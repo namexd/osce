@@ -12,23 +12,26 @@ use Modules\Osce\Entities\CommonModel;
 
 class ExamFlowRoom extends CommonModel
 {
-    protected $connection	=	'osce_mis';
-    protected $table 		= 	'exam_flow_room';
+    protected $connection = 'osce_mis';
+    protected $table = 'exam_flow_room';
     protected $primaryKey = 'id';
-    public $incrementing	=	true;
-    public $timestamps	    =	true;
-    protected $fillable 	=   ['serialnumber','room_id','flow_id','created_user_id', 'exam_id'];
+    public $incrementing = true;
+    public $timestamps = true;
+    protected $fillable = ['serialnumber', 'room_id', 'flow_id', 'created_user_id', 'exam_id', 'effected'];
 
     /*
      * 所属房间
      */
-    public function room(){
-        return $this->hasOne('\Modules\Osce\Entities\Room','id','room_id');
+    public function room()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Room', 'id', 'room_id');
     }
 
-    public function queueStudent(){
-        return $this->hasMany('\Modules\Osce\Entities\ExamQueue','room_id','room_id');
+    public function queueStudent()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\ExamQueue', 'room_id', 'room_id');
     }
+
     /**
      * 获取考场下 考站数量
      * @access public
@@ -41,49 +44,45 @@ class ExamFlowRoom extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getRoomStationNum($examFlowRoom){
-        $room   =   $examFlowRoom   ->  room;
-        if(is_null($room))
-        {
+    public function getRoomStationNum($examFlowRoom)
+    {
+        $room = $examFlowRoom->room;
+        if (is_null($room)) {
             throw new \Exception('房间不存在');
         }
-        $stations   =   $room   ->  stations;
+        $stations = $room->stations;
         return count($stations);
     }
 
-    public function getRoomStaionTime($examFlowRoom){
-        $room   =   $examFlowRoom   ->  room;
-        if(is_null($room))
-        {
+    public function getRoomStaionTime($examFlowRoom)
+    {
+        $room = $examFlowRoom->room;
+        if (is_null($room)) {
             throw new \Exception('房间不存在');
         }
-        $stations   =   $room   ->  stations;
-        $mins=0;
-        foreach($stations as $station)
-        {
-            $info   =   $station->station;
-            if(is_null($info))
-            {
+        $stations = $room->stations;
+        $mins = 0;
+        foreach ($stations as $station) {
+            $info = $station->station;
+            if (is_null($info)) {
                 throw new \Exception('考场不存在');
             }
-            $mins   =   $mins   >   $info    ->  mins? $mins:$info    ->  mins;
+            $mins = $mins > $info->mins ? $mins : $info->mins;
         }
         return $mins;
     }
 
-    public function getRoomStationsByFlow($examFlowRoom){
-        $stationsData   =   [];
-        foreach($examFlowRoom as $one)
-        {
-            $room   =   $one    ->  room;
-            if(is_null($room))
-            {
+    public function getRoomStationsByFlow($examFlowRoom)
+    {
+        $stationsData = [];
+        foreach ($examFlowRoom as $one) {
+            $room = $one->room;
+            if (is_null($room)) {
                 throw new \Exception('房间不存在');
             }
-            $stations   =   $room->stations;
-            foreach($stations as $station)
-            {
-                $stationsData[] =   $station->station;
+            $stations = $room->stations;
+            foreach ($stations as $station) {
+                $stationsData[] = $station->station;
             }
         }
         return $stationsData;

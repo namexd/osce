@@ -337,6 +337,7 @@ class ExamQueue extends CommonModel
                     if ($exam->sequence_mode == 2) {
 
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
+                        \Log::alert($stationTime.'以考站安排');
                     } else {
                         //这是已考场安排的需拿到room_id
                         $stationTime    =   $this   ->  getRoomStationMaxTime($item->room_id);

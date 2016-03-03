@@ -249,7 +249,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//视频的着陆页
 		Route::get('exam-result/result-video',['uses'=>'ExamResultController@getResultVideo','as'=>'osce.admin.course.getResultVideo']);
-		Route::get('exam-result/download-components',['uses'=>'ExamResultController@getdownloadComponents','as'=>'osce.admin.course.getdownloadComponents']);
+		Route::get('exam-result/download-components',['uses'=>'ExamResultController@getDownloadComponents','as'=>'osce.admin.course.getDownloadComponents']);
 
 		//科目统计相关
 		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.course.getIndex']);
@@ -450,19 +450,20 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //		'id'	=> 'required'
 //	]);
 
-	$exam_id = $request->get('id');
-	if(empty($exam_id)){
-		return '请传入id，id对应考试ID';
-	}
-
-	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
-	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
-	$exam = new \Modules\Osce\Entities\Exam();
-	if($exam->emptyData($exam_id)){
-		return '成功';
-	}
-
-	return '失败';
+//	$exam_id = $request->get('id');
+//	if(empty($exam_id)){
+//		return '请传入id，id对应考试ID';
+//	}
+//
+//	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
+//	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
+//	$exam = new \Modules\Osce\Entities\Exam();
+//	if($exam->emptyData($exam_id)){
+//		return '成功';
+//	}
+//
+//	return '失败';
+	dd(!0);
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 
