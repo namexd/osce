@@ -31,7 +31,7 @@
 
                 <form action="{{route('osce.admin.Station.getStationList')}}" method="get">
                     <div class="input-group" style="width: 290px;margin-bottom: 20px;">
-                        <input type="text" placeholder="请输入考站名" class="form-control" name="name" value="{{(empty($name)?'':$name)}}">
+                        <input type="text" placeholder="请输入考站名" class="form-control" name="name" value="{{(isset($name)?$name:'')}}">
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary" id="search">搜索</button>
                     </span>
