@@ -337,11 +337,11 @@ class ExamQueue extends CommonModel
                     ->orderBy('begin_dt', 'asc')
                     ->get();
 
-                $nowQueues  =   $studentTimes->where('exam_queue.status',2);
+                $nowQueues  =   $studentTimes->where('status',2);
 
                 $nowQueue   =   $nowQueues  ->  shift();
                 dump($nowQueue,222);
-            
+
                 $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
                 dd($lateTime);
                 \Log::alert($lateTime.'迟到时间');
