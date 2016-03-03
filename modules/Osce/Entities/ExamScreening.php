@@ -32,7 +32,7 @@ class ExamScreening extends CommonModel
     //关联考试表
     public function  ExamInfo()
     {
-        return $this->belongsTo('Modules\Osce\Entities\exam', 'exam_id', 'id');
+        return $this->belongsTo('Modules\Osce\Entities\Exam', 'exam_id', 'id');
     }
 
     public function roomsRelation()
