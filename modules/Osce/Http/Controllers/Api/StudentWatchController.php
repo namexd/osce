@@ -356,7 +356,7 @@ class StudentWatchController extends CommonController
         }
         else
         {
-            if(is_null($item->station->name)){
+            if(is_null($item->station_id)){
                 $data =[
                     'code'=> 3,
                     'title'=> '你将要进入下面教室抽签考试',
