@@ -76,6 +76,7 @@ function statistics_teach_score(){
     //默认加载最近一次考试
     var $examId = $(".exam_select").children().first().val();
     var $subjectId = $(".student_select").children().first().val();
+    var subname = $('.student_select option:selected').html();
     var url = "/osce/admin/testscores/teacher-data-list";
     function ajax(examId,subjectId){
         $(".subjectBody").empty();
@@ -91,7 +92,7 @@ function statistics_teach_score(){
                 var minScore = res.data.data.minScore.split(",");
                 if(avgStr){echartsSubject(teacherStr,avgStr,maxScore,minScore);}
                 $(res.data.data.datalist).each(function(i){
-                    var jumpUrl = '/osce/admin/testscores/grade-score-list?classid='+this.grade_class;
+                    var jumpUrl = '/osce/admin/testscores/grade-score-list?classid='+this.grade_class+'&subname='+subname;
                     $(".subjectBody").append('<tr>' +
                         '<td>'+(i+1)+'</td>' +
                         '<td>'+this.teacher_name+'</td>' +

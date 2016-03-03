@@ -316,10 +316,10 @@ class TestScoresController  extends CommonController
             'allData' => trim($allData,','),//考试平均分
             'timeData' => trim($timeData,',')//考试时间
         ];
-       // dd($data);
         return view('osce::admin.statisticalanalysis.statistics_teach_history',[
             'data' => $data,
-            'classId'=>$classId
+            'classId'=>$classId,
+            'subname' => $request->subname
         ]);
     }
 
@@ -338,8 +338,11 @@ class TestScoresController  extends CommonController
         $ResultID = $request->resultID;
         //班级成绩明细简介
         $data = $TestScoreRepositories->getExamDetails($examID,$ResultID);
+        echo $ResultID;
+        dd($examID);
+        $data->time = date('Y-m-d H:i',strtotime($data->begin_dt)).' ~ '.date('H:i',strtotime($data->end_dt));
         //列表数据
-       $datalist = $TestScoreRepositories->getGradeDetailList($examID);
+       $datalist = $TestScoreRepositories->getGradeDetailList($examID,$data->id);
         return view('osce::admin.statisticalanalysis.statistics_teach_detail',[
             'data' => $data,
             'datalist'=>$datalist
