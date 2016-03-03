@@ -142,8 +142,11 @@ class AutomaticPlanArrangement
                     return $this->output($examId);
                 }
             }
-
-            throw new \Exception('人数太多，所设时间无法完成考试');
+//            dump($this->_S);
+//            dump($this->_S_ING);
+//            dump($examPlanNull);
+//            echo '==============================';
+            throw new \Exception('人数太多，所设时间无法完成考试', -888);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -204,12 +207,16 @@ class AutomaticPlanArrangement
 
                         $this->tempPlan[] = $result;
                     }
+//                    dump($station->timer);
+//                    echo '===========================';
                     $station->timer += 60;
                     //反之，则是关门状态
                 } else {
                     $tempValues = $this->examPlanRecordIsOpenDoor($station, $screen);
-
+//                    dump($station->timer);
                     if ($station->timer >= $station->mins * 60 + config('osce.begin_dt_buffer') * 60) {
+//                        dd($station->mins, config('osce.begin_dt_buffer'));
+//                        dd($station->timer);
                         $station->timer = 0;
                         //将结束时间写在表内
                         foreach ($tempValues as $tempValue) {
@@ -224,14 +231,6 @@ class AutomaticPlanArrangement
                 }
             }
 //            sleep(1);
-        }
-
-        //找到未考完的考生
-        $undoneStudents = [];
-        $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
-        $undoneStudentsIds = $examPlanEntity->pluck('student_id');
-        foreach ($undoneStudentsIds as $undoneStudentsId) {
-            $undoneStudents[] = Student::findOrFail($undoneStudentsId);
         }
 
         //获取未走完流程的考生
@@ -252,22 +251,33 @@ class AutomaticPlanArrangement
             ))
             ->Having('flowsNum', '<', $flowsNum)
             ->get();
+//        $undoneStudents = [];
         if (count($studentList)) {
-            $studentNotOver = $studentList->pluck('student_id');
+            $studentNotOvers = $studentList->pluck('student_id');
+//            foreach ($studentNotOvers as $studentNotOver) {
+//                $undoneStudents[] = Student::find($studentNotOver);
+//            }
+
             //删除未走完流程的考生
-            if (!ExamPlanRecord::whereIn('student_id', $studentNotOver->toArray())->delete()) {
+            if (!ExamPlanRecord::whereIn('student_id', $studentNotOvers->toArray())->delete()) {
                 throw new \Exception('考试未完成学生移动失败', -2100);
             }
         }
-
-
-        //删除未考完学生记录
-//        if (!$undoneStudentsIds->isEmpty()) {
-//            if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
-//                throw new \Exception('删除未考完考生记录失败！', -2101);
-//            }
-//        }
-
+//        dump($studentList);
+        //找到未考完的考生
+        $undoneStudents = [];
+        $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
+        $undoneStudentsIds = $examPlanEntity->pluck('student_id');
+        foreach ($undoneStudentsIds as $undoneStudentsId) {
+            $undoneStudents[] = Student::findOrFail($undoneStudentsId);
+        }
+//
+//        //删除未考完学生记录
+        if (!$undoneStudentsIds->isEmpty()) {
+            if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
+                throw new \Exception('删除未考完考生记录失败！', -2101);
+            }
+        }
 
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_ING);
@@ -391,7 +401,12 @@ class AutomaticPlanArrangement
                                 $result[] = $thisStudent;
                             }
                             if (count($this->_S) > 0) {
-                                $this->_S_ING[] = array_shift($this->_S);
+                                if (is_array($this->_S)) {
+                                    $this->_S_ING[] = array_shift($this->_S);
+                                } else {
+                                    $this->_S_ING[] = $this->_S->shift();
+                                }
+
                             }
                         }
                     }
@@ -410,7 +425,11 @@ class AutomaticPlanArrangement
                                 $result[] = $thisStudent;
                             }
                             if (count($this->_S) > 0) {
-                                $this->_S_ING[] = array_shift($this->_S);
+                                if (is_array($this->_S)) {
+                                    $this->_S_ING[] = array_shift($this->_S);
+                                } else {
+                                    $this->_S_ING[] = $this->_S->shift();
+                                }
                             }
                         }
                     }
@@ -443,7 +462,11 @@ class AutomaticPlanArrangement
                                 $result[] = $thisStudent;
                             }
                             if (count($this->_S) > 0) {
-                                $this->_S_ING[] = array_shift($this->_S);
+                                if (is_array($this->_S)) {
+                                    $this->_S_ING[] = array_shift($this->_S);
+                                } else {
+                                    $this->_S_ING[] = $this->_S->shift();
+                                }
                             }
                         }
                     }

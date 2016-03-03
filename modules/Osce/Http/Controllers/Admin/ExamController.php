@@ -642,11 +642,12 @@ class ExamController extends CommonController
             $studentList = array_shift($data);
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
-            if(!$student->importStudent($exam_id, $examineeData)){
-                throw new \Exception('学生导入数据失败，请修改重试');
+            $result = $student->importStudent($exam_id, $examineeData);
+            if(!$result){
+                throw new \Exception('学生导入数据失败，请参考模板修改后重试');
             }
 
-            return json_encode($this->success_data(['code'=>1]));
+            return json_encode($this->success_data([], 1, "成功导入{$result}个学生！"));
 
         } catch (\Exception $ex) {
             return json_encode($this->fail($ex));

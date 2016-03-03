@@ -358,7 +358,14 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttachImage(Request $request)
     {
+        \Log::info('params',[$request->all()]);
         try {
+            $this->validate($request, [
+                'student_id' => 'required|integer',
+                'station_id' => 'required|integer',
+                'standard_id' => 'required|integer'
+            ]);
+
             //获取数据
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');

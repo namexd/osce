@@ -6,9 +6,9 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "test_station":test_station();break;
-        case "examroom":examroom();break;
-        case "clinicalcase":clinicalcase();break;
+        case "exam_station":exam_station();break;
+        case "site_manage":site_manage();break;
+        case "clinical_case_manage":clinical_case_manage();break;
         case "categories":categories();break;
         case "invigilator":invigilator();break;
         case "topic":topic();break;
@@ -23,7 +23,7 @@ $(function(){
  * @version 1.0
  * @date    2016-01-06
  */
-function test_station(){
+function exam_station(){
 
    $(".delete").click(function(){
        var thisElement = $(this);
@@ -40,7 +40,7 @@ function test_station(){
  * @version 1.0
  * @date    2016-01-06
  */
-function clinicalcase(){
+function clinical_case_manage(){
    $(".delete").click(function(){
        deleteItems("post",pars.deletes,$(this).attr("value"),pars.firstpage)
    })
@@ -52,7 +52,7 @@ function clinicalcase(){
  * @version 1.0
  * @date    2016-01-06
  */
-function examroom(){
+function site_manage(){
     $(".delete").click(function(){
         deleteArea("post",pars.deletes,$(this).attr("value"),$(this).data('type'),pars.firstpage)
     })
@@ -96,9 +96,6 @@ function deleteItem(url){
 
 
 function categories(){
-
-    
-
     $('#submit-btn').click(function(){
         var flag = null;
         $('tbody').find('.col-sm-10').each(function(key,elem){
