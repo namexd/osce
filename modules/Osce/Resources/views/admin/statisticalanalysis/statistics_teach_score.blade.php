@@ -8,6 +8,7 @@
     <!-- ECharts -->
     <script src="{{asset('osce/admin/plugins/js/plugins/echarts/echarts-all.js')}}"></script>
     <script src="{{asset('osce/admin/statisticalanalysis/statistics_teach.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
 <script>
 
 
