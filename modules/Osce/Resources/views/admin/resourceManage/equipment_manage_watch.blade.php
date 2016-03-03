@@ -8,131 +8,146 @@
         }
         .blank-panel .panel-heading {margin-left: -20px;}
         #start,#end{width: 160px;}
-        .left-text{
-            line-height: 34px;
-            margin-right: 20px;
+        .btn{
+            margin: 0!important;
         }
-        .right-list{
-            width: 60%;
-        }
-        table tbody tr td:last-child{width: initial!important;}
     </style>
 @stop
 
 @section('only_js')
-<script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
-<script>
-    $(function(){
 
-        var start = {
-            elem: '#starts', //需显示日期的元素选择器
-            event: 'click', //触发事件
-            format: 'YYYY-MM-DD hh:mm:ss', //日期格式
-            istime: true, //是否开启时间选择
-            isclear: true, //是否显示清空
-            istoday: true, //是否显示今天
-            issure: true, //是否显示确认
-            festival: true, //是否显示节日
-            min: '1900-01-01 00:00:00', //最小日期
-            max: '2099-12-31 23:59:59', //最大日期
-            start: layer.now,    //开始日期
-            fixed: false, //是否固定在可视区域
-            zIndex: 99999999, //css z-index
-            choose: function(dates){ //选择好日期的回调
-
-            }
-        };
-
-        var end = {
-            elem: '#ends', //需显示日期的元素选择器
-            event: 'click', //触发事件
-            format: 'YYYY-MM-DD hh:mm:ss', //日期格式
-            istime: true, //是否开启时间选择
-            isclear: true, //是否显示清空
-            istoday: true, //是否显示今天
-            issure: true, //是否显示确认
-            festival: true, //是否显示节日
-            min: '1900-01-01 00:00:00', //最小日期
-            max: '2099-12-31 23:59:59', //最大日期
-            start: layer.now,    //开始日期
-            fixed: false, //是否固定在可视区域
-            zIndex: 99999999, //css z-index
-            choose: function(dates){ //选择好日期的回调
-
-            }
-        };
-
-        laydate(start);
-        laydate(end);
-
-    })
-</script>
 @stop
 
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
-            <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">使用记录</h5>
-            </div>
-            <div class="col-xs-6 col-md-2" style="float: right;">
-                <a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>3])}}" class="btn btn-outline btn-default" style="float: right;">返回</a>
+            <div class="col-xs-12 col-md-12">
+                <h5 class="title-label">设备管理</h5>
+                <a href="{{route('osce.admin.machine.getAddWatch')}}" class="btn btn-primary" style="float:right;margin:0 10px 0 0;">新增</a>
+                <a href="{{route('osce.admin.machine.getWatchLogList')}}" class="btn btn-outline btn-default" style="float:right;margin:0 10px 0 0!important;">使用记录</a>
+                <div class="clearfix"></div>
             </div>
         </div>
-        <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.machine.getWatchLogList')}}" method="get">
-            <div class="panel blank-panel">
-                <div  class="row" style="margin:20px 0;">
-                    <div class="col-md-3 col-sm-3 col-xs-12">
-                        <label class="pull-left left-text">设备ID:</label>
 
-                        <div class="pull-left right-list">
-                            <input class="form-control m-b" name="code" value="{{$code==null?'':$code }}"/>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-12">
-                        <label class="pull-left left-text">使用人:</label>
-                        <div class="pull-left right-list">
-                            <input class="form-control m-b" name="student_name" value="{{$student_name==null?'':$student_name }}"/>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12" style="padding-right:0; ">
-                        <label class="pull-left left-text">使用时间:</label>
-                        <div class="pull-left">
-                            <input class="form-control" name="begin_dt"  id="starts" value="{{$begin_dt==null?'':$begin_dt }}"/>
-                        </div>
-                        <label class="pull-left left-text" style="margin-left: 20px;">到</label>
-                        <div class="pull-left" style="margin-right:20px;" >
-                            <input class="form-control" name="end_dt" id="ends" value="{{$end_dt==null?'':$end_dt }}"/>
-                        </div>
-                        <button class="btn  btn-primary" type="submit"  style="float:left;height: 34px;" />搜索</button>
+            <div class="ibox-content container-fluid">
+                <div class="panel-heading">
+                    <div class="panel-options">
+                        <ul class="nav nav-tabs">
+                            @forelse($options as $key=>$option)
+                                <li class="{{$_GET['cate_id']==$option['id']? 'active':''}}"><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>$option['id']])}}">{{$option['name']}}</a></li>
+                            @empty
+                            @endforelse
+                        </ul>
                     </div>
                 </div>
+
+                <div class="input-group" style="margin-bottom: 20px;margin-top: 10px;">
+                    <form action="{{route('osce.admin.machine.getMachineList',['cate_id'=>3])}}" method="get">
+                    <input type="hidden" name="cate_id" value="3">
+                    <input type="text" placeholder="设备名称" class="form-control" style="width: 250px;margin-right: 10px;height: 36px;" name="name" value="{{(empty($name)?'':$name)}}">
+
+                    <div class="btn-group" style="margin-right: 10px;">
+                        <button type="button" class="btn btn-default dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="">
+                            @if(array_key_exists('status',$_GET))
+                                @forelse($machineStatuValues as $status=>$machineStatuValue)
+                                    @if($_GET['status']==$status)
+                                        {{$machineStatuValue}}
+                                        <input type="hidden" name="status" value="{{$status}}">
+                                    @endif
+                                @empty
+                                @endforelse
+                            @else
+                                状态
+                            @endif
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>3])}}">全部</a></li>
+                            @forelse($machineStatuValues as $status=>$machineStatuValue)
+                                @if(array_key_exists('name',$_GET))
+                                    <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>3,'status'=>$status,'name'=>$_GET['name']])}}">{{$machineStatuValue}}</a></li>
+                                @else
+                                    <li><a href="{{route('osce.admin.machine.getMachineList',['cate_id'=>3,'status'=>$status])}}">{{$machineStatuValue}}</a></li>
+                                @endif
+                            @empty
+                            @endforelse
+                        </ul>
+                    </div>
+                    <button type="submit" class="btn  btn-primary" id="search">&nbsp;搜索&nbsp;</button>
+                    </form>
+                </div>
+
                 <table class="table table-striped" id="table-striped">
                     <thead>
                     <tr>
+                        <th>#</th>
                         <th>设备ID</th>
-                        <th>使用人</th>
-                        <th>使用时间</th>
+                        <th>感应ID</th>
+                        <th>设备名称</th>
+                        <th>状态</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($list as $key=>$item)
+                    @forelse($list as $key => $item)
                         <tr>
+                            <td>{{$key+1}}</td>
                             <td>{{$item->code}}</td>
+                            <td>{{$item->nfc_code}}</td>
                             <td>{{$item->name}}</td>
-                            <td>{{(empty($item->context['time'])?'':$item->context['time'])}}</td>
+                            <td style="color: @if($item->status==1)#16beb0
+                                              @elseif($item->status==2)#ed5565
+                                              @elseif($item->status==3)#f8ac59
+                                              @endif
+                                    ">{{$machineStatuValues[$item->status]}}</td>
+                            <td>
+                                <a href="{{route('osce.admin.machine.getEditWatch',['id'=>$item->id])}}">
+                                    <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                                </a>
+                                <a href="javascript:void(0)"><span class="read state2"><i class="fa fa-trash-o fa-2x" eid="{{$item->id}}"></i></span></a>
+                            </td>
                         </tr>
-                    @endforeach
+                    @empty
+                    @endforelse
+
                     </tbody>
                 </table>
-                <div class="pull-left">
-                    共{{$list->total()}}条
-                </div>
-                <div class="btn-group pull-right">
-                   {!! $list->appends($_GET)->render() !!}
-                </div>
+
+                    <div class="pull-left">
+                        共{{$list->total()}}条
+                    </div>
+                    <div class="pull-right">
+                        {!! $list->appends($_GET)->render() !!}
+                    </div>
+
+
             </div>
-        </form>
     </div>
+
+    <script>
+        $(function(){
+            //删除用户
+            $(".fa-trash-o").click(function(){
+                var thisElement=$(this);
+                var eid=thisElement.attr("eid");
+                layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
+                    $.ajax({
+                        type:'post',
+                        async:true,
+                        url:'{{route('osce.admin.machine.postMachineDelete')}}',
+                        data:{id:eid, cate_id:3},
+                        success:function(data){
+                            if(data.code == 1){
+                                location.href='{{route("osce.admin.machine.getMachineList",["cate_id"=>3])}}'
+                            }else {
+                                layer.msg(data.message,{skin:'msg-error',icon:1});
+                            }
+                        }
+                    })
+                });
+            })
+        })
+    </script>
 @stop{{-- 内容主体区域 --}}

@@ -145,7 +145,9 @@ class TestResult extends CommonModel
         $arr = json_decode($score, true);
         foreach ($arr as $item) {
             foreach ($item['test_term'] as $str) {
+
                 $list [] = [
+//                    'pid'=>$str['pid'],
                     'subject_id' => $str['subject_id'],
                     'standard_id' => $str['id'],
                     'score' =>$str['real'],
