@@ -109,13 +109,12 @@ class TestScoresController  extends CommonController
         //$examid = $request->examid;
         $subid = $request->subid;
         //获取学生科目成绩
-        $singledata = $TestScoreRepositories->getStudentScoreAvg($student_id,$subid);
+        $singledata = $TestScoreRepositories->getStudentHistoryScoreCount($student_id,$subid);
 
         dd($singledata);
         //获取科目平均成绩
         //dd($singledata);
         $avgdata = $TestScoreRepositories->getStudentScoreCount('',0,$subid)->toArray();
-        dd($avgdata);
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
