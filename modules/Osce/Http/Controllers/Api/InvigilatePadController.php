@@ -283,8 +283,7 @@ class InvigilatePadController extends CommonController
         if(is_null($studentExamTime)){
             throw new \Exception('没有查询到该学生队列',-100);
         }
-       echo 123;
-       exit();
+
         $time = (strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt))/60;
         $data = [
             'station_id' => $stationId,
@@ -307,6 +306,8 @@ class InvigilatePadController extends CommonController
         //根据考试获取到考试流程
         $ExamFlowModel = new  ExamFlow();
         $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
+       echo 123;
+       exit();
         //查询出学生当前已完成的考试
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
 
