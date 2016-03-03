@@ -76,7 +76,7 @@ function statistics_teach_score(){
     //默认加载最近一次考试
     var $examId = $(".exam_select").children().first().val();
     var $subjectId = $(".student_select").children().first().val();
-    var subname = $('.student_select option:selected').html();
+
     var url = "/osce/admin/testscores/teacher-data-list";
     function ajax(examId,subjectId){
         $(".subjectBody").empty();
@@ -90,9 +90,10 @@ function statistics_teach_score(){
                 var avgStr = res.data.data.avgStr.split(",");
                 var maxScore = res.data.data.maxScore.split(",");
                 var minScore = res.data.data.minScore.split(",");
+                var subname = $('.student_select option:selected').html();
                 if(avgStr){echartsSubject(teacherStr,avgStr,maxScore,minScore);}
                 $(res.data.data.datalist).each(function(i){
-                    var jumpUrl = '/osce/admin/testscores/grade-score-list?classid='+this.grade_class+'&subname='+subname;
+                    var jumpUrl = '/osce/admin/testscores/grade-score-list?classid='+this.grade_class+'&subname='+subname+'&subid='+this.subid;
                     $(".subjectBody").append('<tr>' +
                         '<td>'+(i+1)+'</td>' +
                         '<td>'+this.teacher_name+'</td>' +
@@ -105,7 +106,7 @@ function statistics_teach_score(){
                         '<a href='+jumpUrl+'>' +
                         '<span class="read state1 detail"><i class="fa fa-cog fa-2x"></i></span>' +
                         '</a>' +
-                        '<span class="read state1 detail cursor"><i class="fa fa-search fa-2x"></i></span>' +
+                        '<span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="'+this.exam_id+'" resultid="'+this.rid+'" subid="'+this.subid+'"></i></span>' +
                         '</td>' +
                         '</tr>')
                 })
@@ -123,13 +124,15 @@ function statistics_teach_score(){
     $(".subjectBody").delegate(".fa-search","click",function(){
         var examid = $(this).attr("examid");
         var resultid = $(this).attr("resultid");
+        var subid = $(this).attr("subid");
+
         parent.layer.open({
             type: 2,
             title: '班级成绩明细',
             shadeClose: true,
             shade: 0.8,
             area: ['90%', '90%'],
-            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid//iframe的url
+            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid+'&subid='+subid//iframe的url
         });
     });
 }
@@ -200,13 +203,14 @@ function teach_detail(){
     $(".fa-search").click(function(){
         var examid = $(this).attr("examid");
         var resultid = $(this).attr("resultid");
+        var subid = $(this).attr("subid");
         parent.layer.open({
             type: 2,
             title: '班级成绩明细',
             shadeClose: true,
             shade: 0.8,
             area: ['90%', '90%'],
-            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid//iframe的url
+            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid+'&subid='+subid//iframe的url
         });
 
     })

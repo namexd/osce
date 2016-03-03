@@ -340,12 +340,14 @@ class TestScoreRepositories  extends BaseRepository
         })->select(
             'student.teacher_name',
             'student.grade_class',
+            'subject.id as subid',
+            'exam_screening.exam_id as exam_id',
+            'exam_result.id as rid',
             $DB->raw('count(student.id) as stuNum'),
             $DB->raw('avg(exam_result.score) as avgScore'),
             $DB->raw('max(exam_result.score) as maxScore'),
             $DB->raw('min(exam_result.score) as minScore')
         )->groupBy('student.teacher_name')->get();
-        //dd($examlist);
         return $examlist;
     }
     /**
@@ -358,18 +360,19 @@ class TestScoreRepositories  extends BaseRepository
      * @date    2016-3-2 17:26:32
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getGradeScore($classId){
+    public function getGradeScore($classId,$subid){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
         if($classId){
-            $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
+            $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->where('subject.id','=',$subid)->select(
                 'exam.name',
                 $DB->raw('avg(exam_result.score) as avgScore'),
                 'exam.id',
-                'exam_result.id as rid'
+                'exam_result.id as rid',
+                'subject.id as sid'
             );
         }else{
-            $ExamResult = $ExamResult->select(
+            $ExamResult = $ExamResult->where('subject.id','=',$subid)->select(
                 $DB->raw('avg(exam_result.score) as avgScore'),
                 'exam.id'
             );
@@ -380,6 +383,10 @@ class TestScoreRepositories  extends BaseRepository
             $join->on('exam.id','=','exam_screening.exam_id');
         })->leftjoin('student',function($join){
             $join->on('student.id','=','exam_result.student_id');
+        })->leftjoin('station',function($join){
+            $join->on('station.id','=','exam_result.station_id');
+        })->leftjoin('subject',function($join){
+            $join->on('subject.id','=','station.subject_id');
         })->orderBy('exam.name')->get();
         return $examlist;
     }
@@ -430,10 +437,11 @@ class TestScoreRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function getExamDetails($examID,$ResultID){
+    public function getExamDetails($examID,$ResultID,$subjectID){
         $DB = \DB::connection('osce_mis');
-        $ExamResult = new ExamResult();
-        $examlist = $ExamResult->where('exam.id','=',$examID)->where('exam_result.id','=',$ResultID)->leftjoin('exam_screening',function($join){
+        $ExamResult = new ExamResult();//
+        //dd($subjectID);
+        $examlist = $ExamResult->where('subject.id','=',$subjectID)->where('exam.id','=',$examID)->where('exam_result.id','=',$ResultID)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
             $join->on('exam.id','=','exam_screening.exam_id');
@@ -451,6 +459,7 @@ class TestScoreRepositories  extends BaseRepository
             'subject.title',
             'subject.id'
         )->first();
+        //dd($examlist);
         return $examlist;
     }
 }
