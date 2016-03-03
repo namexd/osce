@@ -106,14 +106,16 @@ class TestScoresController  extends CommonController
     public function studentSubjectList(Request $request,TestScoreRepositories $TestScoreRepositories){
         //获取已考过试的所有学生
         $student_id = $request->student_id;
-        $examid = $request->examid;
+        //$examid = $request->examid;
         $subid = $request->subid;
         //获取学生科目成绩
-        $singledata = $TestScoreRepositories->getStudentScoreCount($student_id,$examid,$subid)->toArray();
-        //dd($singledata);
+        $singledata = $TestScoreRepositories->getStudentScoreAvg($student_id,$subid);
+
+        dd($singledata);
         //获取科目平均成绩
         //dd($singledata);
-        $avgdata = $TestScoreRepositories->getStudentScoreCount('',$examid,$subid)->toArray();
+        $avgdata = $TestScoreRepositories->getStudentScoreCount('',0,$subid)->toArray();
+        dd($avgdata);
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
