@@ -565,7 +565,7 @@ class InvigilatePadController extends CommonController
                 }
             }
 
-            return '锚点上传成功！';
+            return ['锚点上传成功！'];
         } catch (\Exception $ex) {
             throw $ex;
         }
