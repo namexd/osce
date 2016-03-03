@@ -74,10 +74,9 @@ class Invite extends CommonModel
                     throw new \Exception('邀请保存失败');
                 }
             }
-            $connection->commit();
 
             $this->sendMsg($data);
-
+            $connection->commit();
             return $notice;
         } catch (\Exception $ex) {
             $connection->rollBack();
