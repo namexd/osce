@@ -161,6 +161,8 @@ class AutomaticPlanArrangement
      */
     private function screenPlan($examId, $screen)
     {
+        $this->resetStationTime();
+
         /*
          * 获得场次的开始和结束时间
          */
@@ -188,6 +190,7 @@ class AutomaticPlanArrangement
                  * 如果为false，就说明是开门状态
                  */
                 $tempBool = $this->ckeckStatus($station, $screen);
+
                 if (!$tempBool) {
                     //获取实体所需要的学生清单
                     $students = $this->needStudents($station, $screen, $examId);
@@ -200,23 +203,17 @@ class AutomaticPlanArrangement
                         //拼装数据
                         $data = $this->dataBuilder($examId, $screen, $student, $station, $i);
                         $result = ExamPlanRecord::create($data);
-//                        dump($result);
                         if (!$result) {
                             throw new \Exception('关门失败！', -11);
                         }
 
                         $this->tempPlan[] = $result;
                     }
-//                    dump($station->timer);
-//                    echo '===========================';
                     $station->timer += 60;
                     //反之，则是关门状态
                 } else {
                     $tempValues = $this->examPlanRecordIsOpenDoor($station, $screen);
-//                    dump($station->timer);
                     if ($station->timer >= $station->mins * 60 + config('osce.begin_dt_buffer') * 60) {
-//                        dd($station->mins, config('osce.begin_dt_buffer'));
-//                        dd($station->timer);
                         $station->timer = 0;
                         //将结束时间写在表内
                         foreach ($tempValues as $tempValue) {
@@ -263,7 +260,6 @@ class AutomaticPlanArrangement
                 throw new \Exception('考试未完成学生移动失败', -2100);
             }
         }
-//        dump($studentList);
         //找到未考完的考生
         $undoneStudents = [];
         $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
@@ -415,8 +411,6 @@ class AutomaticPlanArrangement
             case 2:
                 $result = [];
                 $testStudents = $this->orderTestStudent($station, $screen);
-//                dump($testStudents);
-//                dump($result);
                 if ($station->serialnumber == 1) {
                     for ($i = 0; $i < $station->needNum; $i++) {
                         if (count($this->_S_ING) > 0) {
@@ -601,7 +595,6 @@ class AutomaticPlanArrangement
                 $this->sequenceMode);
             if (count($tempArrays) != 0) {
                 $a = Student::whereIn('id', $tempArrays)->get();
-//                dump($a);
                 return $a;
             } else {
                 return collect([]);
@@ -818,5 +811,17 @@ class AutomaticPlanArrangement
             ->where('exam_id', $this->exam_id)->get()
             ->pluck('serialnumber');
         return $studentSerialnumber;
+    }
+
+    /**
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time
+     */
+    private function resetStationTime()
+    {
+        foreach ($this->_T as &$station) {
+            $station->timer = 0;
+        }
     }
 }

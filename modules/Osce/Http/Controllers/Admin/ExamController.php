@@ -1247,7 +1247,6 @@ class ExamController extends CommonController
         }
 //        $plan   =   $this           ->  getEmptyTime($plan);
         $user   =   Auth::user();
-
         //如果$plan为空，就判断该考试在临时表中是否有数据
         if (count($plan) == 0) {
             if (ExamPlanRecord::where('exam_id', $id)->first()) {

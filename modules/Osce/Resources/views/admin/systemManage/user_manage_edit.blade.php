@@ -14,7 +14,24 @@
 @section('only_js')
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script type="text/javascript">
+//		$.fn.pasteEvents = function( delay ) {
+//		    if (delay == undefined) delay = 20;
+//		    return $(this).each(function() {
+//		        var $el = $(this);
+//		        $el.on("paste", function() {
+//		            $el.trigger("prepaste");
+//		            setTimeout(function() { $el.trigger("postpaste"); }, delay);
+//		        });
+//		    });
+//		};
         $(function(){
+        	
+//      	$("input[name=mobile]").on("postpaste", function() {
+//			   var mobile=$(this).val();
+//			   mobile+=" ";
+//			   $("input[name=mobile]").val(mobile);
+//			}).pasteEvents();
+        	
             /**
              * 下面是进行插件初始化
              * 你只需传入相应的键值对

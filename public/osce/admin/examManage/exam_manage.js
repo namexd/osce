@@ -2064,7 +2064,9 @@ function smart_assignment(){
     function makeCols(data){
         var ul  =   $('<ul>');
         var child   =   data.child;
-        var title   =   $('<li class="title">').text(data.name);
+        var titleName   =   data.name.length>16? data.name.substr(0,16)+'…':data.name;
+        var title   =   $('<li class="title">').text(titleName);
+        title.attr('title',data.name);
         ul.append(title);
         ul.addClass('roomStatioin')
         var perTime=0;
