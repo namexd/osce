@@ -257,10 +257,17 @@ class SubjectStatisticsController  extends CommonController
 
     public function stationDetails(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
 
+        //验证
+        $this->validate($request, [
+            'examId' => 'required|integer',
+            'subjectId' => 'required|integer',
+            'stationId' => 'required|integer'
+        ]);
+
         $examId = $request->input('examId',0); //获取考试id
         $subjectId = $request->input('subjectId',0); //获取科目id
         $stationId = $request->input('stationId',0); //获取考站id
-        $data = $subjectStatisticsRepositories->GetStationDetails(361,88,49);
+        $data = $subjectStatisticsRepositories->GetStationDetails($examId,$subjectId,$stationId);
         $stationDetails = [];//详情数据
         $title = '';//详情头部数据
         if(count($data)>0){
@@ -441,7 +448,7 @@ class SubjectStatisticsController  extends CommonController
         $subjectId = $request->input('subjectId',0);
 
         //查询考核点分析所需数据
-        $result = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList(361,88,788);//558
+        $result = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId,$subjectId,$standardPid);//558
 
         $datas = [];
         $number = 1;//序号
