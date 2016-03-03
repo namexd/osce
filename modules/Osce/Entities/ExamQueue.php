@@ -340,7 +340,7 @@ class ExamQueue extends CommonModel
                 $nowQueues  =   $studentTimes->where('status',2);
 
                 $nowQueue   =   $nowQueues  ->  shift();
-                dump($nowQueue,222);
+                dd($studentTimes,222);
 
                 $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
                 dd($lateTime);
