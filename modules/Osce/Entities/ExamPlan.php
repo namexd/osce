@@ -990,27 +990,24 @@ class ExamPlan extends CommonModel
         try {
             switch ($exam->sequence_mode) {
                 case 1:
-                    $rooms = collect($result)->pluck('room_id')->toArray();
-                    if (!ExamFlowRoom::whereIn('room_id', $rooms)
-                        ->update(['effected' => 1])
-                    ) {
-                        throw new \Exception ('更新流程表失败！请重试', -988);
+                    $rooms = collect($result)->pluck('room_id')->unique()->toArray();
+                    $examFlowRoom = ExamFlowRoom::whereIn('room_id', $rooms)->get();
+                    foreach ($examFlowRoom as $item) {
+                        $item->effected = 1;
+                        if (!$item->save()) {
+                            throw new \Exception ('更新流程表失败！请重试', -988);
+                        }
                     }
                     break;
                 case 2:
-                    $stations = collect($result)->pluck('station_id')->toArray();
-                    $examFlowRoom = ExamFlowRoom::whereIn('room_id', $stations)->get();
-                    foreach ($examFlowRoom as $index => $item) {
+                    $stations = collect($result)->pluck('station_id')->unique()->toArray();
+                    $examFlowStation = ExamFlowStation::whereIn('station_id', $stations)->get();
+                    foreach ($examFlowStation as $index => $item) {
                         $item->effected = 1;
                         if(!$item->save()){
                             throw new \Exception ('更新流程表失败！请重试', -988);
                         }
                     }
-//                    if (!ExamFlowRoom::whereIn('room_id', $stations)
-//                        ->update(['effected' => 1])
-//                    ) {
-//                        throw new \Exception ('更新流程表失败！请重试', -988);
-//                    }
                     break;
                 default:
                     throw new \Exception('没有这种考试模式！', -987);
