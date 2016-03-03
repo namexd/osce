@@ -532,9 +532,10 @@ class InvigilatePadController extends CommonController
      * @param $studentId 学生id
      * @param $examId 考试id
      * @param $teacherId 老师id
-     * @param $timeAnchor 锚点时间戳
+     * @param $timeAnchors
      * @return bool
      * @throws \Exception
+     * @internal param 锚点时间戳 $timeAnchor
      * @internal param $examScreenId
      * @internal param array $timeAnchors
      */
@@ -543,12 +544,9 @@ class InvigilatePadController extends CommonController
         try {
             //获得站点摄像机关联表
             $stationVcr = StationVcr::where('station_id', $stationId)->first();
-            if (empty($stationVcr)) {
+            if (is_null($stationVcr)) {
                 throw new \Exception('该考站未关联摄像机', -200);
             }
-
-            //获取考试
-//            $exam = ExamScreening::findOrFail($examScreenId);
 
             foreach ($timeAnchors as $timeAnchor) {
                 //拼凑数组
@@ -563,11 +561,11 @@ class InvigilatePadController extends CommonController
 
                 //将数据插入库
                 if (!$result = StationVideo::create($data)) {
-                    throw new \Exception('保存失败！请重试！', -210);
+                    throw new \Exception('保存失败！请重试', -210);
                 }
             }
 
-            return strtotime($result->begin_dt);
+            return '锚点上传成功！';
         } catch (\Exception $ex) {
             throw $ex;
         }
