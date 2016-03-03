@@ -714,10 +714,6 @@ class Exam extends CommonModel
                 $valueI->delete();
             }
         }
-        //删除考试考场学生表
-        foreach ($examScreeningObj as $item) {
-            ExamScreeningStudent::where('exam_screening_id',$item->id)->delete();
-        }
         //删除考试对应的考生
         $examObj->students()->delete();
         //删除智能排考记录
@@ -754,6 +750,10 @@ class Exam extends CommonModel
 */
 //        Exam::doingExam();    //获取正在考试的考试
 
+        //修改考试考场学生表 考试场次终止为0
+        foreach ($examScreeningObj as $item) {
+            ExamScreeningStudent::where('exam_screening_id',$item->id)->update(['is_end'=>0]);       //TODO 更改考试场次终止为0
+        }
         //更改考试场次状态
         $examScreenings = $examScreening-> get();
         if (!$examScreenings->isEmpty()) {

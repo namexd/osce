@@ -11,7 +11,7 @@ $(function(){
         case "clinical_case_manage":clinical_case_manage();break;
         case "categories":categories();break;
         case "invigilator":invigilator();break;
-        case "topic":topic();break;
+        case "sbject_manage":sbject_manage();break;
         case "sp_invigilator":sp_invigilator();break;
     }
 });
@@ -767,7 +767,7 @@ function invigilator(){
  * @return  {[type]}   [description]
  */
 
-function topic(){
+function sbject_manage(){
    $(".fa-trash-o").click(function(){
         var thisElement=$(this);
         layer.alert('确认删除？',function(){
