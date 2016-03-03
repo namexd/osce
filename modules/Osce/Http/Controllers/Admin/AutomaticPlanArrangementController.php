@@ -29,7 +29,6 @@ class AutomaticPlanArrangementController extends CommonController
      */
     function getIndex(Request $request)
     {
-
         $this->validate($request, [
             'exam_id' => 'required|integer'
         ]);
