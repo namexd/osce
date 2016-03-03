@@ -2,10 +2,7 @@
 
 @section('only_css')
     <style>
-        .tabs{
-            margin: 20px 0;
-            font-weight: 700;
-        }
+        .gray-bg{background-color: #ffffff;!important;}
     </style>
 @stop
 
