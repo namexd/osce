@@ -106,14 +106,16 @@ class TestScoresController  extends CommonController
     public function studentSubjectList(Request $request,TestScoreRepositories $TestScoreRepositories){
         //获取已考过试的所有学生
         $student_id = $request->student_id;
-        $examid = $request->examid;
+        //$examid = $request->examid;
         $subid = $request->subid;
         //获取学生科目成绩
-        $singledata = $TestScoreRepositories->getStudentScoreCount($student_id,$examid,$subid)->toArray();
-        //dd($singledata);
+        $singledata = $TestScoreRepositories->getStudentScoreAvg($student_id,$subid);
+
+        dd($singledata);
         //获取科目平均成绩
         //dd($singledata);
-        $avgdata = $TestScoreRepositories->getStudentScoreCount('',$examid,$subid)->toArray();
+        $avgdata = $TestScoreRepositories->getStudentScoreCount('',0,$subid)->toArray();
+        dd($avgdata);
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
@@ -253,6 +255,8 @@ class TestScoresController  extends CommonController
         $datalist = $TestScoreRepositories->getTeacherData($examid,$subjectid);
         $teacherStr = '';
         $avgStr = '';
+        $maxScore = '';
+        $minScore = '';
         foreach($datalist as $v){
             if($v->teacher_name){
                 $teacherStr .= $v->teacher_name.',';
@@ -261,14 +265,22 @@ class TestScoresController  extends CommonController
             if($v->avgScore){
                 $avgStr .= sprintf('%.1f',$v->avgScore).',';
             }
+            if($v->maxScore){
+                $maxScore .= $v->maxScore.',';
+            }
 
+            if($v->minScore){
+                $minScore .= $v->minScore.',';
+            }
         }
         $data = [
             'datalist' => $datalist,
             'teacherStr' => trim($teacherStr,','),
-            'avgStr' => trim($avgStr,',')
+            'avgStr' => trim($avgStr,','),
+            'maxScore' => trim($maxScore,','),
+            'minScore' => trim($minScore,',')
         ];
-        $this->success_data(['data'=>$data]);
+        return $this->success_data(['data'=>$data]);
     }
 
     /**
@@ -298,17 +310,20 @@ class TestScoresController  extends CommonController
                 $allData .= $vv['avgScore'].',';
             }
             $classData .= $v['avgScore'].',';
-            $timeData .= $v['begin_dt'].',';
+            $timeData .= $v['name'].',';
         }
-
+       // dd($datalist);
         $data = [
             'datalist' => $datalist,//列表数据
             'classData' => trim($classData,','),//班级平均分
             'allData' => trim($allData,','),//考试平均分
             'timeData' => trim($timeData,',')//考试时间
         ];
-        //dd($data);
-        $this->success_data(['data'=>$data]);
+       // dd($data);
+        return view('osce::admin.statisticalanalysis.statistics_teach_history',[
+            'data' => $data,
+            'classId'=>$classId
+        ]);
     }
 
     /**
@@ -322,12 +337,17 @@ class TestScoresController  extends CommonController
      */
     public function getGradeDetail(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examID = $request->examid;
-        $subjectID = $request->subjectID;
+        //$subjectID = $request->subjectID;
         $ResultID = $request->resultID;
         //班级成绩明细简介
-        $data = $TestScoreRepositories->getExamDetails($examID,$subjectID,$ResultID);
+        $data = $TestScoreRepositories->getExamDetails($examID,$ResultID);
         //列表数据
-        $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID);
+       $datalist = $TestScoreRepositories->getGradeDetailList($examID);
+        return view('osce::admin.statisticalanalysis.statistics_teach_detail',[
+            'data' => $data,
+            'datalist'=>$datalist
+        ]);
+
     }
 }
 
