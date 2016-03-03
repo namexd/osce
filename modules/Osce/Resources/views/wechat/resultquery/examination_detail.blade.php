@@ -36,7 +36,7 @@
         </div>
         <div class="form-group">
             <label for="">评价</label>
-            <div class="txt">{{$examresultList->evaluate}}</div>
+            <div class="txt">{{($examresultList->evaluate == 'null'?'':$examresultList->evaluate)}}</div>
         </div>
   	</div>
 
