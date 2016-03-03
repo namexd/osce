@@ -38,11 +38,11 @@
                     @foreach(@$datalist as $k=>$list)
                         <tr>
                             <td>{{$k+1}}</td>
-                            <td>{{$list->name}}</td>
-                            <td>{{$list->begin_dt}}</td>
-                            <td>{{$list->time}}</td>
-                            <td>{{$list->score}}</td>
-                            <td>{{$list->tname}}</td>
+                            <td>{{@$list->name}}</td>
+                            <td>{{@$list->begin_dt}}</td>
+                            <td>{{@$list->time}}</td>
+                            <td>{{@$list->score}}</td>
+                            <td>{{@$list->tname}}</td>
                         </tr>
                     @endforeach
                 @endif
