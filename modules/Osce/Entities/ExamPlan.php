@@ -953,7 +953,7 @@ class ExamPlan extends CommonModel
     private function changeSerialnumberToZero($exam)
     {
         try {
-            switch ($exam->serialnumber) {
+            switch ($exam->sequence_mode) {
                 case 1:
                     $examFlowRoom = ExamFlowRoom::where('exam_id', $exam->id)
                         ->update(['effected' => 0]);
