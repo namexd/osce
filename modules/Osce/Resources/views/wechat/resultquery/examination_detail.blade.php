@@ -43,25 +43,25 @@
   	<div class="detail_box">
 	  	<table id="detail_tb">
 	  		<tr>
-	  			<th>序号</th>
-	  			<th>考核内容</th>
-	  			<th>满分</th>
-	  			<th>得分</th>
+	  			<th width="15%">序号</th>
+	  			<th width="55%">考核内容</th>
+	  			<th width="15%" style="text-align: center">满分</th>
+	  			<th width="15%" style="text-align: center">得分</th>
 	  		</tr>
 
             @forelse($examScoreList as $key => $value)
                 <tr class="active">
                     <td>{{$value['sort']}}</td>
                     <td>{{$value['content']}}</td>
-                    <td>{{$value['tScore']}}</td>
-                    <td>{{$value['score']}}</td>
+                    <td style="text-align: center">{{$value['tScore']}}</td>
+                    <td style="text-align: center">{{$value['score']}}</td>
                 </tr>
                 @forelse($value['items'] as $k => $item)
                     <tr>
                         <td>{{$item['standard']->parent->sort.'-'.$item['standard']->sort}}</td>
                         <td>{{$item['standard']->content}}</td>
-                        <td>{{$item['standard']->score}}</td>
-                        <td>{{$item['score']}}</td>
+                        <td style="text-align: center">{{$item['standard']->score}}</td>
+                        <td style="text-align: center">{{$item['score']}}</td>
                     </tr>
                 @empty
                 @endforelse

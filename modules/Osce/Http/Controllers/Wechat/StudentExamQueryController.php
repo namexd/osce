@@ -135,9 +135,9 @@ class StudentExamQueryController extends CommonController
                     $teacherModel = new Teacher();
                     $spteacher = $teacherModel->getSpTeacher($stationType->station_id, $examId);
 
-                    if (!$spteacher) {
-                        throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
-                    }
+//                    if (!$spteacher) {
+//                        throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
+//                    }
                 }
 
                 $stationData[] = [
