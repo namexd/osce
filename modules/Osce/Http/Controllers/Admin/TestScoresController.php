@@ -225,7 +225,7 @@ class TestScoresController  extends CommonController
     /**
      * 教学成绩分析-请求科目数据
      * @method  POST
-     * @url testscores/standardDetails
+     * @url testscores/subject-lists
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
      * @author weihuiguo <weihuiguo@misrobot.com>
@@ -234,6 +234,77 @@ class TestScoresController  extends CommonController
     public function getSubjectLists(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examid = $request->examid;
         $datalist = $TestScoreRepositories->getSubjectlist($examid);
+        $this->success_data(['datalist'=>$datalist]);
+    }
+
+    /**
+     * 教学成绩分析-查找列表数据
+     * @method  POST
+     * @url testscores/teacher-data-list
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date   2016-3-2 17:22:53 .com Inc. All Rights Reserved
+     */
+    public function getTeacherDataList(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $examid = $request->examid;
+        $subjectid = $request->subjectid;
+        $datalist = $TestScoreRepositories->getTeacherData($examid,$subjectid);
+        $teacherStr = '';
+        $avgStr = '';
+        foreach($datalist as $v){
+            if($v->teacher_name){
+                $teacherStr .= $v->teacher_name.',';
+            }
+
+            if($v->avgScore){
+                $avgStr .= sprintf('%.1f',$v->avgScore).',';
+            }
+
+        }
+        $data = [
+            'datalist' => $datalist,
+            'teacherStr' => trim($teacherStr,','),
+            'avgStr' => trim($avgStr,',')
+        ];
+        $this->success_data(['data'=>$data]);
+    }
+
+    /**
+     * 教学成绩分析-班级历史成绩分析
+     * @method  POST
+     * @url testscores/grade-score-list
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date   2016-3-2 17:50:30 .com Inc. All Rights Reserved
+     */
+    public function getGradeScoreList(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $classId = $request->classid;
+        //获取当前班级历史记录
+        $datalist = $TestScoreRepositories->getGradeScore($classId)->toArray();
+        //获取当前考试记录
+        $curent = $TestScoreRepositories->getGradeScore('')->toArray();
+        $classData = '';
+        $allData = '';
+        foreach($datalist as $k=>$v){
+            foreach($curent as $kk=>$vv){
+                if($v['id'] == $vv['id']){
+                    //把当前考试平均成绩加入班级中
+                    $datalist[$k]['AllavgScore'] = $vv['avgScore'];
+                }
+                $allData .= $vv['avgScore'].',';
+            }
+            $classData .= $v['avgScore'].',';
+        }
+
+        $data = [
+            'datalist' => $datalist,//列表数据
+            'classData' => trim($classData,','),//班级平均分
+            'allData' => trim($allData,',')//考试平均分
+        ];
+        dd($data);
+        $this->success_data(['data'=>$data]);
     }
 }
 
