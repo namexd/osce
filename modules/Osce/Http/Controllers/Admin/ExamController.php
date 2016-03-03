@@ -12,11 +12,14 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\AutomaticPlanArrangement\AutomaticPlanArrangement;
+use Modules\Osce\Entities\AutomaticPlanArrangement\ExamPlaceEntity;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamPlanForRoom;
+use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Flows;
@@ -633,7 +636,7 @@ class ExamController extends CommonController
             //获得上传的数据
             $exam_id= $id;
             $data   = Common::getExclData($request, 'student');
-            $exam   =   Exam::find($exam_id);
+            $exam   = Exam::find($exam_id);
             if($exam->status!=0)
             {
                 throw new \Exception('此考试当前状态下不允许新增');
@@ -642,11 +645,12 @@ class ExamController extends CommonController
             $studentList = array_shift($data);
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
-            if(!$student->importStudent($exam_id, $examineeData)){
-                throw new \Exception('学生导入数据失败，请修改重试');
+            $result = $student->importStudent($exam_id, $examineeData);
+            if(!$result){
+                throw new \Exception('学生导入数据失败，请参考模板修改后重试');
             }
 
-            return json_encode($this->success_data(['code'=>1]));
+            return json_encode($this->success_data([], 1, "成功导入{$result}个学生！"));
 
         } catch (\Exception $ex) {
             return json_encode($this->fail($ex));
@@ -1244,6 +1248,16 @@ class ExamController extends CommonController
 //        $plan   =   $this           ->  getEmptyTime($plan);
         $user   =   Auth::user();
 
+        //如果$plan为空，就判断该考试在临时表中是否有数据
+        if (count($plan) == 0) {
+            if (ExamPlanRecord::where('exam_id', $id)->first()) {
+                $automaticPlanArrangement = new AutomaticPlanArrangement($id, new ExamPlaceEntity(), new \Modules\Osce\Entities\AutomaticPlanArrangement\Exam());
+                $plan = $automaticPlanArrangement->output($id);
+                return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors('当前排考计划并没有保存！');
+            } else {
+                $plan = [];
+            }
+        }
         return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
     }
 

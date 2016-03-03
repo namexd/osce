@@ -2345,7 +2345,7 @@ function examinee_manage(){
             {
                 if(data.code == 1){
                     layer.close(index);
-                    layer.msg('导入成功！',{skin:'msg-success',icon:1},function(){
+                    layer.msg(data.message,{skin:'msg-success',icon:1},function(){
                         location.reload();
                     });
                 }else{

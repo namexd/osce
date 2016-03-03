@@ -128,9 +128,13 @@ class Student extends CommonModel
         $backArr = [];
 
         try{
+            $total  = 0;
+            $sucNum = 0;    //导入成功的学生数
+            $exiNum = 0;    //已经存在的学生数
             //将数组导入到模型中的addInvigilator方法
             foreach($examineeData as $key => $studentData)
             {
+                $total++;       //获取考生总数
                 if($studentData['gender'] == '男'){
                     $studentData['gender'] = 1;
                 }elseif($studentData['gender'] == '女'){
@@ -144,7 +148,6 @@ class Student extends CommonModel
                         $backArr[] = ['key'=> $key+2, 'title'=>'name'];
                     }
                     continue;
-//                    throw new \Exception('第'.($key+2).'行姓名不能为空，请修改后重试！');
                 }
                 //验证身份证号
                 if(!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/',$studentData['idcard'])){
@@ -166,46 +169,50 @@ class Student extends CommonModel
                 $user = User::where(['username' => $studentData['mobile']])->select(['id'])->first();
                 if($user){
                     //根据用户ID和考试号查找考生
-                    $student = $this->where('user_id', '=', $user->id)
-                        ->where('exam_id', '=', $exam_id)->first();
+                    $student = $this->where('user_id', '=', $user->id)->where('exam_id', '=', $exam_id)->first();
                 }else{
                     $student = false;
                 }
 
                 //考生存在,则 跳过
                 if($student){
-                    $backArr[] = ['key'=> $key+2, 'title'=>'exist'];
+                    $exiNum++;
                     continue;
                 }
                 //添加考生
                 if(!$this->addExaminee($exam_id, $studentData, $key+2))
                 {
                     throw new \Exception('学生导入数据失败，请修改后重试');
+                }else{
+                    //添加成功的考生数
+                    $sucNum++;
                 }
             }
+            $message = "成功导入{$sucNum}个学生";
 
+            if($exiNum){
+                $message .= "，有{$exiNum}个学生已存在";
+            }
             //返回信息数组不为空
             if(!empty($backArr)){
-                $message = '第';
-                $mes1 = '';     $mes2 = '';
+                $mes1 = '';
                 foreach ($backArr as $item) {
                     if($item['title']=='name'){
                         $mes1 .= $item['key'].'、';
-                    }elseif($item['title']=='exist'){
-                        $mes2 .= $item['key'].'、';
                     }
                 }
-                if($mes1 != '' && $mes2 != ''){
-                    $message .= rtrim($mes1,'、').'行姓名不能为空，第'.rtrim($mes2,'、').'行考生已存在，请修改后重试！';
-                }elseif($mes1 != ''){
-                    $message .= rtrim($mes1,'、').'行姓名不能为空，请修改后重试！';
-                }else{
-                    $message .= rtrim($mes2,'、').'行考生已存在，请修改后重试！';
+                if($mes1 != ''){
+                    $message .= '，第'.rtrim($mes1,'、').'行姓名不能为空！';
                 }
-                throw new \Exception($message);
+            }
+            if($exiNum || isset($mes1)){
+                if(isset($mes1)){
+                    throw new \Exception(trim($message,'，'));
+                }
+                throw new \Exception(trim($message,'，'),1);
             }
 
-            return true;
+            return $sucNum;     //返回导入成功的个数
 
         } catch(\Exception $ex) {
             throw $ex;

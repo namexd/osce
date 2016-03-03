@@ -89,8 +89,8 @@ abstract class CommonController extends Controller
         return [
             'code' => $code,
             'message' => '错误信息:' . $ex->getMessage(),
-            'errorLine' => '错误行数:' . $ex->getLine(),
-            'errorFile' => '错误文件:' . $ex->getFile()
+//            'errorLine' => '错误行数:' . $ex->getLine(),
+//            'errorFile' => '错误文件:' . $ex->getFile()
         ];
     }
 

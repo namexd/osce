@@ -31,7 +31,7 @@
                             message: 'The username is not valid',
                             validators: {
                                 notEmpty: {/*非空提示*/
-                                    message: '用户名不能为空'
+                                    message: '姓名不能为空'
                                 },
                                 stringLength: {/*长度提示*/
                                     min: 2,

@@ -14,6 +14,7 @@ use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
+use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
@@ -134,9 +135,9 @@ class StudentExamQueryController extends CommonController
                     $teacherModel = new Teacher();
                     $spteacher = $teacherModel->getSpTeacher($stationType->station_id, $examId);
 
-                    if (!$spteacher) {
-                        throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
-                    }
+//                    if (!$spteacher) {
+//                        throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
+//                    }
                 }
 
                 $stationData[] = [
@@ -197,50 +198,67 @@ class StudentExamQueryController extends CommonController
         //得到考试名字
         $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
 
-
         //查询出详情列表
         $examscoreModel = new ExamScore();
         $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
 
-
-        $groupData = [];
-        foreach ($examScoreList as $examScore) {
-            $groupData[$examScore->standard->pid][] = $examScore;
+        //TODO: zhoufuxiang
+        $scores = [];
+        $itemScore = [];
+        foreach($examScoreList as $itm){
+            $pid = $itm->standard->pid;
+            $scores[$pid]['items'][] = [
+                'standard'  => $itm->standard,
+                'score'     => $itm->score,
+            ];
+            $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore'])? $itemScore[$pid]['totalScore']:0) + $itm->score;
         }
-        $indexData = [];
 
-        if (empty($groupData[0])) {
-            throw new \Exception('请检查该考站是否有评分详情');
+        foreach ($scores as $index => $item) {
+            //获取考核点信息
+            $standardM = Standard::where('id', $index)->first();
+            $scores[$index]['sort']     = $standardM->sort;
+            $scores[$index]['content']  = $standardM->content;
+            $scores[$index]['tScore']   = $standardM->score;
+            $scores[$index]['score']    = $itemScore[$index]['totalScore'];
         }
-        foreach ($groupData[0] as $group) {
-            $groupInfo = $group;
-            try {
-                $groupInfo['child'] = $groupData[$group->standard->id];  //排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
-            } catch (\Exception $ex) {
-
-                dd($group->standard->id, $groupData);
-            }
 
 
-            $indexData[] = $groupInfo;
 
+//        $groupData = [];
+//        foreach ($examScoreList as $examScore) {
+//            $groupData[$examScore->standard->pid][] = $examScore;
+//        }
+//        $indexData = [];
+//        if (empty($groupData[0])) {
+//            throw new \Exception('请检查该考站是否有评分详情');
+//        }
+//        foreach ($groupData[0] as $group) {
+//            $groupInfo = $group;
+//            try {
+//                $groupInfo['child'] = $groupData[$group->standard->id];  //排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
+//            } catch (\Exception $ex) {
+//
+//                dd($group->standard->id, $groupData);
+//            }
+//            $indexData[] = $groupInfo;
+//        }
+//        $list = [];
+//        foreach ($indexData as $goupData) {
+//            $childrens = is_null($goupData['child']) ? [] : $goupData['child'];
+//            unset($goupData['child']);
+//            $list[] = $goupData;
+//            foreach ($childrens as $children) {
+//                $list[] = $children;
+//            }
+//        }
 
-        }
-        $list = [];
-
-
-        foreach ($indexData as $goupData) {
-            $childrens = is_null($goupData['child']) ? [] : $goupData['child'];
-            unset($goupData['child']);
-            $list[] = $goupData;
-
-            foreach ($childrens as $children) {
-                $list[] = $children;
-            }
-        }
-//        dd($list);
-
-        return view('osce::wechat.resultquery.examination_detail', ['examScoreList' => $list], ['examresultList' => $examresultList, 'examName' => $examName]);
+        return view('osce::wechat.resultquery.examination_detail',
+            [
+                'examScoreList'  => $scores,
+                'examresultList' => $examresultList,
+                'examName'       => $examName
+            ]);
     }
 
 

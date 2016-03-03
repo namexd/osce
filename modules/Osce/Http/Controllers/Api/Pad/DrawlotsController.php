@@ -254,12 +254,12 @@ class DrawlotsController extends CommonController
                 //从队列表中通过考场ID得到对应的当前组的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
-                    throw new \Exception('当前考生并非在这一组考试', 7200);
+                    throw new \Exception('该考生不在当前考生小组中', 7200);
                 }
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
-                    throw new \Exception('当前考生并非在这一组考试', 7201);
+                    throw new \Exception('该考生不在当前考生小组中', 7201);
                 }
             } else {
                 throw new \Exception('没有这种考试模式！',-705);
@@ -301,7 +301,7 @@ class DrawlotsController extends CommonController
             $id = $request->input('id');
 
             //获取正在考试中的考试
-            $exam = Exam::where('status', 1)->first();
+            $exam = Exam::doingExam();
             if (is_null($exam)) {
                 throw new \Exception('当前没有正在进行考试！', 4100);
             }
