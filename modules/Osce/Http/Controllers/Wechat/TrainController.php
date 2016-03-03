@@ -137,7 +137,7 @@ class TrainController extends  CommonController{
             $clicks=InformTrain::where('id',$id)->first()->clicks;
         }catch (\Exception $ex){
             return redirect()->back()->withErrors('该培训信息已被删除');
-//            abort(404,'该培训信息已被删除');
+//            abort(404,'该培训信息已被删除，请检查数据或联系管理员');
         }
         $clicks=$clicks+1;
         InformTrain::where('id',$id)->update(['clicks'=>$clicks]);
