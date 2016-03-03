@@ -329,7 +329,6 @@ class ExamQueue extends CommonModel
 
 //            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
             $status = $examQueue->update(['status' => 2]);
-            dump($status,111);
 
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
