@@ -13,6 +13,43 @@ $(function(){
 
 //教学成绩分析
 function statistics_teach_score(){
+
+    var t = echarts.init(document.getElementById("echarts-Subject")),
+        n = {
+            tooltip: {
+                trigger: "axis"
+            },
+            legend: {
+                data: ["平均成绩","最高分","最低分"]
+            },
+            calculable: !0,
+            xAxis: [{
+                type: "category",
+                data: ["张老师","王老师","李老师","朱老师","月老师"]
+            }],
+            yAxis: [{
+                type: "value"
+            }],
+            series: [
+                {
+                    name: "平均成绩",
+                    type: "bar",
+                    data: [30,50,48,32,48]
+                },
+                {
+                    name: "最高分",
+                    type: "line",
+                    data: [80,90,95,92,95]
+                },
+                {
+                    name: "最低分",
+                    type: "line",
+                    data: [10,15,14,3,4]
+                }
+            ]
+        };
+    t.setOption(n);
+
     //默认加载select
     var $selectId = $(".exam_select").children().first().val();
     function select(selectId){

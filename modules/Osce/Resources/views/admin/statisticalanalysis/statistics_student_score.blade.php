@@ -14,7 +14,6 @@
 </script>
 @stop
 
-
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'statistics_student_score'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
