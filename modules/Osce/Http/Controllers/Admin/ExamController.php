@@ -636,7 +636,7 @@ class ExamController extends CommonController
             //获得上传的数据
             $exam_id= $id;
             $data   = Common::getExclData($request, 'student');
-            $exam   =   Exam::find($exam_id);
+            $exam   = Exam::find($exam_id);
             if($exam->status!=0)
             {
                 throw new \Exception('此考试当前状态下不允许新增');
