@@ -287,6 +287,7 @@ class TestScoresController  extends CommonController
         $curent = $TestScoreRepositories->getGradeScore('')->toArray();
         $classData = '';
         $allData = '';
+        $timeData = '';
         foreach($datalist as $k=>$v){
             foreach($curent as $kk=>$vv){
                 if($v['id'] == $vv['id']){
@@ -296,15 +297,31 @@ class TestScoresController  extends CommonController
                 $allData .= $vv['avgScore'].',';
             }
             $classData .= $v['avgScore'].',';
+            $timeData .= $v['begin_dt'].',';
         }
 
         $data = [
             'datalist' => $datalist,//列表数据
             'classData' => trim($classData,','),//班级平均分
-            'allData' => trim($allData,',')//考试平均分
+            'allData' => trim($allData,','),//考试平均分
+            'timeData' => trim($timeData,',')//考试时间
         ];
-        dd($data);
+        //dd($data);
         $this->success_data(['data'=>$data]);
+    }
+
+    /**
+     * 教学成绩分析-班级成绩明细
+     * @method  POST
+     * @url testscores/grade-score-list
+     * @access public
+     * @param Request $request,TestScoreRepositories $TestScoreRepositories
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date   2016-3-3 10:17:25 .com Inc. All Rights Reserved
+     */
+    public function getGradeDetail(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $examResultID = $request->examresultid;
+        $datalist = $TestScoreRepositories->getGradeDetailList($examResultID);
     }
 }
 

@@ -259,7 +259,8 @@ class TestScoreRepositories  extends BaseRepository
             $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
                 'exam.name',
                 $DB->raw('avg(exam_result.score) as avgScore'),
-                'exam.id'
+                'exam.id',
+                'begin_dt'
             );
         }else{
             $ExamResult = $ExamResult->select(
@@ -267,6 +268,42 @@ class TestScoreRepositories  extends BaseRepository
                 'exam.id'
             );
         }
+        $examlist = $ExamResult->leftjoin('exam_screening',function($join){
+            $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+        })->leftjoin('exam',function($join){
+            $join->on('exam.id','=','exam_screening.exam_id');
+        })->leftjoin('student',function($join){
+            $join->on('student.id','=','exam_result.student_id');
+        })->orderBy('exam.name')->get();
+        return $examlist;
+    }
+
+    /**
+     * 考生成绩分析-班级成绩明细
+     * @access public
+     * @param $ExamId
+     * @param int $qualified
+     * @return mixed
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-3-2 17:26:32
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getGradeDetailList($examResultID){
+        $DB = \DB::connection('osce_mis');
+        $ExamResult = new ExamResult();
+//        if($classId){
+//            $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
+//                'exam.name',
+//                $DB->raw('avg(exam_result.score) as avgScore'),
+//                'exam.id',
+//                'begin_dt'
+//            );
+//        }else{
+//            $ExamResult = $ExamResult->select(
+//                $DB->raw('avg(exam_result.score) as avgScore'),
+//                'exam.id'
+//            );
+//        }
         $examlist = $ExamResult->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
