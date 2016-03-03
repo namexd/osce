@@ -147,7 +147,6 @@ class TestResult extends CommonModel
             foreach ($item['test_term'] as $str) {
 
                 $list [] = [
-//                    'pid'=>$str['pid'],
                     'subject_id' => $str['subject_id'],
                     'standard_id' => $str['id'],
                     'score' =>$str['real'],
