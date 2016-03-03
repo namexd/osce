@@ -288,32 +288,62 @@ class TestScoreRepositories  extends BaseRepository
      * @date    2016-3-2 17:26:32
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getGradeDetailList($examResultID){
+    public function getGradeDetailList($examID,$subjectID){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-//        if($classId){
-//            $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
-//                'exam.name',
-//                $DB->raw('avg(exam_result.score) as avgScore'),
-//                'exam.id',
-//                'begin_dt'
-//            );
-//        }else{
-//            $ExamResult = $ExamResult->select(
-//                $DB->raw('avg(exam_result.score) as avgScore'),
-//                'exam.id'
-//            );
-//        }
-        $examlist = $ExamResult->leftjoin('exam_screening',function($join){
+        $examlist = $ExamResult->where('exam.id','=',$examID)->where('subject.id','=',$subjectID)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
             $join->on('exam.id','=','exam_screening.exam_id');
         })->leftjoin('student',function($join){
             $join->on('student.id','=','exam_result.student_id');
-        })->orderBy('exam.name')->get();
+        })->leftjoin('teacher',function($join){
+            $join->on('teacher.id','=','exam_result.teacher_id');
+        })->leftjoin('station',function($join){
+            $join->on('station.id','=','exam_result.station_id');
+        })->leftjoin('subject',function($join){
+            $join->on('subject.id','=','station.subject_id');
+        })->select(
+            'student.name',
+            'exam_result.begin_dt',
+            'exam_result.time',
+            'exam_result.score',
+            'teacher.name as tname'
+        )->get();
         return $examlist;
     }
 
+    /**
+     * 考生成绩分析-班级明细简介
+     * @access public
+     * @param $ExamId
+     * @param int $qualified
+     * @return mixed
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date    2016-3-2 17:26:32
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamDetails($examID,$subjectID,$ResultID){
+        $DB = \DB::connection('osce_mis');
+        $ExamResult = new ExamResult();
+        $examlist = $ExamResult->where('exam.id','=',$examID)->where('exam_result.id','=',$ResultID)->leftjoin('exam_screening',function($join){
+            $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+        })->leftjoin('exam',function($join){
+            $join->on('exam.id','=','exam_screening.exam_id');
+        })->leftjoin('student',function($join){
+            $join->on('student.id','=','exam_result.student_id');
+        })->leftjoin('station',function($join){
+            $join->on('station.id','=','exam_result.station_id');
+        })->leftjoin('subject',function($join){
+            $join->on('subject.id','=','station.subject_id');
+        })->select(
+            'exam.name',
+            'exam_result.begin_dt',
+            'student.grade_class',
+            'subject.title'
+        )->get();
+        return $examlist;
+    }
 }
 
 

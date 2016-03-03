@@ -12,6 +12,7 @@ use Modules\Msc\Entities\Student;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Repositories\TestScoreRepositories;
+use Modules\Osce\Repositories\SubjectStatisticsRepositories;
 class TestScoresController  extends CommonController
 {
     /**
@@ -208,16 +209,16 @@ class TestScoresController  extends CommonController
     /**
      * 教学成绩分析
      * @method  POST
-     * @url testscores/standardDetails
+     * @url osce.admin.TestScoresController.testScoresCount
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
      * @author weihuiguo <weihuiguo@misrobot.com>
      * @date    2016-3-2 16:51:27 .com Inc. All Rights Reserved
      */
-    public function testScoresCount(Request $request,TestScoreRepositories $TestScoreRepositories){
+    public function testScoresCount(Request $request,SubjectStatisticsRepositories $SubjectStatisticsRepositories){
         //获取考试的数据
-        $examlist = $TestScoreRepositories->getExamList();
-        return view('osce::admin.statisticalanalysis.statistics_student_subject',[
+        $examlist = $SubjectStatisticsRepositories->GetExamList();
+        return view('osce::admin.statisticalanalysis.statistics_teach_score',[
             'examlist' => $examlist,
         ]);
     }
@@ -234,7 +235,7 @@ class TestScoresController  extends CommonController
     public function getSubjectLists(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examid = $request->examid;
         $datalist = $TestScoreRepositories->getSubjectlist($examid);
-        $this->success_data(['datalist'=>$datalist]);
+        return $this->success_data(['datalist'=>$datalist]);
     }
 
     /**
@@ -313,15 +314,20 @@ class TestScoresController  extends CommonController
     /**
      * 教学成绩分析-班级成绩明细
      * @method  POST
-     * @url testscores/grade-score-list
+     * @url testscores/grade-detail
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
      * @author weihuiguo <weihuiguo@misrobot.com>
      * @date   2016-3-3 10:17:25 .com Inc. All Rights Reserved
      */
     public function getGradeDetail(Request $request,TestScoreRepositories $TestScoreRepositories){
-        $examResultID = $request->examresultid;
-        $datalist = $TestScoreRepositories->getGradeDetailList($examResultID);
+        $examID = $request->examid;
+        $subjectID = $request->subjectID;
+        $ResultID = $request->resultID;
+        //班级成绩明细简介
+        $data = $TestScoreRepositories->getExamDetails($examID,$subjectID,$ResultID);
+        //列表数据
+        $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID);
     }
 }
 
