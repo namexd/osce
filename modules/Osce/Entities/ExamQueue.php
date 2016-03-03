@@ -329,6 +329,7 @@ class ExamQueue extends CommonModel
 
 //            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
             $status = $examQueue->update(['status' => 2]);
+            dump($status,111);
 
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
@@ -337,8 +338,12 @@ class ExamQueue extends CommonModel
                     ->get();
 
                 $nowQueues  =   $studentTimes->where('exam_queue.status',2);
+
                 $nowQueue   =   $nowQueues  ->  shift();
+                dump($nowQueue,222);
+            
                 $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
+                dd($lateTime);
                 \Log::alert($lateTime.'迟到时间');
 
                 foreach ($studentTimes as $key=>$item) {
