@@ -306,8 +306,6 @@ class InvigilatePadController extends CommonController
         //根据考试获取到考试流程
         $ExamFlowModel = new  ExamFlow();
         $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
-       echo 123;
-       exit();
         //查询出学生当前已完成的考试
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
 
@@ -316,14 +314,20 @@ class InvigilatePadController extends CommonController
                 //todo 调用zhoufuxiang接口......
                 try {
                     $examResultModel = new ExamResult();
+                    echo 1;
                     $examResultModel->examResultPush($data['student_id']);
+                    echo 2;
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
             }
                 $TestResultModel = new TestResult();
+                echo 3;
+
                 $result = $TestResultModel->addTestResult($data, $score);
+                echo 4;
 //                \Log::alert(json_encode($result));
+       exit();
         if ($result) {
             //修改exam_attach表里的结果id
             return response()->json($this->success_data([], 1, '成绩提交成功'));
