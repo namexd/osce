@@ -320,7 +320,7 @@ class TestScoresController  extends CommonController
             'timeData' => trim($timeData,',')//考试时间
         ];
         //dd($data);
-        $this->success_data(['data'=>$data]);
+        return $this->success_data(['data'=>$data]);
     }
 
     /**
@@ -340,6 +340,11 @@ class TestScoresController  extends CommonController
         $data = $TestScoreRepositories->getExamDetails($examID,$subjectID,$ResultID);
         //列表数据
         $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID);
+        $data = [
+            'datainfo' => $data,
+            'datalist' => $datalist,
+        ];
+        return $this->success_data(['data'=>$data]);
     }
 }
 
