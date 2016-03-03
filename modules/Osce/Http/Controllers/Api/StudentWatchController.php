@@ -353,7 +353,9 @@ class StudentWatchController extends CommonController
                 'willRoomName'=> $examRoomName,
 
             ];
-        }else{
+        }
+        else
+        {
             $data =[
                 'code'=> 2,
                 'title'=> '请进入考试教室',

@@ -99,6 +99,7 @@ class NoticeListController   extends CommonController
         if(is_null($notice))
         {
             //消息不存在
+
             abort(404,'你要查看的通知不存在');
         }
 
