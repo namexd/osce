@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities;
 use DB;
 use Auth;
 use Exception;
+
 class ExamFlowStation extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -20,20 +21,24 @@ class ExamFlowStation extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['serialnumber', 'station_id', 'flow_id', 'created_user_id', 'exam_id'];
+    protected $fillable = ['serialnumber', 'station_id', 'flow_id', 'created_user_id', 'exam_id', 'effected'];
 
-    public function queueStation(){
-        return $this->hasMany('\Modules\Osce\Entities\ExamQueue','station_id','station_id');
+    public function queueStation()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\ExamQueue', 'station_id', 'station_id');
     }
 
-    public function roomStation() {
-       return $this->belongsTo('\Modules\Osce\Entities\RoomStation','station_id','station_id');
+    public function roomStation()
+    {
+        return $this->belongsTo('\Modules\Osce\Entities\RoomStation', 'station_id', 'station_id');
     }
 
-    public function station(){
-        return $this->hasOne('\Modules\Osce\Entities\Station','id','station_id');
+    public function station()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Station', 'id', 'station_id');
     }
-	public function createExamAssignment($examId,array $room, array $formData = [])
+
+    public function createExamAssignment($examId, array $room, array $formData = [])
     {
         //将数据插入各表，使用事务
         try {
@@ -63,7 +68,7 @@ class ExamFlowStation extends CommonModel
                     if (!$flowsResult = Flows::create($flowsData)) {
                         throw new Exception('流程添加失败');
                     }
-                    $flowsId = $flowsResult -> id;
+                    $flowsId = $flowsResult->id;
 
                     //将数据插入到各个关联表中
                     $this->examStationAssociationSave($examId, $flowsId, $user, $key, $v);
@@ -91,7 +96,7 @@ class ExamFlowStation extends CommonModel
      * @return bool
      * @throws Exception
      */
-    public function updateExamAssignment($examId,array $room,array $formData = [])
+    public function updateExamAssignment($examId, array $room, array $formData = [])
     {
         try {
             //使用事务
@@ -108,7 +113,7 @@ class ExamFlowStation extends CommonModel
 
             $id = $examId;
             $this->examStationDelete($id);
-            foreach ($room as $key=> $item) {
+            foreach ($room as $key => $item) {
                 foreach ($item as $value) {
                     //根据station_id查对应的名字
                     $station = Station::findOrFail($value)->first();
@@ -122,7 +127,7 @@ class ExamFlowStation extends CommonModel
                     if (!$flowsResult = Flows::create($flowsData)) {
                         throw new Exception('流程添加失败');
                     }
-                    $flowsId = $flowsResult -> id;
+                    $flowsId = $flowsResult->id;
 
                     //将数据插入到各个关联表中
                     $this->examStationAssociationSave($examId, $flowsId, $user, $key, $value);
@@ -130,8 +135,8 @@ class ExamFlowStation extends CommonModel
             }
 
             //删除stationTeacher表
-            if (!StationTeacher::where('exam_id',$examId)->get()->isEmpty()) {
-                if (!StationTeacher::where('exam_id',$examId)->delete()) {
+            if (!StationTeacher::where('exam_id', $examId)->get()->isEmpty()) {
+                if (!StationTeacher::where('exam_id', $examId)->delete()) {
                     throw new \Exception('删除考站老师失败，请重试！');
                 }
             }
@@ -167,7 +172,7 @@ class ExamFlowStation extends CommonModel
                 'station_id' => $value,
                 'create_user_id' => $user->id
             ];
-            if (ExamStation::where('exam_id',$examId)->where('station_id',$value)->get()->isEmpty()) {
+            if (ExamStation::where('exam_id', $examId)->where('station_id', $value)->get()->isEmpty()) {
                 if (!ExamStation::create($examStationData)) {
                     throw new \Exception('考试考站关联添加失败');
                 }
@@ -197,8 +202,8 @@ class ExamFlowStation extends CommonModel
                 throw new Exception('考试流程考站关联添加失败');
             }
         } catch (\Exception $ex) {
-                throw $ex;
-            }
+            throw $ex;
+        }
     }
 
     /**
@@ -211,42 +216,42 @@ class ExamFlowStation extends CommonModel
     protected function stationTeacherAssociation($examId, $value, $user)
     {
         try {
-        //先拼装teacher的数据
-        $teacherIDs = [];
-        if (!empty($value['teacher_id'])) {
-            $teacherIDs[] = $value['teacher_id'];
-        }   else {
-            $teacherIDs[] = NULL;
-        }
+            //先拼装teacher的数据
+            $teacherIDs = [];
+            if (!empty($value['teacher_id'])) {
+                $teacherIDs[] = $value['teacher_id'];
+            } else {
+                $teacherIDs[] = null;
+            }
 
 
-        if (!empty($value['spteacher_id'])) {
-            if (is_array($value['spteacher_id'])) {
-                foreach ($value['spteacher_id'] as $spTeacherId) {
-                    $teacherIDs[] = $spTeacherId;
+            if (!empty($value['spteacher_id'])) {
+                if (is_array($value['spteacher_id'])) {
+                    foreach ($value['spteacher_id'] as $spTeacherId) {
+                        $teacherIDs[] = $spTeacherId;
+                    }
+                } else {
+                    $teacherIDs[] = $value['spteacher_id'];
                 }
             } else {
-                $teacherIDs[] = $value['spteacher_id'];
+                $teacherIDs[] = null;
             }
-        } else {
-            $teacherIDs[] = NULL;
-        }
 
-        foreach ($teacherIDs as $teacherID) {
-            $stationTeacherData = [
-                'station_id' => $value['station_id'],
-                'user_id' => $teacherID,
-                'case_id' => StationCase::where('station_id', $value['station_id'])->first()->case_id,
-                'exam_id' => $examId,
-                'created_user_id' => $user->id,
-                'type' => empty($value['teacher_id']) ? 2 : 1
-            ];
+            foreach ($teacherIDs as $teacherID) {
+                $stationTeacherData = [
+                    'station_id' => $value['station_id'],
+                    'user_id' => $teacherID,
+                    'case_id' => StationCase::where('station_id', $value['station_id'])->first()->case_id,
+                    'exam_id' => $examId,
+                    'created_user_id' => $user->id,
+                    'type' => empty($value['teacher_id']) ? 2 : 1
+                ];
 
-            if (!$StationTeachers = StationTeacher::create($stationTeacherData)) {
-                throw new \Exception('考站-老师关系添加失败！');
+                if (!$StationTeachers = StationTeacher::create($stationTeacherData)) {
+                    throw new \Exception('考站-老师关系添加失败！');
+                }
             }
-        }
-    } catch (Exception $ex) {
+        } catch (Exception $ex) {
             throw $ex;
         }
     }
@@ -260,7 +265,7 @@ class ExamFlowStation extends CommonModel
     {
         try {
             //删除考试考场关联
-            if (!ExamStation::where('exam_id', $id)->get() -> isEmpty()) {
+            if (!ExamStation::where('exam_id', $id)->get()->isEmpty()) {
                 if (!ExamStation::where('exam_id', $id)->delete()) {
                     throw new \Exception('删除考试考场关联失败，请重试！');
                 }
@@ -290,7 +295,7 @@ class ExamFlowStation extends CommonModel
             }
         } catch (Exception $ex) {
             throw $ex;
-          }
         }
+    }
 
 }
