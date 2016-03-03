@@ -17,30 +17,21 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'statistics_teach_score'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'teach_detail','classData':'{{@$data['classData']}}','allData':'{{@$data['allData']}}','timeData':'{{@$data['timeData']}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">教学成绩分析</h5>
             </div>
         </div>
+        <div class="ibox-content">
+            <span class="student_name">{{@$classId}}</span>
+            <span class="marl_10 student_subject">科目一</span>
+            <span>历史成绩分析</span>
+            <button class="btn btn-sm btn-primary marl_10 right" id="back">返回</button>
+        </div>
         <div class="panel blank-panel">
-            <div class="container-fluid ibox-content">
-                <div class="input-group" style="margin:20px 0;">
-                    <label for="" class="pull-left exam-name">考试名称：</label>
-                    <select name="name" class="input-sm form-control exam_select" style="width: 210px;height: 34px">
-                        @if(!empty($examlist))
-                            @foreach(@$examlist as $exam)
-                        <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                    <label for="" class="pull-left exam-name" style="margin-left: 20px;">科目名称：</label>
-                    <select name="name" class="input-sm form-control student_select" style="width: 210px;height: 34px">
-
-                    </select>
-                    <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">搜索</button>
-                </div>
+            <div class="container-fluid ibox-content" style="border: none">
                 <div class="list_all">
                     <div class="row">
                         <div class="col-sm-12">
@@ -53,17 +44,26 @@
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>老师</th>
-                            <th>班级</th>
-                            <th>人数</th>
-                            <th>平均成绩</th>
-                            <th>最高分</th>
-                            <th>最低分</th>
+                            <th>考试</th>
+                            <th>班级平均成绩</th>
+                            <th>考试平均成绩</th>
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
-
+                        @if(!empty(@$data['datalist']))
+                            @foreach(@$data['datalist'] as $k=>$v)
+                                <tr>
+                                    <td>{{@$k+1}}</td>
+                                    <td>{{@$v['name']}}</td>
+                                    <td>{{@$v['avgScore']}}</td>
+                                    <td>{{@$v['AllavgScore']}}</td>
+                                    <td>
+                                        <span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="{{@$v['id']}}" resultid="{{@$v['rid']}}"></i></span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                         </tbody>
                     </table>
                 </div>

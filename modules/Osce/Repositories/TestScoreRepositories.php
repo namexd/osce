@@ -365,7 +365,8 @@ class TestScoreRepositories  extends BaseRepository
             $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
                 'exam.name',
                 $DB->raw('avg(exam_result.score) as avgScore'),
-                'exam.id'
+                'exam.id',
+                'exam_result.id as rid'
             );
         }else{
             $ExamResult = $ExamResult->select(
@@ -393,10 +394,10 @@ class TestScoreRepositories  extends BaseRepository
      * @date    2016-3-2 17:26:32
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getGradeDetailList($examID,$subjectID){
+    public function getGradeDetailList($examID){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        $examlist = $ExamResult->where('exam.id','=',$examID)->where('subject.id','=',$subjectID)->leftjoin('exam_screening',function($join){
+        $examlist = $ExamResult->where('exam.id','=',$examID)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
             $join->on('exam.id','=','exam_screening.exam_id');
@@ -428,7 +429,8 @@ class TestScoreRepositories  extends BaseRepository
      * @date    2016-3-2 17:26:32
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamDetails($examID,$subjectID,$ResultID){
+
+    public function getExamDetails($examID,$ResultID){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
         $examlist = $ExamResult->where('exam.id','=',$examID)->where('exam_result.id','=',$ResultID)->leftjoin('exam_screening',function($join){
@@ -446,7 +448,7 @@ class TestScoreRepositories  extends BaseRepository
             'exam_result.begin_dt',
             'student.grade_class',
             'subject.title'
-        )->get();
+        )->first();
         return $examlist;
     }
 }
