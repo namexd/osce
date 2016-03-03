@@ -99,8 +99,8 @@ class NoticeListController   extends CommonController
         if(is_null($notice))
         {
             //消息不存在
-
-            abort(404,'你要查看的通知不存在');
+            return redirect()->back()->withErrors('该通知信息已被删除');
+//            abort(404,'你要查看的通知不存在');
         }
 
         return view('osce::wechat.system_info.system_notice_detail',['notice'=>$notice]);
