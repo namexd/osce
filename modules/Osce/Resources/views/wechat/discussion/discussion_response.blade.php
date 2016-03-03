@@ -88,34 +88,28 @@
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 <script>
 $(function(){
-    $('#list_form').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*验证*/
-                    content: {/*键名username和input name值对应*/
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '不能为空！'
-                            },
-                            stringLength: {
-                                max:200,
-                                message: '回复内容长度必须少于200字符'
-                            }
-                        }
-                    }
-                }
-            });
     //回复
+    $("#context").keyup(function(){
+        var content=$("#context").val();
+        $(".sum").text(content.length);
+    });
+
     $('.btn2').click(function(){
         var content = $('#context').val();
         if(content==''){
             $.alert({
                 title: '提示：',
                 content: '回复内容不能为空!',
+                confirmButton: '确定',
+                confirm: function(){
+                }
+            });
+            return;
+        }
+        if(content.length>200){
+            $.alert({
+                title: '提示：',
+                content: '回复内容不能超过200字!',
                 confirmButton: '确定',
                 confirm: function(){
                 }
@@ -180,15 +174,19 @@ $(function(){
     @endforeach
     <ul class="history-list">
         <li>
-            <form id="list_form">
+            <div id="list_form">
                 <input type="hidden" name="id" value="{{ $list->id }}">
 
                 <div class="form-group">
                   <label class="" for="name">&nbsp;</label>
                   <textarea style="width:96%;margin:0 2%;height:100px;resize: none;" class="form-control" id="context" name="content" placeholder="请输入要反馈的内容,不超过200字~" rows="5"></textarea>
                 </div>
+                <div class="form-group">
+                    <label class="" for="name">&nbsp;</label>
+                    <span class="clo9" style="width:96%;margin:0 2%;height:100px;resize: none;">已输入 <span class="sum">0</span>个字符！</span>
+                </div>
                 <input  style="width:96%;margin:0 2%;" type="button" value="提交" class="btn2" />
-            </form>
+            </div>
         </li>
     </ul>
 @stop

@@ -280,7 +280,7 @@ class InvigilatePadController extends CommonController
             ->where('student_id','=',$studentId)
             ->where('exam_screening_id','=',$examScreeningId)
             ->first();
-        if(!$studentExamTime){
+        if(is_null($studentExamTime)){
             throw new \Exception('没有查询到该学生队列',-100);
         }
         $time = (strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt))/60;
