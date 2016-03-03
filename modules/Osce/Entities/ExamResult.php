@@ -97,10 +97,12 @@ class ExamResult extends CommonModel
             //用户信息
             $userInfo = User::where('id', $student->user_id)->select(['name', 'openid'])->first();
             if($userInfo){
+//                echo 'a2a';
                 if(!empty($userInfo->openid)){
                     //查询总成绩
                     $testResult = new TestResult();
                     $examResult = $testResult->AcquireExam($student_id);
+//                    echo 'a3a';
                     //成绩详情url地址
                     if($url == ''){
                         $url = route('osce.wechat.student-exam-query.getResultsQueryIndex',['exam_id'=>$student->exam_id,'student_id'=>$student_id]);
@@ -113,7 +115,9 @@ class ExamResult extends CommonModel
                         ],
                     ];
                     $message = Common::CreateWeiXinMessage($msgData);
+//                    echo 'a4a';
                     Common::sendWeiXin($userInfo->openid, $message);    //单发
+//                    echo 'a5a';
 
                 }else{
                     throw new \Exception($userInfo->name.' 没有关联微信号');

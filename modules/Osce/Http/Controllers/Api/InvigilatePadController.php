@@ -314,20 +314,20 @@ class InvigilatePadController extends CommonController
                 //todo 调用zhoufuxiang接口......
                 try {
                     $examResultModel = new ExamResult();
-                    echo 1;
+//                    echo 1;
                     $examResultModel->examResultPush($data['student_id']);
-                    echo 2;
+//                    echo 2;
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
             }
                 $TestResultModel = new TestResult();
-                echo 3;
+//                echo 3;
 
                 $result = $TestResultModel->addTestResult($data, $score);
-                echo 4;
+//                echo 4;
 //                \Log::alert(json_encode($result));
-       exit();
+//       exit();
         if ($result) {
             //修改exam_attach表里的结果id
             return response()->json($this->success_data([], 1, '成绩提交成功'));
