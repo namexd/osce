@@ -205,6 +205,7 @@ function subject_level(){
 }
 //考站成绩分析
 function examation_statistics(){
+    var target=pars.target;
     //图表插件
     function echartsSubject(stationNameStr,scoreAvgStr){
         var t = echarts.init(document.getElementById("echarts-Subject")),
@@ -256,11 +257,24 @@ function examation_statistics(){
                         '<td>'+this.scoreAvg+'</td>' +
                         '<td>'+this.studentQuantity+'</td>' +
                         '<td>' +
-                        '<a href="">' +
-                        '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
-                        '</a>' +
+                        '<span class="read state1 detail"><i class="fa fa-search fa-2x cursor" id="'+this.stationId+'"></i></span>' +
                         '</td></tr>')
                 })
+
+                $(".fa-search").click(function(){
+                    var stationId= $(this).attr("id");
+                    console.log(target+'?subjectId='+subjectId+'&examId='+examId+'&stationId='+stationId);
+                    parent.layer.open({
+                        type: 2,
+                        title: '考站成绩明细',
+                        shadeClose: true,
+                        shade: 0.8,
+                        area: ['90%', '90%'],
+                        content:target+'?subjectId='+subjectId+'&examId='+examId+'&stationId='+stationId //iframe的url
+                    });
+                })
+
+
             }
         })
     }
@@ -274,6 +288,7 @@ function examation_statistics(){
 }
 //考核点分析
 function statistics_check(){
+    var target=pars.target;//详情页地址
     //图表插件
     function echartsSubject(standardContentStr,qualifiedPassStr){
         var t = echarts.init(document.getElementById("echarts-Subject")),
@@ -327,10 +342,20 @@ function statistics_check(){
                         '<td>'+this.studentQuantity+'</td>' +
                         '<td>'+this.qualifiedPass+'</td>' +
                         '<td>' +
-                        '<a href="">' +
-                        '<span class="read state1 detail"><i class="fa fa-search fa-2x"></i></span>' +
-                        '</a>' +
+                        '<span class="read state1 detail"><i class="fa fa-search fa-2x cursor" pid="'+this.pid+'"></i></span>' +
                         '</td></tr>')
+                })
+                $(".fa-search").click(function(){
+                    var standardPid= $(this).attr("pid");
+                    console.log(target+'?subjectId='+subjectId+'&examId='+examId+'&pid='+standardPid);
+                    parent.layer.open({
+                        type: 2,
+                        title: '考核点详情',
+                        shadeClose: true,
+                        shade: 0.8,
+                        area: ['90%', '90%'],
+                        content:target+'?subjectId='+subjectId+'&examId='+examId+'&standardPid='+standardPid //iframe的url
+                    });
                 })
             }
         })
