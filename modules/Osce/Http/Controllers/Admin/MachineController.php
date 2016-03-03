@@ -123,6 +123,10 @@ class MachineController extends CommonController
             'name'      =>  'sometimes',
             'status'    =>  'sometimes',
             'nfc_code'    =>  'sometimes',
+            'code'         => 'sometimes',
+            'student_name'         => 'sometimes',
+            'begin_dt'         => 'sometimes',
+            'end_dt'         => 'sometimes',
         ]);
 
         $cate_id    =   intval($request   ->  get('cate_id'));
@@ -142,6 +146,7 @@ class MachineController extends CommonController
         $model  =   $this   ->  getMachineModel($cate_id);
         $list   =   $model  ->  getList($name, $status,$nfc_code);
 
+
         $machineStatuValues   =   $model  ->  getMachineStatuValues();
         switch($cate_id)
         {
@@ -149,6 +154,7 @@ class MachineController extends CommonController
                 return view('osce::admin.resourceManage.equipment_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
                 break;
             case 3:
+//                dd($list);
                 return view('osce::admin.resourceManage.equipment_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
                 break;
             case 1:

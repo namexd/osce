@@ -2331,6 +2331,10 @@ function examinee_manage(){
         var id=pars.id;
         var url = pars.excel;
         url += '/'+id;
+        //加载中
+        var index = layer.load(0, {
+            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
         $.ajaxFileUpload
         ({
             url:url,
@@ -2340,10 +2344,12 @@ function examinee_manage(){
             success: function (data, status)
             {
                 if(data.code == 1){
+                    layer.close(index);
                     layer.msg('导入成功！',{skin:'msg-success',icon:1},function(){
                         location.reload();
                     });
                 }else{
+                    layer.close(index);
                     layer.msg(data.message,{skin:'msg-error',icon:1},function(){
                         location.reload();
                     });
@@ -2351,6 +2357,7 @@ function examinee_manage(){
             },
             error: function (data, status, e)
             {
+                layer.close(index);
                 layer.alert(data.message);
             }
         });

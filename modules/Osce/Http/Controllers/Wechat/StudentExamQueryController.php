@@ -217,6 +217,7 @@ class StudentExamQueryController extends CommonController
             try {
                 $groupInfo['child'] = $groupData[$group->standard->id];  //排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
             } catch (\Exception $ex) {
+
                 dd($group->standard->id, $groupData);
             }
 
