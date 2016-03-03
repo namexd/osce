@@ -110,8 +110,6 @@ class TestScoresController  extends CommonController
         $subid = $request->subid;
         //获取学生科目成绩
         $singledata = $TestScoreRepositories->getStudentHistoryScoreCount($student_id,$subid);
-
-        dd($singledata);
         //获取科目平均成绩
         //dd($singledata);
         $avgdata = $TestScoreRepositories->getStudentScoreCount('',0,$subid)->toArray();
