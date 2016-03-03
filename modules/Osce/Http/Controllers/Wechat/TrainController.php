@@ -125,10 +125,20 @@ class TrainController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getTrainDetail(Request $request){
-        $id=$request->get('id');
+
+
 //        \DB::connection('osce_mis')->table('inform_training')->increment('clicks');
-        $train=InformTrain::where('id',$id)->select()->get();
-        $clicks=InformTrain::where('id',$id)->first()->clicks;
+        try{
+            $id=$request->get('id');
+            $train=InformTrain::where('id',$id)->select()->get();
+            if(!$train){
+                throw new \Exception('没有找到培训的相关信息',404);
+            }
+            $clicks=InformTrain::where('id',$id)->first()->clicks;
+        }catch (\Exception $ex){
+            return redirect()->back()->withErrors('该培训信息已被删除');
+//            abort(404,'该培训信息已被删除');
+        }
         $clicks=$clicks+1;
         InformTrain::where('id',$id)->update(['clicks'=>$clicks]);
         foreach($train as $item){
@@ -150,6 +160,8 @@ class TrainController extends  CommonController{
             $data['attachments']=unserialize($data['attachments']);
         }
         return view('osce::wechat.train.train_detail')->with('data',$data);
+
+
     }
 
     /**
