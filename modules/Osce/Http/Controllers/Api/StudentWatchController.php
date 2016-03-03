@@ -356,15 +356,28 @@ class StudentWatchController extends CommonController
         }
         else
         {
-            $data =[
-                'code'=> 3,
-                'title'=> '你将要进入下面教室抽签考试',
-                'willStudents'=> '',
-                'estTime'=> '',
-                'willRoomName'=> '',
-                'roomName'=> $examRoomName.'-'.$item->station->name,
+            if(is_null($item->station->name)){
+                $data =[
+                    'code'=> 3,
+                    'title'=> '你将要进入下面教室抽签考试',
+                    'willStudents'=> '',
+                    'estTime'=> '',
+                    'willRoomName'=> '',
+                    'roomName'=> $examRoomName,
 
-            ];
+                ];
+            }else{
+                $data =[
+                    'code'=> 3,
+                    'title'=> '你将要进入下面教室抽签考试',
+                    'willStudents'=> '',
+                    'estTime'=> '',
+                    'willRoomName'=> '',
+                    'roomName'=> $examRoomName.'-'.$item->station->name,
+
+                ];
+            }
+
         }
         return $data;
    }
