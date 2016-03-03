@@ -48,7 +48,7 @@ class InvigilatePadController extends CommonController
     {
         $examScreeningModel = new ExamScreening();
         $result = $examScreeningModel->getExamCheck();
-        dd($result);
+
     }
 
 
@@ -283,6 +283,8 @@ class InvigilatePadController extends CommonController
         if(is_null($studentExamTime)){
             throw new \Exception('没有查询到该学生队列',-100);
         }
+       echo 123;
+       exit();
         $time = (strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt))/60;
         $data = [
             'station_id' => $stationId,
