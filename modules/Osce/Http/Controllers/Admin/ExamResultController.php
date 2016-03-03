@@ -10,9 +10,11 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
+use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVideo;
@@ -91,26 +93,39 @@ class ExamResultController extends CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function geExamResultList(Request $request){
-         $this->validate($request,[
-             'exam_id'     => 'sometimes',
-             'station_id'  => 'sometimes',
-             'name'        => 'sometimes',
-         ]);
+        $this->validate($request,[
+            'exam_id'     => 'sometimes',
+            'station_id'  => 'sometimes',
+            'name'        => 'sometimes',
+        ]);
 
-         $examId=$request->get('exam_id');
-         $stationId=$request->get('station_id');
-         $name=$request->get('name');
+        $examId    = $request->get('exam_id');
+        $stationId = $request->get('station_id');
+        $name      = $request->get('name');
 
-         $stations=Station::select()->get();
-         $exams=Exam::select()->get();
-         $examResult=new ExamResult();
-         $examResults=$examResult->getResultList($examId,$stationId,$name);
-         foreach($examResults as $item){
-             date_default_timezone_set("UTC");
-             $item->time = date('H:i:s',$item->time);
-             date_default_timezone_set("PRC");
-         }
-         return view('osce::admin.examManage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams,'exam_id'=>$examId,'station_id'=>$stationId,'name'=>$name]);
+        //存在考试ID，根据考试ID查询对应的考站
+        if(!empty($examId)){
+            $examInfo = Exam::where('id', $examId)->select('sequence_mode')->first();
+            if($examInfo->sequence_mode == 1){
+                $examRoomIds = ExamRoom::where('exam_id', $examId)->select('room_id')->get()->pluck('room_id');
+                $examStationIds = RoomStation::whereIn('room_id', $examRoomIds)->select('station_id')->get()->pluck('station_id');
+            }else{
+                $examStationIds = ExamStation::where('exam_id', $examId)->select('station_id')->get()->pluck('station_id');
+            }
+            $stations  = Station::whereIn('id',$examStationIds)->get();
+        }else{
+            $stations  = Station::select()->get();
+        }
+
+        $exams      = Exam::select()->get();
+        $examResult = new ExamResult();
+        $examResults= $examResult->getResultList($examId,$stationId,$name);
+        foreach($examResults as $item){
+            date_default_timezone_set("UTC");
+            $item->time = date('H:i:s',$item->time);
+            date_default_timezone_set("PRC");
+        }
+        return view('osce::admin.examManage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams,'exam_id'=>$examId,'station_id'=>$stationId,'name'=>$name]);
     }
 
     /**
