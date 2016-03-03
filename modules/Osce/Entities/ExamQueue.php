@@ -333,7 +333,12 @@ class ExamQueue extends CommonModel
                     ->whereIn('exam_queue.status', [0, 2])
                     ->orderBy('begin_dt', 'asc')
                     ->get();
-                foreach ($studentTimes as $item) {
+
+                $nowQueues  =   $studentTimes->where('exam_queue.status',2);
+                $nowQueue   =   $nowQueues  ->  shift();
+                $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
+
+                foreach ($studentTimes as $key=>$item) {
                     if ($exam->sequence_mode == 2) {
 
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
@@ -343,8 +348,8 @@ class ExamQueue extends CommonModel
                         $stationTime    =   $this   ->  getRoomStationMaxTime($item->room_id);
                         \Log::alert($stationTime.'以考场安排');
                     }
+
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
-                        $lateTime = time() - strtotime($item->begin_dt);
                         if ($item->status == 2) {
                             $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
                             $item->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
