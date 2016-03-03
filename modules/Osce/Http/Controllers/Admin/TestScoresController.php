@@ -270,7 +270,7 @@ class TestScoresController  extends CommonController
             'teacherStr' => trim($teacherStr,','),
             'avgStr' => trim($avgStr,',')
         ];
-        $this->success_data(['data'=>$data]);
+        return $this->success_data(['data'=>$data]);
     }
 
     /**
