@@ -401,7 +401,12 @@ class AutomaticPlanArrangement
                                 $result[] = $thisStudent;
                             }
                             if (count($this->_S) > 0) {
-                                $this->_S_ING[] = array_shift($this->_S);
+                                if (is_array($this->_S)) {
+                                    $this->_S_ING[] = array_shift($this->_S);
+                                } else {
+                                    $this->_S_ING[] = $this->_S->shift();
+                                }
+
                             }
                         }
                     }
@@ -420,7 +425,11 @@ class AutomaticPlanArrangement
                                 $result[] = $thisStudent;
                             }
                             if (count($this->_S) > 0) {
-                                $this->_S_ING[] = array_shift($this->_S);
+                                if (is_array($this->_S)) {
+                                    $this->_S_ING[] = array_shift($this->_S);
+                                } else {
+                                    $this->_S_ING[] = $this->_S->shift();
+                                }
                             }
                         }
                     }
@@ -453,7 +462,11 @@ class AutomaticPlanArrangement
                                 $result[] = $thisStudent;
                             }
                             if (count($this->_S) > 0) {
-                                $this->_S_ING[] = array_shift($this->_S);
+                                if (is_array($this->_S)) {
+                                    $this->_S_ING[] = array_shift($this->_S);
+                                } else {
+                                    $this->_S_ING[] = $this->_S->shift();
+                                }
                             }
                         }
                     }
