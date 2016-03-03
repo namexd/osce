@@ -335,9 +335,18 @@ class ExamQueue extends CommonModel
                     ->whereIn('exam_queue.status', [0, 2])
                     ->orderBy('begin_dt', 'asc')
                     ->get();
+                $nowQueue  =   null;
+                foreach($studentTimes as $stationTime){
+                    if($stationTime->status==2){
+                        $nowQueue = $stationTime;
+                        break;
+                    }
+                }
+                if(is_null($nowQueue))
+                {
+                    throw new \Exception('进入考试失败',-105);
+                }
 
-                $nowQueues  =   $studentTimes->where('exam_queue.status',2);
-                $nowQueue   =   $nowQueues  ->  shift();
                 $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
                 \Log::alert($lateTime.'迟到时间');
 
