@@ -108,14 +108,13 @@ class TestScoresController  extends CommonController
         $student_id = $request->student_id;
         //$examid = $request->examid;
         $subid = $request->subid;
-        $examid = [];
         //获取学生科目成绩
         $singledata = $TestScoreRepositories->getStudentHistoryScoreCount($student_id,$subid);
-        if(!empty($singledata)){
-            $examid = $singledata->pluck('exam_id');
-        }
+
+        dd($singledata);
         //获取科目平均成绩
-        $avgdata = $TestScoreRepositories->getStudentHistoryScoreCount($student_id,$subid,$examid);
+        //dd($singledata);
+        $avgdata = $TestScoreRepositories->getStudentScoreCount('',0,$subid)->toArray();
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
@@ -310,16 +309,16 @@ class TestScoresController  extends CommonController
                 $allData .= $vv['avgScore'].',';
             }
             $classData .= $v['avgScore'].',';
-            $timeData .= $v['name'].',';
+            $timeData .= $v['begin_dt'].',';
         }
-        //dd($datalist);
+
         $data = [
             'datalist' => $datalist,//列表数据
             'classData' => trim($classData,','),//班级平均分
             'allData' => trim($allData,','),//考试平均分
             'timeData' => trim($timeData,',')//考试时间
         ];
-        dd($data);
+        //dd($data);
         return $this->success_data(['data'=>$data]);
     }
 
