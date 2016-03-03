@@ -59,7 +59,7 @@ var courseObserveDetail = (function(mod){
          *检查插件是否已经安装过
          */
         if (-1 == WebVideoCtrl.I_CheckPluginInstall()) {
-            alert("您还未安装过插件，双击开发包目录里的WebComponents.exe安装！");
+            alert("您还未安装过插件，请先安装！");
             var iframe  =$('<iframe>').attr('src',download_url);
             var box=    $('<div>').css('display','none');
             box.append(iframe);
@@ -84,7 +84,7 @@ var courseObserveDetail = (function(mod){
          *检查插件是否最新
          */
         if (-1 == WebVideoCtrl.I_CheckPluginVersion()) {
-            alert("检测到新的插件版本，双击开发包目录里的WebComponents.exe升级！");
+            alert("检测到新的插件版本，请先升级！");
             var iframe  =$('<iframe>').attr('src',download_url);
             var box=    $('<div>').css('display','none');
             box.append(iframe);
