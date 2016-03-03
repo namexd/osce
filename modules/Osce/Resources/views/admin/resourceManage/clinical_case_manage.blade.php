@@ -17,7 +17,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'clinicalcase','deletes':'{{route('osce.admin.case.postDelete')}}',
+<input type="hidden" id="parameter" value="{'pagename':'clinical_case_manage','deletes':'{{route('osce.admin.case.postDelete')}}',
 'firstpage':'{{route('osce.admin.case.getCaseList')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row table-head-style1 ">

@@ -17,7 +17,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'test_station','deletes':'{{route('osce.admin.Station.postDelete')}}','firstpage':'{{route('osce.admin.Station.getStationList')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'exam_station','deletes':'{{route('osce.admin.Station.postDelete')}}','firstpage':'{{route('osce.admin.Station.getStationList')}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
