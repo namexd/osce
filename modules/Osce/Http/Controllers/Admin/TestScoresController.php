@@ -310,17 +310,20 @@ class TestScoresController  extends CommonController
                 $allData .= $vv['avgScore'].',';
             }
             $classData .= $v['avgScore'].',';
-            $timeData .= $v['begin_dt'].',';
+            $timeData .= $v['name'].',';
         }
-
+       // dd($datalist);
         $data = [
             'datalist' => $datalist,//列表数据
             'classData' => trim($classData,','),//班级平均分
             'allData' => trim($allData,','),//考试平均分
             'timeData' => trim($timeData,',')//考试时间
         ];
-        //dd($data);
-        $this->success_data(['data'=>$data]);
+       // dd($data);
+        return view('osce::admin.statisticalanalysis.statistics_teach_history',[
+            'data' => $data,
+            'classId'=>$classId
+        ]);
     }
 
     /**
@@ -334,12 +337,17 @@ class TestScoresController  extends CommonController
      */
     public function getGradeDetail(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examID = $request->examid;
-        $subjectID = $request->subjectID;
+        //$subjectID = $request->subjectID;
         $ResultID = $request->resultID;
         //班级成绩明细简介
-        $data = $TestScoreRepositories->getExamDetails($examID,$subjectID,$ResultID);
+        $data = $TestScoreRepositories->getExamDetails($examID,$ResultID);
         //列表数据
-        $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID);
+       $datalist = $TestScoreRepositories->getGradeDetailList($examID);
+        return view('osce::admin.statisticalanalysis.statistics_teach_detail',[
+            'data' => $data,
+            'datalist'=>$datalist
+        ]);
+
     }
 }
 
