@@ -394,10 +394,10 @@ class TestScoreRepositories  extends BaseRepository
      * @date    2016-3-2 17:26:32
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getGradeDetailList($examID){
+    public function getGradeDetailList($examID,$subID){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        $examlist = $ExamResult->where('exam.id','=',$examID)->leftjoin('exam_screening',function($join){
+        $examlist = $ExamResult->where('exam.id','=',$examID)->where('subject.id','=',$subID)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
             $join->on('exam.id','=','exam_screening.exam_id');
@@ -446,8 +446,10 @@ class TestScoreRepositories  extends BaseRepository
         })->select(
             'exam.name',
             'exam_result.begin_dt',
+            'exam_result.end_dt',
             'student.grade_class',
-            'subject.title'
+            'subject.title',
+            'subject.id'
         )->first();
         return $examlist;
     }

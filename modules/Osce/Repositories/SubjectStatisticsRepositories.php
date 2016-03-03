@@ -246,6 +246,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
                 'subject.title as subjectTitle',//科目名称
                 'station.name as stationName',//考站名称
                 'student.name as studentName',//考生名字
+                'student.grade_class as gradeClass',//班级
                 'exam_result.time',//耗时
                 'exam_result.score',//成绩
                 'teacher.name as teacherName'//老师
@@ -373,9 +374,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
      */
     public function subjectDownlist($examId)
     {
-        /*
-         * 给考试对应的科目下拉数据
-         */
+        //给考试对应的科目下拉数据
         $StationTeacherBuilder = '';
 
         if (is_object($examId)) {

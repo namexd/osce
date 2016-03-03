@@ -283,6 +283,8 @@ class SubjectStatisticsController  extends CommonController
             $title['time'] = $data[0]['begin_dt'].'~'.date('H:i:s',strtotime($data[0]['end_dt']));//考试时间
             $title['subjectTitle'] = $data[0]['subjectTitle'];//科目名称
             $title['stationName'] = $data[0]['stationName'];//考站名称
+            $title['gradeClass'] = $data[0]['gradeClass'];//班级
+
         }
         //($title);
         //将数据展示到页面
@@ -513,7 +515,7 @@ class SubjectStatisticsController  extends CommonController
     }
 
 
-    /**
+    /**根据考试id获取对应的科目
      * @method GET
      * @url /osce/admin/subject-statistics/get-subject
      * @access public
