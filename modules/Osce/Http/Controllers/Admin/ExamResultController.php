@@ -92,7 +92,8 @@ class ExamResultController extends CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function geExamResultList(Request $request){
+    public function geExamResultList(Request $request)
+    {
         $this->validate($request,[
             'exam_id'     => 'sometimes',
             'station_id'  => 'sometimes',
