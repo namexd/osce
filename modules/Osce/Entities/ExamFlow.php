@@ -59,12 +59,12 @@ class ExamFlow extends CommonModel
 
         if ($SequenceMode->sequence_mode == 1) {
             //根据考场排序
-            $studentExamSum = count(ExamFlowRoom::where('exam_id','=',$examId)->groupBy('serialnumber')->get());
+            $studentExamSum = count(ExamFlowRoom::where('exam_id','=',$examId)->where('effected', 1)->groupBy('serialnumber')->get());
 
 
         } else {
             //根据考站排序
-            $studentExamSum =count(ExamFlowStation::where('exam_id','=',$examId)->groupBy('serialnumber')->get()) ;
+            $studentExamSum =count(ExamFlowStation::where('exam_id','=',$examId)->where('effected', 1)->groupBy('serialnumber')->get()) ;
 
         }
 
