@@ -90,6 +90,13 @@ class AuthController extends BaseController
             'slug' => rand(1,999999),
             'description'=>Input::get('description')
         ];
+        //查看角色名是否已存在
+
+        $RoleName = DB::connection('sys_mis')->table('sys_roles')->where('name','=',$data['name'])->first();
+        if($RoleName){
+            return  redirect()->back()->withErrors(['该角色名已存在']);
+        }
+
         $addNewRole = DB::connection('sys_mis')->table('sys_roles')->insert($data);
 
         if($addNewRole){
