@@ -337,6 +337,7 @@ class ExamQueue extends CommonModel
                 $nowQueues  =   $studentTimes->where('exam_queue.status',2);
                 $nowQueue   =   $nowQueues  ->  shift();
                 $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
+                \Log::alert($lateTime.'迟到时间');
 
                 foreach ($studentTimes as $key=>$item) {
                     if ($exam->sequence_mode == 2) {
@@ -362,11 +363,6 @@ class ExamQueue extends CommonModel
                         }
                     } else {
                         //查询到考站的标准时间
-//                            $station = Station::find($stationId);
-//                        $dataTemp   =   [
-//                            'begin_dt' => date('Y-m-d H:i:s', $nowTime),
-//                            'end_dt' => date('Y-m-d H:i:s', $nowTime + $stationTime * 60)
-//                        ];
                         $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
                         if (is_null($ExamTime)) {
                             throw new \Exception('没有找到对应的队列信息', -104);
