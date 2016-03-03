@@ -171,7 +171,7 @@ class StudentWatchController extends CommonController
         $room =$item->room;
         $data   =   [
             'code'=>3,
-            'title'=>'将要考试进入考站',
+            'title'=>'请请入下面考站考试',
             'roomName'=>$room->name.'-'.$station->name,
         ];
         return $data;
@@ -357,12 +357,12 @@ class StudentWatchController extends CommonController
         else
         {
             $data =[
-                'code'=> 2,
-                'title'=> '请进入考试教室',
+                'code'=> 3,
+                'title'=> '你将要进入下面教室抽签考试',
                 'willStudents'=> '',
                 'estTime'=> '',
                 'willRoomName'=> '',
-                'roomName'=> $examRoomName,
+                'roomName'=> $examRoomName.'-'.$item->station->name,
 
             ];
         }
