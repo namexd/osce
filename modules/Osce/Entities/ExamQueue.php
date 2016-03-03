@@ -347,7 +347,7 @@ class ExamQueue extends CommonModel
                 {
                     throw new \Exception('进入考试失败',-105);
                 }
-                dd($studentTimes,222);
+                dd($nowQueue,222);
 
                 $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
                 dd($lateTime);
