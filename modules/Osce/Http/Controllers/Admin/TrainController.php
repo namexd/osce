@@ -103,6 +103,11 @@ class TrainController extends  CommonController{
             'create_user_id'     => $userId,
             'clicks'             => 0,
         ];
+
+        $contentLen = mb_strlen($data['content']);
+        if($contentLen > 10000){
+            return redirect()->back()->withInput()->withErrors(['内容字数超过限制，请修改后重试！']);
+        }
         $result=InformTrain::create($data);
         if($result){
          return redirect('/osce/admin/train/train-list')->with('success','新增成功');
@@ -202,12 +207,17 @@ class TrainController extends  CommonController{
             'teacher'                 =>'required',
             'content'                 =>'required',
         ]);
-        $data=$request->only(['id','name','address','begin_dt','end_dt','teacher','content']);
+        $data = $request->only(['id','name','address','begin_dt','end_dt','teacher','content']);
+        //限制内容长度（1W） TODO: Zhoufuxiang
+        $contentLen = mb_strlen($data['content']);
+        if($contentLen > 10000){
+            return redirect()->back()->withInput()->withErrors(['内容字数超过限制，请修改后重试！']);
+        }
 
         $user=Auth::user();
         $userId=$user->id;
-        $connection	=	\DB::connection('sys_mis');
-        $userRole	=	$connection	->	table('sys_user_role')	->	where('user_id','=',$user->id)->first();
+        $connection	= \DB::connection('sys_mis');
+        $userRole	= $connection->table('sys_user_role')->where('user_id','=',$user->id)->first();
         $createId=InformTrain::where('id',$data['id'])->select()->first()->create_user_id;
         if($userId==$createId || $userRole->role_id==config('config.superRoleId')){
             $data['attachments']=serialize($request->input('file'));

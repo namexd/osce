@@ -105,6 +105,10 @@ class NoticeController extends CommonController
         }
 
         try {
+            $contentLen = mb_strlen($content);
+            if($contentLen > 10000){
+                throw new \Exception('内容字数超过限制，请修改后重试！');
+            }
             if (!is_array($groups)) {
                 throw new \Exception('请选择接收人所属角色');
             }
@@ -198,6 +202,10 @@ class NoticeController extends CommonController
 
         $NoticeModel = new Notice();
         try {
+            $contentLen = mb_strlen($content);
+            if($contentLen > 10000){
+                throw new \Exception('内容字数超过限制，请修改后重试！');
+            }
             if ($NoticeModel->editNotice($id, $name, $content, $attach, $groups)) {
                 return redirect()->route('osce.admin.notice.getList');
             } else {
