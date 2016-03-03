@@ -515,7 +515,7 @@ class SubjectStatisticsController  extends CommonController
     }
 
 
-    /**
+    /**根据考试id获取对应的科目
      * @method GET
      * @url /osce/admin/subject-statistics/get-subject
      * @access public

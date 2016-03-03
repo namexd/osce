@@ -374,9 +374,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
      */
     public function subjectDownlist($examId)
     {
-        /*
-         * 给考试对应的科目下拉数据
-         */
+        //给考试对应的科目下拉数据
         $StationTeacherBuilder = '';
 
         if (is_object($examId)) {
