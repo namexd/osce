@@ -85,7 +85,6 @@
         </div>
         <div class="ibox-content">
             <div class="row">
-
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.room.postCreateRoom')}}">
                         <div class="form-group">

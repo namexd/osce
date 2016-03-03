@@ -22,7 +22,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'examroom','deletes':'{{route('osce.admin.room.postDelete')}}','firstpage':'{{route('osce.admin.room.getRoomList')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'site_manage','deletes':'{{route('osce.admin.room.postDelete')}}','firstpage':'{{route('osce.admin.room.getRoomList')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
