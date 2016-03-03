@@ -237,7 +237,9 @@ class SubjectStatisticsController  extends CommonController
             'examInfo' =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'stationList'=>$datas, //考站成绩分析列表
-            'StrList'=>$StrList
+            'StrList'=>$StrList,
+            'examId' =>$examId,//考试ID
+            'subjectId' =>$subjectId //科目id
         ]);
     }
 
