@@ -281,8 +281,7 @@ class TestScoresController  extends CommonController
             'maxScore' => $maxScore,
             'minScore' => $minScore
         ];
-        //dd($data);
-        $this->success_data(['data'=>$data]);
+        return $this->success_data(['data'=>$data]);
     }
 
     /**
