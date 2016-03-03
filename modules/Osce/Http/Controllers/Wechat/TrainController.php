@@ -128,15 +128,17 @@ class TrainController extends  CommonController{
 
 
 //        \DB::connection('osce_mis')->table('inform_training')->increment('clicks');
-
+        try{
             $id=$request->get('id');
             $train=InformTrain::where('id',$id)->select()->get();
             if(!$train){
-                abort(404,'该培训信息不存在，请检查数据或联系管理员');
+                throw new \Exception('没有找到培训的相关信息',404);
             }
-            if(!$clicks=InformTrain::where('id',$id)->first()->clicks){
-                abort(404,'该培训信息不存在，请检查数据或联系管理员');
-            }
+            $clicks=InformTrain::where('id',$id)->first()->clicks;
+        }catch (\Exception $ex){
+            return redirect()->back()->withErrors('该培训信息已被删除');
+//            abort(404,'该培训信息已被删除');
+        }
         $clicks=$clicks+1;
         InformTrain::where('id',$id)->update(['clicks'=>$clicks]);
         foreach($train as $item){
