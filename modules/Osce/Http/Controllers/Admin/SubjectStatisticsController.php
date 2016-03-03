@@ -427,16 +427,17 @@ class SubjectStatisticsController  extends CommonController
      */
     public function standardDetails(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
 
-        $standardPid = $request->input('standardPid',0);
-        $examId = $request->input('examId',0);
-        $subjectId = $request->input('subjectId',0);
         //验证
         $this->validate($request, [
             'examId' => 'required|integer',
             'subjectId' => 'required|integer',
             'standardPid' => 'required|integer'
         ]);
-        
+
+        $standardPid = $request->input('standardPid',0);
+        $examId = $request->input('examId',0);
+        $subjectId = $request->input('subjectId',0);
+
         //查询考核点分析所需数据
         $result = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList(361,88,788);//558
 
