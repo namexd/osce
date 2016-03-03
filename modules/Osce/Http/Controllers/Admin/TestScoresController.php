@@ -255,6 +255,8 @@ class TestScoresController  extends CommonController
         $datalist = $TestScoreRepositories->getTeacherData($examid,$subjectid);
         $teacherStr = '';
         $avgStr = '';
+        $maxScore = '';
+        $minScore = '';
         foreach($datalist as $v){
             if($v->teacher_name){
                 $teacherStr .= $v->teacher_name.',';
@@ -264,12 +266,22 @@ class TestScoresController  extends CommonController
                 $avgStr .= sprintf('%.1f',$v->avgScore).',';
             }
 
+            if($v->maxScore){
+                $maxScore .= $v->$maxScore.',';
+            }
+
+            if($v->minScore){
+                $minScore .= $v->$minScore.',';
+            }
         }
         $data = [
             'datalist' => $datalist,
             'teacherStr' => trim($teacherStr,','),
-            'avgStr' => trim($avgStr,',')
+            'avgStr' => trim($avgStr,','),
+            'maxScore' => $maxScore,
+            'minScore' => $minScore
         ];
+        //dd($data);
         $this->success_data(['data'=>$data]);
     }
 
