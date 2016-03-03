@@ -327,3 +327,5 @@ table tbody tr td:last-child{width: 120px;}
     width: 32px!important;
     background:url('../plugins/js/plugins/layer/skin/default/icon.png') no-repeat -224px 0!important;
 }
+/*手势*/
+.cursor{cursor: pointer}

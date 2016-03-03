@@ -37,11 +37,7 @@
         });
     })
 </script>
-@stop
-
-
-@section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'examation_statistics','ajaxUrl':'{{ route('osce.admin.SubjectStatisticsController.stationGradeList') }}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'statistics_check','ajaxUrl':'{{ route('osce.admin.SubjectStatisticsController.standardGradeList') }}','target':'{{ route('osce.admin.SubjectStatisticsController.standardDetails') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -54,8 +50,8 @@
                     <ul class="nav nav-tabs">
                         <li><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeList')}}">单次考试分析</a></li>
                         <li><a href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeAnalyze')}}">科目成绩趋势</a></li>
-                        <li class="active"><a href="{{ route('osce.admin.SubjectStatisticsController.stationGradeList') }}">考站成绩分析</a></li>
-                        <li><a href="{{ route('osce.admin.SubjectStatisticsController.standardGradeList') }}">考核点分析</a></li>
+                        <li><a href="{{ route('osce.admin.SubjectStatisticsController.stationGradeList') }}">考站成绩分析</a></li>
+                        <li class="active"><a href="{{ route('osce.admin.SubjectStatisticsController.standardGradeList') }}">考核点分析</a></li>
                     </ul>
                 </div>
             </div>
@@ -66,10 +62,10 @@
                     <label for="" class="pull-left exam-name">考试名称：</label>
                     <select name="name" id="exam-id" class="input-sm form-control exam_select" style="width: 210px;height: 34px">
                         @foreach(@$examInfo as $exam)
-                        <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
+                            <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
                         @endforeach
                     </select>
-                    <label for="" class="pull-left exam-name" style="margin-left: 20px">科目名称：</label>
+                    <label for="" class="pull-left exam-name" style="margin-left: 20px;">科目名称：</label>
                     <select name="name" id="subject-id" class="input-sm form-control subject_select" style="width: 210px;height: 34px">
                         @foreach(@$subjectInfo as $subject)
                             <option value="{{ $subject['id'] }}">{{ $subject['title'] }}</option>
@@ -88,13 +84,11 @@
                     <table class="table table-striped" id="table-striped" style="background:#fff">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>考站</th>
-                            <th>评分老师</th>
-                            <th>考试限时</th>
-                            <th>平均耗时</th>
+                            <th>序号</th>
+                            <th>考核点</th>
                             <th>平均成绩</th>
                             <th>考试人数</th>
+                            <th>合格率</th>
                             <th>操作</th>
                         </tr>
                         </thead>

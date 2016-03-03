@@ -234,7 +234,7 @@ class SubjectStatisticsController  extends CommonController
         }
 
         //将数据展示到页面
-        return view('osce::admin.statisticalanalysis.statistics_examation', [
+        return view('osce::admin.statisticalanalysis.statistics_subject_examation', [
             'examInfo' =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'stationList'=>$datas, //考站成绩分析列表
@@ -277,9 +277,9 @@ class SubjectStatisticsController  extends CommonController
             $title['subjectTitle'] = $data[0]['subjectTitle'];//科目名称
             $title['stationName'] = $data[0]['stationName'];//考站名称
         }
-        dd($stationDetails);
+        //($title);
         //将数据展示到页面
-        return view('osce::admin.statisticalanalysis.statistics_examation', [
+        return view('osce::admin.statisticalanalysis.statistics_subject_examation_detail', [
             'title' =>$title ,//头部数据
             'stationDetails' =>$stationDetails ,//考站详情
         ]);
@@ -409,7 +409,7 @@ class SubjectStatisticsController  extends CommonController
 
         //将数据展示到页面
 //        dd($datas);
-        return view('osce::admin.statisticalanalysis.statistics_check', [
+        return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
             'examInfo'      =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'standardList' =>$datas, //考核点分析列表
@@ -496,9 +496,13 @@ class SubjectStatisticsController  extends CommonController
             }
         }
 
-        if ($request->ajax()) {
-            return $this->success_data(['datainfo'=>$datas]);
-        }
+        return view('osce::admin.statisticalanalysis.statistics_subject_standard_detail', [
+            'datas'=>$datas
+           // 'examInfo'      =>$examInfo ,//考试列表
+           // 'subjectInfo' =>$subjectInfo ,//科目列表
+           // 'standardList' =>$datas, //考核点分析列表
+           // 'StrList'=>$StrList,
+        ]);
     }
 
 
