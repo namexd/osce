@@ -347,10 +347,8 @@ class ExamQueue extends CommonModel
                 {
                     throw new \Exception('进入考试失败',-105);
                 }
-                dd($nowQueue,222);
 
                 $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
-                dd($lateTime);
                 \Log::alert($lateTime.'迟到时间');
 
                 foreach ($studentTimes as $key=>$item) {
