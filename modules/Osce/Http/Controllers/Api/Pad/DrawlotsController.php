@@ -11,6 +11,8 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamFlowRoom;
+use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
@@ -318,6 +320,9 @@ class DrawlotsController extends CommonController
             //拿到房间
             $room = $this->getRoomId($id, $exam->id);
 
+            //判断其考站或考场是否在该次考试中使用
+            $this->checkEffected($exam, $room, $station);
+
             //将考场名字和考站名字封装起来
             $station->name = $room->name . '-' . $station->name;
 
@@ -607,5 +612,37 @@ class DrawlotsController extends CommonController
         //$ranStationId为随机选择的一个考站
         $ranStationId = $stationIds[array_rand($stationIds)];
         return $ranStationId;
+    }
+
+    /**
+     * 判断当前这个考试实体是否在这场考试中被启用
+     * @param $exam
+     * @param $room
+     * @param $station
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-04 16:42
+     */
+    private function checkEffected($exam, $room, $station)
+    {
+        switch ($exam->sequence_mode) {
+            case 1:
+                $examFlowRooms = ExamFlowRoom::where('room_id', $room->id)->get();
+                $effected = $examFlowRooms->pluck('effected');
+                if (!$effected->search(1)) {
+                    throw new \Exception('当前老师并没有被安排在这场考试中', -1010);
+                }
+                break;
+            case 2:
+                $examFlowStations = ExamFlowStation::where('station_id', $station->id)->get();
+                $effected = $examFlowStations->pluck('effected');
+                if (!$effected->search(1)) {
+                    throw new \Exception('当前老师并没有被安排在这场考试中', -1011);
+                }
+                break;
+            default:
+                throw new \Exception('系统异常，请重试', -955);
+                break;
+        }
     }
 }
