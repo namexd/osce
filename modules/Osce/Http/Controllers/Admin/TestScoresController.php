@@ -45,6 +45,7 @@ class TestScoresController  extends CommonController
     public function postAjaxGetTester(Request $request,TestScoreRepositories $TestScoreRepositories){
         //根据页面get过来的考试ID查找当前考试下的所有考生
         $examId = $request->examid?$request->examid:'';
+
         if(!$examId){
             $tester = array();
         }else{
@@ -65,7 +66,7 @@ class TestScoresController  extends CommonController
      * @date    2016年2月26日14:56:58
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getAjaxGetSubject(Request $request,TestScoreRepositories $TestScoreRepositories){
+    public function getAjaxGetSubject(Request $request,TestScoreRepositories $TestScoreRepositories,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         //获取筛选参数
         $examid = Intval($request->examid);
         $student_id = intval($request->student_id);
@@ -73,28 +74,34 @@ class TestScoresController  extends CommonController
         //查找学生所有科目考试数据
             //\DB::connection("osce_mis")->enableQueryLog();
 
-        $singledata = $TestScoreRepositories->getTestSubject($examid,$student_id)->toArray();
+        $singledata = $TestScoreRepositories->getTestSubject($examid,$student_id,'')->toArray();
        // dd(\DB::connection("osce_mis")->getQueryLog());
+
+        //查找所有科目
+        $subject = $subjectStatisticsRepositories->subjectDownlist($examid);
+        $subjectId = 0;
+        if(!empty($subject)){
+            $subjectId = $subject->pluck('id');
+        }
         //查找当前考试所有科目平均成绩
-        $avgdata = $TestScoreRepositories->getTestSubject($examid,'')->toArray();
+        $avgdata = $TestScoreRepositories->getTestSubject($examid,'',$subjectId)->toArray();
         //dd($avgdata);
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
-                    $singledata[$k]['timeAvg'] = sprintf('%.1f',$avgdata[$kk]['timeAvg']);
-                    $singledata[$k]['scoreAvg'] = sprintf('%.1f',$avgdata[$kk]['scoreAvg']);
+                    $singledata[$k]['timeAvg'] = sprintf('%.2f',$avgdata[$kk]['timeAvg']);
+                    $singledata[$k]['scoreAvg'] = sprintf('%.2f',$avgdata[$kk]['scoreAvg']);
                 }
+                $avgdata[$kk]['scoreAvg'] = sprintf('%.2f',$vv['scoreAvg']);
             }
         }
-        //查找所有科目
-        $subject = $TestScoreRepositories->getSubList();
+
         $data = [
             'list' => $singledata,//列表
             'singledata' => $singledata,//雷达图学生成绩
             'avgdata' => $avgdata,//平均成绩
             'subject' => $subject
         ];
-       // dd($data);
         return $data;
     }
     /**

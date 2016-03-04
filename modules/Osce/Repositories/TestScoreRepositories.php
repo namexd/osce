@@ -59,7 +59,7 @@ class TestScoreRepositories  extends BaseRepository
      * @date    2016年2月26日15:06:29
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getTestSubject($examid,$student_id){
+    public function getTestSubject($examid,$student_id,$subjectId){
         $DB = \DB::connection('osce_mis');
         $builder = new ExamResult();
         if($student_id){
@@ -72,6 +72,11 @@ class TestScoreRepositories  extends BaseRepository
                 'exam_result.id as result_id'
             );
         }
+
+        if(!empty($subjectId)){
+            $builder = $builder->whereIn('subject.id',$subjectId);
+        }
+
         $builder = $builder->where('exam_screening.exam_id','=',$examid)->leftJoin('student', function($join){
             $join -> on('student.id', '=', 'exam_result.student_id');
         })->leftJoin('exam_screening', function($join){

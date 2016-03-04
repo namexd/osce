@@ -111,6 +111,7 @@ function statistics_student_score(){
                         text: this.title,
                         max: this.score
                     });
+                    //console.log(subStr);
                     if(singledata[i]){
                         studentScoreStr.push(Number(singledata[i]['score']));
                     }else{
