@@ -129,9 +129,6 @@ a{-webkit-touch-callout:none;}
 .btn-default2{background-color: #fff;border-color: #ccc;color: #9c9c9c;}
 a.btn:hover {text-decoration: none;}
 
-
-
-
 .has-error .form-control{border-color: #ed5565!important;}
 
 .btn-primary[disabled]{background:#eee;color:#aaa;border:1px solid #aaa;}
