@@ -35,7 +35,9 @@ return [
 			'电子邮箱'	=>	'email',
 			'头像'		=>	'avator',
 			'备注'		=>	'description',
-			'准考证号'	=>  'exam_sequence'
+			'准考证号'	=>  'exam_sequence',
+			'班级'		=>	'grade_class',
+			'班主任姓名' =>	'teacher_name'
 		],
 	],
 	'machine_category'=>[

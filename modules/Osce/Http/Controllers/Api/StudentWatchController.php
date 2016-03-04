@@ -282,7 +282,7 @@ class StudentWatchController extends CommonController
         if ($ExamFinishStatus >= $studentExamSum){
             //查询出考试结果
             $examResult = ExamResult::where('student_id','=',$examQueue->student_id)->count();
-            if($examResult >= $studentExamSum){
+            if($examResult >= $ExamFinishStatus){
                 $testresultModel = new TestResult();
                 $score =  $testresultModel->AcquireExam($examQueue->student_id);
                 $data = [

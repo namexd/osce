@@ -22,7 +22,7 @@ class Student extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id', 'description','exam_sequence'];
+    protected $fillable = ['name', 'exam_id', 'user_id', 'idcard', 'mobile', 'code', 'avator', 'create_user_id', 'description','exam_sequence','grade_class','teacher_name'];
 
     public function userInfo(){
         return $this->hasOne('\App\Entities\User','id','user_id');
@@ -126,7 +126,11 @@ class Student extends CommonModel
     public function judgeTemplet($data)
     {
         try{
-            $config = ['姓名', '性别', '学号', '身份证号', '联系电话', '电子邮箱', '头像', '备注', '准考证号'];
+            $nameToEn = config('osce.importForCnToEn.student');
+            foreach ($nameToEn as $index => $item) {
+                $config[] = $index;
+            }
+//            $config = ['姓名','性别','学号','身份证号','联系电话','电子邮箱','头像','备注','准考证号','班级','班主任姓名'];
             foreach ($data as $value) {
                 $key = 0;
                 //模板列数
@@ -208,8 +212,30 @@ class Student extends CommonModel
                     $exiNum++;
                     continue;
                 }
+                //用户数据
+                $userData = [
+                    'name'   => $studentData['name'],
+                    'gender' => $studentData['gender'],
+                    'idcard' => $studentData['idcard'],
+                    'mobile' => $studentData['mobile'],
+                    'code'   => $studentData['code'],
+                    'avatar' => $studentData['avator'],
+                    'email'  => $studentData['email']
+                ];
+                //考生数据
+                $examineeData = [
+                    'name'          => $studentData['name'],
+                    'idcard'        => $studentData['idcard'],
+                    'mobile'        => $studentData['mobile'],
+                    'code'          => $studentData['code'],
+                    'avator'        => $studentData['avator'],
+                    'description'   => $studentData['description'],
+                    'exam_sequence' => $studentData['exam_sequence'],
+                    'grade_class'   => $studentData['grade_class'],
+                    'teacher_name'  => $studentData['teacher_name']
+                ];
                 //添加考生
-                if(!$this->addExaminee($exam_id, $studentData, $key+2))
+                if(!$this->addExaminee($exam_id, $examineeData, $userData, $key+2))
                 {
                     throw new \Exception('学生导入数据失败，请修改后重试');
                 }else{
@@ -255,7 +281,7 @@ class Student extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function addExaminee($exam_id, $examineeData,$key = '')
+    public function addExaminee($exam_id, $examineeData, $userData, $key = '')
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -270,26 +296,25 @@ class Student extends CommonModel
 
             //如果查找到了，对用户信息 进行编辑处理
             if(count($user) != 0){
-                $user -> name   = $examineeData['name'];    //姓名
-                $user -> gender = $examineeData['gender'];  //性别
-                $user -> mobile = $examineeData['mobile'];  //手机号
-                $user -> avatar = $examineeData['avator'];  //头像
-                $user -> idcard = $examineeData['idcard'];  //身份证号
-                $user -> email  = $examineeData['email'];   //邮箱
+                //获取数据（姓名,性别,身份证号,手机号,学号,邮箱,照片）
+                foreach ($userData as $field => $value) {
+                    $user -> $field = $value;
+                }
+
                 if(!($user->save())){      //跟新用户
                     throw new \Exception('新增考生失败！');
                 }
 
             }else{      //如果没找到，新增处理,   如果新增成功，发短信通知用户
                 //手机号未注册，查询手机号码是否已经使用
-                $mobile = User::where(['mobile' => $examineeData['mobile']])->first();
+                $mobile = User::where(['mobile' => $userData['mobile']])->first();
                 //该手机号码已经使用
                 if($mobile){
                     throw new \Exception('手机号已经存在，请输入新的手机号');
                 }
                 $password   =   '123456';
-                $user       =   $this   ->  registerUser($examineeData,$password);
-                $this       ->  sendRegisterEms($examineeData['mobile'],$password);
+                $user       =   $this   ->  registerUser($userData,$password);
+                $this       ->  sendRegisterEms($userData['mobile'],$password);
             }
             //查询学号是否存在
             $code = $this->where('code', $examineeData['code'])->where('user_id','<>',$user->id)->first();
@@ -437,17 +462,19 @@ class Student extends CommonModel
 
         //查询本场考试中 已考试过的 学生 ，用于剔除//TODO zhoufuxiang
         $students = $this->leftjoin('exam_screening_student',function($join){
-            $join ->on('student.id', '=', 'exam_screening_student.student_id');
-        })
+                $join ->on('student.id', '=', 'exam_screening_student.student_id');
+            })
             ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
             ->where('exam_screening_student.is_end', '=', 1)
             ->select(['exam_screening_student.student_id'])->get();
-        $studentIds = [];   //用于保存已经考试的学生ID
-        if(count($students)){
-            foreach ($students as $index => $student) {
-                array_push($studentIds, $student->student_id);
-            }
-        }
+        //获取已经考试过的学生ID
+        $studentIds = $students->pluck('student_id');
+//        $studentIds = [];
+//        if(count($students)){
+//            foreach ($students as $index => $student) {
+//                array_push($studentIds, $student->student_id);
+//            }
+//        }
         //剔除 已经考试过的学生
         if(count($studentIds)){
             $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
