@@ -96,6 +96,8 @@ class TestScoresController  extends CommonController
                 }
                 $avgdata[$kk]['scoreAvg'] = sprintf('%.2f',$vv['scoreAvg']);
             }
+            $singledata[$k]['mins'] = $subjectStatisticsRepositories->timeTransformation($v['mins']);
+            $singledata[$k]['time'] = $subjectStatisticsRepositories->timeTransformation($v['time']);
         }
         //重新排列 平均成绩数组的顺序
         foreach($avgdata as $v){
@@ -149,6 +151,7 @@ class TestScoresController  extends CommonController
                     $singledata[$k]['timeAvg'] = $subjectStatisticsRepositories->timeTransformation(sprintf('%.2f',$vv['timeAvg']));
                     $singledata[$k]['scoreAvg'] = sprintf('%.2f',$vv['scoreAvg']);
                     $singledata[$k]['time'] = date("Y年m月",strtotime($v['begin_dt']));
+                    $avgdata[$kk]['mins'] = $subjectStatisticsRepositories->timeTransformation($vv['mins']);
                     unset($singledata[$k]['begin_dt']);
                 }else{
                     $singledata[$k]['timeAvg'] = 0;
@@ -157,8 +160,9 @@ class TestScoresController  extends CommonController
 //                    unset($singledata[$k]['begin_dt']);
                 }
             }
-
+            $singledata[$k]['mins'] = $subjectStatisticsRepositories->timeTransformation($v['mins']);
         }
+       // dd($singledata);
         foreach($singledata as $kk=>$vvv){
             if($kk == 0){
                 $avg = $vvv['scoreAvg'];
@@ -169,13 +173,15 @@ class TestScoresController  extends CommonController
             $avg .= ','.$vv['scoreAvg'];
             $totle .= ','.$vv['score'];
             $time .= ','.$vv['time'];
+            $singledata[$kk]['mins'] = $subjectStatisticsRepositories->timeTransformation($vvv['mins']);
         }
+        //dd($singledata);
         $data = [
             'list' => $singledata,//列表
             'singledata' => $singledata,//雷达图学生成绩
             'avgdata' => $avgdata//平均成绩
         ];
-        //dd($singledata);
+        //dd($data);
         return view('osce::admin.statisticalanalysis.statistics_student_subject',[
             'data' => $data,
             'avg' => $avg,
@@ -211,7 +217,7 @@ class TestScoresController  extends CommonController
      * @date    2016-2-29 09:45:15
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function ajaxGetStudentTestCount(Request $request,TestScoreRepositories $TestScoreRepositories){
+    public function ajaxGetStudentTestCount(Request $request,TestScoreRepositories $TestScoreRepositories,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $student_id = $request->student_id;
         $subid = $request->subject_id;
         //获取学生科目成绩
@@ -220,7 +226,7 @@ class TestScoresController  extends CommonController
         $avgdata = $TestScoreRepositories->getStudentScoreCount('',$subid)->toArray();
         foreach($singledata as $k=>$v){
             if($avgdata[$k]['id'] == $v['id']){
-                $singledata[$k]['timeAvg'] = $avgdata[$k]['timeAvg'];
+                $singledata[$k]['timeAvg'] = $subjectStatisticsRepositories->timeTransformation($avgdata[$k]['timeAvg']);
                 $singledata[$k]['scoreAvg'] = $avgdata[$k]['scoreAvg'];
                 $singledata[$k]['time'] = date("Y年m月",strtotime($v['begin_dt']));
                 unset($singledata[$k]['begin_dt']);
@@ -372,7 +378,7 @@ class TestScoresController  extends CommonController
      * @author weihuiguo <weihuiguo@misrobot.com>
      * @date   2016-3-3 10:17:25 .com Inc. All Rights Reserved
      */
-    public function getGradeDetail(Request $request,TestScoreRepositories $TestScoreRepositories){
+    public function getGradeDetail(Request $request,TestScoreRepositories $TestScoreRepositories,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $examID = $request->examid;
         $subjectID = $request->subid;
         $ResultID = $request->resultID;
@@ -382,6 +388,9 @@ class TestScoresController  extends CommonController
         $data->time = date('Y-m-d H:i',strtotime($data->begin_dt)).' ~ '.date('H:i',strtotime($data->end_dt));
         //列表数据
        $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID);
+        foreach($datalist as $k=>$v){
+            $datalist[$k]['time'] = $subjectStatisticsRepositories->timeTransformation($v->time);
+        }
         return view('osce::admin.statisticalanalysis.statistics_teach_detail',[
             'data' => $data,
             'datalist'=>$datalist
