@@ -97,6 +97,11 @@ class Student extends CommonModel
                 throw new \Exception('该考生已绑定，无法删除！');
             }
 
+            $examPlanRecordDelete = ExamPlanRecord::where('exam_id', $exam_id)->delete();
+            if (!$examPlanRecordDelete) {
+                throw new \Exception('删除考生失败');
+            }
+
             if (ExamPlan::where('student_id',$student_id)->first()) {
                 if (!ExamOrder::where('student_id',$student_id)->delete()) {
                     throw new \Exception('删除该学生失败');
