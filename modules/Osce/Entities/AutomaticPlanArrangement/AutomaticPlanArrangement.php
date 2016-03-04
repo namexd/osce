@@ -227,7 +227,6 @@ class AutomaticPlanArrangement
                     }
                 }
             }
-//            sleep(1);
         }
 
         //获取未走完流程的考生
@@ -428,9 +427,14 @@ class AutomaticPlanArrangement
                         }
                     }
                 } else {
-                    $result = $testStudents;
+                    if (count($testStudents) <= $station->needNum) {
+                        $result = $testStudents;
+                    } elseif (count($testStudents) > $station->needNum) {
+                        for ($i = 0; $i < $station->needNum; $i++) {
+                            $result[] = $testStudents->shift();
+                        }
+                    }
                 }
-//                echo '===================================================';
                 break;
             case 3:
                 $testStudents = $this->pollTestStudents($station, $screen);
@@ -594,8 +598,7 @@ class AutomaticPlanArrangement
             $tempArrays = ExamPlanRecord::orderBeginStudent($screen, $station->serialnumber,
                 $this->sequenceMode);
             if (count($tempArrays) != 0) {
-                $a = Student::whereIn('id', $tempArrays)->get();
-                return $a;
+                return Student::whereIn('id', $tempArrays)->get();
             } else {
                 return collect([]);
             }
