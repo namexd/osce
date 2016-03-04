@@ -11,6 +11,34 @@
 @stop
 
 @section('only_js')
+	<script>
+		$(function(){
+			$('.col-sm-4').click(function(){
+				var appid = $('.form-control').val();
+				if(appid==''){
+					$.alert({
+						title: '提示：',
+						content: '请输入在第一步中输入注册微信时的appID!',
+						confirmButton: '确定',
+						confirm: function(){
+						}
+					});
+				}else{
+
+					$(this).find('> a').attr('href','https://open.weixin.qq.com/connect/qrconnect?' +
+							'appid='+$('.form-control').val()+
+							'&scope=snsapi_login&redirect_uri=http%3A%2F%2Fmp.weixin.qq.com%2Fdebug%2Fcgi-bin%2Fsandbox%3Ft%3Dsandbox%2Flogin');
+//						alert(	$(this).find('> a').attr('href'))
+				}
+
+			});
+		})
+	</script>
+
+
+
+
+
 @stop
 
 @section('content')
@@ -33,36 +61,36 @@
 								<div class="clearfix form-group">
 									<label class="col-sm-2 control-label"><h5>第一步：</h5></label>
 									<div class="col-sm-9">
-										请输入appID
-										<input type="text" class="form-control" id="" name="email_server" >
+										请输入注册微信时的appID
+										<input type="text" class="form-control" id="" name="email_server" value="">
 									</div>
 								</div>
 			                	<div class="clearfix form-group">
 		                            <label class="col-sm-2 control-label"><h5>第二步：</h5></label>
 		                            <div class="col-sm-4">
-										<a href="http://www.cnblogs.com/A-Song/archive/2011/12/14/2288215.html" target="_blank">请先点击此处在微信中获取到（appID，appsecret）</a>
+										<a target="_blank">请先点击此处在微信中获取到（appID，appsecret）</a>
 
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
 		                            <label class="col-sm-2 control-label"><h5>第三步：</h5></label>
 		                            <div class="col-sm-9">
-		                                <p>请将获取到的appID放在系统设置->微信->app_id,</p>
-		                                <p>请将获取到的appsecret放在系统设置->微信->secret</p>
+		                                <p>请将获取到的appID放在系统设置->微信->app_id的输入框中;</p>
+		                                <p>请将获取到的appsecret放在系统设置->微信->secret的输入框中;</p>
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
 		                            <label class="col-sm-2 control-label"><h5>第四步：</h5></label>
 		                            <div class="col-sm-9">
-										<p>请将此url地址放入微信中的接口配置中url中</p>
-										<input type="text" class="form-control" id="" name="email_server" value="http://osce.dev.cd.misrobot.com/api/1.0/public/osce/wechat/token">
+										<p>请将此下面url地址，放入微信中的接口配置中的url中</p>
+										<input type="text" class="form-control" id="" name="email_server" value='http://{{$url}}/api/1.0/public/osce/wechat/token'>
 
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
 		                            <label class="col-sm-2 control-label"><h5>第五步：</h5></label>
 		                            <div class="col-sm-9">
-										<p>请在系统设置中设置token值然后将这个token值放入微信中的接口配置中token中两个值一定要相同</p>
+										<p>请在系统设置中设置token值，然后将这个token值放入微信中的接口配置中，两个token值一定要相同</p>
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
