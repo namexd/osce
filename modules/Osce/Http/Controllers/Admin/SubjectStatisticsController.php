@@ -51,7 +51,8 @@ class SubjectStatisticsController  extends CommonController
 
             $rew[$key]['qualifiedPass'] = '0%';
             $rew[$key]['scoreAvg'] =sprintf('%.2f',$val['scoreAvg']);
-            $rew[$key]['timeAvg'] =sprintf('%.2f',$val['timeAvg']);
+            //转换为标准时间
+            $rew[$key]['timeAvg'] =$subjectStatisticsRepositories->timeTransformation(sprintf('%.2f',$val['timeAvg']));
             //给结果展示列表中序号列加入数据
             $rew[$key]['number']=$key+1;
             foreach($rewTwo as $v){
@@ -116,7 +117,7 @@ class SubjectStatisticsController  extends CommonController
             $rew[$key]['number'] = $key + 1;
             $rew[$key]['qualifiedPass'] = '0';
             $rew[$key]['scoreAvg'] =sprintf('%.2f',$val['scoreAvg']);
-            $rew[$key]['timeAvg'] =sprintf('%.2f',$val['timeAvg']);
+            $rew[$key]['timeAvg'] =$subjectStatisticsRepositories->timeTransformation(sprintf('%.2f',$val['timeAvg']));
             $rew[$key]['ExamBeginTime'] = substr($val['ExamBeginTime'],0,7);
 
             foreach ($rewTwo as $v) {

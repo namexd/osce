@@ -444,4 +444,23 @@ class SubjectStatisticsRepositories  extends BaseRepository
         //dd($data);
         return $data;
     }
+
+    /**
+     * 时间转换
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $seconds, 秒戳
+     * @return mixed
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月4日09:41:31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function timeTransformation($seconds){
+        $time = 0;
+        date_default_timezone_set("UTC");
+        $time = date('H:i:s',$seconds);
+        date_default_timezone_set("PRC");
+        return  $time;
+    }
 }
