@@ -46,9 +46,12 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
-        $examScreeningModel = new ExamScreening();
-        $result = $examScreeningModel->getExamCheck();
-        dd($result);
+//        $examScreeningModel = new ExamScreening();
+//        $result = $examScreeningModel->getExamCheck();
+        $a =strtotime('2016-03-04 10:59:14');
+        $c=strtotime('2016-03-04 11:03:14');
+          $b=($c-$a)/60;
+        dd($b);
 
 
     }
@@ -286,14 +289,20 @@ class InvigilatePadController extends CommonController
                 throw new \Exception('没有查询到该学生队列', -100);
             }
 
-            $time = (strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt))/60;
+            $time = (strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt));
+            if($time>=60){
+                $useTime =$time/60;
+            }else{
+                $useTime =1;
+            }
+//            getMinutes
             $data = [
                 'station_id' => $stationId,
                 'student_id' => $studentId,
                 'exam_screening_id' => $examScreeningId,
                 'begin_dt' => $studentExamTime->begin_dt,//考试开始时间
                 'end_dt' => $studentExamTime->end_dt,//考试实际结束时间
-                'time' => $time,//考试用时
+                'time' => $useTime,//考试用时
                 'score_dt' => Input::get('end_dt'),//评分时间
                 'teacher_id' => Input::get('teacher_id'),
                 'evaluate' => Input::get('evaluate'),//评价内容
