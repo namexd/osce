@@ -185,7 +185,6 @@ class InvigilatePadController extends CommonController
             //根据考站id查询出下面所有的考试项目
         try {
             $station = Station::find($stationId);
-
             //考试标准时间
             $mins = $station->mins;
 //            $exam = Exam::find($examId);
