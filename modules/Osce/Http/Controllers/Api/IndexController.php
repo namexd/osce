@@ -814,22 +814,20 @@ class IndexController extends CommonController
             } else{
                 $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
             }
-            $countStation = $stations->pluck('station_id');
-//            $countStation=[];
-//            foreach($stations as $item){
-//                $countStation[]=$item->station_id;
-//            }
-//            $countStation=array_unique($countStation);
-            $countStation = $countStation->unqiue();
-            $batch      = config('osce.batch_num');//默认为2
-            $stationNum = count($countStation)*$batch;//可以绑定的学生数量 考站数乘以倍数
-            $list = $studentModel->getStudentQueue($exam_id, $screen_id, $stationNum);//获取考生队列
+            $countStation=[];
+            foreach($stations as $item){
+                $countStation[]=$item->station_id;
+            }
+            $countStation=array_unique($countStation);
+            $batch=config('osce.batch_num');//默认为2
+            $countStation=count($countStation)*$batch;//可以绑定的学生数量 考站数乘以倍数
+            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);//获取考生队列
             $data=[];
             foreach($list as $itm){
                 $data[]=[
-                    'name'   => $itm->name,
+                    'name' => $itm->name,
                     'idcard' => $itm->idcard,
-                    'code'   => $itm->code,
+                    'code' => $itm->code,
                     'exam_screening_id' => $itm->exam_screening_id,
                 ];
             }
