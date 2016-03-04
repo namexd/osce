@@ -252,7 +252,7 @@ class Student extends CommonModel
 
             $message = "成功导入{$sucNum}个学生";
             if ($exiNum) {
-                $message .= "，有{$exiNum}个学生已存在";
+                $message .= "，有{$exiNum}个手机号码已存在，请检查！";
             }
             //返回信息数组不为空
             if (!empty($backArr)) {
@@ -610,7 +610,7 @@ class Student extends CommonModel
 
             if (ExamPlan::where('student_id', $student_id)->first()) {
                 if (!ExamOrder::where('student_id', $student_id)->delete()) {
-                    throw new \Exception('删除该学生失败');
+                    throw new \Exception('考生已排考保存，无法删除！');
                 }
             }
         } catch (\Exception $ex) {
