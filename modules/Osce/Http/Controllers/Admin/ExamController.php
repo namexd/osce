@@ -1251,7 +1251,7 @@ class ExamController extends CommonController
             if (ExamPlanRecord::where('exam_id', $id)->first()) {
                 $automaticPlanArrangement = new AutomaticPlanArrangement($id, new ExamPlaceEntity(), new \Modules\Osce\Entities\AutomaticPlanArrangement\Exam());
                 $plan = $automaticPlanArrangement->output($id);
-                return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors('当前排考计划并没有保存！');
+                return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors('当前排考计划没有保存！');
             } else {
                 $plan = [];
             }

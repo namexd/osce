@@ -46,9 +46,9 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
-        $examScreeningModel = new ExamScreening();
-        $result = $examScreeningModel->getExamCheck();
-        dd($result);
+//        $examScreeningModel = new ExamScreening();
+//        $result = $examScreeningModel->getExamCheck();
+
 
 
     }
@@ -176,25 +176,21 @@ class InvigilatePadController extends CommonController
 
     public function getExamGrade(Request $request)
     {
-        try {
             $this->validate($request, [
                 'station_id' => 'required|integer',
-//            'exam_id'  => 'required|integer'
             ], [
                 'station_id.required' => '没有获取到当前考站',
-                'exam_id.required' => '没有获取到当前考试'
             ]);
-//
             $stationId = $request->get('station_id');
-//        $stationId=8;
-            $examId = $request->get('exam_id');
             //根据考站id查询出下面所有的考试项目
+        try {
             $station = Station::find($stationId);
             //考试标准时间
             $mins = $station->mins;
-            $exam = Exam::find($examId);
+//            $exam = Exam::find($examId);
             $StandardModel = new Standard();
             $standardList = $StandardModel->ItmeList($station->subject_id);
+
             if (count($standardList) != 0) {
                 return response()->json(
                     $this->success_data($standardList, 1, '数据传送成功')
@@ -286,21 +282,22 @@ class InvigilatePadController extends CommonController
                 throw new \Exception('没有查询到该学生队列', -100);
             }
 
-            $time = (strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt))/60;
+            $useTime = strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt);
+//            getMinutes
             $data = [
                 'station_id' => $stationId,
                 'student_id' => $studentId,
                 'exam_screening_id' => $examScreeningId,
                 'begin_dt' => $studentExamTime->begin_dt,//考试开始时间
                 'end_dt' => $studentExamTime->end_dt,//考试实际结束时间
-                'time' => $time,//考试用时
+                'time' => $useTime,//考试用时
                 'score_dt' => Input::get('end_dt'),//评分时间
                 'teacher_id' => Input::get('teacher_id'),
                 'evaluate' => Input::get('evaluate'),//评价内容
                 'operation' => Input::get('operation'),//操作的连贯性
                 'skilled' => Input::get('skilled'),//工作的娴熟度
                 'patient' => Input::get('patient'),//病人关怀情况
-                'affinity' => Input::get('affinity'),//沟通亲和能力
+                'affinity' => Input::get('affinity'),//沟通亲和能力/
 
             ];
             //根据考生id获取到考试id
