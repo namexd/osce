@@ -51,7 +51,7 @@
 	        </div>
 	    </div>
     </div>
-    <div class="examination_msg">
+    <div class="examination_msg" style="display: none;">
 		<div class="form-group">
 			<label for="">考试时间</label>
 			<div class="txt" id="time"></div>
@@ -72,7 +72,7 @@
 			<label for="">平均成绩</label>
 			<div class="txt" id="vgn"></div>
 		</div>
-		<table class="table cj_tab">
+		<table class="table cj_tab" style="margin-top: 10px">
 			<tr>
 				<th>考生姓名</th>
 				<th>总分</th>

@@ -156,6 +156,7 @@ function examination_list_teacher(){
 					 station_id:s_id
 				},
 				success:function(res){
+					$(".examination_msg").show();
 					var begin_time=(res.data['item'].exam_begin_dt).substring(0,10);
 					var end_time=(res.data['item'].exam_end_dt).substring(0,10);
 					var time="";

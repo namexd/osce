@@ -8,8 +8,8 @@
 .see_msg{background:#fff;padding-bottom:10px;}
 .see_msg a{color:#1ab394;}
 
-/*详情*/
-.examination_msg{width:100%;border-left:2px solid #1ab394;box-sizing: border-box;padding:10px;background:#fff;}
+/*详情border-left:2px solid #1ab394;*/
+.examination_msg{width:100%;box-sizing: border-box;padding:10px;background:#fff;}
 /*列表样式2列表样式1*/
 .examination_msg .form-group{padding:0; margin-bottom: 0;}
 .examination_msg .form-group  label{position:absolute;z-index:10; left:3%;font-size:14px;margin-top:6px;width:82px;
