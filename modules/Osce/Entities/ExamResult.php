@@ -81,7 +81,7 @@ class ExamResult extends CommonModel
     /**
      * 考试成绩实时推送
      */
-    public function examResultPush($student_id, $url = '')
+    public function examResultPush($student_id, $screening_id, $url = '')
     {
         try {
             //考生信息
@@ -105,7 +105,7 @@ class ExamResult extends CommonModel
 //                    echo 'a3a';
                     //成绩详情url地址
                     if($url == ''){
-                        $url = route('osce.wechat.student-exam-query.getResultsQueryIndex',['exam_id'=>$student->exam_id,'student_id'=>$student_id]);
+                        $url = route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$screening_id]);
                     }
                     $msgData = [
                         [

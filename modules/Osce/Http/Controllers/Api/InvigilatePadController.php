@@ -315,7 +315,7 @@ class InvigilatePadController extends CommonController
                 try {
                     $examResultModel = new ExamResult();
 //                    echo 1;
-                    $examResultModel->examResultPush($data['student_id']);
+                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id']);
 //                    echo 2;
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
