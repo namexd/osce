@@ -495,33 +495,32 @@ class ExamController extends CommonController
             'mobile'        =>  'required',
             'code'          =>  'required',
             'images_path'   =>  'required',
-            'exam_sequence' =>  'required'
+            'exam_sequence' =>  'required',
+            'grade_class'   =>  'required',
+            'teacher_name'  =>  'required'
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
             'mobile.required'       =>  '手机号必填',
             'code.required'         =>  '学号必填',
             'images_path.required'  =>  '请上传照片',
-            'exam_sequence.required'=>  '准考证号必填'
+            'exam_sequence.required'=>  '准考证号必填',
+            'grade_class.required'  =>  '班级必填',
+            'teacher_name.required' =>  '班主任姓名必填'
         ]);
 
         //考试id
         $exam_id = $request->get('exam_id');
-        //考生数据
-        $examineeData = [
-            'name'          => $request  ->  get('name'),          //姓名
-            'gender'        => $request  ->  get('gender'),        //性别
-            'idcard'        => $request  ->  get('idcard'),        //身份证号
-            'mobile'        => $request  ->  get('mobile'),        //手机号
-            'code'          => $request  ->  get('code'),          //学号
-            'avator'        => $request  ->  get('images_path')[0],//照片
-            'email'         => $request  ->  get('email'),         //邮箱
-            'description'   => $request  ->  get('description'),   //备注
-            'exam_sequence' => $request  ->  input('exam_sequence') //准考证号
-        ];
+        $images  = $request->get('images_path');      //照片
+        //用户数据(姓名,性别,身份证号,手机号,学号,邮箱,照片)
+        $userData = $request->only('name','gender','idcard','mobile','code','email');
+        $userData['avatar'] = $images[0];      //照片
+        //考生数据(姓名,性别,身份证号,手机号,学号,邮箱,备注,准考证号,班级,班主任姓名)
+        $examineeData = $request->only('name','idcard','mobile','code','description','exam_sequence','grade_class','teacher_name');
+        $examineeData['avator'] = $images[0];  //照片
 
         try{
-            if($exam = $model -> addExaminee($exam_id, $examineeData))
+            if($exam = $model -> addExaminee($exam_id, $examineeData, $userData))
             {
                 return redirect()->route('osce.admin.exam.getExamineeManage', ['id' => $exam_id]);
             } else {
@@ -553,26 +552,24 @@ class ExamController extends CommonController
             'mobile'        =>  'required',
             'description'   =>  'sometimes',
             'images_path'   =>  'required',
-            'exam_sequence' =>  'required'
+            'exam_sequence' =>  'required',
+            'grade_class'   =>  'required',
+            'teacher_name'  =>  'required'
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
             'mobile.required'       =>  '手机号必填',
             'images_path.required'  =>  '请上传照片',
-            'exam_sequence.required'=>  '准考证号必填'
+            'exam_sequence.required'=>  '准考证号必填',
+            'grade_class.required'  =>  '班级必填',
+            'teacher_name.required' =>  '班主任姓名必填'
         ]);
-        $id =   $request->get('id');
+        $id         =   $request->get('id');
         $student    =   Student::find($id);
-        $images     =   $request->get('images_path');
-        $data   =   [
-            'name'          =>  $request->get('name'),
-            'idcard'        =>  $request->get('idcard'),
-            'mobile'        =>  $request->get('mobile'),
-            'code'          =>  $request->get('code'),
-            'avator'        =>  $images[0],
-            'description'   =>  $request->get('description'),
-            'exam_sequence' => $request  ->  input('exam_sequence') //准考证号
-        ];
+        $images     =   $request->get('images_path');   //照片
+        //考生数据(姓名,性别,身份证号,手机号,学号,邮箱,备注,准考证号,班级,班主任姓名)
+        $data = $request->only('name','idcard','mobile','code','description','exam_sequence','grade_class','teacher_name');
+        $data['avator'] = $images[0];  //照片
 
         try{
             if($student) {
