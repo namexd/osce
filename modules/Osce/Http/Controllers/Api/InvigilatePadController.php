@@ -48,6 +48,8 @@ class InvigilatePadController extends CommonController
     {
         $examScreeningModel = new ExamScreening();
         $result = $examScreeningModel->getExamCheck();
+        dd($result);
+
 
     }
 
