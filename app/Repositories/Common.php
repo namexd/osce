@@ -163,6 +163,7 @@ class Common{
                 {
                     throw new \Exception('没有找到首行');
                 }
+
                 $keyList=$itemsInfo->toArray();
                 foreach($items as $rowNum=>$rows)
                 {

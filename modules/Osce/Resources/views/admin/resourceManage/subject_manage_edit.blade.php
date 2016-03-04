@@ -158,7 +158,7 @@
                                                     </td>
                                                     <td>
                                                         <select {!! $data->pid==0? 'style="display:none;"':''!!} class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
-                                                            @for($i=1;$i<=config('osce.topticOptionMaxNumer',10);$i++)
+                                                            @for($i=1;$i<=config('osce.topticOptionMaxNumer',15);$i++)
                                                             <option value="{{$i}}" {{$data->score==$i? 'selected="selected"':''}}>{{$i}}</option>
                                                             @endfor
                                                         </select>
