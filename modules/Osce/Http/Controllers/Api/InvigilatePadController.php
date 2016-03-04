@@ -48,10 +48,7 @@ class InvigilatePadController extends CommonController
     {
 //        $examScreeningModel = new ExamScreening();
 //        $result = $examScreeningModel->getExamCheck();
-        $a =strtotime('2016-03-04 10:59:14');
-        $c=strtotime('2016-03-04 11:03:14');
-          $b=($c-$a)/60;
-        dd($b);
+
 
 
     }
@@ -179,25 +176,22 @@ class InvigilatePadController extends CommonController
 
     public function getExamGrade(Request $request)
     {
-        try {
             $this->validate($request, [
                 'station_id' => 'required|integer',
-//            'exam_id'  => 'required|integer'
             ], [
                 'station_id.required' => '没有获取到当前考站',
-                'exam_id.required' => '没有获取到当前考试'
             ]);
-//
             $stationId = $request->get('station_id');
-//        $stationId=8;
-            $examId = $request->get('exam_id');
             //根据考站id查询出下面所有的考试项目
+        try {
             $station = Station::find($stationId);
+
             //考试标准时间
             $mins = $station->mins;
-            $exam = Exam::find($examId);
+//            $exam = Exam::find($examId);
             $StandardModel = new Standard();
             $standardList = $StandardModel->ItmeList($station->subject_id);
+
             if (count($standardList) != 0) {
                 return response()->json(
                     $this->success_data($standardList, 1, '数据传送成功')

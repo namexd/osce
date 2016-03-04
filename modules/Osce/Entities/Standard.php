@@ -36,8 +36,10 @@ class Standard extends CommonModel
     }
 
     public function ItmeList($subjectId){
+
         try{
             $prointList =   $this->where('subject_id','=',$subjectId)->get();
+
             $data       =   [];
             foreach($prointList as $item)
             {
