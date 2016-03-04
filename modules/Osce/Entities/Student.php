@@ -106,30 +106,13 @@ class Student extends CommonModel
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
-            $result = WatchLog::where('student_id', $student_id)->first();
-            if ($result) {
-                throw new \Exception('该考生已绑定，无法删除！');
-            }
-            if (!$result = $this->where('id', $student_id)->delete()) {
-                throw new \Exception('该考生已绑定，无法删除！');
-            }
-
-            $examPlanRecord = ExamPlanRecord::where('exam_id', $exam_id)->first();
-            if ($examPlanRecord && $examPlanRecord->delete()) {
-                throw new \Exception('删除考生失败');
-            }
-
-            if (ExamPlan::where('student_id', $student_id)->first()) {
-                if (!ExamOrder::where('student_id', $student_id)->delete()) {
-                    throw new \Exception('删除该学生失败');
-                }
-            }
+            $this->checkDelete($student_id, $exam_id);
             $examData = [
                 'total' => count(Student::where('exam_id', $exam_id)->get())
             ];
             //更新考试信息
             $exam = new Exam();
-            if (!$result = $exam->updateData($exam_id, $examData)) {
+            if (!$exam->updateData($exam_id, $examData)) {
                 throw new \Exception('修改考试信息失败!');
             }
 
@@ -593,6 +576,44 @@ class Student extends CommonModel
     static public function examStudent($examId)
     {
         return Student::where('exam_id', '=', $examId)->get();
+    }
+
+    /**
+     * 删除的检测
+     * @param $student_id
+     * @param $exam_id
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-04 21:06
+     */
+    private function checkDelete($student_id, $exam_id)
+    {
+        try {
+            $result = WatchLog::where('student_id', $student_id)->first();
+            if ($result) {
+                throw new \Exception('该考生已绑定，无法删除！');
+            }
+            if (!$result = $this->where('id', $student_id)->delete()) {
+                throw new \Exception('该考生已绑定，无法删除！');
+            }
+
+            $examPlanRecord = ExamPlanRecord::where('exam_id', $exam_id)->get();
+            if (!$examPlanRecord->isEmpty()) {
+                foreach ($examPlanRecord as $item) {
+                    if (!$item->delete()) {
+                        throw new \Exception('删除考生失败');
+                    }
+                }
+            }
+
+            if (ExamPlan::where('student_id', $student_id)->first()) {
+                if (!ExamOrder::where('student_id', $student_id)->delete()) {
+                    throw new \Exception('删除该学生失败');
+                }
+            }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
 }
