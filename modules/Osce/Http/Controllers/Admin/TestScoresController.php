@@ -322,10 +322,12 @@ class TestScoresController  extends CommonController
     public function getGradeScoreList(Request $request,TestScoreRepositories $TestScoreRepositories){
         $classId = $request->classid;
         $subid = $request->subid;
+        $examid = $request->examid;
         //获取当前班级历史记录
-        $datalist = $TestScoreRepositories->getGradeScore($classId,$subid)->toArray();
+        $datalist = $TestScoreRepositories->getGradeScore($classId,$subid,$examid)->toArray();
         //获取当前考试记录
-        $curent = $TestScoreRepositories->getGradeScore('',$subid)->toArray();
+        $curent = $TestScoreRepositories->getGradeScore('',$subid,$examid)->toArray();
+
         $classData = '';
         $allData = '';
         $timeData = '';
@@ -333,6 +335,7 @@ class TestScoresController  extends CommonController
             foreach($curent as $kk=>$vv){
                 if($v['id'] == $vv['id']){
                     //把当前考试平均成绩加入班级中
+                    //dd($vv['avgScore']);
                     $datalist[$k]['AllavgScore'] = $vv['avgScore'];
                 }
                 $allData .= $vv['avgScore'].',';
@@ -347,6 +350,7 @@ class TestScoresController  extends CommonController
             'allData' => trim($allData,','),//考试平均分
             'timeData' => trim($timeData,',')//考试时间
         ];
+        //dd($datalist);
         return view('osce::admin.statisticalanalysis.statistics_teach_history',[
             'data' => $data,
             'classId'=>$classId,
@@ -368,6 +372,7 @@ class TestScoresController  extends CommonController
         $subjectID = $request->subid;
         $ResultID = $request->resultID;
         //班级成绩明细简介
+
         $data = $TestScoreRepositories->getExamDetails($examID,$ResultID,$subjectID);
         $data->time = date('Y-m-d H:i',strtotime($data->begin_dt)).' ~ '.date('H:i',strtotime($data->end_dt));
         //列表数据
