@@ -581,7 +581,7 @@ class Student extends CommonModel
     }
 
     /**
-     * 删除的检测
+     * 删除学生的检测
      * @param $student_id
      * @param $exam_id
      * @throws \Exception
