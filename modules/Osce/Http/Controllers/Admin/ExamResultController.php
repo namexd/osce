@@ -333,7 +333,7 @@ class ExamResultController extends CommonController{
 //                }
 //            }
 
-            return view('osce::admin.statisticalanalysis.exam_video',['data'=>$data,'anchor'=>$anchor]);
+            return view('osce::admin.statisticAlanalysis.exam_video',['data'=>$data,'anchor'=>$anchor]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
