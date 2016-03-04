@@ -610,7 +610,7 @@ class Student extends CommonModel
 
             if (ExamPlan::where('student_id', $student_id)->first()) {
                 if (!ExamOrder::where('student_id', $student_id)->delete()) {
-                    throw new \Exception('考生已排考保存，无法删除！');
+                    throw new \Exception('删除该考生失败！');
                 }
             }
         } catch (\Exception $ex) {
