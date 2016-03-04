@@ -202,7 +202,7 @@ class Student extends CommonModel
                 $user = User::where(['username' => $studentData['mobile']])->select(['id'])->first();
                 if($user){
                     //根据用户ID和考试号查找考生
-                    $student = $this->where('user_id', '=', $user->id)->where('exam_id', '=', $exam_id)->first();
+                    $student = $this->where('user_id', $user->id)->where('exam_id', $exam_id)->first();
                 }else{
                     $student = false;
                 }
@@ -263,7 +263,7 @@ class Student extends CommonModel
                 if(isset($mes1)){
                     throw new \Exception(trim($message,'，'));
                 }
-                throw new \Exception(trim($message,'，'),1);
+                throw new \Exception(trim($message,'，'));
             }
 
             return $sucNum;     //返回导入成功的个数
@@ -323,8 +323,7 @@ class Student extends CommonModel
                 throw new \Exception((empty($key)?'':('第'.$key.'行')).'该学号已经有别人使用！');
             }
             //根据用户ID和考试号查找考生
-            $student = $this->where('user_id', '=', $user->id)
-                            ->where('exam_id', '=', $exam_id)->first();
+            $student = $this->where('user_id', $user->id)->where('exam_id', $exam_id)->first();
 
             //存在考生信息,则提示已添加, 否则新增
             if($student){

@@ -62,7 +62,7 @@ class StationController extends CommonController
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试'];
 
         //获得展示数据
-        $data = $model->showList($order,  $ajax = false, $name);
+        $data = $model->showList([],  $ajax = false, $name);
 
         //将展示数据放在页面上
         return view('osce::admin.resourceManage.exam_station',['data' => $data, 'placeCate'=>$placeCate, 'name'=>$name]);

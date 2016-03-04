@@ -127,7 +127,6 @@ function categories(){
         //计数器标志
         var index = $('table').find('tbody').attr('index');
         index = parseInt(index) + 1;
-
         var html = '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
                 '<td>'+parseInt(index)+'</td>'+
                 '<td>'+
@@ -139,12 +138,11 @@ function categories(){
                 '</div>'+
                 '</td>'+
                 '<td>'+
-                '<select style="display:none;" class="form-control" name="score['+index+'][total]">'+
-                '<option value="1">1</option>'+
-                '<option value="2">2</option>'+
-                '<option value="3">3</option>'+
-                '<option value="4">4</option>'+
-                '</select>'+
+                '<select style="display:none;" class="form-control" name="score['+index+'][total]">';
+                for(var a=1; a<=15; a++){
+                    html += '<option value="'+a+'">'+a+'</option>';
+                }
+        html +=  '</select>'+
                 '</td>'+
                 '<td>'+
                 '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -191,7 +189,7 @@ function categories(){
                 '<td>'+
                 '<select class="form-control" name="score['+parent+']['+child+']">';
                 /*TODO: Zhoufuxiang 2016-2-26*/
-                for(var a=1; a<=10; a++){
+                for(var a=1; a<=15; a++){
                     html += '<option value="'+a+'">'+a+'</option>';
                 }
         html += '</select>'+
@@ -636,7 +634,7 @@ function categories(){
                                        '<select class="form-control" style="display:none;" name="score['+index+'][total]">'+
                                        '<option value="'+res[i].score+'">'+res[i].score+'</option>';
                                        /*TODO: Zhoufuxiang 2016-2-26*/
-                                       for(var a=1; a<=10; a++){
+                                       for(var a=1; a<=15; a++){
                                            html += '<option value="'+a+'">'+a+'</option>';
                                        }
                                html += '</select>'+
@@ -675,7 +673,7 @@ function categories(){
                                                '<select class="form-control" name="score['+index+']['+res[j].sort.substr(res[j].sort.indexOf('-')+1, 3)+']">';
                                                 /*TODO: Zhoufuxiang 2016-2-26*/
                                                //'<option value="'+res[j].score+'">'+res[j].score+'</option>';
-                                               for(var a=1; a<=10; a++){
+                                               for(var a=1; a<=15; a++){
                                                    html += '<option value="'+a+'"'+((res[j].score==a)?" selected ":"")+'>'+a+'</option>';
                                                }
                                        html += '</select>'+

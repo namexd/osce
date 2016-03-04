@@ -12,7 +12,7 @@ return [
 	'batch_num' => 3,
 	'wait_student_num' => 4,
 
-	'topticOptionMaxNumer'	=>	10,
+	'topticOptionMaxNumer'	=>	15,
 
 	'importForCnToEn'=>[
 		// 中英文 字段名对照

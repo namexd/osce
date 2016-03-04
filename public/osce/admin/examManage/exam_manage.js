@@ -1690,8 +1690,14 @@ function exam_notice_add(){
      * @date    2016-01-15
      */
     $(".images_uploads").change(function(){
+    	var files=document.getElementById("file0").files;
+    	var kb=Math.floor(files[0].size/1024);
+    	//console.log(kb);
+    	if(kb>2048){
+    		layer.alert('文件大小不得超过2M!');
+    		return false;
+    	}
         $.ajaxFileUpload({
-
             url:pars.url,
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
@@ -1881,6 +1887,13 @@ function exam_notice_edit(){
      * @date    2016-01-15
      */
     $(".images_uploads").change(function(){
+    	var files=document.getElementById("file0").files;
+    	var kb=Math.floor(files[0].size/1024);
+    	//console.log(kb);
+    	if(kb>2048){
+    		layer.alert('文件大小不得超过2M!');
+    		return false;
+    	}
         $.ajaxFileUpload({
             url:pars.url,
             fileElementId:'file0',//必须要是 input file标签 ID
