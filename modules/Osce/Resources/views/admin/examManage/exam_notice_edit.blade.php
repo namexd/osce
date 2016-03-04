@@ -48,6 +48,21 @@
  <script src="{{asset('osce/admin/plugins/js/plugins/UEditor/lang/zh-cn/zh-cn.js')}}"></script>
  <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
  <script src="{{asset('osce/admin/examManage/exam_manage.js')}}" ></script>
+ <script>
+     function asd(){
+         var reg=document.getElementsByName("reg");
+         if(reg[0].checked){
+             document.getElementById("submit").disabled=false;
+         }
+         else {
+             document.getElementById("submit").disabled=true;
+
+         }
+     }
+ </script>
+
+
+
 @stop
 
 @section('content')
@@ -72,22 +87,22 @@
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
-                    <div class="form-group">
+                    <div class="form-group" >
                         <label class="col-sm-2 control-label">接收人:</label>
                         <div class="col-sm-10 select_code" id="checkbox_div">
-                            <label class="check_label checkbox_input">
+                            <label class="check_label checkbox_input" >
                                 <div class="check_icon {{in_array(1,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <input  name="reg" type="checkbox" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}} disabled >
                                 <span class="check_name">考生</span>
                             </label>
                             <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(2,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <input type="checkbox" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}} disabled >
                                 <span class="check_name">老师</span>
                             </label>
                             <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(3,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}}>
+                                <input type="checkbox" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}} disabled >
                                 <span class="check_name">sp老师</span>
                             </label>
                         </div>
@@ -95,25 +110,25 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">标题:</label>
-                        <div class="col-sm-10">
-                            <input type="text"  id="examinee_id" name="name" value="{{$item->name}}" class="form-control">
+                        <div class="col-sm-10" >
+                            <input type="text"  id="examinee_id" name="name" value="{{$item->name}}" class="form-control" disabled>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label" >内容:</label>
                         <div class="col-sm-10">
-                            <div id="content" style="display: none;">
+                            <div id="content" style="display: none;" >
                                 {!! $item->content !!}
                             </div>
-                            <script id="editor" type="text/plain" style="width:100%;height:500px;" name="content" ></script>
+                            <script id="editor" type="text/plain" style="width:100%;height:500px;" name="content"></script>
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">附件:</label>
                         <div class="col-sm-10">
-                            <span class="images_uploads upload btn btn-white">上传附件
+                            <span class="images_uploads upload btn btn-white" >上传附件
                                 <input type="file"  name="attchment" id="file0"/>
                             </span>
                             <div class="upload_list upload_list_doc">
@@ -129,7 +144,7 @@
                     <div class="hr-line-dashed"></div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-primary" type="submit">保存</button>
+                            <button class="btn btn-primary" type="submit" disabled>保存</button>
                             <a class="btn btn-white cancel" href="javascript:history.back(-1)">取消</a>
                         </div>
                     </div>
