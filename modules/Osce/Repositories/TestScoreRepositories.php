@@ -37,13 +37,14 @@ class TestScoreRepositories  extends BaseRepository
             $join -> on('exam_screening.exam_id', '=', 'exam.id');
         })->leftJoin('exam_result', function($join){
             $join -> on('exam_result.exam_screening_id', '=', 'exam_screening.id');
-        })->select('exam_result.student_id')->get();
+        })->get();
         $idarr = [];
         foreach($builder as $v){
             if($v->student_id){
                 $idarr[] = $v->student_id;
             }
         }
+
         $tester = Student::whereIn('id',$idarr)->get();
         return $tester;
     }
@@ -79,7 +80,8 @@ class TestScoreRepositories  extends BaseRepository
             $join -> on('station.id', '=', 'exam_result.station_id');
         })->leftJoin('subject', function($join){
             $join -> on('subject.id', '=', 'station.subject_id');
-        })->groupBy('station.subject_id')->get();
+        })->groupBy('subject.id')->get();
+        //dd($builder);
         return $builder;
     }
 

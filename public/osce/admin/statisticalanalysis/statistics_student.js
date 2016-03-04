@@ -15,7 +15,7 @@ $(function(){
 //考生成绩分析
 function statistics_student_score(){
     //默认加载select
-    var $selectId = $(".exam_select").val();
+    var $selectId = $(".exam_select option:selected").val();
     function select(selectId){
         $(".student_select").empty();
         var url ='/osce/admin/testscores/ajax-get-tester';
@@ -133,6 +133,7 @@ function statistics_student_score(){
     ajax($selectId,$studentId);
     //筛选
     $("#search").click(function(){
+        var $selectId = $(".exam_select option:selected").val();
         var $studentId = $(".student_select option:selected").val();
         ajax($selectId,$studentId);
     });
