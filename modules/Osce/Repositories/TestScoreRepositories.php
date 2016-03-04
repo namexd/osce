@@ -367,7 +367,7 @@ class TestScoreRepositories  extends BaseRepository
      * @date    2016-3-2 17:26:32
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getGradeScore($classId,$subid){
+    public function getGradeScore($classId,$subid,$examid){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
         if($classId){
@@ -384,6 +384,7 @@ class TestScoreRepositories  extends BaseRepository
                 'exam.id'
             );
         }
+        $ExamResult = $ExamResult->where('exam.id','=',$examid);
         $examlist = $ExamResult->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
