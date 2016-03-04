@@ -106,7 +106,9 @@ class Student extends CommonModel
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
+            //验证学生的删除
             $this->checkDelete($student_id, $exam_id);
+
             $examData = [
                 'total' => count(Student::where('exam_id', $exam_id)->get())
             ];
@@ -591,17 +593,17 @@ class Student extends CommonModel
         try {
             $result = WatchLog::where('student_id', $student_id)->first();
             if ($result) {
-                throw new \Exception('该考生已绑定，无法删除！');
+                throw new \Exception('该考生已绑定，无法删除！', -111);
             }
             if (!$result = $this->where('id', $student_id)->delete()) {
-                throw new \Exception('该考生已绑定，无法删除！');
+                throw new \Exception('删除该考生失败', -112);
             }
 
             $examPlanRecord = ExamPlanRecord::where('exam_id', $exam_id)->get();
             if (!$examPlanRecord->isEmpty()) {
                 foreach ($examPlanRecord as $item) {
                     if (!$item->delete()) {
-                        throw new \Exception('删除考生失败');
+                        throw new \Exception('删除该考生失败', -113);
                     }
                 }
             }
