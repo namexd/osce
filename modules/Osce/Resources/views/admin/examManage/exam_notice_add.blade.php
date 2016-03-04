@@ -27,6 +27,12 @@
         margin:0!important;
     }
     #file0{position:absolute;top:0;left:0;width:100px;height:34px;opacity:0;cursor:pointer;}
+    .file-msg{
+        position: relative;
+        top: -26px;
+        left: 109px;
+        color: #42b2b1;
+    }
     .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
     .fa-remove{cursor:pointer;}
     .check_label + i.form-control-feedback.glyphicon.glyphicon-ok {top: -2px;}
@@ -107,6 +113,7 @@
                         <span class="images_uploads upload btn btn-white">上传附件
                             <input type="file"  name="attchment" id="file0"/>
                         </span>
+                        <span class="file-msg">(文件大小不得超过2M!)</span>
                         <div class="upload_list upload_list_doc">
                             
                         </div>
