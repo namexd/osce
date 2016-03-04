@@ -105,14 +105,16 @@ class ExamPlanRecord extends CommonModel
             $prevSerial = ExamPlanRecord::where('exam_screening_id','=',$screen->id)
                 ->where('serialnumber', '=', $serialnumber)
                 ->whereNotNull('end_dt')
-                ->groupBy('student_id')
+//                ->groupBy('student_id')
+                ->orderBy('end_dt', 'asc')
                 ->get()
                 ->pluck('student_id');
 
             $thisSerial = ExamPlanRecord::where('exam_screening_id', $screen->id)
                 ->whereNotNull('end_dt')
                 ->where('serialnumber', '=', $serialnumber-1)
-                ->groupBy('student_id')
+//                ->groupBy('student_id')
+                ->orderBy('end_dt', 'asc')
                 ->get()
                 ->pluck('student_id');
 
