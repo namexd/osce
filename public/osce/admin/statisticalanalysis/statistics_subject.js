@@ -6,14 +6,14 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "subject_statistics":subject_statistics();break;//科目成绩分析
-        case "subject_level":subject_level();break;//科目难度分析
+        case "subject_statistics":subject_statistics();break;//单次考试分析
+        case "subject_level":subject_level();break;//科目成绩趋势
         case "examation_statistics":examation_statistics();break;//考站成绩分析
         case "statistics_check":statistics_check();break;//考核点分析
     }
 });
 
-//科目成绩分析
+//单次考试分析
 function subject_statistics(){
     function echartsSubject(standardStr,scoreAvgStr){//科目成绩分析。
         var t = echarts.init(document.getElementById("echarts-Subject")),
@@ -101,7 +101,7 @@ function subject_statistics(){
         ajax(exam_id,exam_name);
     });
 }
-//科目难度分析
+//科目成绩趋势
 function subject_level(){
     function echartsSubject(timeStr,passStr){//科目成绩分析。
         var e = echarts.init(document.getElementById("echarts-Subject")),
@@ -130,12 +130,12 @@ function subject_level(){
                     data: passStr,
                     markPoint: {
                         data: [{
-                            type: "max",
-                            name: "最大值"
+                            type: "min",
+                            name: "最小值"
                         },
                             {
-                                type: "min",
-                                name: "最小值"
+                                type: "max",
+                                name: "最大值"
                             }]
                     }
                 }]
@@ -167,11 +167,14 @@ function subject_level(){
             type:'get',
             cache:false,
             success:function(res){
-                console.log(res);
                 $(".subjectBody").empty();
                 var timeStr = res.data.StrList.standardStr.split(",");
                 var passStr=res.data.StrList.qualifiedPass.split(",");
-                if(timeStr){echartsSubject(timeStr,passStr);}
+                var passStr1 = [];
+                for(var i=0;i<passStr.length;i++){
+                    passStr1.push(Number(passStr[i]));
+                }
+                if(timeStr){echartsSubject(timeStr,passStr1);}
                 $(res.data.list).each(function(){
                     //拼接URL 链接
                     var url = '';

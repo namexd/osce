@@ -43,7 +43,7 @@
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>考试</th>
+                            <th>科目</th>
                             <th>考试时间</th>
                             <th>平均耗时</th>
                             <th>平均成绩</th>
