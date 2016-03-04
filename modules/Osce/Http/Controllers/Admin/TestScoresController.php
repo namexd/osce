@@ -67,10 +67,14 @@ class TestScoresController  extends CommonController
      */
     public function getAjaxGetSubject(Request $request,TestScoreRepositories $TestScoreRepositories){
         //获取筛选参数
-        $examid = $request->examid;
-        $student_id = $request->student_id;
+        $examid = Intval($request->examid);
+        $student_id = intval($request->student_id);
+        //echo $examid;
         //查找学生所有科目考试数据
+            //\DB::connection("osce_mis")->enableQueryLog();
+
         $singledata = $TestScoreRepositories->getTestSubject($examid,$student_id)->toArray();
+       // dd(\DB::connection("osce_mis")->getQueryLog());
         //查找当前考试所有科目平均成绩
         $avgdata = $TestScoreRepositories->getTestSubject($examid,'')->toArray();
         //dd($avgdata);

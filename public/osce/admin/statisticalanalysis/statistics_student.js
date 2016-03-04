@@ -15,7 +15,7 @@ $(function(){
 //考生成绩分析
 function statistics_student_score(){
     //默认加载select
-    var $selectId = $(".exam_select").val();
+    var $selectId = $(".exam_select option:selected").val();
     function select(selectId){
         $(".student_select").empty();
         var url ='/osce/admin/testscores/ajax-get-tester';
@@ -37,7 +37,7 @@ function statistics_student_score(){
         var id = $(this).val();
         select(id);
     });
-    var $studentId = $(".student_select").val();
+    var $studentId = $(".student_select option:selected").val();
     function echartsSubject(subStr,studentScoreStr,scoreAvgStr){//科目成绩分析。
         var h = echarts.init(document.getElementById("echarts-Subject")),
             d = {
@@ -70,6 +70,24 @@ function statistics_student_score(){
         h.setOption(d);
     }
     //默认加载最近一次考试
+    var getStorage = localStorage.getItem("stuScore");
+    if(getStorage){
+        getStorage =JSON.parse(getStorage);
+        selectId = getStorage.selectId;
+        studentId = getStorage.studentId;
+        $(".exam_select").children().each(function(){
+            if($(this).val() == selectId){
+                $(this).attr("selected",true);
+            }
+        });
+        $(".student_select").children().each(function(){
+            if($(this).val() == studentId){
+                $(this).attr("selected",true);
+            }
+        });
+        $selectId = selectId;
+        $studentId = studentId;
+    }
     function ajax(examId,studentId){
         var url = '/osce/admin/testscores/ajax-get-subject';
         $.ajax({
@@ -87,7 +105,6 @@ function statistics_student_score(){
                 var scoreAvg = res.avgdata;
                 $(res.singledata).each(function(){
                     subjectStr.push(this.title);
-
                 });
                 $(res.subject).each(function(i){
                     subStr.push({
@@ -104,10 +121,7 @@ function statistics_student_score(){
                     }else{
                         scoreAvgStr.push(0);
                     }
-
-
                 });
-
                 $(res.list).each(function(i){
                     $(".subjectBody").append('<tr>' +
                         '<td>'+( i+1 )+'</td>' +
@@ -133,7 +147,10 @@ function statistics_student_score(){
     ajax($selectId,$studentId);
     //筛选
     $("#search").click(function(){
+        var $selectId = $(".exam_select option:selected").val();
         var $studentId = $(".student_select option:selected").val();
+        var pageName = "statistics_student_score";
+        setStorage(pageName,$selectId,$studentId);
         ajax($selectId,$studentId);
     });
 }
@@ -201,5 +218,15 @@ function subject_level (){
         history.go(-1);
     })
 }
-
+//考生成绩分析页面本地存储
+function setStorage(pageName,selectId,studentId){
+    //考生成绩分析首页存储
+    if(pageName == "statistics_student_score"){
+        var stuScore = {};
+        stuScore.pageName = pageName;
+        stuScore.selectId = selectId;
+        stuScore.studentId = studentId;
+        localStorage.setItem("stuScore",JSON.stringify(stuScore));//设置本地存储
+    }
+}
 
