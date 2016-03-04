@@ -304,7 +304,7 @@ class InvigilatePadController extends CommonController
                 'operation' => Input::get('operation'),//操作的连贯性
                 'skilled' => Input::get('skilled'),//工作的娴熟度
                 'patient' => Input::get('patient'),//病人关怀情况
-                'affinity' => Input::get('affinity'),//沟通亲和能力
+                'affinity' => Input::get('affinity'),//沟通亲和能力/
 
             ];
             //根据考生id获取到考试id
