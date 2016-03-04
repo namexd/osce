@@ -70,31 +70,21 @@ class Room extends CommonModel
             } else {
                 //通过传入的$type来展示响应的数据
                 if ($type === "0") {
-                    $builder = Room::select([
-                        'id',
-                        'name',
-                        'address',
-                        'description'
-                    ]);
-
+                    $builder = Room::select(['id', 'name', 'address', 'description']);
                     if ($keyword !== "") {
-
                         $builder = $builder->where('name','like','%'.  $keyword . '%');
                     }
-                    return $builder -> paginate(config('osce.page_size'));
+                    return $builder -> paginate(config('osce.page_size', 10));
+
                 } else {
-                    $builder = Area::select([
-                        'id',
-                        'name',
-                        'cate',
-                        'description'
-                    ]);
+
+                    $builder = Area::select(['id','name','cate','description']);
+
                     if ($keyword !== "") {
                         $builder = $builder->where('name','like','%'.$keyword.'%');
                     }
-                    return $builder->where('cate',$type)->paginate(config('osce.page_size'));
+                    return $builder->where('cate',$type)->paginate(config('osce.page_size', 10));
                 }
-
             }
 
         } catch (\Exception $ex) {
