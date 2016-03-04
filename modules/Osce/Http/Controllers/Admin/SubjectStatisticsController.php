@@ -97,7 +97,7 @@ class SubjectStatisticsController  extends CommonController
      * @access public
      * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
      * @author yangshaolin <yangshaoliin@misrobot.com>
-     * @date    2016年2月29日14:20:34
+     * @date    2016年3月4日10:08:52
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function  SubjectGradeAnalyze(request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
@@ -164,7 +164,7 @@ class SubjectStatisticsController  extends CommonController
      * @param SubjectStatisticsRepositories $subject
      * @return \Illuminate\View\View|string
      * @author xumin <xumin@misrobot.com>
-     * @date
+     * @date 2016年3月4日10:08:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function stationGradeList(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
@@ -210,8 +210,8 @@ class SubjectStatisticsController  extends CommonController
                     'stationName'      => $item->stationName,//考站名称
                     'teacherName'      => $item->teacherName,//评分老师
                     'examMins'          => $item->examMins,//考试限时
-                    'timeAvg'           => sprintf("%01.2f", $item->timeAvg),//平均耗时
-                    'scoreAvg'          => sprintf("%01.2f", $item->scoreAvg),//平均成绩
+                    'timeAvg'           => $subjectStatisticsRepositories->timeTransformation(sprintf("%01.2f", $item->timeAvg)),//平均耗时
+                    'scoreAvg'          =>sprintf("%01.2f", $item->scoreAvg),//平均成绩
                     'studentQuantity'  => $item->studentQuantity,//考试人数
                 ];
                 if($stationNameStr){
@@ -276,7 +276,7 @@ class SubjectStatisticsController  extends CommonController
                 $stationDetails[$k]['number'] = $k+1;//编号
                 $stationDetails[$k]['studentName'] = $v->studentName;//考生名字
                 $stationDetails[$k]['begin_dt'] = $v->begin_dt;//考试时间
-                $stationDetails[$k]['time'] = $v->time;//耗时
+                $stationDetails[$k]['time'] =$subjectStatisticsRepositories->timeTransformation($v->time);//耗时
                 $stationDetails[$k]['score'] = $v->score;//成绩
                 $stationDetails[$k]['teacherName'] = $v->teacherName;//评价老师
             }
