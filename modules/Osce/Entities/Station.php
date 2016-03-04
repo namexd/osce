@@ -76,8 +76,7 @@ class Station extends CommonModel
                 $builder = $builder->whereNotIn($this->table.'.id',$stationIdArray);
             }
             if($name !== ''){
-//                $name = $this->sqlencode($name);
-                $builder = $builder->where($this->table.'.name', 'like', '%'.$name.'%');
+                $builder = $builder->where($this->table.'.name', 'like', '%'. '\\' . $name.'%');
             }
 
             //开始查询
@@ -104,14 +103,6 @@ class Station extends CommonModel
         } catch (\Exception $ex) {
             throw $ex;
         }
-    }
-
-    public function sqlencode($str){
-        $str = str_replace("';", "';';", $str);
-        $str = str_replace("[", "[[]", $str);
-        $str = str_replace("_", "[_]", $str);
-        $str = str_replace("%", "[%]", $str);
-        return $str;
     }
 
     /**
