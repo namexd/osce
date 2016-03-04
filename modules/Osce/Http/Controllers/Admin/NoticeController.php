@@ -199,7 +199,6 @@ class NoticeController extends CommonController
         } else {
             $attach = '';
         }
-
         $NoticeModel = new Notice();
         try {
             $contentLen = mb_strlen($content);
