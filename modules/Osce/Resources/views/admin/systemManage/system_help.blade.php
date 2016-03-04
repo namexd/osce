@@ -11,7 +11,6 @@
 @stop
 
 @section('only_js')
-	
 @stop
 
 @section('content')
