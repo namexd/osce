@@ -12,7 +12,7 @@ return [
 	'batch_num' => 3,
 	'wait_student_num' => 4,
 
-	'topticOptionMaxNumer'	=>	10,
+	'topticOptionMaxNumer'	=>	15,
 
 	'importForCnToEn'=>[
 		// 中英文 字段名对照
@@ -35,7 +35,9 @@ return [
 			'电子邮箱'	=>	'email',
 			'头像'		=>	'avator',
 			'备注'		=>	'description',
-			'准考证号'	=>  'exam_sequence'
+			'准考证号'	=>  'exam_sequence',
+			'班级'		=>	'grade_class',
+			'班主任姓名' =>	'teacher_name'
 		],
 	],
 	'machine_category'=>[
