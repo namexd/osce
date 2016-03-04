@@ -284,7 +284,7 @@ class TestScoresController  extends CommonController
         $avgStr = '';
         $maxScore = '';
         $minScore = '';
-        foreach($datalist as $v){
+        foreach($datalist as $k=>$v){
             if($v->teacher_name){
                 $teacherStr .= $v->teacher_name.',';
             }
@@ -298,6 +298,10 @@ class TestScoresController  extends CommonController
 
             if($v->minScore){
                 $minScore .= $v->minScore.',';
+            }
+
+            if($v->minScore){
+                $datalist[$k]['avgScore'] = sprintf('%.2f',$v->avgScore);
             }
         }
         $data = [
@@ -336,12 +340,13 @@ class TestScoresController  extends CommonController
                 if($v['id'] == $vv['id']){
                     //把当前考试平均成绩加入班级中
                     //dd($vv['avgScore']);
-                    $datalist[$k]['AllavgScore'] = $vv['avgScore'];
+                    $datalist[$k]['AllavgScore'] = sprintf('%.2f',$vv['avgScore']);
                 }
-                $allData .= $vv['avgScore'].',';
+                $allData .= sprintf('%.2f',$vv['avgScore']).',';
             }
-            $classData .= $v['avgScore'].',';
+            $classData .= sprintf('%.2f',$v['avgScore']).',';
             $timeData .= $v['name'].',';
+            $datalist[$k]['avgScore'] = sprintf('%.2f',$v['avgScore']);
         }
        // dd($datalist);
         $data = [

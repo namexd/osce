@@ -118,7 +118,7 @@ class SubjectStatisticsController  extends CommonController
             $rew[$key]['qualifiedPass'] = '0';
             $rew[$key]['scoreAvg'] =sprintf('%.2f',$val['scoreAvg']);
             $rew[$key]['timeAvg'] =$subjectStatisticsRepositories->timeTransformation(sprintf('%.2f',$val['timeAvg']));
-            $rew[$key]['ExamBeginTime'] = substr($val['ExamBeginTime'],0,7);
+            $rew[$key]['ExamBeginTime'] = substr($val['ExamBeginTime'],0,10);
 
             foreach ($rewTwo as $v) {
                 if ($val['ExamId'] == $v['ExamId']) {
@@ -128,10 +128,10 @@ class SubjectStatisticsController  extends CommonController
 
             }
             if ($standardStr) {
-                $standardStr .= ',' . $val['ExamBeginTime'];
+                $standardStr .= ',' .substr($val['ExamBeginTime'],0,7);
                 $qualifiedPass.=','.$val['qualifiedPass'];
             } else {
-                $standardStr .= $val['ExamBeginTime'];
+                $standardStr .= substr($val['ExamBeginTime'],0,7);
                 $qualifiedPass.=$val['qualifiedPass'];
             }
              $val['qualifiedPass']=$val['qualifiedPass'].'%';
@@ -151,6 +151,7 @@ class SubjectStatisticsController  extends CommonController
         if ($request->ajax()) {
             return $this->success_data(['list' => $rew, 'StrList' => $StrList]);
         }
+       // dd($StrList);
 
         return view('osce::admin.statisticalanalysis.statistics_subject_level', ['list' => $rew, 'subjectList' => $SubjectList, 'StrList' => $StrList]);
     }
