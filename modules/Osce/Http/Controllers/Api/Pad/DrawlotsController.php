@@ -264,7 +264,7 @@ class DrawlotsController extends CommonController
                     throw new \Exception('该考生不在当前考生小组中', 7201);
                 }
             } else {
-                throw new \Exception('没有这种考试模式！',-705);
+                throw new \Exception('没有这种考试模式！', -705);
             }
 
             //如果考生走错了房间
@@ -627,14 +627,16 @@ class DrawlotsController extends CommonController
     {
         switch ($exam->sequence_mode) {
             case 1:
-                $examFlowRooms = ExamFlowRoom::where('room_id', $room->id)->get();
+                $examFlowRooms = ExamFlowRoom::where('room_id', $room->id)
+                    ->where('exam_id', $exam->id)->get();
                 $effected = $examFlowRooms->pluck('effected');
                 if (!$effected->search(1)) {
                     throw new \Exception('当前老师并没有被安排在这场考试中', -1010);
                 }
                 break;
             case 2:
-                $examFlowStations = ExamFlowStation::where('station_id', $station->id)->get();
+                $examFlowStations = ExamFlowStation::where('station_id', $station->id)
+                    ->where('exam_id', $exam->id)->get();
                 $effected = $examFlowStations->pluck('effected');
                 if (!$effected->search(1)) {
                     throw new \Exception('当前老师并没有被安排在这场考试中', -1011);
