@@ -69,6 +69,8 @@ class TestScoreRepositories  extends BaseRepository
                 $DB->raw('avg(exam_result.time) as timeAvg'),
                 $DB->raw('avg(exam_result.score) as scoreAvg'),
                 'subject.id',
+                'subject.title',
+                'subject.score',
                 'exam_result.id as result_id'
             );
         }

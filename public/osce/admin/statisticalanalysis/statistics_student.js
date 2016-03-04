@@ -106,22 +106,16 @@ function statistics_student_score(){
                 $(res.singledata).each(function(){
                     subjectStr.push(this.title);
                 });
-                $(res.subject).each(function(i){
+                $(res.avgdata).each(function(i){
                     subStr.push({
                         text: this.title,
                         max: this.score
                     });
-                    //console.log(subStr);
                     if(singledata[i]){
                         studentScoreStr.push(Number(singledata[i]['score']));
-                    }else{
-                        studentScoreStr.push(0);
                     }
-                    if(scoreAvg[i]){
-                        scoreAvgStr.push(Number(scoreAvg[i]['scoreAvg']));
-                    }else{
-                        scoreAvgStr.push(0);
-                    }
+                    scoreAvgStr.push(Number(scoreAvg[i]['scoreAvg']));
+
                 });
                 $(res.list).each(function(i){
                     $(".subjectBody").append('<tr>' +
@@ -141,6 +135,7 @@ function statistics_student_score(){
                         '</a>' +
                         '</td></tr>')
                 });
+
                 if(studentScoreStr){echartsSubject(subStr,studentScoreStr,scoreAvgStr);}
             }
         })

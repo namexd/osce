@@ -85,22 +85,37 @@ class TestScoresController  extends CommonController
         }
         //查找当前考试所有科目平均成绩
         $avgdata = $TestScoreRepositories->getTestSubject($examid,'',$subjectId)->toArray();
-        //dd($avgdata);
+
+        $avgInfo = [];
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
                     $singledata[$k]['timeAvg'] = $subjectStatisticsRepositories->timeTransformation(sprintf('%.2f',$avgdata[$kk]['timeAvg']));
                     $singledata[$k]['scoreAvg'] = sprintf('%.2f',$avgdata[$kk]['scoreAvg']);
+                    $avgInfo[] = $vv;
                 }
                 $avgdata[$kk]['scoreAvg'] = sprintf('%.2f',$vv['scoreAvg']);
             }
         }
+        //重新排列 平均成绩数组的顺序
+        foreach($avgdata as $v){
+            $fag = true;
+            foreach($avgInfo as $val){
+                if($v['id'] == $val['id']){
+                    $fag = false;
+                }
+            }
+            if($fag){
+                $avgInfo[] = $v;
+            }
+        }
 
+        //dd($avgInfo);
         $data = [
             'list' => $singledata,//列表
             'singledata' => $singledata,//雷达图学生成绩
-            'avgdata' => $avgdata,//平均成绩
-            'subject' => $subject
+            'avgdata' => $avgInfo,//平均成绩
+            //'subject' => $subject
         ];
         return $data;
     }
