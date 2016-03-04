@@ -438,7 +438,13 @@ class ExamController extends CommonController
             $result = $student->deleteStudent($student_id,$exam_id);
 
             if ($result === true) {
-                return $this->success_data(['删除成功！']);
+//                $examPlan = ExamPlan::where('student_id', $student_id)->first();
+                $num = count(Student::where('exam_id', $exam_id)->get());
+                if($num){
+                    return $this->success_data([],1,'删除成功！请去排考！');
+                }else{
+                    return $this->success_data([],1,'删除成功！请添加考生！');
+                }
             }
 
         } catch (\Exception $ex) {
