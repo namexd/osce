@@ -630,7 +630,7 @@ class DrawlotsController extends CommonController
                 $examFlowRooms = ExamFlowRoom::where('room_id', $room->id)
                     ->where('exam_id', $exam->id)->get();
                 $effected = $examFlowRooms->pluck('effected'); //获取effected的一维集合
-                if (!$effected->search(1)) {  //如果集合里面没有1，就报错
+                if (!$effected->search('1')) {  //如果集合里面没有1，就报错
                     throw new \Exception('当前老师并没有被安排在这场考试中', -1010);
                 }
                 break;
@@ -638,8 +638,8 @@ class DrawlotsController extends CommonController
                 $examFlowStations = ExamFlowStation::where('station_id', $station->id)
                     ->where('exam_id', $exam->id)->get();
                 $effected = $examFlowStations->pluck('effected'); //获取effected的一维集合
-                dd($effected);
-                if (!$effected->search(1)) { //如果集合里面没有1，就报错
+                dd($effected->search('1'));
+                if (!$effected->search('1')) { //如果集合里面没有1，就报错
                     throw new \Exception('当前老师并没有被安排在这场考试中', -1011);
                 }
                 break;
