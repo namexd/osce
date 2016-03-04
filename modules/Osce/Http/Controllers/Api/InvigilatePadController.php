@@ -289,12 +289,7 @@ class InvigilatePadController extends CommonController
                 throw new \Exception('没有查询到该学生队列', -100);
             }
 
-            $time = (strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt));
-            if($time>=60){
-                $useTime =$time/60;
-            }else{
-                $useTime =1;
-            }
+            $useTime = strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt);
 //            getMinutes
             $data = [
                 'station_id' => $stationId,
