@@ -388,7 +388,8 @@ class SubjectStatisticsController  extends CommonController
                 //计算该考核点的合格率
                 $rew[$k]['studentQualifiedPercentage'] = sprintf("%.4f",$rew[$k]['studentQualifiedCount']/$rew[$k]['studentCount'])*100;
                 //获取该考核点名称
-                $content = $subjectStatisticsRepositories->GetContent($v['pid']);
+                $content = SubjectItem::where('id','=',$v['pid'])->select('content')->first();
+                $content = !empty($content)?$content['content']:'-';
                 $datas[] = [
                     'number'               => $number++,//序号
                     'standardContent'     => $content,//考核点名称
