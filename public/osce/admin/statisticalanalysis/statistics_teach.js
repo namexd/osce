@@ -76,8 +76,25 @@ function statistics_teach_score(){
     //默认加载最近一次考试
     var $examId = $(".exam_select").children().first().val();
     var $subjectId = $(".student_select").children().first().val();
-
     var url = "/osce/admin/testscores/teacher-data-list";
+    var getStorage = localStorage.getItem("teachScore");
+    if(getStorage){
+        getStorage =JSON.parse(getStorage);
+        examId = getStorage.examId;
+        subjectId = getStorage.subjectId;
+        $(".exam_select").children().each(function(){
+            if($(this).val() == examId){
+                $(this).attr("selected",true);
+            }
+        });
+        $(".student_select").children().each(function(){
+            if($(this).val() == subjectId){
+                $(this).attr("selected",true);
+            }
+        });
+        $examId = examId;
+        $subjectId = subjectId;
+    }
     function ajax(examId,subjectId){
         $(".subjectBody").empty();
         $.ajax({
@@ -85,7 +102,6 @@ function statistics_teach_score(){
             type:"get",
             cache:false,
             success:function(res){
-                //console.log(res);
                 var teacherStr = res.data.data.teacherStr.split(",");
                 var avgStr = res.data.data.avgStr.split(",");
                 var maxScore = res.data.data.maxScore.split(",");
@@ -118,6 +134,8 @@ function statistics_teach_score(){
     $("#search").click(function(){
         var examId = $(".exam_select option:selected").val();
         var subjectId = $(".student_select option:selected").val();
+        var pageName = "statistics_teach_score";
+        setStorage(pageName,examId,subjectId);
         ajax(examId,subjectId);
     });
     //跳详情页面
@@ -125,7 +143,6 @@ function statistics_teach_score(){
         var examid = $(this).attr("examid");
         var resultid = $(this).attr("resultid");
         var subid = $(this).attr("subid");
-
         parent.layer.open({
             type: 2,
             title: '班级成绩明细',
@@ -216,11 +233,15 @@ function teach_detail(){
     })
 }
 //数据本独存储
-//function setStorage(pageName,){
-//    var session4 = {};
-//    var session4.pageName = pageName;
-//    var
-//};
+function setStorage(pageName,examId,subjectId){
+    if(pageName == "statistics_teach_score"){
+        var teachScore = {};
+        teachScore.pageName = pageName;
+        teachScore.subjectId = subjectId;
+        teachScore.examId = examId;
+        localStorage.setItem("teachScore",JSON.stringify(teachScore));//设置本地存储
+    }
+}
 
 
 
