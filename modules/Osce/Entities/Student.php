@@ -121,6 +121,43 @@ class Student extends CommonModel
     }
 
     /**
+     * 判断考生模板表头及列数 TODO: zhoufuxiang 2016-3-4
+     */
+    public function judgeTemplet($data)
+    {
+        try{
+            $config = ['姓名', '性别', '学号', '身份证号', '联系电话', '电子邮箱', '头像', '备注', '准考证号'];
+            foreach ($data as $value) {
+                $key = 0;
+                //模板列数
+                if(count($value) != count($config)){
+                    throw new \Exception('模板列数有误');
+                }
+                foreach ($value as $index => $item) {
+                    $key++;
+                    if(!in_array($index, $config)){
+                        throw new \Exception('第'.$key.'列模板表头有误');
+                    }
+                }
+            }
+
+        } catch(\Exception $ex){
+            throw $ex;
+        }
+    }
+    /**
+     * 性别处理
+     */
+    public function handleSex($sex){
+        if($sex == '男'){
+            return 1;
+        }elseif($sex == '女'){
+            return 2;
+        }
+        return 0;
+    }
+
+    /**
      * 导入考生
      */
     public function importStudent($exam_id, $examineeData)
@@ -134,14 +171,9 @@ class Student extends CommonModel
             //将数组导入到模型中的addInvigilator方法
             foreach($examineeData as $key => $studentData)
             {
-                $total++;       //获取考生总数
-                if($studentData['gender'] == '男'){
-                    $studentData['gender'] = 1;
-                }elseif($studentData['gender'] == '女'){
-                    $studentData['gender'] = 2;
-                }else{
-                    $studentData['gender'] = 0;
-                }
+                $total++;       //获取处理过的考生总数
+                //性别处理
+                $studentData['gender'] = $this->handleSex($studentData['gender']);
                 //姓名不能为空
                 if(empty(trim($studentData['name']))){
                     if(!empty($studentData['idcard']) && !empty($studentData['mobile'])){
@@ -158,9 +190,6 @@ class Student extends CommonModel
                     throw new \Exception('第'.($key+2).'行手机号不符规格，请修改后重试！');
                 }
                 //准考证号不能为空
-                if(!isset($studentData['exam_sequence'])){
-                    throw new \Exception('缺少准考证号列，请添加');
-                }
                 if(empty(trim($studentData['exam_sequence']))){
                     throw new \Exception('第'.($key+2).'行准考证号不能为空，请修改后重试！');
                 }
@@ -184,12 +213,11 @@ class Student extends CommonModel
                 {
                     throw new \Exception('学生导入数据失败，请修改后重试');
                 }else{
-                    //添加成功的考生数
-                    $sucNum++;
+                    $sucNum++;      //添加成功的考生数
                 }
-            }
-            $message = "成功导入{$sucNum}个学生";
+            } /*循环结束*/
 
+            $message = "成功导入{$sucNum}个学生";
             if($exiNum){
                 $message .= "，有{$exiNum}个学生已存在";
             }

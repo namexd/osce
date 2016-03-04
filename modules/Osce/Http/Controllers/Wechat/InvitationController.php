@@ -191,7 +191,7 @@ class InvitationController extends CommonController
                 $teacher =Teacher:: find($inviteModel->user_id);
             }
         } else {
-            throw new \Exception('请检查登陆稍后再试!');
+            return  redirect()->back()->withErrors(['该考试信息已被删除或者取消']);
         }
         $list = [
             'exam_name' => $inviteModel->name,

@@ -231,6 +231,20 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                <label class="col-sm-2 control-label">班级:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="exam_sequence" name="grade_class" class="form-control">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">班主任姓名:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="exam_sequence" name="teacher_name" class="form-control">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">联系电话:</label>
 
                                 <div class="col-sm-10">

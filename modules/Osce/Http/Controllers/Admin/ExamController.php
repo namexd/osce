@@ -643,6 +643,8 @@ class ExamController extends CommonController
             }
             //去掉sheet
             $studentList = array_shift($data);
+            //判断模板 列数、表头是否有误
+            $student->judgeTemplet($studentList);
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
             $result = $student->importStudent($exam_id, $examineeData);

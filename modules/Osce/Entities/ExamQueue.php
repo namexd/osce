@@ -349,7 +349,6 @@ class ExamQueue extends CommonModel
 
                 $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
                 \Log::alert($lateTime.'迟到时间');
-
                 foreach ($studentTimes as $key=>$item) {
                     if ($exam->sequence_mode == 2) {
 
