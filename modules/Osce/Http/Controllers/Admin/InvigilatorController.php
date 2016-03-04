@@ -388,6 +388,9 @@ class InvigilatorController extends CommonController
             }
 
         } catch(\Exception $ex){
+            if($ex->getCode()==23000){
+                return redirect()->back()->withErrors(['这个号码已有过关联']);
+            }
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -448,6 +451,9 @@ class InvigilatorController extends CommonController
             }
 
         } catch(\Exception $ex){
+            if($ex->getCode()==23000){
+                return redirect()->back()->withErrors(['这个号码已有过关联']);
+            }
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
