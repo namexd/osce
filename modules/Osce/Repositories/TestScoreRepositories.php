@@ -72,7 +72,6 @@ class TestScoreRepositories  extends BaseRepository
                 'exam_result.id as result_id'
             );
         }
-
         if(!empty($subjectId)){
             $builder = $builder->whereIn('subject.id',$subjectId);
         }

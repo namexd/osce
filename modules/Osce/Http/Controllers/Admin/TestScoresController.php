@@ -89,7 +89,7 @@ class TestScoresController  extends CommonController
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
-                    $singledata[$k]['timeAvg'] = sprintf('%.2f',$avgdata[$kk]['timeAvg']);
+                    $singledata[$k]['timeAvg'] = $subjectStatisticsRepositories->timeTransformation(sprintf('%.2f',$avgdata[$kk]['timeAvg']));
                     $singledata[$k]['scoreAvg'] = sprintf('%.2f',$avgdata[$kk]['scoreAvg']);
                 }
                 $avgdata[$kk]['scoreAvg'] = sprintf('%.2f',$vv['scoreAvg']);
@@ -114,7 +114,7 @@ class TestScoresController  extends CommonController
      * @date    2016年2月26日14:56:58
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function studentSubjectList(Request $request,TestScoreRepositories $TestScoreRepositories){
+    public function studentSubjectList(Request $request,TestScoreRepositories $TestScoreRepositories,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         //获取已考过试的所有学生
         $student_id = $request->student_id;
         //$examid = $request->examid;
@@ -127,8 +127,8 @@ class TestScoresController  extends CommonController
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
-                    $singledata[$k]['timeAvg'] = sprintf('%.1f',$vv['timeAvg']);
-                    $singledata[$k]['scoreAvg'] = sprintf('%.1f',$vv['scoreAvg']);
+                    $singledata[$k]['timeAvg'] = $subjectStatisticsRepositories->timeTransformation(sprintf('%.2f',$vv['timeAvg']));
+                    $singledata[$k]['scoreAvg'] = sprintf('%.2f',$vv['scoreAvg']);
                     $singledata[$k]['time'] = date("Y年m月",strtotime($v['begin_dt']));
                     unset($singledata[$k]['begin_dt']);
                 }else{
@@ -271,7 +271,7 @@ class TestScoresController  extends CommonController
             }
 
             if($v->avgScore){
-                $avgStr .= sprintf('%.1f',$v->avgScore).',';
+                $avgStr .= sprintf('%.2f',$v->avgScore).',';
             }
             if($v->maxScore){
                 $maxScore .= $v->maxScore.',';
