@@ -281,6 +281,12 @@ class AuthController extends BaseController
         if($addNewRole->name == $name && $addNewRole->description == $des){
             return  redirect()->back()->withErrors(['未做修改']);
         }
+        //查看角色名是否已存在
+        $RoleName = DB::connection('sys_mis')->table('sys_roles')->where('name','=',$name)->first();
+        if($RoleName){
+            return  redirect()->back()->withErrors(['该角色名已存在']);
+        }
+
         $addNewRole->name        = $name;
         $addNewRole->description = $des;
         if($addNewRole->save()){
