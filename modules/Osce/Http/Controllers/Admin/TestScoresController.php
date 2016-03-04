@@ -134,11 +134,15 @@ class TestScoresController  extends CommonController
         $student_id = $request->student_id;
         //$examid = $request->examid;
         $subid = $request->subid;
+        $examid = [];
         //获取学生科目成绩
         $singledata = $TestScoreRepositories->getStudentHistoryScoreCount($student_id,$subid);
+        if(!empty($singledata)){
+            $examid = $singledata->pluck('exam_id');
+        }
         //获取科目平均成绩
-        //dd($singledata);
-        $avgdata = $TestScoreRepositories->getStudentScoreCount('',0,$subid)->toArray();
+        $avgdata = $TestScoreRepositories->getStudentHistoryScoreCount($student_id,$subid,$examid);
+
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
                 if($v['id'] == $vv['id']){
@@ -171,7 +175,7 @@ class TestScoresController  extends CommonController
             'singledata' => $singledata,//雷达图学生成绩
             'avgdata' => $avgdata//平均成绩
         ];
-        //dd($avg);
+        //dd($singledata);
         return view('osce::admin.statisticalanalysis.statistics_student_subject',[
             'data' => $data,
             'avg' => $avg,

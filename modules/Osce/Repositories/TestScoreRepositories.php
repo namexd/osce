@@ -198,10 +198,9 @@ class TestScoreRepositories  extends BaseRepository
             $builder = $builder->where('exam_result.student_id', '=', $student_id)
                 ->select(
                     'subject.title',
-                    'station.mins',
+                    'exam_result.time as mins',
                     'exam_result.begin_dt',
                     'exam_result.id as result_id',
-                    'exam_result.time',
                     'exam_result.score','subject.id',
                     'exam.id as exam_id',
                     'exam.name as exam_name'
