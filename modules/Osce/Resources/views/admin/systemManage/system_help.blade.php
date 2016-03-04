@@ -18,7 +18,7 @@
 				if(appid==''){
 					$.alert({
 						title: '提示：',
-						content: '请输入在第一步中输入appID!',
+						content: '请输入在第一步中输入注册微信时的appID!',
 						confirmButton: '确定',
 						confirm: function(){
 						}
@@ -61,7 +61,7 @@
 								<div class="clearfix form-group">
 									<label class="col-sm-2 control-label"><h5>第一步：</h5></label>
 									<div class="col-sm-9">
-										请输入appID
+										请输入注册微信时的appID
 										<input type="text" class="form-control" id="" name="email_server" value="">
 									</div>
 								</div>
