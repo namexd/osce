@@ -361,7 +361,7 @@ class Notice extends CommonModel
         try {
             $sender =   \App::make('messages.email');
             $content=   [];
-            $content[]  =   '亲爱的osce考试系统用户:\n';
+            $content[]  =   '亲爱的osce考试系统用户:';
             $content[]  =   $notice->exam->name. ' ' .$notice->title;
             $content[]  =   '详情查看'.$url;
             $sender ->  send($to,implode('',$content));
