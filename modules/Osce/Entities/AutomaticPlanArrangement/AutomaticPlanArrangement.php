@@ -75,36 +75,40 @@ class AutomaticPlanArrangement
      */
     function __construct($examId, ExamPlaceEntityInterface $examPlaceEntity, ExamInterface $exam)
     {
-        /*
-         * 初始化属性
-         */
-        $this->_Exam = Exam::findOrFail($examId);
-        $this->_T_Count = count($examPlaceEntity->stationTotal($examId));
-        $this->_T = $examPlaceEntity->stationTotal($examId);
-        $this->_S_Count = count(Student::examStudent($examId));
-        $this->_S = Student::examStudent($examId)->shuffle();
-        $this->screen = $exam->screenList($examId);
-        $this->sequenceMode = $this->_Exam->sequence_mode;
-        $this->sequenceCate = $this->_Exam->sequence_cate;
-        $this->exam_id = $examId;
+        try {
+            /*
+             * 初始化属性
+             */
+            $this->_Exam = Exam::findOrFail($examId);
+            $this->_T_Count = count($examPlaceEntity->stationTotal($examId));
+            $this->_T = $examPlaceEntity->stationTotal($examId);
+            $this->_S_Count = count(Student::examStudent($examId));
+            $this->_S = Student::examStudent($examId)->shuffle();
+            $this->screen = $exam->screenList($examId);
+            $this->sequenceMode = $this->_Exam->sequence_mode;
+            $this->sequenceCate = $this->_Exam->sequence_cate;
+            $this->exam_id = $examId;
 
-        /*
-         * 设置考试实体的状态为true
-         */
-        foreach ($this->_T as &$item) {
-            $item['status'] = true;
-            $item['timer'] = 0;
+            /*
+             * 设置考试实体的状态为true
+             */
+            foreach ($this->_T as &$item) {
+                $item['status'] = true;
+                $item['timer'] = 0;
+            }
+
+            foreach ($this->_S as &$s) {
+                $s['serialnumber'] = [];
+            }
+
+
+            /*
+             * 将考试实体进行分组
+             */
+            $this->_TS = collect($this->_T)->groupBy('serialnumber');
+        } catch (\Exception $ex) {
+            throw $ex;
         }
-
-        foreach ($this->_S as &$s) {
-            $s['serialnumber'] = [];
-        }
-
-
-        /*
-         * 将考试实体进行分组
-         */
-        $this->_TS = collect($this->_T)->groupBy('serialnumber');
     }
 
     /**
@@ -227,7 +231,6 @@ class AutomaticPlanArrangement
                     }
                 }
             }
-//            sleep(1);
         }
 
         //获取未走完流程的考生
@@ -428,9 +431,14 @@ class AutomaticPlanArrangement
                         }
                     }
                 } else {
-                    $result = $testStudents;
+                    if (count($testStudents) <= $station->needNum) {
+                        $result = $testStudents;
+                    } elseif (count($testStudents) > $station->needNum) {
+                        for ($i = 0; $i < $station->needNum; $i++) {
+                            $result[] = $testStudents->shift();
+                        }
+                    }
                 }
-//                echo '===================================================';
                 break;
             case 3:
                 $testStudents = $this->pollTestStudents($station, $screen);
@@ -594,8 +602,7 @@ class AutomaticPlanArrangement
             $tempArrays = ExamPlanRecord::orderBeginStudent($screen, $station->serialnumber,
                 $this->sequenceMode);
             if (count($tempArrays) != 0) {
-                $a = Student::whereIn('id', $tempArrays)->get();
-                return $a;
+                return Student::whereIn('id', $tempArrays)->get();
             } else {
                 return collect([]);
             }
