@@ -459,7 +459,7 @@ class InvigilatePadController extends CommonController
     public function postTestAttachRadio(
         Request $request
     ) {
-        try {
+//        try {
             //获取数据
             $studentId = $request   ->  input('student_id');
             $stationId = $request   ->  input('station_id');
@@ -506,10 +506,10 @@ class InvigilatePadController extends CommonController
             }
 
             return response()->json($this->success_data([$result->id]));
-        } catch (\Exception $ex) {
-            dd(response());
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            dd(response());
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
