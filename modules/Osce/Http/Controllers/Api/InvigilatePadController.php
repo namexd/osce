@@ -461,6 +461,7 @@ class InvigilatePadController extends CommonController
         Request $request
     ) {
         \Log::info('params', $request->all());
+        \Log::info('size', $request->file('radio')->getClientSize());
         try {
             //获取数据
             $studentId = $request->input('student_id');
