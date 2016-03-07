@@ -76,15 +76,15 @@ class InvigilatePadController extends CommonController
             $fileName = '';
             //获取文件的MIME类型
             $fileMime = $file->getMimeType();
-            \Log::info('mime',[$fileMime]);
-            \log::info('test',['test']);
+//            \Log::info('mime',[$fileMime]);
+//            \log::info('test',['test']);
             foreach ($params as $param) {
                 $fileName .= $param . '_';
             }
             $fileName .= mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
             //取得保存路径
-            //$savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
-            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . 13 . '_' . 13 . '/';
+            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
+//            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . 13 . '_' . 13 . '/';
             $savePath = public_path($savePath);
             //TODO iconv用在windows环境下
 //            $savePath = iconv("UTF-8", "gb2312", $savePath);
@@ -98,23 +98,23 @@ class InvigilatePadController extends CommonController
             //生成附件url地址
             $attachUrl = $savePath . $fileName;
             //将要插入数据库的数据拼装成数组
-//            $data = [
-//                'test_result_id' => null,
-//                'url' => $attachUrl,
-//                'type' => $fileMime,
-//                'name' => $fileName,
-//                'description' => $date . '-' . $params['student_name'],
-//                'standard_id' => $standardId
-//            ];
+            $data = [
+                'test_result_id' => null,
+                'url' => $attachUrl,
+                'type' => $fileMime,
+                'name' => $fileName,
+                'description' => $date . '-' . $params['student_name'],
+                'standard_id' => $standardId
+            ];
 
             //将内容插入数据库
-//            if (!$result = TestAttach::create($data)) {
-//                if (!Storage::delete($attachUrl)) {
-//                    throw new \Exception('未能成功保存文件！', -140);
-//                }
-//                throw new \Exception('附件数据保存失败', -150);
-//            }
-//            return $result;
+            if (!$result = TestAttach::create($data)) {
+                if (!Storage::delete($attachUrl)) {
+                    throw new \Exception('未能成功保存文件！', -140);
+                }
+                throw new \Exception('附件数据保存失败', -150);
+            }
+            return $result;
 
         } catch (\Exception $ex) {
             throw $ex;
@@ -460,12 +460,12 @@ class InvigilatePadController extends CommonController
     public function postTestAttachRadio(
         Request $request
     ) {
-//        try {
+        try {
             //获取数据
             $studentId = $request   ->  input('student_id');
             $stationId = $request   ->  input('station_id');
             $standardId = $request  ->  input('standard_id');
-            /*
+
             $exam = Exam::doingExam();
             if(is_null($exam))
             {
@@ -486,17 +486,17 @@ class InvigilatePadController extends CommonController
             }
             $stationName    =   $station->name;
             $examName = $exam->name;
-            */
-            \Log::info('params', [$studentId, $stationId, $standardId]);
+
+//            \Log::info('params', [$studentId, $stationId, $standardId]);
             //将参数拼装成一个数组
 
-//            $params = [
-//                'exam_name' => $examName,
-//                'student_name' => $studentName,
-//                'student_code' => $studentCode,
-//                'station_name' => $stationName,
-//            ];
-        $params     =   [];
+            $params = [
+                'exam_name' => $examName,
+                'student_name' => $studentName,
+                'student_code' => $studentCode,
+                'station_name' => $stationName,
+            ];
+
             //获取当前日期
             $date = date('Y-m-d');
 
@@ -512,11 +512,10 @@ class InvigilatePadController extends CommonController
                 $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
             }
 
-            //return response()->json($this->success_data([$result->id]));
-            return response()->json($this->success_data([1]));
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+            return response()->json($this->success_data([$result->id]));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
