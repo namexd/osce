@@ -26,14 +26,14 @@ class LoginController extends  CommonController
         ]);
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
-
-        if (Auth::attempt(['username' => $username, 'password' => $password]))
+        $user=Auth::attempt(['username' => $username, 'password' => $password]);
+        if ($user)
         {
-            $user = User::where('username', $username)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
             return redirect()->route('osce.admin.index');
         }
         else
         {
+            
             return redirect()->back()->withErrors('账号密码错误');
         }
     }
