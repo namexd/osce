@@ -72,6 +72,7 @@ class AutomaticPlanArrangement
      * @param $examId 考试id
      * @param ExamPlaceEntityInterface $examPlaceEntity ExamPlaceEntityInterface的实现
      * @param ExamInterface $exam ExamInterface的实现
+     * @throws \Exception
      */
     function __construct($examId, ExamPlaceEntityInterface $examPlaceEntity, ExamInterface $exam)
     {
@@ -80,8 +81,8 @@ class AutomaticPlanArrangement
              * 初始化属性
              */
             $this->_Exam = Exam::findOrFail($examId);
-            $this->_T_Count = count($examPlaceEntity->stationTotal($examId));
-            $this->_T = $examPlaceEntity->stationTotal($examId);
+            $this->_T_Count = count($examPlaceEntity->stationTotal($this->_Exam));
+            $this->_T = $examPlaceEntity->stationTotal($this->_Exam);
             $this->_S_Count = count(Student::examStudent($examId));
             $this->_S = Student::examStudent($examId)->shuffle();
             $this->screen = $exam->screenList($examId);
@@ -189,7 +190,6 @@ class AutomaticPlanArrangement
                  * 如果为false，就说明是开门状态
                  */
                 $tempBool = $this->ckeckStatus($station, $screen);
-
                 if (!$tempBool) {
                     //获取实体所需要的学生清单
                     $students = $this->needStudents($station, $screen, $examId);
@@ -553,8 +553,6 @@ class AutomaticPlanArrangement
     {
         $result = ExamPlanRecord::where('exam_id', $examId)
             ->get();
-//        dd($result);
-        $exam = Exam::findOrFail($examId);
 
         $arrays = [];
         foreach ($result as $record) {
@@ -563,7 +561,7 @@ class AutomaticPlanArrangement
             $station_id = $record->station_id;
             //$station        =   $record->station;
             $screeningId = $record->exam_screening_id;
-            if ($exam->sequence_mode == 1) //考场模式
+            if ($this->_Exam->sequence_mode == 1) //考场模式
             {
                 $arrays[$screeningId][$record->room_id][strtotime($record->begin_dt)][] = $record;
             } else //考站模式
@@ -577,11 +575,10 @@ class AutomaticPlanArrangement
             foreach ($screening as $entityId => $timeList) {
                 foreach ($timeList as $batch => $recordList) {
                     foreach ($recordList as $record) {
-                        if ($exam->sequence_mode == 1) //考场模式
+                        if ($this->_Exam->sequence_mode == 1) //考场模式
                         {
                             $name = $record->room->name;
-                        } else //考站模式
-                        {
+                        } elseif ($this->_Exam->sequence_mode == 2) { //考站模式
                             $name = $record->room->name . '-' . $record->station->name;
                         }
 
