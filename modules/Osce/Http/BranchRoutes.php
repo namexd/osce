@@ -53,6 +53,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
          Route::get('exam/exam-label', ['uses'=>'ExamLabelController@getExamLabel','as'=>'osce.admin.ExamLabelController.getExamLabel']);
 
 
+            //时间管理
+
+            Route::get('examinationpaper/exam-list',['uses'=>'ExaminationPaperController@getExamList','as'=>'osce.admin.ExaminationPaperController.getExamList']);
+
     });
 
 });

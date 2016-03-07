@@ -5,11 +5,10 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
+@stop
 
-
-<script>
-
-</script>
+@section('content')
     <input type="hidden" id="parameter" value="{'pagename':'subject_check_tag'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
@@ -17,7 +16,7 @@
                 <h5 class="title-label">题库管理</h5>
             </div>
         </div>
-        <div class="container-fluid ibox-content">
+        <div class="container-fluid ibox-content" style="padding-bottom: 0;">
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
@@ -30,16 +29,16 @@
         </div>
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content" style="border: none;">
-                <div class="input-group" style="margin:20px 0;">
+                <div class="input-group" style="width: 100%;margin:20px 0;">
                     <label for="" class="pull-left exam-name">标签名称：</label>
-                    <input type="text" placeholder="请输入标签名称" name="tagName" class="input-md form-control">
+                    <input type="text" placeholder="请输入标签名称" name="tagName" class="input-md form-control" style="width: 250px;">
                     <label for="" class="pull-left exam-name" style="margin-left: 20px;">标签类型：</label>
-                    <select name="name" id="subject-id" class="input-sm form-control subject_select" style="width: 210px;height: 34px">
+                    <select name="name" id="subject-id" class="input-sm form-control subject_select" style="width: 250px;height: 34px">
                         <option value="">难度标签</option>
                         <option value="">能力标签</option>
                     </select>
                     <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
-                    <button type="submit" class="btn btn-sm btn-primary marl_10 right" id="add">新增</button>
+                    <button type="submit" class="btn btn-sm btn-primary marl_10 pull-right" id="add">新增</button>
                 </div>
                 <div class="list_all">
                     <table class="table table-striped" id="table-striped" style="background:#fff">
@@ -59,12 +58,12 @@
                                 <td>科目标签</td>
                                 <td>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</td>
                                 <td>
-                                    <a href="">
+                                    <a href="javascript:void(0)">
                                         <span class="read state1 detail">
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
                                     </a>
-                                    <a href="">
+                                    <a href="javascript:void(0)">
                                         <span class="read state2">
                                             <i class="fa fa-trash-o fa-2x"></i>
                                         </span>
