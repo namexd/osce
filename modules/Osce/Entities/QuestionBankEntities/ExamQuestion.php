@@ -11,9 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use DB;
 use Auth;
-
-
-/**试题表
+/**试题模型
  * Class ExamQuestion
  * @package Modules\Osce\Entities
  */
@@ -44,28 +42,29 @@ class ExamQuestion extends Model
     {
         $builder = $this;
         if ($formData['examQuestionTypeId']) {
-            $builder = $builder->where('exam_question_type_id', '=', $formData['examQuestionTypeId']);
+            $builder = $builder->where('exam_question_label.exam_paper_label_id', '=', $formData['examPaperLabelId']);
         }
         if ($formData['examQuestionTypeId']) {
-            $builder = $builder->where('exam_paper_label_id', '=', $formData['examPaperLabelId']);
+            $builder = $builder->where('exam_question.exam_question_type_id', '=', $formData['examQuestionTypeId']);
         }
+
         $builder = $builder->leftJoin('exam_question_item', function ($join) {
             $join->on('exam_question.id', '=', 'exam_question_item.exam_question_id');
         })->leftJoin('exam_question_label', function ($join) {
             $join->on('exam_question.id', '=', 'exam_question_label.exam_question_id');
         })->leftJoin('exam_question_type', function ($join) {
             $join->on('exam_question.exam_question_type_id', '=', 'exam_question_type.id');
-        })->leftJoin('label_type', function ($join) {
-            $join->on('exam_question_label.exam_paper_label_id', '=', 'label_type.id');
-        })->select([
+        })->leftJoin('exam_question_label_type', function ($join) {
+            $join->on('exam_question_label.exam_paper_label_id', '=', 'exam_question_label_type.id');
+        })->groupBy('exam_question.id')->select([
             'exam_question.id',//试题id
             'exam_question.name',//试题名称
             'label_type.name as labelTypeName',//考核范围
             'exam_question_type.name as examQuestionTypeName',//题目类型
         ]);
-        return $builder->paginate(10);
+        $pageSize = config('page_size');
+        return $builder->paginate($pageSize);
     }
-
 
     /**删除
      * @method

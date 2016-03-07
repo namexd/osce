@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
 
-/**试题子项表
+/**试题子项模型
  * Class ExamQuestionItem
  * @package Modules\Osce\Entities
  */

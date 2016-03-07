@@ -1,6 +1,11 @@
 <?php
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
+
+/**标签类型模型
+ * Class LabelType
+ * @package Modules\Osce\Entities\QuestionBankEntities
+ */
 class LabelType extends  Model
 {
     protected $connection	=	'osce_mis';
