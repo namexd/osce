@@ -699,4 +699,31 @@ class InvigilatorController extends CommonController
             return json_encode(['valid' =>true]);
         }
     }
+    /**
+     * 判断身份证号是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postIdcardUnique(Request $request)
+    {
+        $this->validate($request, [
+            'idcard'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $idcard = $request  -> get('idcard');
+        //实例化模型
+        $model =  new User();
+        //查询 该身份证号 是否存在
+        if(empty($id)){
+            $result = $model->where('idcard', $idcard)->first();
+        }else{
+            $result = $model->where('idcard', $idcard)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
 }
