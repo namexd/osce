@@ -458,6 +458,7 @@ class InvigilatePadController extends CommonController
     public function postTestAttachRadio(
         Request $request
     ) {
+        \Log::info('params', $request->all());
         try {
             //获取数据
             $studentId = $request->input('student_id');
