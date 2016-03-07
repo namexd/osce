@@ -19,7 +19,7 @@
             <p>考试时间：{{$title['time']}}</p>
         </div>
         <div class="col-sm-6"><p>科目：{{$title['subjectTitle']}}</p></div>
-        <div class="col-sm-6"><p>班级：{{$title['gradeClass']}}</p></div>
+        <div class="col-sm-6"><p>考站名称：{{$title['stationName']}}</p></div>
         </div>
         <table class="table table-bordered">
             <thead>
