@@ -83,7 +83,8 @@ class InvigilatePadController extends CommonController
             }
             $fileName .= mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
             //取得保存路径
-            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
+            //$savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
+            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . 13 . '_' . 13 . '/';
             $savePath = public_path($savePath);
             //TODO iconv用在windows环境下
 //            $savePath = iconv("UTF-8", "gb2312", $savePath);
