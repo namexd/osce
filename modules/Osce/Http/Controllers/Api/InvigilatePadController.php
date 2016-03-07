@@ -98,14 +98,14 @@ class InvigilatePadController extends CommonController
             //生成附件url地址
             $attachUrl = $savePath . $fileName;
             //将要插入数据库的数据拼装成数组
-            $data = [
-                'test_result_id' => null,
-                'url' => $attachUrl,
-                'type' => $fileMime,
-                'name' => $fileName,
-                'description' => $date . '-' . $params['student_name'],
-                'standard_id' => $standardId
-            ];
+//            $data = [
+//                'test_result_id' => null,
+//                'url' => $attachUrl,
+//                'type' => $fileMime,
+//                'name' => $fileName,
+//                'description' => $date . '-' . $params['student_name'],
+//                'standard_id' => $standardId
+//            ];
 
             //将内容插入数据库
 //            if (!$result = TestAttach::create($data)) {
