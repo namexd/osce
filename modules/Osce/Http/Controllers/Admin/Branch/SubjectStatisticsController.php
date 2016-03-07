@@ -6,7 +6,7 @@
  * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
  */
 
-namespace Modules\Osce\Http\Controllers\Admin;
+namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Modules\Osce\Entities\SubjectItem;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
