@@ -71,7 +71,7 @@
 									<div class="clearfix form-group">
 										<label class="col-sm-2 control-label"><h5>第一步：</h5></label>
 										<div class="col-sm-9">
-										<a href="http://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login " target="_blank">点击此处进入微信公众平台接口测试帐号申请登陆页面</a>
+										<a href="http://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login" target="_blank">点击此处进入微信公众平台接口测试帐号申请登陆页面</a>
 
 											<p>
 												点击登陆->用手机扫描二维码->手机上点击确认登陆->进入测试号管理
@@ -116,6 +116,61 @@
 											<p>请根据自己需要在系统设置中设置encoding_key值，请保存好该encoding_key值，以便后面使用</p>
 										</div>
 									</div>
+
+
+									<div class="clearfix form-group">
+										<label class="col-sm-2 control-label"><h5>第六步：</h5></label>
+										<div class="col-sm-9">
+											<p>请在（测试号管理->体验接口权限表->网页服务->网页帐号->点击修改）
+												<img src="">
+												请在弹出的框中填上你的域名，格式如事例框一样。请注意该域名不可以有http://
+											</p>
+										</div>
+									</div>
+
+									<div class="clearfix form-group">
+										<label class="col-sm-2 control-label"><h5>第七步：</h5></label>
+										<div class="col-sm-9">
+											<p>请在（测试号管理->体验接口权限表->对话服务->基础支持->获取access_token）跳转到获取access_token页面
+												请点击该页面最后的（使用网页调试工具调试该接口）跳转到（微信公众平台接口调试工具）页面。
+
+											</p>
+										</div>
+									</div>
+
+									<div class="clearfix form-group">
+										<label class="col-sm-2 control-label"><h5>第八步：</h5></label>
+										<div class="col-sm-9">
+											<p>
+												请在该页面中的（使用说明->（3)文本框中填入appid和secret，该值为（测试号管理）页面的（appID和appsecret））
+												其他的值不要改变，填好后点击检查问题按钮。
+											</p>
+										</div>
+									</div>
+									<div class="clearfix form-group">
+										<label class="col-sm-2 control-label"><h5>第九步：</h5></label>
+										<div class="col-sm-9">
+											<p>
+												请把这里的生成的（基础支持：获取access_token接口/token）里面的（还回结果->access_token）里面的值复制下来。
+
+											</p>
+										</div>
+									</div>
+									<div class="clearfix form-group">
+										<label class="col-sm-2 control-label"><h5>第十步：</h5></label>
+										<div class="col-sm-9">
+											<p>
+												请把当前页面中的（使用说明->（3）->第一项：接口类型的值改为（自定义菜单），第二项：接口列表的值改为（自定义菜单创建接口/menu/create））
+												然后将刚才的access_token值放入 （三、参数列表->access_token中）<br/>
+												将下面的数据复制放入（body）中<br/>
+												
+
+											</p>
+										</div>
+									</div>
+
+
+
 								</div>
 							</div>
 						</div>
