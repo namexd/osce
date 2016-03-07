@@ -8,7 +8,6 @@
 
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Osce\Entities\QuestionBankEntities\LabelType;
 class ExamQuestionLabel extends  Model
 {
     protected $connection	=	'osce_mis';
@@ -18,9 +17,8 @@ class ExamQuestionLabel extends  Model
     protected $fillable 	=	['label_type_id', 'name','describe','status'];
 
     //标签类型
-    public function LabelType(){
-
-        return $this->hasOne('Modules\Osce\Entities\QuestionBankEntities\LabelType','id','label_type_id');
+    public function ExamQuestionLabelType(){
+        return $this->hasOne('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType','id','label_type_id');
     }
 
 

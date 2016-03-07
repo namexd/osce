@@ -8,15 +8,14 @@
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Modules\Osce\Http\Controllers\CommonController;
-use Modules\Osce\Entities\QuestionBankEntities\examQuestionLabel;
-use Modules\Osce\Entities\QuestionBankEntities\examLabel;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
 
 class ExamLabelController extends CommonController
 {
     public function getExamLabel(){
         //dd('考核表签');
-        $examquestion=new examQuestionLabel();
-       $examlist= $examquestion->LabelType()->get();
+        $examquestion=new ExamQuestionLabel();
+        $examlist= $examquestion->LabelType;
         dd($examlist);
 
 
