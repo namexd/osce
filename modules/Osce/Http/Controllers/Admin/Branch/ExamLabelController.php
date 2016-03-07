@@ -9,17 +9,17 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 
 class ExamLabelController extends CommonController
 {
     public function getExamLabel(){
         //dd('考核表签');
-        $examquestion=new ExamQuestionLabel();
-        $examlist= $examquestion->LabelType;
-        dd($examlist);
+        $ExamQuestionLabelType=new ExamQuestionLabelType();
+        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->labelTypeList();
 
 
-        return view('osce::admin.resourcemanage.subject_check_tag');
+        return view('osce::admin.resourcemanage.subject_check_tag',['ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList]);
 
     }
 
