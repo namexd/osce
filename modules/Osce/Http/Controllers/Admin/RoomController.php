@@ -44,7 +44,7 @@ class RoomController extends CommonController
             'keyword'   => 'sometimes'
         ]);
         //获取各字段
-        $keyword = e($request->input('keyword', ""));
+        $keyword = $request ->input('keyword', "");
         $type    = $request ->input('type', '0');
         $id      = $request ->input('id', '');
 

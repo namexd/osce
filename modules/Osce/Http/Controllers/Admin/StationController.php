@@ -54,7 +54,7 @@ class StationController extends CommonController
         $orderBy = empty(config('order_by')) ? 'desc' : config('order_by');
 
         //搜索名字
-        $name = e($request->get('name'));
+        $name = $request->get('name');
 
         //拼凑一个order数组
         $order = [$orderType, $orderBy];

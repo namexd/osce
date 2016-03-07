@@ -199,8 +199,8 @@ class Watch extends CommonModel implements MachineInterface
         if($name != '')
         {
             $builder = $builder->where(function($query) use ($name){
-                $query->orWhere('name', 'like', '%'.$name.'%')
-                      ->orWhere('code', 'like', '%'.$name.'%');
+                    $query->orWhere('name', 'like', '%\\'.$name.'%')
+                          ->orWhere('code', 'like', '%\\'.$name.'%');
             });
         }
         if($status || ($status==0&&$status!=''))
