@@ -5,11 +5,10 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
+@stop
 
-
-<script>
-
-</script>
+@section('content')
     <input type="hidden" id="parameter" value="{'pagename':'subject_check_tag'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
