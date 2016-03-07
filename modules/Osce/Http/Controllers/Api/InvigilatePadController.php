@@ -107,13 +107,13 @@ class InvigilatePadController extends CommonController
             ];
 
             //将内容插入数据库
-            if (!$result = TestAttach::create($data)) {
-                if (!Storage::delete($attachUrl)) {
-                    throw new \Exception('未能成功保存文件！', -140);
-                }
-                throw new \Exception('附件数据保存失败', -150);
-            }
-            return $result;
+//            if (!$result = TestAttach::create($data)) {
+//                if (!Storage::delete($attachUrl)) {
+//                    throw new \Exception('未能成功保存文件！', -140);
+//                }
+//                throw new \Exception('附件数据保存失败', -150);
+//            }
+//            return $result;
 
         } catch (\Exception $ex) {
             throw $ex;
@@ -464,6 +464,7 @@ class InvigilatePadController extends CommonController
             $studentId = $request   ->  input('student_id');
             $stationId = $request   ->  input('station_id');
             $standardId = $request  ->  input('standard_id');
+            /*
             $exam = Exam::doingExam();
             if(is_null($exam))
             {
@@ -484,16 +485,17 @@ class InvigilatePadController extends CommonController
             }
             $stationName    =   $station->name;
             $examName = $exam->name;
-
+            */
             \Log::info('params', [$studentId, $stationId, $standardId]);
             //将参数拼装成一个数组
-            $params = [
-                'exam_name' => $examName,
-                'student_name' => $studentName,
-                'student_code' => $studentCode,
-                'station_name' => $stationName,
-            ];
 
+//            $params = [
+//                'exam_name' => $examName,
+//                'student_name' => $studentName,
+//                'student_code' => $studentCode,
+//                'station_name' => $stationName,
+//            ];
+        $params     =   [];
             //获取当前日期
             $date = date('Y-m-d');
 
@@ -505,7 +507,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错', -130);
                 }
 
-                \Log::info('params', [$studentId, $stationId, $standardId]);
+//                \Log::info('params', [$studentId, $stationId, $standardId]);
                 $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
             }
 
