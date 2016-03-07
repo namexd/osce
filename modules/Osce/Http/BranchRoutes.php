@@ -8,47 +8,47 @@
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin\Branch'], function () {
-            //TODO ÌÆ¿¡
-            Route::get('subject-statistics/subject-grade-list',['uses'=>'SubjectStatisticsController@SubjectGradeList','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeList']);
-            //¿¼Éú¿ÆÄ¿Í³¼Æ
-            Route::get('testscores/test-score-list',['uses'=>'TestScoresController@TestScoreList','as'=>'osce.admin.TestScoresController.TestScoreList']);
-            //¿¼Éú³É¼¨Í³¼Æ
-            Route::get('testscores/student-subject-list',['uses'=>'TestScoresController@studentSubjectList','as'=>'osce.admin.TestScoresController.studentSubjectList']);
-            //ajax»ñÈ¡¿¼ÉúËù¿¼¹ýµÃ¿ÆÄ¿
-            Route::get('testscores/ajax-get-subject',['uses'=>'TestScoresController@getAjaxGetSubject','as'=>'osce.admin.TestScoresController.getAjaxGetSubject']);
-            Route::get('testscores/ajax-get-subjectlist',['uses'=>'TestScoresController@ajaxGetSubjectlist','as'=>'osce.admin.TestScoresController.ajaxGetSubjectlist']);
-            //ajax»ñÈ¡¿¼ÉúËù¿¼¹ýµÃ¿ÆÄ¿³É¼¨
-            Route::get('testscores/ajax-get-student-test-count',['uses'=>'TestScoresController@ajaxGetStudentTestCount','as'=>'osce.admin.TestScoresController.ajaxGetStudentTestCount']);
-            //¿¼ÊÔ¿ÆÄ¿ÏêÏ¸ÐÅÏ¢²éÑ¯
-            Route::get('subject-statistics/subject-info',['uses'=>'SubjectStatisticsController@SubjectGradeInfo','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeInfo']);
-            //¿¼ÊÔ¿ÆÄ¿ÄÑ¶È·ÖÎö
-            Route::get('subject-statistics/subject-analyze',['uses'=>'SubjectStatisticsController@SubjectGradeAnalyze','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeAnalyze']);
-            //¿¼Éú³É¼¨ÏêÇé
-            Route::get('testscores/get-tester-score-detail',['uses'=>'TestScoresController@getTesterScoreDetail','as'=>'osce.admin.TestScoresController.getTesterScoreDetail']);
-            //¿¼Õ¾³É¼¨·ÖÎö
-            Route::get('subject-statistics/station-grade-list',['uses'=>'SubjectStatisticsController@stationGradeList','as'=>'osce.admin.SubjectStatisticsController.stationGradeList']);
+        //TODO å”ä¿Š
+        Route::get('subject-statistics/subject-grade-list',['uses'=>'SubjectStatisticsController@SubjectGradeList','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeList']);
+        //è€ƒç”Ÿç§‘ç›®ç»Ÿè®¡
+        Route::get('testscores/test-score-list',['uses'=>'TestScoresController@TestScoreList','as'=>'osce.admin.TestScoresController.TestScoreList']);
+        //è€ƒç”Ÿæˆç»©ç»Ÿè®¡
+        Route::get('testscores/student-subject-list',['uses'=>'TestScoresController@studentSubjectList','as'=>'osce.admin.TestScoresController.studentSubjectList']);
+        //ajaxèŽ·å–è€ƒç”Ÿæ‰€è€ƒè¿‡å¾—ç§‘ç›®
+        Route::get('testscores/ajax-get-subject',['uses'=>'TestScoresController@getAjaxGetSubject','as'=>'osce.admin.TestScoresController.getAjaxGetSubject']);
+        Route::get('testscores/ajax-get-subjectlist',['uses'=>'TestScoresController@ajaxGetSubjectlist','as'=>'osce.admin.TestScoresController.ajaxGetSubjectlist']);
+        //ajaxèŽ·å–è€ƒç”Ÿæ‰€è€ƒè¿‡å¾—ç§‘ç›®æˆç»©
+        Route::get('testscores/ajax-get-student-test-count',['uses'=>'TestScoresController@ajaxGetStudentTestCount','as'=>'osce.admin.TestScoresController.ajaxGetStudentTestCount']);
+        //è€ƒè¯•ç§‘ç›®è¯¦ç»†ä¿¡æ¯æŸ¥è¯¢
+        Route::get('subject-statistics/subject-info',['uses'=>'SubjectStatisticsController@SubjectGradeInfo','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeInfo']);
+        //è€ƒè¯•ç§‘ç›®éš¾åº¦åˆ†æž
+        Route::get('subject-statistics/subject-analyze',['uses'=>'SubjectStatisticsController@SubjectGradeAnalyze','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeAnalyze']);
+        //è€ƒç”Ÿæˆç»©è¯¦æƒ…
+        Route::get('testscores/get-tester-score-detail',['uses'=>'TestScoresController@getTesterScoreDetail','as'=>'osce.admin.TestScoresController.getTesterScoreDetail']);
+        //è€ƒç«™æˆç»©åˆ†æž
+        Route::get('subject-statistics/station-grade-list',['uses'=>'SubjectStatisticsController@stationGradeList','as'=>'osce.admin.SubjectStatisticsController.stationGradeList']);
 
-            //¿¼Õ¾³É¼¨·ÖÎö-ÏêÇé
-            Route::get('subject-statistics/stationDetails',['uses'=>'SubjectStatisticsController@stationDetails','as'=>'osce.admin.SubjectStatisticsController.stationDetails']);
+        //è€ƒç«™æˆç»©åˆ†æž-è¯¦æƒ…
+        Route::get('subject-statistics/stationDetails',['uses'=>'SubjectStatisticsController@stationDetails','as'=>'osce.admin.SubjectStatisticsController.stationDetails']);
 
 
 
-            //¿¼ºËµã·ÖÎö
-            Route::get('subject-statistics/standard-grade-list',['uses'=>'SubjectStatisticsController@standardGradeList','as'=>'osce.admin.SubjectStatisticsController.standardGradeList']);
-            Route::get('subject-statistics/subject',['uses'=>'SubjectStatisticsController@getSubject','as'=>'osce.admin.SubjectStatisticsController.getSubject']);
-            Route::post('testscores/ajax-get-tester',['uses'=>'TestScoresController@postAjaxGetTester','as'=>'osce.admin.TestScoresController.postAjaxGetTester']);
-            //¿¼ºËµã³É¼¨·ÖÎö-ÏêÇé
-            Route::get('subject-statistics/standardDetails',['uses'=>'SubjectStatisticsController@standardDetails','as'=>'osce.admin.SubjectStatisticsController.standardDetails']);
-            //½ÌÑ§³É¼¨·ÖÎö
-            Route::get('testscores/test-scores-count',['uses'=>'TestScoresController@testScoresCount','as'=>'osce.admin.TestScoresController.testScoresCount']);
-            //½ÌÑ§³É¼¨·ÖÎö-»ñÈ¡¿ÆÄ¿
-            Route::get('testscores/subject-lists',['uses'=>'TestScoresController@getSubjectLists','as'=>'osce.admin.TestScoresController.getSubjectLists']);
-            //½ÌÑ§³É¼¨·ÖÎö-»ñÈ¡»ñÈ¡½ÌÊÒÁÐ±íÊý¾Ý
-            Route::get('testscores/teacher-data-list',['uses'=>'TestScoresController@getTeacherDataList','as'=>'osce.admin.TestScoresController.getTeacherDataList']);
-            //½ÌÑ§³É¼¨·ÖÎö-°à¼¶ÀúÊ·³É¼¨
-            Route::get('testscores/grade-score-list',['uses'=>'TestScoresController@getGradeScoreList','as'=>'osce.admin.TestScoresController.getGradeScoreList']);
-            //½ÌÑ§³É¼¨·ÖÎö-°à¼¶³É¼¨Ã÷Ï¸
-            Route::get('testscores/grade-detail',['uses'=>'TestScoresController@getGradeDetail','as'=>'osce.admin.TestScoresController.getGradeDetail']);
+        //è€ƒæ ¸ç‚¹åˆ†æž
+        Route::get('subject-statistics/standard-grade-list',['uses'=>'SubjectStatisticsController@standardGradeList','as'=>'osce.admin.SubjectStatisticsController.standardGradeList']);
+        Route::get('subject-statistics/subject',['uses'=>'SubjectStatisticsController@getSubject','as'=>'osce.admin.SubjectStatisticsController.getSubject']);
+        Route::post('testscores/ajax-get-tester',['uses'=>'TestScoresController@postAjaxGetTester','as'=>'osce.admin.TestScoresController.postAjaxGetTester']);
+        //è€ƒæ ¸ç‚¹æˆç»©åˆ†æž-è¯¦æƒ…
+        Route::get('subject-statistics/standardDetails',['uses'=>'SubjectStatisticsController@standardDetails','as'=>'osce.admin.SubjectStatisticsController.standardDetails']);
+        //æ•™å­¦æˆç»©åˆ†æž
+        Route::get('testscores/test-scores-count',['uses'=>'TestScoresController@testScoresCount','as'=>'osce.admin.TestScoresController.testScoresCount']);
+        //æ•™å­¦æˆç»©åˆ†æž-èŽ·å–ç§‘ç›®
+        Route::get('testscores/subject-lists',['uses'=>'TestScoresController@getSubjectLists','as'=>'osce.admin.TestScoresController.getSubjectLists']);
+        //æ•™å­¦æˆç»©åˆ†æž-èŽ·å–èŽ·å–æ•™å®¤åˆ—è¡¨æ•°æ®
+        Route::get('testscores/teacher-data-list',['uses'=>'TestScoresController@getTeacherDataList','as'=>'osce.admin.TestScoresController.getTeacherDataList']);
+        //æ•™å­¦æˆç»©åˆ†æž-ç­çº§åŽ†å²æˆç»©
+        Route::get('testscores/grade-score-list',['uses'=>'TestScoresController@getGradeScoreList','as'=>'osce.admin.TestScoresController.getGradeScoreList']);
+        //æ•™å­¦æˆç»©åˆ†æž-ç­çº§æˆç»©æ˜Žç»†
+        Route::get('testscores/grade-detail',['uses'=>'TestScoresController@getGradeDetail','as'=>'osce.admin.TestScoresController.getGradeDetail']);
 
 
     });
