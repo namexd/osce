@@ -51,6 +51,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('testscores/grade-detail',['uses'=>'TestScoresController@getGradeDetail','as'=>'osce.admin.TestScoresController.getGradeDetail']);
 
 
+            //时间管理
+
+            Route::get('branch/examinationpaper/exam-list',['uses'=>'ExaminationPaperController@getExamList','as'=>'osce.admin.ExaminationPaperController.getExamList']);
+
     });
 
 });
