@@ -483,12 +483,12 @@ class InvigilatePadController extends CommonController
 
             //获取当前日期
             $date = date('Y-m-d');
-
+            $radios = $request->file('radio');
+            \Log::info('123',[$radios->getClientSize()]);
             if (!$request->hasFile('radio')) {
                 throw new \Exception('上传的音频不存在', -120);
             } else {
-                $radios = $request->file('radio');
-                \Log::info('123',[$radios->getClientSize()]);
+//                $radios = $request->file('radio');
                 if (!$radios->isValid()) {
                     throw new \Exception('上传的音频出错', -130);
                 }
