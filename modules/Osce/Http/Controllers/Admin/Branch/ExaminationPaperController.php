@@ -13,6 +13,7 @@ use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\QuestionBankEntities\ExaminationPaper;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
 class ExaminationPaperController extends CommonController
@@ -20,6 +21,31 @@ class ExaminationPaperController extends CommonController
     /**
      * 获取试卷列表
      * @url       GET /osce/admin/examinationpaper/exam-list
+     * @access    public
+     * @param Request $request get请求<br><br>
+     *                         <b>get请求字段：</b>
+     *                         string        keyword         关键字
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamList(Request $request)
+    {
+        $keyword = $request->keyword;
+
+        //获取试卷与试题构造表数据
+        $examPaper= new ExaminationPaper();
+        $examList = $examPaper->getExamPaperlist($keyword);
+
+        dd($examList);
+    }
+
+    /**
+     * 获取考核范围
+     * @url       GET /osce/admin/examinationpaper/question-round
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
@@ -33,10 +59,11 @@ class ExaminationPaperController extends CommonController
      * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamList(Request $request)
+    public function getQuestionRound(Request $request)
     {
-        $keyword = $request->keyword;
+        $LabelType= new ExamQuestionLabelType();
+        $LabelTypeList = $LabelType->labelTypeList();
+
+        dd($LabelTypeList);
     }
-
-
 }

@@ -21,6 +21,18 @@ class ExamQuestionLabelType extends  Model
         return $data;
     }
 
+    /**获取标签类型和标签的相关数据
+     * @method
+     * @url /osce/
+     * @access public
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getLabAndType(){
+        $builder = $this;
+
+    }
 }
 
 
