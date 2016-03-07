@@ -11,8 +11,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use App\Entities\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Http\Controllers\CommonController;
+use Auth;
 
 class LoginController extends  CommonController
 {
@@ -26,15 +26,20 @@ class LoginController extends  CommonController
         ]);
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
+        try{
 
-        if (Auth::attempt(['username' => $username, 'password' => $password]))
-        {
-            $user = User::where('username', $username)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
-            return redirect()->route('osce.admin.index');
+            $user=Auth::attempt(['username' => $username, 'password' => $password]);
+            if ($user)
+            {
+                return redirect()->route('osce.admin.index');
+            }
+            else
+            {
+                throw new \Exception('账号密码错误');
+            }
+        }catch (\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
         }
-        else
-        {
-            return redirect()->back()->withErrors('账号密码错误');
-        }
+
     }
 }
