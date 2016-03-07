@@ -76,6 +76,7 @@ class InvigilatePadController extends CommonController
             $fileName = '';
             //获取文件的MIME类型
             $fileMime = $file->getMimeType();
+            \Log::info('mime',[$fileMime]);
             foreach ($params as $param) {
                 $fileName .= $param . '_';
             }
