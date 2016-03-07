@@ -460,6 +460,7 @@ class InvigilatePadController extends CommonController
         Request $request
     ) {
         try {
+            \Log::info('file', [$_FILES]);
             //获取数据
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
@@ -484,7 +485,7 @@ class InvigilatePadController extends CommonController
 
             //获取当前日期
             $date = date('Y-m-d');
-            \Log::info('file', [$_FILES]);
+
             if (!$request->hasFile('radio')) {
                 throw new \Exception('上传的音频不存在', -120);
             } else {
