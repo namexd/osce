@@ -118,7 +118,7 @@
                                     $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                                     return {
-                                        code: $('[name="whateverNameAttributeInYourForm"]').val()
+                                        idcard: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }
                             }
