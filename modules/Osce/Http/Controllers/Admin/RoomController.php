@@ -44,7 +44,7 @@ class RoomController extends CommonController
             'keyword'   => 'sometimes'
         ]);
         //获取各字段
-        $keyword = e($request->input('keyword', ""));
+        $keyword = $request ->input('keyword', "");
         $type    = $request ->input('type', '0');
         $id      = $request ->input('id', '');
 
@@ -54,8 +54,7 @@ class RoomController extends CommonController
             //获取当前的标签
             $area = config('osce.room_cate');
             //展示页面
-            $cateList   =   Area::groupBy('cate')->select('cate')->get();
-
+            $cateList   =   Area::groupBy('cate')->get();
             return view('osce::admin.resourceManage.site_manage', ['area' => $cateList, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         } catch(\Exception $ex){
             return redirect()->back()->withErrors($ex->getMessage());
@@ -133,8 +132,7 @@ class RoomController extends CommonController
         $id         = $request->input('id');
         $vcr_id     = $request->get('vcr_id');
         $formData   = $request->only('name', 'description', 'address', 'code','cate');
-
-        $type       = empty($formData['cate'])? 0:($formData['cate']=='考场'?0:$formData['cate']);
+        $type       = empty($formData['cate'])? 0:$formData['cate'];
 
         $user = Auth::user();
         if(!$user){

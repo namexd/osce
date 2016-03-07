@@ -160,9 +160,8 @@ class Vcr extends CommonModel implements MachineInterface
      */
     public function getList($name,$status,$nfc_code=''){
         $bulder =   $this;
-        if($name != '')
-        {
-            $bulder =   $bulder    ->  where('name', 'like', '%'.$name.'%');
+        if($name != ''){
+            $bulder =   $bulder    ->  where('name', 'like', '%\\'.$name.'%');
         }
         if($status !='')
         {

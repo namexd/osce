@@ -2185,7 +2185,7 @@ function smart_assignment(){
         });
         $.post(pars.makePlanUrl,function(testData){
 
-            if(testData.code !=1)
+            if(testData.code==-999)
             {
                 layer.msg(testData.message,{skin:'msg-error',icon:1});
                 //关闭加载
@@ -2393,10 +2393,10 @@ function examinee_manage(){
                 data:{id:sid,exam_id:examId},
                 success:function(data){
                     if(data.code ==1){
-                        layer.msg(data.message,{'skin':'msg-success','icon':1});
+                        layer.msg('删除成功！',{'skin':'msg-success','icon':1});
                         location.reload();
                     }else {
-                        layer.msg(data.message,{'skin':'msg-error','icon':1});
+                        layer.msg(data.message,{'skin':'msg-success','icon':1});
                     }
                 }
             })

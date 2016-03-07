@@ -56,7 +56,6 @@ class Room extends CommonModel
     public function showRoomList($keyword = '', $type = '0', $id = '')
     {
         try {
-
             //如果传入了id,就说明是编辑,那就只读取该id的数据
             //如果传入的type是1，就说明是编辑考场
             if ($id !== "") {
@@ -70,20 +69,20 @@ class Room extends CommonModel
             } else {
                 //通过传入的$type来展示响应的数据
                 if ($type === "0") {
-                    $builder = Room::select(['id', 'name', 'address', 'description']);
+                    $builder = Room::select(['id','name','address','description']);
+
                     if ($keyword !== "") {
-                        $builder = $builder->where('name','like','%'.  $keyword . '%');
+                        $builder = $builder->where('name','like','%\\'.  $keyword . '%');
                     }
-                    return $builder -> paginate(config('osce.page_size', 10));
+                    return $builder -> paginate(config('osce.page_size'));
 
                 } else {
-
                     $builder = Area::select(['id','name','cate','description']);
 
-                    if ($keyword !== "") {
-                        $builder = $builder->where('name','like','%'.$keyword.'%');
+                    if ($keyword != "") {
+                        $builder = $builder->where('name','like','%\\'.$keyword.'%');
                     }
-                    return $builder->where('cate',$type)->paginate(config('osce.page_size', 10));
+                    return $builder->where('cate',$type)->paginate(config('osce.page_size'));
                 }
             }
 
