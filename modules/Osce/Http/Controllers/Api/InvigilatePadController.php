@@ -489,7 +489,7 @@ class InvigilatePadController extends CommonController
                 throw new \Exception('上传的音频不存在', -120);
             } else {
                 $radios = $request->file('radio');
-
+                \Log::info('123',[$radios->getClientSize()]);
                 if (!$radios->isValid()) {
                     throw new \Exception('上传的音频出错', -130);
                 }
