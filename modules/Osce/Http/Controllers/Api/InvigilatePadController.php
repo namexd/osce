@@ -76,6 +76,8 @@ class InvigilatePadController extends CommonController
             $fileName = '';
             //获取文件的MIME类型
             $fileMime = $file->getMimeType();
+            \Log::info('mime',[$fileMime]);
+            \log::info('test',['test']);
             foreach ($params as $param) {
                 $fileName .= $param . '_';
             }
@@ -458,6 +460,7 @@ class InvigilatePadController extends CommonController
     public function postTestAttachRadio(
         Request $request
     ) {
+        \Log::info('params', $request->all());
         try {
             //获取数据
             $studentId = $request->input('student_id');
@@ -492,7 +495,7 @@ class InvigilatePadController extends CommonController
                 if (!$radios->isValid()) {
                     throw new \Exception('上传的音频出错', -130);
                 }
-
+                \Log::alert('radio', [$radios]);
                 $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
             }
 

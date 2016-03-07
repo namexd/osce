@@ -230,7 +230,7 @@ class AutomaticPlanArrangement
 
         //获取未走完流程的考生
         $ExamFlowModel = new ExamFlow();
-        $flowsNum = $ExamFlowModel->studentExamSum($examId);
+        $flowsNum = $ExamFlowModel->studentFlowCount($this->_Exam);
         //SELECT count(`id`) as total,`student_id` FROM `exam_plan_record` where`exam_id` = 25 Group by `student_id` Having total <> 2
         $studentList = ExamPlanRecord::  where('exam_id', '=', $examId)
             ->whereNotNull('end_dt')
@@ -246,7 +246,6 @@ class AutomaticPlanArrangement
             ))
             ->Having('flowsNum', '<', $flowsNum)
             ->get();
-
         //未考完的学生实例数组
         $undoneStudents = [];
 
