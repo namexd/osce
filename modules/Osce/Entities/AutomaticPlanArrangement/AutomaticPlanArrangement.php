@@ -114,7 +114,6 @@ class AutomaticPlanArrangement
     /**
      * 智能排考
      * @author Jiangzhiheng
-     * @time
      * @param $examId
      * @return array
      * @throws \Exception
@@ -146,10 +145,6 @@ class AutomaticPlanArrangement
                     return $this->output($examId);
                 }
             }
-//            dump($this->_S);
-//            dump($this->_S_ING);
-//            dump($examPlanNull);
-//            echo '==============================';
             throw new \Exception('人数太多，所设时间无法完成考试', -888);
         } catch (\Exception $ex) {
             throw $ex;
@@ -464,7 +459,6 @@ class AutomaticPlanArrangement
             $arrays[] = $item->student;
         }
 
-        dump();
         if (count($tempArrays) == 0) {
             $arrays = $this->beginStudents($station);
         }
@@ -834,12 +828,13 @@ class AutomaticPlanArrangement
     }
 
     /**
+     * 轮循模式下的学生选择
      * @param $station
      * @param $screen
      * @param $examId
      * @return array
      * @author Jiangzhiheng
-     * @time
+     * @time 2016-03-04 20:08
      */
     private function pollMode($station, $screen, $examId)
     {
