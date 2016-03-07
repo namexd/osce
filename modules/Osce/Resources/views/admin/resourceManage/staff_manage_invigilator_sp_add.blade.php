@@ -101,6 +101,21 @@
                             regexp: {
                                 regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
                                 message: '请输入正确的身份证号'
+                            },
+                            threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                            remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                                url: '{{route('osce.admin.invigilator.postSelectTeacher')}}',//验证地址
+                                delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                type: 'POST',//请求方式
+                                message: '身份证号已存在',//提示消息
+                                /*自定义提交数据，默认值提交当前input value*/
+                                data: function(validator) {
+                                    $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                                    return {
+                                        code: $('[name="whateverNameAttributeInYourForm"]').val()
+                                    }
+                                }
                             }
                         }
                     },

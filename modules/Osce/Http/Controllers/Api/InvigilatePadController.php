@@ -378,7 +378,6 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttachImage(Request $request)
     {
-        \Log::info('params', $request->all());
         try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
@@ -460,14 +459,12 @@ class InvigilatePadController extends CommonController
     public function postTestAttachRadio(
         Request $request
     ) {
-        \Log::info('params', $request->all());
         try {
             //获取数据
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             $standardId = $request->input('standard_id');
             $exam = Exam::doingExam();
-
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
             $studentName = $student->name;
@@ -475,6 +472,7 @@ class InvigilatePadController extends CommonController
             $stationName = Station::findOrFail($stationId)->first()->name;
             $examName = $exam->name;
 
+            \Log::info('params', [$studentId, $stationId, $standardId]);
 
             //将参数拼装成一个数组
             $params = [
@@ -486,16 +484,16 @@ class InvigilatePadController extends CommonController
 
             //获取当前日期
             $date = date('Y-m-d');
-
+            \Log::info('file', [$_FILES]);
             if (!$request->hasFile('radio')) {
                 throw new \Exception('上传的音频不存在', -120);
             } else {
                 $radios = $request->file('radio');
-
                 if (!$radios->isValid()) {
                     throw new \Exception('上传的音频出错', -130);
                 }
-                \Log::alert('radio', [$radios]);
+
+                \Log::info('params', [$studentId, $stationId, $standardId]);
                 $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
             }
 
