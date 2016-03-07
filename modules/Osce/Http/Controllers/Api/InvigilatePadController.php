@@ -460,7 +460,7 @@ class InvigilatePadController extends CommonController
     public function postTestAttachRadio(
         Request $request
     ) {
-        \Log::info('params', $request->all());
+//        \Log::info('params', $request->all());
         \Log::info('size', $request->file('radio')->getClientSize());
         try {
             //获取数据
