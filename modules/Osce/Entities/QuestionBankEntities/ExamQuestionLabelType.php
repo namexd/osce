@@ -8,7 +8,7 @@ class ExamQuestionLabelType extends  Model
     public $timestamps	=	true;
     protected $primaryKey	=	'id';
     protected $fillable 	=	['id', 'name','status'];
-    /**获取标签类型列表
+    /**鑾峰彇鏍囩绫诲瀷鍒楄〃
      * @method
      * @url /osce/
      * @access public
