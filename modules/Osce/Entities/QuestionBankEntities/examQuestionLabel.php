@@ -8,6 +8,9 @@
 
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
+
+use Modules\Osce\Entities\QuestionBankEntities\LabelType;
+
 class ExamQuestionLabel extends  Model
 {
     protected $connection	=	'osce_mis';
@@ -21,5 +24,12 @@ class ExamQuestionLabel extends  Model
         return $this->hasOne('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType','id','label_type_id');
     }
 
-
+    /**
+     * 标签类型和标签关联
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function LabelTypeAndLabel()
+    {
+        return $this    ->  hasMany('\Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType','id','label_type_id');
+    }
 }

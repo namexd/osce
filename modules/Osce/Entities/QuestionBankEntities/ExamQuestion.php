@@ -11,9 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use DB;
 use Auth;
-
-
-/**试题表
+/**试题模型
  * Class ExamQuestion
  * @package Modules\Osce\Entities
  */
@@ -44,28 +42,33 @@ class ExamQuestion extends Model
     {
         $builder = $this;
         if ($formData['examQuestionTypeId']) {
-            $builder = $builder->where('exam_question_type_id', '=', $formData['examQuestionTypeId']);
+            $builder = $builder->where('exam_question_label.exam_paper_label_id', '=', $formData['examPaperLabelId']);
         }
         if ($formData['examQuestionTypeId']) {
-            $builder = $builder->where('exam_paper_label_id', '=', $formData['examPaperLabelId']);
+            $builder = $builder->where('exam_question.exam_question_type_id', '=', $formData['examQuestionTypeId']);
         }
+
         $builder = $builder->leftJoin('exam_question_item', function ($join) {
             $join->on('exam_question.id', '=', 'exam_question_item.exam_question_id');
-        })->leftJoin('exam_question_label', function ($join) {
-            $join->on('exam_question.id', '=', 'exam_question_label.exam_question_id');
+
+        })->leftJoin('exam_question_label_relation', function ($join) {
+            $join->on('exam_question.id', '=', 'exam_question_label_relation.exam_question_id');
+
         })->leftJoin('exam_question_type', function ($join) {
             $join->on('exam_question.exam_question_type_id', '=', 'exam_question_type.id');
-        })->leftJoin('label_type', function ($join) {
-            $join->on('exam_question_label.exam_paper_label_id', '=', 'label_type.id');
-        })->select([
+
+        })->leftJoin('exam_question_label_type', function ($join) {
+            $join->on('exam_question_label_relation.exam_paper_label_id', '=', 'exam_question_label_type.id');
+
+        })->groupBy('exam_question.id')->select([
             'exam_question.id',//试题id
             'exam_question.name',//试题名称
-            'label_type.name as labelTypeName',//考核范围
+            'exam_question_label_type.name as labelTypeName',//考核范围
             'exam_question_type.name as examQuestionTypeName',//题目类型
         ]);
-        return $builder->paginate(10);
+        $pageSize = config('page_size');
+        return $builder->paginate($pageSize);
     }
-
 
     /**删除
      * @method
@@ -120,23 +123,29 @@ class ExamQuestion extends Model
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function addExamQuestion($examQuestionData, $examQuestionItemData, $examQuestionLabelData)
+    public function addExamQuestion($examQuestionData, $examQuestionItemData, $examQuestionLabelRelationData)
     {
         DB::beginTransaction();
+        //向试题表中插入数据
+        $examQuestion['create_user_id'] = Auth::user()->id;
         $examQuestion = ExamQuestion::create($examQuestionData);
         if (!$examQuestion instanceof self) {
             DB::rollback();
             return false;
         }
+        //向试题子项表插入数据
         foreach ($examQuestionItemData as $key => $value) {
+            $value['create_user_id'] = Auth::user()->id;
             $value['exam_question_id'] = $examQuestion->id;
             if (!$examQuestionItem = ExamQuestionItem::create($value)) {
                 DB::rollback();
                 return false;
             }
         }
-        $examQuestionLabelData['exam_question_id'] = $examQuestion->id;
-        if (!$examQuestionLabel = ExamQuestionLabel::create($examQuestionLabelData)) {
+        //向试题和标签中间表插入数据
+        $examQuestionLabelRelationData['exam_question_id'] = $examQuestion->id;
+        $examQuestionLabelRelationData['create_user_id'] = Auth::user()->id;
+        if (!$examQuestionLabelRelation = ExamQuestionLabelRelation::create($examQuestionLabelRelationData)) {
             DB::rollback();
             return false;
         }
@@ -172,9 +181,9 @@ class ExamQuestion extends Model
             ->select([
             'exam_question.id',//试题id
             'exam_question.exam_question_type_id',//题目类型
-            'exam_question_item.name as examQuestionItemName',//题目名称
-            'exam_question_item.content as examQuestionItemContent',//考核范围
-            'exam_question_type.name as examQuestionTypeName',//题目类型
+            'exam_question.name',//题目
+            'exam_question_item.name as examQuestionItemName',//选项名称
+            'exam_question_item.content as examQuestionItemContent',//选项内容
             'exam_question.answer',//正确答案
             'exam_question.parsing',//解析
             'exam_question_label.exam_paper_label_id',//考核范围
