@@ -246,27 +246,30 @@ class AutomaticPlanArrangement
             ))
             ->Having('flowsNum', '<', $flowsNum)
             ->get();
-//        $undoneStudents = [];
+
+        //未考完的学生实例数组
+        $undoneStudents = [];
+
         if (count($studentList)) {
             $studentNotOvers = $studentList->pluck('student_id');
-//            foreach ($studentNotOvers as $studentNotOver) {
-//                $undoneStudents[] = Student::find($studentNotOver);
-//            }
 
             //删除未走完流程的考生
             if (!ExamPlanRecord::whereIn('student_id', $studentNotOvers->toArray())->delete()) {
                 throw new \Exception('考试未完成学生移动失败', -2100);
             }
+
+            //将没有考完的考生放回到总的考生池里
+            foreach ($studentNotOvers as $studentNotOver) {
+                $undoneStudents[] = Student::findOrFail($studentNotOver);
+            }
         }
         //找到未考完的考生
-        $undoneStudents = [];
         $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
         $undoneStudentsIds = $examPlanEntity->pluck('student_id');
         foreach ($undoneStudentsIds as $undoneStudentsId) {
             $undoneStudents[] = Student::findOrFail($undoneStudentsId);
         }
-//
-//        //删除未考完学生记录
+        //删除未考完学生记录
         if (!$undoneStudentsIds->isEmpty()) {
             if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
                 throw new \Exception('删除未考完考生记录失败！', -2101);
@@ -275,7 +278,7 @@ class AutomaticPlanArrangement
 
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_ING);
-        $this->_S = $this->_S->merge($undoneStudents);
+        $this->_S = $this->_S->merge(array_unique($undoneStudents));
     }
 
     /**
