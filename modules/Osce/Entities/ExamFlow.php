@@ -12,11 +12,11 @@ use Modules\Osce\Entities\CommonModel;
 
 class ExamFlow extends CommonModel
 {
-    protected $connection	=	'osce_mis';
-    protected $table 		= 	'exam_flow';
-    public $incrementing	=	true;
-    public $timestamps	    =	true;
-    protected $fillable 	=	['exam_id','flow_id','created_user_id'];
+    protected $connection = 'osce_mis';
+    protected $table = 'exam_flow';
+    public $incrementing = true;
+    public $timestamps = true;
+    protected $fillable = ['exam_id', 'flow_id', 'created_user_id'];
 
     /**
      * 考试-流程节点-房间的关系
@@ -30,15 +30,19 @@ class ExamFlow extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function examFlowRoomRelation(){
-        return $this->hasOne('\Modules\Osce\Entities\ExamFlowRoom','flow_id','flow_id');
+    public function examFlowRoomRelation()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\ExamFlowRoom', 'flow_id', 'flow_id');
     }
 
-    public function examFlowStationRelation(){
-        return $this->hasOne('\Modules\Osce\Entities\ExamFlowStation','flow_id','flow_id');
+    public function examFlowStationRelation()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\ExamFlowStation', 'flow_id', 'flow_id');
     }
-    public function flow(){
-        return $this->hasOne('\Modules\Osce\Entities\Flows','id','flow_id');
+
+    public function flow()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Flows', 'id', 'flow_id');
     }
 
     /**
@@ -60,12 +64,14 @@ class ExamFlow extends CommonModel
 
         if ($SequenceMode->sequence_mode == 1) {
             //根据考场排序
-            $studentExamSum = count(ExamFlowRoom::where('exam_id','=',$examId)->where('effected', 1)->groupBy('serialnumber')->get());
+            $studentExamSum = count(ExamFlowRoom::where('exam_id', '=', $examId)->where('effected',
+                1)->groupBy('serialnumber')->get());
 
 
         } else {
             //根据考站排序
-            $studentExamSum =count(ExamFlowStation::where('exam_id','=',$examId)->where('effected', 1)->groupBy('serialnumber')->get()) ;
+            $studentExamSum = count(ExamFlowStation::where('exam_id', '=', $examId)->where('effected',
+                1)->groupBy('serialnumber')->get());
 
         }
         return $studentExamSum;
