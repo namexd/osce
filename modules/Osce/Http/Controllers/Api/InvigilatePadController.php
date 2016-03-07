@@ -507,6 +507,7 @@ class InvigilatePadController extends CommonController
 
             return response()->json($this->success_data([$result->id]));
         } catch (\Exception $ex) {
+            dd(response());
             return response()->json($this->fail($ex));
         }
     }
