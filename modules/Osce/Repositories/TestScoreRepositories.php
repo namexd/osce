@@ -192,7 +192,8 @@ class TestScoreRepositories  extends BaseRepository
                     $DB->raw('avg(exam_result.score) as scoreAvg'),
                     'subject.id',
                     'exam_result.id as result_id',
-                    'exam.id as exam_id'
+                    'exam.id as exam_id',
+                    'exam.name as exam_name'
                 );
         }else{
             $builder = $builder->where('exam_result.student_id', '=', $student_id)

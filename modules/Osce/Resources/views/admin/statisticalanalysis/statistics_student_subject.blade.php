@@ -43,7 +43,7 @@
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>科目</th>
+                            <th>考试</th>
                             <th>考试时间</th>
                             <th>平均耗时</th>
                             <th>平均成绩</th>
@@ -57,7 +57,7 @@
                             @foreach(@$data['list'] as $k=>$v)
                                 <tr>
                                     <td>{{@$k+1}}</td>
-                                    <td>{{@$v['title']}}</td>
+                                    <td>{{@$v['exam_name']}}</td>
                                     <td>{{@$v['time']}}</td>
                                     <td>{{@$v['timeAvg']}}</td>
                                     <td>{{@$v['scoreAvg']}}</td>
