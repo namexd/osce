@@ -63,6 +63,28 @@
 		});
 		})
 	</script>
+	<?php
+		$errorsInfo =(array)$errors->getMessages();
+		if(!empty($errorsInfo)){
+			$errorsInfo = array_shift($errorsInfo);
+		}
+	?>
+	@forelse($errorsInfo as $errorItem)
+		<div class="pnotice" style="display: none;">{{$errorItem}}</div>
+	@empty
+	@endforelse
+	<script>
+		$(function(){
+			//错误提示
+			var msg = $('.pnotice').text();
+			if(msg==''){
+				$("#passwdTip").css('display','none');
+				return;
+			}else{
+				$("#passwdTip").css('display','block');
+			}
+		})
+	</script>
 </head>
 <body>
 		<div class="middle-box loginscreen animated fadeInDown">
@@ -86,6 +108,7 @@
 					<input type="hidden" name="grant_type" id="grant_type" value="password">
 					<input type="hidden" name="client_id"  id="client_id" value="ios">
 					<input type="hidden" name="client_secret" id="client_secret" value="111">
+					<div id="passwdTip" style="color: #a94442; display: none">用户名或密码错误，请重新输入</div>
 					<div class="clearfix">
 						<label class="check_label checkbox_input" style="display: none">
                             <div class="check_icon check" style="display: inline-block"></div>

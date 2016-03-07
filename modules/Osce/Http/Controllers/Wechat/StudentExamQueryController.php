@@ -84,7 +84,7 @@ class StudentExamQueryController extends CommonController
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
      * @return json
-     * @version 1.0
+     * @version 0.4
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
@@ -110,8 +110,8 @@ class StudentExamQueryController extends CommonController
             //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
             $studentInfo = Student::find($studentId);
             $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
+            // TODO 根据考试id找到对应的考试场次  zhouqiang  2016-3-7
 
-            //根据考试id找到对应的考试场次
 //        $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get();
 
 //        $examScreening = [];
