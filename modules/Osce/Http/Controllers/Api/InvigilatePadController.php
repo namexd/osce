@@ -460,21 +460,28 @@ class InvigilatePadController extends CommonController
         Request $request
     ) {
         try {
-            \Log::info('file', [$_FILES]);
             //获取数据
-            $studentId = $request->input('student_id');
-            $stationId = $request->input('station_id');
-            $standardId = $request->input('standard_id');
+            $studentId = $request   ->  input('student_id');
+            $stationId = $request   ->  input('station_id');
+            $standardId = $request  ->  input('standard_id');
             $exam = Exam::doingExam();
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
-            $studentName = $student->name;
-            $studentCode = $student->code;
-            $stationName = Station::findOrFail($stationId)->first()->name;
+            if(is_null($student))
+            {
+                throw new \Exception('找不到该考生',-3);
+            }
+            $studentName    =   $student->name;
+            $studentCode    =   $student->code;
+            $station        =   Station::findOrFail($stationId)->first();
+            if(is_null($station))
+            {
+                throw new \Exception('找不到该考站',-4);
+            }
+            $stationName    =   $station->name;
             $examName = $exam->name;
 
             \Log::info('params', [$studentId, $stationId, $standardId]);
-
             //将参数拼装成一个数组
             $params = [
                 'exam_name' => $examName,
