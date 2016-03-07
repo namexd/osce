@@ -40,7 +40,7 @@ class ExaminationPaperController extends CommonController
         $examPaper= new ExaminationPaper();
         $examList = $examPaper->getExamPaperlist($keyword);
 
-        dd($examList);
+        return view('osce::admin.resourcemanage.subject_papers', ['data' => $examList]);
     }
 
     /**
