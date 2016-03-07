@@ -472,6 +472,7 @@ class InvigilatePadController extends CommonController
             $stationName = Station::findOrFail($stationId)->first()->name;
             $examName = $exam->name;
 
+            \Log::info('params', [$studentId, $stationId, $standardId]);
 
             //将参数拼装成一个数组
             $params = [
