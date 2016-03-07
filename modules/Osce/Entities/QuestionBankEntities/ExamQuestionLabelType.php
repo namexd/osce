@@ -16,31 +16,21 @@ class ExamQuestionLabelType extends  Model
     public $timestamps	=	true;
     protected $primaryKey	=	'id';
     protected $fillable 	=	['id', 'name','status'];
-    /**鑾峰彇鏍囩绫诲瀷鍒楄〃
+
+    /**获取标签类型列表
      * @method
      * @url /osce/
      * @access public
+     * @return mixed
      * @author xumin <xumin@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function labelTypeList(){
+    public function examQuestionLabelTypeList(){
         $data = $this->select('id','name')->orderBy('created_at','desc')->get();
         return $data;
     }
 
-    /**鑾峰彇鏍囩绫诲瀷鍜屾爣绛剧殑鐩稿叧鏁版嵁
-     * @method
-     * @url /osce/
-     * @access public
-     * @author xumin <xumin@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getLabAndType(){
-        $builder = $this;
-
-    }
 }
 
 
