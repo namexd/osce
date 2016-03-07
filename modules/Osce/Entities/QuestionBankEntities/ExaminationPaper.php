@@ -1,30 +1,21 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: j5110
- * Date: 2016/1/6
- * Time: 10:33
+ * User: Administrator
+ * Date: 2016/3/7 0007
+ * Time: 13:56
  */
-
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
-
-use DB;
-use Auth;
-
-/**试题子项表
- * Class ExamQuestionItem
- * @package Modules\Osce\Entities
- */
-class ExamQuestionItem extends Model
+class ExaminationPaper extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'exam_question_item';
+    protected $table = 'area_vcr';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'name', 'content', 'exam_question_id', 'status'];
+    protected $fillable = ['area_id', 'vcr_id', 'created_user_id'];
 
 }

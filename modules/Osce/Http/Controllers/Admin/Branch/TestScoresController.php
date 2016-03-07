@@ -6,7 +6,7 @@
  * Time: 14:30
  */
 
-namespace Modules\Osce\Http\Controllers\Admin;
+namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
 use Modules\Osce\Http\Controllers\CommonController;

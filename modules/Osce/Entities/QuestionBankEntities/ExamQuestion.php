@@ -6,7 +6,8 @@
  * Time: 10:33
  */
 
-namespace Modules\Osce\Entities;
+namespace Modules\Osce\Entities\QuestionBankEntities;
+use Illuminate\Database\Eloquent\Model;
 
 use DB;
 use Auth;
@@ -16,7 +17,7 @@ use Auth;
  * Class ExamQuestion
  * @package Modules\Osce\Entities
  */
-class ExamQuestion extends CommonModel
+class ExamQuestion extends Model
 {
     protected $connection = 'osce_mis';
     protected $table = 'exam_question';

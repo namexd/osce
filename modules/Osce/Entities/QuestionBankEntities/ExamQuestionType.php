@@ -6,17 +6,14 @@
  * Time: 10:33
  */
 
-namespace Modules\Osce\Entities;
-
+namespace Modules\Osce\Entities\QuestionBankEntities;
+use Illuminate\Database\Eloquent\Model;
 use DB;
-use Auth;
-
-
 /**题目类型表
  * Class ExamQuestionLabel
  * @package Modules\Osce\Entities
  */
-class ExamQuestionType extends CommonModel
+class ExamQuestionType extends Model
 {
     protected $connection = 'osce_mis';
     protected $table = 'exam_question_type';
