@@ -48,7 +48,8 @@ class ExamFlow extends CommonModel
      * @author zhouqiang<zhouqiang@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
+     * @param $examId
+     * @return int
      */
     public function studentExamSum($examId)
     {
@@ -59,16 +60,42 @@ class ExamFlow extends CommonModel
 
         if ($SequenceMode->sequence_mode == 1) {
             //根据考场排序
-            $studentExamSum = count(ExamFlowRoom::where('exam_id','=',$examId)->groupBy('serialnumber')->get());
+            $studentExamSum = count(ExamFlowRoom::where('exam_id','=',$examId)->where('effected', 1)->groupBy('serialnumber')->get());
 
 
         } else {
             //根据考站排序
-            $studentExamSum =count(ExamFlowStation::where('exam_id','=',$examId)->groupBy('serialnumber')->get()) ;
+            $studentExamSum =count(ExamFlowStation::where('exam_id','=',$examId)->where('effected', 1)->groupBy('serialnumber')->get()) ;
 
         }
-
         return $studentExamSum;
 
+    }
+
+    /**
+     * 当场考试相关的所有流程个数
+     * @param $exam
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-07 16：51
+     */
+    public function studentFlowCount($exam)
+    {
+        try {
+            switch ($exam->sequence_mode) {
+                case 1:
+                    return count(ExamFlowRoom::where('exam_id', '=', $exam->id)->groupBy('serialnumber')->get());
+                    break;
+                case 2:
+                    return count(ExamFlowStation::where('exam_id', '=', $exam->id)->groupBy('serialnumber')->get());
+                    break;
+                default:
+                    throw new \Exception('当前系统异常，请重试');
+                    break;
+            }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 }
