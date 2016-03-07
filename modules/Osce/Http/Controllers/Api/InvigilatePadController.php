@@ -465,7 +465,6 @@ class InvigilatePadController extends CommonController
             $stationId = $request->input('station_id');
             $standardId = $request->input('standard_id');
             $exam = Exam::doingExam();
-            \Log::info('params', [$studentId, $stationId, $standardId]);
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
             $studentName = $student->name;
@@ -493,6 +492,8 @@ class InvigilatePadController extends CommonController
                 if (!$radios->isValid()) {
                     throw new \Exception('上传的音频出错', -130);
                 }
+
+                \Log::info('params', [$studentId, $stationId, $standardId]);
                 $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
             }
 
