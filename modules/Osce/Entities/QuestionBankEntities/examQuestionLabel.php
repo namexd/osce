@@ -9,7 +9,7 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Osce\Entities\QuestionBankEntities\LabelType;
-class examQuestionLabel extends  Model
+class ExamQuestionLabel extends  Model
 {
     protected $connection	=	'osce_mis';
     protected $table 		= 	'exam_question_label';
