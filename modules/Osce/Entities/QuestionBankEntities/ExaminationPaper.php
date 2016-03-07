@@ -7,15 +7,38 @@
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Osce\Entities\CommonModel;
 class ExaminationPaper extends CommonModel
 {
     protected $connection = 'osce_mis';
-    protected $table = 'area_vcr';
+    protected $table = 'exam_paper';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['area_id', 'vcr_id', 'created_user_id'];
+    protected $fillable = ['id', 'name', 'status','mode','type','length','created_user_id'];
+    /**
+     * 获取试卷列表
+     * @access    public
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamPaperlist($keyword){
+        $builder = $this;
+        if(!empty($keyword)){
+            $builder = $builder->where('name','like','%'.$keyword.'%');
+        }
 
+        $builder = $builder->leftjoin('exam_paper_structure',function($join){
+                $join->on('exam_paper_structure.exam_paper_id','=','exam_paper.id');
+            })->select('exam_paper.name','exam_paper.type','exam_paper_structure.num','exam_paper_structure.total_score')
+            ->orderBy('exam_paper.id','desc')->paginate(config('msc.page_size'));
+
+        return $builder;
+    }
 }

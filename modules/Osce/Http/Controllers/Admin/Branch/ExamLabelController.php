@@ -8,19 +8,30 @@
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Modules\Osce\Http\Controllers\CommonController;
-use Modules\Osce\Entities\QuestionBankEntities\examQuestionLabel;
-use Modules\Osce\Entities\QuestionBankEntities\examLabel;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
+use Illuminate\Http\Request;
 
 class ExamLabelController extends CommonController
 {
-    public function getExamLabel(){
-        //dd('考核表签');
-        $examquestion=new examQuestionLabel();
-       $examlist= $examquestion->LabelType()->get();
-        dd($examlist);
+    public function getExamLabel(Request $Request){
+/*        $this->validate($Request,[
+            'keyword'=>'required|integer',
+            'label_type_id'=>'required|integer',
+        ]);*/
+        $ExamQuestionLabelType=new ExamQuestionLabelType();
+        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->labelTypeList();
 
 
-        return view('osce::admin.resourcemanage.subject_check_tag');
+        return view('osce::admin.resourcemanage.subject_check_tag',['ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList]);
+
+    }
+
+    public function AddExamQuestionLabel(Request $Request){
+        $this->validate($Request,[
+
+        ]);
+
 
     }
 
