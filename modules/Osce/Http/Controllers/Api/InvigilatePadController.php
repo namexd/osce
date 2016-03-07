@@ -495,7 +495,7 @@ class InvigilatePadController extends CommonController
                 if (!$radios->isValid()) {
                     throw new \Exception('上传的音频出错', -130);
                 }
-
+                \Log::alert('radio', [$radios]);
                 $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
             }
 
