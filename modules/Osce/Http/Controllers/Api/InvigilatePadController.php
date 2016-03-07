@@ -465,6 +465,10 @@ class InvigilatePadController extends CommonController
             $stationId = $request   ->  input('station_id');
             $standardId = $request  ->  input('standard_id');
             $exam = Exam::doingExam();
+            if(is_null($exam))
+            {
+                throw new \Exception('当前没有正在进行的考试',-1);
+            }
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
             if(is_null($student))
@@ -507,7 +511,6 @@ class InvigilatePadController extends CommonController
 
             return response()->json($this->success_data([$result->id]));
 //        } catch (\Exception $ex) {
-//            dd(response());
 //            return response()->json($this->fail($ex));
 //        }
     }
