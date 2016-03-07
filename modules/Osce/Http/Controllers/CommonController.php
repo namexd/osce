@@ -81,10 +81,10 @@ abstract class CommonController extends Controller
      */
     public function fail(\Exception $ex)
     {
-        if($ex->getCode() == 0) {
-            $code   =   -999;
+        if ($ex->getCode() == 0) {
+            $code = -999;
         } else {
-            $code   =   $ex -> getCode();
+            $code = $ex->getCode();
         }
         return [
             'code' => $code,
@@ -102,9 +102,42 @@ abstract class CommonController extends Controller
      */
     protected function errorLog(\Exception $ex)
     {
-       \Log::info('Error',[
-           'ErrorCode:' . $ex->getCode(),
-           'ErrorMessage:' . $ex->getMessage()
-       ]) ;
+        \Log::info('Error', [
+            'ErrorCode:' . $ex->getCode(),
+            'ErrorMessage:' . $ex->getMessage()
+        ]);
     }
+
+    /**
+     * 正则验证
+     * @param $value
+     * @param $rule
+     * @return bool
+     * @author Jiangzhiheng
+     * @time 2016-03-07 09:41
+     */
+    public static function regex_vali($value, $rule)
+    {
+        $validate = [
+            'require' => '/\S+/',
+            'email' => '/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/',
+            'url' => '/^http(s?):\/\/(?:[A-za-z0-9-]+\.)+[A-za-z]{2,4}(:\d+)?(?:[\/\?#][\/=\?%\-&~`@[\]\':+!\.#\w]*)?$/',
+            'currency' => '/^\d+(\.\d+)?$/',
+            'number' => '/^\d+$/',
+            'zip' => '/^\d{6}$/',
+            'integer' => '/^[-\+]?\d+$/',
+            'double' => '/^[-\+]?\d+(\.\d+)?$/',
+            'english' => '/^[A-Za-z]+$/',
+            'alpha&no' => '/^[A-Za-z0-9]+$/',
+            'positive_integer' => '/^[+]?[1-9]+$/', //正整数
+            'date' => '/^\d{4}(\-|\/|.)\d{1,2}\1\d{1,2}$/',
+            'datetime' => '/^\d{4}(\-|\/|.)\d{1,2}\1\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}$/'
+        ];
+        // 检查是否有内置的正则表达式
+        if (isset($validate[strtolower($rule)])) {
+            $rule = $validate[strtolower($rule)];
+        }
+        return preg_match($rule, $value) === 1;
+    }
+
 }
