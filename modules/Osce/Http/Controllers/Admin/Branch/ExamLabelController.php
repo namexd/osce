@@ -20,7 +20,7 @@ class ExamLabelController extends CommonController
             'label_type_id'=>'required|integer',
         ]);*/
         $ExamQuestionLabelType=new ExamQuestionLabelType();
-        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->labelTypeList();
+        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->examQuestionLabelTypeList();
 
 
         return view('osce::admin.resourcemanage.subject_check_tag',['ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList]);
