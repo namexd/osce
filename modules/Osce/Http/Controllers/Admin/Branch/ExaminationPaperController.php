@@ -18,8 +18,8 @@ use DB;
 class ExaminationPaperController extends CommonController
 {
     /**
-     * 获取考试列表
-     * @url       GET /osce/admin/exam/exam-list
+     * 获取试卷列表
+     * @url       GET /osce/admin/examinationpaper/exam-list
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
@@ -30,28 +30,12 @@ class ExaminationPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamList(Request $request, Exam $exam)
+    public function getExamList(Request $request)
     {
-        //验证略
-        $this->validate($request,[
-            'exam_name' =>'sometimes'
-        ]);
-
-        $formData = $request->only('exam_name');
-
-        //从模型得到数据
-        $data = $exam->showExamList($formData);
-
-        //得到考试组成
-        foreach ($data as &$item) {
-            $item->constitute = $this->getExamConstitute($item['id']);
-        }
-
-        return view('osce::admin.exammanage.exam_assignment', ['data' => $data]);
-
+        $keyword = $request->keyword;
     }
 
 
