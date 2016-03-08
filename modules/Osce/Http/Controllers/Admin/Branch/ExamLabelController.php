@@ -34,7 +34,7 @@ class ExamLabelController extends CommonController
         ]);*/
 
             $keyword = !empty(Input::get('tagName'))?Input::get('tagName'):'';
-            $id=!empty(Input::get('subject-id'))?Input::get('subject-id'):'';
+            $id=!empty(Input::get('tagType'))?Input::get('tagType'):'';
             $where['keyword'] = $keyword;
             $where['id']=$id;
             $datalist = $examQuestionLabel->getFilteredPaginateList($where);
