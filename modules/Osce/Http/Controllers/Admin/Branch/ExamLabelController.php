@@ -16,10 +16,24 @@ use Illuminate\Http\Request;
 class ExamLabelController extends CommonController
 {
 
+
+    public  function examLabelVerify(){
+        $id = e(Input::get('id',''));
+        if($id){
+            $examQuestionDetail = ExamQuestionLabel::find($id);
+               if($examQuestionDetail){
+                return $meg='增加的数据已存在';
+            }
+        }else{
+           // return $this->postAddExamQuestionLabel(Request $Request);
+        }
+
+
+    }
     /**
      * 试卷标签列表展示页
      * @method  GET
-     * @url
+     * @url /osce/admin/exam/exam-label
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
@@ -56,7 +70,7 @@ class ExamLabelController extends CommonController
     /**
      * 新增试卷标签
      * @method  GET
-     * @url
+     * @url   /osce/admin/exam/exam-addLabel
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
@@ -76,8 +90,8 @@ class ExamLabelController extends CommonController
     }
 
     /**
-     * @method
-     * @url /osce/
+     * @methodb post
+     * @url /osce/admin/exam/exam-addLabel
      * @access public
      * @return $this
      * @author tangjun <tangjun@misrobot.com>
@@ -106,7 +120,7 @@ class ExamLabelController extends CommonController
     /**
      * 获取编辑试卷标签内容
      * @method  GET
-     * @url
+     * @url   /osce/admin/exam/exam-getLabel
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
@@ -130,7 +144,7 @@ class ExamLabelController extends CommonController
     /**
      * 编辑试卷标签内容
      * @method  GET
-     * @url
+     * @url  /osce/admin/exam/exam-editLabel
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
@@ -146,7 +160,7 @@ class ExamLabelController extends CommonController
         ]);
         $data = [
             'name'=>Input::get('name'),
-            'label_type_id'=>Input::get('id'),
+            'label_type_id'=>Input::get('label_type_id'),
             'describe'=>Input::get('describe')
         ];
         $add = \DB::connection('msc_mis')->table('exam_question_label')->where('id','=',e(Input::get('id')))->update($data);
@@ -161,7 +175,7 @@ class ExamLabelController extends CommonController
     /**
      * 删除试卷标签
      * @method  GET
-     * @url
+     * @url   /osce/admin/exam/exam-deleteLabel
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
@@ -169,17 +183,17 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getDeleteExamQuestionLabel(){
-       // dd('删除试卷标签');
+        // dd('删除试卷标签');
         $id = e(Input::get('id',''));
         if($id){
             $data = \DB::connection('msc_mis')->table('exam_question_label')->where('id','=',$id)->delete();
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('删除成功');
+                return $this->success_data([],1,'success');
             }else{
-                return redirect()->back()->withInput()->withErrors('系统异常');
+                return $this->success_data([],0,'fail');
             }
         }else{
-            return redirect()->back()->withInput()->withErrors('系统异常');
+                return $this->success_data([],3,'系统异常');
         }
     }
 

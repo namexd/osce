@@ -64,6 +64,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('exam/exam-addLabel', ['uses'=>'ExamLabelController@addExamQuestionLabel','as'=>'osce.admin.ExamLabelController.addExamQuestionLabel']);
         Route::post('exam/exam-addLabel', ['uses'=>'ExamLabelController@postAddExamQuestionLabel','as'=>'osce.admin.ExamLabelController.postAddExamQuestionLabel']);
 
+        Route::get('exam/exam-verify', ['uses'=>'ExamLabelController@examLabelVerify','as'=>'osce.admin.ExamLabelController.examLabelVerify']);
 
 
         //试卷管理-列表
