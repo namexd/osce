@@ -7,17 +7,13 @@
  */
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
-
-
 use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
-use modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Http\Controllers\CommonController;
-
-
 use DB;
 class ExamPaperController extends CommonController
 {
@@ -138,7 +134,7 @@ class ExamPaperController extends CommonController
     }
 
     /**
-     * ajax请求标签类型
+     * ajax请求考试题目
      * @url       GET /osce/admin/exampaper/exam-questions
      * @access    public
      * @param Request $request get请求<br><br>
@@ -169,7 +165,13 @@ class ExamPaperController extends CommonController
 
         //根据筛选参数查找试题数据
         $ExamQuestion = new ExamQuestion();
-        dd(new ExamQuestion());
         $questions = $ExamQuestion -> getExamQuestion($data);
+//        foreach($questions as $k => $v){
+//            foreach($v->exam_question_label_relation as $kk => $vv){
+//                dd($vv);
+//            }
+//        }
+        dd($questions);
+        exit;
     }
 }
