@@ -149,7 +149,7 @@ class ExamLabelController extends CommonController
             'label_type_id'=>Input::get('id'),
             'describe'=>Input::get('describe')
         ];
-        $add = DB::connection('msc_mis')->table('exam_question_label_type')->where('id','=',e(Input::get('id')))->update($data);
+        $add = \DB::connection('msc_mis')->table('exam_question_label')->where('id','=',e(Input::get('id')))->update($data);
         if($data != false){
             return redirect()->back()->withInput()->withErrors('修改成功');
         }else{
@@ -170,10 +170,10 @@ class ExamLabelController extends CommonController
      */
     public function getDeleteExamQuestionLabel(){
        // dd('删除试卷标签');
-        $id = urlencode(e(Input::get('id')));
+        $id = e(Input::get('id',''));
         if($id){
-            $data = DB::connection('msc_mis')->table('exam_question_label')->where('id','=',$id)->delete();
-            if($data != fasle){
+            $data = \DB::connection('msc_mis')->table('exam_question_label')->where('id','=',$id)->delete();
+            if($data != false){
                 return redirect()->back()->withInput()->withErrors('删除成功');
             }else{
                 return redirect()->back()->withInput()->withErrors('系统异常');
