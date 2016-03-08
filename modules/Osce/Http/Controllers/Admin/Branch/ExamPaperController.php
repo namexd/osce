@@ -86,9 +86,9 @@ class ExamPaperController extends CommonController
         $Paper = new ExamQuestionPaper();
         $delete = $Paper->where('id','=',$id)->delete();
         if($delete){
-            return redirect()->back()->withErrors('操作成功！');
+            return redirect()->route('osce.admin.ExamPaperController.getExamList');
         }else{
-            return redirect()->back()->withErrors('系统异常');
+            return redirect()->route('osce.admin.ExamPaperController.getExamList');
         }
     }
 }
