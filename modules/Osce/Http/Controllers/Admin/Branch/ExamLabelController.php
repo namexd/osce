@@ -17,9 +17,70 @@ class ExamLabelController extends CommonController
 {
 
     /**
+     * 试卷标签添加验证
+     * @method  GET
+     * @url /osce/admin/exam/exam-addVerify
+     * @access public
+     * @param
+     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @date    2016年3月7日17:38:23
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+    public  function examAddLabelVerify(Request $Request){
+        $id = e(Input::get('id',''));
+        if($id){
+            $examQuestionDetail = ExamQuestionLabel::find($id);
+               if($examQuestionDetail){
+              //  return $this->success_data([],1,'添加项已存在');
+                   return false;
+            }else{
+                  if($this->postAddExamQuestionLabel($Request)){
+                      return true;
+                    //  return $this->success_data([],1,'添加成功');
+                  }
+                /*   else{
+                       return false;
+                      // return $this->success_data([],0,'添加失败');
+                   }*/
+               }
+        }
+
+    }
+    /**
+     * 试卷标签编辑验证
+     * @method  GET
+     * @url /osce/admin/exam/exam-editVerify
+     * @access public
+     * @param
+     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @date    2016年3月7日17:38:23
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public  function examEditLabelVerify(Request $Request){
+        $id = e(Input::get('id',''));
+        if($id){
+            $examQuestionDetail = ExamQuestionLabel::find($id);
+            if($examQuestionDetail){
+                //  return $this->success_data([],1,'添加项已存在');
+                return false;
+            }else{
+                if($this->editExamQuestionLabelInsert($Request)){
+                    return true;
+                    //  return $this->success_data([],1,'添加成功');
+                }
+                /*   else{
+                       return false;
+                      // return $this->success_data([],0,'添加失败');
+                   }*/
+            }
+        }
+
+    }
+    /**
      * 试卷标签列表展示页
      * @method  GET
-     * @url
+     * @url /osce/admin/exam/exam-label
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
@@ -56,7 +117,7 @@ class ExamLabelController extends CommonController
     /**
      * 新增试卷标签
      * @method  GET
-     * @url
+     * @url   /osce/admin/exam/exam-addLabel
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
@@ -76,16 +137,17 @@ class ExamLabelController extends CommonController
     }
 
     /**
-     * @method
-     * @url /osce/
+     * @methodb post
+     * @url /osce/admin/exam/exam-addLabel
      * @access public
      * @return $this
      * @author tangjun <tangjun@misrobot.com>
      * @date 2016年3月8日14:26:08
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postAddExamQuestionLabel(Request $Request)
+    public function postAddExamQuestionLabel($Request)
     {
+         //dd($Request->all());
         $this->validate($Request, [
             'name' => 'required',
             'label_type_id' => 'required|integer',
@@ -98,15 +160,15 @@ class ExamLabelController extends CommonController
         ];
         $add = ExamQuestionLabel::create($data);
         if ($add != false) {
-            return redirect()->back()->withInput()->withErrors('添加成功');
+            return true;
         } else {
-            return redirect()->back()->withInput()->withErrors('系统异常');
+            return false;
         }
     }
     /**
      * 获取编辑试卷标签内容
      * @method  GET
-     * @url
+     * @url   /osce/admin/exam/exam-getLabel
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
@@ -130,14 +192,15 @@ class ExamLabelController extends CommonController
     /**
      * 编辑试卷标签内容
      * @method  GET
-     * @url
+     * @url  /osce/admin/exam/exam-editLabel
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
      * @date    2016年3月7日17:49:25
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function editExamQuestionLabelInsert(Request $Request){
+    public function editExamQuestionLabelInsert($Request){
+        //dd($Request->all());
         $this->validate($Request, [
             'id'=>'required',
             'name' => 'required',
@@ -146,14 +209,17 @@ class ExamLabelController extends CommonController
         ]);
         $data = [
             'name'=>Input::get('name'),
-            'label_type_id'=>Input::get('id'),
+            'label_type_id'=>Input::get('label_type_id'),
             'describe'=>Input::get('describe')
         ];
-        $add = \DB::connection('msc_mis')->table('exam_question_label')->where('id','=',e(Input::get('id')))->update($data);
+        $examTable=new ExamQuestionLabel();
+        $add =  $examTable->where('id','=',e(Input::get('id')))->update($data);
         if($data != false){
-            return redirect()->back()->withInput()->withErrors('修改成功');
+           // return redirect()->back()->withInput()->withErrors('修改成功');
+            return true;
         }else{
-            return redirect()->back()->withInput()->withErrors('系统异常');
+            return false;
+           // return redirect()->back()->withInput()->withErrors('系统异常');
         }
     }
 
@@ -161,7 +227,7 @@ class ExamLabelController extends CommonController
     /**
      * 删除试卷标签
      * @method  GET
-     * @url
+     * @url   /osce/admin/exam/exam-deleteLabel
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
@@ -169,17 +235,19 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getDeleteExamQuestionLabel(){
-       // dd('删除试卷标签');
+        // dd('删除试卷标签');
         $id = e(Input::get('id',''));
+        //dd($id);
+        $examTable=new ExamQuestionLabel();
         if($id){
-            $data = \DB::connection('msc_mis')->table('exam_question_label')->where('id','=',$id)->delete();
+            $data =   $examTable->where('id','=',$id)->delete();
             if($data != false){
-                return redirect()->back()->withInput()->withErrors('删除成功');
+                return $this->success_data([],1,'success');
             }else{
-                return redirect()->back()->withInput()->withErrors('系统异常');
+                return $this->success_data([],0,'fail');
             }
         }else{
-            return redirect()->back()->withInput()->withErrors('系统异常');
+                return $this->success_data([],3,'系统异常');
         }
     }
 

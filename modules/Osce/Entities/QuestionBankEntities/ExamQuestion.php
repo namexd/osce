@@ -146,6 +146,7 @@ class ExamQuestion extends Model
             DB::rollback();
             return false;
         }
+
         //向试题子项表插入数据
         foreach ($examQuestionItemData as $key => $value) {
             $value['create_user_id'] = Auth::user()->id;
@@ -227,17 +228,20 @@ class ExamQuestion extends Model
         }
 
         foreach ($examQuestionItemData as $key => $value) {
-            $examQuestionItem = ExamQuestionItem::where('exam_question_id', '=', $examQuestionData['id'])->update($examQuestionItemData);
+            $examQuestionItem = ExamQuestionItem::where('exam_question_id', '=', $examQuestionData['id'])->update($value);
             if (!$examQuestionItem) {
                 DB::rollback();
                 return false;
             }
         }
-        $examQuestionLabelRelation = ExamQuestionLabelRelation::where('exam_question_id', '=', $examQuestionData['id'])->update($examQuestionLabelRelationData);
-        if (!$examQuestionLabelRelation) {
-            DB::rollback();
-            return false;
+        foreach ($examQuestionLabelRelationData as $key => $value) {
+            $examQuestionLabelRelation = ExamQuestionLabelRelation::where('exam_question_id', '=', $examQuestionData['id'])->update($examQuestionLabelRelationData);
+            if (!$examQuestionLabelRelation) {
+                DB::rollback();
+                return false;
+            }
         }
+
 
         DB::commit();
         return true;
