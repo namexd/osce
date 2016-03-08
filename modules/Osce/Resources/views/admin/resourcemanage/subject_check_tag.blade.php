@@ -31,15 +31,20 @@
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content" style="border: none;">
                 <div class="input-group" style="width: 100%;margin:20px 0;">
-                    <label for="" class="pull-left exam-name">标签名称：</label>
-                    <input type="text" placeholder="请输入标签名称" name="tagName" class="input-md form-control" style="width: 250px;">
-                    <label for="" class="pull-left exam-name" style="margin-left: 20px;">标签类型：</label>
-                    <select name="name" id="subject-id" class="input-sm form-control subject_select" style="width: 250px;height: 34px">
-                        <option value="">难度标签</option>
-                        <option value="">能力标签</option>
-                    </select>
-                    <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
-                    <button type="submit" class="btn btn-sm btn-primary marl_10 pull-right" id="add">新增</button>
+                    <form action="" method="get">
+                        <label for="" class="pull-left exam-name">标签名称：</label>
+                        <input type="text" placeholder="请输入标签名称" name="tagName" class="input-md form-control" style="width: 250px;">
+                        <label for="" class="pull-left exam-name" style="margin-left: 20px;">标签类型：</label>
+                        <select name="tagType" id="tagType" class="input-sm form-control subject_select" style="width: 250px;height: 34px">
+                            @if(!empty(@$ExamQuestionLabelTypeList))
+                                @foreach(@$ExamQuestionLabelTypeList as $val)
+                                    <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
+                        <button type="submit" class="btn btn-sm btn-primary marl_10 pull-right" id="add">新增</button>
+                    </form>
                 </div>
                 <div class="list_all">
                     <table class="table table-striped" id="table-striped" style="background:#fff">
