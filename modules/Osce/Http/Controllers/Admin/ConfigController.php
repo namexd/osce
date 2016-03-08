@@ -88,6 +88,7 @@ class ConfigController extends CommonController
                 'email_password' => 'required'
             ]);
 
+
             //获取输入值
             $formData = $request->only('message_type');
             $file = $request->only('sms_cnname', 'sms_url', 'sms_username', 'sms_password', 'wechat_use_alias',
@@ -345,7 +346,7 @@ class ConfigController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWeChatHelp(Request $request){
+    public function getWeChatHelp(){
         $current_url    =   $_SERVER['HTTP_HOST'];
         return view('osce::admin.systemManage.system_help',['url'=>$current_url]);
 
