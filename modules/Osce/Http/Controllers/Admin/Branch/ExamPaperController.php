@@ -91,4 +91,21 @@ class ExamPaperController extends CommonController
             return redirect()->route('osce.admin.ExamPaperController.getExamList');
         }
     }
+
+    /**
+     * 新增试卷页面
+     * @url       GET /osce/admin/exampaper/delete-exam
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAddExamPage(Request $request)
+    {
+        return view('osce::admin.resourcemanage.subject_papers_add');
+    }
 }
