@@ -41,4 +41,27 @@ class ExamQuestionPaper extends CommonModel
 
         return $builder;
     }
+
+
+
+    /**
+     * 查找与试卷相关的数据
+     * @access    public
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamDatas($exam_id){
+        $builder = $this->where('exam_paper.id','=',$exam_id);
+
+        $builder = $builder->leftjoin('exam_paper_structure',function($join){
+            $join->on('exam_paper_structure.exam_paper_id','=','exam_paper.id');
+        })->select('exam_paper.name','exam_paper.type','exam_paper_structure.num','exam_paper_structure.total_score')
+            ->orderBy('exam_paper.id','desc')->paginate(config('msc.page_size'));
+
+        return $builder;
+    }
 }

@@ -10,7 +10,7 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_check_tag'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'subject_check_tag','addUrl':'{{ route('osce.admin.ExamLabelController.addExamQuestionLabel') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -31,7 +31,7 @@
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content" style="border: none;">
                 <div class="input-group" style="width: 100%;margin:20px 0;">
-                    <form action="" method="get">
+                    <form action="" method="get" class="left">
                         <label for="" class="pull-left exam-name">标签名称：</label>
                         <input type="text" placeholder="请输入标签名称" name="tagName" class="input-md form-control" style="width: 250px;">
                         <label for="" class="pull-left exam-name" style="margin-left: 20px;">标签类型：</label>
@@ -43,8 +43,8 @@
                             @endif
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
-                        <button type="submit" class="btn btn-sm btn-primary marl_10 pull-right" id="add">新增</button>
                     </form>
+                    <button class="btn btn-sm btn-primary marl_10 right" id="add">新增</button>
                 </div>
                 <div class="list_all">
                     <table class="table table-striped" id="table-striped" style="background:#fff">
@@ -57,25 +57,29 @@
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody class="subjectBody">
-                            <tr>
-                                <td>1</td>
-                                <td>基础医学</td>
-                                <td>科目标签</td>
-                                <td>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</td>
-                                <td>
-                                    <a href="javascript:void(0)">
-                                        <span class="read state1 detail">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0)">
-                                        <span class="read state2">
-                                            <i class="fa fa-trash-o fa-2x"></i>
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>
+                        <tbody class="tagBody">
+                            @if(!empty(@$datalist))
+                                @foreach(@$datalist as $k=>$val)
+                                    <tr>
+                                        <td>{{ $k+1 }}</td>
+                                        <td>{{ $val['name'] }}</td>
+                                        <td>{{ $val['LabelType'] }}</td>
+                                        <td>{{ $val['describe'] }}</td>
+                                        <td>
+                                            <a href="javascript:void(0)" class="edit" dataId="{{ $val['id'] }}">
+                                                <span class="read state1 detail">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
+                                            </a>
+                                            <a href="javascript:void(0)" class="delete" dataId="{{ $val['id'] }}">
+                                                <span class="read state2">
+                                                    <i class="fa fa-trash-o fa-2x"></i>
+                                                </span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                     <div class="pull-left">共10条</div>

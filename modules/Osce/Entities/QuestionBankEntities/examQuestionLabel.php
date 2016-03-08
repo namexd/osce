@@ -51,7 +51,7 @@ class ExamQuestionLabel extends  Model
 
         if ($where['keyword'])
         {
-            $builder = $builder->where(name,'like','%'.$where['keyword'].'%');
+            $builder = $builder->where('name','like','%'.$where['keyword'].'%');
         }
         if ($where['id'])
         {

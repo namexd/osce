@@ -38,30 +38,27 @@
         <div class="ibox-content">
             <div class="row">
                 <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="{{ route('osce.admin.ExamLabelController.postAddExamQuestionLabel') }}">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">标签名称</label>
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="title" name="name" placeholder="最多输入10个字">
+                                <input type="text" required class="form-control" id="title" name="title" placeholder="最多输入10个字">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">标签类型</label>
                             <div class="col-sm-10">
-                                <select required name="label_type_id" id="tagType" class="input-sm form-control tag" style="height: 34px;">
-                                    @if(!empty(@$ExamQuestionLabelTypeList))
-                                        @foreach(@$ExamQuestionLabelTypeList as $val)
-                                            <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
-                                        @endforeach
-                                    @endif
+                                <select required name="tag" id="tagType" class="input-sm form-control tag" style="height: 34px;">
+                                    <option value="">科目标签</option>
+                                    <option value="">能力标签</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="description" required  class="form-control" name="describe" placeholder="最多输入10个字"/>
+                                <input id="description" required  class="form-control" name="desc" placeholder="最多输入10个字"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
