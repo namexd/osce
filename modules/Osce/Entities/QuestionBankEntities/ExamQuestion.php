@@ -243,6 +243,21 @@ class ExamQuestion extends Model
         return true;
     }
 
+    /**保存编辑
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $examQuestionData 试题表数据
+     * @param $examQuestionItemData 试题子项表数据
+     * @param $examQuestionLabelRelationData 试题和标签中间表数据
+     * @return bool
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function exam_question_label_relation(){
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionItem','exam_question_id','id');
+    }
     /**根据标签查找试题
      * @method
      * @url /osce/
@@ -256,7 +271,12 @@ class ExamQuestion extends Model
         //$builder = $this->whereIn('exam_paper_structure_label.');
         $builder = $this->leftjoin('exam_question_type',function($join){
             $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
-        })->get();
+        })->with([''])->get();
         dd($builder);
+//        ->leftjoin('exam_question_label_relation',function($join){
+//            $join->on('exam_question_label_relation.exam_question_id','=','exam_question.id');
+//        })->leftjoin('exam_question_label',function($join){
+//            $join->on('exam_question_label.id','=','exam_question_label_relation.exam_question_label_id');
+//        })
     }
 }

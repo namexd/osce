@@ -7,17 +7,13 @@
  */
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
-
-
 use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
-use modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Http\Controllers\CommonController;
-
-
 use DB;
 class ExamPaperController extends CommonController
 {
@@ -169,7 +165,7 @@ class ExamPaperController extends CommonController
 
         //根据筛选参数查找试题数据
         $ExamQuestion = new ExamQuestion();
-        dd(new ExamQuestion());
         $questions = $ExamQuestion -> getExamQuestion($data);
+
     }
 }
