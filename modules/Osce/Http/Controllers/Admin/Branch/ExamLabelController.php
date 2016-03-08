@@ -115,7 +115,7 @@ class ExamLabelController extends CommonController
      */
     public function getEditExamQuestionLabel(){
         //dd('获取编辑试卷标签内容');
-        $id = urlencode(e(Input::get('id')));
+        $id = e(Input::get('id',''));
         if($id){
             $examQuestionDetail = ExamQuestionLabel::find($id);
         }else{
@@ -124,7 +124,7 @@ class ExamLabelController extends CommonController
         $data = [
             'examQuestionDetail' => $examQuestionDetail,
         ];
-        //return view('msc::admin.',$data);
+        return view('osce::admin.resourcemanage.subject_check_tag_edit',$data);
     }
 
     /**
@@ -138,22 +138,19 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function editExamQuestionLabelInsert(Request $Request){
-        //dd('编辑试卷标签内容');
-        $this->validate($Request,[
-            'id'=>'require',
-            'name'=>'require',
-            'label_type_id'=>'required|integer',
-            'describe'=>'required'
+        $this->validate($Request, [
+            'id'=>'required',
+            'name' => 'required',
+            'label_type_id' => 'required|integer',
+            'describe' => 'required'
         ]);
-
         $data = [
-            'id'=>\Input::get('id'),
             'name'=>Input::get('name'),
             'label_type_id'=>Input::get('id'),
             'describe'=>Input::get('describe')
         ];
-        $add = DB::connection('msc_mis')->table('exam_question_label_type')->where('id','=',urlencode(e(Input::get('id'))))->update($data);
-        if($data != fasle){
+        $add = DB::connection('msc_mis')->table('exam_question_label_type')->where('id','=',e(Input::get('id')))->update($data);
+        if($data != false){
             return redirect()->back()->withInput()->withErrors('修改成功');
         }else{
             return redirect()->back()->withInput()->withErrors('系统异常');
