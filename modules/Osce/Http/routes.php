@@ -386,7 +386,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//pad的上传
 		Route::post('upload-image',['uses'=>'InvigilatePadController@postTestAttachImage','as'=>'osce.pad.InvigilatePad.postTestAttachImage']);
 		Route::post('upload-radio',['uses'=>'InvigilatePadController@postTestAttachRadio','as'=>'osce.pad.InvigilatePad.postTestAttachRadio']);
-		Route::post('store-anchor',['uses'=>'InvigilatePadController@StoreAnchor','as'=>'osce.pad.InvigilatePad.StoreAnchor']);
+		Route::post('store-anchor',['uses'=>'InvigilatePadController@postStoreAnchor','as'=>'osce.pad.InvigilatePad.StoreAnchor']);
 	});
 });
 

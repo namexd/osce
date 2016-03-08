@@ -7,6 +7,13 @@
 		.control-label{text-align: right;height:34px;line-height:34px;font-weight: 100;}
 		.ibox-title h5{line-height: 6px;}
 		.col-sm-9 p{line-height: 30px;}
+		.div_box{background:#e3e3e3;border-radius:5px;padding:20px;color:#000}
+		.pdl2{padding-left: 2em}
+		.pdl4{padding-left: 4em}
+		.pdl6{padding-left: 6em}
+		.pdl8{padding-left: 8em}
+		.pdl10{padding-left: 10em}
+		.pdl12{padding-left: 12em}
 	</style>
 @stop
 
@@ -122,8 +129,7 @@
 										<label class="col-sm-2 control-label"><h5>第六步：</h5></label>
 										<div class="col-sm-9">
 											<p>请在（测试号管理->体验接口权限表->网页服务->网页帐号->点击修改）
-												<img src="">
-												请在弹出的框中填上你的域名，格式如事例框一样。请注意该域名不可以有http://
+												请在弹出的框中填上你的域名。请注意该域名不可以有http://
 											</p>
 										</div>
 									</div>
@@ -163,12 +169,23 @@
 												请把当前页面中的（使用说明->（3）->第一项：接口类型的值改为（自定义菜单），第二项：接口列表的值改为（自定义菜单创建接口/menu/create））
 												然后将刚才的access_token值放入 （三、参数列表->access_token中）<br/>
 												将下面的数据复制放入（body）中<br/>
-												<div>
-												
-
-											</div>
-
-
+												<div class="div_box">
+													<p>{</p>
+													<p class="pdl2">"button":[</p>
+													<p class="pdl4">{</p>
+													<p class="pdl6">"name":"Osce考试系统",</p>
+													<p class="pdl8">"sub_button":[</p>
+													<p class="pdl10">{</p>
+													<p class="pdl12">"type":"view",</p>
+													<p class="pdl12">"name":"登录",</p>
+													<p class="pdl12">"url":"https:\/\/open.weixin.qq.com\/connect\/oauth2\/authorize?appid=【微信公众号ID】&redirect_uri=http%3A%2F%2F【公众号域名】%2Fosce%2Fwechat%2Fuser%2Flogin&response_type=code&scope=snsapi_base&state=【用户设置的encoding_key】#wechat_redirect",</p>
+													<p class="pdl12">"sub_button":[]</p>
+													<p class="pdl10">}</p>
+													<p class="pdl6">]</p>
+													<p class="pdl4">}</p>
+													<p class="pdl2">]</p>
+													<p>}</p>
+												</div>
 											</p>
 										</div>
 									</div>
