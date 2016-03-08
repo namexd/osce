@@ -7,6 +7,13 @@
 		.control-label{text-align: right;height:34px;line-height:34px;font-weight: 100;}
 		.ibox-title h5{line-height: 6px;}
 		.col-sm-9 p{line-height: 30px;}
+		.div_box{background:#e3e3e3;border-radius:5px;padding:20px;color:#000}
+		.pdl2{padding-left: 2em}
+		.pdl4{padding-left: 4em}
+		.pdl6{padding-left: 6em}
+		.pdl8{padding-left: 8em}
+		.pdl10{padding-left: 10em}
+		.pdl12{padding-left: 12em}
 	</style>
 @stop
 
@@ -32,6 +39,13 @@
 				}
 
 			});
+
+			$('.help').click(function(){
+				var  appid= $('#appId').val();
+				var  url= $('#urls').val();
+				var encoding_key = $('#encoding_key').val();
+				$('#http').html('"url":"https:\/\/open.weixin.qq.com\/connect\/oauth2\/authorize?appid='+appid+'&redirect_uri=http%3A%2F%2F'+url+'%2Fosce%2Fwechat%2Fuser%2Flogin&response_type=code&scope=snsapi_base&state='+encoding_key+'#wechat_redirect",');
+			})
 		})
 	</script>
 
@@ -55,8 +69,6 @@
 						<div class="ibox-title" style="border:none;">
 							<h5>微信</h5>
 						</div>
-
-
 						<div class="ibox-content" style="border:none;">
 							<div class="row">
 								<div class="col-md-12 ">
@@ -122,8 +134,7 @@
 										<label class="col-sm-2 control-label"><h5>第六步：</h5></label>
 										<div class="col-sm-9">
 											<p>请在（测试号管理->体验接口权限表->网页服务->网页帐号->点击修改）
-												<img src="">
-												请在弹出的框中填上你的域名，格式如事例框一样。请注意该域名不可以有http://
+												请在弹出的框中填上你的域名。请注意该域名不可以有http://
 											</p>
 										</div>
 									</div>
@@ -162,18 +173,42 @@
 											<p>
 												请把当前页面中的（使用说明->（3）->第一项：接口类型的值改为（自定义菜单），第二项：接口列表的值改为（自定义菜单创建接口/menu/create））
 												然后将刚才的access_token值放入 （三、参数列表->access_token中）<br/>
-												将下面的数据复制放入（body）中<br/>
-												<div>
 
+												请输入appId<input style="width: 150px;"type="text"  class="form-control name edit-name"  id="appId"/>
+												请输入公众号域名<input style="width: 150px;"type="text"  class="form-control name edit-name" id="urls"/>
+												请输入用户设置的encoding_key<input style="width: 150px;"type="text"  class="form-control name edit-name" id="encoding_key"/>
+												  <input  class="help" type="button" value="点击生成"/>
+											</p>
+											将下面的数据复制放入（body）中 点击检查问题<br/>
+												<div class="div_box" id="div_show">
+													<p>{</p>
+													<p class="pdl2">"button":[</p>
+													<p class="pdl4">{</p>
+													<p class="pdl6">"name":"Osce考试系统",</p>
+													<p class="pdl8">"sub_button":[</p>
+													<p class="pdl10">{</p>
+													<p class="pdl12">"type":"view",</p>
+													<p class="pdl12">"name":"登录",</p>
+													<p class="pdl12" id="http">"url":"https:\/\/open.weixin.qq.com\/connect\/oauth2\/authorize?appid=【微信公众号ID】&redirect_uri=http%3A%2F%2F【公众号域名】%2Fosce%2Fwechat%2Fuser%2Flogin&response_type=code&scope=snsapi_base&state=【用户设置的encoding_key】#wechat_redirect",</p>
+													<p class="pdl12">"sub_button":[]</p>
+													<p class="pdl10">}</p>
+													<p class="pdl6">]</p>
+													<p class="pdl4">}</p>
+													<p class="pdl2">]</p>
+													<p>}</p>
+												</div>
+										</div>
+									</div>
 
-											</div>
-
+									<div class="clearfix form-group">
+										<label class="col-sm-2 control-label"><h5>第十一步：</h5></label>
+										<div class="col-sm-9">
+											<p>
+											如果第十步还回成功，到（测试号管理）中扫描二维码就可以关注公众号了。时你的配置就已全部完成。
 
 											</p>
 										</div>
 									</div>
-
-
 
 								</div>
 							</div>

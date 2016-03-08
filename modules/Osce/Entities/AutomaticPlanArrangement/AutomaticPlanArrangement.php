@@ -148,6 +148,11 @@ class AutomaticPlanArrangement
             }
             throw new \Exception('人数太多，所设时间无法完成考试', -888);
         } catch (\Exception $ex) {
+            if (ExamPlanRecord::where('exam_id', $examId)->count()) {
+                if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
+                    throw new \Exception('系统异常！', -500);
+                }
+            }
             throw $ex;
         }
     }
@@ -161,6 +166,7 @@ class AutomaticPlanArrangement
      */
     private function screenPlan($examId, $screen)
     {
+        //重置考试实体计数器
         $this->resetStationTime();
 
         /*
@@ -643,9 +649,9 @@ class AutomaticPlanArrangement
 
         //如果有，说明是关门状态
         if ($examPlanRecord->isEmpty()) {
-            return false;
+            return false;  //开门状态
         } else {
-            return true;
+            return true;   //关门状态
         }
     }
 

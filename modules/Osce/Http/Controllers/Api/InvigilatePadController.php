@@ -67,7 +67,7 @@ class InvigilatePadController extends CommonController
      * @internal param $files
      * @internal param $testResultId
      */
-    protected static function uploadFileBuilder($file, $date, array $params, $standardId)
+    protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId)
     {
         try {
             //将上传的文件遍历
@@ -75,13 +75,13 @@ class InvigilatePadController extends CommonController
             //拼凑文件名字
             $fileName = '';
             //获取文件的MIME类型
-            $fileMime = $file->getMimeType();
+//            $fileMime = $file->getMimeType();
             foreach ($params as $param) {
                 $fileName .= $param . '_';
             }
             $fileName .= mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
             //取得保存路径
-            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
+            $savePath = 'osce/Attach/' . $type . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
 //            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . 13 . '_' . 13 . '/';
             $savePath = public_path($savePath);
             //TODO iconv用在windows环境下
@@ -99,7 +99,7 @@ class InvigilatePadController extends CommonController
             $data = [
                 'test_result_id' => null,
                 'url' => $attachUrl,
-                'type' => $fileMime,
+                'type' => $type,
                 'name' => $fileName,
                 'description' => $date . '-' . $params['student_name'],
                 'standard_id' => $standardId
@@ -394,11 +394,16 @@ class InvigilatePadController extends CommonController
             }
 
             //根据ID找到对应的名字
-            $student = Student::findOrFail($studentId)->first();
+            $student = Student::find($studentId);
+            if (is_null($student)) {
+                throw new \Exception('当前找不到指定的学生！', -1);
+            }
             $studentName = $student->name;
             $studentCode = $student->code;
-            $stationName = Station::findOrFail($stationId)->first()->name;
-
+            $station = Station::find($stationId);
+            if (is_null($station)) {
+                throw new \Exception('当前找不到指定的考站！', -1);
+            }
             $examName = $exam->name;
 
             //将参数拼装成一个数组
@@ -406,10 +411,13 @@ class InvigilatePadController extends CommonController
                 'exam_name' => $examName,
                 'student_name' => $studentName,
                 'student_code' => $studentCode,
-                'station_name' => $stationName,
+                'station_name' => $station->name,
             ];
             //获取当前日期
             $date = date('Y-m-d');
+
+            //设定当前文件类型
+            $type = 'image';
 
             //获取上传的文件,验证文件是否成功上传
             if (!$request->hasFile('photo')) {
@@ -427,7 +435,7 @@ class InvigilatePadController extends CommonController
 
 
                 //拼装文件名,并插入数据库
-                $result = self::uploadFileBuilder($photos, $date, $params, $standardId);
+                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId);
             }
             return response()->json($this->success_data([$result->id]));
 
@@ -469,13 +477,13 @@ class InvigilatePadController extends CommonController
                 throw new \Exception('当前没有正在进行的考试', -1);
             }
             //根据ID找到对应的名字
-            $student = Student::findOrFail($studentId)->first();
+            $student = Student::find($studentId);
             if (is_null($student)) {
                 throw new \Exception('找不到该考生', -3);
             }
             $studentName = $student->name;
             $studentCode = $student->code;
-            $station = Station::findOrFail($stationId)->first();
+            $station = Station::find($stationId);
             if (is_null($station)) {
                 throw new \Exception('找不到该考站', -4);
             }
@@ -494,6 +502,9 @@ class InvigilatePadController extends CommonController
             //获取当前日期
             $date = date('Y-m-d');
 
+            //设定当前文件类型
+            $type = 'radio';
+
             if (!$request->hasFile('radio')) {
                 throw new \Exception('上传的音频不存在', -120);
             } else {
@@ -502,7 +513,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错', -130);
                 }
 
-                $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
+                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardId);
             }
 
             return response()->json($this->success_data([$result->id]));
@@ -520,14 +531,15 @@ class InvigilatePadController extends CommonController
      */
     public function postStoreAnchor(Request $request)
     {
+        \Log::debug('param', $request->all());
         try {
             //验证
             $this->validate($request, [
                 'station_id' => 'required|integer',
                 'student_id' => 'required|integer',
-                'exam_screen_id' => 'required|integer',
-                'teacher_id' => 'required|integer',
-                'time_anchors' => 'required|array',
+                'exam_id' => 'required|integer',
+                'user_id' => 'required|integer',
+                'time_anchors' => 'required|string',
             ]);
 
             //将视频的锚点信息保存进数据库，因为可能有很多条，所以用foreach
@@ -535,7 +547,11 @@ class InvigilatePadController extends CommonController
             $studentId = $request->input('student_id');
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
-            $teacherId = $request->input('teacher_id');
+            $teacherId = $request->input('user_id');
+            \Log::debug('time', [$timeAnchor]);
+            //将戳过来的字符串变成数组
+            $timeAnchor = explode(',', $timeAnchor);
+            \Log::debug('params', [$stationId, $studentId, $examId, $teacherId, $timeAnchor]);
 
 
             return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId,
@@ -558,8 +574,10 @@ class InvigilatePadController extends CommonController
      * @internal param $examScreenId
      * @internal param array $timeAnchors
      */
-    private function storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchors)
+    private function storeAnchor($stationId, $studentId, $examId, $teacherId, array $timeAnchors)
     {
+        $connection = \DB::connection('osce_mis');
+        $connection->beginTransaction();
         try {
             //获得站点摄像机关联表
             $stationVcr = StationVcr::where('station_id', $stationId)->first();
@@ -584,8 +602,10 @@ class InvigilatePadController extends CommonController
                 }
             }
 
+            $connection->commit();
             return ['锚点上传成功！'];
         } catch (\Exception $ex) {
+            $connection->rollBack();
             throw $ex;
         }
 
@@ -688,5 +708,47 @@ class InvigilatePadController extends CommonController
             return response()->json($this->fail($ex));
         }
     }
+
+    /**
+     *  替考警告
+     * @method GET
+     * @url
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     student_id    学生id   (必须的)
+     * @return json
+     * @version
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+        public function  getTheirSteadWarning(Request $request){
+            try{
+
+                $this->validate($request,[
+                'student_id'=>'required|integer'
+            ]);
+                $studentId=$request->get('student_id');
+                $student =Student::find($studentId);
+                if(!$student){
+                    throw new \Exception('没有找到该学生相关信息',-1);
+                }
+//                 $student->status=5;
+                if(!$student->save()){
+                    throw new \Exception('替考警告失败',-2);
+                }
+                return response()->json(
+                    $this->success_data('替考警告成功',1)
+                );
+            }catch (\Exception $ex){
+                return response()->json($this->fail($ex));
+
+            }
+
+
+        }
+
+
 
 }

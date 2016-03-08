@@ -164,6 +164,11 @@
 
         })
 
+        $(function(){
+            @if(isset($_GET['succ']) && $_GET['succ']==1)
+                layer.msg('保存成功！',{skin:'msg-success',icon:1});
+            @endif
+        })
     </script>
 @stop
 
