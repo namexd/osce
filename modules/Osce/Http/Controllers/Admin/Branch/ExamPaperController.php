@@ -48,10 +48,6 @@ class ExamPaperController extends CommonController
      * @url       GET /osce/admin/exampaper/question-round
      * @access    public
      * @param Request $request get请求<br><br>
-     *                         <b>get请求字段：</b>
-     *                         string        keyword         关键字
-     *                         string        order_name      排序字段名 枚举 e.g 1:设备名称 2:预约人 3:是否复位状态自检 4:是否复位设备
-     *                         string        order_by        排序方式 枚举 e.g:desc,asc
      * @param Exam $exam
      * @return view
      * @throws \Exception
@@ -63,6 +59,35 @@ class ExamPaperController extends CommonController
     {
         $LabelType= new ExamQuestionLabelType();
         $LabelTypeList = $LabelType->getLabAndType()->toArray();
-        $this->success_data($LabelTypeList);
+        return $this->success_data($LabelTypeList);
+    }
+
+    /**
+     * 删除试卷
+     * @url       GET /osce/admin/exampaper/delete-exam
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDeleteExam(Request $request)
+    {
+        //验证ID
+        $this->validate($request,[
+            'id'        => 'required|integer',
+        ]);
+        $id = $request->id;
+
+        $Paper = new ExamQuestionPaper();
+        $delete = $Paper->where('id','=',$id)->delete();
+        if($delete){
+            return redirect()->back()->withErrors('操作成功！');
+        }else{
+            return redirect()->back()->withErrors('系统异常');
+        }
     }
 }

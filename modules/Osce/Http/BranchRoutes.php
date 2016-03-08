@@ -53,13 +53,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
          Route::get('exam/exam-label', ['uses'=>'ExamLabelController@getExamLabel','as'=>'osce.admin.ExamLabelController.getExamLabel']);
 
 
-            //试卷管理-列表
+        //试卷管理-列表
         Route::get('exampaper/exam-list',['uses'=>'ExamPaperController@getExamList','as'=>'
         osce.admin.ExamPaperController.getExamList']);
-            //试卷管理-ajax获取抽题范围
+        //试卷管理-ajax获取抽题范围
         Route::get('exampaper/question-round',['uses'=>'ExamPaperController@getQuestionRound','as'=>'osce.admin.ExamPaperController.getQuestionRound']);
-
-
+        //试卷管理-删除试卷
+        Route::get('exampaper/delete-exam',['uses'=>'ExamPaperController@getDeleteExam','as'=>'osce.admin.ExamPaperController.getDeleteExam']);
 
         //题库管理新增
         Route::get('examQuestion/examQuestion-add',['uses'=>'ExamQuestionController@getExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.getExamQuestionAdd']);//新增页面
