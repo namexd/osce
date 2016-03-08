@@ -30,8 +30,8 @@
         </div>
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content" style="border: none;">
-                <div class="input-group" style="margin:20px 0;">
-                    <form action="" method="get">
+                <div class="input-group" style="width: 100%;margin:20px 0;">
+                    <form action="" method="get" class="left">
                         <label for="" class="pull-left exam-name">标签名称：</label>
                         <input type="text" placeholder="请输入标签名称" name="tagName" class="input-md form-control" style="width: 250px;">
                         <label for="" class="pull-left exam-name" style="margin-left: 20px;">标签类型：</label>
@@ -44,7 +44,7 @@
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
                     </form>
-                    <button class="btn btn-sm btn-primary marl_10 pull-right" id="add">新增</button>
+                    <button class="btn btn-sm btn-primary marl_10 right" id="add">新增</button>
                 </div>
                 <div class="list_all">
                     <table class="table table-striped" id="table-striped" style="background:#fff">
