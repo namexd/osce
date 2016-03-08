@@ -72,6 +72,7 @@ class AutomaticPlanArrangement
      * @param $examId 考试id
      * @param ExamPlaceEntityInterface $examPlaceEntity ExamPlaceEntityInterface的实现
      * @param ExamInterface $exam ExamInterface的实现
+     * @throws \Exception
      */
     function __construct($examId, ExamPlaceEntityInterface $examPlaceEntity, ExamInterface $exam)
     {
@@ -80,8 +81,8 @@ class AutomaticPlanArrangement
              * 初始化属性
              */
             $this->_Exam = Exam::findOrFail($examId);
-            $this->_T_Count = count($examPlaceEntity->stationTotal($examId));
-            $this->_T = $examPlaceEntity->stationTotal($examId);
+            $this->_T_Count = count($examPlaceEntity->stationTotal($this->_Exam));
+            $this->_T = $examPlaceEntity->stationTotal($this->_Exam);
             $this->_S_Count = count(Student::examStudent($examId));
             $this->_S = Student::examStudent($examId)->shuffle();
             $this->screen = $exam->screenList($examId);
@@ -189,7 +190,6 @@ class AutomaticPlanArrangement
                  * 如果为false，就说明是开门状态
                  */
                 $tempBool = $this->ckeckStatus($station, $screen);
-
                 if (!$tempBool) {
                     //获取实体所需要的学生清单
                     $students = $this->needStudents($station, $screen, $examId);
@@ -230,7 +230,7 @@ class AutomaticPlanArrangement
 
         //获取未走完流程的考生
         $ExamFlowModel = new ExamFlow();
-        $flowsNum = $ExamFlowModel->studentExamSum($examId);
+        $flowsNum = $ExamFlowModel->studentFlowCount($this->_Exam);
         //SELECT count(`id`) as total,`student_id` FROM `exam_plan_record` where`exam_id` = 25 Group by `student_id` Having total <> 2
         $studentList = ExamPlanRecord::  where('exam_id', '=', $examId)
             ->whereNotNull('end_dt')
@@ -246,27 +246,29 @@ class AutomaticPlanArrangement
             ))
             ->Having('flowsNum', '<', $flowsNum)
             ->get();
-//        $undoneStudents = [];
+        //未考完的学生实例数组
+        $undoneStudents = [];
+
         if (count($studentList)) {
             $studentNotOvers = $studentList->pluck('student_id');
-//            foreach ($studentNotOvers as $studentNotOver) {
-//                $undoneStudents[] = Student::find($studentNotOver);
-//            }
 
             //删除未走完流程的考生
             if (!ExamPlanRecord::whereIn('student_id', $studentNotOvers->toArray())->delete()) {
                 throw new \Exception('考试未完成学生移动失败', -2100);
             }
+
+            //将没有考完的考生放回到总的考生池里
+            foreach ($studentNotOvers as $studentNotOver) {
+                $undoneStudents[] = Student::findOrFail($studentNotOver);
+            }
         }
         //找到未考完的考生
-        $undoneStudents = [];
         $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
         $undoneStudentsIds = $examPlanEntity->pluck('student_id');
         foreach ($undoneStudentsIds as $undoneStudentsId) {
             $undoneStudents[] = Student::findOrFail($undoneStudentsId);
         }
-//
-//        //删除未考完学生记录
+        //删除未考完学生记录
         if (!$undoneStudentsIds->isEmpty()) {
             if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
                 throw new \Exception('删除未考完考生记录失败！', -2101);
@@ -275,7 +277,7 @@ class AutomaticPlanArrangement
 
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_ING);
-        $this->_S = $this->_S->merge($undoneStudents);
+        $this->_S = $this->_S->merge(array_unique($undoneStudents));
     }
 
     /**
@@ -553,8 +555,6 @@ class AutomaticPlanArrangement
     {
         $result = ExamPlanRecord::where('exam_id', $examId)
             ->get();
-//        dd($result);
-        $exam = Exam::findOrFail($examId);
 
         $arrays = [];
         foreach ($result as $record) {
@@ -563,7 +563,7 @@ class AutomaticPlanArrangement
             $station_id = $record->station_id;
             //$station        =   $record->station;
             $screeningId = $record->exam_screening_id;
-            if ($exam->sequence_mode == 1) //考场模式
+            if ($this->_Exam->sequence_mode == 1) //考场模式
             {
                 $arrays[$screeningId][$record->room_id][strtotime($record->begin_dt)][] = $record;
             } else //考站模式
@@ -577,11 +577,10 @@ class AutomaticPlanArrangement
             foreach ($screening as $entityId => $timeList) {
                 foreach ($timeList as $batch => $recordList) {
                     foreach ($recordList as $record) {
-                        if ($exam->sequence_mode == 1) //考场模式
+                        if ($this->_Exam->sequence_mode == 1) //考场模式
                         {
                             $name = $record->room->name;
-                        } else //考站模式
-                        {
+                        } elseif ($this->_Exam->sequence_mode == 2) { //考站模式
                             $name = $record->room->name . '-' . $record->station->name;
                         }
 

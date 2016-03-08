@@ -85,7 +85,7 @@
                         <div class="col-sm-10">
                             <select id="select_Category"   class="form-control" name="exam_id" disabled>
                                 @forelse($list as $exam)
-                                    <option value="{{$exam->id}}" {{$exam->id==$item->exam_id? 'selected="selected"':''}}>{{$exam->name}}</option>
+                                    <option value="{{$exam->id}}" {{$exam->id==$item->exam_id? 'selected="selected"':''}} >{{$exam->name}}</option>
                                 @empty
                                     <option value="">请创建考试</option>
                                 @endforelse
@@ -96,19 +96,22 @@
                     <div class="form-group" >
                         <label class="col-sm-2 control-label">接收人:</label>
                         <div class="col-sm-10 select_code" id="checkbox_div">
-                            <label class="check_label checkbox_input" >
+                            <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(1,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input  name="reg" type="checkbox" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}} disabled >
+                                <input type="checkbox"  value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}} disabled="disabled">
+                                <input type="hidden" name="accept[]" value="1" {{in_array(1,explode(',',$item->accept))? 'checked="checked"':''}} >
                                 <span class="check_name">考生</span>
                             </label>
                             <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(2,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}} disabled >
+                                <input type="checkbox"  value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}} disabled="disabled">
+                                <input type="hidden" name="accept[]" value="2" {{in_array(2,explode(',',$item->accept))? 'checked="checked"':''}} >
                                 <span class="check_name">老师</span>
                             </label>
                             <label class="check_label checkbox_input">
                                 <div class="check_icon {{in_array(3,explode(',',$item->accept))? 'check':''}}" style="display: inline-block"></div>
-                                <input type="checkbox" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}} disabled >
+                                <input type="checkbox"  value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}} disabled="disabled">
+                                <input type="hidden" name="accept[]" value="3" {{in_array(3,explode(',',$item->accept))? 'checked="checked"':''}} >
                                 <span class="check_name">sp老师</span>
                             </label>
                         </div>
@@ -117,7 +120,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">标题:</label>
                         <div class="col-sm-10" >
-                            <input type="text"  id="examinee_id" name="name" value="{{$item->name}}" class="form-control" disabled>
+                            <input type="text"  id="examinee_id" name="name" value="{{$item->name}}" class="form-control" readonly="readonly">
                         </div>
                     </div>
                     <div class="hr-line-dashed"></div>

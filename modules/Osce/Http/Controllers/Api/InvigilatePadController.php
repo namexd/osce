@@ -48,7 +48,10 @@ class InvigilatePadController extends CommonController
     {
 //        $examScreeningModel = new ExamScreening();
 //        $result = $examScreeningModel->getExamCheck();
-
+        $a = strtotime('2016-03-04 10:59:14');
+        $c = strtotime('2016-03-04 11:03:14');
+        $b = ($c - $a) / 60;
+        dd($b);
 
 
     }
@@ -79,6 +82,7 @@ class InvigilatePadController extends CommonController
             $fileName .= mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
             //取得保存路径
             $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
+//            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . 13 . '_' . 13 . '/';
             $savePath = public_path($savePath);
             //TODO iconv用在windows环境下
 //            $savePath = iconv("UTF-8", "gb2312", $savePath);
@@ -176,18 +180,26 @@ class InvigilatePadController extends CommonController
 
     public function getExamGrade(Request $request)
     {
+
+        try {
+
             $this->validate($request, [
                 'station_id' => 'required|integer',
+//            'exam_id'  => 'required|integer'
             ], [
                 'station_id.required' => '没有获取到当前考站',
+                'exam_id.required' => '没有获取到当前考试'
             ]);
+
             $stationId = $request->get('station_id');
+//      $stationId=49;
+            $examId = $request->get('exam_id');
             //根据考站id查询出下面所有的考试项目
-        try {
             $station = Station::find($stationId);
+
             //考试标准时间
             $mins = $station->mins;
-//            $exam = Exam::find($examId);
+            $exam = Exam::find($examId);
             $StandardModel = new Standard();
             $standardList = $StandardModel->ItmeList($station->subject_id);
 
@@ -365,7 +377,6 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttachImage(Request $request)
     {
-        \Log::info('params', $request->all());
         try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
@@ -452,17 +463,27 @@ class InvigilatePadController extends CommonController
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             $standardId = $request->input('standard_id');
-            $exam = Exam::doingExam();
 
+            $exam = Exam::doingExam();
+            if (is_null($exam)) {
+                throw new \Exception('当前没有正在进行的考试', -1);
+            }
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
+            if (is_null($student)) {
+                throw new \Exception('找不到该考生', -3);
+            }
             $studentName = $student->name;
             $studentCode = $student->code;
-            $stationName = Station::findOrFail($stationId)->first()->name;
+            $station = Station::findOrFail($stationId)->first();
+            if (is_null($station)) {
+                throw new \Exception('找不到该考站', -4);
+            }
+            $stationName = $station->name;
             $examName = $exam->name;
 
-
             //将参数拼装成一个数组
+
             $params = [
                 'exam_name' => $examName,
                 'student_name' => $studentName,
@@ -477,7 +498,6 @@ class InvigilatePadController extends CommonController
                 throw new \Exception('上传的音频不存在', -120);
             } else {
                 $radios = $request->file('radio');
-
                 if (!$radios->isValid()) {
                     throw new \Exception('上传的音频出错', -130);
                 }

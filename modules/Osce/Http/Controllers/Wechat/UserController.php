@@ -230,6 +230,7 @@ class UserController  extends CommonController
             $openid = \Illuminate\Support\Facades\Session::get('openid','');
             if (Auth::attempt(['username' => $username, 'password' => $password]))
             {
+                // ToDO 修改登录时间 zhouqiang 2016-3-7
                 $user   =   Auth::user();
                 $connection=\DB::connection('sys_mis');
                 $connection->table('users')->where('id',$user->id)->update(['lastlogindate'=>$nowTime]);
@@ -242,7 +243,7 @@ class UserController  extends CommonController
                         throw new \Exception('微信登录失败');
                     }
                 }
-//                //修改登录时间
+
 
                 return redirect()->route('osce.wechat.index.getIndex');
             }

@@ -131,9 +131,9 @@ class MachineController extends CommonController
 
         $cate_id    =   intval($request   ->  get('cate_id'));
         $cate_id    =   $cate_id==0? 1:$cate_id;
-        $name       =   e($request   ->  get('name'));
-        $status     =   e($request   ->  get('status'));
-        $nfc_code     =   e($request   ->  get('nfc_code'));
+        $name       =   $request   ->  get('name');
+        $status     =   e($request ->  get('status'));
+        $nfc_code   =   e($request ->  get('nfc_code'));
         $cate       =   config('osce.machine_category');
         if(is_null($cate))
         {
@@ -154,7 +154,6 @@ class MachineController extends CommonController
                 return view('osce::admin.resourceManage.equipment_manage_pad',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
                 break;
             case 3:
-//                dd($list);
                 return view('osce::admin.resourceManage.equipment_manage_watch',['list'=>$list,'options'=>$cate,'machineStatuValues'=>$machineStatuValues,'name'=>$name]);
                 break;
             case 1:

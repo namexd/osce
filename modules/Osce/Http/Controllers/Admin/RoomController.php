@@ -44,7 +44,7 @@ class RoomController extends CommonController
             'keyword'   => 'sometimes'
         ]);
         //获取各字段
-        $keyword = e($request->input('keyword', ""));
+        $keyword = $request ->input('keyword', "");
         $type    = $request ->input('type', '0');
         $id      = $request ->input('id', '');
 
@@ -119,7 +119,7 @@ class RoomController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postEditRoom(Request $request)
+    public function postEditRoom(Request $request, Room $room)
     {
         //验证数据，暂时省略
         $this->validate($request, [
@@ -144,6 +144,16 @@ class RoomController extends CommonController
                 $room = new Room();
                 unset($formData['cate']);
                 $room->editRoomData($id, $vcr_id, $formData);
+            //TODO: Zhoufuxiang 16-3-7
+            } elseif($type == '考场'){
+                unset($formData['cate']);
+                //删除对应场所
+                $area = new Area();
+                if(!$area->deleteArea($id)){
+                    throw new \Exception('场所修改失败！',-120);
+                }
+                //新建考场
+                $room->createRoom($formData,$vcr_id,$user->id);
             } else {
                 $area = new Area();
                 $area->editAreaData($id, $vcr_id, $formData);
