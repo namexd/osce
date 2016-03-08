@@ -12,15 +12,15 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
-use Modules\Osce\Entities\QuestionBankEntities\ExaminationPaper;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
-class ExaminationPaperController extends CommonController
+class ExamPaperController extends CommonController
 {
     /**
      * 获取试卷列表
-     * @url       GET /osce/admin/examinationpaper/exam-list
+     * @url       GET /osce/admin/exampaper/exam-list
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
@@ -37,7 +37,7 @@ class ExaminationPaperController extends CommonController
         $keyword = $request->keyword;
 
         //获取试卷与试题构造表数据
-        $examPaper= new ExaminationPaper();
+        $examPaper= new ExamQuestionPaper();
         $examList = $examPaper->getExamPaperlist($keyword);
 
         return view('osce::admin.resourcemanage.subject_papers', ['data' => $examList]);
@@ -45,7 +45,7 @@ class ExaminationPaperController extends CommonController
 
     /**
      * 获取考核范围
-     * @url       GET /osce/admin/examinationpaper/question-round
+     * @url       GET /osce/admin/exampaper/question-round
      * @access    public
      * @param Request $request get请求<br><br>
      *                         <b>get请求字段：</b>
@@ -62,8 +62,7 @@ class ExaminationPaperController extends CommonController
     public function getQuestionRound(Request $request)
     {
         $LabelType= new ExamQuestionLabelType();
-        $LabelTypeList = $LabelType->labelTypeList();
-
-        dd($LabelTypeList);
+        $LabelTypeList = $LabelType->getLabAndType()->toArray();
+        $this->success_data($LabelTypeList);
     }
 }
