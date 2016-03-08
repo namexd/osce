@@ -58,59 +58,7 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public  function examAddLabelVerify(Request $Request){
-        $name = e(Input::get('name',''));
-        if($name){
-            $examQuestionDetail = ExamQuestionLabel::where('name','=','name');
-               if($examQuestionDetail){
-              //  return $this->success_data([],1,'添加项已存在');
-                   return false;
-            }else{
-                  if($this->postAddExamQuestionLabel($Request)){
-                      return true;
-                    //  return $this->success_data([],1,'添加成功');
-                  }
-                /*   else{
-                       return false;
-                      // return $this->success_data([],0,'添加失败');
-                   }*/
-               }
-        }
 
-    }
-    /**
-     * 试卷标签编辑验证
-     * @method  GET
-     * @url /osce/admin/exam/exam-editVerify
-     * @access public
-     * @param
-     * @author yangshaolin <yangshaolin@misrobot.com>
-     * @date    2016年3月7日17:38:23
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public  function examEditLabelVerify(Request $Request){
-        $id = e(Input::get('id',''));
-        $name=Input::get('name');
-        if($id){
-            $examQuestionDetail = ExamQuestionLabel::where('name','=','name');
-
-
-            if($examQuestionDetail){
-                //  return $this->success_data([],1,'添加项已存在');
-                return false;
-            }else{
-                if($this->editExamQuestionLabelInsert($Request)){
-                    return true;
-                    //  return $this->success_data([],1,'添加成功');
-                }
-                /*   else{
-                       return false;
-                      // return $this->success_data([],0,'添加失败');
-                   }*/
-            }
-        }
-
-    }
     /**
      * 试卷标签列表展示页
      * @method  GET
@@ -221,6 +169,7 @@ class ExamLabelController extends CommonController
         $data = [
             'examQuestionDetail' => $examQuestionDetail,
         ];
+
         return  $this->success_data(['data'=>$data,1,'success']);
     }
 
@@ -250,10 +199,11 @@ class ExamLabelController extends CommonController
         $examTable=new ExamQuestionLabel();
         $add =  $examTable->where('id','=',e(Input::get('id')))->update($data);
         if($data != false){
+
             return redirect()->back()->withInput()->withErrors('修改成功');
 
         }else{
-
+ 
             return redirect()->back()->withInput()->withErrors('系统异常');
         }
     }
