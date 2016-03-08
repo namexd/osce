@@ -243,5 +243,20 @@ class ExamQuestion extends Model
         return true;
     }
 
-
+    /**根据标签查找试题
+     * @method
+     * @url /osce/
+     * @access public
+     * @return bool
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamQuestion($data){
+        //$builder = $this->whereIn('exam_paper_structure_label.');
+        $builder = $this->leftjoin('exam_question_type',function($join){
+            $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
+        })->get();
+        dd($builder);
+    }
 }
