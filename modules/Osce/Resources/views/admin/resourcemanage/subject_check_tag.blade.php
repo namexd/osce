@@ -5,6 +5,7 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('osce/admin/subjectManage/check_tag.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
 @stop
 

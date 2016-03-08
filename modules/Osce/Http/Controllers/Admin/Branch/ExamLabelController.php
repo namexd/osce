@@ -15,12 +15,12 @@ use Illuminate\Http\Request;
 class ExamLabelController extends CommonController
 {
     public function getExamLabel(Request $Request){
-        $this->validate($Request,[
+/*        $this->validate($Request,[
             'keyword'=>'required|integer',
             'label_type_id'=>'required|integer',
-        ]);
+        ]);*/
         $ExamQuestionLabelType=new ExamQuestionLabelType();
-        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->labelTypeList();
+        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->examQuestionLabelTypeList();
 
 
         return view('osce::admin.resourcemanage.subject_check_tag',['ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList]);
