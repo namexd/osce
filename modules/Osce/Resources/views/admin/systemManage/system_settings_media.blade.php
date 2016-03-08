@@ -168,6 +168,12 @@
 	            }
 	        });
        	});
+		//提示保存成功
+		$(function(){
+			@if(isset($_GET['succ']) && !empty($_GET['succ']))
+                layer.msg('保存成功！',{skin:'msg-success',icon:1});
+			@endif
+        })
     </script>
 @stop
 
