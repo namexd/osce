@@ -9,7 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
-use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 
@@ -27,30 +27,32 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function getExamLabel(Request $Request,ExamQuestionType $examQuestionType ){
-/*        $this->validate($Request,[
+    public function getExamLabel(Request $Request,ExamQuestionLabel $examQuestionLabel ){
+     /*   $this->validate($Request,[
             'keyword'=>'required|integer',
             'label_type_id'=>'required|integer',
         ]);*/
 
-        /*   $keyword = !empty(Input::get('keyword'))?Input::get('keyword'):'';
-            $id=!empty(Input::get('keyword'))?Input::get('keyword'):'';
+            $keyword = !empty(Input::get('tagName'))?Input::get('tagName'):'';
+            $id=!empty(Input::get('subject-id'))?Input::get('subject-id'):'';
             $where['keyword'] = $keyword;
             $where['id']=$id;
-            $datalist = $examQuestionType->getFilteredPaginateList($where);
+            $datalist = $examQuestionLabel->getFilteredPaginateList($where);
 
+           $ExamQuestionLabelType=new ExamQuestionLabelType();
+           $ExamQuestionLabelTypeList= $ExamQuestionLabelType->examQuestionLabelTypeList();
+           //dd($ExamQuestionLabelTypeList);
 
-        $ExamQuestionLabelType=new ExamQuestionLabelType();
-        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->examQuestionLabelTypeList();*/
 
 
         return view('osce::admin.resourcemanage.subject_check_tag',
             [
-         /*    'ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList,
-            'datalist'=>$datalist*/
+            'ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList,
+            'datalist'=>$datalist
         ]);
 
     }
+
     /**
      * 新增试卷标签
      * @method  GET
@@ -62,10 +64,11 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function AddExamQuestionLabel(Request $Request){
+    public function addExamQuestionLabel(Request $Request){
+        //dd('新增试卷标签');
         $this->validate($Request,[
-               'name'=>'require',
-               'label_type_id'=>'required|integer',
+               'tagName'=>'require',
+               'subject-id'=>'required|integer',
                'describe'=>'required'
         ]);
         $data = [
@@ -93,6 +96,7 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getEditExamQuestionLabel(){
+        //dd('获取编辑试卷标签内容');
         $id = urlencode(e(Input::get('id')));
         if($id){
             $examQuestionDetail = ExamQuestionLabel::find($id);
@@ -115,8 +119,8 @@ class ExamLabelController extends CommonController
      * @date    2016年3月7日17:49:25
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function EditExamQuestionLabelInsert(Request $Request){
-
+    public function editExamQuestionLabelInsert(Request $Request){
+        //dd('编辑试卷标签内容');
         $this->validate($Request,[
             'id'=>'require',
             'name'=>'require',
@@ -150,6 +154,7 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getDeleteExamQuestionLabel(){
+       // dd('删除试卷标签');
         $id = urlencode(e(Input::get('id')));
         if($id){
             $data = DB::connection('msc_mis')->table('exam_question_label')->where('id','=',$id)->delete();
