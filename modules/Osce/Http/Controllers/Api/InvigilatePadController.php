@@ -67,7 +67,7 @@ class InvigilatePadController extends CommonController
      * @internal param $files
      * @internal param $testResultId
      */
-    protected static function uploadFileBuilder($file, $date, array $params, $standardId)
+    protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId)
     {
         try {
             //将上传的文件遍历
@@ -75,13 +75,13 @@ class InvigilatePadController extends CommonController
             //拼凑文件名字
             $fileName = '';
             //获取文件的MIME类型
-            $fileMime = $file->getMimeType();
+//            $fileMime = $file->getMimeType();
             foreach ($params as $param) {
                 $fileName .= $param . '_';
             }
             $fileName .= mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
             //取得保存路径
-            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
+            $savePath = 'osce/Attach/' . $type . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
 //            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . 13 . '_' . 13 . '/';
             $savePath = public_path($savePath);
             //TODO iconv用在windows环境下
@@ -99,7 +99,7 @@ class InvigilatePadController extends CommonController
             $data = [
                 'test_result_id' => null,
                 'url' => $attachUrl,
-                'type' => $fileMime,
+                'type' => $type,
                 'name' => $fileName,
                 'description' => $date . '-' . $params['student_name'],
                 'standard_id' => $standardId
@@ -416,6 +416,9 @@ class InvigilatePadController extends CommonController
             //获取当前日期
             $date = date('Y-m-d');
 
+            //设定当前文件类型
+            $type = 'image';
+
             //获取上传的文件,验证文件是否成功上传
             if (!$request->hasFile('photo')) {
                 throw new \Exception('上传的照片不存在', -100);
@@ -432,7 +435,7 @@ class InvigilatePadController extends CommonController
 
 
                 //拼装文件名,并插入数据库
-                $result = self::uploadFileBuilder($photos, $date, $params, $standardId);
+                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId);
             }
             return response()->json($this->success_data([$result->id]));
 
@@ -499,6 +502,9 @@ class InvigilatePadController extends CommonController
             //获取当前日期
             $date = date('Y-m-d');
 
+            //设定当前文件类型
+            $type = 'radio';
+
             if (!$request->hasFile('radio')) {
                 throw new \Exception('上传的音频不存在', -120);
             } else {
@@ -507,7 +513,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错', -130);
                 }
 
-                $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
+                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardId);
             }
 
             return response()->json($this->success_data([$result->id]));
@@ -525,6 +531,7 @@ class InvigilatePadController extends CommonController
      */
     public function postStoreAnchor(Request $request)
     {
+        \Log::debug('param', $request->all());
         try {
             //验证
             $this->validate($request, [
@@ -532,7 +539,7 @@ class InvigilatePadController extends CommonController
                 'student_id' => 'required|integer',
                 'exam_id' => 'required|integer',
                 'user_id' => 'required|integer',
-                'time_anchors' => 'required|array',
+                'time_anchors' => 'required|string',
             ]);
 
             //将视频的锚点信息保存进数据库，因为可能有很多条，所以用foreach
@@ -541,7 +548,10 @@ class InvigilatePadController extends CommonController
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
             $teacherId = $request->input('user_id');
-            \Log::info('params', [$stationId, $studentId, $examId, $teacherId, $timeAnchor]);
+            \Log::debug('time', [$timeAnchor]);
+            //将戳过来的字符串变成数组
+            $timeAnchor = explode(',', $timeAnchor);
+            \Log::debug('params', [$stationId, $studentId, $examId, $teacherId, $timeAnchor]);
 
 
             return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId,
@@ -564,8 +574,10 @@ class InvigilatePadController extends CommonController
      * @internal param $examScreenId
      * @internal param array $timeAnchors
      */
-    private function storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchors)
+    private function storeAnchor($stationId, $studentId, $examId, $teacherId, array $timeAnchors)
     {
+        $connection = \DB::connection('osce_mis');
+        $connection->beginTransaction();
         try {
             //获得站点摄像机关联表
             $stationVcr = StationVcr::where('station_id', $stationId)->first();
@@ -590,8 +602,10 @@ class InvigilatePadController extends CommonController
                 }
             }
 
+            $connection->commit();
             return ['锚点上传成功！'];
         } catch (\Exception $ex) {
+            $connection->rollBack();
             throw $ex;
         }
 

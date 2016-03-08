@@ -32,8 +32,9 @@ class ConfigController extends CommonController
      * @date 2016-01-11 11：48
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getIndex()
+    public function getIndex(Request $request)
     {
+        $succ = $request->input('succ');
         //从文件获取配置数组
         $tempConfig = config('message');
         //从数据库获取配置
@@ -44,7 +45,7 @@ class ConfigController extends CommonController
             $tempDB = [];
             $tempDB[0]['value'] = [];
         }
-        return view('osce::admin.systemManage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
+        return view('osce::admin.systemManage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB, 'succ'=>$succ]);
     }
 
     /**
@@ -118,7 +119,7 @@ class ConfigController extends CommonController
             }
 
             DB::connection('osce_mis')->commit();
-            return redirect()->route('osce.admin.config.getIndex');
+            return redirect()->route('osce.admin.config.getIndex',['succ'=>1]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

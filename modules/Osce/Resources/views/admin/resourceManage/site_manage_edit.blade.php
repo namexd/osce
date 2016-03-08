@@ -176,7 +176,7 @@
     <script src="{{asset('/osce/common/select2-4.0.0/js/i18n/zh-CN.js')}}"></script>
     <script>
         $(function(){
-            $('[name=cate]').select2({
+            /*$('[name=cate]').select2({
                 tags: true,
                 tokenSeparators: [',', ' '],
                 maximumInputLength: 12
@@ -187,7 +187,13 @@
                 var choose  =   info.pop();
                 $(this).val([choose, choose]).trigger("change");
                 $(this).select2("close");
-            });
+            });*/
+
+            $('[name=cate]').select2({
+                tags: true,
+                tokenSeparators: [',', ' '],
+                maximumInputLength: 12
+            })
         })
     </script>
 @stop
