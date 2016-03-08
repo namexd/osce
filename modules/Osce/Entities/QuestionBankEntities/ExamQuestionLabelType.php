@@ -2,7 +2,6 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 
-
 /**标签类型模型
  * Class LabelType
  * @package Modules\Osce\Entities\QuestionBankEntities
@@ -31,6 +30,26 @@ class ExamQuestionLabelType extends  Model
         return $data;
     }
 
+    /**
+     * 标签类型和标签关联
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function LabelTypeAndLabel()
+    {
+        return $this    ->  hasMany('\Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel','label_type_id','id');
+    }
+    /**获取标签类型和标签的相关数据
+     * @method
+     * @url /osce/
+     * @access public
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getLabAndType(){
+        $builder = $this->with('LabelTypeAndLabel')->get();
+        return $builder;
+    }
 }
 
 

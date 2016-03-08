@@ -8,7 +8,7 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Osce\Entities\CommonModel;
-class ExaminationPaper extends CommonModel
+class ExamQuestionPaper extends CommonModel
 {
     protected $connection = 'osce_mis';
     protected $table = 'exam_paper';

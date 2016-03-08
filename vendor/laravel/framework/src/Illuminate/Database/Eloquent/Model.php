@@ -727,12 +727,11 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      */
     public static function with($relations)
     {
+
         if (is_string($relations)) {
             $relations = func_get_args();
         }
-
         $instance = new static;
-
         return $instance->newQuery()->with($relations);
     }
 
