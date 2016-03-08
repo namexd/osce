@@ -147,7 +147,7 @@ class ExamLabelController extends CommonController
      */
     public function postAddExamQuestionLabel($Request)
     {
-         dd($Request->all());
+         //dd($Request->all());
         $this->validate($Request, [
             'name' => 'required',
             'label_type_id' => 'required|integer',
@@ -200,7 +200,7 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function editExamQuestionLabelInsert($Request){
-        dd($Request->all());
+        //dd($Request->all());
         $this->validate($Request, [
             'id'=>'required',
             'name' => 'required',
