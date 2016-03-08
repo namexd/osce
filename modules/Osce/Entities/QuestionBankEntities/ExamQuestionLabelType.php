@@ -47,7 +47,9 @@ class ExamQuestionLabelType extends  Model
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getLabAndType(){
-        $builder = $this->with('LabelTypeAndLabel')->get();
+        $builder = $this->with(['LabelTypeAndLabel'=>function($label){
+            $label->where('exam_question_label.status','=',1);
+        }])->get();
         return $builder;
     }
 }

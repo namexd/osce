@@ -146,6 +146,7 @@ class ExamQuestion extends Model
             DB::rollback();
             return false;
         }
+
         //向试题子项表插入数据
         foreach ($examQuestionItemData as $key => $value) {
             $value['create_user_id'] = Auth::user()->id;
@@ -227,21 +228,59 @@ class ExamQuestion extends Model
         }
 
         foreach ($examQuestionItemData as $key => $value) {
-            $examQuestionItem = ExamQuestionItem::where('exam_question_id', '=', $examQuestionData['id'])->update($examQuestionItemData);
+            $examQuestionItem = ExamQuestionItem::where('exam_question_id', '=', $examQuestionData['id'])->update($value);
             if (!$examQuestionItem) {
                 DB::rollback();
                 return false;
             }
         }
-        $examQuestionLabelRelation = ExamQuestionLabelRelation::where('exam_question_id', '=', $examQuestionData['id'])->update($examQuestionLabelRelationData);
-        if (!$examQuestionLabelRelation) {
-            DB::rollback();
-            return false;
+        foreach ($examQuestionLabelRelationData as $key => $value) {
+            $examQuestionLabelRelation = ExamQuestionLabelRelation::where('exam_question_id', '=', $examQuestionData['id'])->update($examQuestionLabelRelationData);
+            if (!$examQuestionLabelRelation) {
+                DB::rollback();
+                return false;
+            }
         }
+
 
         DB::commit();
         return true;
     }
 
-
+    /**保存编辑
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $examQuestionData 试题表数据
+     * @param $examQuestionItemData 试题子项表数据
+     * @param $examQuestionLabelRelationData 试题和标签中间表数据
+     * @return bool
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function exam_question_label_relation(){
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionItem','exam_question_id','id');
+    }
+    /**根据标签查找试题
+     * @method
+     * @url /osce/
+     * @access public
+     * @return bool
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamQuestion($data){
+        //$builder = $this->whereIn('exam_paper_structure_label.');
+        $builder = $this->leftjoin('exam_question_type',function($join){
+            $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
+        })->with([''])->get();
+        dd($builder);
+//        ->leftjoin('exam_question_label_relation',function($join){
+//            $join->on('exam_question_label_relation.exam_question_id','=','exam_question.id');
+//        })->leftjoin('exam_question_label',function($join){
+//            $join->on('exam_question_label.id','=','exam_question_label_relation.exam_question_label_id');
+//        })
+    }
 }
