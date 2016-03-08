@@ -531,6 +531,7 @@ class InvigilatePadController extends CommonController
      */
     public function postStoreAnchor(Request $request)
     {
+        \Log::debug('param', $request->all());
         try {
             //验证
             $this->validate($request, [
