@@ -65,31 +65,44 @@ class ExamLabelController extends CommonController
      */
 
     public function addExamQuestionLabel(Request $Request){
-        //dd('新增试卷标签');
-       /* $this->validate($Request,[
-               'tagName'=>'require',
-               'subject-id'=>'required|integer',
-               'describe'=>'required'
-        ]);
-        $data = [
-            'name'=>Input::get('name'),
-            'label_type_id'=>Input::get('id'),
-             'describe'=>Input::get('describe')
-            ];
-        $add = ExamQuestionLabel::create($data);
-        if($data != fasle){
-            return redirect()->back()->withInput()->withErrors('添加成功');
-        }else{
-            return redirect()->back()->withInput()->withErrors('系统异常');
-        }*/
+        //获取标签类型列表
+        $ExamQuestionLabelType = new ExamQuestionLabelType();
+        $ExamQuestionLabelTypeList = $ExamQuestionLabelType->examQuestionLabelTypeList();
         return view('osce::admin.resourcemanage.subject_check_tag_add',
             [
-          /*      'ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList,
-                'datalist'=>$datalist*/
+                'ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList,
             ]);
 
     }
 
+    /**
+     * @method
+     * @url /osce/
+     * @access public
+     * @return $this
+     * @author tangjun <tangjun@misrobot.com>
+     * @date 2016年3月8日14:26:08
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postAddExamQuestionLabel(Request $Request)
+    {
+        $this->validate($Request, [
+            'name' => 'required',
+            'label_type_id' => 'required|integer',
+            'describe' => 'required'
+        ]);
+        $data = [
+            'name' => Input::get('name'),
+            'label_type_id' => Input::get('label_type_id'),
+            'describe' => Input::get('describe')
+        ];
+        $add = ExamQuestionLabel::create($data);
+        if ($add != false) {
+            return redirect()->back()->withInput()->withErrors('添加成功');
+        } else {
+            return redirect()->back()->withInput()->withErrors('系统异常');
+        }
+    }
     /**
      * 获取编辑试卷标签内容
      * @method  GET
