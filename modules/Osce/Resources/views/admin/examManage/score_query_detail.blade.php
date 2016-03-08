@@ -74,7 +74,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['平均分',student_name],
+                        data:[student_name,'平均分'],
                         x:'right'
                     },
                     toolbox: {
@@ -96,23 +96,6 @@
                     ],
                     series : [
                         {
-                            name:'平均分',
-                            type:'line',
-                            smooth:true,
-                            itemStyle: {
-                                normal: {
-                                    color:'#ccc',
-                                    lineStyle:{
-                                        color:'#ccc'
-                                    },
-                                    areaStyle: {
-                                        type: 'default'
-                                    }
-                                }
-                            },
-                            data:avg//[55, 67, 76, 68, 60, 68, 77]
-                        },
-                        {
                             name:student_name,
                             type:'line',
                             smooth:true,
@@ -128,6 +111,23 @@
                                 }
                             },
                             data:standard//[30, 82, 34, 91, 90, 30, 10]
+                        },
+                        {
+                            name:'平均分',
+                            type:'line',
+                            smooth:true,
+                            itemStyle: {
+                                normal: {
+                                    color:'#ccc',
+                                    lineStyle:{
+                                        color:'#ccc'
+                                    },
+                                    areaStyle: {
+                                        type: 'default'
+                                    }
+                                }
+                            },
+                            data:avg//[55, 67, 76, 68, 60, 68, 77]
                         }
                     ]
                 };
