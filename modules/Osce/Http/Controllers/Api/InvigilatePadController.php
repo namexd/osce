@@ -394,11 +394,16 @@ class InvigilatePadController extends CommonController
             }
 
             //根据ID找到对应的名字
-            $student = Student::findOrFail($studentId)->first();
+            $student = Student::find($studentId);
+            if (is_null($student)) {
+                throw new \Exception('当前找不到指定的学生！', -1);
+            }
             $studentName = $student->name;
             $studentCode = $student->code;
-            $stationName = Station::findOrFail($stationId)->first()->name;
-
+            $station = Station::find($stationId);
+            if (is_null($station)) {
+                throw new \Exception('当前找不到指定的考站！', -1);
+            }
             $examName = $exam->name;
 
             //将参数拼装成一个数组
@@ -406,7 +411,7 @@ class InvigilatePadController extends CommonController
                 'exam_name' => $examName,
                 'student_name' => $studentName,
                 'student_code' => $studentCode,
-                'station_name' => $stationName,
+                'station_name' => $station->name,
             ];
             //获取当前日期
             $date = date('Y-m-d');
@@ -469,13 +474,13 @@ class InvigilatePadController extends CommonController
                 throw new \Exception('当前没有正在进行的考试', -1);
             }
             //根据ID找到对应的名字
-            $student = Student::findOrFail($studentId)->first();
+            $student = Student::find($studentId);
             if (is_null($student)) {
                 throw new \Exception('找不到该考生', -3);
             }
             $studentName = $student->name;
             $studentCode = $student->code;
-            $station = Station::findOrFail($stationId)->first();
+            $station = Station::find($stationId);
             if (is_null($station)) {
                 throw new \Exception('找不到该考站', -4);
             }
@@ -525,8 +530,8 @@ class InvigilatePadController extends CommonController
             $this->validate($request, [
                 'station_id' => 'required|integer',
                 'student_id' => 'required|integer',
-                'exam_screen_id' => 'required|integer',
-                'teacher_id' => 'required|integer',
+                'exam_id' => 'required|integer',
+                'user_id' => 'required|integer',
                 'time_anchors' => 'required|array',
             ]);
 
@@ -535,7 +540,8 @@ class InvigilatePadController extends CommonController
             $studentId = $request->input('student_id');
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
-            $teacherId = $request->input('teacher_id');
+            $teacherId = $request->input('user_id');
+            \Log::info('params', [$stationId, $studentId, $examId, $teacherId, $timeAnchor]);
 
 
             return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId,
