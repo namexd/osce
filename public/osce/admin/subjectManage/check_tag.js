@@ -14,13 +14,14 @@ $(function(){
 function subject_check_tag(){
     //新增
     $("#add").click(function(){
+        var url = pars.addUrl;
         parent.layer.open({
             type: 2,
             title: '新增考核标签',
             shadeClose: true,
             shade: 0.8,
-            area: ['90%', '90%'],
-            content:''
+            area: ['60%', '60%'],
+            content:url
         });
     });
 }
