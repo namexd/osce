@@ -23,7 +23,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="{{route('osce.admin.ExamLabelController.getExamLabel')}}">考核标签</a></li>
                         <li><a href="">题库管理</a></li>
-                        <li><a href="">试卷管理</a></li>
+                        <li><a href="{{route('osce.admin.ExamPaperController.getExamList')}}">试卷管理</a></li>
                     </ul>
                 </div>
             </div>

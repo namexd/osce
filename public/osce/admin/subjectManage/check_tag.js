@@ -12,18 +12,15 @@ $(function(){
 
 //考核标签
 function subject_check_tag(){
-    //跳详情页面
-    $(".subjectBody").delegate(".fa-search","click",function(){
-        var examid = $(this).attr("examid");
-        var resultid = $(this).attr("resultid");
-        var subid = $(this).attr("subid");
+    //新增
+    $("#add").click(function(){
         parent.layer.open({
             type: 2,
-            title: '班级成绩明细',
+            title: '新增考核标签',
             shadeClose: true,
             shade: 0.8,
             area: ['90%', '90%'],
-            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid+'&subid='+subid//iframe的url
+            content:''
         });
     });
 }

@@ -34,6 +34,7 @@ class ExamPaperController extends CommonController
      */
     public function getExamList(Request $request)
     {
+        
         $keyword = $request->keyword;
 
         //获取试卷与试题构造表数据
@@ -48,10 +49,6 @@ class ExamPaperController extends CommonController
      * @url       GET /osce/admin/exampaper/question-round
      * @access    public
      * @param Request $request get请求<br><br>
-     *                         <b>get请求字段：</b>
-     *                         string        keyword         关键字
-     *                         string        order_name      排序字段名 枚举 e.g 1:设备名称 2:预约人 3:是否复位状态自检 4:是否复位设备
-     *                         string        order_by        排序方式 枚举 e.g:desc,asc
      * @param Exam $exam
      * @return view
      * @throws \Exception
@@ -62,8 +59,53 @@ class ExamPaperController extends CommonController
     public function getQuestionRound(Request $request)
     {
         $LabelType= new ExamQuestionLabelType();
-        $LabelTypeList = $LabelType->getLabAndType();
+        $LabelTypeList = $LabelType->getLabAndType()->toArray();
+        return $this->success_data($LabelTypeList);
+    }
 
-        dd($LabelTypeList);
+    /**
+     * 删除试卷
+     * @url       GET /osce/admin/exampaper/delete-exam
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDeleteExam(Request $request)
+    {
+        //验证ID
+        $this->validate($request,[
+            'id'        => 'required|integer',
+        ]);
+        $id = $request->id;
+
+        $Paper = new ExamQuestionPaper();
+        $delete = $Paper->where('id','=',$id)->delete();
+        if($delete){
+            return redirect()->route('osce.admin.ExamPaperController.getExamList');
+        }else{
+            return redirect()->route('osce.admin.ExamPaperController.getExamList');
+        }
+    }
+
+    /**
+     * 新增试卷页面
+     * @url       GET /osce/admin/exampaper/delete-exam
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAddExamPage(Request $request)
+    {
+        return view('osce::admin.resourcemanage.subject_papers_add');
     }
 }
