@@ -27,6 +27,16 @@ class ExamQuestion extends Model
     protected $fillable = ['id', 'exam_question_type_id', 'name', 'parsing', 'answer'];
 
 
+    //试题子项表
+    public function examQuestionItem (){
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionItem','exam_question_id','id');//一对多(参数：关联模型名称，关联模型名称键名，本模型键名)
+    }
+
+    //试题子项表
+    public function ExamQuestionLabelRelation (){
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionItem','exam_question_id','id');//一对多(参数：关联模型名称，关联模型名称键名，本模型键名)
+    }
+
     /**获取试题列表的方法
      * @method
      * @url /osce/
@@ -48,29 +58,30 @@ class ExamQuestion extends Model
             $builder = $builder->where('exam_question.exam_question_type_id', '=', $formData['examQuestionTypeId']);
         }
 
-        $builder = $builder->leftJoin('exam_question_item', function ($join) {
+        $builder = $builder->leftJoin('exam_question_item', function ($join) { //试题子项表
             $join->on('exam_question.id', '=', 'exam_question_item.exam_question_id');
 
-        })->leftJoin('exam_question_label_relation', function ($join) {
+        })->leftJoin('exam_question_label_relation', function ($join) { //试题和标签中间表
             $join->on('exam_question.id', '=', 'exam_question_label_relation.exam_question_id');
 
-        })->leftJoin('exam_question_type', function ($join) {
+        })->leftJoin('exam_question_type', function ($join) { //题目类型表
             $join->on('exam_question.exam_question_type_id', '=', 'exam_question_type.id');
 
-        })->leftJoin('exam_question_label_type', function ($join) {
+        })->leftJoin('exam_question_label_type', function ($join) { //标签类型表
             $join->on('exam_question_label_relation.exam_paper_label_id', '=', 'exam_question_label_type.id');
 
         })->groupBy('exam_question.id')->select([
             'exam_question.id',//试题id
             'exam_question.name',//试题名称
-            'exam_question_label_type.name as labelTypeName',//考核范围
+            'exam_question_label_type.name as examQuestionlabelTypeName',//考核范围
             'exam_question_type.name as examQuestionTypeName',//题目类型
         ]);
+
         $pageSize = config('page_size');
         return $builder->paginate($pageSize);
     }
 
-    /**删除
+    /**删除试题
      * @method
      * @url /osce/
      * @access public
@@ -80,29 +91,31 @@ class ExamQuestion extends Model
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function deleteData($id)
+    public function deleteExamQuestion($id)
     {
         DB::beginTransaction();
-        //删除试题表
+        //查询试题表中是否有对应的数据
         $examQuestion = $this->where('id', '=', $id)->get();
         if (!$examQuestion->isEmpty()) {
-            if (!$this::where('id', $id)->delete()) {
-                DB::rollback();
-                return false;
+
+            //删除试题子项表
+            $examQuestionItem = ExamQuestionItem::where('exam_question_id', '=', $id)->get();
+            if (!$examQuestionItem->isEmpty()) {
+                if (!ExamQuestionItem::where('exam_question_id','=',$id)->delete()) {
+                    DB::rollback();
+                    return false;
+                }
             }
-        }
-        //删除试题子项表
-        $examQuestionItem = ExamQuestionItem::where('exam_question_id', '=', $id)->get();
-        if (!$examQuestionItem->isEmpty()) {
-            if (!ExamQuestionItem::where('exam_question_id', $id)->delete()) {
-                DB::rollback();
-                return false;
+            //删除试题和标签中间表
+            $examQuestionLabelRelation = ExamQuestionLabelRelation::where('exam_question_id', '=', $id)->get();
+            if (!$examQuestionLabelRelation->isEmpty()) {
+                if (!ExamQuestionLabel::where('exam_question_id','=', $id)->delete()) {
+                    DB::rollback();
+                    return false;
+                }
             }
-        }
-        //删除试题和标签中间表
-        $examQuestionLabel = ExamQuestionLabel::where('exam_question_id', '=', $id)->get();
-        if (!$examQuestionLabel->isEmpty()) {
-            if (!ExamQuestionLabel::where('exam_question_id', $id)->delete()) {
+            //删除试题表
+            if (!$this::where('id','=',$id)->delete()) {
                 DB::rollback();
                 return false;
             }
@@ -111,13 +124,13 @@ class ExamQuestion extends Model
         return true;
     }
 
-    /**新增
+    /**新增数据交互
      * @method
      * @url /osce/
      * @access public
-     * @param $examQuestionData
-     * @param $examQuestionItemData
-     * @param $examQuestionLabelData
+     * @param $examQuestionData 试题表数据
+     * @param $examQuestionItemData 试题子项表数据
+     * @param $examQuestionLabelRelationData 试题和标签中间表数据
      * @return bool
      * @author xumin <xumin@misrobot.com>
      * @date
@@ -143,11 +156,13 @@ class ExamQuestion extends Model
             }
         }
         //向试题和标签中间表插入数据
-        $examQuestionLabelRelationData['exam_question_id'] = $examQuestion->id;
-        $examQuestionLabelRelationData['create_user_id'] = Auth::user()->id;
-        if (!$examQuestionLabelRelation = ExamQuestionLabelRelation::create($examQuestionLabelRelationData)) {
-            DB::rollback();
-            return false;
+        foreach ($examQuestionLabelRelationData as $key => $value) {
+            $examQuestionLabelRelationData['exam_question_id'] = $examQuestion->id;
+            $examQuestionLabelRelationData['create_user_id'] = Auth::user()->id;
+            if (!$examQuestionLabelRelation = ExamQuestionLabelRelation::create($examQuestionLabelRelationData)) {
+                DB::rollback();
+                return false;
+            }
         }
         DB::commit();
         return true;
@@ -157,9 +172,8 @@ class ExamQuestion extends Model
      * @method
      * @url /osce/
      * @access public
-     * @param $examQuestionData
-     * @param $examQuestionItemData
-     * @param $examQuestionLabelData
+     * @param $id 试题表id
+     * @return mixed
      * @author xumin <xumin@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
@@ -167,14 +181,14 @@ class ExamQuestion extends Model
     public function getExamQuestionById($id)
     {
         $builder = $this;
-        $builder = $builder->leftJoin('exam_question_item', function ($join) {
+        $builder = $builder->leftJoin('exam_question_item', function ($join) {//试题子项表
             $join->on('exam_question.id', '=', 'exam_question_item.exam_question_id');
-        })->leftJoin('exam_question_label', function ($join) {
-            $join->on('exam_question.id', '=', 'exam_question_label.exam_question_id');
-        })->leftJoin('exam_question_type', function ($join) {
+
+        })->leftJoin('exam_question_label_relation', function ($join) {//试题和标签中间表
+            $join->on('exam_question.id', '=', 'exam_question_label_relation.exam_question_id');
+
+        })->leftJoin('exam_question_type', function ($join) {//题目类型表
             $join->on('exam_question.exam_question_type_id', '=', 'exam_question_type.id');
-        })->leftJoin('label_type', function ($join) {
-            $join->on('exam_question_label.exam_paper_label_id', '=', 'label_type.id');
         });
         $data = $builder->where('exam_question.id','=',$id)
             ->groupBy('exam_question.id')
@@ -186,7 +200,7 @@ class ExamQuestion extends Model
             'exam_question_item.content as examQuestionItemContent',//选项内容
             'exam_question.answer',//正确答案
             'exam_question.parsing',//解析
-            'exam_question_label.exam_paper_label_id',//考核范围
+            'exam_question_label_relation.exam_paper_label_id',//考核范围
         ]);
         return $data;
     }
@@ -195,15 +209,15 @@ class ExamQuestion extends Model
      * @method
      * @url /osce/
      * @access public
-     * @param $examQuestionData
-     * @param $examQuestionItemData
-     * @param $examQuestionLabelData
+     * @param $examQuestionData 试题表数据
+     * @param $examQuestionItemData 试题子项表数据
+     * @param $examQuestionLabelRelationData 试题和标签中间表数据
      * @return bool
      * @author xumin <xumin@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function editExamQuestion($examQuestionData, $examQuestionItemData, $examQuestionLabelData)
+    public function editExamQuestion($examQuestionData, $examQuestionItemData, $examQuestionLabelRelationData)
     {
         DB::beginTransaction();
         $examQuestion = ExamQuestion::where('id', '=', $examQuestionData['id'])->update($examQuestionData);
@@ -219,8 +233,8 @@ class ExamQuestion extends Model
                 return false;
             }
         }
-        $examQuestionLabel = ExamQuestionLabel::where('exam_question_id', '=', $examQuestionData['id'])->update($examQuestionLabelData);
-        if (!$examQuestionLabel) {
+        $examQuestionLabelRelation = ExamQuestionLabelRelation::where('exam_question_id', '=', $examQuestionData['id'])->update($examQuestionLabelRelationData);
+        if (!$examQuestionLabelRelation) {
             DB::rollback();
             return false;
         }
