@@ -1,22 +1,32 @@
 <?php
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
+
+
+/**标签类型模型
+ * Class LabelType
+ * @package Modules\Osce\Entities\QuestionBankEntities
+ */
+
 class ExamQuestionLabelType extends  Model
+
 {
     protected $connection	=	'osce_mis';
     protected $table 		= 	'exam_question_label_type';
     public $timestamps	=	true;
     protected $primaryKey	=	'id';
     protected $fillable 	=	['id', 'name','status'];
+
     /**获取标签类型列表
      * @method
      * @url /osce/
      * @access public
+     * @return mixed
      * @author xumin <xumin@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function labelTypeList(){
+    public function examQuestionLabelTypeList(){
         $data = $this->select('id','name')->orderBy('created_at','desc')->get();
         return $data;
     }
@@ -31,7 +41,8 @@ class ExamQuestionLabelType extends  Model
      */
     public function getLabAndType(){
         $builder = $this;
-
+        $builder = $builder->with('LabelTypeAndLabel')->get();
+        dd($builder);
     }
 }
 

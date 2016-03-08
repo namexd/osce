@@ -40,7 +40,7 @@ class ExamLabelController extends CommonController
 
 
         $ExamQuestionLabelType=new ExamQuestionLabelType();
-        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->labelTypeList();
+        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->examQuestionLabelTypeList();
 
 
         return view('osce::admin.resourcemanage.subject_check_tag',

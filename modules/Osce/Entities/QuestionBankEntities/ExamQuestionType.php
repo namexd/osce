@@ -9,7 +9,7 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
-/**题目类型表
+/**题目类型模型
  * Class ExamQuestionLabel
  * @package Modules\Osce\Entities
  */
