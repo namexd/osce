@@ -1802,35 +1802,63 @@ class ExamController extends CommonController
      * @url POST /osce/admin/exam/exam-sequence-unique
      * @author zhouchong <zhouchong@misrobot.com>     *
      */
-    public function postExamSequenceUnique(Request $request){
-       $this->validate($request,[
-           'exam_id' => 'required',
-           'exam_sequence' => 'required',
-           'id' => 'sometimes',
-       ]);
-       $examId=$request->input('exam_id');
-       $exam_sequence=$request->input('exam_sequence');
-       $studentId=$request->input('id');
-//       $examSequence=Student::where('exam_id',$examId)->select('exam_sequence')->first()->exam_sequence;
-       $id=Student::where('exam_id',$examId)->where('exam_sequence',$exam_sequence)->select('id')->first();
-        if(empty($studentId)){
-            if($id){
-                return json_encode(['valid' =>false]);
-            }else{
-                return json_encode(['valid' =>true]);
-            }
+    public function postExamSequenceUnique(Request $request)
+    {
+        $this->validate($request,[
+            'exam_id'        => 'required',
+            'exam_sequence'  => 'sometimes',
+            'mobile'         => 'sometimes',
+            'idcard'         => 'sometimes',
+            'code'           => 'sometimes',
+            'id'             => 'sometimes',
+        ]);
+        $examId      = $request->input('exam_id');
+        $examSequence= $request->input('exam_sequence');
+        $mobile      = $request->input('mobile');
+        $idcard      = $request->input('idcard');
+        $code        = $request->input('code');
+        $studentId   = $request->input('id');
+        //根据条件判断
+        if(!empty($mobile)){
+            $where = ['exam_id'=>$examId, 'mobile' => $mobile];
+        }elseif(!empty($idcard)){
+            $where = ['exam_id'=>$examId, 'idcard' => $idcard];
+        }elseif(!empty($code)){
+            $where = ['exam_id'=>$examId, 'code' => $code];
+        }elseif(!empty($examSequence)){
+            $where = ['exam_id'=>$examId, 'exam_sequence' => $examSequence];
         }else{
-            if($id){
-                if($id->id!=$studentId){
-                    return json_encode(['valid' =>false]);
-                }else{
-                    return json_encode(['valid' =>true]);
-                }
-            }else{
-                return json_encode(['valid' =>true]);
-            }
-
+            return json_encode(['valid' =>false]);
+        }
+        if(empty($studentId)){
+            $result = Student::where($where)->first();
+        }else{
+            $result = Student::where($where)->where('id', '<>', $studentId)->first();
+        }
+        //是否已存在
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
         }
 
+//       $id  = Student::where('exam_id',$examId)->where('exam_sequence',$examSequence)->select('id')->first();
+//        if(empty($studentId)){
+//            if($id){
+//                return json_encode(['valid' =>false]);
+//            }else{
+//                return json_encode(['valid' =>true]);
+//            }
+//        }else{
+//            if($id){
+//                if($id->id!=$studentId){
+//                    return json_encode(['valid' =>false]);
+//                }else{
+//                    return json_encode(['valid' =>true]);
+//                }
+//            }else{
+//                return json_encode(['valid' =>true]);
+//            }
+//        }
     }
 }

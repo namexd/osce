@@ -5,7 +5,7 @@
         margin: 10px 0 30px;
         padding: 10px;
     }
-    .col-sm-10 i{
+    .col-sm-12 i{
         margin: 0 10px;
         font-size:16px;
         color: #ccc;
@@ -74,7 +74,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['平均分',student_name],
+                        data:[student_name,'平均分'],
                         x:'right'
                     },
                     toolbox: {
@@ -96,23 +96,6 @@
                     ],
                     series : [
                         {
-                            name:'平均分',
-                            type:'line',
-                            smooth:true,
-                            itemStyle: {
-                                normal: {
-                                    color:'#ccc',
-                                    lineStyle:{
-                                        color:'#ccc'
-                                    },
-                                    areaStyle: {
-                                        type: 'default'
-                                    }
-                                }
-                            },
-                            data:avg//[55, 67, 76, 68, 60, 68, 77]
-                        },
-                        {
                             name:student_name,
                             type:'line',
                             smooth:true,
@@ -128,6 +111,23 @@
                                 }
                             },
                             data:standard//[30, 82, 34, 91, 90, 30, 10]
+                        },
+                        {
+                            name:'平均分',
+                            type:'line',
+                            smooth:true,
+                            itemStyle: {
+                                normal: {
+                                    color:'#ccc',
+                                    lineStyle:{
+                                        color:'#ccc'
+                                    },
+                                    areaStyle: {
+                                        type: 'default'
+                                    }
+                                }
+                            },
+                            data:avg//[55, 67, 76, 68, 60, 68, 77]
                         }
                     ]
                 };
@@ -301,16 +301,16 @@
                 <div class="row">
                     <div class="col-md-6 ">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">操作的连贯性：</label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-12">
+                            <label class="control-label">操作的连贯性：</label>
                             @for ($i = 0; $i < 5; $i++)
                                 <i class="fa fa-star {{$i<$result['operation']?'perfect':''}}"></i>
                             @endfor
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">工作的娴熟度：</label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-12">
+                            <label class="control-label">工作的娴熟度：</label>
                             @for ($i = 0; $i < 5; $i++)
                                 <i class="fa fa-star {{$i<$result['skilled']?'perfect':''}}"></i>
                             @endfor
@@ -319,16 +319,16 @@
                     </div>
                     <div class="col-md-6 ">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">病人关怀情况：</label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-12">
+                            <label class="control-label">病人关怀情况：</label>
                             @for ($i = 0; $i < 5; $i++)
                                 <i class="fa fa-star {{$i<$result['patient']?'perfect':''}}"></i>
                             @endfor
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">沟通亲和力：</label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-12">
+                            <label class="control-label">沟通亲和力：</label>
                             @for ($i = 0; $i < 5; $i++)
                                 <i class="fa fa-star {{$i<$result['affinity']?'perfect':''}}"></i>
                             @endfor
