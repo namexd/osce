@@ -260,8 +260,9 @@ class ExamQuestion extends Model
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function exam_question_label_relation(){
-        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionItem','exam_question_id','id');
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelRelation','exam_question_id','id');
     }
+
     /**根据标签查找试题
      * @method
      * @url /osce/
@@ -275,12 +276,9 @@ class ExamQuestion extends Model
         //$builder = $this->whereIn('exam_paper_structure_label.');
         $builder = $this->leftjoin('exam_question_type',function($join){
             $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
-        })->with([''])->get();
-        dd($builder);
-//        ->leftjoin('exam_question_label_relation',function($join){
-//            $join->on('exam_question_label_relation.exam_question_id','=','exam_question.id');
-//        })->leftjoin('exam_question_label',function($join){
-//            $join->on('exam_question_label.id','=','exam_question_label_relation.exam_question_label_id');
-//        })
+        })->with(['exam_question_label_relation'=>function($relation){
+            $relation->with('exam_question_label');
+        }])->get();
+        return $builder;
     }
 }
