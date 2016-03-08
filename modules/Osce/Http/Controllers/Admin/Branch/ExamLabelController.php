@@ -185,8 +185,10 @@ class ExamLabelController extends CommonController
     public function getDeleteExamQuestionLabel(){
         // dd('删除试卷标签');
         $id = e(Input::get('id',''));
+        //dd($id);
+        $examTable=new ExamQuestionLabel();
         if($id){
-            $data = \DB::connection('msc_mis')->table('exam_question_label')->where('id','=',$id)->delete();
+            $data =   $examTable->where('id','=',$id)->delete();
             if($data != false){
                 return $this->success_data([],1,'success');
             }else{
