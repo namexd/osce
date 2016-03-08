@@ -541,7 +541,7 @@ class InvigilatePadController extends CommonController
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
             $teacherId = $request->input('user_id');
-            \Log::info('params', [$stationId, $studentId, $examId, $teacherId, $timeAnchor]);
+            \Log::debug('params', [$stationId, $studentId, $examId, $teacherId, $timeAnchor]);
 
 
             return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId,
