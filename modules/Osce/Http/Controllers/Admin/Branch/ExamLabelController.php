@@ -27,29 +27,29 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function getExamLabel(Request $Request,ExamQuestionLabel $examQuestionLabel ){
-     /*   $this->validate($Request,[
-            'keyword'=>'required|integer',
-            'label_type_id'=>'required|integer',
-        ]);*/
+    public function getExamLabel(Request $Request, ExamQuestionLabel $examQuestionLabel)
+    {
 
-            $keyword = !empty(Input::get('tagName'))?Input::get('tagName'):'';
-            $id=!empty(Input::get('tagType'))?Input::get('tagType'):'';
-            $where['keyword'] = $keyword;
-            $where['id']=$id;
-            $datalist = $examQuestionLabel->getFilteredPaginateList($where);
+        $where['keyword'] = Input::get('tagName', '');
+        $where['id'] = Input::get('tagType', '');
 
-           $ExamQuestionLabelType=new ExamQuestionLabelType();
-           $ExamQuestionLabelTypeList= $ExamQuestionLabelType->examQuestionLabelTypeList();
-           //dd($ExamQuestionLabelTypeList);
+        //获取标签列表
+        $datalist = $examQuestionLabel->getFilteredPaginateList($where);
 
+        //获取标签类型列表
+        $ExamQuestionLabelType = new ExamQuestionLabelType();
+        $ExamQuestionLabelTypeList = $ExamQuestionLabelType->examQuestionLabelTypeList();
 
+        //TODO 拼凑标签名称
+        foreach($datalist as $k=>$v){
+            $datalist[$k]['LabelType']=empty($v->ExamQuestionLabelType->name)?'-':$v->ExamQuestionLabelType->name;
+        }
 
         return view('osce::admin.resourcemanage.subject_check_tag',
             [
-            'ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList,
-            'datalist'=>$datalist
-        ]);
+                'ExamQuestionLabelTypeList' => $ExamQuestionLabelTypeList,
+                'datalist' => $datalist
+            ]);
 
     }
 
