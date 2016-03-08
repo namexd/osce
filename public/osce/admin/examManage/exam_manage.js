@@ -2185,7 +2185,7 @@ function smart_assignment(){
         });
         $.post(pars.makePlanUrl,function(testData){
 
-            if(testData.code==-999)
+            if(testData.code!=1)
             {
                 layer.msg(testData.message,{skin:'msg-error',icon:1});
                 //关闭加载
@@ -2201,6 +2201,7 @@ function smart_assignment(){
 
                 //关闭加载
                 layer.close(index);
+                layer.msg('排考成功！',{skin:'msg-success',icon:1});
             }
         });
     }
