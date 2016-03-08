@@ -689,4 +689,46 @@ class InvigilatePadController extends CommonController
         }
     }
 
+    /**
+     *  替考警告
+     * @method GET
+     * @url
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     student_id    学生id   (必须的)
+     * @return json
+     * @version
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+        public function  getTheirSteadWarning(Request $request){
+            try{
+
+                $this->validate($request,[
+                'student_id'=>'required|integer'
+            ]);
+                $studentId=$request->get('student_id');
+                $student =Student::find($studentId);
+                if(!$student){
+                    throw new \Exception('没有找到该学生相关信息',-1);
+                }
+                 $student->status=5;
+                if(!$student->save()){
+                    throw new \Exception('替考警告失败',-2);
+                }
+                return response()->json(
+                    $this->success_data('替考警告成功',1)
+                );
+            }catch (\Exception $ex){
+                return response()->json($this->fail($ex));
+
+            }
+
+
+        }
+
+
+
 }
