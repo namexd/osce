@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 
 class ExamLabelController extends CommonController
@@ -32,7 +33,7 @@ class ExamLabelController extends CommonController
             'label_type_id'=>'required|integer',
         ]);*/
 
-           $keyword = !empty(Input::get('keyword'))?Input::get('keyword'):'';
+        /*   $keyword = !empty(Input::get('keyword'))?Input::get('keyword'):'';
             $id=!empty(Input::get('keyword'))?Input::get('keyword'):'';
             $where['keyword'] = $keyword;
             $where['id']=$id;
@@ -40,13 +41,13 @@ class ExamLabelController extends CommonController
 
 
         $ExamQuestionLabelType=new ExamQuestionLabelType();
-        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->examQuestionLabelTypeList();
+        $ExamQuestionLabelTypeList= $ExamQuestionLabelType->examQuestionLabelTypeList();*/
 
 
         return view('osce::admin.resourcemanage.subject_check_tag',
             [
-             'ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList,
-            'datalist'=>$datalist
+         /*    'ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList,
+            'datalist'=>$datalist*/
         ]);
 
     }
