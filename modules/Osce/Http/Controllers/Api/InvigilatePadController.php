@@ -48,9 +48,9 @@ class InvigilatePadController extends CommonController
     {
 //        $examScreeningModel = new ExamScreening();
 //        $result = $examScreeningModel->getExamCheck();
-        $a =strtotime('2016-03-04 10:59:14');
-        $c=strtotime('2016-03-04 11:03:14');
-          $b=($c-$a)/60;
+        $a = strtotime('2016-03-04 10:59:14');
+        $c = strtotime('2016-03-04 11:03:14');
+        $b = ($c - $a) / 60;
         dd($b);
 
 
@@ -76,8 +76,6 @@ class InvigilatePadController extends CommonController
             $fileName = '';
             //获取文件的MIME类型
             $fileMime = $file->getMimeType();
-//            \Log::info('mime',[$fileMime]);
-//            \log::info('test',['test']);
             foreach ($params as $param) {
                 $fileName .= $param . '_';
             }
@@ -462,32 +460,28 @@ class InvigilatePadController extends CommonController
     ) {
         try {
             //获取数据
-            $studentId = $request   ->  input('student_id');
-            $stationId = $request   ->  input('station_id');
-            $standardId = $request  ->  input('standard_id');
+            $studentId = $request->input('student_id');
+            $stationId = $request->input('station_id');
+            $standardId = $request->input('standard_id');
 
             $exam = Exam::doingExam();
-            if(is_null($exam))
-            {
-                throw new \Exception('当前没有正在进行的考试',-1);
+            if (is_null($exam)) {
+                throw new \Exception('当前没有正在进行的考试', -1);
             }
             //根据ID找到对应的名字
             $student = Student::findOrFail($studentId)->first();
-            if(is_null($student))
-            {
-                throw new \Exception('找不到该考生',-3);
+            if (is_null($student)) {
+                throw new \Exception('找不到该考生', -3);
             }
-            $studentName    =   $student->name;
-            $studentCode    =   $student->code;
-            $station        =   Station::findOrFail($stationId)->first();
-            if(is_null($station))
-            {
-                throw new \Exception('找不到该考站',-4);
+            $studentName = $student->name;
+            $studentCode = $student->code;
+            $station = Station::findOrFail($stationId)->first();
+            if (is_null($station)) {
+                throw new \Exception('找不到该考站', -4);
             }
-            $stationName    =   $station->name;
+            $stationName = $station->name;
             $examName = $exam->name;
 
-//            \Log::info('params', [$studentId, $stationId, $standardId]);
             //将参数拼装成一个数组
 
             $params = [
@@ -508,7 +502,6 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错', -130);
                 }
 
-//                \Log::info('params', [$studentId, $stationId, $standardId]);
                 $result = self::uploadFileBuilder($radios, $date, $params, $standardId);
             }
 
