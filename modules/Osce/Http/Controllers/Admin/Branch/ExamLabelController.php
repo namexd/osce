@@ -66,7 +66,7 @@ class ExamLabelController extends CommonController
 
     public function addExamQuestionLabel(Request $Request){
         //dd('新增试卷标签');
-        $this->validate($Request,[
+       /* $this->validate($Request,[
                'tagName'=>'require',
                'subject-id'=>'required|integer',
                'describe'=>'required'
@@ -81,7 +81,12 @@ class ExamLabelController extends CommonController
             return redirect()->back()->withInput()->withErrors('添加成功');
         }else{
             return redirect()->back()->withInput()->withErrors('系统异常');
-        }
+        }*/
+        return view('osce::admin.resourcemanage.subject_check_tag_add',
+            [
+          /*      'ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList,
+                'datalist'=>$datalist*/
+            ]);
 
     }
 
