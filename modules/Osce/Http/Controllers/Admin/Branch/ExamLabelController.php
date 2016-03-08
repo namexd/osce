@@ -27,10 +27,45 @@ class ExamLabelController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
+    public function postCheckNameOnly(Request $request){
+        //dd('验证');
+        $this->validate($request,[
+            'name'   => 'required',
+        ]);
+
+        $ExamQuestionLabelType = new ExamQuestionLabel();
+        if(!empty($request['id'])){
+            $ExamQuestionLabelTypeList = $ExamQuestionLabelType->where('name','=',$request['name'])->where('id','<>',$request['id'])->first();
+        }else{
+            $ExamQuestionLabelTypeList = $ExamQuestionLabelType->where('name','=',$request['name'])->first();
+        }
+
+        if(!empty($ExamQuestionLabelTypeList->id)){
+               return response()->json(
+                $this->success_rows(1,'标签名称已存在')
+            );
+        }else{
+            return response()->json(
+                $this->success_rows(2,'标签名称不存在')
+            );
+        }
+
+    }
+    /**
+     * 试卷标签添加验证
+     * @method  GET
+     * @url /osce/admin/exam/exam-addVerify
+     * @access public
+     * @param
+     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @date    2016年3月7日17:38:23
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
     public  function examAddLabelVerify(Request $Request){
-        $id = e(Input::get('id',''));
-        if($id){
-            $examQuestionDetail = ExamQuestionLabel::find($id);
+        $name = e(Input::get('name',''));
+        if($name){
+            $examQuestionDetail = ExamQuestionLabel::where('name','=','name');
                if($examQuestionDetail){
               //  return $this->success_data([],1,'添加项已存在');
                    return false;
@@ -59,8 +94,11 @@ class ExamLabelController extends CommonController
      */
     public  function examEditLabelVerify(Request $Request){
         $id = e(Input::get('id',''));
+        $name=Input::get('name');
         if($id){
-            $examQuestionDetail = ExamQuestionLabel::find($id);
+            $examQuestionDetail = ExamQuestionLabel::where('name','=','name');
+
+
             if($examQuestionDetail){
                 //  return $this->success_data([],1,'添加项已存在');
                 return false;
