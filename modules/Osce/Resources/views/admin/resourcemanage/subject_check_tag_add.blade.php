@@ -33,45 +33,46 @@
 <script src="{{asset('osce/admin/resourcemanage/js/resourcemanage.js')}}" ></script>
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
-
 @stop
 
 @section('content')
     <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>新增科目</h5>
-        </div>
         <div class="ibox-content">
             <div class="row">
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.topic.postAddTopic')}}">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">名称</label>
+                            <label class="col-sm-2 control-label">标签名称</label>
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="title" name="title">
+                                <input type="text" required class="form-control" id="title" name="title" placeholder="最多输入10个字">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">标签类型</label>
+                            <div class="col-sm-10">
+                                <select required name="tag" id="tagType" class="input-sm form-control tag">
+                                    <option value="">科目标签</option>
+                                    <option value="">能力标签</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control" name="desc"/>
+                                <input id="description" required  class="form-control" name="desc" placeholder="最多输入10个字"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" id="submit-btn" type="submit">保存</button>
-                                <a class="btn btn-white" href="">取消</a>
+                                <button class="btn btn-sm btn-primary" id="sure" type="submit">确定</button>
+                                <button class="btn btn-white btn-sm" id="cancel">取消</button>
                             </div>
                         </div>
                     </form>
-
                 </div>
-
             </div>
         </div>
     </div>
-
-</div>
 @stop{{-- 内容主体区域 --}}
