@@ -148,6 +148,11 @@ class AutomaticPlanArrangement
             }
             throw new \Exception('人数太多，所设时间无法完成考试', -888);
         } catch (\Exception $ex) {
+            if (ExamPlanRecord::where('exam_id', $examId)->count()) {
+                if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
+                    throw new \Exception('系统异常！', -500);
+                }
+            }
             throw $ex;
         }
     }
