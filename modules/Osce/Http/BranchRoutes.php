@@ -54,8 +54,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 
         //试卷管理-列表
-        Route::get('exampaper/exam-list',['uses'=>'ExamPaperController@getExamList','as'=>'
-        osce.admin.ExamPaperController.getExamList']);
+        Route::get('exampaper/exam-list',['uses'=>'ExamPaperController@getExamList','as'=>'osce.admin.ExamPaperController.getExamList']);
         //试卷管理-ajax获取抽题范围
         Route::get('exampaper/question-round',['uses'=>'ExamPaperController@getQuestionRound','as'=>'osce.admin.ExamPaperController.getQuestionRound']);
         //试卷管理-删除试卷
