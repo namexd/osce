@@ -576,6 +576,8 @@ class InvigilatePadController extends CommonController
      */
     private function storeAnchor($stationId, $studentId, $examId, $teacherId, array $timeAnchors)
     {
+        $connection = \DB::connection('osce_mis');
+        $connection->beginTransaction();
         try {
             //获得站点摄像机关联表
             $stationVcr = StationVcr::where('station_id', $stationId)->first();
@@ -600,8 +602,10 @@ class InvigilatePadController extends CommonController
                 }
             }
 
+            $connection->commit();
             return ['锚点上传成功！'];
         } catch (\Exception $ex) {
+            $connection->rollBack();
             throw $ex;
         }
 
@@ -730,7 +734,7 @@ class InvigilatePadController extends CommonController
                 if(!$student){
                     throw new \Exception('没有找到该学生相关信息',-1);
                 }
-                 $student->status=5;
+//                 $student->status=5;
                 if(!$student->save()){
                     throw new \Exception('替考警告失败',-2);
                 }

@@ -34,7 +34,7 @@
 
     <script type="text/javascript">
     	$(function(){
-	    	$('#Form1').bootstrapValidator({
+    		$('#Form1').bootstrapValidator({
 	              message: 'This value is not valid',
 	              feedbackIcons: {/*输入框不同状态，显示图片的样式*/
 	                  valid: 'glyphicon glyphicon-ok',
@@ -60,7 +60,7 @@
 	                  }
 	              }
 	        });
-	        $('#Form2').bootstrapValidator({
+    		$('#Form2').bootstrapValidator({
 	              message: 'This value is not valid',
 	              feedbackIcons: {/*输入框不同状态，显示图片的样式*/
 	                  valid: 'glyphicon glyphicon-ok',
@@ -86,6 +86,66 @@
 	                  }
 	              }
 	        });
+    		$("#add_role").click(function(){
+    			$('.validation-form').data('bootstrapValidator').destroy();
+    			//$('.validation-form').data('bootstrapValidator').resetForm(true);
+    			$('#Form1').bootstrapValidator({
+	              message: 'This value is not valid',
+	              feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+	                  valid: 'glyphicon glyphicon-ok',
+	                  invalid: 'glyphicon glyphicon-remove',
+	                  validating: 'glyphicon glyphicon-refresh'
+	              },
+	              fields: {/*验证*/
+	                  name: {/*键名username和input name值对应*/
+	                      message: 'The username is not valid',
+	                      validators: {
+	                          notEmpty: {/*非空提示*/
+	                              message: '用户名不能为空'
+	                          }
+	                      }
+	                  },
+	                  description: {
+	                      validators: {
+	                          notEmpty: {
+	                              /*非空提示*/
+	                              message: '角色描述不能为空'
+	                          }
+	                      }
+	                  }
+	              }
+	        	});
+    		})
+    		$(".edit_role").click(function(){
+    			$('#Form2').data('bootstrapValidator').destroy();
+    			//$('.validation-form').data('bootstrapValidator').resetForm(true);
+    			$('#Form2').bootstrapValidator({
+	              message: 'This value is not valid',
+	              feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+	                  valid: 'glyphicon glyphicon-ok',
+	                  invalid: 'glyphicon glyphicon-remove',
+	                  validating: 'glyphicon glyphicon-refresh'
+	              },
+	              fields: {/*验证*/
+	                  name: {/*键名username和input name值对应*/
+	                      message: 'The username is not valid',
+	                      validators: {
+	                          notEmpty: {/*非空提示*/
+	                              message: '用户名不能为空'
+	                          }
+	                      }
+	                  },
+	                  description: {
+	                      validators: {
+	                          notEmpty: {
+	                              /*非空提示*/
+	                              message: '角色描述不能为空'
+	                          }
+	                      }
+	                  }
+	              }
+	        });
+    		})
         })
 
         //点击关闭错误提示条
@@ -183,7 +243,7 @@
 @stop{{-- 内容主体区域 --}}
 
 @section('layer_content')
-    <form class="form-horizontal" id="Form1" novalidate="novalidate" method="post" action="{{url('/auth/add-new-role')}}">
+    <form class="form-horizontal validation-form" id="Form1" novalidate="novalidate" method="post" action="{{url('/auth/add-new-role')}}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">新增角色</h4>
