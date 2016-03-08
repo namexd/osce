@@ -57,7 +57,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //获取编辑试卷标签内容
         Route::get('exam/exam-getLabel', ['uses'=>'ExamLabelController@getEditExamQuestionLabel','as'=>'osce.admin.ExamLabelController.getEditExamQuestionLabel']);
         //编辑试卷标签内容
-        Route::get('exam/exam-editLabel', ['uses'=>'ExamLabelController@editExamQuestionLabelInsert','as'=>'osce.admin.ExamLabelController.editExamQuestionLabelInsert']);
+        Route::post('exam/exam-editLabel', ['uses'=>'ExamLabelController@editExamQuestionLabelInsert','as'=>'osce.admin.ExamLabelController.editExamQuestionLabelInsert']);
         //删除试卷标签
         Route::get('exam/exam-deleteLabel', ['uses'=>'ExamLabelController@getDeleteExamQuestionLabel','as'=>'osce.admin.ExamLabelController.getDeleteExamQuestionLabel']);
         //新增试卷标签

@@ -39,18 +39,14 @@ class ExamLabelController extends CommonController
         }else{
             $ExamQuestionLabelTypeList = $ExamQuestionLabelType->where('name','=',$request['name'])->first();
         }
-
         if(!empty($ExamQuestionLabelTypeList->id)){
-               return response()->json(
-                $this->success_rows(1,'标签名称已存在')
-            );
+            die(json_encode(['valid'=>false]));
         }else{
-            return response()->json(
-                $this->success_rows(2,'标签名称不存在')
-            );
+            die(json_encode(['valid'=>true]));
         }
 
     }
+
     /**
      * 试卷标签添加验证
      * @method  GET
@@ -183,9 +179,9 @@ class ExamLabelController extends CommonController
      * @date 2016年3月8日14:26:08
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postAddExamQuestionLabel($Request)
+    public function postAddExamQuestionLabel(Request $Request)
     {
-         //dd($Request->all());
+        //dd($Request->all());
         $this->validate($Request, [
             'name' => 'required',
             'label_type_id' => 'required|integer',
@@ -198,11 +194,12 @@ class ExamLabelController extends CommonController
         ];
         $add = ExamQuestionLabel::create($data);
         if ($add != false) {
-            return true;
+            return redirect()->back()->withInput()->withErrors('添加成功');
         } else {
-            return false;
+            return redirect()->back()->withInput()->withErrors('添加失败');
         }
     }
+
     /**
      * 获取编辑试卷标签内容
      * @method  GET
@@ -224,7 +221,7 @@ class ExamLabelController extends CommonController
         $data = [
             'examQuestionDetail' => $examQuestionDetail,
         ];
-        return view('osce::admin.resourcemanage.subject_check_tag_edit',$data);
+        return  $this->success_data(['data'=>$data,1,'success']);
     }
 
     /**
@@ -237,8 +234,8 @@ class ExamLabelController extends CommonController
      * @date    2016年3月7日17:49:25
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function editExamQuestionLabelInsert($Request){
-        //dd($Request->all());
+    public function editExamQuestionLabelInsert(Request $Request){
+
         $this->validate($Request, [
             'id'=>'required',
             'name' => 'required',
@@ -253,13 +250,14 @@ class ExamLabelController extends CommonController
         $examTable=new ExamQuestionLabel();
         $add =  $examTable->where('id','=',e(Input::get('id')))->update($data);
         if($data != false){
-           // return redirect()->back()->withInput()->withErrors('修改成功');
-            return true;
+            return redirect()->back()->withInput()->withErrors('修改成功');
+
         }else{
-            return false;
-           // return redirect()->back()->withInput()->withErrors('系统异常');
+
+            return redirect()->back()->withInput()->withErrors('系统异常');
         }
     }
+
 
 
     /**
