@@ -69,9 +69,6 @@
 						<div class="ibox-title" style="border:none;">
 							<h5>微信</h5>
 						</div>
-
-						{{--var html ='<input  style="height: 100px;" type="text" class="form-control name edit-name" value="' name="name" readonly="readonly"/>'--}}
-
 						<div class="ibox-content" style="border:none;">
 							<div class="row">
 								<div class="col-md-12 ">
@@ -177,13 +174,13 @@
 												请把当前页面中的（使用说明->（3）->第一项：接口类型的值改为（自定义菜单），第二项：接口列表的值改为（自定义菜单创建接口/menu/create））
 												然后将刚才的access_token值放入 （三、参数列表->access_token中）<br/>
 
-												请输入appId<input style="width: 100px;"type="text"  class="form-control name edit-name"  id="appId"/>
-												请输入公众号域名<input style="width: 100px;"type="text"  class="form-control name edit-name" id="urls"/>
-												请输入用户设置的encoding_key<input style="width: 100px;"type="text"  class="form-control name edit-name" id="encoding_key"/>
+												请输入appId<input style="width: 150px;"type="text"  class="form-control name edit-name"  id="appId"/>
+												请输入公众号域名<input style="width: 150px;"type="text"  class="form-control name edit-name" id="urls"/>
+												请输入用户设置的encoding_key<input style="width: 150px;"type="text"  class="form-control name edit-name" id="encoding_key"/>
 												  <input  class="help" type="button" value="点击生成"/>
 											</p>
 											将下面的数据复制放入（body）中 点击检查问题<br/>
-												<div class="div_box">
+												<div class="div_box" id="div_show">
 													<p>{</p>
 													<p class="pdl2">"button":[</p>
 													<p class="pdl4">{</p>
