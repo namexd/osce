@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Entities\QuestionBankEntities;
+
 use Illuminate\Database\Eloquent\Model;
 class ExamQuestionLabel extends  Model
 {

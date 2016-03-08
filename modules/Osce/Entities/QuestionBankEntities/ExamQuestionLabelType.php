@@ -31,7 +31,8 @@ class ExamQuestionLabelType extends  Model
      */
     public function getLabAndType(){
         $builder = $this;
-
+        $builder = $builder->with('LabelTypeAndLabel')->get();
+        dd($builder);
     }
 }
 
