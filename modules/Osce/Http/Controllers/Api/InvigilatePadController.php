@@ -547,7 +547,7 @@ class InvigilatePadController extends CommonController
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
             $teacherId = $request->input('user_id');
-
+            \Log::debug('time', [$timeAnchor]);
             //将戳过来的字符串变成数组
             $timeAnchor = explode(',', $timeAnchor);
             \Log::debug('params', [$stationId, $studentId, $examId, $teacherId, $timeAnchor]);
@@ -573,7 +573,7 @@ class InvigilatePadController extends CommonController
      * @internal param $examScreenId
      * @internal param array $timeAnchors
      */
-    private function storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchors)
+    private function storeAnchor($stationId, $studentId, $examId, $teacherId, array $timeAnchors)
     {
         try {
             //获得站点摄像机关联表
