@@ -156,11 +156,13 @@ class ExamQuestion extends Model
             }
         }
         //向试题和标签中间表插入数据
-        $examQuestionLabelRelationData['exam_question_id'] = $examQuestion->id;
-        $examQuestionLabelRelationData['create_user_id'] = Auth::user()->id;
-        if (!$examQuestionLabelRelation = ExamQuestionLabelRelation::create($examQuestionLabelRelationData)) {
-            DB::rollback();
-            return false;
+        foreach ($examQuestionLabelRelationData as $key => $value) {
+            $examQuestionLabelRelationData['exam_question_id'] = $examQuestion->id;
+            $examQuestionLabelRelationData['create_user_id'] = Auth::user()->id;
+            if (!$examQuestionLabelRelation = ExamQuestionLabelRelation::create($examQuestionLabelRelationData)) {
+                DB::rollback();
+                return false;
+            }
         }
         DB::commit();
         return true;
