@@ -62,8 +62,7 @@ class ExamPaperController extends CommonController
     public function getQuestionRound(Request $request)
     {
         $LabelType= new ExamQuestionLabelType();
-        $LabelTypeList = $LabelType->getLabAndType();
-
-        dd($LabelTypeList);
+        $LabelTypeList = $LabelType->getLabAndType()->toArray();
+        $this->success_data($LabelTypeList);
     }
 }
