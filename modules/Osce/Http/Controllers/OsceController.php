@@ -13,6 +13,9 @@ class OsceController extends Controller {
 			$SysMenus	=	new SysMenus();
 
 			$user	=	\Auth::user();
+			if(!$user){
+				throw new \Exception('没有找到用户，请登录');
+			}
 			//sys_user_role
 			$connection	=	\DB::connection('sys_mis');
 			$userRole	=	$connection	->	table('sys_user_role')	->	where('user_id','=',$user->id)->first();
