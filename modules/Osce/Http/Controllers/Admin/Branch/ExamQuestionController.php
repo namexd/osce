@@ -101,8 +101,15 @@ class ExamQuestionController extends CommonController
         foreach($examQuestionLabelTypeList as $k=>$v){
             $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;
         }
-        //dd($examQuestionLabelTypeList);
-
+/*        foreach($examQuestionLabelTypeList as $k=>$v){
+            $a[$k]['id']=$v->id;
+            $a[$k]['name']=$v->name;
+            foreach($v['examQuestionLabelList'] as $key=>$item){
+                $a[$k]['examQuestionLabelList'][$key]['id'] = $item->id;
+                $a[$k]['examQuestionLabelList'][$key]['name']= $item->name;
+            }
+        }
+        dd($a);*/
         return view('osce::admin.resourcemanage.subject_manage_add', [
             'examQuestionTypeList'       => $examQuestionTypeList, //题目类型列表
             'examQuestionLabelTypeList' => $examQuestionLabelTypeList, //考核范围列表
@@ -146,7 +153,7 @@ class ExamQuestionController extends CommonController
         );
         //试题和标签中间表数据
         $examQuestionLabelRelationData = array(
-            'exam_paper_label_id' =>$request->input('examPaperLabelId'),//试卷标签id
+            'exam_question_label_id' =>$request->input('examQuestionLabelId'),//标签id
         );
         $examQuestionModel= new ExamQuestion();
         $result = $examQuestionModel->addExamQuestion($examQuestionData,$examQuestionItemData,$examQuestionLabelRelationData);
@@ -174,19 +181,35 @@ class ExamQuestionController extends CommonController
     {
         //验证
         $this->validate($request, [
-            'id' => 'required|integer',//试题id
+            'id' => 'sometimes|integer',//试题id
         ]);
         //试题id
         $id = $request->input('id');
+
         //获取题目类型列表
         $examQuestionTypeModel= new ExamQuestionType();
         $examQuestionTypeList = $examQuestionTypeModel->examQuestionTypeList();
-        //获取考核范围列表（标签类型列表）
+
+        //对应考核范围列表（标签类型列表和标签列表）
         $examQuestionLabelTypeModel = new ExamQuestionLabelType();
         $examQuestionLabelTypeList = $examQuestionLabelTypeModel->examQuestionLabelTypeList();
+        foreach($examQuestionLabelTypeList as $k=>$v){
+            $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;
+        }
+
         //获取试题信息
         $examQuestionModel= new ExamQuestion();
-        $list = $examQuestionModel->getExamQuestionById($id);
+        $list = $examQuestionModel->getExamQuestionById(1);
+        //根据试题信息获取对应子项表列表
+        $examQuestionItemList = $list->examQuestionItem;
+
+        //根据试题信息获取对应的标签列表
+        $examQuestionLabelList = $list->ExamQuestionLabelRelation[''];
+
+        dd($examQuestionLabelList);
+
+
+
         $datas = [];
         if(count($list) > 0){
             foreach($list as $k=>$item){
@@ -197,11 +220,11 @@ class ExamQuestionController extends CommonController
                     'examQuestionItemName'      => $item->examQuestionItemName,//选项名称
                     'examQuestionItemContent'  => $item->examQuestionItemContent,//选项内容
                     'answer'                      => $item->answer,//正确答案
-                    'exam_paper_label_id'       => $item->exam_paper_label_id,//考核范围
+                    'exam_question_label_id'    => $item->exam_question_label_id,//标签id（考核范围）
                 ];
             }
         }
-        dd($datas);
+
         return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
             'data'                          =>$datas ,//试题信息

@@ -177,8 +177,7 @@ class ExamQuestion extends Model
      */
     public function getExamQuestionById($id)
     {
-        $builder = $this;
-        $builder = $builder->leftJoin('exam_question_item', function ($join) {//试题子项表
+       /* $builder = $builder->leftJoin('exam_question_item', function ($join) {//试题子项表
             $join->on('exam_question.id', '=', 'exam_question_item.exam_question_id');
 
         })->leftJoin('exam_question_label_relation', function ($join) {//试题和标签中间表
@@ -186,19 +185,18 @@ class ExamQuestion extends Model
 
         })->leftJoin('exam_question_type', function ($join) {//题目类型表
             $join->on('exam_question.exam_question_type_id', '=', 'exam_question_type.id');
-        });
-        $data = $builder->where('exam_question.id','=',$id)
-            ->groupBy('exam_question.id')
+        });*/
+        $data = $this->where('exam_question.id','=',$id)
             ->select([
             'exam_question.id',//试题id
             'exam_question.exam_question_type_id',//题目类型
             'exam_question.name',//题目
-            'exam_question_item.name as examQuestionItemName',//选项名称
-            'exam_question_item.content as examQuestionItemContent',//选项内容
             'exam_question.answer',//正确答案
             'exam_question.parsing',//解析
-            'exam_question_label_relation.exam_paper_label_id',//考核范围
-        ]);
+            //'exam_question_label_relation.exam_question_label_id',//标签id（考核范围）
+                // 'exam_question_item.name as examQuestionItemName',//选项名称
+                // 'exam_question_item.content as examQuestionItemContent',//选项内容
+        ])->first();
         return $data;
     }
 
