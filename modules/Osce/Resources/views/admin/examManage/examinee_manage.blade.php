@@ -54,6 +54,7 @@
     'background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}',
     'excel':'{{route('osce.admin.exam.postImportStudent')}}',
     'id':'{{$id}}',
+    'judgeUrl':'{{route('osce.admin.exam.postJudgeStudent')}}',
     'deleteUrl':'{{route('osce.admin.exam.postDelStudent')}}'}"/>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
