@@ -119,18 +119,18 @@ class ExamQuestionController extends CommonController
      */
     public function postExamQuestionAdd(Request $request)
     {
-        dd($request->all());
         $this->validate($request, [
             'examQuestionTypeId'    =>'sometimes|integer',//试题表
-            'name'                     => 'required|max:32|string',
-            'parsing'                 => 'sometimes|max:255|string',
-            'answer'                  => 'required|max:32|string',
+            'name'                     => 'required|string',
+            'parsing'                 => 'sometimes|string',
+            'answer'                  => 'required',
 
-            'examQuestionItemName'  => 'required|max:32|string',//试题子项表
-            'content'                 => 'sometimes|max:255|string',
+            'examQuestionItemName'  => 'required|string',//试题子项表
+            'content'                 => 'sometimes|string',
 
             'examQuestionLabelId'      =>'sometimes|integer',//试题和标签中间表
         ]);
+        dd($request->all());
         //试题表数据
         $examQuestionData =array(
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id

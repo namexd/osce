@@ -9,7 +9,7 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
-/**ÌâÄ¿ÀàĞÍÄ£ĞÍ
+/**ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
  * Class ExamQuestionLabel
  * @package Modules\Osce\Entities
  */
@@ -24,7 +24,7 @@ class ExamQuestionType extends Model
     protected $hidden = [];
     protected $fillable = ['id', 'name', 'status'];
 
-    /**»ñÈ¡ÌâÄ¿ÀàĞÍÁĞ±í
+    /**ï¿½ï¿½È¡ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½
      * @method
      * @url /osce/
      * @access public
@@ -33,7 +33,7 @@ class ExamQuestionType extends Model
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function examQuestionTypeList(){
-        $data = $this->select('id','name')->orderBy('created_at','desc')->get();
+        $data = $this->select('id','name')->get();
         return $data;
     }
 }

@@ -175,18 +175,6 @@ function subject_manage_add(){
             }
         });
     });
-    //科目标签
-    $(".subjectTag").select2({
-
-    });
-    //能力标签
-    $(".abilityTag").select2({
-
-    });
-    //技能标签
-    $(".skillTag").select2({
-
-    })
 }
 
 

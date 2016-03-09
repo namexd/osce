@@ -33,12 +33,22 @@
                 <div class="input-group" style="width: 100%;margin:20px 0;">
                     <form action="" method="get" class="left">
                         <label for="" class="pull-left exam-type">试题类型：</label>
-                        <select name="examType" id="examType" class="input-sm form-control exam_select" style="width: 250px;height: 34px">
-
+                        <select name="examQuestionLabelTypeId" id="examType" class="input-sm form-control exam_select" style="width: 250px;height: 34px">
+                                <option value="">全部</option>
+                            @if(!empty(@$examQuestionLabelTypeList))
+                                @foreach(@$examQuestionLabelTypeList as $val)
+                                    <option value="{{@$val['id']}}">{{@$val['name']}}</option>
+                                @endforeach
+                            @endif
                         </select>
                         <label for="" class="pull-left subject-type" style="margin-left: 20px;">题目类型：</label>
-                        <select name="subjectType" id="subjectType" class="input-sm form-control subject_select" style="width: 250px;height: 34px">
-
+                        <select name="examQuestionTypeId" id="subjectType" class="input-sm form-control subject_select" style="width: 250px;height: 34px">
+                            <option value="">全部</option>
+                            @if(!empty(@$examQuestionTypeList))
+                                @foreach(@$examQuestionTypeList as $val)
+                                    <option value="{{@$val['id']}}">{{@$val['name']}}</option>
+                                @endforeach
+                            @endif
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">搜索</button>
                     </form>
