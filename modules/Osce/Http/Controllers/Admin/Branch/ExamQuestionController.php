@@ -229,7 +229,7 @@ class ExamQuestionController extends CommonController
             $data['answer'] = $list->answer;//正确答案
             $data['parsing'] = $list->parsing;//解析
         }
-     
+        //dd($examQuestionLabelTypeList);
         return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
             'data'                          =>$data ,//试题信息
