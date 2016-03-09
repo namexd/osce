@@ -49,15 +49,14 @@
                             </tr>
                         </thead>
                         <tbody class="subjectBody">
-                            {{$data['examList']}}
-                            @if(!empty(@$data['examList']))
-                                @foreach(@$data['examList'] as $val)
+                        @if(!empty(@$data))
+                                @foreach(@$data as $k=>$val)
                                     <tr>
-                                        <td>{{@$val+1}}</td>
-                                        <td>{{@$val['ExaminationPaper']['name']}}</td>
-                                        <td>{{@$val['ExaminationPaper']['num']}}</td>
-                                        <td>{{@$val['ExaminationPaper']['total_score']}}</td>
-                                        @if($val['ExaminationPaper']['type']===1)
+                                        <td>{{@$k+1}}</td>
+                                        <td>{{@$val['name']}}</td>
+                                        <td>{{@$val['num']}}</td>
+                                        <td>{{@$val['total_score']}}</td>
+                                        @if($val['type']===1)
                                             <td>随机试卷</td>
                                         @else
                                             <td>统一试卷</td>
@@ -68,7 +67,7 @@
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
                                             </a>
-                                            <a href="javascript:void(0)">
+                                            <a href="{{route('osce.admin.ExamPaperController.getDeleteExam',['id'=>@$val['id']])}}">
                                         <span class="read state2">
                                             <i class="fa fa-trash-o fa-2x"></i>
                                         </span>
@@ -79,14 +78,13 @@
                             @endif
                         </tbody>
                     </table>
-                    <div class="pull-left">共10条</div>
-                    <div class="btn-group pull-right">
-                        <ul class="pagination">
-                            <li class="disabled"><span>«</span></li>
-                            <li class="active"><span>1</span></li>
-                            <li><a href="">2</a></li>
-                            <li><a href="" rel="next">»</a></li>
-                        </ul>
+                    <div class="pull-left">
+                        共{{$data->total()}}条
+                    </div>
+                    <div class="pull-right">
+
+                        {!! $data->appends($keyword)->render() !!}
+
                     </div>
                 </div>
             </div>

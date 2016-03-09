@@ -39,8 +39,8 @@ class ExamPaperController extends CommonController
         //获取试卷与试题构造表数据
         $examPaper= new ExamPaper();
         $examList = $examPaper->getExamPaperlist($keyword);
-        //dd($examList);
-        return view('osce::admin.resourcemanage.subject_papers', ['data' => $examList]);
+        //dd($examList->toArray());
+        return view('osce::admin.resourcemanage.subject_papers', ['data' => $examList,'keyword' => $keyword]);
     }
 
     /**
@@ -186,8 +186,25 @@ class ExamPaperController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getAddExams(Request $request){
-        $data = $request->all();
-        $examPaper = new ExamPaper();
-        $addExam  = $examPaper -> addExams($data);
+        DB::beginTransaction();
+
+        $data = $request -> all();
+        $mode = $request -> mode;
+        $type = $request -> type;
+
+        if($mode == 1 && $type == 1){//自动-随机
+
+        }elseif($mode == 1 && $type == 2){//自动-统一
+
+        }elseif($mode == 2 && $type == 2){//手动-统一
+
+        }
+
+        //向试卷表插入基础数据
+        $examPaper = ExamPaper::create($data);
+        if(!$examPaper){
+            DB::rollback();
+            return false;
+        }
     }
 }
