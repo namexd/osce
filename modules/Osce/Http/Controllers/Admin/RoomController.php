@@ -92,6 +92,7 @@ class RoomController extends CommonController
         $data = $model->showRoomList("", $type, $id);
 
 
+
         $cateList   =   Area::groupBy('cate')->select('cate')->get();
         //TODO:zhoufuxiang，查询没被其他考场关联的摄像机
         $model = new Vcr();
@@ -146,14 +147,15 @@ class RoomController extends CommonController
                 $room->editRoomData($id, $vcr_id, $formData);
             //TODO: Zhoufuxiang 16-3-7
             } elseif($type == '考场'){
-                unset($formData['cate']);
+                throw new \Exception('不能够修改为考场',-120);
+//                unset($formData['cate']);
                 //删除对应场所
-                $area = new Area();
-                if(!$area->deleteArea($id)){
-                    throw new \Exception('场所修改失败！',-120);
-                }
-                //新建考场
-                $room->createRoom($formData,$vcr_id,$user->id);
+//                $area = new Area();
+//                if(!$area->deleteArea($id)){
+//                    throw new \Exception('场所修改失败！',-120);
+//                }
+//                //新建考场
+//                $room->createRoom($formData,$vcr_id,$user->id);
             } else {
                 $area = new Area();
                 $area->editAreaData($id, $vcr_id, $formData);
