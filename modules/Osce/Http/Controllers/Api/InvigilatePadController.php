@@ -531,7 +531,6 @@ class InvigilatePadController extends CommonController
      */
     public function postStoreAnchor(Request $request)
     {
-        \Log::debug('param', $request->all());
         try {
             //验证
             $this->validate($request, [
@@ -548,11 +547,9 @@ class InvigilatePadController extends CommonController
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
             $teacherId = $request->input('user_id');
-            \Log::debug('time', [$timeAnchor]);
+
             //将戳过来的字符串变成数组
             $timeAnchor = explode(',', $timeAnchor);
-            \Log::debug('params', [$stationId, $studentId, $examId, $teacherId, $timeAnchor]);
-
 
             return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId,
                 $timeAnchor)));
