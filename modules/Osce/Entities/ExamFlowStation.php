@@ -140,6 +140,9 @@ class ExamFlowStation extends CommonModel
                 }
             }
 
+            //如果有排考，删除排考数据
+            ExamPlanRecord::deleteRecord($examId);
+
             foreach ($formData as $key => $value) {
                 //准备数据，插入station_teacher表
                 $this->stationTeacherAssociation($examId, $value, $user);
