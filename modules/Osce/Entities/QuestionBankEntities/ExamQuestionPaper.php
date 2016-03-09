@@ -37,8 +37,8 @@ class ExamQuestionPaper extends CommonModel
         $builder = $builder->leftjoin('exam_paper_structure',function($join){
                 $join->on('exam_paper_structure.exam_paper_id','=','exam_paper.id');
             })->select('exam_paper.name','exam_paper.type','exam_paper_structure.num','exam_paper_structure.total_score')
-            ->orderBy('exam_paper.id','desc')->paginate(config('msc.page_size'));
-
+            ->orderBy('exam_paper.id','desc')->paginate(config('osce.page_size'));
+        //dd($builder);
         return $builder;
     }
 

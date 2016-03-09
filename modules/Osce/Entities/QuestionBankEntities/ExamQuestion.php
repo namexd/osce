@@ -251,6 +251,7 @@ class ExamQuestion extends Model
      * @method
      * @url /osce/
      * @access public
+     *
      * @param $examQuestionData 试题表数据
      * @param $examQuestionItemData 试题子项表数据
      * @param $examQuestionLabelRelationData 试题和标签中间表数据
@@ -273,12 +274,12 @@ class ExamQuestion extends Model
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamQuestion($data){
-        //$builder = $this->whereIn('exam_paper_structure_label.');
+        $_GET['currentPage'] = 2;
         $builder = $this->leftjoin('exam_question_type',function($join){
             $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
-        })->with(['exam_question_label_relation'=>function($relation){
-            $relation->with('exam_question_label');
-        }])->get();
+        })->with(['exam_question_label_relation'=>function($relation) use($data){
+            $relation->with('exam_question_label')->whereIn('exam_question_label_relation.exam_question_label_id',$data);
+        }])->paginate(config('msc.page_size'));
         return $builder;
     }
 }
