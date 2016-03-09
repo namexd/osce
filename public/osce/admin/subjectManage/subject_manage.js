@@ -146,7 +146,6 @@ function subject_manage(){
                 type:"get",
                 cache:false,
                 success:function(res){
-                    console.log(res);
                     if(res.code == "1"){
                         location.href = location.href;
                     }else{
@@ -155,7 +154,11 @@ function subject_manage(){
                 }
             })
         })
-    })
+    });
+    //新增
+    $("#add").click(function(){
+        //location.href=;
+    });
 }
 
 
