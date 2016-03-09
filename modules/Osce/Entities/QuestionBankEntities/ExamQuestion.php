@@ -51,9 +51,17 @@ class ExamQuestion extends Model
     public function showExamQuestionList($formData = '')
     {
         $builder = $this;
-        if ($formData['examQuestionTypeId']) {
-            $builder = $builder->where('exam_question_label.exam_paper_label_id', '=', $formData['examPaperLabelId']);
+        //标签类型
+        if ($formData['examQuestionLabelTypeId']) {
+            //根据标签类型id获取对应的标签id
+            $examQuestionLabelModel = new ExamQuestionLabel();
+            $examQuestionLabelId = $examQuestionLabelModel->where('label_type_id','=',$formData['examQuestionLabelTypeId'])->select('id')->get()->toArray();
+            if(count($examQuestionLabelId)>0){
+                $builder = $builder->whereIn('exam_question_label_relation.exam_question_label_id',$examQuestionLabelId);
+            }
         }
+        //dd($examQuestionLabelId);
+        //题目类型
         if ($formData['examQuestionTypeId']) {
             $builder = $builder->where('exam_question.exam_question_type_id', '=', $formData['examQuestionTypeId']);
         }
@@ -71,8 +79,10 @@ class ExamQuestion extends Model
             'exam_question.id',//试题id
             'exam_question.name',//试题名称
             'exam_question_type.name as examQuestionTypeName',//题目类型
+            'exam_question_label_relation.exam_question_label_id',//标签id
         ]);
         $pageSize = config('page_size');
+
         return $builder->paginate($pageSize);
     }
 
@@ -177,15 +187,7 @@ class ExamQuestion extends Model
      */
     public function getExamQuestionById($id)
     {
-       /* $builder = $builder->leftJoin('exam_question_item', function ($join) {//试题子项表
-            $join->on('exam_question.id', '=', 'exam_question_item.exam_question_id');
 
-        })->leftJoin('exam_question_label_relation', function ($join) {//试题和标签中间表
-            $join->on('exam_question.id', '=', 'exam_question_label_relation.exam_question_id');
-
-        })->leftJoin('exam_question_type', function ($join) {//题目类型表
-            $join->on('exam_question.exam_question_type_id', '=', 'exam_question_type.id');
-        });*/
         $data = $this->where('exam_question.id','=',$id)
             ->select([
             'exam_question.id',//试题id
@@ -193,10 +195,7 @@ class ExamQuestion extends Model
             'exam_question.name',//题目
             'exam_question.answer',//正确答案
             'exam_question.parsing',//解析
-            //'exam_question_label_relation.exam_question_label_id',//标签id（考核范围）
-                // 'exam_question_item.name as examQuestionItemName',//选项名称
-                // 'exam_question_item.content as examQuestionItemContent',//选项内容
-        ])->first();
+            ])->first();
         return $data;
     }
 

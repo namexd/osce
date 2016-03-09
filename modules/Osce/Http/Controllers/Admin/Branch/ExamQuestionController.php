@@ -28,10 +28,10 @@ class ExamQuestionController extends CommonController
     public function showExamQuestionList(Request $request)
     {
         $this->validate($request, [
-            'examPaperLabelId' => 'sometimes|integer',//试题类型id
-            'examQuestionTypeId' => 'sometimes|integer',//题目类型id
+            'examQuestionLabelTypeId' => 'sometimes|integer',//试题类型id(标签类型)
+            'examQuestionTypeId'       => 'sometimes|integer',//题目类型id
         ]);
-        $formData['examPaperLabelId'] = $request->input('examPaperLabelId'); //试题类型id
+        $formData['examQuestionLabelTypeId'] = $request->input('examQuestionLabelTypeId'); //试题类型id(2)
         $formData['examQuestionTypeId'] = $request->input('examQuestionTypeId');//题目类型id
 
         //获取试题类型列表
