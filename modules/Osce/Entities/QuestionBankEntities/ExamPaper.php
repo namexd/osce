@@ -47,7 +47,7 @@ class ExamPaper extends CommonModel
 
         $builder = $builder->leftjoin('exam_paper_structure',function($join){
                 $join->on('exam_paper_structure.exam_paper_id','=','exam_paper.id');
-            })->select('exam_paper.name','exam_paper.type','exam_paper_structure.num','exam_paper_structure.total_score')
+            })->select('exam_paper.id','exam_paper.name','exam_paper.type','exam_paper_structure.num','exam_paper_structure.total_score')
             ->orderBy('exam_paper.id','desc')->paginate(config('osce.page_size'));
         //dd($builder);
         return $builder;
@@ -88,7 +88,6 @@ class ExamPaper extends CommonModel
      */
     public function addExams($data){
         DB::beginTransaction();
-
         //向试卷表插入基础数据
         $examPaper = ExamPaper::create($data);
         if(!$examPaper){
