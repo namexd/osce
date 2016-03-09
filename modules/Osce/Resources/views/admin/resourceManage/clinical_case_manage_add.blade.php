@@ -18,9 +18,6 @@
                         /*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '病例名称不能为空'
-                            },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
                             remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
                                 url: '{{route('osce.admin.case.postNameUnique')}}',//验证地址
@@ -33,6 +30,9 @@
                                         name: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }
+                            },
+                            notEmpty: {/*非空提示*/
+                                message: '病例名称不能为空'
                             }
                         }
                     }

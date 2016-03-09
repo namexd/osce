@@ -50,13 +50,6 @@
                     },
                     code: {
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '学号不能为空'
-                            },
-                            regexp:{
-                                regexp: /^\d+$/,
-                                message: '请输入正确的学号'
-                            },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
                             remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
                                 url: '{{route("osce.admin.exam.postExamSequenceUnique")}}',//验证地址
@@ -71,18 +64,18 @@
                                         code: $('[name="whateverNameAttributeInYourForm"]').val()
                                     };
                                 }
+                            },
+                            notEmpty: {/*非空提示*/
+                                message: '学号不能为空'
+                            },
+                            regexp:{
+                                regexp: /^\d+$/,
+                                message: '请输入正确的学号'
                             }
                         }
                     },
                     idcard: {
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '身份证号不能为空'
-                            },
-                            regexp: {
-                                regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
-                                message: '请输入正确的身份证号'
-                            },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
                             remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
                                 url: '{{route("osce.admin.exam.postExamSequenceUnique")}}',//验证地址
@@ -97,14 +90,18 @@
                                         idcard: $('[name="whateverNameAttributeInYourForm"]').val()
                                     };
                                 }
+                            },
+                            notEmpty: {/*非空提示*/
+                                message: '身份证号不能为空'
+                            },
+                            regexp: {
+                                regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                                message: '请输入正确的身份证号'
                             }
                         }
                     },
                     exam_sequence:{
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '准考证号不能为空'
-                            },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
                             remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
                                 url: '{{route("osce.admin.exam.postExamSequenceUnique")}}',//验证地址
@@ -119,23 +116,14 @@
                                         exam_sequence: $('[name="whateverNameAttributeInYourForm"]').val()
                                     };
                                 }
+                            },
+                            notEmpty: {/*非空提示*/
+                                message: '准考证号不能为空'
                             }
                         }
                     },
                     mobile: {
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '手机号码不能为空'
-                            },
-                            stringLength: {
-                                min: 11,
-                                max: 11,
-                                message: '请输入11位手机号码'
-                            },
-                            regexp: {
-                                regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
-                                message: '请输入正确的手机号码'
-                            },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
                             remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
                                 url: '{{route("osce.admin.exam.postExamSequenceUnique")}}',//验证地址
@@ -150,6 +138,18 @@
                                         mobile: $('[name="whateverNameAttributeInYourForm"]').val()
                                     };
                                 }
+                            },
+                            notEmpty: {/*非空提示*/
+                                message: '手机号码不能为空'
+                            },
+                            stringLength: {
+                                min: 11,
+                                max: 11,
+                                message: '请输入11位手机号码'
+                            },
+                            regexp: {
+                                regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
+                                message: '请输入正确的手机号码'
                             }
                         }
                     },
