@@ -65,10 +65,10 @@ class TestResult extends CommonModel
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
-                $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
+                 $this->getSaveExamEvaluate($scoreData, $ExamResultId);
 
             } else {
-                throw new \Exception('成绩提交失败',-6);
+                throw new \Exception('成绩提交失败',-1000);
             }
             $connection->commit();
             return $testResult;
@@ -78,7 +78,18 @@ class TestResult extends CommonModel
         }
 
     }
+    //upload_document_id 音频 图片id集合去修改
+    private function getSaveExamAttach($uploadDocumentId,$ExamResultId){
+        $AttachData = TestAttach::whereIn('id',$uploadDocumentId)->get();
+        foreach($AttachData as $item){
+            $item->test_result_id = $ExamResultId;
+            if(!$item->save()){
+                throw new \Exception('修改图片音频结果失败',-1400);
+            }
 
+        }
+
+    }
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
     {
@@ -88,7 +99,7 @@ class TestResult extends CommonModel
             $examScore=ExamScore::create($item);
             if(!$examScore)
             {
-                throw new \Exception('保存分数详情失败',-5);
+                throw new \Exception('保存分数详情失败',-1300);
             }
         }
     }

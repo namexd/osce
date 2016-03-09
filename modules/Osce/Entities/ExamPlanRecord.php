@@ -124,4 +124,26 @@ class ExamPlanRecord extends CommonModel
             throw $ex;
         }
     }
+
+    /**
+     * 清空某场考试的排考记录
+     * @param $examId
+     * @return bool
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-09 16:11
+     */
+    static public function deleteRecord($examId)
+    {
+        try {
+            if (ExamPlanRecord::where('exam_id', $examId)->first()) {
+                if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
+                    throw new \Exception('重置排考记录表失败！');
+                }
+            }
+            return true;
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 }
