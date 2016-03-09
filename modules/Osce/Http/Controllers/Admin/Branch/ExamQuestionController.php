@@ -47,12 +47,12 @@ class ExamQuestionController extends CommonController
         $data = $examQuestionModel->showExamQuestionList($formData);
 
         //获取考核范围
-        $content = array();
+        $examQuestionLabelName = array();
         foreach($data as $k1=>$v1) {
             foreach ($v1->ExamQuestionLabelRelation as $k2 => $v2) {
-                 $content[$k1][$k2] = $v2->ExamQuestionLabel['name'];
+                $examQuestionLabelName[$k1][$k2] = $v2->ExamQuestionLabel['name'];
             }
-            $content[$k1]['examQuestionLabelName'] = implode(',',$content[$k1]);
+            $examQuestionLabelName[$k1] = implode(',',$examQuestionLabelName[$k1]);
         }
 
         $list = [];
@@ -62,7 +62,7 @@ class ExamQuestionController extends CommonController
                     'number'                       => $k+1,//序号
                     'id'                            => $item->id,//试题id
                     'name'                          => $item->name,//试题名称
-                    'examQuestionLabelName'      => $content[$k]['examQuestionLabelName'],//考核范围
+                    'examQuestionLabelName'      => $examQuestionLabelName[$k],//考核范围
                     'examQuestionTypeName'       => $item->examQuestionTypeName,//题目类型
                 ];
             }
