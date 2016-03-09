@@ -31,8 +31,8 @@ class OsceController extends Controller {
 		}
 		catch(\Exception $ex)
 		{
-
-			return redirect()->route('osce.admin.getIndex')->withErrors($ex->getMessage());
+//			return redirect()->route('osce.admin.getIndex')->withErrors($ex->getMessage());
+			return redirect()->route('osce.admin.getIndex');	//Zhoufuxiang 2016-3-9
 		}
 		return view('osce::admin.layouts.admin',['list'=>$MenusList,'role_id'=>$userRole->role_id]);
 	}
