@@ -76,9 +76,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>题目</label>
                                 <div class="col-sm-10">
-                                    <textarea name="name" id="subjectName" cols="10" rows="5" class="form-control">
-
-                                    </textarea>
+                                    <textarea name="name" id="subjectName" cols="10" rows="5" class="form-control"></textarea>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -88,7 +86,7 @@
                                     <div class="ibox float-e-margins">
                                         <div class="ibox-title">
                                             <div class="ibox-tools">
-                                                <button class="btn btn-primary" id="addChose">新增选项</button>
+                                                <span class="btn btn-primary" id="addChose">新增选项</span>
                                             </div>
                                         </div>
                                         <div class="ibox-content">
@@ -111,13 +109,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td>
-                                                            <a href="javascript:void(0)">
-                                                                <span class="read state2 detail">
-                                                                    <i class="fa fa-trash-o fa-2x"></i>
-                                                                </span>
-                                                            </a>
-                                                        </td>
+                                                        <td></td>
                                                     </tr>
                                                     <tr>
                                                         <td>B</td>
@@ -129,13 +121,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td>
-                                                            <a href="javascript:void(0)">
-                                                                <span class="read state2 detail">
-                                                                    <i class="fa fa-trash-o fa-2x"></i>
-                                                                </span>
-                                                            </a>
-                                                        </td>
+                                                        <td></td>
                                                     </tr>
                                                     <tr>
                                                         <td>C</td>
@@ -147,13 +133,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td>
-                                                            <a href="javascript:void(0)">
-                                                                <span class="read state2 detail">
-                                                                    <i class="fa fa-trash-o fa-2x"></i>
-                                                                </span>
-                                                            </a>
-                                                        </td>
+                                                        <td></td>
                                                     </tr>
                                                     <tr>
                                                         <td>D</td>
@@ -166,7 +146,7 @@
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <a href="javascript:void(0)">
+                                                            <a href="javascript:void(0)" class="delete">
                                                                 <span class="read state2 detail">
                                                                     <i class="fa fa-trash-o fa-2x"></i>
                                                                 </span>
@@ -185,22 +165,22 @@
                                 <div class="col-sm-10" id="checkbox_div">
                                     <label class="check_label checkbox_input check_top">
                                         <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="answer[]"  value="A">
+                                        <input type="checkbox" name="answer[]"  value="A" class="min">
                                         <span class="check_name">A</span>
                                     </label>
                                     <label class="check_label checkbox_input check_top">
                                         <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="answer[]"  value="B">
+                                        <input type="checkbox" name="answer[]"  value="B" class="min">
                                         <span class="check_name">B</span>
                                     </label>
                                     <label class="check_label checkbox_input check_top">
                                         <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="answer[]"  value="C">
+                                        <input type="checkbox" name="answer[]"  value="C" class="min">
                                         <span class="check_name">C</span>
                                     </label>
                                     <label class="check_label checkbox_input check_top">
                                         <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="answer[]" value="D">
+                                        <input type="checkbox" name="answer[]" value="D" class="min">
                                         <span class="check_name">D</span>
                                     </label>
                                 </div>
@@ -209,9 +189,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">解析</label>
                                 <div class="col-sm-10">
-                                    <textarea name="parsing" id="subjectDes" cols="10" rows="5" class="form-control">
-
-                                    </textarea>
+                                    <textarea name="parsing" id="subjectDes" cols="10" rows="5" class="form-control"></textarea>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
