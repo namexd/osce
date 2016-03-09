@@ -34,40 +34,47 @@
 @stop
 
 @section('content')
-    <div class="ibox float-e-margins">
-        <div class="ibox-content">
-            <div class="row">
-                <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">标签名称</label>
-                            <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="title" name="name" placeholder="最多输入10个字">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row table-head-style1 ">
+            <div class="col-xs-6 col-md-2">
+                <h5 class="title-label">新增试题</h5>
+            </div>
+        </div>
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">标签名称</label>
+                                <div class="col-sm-10">
+                                    <input type="text" required class="form-control" id="title" name="name" placeholder="最多输入10个字">
+                                </div>
                             </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">标签类型</label>
-                            <div class="col-sm-10">
-                                <select required name="label_type_id" id="tagType" class="input-sm form-control tag" style="height: 34px;">
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">标签类型</label>
+                                <div class="col-sm-10">
+                                    <select required name="label_type_id" id="tagType" class="input-sm form-control tag" style="height: 34px;">
 
-                                </select>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">描述</label>
-                            <div class="col-sm-10">
-                                <input id="description" required  class="form-control" name="describe" placeholder="最多输入10个字"/>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">描述</label>
+                                <div class="col-sm-10">
+                                    <input id="description" required  class="form-control" name="describe" placeholder="最多输入10个字"/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-sm btn-primary" id="sure" type="submit">确定</button>
-                                <button class="btn btn-white btn-sm" id="cancel">取消</button>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-sm btn-primary" id="sure" type="submit">确定</button>
+                                    <button class="btn btn-white btn-sm" id="cancel">取消</button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
