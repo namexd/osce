@@ -1,11 +1,12 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
-
+    <link href="{{asset('osce/common/select2-4.0.0/css/select2.min.css')}}" rel="stylesheet">
 @stop
 
 @section('only_js')
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
+    <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script>
         function categories(){
             $('#submit-btn').click(function(){
@@ -26,7 +27,6 @@
                 }
             });
 
-
             /**
              * 新增一条父考核点
              * @author  mao
@@ -38,576 +38,48 @@
                 var index = $('table').find('tbody').attr('index');
                 index = parseInt(index) + 1;
 
-                var html = '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
+                var html = '<tr>'+
                         '<td>'+parseInt(index)+'</td>'+
                         '<td>'+
-                        '<div class="form-group">'+
-                        '<label class="col-sm-2 control-label">考核点:</label>'+
-                        '<div class="col-sm-10">'+
-                        '<input id="select_Category"  class="form-control" name="content['+index+'][title]"/>'+
-                        '</div>'+
-                        '</div>'+
+                        '<select class="form-control">'+
+                        '<option value="1">单选题</option>'+
+                        '<option value="2">多选题</option>'+
+                        '<option value="3">不定项选择题</option>'+
+                        '<option value="4">判断题</option>'+
+                        '</select>'+
                         '</td>'+
                         '<td>'+
-                        '<select style="display:none;" class="form-control" name="score['+index+'][total]">'+
-                        '<option value="1">1</option>'+
-                        '<option value="2">2</option>'+
-                        '<option value="3">3</option>'+
-                        '<option value="4">4</option>'+
-                        '</select>'+
+                        '<div class="scope"  data-toggle="modal" data-target="#myModal">内科，操作，本科4年制</div>'+
+                        '</td>'+
+                        '<td>'+
+                        '<input  class="form-control" name="content['+index+'][title]"/>'+
+                        '</td>'+
+                        '<td>'+
+                        '<input class="form-control" name="content['+index+'][title]"/>'+
+                        '</td>'+
+                        '<td>'+
+                        '20'+
                         '</td>'+
                         '<td>'+
                         '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-up parent-up fa-2x"></i></span></a>'+
-                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-down parent-down fa-2x"></i></span></a>'+
-                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                         '</td>'+
                         '</tr>';
-                //记录计数
-                $('table').find('tbody').attr('index',index);
-                $('tbody').append(html);
+                        //记录计数
+                        $('table').find('tbody').attr('index',index);
+                        $('tbody').append(html);
             });
-
             /**
-             * 新增个子类
-             * @author  mao
-             * @version  1.0
-             * @date        2015-12-31
+             * 题目类型
              */
-            $('tbody').on('click','.fa-plus',function(){
-                var thisElement = $(this).parent().parent().parent().parent();
+            $('tbody').on('click','.scope',function(){
 
-                var parent = thisElement.attr('parent'),
-                        child = thisElement.attr('current');
-
-                child = parseInt(child) + 1;
-
-                var html = '<tr child="'+child+'" class="'+thisElement.attr('class')+'" >'+
-                        '<td>'+parent+'-'+child+'</td>'+
-                        '<td>'+
-                        '<div class="form-group">'+
-                        '<label class="col-sm-2 control-label">考核项:</label>'+
-                        '<div class="col-sm-10">'+
-                        '<input id="select_Category"  class="form-control" name="content['+parent+']['+child+']"/>'+
-                        '</div>'+
-                        '</div>'+
-                        '<div class="form-group">'+
-                        '<label class="col-sm-2 control-label">评分标准:</label>'+
-                        '<div class="col-sm-10">'+
-                        '<input id="select_Category"  class="form-control"  name="description['+parent+']['+child+']"/>'+
-                        '</div>'+
-                        '</div>'+
-                        '</td>'+
-                        '<td>'+
-                        '<select class="form-control" name="score['+parent+']['+child+']">'+
-                        '<option value="1">1</option>'+
-                        '<option value="2">2</option>'+
-                        '<option value="3">3</option>'+
-                        '<option value="4">4</option>'+
-                        '</select>'+
-                        '</td>'+
-                        '<td>'+
-                        '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up child-up fa-2x"></i></span></a>'+
-                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down child-down fa-2x"></i></span></a>'+
-                        '</td>'+
-                        '</tr>';
-                //记录计数
-                thisElement.attr('current',child);
-
-                //分数自动加减
-                //var thisElement = $(this).parent().parent();
-                var childTotal  =   thisElement.parent().find('.pid-'+parent).length;
-                thisElement.parent().find('.pid-'+parent).eq(childTotal-1).after(html);
-                //父亲节点
-                var className = thisElement.attr('class'),
-                        parent =  className.split('-')[1];
-
-                //自动加减节点
-                var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
-
-
-                //改变value值,消除连续变换值的变化
-                var total = 0;//= parseInt(change.val())+parseInt($(this).val());
-                $('.'+className).each(function(key,elem){
-                    if($(elem).attr('parent')==parent){
-                        return;
-                    }else{
-                        total += parseInt($(elem).find('td').eq(2).find('select').val());
-                    }
-                });
-
-                //当没有子类的时候
-                if(total==0){
-                    return;
-                }
-
-                var option = '';
-                for(var k =1;k<=total;k++){
-                    option += '<option value="'+k+'">'+k+'</option>';
-                }
-                change.html(option);
-                change.val(total);
-
-                $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
-                change.after('<span>'+parseInt(total)+'</span>');
-
-                /*var option = '';
-                 for(var k =0;k<=child;k++){
-                 option += '<option value="'+k+'">'+k+'</option>';
-                 }
-                 thisElement.find('td').eq(2).find('select').html(option);
-                 thisElement.find('td').eq(2).find('select').val(child);
-                 //禁用下拉
-                 //thisElement.find('td').eq(2).find('select').hide();
-                 thisElement.find('td').eq(2).find('span').remove();
-                 thisElement.find('td').eq(2).find('select').after('<span>'+child+'</span>')
-                 */
-
-                //更新计数
-                increment(thisElement);
             });
-
-            /**
-             * 子类序号更新
-             * @author marvine
-             * @date    2015-12-31
-             * @version [1.0]
-             * @param   {object}   thisElement dom参数
-             */
-            function increment(thisElement){
-                var update_P = 0,
-                        str = '.'+thisElement.attr('class');
-                $('tbody').find(str).each(function(key,elem){
-
-                    if($(elem).attr('child')!=undefined){
-                        $(elem).attr('child',key);
-                        $(elem).attr('class','pid-'+update_P);
-                        $(elem).find('td').eq(0).text(update_P+'-'+key);
-                        $(elem).find('td').eq(2).find('select').attr('name','score['+update_P+']['+key+']');
-                    }else{
-                        update_P = $(elem).attr('parent');
-                        $(elem).attr('class','pid-'+update_P);
-                    }
-                });
-            }
-
             /**
              * 删除
-             * @author marvine
-             * @date    2015-12-31
-             * @version [1.0]
-             * @param   {[type]}   ){                     var thisElement [description]
-    * @return  {[type]}       [description]
-    */
+             */
             $('tbody').on('click','.fa-trash-o',function(){
-                var thisElement = $(this).parent().parent().parent().parent();
-                if(thisElement.attr('child')==undefined){
-                    //父类删除
-                    var classElement = '.'+thisElement.attr('class');
-                    var parent = 1;
-                    $(classElement).remove();
-                    //更新计数序号
-                    $('tbody tr').each(function(key,elem){
-                        if($(elem).attr('child')==undefined){
-                            $(elem).attr('parent',parent);
-                            $(elem).find('td').eq(0).text(parent);
-                            $(elem).attr('class','pid-'+parent);
-                            $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
-                            parent += 1;
-                        }else{
-                            var child = $(elem).attr('child'),
-                                    parent_p = parent - 1;
-                            $(elem).find('td').eq(0).text(parent_p+'-'+child);
-                            $(elem).attr('class','pid-'+parent_p);
-                            $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
-                            child += 1;
-                        }
-                    });
-
-                    //父类计数更新
-                    $('tbody').attr('index',parseInt($('tbody').attr('index'))-1)
-
-                }else{
-                    //子类删除
-                    thisElement.remove();
-                    increment(thisElement);
-
-
-
-                    //父亲节点
-                    var className = thisElement.attr('class');
-                    parent =  className.split('-')[1];
-                    //自动加减节点
-                    var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
-
-                    //改变value值,消除连续变换值的变化
-                    var total = 0;//= parseInt(change.val())+parseInt($(this).val());
-                    $('.'+className).each(function(key,elem){
-                        if($(elem).attr('parent')==parent){
-                            return;
-                        }else{
-                            total += parseInt($(elem).find('td').eq(2).find('select').val());
-                        }
-                    });
-                    var cu = total;
-                    //当删除完的时候
-                    if(total==0){
-                        total = 1;
-                        cu = 0;
-                        $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').text('');
-                        //change.show();
-                        //dom
-                        var option = '';
-                        for(var k =1;k<=4;k++){
-                            option += '<option value="'+k+'">'+k+'</option>';
-                        }
-                        change.html(option);
-                        change.val(total);
-                        $('.'+className+'[parent='+parent+']').attr('current',cu);
-                        return;
-                    }
-                    var option = '';
-                    for(var k =1;k<=total;k++){
-                        option += '<option value="'+k+'">'+k+'</option>';
-                    }
-                    change.html(option);
-                    change.val(total);
-                    $('.'+className+'[parent='+parent+']').attr('current',cu);
-
-                    $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
-                    change.after('<span>'+parseInt(total)+'</span>');
-
-
-                }
+                $(this).parent().parent().parent().parent().remove();
             });
-
-            /**
-             * 数据条目上移
-             * @author marvine
-             * @date    2015-12-31
-             * @version [1.0]
-             */
-            $('tbody').on('click','.child-up',function(){
-                var thisElement = $(this).parent().parent().parent().parent();
-                if(thisElement.prev().attr('child')!=undefined){
-                    var thisInput = thisElement.find('input:first').val(),
-                            thisInputLast = thisElement.find('input:last').val(),
-                            thisSelect = thisElement.find('select').val(),
-                            prevInput = thisElement.prev().find('input:first').val(),
-                            prevInputLast = thisElement.prev().find('input:last').val(),
-                            prevSelect = thisElement.prev().find('select').val();
-
-                    //交换数据
-                    thisElement.find('input:first').val(prevInput);
-                    thisElement.find('input:last').val(prevInputLast);
-                    thisElement.find('select').val(prevSelect);
-                    thisElement.prev().find('input:first').val(thisInput);
-                    thisElement.prev().find('input:last').val(thisInputLast);
-                    thisElement.prev().find('select').val(thisSelect);
-                }else{
-                    return;
-                }
-            });
-
-            /**
-             * 数据条目下移
-             * @author marvine
-             * @date    2015-12-31
-             * @version [1.0]
-             */
-            $('tbody').on('click','.child-down',function(){
-                var thisElement = $(this).parent().parent().parent().parent();
-                if(thisElement.next().attr('child')!=undefined){
-                    var thisInput = thisElement.find('input:first').val(),
-                            thisInputLast = thisElement.find('input:last').val(),
-                            thisSelect = thisElement.find('select').val(),
-                            nextInput = thisElement.next().find('input:first').val(),
-                            nextInputLast = thisElement.next().find('input:last').val(),
-                            nextSelect = thisElement.next().find('select').val();
-
-                    //交换数据
-                    thisElement.find('input:first').val(nextInput);
-                    thisElement.find('input:last').val(nextInputLast);
-                    thisElement.find('select').val(nextSelect);
-                    thisElement.next().find('input:first').val(thisInput);
-                    thisElement.next().find('input:last').val(thisInputLast);
-                    thisElement.next().find('select').val(thisSelect);
-                }else{
-                    return;
-                }
-            });
-
-            /**
-             * 父亲节点上移
-             * @author mao
-             * @version 1.0
-             * @date    2016-01-19
-             */
-            $('tbody').on('click','.parent-up',function(){
-
-                var thisElement = $(this).parent().parent().parent().parent();
-                var className = thisElement.attr('class');
-                var parent =  1;
-                var value = [];
-                var valueTotal = null;
-
-                //存储select的值
-                $('.'+className).each(function(key,elem){
-                    if($(elem).attr('parent')==undefined){
-                        value.push($(elem).find('td').eq(2).find('select').val());
-                    }else{
-                        valueTotal = $(elem).find('td').eq(2).find('select').val();
-                    }
-                });
-                //存储dom结构
-                var thisDOM = $('.'+className).clone();
-                var preIndex = parseInt(className.split('-')[1])-1;
-
-                //最头一个
-                if($('.pid-'+preIndex+'[parent="'+preIndex+'"]').length==0){
-                    return;
-                }
-
-                //上移
-                $('.'+className).remove();
-                $('.pid-'+preIndex+'[parent="'+preIndex+'"]').before(thisDOM);
-
-                //更新序号
-                $('tbody tr').each(function(key,elem){
-                    if($(elem).attr('child')==undefined){
-                        $(elem).attr('parent',parent);
-                        $(elem).find('td').eq(0).text(parent);
-                        $(elem).attr('class','pid-'+parent);
-
-                        //更新name表单序号
-                        $(elem).find('td').eq(1).find('input').attr('name','content['+parent+'][title]');
-                        $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
-
-                        parent += 1;
-                    }else{
-                        var child = $(elem).attr('child'),
-                                parent_p = parent - 1;
-                        $(elem).find('td').eq(0).text(parent_p+'-'+child);
-                        $(elem).attr('class','pid-'+parent_p);
-
-                        //更新name表单序号
-                        $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+parent_p+']['+child+']');
-                        $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+parent_p+']['+child+']');
-                        $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
-
-                        child += 1;
-                    }
-                });
-                //更新数据
-                $('.pid-'+preIndex).each(function(key,elem){
-                    if($(elem).attr('parent')==undefined){
-
-                        $(elem).find('td').eq(2).find('select').find("option").eq(value[key-1]-1).attr('selected','selected');
-                        $(elem).find('td').eq(2).find('select').find("option:selected").val(value[key-1]);
-                    }else{
-                        $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
-                        $(elem).find('td').eq(2).find('select').find("option:selected").val(valueTotal);
-                    }
-                });
-
-
-            });
-
-            /**
-             * 父亲节点下移
-             * @author mao
-             * @version 1.0
-             * @date    2016-01-19
-             */
-            $('tbody').on('click','.parent-down',function(){
-
-                var thisElement = $(this).parent().parent().parent().parent();
-                var className = thisElement.attr('class');
-                var parent =  1;
-                var value = [];
-                var valueTotal = null;
-
-
-                //存储select的值
-                $('.'+className).each(function(key,elem){
-                    if($(elem).attr('parent')==undefined){
-                        value.push($(elem).find('td').eq(2).find('select').val());
-                    }else{
-                        valueTotal = $(elem).find('td').eq(2).find('select').val();
-                    }
-                });
-                //存储dom结构
-                var thisDOM = $('.'+className).clone();
-                var preIndex = parseInt(className.split('-')[1])+1;
-
-                //最尾一个
-                if($('.pid-'+preIndex+'[parent="'+preIndex+'"]').length==0){
-                    return;
-                }
-
-                //上移
-                $('.'+className).remove();
-                $('.pid-'+preIndex+':last').after(thisDOM);
-
-                //更新序号
-                $('tbody tr').each(function(key,elem){
-                    if($(elem).attr('child')==undefined){
-                        $(elem).attr('parent',parent);
-                        $(elem).find('td').eq(0).text(parent);
-                        $(elem).attr('class','pid-'+parent);
-
-                        //更新name表单序号
-                        $(elem).find('td').eq(1).find('input').attr('name','content['+parent+'][title]');
-                        $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
-
-                        parent += 1;
-                    }else{
-                        var child = $(elem).attr('child'),
-                                parent_p = parent - 1;
-                        $(elem).find('td').eq(0).text(parent_p+'-'+child);
-                        $(elem).attr('class','pid-'+parent_p);
-
-                        //更新name表单序号
-                        $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+parent_p+']['+child+']');
-                        $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+parent_p+']['+child+']');
-                        $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
-
-                        child += 1;
-                    }
-                });
-
-                //更新数据
-                $('.pid-'+preIndex).each(function(key,elem){
-                    if($(elem).attr('parent')==undefined){
-                        //$(elem).find('td').eq(2).find('select').find("option:selected").text(value[key-1]);
-                        $(elem).find('td').eq(2).find('select').find("option").eq(value[key-1]-1).attr('selected','selected');
-                        $(elem).find('td').eq(2).find('select').val(value[key-1]);
-                    }else{
-                        $(elem).find('td').eq(2).find('select').find("option:selected").text(valueTotal);
-                        $(elem).find('td').eq(2).find('select').find("option:selected").val(valueTotal);
-                    }
-                });
-
-            });
-
-            /**
-             * 文件导入
-             * @author mao
-             * @version 1.0
-             * @date    2016-01-08
-             */
-            $("#file1").change(function(){
-                $.ajaxFileUpload
-                ({
-
-                    url:pars.excel,
-                    secureuri:false,//
-                    fileElementId:'file0',//必须要是 input file标签 ID
-                    dataType: 'text',//
-                    success: function (data, status)
-                    {
-                        data    =   data.replace('<pre>','').replace('</pre>','');
-                        data    =   eval('('+data+')');
-
-                        if(data.code == 1){
-                            layer.msg('导入成功！',{skin:'msg-success',icon:1});
-
-                            /**
-                             * 数据导入
-                             * @author mao
-                             * @version 1.0
-                             * @date    2016-01-08
-                             */
-                            var html = '';
-                            var res = data.data;
-                            var index = parseInt($('tbody').attr('index'));
-
-                            for(var i in res){
-                                if(res[i].level==1){
-                                    index++;
-                                    //添加父级dom
-                                    html += '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
-                                            '<td>'+index+'</td>'+
-                                            '<td>'+
-                                            '<div class="form-group">'+
-                                            '<label class="col-sm-2 control-label">考核点:</label>'+
-                                            '<div class="col-sm-10">'+
-                                            '<input id="select_Category"  class="form-control" value="'+res[i].check_point+'" name="content['+index+'][title]"/>'+
-                                            '</div>'+
-                                            '</div>'+
-                                            '</td>'+
-                                            '<td>'+
-                                            '<select class="form-control" style="display:none;" name="score['+index+'][total]">'+
-                                            '<option value="'+res[i].score+'">'+res[i].score+'</option>'+
-                                            '<option value="1">1</option>'+
-                                            '<option value="2">2</option>'+
-                                            '<option value="3">3</option>'+
-                                            '<option value="4">4</option>'+
-                                            '</select>'+
-                                            '<span>'+res[i].score+'</span>'+
-                                            '</td>'+
-                                            '<td>'+
-                                            '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                            '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-up parent-up fa-2x"></i></span></a>'+
-                                            '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-arrow-down parent-down fa-2x"></i></span></a>'+
-                                            '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                                            '</td>'+
-                                            '</tr>';
-
-                                    for(var j in res){
-                                        if(res[j].level==2&&res[j].pid==res[i].sort){
-
-                                            //处理子级dom
-                                            html += '<tr child="'+res[j].sort+'" class="pid-'+index+'" >'+
-                                                    '<td>'+index+'-'+res[j].sort+'</td>'+
-                                                    '<td>'+
-                                                    '<div class="form-group">'+
-                                                    '<label class="col-sm-2 control-label">考核项:</label>'+
-                                                    '<div class="col-sm-10">'+
-                                                    '<input id="select_Category"  class="form-control" value="'+res[j].check_item+'" name="content['+index+']['+res[j].sort+']"/>'+
-                                                    '</div>'+
-                                                    '</div>'+
-                                                    '<div class="form-group">'+
-                                                    '<label class="col-sm-2 control-label">评分标准:</label>'+
-                                                    '<div class="col-sm-10">'+
-                                                    '<input id="select_Category"  class="form-control" value="'+res[j].answer+'" name="description['+index+']['+res[j].sort+']"/>'+
-                                                    '</div>'+
-                                                    '</div>'+
-                                                    '</td>'+
-                                                    '<td>'+
-                                                    '<select class="form-control" name="score['+index+']['+res[j].sort+']">'+
-                                                    '<option value="'+res[j].score+'">'+res[j].score+'</option>'+
-                                                    '<option value="1">1</option>'+
-                                                    '<option value="2">2</option>'+
-                                                    '<option value="3">3</option>'+
-                                                    '<option value="4">4</option>'+
-                                                    '</select>'+
-                                                    '</td>'+
-                                                    '<td>'+
-                                                    '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                                    '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up child-up fa-2x"></i></span></a>'+
-                                                    '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down child-down fa-2x"></i></span></a>'+
-                                                    '</td>'+
-                                                    '</tr>';
-                                        }
-                                    }
-                                }
-                            }
-                            $('tbody').attr('index',index);
-                            $('tbody').append(html);
-                        }else {
-                            layer.alert('文件导入错误，请参考下载模板！');
-                        }
-                    },
-                    error: function (data, status, e)
-                    {
-                        layer.msg('导入失败！',{skin:'msg-error',icon:1});
-                    }
-                });
-            }) ;
-
-
             /**
              * 考核分数自动加减
              * @author mao
@@ -616,14 +88,6 @@
              */
             $('tbody').on('change','select',function(){
                 var thisElement = $(this).parent().parent();
-                //父亲节点
-                var className = thisElement.attr('class'),
-                        parent =  className.split('-')[1];
-
-                //自动加减节点
-                var change = $('.'+className+'[parent='+parent+']').find('td').eq(2).find('select');
-
-
                 //改变value值,消除连续变换值的变化
                 var total = 0;//= parseInt(change.val())+parseInt($(this).val());
                 $('.'+className).each(function(key,elem){
@@ -633,29 +97,11 @@
                         total += parseInt($(elem).find('td').eq(2).find('select').val());
                     }
                 });
-
-                //当没有子类的时候
-                if(total==0){
-                    return;
-                }
-
-                var option = '';
-                for(var k =1;k<=total;k++){
-                    option += '<option value="'+k+'">'+k+'</option>';
-                }
-                change.html(option);
-                change.val(total);
-
-                $('.'+className+'[parent='+parent+']').find('td').eq(2).find('span').remove();
-                change.after('<span>'+parseInt(total)+'</span>')
-
-
             });
 
-
         }
-
         $(function(){
+            categories();
             /**
              * 编辑和新增共用了一段代码，这里必须将验证单独拿出
              * @author mao
@@ -704,7 +150,7 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_check_tag'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'subject_papers_add}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -721,7 +167,6 @@
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
-
                 <div class="form-group">
                     <label class="col-sm-2 control-label">考试时长</label>
                     <div class="col-sm-10">
@@ -755,24 +200,35 @@
                     <label class="col-sm-2 control-label">评分标准</label>
                     <div class="col-sm-10">
                         <div class="ibox float-e-margins">
-                            <div class="ibox-title">
+                            <div class="ibox-title" style="border-top:0;">
                                 <h5></h5>
                                 <div class="ibox-tools">
                                     <button type="button" class="btn btn-outline btn-default" id="add-new">新增题型</button>
                                 </div>
                             </div>
-                            <div class="ibox-content">
+                            <div class="ibox-content" style="border-top:0;" >
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
-                                        <th>序号</th>
-                                        <th>考核内容</th>
-                                        <th width="120">分数</th>
-                                        <th width="160">操作</th>
+                                        <th width="10%">序号</th>
+                                        <th width="20%">题目类型</th>
+                                        <th>考核范围</th>
+                                        <th width="10%">题目总量</th>
+                                        <th width="10%">每题分数</th>
+                                        <th width="10%">总分</th>
+                                        <th width="10%">操作</th>
                                     </tr>
                                     </thead>
                                     <tbody index="0">
-
+                                        <tr>
+                                            <th>总计</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>40</th>
+                                            <th>-</th>
+                                            <th>20</th>
+                                            <th></th>
+                                        </tr>
                                     </tbody>
                                 </table>
 
@@ -781,8 +237,6 @@
 
                     </div>
                 </div>
-
-
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
                         <button class="btn btn-primary" type="submit">保存</button>
@@ -793,3 +247,78 @@
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}
+
+@section('layer_content')
+    {{--新增表单--}}
+    <form class="form-horizontal" id="addForm" novalidate="novalidate" method="post" action="{{ route('osce.admin.ExamLabelController.postAddExamQuestionLabel') }}">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">选择抽题范围</h4>
+        </div>
+        <div class="modal-body">
+
+            @if(@$label)
+                @foreach(@$label as $sub)
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{@$sub['name']}}：</label>
+                        <div class="col-sm-3">
+                            <select name="label" class="form-control">
+                                <option value="1">包含</option>
+                                <option value="1">等于</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">
+                                @if(!empty($sub['label_type_and_label']))
+                                    @foreach($sub['label_type_and_label'] as $key => $val)
+                                        <option value="{{ $val['id'] }}">{{@$val['name']}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+            {{--<div class="form-group">--}}
+                {{--<label class="col-sm-3 control-label">能力标签：</label>--}}
+                {{--<div class="col-sm-3">--}}
+                    {{--<select name="label" class="form-control">--}}
+                        {{--<option value="1">包含</option>--}}
+                        {{--<option value="1">等于</option>--}}
+                    {{--</select>--}}
+                {{--</div>--}}
+                {{--<div class="col-sm-6">--}}
+                    {{--<select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">--}}
+                        {{--@if(!empty($v['examQuestionLabelList']))--}}
+                            {{--@foreach($v['examQuestionLabelList'] as $key => $val)--}}
+                                {{--<option value="{{ $val['id'] }}">{{@$val['name']}}</option>--}}
+                            {{--@endforeach--}}
+                        {{--@endif--}}
+                    {{--</select>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+            {{--<div class="form-group">--}}
+                {{--<label class="col-sm-3 control-label">难度标签：</label>--}}
+                {{--<div class="col-sm-3">--}}
+                    {{--<select name="label" class="form-control">--}}
+                        {{--<option value="1">包含</option>--}}
+                        {{--<option value="1">等于</option>--}}
+                    {{--</select>--}}
+                {{--</div>--}}
+                {{--<div class="col-sm-6">--}}
+                    {{--<select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">--}}
+                        {{--@if(!empty($v['examQuestionLabelList']))--}}
+                            {{--@foreach($v['examQuestionLabelList'] as $key => $val)--}}
+                                {{--<option value="{{ $val['id'] }}">{{@$val['name']}}</option>--}}
+                            {{--@endforeach--}}
+                        {{--@endif--}}
+                    {{--</select>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success" id='sure'>确定</button>
+            <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
+        </div>
+    </form>
+@stop
