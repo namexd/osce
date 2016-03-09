@@ -49,8 +49,28 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('testscores/grade-score-list',['uses'=>'TestScoresController@getGradeScoreList','as'=>'osce.admin.TestScoresController.getGradeScoreList']);
         //教学成绩分析-班级成绩明细
         Route::get('testscores/grade-detail',['uses'=>'TestScoresController@getGradeDetail','as'=>'osce.admin.TestScoresController.getGradeDetail']);
-            //题库考核表签(yang)
-         Route::get('exam/exam-label', ['uses'=>'ExamLabelController@getExamLabel','as'=>'osce.admin.ExamLabelController.getExamLabel']);
+
+
+
+        //题库考核表签(cy)
+        Route::get('exam/exam-label', ['uses'=>'ExamLabelController@getExamLabel','as'=>'osce.admin.ExamLabelController.getExamLabel']);
+        //获取编辑试卷标签内容
+        Route::get('exam/exam-getLabel', ['uses'=>'ExamLabelController@getEditExamQuestionLabel','as'=>'osce.admin.ExamLabelController.getEditExamQuestionLabel']);
+        //编辑试卷标签内容
+        Route::post('exam/exam-editLabel', ['uses'=>'ExamLabelController@editExamQuestionLabelInsert','as'=>'osce.admin.ExamLabelController.editExamQuestionLabelInsert']);
+        //删除试卷标签
+        Route::get('exam/exam-deleteLabel', ['uses'=>'ExamLabelController@getDeleteExamQuestionLabel','as'=>'osce.admin.ExamLabelController.getDeleteExamQuestionLabel']);
+        //新增试卷标签
+        Route::get('exam/exam-addLabel', ['uses'=>'ExamLabelController@addExamQuestionLabel','as'=>'osce.admin.ExamLabelController.addExamQuestionLabel']);
+        Route::post('exam/exam-addLabel', ['uses'=>'ExamLabelController@postAddExamQuestionLabel','as'=>'osce.admin.ExamLabelController.postAddExamQuestionLabel']);
+        //新增试卷编辑验证标签
+        Route::get('exam/exam-addVerify', ['uses'=>'ExamLabelController@examAddLabelVerify','as'=>'osce.admin.ExamLabelController.examAddLabelVerify']);
+        //编辑试卷标签验证
+        Route::get('exam/exam-editVerify', ['uses'=>'ExamLabelController@examEditLabelVerify','as'=>'osce.admin.ExamLabelController.examEditLabelVerify']);
+
+        //试卷标签验证
+        Route::post('exam/exam-verify', ['uses'=>'ExamLabelController@postCheckNameOnly','as'=>'osce.admin.ExamLabelController.postCheckNameOnly']);
+
 
 
         //试卷管理-列表
@@ -61,14 +81,22 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('exampaper/delete-exam',['uses'=>'ExamPaperController@getDeleteExam','as'=>'osce.admin.ExamPaperController.getDeleteExam']);
         //试卷管理-新增试卷
         Route::get('exampaper/add-exam-page',['uses'=>'ExamPaperController@getAddExamPage','as'=>'osce.admin.ExamPaperController.getAddExamPage']);
+        ////试卷管理-获取试题标签
+        Route::get('exampaper/exam-label-get',['uses'=>'ExamPaperController@getExamLabelGet','as'=>'osce.admin.ExamPaperController.getExamLabelGet']);
+        //试卷管理-获取试卷试题数据
+        Route::get('exampaper/exam-questions',['uses'=>'ExamPaperController@getExamQuestions','as'=>'osce.admin.ExamPaperController.getExamQuestions']);
+
 
         //题库管理新增
         Route::get('examQuestion/examQuestion-add',['uses'=>'ExamQuestionController@getExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.getExamQuestionAdd']);//新增页面
-        Route::post('examQuestion/examQuestion-add',['uses'=>'ExamQuestionController@postExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.postExamQuestionAdd']);//新增数据交换
+        Route::post('examQuestion/examQuestion-add',['uses'=>'ExamQuestionController@postExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.postExamQuestionAdd']);//新增数据交互
 
+        //题库管理编辑
+        Route::get('examQuestion/examQuestion-edit',['uses'=>'ExamQuestionController@getExamQuestionEdit','as'=>'osce.admin.ExamQuestionController.getExamQuestionEdit']);//编辑页面
+        Route::post('examQuestion/examQuestion-edit',['uses'=>'ExamQuestionController@postExamQuestionEdit','as'=>'osce.admin.ExamQuestionController.postExamQuestionEdit']);//保存编辑
 
-
-
+        //题库管理删除
+        Route::post('examQuestion/examQuestion-delete',['uses'=>'ExamQuestionController@examQuestionDelete','as'=>'osce.admin.ExamQuestionController.examQuestionDelete']);
 
     });
 
