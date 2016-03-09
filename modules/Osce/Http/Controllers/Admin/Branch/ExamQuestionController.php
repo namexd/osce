@@ -36,11 +36,14 @@ class ExamQuestionController extends CommonController
         //获取试题列表信息
         $examQuestionModel= new ExamQuestion();
         $data = $examQuestionModel->showExamQuestionList($formData);
+        dd($data);
+
         //获取考核范围
         $examQuestionLabelName = "";
         $content = [];
         foreach($data as $k1=>$v1){
             foreach($v1->ExamQuestionLabelRelation as $k2=>$v2){
+
           /*      if($examQuestionLabelName){
                     $examQuestionLabelName .= ','.$v2->ExamQuestionLabel['name'];
                 }else{
@@ -52,6 +55,7 @@ class ExamQuestionController extends CommonController
                 //print_r($v2->ExamQuestionLabel['name'].',');
             }
         }
+        //dd($content);
 
         $list = [];
         if(count($data) > 0){
@@ -60,7 +64,7 @@ class ExamQuestionController extends CommonController
                     'number'                       => $k+1,//序号
                     'id'                            => $item->id,//试题id
                     'name'                          => $item->name,//试题名称
-                    'examQuestionLabelName'      => $content[$k]['examQuestionLabelName'],//考核范围
+                    'examQuestionLabelName'      => '123132',//考核范围
                     'examQuestionTypeName'       => $item->examQuestionTypeName,//题目类型
                 ];
             }
@@ -69,7 +73,7 @@ class ExamQuestionController extends CommonController
             return $this->success_data(['list'=>$list]);
         }
         dd($list);
-        return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
+        return view('osce::admin.resourcemanage.subject_manage', [
             'data'      =>$data,//对象型数据
             'list'      =>$list ,//试题列表（数组型数据）
         ]);

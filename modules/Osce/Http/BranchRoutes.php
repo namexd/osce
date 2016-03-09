@@ -87,6 +87,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('exampaper/exam-questions',['uses'=>'ExamPaperController@getExamQuestions','as'=>'osce.admin.ExamPaperController.getExamQuestions']);
 
 
+        //题库管理列表
+        Route::get('examQuestion/examQuestion-list',['uses'=>'ExamQuestionController@showExamQuestionList','as'=>'osce.admin.ExamQuestionController.showExamQuestionList']);
+
         //题库管理新增
         Route::get('examQuestion/examQuestion-add',['uses'=>'ExamQuestionController@getExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.getExamQuestionAdd']);//新增页面
         Route::post('examQuestion/examQuestion-add',['uses'=>'ExamQuestionController@postExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.postExamQuestionAdd']);//新增数据交互
