@@ -2,6 +2,9 @@
 
 @section('only_css')
     <link href="{{asset('osce/common/select2-4.0.0/css/select2.min.css')}}" rel="stylesheet">
+    <style>
+        .select2-container--open{ z-index: 10000;}
+    </style>
 @stop
 
 @section('only_js')
@@ -37,7 +40,7 @@
                 //计数器标志
                 var index = $('table').find('tbody').attr('index');
                 index = parseInt(index) + 1;
-
+                var question =
                 var html = '<tr>'+
                         '<td>'+parseInt(index)+'</td>'+
                         '<td>'+
@@ -69,12 +72,20 @@
                         $('tbody').append(html);
             });
             /**
-             * 题目类型
+             * 保存考核范围
              */
-            $('tbody').on('click','.scope',function(){
 
-            });
-            /**
+            $('.form-horizontal').submit(function(){
+                $.getJSON('{{ route('osce.admin.ExamQuestionController.test') }}',$(this).serialize(),function(obj){
+                    var scopelist="<input type='hidden' name='scope[]' value='"+obj+"'>"
+                    $(".save_scope").append(scopelist);
+                })
+                $("#myModal").removeClass("in");
+                $(".modal-backdrop").remove();
+                return  false;
+
+            })
+                /**
              * 删除
              */
             $('tbody').on('click','.fa-trash-o',function(){
@@ -99,9 +110,21 @@
                 });
             });
 
-        }
+
+
+}
         $(function(){
             categories();
+                    @if(!empty($label))
+                        @foreach($label as $k =>$sub)
+                            var str =  '{{ @$sub['id']}}';
+                            $(".tag-"+str).select2({});
+                        @endforeach
+                     @endif
+//                     $('table').delegate(".scope","click",function(){
+//                                    $("#myModal").removeAttr("tabindex");
+//                                });
+            $.fn.modal.Constructor.prototype.enforceFocus =function(){};
             /**
              * 编辑和新增共用了一段代码，这里必须将验证单独拿出
              * @author mao
@@ -207,6 +230,7 @@
                                 </div>
                             </div>
                             <div class="ibox-content" style="border-top:0;" >
+                                <div class="save_scope"></div>
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
@@ -250,28 +274,27 @@
 
 @section('layer_content')
     {{--新增表单--}}
-    <form class="form-horizontal" id="addForm" novalidate="novalidate" method="post" action="{{ route('osce.admin.ExamLabelController.postAddExamQuestionLabel') }}">
+    <form class="form-horizontal" action="{{ route('osce.admin.ExamQuestionController.test') }}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">选择抽题范围</h4>
         </div>
         <div class="modal-body">
-
             @if(@$label)
-                @foreach(@$label as $sub)
+                @foreach(@$label as $k =>$sub)
                     <div class="form-group">
                         <label class="col-sm-3 control-label">{{@$sub['name']}}：</label>
                         <div class="col-sm-3">
-                            <select name="label" class="form-control">
-                                <option value="1">包含</option>
+                            <select class="form-control" name="label-{{ @$sub['id'] }}">
+                                <option value="0">包含</option>
                                 <option value="1">等于</option>
                             </select>
                         </div>
                         <div class="col-sm-6">
-                            <select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">
+                            <select class="form-control tag-{{ @$sub['id'] }}" name="tag-{{ @$sub['id'] }}[]" multiple="multiple" style="width: 100%">
                                 @if(!empty($sub['label_type_and_label']))
-                                    @foreach($sub['label_type_and_label'] as $key => $val)
-                                        <option value="{{ $val['id'] }}">{{@$val['name']}}</option>
+                                    @foreach(@$sub['label_type_and_label'] as $key => $val)
+                                        <option value="{{ @$val['id'] }}-{{@$val['name']}}">{{@$val['name']}}</option>
                                     @endforeach
                                 @endif
                             </select>
@@ -279,42 +302,6 @@
                     </div>
                 @endforeach
             @endif
-            {{--<div class="form-group">--}}
-                {{--<label class="col-sm-3 control-label">能力标签：</label>--}}
-                {{--<div class="col-sm-3">--}}
-                    {{--<select name="label" class="form-control">--}}
-                        {{--<option value="1">包含</option>--}}
-                        {{--<option value="1">等于</option>--}}
-                    {{--</select>--}}
-                {{--</div>--}}
-                {{--<div class="col-sm-6">--}}
-                    {{--<select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">--}}
-                        {{--@if(!empty($v['examQuestionLabelList']))--}}
-                            {{--@foreach($v['examQuestionLabelList'] as $key => $val)--}}
-                                {{--<option value="{{ $val['id'] }}">{{@$val['name']}}</option>--}}
-                            {{--@endforeach--}}
-                        {{--@endif--}}
-                    {{--</select>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="form-group">--}}
-                {{--<label class="col-sm-3 control-label">难度标签：</label>--}}
-                {{--<div class="col-sm-3">--}}
-                    {{--<select name="label" class="form-control">--}}
-                        {{--<option value="1">包含</option>--}}
-                        {{--<option value="1">等于</option>--}}
-                    {{--</select>--}}
-                {{--</div>--}}
-                {{--<div class="col-sm-6">--}}
-                    {{--<select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">--}}
-                        {{--@if(!empty($v['examQuestionLabelList']))--}}
-                            {{--@foreach($v['examQuestionLabelList'] as $key => $val)--}}
-                                {{--<option value="{{ $val['id'] }}">{{@$val['name']}}</option>--}}
-                            {{--@endforeach--}}
-                        {{--@endif--}}
-                    {{--</select>--}}
-                {{--</div>--}}
-            {{--</div>--}}
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-success" id='sure'>确定</button>
