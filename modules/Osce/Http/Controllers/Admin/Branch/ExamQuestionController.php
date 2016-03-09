@@ -153,7 +153,11 @@ class ExamQuestionController extends CommonController
             'name' =>$request->input('examQuestionItemName'),//选项名称:A/B/C/D
             'content' =>$request->input('content'),//选项内容/判断内容
         );
-
+       /* echo "<pre>";
+        print_r($examQuestionData);
+        print_r($examQuestionItemData);
+        print_r($ExamQuestionLabelRelationData);
+        dd(1);*/
         $examQuestionModel= new ExamQuestion();
         $result = $examQuestionModel->addExamQuestion($examQuestionData,$examQuestionItemData,$ExamQuestionLabelRelationData);
         if($result)
@@ -190,7 +194,8 @@ class ExamQuestionController extends CommonController
 
         //获取试题信息
         $examQuestionModel= new ExamQuestion();
-        $list = $examQuestionModel->getExamQuestionById(1);
+        $list = $examQuestionModel->getExamQuestionById(8);
+        $list['answer'] = unserialize($list['answer']);
 
         //获取对应试题子项表列表
         $examQuestionItemList = $list->examQuestionItem;
@@ -216,23 +221,18 @@ class ExamQuestionController extends CommonController
             }
             $examQuestionLabelTypeList[$k]['examQuestionLabelList_'] = $data;
         }
-
-
-        $datas = [];
-        if(count($list) > 0){
-            foreach($list as $k=>$item){
-                $datas[] = [
-                    'number'                      => $k+1,//序号
-                    'id'                           => $item->id,//试题id
-                    'exam_question_type_id'     => $item->exam_question_type_id,//题目类型
-                    'answer'                      => $item->answer,//正确答案
-                ];
-            }
+        $data = [];
+        if($list){
+            $data['id'] = $list->id;
+            $data['exam_question_type_id'] = $list->exam_question_type_id;//题目类型
+            $data['name'] = $list->name;//题目名称
+            $data['answer'] = $list->answer;//正确答案
+            $data['parsing'] = $list->parsing;//解析
         }
-
+     
         return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
-            'data'                          =>$datas ,//试题信息
+            'data'                          =>$data ,//试题信息
             'examQuestionItemList'       =>$examQuestionItemList ,//试题子项表列表
             'examQuestionLabelTypeList' =>$examQuestionLabelTypeList ,//考核范围列表
         ]);
