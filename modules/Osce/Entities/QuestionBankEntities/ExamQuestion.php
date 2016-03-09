@@ -32,9 +32,9 @@ class ExamQuestion extends Model
         return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionItem','exam_question_id','id');//一对多(参数：关联模型名称，关联模型名称键名，本模型键名)
     }
 
-    //试题子项表
+    //关联标签表
     public function ExamQuestionLabelRelation (){
-        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionItem','exam_question_id','id');//一对多(参数：关联模型名称，关联模型名称键名，本模型键名)
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelRelation','exam_question_id','id');//一对多(参数：关联模型名称，关联模型名称键名，本模型键名)
     }
 
     /**获取试题列表的方法
@@ -67,13 +67,13 @@ class ExamQuestion extends Model
         })->leftJoin('exam_question_type', function ($join) { //题目类型表
             $join->on('exam_question.exam_question_type_id', '=', 'exam_question_type.id');
 
-        })->leftJoin('exam_question_label_type', function ($join) { //标签类型表
+        })/*->leftJoin('exam_question_label_type', function ($join) { //标签类型表
             $join->on('exam_question_label_relation.exam_paper_label_id', '=', 'exam_question_label_type.id');
 
-        })->groupBy('exam_question.id')->select([
+        })*/->groupBy('exam_question.id')->select([
             'exam_question.id',//试题id
             'exam_question.name',//试题名称
-            'exam_question_label_type.name as examQuestionlabelTypeName',//考核范围
+           // 'exam_question_label_type.name as examQuestionlabelTypeName',//考核范围
             'exam_question_type.name as examQuestionTypeName',//题目类型
         ]);
 

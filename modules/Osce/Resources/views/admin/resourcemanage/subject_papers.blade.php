@@ -21,7 +21,7 @@
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
                         <li><a href="{{route('osce.admin.ExamLabelController.getExamLabel')}}">考核标签</a></li>
-                        <li><a href="">题库管理</a></li>
+                        <li><a href="{{route('osce.admin.ExamQuestionController.showExamQuestionList')}}">题库管理</a></li>
                         <li  class="active"><a href="{{route('osce.admin.ExamPaperController.getExamList')}}">试卷管理</a></li>
                     </ul>
                 </div>
@@ -34,7 +34,7 @@
                     <input type="text" placeholder="请输入标签名称" name="tagName" class="input-md form-control" style="width: 250px;">
 
                     <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
-                    <button type="submit" class="btn btn-sm btn-primary marl_10 pull-right" id="add">新增</button>
+                    <button type="submit" class="btn btn-sm btn-primary marl_10 pull-right" id="add"><a href="{{route('osce.admin.ExamPaperController.getAddExamPage')}}"> 新增</a></button>
                 </div>
                 <div class="list_all">
                     <table class="table table-striped" id="table-striped" style="background:#fff">

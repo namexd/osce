@@ -18,6 +18,17 @@ class ExamQuestionPaper extends CommonModel
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['id', 'name', 'status','mode','type','length','created_user_id'];
+
+    /**
+     * 与试题构造表的模型关系
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月9日10:38:36
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ExamQuestionPaperStructure(){
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionPaperStructure','exam_paper_id','id');
+    }
     /**
      * 获取试卷列表
      * @access    public
