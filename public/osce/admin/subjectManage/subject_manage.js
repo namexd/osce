@@ -147,18 +147,19 @@ function subject_manage(){
                 dataType:"json",
                 cache:false,
                 success:function(res){
-                    //if(res.code == "1"){
-                    //    location.href = location.href;
-                    //}else{
-                    //    layer.msg('删除失败',{'skin':'msg-error',icon:1})
-                    //}
+                    if(res == true){
+                        location.href = location.href;
+                    }else{
+                        layer.msg('删除失败',{'skin':'msg-error',icon:1})
+                    }
                 }
             })
         })
     });
     //新增
     $("#add").click(function(){
-        //location.href=;
+        var add = pars.add;
+        location.href=add;
     });
 }
 
