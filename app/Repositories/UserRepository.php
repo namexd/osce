@@ -450,6 +450,7 @@ class UserRepository extends BaseRepository
                 'mobile'=>$verify->mobile
             ];
             Common::sendSms($verify->mobile,'注册验证码：'.$verify->code.' 【敏行医学】');
+
             return $dataReturn;
         }
         catch(\Exception $ex)
