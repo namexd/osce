@@ -45,7 +45,7 @@ class ExamQuestionController extends CommonController
         //获取试题列表信息
         $examQuestionModel= new ExamQuestion();
         $data = $examQuestionModel->showExamQuestionList($formData);
-      
+
         //获取考核范围
         $examQuestionLabelName = "";
         foreach($data as $k1=>$v1) {
@@ -68,28 +68,19 @@ class ExamQuestionController extends CommonController
                 ];
             }
         }
-        //dd($list);
         if ($request->ajax()) {
-            return $this->success_data(['list'=>$list]);
+            return $this->success_data([
+                    'list'=>$list,
+                    'examQuestionLabelTypeList'=>$examQuestionLabelTypeList,
+                    'examQuestionTypeList'=>$examQuestionTypeList
+                ]);
         }
-
         return view('osce::admin.resourcemanage.subject_manage', [
             'data'                         =>$data,//对象型数据
             'list'                         =>$list ,//试题列表（数组型数据）
             'examQuestionLabelTypeList' =>$examQuestionLabelTypeList,//试题类型列表
             'examQuestionTypeList'       =>$examQuestionTypeList //题目类型列表
         ]);
-        /*table后写入
-         *  <div>
-                    <div class="pull-left">
-                        共{{$data->total()}}条
-                    </div>
-                    <div class="pull-right">
-                        {!! $data->render() !!}
-                    </div>
-                </div>
-         *
-         * */
     }
 
     /**打开新增页面
