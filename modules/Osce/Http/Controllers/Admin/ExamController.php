@@ -683,13 +683,14 @@ class ExamController extends CommonController
               'student_name'   => 'sometimes',
         ]);
         //获取各字段
-        $exam_name      = trim($request->get('exam_name'));
-        $student_name   = trim($request->get('student_name'));
-        $formData = ['exam_name'=>$exam_name, 'student_name'=>$student_name];
+        $exam_name    = trim(e($request->get('exam_name')));
+        $student_name = trim($request->get('student_name'));
+        $formData     = ['exam_name'=>$exam_name, 'student_name'=>$student_name];
+
         //获取当前场所的类
-        $examModel= new Student();
+        $examModel = new Student();
         //从模型得到数据
-        $data=$examModel->getList($formData);
+        $data = $examModel->getList($formData);
         //展示页面
         return view('osce::admin.examManage.examinee_query', ['data'=>$data, 'exam_name'=>$exam_name, 'student_name'=>$student_name]);
     }

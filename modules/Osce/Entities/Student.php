@@ -417,11 +417,11 @@ class Student extends CommonModel
     public function getList($formData = '')
     {
         $builder = $this->leftJoin('exam', 'student.exam_id', '=', 'exam.id');
-        if ($formData['exam_name']) {
-            $builder = $builder->where('exam.name', 'like', '%' . $formData['exam_name'] . '%');
+        if (isset($formData['exam_name']) && $formData['exam_name'] != '') {
+            $builder = $builder->where('exam.name', 'like', '%\\' . $formData['exam_name'] . '%');
         }
-        if ($formData['student_name']) {
-            $builder = $builder->where('student.name', 'like', '%' . $formData['student_name'] . '%');
+        if (isset($formData['student_name']) && $formData['student_name'] != '') {
+            $builder = $builder->where('student.name', 'like', '%\\' . $formData['student_name'] . '%');
         }
 
         $builder = $builder->select([
