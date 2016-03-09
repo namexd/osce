@@ -8,7 +8,7 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Osce\Entities\CommonModel;
-class ExamQuestionPaper extends CommonModel
+class ExamPaper extends CommonModel
 {
     protected $connection = 'osce_mis';
     protected $table = 'exam_paper';
@@ -26,8 +26,8 @@ class ExamQuestionPaper extends CommonModel
      * @date    2016年3月9日10:38:36
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function ExamQuestionPaperStructure(){
-        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionPaperStructure','exam_paper_id','id');
+    public function ExamPaperStructure(){
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamPaperStructure','exam_paper_id','id');
     }
     /**
      * 获取试卷列表
