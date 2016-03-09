@@ -167,6 +167,10 @@ class ExamPaperController extends CommonController
         $ExamQuestion = new ExamQuestion();
 
         $questions = $ExamQuestion -> getExamQuestion($data);
+        //return response()->json(
+            dd($this->success_rows(1,'获取成功',$questions->total(),config('msc.page_size',10),$questions->currentPage(),array('questions'=>$questions->toArray())));
+       // );
+
 //        foreach($questions as $k => $v){
 //            foreach($v->exam_question_label_relation as $kk => $vv){
 //                dd($vv);
