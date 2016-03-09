@@ -123,6 +123,6 @@ class SysValidatecode extends Model
      * 查询 手机号 是否有 有效的验证码
      */
     public function judgeCode($mobile, $type){
-        return $this->where('mobile', $mobile)->where('type',2)->where('expiretime','>',time())->select('code')->first();
+        return $this->where('mobile', $mobile)->where('type',2)->where('expiretime','>',time())->first();
     }
 }
