@@ -42,7 +42,7 @@
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">搜索</button>
                     </form>
-                    <button class="btn btn-sm btn-primary marl_10 right" id="add" data-toggle="modal" data-target="#myModal">新增</button>
+                    <button class="btn btn-sm btn-primary marl_10 right" id="add">新增</button>
                 </div>
                 <div class="list_all">
                     <table class="table table-striped" id="table-striped" style="background:#fff">
@@ -64,7 +64,7 @@
                                         <td>{{ $val['examQuestionLabelName'] }}</td>
                                         <td>{{ $val['examQuestionTypeName'] }}</td>
                                         <td>
-                                            <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" class="edit" dataId="{{ $val['id'] }}">
+                                            <a href="javascript:void(0)" class="edit" dataId="{{ $val['id'] }}">
                                                 <span class="read state1 detail">
                                                     <i class="fa fa-cog fa-2x"></i>
                                                 </span>
