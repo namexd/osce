@@ -222,7 +222,7 @@ class AutomaticPlanArrangement
                         $station->timer = 0;
                         //将结束时间写在表内
                         foreach ($tempValues as $tempValue) {
-                            $tempValue->end_dt = date('Y-m-d H:i:s', $i - 1);
+                            $tempValue->end_dt = date('Y-m-d H:i:s', $i);
                             if (!$tempValue->save()) {
                                 throw new \Exception('开门失败！', -10);
                             }

@@ -329,7 +329,7 @@ function add_basic(){
     $('#add-basic').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
 
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         },function(thisID){
