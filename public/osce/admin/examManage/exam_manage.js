@@ -164,7 +164,7 @@ function exam_add(){
      */
     $('#exam_add').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         },function(thisID){
@@ -1210,7 +1210,7 @@ function examroom_assignment(){
      */
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         },function(its){
@@ -1731,7 +1731,7 @@ function exam_notice_add(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         }, function(index){
@@ -1921,7 +1921,7 @@ function exam_notice_edit(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         }, function(index){
@@ -2385,9 +2385,9 @@ function examinee_manage(){
         var examId=$(this).attr("examid");
 
         $.ajax({
-            type:'get',
+            type:'post',
             async:true,
-            url:'',
+            url:pars.judgeUrl,
             data:{id:sid,exam_id:examId},
             success:function(res){
                 if(res.code!=1){
@@ -2407,7 +2407,7 @@ function examinee_manage(){
                                     layer.msg('删除成功！',{'skin':'msg-success','icon':1});
                                     location.reload();
                                 }else {
-                                    layer.msg(data.message,{'skin':'msg-success','icon':1});
+                                    layer.msg(data.message,{'skin':'msg-error','icon':1});
                                 }
                             }
                         })
@@ -3079,7 +3079,7 @@ function station_assignment(){
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
 
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         },function(its){
