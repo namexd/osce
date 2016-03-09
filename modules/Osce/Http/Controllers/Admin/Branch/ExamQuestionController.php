@@ -161,7 +161,7 @@ class ExamQuestionController extends CommonController
         $result = $examQuestionModel->addExamQuestion($examQuestionData,$examQuestionItemData,$ExamQuestionLabelRelationData);
         if($result)
         {
-            return redirect()->route('osce::admin.resourcemanage.subject_manage')->with('success','新增成功');
+            return redirect()->route('osce.admin.ExamQuestionController.showExamQuestionList')->with('success','新增成功');
         }
         else
         {
