@@ -34,6 +34,10 @@ class ExamQuestionController extends CommonController
         $formData['examPaperLabelId'] = $request->input('examPaperLabelId'); //试题类型id
         $formData['examQuestionTypeId'] = $request->input('examQuestionTypeId');//题目类型id
 
+        //获取试题类型列表
+        $examQuestionLabelTypeModel= new ExamQuestionLabelType();
+        $examQuestionLabelTypeList = $examQuestionLabelTypeModel->examQuestionLabelTypeList();
+
         //获取题目类型列表
         $examQuestionTypeModel= new ExamQuestionType();
         $examQuestionTypeList = $examQuestionTypeModel->examQuestionTypeList();
@@ -63,8 +67,10 @@ class ExamQuestionController extends CommonController
         }
 
         return view('osce::admin.resourcemanage.subject_manage', [
-            'data'      =>$data,//对象型数据
-            'list'      =>$list ,//试题列表（数组型数据）
+            'data'                         =>$data,//对象型数据
+            'list'                         =>$list ,//试题列表（数组型数据）
+            'examQuestionLabelTypeList' =>$examQuestionLabelTypeList,//试题类型列表
+            'examQuestionTypeList'       =>$examQuestionTypeList //题目类型列表
         ]);
         /*table后写入
          *  <div>
