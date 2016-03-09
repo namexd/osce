@@ -44,13 +44,6 @@
                         /*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '教师编号不能为空'
-                            },
-                            regexp: {
-                                regexp: /^\w+$/,
-                                message: '教师编号应该由数字，英文或下划线组成'
-                            },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
                             remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
                                 url: '{{route('osce.admin.invigilator.postCodeUnique')}}',//验证地址
@@ -66,23 +59,18 @@
                                         code: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }
+                            },
+                            notEmpty: {/*非空提示*/
+                                message: '教师编号不能为空'
+                            },
+                            regexp: {
+                                regexp: /^\w+$/,
+                                message: '教师编号应该由数字，英文或下划线组成'
                             }
                         }
                     },
                     mobile: {
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '手机号码不能为空'
-                            },
-                            stringLength: {
-                                min: 11,
-                                max: 11,
-                                message: '请输入11位手机号码'
-                            },
-                            regexp: {
-                                regexp: /^1[3|7|5|8]{1}[0-9]{9}$/,
-                                message: '请输入正确的手机号码'
-                            },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
                             remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
                                 url: '{{route('osce.admin.invigilator.postSelectTeacher')}}',//验证地址
@@ -95,6 +83,18 @@
                                         mobile: $('#mobile').val()
                                     }
                                 }
+                            },
+                            notEmpty: {/*非空提示*/
+                                message: '手机号码不能为空'
+                            },
+                            stringLength: {
+                                min: 11,
+                                max: 11,
+                                message: '请输入11位手机号码'
+                            },
+                            regexp: {
+                                regexp: /^1[3|7|5|8]{1}[0-9]{9}$/,
+                                message: '请输入正确的手机号码'
                             }
                         }
                     },
@@ -102,13 +102,6 @@
                         /*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '身份证号不能为空'
-                            },
-                            regexp: {
-                                regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
-                                message: '请输入正确的身份证号'
-                            },
                             threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
                             remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
                                 url: '{{route('osce.admin.invigilator.postIdcardUnique')}}',//验证地址
@@ -124,6 +117,13 @@
                                         idcard: $('[name="whateverNameAttributeInYourForm"]').val()
                                     }
                                 }
+                            },
+                            notEmpty: {/*非空提示*/
+                                message: '身份证号不能为空'
+                            },
+                            regexp: {
+                                regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                                message: '请输入正确的身份证号'
                             }
                         }
                     },
