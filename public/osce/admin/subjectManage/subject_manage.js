@@ -143,11 +143,11 @@ function subject_manage(){
         },function(){
             $.ajax({
                 url:url+'?id='+id,
-                type:"get",
+                type:"post",
+                dataType:"json",
                 cache:false,
                 success:function(res){
-                    console.log(res);
-                    if(res.code == "1"){
+                    if(res == true){
                         location.href = location.href;
                     }else{
                         layer.msg('删除失败',{'skin':'msg-error',icon:1})
@@ -155,7 +155,12 @@ function subject_manage(){
                 }
             })
         })
-    })
+    });
+    //新增
+    $("#add").click(function(){
+        var add = pars.add;
+        location.href=add;
+    });
 }
 
 

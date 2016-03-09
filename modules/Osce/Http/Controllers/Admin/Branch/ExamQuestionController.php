@@ -34,17 +34,28 @@ class ExamQuestionController extends CommonController
         $formData['examPaperLabelId'] = $request->input('examPaperLabelId'); //试题类型id
         $formData['examQuestionTypeId'] = $request->input('examQuestionTypeId');//题目类型id
 
+        //获取试题类型列表
+        $examQuestionLabelTypeModel= new ExamQuestionLabelType();
+        $examQuestionLabelTypeList = $examQuestionLabelTypeModel->examQuestionLabelTypeList();
+
         //获取题目类型列表
         $examQuestionTypeModel= new ExamQuestionType();
         $examQuestionTypeList = $examQuestionTypeModel->examQuestionTypeList();
 
-
         //获取试题列表信息
         $examQuestionModel= new ExamQuestion();
         $data = $examQuestionModel->showExamQuestionList($formData);
-
+      
         //获取考核范围
         $examQuestionLabelName = "";
+        foreach($data as $k1=>$v1) {
+            foreach ($v1->ExamQuestionLabelRelation as $k2 => $v2) {
+                 $content[$k1][$k2] = $v2->ExamQuestionLabel['name'];
+            }
+
+        }
+        //dd($content);
+
         $list = [];
         if(count($data) > 0){
             foreach($data as $k=>$item){
@@ -63,8 +74,10 @@ class ExamQuestionController extends CommonController
         }
 
         return view('osce::admin.resourcemanage.subject_manage', [
-            'data'      =>$data,//对象型数据
-            'list'      =>$list ,//试题列表（数组型数据）
+            'data'                         =>$data,//对象型数据
+            'list'                         =>$list ,//试题列表（数组型数据）
+            'examQuestionLabelTypeList' =>$examQuestionLabelTypeList,//试题类型列表
+            'examQuestionTypeList'       =>$examQuestionTypeList //题目类型列表
         ]);
         /*table后写入
          *  <div>
@@ -96,7 +109,7 @@ class ExamQuestionController extends CommonController
         $examQuestionLabelTypeModel = new ExamQuestionLabelType();
         $examQuestionLabelTypeList = $examQuestionLabelTypeModel->examQuestionLabelTypeList();
 
-        return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
+        return view('osce::admin.resourcemanage.subject_manage_add', [
             'examQuestionTypeList'       => $examQuestionTypeList, //题目类型列表
             'examQuestionLabelTypeList' => $examQuestionLabelTypeList, //考核范围列表
         ]);
@@ -278,7 +291,6 @@ class ExamQuestionController extends CommonController
         $id = $request->input('id');
         $examQuestionModel= new ExamQuestion();
         $result = $examQuestionModel->deleteExamQuestion($id);
-        dd($result);
         if($result){
             return response()->json(true);
         }else{

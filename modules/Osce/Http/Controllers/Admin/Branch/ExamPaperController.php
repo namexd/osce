@@ -10,7 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
-use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionPaper;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -37,7 +37,7 @@ class ExamPaperController extends CommonController
         $keyword = $request->keyword;
 
         //获取试卷与试题构造表数据
-        $examPaper= new ExamQuestionPaper();
+        $examPaper= new ExamPaper();
         $examList = $examPaper->getExamPaperlist($keyword);
         //dd($examList);
         return view('osce::admin.resourcemanage.subject_papers', ['data' => $examList]);
@@ -82,7 +82,7 @@ class ExamPaperController extends CommonController
         ]);
         $id = $request->id;
 
-        $Paper = new ExamQuestionPaper();
+        $Paper = new ExamPaper();
         $delete = $Paper->where('id','=',$id)->delete();
 
         if($delete){

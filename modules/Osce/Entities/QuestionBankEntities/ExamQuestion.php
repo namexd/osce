@@ -67,16 +67,11 @@ class ExamQuestion extends Model
         })->leftJoin('exam_question_type', function ($join) { //题目类型表
             $join->on('exam_question.exam_question_type_id', '=', 'exam_question_type.id');
 
-        })/*->leftJoin('exam_question_label_type', function ($join) { //标签类型表
-            $join->on('exam_question_label_relation.exam_paper_label_id', '=', 'exam_question_label_type.id');
-
-        })*/->groupBy('exam_question.id')->select([
+        })->groupBy('exam_question.id')->select([
             'exam_question.id',//试题id
             'exam_question.name',//试题名称
-           // 'exam_question_label_type.name as examQuestionlabelTypeName',//考核范围
             'exam_question_type.name as examQuestionTypeName',//题目类型
         ]);
-
         $pageSize = config('page_size');
         return $builder->paginate($pageSize);
     }
@@ -100,6 +95,7 @@ class ExamQuestion extends Model
 
             //删除试题子项表
             $examQuestionItem = ExamQuestionItem::where('exam_question_id', '=', $id)->get();
+
             if (!$examQuestionItem->isEmpty()) {
                 if (!ExamQuestionItem::where('exam_question_id','=',$id)->delete()) {
                     DB::rollback();
@@ -109,7 +105,7 @@ class ExamQuestion extends Model
             //删除试题和标签中间表
             $examQuestionLabelRelation = ExamQuestionLabelRelation::where('exam_question_id', '=', $id)->get();
             if (!$examQuestionLabelRelation->isEmpty()) {
-                if (!ExamQuestionLabel::where('exam_question_id','=', $id)->delete()) {
+                if (!ExamQuestionLabelRelation::where('exam_question_id','=', $id)->delete()) {
                     DB::rollback();
                     return false;
                 }
