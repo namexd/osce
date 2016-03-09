@@ -133,6 +133,7 @@ class ExamQuestionController extends CommonController
 
             'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
+        //试题和标签中间表数据
         $ExamQuestionLabelRelationData = [];
         foreach($request->all() as $key => $val){
             if(preg_match('/^tag-{1,3}/',$key)){
@@ -153,10 +154,6 @@ class ExamQuestionController extends CommonController
             'content' =>$request->input('content'),//选项内容/判断内容
         );
 
-        //试题和标签中间表数据
-        $examQuestionLabelRelationData = array(
-            'exam_question_label_id' =>$request->input('examQuestionLabelId'),//标签id
-        );
         $examQuestionModel= new ExamQuestion();
         $result = $examQuestionModel->addExamQuestion($examQuestionData,$examQuestionItemData,$ExamQuestionLabelRelationData);
         if($result)
@@ -252,49 +249,50 @@ class ExamQuestionController extends CommonController
      */
     public function postExamQuestionEdit(Request $request)
     {
-        dd($request->all());
         $this->validate($request, [
-            'id'                       => 'required|integer',//试题表
-            'examQuestionTypeId'    =>'sometimes|integer',
-            'name'                     => 'required|max:32|string',
-            'parsing'                 => 'sometimes|max:255|string',
-            'answer'                  => 'required|max:32|string',
+            'id'                      =>'required|integer',
+            'examQuestionTypeId'    =>'sometimes|integer',//试题表
+            'name'                     => 'required|string',
+            'parsing'                 => 'sometimes|string',
+            'answer'                  => 'required',
 
-            'examQuestionItemName'  => 'required|max:32|string',//试题子项表
-            'content'                 => 'sometimes|max:255|string',
+            'examQuestionItemName'  => 'required|array',//试题子项表
+            'content'                 => 'sometimes|array',
 
-            'examQuestionLabelId'   =>'sometimes|integer',//试题和标签中间表
+            'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
+        //试题和标签中间表数据
+        $ExamQuestionLabelRelationData = [];
+        foreach($request->all() as $key => $val){
+            if(preg_match('/^tag-{1,3}/',$key)){
+                $arr = explode('-',$key);
+                $ExamQuestionLabelRelationData[$arr[1]] = $val;
+            }
+        }
         //试题表数据
         $examQuestionData =array(
             'id'                       =>$request->input('id'),//试题id
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'answer'                  =>$request->input('answer'),//正确答案（a/abc/0,1）
+            'answer'                  =>serialize($request->input('answer')),//正确答案（a/abc/0,1）
         );
         //试题子项表数据
         $examQuestionItemData = array(
             'name' =>$request->input('examQuestionItemName'),//选项名称:A/B/C/D
             'content' =>$request->input('content'),//选项内容/判断内容
         );
-        //试题和标签中间表数据
-        $examQuestionLabelRelationData = array(
-            'exam_question_label_id' =>$request->input('examQuestionLabelId'),//标签id
-        );
-        $examQuestionModel= new ExamQuestion();
-        $result = $examQuestionModel->editExamQuestion($examQuestionData,$examQuestionItemData,$examQuestionLabelRelationData);
 
-        dd($result);
+        $examQuestionModel= new ExamQuestion();
+        $result = $examQuestionModel->editExamQuestion($examQuestionData,$examQuestionItemData,$ExamQuestionLabelRelationData);
         if($result)
         {
-            return redirect()->route('examQuestion.getCustomerList')->with('success','编辑成功');
+            return redirect()->route('osce.admin.ExamQuestionController.showExamQuestionList')->with('success','编辑成功');
         }
         else
         {
             return back()->with('error','编辑失败');
         }
-
     }
 
     /**删除试题

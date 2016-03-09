@@ -226,48 +226,45 @@ class ExamQuestion extends Model
      */
     public function editExamQuestion($examQuestionData, $examQuestionItemData, $examQuestionLabelRelationData)
     {
-        DB::beginTransaction();
-        $examQuestion = ExamQuestion::where('id', '=', $examQuestionData['id'])->update($examQuestionData);
-        if (!$examQuestion) {
-            DB::rollback();
-            return false;
-        }
-
-        foreach ($examQuestionItemData as $key => $value) {
-            $examQuestionItem = ExamQuestionItem::where('exam_question_id', '=', $examQuestionData['id'])->update($value);
-            if (!$examQuestionItem) {
-                DB::rollback();
-                return false;
+        $DB = DB::connection('osce_mis');
+        $DB->beginTransaction();
+        try{
+            $examQuestions = ExamQuestion::where('id','=',$examQuestionData['id'])->first();
+            if($examQuestions){
+                if (!ExamQuestion::where('id','=',$examQuestionData['id'])->update($examQuestionData)) {
+                    throw new \Exception(' 修改试题表数据失败！');
+                }
             }
-        }
-        foreach ($examQuestionLabelRelationData as $key => $value) {
-            $examQuestionLabelRelation = ExamQuestionLabelRelation::where('exam_question_id', '=', $examQuestionData['id'])->update($examQuestionLabelRelationData);
-            if (!$examQuestionLabelRelation) {
-                DB::rollback();
-                return false;
+
+            //向试题子项表插入数据
+            foreach ($examQuestionItemData as $key => $value) {
+                $data['create_user_id'] = Auth::user()->id;
+                $data['exam_question_id'] = $examQuestionData['id'];
+                foreach($value as $k => $v){
+                    $data['name'] = $v;
+                    $data['content'] = $examQuestionItemData['content'][$k];
+                    if(!ExamQuestionItem::where('exam_question_id','=',$examQuestionData['id'])->update($value)){
+                        throw new \Exception(' 编辑试题子项数据失败！');
+                    }
+                }
             }
+            //向试题和标签中间表插入数据
+            foreach ($examQuestionLabelRelationData as $key => $value) {
+                $examQuestionLabelRelationInfo['exam_question_id'] = $examQuestionData['id'];
+                $examQuestionLabelRelationInfo['create_user_id'] = Auth::user()->id;
+                foreach($value as $v){
+                    $examQuestionLabelRelationInfo['exam_question_label_id'] = $v;
+                    if(!ExamQuestionLabelRelation::where('exam_question_id','=',$examQuestionData['id'])->update($examQuestionLabelRelationInfo)){
+                        throw new \Exception(' 编辑试题和标签中间数据失败！');
+                    }
+                }
+            }
+            $DB->commit();
+            return true;
+        }catch (\Exception $ex){
+            $DB->rollback();
+            throw $ex;
         }
-
-
-        DB::commit();
-        return true;
-    }
-
-    /**保存编辑
-     * @method
-     * @url /osce/
-     * @access public
-     *
-     * @param $examQuestionData 试题表数据
-     * @param $examQuestionItemData 试题子项表数据
-     * @param $examQuestionLabelRelationData 试题和标签中间表数据
-     * @return bool
-     * @author xumin <xumin@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function exam_question_label_relation(){
-        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelRelation','exam_question_id','id');
     }
 
     /**根据标签查找试题
