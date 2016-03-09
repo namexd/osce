@@ -49,12 +49,13 @@ class ExamQuestionController extends CommonController
                     $examQuestionLabelName .= $v2->ExamQuestionLabel['name'];
                 }
                 $content[$k1] = $examQuestionLabelName;*/
+                dd($v2->ExamQuestionLabel);
 
                 $content[$k1][$k2] = $v2->ExamQuestionLabel['name'];
                 //print_r($v2->ExamQuestionLabel['name'].',');
             }
         }
-        //dd($content);
+       // dd($content);
 
         $list = [];
         if(count($data) > 0){

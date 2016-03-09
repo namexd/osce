@@ -25,6 +25,11 @@ class ExamQuestionLabelRelation extends Model
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['id', 'status', 'exam_question_label_id', 'exam_question_id', 'created_user_id'];
+
+    //关联标签表
+    public function ExamQuestionLabel (){
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel','id','exam_question_label_id');//一对多(参数：关联模型名称，关联模型名称键名，本模型键名)
+    }
     /**试卷标签表
      * @method
      * @url /osce/
