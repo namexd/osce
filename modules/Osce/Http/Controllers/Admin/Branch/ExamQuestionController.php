@@ -42,10 +42,10 @@ class ExamQuestionController extends CommonController
         $examQuestionTypeModel= new ExamQuestionType();
         $examQuestionTypeList = $examQuestionTypeModel->examQuestionTypeList();
 
-
         //获取试题列表信息
         $examQuestionModel= new ExamQuestion();
         $data = $examQuestionModel->showExamQuestionList($formData);
+     
 
         //获取考核范围
         $examQuestionLabelName = "";
@@ -55,11 +55,7 @@ class ExamQuestionController extends CommonController
             }
 
         }
-        dd($content);
-
-
-
-
+        //dd($content);
 
         $list = [];
         if(count($data) > 0){
