@@ -16,6 +16,12 @@ class ExamQuestionLabelType extends  Model
     protected $primaryKey	=	'id';
     protected $fillable 	=	['id', 'name','status'];
 
+
+    //关联标签表
+    public function examQuestionLabel (){
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel','label_type_id','id');//一对多(参数：关联模型名称，关联模型名称键名，本模型键名)
+    }
+
     /**获取标签类型列表
      * @method
      * @url /osce/

@@ -47,14 +47,13 @@ class ExamQuestionController extends CommonController
         $data = $examQuestionModel->showExamQuestionList($formData);
 
         //获取考核范围
-        $examQuestionLabelName = "";
+        $content = array();
         foreach($data as $k1=>$v1) {
             foreach ($v1->ExamQuestionLabelRelation as $k2 => $v2) {
                  $content[$k1][$k2] = $v2->ExamQuestionLabel['name'];
             }
-
+            $content[$k1]['examQuestionLabelName'] = implode(',',$content[$k1]);
         }
-        //dd($content);
 
         $list = [];
         if(count($data) > 0){
@@ -63,7 +62,7 @@ class ExamQuestionController extends CommonController
                     'number'                       => $k+1,//序号
                     'id'                            => $item->id,//试题id
                     'name'                          => $item->name,//试题名称
-                    'examQuestionLabelName'      => '123132',//考核范围
+                    'examQuestionLabelName'      => $content[$k]['examQuestionLabelName'],//考核范围
                     'examQuestionTypeName'       => $item->examQuestionTypeName,//题目类型
                 ];
             }
@@ -99,6 +98,10 @@ class ExamQuestionController extends CommonController
         //获取考核范围列表（标签类型列表）
         $examQuestionLabelTypeModel = new ExamQuestionLabelType();
         $examQuestionLabelTypeList = $examQuestionLabelTypeModel->examQuestionLabelTypeList();
+        foreach($examQuestionLabelTypeList as $k=>$v){
+            $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;
+        }
+        dd($examQuestionLabelTypeList);
 
         return view('osce::admin.resourcemanage.subject_manage_add', [
             'examQuestionTypeList'       => $examQuestionTypeList, //题目类型列表
