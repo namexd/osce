@@ -102,15 +102,6 @@ class ExamQuestionController extends CommonController
             $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;
         }
 
-/*        foreach($examQuestionLabelTypeList as $k=>$v){
-            $a[$k]['id']=$v->id;
-            $a[$k]['name']=$v->name;
-            foreach($v['examQuestionLabelList'] as $key=>$item){
-                $a[$k]['examQuestionLabelList'][$key]['id'] = $item->id;
-                $a[$k]['examQuestionLabelList'][$key]['name']= $item->name;
-            }
-        }
-        dd($a);*/
         return view('osce::admin.resourcemanage.subject_manage_add', [
             'examQuestionTypeList'       => $examQuestionTypeList, //题目类型列表
             'examQuestionLabelTypeList' => $examQuestionLabelTypeList, //考核范围列表
@@ -138,7 +129,7 @@ class ExamQuestionController extends CommonController
             'examQuestionItemName'  => 'required|max:32|string',//试题子项表
             'content'                 => 'sometimes|max:255|string',
 
-            'examPaperLabelId'      =>'sometimes|integer',//试题和标签中间表
+            'examQuestionLabelId'      =>'sometimes|integer',//试题和标签中间表
         ]);
         //试题表数据
         $examQuestionData =array(
@@ -220,7 +211,6 @@ class ExamQuestionController extends CommonController
             $examQuestionLabelTypeList[$k]['examQuestionLabelList_'] = $data;
         }
 
-        dd($examQuestionLabelTypeList);
 
         $datas = [];
         if(count($list) > 0){
@@ -264,7 +254,7 @@ class ExamQuestionController extends CommonController
             'examQuestionItemName'  => 'required|max:32|string',//试题子项表
             'content'                 => 'sometimes|max:255|string',
 
-            'examPaperLabelId'      =>'sometimes|integer',//试题和标签中间表
+            'examQuestionLabelId'   =>'sometimes|integer',//试题和标签中间表
         ]);
         //试题表数据
         $examQuestionData =array(
@@ -281,7 +271,7 @@ class ExamQuestionController extends CommonController
         );
         //试题和标签中间表数据
         $examQuestionLabelRelationData = array(
-            'exam_paper_label_id' =>$request->input('examPaperLabelId'),//试卷标签id
+            'exam_question_label_id' =>$request->input('examQuestionLabelId'),//标签id
         );
         $examQuestionModel= new ExamQuestion();
         $result = $examQuestionModel->editExamQuestion($examQuestionData,$examQuestionItemData,$examQuestionLabelRelationData);
