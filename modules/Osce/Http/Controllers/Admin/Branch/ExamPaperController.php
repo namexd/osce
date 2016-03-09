@@ -33,7 +33,7 @@ class ExamPaperController extends CommonController
      */
     public function getExamList(Request $request)
     {
-        
+
         $keyword = $request->keyword;
 
         //获取试卷与试题构造表数据
