@@ -1247,14 +1247,21 @@ class ExamController extends CommonController
 //        $plan   =   $this           ->  getEmptyTime($plan);
         $user   =   Auth::user();
         //如果$plan为空，就判断该考试在临时表中是否有数据
-        if (count($plan) == 0) {
-            if (ExamPlanRecord::where('exam_id', $id)->first()) {
-                $automaticPlanArrangement = new AutomaticPlanArrangement($id, new ExamPlaceEntity(), new \Modules\Osce\Entities\AutomaticPlanArrangement\Exam());
-                $plan = $automaticPlanArrangement->output($id);
-                return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors('当前排考计划没有保存！');
-            } else {
-                $plan = [];
+
+        try {
+            if (count($plan) == 0) {
+                if (ExamPlanRecord::where('exam_id', $id)->first()) {
+                    $automaticPlanArrangement = new AutomaticPlanArrangement($id, new ExamPlaceEntity(), new \Modules\Osce\Entities\AutomaticPlanArrangement\Exam());
+                    $plan = $automaticPlanArrangement->output($id);
+                    return view('osce::admin.examManage.smart_assignment', ['exam' => $exam, 'plan' => $plan])->withErrors('当前排考计划没有保存！');
+                } else {
+                    $plan = [];
+                }
             }
+        }
+        catch (\Exception $ex)
+        {
+            return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
         }
         return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
     }

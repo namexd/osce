@@ -731,7 +731,7 @@ class InvigilatePadController extends CommonController
                 if(!$student){
                     throw new \Exception('没有找到该学生相关信息',-1);
                 }
-                 $student->status=5;
+//                 $student->status=5;
                 if(!$student->save()){
                     throw new \Exception('替考警告失败',-2);
                 }

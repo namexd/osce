@@ -97,8 +97,8 @@ class StudentExamQueryController extends CommonController
             'exam_id' => 'required|integer',
             'student_id' => 'sometimes|integer'
         ]);
-        $examId     = Input::get('exam_id');
-        $studentId  = Input::get('student_id');
+        $examId = Input::get('exam_id');
+        $studentId = Input::get('student_id');
         //获取到考试的时间
         try {
             if (empty($studentId)) {
@@ -141,16 +141,16 @@ class StudentExamQueryController extends CommonController
                 }
 
                 $stationData[] = [
-                    'exam_result_id'=> $stationType->exam_result_id,
-                    'station_id'    => $stationType->id,
-                    'score'         => $stationType->score,
-                    'time'          => $stationType->time,
+                    'exam_result_id' => $stationType->exam_result_id,
+                    'station_id' => $stationType->id,
+                    'score' => $stationType->score,
+                    'time' => $stationType->time,
                     'grade_teacher' => $stationType->grade_teacher,
-                    'type'          => $stationType->type,
-                    'station_name'  => $stationType->station_name,
-                    'sp_name'       => isset($spteacher->name) ? $spteacher->name : '-',
-                    'begin_dt'      => $examTime->begin_dt,
-                    'end_dt'        => $examTime->end_dt,
+                    'type' => $stationType->type,
+                    'station_name' => $stationType->station_name,
+                    'sp_name' => isset($spteacher->name) ? $spteacher->name : '-',
+                    'begin_dt' => $examTime->begin_dt,
+                    'end_dt' => $examTime->end_dt,
                     'exam_screening_id' => $stationType->exam_screening_id,
 //                    'student_name' =>$studentInfo->name,
 //                    'student_mobile' =>$studentInfo->mobile,
@@ -205,24 +205,23 @@ class StudentExamQueryController extends CommonController
         //TODO: zhoufuxiang
         $scores = [];
         $itemScore = [];
-        foreach($examScoreList as $itm){
+        foreach ($examScoreList as $itm) {
             $pid = $itm->standard->pid;
             $scores[$pid]['items'][] = [
-                'standard'  => $itm->standard,
-                'score'     => $itm->score,
+                'standard' => $itm->standard,
+                'score' => $itm->score,
             ];
-            $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore'])? $itemScore[$pid]['totalScore']:0) + $itm->score;
+            $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
         }
 
         foreach ($scores as $index => $item) {
             //获取考核点信息
             $standardM = Standard::where('id', $index)->first();
-            $scores[$index]['sort']     = $standardM->sort;
-            $scores[$index]['content']  = $standardM->content;
-            $scores[$index]['tScore']   = $standardM->score;
-            $scores[$index]['score']    = $itemScore[$index]['totalScore'];
+            $scores[$index]['sort'] = $standardM->sort;
+            $scores[$index]['content'] = $standardM->content;
+            $scores[$index]['tScore'] = $standardM->score;
+            $scores[$index]['score'] = $itemScore[$index]['totalScore'];
         }
-
 
 
 //        $groupData = [];
@@ -255,9 +254,9 @@ class StudentExamQueryController extends CommonController
 
         return view('osce::wechat.resultquery.examination_detail',
             [
-                'examScoreList'  => $scores,
+                'examScoreList' => $scores,
                 'examresultList' => $examresultList,
-                'examName'       => $examName
+                'examName' => $examName
             ]);
     }
 
@@ -352,7 +351,7 @@ class StudentExamQueryController extends CommonController
             if (!empty($avg)) {
 
                 if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
-                    $item['avg_score'] = number_format($avg->pluck('score')->sum() / $avg->pluck('score')->count(),2);
+                    $item['avg_score'] = number_format($avg->pluck('score')->sum() / $avg->pluck('score')->count(), 2);
                     date_default_timezone_set("UTC");
                     $item['avg_time'] = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
                     date_default_timezone_set("PRC");

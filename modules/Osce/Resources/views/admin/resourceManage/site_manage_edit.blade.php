@@ -109,16 +109,18 @@
                             <label class="col-sm-2 control-label">场所类别</label>
 
                             <div class="col-sm-10">
-                                <select class="form-control" name="cate">
-                                    @if($type==='0')
-                                        <option value="0" {{0==$type? 'selected="selected"':''}}>考场</option>
+                                @if($type==='0')
+                                <select class="form-control" name="cate" disabled="disabled">
+                                        <option value="0" {{0==$type? 'selected="selected"':''}} >考场</option>
+                                </select>
                                     @else
+                                    <select class="form-control" name="cate">
                                         @forelse($cateList as $cate)
                                             <option value="{{$cate->cate}}"  {{$cate->cate==$type? 'selected="selected"':''}} >{{$cate->cate}}</option>
                                         @empty
                                         @endforelse
                                     @endif
-                                </select>
+                                    </select>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
