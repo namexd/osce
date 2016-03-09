@@ -8,7 +8,7 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Osce\Entities\CommonModel;
-class ExamQuestionPaper extends CommonModel
+class ExamPaper extends CommonModel
 {
     protected $connection = 'osce_mis';
     protected $table = 'exam_paper';
@@ -18,6 +18,17 @@ class ExamQuestionPaper extends CommonModel
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = ['id', 'name', 'status','mode','type','length','created_user_id'];
+
+    /**
+     * 与试题构造表的模型关系
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月9日10:38:36
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ExamPaperStructure(){
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamPaperStructure','exam_paper_id','id');
+    }
     /**
      * 获取试卷列表
      * @access    public
@@ -37,8 +48,8 @@ class ExamQuestionPaper extends CommonModel
         $builder = $builder->leftjoin('exam_paper_structure',function($join){
                 $join->on('exam_paper_structure.exam_paper_id','=','exam_paper.id');
             })->select('exam_paper.name','exam_paper.type','exam_paper_structure.num','exam_paper_structure.total_score')
-            ->orderBy('exam_paper.id','desc')->paginate(config('msc.page_size'));
-
+            ->orderBy('exam_paper.id','desc')->paginate(config('osce.page_size'));
+        //dd($builder);
         return $builder;
     }
 

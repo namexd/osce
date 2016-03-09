@@ -39,7 +39,7 @@ class ExamPaperController extends CommonController
         //获取试卷与试题构造表数据
         $examPaper= new ExamQuestionPaper();
         $examList = $examPaper->getExamPaperlist($keyword);
-
+        //dd($examList);
         return view('osce::admin.resourcemanage.subject_papers', ['data' => $examList]);
     }
 
@@ -165,6 +165,7 @@ class ExamPaperController extends CommonController
 
         //根据筛选参数查找试题数据
         $ExamQuestion = new ExamQuestion();
+
         $questions = $ExamQuestion -> getExamQuestion($data);
 //        foreach($questions as $k => $v){
 //            foreach($v->exam_question_label_relation as $kk => $vv){
