@@ -49,6 +49,18 @@ class ExamQuestionController extends CommonController
 
         //获取考核范围
         $examQuestionLabelName = "";
+        foreach($data as $k1=>$v1) {
+            foreach ($v1->ExamQuestionLabelRelation as $k2 => $v2) {
+                 $content[$k1][$k2] = $v2->ExamQuestionLabel['name'];
+            }
+
+        }
+        dd($content);
+
+
+
+
+
         $list = [];
         if(count($data) > 0){
             foreach($data as $k=>$item){
@@ -102,7 +114,7 @@ class ExamQuestionController extends CommonController
         $examQuestionLabelTypeModel = new ExamQuestionLabelType();
         $examQuestionLabelTypeList = $examQuestionLabelTypeModel->examQuestionLabelTypeList();
 
-        return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
+        return view('osce::admin.resourcemanage.subject_manage_add', [
             'examQuestionTypeList'       => $examQuestionTypeList, //题目类型列表
             'examQuestionLabelTypeList' => $examQuestionLabelTypeList, //考核范围列表
         ]);
