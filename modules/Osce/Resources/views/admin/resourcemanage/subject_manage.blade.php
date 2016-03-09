@@ -90,7 +90,7 @@
                             @endif
                         </tbody>
                     </table>
-                    <div class="pull-left">共10条</div>
+                    <div class="pull-left">共{{$data->total()}}条</div>
                     <div class="btn-group pull-right">
                         <ul class="pagination">
                             <li class="disabled"><span>«</span></li>
