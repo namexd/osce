@@ -144,8 +144,6 @@ class ExamPaperController extends CommonController
      * @version   1.0
      * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-
-
      */
     public function getExamQuestions(Request $request)
     {
@@ -167,16 +165,27 @@ class ExamPaperController extends CommonController
         $ExamQuestion = new ExamQuestion();
 
         $questions = $ExamQuestion -> getExamQuestion($data);
-        //return response()->json(
-            dd($this->success_rows(1,'获取成功',$questions->total(),config('msc.page_size',10),$questions->currentPage(),array('questions'=>$questions->toArray())));
-       // );
 
-//        foreach($questions as $k => $v){
-//            foreach($v->exam_question_label_relation as $kk => $vv){
-//                dd($vv);
-//            }
-//        }
+
         dd($questions);
         exit;
+    }
+
+    /**
+     * 新增试卷操作
+     * @url       GET /osce/admin/exampaper/add-exams
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAddExams(Request $request){
+        $data = $request->all();
+        $examPaper = new ExamPaper();
+        $addExam  = $examPaper -> addExams($data);
     }
 }
