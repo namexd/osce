@@ -360,7 +360,11 @@ class Exam extends CommonModel
                 {
                     throw new \Exception('重置作废数据失败');
                 }
-                //清楚排考记录
+
+                /**
+                 * 清除排考记录
+                 * @return bool
+                 */
                 ExamPlanRecord::deleteRecord($exam_id);
                 // 删除邀请表相关数据
                 $examScreeningList  =   $exam->examScreening;
