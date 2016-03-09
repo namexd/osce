@@ -17,6 +17,7 @@ use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
+use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Vcr;
@@ -107,19 +108,57 @@ class PadController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-       public function getStudentVcr(Request $request){
-             $this->validate($request,[
-                'room_id' => 'required|integer',
-                'exam_id'    => 'required|integer'
-             ]);
-             $room_id=$request->get('room_id');
-             $exam_id=$request->get('exam_id');
-             $stationModel=new StationVcr();
-             $stationVcrs=$stationModel->getStionVcr($room_id,$exam_id);
-             return response()->json(
-                 $this->success_data($stationVcrs,1,'success')
-             );
-       }
+    public function getStudentVcr(Request $request){
+        $this->validate($request,[
+            'room_id' => 'required|integer',
+            'exam_id'    => 'required|integer'
+        ]);
+        $room_id=$request->get('room_id');
+        $exam_id=$request->get('exam_id');
+        $stationModel=new StationVcr();
+        $stationVcrs=$stationModel->getStionVcr($room_id,$exam_id);
+
+        return response()->json(
+            $this->success_data($stationVcrs,1,'success')
+        );
+    }
+
+    /**
+     * 根据考场ID、考试ID和teacher_id获取考站的摄像头信息(接口)
+     * @method GET
+     * @url api/1.0/private/osce/pad/teacher-vcr
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}    2016-3-9
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getTeacherVcr(Request $request)
+    {
+        $this->validate($request,[
+            'exam_id'       => 'required|integer',
+            'teacher_id'    => 'required|integer',
+            'room_id'       => 'required|integer',
+        ]);
+        //获取参数
+        $exam_id    = $request->get('exam_id');
+        $room_id    = $request->get('room_id');
+        $teacher_id = $request->get('teacher_id');
+        $stationTea = new StationTeacher();
+        $vcrInfo    = $stationTea->getVcrInfo($exam_id, $teacher_id, $room_id);
+
+        return response()->json(
+            $this->success_data($vcrInfo, 1, 'success')
+        );
+    }
 
     /**
      *根据时间段和摄像机ID 获取标记点列表(接口)

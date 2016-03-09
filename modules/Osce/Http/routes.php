@@ -267,6 +267,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('vcr',['uses'=>'PadController@getVcr']);
 
 		Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
+		Route::get('teacher-vcr',['uses'=>'PadController@getTeacherVcr']);		//根据考场ID、考试ID和teacher_id获取考站的摄像头信息(接口)
 		Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
 
 		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
