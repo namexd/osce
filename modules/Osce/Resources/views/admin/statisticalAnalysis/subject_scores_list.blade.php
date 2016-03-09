@@ -106,7 +106,7 @@ $(function(){
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($data as $item)
+                    @forelse($data as $item)
                         <tr>
                             <td>{{$item->exam_name}}</td>
                             <td>{{$item->subject_name}}</td>
@@ -114,15 +114,20 @@ $(function(){
                             <td>{{$item->avg_score}}</td>
                             <td>{{$item->avg_time}}</td>
                             <td><a href="{{route('osce.admin.course.getStudent',[
-                            'exam_id'=>$item->exam_id,
-                            'subject_id'=>$item->subject_id,
-                            'exam'=>$item->exam_name,
-                            'subject'=>$item->subject_name,
-                            'avg_score'=>$item->avg_score,
-                            'avg_time'=>$item->avg_time
-                            ])}}"> <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span></a></td>
+                                                'exam_id'   =>$item->exam_id,
+                                                'subject_id'=>$item->subject_id,
+                                                'exam'      =>$item->exam_name,
+                                                'subject'   =>$item->subject_name,
+                                                'avg_score' =>$item->avg_score,
+                                                'avg_time'  =>$item->avg_time
+                                            ])}}">
+                                    <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
+                                </a>
+                            </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr><td colspan="6">{{$backMes}}</td></tr>
+                    @endforelse
                     </tbody>
                 </table>
                 @if(count($data) != 0)

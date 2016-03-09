@@ -48,6 +48,7 @@
 				var  url= $('#urls').val();
 				var encoding_key = $('#encoding_key').val();
 				if(appid==''){
+					$('#div_show').hide();
 					$.alert({
 						title: '提示：',
 						content: '请输入注册微信时的appID!',
@@ -56,6 +57,7 @@
 						}
 					});
 				} else if(url==''){
+					$('#div_show').hide();
 					$.alert({
 						title: '提示：',
 						content: '请输入你的域名!',
@@ -64,9 +66,10 @@
 						}
 					});
 				}else if(encoding_key==''){
+					$('#div_show').hide();
 					$.alert({
 						title: '提示：',
-						content: '请输入系统设置中encoding_key!',
+						content: '请输入系统设置中的encoding_key!',
 						confirmButton: '确定',
 						confirm: function(){
 						}
