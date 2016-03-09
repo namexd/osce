@@ -218,30 +218,42 @@ class UserController extends CommonController
             'id'  =>  'required'
         ]);
          $id=$request->get('id');
-         $roleId=SysUserRole::where('user_id',$id)->select()->first();
-         $roles=SysRoles::select()->get();
-         $data=[];
-         foreach($roles as $role){
-             if($roleId){
-                   $user_role_id=$roleId->role_id;
-                 if($role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') && $role->id!=$user_role_id){
-                     $data[]=[
-                         'role_id'=>$role->id,
-                         'role_name'=>$role->name,
-                     ];
-                 }
-             }else{
-                 if($role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') && $role->id!=config('config.teacherRoleId') ){
-                     $data[]=[
-                         'role_id'=>$role->id,
-                         'role_name'=>$role->name,
-                     ];
-                 }
-             }
+        try {
+            $roleId = SysUserRole::where('user_id', $id)->select()->first();
+            $roles = SysRoles::select()->get();
+            $data = [];
+            foreach ($roles as $role) {
+                if ($roleId) {
+                    $user_role_id = $roleId->role_id;
+                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != $user_role_id) {
+                        $data[] = [
+                            'role_id' => $role->id,
+                            'role_name' => $role->name,
+                        ];
+                    }
+                } else {
+                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId')) {
+                        $data[] = [
+                            'role_id' => $role->id,
+                            'role_name' => $role->name,
+                        ];
+                    }
+                }
 
-         }
+            }
 
-         return view('osce::admin.systemManage.user_manage_change_role')->with(['role_id'=>$roleId,'data'=>$data,'user_id'=>$id]);
+            return view('osce::admin.systemManage.user_manage_change_role')->with([
+                'role_id' => $roleId,
+                'data' => $data,
+                'user_id' => $id
+            ]);
+        } catch (\Exception $ex) {
+            return view('osce::admin.systemManage.user_manage_change_role')->with([
+                'role_id' => $roleId,
+                'data' => $data,
+                'user_id' => $id
+            ])->withErrors($ex->getMessage());
+        }
     }
 
     /**
