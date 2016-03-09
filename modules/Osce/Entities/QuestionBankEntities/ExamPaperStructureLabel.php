@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Administrator
- * Date: 2016/3/7 0007
- * Time: 13:56
+ * @author tangjun <tangjun@misrobot.com>
+ * @date 2016Äê3ÔÂ9ÈÕ11:02:12
+ * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
