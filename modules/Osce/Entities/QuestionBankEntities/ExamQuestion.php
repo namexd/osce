@@ -144,35 +144,48 @@ class ExamQuestion extends Model
      */
     public function addExamQuestion($examQuestionData, $examQuestionItemData, $examQuestionLabelRelationData)
     {
-        DB::beginTransaction();
-        //向试题表中插入数据
-        $examQuestion['create_user_id'] = Auth::user()->id;
-        $examQuestion = ExamQuestion::create($examQuestionData);
-        if (!$examQuestion instanceof self) {
-            DB::rollback();
-            return false;
+
+        $DB = DB::connection('osce_mis');
+        $DB->beginTransaction();
+        try{
+            //向试题表中插入数据
+            $examQuestion['create_user_id'] = Auth::user()->id;
+            $examQuestion = ExamQuestion::create($examQuestionData);
+            if (!$examQuestion instanceof self) {
+                throw new \Exception(' 插入试题表数据失败！');
+            }
+
+            //向试题子项表插入数据
+            foreach ($examQuestionItemData as $key => $value) {
+                $data['create_user_id'] = Auth::user()->id;
+                $data['exam_question_id'] = $examQuestion->id;
+
+                foreach($value as $k => $v){
+                    $data['name'] = $v;
+                    $data['content'] = $examQuestionItemData['content'][$k];
+                    if(!ExamQuestionItem::create($value)){
+                        throw new \Exception(' 插入试题子项数据失败！');
+                    }
+                }
+            }
+            //向试题和标签中间表插入数据
+            foreach ($examQuestionLabelRelationData as $key => $value) {
+                $examQuestionLabelRelationInfo['exam_question_id'] = $examQuestion->id;
+                $examQuestionLabelRelationInfo['create_user_id'] = Auth::user()->id;
+                foreach($value as $v){
+                    $examQuestionLabelRelationInfo['exam_question_label_id'] = $v;
+                    if(!ExamQuestionLabelRelation::create($examQuestionLabelRelationInfo)){
+                        throw new \Exception(' 插入试题和标签中间表失败！');
+                    }
+                }
+            }
+            $DB->commit();
+            return true;
+        }catch (\Exception $ex){
+            $DB->rollback();
+            throw $ex;
         }
 
-        //向试题子项表插入数据
-        foreach ($examQuestionItemData as $key => $value) {
-            $value['create_user_id'] = Auth::user()->id;
-            $value['exam_question_id'] = $examQuestion->id;
-            if (!$examQuestionItem = ExamQuestionItem::create($value)) {
-                DB::rollback();
-                return false;
-            }
-        }
-        //向试题和标签中间表插入数据
-        foreach ($examQuestionLabelRelationData as $key => $value) {
-            $examQuestionLabelRelationData['exam_question_id'] = $examQuestion->id;
-            $examQuestionLabelRelationData['create_user_id'] = Auth::user()->id;
-            if (!$examQuestionLabelRelation = ExamQuestionLabelRelation::create($examQuestionLabelRelationData)) {
-                DB::rollback();
-                return false;
-            }
-        }
-        DB::commit();
-        return true;
     }
 
     /**编辑页面回显

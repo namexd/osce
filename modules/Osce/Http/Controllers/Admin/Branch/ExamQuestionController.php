@@ -50,11 +50,13 @@ class ExamQuestionController extends CommonController
         $examQuestionLabelName = array();
         foreach($data as $k1=>$v1) {
             foreach ($v1->ExamQuestionLabelRelation as $k2 => $v2) {
-                $examQuestionLabelName[$k1][$k2] = $v2->ExamQuestionLabel['name'];
+                $examQuestionLabelName[$k1][] = $v2->ExamQuestionLabel['name'];
             }
-            $examQuestionLabelName[$k1] = implode(',',$examQuestionLabelName[$k1]);
-        }
+            if(!empty($examQuestionLabelName[$k1])&&count($examQuestionLabelName[$k1])>0){
+                $examQuestionLabelName[$k1] = implode(',',$examQuestionLabelName[$k1]);
+            }
 
+        }
         $list = [];
         if(count($data) > 0){
             foreach($data as $k=>$item){
@@ -62,7 +64,7 @@ class ExamQuestionController extends CommonController
                     'number'                       => $k+1,//序号
                     'id'                            => $item->id,//试题id
                     'name'                          => $item->name,//试题名称
-                    'examQuestionLabelName'      => $examQuestionLabelName[$k],//考核范围
+                    'examQuestionLabelName'      => !empty($examQuestionLabelName[$k])?$examQuestionLabelName[$k]:'-',//考核范围
                     'examQuestionTypeName'       => $item->examQuestionTypeName,//题目类型
                 ];
             }
@@ -119,40 +121,47 @@ class ExamQuestionController extends CommonController
      */
     public function postExamQuestionAdd(Request $request)
     {
+
         $this->validate($request, [
             'examQuestionTypeId'    =>'sometimes|integer',//试题表
             'name'                     => 'required|string',
             'parsing'                 => 'sometimes|string',
             'answer'                  => 'required',
 
-            'examQuestionItemName'  => 'required|string',//试题子项表
-            'content'                 => 'sometimes|string',
+            'examQuestionItemName'  => 'required|array',//试题子项表
+            'content'                 => 'sometimes|array',
 
-            'examQuestionLabelId'      =>'sometimes|integer',//试题和标签中间表
+            'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
-        dd($request->all());
+        $ExamQuestionLabelRelationData = [];
+        foreach($request->all() as $key => $val){
+            if(preg_match('/^tag-{1,3}/',$key)){
+                $arr = explode('-',$key);
+                $ExamQuestionLabelRelationData[$arr[1]] = $val;
+            }
+        }
         //试题表数据
         $examQuestionData =array(
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'answer'                  =>$request->input('answer'),//正确答案（a/abc/0,1）
+            'answer'                  =>serialize($request->input('answer')),//正确答案（a/abc/0,1）
         );
         //试题子项表数据
         $examQuestionItemData = array(
             'name' =>$request->input('examQuestionItemName'),//选项名称:A/B/C/D
             'content' =>$request->input('content'),//选项内容/判断内容
         );
+
         //试题和标签中间表数据
         $examQuestionLabelRelationData = array(
             'exam_question_label_id' =>$request->input('examQuestionLabelId'),//标签id
         );
         $examQuestionModel= new ExamQuestion();
-        $result = $examQuestionModel->addExamQuestion($examQuestionData,$examQuestionItemData,$examQuestionLabelRelationData);
-
+        $result = $examQuestionModel->addExamQuestion($examQuestionData,$examQuestionItemData,$ExamQuestionLabelRelationData);
         if($result)
         {
-            return redirect()->route('examQuestion.getCustomerList')->with('success','新增成功');
+            return redirect()->route('osce::admin.resourcemanage.subject_manage')->with('success','新增成功');
         }
         else
         {

@@ -103,11 +103,11 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>A</td>
-                                                        <input type="hidden" >
+                                                        <input type="hidden" name="examQuestionItemName[]" value="A">
                                                         <td>
                                                             <div class="form-group">
                                                                 <div class="col-sm-12">
-                                                                    <input type="text" class="form-control">
+                                                                    <input type="text" class="form-control" name="content[]">
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -121,10 +121,11 @@
                                                     </tr>
                                                     <tr>
                                                         <td>B</td>
+                                                        <input type="hidden" name="examQuestionItemName[]" value="B">
                                                         <td>
                                                             <div class="form-group">
                                                                 <div class="col-sm-12">
-                                                                    <input type="text" class="form-control">
+                                                                    <input type="text" class="form-control" name="content[]">
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -138,10 +139,11 @@
                                                     </tr>
                                                     <tr>
                                                         <td>C</td>
+                                                        <input type="hidden" name="examQuestionItemName[]" value="C">
                                                         <td>
                                                             <div class="form-group">
                                                                 <div class="col-sm-12">
-                                                                    <input type="text" class="form-control">
+                                                                    <input type="text" class="form-control" name="content[]">
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -155,10 +157,11 @@
                                                     </tr>
                                                     <tr>
                                                         <td>D</td>
+                                                        <input type="hidden" name="examQuestionItemName[]" value="D">
                                                         <td>
                                                             <div class="form-group">
                                                                 <div class="col-sm-12">
-                                                                    <input type="text" class="form-control">
+                                                                    <input type="text" class="form-control" name="content[]">
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -206,7 +209,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">解析</label>
                                 <div class="col-sm-10">
-                                    <textarea name="des" id="subjectDes" cols="10" rows="5" class="form-control">
+                                    <textarea name="parsing" id="subjectDes" cols="10" rows="5" class="form-control">
 
                                     </textarea>
                                 </div>
