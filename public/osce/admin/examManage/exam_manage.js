@@ -164,7 +164,7 @@ function exam_add(){
      */
     $('#exam_add').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         },function(thisID){
@@ -1210,7 +1210,7 @@ function examroom_assignment(){
      */
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         },function(its){
@@ -1731,7 +1731,7 @@ function exam_notice_add(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         }, function(index){
@@ -1921,7 +1921,7 @@ function exam_notice_edit(){
     $(".upload_list").on("click",".fa-remove",function(){
 
         var thisElement = $(this);
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         }, function(index){
@@ -2383,7 +2383,42 @@ function examinee_manage(){
     $(".delete").click(function(){
         var sid=$(this).attr("sid");
         var examId=$(this).attr("examid");
-        layer.confirm('确认为删除？',{
+
+        $.ajax({
+            type:'post',
+            async:true,
+            url:pars.judgeUrl,
+            data:{id:sid,exam_id:examId},
+            success:function(res){
+                if(res.code!=1){
+                    layer.alert(res.message);
+                }else{
+                    layer.confirm(res.message,{
+                        title:'删除',
+                        btn: ['确定','取消'] 
+                    },function(){
+                        $.ajax({
+                            type:'post',
+                            async:true,
+                            url:pars.deleteUrl,
+                            data:{id:sid,exam_id:examId},
+                            success:function(data){
+                                if(data.code ==1){
+                                    layer.msg('删除成功！',{'skin':'msg-success','icon':1});
+                                    location.reload();
+                                }else {
+                                    layer.msg(data.message,{'skin':'msg-error','icon':1});
+                                }
+                            }
+                        })
+                        //window.location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
+                    });
+                }
+            }
+        });
+
+
+        /*layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         },function(){
@@ -2402,7 +2437,7 @@ function examinee_manage(){
                 }
             })
             //window.location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
-        });
+        });*/
     })
 }
 
@@ -3044,7 +3079,7 @@ function station_assignment(){
     $('#examroom').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
 
-        layer.confirm('确认为删除？',{
+        layer.confirm('确认删除？',{
             title:'删除',
             btn: ['确定','取消'] 
         },function(its){
