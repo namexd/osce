@@ -81,6 +81,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('exampaper/delete-exam',['uses'=>'ExamPaperController@getDeleteExam','as'=>'osce.admin.ExamPaperController.getDeleteExam']);
         //试卷管理-新增试卷
         Route::get('exampaper/add-exam-page',['uses'=>'ExamPaperController@getAddExamPage','as'=>'osce.admin.ExamPaperController.getAddExamPage']);
+        //
+        Route::get('exampaper/scope-callback',['uses'=>'ExamPaperController@scopeCallback','as'=>'osce.admin.ExamPaperController.scopeCallback']);
+
 //        ////试卷管理-获取试题标签
 //        Route::get('exampaper/exam-label-get',['uses'=>'ExamPaperController@getExamLabelGet','as'=>'osce.admin.ExamPaperController.getExamLabelGet']);
         //试卷管理-获取试卷试题数据
@@ -101,6 +104,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
         //题库管理删除
         Route::post('examQuestion/examQuestion-delete',['uses'=>'ExamQuestionController@examQuestionDelete','as'=>'osce.admin.ExamQuestionController.examQuestionDelete']);
+
 
     });
 

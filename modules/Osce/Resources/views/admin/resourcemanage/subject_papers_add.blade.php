@@ -40,7 +40,7 @@
                 //计数器标志
                 var index = $('table').find('tbody').attr('index');
                 index = parseInt(index) + 1;
-                var question =
+
                 var html = '<tr>'+
                         '<td>'+parseInt(index)+'</td>'+
                         '<td>'+
@@ -52,7 +52,7 @@
                         '</select>'+
                         '</td>'+
                         '<td>'+
-                        '<div class="scope"  data-toggle="modal" data-target="#myModal">内科，操作，本科4年制</div>'+
+                        '<div class="scope" id="scope-'+parseInt(index)+'" data-toggle="modal" data-target="#myModal">内科，操作，本科4年制</div>'+
                         '</td>'+
                         '<td>'+
                         '<input  class="form-control" name="content['+index+'][title]"/>'+
@@ -70,21 +70,38 @@
                         //记录计数
                         $('table').find('tbody').attr('index',index);
                         $('tbody').append(html);
+
+                        /**
+                         * 保存考核范围
+                         */
+                        var this_scope;
+                        $(".scope").click(function(){
+                            this_scope=$(this).attr("id");
+                        })
+                        $('.form-horizontal').submit(function(){
+                            $.getJSON($(this).attr('action'),$(this).serialize(),function(obj){
+                                var scopelist="<input type='hidden' name='scope[]' value='"+obj+"'>"
+                                $(".save_scope").append(scopelist);
+                                $("#myModal").removeClass("in").hide().attr("aria-hidden","true");
+                                $("body").removeClass("modal-open");
+                                $(".modal-backdrop").remove();
+                                console.log(obj,obj.tag-1.length())
+                                var txt="";
+                                for (x in obj)
+                                {
+                                    txt=txt +obj[x]+"," ;
+                                }
+
+                                $("#" +this_scope).text(
+                                        txt
+                                );
+                            })
+
+                            return  false;
+
+                        })
             });
-            /**
-             * 保存考核范围
-             */
 
-            $('.form-horizontal').submit(function(){
-                $.getJSON('{{ route('osce.admin.ExamQuestionController.test') }}',$(this).serialize(),function(obj){
-                    var scopelist="<input type='hidden' name='scope[]' value='"+obj+"'>"
-                    $(".save_scope").append(scopelist);
-                })
-                $("#myModal").removeClass("in");
-                $(".modal-backdrop").remove();
-                return  false;
-
-            })
                 /**
              * 删除
              */
@@ -274,7 +291,7 @@
 
 @section('layer_content')
     {{--新增表单--}}
-    <form class="form-horizontal" action="{{ route('osce.admin.ExamQuestionController.test') }}">
+    <form class="form-horizontal" action="{{ route('osce.admin.ExamPaperController.scopeCallback') }}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">选择抽题范围</h4>
