@@ -157,6 +157,8 @@ class RoomController extends CommonController
 //                //新建考场
 //                $room->createRoom($formData,$vcr_id,$user->id);
             } else {
+
+                
                 $area = new Area();
                 $area->editAreaData($id, $vcr_id, $formData);
             }
