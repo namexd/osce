@@ -18,32 +18,63 @@
 @stop
 
 @section('only_js')
+	<link rel="stylesheet" type="text/txt" src="{{asset('osce/common/css/bootstrapValidator.css')}}"/>
+	<script type="text/javascript" src="{{asset('osce/common/js/bootstrapValidator.js')}}"> </script>
 	<script>
 		$(function(){
-			$('.col-sm-4').click(function(){
-				var appid = $('.form-control').val();
-				if(appid==''){
-					$.alert({
-						title: '提示：',
-						content: '请输入在第一步中输入注册微信时的appID!',
-						confirmButton: '确定',
-						confirm: function(){
-						}
-					});
-				}else{
+//			$('.col-sm-4').click(function(){
+//				var appid = $('.form-control').val();
+//				if(appid==''){
+//					$.alert({
+//						title: '提示：',
+//						content: '请输入在第一步中输入注册微信时的appID!',
+//						confirmButton: '确定',
+//						confirm: function(){
+//						}
+//					});
+//				}else{
+//
+//					$(this).find('> a').attr('href','https://open.weixin.qq.com/connect/qrconnect?' +
+//							'appid='+$('.form-control').val()+
+//							'&scope=snsapi_login&redirect_uri=http%3A%2F%2Fmp.weixin.qq.com%2Fdebug%2Fcgi-bin%2Fsandbox%3Ft%3Dsandbox%2Flogin');
+////						alert(	$(this).find('> a').attr('href'))
+//				}
+//
+//			});
 
-					$(this).find('> a').attr('href','https://open.weixin.qq.com/connect/qrconnect?' +
-							'appid='+$('.form-control').val()+
-							'&scope=snsapi_login&redirect_uri=http%3A%2F%2Fmp.weixin.qq.com%2Fdebug%2Fcgi-bin%2Fsandbox%3Ft%3Dsandbox%2Flogin');
-//						alert(	$(this).find('> a').attr('href'))
-				}
-
-			});
 
 			$('.help').click(function(){
 				var  appid= $('#appId').val();
 				var  url= $('#urls').val();
 				var encoding_key = $('#encoding_key').val();
+				if(appid==''){
+					$.alert({
+						title: '提示：',
+						content: '请输入注册微信时的appID!',
+						confirmButton: '确定',
+						confirm: function(){
+						}
+					});
+				} else if(url==''){
+					$.alert({
+						title: '提示：',
+						content: '请输入你的域名!',
+						confirmButton: '确定',
+						confirm: function(){
+						}
+					});
+				}else if(encoding_key==''){
+					$.alert({
+						title: '提示：',
+						content: '请输入系统设置中encoding_key!',
+						confirmButton: '确定',
+						confirm: function(){
+						}
+					});
+				}else{
+					$('#div_show').show();
+				}
+
 				$('#http').html('"url":"https:\/\/open.weixin.qq.com\/connect\/oauth2\/authorize?appid='+appid+'&redirect_uri=http%3A%2F%2F'+url+'%2Fosce%2Fwechat%2Fuser%2Flogin&response_type=code&scope=snsapi_base&state='+encoding_key+'#wechat_redirect",');
 			})
 		})
@@ -162,7 +193,7 @@
 										<label class="col-sm-2 control-label"><h5>第九步：</h5></label>
 										<div class="col-sm-9">
 											<p>
-												请把这里的生成的（基础支持：获取access_token接口/token）里面的（还回结果->access_token）里面的值复制下来。
+												请把（基础支持：获取access_token接口/token）里面的（还回结果->access_token）里面的值复制下来。
 
 											</p>
 										</div>
@@ -174,13 +205,13 @@
 												请把当前页面中的（使用说明->（3）->第一项：接口类型的值改为（自定义菜单），第二项：接口列表的值改为（自定义菜单创建接口/menu/create））
 												然后将刚才的access_token值放入 （三、参数列表->access_token中）<br/>
 
-												请输入appId<input style="width: 150px;"type="text"  class="form-control name edit-name"  id="appId"/>
-												请输入公众号域名<input style="width: 150px;"type="text"  class="form-control name edit-name" id="urls"/>
-												请输入用户设置的encoding_key<input style="width: 150px;"type="text"  class="form-control name edit-name" id="encoding_key"/>
-												  <input  class="help" type="button" value="点击生成"/>
+												请输入appId<input style="width: 150px;"type="text"  class="form-control name edit-name" name="appid" id="appId"/>
+												请输入公众号域名<input style="width: 150px;"type="text"  class="form-control name edit-name"  name="url" id="urls" value="{{$url}}"/>
+												请输入用户设置的encoding_key<input style="width: 150px;"type="text"  class="form-control name edit-name"  name="encoding"   id="encoding_key"/><br/>
+												  <input  class="help" type="button" value="点击生成(body)里需要的数据"/>
 											</p>
-											将下面的数据复制放入（body）中 点击检查问题<br/>
-												<div class="div_box" id="div_show">
+											将下面生成的数据复制放入（body）中然后点击检查问题<br/>
+												<div class="div_box" id="div_show" hidden>
 													<p>{</p>
 													<p class="pdl2">"button":[</p>
 													<p class="pdl4">{</p>
