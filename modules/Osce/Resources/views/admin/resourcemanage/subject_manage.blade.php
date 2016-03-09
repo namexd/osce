@@ -10,7 +10,7 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_manage'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'subject_manage','delUrl':'{{ route('osce.admin.ExamQuestionController.examQuestionDelete') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -56,26 +56,28 @@
                             </tr>
                         </thead>
                         <tbody class="subjectBody">
-
+                            @if(!empty(@$list))
+                                @foreach(@$list as $val)
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ $val['number'] }}</td>
+                                        <td>{{ $val['name'] }}</td>
+                                        <td>{{ $val['examQuestionLabelName'] }}</td>
+                                        <td>{{ $val['examQuestionTypeName'] }}</td>
                                         <td>
-                                            <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" class="edit" >
+                                            <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" class="edit" dataId="{{ $val['id'] }}">
                                                 <span class="read state1 detail">
                                                     <i class="fa fa-cog fa-2x"></i>
                                                 </span>
                                             </a>
-                                            <a href="javascript:void(0)" class="delete" >
+                                            <a href="javascript:void(0)" class="delete" dataId="{{ $val['id'] }}">
                                                 <span class="read state2">
                                                     <i class="fa fa-trash-o fa-2x"></i>
                                                 </span>
                                             </a>
                                         </td>
                                     </tr>
-
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                     <div class="pull-left">共10条</div>
@@ -94,38 +96,5 @@
 @stop{{-- 内容主体区域 --}}
 
 @section('layer_content')
-    {{--新增表单--}}
-    <form class="form-horizontal" id="addForm" novalidate="novalidate" method="post" action="">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">新增试题</h4>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565">*</span>标签名称：</label>
-                <div class="col-sm-9">
-                    <input type="text" name="name" class="form-control" placeholder="最多输入10个字">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">标签类型：</label>
-                <div class="col-sm-9">
-                    <select name="label_type_id" id="typeSelect" class="form-control">
 
-
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">描述：</label>
-                <div class="col-sm-9">
-                    <input type="text" name="describe" class="form-control" placeholder="最多输入10个字">
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-success" id='sure'>确定</button>
-            <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
-        </div>
-    </form>
 @stop

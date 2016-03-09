@@ -133,7 +133,29 @@ function subject_check_tag(){
 }
 //题库管理
 function subject_manage(){
-
+    //删除
+    $(".delete").click(function(){
+        var id = $(this).attr("dataId");
+        var url = pars.delUrl;
+        layer.confirm('是否确定删除该试题？',{
+            title:'删除',
+            btn: ['确定','取消']
+        },function(){
+            $.ajax({
+                url:url+'?id='+id,
+                type:"get",
+                cache:false,
+                success:function(res){
+                    console.log(res);
+                    if(res.code == "1"){
+                        location.href = location.href;
+                    }else{
+                        layer.msg('删除失败',{'skin':'msg-error',icon:1})
+                    }
+                }
+            })
+        })
+    })
 }
 
 

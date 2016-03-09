@@ -33,29 +33,18 @@ class ExamQuestionController extends CommonController
         ]);
         $formData['examPaperLabelId'] = $request->input('examPaperLabelId'); //试题类型id
         $formData['examQuestionTypeId'] = $request->input('examQuestionTypeId');//题目类型id
+
+        //获取题目类型列表
+        $examQuestionTypeModel= new ExamQuestionType();
+        $examQuestionTypeList = $examQuestionTypeModel->examQuestionTypeList();
+
+
         //获取试题列表信息
         $examQuestionModel= new ExamQuestion();
         $data = $examQuestionModel->showExamQuestionList($formData);
 
         //获取考核范围
         $examQuestionLabelName = "";
-        $content = [];
-        foreach($data as $k1=>$v1){
-            foreach($v1->ExamQuestionLabelRelation as $k2=>$v2){
-
-          /*      if($examQuestionLabelName){
-                    $examQuestionLabelName .= ','.$v2->ExamQuestionLabel['name'];
-                }else{
-                    $examQuestionLabelName .= $v2->ExamQuestionLabel['name'];
-                }
-                $content[$k1] = $examQuestionLabelName;*/
-
-                $content[$k1][$k2] = $v2->ExamQuestionLabel['name'];
-                //print_r($v2->ExamQuestionLabel['name'].',');
-            }
-        }
-        //dd($content);
-
         $list = [];
         if(count($data) > 0){
             foreach($data as $k=>$item){
