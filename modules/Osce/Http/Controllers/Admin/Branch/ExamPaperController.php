@@ -94,7 +94,7 @@ class ExamPaperController extends CommonController
 
     /**
      * 新增试卷页面
-     * @url       GET /osce/admin/exampaper/delete-exam
+     * @url       GET /osce/admin/exampaper/add-exam-page
      * @access    public
      * @param Request $request get请求<br><br>
      * @param Exam $exam
@@ -106,7 +106,9 @@ class ExamPaperController extends CommonController
      */
     public function getAddExamPage(Request $request)
     {
-        return view('osce::admin.resourcemanage.subject_papers_add');
+        $label = $this->getExamLabelGet();
+        //dd($label);
+        return view('osce::admin.resourcemanage.subject_papers_add',['label'=>$label]);
     }
 
 
@@ -124,13 +126,13 @@ class ExamPaperController extends CommonController
 
 
      */
-    public function getExamLabelGet(Request $request)
+    public function getExamLabelGet()
     {
         $LabelType= new ExamQuestionLabelType();
         //\DB::connection("osce_mis")->enableQueryLog();
         $label = $LabelType->getLabAndType()->toArray();
         //dd(\DB::connection("osce_mis")->getQueryLog());
-        return $this->success_data($label);
+        return $label;
     }
 
     /**

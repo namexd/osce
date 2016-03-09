@@ -256,60 +256,65 @@
             <h4 class="modal-title" id="myModalLabel">选择抽题范围</h4>
         </div>
         <div class="modal-body">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">科目名称：</label>
-                <div class="col-sm-3">
-                    <select name="label" class="form-control">
-                        <option value="1">包含</option>
-                        <option value="1">等于</option>
-                    </select>
-                </div>
-                <div class="col-sm-6">
-                    <select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">
-                        @if(!empty($v['examQuestionLabelList']))
-                            @foreach($v['examQuestionLabelList'] as $key => $val)
-                                <option value="{{ $val['id'] }}">{{@$val['name']}}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">能力标签：</label>
-                <div class="col-sm-3">
-                    <select name="label" class="form-control">
-                        <option value="1">包含</option>
-                        <option value="1">等于</option>
-                    </select>
-                </div>
-                <div class="col-sm-6">
-                    <select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">
-                        @if(!empty($v['examQuestionLabelList']))
-                            @foreach($v['examQuestionLabelList'] as $key => $val)
-                                <option value="{{ $val['id'] }}">{{@$val['name']}}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">难度标签：</label>
-                <div class="col-sm-3">
-                    <select name="label" class="form-control">
-                        <option value="1">包含</option>
-                        <option value="1">等于</option>
-                    </select>
-                </div>
-                <div class="col-sm-6">
-                    <select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">
-                        @if(!empty($v['examQuestionLabelList']))
-                            @foreach($v['examQuestionLabelList'] as $key => $val)
-                                <option value="{{ $val['id'] }}">{{@$val['name']}}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
+
+            @if(@$label)
+                @foreach(@$label as $sub)
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{@$sub['name']}}：</label>
+                        <div class="col-sm-3">
+                            <select name="label" class="form-control">
+                                <option value="1">包含</option>
+                                <option value="1">等于</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">
+                                @if(!empty($sub['label_type_and_label']))
+                                    @foreach($sub['label_type_and_label'] as $key => $val)
+                                        <option value="{{ $val['id'] }}">{{@$val['name']}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+            {{--<div class="form-group">--}}
+                {{--<label class="col-sm-3 control-label">能力标签：</label>--}}
+                {{--<div class="col-sm-3">--}}
+                    {{--<select name="label" class="form-control">--}}
+                        {{--<option value="1">包含</option>--}}
+                        {{--<option value="1">等于</option>--}}
+                    {{--</select>--}}
+                {{--</div>--}}
+                {{--<div class="col-sm-6">--}}
+                    {{--<select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">--}}
+                        {{--@if(!empty($v['examQuestionLabelList']))--}}
+                            {{--@foreach($v['examQuestionLabelList'] as $key => $val)--}}
+                                {{--<option value="{{ $val['id'] }}">{{@$val['name']}}</option>--}}
+                            {{--@endforeach--}}
+                        {{--@endif--}}
+                    {{--</select>--}}
+                {{--</div>--}}
+            {{--</div>--}}
+            {{--<div class="form-group">--}}
+                {{--<label class="col-sm-3 control-label">难度标签：</label>--}}
+                {{--<div class="col-sm-3">--}}
+                    {{--<select name="label" class="form-control">--}}
+                        {{--<option value="1">包含</option>--}}
+                        {{--<option value="1">等于</option>--}}
+                    {{--</select>--}}
+                {{--</div>--}}
+                {{--<div class="col-sm-6">--}}
+                    {{--<select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">--}}
+                        {{--@if(!empty($v['examQuestionLabelList']))--}}
+                            {{--@foreach($v['examQuestionLabelList'] as $key => $val)--}}
+                                {{--<option value="{{ $val['id'] }}">{{@$val['name']}}</option>--}}
+                            {{--@endforeach--}}
+                        {{--@endif--}}
+                    {{--</select>--}}
+                {{--</div>--}}
+            {{--</div>--}}
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-success" id='sure'>确定</button>
