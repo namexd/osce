@@ -278,7 +278,6 @@ class ExamQuestionController extends CommonController
         $id = $request->input('id');
         $examQuestionModel= new ExamQuestion();
         $result = $examQuestionModel->deleteExamQuestion($id);
-        dd($result);
         if($result){
             return response()->json(true);
         }else{
