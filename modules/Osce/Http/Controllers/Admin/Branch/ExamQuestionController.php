@@ -101,7 +101,7 @@ class ExamQuestionController extends CommonController
         foreach($examQuestionLabelTypeList as $k=>$v){
             $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;
         }
-        dd($examQuestionLabelTypeList);
+        //dd($examQuestionLabelTypeList);
 
         return view('osce::admin.resourcemanage.subject_manage_add', [
             'examQuestionTypeList'       => $examQuestionTypeList, //题目类型列表
