@@ -17,8 +17,10 @@ use Auth;
 class LoginController extends  CommonController
 {
     public function getIndex(){
+
         return view('osce::admin.login');
     }
+
     public function postIndex(Request $request){
         $this   ->validate($request,[
             'username'  =>  'required',
