@@ -75,4 +75,27 @@ class ExamPaper extends CommonModel
 
         return $builder;
     }
+
+    /**
+     * 添加试卷操作
+     * @access    public
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function addExams($data){
+        DB::beginTransaction();
+
+        //向试卷表插入基础数据
+        $examPaper = ExamPaper::create($data);
+        if(!$examPaper){
+            DB::rollback();
+            return false;
+        }
+
+        //
+    }
 }
