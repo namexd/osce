@@ -40,21 +40,7 @@ class ExamQuestionController extends CommonController
         //获取考核范围
         $examQuestionLabelName = "";
         $content = [];
-        foreach($data as $k1=>$v1){
-            foreach($v1->ExamQuestionLabelRelation as $k2=>$v2){
 
-          /*      if($examQuestionLabelName){
-                    $examQuestionLabelName .= ','.$v2->ExamQuestionLabel['name'];
-                }else{
-                    $examQuestionLabelName .= $v2->ExamQuestionLabel['name'];
-                }
-                $content[$k1] = $examQuestionLabelName;*/
-                dd($v2->ExamQuestionLabel);
-
-                $content[$k1][$k2] = $v2->ExamQuestionLabel['name'];
-                //print_r($v2->ExamQuestionLabel['name'].',');
-            }
-        }
        // dd($content);
 
         $list = [];
