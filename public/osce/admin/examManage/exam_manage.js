@@ -1693,16 +1693,15 @@ function exam_notice_add(){
     	var files=document.getElementById("file0").files;
     	var kb=Math.floor(files[0].size/1024);
     	//console.log(kb);
-    	if(kb>2048){
-    		layer.alert('文件大小不得超过2M!');
-    		return false;
-    	}
+
         $.ajaxFileUpload({
             url:pars.url,
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
             success: function (data, status){
-                if(data.code==1){
+                if(kb>2048){
+                    layer.alert('文件大小不得超过2M!');
+                } else if(data.code==1){
                    str='<p><input type="hidden" name="attach[]" id="" value="'+data.data.path+'" />'+data.data.name+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
                     //var ln=$(".upload_list").children("p").length;
                     //添加
@@ -1890,16 +1889,15 @@ function exam_notice_edit(){
     	var files=document.getElementById("file0").files;
     	var kb=Math.floor(files[0].size/1024);
     	//console.log(kb);
-    	if(kb>2048){
-    		layer.alert('文件大小不得超过2M!');
-    		return false;
-    	}
+
         $.ajaxFileUpload({
             url:pars.url,
             fileElementId:'file0',//必须要是 input file标签 ID
             dataType: 'json',
             success: function (data, status){
-                if(data.code==1){
+                if(kb>2048){
+                    layer.alert('文件大小不得超过2M!');
+                } else if(data.code==1){
                    str='<p><input type="hidden" name="attach[]" id="" value="'+data.data.path+'" />'+data.data.name+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
                     //var ln=$(".upload_list").children("p").length;
                     //添加

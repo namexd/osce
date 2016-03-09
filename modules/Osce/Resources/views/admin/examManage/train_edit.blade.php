@@ -121,10 +121,7 @@
  			var files=document.getElementById("file0").files;
 	    	var kb=Math.floor(files[0].size/1024);
 	    	//console.log(kb);
-	    	if(kb>2048){
-	    		layer.alert('文件大小不得超过2M!');
-	    		return false;
-	    	}
+
 	        $.ajaxFileUpload
 	        ({
                 url:'{{url('/osce/admin/train/upload-file')}}',
@@ -133,7 +130,10 @@
 	            dataType: 'json',//
                 success: function (data, status)
                 {
-                    if(data.code!=1){
+                    if(kb>2048){
+                        layer.alert('文件大小不得超过2M!');
+                    }
+                   else if(data.code!=1){
                         layer.msg('只能上传后缀为".xlsx"或".docx"的文件！',{skin:'msg-error',icon:1});
                     }else{
                         str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" />'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
@@ -240,7 +240,7 @@
                         		上传附件
 								<input type="file" name="file" id="file0"/>
 							</span>
-                            <span class="file-msg">(上传文件类型为docx, xlsx)</span>
+                            <span class="file-msg">(上传文件类型为docx, xlsx，文件大小不得超过2M)</span>
 							<div class="upload_list">
 								@if($data['attachments'])
                                     @foreach($data['attachments'] as $data)
