@@ -8,6 +8,7 @@ $(function(){
     switch(pars.pagename){
         case "subject_check_tag":subject_check_tag();break;//考核标签
         case "subject_manage":subject_manage();break;//题库管理
+        case "subject_manage_add":subject_manage_add();break;//题库管理新增
     }
 });
 
@@ -161,6 +162,31 @@ function subject_manage(){
         var add = pars.add;
         location.href=add;
     });
+}
+//题库管理新增
+function subject_manage_add(){
+    //选项选中
+    $(function(){
+        $(".checkbox_input").click(function(){
+            if($(this).find("input").is(':checked')){
+                $(this).find(".check_icon ").addClass("check");
+            }else{
+                $(this).find(".check_icon").removeClass("check");
+            }
+        });
+    });
+    //科目标签
+    $(".subjectTag").select2({
+
+    });
+    //能力标签
+    $(".abilityTag").select2({
+
+    });
+    //技能标签
+    $(".skillTag").select2({
+
+    })
 }
 
 
