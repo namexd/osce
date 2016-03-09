@@ -234,6 +234,10 @@ class Flows extends CommonModel
                     throw new \Exception('删除教师考站关联失败，请重试！');
                 }
             }
+
+            //删除排考记录表
+            ExamPlanRecord::deleteRecord($exam_id);
+
             //保存新的数据
             $this->saveExamroomAssignmen($exam_id,$roomData,$stationData);
 
