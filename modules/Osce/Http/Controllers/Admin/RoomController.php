@@ -51,6 +51,9 @@ class RoomController extends CommonController
         try{
             //获取当前场所的类
             $data = $room->showRoomList($keyword, $type, $id);
+            if(count($data)==0){
+                return redirect()->route('osce.admin.room.getRoomList');
+            }
             //获取当前的标签
             $area = config('osce.room_cate');
             //展示页面
@@ -158,7 +161,7 @@ class RoomController extends CommonController
 //                $room->createRoom($formData,$vcr_id,$user->id);
             } else {
 
-                
+
                 $area = new Area();
                 $area->editAreaData($id, $vcr_id, $formData);
             }
