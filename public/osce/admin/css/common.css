@@ -327,3 +327,6 @@ table tbody tr td:last-child{width: 120px;}
 }
 
 table + .pull-left,.pull-left + .pull-right{margin-top:12px!important;}
+
+/*ie 下拉选择兼容*/
+.has-feedback .form-control{padding-right: 5px;}
