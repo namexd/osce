@@ -200,14 +200,13 @@
                     <label class="col-sm-2 control-label">试卷名称</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="name" name="name">
-                        <input type="hidden"  class="form-control" id="cate_id" name="cate_id" value="2" />
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">考试时长</label>
                     <div class="col-sm-10">
-                        <input type="text"  class="form-control" id="code" name="code">
+                        <input type="text"  class="form-control" id="code" name="time">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -226,7 +225,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">试卷类型</label>
                     <div class="col-sm-10">
-                        <select id="status"   class="form-control m-b" name="status">
+                        <select id="status"   class="form-control m-b" name="status2">
                             <option value="1">随机试卷</option>
                             <option value="2">统一试卷</option>
                         </select>
