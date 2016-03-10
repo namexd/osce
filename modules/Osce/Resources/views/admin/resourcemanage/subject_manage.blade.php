@@ -92,12 +92,7 @@
                     </table>
                     <div class="pull-left">共{{$data->total()}}条</div>
                     <div class="btn-group pull-right">
-                        <ul class="pagination">
-                            <li class="disabled"><span>«</span></li>
-                            <li class="active"><span>1</span></li>
-                            <li><a href="">2</a></li>
-                            <li><a href="" rel="next">»</a></li>
-                        </ul>
+                        {!! $data->appends($_GET)->render() !!}
                     </div>
                 </div>
             </div>

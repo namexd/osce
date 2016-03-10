@@ -85,7 +85,6 @@
                                 $("#myModal").removeClass("in").hide().attr("aria-hidden","true");
                                 $("body").removeClass("modal-open");
                                 $(".modal-backdrop").remove();
-                                console.log(obj,obj.tag-1.length())
                                 var txt="";
                                 for (x in obj)
                                 {
@@ -126,8 +125,6 @@
                     }
                 });
             });
-
-
 
 }
         $(function(){
