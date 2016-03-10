@@ -102,6 +102,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //题库管理删除
         Route::post('examQuestion/examQuestion-delete',['uses'=>'ExamQuestionController@examQuestionDelete','as'=>'osce.admin.ExamQuestionController.examQuestionDelete']);
 
+        //API
+        Route::get('api/editor-exam-paper-item',['uses'=>'ApiController@GetEditorExamPaperItem','as'=>'osce.admin.ApiController.GetEditorExamPaperItem']);
+
+        Route::post('api/editor-exam-paper-item',['uses'=>'ApiController@PostEditorExamPaperItem','as'=>'osce.admin.ApiController.PostEditorExamPaperItem']);
+
+        //
+
     });
 
 });
