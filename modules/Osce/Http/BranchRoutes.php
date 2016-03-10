@@ -99,7 +99,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::post('examQuestion/examQuestion-add',['uses'=>'ExamQuestionController@postExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.postExamQuestionAdd']);//新增数据交互
 
         //题库管理编辑
-        Route::get('examQuestion/examQuestion-edit',['uses'=>'ExamQuestionController@getExamQuestionEdit','as'=>'osce.admin.ExamQuestionController.getExamQuestionEdit']);//编辑页面
+        Route::get('examQuestion/examQuestion-edit/{id}',['uses'=>'ExamQuestionController@getExamQuestionEdit','as'=>'osce.admin.ExamQuestionController.getExamQuestionEdit']);//编辑页面
         Route::post('examQuestion/examQuestion-edit',['uses'=>'ExamQuestionController@postExamQuestionEdit','as'=>'osce.admin.ExamQuestionController.postExamQuestionEdit']);//保存编辑
 
         //题库管理删除

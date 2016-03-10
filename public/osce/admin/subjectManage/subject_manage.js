@@ -9,7 +9,7 @@ $(function(){
         case "subject_check_tag":subject_check_tag();break;//考核标签
         case "subject_manage":subject_manage();break;//题库管理
         case "subject_manage_add":subject_manage_add();break;//题库管理新增
-        case "subject_manage_edit":subject_manage_edit();break;//题库管理编辑
+        //case "subject_manage_edit":subject_manage_edit();break;//题库管理编辑
     }
 });
 
@@ -473,12 +473,8 @@ function subject_manage_add(){
 
     });
 }
-//题库管理编辑
-function subject_manage_edit(){
-    //调select2插件
-    $(".tag").select2({});
 
-}
+
 
 
 

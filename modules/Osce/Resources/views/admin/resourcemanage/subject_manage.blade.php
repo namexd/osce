@@ -74,7 +74,7 @@
                                         <td>{{ $val['examQuestionLabelName'] }}</td>
                                         <td>{{ $val['examQuestionTypeName'] }}</td>
                                         <td>
-                                            <a href="javascript:void(0)" class="edit" dataId="{{ $val['id'] }}">
+                                            <a href="{{ route('osce.admin.ExamQuestionController.getExamQuestionEdit',['id'=>$val['id']]) }}" class="edit">
                                                 <span class="read state1 detail">
                                                     <i class="fa fa-cog fa-2x"></i>
                                                 </span>
