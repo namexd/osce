@@ -121,6 +121,7 @@ class ExamQuestionController extends CommonController
             'name'                     => 'required|string',
             'parsing'                 => 'sometimes|string',
             'answer'                  => 'required',
+            'judge'                  => 'sometimes|integer',
 
             'examQuestionItemName'  => 'required|array',//试题子项表
             'content'                 => 'sometimes|array',
@@ -142,7 +143,7 @@ class ExamQuestionController extends CommonController
         );
         //判断是否为判断题
         if($request->input('examQuestionTypeId')=='4'){
-            $examQuestionData['answer'] = $request->input('answer');//正确答案（0-错误，1-正确,）
+            $examQuestionData['answer'] = $request->input('judge');//正确答案（0-错误，1-正确,）
         }else{
             $examQuestionData['answer'] = implode('@',$request->input('answer'));//正确答案（a/abc/0,1）
         }
