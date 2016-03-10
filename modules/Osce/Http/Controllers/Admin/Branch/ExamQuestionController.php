@@ -45,6 +45,7 @@ class ExamQuestionController extends CommonController
         //获取试题列表信息
         $examQuestionModel= new ExamQuestion();
         $data = $examQuestionModel->showExamQuestionList($formData);
+
         //获取考核范围
         $examQuestionLabelName = array();
         foreach($data as $k1=>$v1) {
