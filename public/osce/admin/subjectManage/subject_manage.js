@@ -166,6 +166,7 @@ function subject_manage(){
 //题库管理新增
 function subject_manage_add(){
     $(function(){
+        $(".tag").select2({});
         //新增选项
         var strToInt = {
             A:'B',
@@ -179,6 +180,7 @@ function subject_manage_add(){
             I:'J'
         };
         $("#addChose").click(function(){
+            $('#sourceForm').data('bootstrapValidator').destroy();
             var old= $("tbody").find("tr").last().children().first().html();
             $("tbody").find("tr").last().before().children().last().empty();
             $("tbody").append('<tr>' +
@@ -203,12 +205,22 @@ function subject_manage_add(){
                 '<div class="check_icon check_other"></div>' +
                 '<input type="checkbox" name="answer[]" value="'+strToInt[old]+'"/>' +
                 '<span class="check_name">'+strToInt[old]+'</span>' +
-                '</label>')
+                '</label>');
+            if($("#subjectType").val()==1){
+                oneValidator();
+            }else if($("#subjectType").val()==2){
+                moreValidator();
+            }else if($("#subjectType").val()==3){
+                noSureValidator();
+            }else{
+                chooseValidator();
+            }
         });
         //删除选项
         $("tbody").delegate(".delete","click",function(){
+            $('#sourceForm').data('bootstrapValidator').destroy();
             $(this).parent().parent().remove();
-            $("#checkbox_div").children().last().remove();
+            $("#checkbox_div").children("label").last().remove();
             if($(".table tbody").children().size() == "2"){
 
             }else{
@@ -218,51 +230,190 @@ function subject_manage_add(){
                     '</span>' +
                     '</a>');
             }
+            if($("#subjectType").val()==1){
+                oneValidator();
+            }else if($("#subjectType").val()==2){
+                moreValidator();
+            }else if($("#subjectType").val()==3){
+                noSureValidator();
+            }else{
+                chooseValidator();
+            }
         });
         //选项选中
-        $(".checkbox_input").change(function(){
-
+        $("#checkbox_div").delegate(".checkbox_input","change",function(){
             if($(this).find("input").is(':checked')){
                 $(this).find(".check_icon ").addClass("check");
             }else{
                 $(this).find(".check_icon").removeClass("check");
             }
         });
-
-        $("#sourceForm").bootstrapValidator({
-            message: 'This value is not valid',
-            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {/*验证*/
-                'answer[]': {/*键名username和input name值对应*/
-                    message: 'The username is not valid',
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '正确答案不能为空'
-                        },
-                        callback: {/*长度提示*/
-                            message: '正确答案必须为两个及两个以上',
-                            callback:function(value){
-                                if($("#subjectType").val() == "2"){
-                                    $(".checkbox_input").change();
-                                    if($('#checkbox_div .check').length < 2){
-                                        return  false;
-                                    }else{
-                                        return  true;
-                                    }
-                                }else{
-                                    return  true;
-                                }
+        //单选验证
+        function oneValidator(){
+            $("#sourceForm").bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    name : {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '题目不能为空'
+                            }
+                        }
+                    },
+                    'content[]' : {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '选项内容不能为空'
+                            }
+                        }
+                    },
+                    'answer[]': {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '正确答案不能为空'
+                            },
+                            choice: {/*长度提示*/
+                                message: '只能选中一个正确答案',
+                                min:1,
+                                max:1
                             }
                         }
                     }
                 }
+            })
+        }
+        oneValidator();
+        //不定项验证
+        function noSureValidator(){
+            $("#sourceForm").bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    name : {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '题目不能为空'
+                            }
+                        }
+                    },
+                    'content[]' : {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '选项内容不能为空'
+                            }
+                        }
+                    },
+                    'answer[]': {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '正确答案不能为空'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        //多选验证
+        function moreValidator(){
+            $("#sourceForm").bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    name : {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '题目不能为空'
+                            }
+                        }
+                    },
+                    'content[]' : {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '选项内容不能为空'
+                            }
+                        }
+                    },
+                    'answer[]': {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '正确答案不能为空'
+                            },
+                            choice: {/*长度提示*/
+                                message: '至少选中两个正确答案',
+                                min:2
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        //判断验证
+        function chooseValidator(){
+            $("#sourceForm").bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    name : {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '题目不能为空'
+                            }
+                        }
+                    },
+                    'content[]' : {
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '选项内容不能为空'
+                            }
+                        }
+                    },
+                    'answer[]': {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '正确答案不能为空'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        $("#subjectType").change(function(){
+            var type=$(this).val();
+            if(type==1){
+                $('#sourceForm').data('bootstrapValidator').destroy();
+                oneValidator();
+            }else if(type==2){
+                $('#sourceForm').data('bootstrapValidator').destroy();
+                moreValidator();
+            }else if(type==3){
+                $('#sourceForm').data('bootstrapValidator').destroy();
+                noSureValidator();
+            }else{
+                $('#sourceForm').data('bootstrapValidator').destroy();
+                chooseValidator();
             }
         })
-
 
     });
 }

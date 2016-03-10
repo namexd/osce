@@ -127,14 +127,11 @@ class ExamQuestionController extends CommonController
 
             'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
+
         //试题和标签中间表数据
-        $ExamQuestionLabelRelationData = [];
-        foreach($request->all() as $key => $val){
-            if(preg_match('/^tag-{1,3}/',$key)){
-                $arr = explode('-',$key);
-                $ExamQuestionLabelRelationData[$arr[1]] = $val;
-            }
-        }
+
+        $ExamQuestionLabelRelationData = $request->input('tag');
+
 
         //试题表数据
         $examQuestionData =array(
@@ -194,7 +191,6 @@ class ExamQuestionController extends CommonController
         if($list){
             //获取对应试题子项表列表
             $examQuestionItemList = $list->examQuestionItem;
-
             //根据试题信息获取对应的标签列表
             $examQuestionLabelList = $list->ExamQuestionLabelRelation;
         }
@@ -225,6 +221,7 @@ class ExamQuestionController extends CommonController
             $data['id'] = $list->id;
             $data['exam_question_type_id'] = $list->exam_question_type_id;//题目类型
             $data['name'] = $list->name;//题目名称
+
             $data['answer'] = explode('@',$list->answer);//正确答案
             $data['parsing'] = $list->parsing;//解析
         }
@@ -319,4 +316,5 @@ class ExamQuestionController extends CommonController
             return response()->json(false);
         }
     }
+
 }

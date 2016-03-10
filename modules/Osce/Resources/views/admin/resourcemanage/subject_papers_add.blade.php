@@ -2,6 +2,9 @@
 
 @section('only_css')
     <link href="{{asset('osce/common/select2-4.0.0/css/select2.min.css')}}" rel="stylesheet">
+    <style>
+        .select2-container--open{ z-index: 10000;}
+    </style>
 @stop
 
 @section('only_js')
@@ -33,7 +36,7 @@
              * @version  1.0
              * @date        2015-12-31
              */
-            $('#add-new').click(function(){
+            $('#add').click(function(){
                 //计数器标志
                 var index = $('table').find('tbody').attr('index');
                 index = parseInt(index) + 1;
@@ -49,13 +52,13 @@
                         '</select>'+
                         '</td>'+
                         '<td>'+
-                        '<div class="scope"  data-toggle="modal" data-target="#myModal">内科，操作，本科4年制</div>'+
+                        '<div class="scope" id="scope-'+parseInt(index)+'">内科，操作，本科4年制</div>'+
                         '</td>'+
                         '<td>'+
-                        '<input  class="form-control" name="content['+index+'][title]"/>'+
+                        '20'+
                         '</td>'+
                         '<td>'+
-                        '<input class="form-control" name="content['+index+'][title]"/>'+
+                        '20'+
                         '</td>'+
                         '<td>'+
                         '20'+
@@ -67,14 +70,38 @@
                         //记录计数
                         $('table').find('tbody').attr('index',index);
                         $('tbody').append(html);
-            });
-            /**
-             * 题目类型
-             */
-            $('tbody').on('click','.scope',function(){
 
+                        /**
+                         * 保存考核范围
+                         */
+                        var this_scope;
+                        $(".scope").click(function(){
+                            this_scope=$(this).attr("id");
+                        })
+                        $('.form-horizontal').submit(function(){
+                            $.getJSON($(this).attr('action'),$(this).serialize(),function(obj){
+                                var scopelist="<input type='hidden' name='scope[]' value='"+obj+"'>"
+                                $(".save_scope").append(scopelist);
+                                $("#myModal").removeClass("in").hide().attr("aria-hidden","true");
+                                $("body").removeClass("modal-open");
+                                $(".modal-backdrop").remove();
+                                var txt="";
+                                for (x in obj)
+                                {
+                                    txt=txt +obj[x]+"," ;
+                                }
+
+                                $("#" +this_scope).text(
+                                        txt
+                                );
+                            })
+
+                            return  false;
+
+                        })
             });
-            /**
+
+                /**
              * 删除
              */
             $('tbody').on('click','.fa-trash-o',function(){
@@ -99,9 +126,19 @@
                 });
             });
 
-        }
+}
         $(function(){
             categories();
+                    @if(!empty($label))
+                        @foreach($label as $k =>$sub)
+                            var str =  '{{ @$sub['id']}}';
+                            $(".tag-"+str).select2({});
+                        @endforeach
+                     @endif
+//                     $('table').delegate(".scope","click",function(){
+//                                    $("#myModal").removeAttr("tabindex");
+//                                });
+            $.fn.modal.Constructor.prototype.enforceFocus =function(){};
             /**
              * 编辑和新增共用了一段代码，这里必须将验证单独拿出
              * @author mao
@@ -203,10 +240,11 @@
                             <div class="ibox-title" style="border-top:0;">
                                 <h5></h5>
                                 <div class="ibox-tools">
-                                    <button type="button" class="btn btn-outline btn-default" id="add-new">新增题型</button>
+                                    <a type="button" class="btn btn-outline btn-default" id="add-new" data-toggle="modal" href="{{route('osce.admin.ExamPaperController.getExampQuestions')}}" data-target="#modal">新增题型</a>
                                 </div>
                             </div>
                             <div class="ibox-content" style="border-top:0;" >
+                                <div class="save_scope"></div>
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
@@ -247,78 +285,3 @@
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}
-
-@section('layer_content')
-    {{--新增表单--}}
-    <form class="form-horizontal" id="addForm" novalidate="novalidate" method="post" action="{{ route('osce.admin.ExamLabelController.postAddExamQuestionLabel') }}">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">选择抽题范围</h4>
-        </div>
-        <div class="modal-body">
-
-            @if(@$label)
-                @foreach(@$label as $sub)
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">{{@$sub['name']}}：</label>
-                        <div class="col-sm-3">
-                            <select name="label" class="form-control">
-                                <option value="1">包含</option>
-                                <option value="1">等于</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6">
-                            <select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">
-                                @if(!empty($sub['label_type_and_label']))
-                                    @foreach($sub['label_type_and_label'] as $key => $val)
-                                        <option value="{{ $val['id'] }}">{{@$val['name']}}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-                    </div>
-                @endforeach
-            @endif
-            {{--<div class="form-group">--}}
-                {{--<label class="col-sm-3 control-label">能力标签：</label>--}}
-                {{--<div class="col-sm-3">--}}
-                    {{--<select name="label" class="form-control">--}}
-                        {{--<option value="1">包含</option>--}}
-                        {{--<option value="1">等于</option>--}}
-                    {{--</select>--}}
-                {{--</div>--}}
-                {{--<div class="col-sm-6">--}}
-                    {{--<select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">--}}
-                        {{--@if(!empty($v['examQuestionLabelList']))--}}
-                            {{--@foreach($v['examQuestionLabelList'] as $key => $val)--}}
-                                {{--<option value="{{ $val['id'] }}">{{@$val['name']}}</option>--}}
-                            {{--@endforeach--}}
-                        {{--@endif--}}
-                    {{--</select>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-            {{--<div class="form-group">--}}
-                {{--<label class="col-sm-3 control-label">难度标签：</label>--}}
-                {{--<div class="col-sm-3">--}}
-                    {{--<select name="label" class="form-control">--}}
-                        {{--<option value="1">包含</option>--}}
-                        {{--<option value="1">等于</option>--}}
-                    {{--</select>--}}
-                {{--</div>--}}
-                {{--<div class="col-sm-6">--}}
-                    {{--<select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">--}}
-                        {{--@if(!empty($v['examQuestionLabelList']))--}}
-                            {{--@foreach($v['examQuestionLabelList'] as $key => $val)--}}
-                                {{--<option value="{{ $val['id'] }}">{{@$val['name']}}</option>--}}
-                            {{--@endforeach--}}
-                        {{--@endif--}}
-                    {{--</select>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-success" id='sure'>确定</button>
-            <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
-        </div>
-    </form>
-@stop
