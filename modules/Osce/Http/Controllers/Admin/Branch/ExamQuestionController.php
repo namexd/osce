@@ -230,7 +230,7 @@ class ExamQuestionController extends CommonController
             $data['answer'] = explode('@',$list->answer);//正确答案
             $data['parsing'] = $list->parsing;//解析
         }
-        return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
+        return view('osce::admin.resourcemanage.subject_manage_edit', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
             'data'                          =>$data ,//试题信息
             'examQuestionItemList'       =>$examQuestionItemList ,//试题子项表列表
