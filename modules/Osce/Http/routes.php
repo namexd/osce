@@ -455,19 +455,26 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //		'id'	=> 'required'
 //	]);
 
-	$exam_id = $request->get('id');
-	if(empty($exam_id)){
-		return '请传入id，id对应考试ID';
-	}
-
-	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
-	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
-	$exam = new \Modules\Osce\Entities\Exam();
-	if($exam->emptyData($exam_id)){
-		return '成功';
-	}
-
-	return '失败';
+//	$exam_id = $request->get('id');
+//	if(empty($exam_id)){
+//		return '请传入id，id对应考试ID';
+//	}
+//
+//	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
+//	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
+//	$exam = new \Modules\Osce\Entities\Exam();
+//	if($exam->emptyData($exam_id)){
+//		return '成功';
+//	}
+//
+//	return '失败';
+	$a = \Modules\Osce\Entities\Exam::where('id',415)->get();
+	$b = $a->first();
+	if (is_object($a)) {
+//		dd(true);
+	} else {
+		dd(false);
+	};
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 

@@ -427,29 +427,6 @@ class DrawlotsController extends CommonController
                     throw new \Exception('当前考生走错了考场！请去' . Room::findOrFail($shouldRoomId)->name, 7000);
                 }
 
-//                $examPlanStationIds = ExamPlan::where('student_id', '=', $student->id)
-//                    ->where('exam_id', '=', $examId)
-//                    ->orderBy('begin_dt', 'asc')
-//                    ->get()->pluck('room_id');
-//
-//                //判断当前考站在计划表中的顺序
-//                $stationIdKey = $examPlanStationIds->search($roomId);
-//                if ($stationIdKey === false) {
-//                    throw new \Exception('该名考生不在计划中！', 3800);
-//                }
-//
-//                $tempExamQueue = ExamQueue::where('student_id', $student->id)
-//                    ->where('exam_id', $examId)
-//                    ->orderBy('begin_dt', 'asc')
-//                    ->get();
-//
-//                //判断其是否应该在这个考站考试
-//                $tempStationIdKey = $stationIdKey - 1;
-//                if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
-//                    throw new \Exception('当前考生走错了考场！', 3400);
-//                }
-
-
                 //将队列状态变更为1
                 $tempObj->status = 1;
                 if (!$tempObj->save()) {
