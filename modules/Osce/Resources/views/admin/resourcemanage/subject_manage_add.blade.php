@@ -32,19 +32,6 @@
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
-    <script>
-
-        $(function(){
-            @if(!empty($examQuestionLabelTypeList))
-                @foreach($examQuestionLabelTypeList as $k => $v)
-                        var str =  '{{ @$v['id'] }}';
-                        $(".tag-"+str).select2({});
-                @endforeach
-            @endif
-
-        })
-
-    </script>
 @stop
 
 @section('content')
@@ -165,22 +152,22 @@
                                 <div class="col-sm-10" id="checkbox_div">
                                     <label class="check_label checkbox_input check_top">
                                         <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="answer[]"  value="A" class="min">
+                                        <input type="checkbox" name="answer[]"  value="A">
                                         <span class="check_name">A</span>
                                     </label>
                                     <label class="check_label checkbox_input check_top">
                                         <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="answer[]"  value="B" class="min">
+                                        <input type="checkbox" name="answer[]"  value="B">
                                         <span class="check_name">B</span>
                                     </label>
                                     <label class="check_label checkbox_input check_top">
                                         <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="answer[]"  value="C" class="min">
+                                        <input type="checkbox" name="answer[]"  value="C">
                                         <span class="check_name">C</span>
                                     </label>
                                     <label class="check_label checkbox_input check_top">
                                         <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="answer[]" value="D" class="min">
+                                        <input type="checkbox" name="answer[]" value="D">
                                         <span class="check_name">D</span>
                                     </label>
                                 </div>
@@ -201,7 +188,7 @@
                                             <div style="margin-bottom: 10px" class="clear">
                                                 <label class="col-sm-2 control-label">{{ @$v['name'] }}</label>
                                                 <div class="col-sm-10">
-                                                    <select class="form-control tag-{{ @$v['id'] }}" name="tag-{{ @$v['id'] }}[]" multiple="multiple">
+                                                    <select class="form-control tag" name="tag[]" multiple="multiple">
                                                         @if(!empty($v['examQuestionLabelList']))
                                                             @foreach($v['examQuestionLabelList'] as $key => $val)
                                                                 <option value="{{ $val['id'] }}">{{@$val['name']}}</option>

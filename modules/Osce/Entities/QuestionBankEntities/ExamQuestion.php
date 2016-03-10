@@ -160,11 +160,9 @@ class ExamQuestion extends Model
                 foreach ($examQuestionLabelRelationData as $key => $value) {
                     $examQuestionLabelRelationInfo['exam_question_id'] = $examQuestion->id;
                     $examQuestionLabelRelationInfo['create_user_id'] = Auth::user()->id;
-                    foreach($value as $v){
-                        $examQuestionLabelRelationInfo['exam_question_label_id'] = $v;
-                        if(!ExamQuestionLabelRelation::create($examQuestionLabelRelationInfo)){
-                            throw new \Exception(' 插入试题和标签中间表失败！');
-                        }
+                    $examQuestionLabelRelationInfo['exam_question_label_id'] = $value;
+                    if(!ExamQuestionLabelRelation::create($examQuestionLabelRelationInfo)){
+                        throw new \Exception(' 插入试题和标签中间表失败！');
                     }
                 }
 
@@ -192,11 +190,9 @@ class ExamQuestion extends Model
                 foreach ($examQuestionLabelRelationData as $key => $value) {
                     $examQuestionLabelRelationInfo['exam_question_id'] = $examQuestion->id;
                     $examQuestionLabelRelationInfo['create_user_id'] = Auth::user()->id;
-                    foreach($value as $v){
-                        $examQuestionLabelRelationInfo['exam_question_label_id'] = $v;
-                        if(!ExamQuestionLabelRelation::create($examQuestionLabelRelationInfo)){
-                            throw new \Exception(' 插入试题和标签中间表失败！');
-                        }
+                    $examQuestionLabelRelationInfo['exam_question_label_id'] = $value;
+                    if(!ExamQuestionLabelRelation::create($examQuestionLabelRelationInfo)){
+                        throw new \Exception(' 插入试题和标签中间表失败！');
                     }
                 }
             }
