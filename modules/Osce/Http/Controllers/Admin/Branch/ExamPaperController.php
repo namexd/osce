@@ -230,4 +230,24 @@ class ExamPaperController extends CommonController
     public function scopeCallback(Request $request){
         die(json_encode($request->all()));
     }
+
+    /**
+     * 选择试题范围页面
+     * @url       GET /osce/admin/exampaper/examp-questions
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExampQuestions(){
+        $label = $this->getExamLabelGet();
+
+        //查找试题类型
+        $question = ExamQuestionType::where('status','=',1)->select('id','name')->get()->toArray();
+        return view('osce::admin.resourcemanage.subject_papers_add',['label'=>$label,'question'=>$question]);
+    }
 }
