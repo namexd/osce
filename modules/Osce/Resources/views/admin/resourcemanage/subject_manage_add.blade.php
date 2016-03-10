@@ -181,16 +181,6 @@
                                         <input type="radio" name="judge" value="0">
                                         <span class="radio_name" style="float: left">错误</span>
                                     </label>
-                                    {{--<label class="check_label checkbox_input check_top">--}}
-                                        {{--<div class="check_icon check_other"></div>--}}
-                                        {{--<input type="checkbox" name="judge"  value="1">--}}
-                                        {{--<span class="check_name">正确</span>--}}
-                                    {{--</label>--}}
-                                    {{--<label class="check_label checkbox_input check_top">--}}
-                                        {{--<div class="check_icon check_other"></div>--}}
-                                        {{--<input type="checkbox" name="judge"  value="0">--}}
-                                        {{--<span class="check_name">错误</span>--}}
-                                    {{--</label>--}}
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
