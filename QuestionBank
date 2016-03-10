@@ -191,6 +191,7 @@ CREATE TABLE IF NOT EXISTS `exam_question_formal` (
   `answer` varchar(20) DEFAULT NULL COMMENT '试题答案（a/abc/0,1）',
   `parsing` varchar(255) DEFAULT NULL COMMENT '题目内容解析',
   `exam_category_formal_id` int(11) DEFAULT NULL COMMENT '正式试题分类id',
+  `student_answer` varchar(20) DEFAULT NULL COMMENT '学生答案',
   `created_user_id` int(11) NOT NULL COMMENT '创建人',
   `created_at` datetime DEFAULT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',

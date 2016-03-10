@@ -31,7 +31,7 @@
             <div class="container-fluid ibox-content" style="border: none;">
                 <div class="input-group" style="width: 100%;margin:20px 0;">
                     <label for="" class="pull-left exam-name">试卷名称：</label>
-                    <input type="text" placeholder="请输入标签名称" name="tagName" class="input-md form-control" style="width: 250px;">
+                    <input type="text" placeholder="请输入标签名称" name="keyword" class="input-md form-control" style="width: 250px;">
 
                     <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
                     <button type="submit" class="btn btn-sm btn-primary marl_10 pull-right" id="add"><a href="{{route('osce.admin.ExamPaperController.getAddExamPage')}}"> 新增</a></button>
