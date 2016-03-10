@@ -12,6 +12,7 @@ use Cache;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
@@ -106,9 +107,12 @@ class ExamPaperController extends CommonController
      */
     public function getAddExamPage(Request $request)
     {
+        //查找标签类型下的标签
         $label = $this->getExamLabelGet();
-        //dd($label);
-        return view('osce::admin.resourcemanage.subject_papers_add',['label'=>$label]);
+
+        //查找试题类型
+        $question = ExamQuestionType::where('status','=',1)->select('id','name')->get()->toArray();
+        return view('osce::admin.resourcemanage.subject_papers_add',['label'=>$label,'question'=>$question]);
     }
 
 
@@ -186,9 +190,20 @@ class ExamPaperController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getAddExams(Request $request){
+        //验证试题类型ID
+//        $this->validate($request,[
+//            'subject_id'        => 'required',
+//            'ability_id'        => 'required',
+//            'difficult_id'        => 'required',
+//        ]);
         DB::beginTransaction();
 
-        $data = $request -> all();
+        $data = [
+            'name' => $request -> name,
+            'code' => $request -> code,
+            'status' => $request -> status,
+            'status' => $request -> status,
+        ];
         $mode = $request -> mode;
         $type = $request -> type;
 
