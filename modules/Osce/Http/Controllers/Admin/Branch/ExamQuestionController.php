@@ -190,7 +190,8 @@ class ExamQuestionController extends CommonController
         //获取试题信息
         $examQuestionModel= new ExamQuestion();
         $list = $examQuestionModel->getExamQuestionById(14);
-
+        $examQuestionItemList ='';
+        $examQuestionLabelList='';
         if($list){
             //获取对应试题子项表列表
             $examQuestionItemList = $list->examQuestionItem;
