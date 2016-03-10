@@ -117,25 +117,22 @@
  		$(".upload").change(function(){
  			var files=document.getElementById("file0").files;
 	    	var kb=Math.floor(files[0].size/1024);
-	    	console.log('1',typeof kb);
-//			if(kb>2048){
-//				layer.alert('文件大小不得超过2M!');
-////				return false;
-//			}
+//	    	console.log('1',typeof kb);
+			if(kb>2048){
+				layer.alert('文件大小不得超过2M!');
+				$("#file0").val('');
+				return false;
+			}
 
 	        $.ajaxFileUpload
 	        ({
-
 	            url:'{{url('/osce/admin/train/upload-file')}}',
 	            secureuri:false,//
 	            fileElementId:'file0',//必须要是 input file标签 ID
 	            dataType: 'json',//
 	            success: function (data, status)
 	            {
-					console.log('2',typeof kb);
-					if(kb>2048){
-						layer.alert('文件大小不得超过2M!');
-					} else if(data.code!=1){
+					if(data.code!=1){
 						layer.msg('只能上传后缀为".xlsx"或".docx"的文件！',{skin:'msg-error',icon:1});
 					}else{
 						var val=data.url;
