@@ -17,6 +17,7 @@ use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -320,10 +321,15 @@ class ExamResultController extends CommonController{
                 ];
             }
             $examScreeningIds = array_column($examScreening, 'id');
+            //更据考站id查询到
+            $stationVcrId = StationVcr::where('station_id','=',$stationId)->first()->id;
+            if(is_null($stationVcrId)){
+                throw new \Exception('没有找到相关联的摄像机');
+            }
             //查询到页面需要的数据
             $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningIds);
             //查询出时间锚点追加到数组中
-            $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationId);
+            $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationVcrId);
 //            if($anchor){
 //                foreach($data as $key=>&$item){
 //                    foreach($anchor as $key1=>$list){
