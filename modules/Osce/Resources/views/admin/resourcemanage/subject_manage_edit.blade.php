@@ -45,7 +45,7 @@
             <div class="ibox-content">
                 <div class="row">
                     <div class="col-md-12 ">
-                        <form method="post" class="form-horizontal" id="sourceForm" action="{{ route('osce.admin.ExamQuestionController.postExamQuestionAdd') }}">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="{{ route('osce.admin.ExamQuestionController.postExamQuestionEdit') }}">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">题目类型</label>
                                 <div class="col-sm-10">
