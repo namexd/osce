@@ -1,15 +1,11 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
-    <link href="{{asset('osce/common/select2-4.0.0/css/select2.min.css')}}" rel="stylesheet">
-    <style>
-        .select2-container--open{ z-index: 10000;}
-    </style>
 @stop
 
 @section('only_js')
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
-    <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
     <script>
         function categories(){
             $('#submit-btn').click(function(){
@@ -100,6 +96,18 @@
 
                         })
             });
+            $("#add-new").click(function(){
+
+
+                layer.open({
+                    type: 2,
+                    area: ['90%', '530px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    content: '{{route('osce.admin.ExamPaperController.getExampQuestions')}}'
+                })
+
+            })
 
                 /**
              * 删除
@@ -240,7 +248,7 @@
                             <div class="ibox-title" style="border-top:0;">
                                 <h5></h5>
                                 <div class="ibox-tools">
-                                    <a type="button" class="btn btn-outline btn-default" id="add-new" data-toggle="modal" href="{{route('osce.admin.ExamPaperController.getExampQuestions')}}" data-target="#modal">新增题型</a>
+                                    <button type="button" class="btn btn-outline btn-default" id="add-new" >新增题型</button>
                                 </div>
                             </div>
                             <div class="ibox-content" style="border-top:0;" >
