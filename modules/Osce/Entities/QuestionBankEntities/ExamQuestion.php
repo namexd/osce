@@ -175,20 +175,19 @@ class ExamQuestion extends Model
                 if (!$examQuestion instanceof self) {
                     throw new \Exception(' 插入试题表数据失败！');
                 }
-
                 //向试题子项表插入数据
-                foreach ($examQuestionItemData as $key => $value) {
+                if(!empty($examQuestionItemData)){
                     $data['create_user_id'] = Auth::user()->id;
                     $data['exam_question_id'] = $examQuestion->id;
-
-                    foreach($value as $k => $v){
+                    foreach($examQuestionItemData['name'] as $k => $v){
                         $data['name'] = $v;
                         $data['content'] = $examQuestionItemData['content'][$k];
-                        if(!ExamQuestionItem::create($value)){
+                        if(!ExamQuestionItem::create($data)){
                             throw new \Exception(' 插入试题子项数据失败！');
                         }
                     }
                 }
+
                 //向试题和标签中间表插入数据
                 foreach ($examQuestionLabelRelationData as $key => $value) {
                     $examQuestionLabelRelationInfo['exam_question_id'] = $examQuestion->id;
