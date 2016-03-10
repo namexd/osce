@@ -190,7 +190,8 @@ class ExamQuestionController extends CommonController
         //获取试题信息
         $examQuestionModel= new ExamQuestion();
         $list = $examQuestionModel->getExamQuestionById(14);
-
+        $examQuestionItemList ='';
+        $examQuestionLabelList='';
         if($list){
             //获取对应试题子项表列表
             $examQuestionItemList = $list->examQuestionItem;
@@ -249,10 +250,11 @@ class ExamQuestionController extends CommonController
     public function postExamQuestionEdit(Request $request)
     {
         $this->validate($request, [
-            'examQuestionTypeId'    =>'sometimes|integer',//试题表
+            'id'                      =>'required|integer',//试题表
+            'examQuestionTypeId'    =>'sometimes|integer',
             'name'                     => 'required|string',
             'parsing'                 => 'sometimes|string',
-            'answer'                  => 'required',
+            'answer'                  => 'sometimes|array',
             'judge'                  => 'sometimes|integer',
 
             'examQuestionItemName'  => 'required|array',//试题子项表
@@ -268,6 +270,7 @@ class ExamQuestionController extends CommonController
 
         //试题表数据
         $examQuestionData =array(
+            'id'                        =>$request->input('id'),//试题id
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
@@ -288,6 +291,7 @@ class ExamQuestionController extends CommonController
 
         $examQuestionModel= new ExamQuestion();
         $result = $examQuestionModel->editExamQuestion($examQuestionData,$examQuestionItemData,$ExamQuestionLabelRelationData);
+        dd($result);
         if($result)
         {
             return redirect()->route('osce.admin.ExamQuestionController.showExamQuestionList')->with('success','编辑成功');
