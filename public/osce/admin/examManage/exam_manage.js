@@ -1692,7 +1692,7 @@ function exam_notice_add(){
     $(".images_uploads").change(function(){
     	var files=document.getElementById("file0").files;
     	var kb=Math.floor(files[0].size/1024);
-    	//console.log(kb);
+    	console.log(kb);
         if(kb>2048){
             layer.alert('文件大小不得超过2M!');
             $("#file0").val('');
