@@ -19,7 +19,7 @@ class ExamLabelController extends CommonController
     /**
      * 试卷标签添加验证
      * @method  GET
-     * @url /osce/admin/exam/exam-addVerify
+     * @url /osce/admin/exam/exam-verify
      * @access public
      * @param
      * @author yangshaolin <yangshaolin@misrobot.com>
@@ -47,16 +47,6 @@ class ExamLabelController extends CommonController
 
     }
 
-    /**
-     * 试卷标签添加验证
-     * @method  GET
-     * @url /osce/admin/exam/exam-addVerify
-     * @access public
-     * @param
-     * @author yangshaolin <yangshaolin@misrobot.com>
-     * @date    2016年3月7日17:38:23
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
 
 
     /**
