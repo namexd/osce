@@ -134,12 +134,14 @@ class ExamQuestionController extends CommonController
                 $ExamQuestionLabelRelationData[$arr[1]] = $val;
             }
         }
+
+
         //试题表数据
         $examQuestionData =array(
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'answer'                  =>serialize($request->input('answer')),//正确答案（a/abc/0,1）
+            'answer'                  =>implode('',$request->input('answer')),//正确答案（a/abc/0,1）
         );
         //试题子项表数据
         $examQuestionItemData = array(
