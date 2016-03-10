@@ -34,7 +34,7 @@
                             <select class="form-control" name="question-type">
                                 @if(!empty($examQuestionTypeList))
                                     @foreach($examQuestionTypeList as $key => $val)
-                                        <option value="{{ @$val['id'] }}-{{@$val['name']}}">{{@$val['name']}}</option>
+                                        <option value="{{ @$val['id'] }}">{{@$val['name']}}</option>
                                     @endforeach
                                 @endif
                             </select>
@@ -54,7 +54,7 @@
                                 <select class="form-control tag" name="tag[]" multiple="multiple" style="width: 100%">
                                     @if(!empty($sub['examQuestionLabel']))
                                         @foreach($sub['examQuestionLabel'] as $key => $val)
-                                            <option value="{{ @$val['id'] }}-{{@$val->name}}">{{@$val->name}}</option>
+                                            <option value="{{ @$val['id'] }}">{{@$val->name}}</option>
                                         @endforeach
                                     @endif
                                 </select>

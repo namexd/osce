@@ -23,7 +23,6 @@
     .check_top {top: 8px;margin-right: 10px;}
     /*select2样式*/
     .select2-container--default .select2-selection--multiple{border: 1px solid #e5e6e7;border-radius:2px;}
-
 </style>
 @stop
 
@@ -66,8 +65,8 @@
                                     <textarea name="name" id="subjectName" cols="10" rows="5" class="form-control"></textarea>
                                 </div>
                             </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
+                            <div class="hr-line-dashed chooseLine"></div>
+                            <div class="form-group choose">
                                 <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>选项</label>
                                 <div class="col-sm-10">
                                     <div class="ibox float-e-margins">
@@ -170,6 +169,28 @@
                                         <input type="checkbox" name="answer[]" value="D">
                                         <span class="check_name">D</span>
                                     </label>
+                                </div>
+                                <div class="col-sm-10" id="radiobox_div" style="display: none;">
+                                    <label class="radio_label" style="top: 8px;">
+                                        <div class="radio_icon" style="float: left"></div>
+                                        <input type="radio" name="judge" value="1">
+                                        <span class="radio_name" style="float: left">正确</span>
+                                    </label>
+                                    <label class="radio_label" style="top: 8px;">
+                                        <div class="radio_icon" style="float: left"></div>
+                                        <input type="radio" name="judge" value="0">
+                                        <span class="radio_name" style="float: left">错误</span>
+                                    </label>
+                                    {{--<label class="check_label checkbox_input check_top">--}}
+                                        {{--<div class="check_icon check_other"></div>--}}
+                                        {{--<input type="checkbox" name="judge"  value="1">--}}
+                                        {{--<span class="check_name">正确</span>--}}
+                                    {{--</label>--}}
+                                    {{--<label class="check_label checkbox_input check_top">--}}
+                                        {{--<div class="check_icon check_other"></div>--}}
+                                        {{--<input type="checkbox" name="judge"  value="0">--}}
+                                        {{--<span class="check_name">错误</span>--}}
+                                    {{--</label>--}}
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
