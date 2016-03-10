@@ -149,7 +149,7 @@ abstract class CommonController extends Controller
      * @author Jiangzhiheng
      * @time 2016-03-10 15:01
      */
-    public function objIsEmpty($obj, $message = '系统错误', $code = -999)
+    static public function objIsEmpty($obj, $message = '系统错误', $code = -999)
     {
         if (is_object($obj)) {
             if (!$obj->isEmpty()) {
@@ -173,7 +173,7 @@ abstract class CommonController extends Controller
      * @author Jiangzhiheng
      * @time 2016-03-10 15:19
      */
-    public function objIsNull($obj, $message = '系统错误', $code = -999)
+    static public function objIsNull($obj, $message = '系统错误', $code = -999)
     {
         if (is_object($obj)) {
             if (!is_null($obj)) {
