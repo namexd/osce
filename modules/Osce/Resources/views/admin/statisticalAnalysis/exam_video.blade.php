@@ -67,11 +67,11 @@
                             @forelse($anchor as $item)
                                 <li><span class="year">{{$item->begin_dt}}</span></li>
                             @empty
-                                @foreach($data as $item)
+                                {{--@foreach($data as $item)--}}
 
-                            <li><span class="year">{{$item->anchor}}</span></li>
+                            {{--<li><span class="year">{{$item->anchor}}</span></li>--}}
 
-                            @endforeach
+                            {{--@endforeach--}}
 
                             @endforelse
 
