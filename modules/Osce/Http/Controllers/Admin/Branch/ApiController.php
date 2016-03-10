@@ -31,6 +31,7 @@ class ApiController extends CommonController
         foreach($examQuestionLabelTypeList as $k=>$v){
             $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;
         }
+        //dd($examQuestionLabelTypeList);
         return  view('osce::admin.resourcemanage.subject_papers_add_detail',[
             'examQuestionLabelTypeList'=>$examQuestionLabelTypeList,
             'examQuestionTypeList'=>$examQuestionTypeList
