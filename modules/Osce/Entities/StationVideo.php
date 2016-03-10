@@ -96,10 +96,11 @@ class StationVideo extends CommonModel
 //    }
 
 
-    static function  getTationVideo($examId, $studentId, $stationId){
+    static function  getTationVideo($examId, $studentId, $stationVcrId){
 
         return  StationVideo::where('exam_id','=',$examId)
             ->where('student_id','=',$studentId)
+            ->where('station_vcr_id','=',$stationVcrId)
             ->groupBy('station_video.begin_dt')
             ->get();
     }

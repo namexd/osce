@@ -85,13 +85,29 @@
                         {
                             type : 'category',
                             boundaryGap : false,
+                            axisLine : {
+                                lineStyle : {
+                                    color: '#ddd',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
                             data : xAxis//['考核点1','考核点2','','','','','']
                         }
                     ],
                     yAxis : [
                         {
                             type : 'value',
-                            name : '分数'
+                            axisLine : {
+                                lineStyle : {
+                                    color: '#ddd',
+                                    width: 1,
+                                    type: 'solid'
+                                }
+                            },
+                            axisLabel : {
+                                formatter: '{value} 分'
+                            }
                         }
                     ],
                     series : [
@@ -99,6 +115,8 @@
                             name:student_name,
                             type:'line',
                             smooth:true,
+                            symbol:'emptyCircle',
+                            symbolSize:4,
                             itemStyle: {
                                 normal: {
                                     color:'#1ab394',
@@ -106,6 +124,7 @@
                                         color:'#1ab394'
                                     },
                                     areaStyle: {
+                                        color:'rgba(26,179,148,.3)',
                                         type: 'default'
                                     }
                                 }
@@ -115,6 +134,8 @@
                         {
                             name:'平均分',
                             type:'line',
+                            symbol:'emptyCircle',
+                            symbolSize:4,
                             smooth:true,
                             itemStyle: {
                                 normal: {

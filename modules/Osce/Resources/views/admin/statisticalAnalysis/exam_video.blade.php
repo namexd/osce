@@ -67,11 +67,11 @@
                             @forelse($anchor as $item)
                                 <li><span class="year">{{$item->begin_dt}}</span></li>
                             @empty
-                                @foreach($data as $item)
+                                {{--@foreach($data as $item)--}}
 
-                            <li><span class="year">{{$item->anchor}}</span></li>
+                            {{--<li><span class="year">{{$item->anchor}}</span></li>--}}
 
-                            @endforeach
+                            {{--@endforeach--}}
 
                             @endforelse
 
@@ -86,10 +86,10 @@
                         </div>
                     </div>
                     <button type="button" class="btn btn-default btn-md pause">
-                        <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                        <i class="fa fa-pause" aria-hidden="true"></i>
                     </button>
                     <button type="button" class="btn btn-default btn-md resume">
-                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                        <i class="fa fa-play"></i>
                     </button>
                 </div>
             </div>
