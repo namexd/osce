@@ -126,14 +126,10 @@ class ExamQuestionController extends CommonController
 
             'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
+
         //试题和标签中间表数据
-        $ExamQuestionLabelRelationData = [];
-        foreach($request->all() as $key => $val){
-            if(preg_match('/^tag-{1,3}/',$key)){
-                $arr = explode('-',$key);
-                $ExamQuestionLabelRelationData[$arr[1]] = $val;
-            }
-        }
+        $ExamQuestionLabelRelationData = $request->input('tag');
+
         //试题表数据
         $examQuestionData =array(
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
