@@ -165,15 +165,105 @@ function subject_manage(){
 }
 //题库管理新增
 function subject_manage_add(){
-    //选项选中
     $(function(){
-        $(".checkbox_input").click(function(){
+        //新增选项
+        var strToInt = {
+            A:'B',
+            B:'C',
+            C:'D',
+            D:'E',
+            E:'F',
+            F:'G',
+            G:'H',
+            H:'I',
+            I:'J'
+        };
+        $("#addChose").click(function(){
+            var old= $("tbody").find("tr").last().children().first().html();
+            $("tbody").find("tr").last().before().children().last().empty();
+            $("tbody").append('<tr>' +
+                '<td>'+strToInt[old]+'</td>' +
+                '<input type="hidden" name="examQuestionItemName[]" value="'+strToInt[old]+'"/>' +
+                '<td>' +
+                '<div class="form-group">' +
+                '<div class="col-sm-12">' +
+                '<input type="text" class="form-control" name="content[]"/>' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td>' +
+                '<a href="javascript:void(0)" class="delete">' +
+                '<span class="read state2 detail">' +
+                '<i class="fa fa-trash-o fa-2x"></i>' +
+                '</span>' +
+                '</a>' +
+                '</td>' +
+                '</tr>');
+            $("#checkbox_div").append('<label class="check_label checkbox_input check_top">' +
+                '<div class="check_icon check_other"></div>' +
+                '<input type="checkbox" name="answer[]" value="'+strToInt[old]+'"/>' +
+                '<span class="check_name">'+strToInt[old]+'</span>' +
+                '</label>')
+        });
+        //删除选项
+        $("tbody").delegate(".delete","click",function(){
+            $(this).parent().parent().remove();
+            $("#checkbox_div").children().last().remove();
+            if($(".table tbody").children().size() == "2"){
+
+            }else{
+                $(".table tbody").children().last("tr").children().last('td').append('<a href="javascript:void(0)" class="delete">' +
+                    '<span class="read state2 detail">' +
+                    '<i class="fa fa-trash-o fa-2x"></i>' +
+                    '</span>' +
+                    '</a>');
+            }
+        });
+        //选项选中
+        $(".checkbox_input").change(function(){
+
             if($(this).find("input").is(':checked')){
                 $(this).find(".check_icon ").addClass("check");
             }else{
                 $(this).find(".check_icon").removeClass("check");
             }
         });
+
+        $("#sourceForm").bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {/*验证*/
+                'answer[]': {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '正确答案不能为空'
+                        },
+                        callback: {/*长度提示*/
+                            message: '正确答案必须为两个及两个以上',
+                            callback:function(value){
+                                if($("#subjectType").val() == "2"){
+                                    $(".checkbox_input").change();
+                                    if($('#checkbox_div .check').length < 2){
+                                        return  false;
+                                    }else{
+                                        return  true;
+                                    }
+                                }else{
+                                    return  true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+
     });
 }
 
