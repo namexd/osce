@@ -1,15 +1,11 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
-    <link href="{{asset('osce/common/select2-4.0.0/css/select2.min.css')}}" rel="stylesheet">
-    <style>
-        .select2-container--open{ z-index: 10000;}
-    </style>
 @stop
 
 @section('only_js')
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
-    <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
     <script>
         function categories(){
             $('#submit-btn').click(function(){
@@ -100,6 +96,19 @@
 
                         })
             });
+            $("#add-new").click(function(){
+
+
+                layer.open({
+                    type: 2,
+                    title: '新增试题组成',
+                    area: ['90%', '530px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}'
+                })
+
+            })
 
                 /**
              * 删除
@@ -129,15 +138,6 @@
 }
         $(function(){
             categories();
-                    @if(!empty($label))
-                        @foreach($label as $k =>$sub)
-                            var str =  '{{ @$sub['id']}}';
-                            $(".tag-"+str).select2({});
-                        @endforeach
-                     @endif
-//                     $('table').delegate(".scope","click",function(){
-//                                    $("#myModal").removeAttr("tabindex");
-//                                });
             $.fn.modal.Constructor.prototype.enforceFocus =function(){};
             /**
              * 编辑和新增共用了一段代码，这里必须将验证单独拿出
@@ -200,14 +200,13 @@
                     <label class="col-sm-2 control-label">试卷名称</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="name" name="name">
-                        <input type="hidden"  class="form-control" id="cate_id" name="cate_id" value="2" />
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">考试时长</label>
                     <div class="col-sm-10">
-                        <input type="text"  class="form-control" id="code" name="code">
+                        <input type="text"  class="form-control" id="code" name="time">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -226,7 +225,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">试卷类型</label>
                     <div class="col-sm-10">
-                        <select id="status"   class="form-control m-b" name="status">
+                        <select id="status"   class="form-control m-b" name="status2">
                             <option value="1">随机试卷</option>
                             <option value="2">统一试卷</option>
                         </select>
@@ -240,7 +239,7 @@
                             <div class="ibox-title" style="border-top:0;">
                                 <h5></h5>
                                 <div class="ibox-tools">
-                                    <a type="button" class="btn btn-outline btn-default" id="add-new" data-toggle="modal" href="{{route('osce.admin.ExamPaperController.getExampQuestions')}}" data-target="#modal">新增题型</a>
+                                    <button type="button" class="btn btn-outline btn-default" id="add-new" >新增题型</button>
                                 </div>
                             </div>
                             <div class="ibox-content" style="border-top:0;" >
@@ -257,7 +256,7 @@
                                         <th width="10%">操作</th>
                                     </tr>
                                     </thead>
-                                    <tbody index="0">
+                                    <tbody index="0" id="list-body">
                                         <tr>
                                             <th>总计</th>
                                             <th></th>
