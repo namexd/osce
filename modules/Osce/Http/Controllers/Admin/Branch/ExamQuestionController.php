@@ -138,19 +138,20 @@ class ExamQuestionController extends CommonController
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'answer'                  =>implode('@',$request->input('answer')),//正确答案（a/abc/0,1）
+
         );
+        //判断是否为判断题
+        if($request->input('examQuestionTypeId')=='4'){
+            $examQuestionData['answer'] = $request->input('answer');//正确答案（0-错误，1-正确,）
+        }else{
+            $examQuestionData['answer'] = implode('@',$request->input('answer'));//正确答案（a/abc/0,1）
+        }
 
         //试题子项表数据
         $examQuestionItemData = array(
             'name' =>$request->input('examQuestionItemName'),//选项名称:A/B/C/D
             'content' =>$request->input('content'),//选项内容/判断内容
         );
-       /* echo "<pre>";
-        print_r($examQuestionData);
-        print_r($examQuestionItemData);
-        print_r($ExamQuestionLabelRelationData);
-        dd(1);*/
         $examQuestionModel= new ExamQuestion();
         $result = $examQuestionModel->addExamQuestion($examQuestionData,$examQuestionItemData,$ExamQuestionLabelRelationData);
         if($result)
@@ -188,6 +189,7 @@ class ExamQuestionController extends CommonController
         //获取试题信息
         $examQuestionModel= new ExamQuestion();
         $list = $examQuestionModel->getExamQuestionById(14);
+
         if($list){
             //获取对应试题子项表列表
             $examQuestionItemList = $list->examQuestionItem;
@@ -216,6 +218,7 @@ class ExamQuestionController extends CommonController
             }
             $examQuestionLabelTypeList[$k]['examQuestionLabelList_'] = $data;
         }
+
         $data = [];
         if($list){
             $data['id'] = $list->id;
