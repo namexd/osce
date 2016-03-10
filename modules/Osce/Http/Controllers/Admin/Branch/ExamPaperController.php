@@ -222,4 +222,12 @@ class ExamPaperController extends CommonController
             return false;
         }
     }
+
+    /**
+     * TODO tangjun
+     * @param Request $request
+     */
+    public function scopeCallback(Request $request){
+        die(json_encode($request->all()));
+    }
 }
