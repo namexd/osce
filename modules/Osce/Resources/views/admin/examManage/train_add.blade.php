@@ -117,7 +117,7 @@
  		$(".upload").change(function(){
  			var files=document.getElementById("file0").files;
 	    	var kb=Math.floor(files[0].size/1024);
-	    	//console.log(kb);
+	    	console.log('1',typeof kb);
 //			if(kb>2048){
 //				layer.alert('文件大小不得超过2M!');
 ////				return false;
@@ -132,6 +132,7 @@
 	            dataType: 'json',//
 	            success: function (data, status)
 	            {
+					console.log('2',typeof kb);
 					if(kb>2048){
 						layer.alert('文件大小不得超过2M!');
 					} else if(data.code!=1){
