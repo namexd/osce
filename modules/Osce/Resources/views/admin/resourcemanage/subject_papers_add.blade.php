@@ -36,7 +36,7 @@
              * @version  1.0
              * @date        2015-12-31
              */
-            $('#add-new').click(function(){
+            $('#add').click(function(){
                 //计数器标志
                 var index = $('table').find('tbody').attr('index');
                 index = parseInt(index) + 1;
@@ -52,13 +52,13 @@
                         '</select>'+
                         '</td>'+
                         '<td>'+
-                        '<div class="scope" id="scope-'+parseInt(index)+'" data-toggle="modal" data-target="#myModal">内科，操作，本科4年制</div>'+
+                        '<div class="scope" id="scope-'+parseInt(index)+'">内科，操作，本科4年制</div>'+
                         '</td>'+
                         '<td>'+
-                        '<input  class="form-control" name="content['+index+'][title]"/>'+
+                        '20'+
                         '</td>'+
                         '<td>'+
-                        '<input class="form-control" name="content['+index+'][title]"/>'+
+                        '20'+
                         '</td>'+
                         '<td>'+
                         '20'+
@@ -240,7 +240,7 @@
                             <div class="ibox-title" style="border-top:0;">
                                 <h5></h5>
                                 <div class="ibox-tools">
-                                    <button type="button" class="btn btn-outline btn-default" id="add-new">新增题型</button>
+                                    <a type="button" class="btn btn-outline btn-default" id="add-new" data-toggle="modal" href="{{route('osce.admin.ExamPaperController.getExampQuestions')}}" data-target="#modal">新增题型</a>
                                 </div>
                             </div>
                             <div class="ibox-content" style="border-top:0;" >
@@ -285,41 +285,3 @@
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}
-
-@section('layer_content')
-    {{--新增表单--}}
-    <form class="form-horizontal" action="{{ route('osce.admin.ExamPaperController.scopeCallback') }}">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">选择抽题范围</h4>
-        </div>
-        <div class="modal-body">
-            @if(@$label)
-                @foreach(@$label as $k =>$sub)
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">{{@$sub['name']}}：</label>
-                        <div class="col-sm-3">
-                            <select class="form-control" name="label-{{ @$sub['id'] }}">
-                                <option value="0">包含</option>
-                                <option value="1">等于</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6">
-                            <select class="form-control tag-{{ @$sub['id'] }}" name="tag-{{ @$sub['id'] }}[]" multiple="multiple" style="width: 100%">
-                                @if(!empty($sub['label_type_and_label']))
-                                    @foreach(@$sub['label_type_and_label'] as $key => $val)
-                                        <option value="{{ @$val['id'] }}-{{@$val['name']}}">{{@$val['name']}}</option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-                    </div>
-                @endforeach
-            @endif
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-success" id='sure'>确定</button>
-            <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
-        </div>
-    </form>
-@stop

@@ -75,7 +75,7 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
-                                    <select class="form-control tag-{{ @$sub['id'] }}" name="tag-{{ @$sub['id'] }}[]" multiple="multiple" style="width: 100%">
+                                    <select class="form-control tag" name="tag[]" multiple="multiple" style="width: 100%">
                                         @if(!empty($sub['label_type_and_label']))
                                             @foreach(@$sub['label_type_and_label'] as $key => $val)
                                                 <option value="{{ @$val['id'] }}-{{@$val['name']}}">{{@$val['name']}}</option>
