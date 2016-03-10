@@ -135,7 +135,7 @@
 	            dataType: 'json',//
                 success: function (data, status)
                 {
-                   else if(data.code!=1){
+                    if(data.code!=1){
                         layer.msg('只能上传后缀为".xlsx"或".docx"的文件！',{skin:'msg-error',icon:1});
                     }else{
                         str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" />'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
