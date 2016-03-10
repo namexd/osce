@@ -248,6 +248,14 @@ function subject_manage_add(){
                 $(this).find(".check_icon").removeClass("check");
             }
         });
+        $("#radiobox_div").delegate(".radio_label","change",function(){
+            if($(this).children("input").checked=="true"){
+                $(this).children(".radio_icon").removeClass("check");
+            }else{
+                $(".radio_icon").removeClass("check");
+                $(this).children(".radio_icon").addClass("check");
+            }
+        });
         //单选验证
         function oneValidator(){
             $("#sourceForm").bootstrapValidator({
@@ -284,6 +292,14 @@ function subject_manage_add(){
                                 max:1
                             }
                         }
+                    },
+                    'tag[]': {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '标签不能为空'
+                            }
+                        }
                     }
                 }
             })
@@ -318,6 +334,14 @@ function subject_manage_add(){
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '正确答案不能为空'
+                            }
+                        }
+                    },
+                    'tag[]': {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '标签不能为空'
                             }
                         }
                     }
@@ -359,6 +383,14 @@ function subject_manage_add(){
                                 min:2
                             }
                         }
+                    },
+                    'tag[]': {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '标签不能为空'
+                            }
+                        }
                     }
                 }
             })
@@ -380,18 +412,19 @@ function subject_manage_add(){
                             }
                         }
                     },
-                    'content[]' : {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '选项内容不能为空'
-                            }
-                        }
-                    },
-                    'answer[]': {/*键名username和input name值对应*/
+                    'judge': {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
                             notEmpty: {/*非空提示*/
                                 message: '正确答案不能为空'
+                            }
+                        }
+                    },
+                    'tag[]': {/*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '标签不能为空'
                             }
                         }
                     }
@@ -401,15 +434,31 @@ function subject_manage_add(){
         $("#subjectType").change(function(){
             var type=$(this).val();
             if(type==1){
+                $(".chooseLine").show();
+                $(".choose").show();
+                $("#radiobox_div").hide();
+                $("#checkbox_div").show();
                 $('#sourceForm').data('bootstrapValidator').destroy();
                 oneValidator();
             }else if(type==2){
+                $(".chooseLine").show();
+                $(".choose").show();
+                $("#radiobox_div").hide();
+                $("#checkbox_div").show();
                 $('#sourceForm').data('bootstrapValidator').destroy();
                 moreValidator();
             }else if(type==3){
+                $(".chooseLine").show();
+                $(".choose").show();
+                $("#radiobox_div").hide();
+                $("#checkbox_div").show();
                 $('#sourceForm').data('bootstrapValidator').destroy();
                 noSureValidator();
             }else{
+                $(".chooseLine").hide();
+                $(".choose").hide();
+                $("#radiobox_div").show();
+                $("#checkbox_div").hide();
                 $('#sourceForm').data('bootstrapValidator').destroy();
                 chooseValidator();
             }
