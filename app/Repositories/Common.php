@@ -34,7 +34,6 @@ class Common{
     public static function sendSms($mobile,$message){
         $sender=\App::make('messages.sms');
         $sender->send($mobile,$message);
-        //(new SendReminderSms($mobile,$message))->onQueue('sms');
 
     }
 
