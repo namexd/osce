@@ -238,6 +238,8 @@ class ExamResultController extends CommonController{
             $scores[$index]['content']  = $standardM->content;
             $scores[$index]['tScore']   = $standardM->score;
             $scores[$index]['score']    = $itemScore[$index]['totalScore'];
+            $scores[$index]['image']    = TestAttach::where('test_result_id',$result['id'])->where('standard_id',$index)->get();
+
             $standard[$index] = $itemScore[$index]['totalScore'];
             $avg[$index] = $standardModel->getCheckPointAvg($index, $result['subject_id']);
         }
