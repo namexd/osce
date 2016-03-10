@@ -38,14 +38,14 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">新增试题</h5>
+                <h5 class="title-label">编辑试题</h5>
             </div>
         </div>
         <div class="ibox float-e-margins">
             <div class="ibox-content">
                 <div class="row">
                     <div class="col-md-12 ">
-                        <form method="post" class="form-horizontal" id="sourceForm" action="{{ route('osce.admin.ExamQuestionController.postExamQuestionAdd') }}">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="{{ route('osce.admin.ExamQuestionController.postExamQuestionEdit') }}">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">题目类型</label>
                                 <div class="col-sm-10">

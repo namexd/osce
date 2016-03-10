@@ -120,7 +120,8 @@ class ExamQuestionController extends CommonController
             'examQuestionTypeId'    =>'sometimes|integer',//试题表
             'name'                     => 'required|string',
             'parsing'                 => 'sometimes|string',
-            'answer'                  => 'required',
+            'answer'                  => 'sometimes|array',
+            'judge'                  => 'sometimes|integer',
 
             'examQuestionItemName'  => 'required|array',//试题子项表
             'content'                 => 'sometimes|array',
@@ -142,7 +143,7 @@ class ExamQuestionController extends CommonController
         );
         //判断是否为判断题
         if($request->input('examQuestionTypeId')=='4'){
-            $examQuestionData['answer'] = $request->input('answer');//正确答案（0-错误，1-正确,）
+            $examQuestionData['answer'] = $request->input('judge');//正确答案（0-错误，1-正确,）
         }else{
             $examQuestionData['answer'] = implode('@',$request->input('answer'));//正确答案（a/abc/0,1）
         }
@@ -189,7 +190,8 @@ class ExamQuestionController extends CommonController
         //获取试题信息
         $examQuestionModel= new ExamQuestion();
         $list = $examQuestionModel->getExamQuestionById(14);
-
+        $examQuestionItemList ='';
+        $examQuestionLabelList='';
         if($list){
             //获取对应试题子项表列表
             $examQuestionItemList = $list->examQuestionItem;
@@ -228,7 +230,7 @@ class ExamQuestionController extends CommonController
             $data['answer'] = explode('@',$list->answer);//正确答案
             $data['parsing'] = $list->parsing;//解析
         }
-        return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
+        return view('osce::admin.resourcemanage.subject_manage_edit', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
             'data'                          =>$data ,//试题信息
             'examQuestionItemList'       =>$examQuestionItemList ,//试题子项表列表
@@ -248,33 +250,39 @@ class ExamQuestionController extends CommonController
     public function postExamQuestionEdit(Request $request)
     {
         $this->validate($request, [
-            'id'                      =>'required|integer',
-            'examQuestionTypeId'    =>'sometimes|integer',//试题表
+            'id'                      =>'required|integer',//试题表
+            'examQuestionTypeId'    =>'sometimes|integer',
             'name'                     => 'required|string',
             'parsing'                 => 'sometimes|string',
-            'answer'                  => 'required',
+            'answer'                  => 'sometimes|array',
+            'judge'                  => 'sometimes|integer',
 
             'examQuestionItemName'  => 'required|array',//试题子项表
             'content'                 => 'sometimes|array',
 
             'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
+
         //试题和标签中间表数据
-        $ExamQuestionLabelRelationData = [];
-        foreach($request->all() as $key => $val){
-            if(preg_match('/^tag-{1,3}/',$key)){
-                $arr = explode('-',$key);
-                $ExamQuestionLabelRelationData[$arr[1]] = $val;
-            }
-        }
+
+        $ExamQuestionLabelRelationData = $request->input('tag');
+
+
         //试题表数据
         $examQuestionData =array(
-            'id'                       =>$request->input('id'),//试题id
+            'id'                        =>$request->input('id'),//试题id
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'answer'                  =>implode('',$request->input('answer')),//正确答案（a/abc/0,1）
+
         );
+        //判断是否为判断题
+        if($request->input('examQuestionTypeId')=='4'){
+            $examQuestionData['answer'] = $request->input('judge');//正确答案（0-错误，1-正确,）
+        }else{
+            $examQuestionData['answer'] = implode('@',$request->input('answer'));//正确答案（a/abc/0,1）
+        }
+
         //试题子项表数据
         $examQuestionItemData = array(
             'name' =>$request->input('examQuestionItemName'),//选项名称:A/B/C/D
@@ -283,6 +291,7 @@ class ExamQuestionController extends CommonController
 
         $examQuestionModel= new ExamQuestion();
         $result = $examQuestionModel->editExamQuestion($examQuestionData,$examQuestionItemData,$ExamQuestionLabelRelationData);
+        dd($result);
         if($result)
         {
             return redirect()->route('osce.admin.ExamQuestionController.showExamQuestionList')->with('success','编辑成功');
