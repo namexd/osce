@@ -81,6 +81,6 @@ class ApiController extends CommonController
             '2'=>$LabelTypeStr,
             '3'=>$ExamQuestionLabelStr = implode(',',$request->tag)
         ];
-        die(json_encode(implode('@',$data)));
+        die(implode('@',$data));
     }
 }

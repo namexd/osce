@@ -101,10 +101,11 @@
 
                 layer.open({
                     type: 2,
+                    title: '新增试题组成',
                     area: ['90%', '530px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ExamPaperController.getExampQuestions')}}'
+                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}'
                 })
 
             })
@@ -137,15 +138,6 @@
 }
         $(function(){
             categories();
-                    @if(!empty($label))
-                        @foreach($label as $k =>$sub)
-                            var str =  '{{ @$sub['id']}}';
-                            $(".tag-"+str).select2({});
-                        @endforeach
-                     @endif
-//                     $('table').delegate(".scope","click",function(){
-//                                    $("#myModal").removeAttr("tabindex");
-//                                });
             $.fn.modal.Constructor.prototype.enforceFocus =function(){};
             /**
              * 编辑和新增共用了一段代码，这里必须将验证单独拿出
@@ -265,7 +257,7 @@
                                         <th width="10%">操作</th>
                                     </tr>
                                     </thead>
-                                    <tbody index="0">
+                                    <tbody index="0" id="list-body">
                                         <tr>
                                             <th>总计</th>
                                             <th></th>
