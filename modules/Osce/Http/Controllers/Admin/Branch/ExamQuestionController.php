@@ -120,7 +120,7 @@ class ExamQuestionController extends CommonController
             'examQuestionTypeId'    =>'sometimes|integer',//试题表
             'name'                     => 'required|string',
             'parsing'                 => 'sometimes|string',
-            'answer'                  => 'required',
+            'answer'                  => 'sometimes|array',
             'judge'                  => 'sometimes|integer',
 
             'examQuestionItemName'  => 'required|array',//试题子项表
@@ -249,33 +249,37 @@ class ExamQuestionController extends CommonController
     public function postExamQuestionEdit(Request $request)
     {
         $this->validate($request, [
-            'id'                      =>'required|integer',
             'examQuestionTypeId'    =>'sometimes|integer',//试题表
             'name'                     => 'required|string',
             'parsing'                 => 'sometimes|string',
             'answer'                  => 'required',
+            'judge'                  => 'sometimes|integer',
 
             'examQuestionItemName'  => 'required|array',//试题子项表
             'content'                 => 'sometimes|array',
 
             'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
+
         //试题和标签中间表数据
-        $ExamQuestionLabelRelationData = [];
-        foreach($request->all() as $key => $val){
-            if(preg_match('/^tag-{1,3}/',$key)){
-                $arr = explode('-',$key);
-                $ExamQuestionLabelRelationData[$arr[1]] = $val;
-            }
-        }
+
+        $ExamQuestionLabelRelationData = $request->input('tag');
+
+
         //试题表数据
         $examQuestionData =array(
-            'id'                       =>$request->input('id'),//试题id
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'answer'                  =>implode('',$request->input('answer')),//正确答案（a/abc/0,1）
+
         );
+        //判断是否为判断题
+        if($request->input('examQuestionTypeId')=='4'){
+            $examQuestionData['answer'] = $request->input('judge');//正确答案（0-错误，1-正确,）
+        }else{
+            $examQuestionData['answer'] = implode('@',$request->input('answer'));//正确答案（a/abc/0,1）
+        }
+
         //试题子项表数据
         $examQuestionItemData = array(
             'name' =>$request->input('examQuestionItemName'),//选项名称:A/B/C/D
