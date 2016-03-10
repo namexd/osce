@@ -117,11 +117,13 @@
  		$(".upload").change(function(){
  			var files=document.getElementById("file0").files;
 	    	var kb=Math.floor(files[0].size/1024);
-	    	//console.log(kb);
-	    	if(kb>2048){
-	    		layer.alert('文件大小不得超过2M!');
-	    		return false;
-	    	}
+//	    	console.log('1',typeof kb);
+			if(kb>2048){
+				layer.alert('文件大小不得超过2M!');
+				$("#file0").val('');
+				return false;
+			}
+
 	        $.ajaxFileUpload
 	        ({
 	            url:'{{url('/osce/admin/train/upload-file')}}',
@@ -237,7 +239,7 @@
                         		上传附件
 								<input type="file" name="file" id="file0"/>
 							</span>
-							<span class="file-msg">(上传文件类型为docx, xlsx)</span>
+							<span class="file-msg">(上传文件类型为docx, xlsx，文件大小不得超过2M!)</span>
 							<div class="upload_list upload_list_doc">
 								<p>
 									<input type="hidden" name="file" id="" value="" />

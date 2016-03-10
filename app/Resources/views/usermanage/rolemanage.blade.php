@@ -86,66 +86,25 @@
 	                  }
 	              }
 	        });
-    		// $("#add_role").click(function(){
-    		// 	$('#Form1').data('bootstrapValidator').destroy();
-    		// 	//$('.validation-form').data('bootstrapValidator').resetForm(true);
-    		// 	$('#Form1').bootstrapValidator({
-	     //          message: 'This value is not valid',
-	     //          feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-	     //              valid: 'glyphicon glyphicon-ok',
-	     //              invalid: 'glyphicon glyphicon-remove',
-	     //              validating: 'glyphicon glyphicon-refresh'
-	     //          },
-	     //          fields: {/*验证*/
-	     //              name: {/*键名username和input name值对应*/
-	     //                  message: 'The username is not valid',
-	     //                  validators: {
-	     //                      notEmpty: {/*非空提示*/
-	     //                          message: '用户名不能为空'
-	     //                      }
-	     //                  }
-	     //              },
-	     //              description: {
-	     //                  validators: {
-	     //                      notEmpty: {
-	     //                          /*非空提示*/
-	     //                          message: '角色描述不能为空'
-	     //                      }
-	     //                  }
-	     //              }
-	     //          }
-	     //    	});
-    		// })
-    		// $(".edit_role").click(function(){
-    		// 	$('#Form2').data('bootstrapValidator').destroy();
-    		// 	//$('.validation-form').data('bootstrapValidator').resetForm(true);
-    		// 	$('#Form2').bootstrapValidator({
-	     //          message: 'This value is not valid',
-	     //          feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-	     //              valid: 'glyphicon glyphicon-ok',
-	     //              invalid: 'glyphicon glyphicon-remove',
-	     //              validating: 'glyphicon glyphicon-refresh'
-	     //          },
-	     //          fields: {/*验证*/
-	     //              name: {/*键名username和input name值对应*/
-	     //                  message: 'The username is not valid',
-	     //                  validators: {
-	     //                      notEmpty: {/*非空提示*/
-	     //                          message: '用户名不能为空'
-	     //                      }
-	     //                  }
-	     //              },
-	     //              description: {
-	     //                  validators: {
-	     //                      notEmpty: {
-	     //                          /*非空提示*/
-	     //                          message: '角色描述不能为空'
-	     //                      }
-	     //                  }
-	     //              }
-	     //          }
-	     //    });
-    		// })
+
+            $('#add_role').click(function(){
+                $('#Form1').css('display','none');
+                $('#Form1').find('input').val('');
+                //准备dom
+                setTimeout(function(){
+                    $('#Form1').data('bootstrapValidator').resetForm();
+                },500);
+                $('#Form1').show('slow');
+            });
+
+    		$(".edit_role").click(function(){
+    			$('#Form2').css('display','none');
+                //准备dom
+                setTimeout(function(){
+                    $('#Form2').data('bootstrapValidator').resetForm();
+                },500);
+                $('#Form2').show('slow');
+    		})
         })
 
         //点击关闭错误提示条
