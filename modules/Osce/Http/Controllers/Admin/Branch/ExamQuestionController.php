@@ -136,14 +136,14 @@ class ExamQuestionController extends CommonController
             }
         }
 
-
         //试题表数据
         $examQuestionData =array(
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'answer'                  =>implode('',$request->input('answer')),//正确答案（a/abc/0,1）
+            'answer'                  =>implode('@',$request->input('answer')),//正确答案（a/abc/0,1）
         );
+
         //试题子项表数据
         $examQuestionItemData = array(
             'name' =>$request->input('examQuestionItemName'),//选项名称:A/B/C/D
@@ -190,18 +190,21 @@ class ExamQuestionController extends CommonController
 
         //获取试题信息
         $examQuestionModel= new ExamQuestion();
-        $list = $examQuestionModel->getExamQuestionById(8);
-        $list['answer'] = unserialize($list['answer']);
+        $list = $examQuestionModel->getExamQuestionById(14);
+        if($list){
+            //获取对应试题子项表列表
+            $examQuestionItemList = $list->examQuestionItem;
 
-        //获取对应试题子项表列表
-        $examQuestionItemList = $list->examQuestionItem;
+            //根据试题信息获取对应的标签列表
+            $examQuestionLabelList = $list->ExamQuestionLabelRelation;
+        }
+
 
         //获取标签类型列表
         $examQuestionLabelTypeModel = new ExamQuestionLabelType();
         $examQuestionLabelTypeList = $examQuestionLabelTypeModel->examQuestionLabelTypeList();
 
-        //根据试题信息获取对应的标签列表
-        $examQuestionLabelList = $list->ExamQuestionLabelRelation;
+
 
         foreach($examQuestionLabelTypeList as $k=>$v){
             $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;//获取标签信息
@@ -222,10 +225,9 @@ class ExamQuestionController extends CommonController
             $data['id'] = $list->id;
             $data['exam_question_type_id'] = $list->exam_question_type_id;//题目类型
             $data['name'] = $list->name;//题目名称
-            $data['answer'] = $list->answer;//正确答案
+            $data['answer'] = explode('@',$list->answer);//正确答案
             $data['parsing'] = $list->parsing;//解析
         }
-        //dd($examQuestionLabelTypeList);
         return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
             'data'                          =>$data ,//试题信息
@@ -271,7 +273,7 @@ class ExamQuestionController extends CommonController
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'answer'                  =>serialize($request->input('answer')),//正确答案（a/abc/0,1）
+            'answer'                  =>implode('',$request->input('answer')),//正确答案（a/abc/0,1）
         );
         //试题子项表数据
         $examQuestionItemData = array(
