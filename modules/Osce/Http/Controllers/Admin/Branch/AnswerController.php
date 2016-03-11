@@ -136,6 +136,8 @@ class AnswerController extends CommonController
         //$result = $answerModel->saveAnswer($data);
         $result=true;
         if($result){
+            //查询该正式的试卷表信息
+            $examPaperFormalList=$answerModel->first();
             //如果保存成功，查询该考卷的所有试题信息
             $getFormalPaperList = $answerModel->getFormalPaper();
             $totalScore=0;//考生总分
@@ -183,8 +185,20 @@ class AnswerController extends CommonController
                     }
                 }
             }
-            dd($totalScore);
-            return response()->json(true);
+            $examPaperFormalList['totalScore']=$totalScore;
+            if($examPaperFormalList){
+                $examPaperFormalData=array(
+                    'id'=>$examPaperFormalList->id,//编号
+                    'exam_paper_id'=>$examPaperFormalList->exam_paper_id,//试卷id
+                    'length'=>$examPaperFormalList->length,//考试时长
+                    'name'=>$examPaperFormalList->name,//试卷名称
+                    'total_score'=>$examPaperFormalList->total_score,//总分
+                    'actual_length'=>$examPaperFormalList->actual_length,//考试用时
+                    'totalScore'=>$examPaperFormalList->totalScore,//该考生成绩
+                );
+            }
+            dd($examPaperFormalData);
+            return response()->json($examPaperFormalData);
         }else{
             return response()->json(false);
         }
