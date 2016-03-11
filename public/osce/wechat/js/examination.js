@@ -7,13 +7,18 @@ $(function(){
     }
 });
 
-
+function timeTo(para){
+	var minutes,
+		seconds;
+	minutes = Math.floor(para/60);
+	seconds = Math.floor(para-(minutes*60));
+	return minutes.toString() + '分' + seconds.toString()+'秒';
+}
 
 function examination_list(){
 	//$.session.clear('exam_id');
 	var url=pars.ajaxurl;
 	var exam_id= $.session.get('exam_id');
-	console.log(exam_id);
 	if(exam_id=='undefined'){
 		return false;
 	}else{
@@ -101,15 +106,6 @@ function examination_list(){
         $('#actionsheet_cancel').one('click', function () {
             hideActionSheet(weuiActionsheet, mask);
         });
-
-		function timeTo(para){
-			var minutes,
-				seconds;
-			minutes = Math.floor(para/60);
-			seconds = Math.floor(para-(minutes*60));
-			return minutes.toString() + '分' + seconds.toString()+'秒';
-		}
-
         //选择
         $('.weui_actionsheet_menu .weui_actionsheet_cell').one('click',function(){
             $('#showActionSheet').find('span').text($(this).text());
