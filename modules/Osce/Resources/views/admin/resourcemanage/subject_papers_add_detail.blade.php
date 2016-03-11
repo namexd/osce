@@ -83,8 +83,8 @@
                             <label class="col-sm-3 control-label">{{@$sub['name']}}：</label>
                             <div class="col-sm-3">
                                 <select class="form-control" name="label-{{ @$sub['id'] }}">
-                                    <option value="0">包含</option>
-                                    <option value="1">等于</option>
+                                    <option value="1">包含</option>
+                                    <option value="2">等于</option>
                                 </select>
                             </div>
                             <div class="col-sm-6">
