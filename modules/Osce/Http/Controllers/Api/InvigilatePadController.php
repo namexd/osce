@@ -67,7 +67,7 @@ class InvigilatePadController extends CommonController
      * @internal param $files
      * @internal param $testResultId
      */
-    protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId)
+    protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId,$studentId)
     {
         try {
             //将上传的文件遍历
@@ -97,6 +97,7 @@ class InvigilatePadController extends CommonController
             $attachUrl = $savePath . $fileName;
             //将要插入数据库的数据拼装成数组
             $data = [
+                'student_id'=>$studentId,
                 'test_result_id' => null,
                 'url' => $attachUrl,
                 'type' => $type,
@@ -431,9 +432,9 @@ class InvigilatePadController extends CommonController
 
 
                 //拼装文件名,并插入数据库
-                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId);
+                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId,$studentId);
             }
-                  header('print',$result->id);
+//            header('print',$result->id);
             return response()->json($this->success_data([$result->id]));
 
         } catch (\Exception $ex) {
