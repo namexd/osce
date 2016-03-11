@@ -221,7 +221,8 @@ class MachineController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postAddMachine(Request $request){
+    public function postAddMachine(Request $request)
+    {
         $this   ->  validate($request,[
             'cate_id'   =>  'required|integer'
         ]);
@@ -230,12 +231,11 @@ class MachineController extends CommonController
         try{
             switch($cate_id)
             {
-                case 1: $machine    =     $this   ->  addCameras($request);
-                        break;
                 case 2: $machine    =     $this   ->  addPad($request);
                         break;
                 case 3: $machine    =     $this   ->  addWatch($request);
                         break;
+                case 1:
                 default :
                         $machine    =     $this   ->  addCameras($request);
             }
@@ -275,7 +275,8 @@ class MachineController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postEditMachine(Request $request){
+    public function postEditMachine(Request $request)
+    {
         $this   ->  validate($request,[
             'cate_id'   =>  'required|integer'
         ]);
@@ -324,7 +325,8 @@ class MachineController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    private function addCameras(Request $request){
+    private function addCameras(Request $request)
+    {
         $this   ->  validate($request,[
             'name'          =>  'required',
             'code'          =>  'required',
@@ -332,6 +334,7 @@ class MachineController extends CommonController
             'username'      =>  'required',
             'password'      =>  'required',
             'port'          =>  'required',
+            'realport'      =>  'required',
             'channel'       =>  'required',
             'description'   =>  'sometimes',
             'status'        =>  'required',
@@ -346,6 +349,7 @@ class MachineController extends CommonController
             'username.required'     =>'设备登录用户名必填',
             'password.required'     =>'设备登录密码必填',
             'port.required'         =>'设备端口必填',
+            'realport.required'     =>'实时端口必填',
             'channel.required'      =>'设备网口必填',
             'status.required'       =>'设备状态必选',
             'factory.required'      =>'厂家必填',
@@ -353,28 +357,17 @@ class MachineController extends CommonController
             'purchase_dt.required'  =>'采购日期必填',
         ]);
 
-        $data   =   [
-            'name'          =>  $request    ->  get('name'),
-            'code'          =>  $request    ->  get('code'),
-            'ip'            =>  $request    ->  get('ip'),
-            'username'      =>  $request    ->  get('username'),
-            'password'      =>  $request    ->  get('password'),
-            'port'          =>  $request    ->  get('port'),
-            'channel'       =>  $request    ->  get('channel'),
-            'description'   =>  $request    ->  get('description'),
-            'status'        =>  $request    ->  get('status'),
-            'factory'       =>  e($request  ->  get('factory')),
-            'sp'            =>  $request    ->  get('sp'),
-            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
-        ];
-
+        $data = $request ->only('name','code','ip','username','password','port','realport',
+                                'channel','description','status','factory','sp','purchase_dt');
+        
         try{
             $model      =   new Vcr();
-            if($cameras =   $model  ->  addMachine($data)){
+            if($cameras =   $model -> addMachine($data)){
                 return $cameras;
             } else{
                 throw new \Exception('新增摄像头失败');
             }
+
         } catch(\Exception $ex){
             //return response()->back()->withError($ex->getMessage());
             throw $ex;
@@ -400,7 +393,8 @@ class MachineController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    private function editCameras(Request $request){
+    private function editCameras(Request $request)
+    {
         $this   ->  validate($request,[
             'id'            =>  'required',
             'name'          =>  'required',
@@ -409,6 +403,7 @@ class MachineController extends CommonController
             'username'      =>  'required',
             'password'      =>  'required',
             'port'          =>  'required',
+            'realport'      =>  'required',
             'channel'       =>  'required',
             'description'   =>  'sometimes',
             'factory'       =>  'required',
@@ -422,27 +417,15 @@ class MachineController extends CommonController
             'username.required' =>'设备登录用户名必填',
             'password.required' =>'设备登录密码必填',
             'port.required'     =>'设备端口必填',
+            'realport.required' =>'实时端口必填',
             'channel.required'  =>'设备网口必填',
             'factory.required'      =>'厂家必填',
             'sp.required'           =>'型号必填',
             'purchase_dt.required'  =>'采购日期必填',
         ]);
 
-        $data   =   [
-            'id'            =>  $request    ->  get('id'),
-            'name'          =>  $request    ->  get('name'),
-            'code'          =>  $request    ->  get('code'),
-            'ip'            =>  $request    ->  get('ip'),
-            'username'      =>  $request    ->  get('username'),
-            'password'      =>  $request    ->  get('password'),
-            'port'          =>  $request    ->  get('port'),
-            'channel'       =>  $request    ->  get('channel'),
-            'description'   =>  $request    ->  get('description'),
-            'status'        =>  $request    ->  get('status'),
-            'sp'            =>  $request    ->  get('sp'),
-            'factory'       =>  e($request  ->  get('factory')),
-            'purchase_dt'   =>  $request    ->  get('purchase_dt'),
-        ];
+        $data = $request ->only('id','name','code','ip','username','password','port','realport',
+                                'channel','description','status','factory','sp','purchase_dt');
 
         try{
             $model      =   new Vcr();

@@ -19,7 +19,7 @@ class Vcr extends CommonModel implements MachineInterface
     protected $table 		= 	'vcr';
     public $incrementing	=	true;
     public $timestamps	    =	true;
-    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','channel','description','status','created_user_id','sp','factory','purchase_dt','used'];
+    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','realport','channel','description','status','created_user_id','sp','factory','purchase_dt','used'];
     public      $search     =   [];
 
     protected $statuValues  =   [
@@ -69,22 +69,19 @@ class Vcr extends CommonModel implements MachineInterface
      */
     public function addMachine($data)
     {
-        $connection =   DB::connection($this->connection);
+        $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try
         {
-            if($vcr =   $this   ->  create($data))
+            if($vcr = $this -> create($data))
             {
                 $connection -> commit();
                 return $vcr;
-            }
-            else
-            {
+            } else {
                 throw new \Exception('新增摄像机失败');
             }
-        }
-        catch(\Exception $ex)
-        {
+
+        } catch(\Exception $ex){
             $connection->rollBack();
             throw $ex;
         }
@@ -114,8 +111,9 @@ class Vcr extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editMachine($data){
-        $connection =   DB::connection($this->connection);
+    public function editMachine($data)
+    {
+        $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try{
             $vcr = $this    -> find($data['id']);
@@ -129,8 +127,8 @@ class Vcr extends CommonModel implements MachineInterface
                 }
                 $connection->enableQueryLog();
                 $result = $vcr -> save();
-                $a  =   $connection->getQueryLog();
-                if(!$result = $vcr -> save()) {
+                $a = $connection->getQueryLog();
+                if(!$result) {
                     throw new \Exception('修改失败，请重试！');
                 }
             } else {
