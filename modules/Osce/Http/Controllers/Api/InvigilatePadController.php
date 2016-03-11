@@ -69,7 +69,6 @@ class InvigilatePadController extends CommonController
      */
     protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId,$studentId)
     {
-        dd($studentId);
         try {
             //将上传的文件遍历
 
@@ -98,13 +97,14 @@ class InvigilatePadController extends CommonController
             $attachUrl = $savePath . $fileName;
             //将要插入数据库的数据拼装成数组
             $data = [
-                'student_id'=>$studentId,
+
                 'test_result_id' => null,
                 'url' => $attachUrl,
                 'type' => $type,
                 'name' => $fileName,
                 'description' => $date . '-' . $params['student_name'],
-                'standard_id' => $standardId
+                'standard_id' => $standardId,
+                 'student_id'=>$studentId,
             ];
 
             //将内容插入数据库
