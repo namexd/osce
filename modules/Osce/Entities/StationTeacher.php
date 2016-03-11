@@ -38,7 +38,7 @@ class StationTeacher extends CommonModel
     public function getVcrInfo($exam_id, $teacher_id, $room_id)
     {
         try{
-            $data = $this->select(['vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
+            $data = $this->select(['vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port','vcr.realport','vcr.channel','vcr.username','vcr.password'])
                 ->leftJoin('room_station', 'room_station.station_id', '=', $this->table.'.station_id')
                 ->leftJoin('station_vcr', 'station_vcr.station_id', '=', $this->table.'.station_id')
                 ->leftJoin('vcr', 'vcr.id', '=', 'station_vcr.vcr_id')
