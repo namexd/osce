@@ -97,6 +97,7 @@ class TestResult extends CommonModel
         }
         $standardId = array_column($list, 'standard_id');
         $AttachData = TestAttach::where('student_id','=',$studentId)->whereIn('standard_id',$standardId)->get();
+        \Log::alert($AttachData);
         if(!$AttachData){
             \Log::alert($AttachData);
         }else{
