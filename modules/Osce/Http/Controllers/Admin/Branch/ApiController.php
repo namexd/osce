@@ -95,7 +95,7 @@ class ApiController extends CommonController
     }
 
     /**
-     * @method
+     * @method  GET
      * @url /osce/admin/api/exam-paper-preview
      * @access public
      * @param $data
