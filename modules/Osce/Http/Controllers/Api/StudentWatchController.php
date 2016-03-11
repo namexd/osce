@@ -323,11 +323,12 @@ class StudentWatchController extends CommonController
         });
         $item   =   array_shift($items);
 
-
+        dd($item);
         //判断前面是否有人考试
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
             ->count();
+
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
 
