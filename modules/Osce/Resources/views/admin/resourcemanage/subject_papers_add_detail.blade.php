@@ -77,8 +77,8 @@
                         </select>
                     </div>
                 </div>
-                @if($examQuestionLabelTypeList)
-                    @foreach($examQuestionLabelTypeList as $k =>$sub)
+                @if(@$examQuestionLabelTypeList)
+                    @foreach(@$examQuestionLabelTypeList as $k =>$sub)
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{@$sub['name']}}：</label>
                             <div class="col-sm-3">
