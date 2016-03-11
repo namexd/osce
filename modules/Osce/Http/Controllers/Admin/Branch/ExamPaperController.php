@@ -14,6 +14,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
+use Modules\Osce\Repositories\QuestionBankRepositories;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Support\Facades\Auth;
 use DB;
@@ -190,7 +191,7 @@ class ExamPaperController extends CommonController
      * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getAddExams(Request $request){
+    public function getAddExams(Request $request,QuestionBankRepositories $QuestionBankRepositories){
         //验证试题类型ID
         $this->validate($request,[
             'name'        => 'required',
@@ -223,9 +224,15 @@ class ExamPaperController extends CommonController
         }
 
         $examPaperID = $examPaper->id;
-        //dd($examPaperID);
         if($status == 1 && $status2 == 1){//自动-随机
 
+            $questions = $request->question;//获取标签参数
+            foreach($questions as $v){
+                $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
+            }
+
+
+        dd($examPapers);
         }elseif($status == 1 && $status2 == 2){//自动-统一
 
         }elseif($status == 2 && $status2 == 2){//手动-统一
@@ -258,6 +265,6 @@ class ExamPaperController extends CommonController
     public function getExampQuestions(){
         $label = $this->getExamLabelGet();//标签
         //dd($label);
-        return view('osce::admin.resourcemanage.subject_papers_add_detail2',['labelList'=>$label]);
+        return view('osce::admin.resourcemanage.subject_papers_add_detail',['labelList'=>$label]);
     }
 }
