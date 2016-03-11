@@ -75,6 +75,19 @@
                 });
             });
 
+            $('#preview').click(function(){
+                layer.open({
+                    type: 2,
+                    title: '新增试题组成',
+                    area: ['90%', '530px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    content: '{{route('osce.admin.ApiController.ExamPaperPreview')}}?'+$(".form-horizontal").serialize(),
+                })
+                return  false;
+
+            })
+
 }
         $(function(){
             categories();
@@ -242,6 +255,7 @@
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
                         <button class="btn btn-primary" type="submit">保存</button>
+                        <button class="btn btn-primary" id="preview" type="button">预览</button>
                         <a class="btn btn-white" href="{{route("osce.admin.machine.getMachineList",["cate_id"=>2])}}">取消</a>
                     </div>
                 </div>
