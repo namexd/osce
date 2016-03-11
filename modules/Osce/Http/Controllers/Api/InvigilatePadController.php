@@ -509,7 +509,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错', -130);
                 }
 
-                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardId);
+                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardId,$studentId);
             }
 
             return response()->json($this->success_data([$result->id]));
