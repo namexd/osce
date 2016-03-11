@@ -25,29 +25,62 @@
                     return false;
                 }
             });
-            var target_url='{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}';//新增add地址
             $("#status").change(function(){
                 if($(this).val()=="1"){
                     $("#paper").show();
                     $("#paper2").hide();
-                    target_url='{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}';
                 }else{
                     $("#paper2").show();
                     $("#paper").hide();
-                    target_url='{{route('osce.admin.ExamPaperController.getExampQuestions')}}';
                 }
             })
             $("#add-new").click(function(){
-
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
                     area: ['90%', '530px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: target_url,
+                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}',
                 })
 
+            })
+
+            /**
+             * 手动组卷页面操作
+             */
+            $("#add-new2").click(function(){
+                $("#addForm").show();
+                $("#editForm").hide();
+            })
+
+            $('tbody').on('click','.fa-pencil-square-o',function(){
+                $("#addForm").hide();
+                $("#editForm").show();
+                $(this).parent().parent().parent().parent().attr("sequence");
+            });
+            $('.form-horizontal').submit(function(){
+                var now = $('#paper2').find('tbody').attr('index');
+                now = parseInt(now) + 1;//计数
+                var tpye= $('select[name="question-type"] option:selected').text();//题目类型ID
+                var score=$('input[name="question-score"]').val(); //每题分数
+                var html = '<tr sequence="'+parseInt(now)+'">'+
+                        '<td>'+parseInt(now)+'<input name="question-type[]" type="hidden" value="'+$(this).serialize()+'"/>'+'</td>'+
+                        '<td>'+tpye+'</td>'+
+                        '<td></td>'+
+                        '<td>'+score+'</td>'+
+                        '<td></td>'+
+                        '<td>'+
+                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
+                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>'+
+                        '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                        '</td>'+
+                        '</tr>';
+                //记录计数
+                $('#paper2').find('tbody').append(html);
+                $('#paper2').find('tbody').attr('index',now);
+                $('.close').trigger('click');
+                return  false;
             })
 
             /**
@@ -55,6 +88,19 @@
              */
             $('tbody').on('click','.fa-trash-o',function(){
                 $(this).parent().parent().parent().parent().remove();
+            });
+            /**
+             * 手动组卷情况下现则试题
+             */
+            $('tbody').on('click','.fa-cog',function(){
+                layer.open({
+                    type: 2,
+                    title: '新增试题组成',
+                    area: ['90%', '530px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    content: '{{route('osce.admin.ExamPaperController.getExampQuestions')}}',
+                })
             });
             /**
              * 考核分数自动加减
@@ -75,7 +121,7 @@
                 });
             });
 
-            $('#preview').click(function(){
+            $('#preview').click(function(){//预览整套试卷
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
@@ -188,14 +234,14 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">评分标准</label>
                     <div class="col-sm-10">
-                        <div class="ibox float-e-margins">
+                        <div class="ibox float-e-margins" id="paper">
                             <div class="ibox-title" style="border-top:0;">
                                 <h5></h5>
                                 <div class="ibox-tools">
                                     <button type="button" class="btn btn-outline btn-default" id="add-new" >新增题型</button>
                                 </div>
                             </div>
-                            <div class="ibox-content" style="border-top:0;" id="paper" >
+                            <div class="ibox-content" style="border-top:0;" >
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
@@ -221,6 +267,14 @@
                                     </tbody>
                                 </table>
 
+                            </div>
+                        </div>
+                        <div class="ibox float-e-margins" id="paper2" >
+                            <div class="ibox-title" style="border-top:0;">
+                                <h5></h5>
+                                <div class="ibox-tools">
+                                    <button type="button" class="btn btn-outline btn-default" id="add-new2" data-toggle="modal" data-target="#myModal" >新增题型</button>
+                                </div>
                             </div>
                             <div class="ibox-content" style="border-top:0;" id="paper2" >
                                 <table class="table table-bordered">
@@ -250,6 +304,7 @@
                             </div>
                         </div>
 
+
                     </div>
                 </div>
                 <div class="form-group">
@@ -263,3 +318,73 @@
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}
+
+@section('layer_content')
+    {{--新增表单--}}
+    <form class="form-horizontal" id="addForm" novalidate="novalidate" method="post" action="{{ route('osce.admin.ExamLabelController.postAddExamQuestionLabel') }}">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">新增试题组成</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">标签类型：</label>
+                <div class="col-sm-9">
+                    <select name="question-type" id="typeSelect" class="form-control">
+                        @if(!empty(@$ExamQuestionLabelTypeList))
+                            @foreach(@$ExamQuestionLabelTypeList as $val)
+                                <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                            @endforeach
+                        @endif
+                            <option value="1">单选题</option>
+                            <option value="2">多选题</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">每题分数：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="question-score" class="form-control" placeholder="仅支持大于0的正整数">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success" id='sure'>确定</button>
+            <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
+        </div>
+    </form>
+    {{--编辑表单--}}
+    <form class="form-horizontal" id="editForm" novalidate="novalidate" method="post" action="{{ route('osce.admin.ExamLabelController.editExamQuestionLabelInsert') }}">
+        <input type="hidden" class="edit_id" name="id">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">编辑试题组成</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">标签类型：</label>
+                <div class="col-sm-9">
+                    <select name="question-type" id="typeSelect" class="form-control">
+                        @if(!empty(@$ExamQuestionLabelTypeList))
+                            @foreach(@$ExamQuestionLabelTypeList as $val)
+                                <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                            @endforeach
+                        @endif
+                            <option value="1">单选题</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">每题分数：</label>
+                <div class="col-sm-9">
+                    <input type="text" name="question-score" class="form-control" placeholder="仅支持大于0的正整数">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success" id='editSure'>确定</button>
+            <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
+        </div>
+    </form>
+@stop
+
