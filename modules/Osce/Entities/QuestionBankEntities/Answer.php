@@ -24,6 +24,19 @@ class Answer extends Model
     protected $hidden = [];
     protected $fillable = ['id', 'status', 'exam_paper_id','length','name','total_score','created_user_id','created_at','updated_at'];
 
+    /**与正式试题分类表的关系
+     * @method
+     * @url /osce/
+     * @access public
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function examCategoryFormal(){
+        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamCategoryFormal','exam_paper_formal_id','id');
+    }
+
     /**正式试卷信息列表
      * @method
      * @url /osce/
