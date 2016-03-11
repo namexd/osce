@@ -94,8 +94,10 @@ class TestResult extends CommonModel
                'standard_id' =>$item['id']
             ];
         }
+
         $standardId = array_column($list, 'standard_id');
         $AttachData = TestAttach::where('student_id',$studentId)->whereIn('standard_id',$standardId)->get();
+        \Log::alert($AttachData);
         foreach($AttachData as $item){
             $item->test_result_id = $ExamResultId;
             if(!$item->save()){
