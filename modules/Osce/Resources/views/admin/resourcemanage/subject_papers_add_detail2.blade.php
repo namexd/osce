@@ -56,18 +56,24 @@
 
             }
             //点击筛选是查找相关试题
+            var subject_id = $('#status0 option:selected').val();
+            var ability_id = $('#status1 option:selected').val();
+            var difficult_id = $('#status2 option:selected').val();
             $('#search').click(function(){
                 //获取筛选条件
-                var subject_id = $('#status0 option:selected').val();
-                var ability_id = $('#status1 option:selected').val();
-                var difficult_id = $('#status2 option:selected').val();
+
+                getexamquestions(subject_id,ability_id,difficult_id);
+            });
+
+            function getexamquestions(subject_id,ability_id,difficult_id){
                 $.ajax({
                     type: "GET",
                     url: "{{route('osce.admin.ExamPaperController.getExamQuestions')}}",
                     data: {subject_id:subject_id,ability_id:ability_id,difficult_id:difficult_id},
                     success: function(msg){
                         if(msg.code){
-                            var data = msg.data;
+                            var data = msg.data.data;
+                            var pagedata = msg.data;
                             var str = '';
                             $(data).each(function(i){
                                 str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon">';
@@ -79,14 +85,49 @@
 
                                 str +='</td></tr>';
                             });
-                            console.log(str);
                             $('.subjectBody').html(str);
+                            var page = 1;
+                            var pager = createPageDom(pagedata.total,pagedata.per_page,page);
+                            $('.pull-right').html(pager);
+                            $('.pull-left').html('共'+pagedata.total+'条');
                         }else{
+                            $('.subjectBody').html();
                             alert('没有数据');
                         }
                     }
                 });
-            });
+            }
+
+            getexamquestions(subject_id,ability_id,difficult_id);
+
+
+            function createPageDom(total,pagesize,page){
+                var string = '';
+                if(total>0){
+                    var sum = Math.ceil(total/pagesize);
+                    //TODO 拼凑上一页的按钮
+                    if(page == 1){
+                        string += '<li class="disabled"><span>«</span></li>';
+                    }else{
+                        string += '<li rel="prev" page="'+(page-1)+'" ><a href="javascript:void(0)">«</a></li>';
+                    }
+
+                    for(var i = 0;i<sum;i++){
+                        if(page == (i+1)){
+                            string += '<li class="active"><span>'+(i+1)+'</span></li>';
+                        }else{
+                            string += '<li page="'+(i+1)+'"><a href="javascript:void(0)">'+(i+1)+'</a></li>';
+                        }
+                    }
+                    //TODO 拼凑下一页的按钮
+                    if(page == sum){
+                        string += '<li class="disabled"><span>»</span></li>';
+                    }else{
+                        string += '<li rel="next" page="'+(page+1)+'" ><a href="javascript:void(0)">»</a></li>';
+                    }
+                }
+                return  string;
+            }
         })
     </script>
 @stop

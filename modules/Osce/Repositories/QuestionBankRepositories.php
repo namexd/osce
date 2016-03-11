@@ -153,11 +153,11 @@ class QuestionBankRepositories  extends BaseRepository
                     if(count($questionList)>0){
                         $questionIdArr = $this->RandQuestionId($questionList->pluck('id'),$val['question_num']);
                     }
-                    $arr[$val['question_type']]['type'] = $val['question_type'];
-                    $arr[$val['question_type']]['num'] = $val['question_num'];
-                    $arr[$val['question_type']]['score'] = $val['question_score'];
-                    $arr[$val['question_type']]['total_score'] = $val['question_total_score'];
-                    $arr[$val['question_type']]['child'] = $questionIdArr;
+                    $arr[$key]['type'] = $val['question_type'];
+                    $arr[$key]['num'] = $val['question_num'];
+                    $arr[$key]['score'] = $val['question_score'];
+                    $arr[$key]['total_score'] = $val['question_total_score'];
+                    $arr[$key]['child'] = $questionIdArr;
                 }
             }
         }

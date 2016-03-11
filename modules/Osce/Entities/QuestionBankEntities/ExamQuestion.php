@@ -333,8 +333,7 @@ class ExamQuestion extends Model
                 $relation->whereIn('exam_question_label_relation.exam_question_label_id',$data);
             }
 
-        }])->select('exam_question_type.name as tname','exam_question.*')->skip(($pageIndex-1)*config('msc.page_size'))->take(config('msc.page_size'))->get();//
-        //dd($builder);
+        }])->select('exam_question_type.name as tname','exam_question.*')->paginate(config('msc.page_size'));//
         return $builder;
     }
 }
