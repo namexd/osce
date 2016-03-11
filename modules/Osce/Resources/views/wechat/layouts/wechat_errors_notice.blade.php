@@ -38,7 +38,9 @@ if(!empty($errorsInfo))
         if(msg==''){
             return;
         }else{
-            layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{skin:"layui-layer-msg1",time: 2000});
+            setTimeout(function(){
+                layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{skin:"layui-layer-msg1",time: 2000});
+            },800)
         }
 
     })
