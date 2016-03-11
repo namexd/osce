@@ -434,7 +434,7 @@ class InvigilatePadController extends CommonController
                 $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId);
             }
                   header('print',$result->id);
-//            return response()->json($this->success_data([$result->id]));
+            return response()->json($this->success_data([$result->id]));
 
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
