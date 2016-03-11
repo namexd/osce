@@ -99,7 +99,7 @@
                     area: ['90%', '530px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ExamPaperController.getExampQuestions')}}',
+                    content: '{{route('osce.admin.ExamPaperController.getExampQuestions')}}?'+$(".form-horizontal").serialize(),
                 })
             });
             /**
