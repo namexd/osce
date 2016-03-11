@@ -68,9 +68,11 @@
 
         <div class="container-fluid ibox-content" style="border: none;">
             <div class="input-group" style="width: 100%;margin:20px 0;">
-                <label for="" class="pull-left exam-name">试卷名称：</label>
-                <input type="text" placeholder="请输入标签名称" name="keyword" class="input-md form-control" style="width: 250px;">
-
+                <label for="" class="pull-left exam-name">科目标签：</label>
+                <select class="form-control" name="label-{{ @$sub['id'] }}">
+                    <option value="0">全部</option>
+                    <option value="1">基础医学</option>
+                </select>
                 <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
                 <button type="submit" class="btn btn-sm btn-primary marl_10 pull-right" id="add"><a href="{{route('osce.admin.ExamPaperController.getAddExamPage')}}"> 新增</a></button>
             </div>
@@ -78,10 +80,11 @@
                 <table class="table table-striped" id="table-striped" style="background:#fff">
                     <thead>
                     <tr>
+                        <th></th>
                         <th>序号</th>
-                        <th>试卷名称</th>
-                        <th>题目数量</th>
-                        <th>总分</th>
+                        <th>试题</th>
+                        <th>考核范围</th>
+                        <th>题目类型</th>
                         <th>试卷类型</th>
                         <th>操作</th>
                     </tr>
@@ -105,7 +108,7 @@
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
                                     </a>
-                                    <a href="{{route('osce.admin.ExamPaperController.getDeleteExam',['id'=>@$val['id']])}}">
+                                    <a href="">
                                         <span class="read state2">
                                             <i class="fa fa-trash-o fa-2x"></i>
                                         </span>

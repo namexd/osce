@@ -25,15 +25,27 @@
                     return false;
                 }
             });
-
+            var target_url='{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}';//新增add地址
+            $("#status").change(function(){
+                if($(this).val()=="1"){
+                    $("#paper").show();
+                    $("#paper2").hide();
+                    target_url='{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}';
+                }else{
+                    $("#paper2").show();
+                    $("#paper").hide();
+                    target_url='{{route('osce.admin.ExamPaperController.getExampQuestions')}}';
+                }
+            })
             $("#add-new").click(function(){
+
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
                     area: ['90%', '530px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}'
+                    content: target_url,
                 })
 
             })
@@ -153,7 +165,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">试卷类型</label>
                     <div class="col-sm-10">
-                        <select id="status"   class="form-control m-b" name="status2">
+                        <select id="status2"   class="form-control m-b" name="status2">
                             <option value="1">随机试卷</option>
                             <option value="2">统一试卷</option>
                         </select>
@@ -170,8 +182,7 @@
                                     <button type="button" class="btn btn-outline btn-default" id="add-new" >新增题型</button>
                                 </div>
                             </div>
-                            <div class="ibox-content" style="border-top:0;" >
-                                <div class="save_scope"></div>
+                            <div class="ibox-content" style="border-top:0;" id="paper" >
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
@@ -194,6 +205,32 @@
                                             <th>20</th>
                                             <th></th>
                                         </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="ibox-content" style="border-top:0;" id="paper2" >
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th width="10%">序号</th>
+                                        <th width="20%">题目类型</th>
+                                        <th width="10%">题目总量</th>
+                                        <th width="10%">每题分数</th>
+                                        <th width="10%">总分</th>
+                                        <th width="10%">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody index="0" id="list-body">
+                                    <tr>
+                                        <th>总计</th>
+
+                                        <th></th>
+                                        <th>40</th>
+                                        <th>-</th>
+                                        <th>20</th>
+                                        <th></th>
+                                    </tr>
                                     </tbody>
                                 </table>
 
