@@ -199,27 +199,28 @@ class ExamPaperController extends CommonController
         $pageIndex = $request->page?$request->page:1;//获取页码
 
         $questions = $ExamQuestion -> getExamQuestion($data,$pageIndex)->toArray();
-        $question = array();
-
-        foreach($questions as $k=>$v){
+        //dd($questions);
+        foreach($questions['data'] as $k=>$v){
             $label = '';
-            $question[$k]['question_name'] = $v['name'];
-            $question[$k]['question_id'] = $v['id'];
-            $question[$k]['questtion_type'] = $v['tname'];
+            $questions['data'][$k]['question_name'] = $v['name'];
+            $questions['data'][$k]['question_id'] = $v['id'];
+            $questions['data'][$k]['questtion_type'] = $v['tname'];
+            if($v['exam_question_label_relation']){
+                foreach(@$v['exam_question_label_relation'] as $kk=>$vv){
 
-            foreach($v['exam_question_label_relation'] as $kk=>$vv){
+                    if($kk <= 3){
+                        $label .= $vv['exam_question_label']['name'].',';
 
-                if($kk <= 3){
-                    $label .= $vv['exam_question_label']['name'].',';
-
+                    }
                 }
+                $questions['data'][$k]['label'] = trim($label,',');
             }
-            $question[$k]['label'] = trim($label,',');
+
             //continue;
         }
         //dd($question);
-        if($question){
-            return $this->success_data($question);
+        if($questions){
+            return $this->success_data($questions);
         }else{
             return $this->success_data('',0,'error');
         }
@@ -276,10 +277,15 @@ class ExamPaperController extends CommonController
 
         $examPaperID = $examPaper->id;
         $questions = $request->question;//获取标签参数
-
+        $examPapers = [];
+        foreach($questions as $v){
+            $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
+        }
+        $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+        dd($examQuestion);
         if($status == 1 && $status2 == 1){//自动-随机
             //新增试卷-试卷构造表和标签类型关联数据添加
-            $result = $this->addData($questions,$examPaperID,$QuestionBankRepositories);
+            $result = $this->addData($examPapers,$examPaperID,$QuestionBankRepositories);
             if(!$result){
                 DB::rollback();
                 return redirect()->back()->withInput()->withErrors('系统异常');
@@ -287,7 +293,7 @@ class ExamPaperController extends CommonController
 
         }elseif($status == 1 && $status2 == 2){//自动-统一
             //新增试卷-试卷构造表和标签类型关联数据添加
-            $result = $this->addData($questions,$examPaperID,$QuestionBankRepositories);
+            $result = $this->addData($examPapers,$examPaperID,$QuestionBankRepositories);
             if(!$result){
                 DB::rollback();
                 return redirect()->back()->withInput()->withErrors('系统异常');
@@ -316,14 +322,11 @@ class ExamPaperController extends CommonController
      * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function addData($questions,$examPaperID,$QuestionBankRepositories){
+    public function addData($examPapers,$examPaperID,$QuestionBankRepositories){
         $user = Auth::user();
         $ExamPaperStructure = new ExamPaperStructure();
         $ExamPaperStructureLabel = new ExamPaperStructureLabel();
 
-        foreach($questions as $v){
-            $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
-        }
         DB::beginTransaction();
 
         foreach($examPapers as $exam){
