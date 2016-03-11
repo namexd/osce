@@ -585,6 +585,19 @@ $(function(){
         courseObserveDetail.StartPlayback(0,pars.ip,newstart,pars.endtime,pars.channel);
 
         //在暂停的情况下拖动进度条
+        testPause(0);
+
+    })
+
+    /**
+     * 判断暂停
+     * @author mao
+     * @version 1.0
+     * @date    2016-03-11
+     * @param   {number}   _param 0
+     */
+    function testPause(_param){
+        var g_iWndIndex = _param;
         setTimeout(function(){
            if($('.pause').css('display')!='none'){
                 var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
@@ -610,9 +623,9 @@ $(function(){
                 console.log(oWndInfo.szIP + " " + szInfo);
             } 
         },2500);
+    }
 
 
-    })
     //选择标记点跳转视频
     $(".points li").click(function(){
         //拿到标记点初始时间
@@ -626,6 +639,8 @@ $(function(){
         clearTimeout(timer);
         progressMove(time_count);
         courseObserveDetail.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
+        //判断是否为暂停
+        testPause(0);
     })
 })
 

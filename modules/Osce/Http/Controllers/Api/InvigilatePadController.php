@@ -682,8 +682,28 @@ class InvigilatePadController extends CommonController
             $date = date('Y-m-d H:i:s', $nowTime);
             $studentId = $request->get('student_id');
             $stationId = $request->get('station_id');
+            //开始考试时创建成绩
+//            $ExamResultData=[
+//                'student_id'=>$studentId,
+//                'exam_screening_id'=>Null,
+//                'station_id'=>$stationId,
+//                'begin_dt'=>$date,
+//                'end_dt'=>Null,
+//                'score'=>0,
+//                'score_dt'=>Null,
+//                'create_user_id'=>Null,
+//                'teacher_id'=>Null,
+//                'evaluate'=>Null,
+//                'operation'=>0,
+//                'skilled'=>0,
+//                'patient'=>0,
+//                'affinity'=>0,
+//
+//            ];
+//           if(!ExamResult::create($ExamResultData)){
+//               throw new \Exception('成绩创建失败',-106);
+//           }
             $ExamQueueModel = new ExamQueue();
-
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime);
 
 

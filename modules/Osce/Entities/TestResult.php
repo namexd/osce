@@ -48,7 +48,7 @@ class TestResult extends CommonModel
         $connection->beginTransaction();
         try {
             //判断成绩是否已提交过
-            $this->getRemoveScore($data['station_id'],$data['student_id'],$data['exam_screening_id']);
+             $ExamResult=$this->getRemoveScore($data['station_id'],$data['student_id'],$data['exam_screening_id']);
 
 //            $examResult = $this->where('student_id', '=', $data['student_id'])
 //                ->where('exam_screening_id', '=', $data['exam_screening_id'])
@@ -62,6 +62,12 @@ class TestResult extends CommonModel
             $total  =   array_pluck($scoreData,'score');
             $total  =   array_sum($total);
             $data['score']  =   $total;
+//            function($data as $ExamResultKey=>$value ){
+//                $ExamResult->$ExamResultKey = $value;
+//            }
+//            if($ExamResult->save()){
+//
+//            }
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
