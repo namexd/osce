@@ -8,7 +8,7 @@
 @stop
 
 @section('only_js')
-    <script type="text/javascript" src="js/all_checkbox.js"> </script>
+    <script type="text/javascript" src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
     <script>
         $(function(){
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
@@ -67,53 +67,68 @@
         </form>
 
         <div class="container-fluid ibox-content" style="border: none;">
-            <div class="input-group" style="width: 100%;margin:20px 0;">
-                <label for="" class="pull-left exam-name">科目标签：</label>
-                <select class="form-control" name="label-{{ @$sub['id'] }}">
-                    <option value="0">全部</option>
-                    <option value="1">基础医学</option>
-                </select>
-                <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
-                <button type="submit" class="btn btn-sm btn-primary marl_10 pull-right" id="add"><a href="{{route('osce.admin.ExamPaperController.getAddExamPage')}}"> 新增</a></button>
+            <div class="input-group row" style="width: 100%;margin:20px 0;">
+                <div class="form-group col-sm-4">
+                    <label class="col-sm-4 control-label">科目标签：</label>
+                    <div class="col-sm-8">
+                        <select id="status2"   class="form-control m-b" name="status2">
+                            <option value="0">全部</option>
+                            <option value="1">基础医学</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label class="col-sm-4 control-label">能力标签：</label>
+                    <div class="col-sm-8">
+                        <select id="status2"   class="form-control m-b" name="status2">
+                            <option value="0">全部</option>
+                            <option value="1">基础医学</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label class="col-sm-4 control-label">难度标签：</label>
+                    <div class="col-sm-8">
+                        <select id="status2"   class="form-control m-b" name="status2">
+                            <option value="0">全部</option>
+                            <option value="1">基础医学</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
+                </div>
             </div>
             <div class="list_all">
                 <table class="table table-striped" id="table-striped" style="background:#fff">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th>
+                            <label class="check_label all_checked">
+                                <div class="check_icon"></div>
+                                <input type="checkbox" value="">
+                            </label>
+                        </th>
                         <th>序号</th>
                         <th>试题</th>
                         <th>考核范围</th>
                         <th>题目类型</th>
-                        <th>试卷类型</th>
-                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody class="subjectBody">
                     @if(!empty(@$data))
                         @foreach(@$data as $k=>$val)
                             <tr>
+                                <td>
+                                    <label class="check_label checkbox_input">
+                                        <div class="check_icon"></div>
+                                        <input type="checkbox" value="">
+                                    </label>
+                                </td>
                                 <td>{{@$k+1}}</td>
                                 <td>{{@$val['name']}}</td>
                                 <td>{{@$val['num']}}</td>
                                 <td>{{@$val['total_score']}}</td>
-                                @if($val['type']===1)
-                                    <td>随机试卷</td>
-                                @else
-                                    <td>统一试卷</td>
-                                @endif
-                                <td>
-                                    <a href="javascript:void(0)">
-                                        <span class="read state1 detail">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
-                                    </a>
-                                    <a href="">
-                                        <span class="read state2">
-                                            <i class="fa fa-trash-o fa-2x"></i>
-                                        </span>
-                                    </a>
-                                </td>
                             </tr>
                         @endforeach
                     @endif
