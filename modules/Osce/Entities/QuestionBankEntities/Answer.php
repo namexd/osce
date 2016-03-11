@@ -62,14 +62,43 @@ class Answer extends Model
             'exam_paper_formal.name',//试卷名称
             'exam_paper_formal.length',//考试时间
             'exam_paper_formal.total_score as totalScore',//试卷总分
-            'exam_category_formal.exam_question_type_id as examQuestionTypeId',//试题类型id
+            'exam_category_formal.id as examCategoryFormalId',//正式试题类型id
             'exam_category_formal.name as typeName',//试题类型名称
             'exam_category_formal.score',//单个试题分值
             'exam_question_formal.name as questionName',//试题名称
             'exam_question_formal.content',//试题内容
             'exam_question_formal.answer',//试题答案
+            'exam_question_formal.student_answer as studentAnswer',//考生答案
         ]);
         return $builder->get();
+    }
+    /**保存考生答案
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $data
+     * @return bool
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function saveAnswer($data)
+    {
+        $DB = \DB::connection('osce_mis');
+        $DB->beginTransaction();
+        $examQuestionFormalModel = new ExamQuestionFormal();
+        if(count($data)>0){
+            foreach($data as $v){
+                $rowData['answer'] = $v['answer'];
+                $result = $examQuestionFormalModel->where('id','=',$v['id'])->update($rowData);
+                if(!$result){
+                    DB::rollback();
+                    return false;
+                }
+            }
+        }
+        $DB->commit();
+        return true;
     }
 
 

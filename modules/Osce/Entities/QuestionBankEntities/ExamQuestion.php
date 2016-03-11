@@ -309,6 +309,9 @@ class ExamQuestion extends Model
         }
     }
 
+//    public function exam_question_label_relation(){
+//        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelRelation','exam_question_id','id');
+//    }
     /**根据标签查找试题
      * @method
      * @url /osce/
@@ -323,12 +326,15 @@ class ExamQuestion extends Model
 
             $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
 
-        })->with(['exam_question_label_relation'=>function($relation) use($data){
+        })->with(['ExamQuestionLabelRelation'=>function($relation) use($data){
 
-            $relation->with('exam_question_label')->whereIn('exam_question_label_relation.exam_question_label_id',$data);
+            $relation->with('exam_question_label');
+            if(!empty($data)){
+                $relation->whereIn('exam_question_label_relation.exam_question_label_id',$data);
+            }
 
-        }])->skip(($pageIndex-1)*config('msc.page_size'))->take(config('msc.page_size'))->get();
-
+        }])->select('exam_question_type.name as tname','exam_question.*')->skip(($pageIndex-1)*config('msc.page_size'))->take(config('msc.page_size'))->get();//
+        //dd($builder);
         return $builder;
     }
 }
