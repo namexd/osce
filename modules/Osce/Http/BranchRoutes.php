@@ -109,6 +109,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
         //理论考试，答题时，试卷信息
         Route::get('answer/formalPaper-List',['uses'=>'AnswerController@formalPaperList','as'=>'osce.admin.AnswerController.formalPaperList']);
+        //保存考生答案
+        Route::get('answer/postSaveAnswer',['uses'=>'AnswerController@postSaveAnswer','as'=>'osce.admin.AnswerController.postSaveAnswer']);
+
+
 
         //展示编辑子项页面
         Route::get('api/editor-exam-paper-item',['uses'=>'ApiController@GetEditorExamPaperItem','as'=>'osce.admin.ApiController.GetEditorExamPaperItem']);

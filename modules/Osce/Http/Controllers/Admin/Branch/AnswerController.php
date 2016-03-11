@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
 use Modules\Osce\Entities\QuestionBankEntities\ExamCategoryFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionFormal;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 
@@ -32,11 +33,9 @@ class AnswerController extends CommonController
      */
     public function formalPaperList()
     {
-
         $answer = new Answer();
         $list = $answer->getFormalPaper();
         $data = [];
-        $newData = [];
         if($list) {
             foreach ($list as $k => $v) {
                 $data[] = array(
@@ -64,19 +63,28 @@ class AnswerController extends CommonController
                 foreach($examCategoryFormalList as $key=>$val){
                     if($val->ExamQuestionFormal){
                         $examCategoryFormalList[$key]['exam_question_formal'] = $val->ExamQuestionFormal;//获取正式试题信息
-                        // $examCategoryFormalList[$key]['count'] = count($val->ExamQuestionFormal);//获取正式试题信息
                     }
                 }
                 foreach($examCategoryFormalList as $k1=>$v1){
                     $examCategoryFormalData[$k1]= array(
                         'id'=>$v1->id,
-                        'exam_question_type_id'=>$v1->exam_question_type_id,
                         'number'=>$v1->number,
                         'score'=>$v1->score,
                         'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
-                        // 'count'=>$v1->count //该试题分类下的试题个数
-
                     );
+                    if($k1+1==1){
+                        $examCategoryFormalData[$k1]['name']='一、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
+                    }elseif($k1+1==2){
+                        $examCategoryFormalData[$k1]['name']='二、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
+                    }elseif($k1+1==3){
+                        $examCategoryFormalData[$k1]['name']='三、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
+                    }elseif($k1+1==4){
+                        $examCategoryFormalData[$k1]['name']='四、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
+                    }elseif($k1+1==5){
+                        $examCategoryFormalData[$k1]['name']='五、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
+                    }elseif($k1+1==6){
+                        $examCategoryFormalData[$k1]['name']='六、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
+                    }
                     if(count($v1['exam_question_formal'])>0){
                         foreach($v1['exam_question_formal'] as $k2=>$v2){
                             $examCategoryFormalData[$k1]['exam_question_formal'][$k2]=array(
@@ -104,4 +112,118 @@ class AnswerController extends CommonController
             'data'                         =>$examCategoryFormalData,//试题信息
         ]);
     }
+    /**保存答案
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postSaveAnswer(Request $request)
+    {
+        $this->validate($request, [
+           // 'examQuestionFormalId'=>'required|integer',//正式的试题表
+            'studentAnswer'        => 'sometimes|array',
+        ]);
+        $data =array(
+            'id' =>$request->input('examQuestionFormalId'), //正式试题id
+            'answer' =>$request->input('studentAnswer'), //考生答案
+        );
+        $answerModel = new Answer();
+        //保存考生答案
+        //$result = $answerModel->saveAnswer($data);
+        $result=true;
+        if($result){
+            //查询该正式的试卷表信息
+            $examPaperFormalList=$answerModel->first();
+            //如果保存成功，查询该考卷的所有试题信息
+            $getFormalPaperList = $answerModel->getFormalPaper();
+            $totalScore=0;//考生总分
+            if(count($getFormalPaperList)>0){
+                foreach($getFormalPaperList as $k=>$v){
+                    if($v['examCategoryFormalId']==1){
+                        //单选题
+                        if($v['studentAnswer']==$v['answer']){
+                            $totalScore+=$v['score'];
+                        }
+                    }elseif($v['examCategoryFormalId']==2){
+                        //多选题
+                        //判断考生答案是否包含@符号，有证明考生选择的是多个选项，无证明考生只选择了一个选项
+                        if(strstr($v['studentAnswer'],'@')){
+                            if($v['studentAnswer']==$v['answer']){
+                                $totalScore+=$v['score'];
+                            }elseif(strstr($v['answer'],$v['studentAnswer'])){
+                                $totalScore+=$v['score']/2;
+                            }
+                        }else{
+                            if(strstr($v['answer'],$v['studentAnswer'])){
+                                $totalScore+=$v['score']/2;
+                            }
+                        }
+                    }elseif($v['examCategoryFormalId']==3){
+                        //不定性选择题
+                        //判断考生答案是否包含@符号，有证明考生选择的是多个选项，无证明考生只选择了一个选项
+                        if(strstr($v['studentAnswer'],'@')){
+                            if($v['studentAnswer']==$v['answer']){
+                                $totalScore+=$v['score'];
+                            }elseif(strstr($v['answer'],$v['studentAnswer'])){
+                                $totalScore+=$v['score']/2;
+                            }
+                        }else{
+                            if(strstr($v['answer'],$v['studentAnswer'])){
+                                $totalScore+=$v['score']/2;
+                            }
+                        }
+
+                    }elseif($v['examCategoryFormalId']==4){
+                        //判断题
+                        if($v['studentAnswer']==$v['answer']){
+                            $totalScore+=$v['score'];
+                        }
+                    }
+                }
+            }
+            $examPaperFormalList['totalScore']=$totalScore;
+            if($examPaperFormalList){
+                $examPaperFormalData=array(
+                    'id'=>$examPaperFormalList->id,//编号
+                    'exam_paper_id'=>$examPaperFormalList->exam_paper_id,//试卷id
+                    'length'=>$examPaperFormalList->length,//考试时长
+                    'name'=>$examPaperFormalList->name,//试卷名称
+                    'total_score'=>$examPaperFormalList->total_score,//总分
+                    'actual_length'=>$examPaperFormalList->actual_length,//考试用时
+                    'totalScore'=>$examPaperFormalList->totalScore,//该考生成绩
+                );
+            }
+            dd($examPaperFormalData);
+            return response()->json($examPaperFormalData);
+        }else{
+            return response()->json(false);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
