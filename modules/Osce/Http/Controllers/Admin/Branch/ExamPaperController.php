@@ -256,6 +256,8 @@ class ExamPaperController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExampQuestions(){
-        return view('osce::admin.resourcemanage.subject_papers_add_detail');
+        $label = $this->getExamLabelGet();//标签
+        //dd($label);
+        return view('osce::admin.resourcemanage.subject_papers_add_detail',['labelList'=>$label]);
     }
 }
