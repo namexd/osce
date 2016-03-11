@@ -218,6 +218,7 @@ class ExamQuestion extends Model
     public function getExamQuestionById($id)
     {
 
+
         $data = $this->where('exam_question.id','=',$id)
             ->select([
             'exam_question.id',//试题id

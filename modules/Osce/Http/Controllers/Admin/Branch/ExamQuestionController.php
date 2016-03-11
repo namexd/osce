@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionItem;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -174,14 +175,17 @@ class ExamQuestionController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamQuestionEdit(Request $request)
+    public function getExamQuestionEdit($id)
     {
-        //验证
-        $this->validate($request, [
-            'id' => 'sometimes|integer',//试题id
-        ]);
-        //试题id
-        $id = $request->input('id');
+
+        $examQuestionItem = new ExamQuestionItem();
+        $content = $examQuestionItem->select('name')->where('exam_question_id','=',$id)->get();
+        $newContent =[];
+        if($content){
+            foreach($content as $v){
+                $newContent[]=$v->name;
+            }
+        }
 
         //获取题目类型列表
         $examQuestionTypeModel= new ExamQuestionType();
@@ -189,7 +193,7 @@ class ExamQuestionController extends CommonController
 
         //获取试题信息
         $examQuestionModel= new ExamQuestion();
-        $list = $examQuestionModel->getExamQuestionById(14);
+        $list = $examQuestionModel->getExamQuestionById($id);
         $examQuestionItemList ='';
         $examQuestionLabelList='';
         if($list){
@@ -226,15 +230,22 @@ class ExamQuestionController extends CommonController
             $data['id'] = $list->id;
             $data['exam_question_type_id'] = $list->exam_question_type_id;//题目类型
             $data['name'] = $list->name;//题目名称
-
-            $data['answer'] = explode('@',$list->answer);//正确答案
             $data['parsing'] = $list->parsing;//解析
+            if($data['exam_question_type_id']==4){
+                $data['answer'] = $list->answer;//正确答案
+            }else{
+                $data['answer'] = explode('@',$list->answer);//正确答案
+            }
         }
+
+
+        //dd($examQuestionLabelTypeList);
         return view('osce::admin.resourcemanage.subject_manage_edit', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
             'data'                          =>$data ,//试题信息
             'examQuestionItemList'       =>$examQuestionItemList ,//试题子项表列表
             'examQuestionLabelTypeList' =>$examQuestionLabelTypeList ,//考核范围列表
+            '$newContent'              =>$newContent,
         ]);
     }
 
