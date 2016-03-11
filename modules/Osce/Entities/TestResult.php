@@ -88,12 +88,15 @@ class TestResult extends CommonModel
     private function getSaveExamAttach($studentId,$ExamResultId,$score){
         $list = [];
         $arr = json_decode($score, true);
+
         foreach($arr as $item){
             $list[]=[
                'standard_id' =>$item['standard_id']
             ];
         }
+        \Log::alert($arr,$list);
         $standardId = array_column($list, 'standard_id');
+
         $AttachData = TestAttach::where('student_id',$studentId)->whereIn('standard_id',$standardId)->get();
         foreach($AttachData as $item){
             $item->test_result_id = $ExamResultId;
