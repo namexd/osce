@@ -558,7 +558,6 @@ $(function(){
     $("#progress").click(function(e){
         clearTimeout(timer);
         var left=e.clientX-($("#progress").offset().left);
-        console.log(left);
         $(".progress-bar").css({"width":left+"px"});
         //var current=progressMove();
         //alert(left*step);
@@ -583,9 +582,36 @@ $(function(){
         var newstart=year+"-"+month+"-"+days+" "+hour+":"+min+":"+s;
         //初始化计时
         clickStart(left);
-
-
         courseObserveDetail.StartPlayback(0,pars.ip,newstart,pars.endtime,pars.channel);
+
+        //在暂停的情况下拖动进度条
+        setTimeout(function(){
+           if($('.pause').css('display')!='none'){
+                var oWndInfo = WebVideoCtrl.I_GetWindowStatus(0),
+                szInfo = "";
+
+                if (oWndInfo != null) {
+                    var iRet = WebVideoCtrl.I_Pause();
+                    if (0 == iRet) {
+                        szInfo = "暂停成功！";
+                        console.log("成功");
+                        //关闭计时器
+                        clearTimeout(timer);
+                    } else {
+                        szInfo = "暂停失败！";
+                        console.log("失败");
+                        setTimeout(function(){
+                            WebVideoCtrl.I_Pause();
+                            //关闭计时器
+                            clearTimeout(timer);
+                        },1000);
+                    }
+                }
+                console.log(oWndInfo.szIP + " " + szInfo);
+            } 
+        },2500);
+
+
     })
     //选择标记点跳转视频
     $(".points li").click(function(){
