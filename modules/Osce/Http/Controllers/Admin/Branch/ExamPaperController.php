@@ -155,9 +155,9 @@ class ExamPaperController extends CommonController
     {
         //验证试题类型ID
         $this->validate($request,[
-            'subject_id'        => 'required',
-            'ability_id'        => 'required',
-            'difficult_id'        => 'required',
+            'subject_id'        => 'sometime|integer',
+            'ability_id'        => 'sometime|integer',
+            'difficult_id'        => 'sometime|integer',
         ]);
 
         //接收筛选参数
@@ -170,9 +170,9 @@ class ExamPaperController extends CommonController
         //根据筛选参数查找试题数据
         $ExamQuestion = new ExamQuestion();
 
-        $questions = $ExamQuestion -> getExamQuestion($data);
+        $pageIndex = $request->page?$request->page:1;//获取页码
 
-
+        $questions = $ExamQuestion -> getExamQuestion($data,$pageIndex);
         dd($questions);
         exit;
     }

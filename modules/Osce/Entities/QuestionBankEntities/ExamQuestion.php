@@ -316,13 +316,17 @@ class ExamQuestion extends Model
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamQuestion($data){
+    public function getExamQuestion($data,$pageIndex){
         $builder = $this->leftjoin('exam_question_type',function($join){
+
             $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
+
         })->with(['exam_question_label_relation'=>function($relation) use($data){
+
             $relation->with('exam_question_label')->whereIn('exam_question_label_relation.exam_question_label_id',$data);
-        }])->paginate(config('msc.page_size'));
-        dd($builder);
+
+        }])->skip(($pageIndex-1)*config('msc.page_size'))->take(config('msc.page_size'))->get();
+
         return $builder;
     }
 }
