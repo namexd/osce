@@ -106,17 +106,13 @@ class StudentWatchController extends CommonController
         //得到场次id
 //        $examScreeningId= $watchStudent->exam_screening_id;
         //得到学生id
-        dump($watchStudent,'腕表信息');
         $studentId = $watchStudent->student_id;
         // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
-        dump($studentId,'学生信息');
-
         $examId = $examInfo->exam_id;
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
-        dump($examQueueCollect,'d队列');
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect);
 
@@ -317,7 +313,6 @@ class StudentWatchController extends CommonController
 
     //判断腕表提醒状态为0时
     private function getStatusWaitExam($examQueueCollect){
-        dump($examQueueCollect);
         $items   =   array_where($examQueueCollect,function($key,$value){
             if($value ->status  ==  0)
             {
@@ -325,9 +320,6 @@ class StudentWatchController extends CommonController
             }
         });
         $item   =   array_shift($items);
-        dump($item);
-
-
         //判断前面是否有人考试
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
