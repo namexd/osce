@@ -86,10 +86,10 @@
                         </div>
                     </div>
                     <button type="button" class="btn btn-default btn-md pause">
-                        <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                        <i class="fa fa-pause" aria-hidden="true"></i>
                     </button>
                     <button type="button" class="btn btn-default btn-md resume">
-                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                        <i class="fa fa-play"></i>
                     </button>
                 </div>
             </div>
