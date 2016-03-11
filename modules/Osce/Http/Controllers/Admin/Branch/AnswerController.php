@@ -15,14 +15,14 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 
-/**øº ‘¥Ã‚øÿ÷∆∆˜
+/**ËÄÉËØïÁ≠îÈ¢òÊéßÂà∂Âô®
  * Class Answer
  * @package Modules\Osce\Http\Controllers\Admin\Branch
  */
 
 class AnswerController extends CommonController
 {
-    /**’˝ Ω ‘æÌ–≈œ¢ ˝æ›
+    /**Ê≠£ÂºèËØïÂç∑‰ø°ÊÅØÊï∞ÊçÆ
      * @method
      * @url /osce/
      * @access public
@@ -40,31 +40,31 @@ class AnswerController extends CommonController
         if($list) {
             foreach ($list as $k => $v) {
                 $data[] = array(
-                    'name' => $v->name,// ‘æÌ√˚≥∆
-                    'length' => $v->length,//øº ‘ ±º‰
-                    'totalScore' => $v->totalScore,// ‘æÌ◊‹∑÷
-                    'examQuestionTypeId' => $v->examQuestionTypeId,// ‘Ã‚¿‡–Õid
-                    'typeName' => $v->typeName,// ‘Ã‚¿‡–Õ√˚≥∆
-                    'score' => $v->score,//µ•∏ˆ ‘Ã‚∑÷÷µ
-                    'questionName' => $v->questionName,// ‘Ã‚√˚≥∆
-                    'content' => $v->content,// ‘Ã‚ƒ⁄»›
-                    'answer' => $v->answer,// ‘Ã‚¥∞∏
+                    'name' => $v->name,//ËØïÂç∑ÂêçÁß∞
+                    'length' => $v->length,//ËÄÉËØïÊó∂Èó¥
+                    'totalScore' => $v->totalScore,//ËØïÂç∑ÊÄªÂàÜ
+                    'examQuestionTypeId' => $v->examQuestionTypeId,//ËØïÈ¢òÁ±ªÂûãid
+                    'typeName' => $v->typeName,//ËØïÈ¢òÁ±ªÂûãÂêçÁß∞
+                    'score' => $v->score,//Âçï‰∏™ËØïÈ¢òÂàÜÂÄº
+                    'questionName' => $v->questionName,//ËØïÈ¢òÂêçÁß∞
+                    'content' => $v->content,//ËØïÈ¢òÂÜÖÂÆπ
+                    'answer' => $v->answer,//ËØïÈ¢òÁ≠îÊ°à
                 );
             }
         }
-        //ªÒ»°’˝ Ω ‘æÌ±Ì–≈œ¢
+        //Ëé∑ÂèñÊ≠£ÂºèËØïÂç∑Ë°®‰ø°ÊÅØ
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->first();
-        //∏˘æ› ‘Ã‚¿‡–Õ∂‘ ‘Ã‚±Ì¿¥Ω¯––∑÷¿‡
+        //Ê†πÊçÆËØïÈ¢òÁ±ªÂûãÂØπËØïÈ¢òË°®Êù•ËøõË°åÂàÜÁ±ª
         $examCategoryFormalList='';
-        $examCategoryFormalData='';// ‘Ã‚–≈œ¢(∏˘æ› ‘Ã‚¿‡–ÕΩ¯––∑÷¿‡)
+        $examCategoryFormalData='';//ËØïÈ¢ò‰ø°ÊÅØ(Ê†πÊçÆËØïÈ¢òÁ±ªÂûãËøõË°åÂàÜÁ±ª)
         if($examPaperFormalList){
-            $examCategoryFormalList = $examPaperFormalList->examCategoryFormal;//ªÒ»°’˝ Ω ‘Ã‚∑÷¿‡–≈œ¢
+            $examCategoryFormalList = $examPaperFormalList->examCategoryFormal;//Ëé∑ÂèñÊ≠£ÂºèËØïÈ¢òÂàÜÁ±ª‰ø°ÊÅØ
             if($examCategoryFormalList){
                 foreach($examCategoryFormalList as $key=>$val){
                     if($val->ExamQuestionFormal){
-                        $examCategoryFormalList[$key]['exam_question_formal'] = $val->ExamQuestionFormal;//ªÒ»°’˝ Ω ‘Ã‚–≈œ¢
-                       // $examCategoryFormalList[$key]['count'] = count($val->ExamQuestionFormal);//ªÒ»°’˝ Ω ‘Ã‚–≈œ¢
+                        $examCategoryFormalList[$key]['exam_question_formal'] = $val->ExamQuestionFormal;//Ëé∑ÂèñÊ≠£ÂºèËØïÈ¢ò‰ø°ÊÅØ
+                        // $examCategoryFormalList[$key]['count'] = count($val->ExamQuestionFormal);//Ëé∑ÂèñÊ≠£ÂºèËØïÈ¢ò‰ø°ÊÅØ
                     }
                 }
                 foreach($examCategoryFormalList as $k1=>$v1){
@@ -75,7 +75,7 @@ class AnswerController extends CommonController
                         'number'=>$v1->number,
                         'score'=>$v1->score,
                         'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
-                       // 'count'=>$v1->count //∏√ ‘Ã‚∑÷¿‡œ¬µƒ ‘Ã‚∏ˆ ˝
+                        // 'count'=>$v1->count //ËØ•ËØïÈ¢òÂàÜÁ±ª‰∏ãÁöÑËØïÈ¢ò‰∏™Êï∞
 
                     );
                     if(count($v1['exam_question_formal'])>0){
@@ -89,8 +89,8 @@ class AnswerController extends CommonController
                                 'parsing' =>$v2->parsing,
                                 'exam_category_formal_id' =>$v2->exam_category_formal_id,
                                 'student_answer' =>$v2->student_answer
-,                            );
-                            $serialNumber[]=($k1+1).'.'.($k2+1);//–Ú¡–∫≈
+                            ,                            );
+                            $serialNumber[]=($k1+1).'.'.($k2+1);//Â∫èÂàóÂè∑
                         }
                     }else{
                         $examCategoryFormalData[$k1]['exam_question_formal']='';
@@ -101,32 +101,4 @@ class AnswerController extends CommonController
         }
         dd($examCategoryFormalData);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

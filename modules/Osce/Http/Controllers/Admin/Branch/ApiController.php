@@ -39,6 +39,16 @@ class ApiController extends CommonController
             'examQuestionTypeList'=>$examQuestionTypeList
         ]);
     }
+
+    /**
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月11日11:20:48
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function PostEditorExamPaperItem(Request $request){
         $ExamQuestionLabel = new ExamQuestionLabel;
         //dd($request->all());
@@ -82,5 +92,18 @@ class ApiController extends CommonController
             '3'=>$ExamQuestionLabelStr = implode(',',$request->tag)
         ];
         die(implode('@',$data));
+    }
+
+    /**
+     * @method
+     * @url /osce/admin/api/exam-paper-preview
+     * @access public
+     * @param $data
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月11日11:21:47
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ExamPaperPreview(Request $request){
+        dd($request);
     }
 }
