@@ -263,6 +263,15 @@ function subject_manage_add(){
                 $(this).children(".radio_icon").addClass("check");
             }
         });
+        if($("#subjectType option:selected").val()==1){
+            oneValidator();
+        }else if($("#subjectType option:selected").val()==2){
+            moreValidator();
+        }else if($("#subjectType option:selected").val()==3){
+            noSureValidator();
+        }else{
+            chooseValidator();
+        }
         //单选验证
         function oneValidator(){
             $("#sourceForm").bootstrapValidator({

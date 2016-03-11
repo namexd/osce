@@ -10,17 +10,19 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
+use Modules\Osce\Entities\QuestionBankEntities\ExamCategoryFormal;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 
-/**¿¼ÊÔ´ğÌâ¿ØÖÆÆ÷
+/**è€ƒè¯•ç­”é¢˜æ§åˆ¶å™¨
  * Class Answer
  * @package Modules\Osce\Http\Controllers\Admin\Branch
  */
 
 class AnswerController extends CommonController
 {
-    /**ÕıÊ½ÊÔ¾íĞÅÏ¢Êı¾İ
+    /**æ­£å¼è¯•å·ä¿¡æ¯æ•°æ®
      * @method
      * @url /osce/
      * @access public
@@ -34,50 +36,72 @@ class AnswerController extends CommonController
         $answer = new Answer();
         $list = $answer->getFormalPaper();
         $data = [];
-        if($list){
-            foreach($list as $k=>$v){
+        $newData = [];
+        if($list) {
+            foreach ($list as $k => $v) {
                 $data[] = array(
-                    'name'=>$v->name,//ÊÔ¾íÃû³Æ
-                    'length'=>$v->length,//¿¼ÊÔÊ±¼ä
-                    'totalScore'=>$v->totalScore,//ÊÔ¾í×Ü·Ö
-                    'examQuestionTypeId'=>$v->examQuestionTypeId,//ÊÔÌâÀàĞÍid
-                    'typeName'=>$v->typeName,//ÊÔÌâÀàĞÍÃû³Æ
-                    'score'=>$v->score,//µ¥¸öÊÔÌâ·ÖÖµ
-                    'questionName'=>$v->questionName,//ÊÔÌâÃû³Æ
-                    'content'=>$v->content,//ÊÔÌâÄÚÈİ
-                    'answer'=>$v->answer,//ÊÔÌâ´ğ°¸
+                    'name' => $v->name,//è¯•å·åç§°
+                    'length' => $v->length,//è€ƒè¯•æ—¶é—´
+                    'totalScore' => $v->totalScore,//è¯•å·æ€»åˆ†
+                    'examQuestionTypeId' => $v->examQuestionTypeId,//è¯•é¢˜ç±»å‹id
+                    'typeName' => $v->typeName,//è¯•é¢˜ç±»å‹åç§°
+                    'score' => $v->score,//å•ä¸ªè¯•é¢˜åˆ†å€¼
+                    'questionName' => $v->questionName,//è¯•é¢˜åç§°
+                    'content' => $v->content,//è¯•é¢˜å†…å®¹
+                    'answer' => $v->answer,//è¯•é¢˜ç­”æ¡ˆ
                 );
             }
         }
-        dd(222);
-        dd($data);
+        //è·å–æ­£å¼è¯•å·è¡¨ä¿¡æ¯
+        $examPaperFormalModel = new ExamPaperFormal();
+        $examPaperFormalList = $examPaperFormalModel->first();
+        //æ ¹æ®è¯•é¢˜ç±»å‹å¯¹è¯•é¢˜è¡¨æ¥è¿›è¡Œåˆ†ç±»
+        $examCategoryFormalList='';
+        $examCategoryFormalData='';//è¯•é¢˜ä¿¡æ¯(æ ¹æ®è¯•é¢˜ç±»å‹è¿›è¡Œåˆ†ç±»)
+        if($examPaperFormalList){
+            $examCategoryFormalList = $examPaperFormalList->examCategoryFormal;//è·å–æ­£å¼è¯•é¢˜åˆ†ç±»ä¿¡æ¯
+            if($examCategoryFormalList){
+                foreach($examCategoryFormalList as $key=>$val){
+                    if($val->ExamQuestionFormal){
+                        $examCategoryFormalList[$key]['exam_question_formal'] = $val->ExamQuestionFormal;//è·å–æ­£å¼è¯•é¢˜ä¿¡æ¯
+                        // $examCategoryFormalList[$key]['count'] = count($val->ExamQuestionFormal);//è·å–æ­£å¼è¯•é¢˜ä¿¡æ¯
+                    }
+                }
+                foreach($examCategoryFormalList as $k1=>$v1){
+                    $examCategoryFormalData[$k1]= array(
+                        'id'=>$v1->id,
+                        'name'=>$v1->name,
+                        'exam_question_type_id'=>$v1->exam_question_type_id,
+                        'number'=>$v1->number,
+                        'score'=>$v1->score,
+                        'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
+                        // 'count'=>$v1->count //è¯¥è¯•é¢˜åˆ†ç±»ä¸‹çš„è¯•é¢˜ä¸ªæ•°
+
+                    );
+                    if(count($v1['exam_question_formal'])>0){
+                        foreach($v1['exam_question_formal'] as $k2=>$v2){
+                            $examCategoryFormalData[$k1]['exam_question_formal'][$k2]=array(
+                                'id' =>$v2->id,
+                                'name' =>$v2->name,
+                                'exam_question_id' =>$v2->exam_question_id,
+                                'content' =>$v2->content,
+                                'answer' =>$v2->answer,
+                                'parsing' =>$v2->parsing,
+                                'exam_category_formal_id' =>$v2->exam_category_formal_id,
+                                'student_answer' =>$v2->student_answer
+                            ,                            );
+                            $serialNumber[]=($k1+1).'.'.($k2+1);//åºåˆ—å·
+                        }
+                    }else{
+                        $examCategoryFormalData[$k1]['exam_question_formal']='';
+                    }
+                }
+                $examCategoryFormalData['serialNumber'] = $serialNumber;
+            }
+        }
+        dd($examCategoryFormalData);
+        return view('osce::admin.theoryCheck.theory_check', [
+            'data'                         =>$examCategoryFormalData,//è¯•é¢˜ä¿¡æ¯
+        ]);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

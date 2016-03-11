@@ -20,17 +20,17 @@ class ExamPaper extends CommonModel
     protected $fillable = ['id', 'name', 'status','mode','type','length','created_user_id'];
 
     /**
-     * ÓëÊÔÌâ¹¹Ôì±íµÄÄ£ĞÍ¹ØÏµ
+     * ä¸è¯•é¢˜æ„é€ è¡¨çš„æ¨¡å‹å…³ç³»
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * @author tangjun <tangjun@misrobot.com>
-     * @date    2016Äê3ÔÂ9ÈÕ10:38:36
+     * @date    2016å¹´3æœˆ9æ—¥10:38:36
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ExamPaperStructure(){
         return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamPaperStructure','exam_paper_id','id');
     }
     /**
-     * »ñÈ¡ÊÔ¾íÁĞ±í
+     * è·å–è¯•å·åˆ—è¡¨
      * @access    public
      * @param Exam $exam
      * @return view
@@ -46,8 +46,8 @@ class ExamPaper extends CommonModel
         }
 
         $builder = $builder->leftjoin('exam_paper_structure',function($join){
-                $join->on('exam_paper_structure.exam_paper_id','=','exam_paper.id');
-            })->select('exam_paper.id','exam_paper.name','exam_paper.type','exam_paper_structure.num','exam_paper_structure.total_score')
+            $join->on('exam_paper_structure.exam_paper_id','=','exam_paper.id');
+        })->select('exam_paper.id','exam_paper.name','exam_paper.type','exam_paper_structure.num','exam_paper_structure.total_score')
             ->orderBy('exam_paper.id','desc')->paginate(config('osce.page_size'));
         //dd($builder);
         return $builder;
@@ -56,7 +56,7 @@ class ExamPaper extends CommonModel
 
 
     /**
-     * ²éÕÒÓëÊÔ¾íÏà¹ØµÄÊı¾İ
+     * æŸ¥æ‰¾ä¸è¯•å·ç›¸å…³çš„æ•°æ®
      * @access    public
      * @param Exam $exam
      * @return view
@@ -77,7 +77,7 @@ class ExamPaper extends CommonModel
     }
 
     /**
-     * Ìí¼ÓÊÔ¾í²Ù×÷
+     * æ·»åŠ è¯•å·æ“ä½œ
      * @access    public
      * @param Exam $exam
      * @return view
@@ -88,7 +88,7 @@ class ExamPaper extends CommonModel
      */
     public function addExams($data){
         DB::beginTransaction();
-        //ÏòÊÔ¾í±í²åÈë»ù´¡Êı¾İ
+        //å‘è¯•å·è¡¨æ’å…¥åŸºç¡€æ•°æ®
         $examPaper = ExamPaper::create($data);
         if(!$examPaper){
             DB::rollback();

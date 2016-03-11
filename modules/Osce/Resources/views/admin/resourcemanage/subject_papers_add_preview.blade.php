@@ -63,7 +63,7 @@
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'subject_papers_add}" />
     <div class="wrapper wrapper-content animated fadeInRight">
-        <form class="form-horizontal" method="post" action="{{ route('osce.admin.ApiController.PostEditorExamPaperItem') }}">
+        <form class="form-horizontal" method="post" action="{{ route('osce.admin.ApiController.PostEditorExamPaperItem')}}">
             <div class="modal-body">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">题目类型：</label>
@@ -83,8 +83,8 @@
                             <label class="col-sm-3 control-label">{{@$sub['name']}}：</label>
                             <div class="col-sm-3">
                                 <select class="form-control" name="label-{{ @$sub['id'] }}">
-                                    <option value="1">包含</option>
-                                    <option value="2">等于</option>
+                                    <option value="0">包含</option>
+                                    <option value="1">等于</option>
                                 </select>
                             </div>
                             <div class="col-sm-6">
