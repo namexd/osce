@@ -14,6 +14,8 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperStructure;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperStructureLabel;
 use Modules\Osce\Repositories\QuestionBankRepositories;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Support\Facades\Auth;
@@ -85,13 +87,28 @@ class ExamPaperController extends CommonController
         ]);
         $id = $request->id;
 
+        DB::beginTransaction();
         $Paper = new ExamPaper();
+        //删除试卷
         $delete = $Paper->where('id','=',$id)->delete();
+        if(!$delete){
+            DB::rollback();
+            return redirect()->back()->withInput()->withErrors('系统异常');
+        }
 
-        if($delete){
-            return redirect()->route('osce.admin.ExamPaperController.getExamList');
+        //查找试卷构造表
+        $exam_paper_structure = ExamPaperStructure::where('exam_paper_id','=',$id)->first();
+        $paper_structure_id = $exam_paper_structure->id;
+        if(!$exam_paper_structure->delete()){
+            DB::rollback();
+            return redirect()->back()->withInput()->withErrors('系统异常');
+        }
+        //删除试卷构造表和标签关联表数据
+        if(ExamPaperStructureLabel::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
+            DB::commit();
+            return redirect()->back()->withInput()->withErrors('操作成功');
         }else{
-            return redirect()->route('osce.admin.ExamPaperController.getExamList');
+            return redirect()->back()->withInput()->withErrors('系统异常');
         }
     }
 
@@ -216,6 +233,11 @@ class ExamPaperController extends CommonController
         $status = $request -> status;
         $status2 = $request -> status2;
 
+        //判断当前数据是否存在
+        $check = ExamPaper::where($data)->first();
+        if($check){
+            return redirect()->back()->withInput()->withErrors('试卷已存在');
+        }
         //向试卷表插入基础数据
         $examPaper = ExamPaper::create($data);
         if(!$examPaper){
@@ -224,22 +246,89 @@ class ExamPaperController extends CommonController
         }
 
         $examPaperID = $examPaper->id;
-        if($status == 1 && $status2 == 1){//自动-随机
+        $questions = $request->question;//获取标签参数
 
-            $questions = $request->question;//获取标签参数
-            foreach($questions as $v){
-                $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
+        if($status == 1 && $status2 == 1){//自动-随机
+            //新增试卷-试卷构造表和标签类型关联数据添加
+            $result = $this->addData($questions,$examPaperID,$QuestionBankRepositories);
+            if(!$result){
+                DB::rollback();
+                return redirect()->back()->withInput()->withErrors('系统异常');
             }
 
-
-        dd($examPapers);
         }elseif($status == 1 && $status2 == 2){//自动-统一
+            //新增试卷-试卷构造表和标签类型关联数据添加
+            $result = $this->addData($questions,$examPaperID,$QuestionBankRepositories);
+            if(!$result){
+                DB::rollback();
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+
+            //随机生成统一试题
+
 
         }elseif($status == 2 && $status2 == 2){//手动-统一
 
         }
 
+        DB::commit();
+        return redirect()->back()->withInput()->withErrors('操作成功');
 
+    }
+
+    /**
+     * 新增试卷-试卷构造表和标签类型关联数据添加
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function addData($questions,$examPaperID,$QuestionBankRepositories){
+        $user = Auth::user();
+        $ExamPaperStructure = new ExamPaperStructure();
+        $ExamPaperStructureLabel = new ExamPaperStructureLabel();
+
+        foreach($questions as $v){
+            $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
+        }
+        DB::beginTransaction();
+
+        foreach($examPapers as $exam){
+            //拼合试卷构造表数据
+            $papers = [
+                'exam_paper_id' => $examPaperID,
+                'exam_question_type_id' => $exam['type'],
+                'num' => $exam['num'],
+                'score' => $exam['score'],
+                'total_score' => $exam['total_score'],
+                'created_user_id' => $user->id,
+            ];
+
+            $addExamPaperStructure = $ExamPaperStructure->create($papers);
+            if(!$addExamPaperStructure){
+                DB::rollback();
+                return false;exit;
+            }
+
+            foreach($exam['structure_label'] as $structure_label){
+                //拼合试卷构造表和试题标签表关联的数据
+                $structure_label['exam_paper_structure_id'] = $addExamPaperStructure->id;
+                $structure_label['created_user_id'] = $user->id;
+
+                $addExamPaperStructureLabel = $ExamPaperStructureLabel->create($structure_label);
+                if(!$addExamPaperStructureLabel){
+                    DB::rollback();
+                    return false;exit;
+                }
+            }
+
+        }
+        DB::commit();
+        return true;
     }
 
     /**
@@ -264,7 +353,6 @@ class ExamPaperController extends CommonController
      */
     public function getExampQuestions(){
         $label = $this->getExamLabelGet();//标签
-        //dd($label);
-        return view('osce::admin.resourcemanage.subject_papers_add_detail',['labelList'=>$label]);
+        return view('osce::admin.resourcemanage.subject_papers_add_detail2',['labelList'=>$label]);
     }
 }
