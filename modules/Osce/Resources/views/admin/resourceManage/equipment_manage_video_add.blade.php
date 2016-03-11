@@ -103,6 +103,15 @@
                             }
                         }
                     },
+                    realport: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '实时端口不能为空'
+                            }
+                        }
+                    },
                     channel: {
                         /*键名username和input name值对应*/
                         message: 'The username is not valid',
@@ -248,6 +257,14 @@
                                 <label class="col-sm-2 control-label">端口</label>
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" id="port" name="port">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">实时端口</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="port" name="realport">
                                 </div>
                             </div>
 
