@@ -103,7 +103,7 @@ class ApiController extends CommonController
      * @date    2016年3月11日11:21:47
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function ExamPaperPreview($data){
-
+    public function ExamPaperPreview(Request $request){
+        dd($request);
     }
 }
