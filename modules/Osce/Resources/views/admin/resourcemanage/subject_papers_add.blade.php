@@ -17,88 +17,16 @@
                     }
                 });
                 if(flag==false){
-                    layer.alert('考核点或考核项不能为空！');
+                    layer.alert('题型不能为空！');
                     return false;
                 }
                 if(flag==null){
-                    layer.alert('请新增考核点！');
+                    layer.alert('请新增题型！');
                     return false;
                 }
             });
 
-            /**
-             * 新增一条父考核点
-             * @author  mao
-             * @version  1.0
-             * @date        2015-12-31
-             */
-            $('#add').click(function(){
-                //计数器标志
-                var index = $('table').find('tbody').attr('index');
-                index = parseInt(index) + 1;
-
-                var html = '<tr>'+
-                        '<td>'+parseInt(index)+'</td>'+
-                        '<td>'+
-                        '<select class="form-control">'+
-                        '<option value="1">单选题</option>'+
-                        '<option value="2">多选题</option>'+
-                        '<option value="3">不定项选择题</option>'+
-                        '<option value="4">判断题</option>'+
-                        '</select>'+
-                        '</td>'+
-                        '<td>'+
-                        '<div class="scope" id="scope-'+parseInt(index)+'">内科，操作，本科4年制</div>'+
-                        '</td>'+
-                        '<td>'+
-                        '20'+
-                        '</td>'+
-                        '<td>'+
-                        '20'+
-                        '</td>'+
-                        '<td>'+
-                        '20'+
-                        '</td>'+
-                        '<td>'+
-                        '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                        '</td>'+
-                        '</tr>';
-                        //记录计数
-                        $('table').find('tbody').attr('index',index);
-                        $('tbody').append(html);
-
-                        /**
-                         * 保存考核范围
-                         */
-                        var this_scope;
-                        $(".scope").click(function(){
-                            this_scope=$(this).attr("id");
-                        })
-                        $('.form-horizontal').submit(function(){
-                            $.getJSON($(this).attr('action'),$(this).serialize(),function(obj){
-                                var scopelist="<input type='hidden' name='scope[]' value='"+obj+"'>"
-                                $(".save_scope").append(scopelist);
-                                $("#myModal").removeClass("in").hide().attr("aria-hidden","true");
-                                $("body").removeClass("modal-open");
-                                $(".modal-backdrop").remove();
-                                var txt="";
-                                for (x in obj)
-                                {
-                                    txt=txt +obj[x]+"," ;
-                                }
-
-                                $("#" +this_scope).text(
-                                        txt
-                                );
-                            })
-
-                            return  false;
-
-                        })
-            });
             $("#add-new").click(function(){
-
-
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
@@ -110,7 +38,7 @@
 
             })
 
-                /**
+            /**
              * 删除
              */
             $('tbody').on('click','.fa-trash-o',function(){
@@ -195,7 +123,7 @@
             </div>
         </div>
         <div class="ibox-content">
-            <form method="post" class="form-horizontal" id="sourceForm" action="">
+            <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.ExamPaperController.getAddExams')}}">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">试卷名称</label>
                     <div class="col-sm-10">
