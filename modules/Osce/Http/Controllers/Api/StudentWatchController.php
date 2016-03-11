@@ -106,15 +106,17 @@ class StudentWatchController extends CommonController
         //得到场次id
 //        $examScreeningId= $watchStudent->exam_screening_id;
         //得到学生id
+        dump($watchStudent,'腕表信息');
         $studentId = $watchStudent->student_id;
         // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
+        dump($studentId,'学生信息');
 
         $examId = $examInfo->exam_id;
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
-//        dd($examQueueCollect);
+        dump($examQueueCollect,'d队列');
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect);
 
