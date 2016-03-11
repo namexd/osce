@@ -69,6 +69,7 @@ class InvigilatePadController extends CommonController
      */
     protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId,$studentId)
     {
+        dd($studentId);
         try {
             //将上传的文件遍历
 
