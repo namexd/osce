@@ -51,7 +51,11 @@ class ExamQuestionController extends CommonController
         $examQuestionLabelName = array();
         foreach($data as $k1=>$v1) {
             foreach ($v1->ExamQuestionLabelRelation as $k2 => $v2) {
-                $examQuestionLabelName[$k1][] = $v2->ExamQuestionLabel['name'];
+                if(!empty($examQuestionLabelName)&&!empty($examQuestionLabelName[$k1])&&count($examQuestionLabelName[$k1])>2){
+                    break;
+                }else{
+                    $examQuestionLabelName[$k1][] = $v2->ExamQuestionLabel['name'];
+                }
             }
             if(!empty($examQuestionLabelName[$k1])&&count($examQuestionLabelName[$k1])>0){
                 $examQuestionLabelName[$k1] = implode(',',$examQuestionLabelName[$k1]);
@@ -239,6 +243,7 @@ class ExamQuestionController extends CommonController
         }
 
 
+       // dd($data);
         //dd($examQuestionLabelTypeList);
         return view('osce::admin.resourcemanage.subject_manage_edit', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
@@ -287,6 +292,7 @@ class ExamQuestionController extends CommonController
             'parsing'                 =>$request->input('parsing'),//题目内容解析
 
         );
+
         //判断是否为判断题
         if($request->input('examQuestionTypeId')=='4'){
             $examQuestionData['answer'] = $request->input('judge');//正确答案（0-错误，1-正确,）
@@ -300,9 +306,9 @@ class ExamQuestionController extends CommonController
             'content' =>$request->input('content'),//选项内容/判断内容
         );
 
+
         $examQuestionModel= new ExamQuestion();
         $result = $examQuestionModel->editExamQuestion($examQuestionData,$examQuestionItemData,$ExamQuestionLabelRelationData);
-        dd($result);
         if($result)
         {
             return redirect()->route('osce.admin.ExamQuestionController.showExamQuestionList')->with('success','编辑成功');

@@ -258,6 +258,6 @@ class ExamPaperController extends CommonController
     public function getExampQuestions(){
         $label = $this->getExamLabelGet();//标签
         //dd($label);
-        return view('osce::admin.resourcemanage.subject_papers_add_detail',['labelList'=>$label]);
+        return view('osce::admin.resourcemanage.subject_papers_add_detail2',['labelList'=>$label]);
     }
 }

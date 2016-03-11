@@ -120,11 +120,11 @@
                     </tbody>
                 </table>
                 <div class="pull-left">
-                    共{{$data->total()}}条
+                    {{--共{{@$data->total()}}条--}}
                 </div>
                 <div class="pull-right">
 
-                    {!! $data->appends($keyword)->render() !!}
+                    {{--{!! $data->appends(@$keyword)->render() !!}--}}
 
                 </div>
             </div>
