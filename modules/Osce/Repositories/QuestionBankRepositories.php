@@ -56,6 +56,16 @@ class QuestionBankRepositories  extends BaseRepository
         return  $data;
     }
 
+    /**
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $str
+     * @return array|bool
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月11日11:05:43
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function StrToArr($str){
         $NewArr = [];
         $ExamQuestionLabel = new ExamQuestionLabel;

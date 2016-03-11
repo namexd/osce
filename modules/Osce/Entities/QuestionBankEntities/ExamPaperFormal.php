@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * @author tangjun <tangjun@misrobot.com>
- * @date 2016Äê3ÔÂ9ÈÕ11:02:12
+ * @date 2016å¹´3æœˆ9æ—¥11:02:12
  * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
@@ -20,10 +20,10 @@ class ExamPaperFormal extends CommonModel
     protected $fillable = ['id', 'exam_paper_id', 'length','name','total_score'];
 
     /**
-     * ÓëÕıÊ½ÊÔÌâ·ÖÀà±íµÄ¹ØÏµ
+     * ä¸æ­£å¼è¯•é¢˜åˆ†ç±»è¡¨çš„å…³ç³»
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * @author tangjun <tangjun@misrobot.com>
-     * @date    2016Äê3ÔÂ9ÈÕ10:38:36
+     * @date    2016å¹´3æœˆ9æ—¥10:38:36
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ExamCategoryFormal(){

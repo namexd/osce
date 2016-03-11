@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * @author tangjun <tangjun@misrobot.com>
- * @date 2016Äê3ÔÂ9ÈÕ11:02:12
+ * @date 2016å¹´3æœˆ9æ—¥11:02:12
  * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
@@ -19,10 +19,10 @@ class ExamQuestionFormal extends CommonModel
     protected $hidden = [];
     protected $fillable = ['id', 'name', 'exam_question_id','content','answer','parsing','exam_category_formal_id'];
     /**
-     * ÓëÊÔÌâ±íµÄ¹ØÏµ
+     * ä¸Žè¯•é¢˜è¡¨çš„å…³ç³»
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * @author tangjun <tangjun@misrobot.com>
-     * @date    2016Äê3ÔÂ9ÈÕ10:38:36
+     * @date    2016å¹´3æœˆ9æ—¥10:38:36
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ExamQuestion(){

@@ -9,7 +9,7 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
-/**��Ŀ����ģ��
+/**试题类型模型
  * Class ExamQuestionLabel
  * @package Modules\Osce\Entities
  */
@@ -24,7 +24,7 @@ class ExamQuestionType extends Model
     protected $hidden = [];
     protected $fillable = ['id', 'name', 'status'];
 
-    /**��ȡ��Ŀ�����б�
+    /**试题类型列表
      * @method
      * @url /osce/
      * @access public

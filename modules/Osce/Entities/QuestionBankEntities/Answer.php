@@ -2,21 +2,21 @@
 /**
  * Created by PhpStorm.
  * @author tangjun <tangjun@misrobot.com>
- * @date 2016Äê3ÔÂ9ÈÕ11:02:12
+ * @date 2016å¹´3æœˆ9æ—¥11:02:12
  * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 
-/**¿¼Éú´ðÌâÊ±£¬ÕýÊ½ÊÔ¾íÄ£ÐÍ
+/**è€ƒç”Ÿç­”é¢˜æ—¶ï¼Œæ­£å¼è¯•å·æ¨¡åž‹
  * Class Answer
  * @package Modules\Osce\Entities\QuestionBankEntities
  */
 class Answer extends Model
 {
     protected $connection = 'osce_mis';
-    protected $table = 'exam_paper_formal';//ÕýÊ½µÄÊÔ¾í±í
+    protected $table = 'exam_paper_formal';//æ­£å¼çš„è¯•å·è¡¨
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
@@ -24,7 +24,7 @@ class Answer extends Model
     protected $hidden = [];
     protected $fillable = ['id', 'status', 'exam_paper_id','length','name','total_score','created_user_id','created_at','updated_at'];
 
-    /**ÕýÊ½ÊÔ¾íÐÅÏ¢ÁÐ±í
+    /**æ­£å¼è¯•å·ä¿¡æ¯åˆ—è¡¨
      * @method
      * @url /osce/
      * @access public
@@ -36,25 +36,25 @@ class Answer extends Model
     {
         $DB = \DB::connection('osce_mis');
         $builder = $this;
-        $builder = $builder->leftJoin('exam_category_formal', function ($join) { //ÕýÊ½ÊÔÌâ·ÖÀà±í
+        $builder = $builder->leftJoin('exam_category_formal', function ($join) { //æ­£å¼è¯•é¢˜åˆ†ç±»è¡¨
             $join->on('exam_paper_formal.id', '=', 'exam_category_formal.exam_paper_formal_id');
 
-        })->leftJoin('exam_question_type',function($join){ //ÌâÄ¿ÀàÐÍ±í
+        })->leftJoin('exam_question_type',function($join){ //é¢˜ç›®ç±»åž‹è¡¨
             $join->on('exam_category_formal.exam_question_type_id', '=', 'exam_question_type.id');
 
-        })->leftJoin('exam_question_formal',function($join){ //ÕýÊ½µÄÊÔÌâ±í
+        })->leftJoin('exam_question_formal',function($join){ //æ­£å¼çš„è¯•é¢˜è¡¨
             $join->on('exam_category_formal.id', '=', 'exam_question_formal.exam_category_formal_id');
 
         })->select([
-            'exam_paper_formal.name',//ÊÔ¾íÃû³Æ
-            'exam_paper_formal.length',//¿¼ÊÔÊ±¼ä
-            'exam_paper_formal.total_score as totalScore',//ÊÔ¾í×Ü·Ö
-            'exam_category_formal.exam_question_type_id as examQuestionTypeId',//ÊÔÌâÀàÐÍid
-            'exam_category_formal.name as typeName',//ÊÔÌâÀàÐÍÃû³Æ
-            'exam_category_formal.score',//µ¥¸öÊÔÌâ·ÖÖµ
-            'exam_question_formal.name as questionName',//ÊÔÌâÃû³Æ
-            'exam_question_formal.content',//ÊÔÌâÄÚÈÝ
-            'exam_question_formal.answer',//ÊÔÌâ´ð°¸
+            'exam_paper_formal.name',//è¯•å·åç§°
+            'exam_paper_formal.length',//è€ƒè¯•æ—¶é—´
+            'exam_paper_formal.total_score as totalScore',//è¯•å·æ€»åˆ†
+            'exam_category_formal.exam_question_type_id as examQuestionTypeId',//è¯•é¢˜ç±»åž‹id
+            'exam_category_formal.name as typeName',//è¯•é¢˜ç±»åž‹åç§°
+            'exam_category_formal.score',//å•ä¸ªè¯•é¢˜åˆ†å€¼
+            'exam_question_formal.name as questionName',//è¯•é¢˜åç§°
+            'exam_question_formal.content',//è¯•é¢˜å†…å®¹
+            'exam_question_formal.answer',//è¯•é¢˜ç­”æ¡ˆ
         ]);
         return $builder->get();
     }
