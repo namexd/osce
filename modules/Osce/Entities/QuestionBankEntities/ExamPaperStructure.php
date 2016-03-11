@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * @author tangjun <tangjun@misrobot.com>
- * @date 2016Äê3ÔÂ9ÈÕ11:02:12
+ * @date 2016å¹´3æœˆ9æ—¥11:02:12
  * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
@@ -20,10 +20,10 @@ class ExamPaperStructure extends CommonModel
     protected $fillable = ['id', 'exam_paper_id', 'exam_question_type_id','num','score','total_score'];
 
     /**
-     * ÓëÊÔ¾í¹¹Ôì±íºÍÊÔÌâ±êÇ©¹ØÁª±íµÄ¹ØÏµ
+     * ä¸è¯•å·æ„é€ è¡¨å’Œè¯•é¢˜æ ‡ç­¾å…³è”è¡¨çš„å…³ç³»
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * @author tangjun <tangjun@misrobot.com>
-     * @date    2016Äê3ÔÂ9ÈÕ10:38:36
+     * @date    2016å¹´3æœˆ9æ—¥10:38:36
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ExamPaperStructureLabel(){
@@ -31,10 +31,10 @@ class ExamPaperStructure extends CommonModel
     }
 
     /**
-     * ÓëÊÔ¾í¹¹ÔìºÍÊÔÌâ¹ØÏµ±íµÄ¹ØÏµ
+     * ä¸è¯•å·æ„é€ å’Œè¯•é¢˜å…³ç³»è¡¨çš„å…³ç³»
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * @author tangjun <tangjun@misrobot.com>
-     * @date    2016Äê3ÔÂ9ÈÕ10:38:36
+     * @date    2016å¹´3æœˆ9æ—¥10:38:36
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ExamPaperStructureQuestion(){
