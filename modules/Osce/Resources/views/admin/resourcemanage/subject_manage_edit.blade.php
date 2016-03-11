@@ -127,7 +127,6 @@
                                         @if(!empty($examQuestionItemList))
                                             @foreach($examQuestionItemList as $k => $v)
                                                 <label class="check_label checkbox_input check_top">
-
                                                     <div class="check_icon check_other  @foreach($data['answer'] as $val) @if($val == $v['name']) check @endif   @endforeach"></div>
                                                     <input type="checkbox" name="answer[]" @foreach($data['answer'] as $val)@if($val == $v['name']) checked="checked" @endif @endforeach  value="{{ $v['name'] }}">
                                                     <span class="check_name">{{ $v['name'] }}</span>
@@ -177,7 +176,9 @@
                                                     <select class="form-control tag" name="tag[]" multiple="multiple">
                                                         @if(!empty($v['examQuestionLabelList']))
                                                             @foreach($v['examQuestionLabelList'] as $key => $val)
-                                                                <option value="{{ $val['id'] }}">{{@$val['name']}}</option>
+                                                                <option value="{{ $val['id'] }}"
+                                                                        @foreach($v['examQuestionLabelList_'] as $val2)@if($val['id'] == $val2['id']) selected @endif @endforeach>{{@$val['name']}}
+                                                                </option>
                                                             @endforeach
                                                         @endif
                                                     </select>
