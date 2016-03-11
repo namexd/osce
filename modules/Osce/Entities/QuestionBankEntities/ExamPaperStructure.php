@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * @author tangjun <tangjun@misrobot.com>
- * @date 2016年3月9日11:02:12
+ * @date 2016�?3�?9�?11:02:12
  * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
@@ -17,13 +17,13 @@ class ExamPaperStructure extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'exam_paper_id', 'exam_question_type_id','num','score','total_score'];
+    protected $fillable = ['id', 'exam_paper_id', 'exam_question_type_id','num','score','total_score','created_user_id'];
 
     /**
-     * 与试卷构造表和试题标签关联表的关系
+     * 与试卷构造表和试题标签关联表的关�?
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * @author tangjun <tangjun@misrobot.com>
-     * @date    2016年3月9日10:38:36
+     * @date    2016�?3�?9�?10:38:36
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ExamPaperStructureLabel(){
@@ -34,7 +34,7 @@ class ExamPaperStructure extends CommonModel
      * 与试卷构造和试题关系表的关系
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * @author tangjun <tangjun@misrobot.com>
-     * @date    2016年3月9日10:38:36
+     * @date    2016�?3�?9�?10:38:36
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ExamPaperStructureQuestion(){
