@@ -181,12 +181,18 @@ class ExamPaperController extends CommonController
         ]);
 
         //接收筛选参数
-        $data = [
-            intval($request -> subject_id),
-            intval($request -> ability_id),
-            intval($request -> difficult_id)
-        ];
+        $data = [];
+        if(intval($request -> subject_id) !== 0){
+            array_push($data,intval($request -> subject_id));
+        }
 
+        if(intval($request -> ability_id) !== 0){
+            array_push($data,intval($request -> ability_id));
+        }
+
+        if(intval($request -> difficult_id) !== 0){
+            array_push($data,intval($request -> difficult_id));
+        }
         //根据筛选参数查找试题数据
         $ExamQuestion = new ExamQuestion();
 
@@ -194,19 +200,22 @@ class ExamPaperController extends CommonController
 
         $questions = $ExamQuestion -> getExamQuestion($data,$pageIndex)->toArray();
         $question = array();
-        $label = '';
+
         foreach($questions as $k=>$v){
+            $label = '';
             $question[$k]['question_name'] = $v['name'];
             $question[$k]['question_id'] = $v['id'];
             $question[$k]['questtion_type'] = $v['tname'];
 
             foreach($v['exam_question_label_relation'] as $kk=>$vv){
+
                 if($kk <= 3){
                     $label .= $vv['exam_question_label']['name'].',';
+
                 }
-                break;
             }
             $question[$k]['label'] = trim($label,',');
+            //continue;
         }
         //dd($question);
         if($question){

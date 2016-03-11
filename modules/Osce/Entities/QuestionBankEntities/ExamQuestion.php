@@ -328,7 +328,10 @@ class ExamQuestion extends Model
 
         })->with(['ExamQuestionLabelRelation'=>function($relation) use($data){
 
-            $relation->with('exam_question_label')->whereIn('exam_question_label_relation.exam_question_label_id',$data);
+            $relation->with('exam_question_label');
+            if(!empty($data)){
+                $relation->whereIn('exam_question_label_relation.exam_question_label_id',$data);
+            }
 
         }])->select('exam_question_type.name as tname','exam_question.*')->skip(($pageIndex-1)*config('msc.page_size'))->take(config('msc.page_size'))->get();//
         //dd($builder);
