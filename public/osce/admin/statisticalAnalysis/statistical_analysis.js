@@ -377,9 +377,7 @@ $(function(){
     courseObserveDetail.download('',{id:$('.active').parent().attr('value'),start:$('#start').val(),end:$('#end').val()});
 
     function progressMove(count/*传入时间参数*/){
-        var i= count;//$(".progress-bar").css("width").split("p")[0];//获取进度条长度
-        i  ++;
-        $(".progress-bar").css("width",i+"px");
+        var i= count;
 
         if(i>=600){
             clearTimeout(timer);
@@ -392,6 +390,8 @@ $(function(){
                 szInfo   = "";
             endToStartPause();
         }else{
+            i  ++;
+            $(".progress-bar").css("width",i+"px");
             timer=setTimeout(function(){progressMove(i)},step*1000);
         }
         //return i;
@@ -587,7 +587,7 @@ $(function(){
         //在暂停的情况下拖动进度条
         setTimeout(function(){
            if($('.pause').css('display')!='none'){
-                var oWndInfo = WebVideoCtrl.I_GetWindowStatus(0),
+                var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
                 szInfo = "";
 
                 if (oWndInfo != null) {
