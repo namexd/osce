@@ -76,7 +76,7 @@ class TestResult extends CommonModel
             } else {
                 throw new \Exception('成绩提交失败',-1000);
             }
-//            $connection->commit();
+            $connection->commit();
             return $testResult;
         } catch (\Exception $ex) {
             $connection->rollBack();
@@ -88,13 +88,13 @@ class TestResult extends CommonModel
     private function getSaveExamAttach($studentId,$ExamResultId,$score){
         $list = [];
         $arr = json_decode($score, true);
-
+            \Log::alert($arr);
         foreach($arr as $item){
             $list[]=[
                'standard_id' =>$item['standard_id']
             ];
         }
-        \Log::alert($arr,$list,$ExamResultId);
+
         $standardId = array_column($list, 'standard_id');
 
         $AttachData = TestAttach::where('student_id',$studentId)->whereIn('standard_id',$standardId)->get();
