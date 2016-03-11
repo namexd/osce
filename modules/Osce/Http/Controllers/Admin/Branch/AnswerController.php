@@ -70,7 +70,6 @@ class AnswerController extends CommonController
                 foreach($examCategoryFormalList as $k1=>$v1){
                     $examCategoryFormalData[$k1]= array(
                         'id'=>$v1->id,
-                        'name'=>$v1->name,
                         'exam_question_type_id'=>$v1->exam_question_type_id,
                         'number'=>$v1->number,
                         'score'=>$v1->score,
@@ -82,9 +81,9 @@ class AnswerController extends CommonController
                         foreach($v1['exam_question_formal'] as $k2=>$v2){
                             $examCategoryFormalData[$k1]['exam_question_formal'][$k2]=array(
                                 'id' =>$v2->id,
-                                'name' =>$v2->name,
+                                'name' =>($k2+1).'、'.$v2->name,
                                 'exam_question_id' =>$v2->exam_question_id,
-                                'content' =>$v2->content,
+                                'content' =>explode(',',$v2->content),
                                 'answer' =>$v2->answer,
                                 'parsing' =>$v2->parsing,
                                 'exam_category_formal_id' =>$v2->exam_category_formal_id,
@@ -97,6 +96,7 @@ class AnswerController extends CommonController
                     }
                 }
                 $examCategoryFormalData['serialNumber'] = $serialNumber;
+
             }
         }
         dd($examCategoryFormalData);
