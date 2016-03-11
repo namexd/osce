@@ -49,8 +49,8 @@ class InvigilatePadController extends CommonController
 //        $examScreeningModel = new ExamScreening();
 //        $result = $examScreeningModel->getExamCheck();
         $a = strtotime('2016-03-04 10:59:14');
-        $c = strtotime('2016-03-04 11:03:14');
-        $b = ($c - $a) / 60;
+        $c = strtotime('2016-03-04 11:59:14');
+        $b = ($c - $a);
         dd($b);
 
 
@@ -275,8 +275,8 @@ class InvigilatePadController extends CommonController
                 'student_id' => 'required',
                 'station_id' => 'required',
                 'exam_screening_id' => 'required',
-                'begin_dt' => 'required',
-                'end_dt' => 'required',
+//                'begin_dt' => 'required',
+//                'end_dt' => 'required',
                 'teacher_id' => 'required',
             ], [
                 'score.required' => '请检查评分标准分值',
@@ -293,7 +293,6 @@ class InvigilatePadController extends CommonController
             if (is_null($studentExamTime)) {
                 throw new \Exception('没有查询到该学生队列', -100);
             }
-
             $useTime = strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt);
 //            getMinutes
             $data = [
@@ -385,6 +384,7 @@ class InvigilatePadController extends CommonController
             $stationId = $request->input('station_id');
             $standardId = $request->input('standard_id');
             $exam = Exam::where('status', 1)->first();
+
             if (is_null($exam)) {
                 throw new \Exception('当前没有正在进行的考试！', -701);
             }

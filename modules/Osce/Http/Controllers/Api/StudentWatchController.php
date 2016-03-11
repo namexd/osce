@@ -334,7 +334,6 @@ class StudentWatchController extends CommonController
 
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
-
           if($examStudent == 0){
 
               $willStudents =$studentnum;
@@ -395,6 +394,7 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
+
           foreach($willStudents as $key=>$willStudent){
 //
               if($willStudent->student_id == $item->student_id){
@@ -402,6 +402,8 @@ class StudentWatchController extends CommonController
                   continue;
               }
           }
+        \Log::alert($willStudents,$studentNum);
+
         return $studentNum;
     }
 
