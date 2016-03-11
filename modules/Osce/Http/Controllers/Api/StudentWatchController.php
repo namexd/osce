@@ -109,12 +109,10 @@ class StudentWatchController extends CommonController
         $studentId = $watchStudent->student_id;
         // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
-
         $examId = $examInfo->exam_id;
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
-//        dd($examQueueCollect);
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect);
 
@@ -322,8 +320,6 @@ class StudentWatchController extends CommonController
             }
         });
         $item   =   array_shift($items);
-
-        dd($item);
         //判断前面是否有人考试
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
