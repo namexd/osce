@@ -72,13 +72,15 @@
                             $(data).each(function(i){
                                 str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon">';
                                 str +='</div><input type="checkbox" value=""></label></td>';
+                                str +='<td>'+(i+1)+'</td>';
                                 str +='<td>'+this.question_name+'</td>';
                                 str +='<td>'+this.label+'</td>';
                                 str +='<td>'+this.questtion_type+'</td>';
+
                                 str +='</td></tr>';
                             });
                             console.log(str);
-                            $('#subjectBody').html(str);
+                            $('.subjectBody').html(str);
                         }else{
                             alert('没有数据');
                         }

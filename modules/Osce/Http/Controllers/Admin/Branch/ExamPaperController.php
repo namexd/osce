@@ -203,7 +203,6 @@ class ExamPaperController extends CommonController
             foreach($v['exam_question_label_relation'] as $kk=>$vv){
                 if($kk <= 3){
                     $label .= $vv['exam_question_label']['name'].',';
-
                 }
                 break;
             }
