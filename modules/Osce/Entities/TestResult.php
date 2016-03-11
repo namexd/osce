@@ -96,14 +96,17 @@ class TestResult extends CommonModel
         }
 
         $standardId = array_column($list, 'standard_id');
-        $AttachData = TestAttach::where('student_id',$studentId)->whereIn('standard_id',$standardId)->get();
-        \Log::alert($AttachData);
-        foreach($AttachData as $item){
-            $item->test_result_id = $ExamResultId;
-            if(!$item->save()){
-                throw new \Exception('修改图片音频结果失败',-1400);
-            }
+        $AttachData = TestAttach::where('student_id','=',$studentId)->whereIn('standard_id',$standardId)->get();
+        if(is_null($AttachData)){
+            \Log::alert($AttachData);
+        }else{
+            foreach($AttachData as $item){
+                $item->test_result_id = $ExamResultId;
+                if(!$item->save()){
+                    throw new \Exception('修改图片音频结果失败',-1400);
+                }
 
+            }
         }
 
     }
