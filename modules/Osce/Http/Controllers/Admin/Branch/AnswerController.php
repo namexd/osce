@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
 use Modules\Osce\Entities\QuestionBankEntities\ExamCategoryFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionFormal;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 
@@ -32,11 +33,9 @@ class AnswerController extends CommonController
      */
     public function formalPaperList()
     {
-
         $answer = new Answer();
         $list = $answer->getFormalPaper();
         $data = [];
-        $newData = [];
         if($list) {
             foreach ($list as $k => $v) {
                 $data[] = array(
@@ -64,18 +63,14 @@ class AnswerController extends CommonController
                 foreach($examCategoryFormalList as $key=>$val){
                     if($val->ExamQuestionFormal){
                         $examCategoryFormalList[$key]['exam_question_formal'] = $val->ExamQuestionFormal;//获取正式试题信息
-                        // $examCategoryFormalList[$key]['count'] = count($val->ExamQuestionFormal);//获取正式试题信息
                     }
                 }
                 foreach($examCategoryFormalList as $k1=>$v1){
                     $examCategoryFormalData[$k1]= array(
                         'id'=>$v1->id,
-                        'exam_question_type_id'=>$v1->exam_question_type_id,
                         'number'=>$v1->number,
                         'score'=>$v1->score,
                         'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
-                        // 'count'=>$v1->count //该试题分类下的试题个数
-
                     );
                     if(count($v1['exam_question_formal'])>0){
                         foreach($v1['exam_question_formal'] as $k2=>$v2){
@@ -104,4 +99,104 @@ class AnswerController extends CommonController
             'data'                         =>$examCategoryFormalData,//试题信息
         ]);
     }
+    /**保存答案
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postSaveAnswer(Request $request)
+    {
+        $this->validate($request, [
+           // 'examQuestionFormalId'=>'required|integer',//正式的试题表
+            'studentAnswer'        => 'sometimes|array',
+        ]);
+        $data =array(
+            'id' =>$request->input('examQuestionFormalId'), //正式试题id
+            'answer' =>$request->input('studentAnswer'), //考生答案
+        );
+        $answerModel = new Answer();
+        //保存考生答案
+        //$result = $answerModel->saveAnswer($data);
+        $result=true;
+        if($result){
+            //如果保存成功，查询该考卷的所有试题信息
+            $getFormalPaperList = $answerModel->getFormalPaper();
+            $totalScore=0;//考生总分
+            if(count($getFormalPaperList)>0){
+                foreach($getFormalPaperList as $k=>$v){
+                    if($v['examCategoryFormalId']==1){
+                        //单选题
+                        if($v['studentAnswer']==$v['answer']){
+                            $totalScore+=$v['score'];
+                        }
+                    }elseif($v['examCategoryFormalId']==2){
+                        //多选题
+                        //判断考生答案是否包含@符号，有证明考生选择的是多个选项，无证明考生只选择了一个选项
+                        if(strstr($v['studentAnswer'],'@')){
+                            if($v['studentAnswer']==$v['answer']){
+                                $totalScore+=$v['score'];
+                            }elseif(strstr($v['answer'],$v['studentAnswer'])){
+                                $totalScore+=$v['score']/2;
+                            }
+                        }else{
+                            if(strstr($v['answer'],$v['studentAnswer'])){
+                                $totalScore+=$v['score']/2;
+                            }
+                        }
+                    }elseif($v['examCategoryFormalId']==3){
+                        //不定性选择题
+                        //判断考生答案是否包含@符号，有证明考生选择的是多个选项，无证明考生只选择了一个选项
+                        if(strstr($v['studentAnswer'],'@')){
+                            if($v['studentAnswer']==$v['answer']){
+                                $totalScore+=$v['score'];
+                            }elseif(strstr($v['answer'],$v['studentAnswer'])){
+                                $totalScore+=$v['score']/2;
+                            }
+                        }else{
+                            if(strstr($v['answer'],$v['studentAnswer'])){
+                                $totalScore+=$v['score']/2;
+                            }
+                        }
+
+                    }elseif($v['examCategoryFormalId']==4){
+                        //判断题
+                        if($v['studentAnswer']==$v['answer']){
+                            $totalScore+=$v['score'];
+                        }
+                    }
+                }
+            }
+            dd($totalScore);
+            return response()->json(true);
+        }else{
+            return response()->json(false);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
