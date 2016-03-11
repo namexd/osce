@@ -333,13 +333,14 @@ class ExamResultController extends CommonController{
             //查询出时间锚点追加到数组中
             $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationVcrId);
 //            if($anchor){
-//                foreach($data as $key=>&$item){
-//                    foreach($anchor as $key1=>$list){
-//                        $item['anchor'] = $list['begin_dt'];
+//                foreach($data as &$item){
+//                    foreach($anchor as $list){
+//                        $item->anchor = $list['begin_dt'];
 ////                        $item['end_dt'] = $list['end_dt'];
 //                    }
 //                }
 //            }
+//            dd($data);
 
             return view('osce::admin.statisticalAnalysis.exam_video',['data'=>$data,'anchor'=>$anchor]);
         } catch (\Exception $ex) {

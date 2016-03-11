@@ -433,7 +433,8 @@ class InvigilatePadController extends CommonController
                 //拼装文件名,并插入数据库
                 $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId);
             }
-            return response()->json($this->success_data([$result->id]));
+                  header('print',$result->id);
+//            return response()->json($this->success_data([$result->id]));
 
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -459,9 +460,7 @@ class InvigilatePadController extends CommonController
      * @date   2016-01-16  14:33
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postTestAttachRadio(
-        Request $request
-    ) {
+    public function postTestAttachRadio(Request $request) {
         try {
             //获取数据
             $studentId = $request->input('student_id');
