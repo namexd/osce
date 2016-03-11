@@ -126,3 +126,4 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
     });
 
 });
+
