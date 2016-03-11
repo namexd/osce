@@ -273,7 +273,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">实时端口</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="port" name="realport" value="{{$item['realport']}}">
+                                    <input type="text"  class="form-control" id="realport" name="realport" value="{{$item['realport']}}">
                                 </div>
                             </div>
 
