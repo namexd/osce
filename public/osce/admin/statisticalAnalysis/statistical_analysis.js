@@ -377,9 +377,7 @@ $(function(){
     courseObserveDetail.download('',{id:$('.active').parent().attr('value'),start:$('#start').val(),end:$('#end').val()});
 
     function progressMove(count/*传入时间参数*/){
-        var i= count;//$(".progress-bar").css("width").split("p")[0];//获取进度条长度
-        i  ++;
-        $(".progress-bar").css("width",i+"px");
+        var i= count;
 
         if(i>=600){
             clearTimeout(timer);
@@ -392,6 +390,8 @@ $(function(){
                 szInfo   = "";
             endToStartPause();
         }else{
+            i  ++;
+            $(".progress-bar").css("width",i+"px");
             timer=setTimeout(function(){progressMove(i)},step*1000);
         }
         //return i;
@@ -558,7 +558,6 @@ $(function(){
     $("#progress").click(function(e){
         clearTimeout(timer);
         var left=e.clientX-($("#progress").offset().left);
-        console.log(left);
         $(".progress-bar").css({"width":left+"px"});
         //var current=progressMove();
         //alert(left*step);
@@ -583,10 +582,50 @@ $(function(){
         var newstart=year+"-"+month+"-"+days+" "+hour+":"+min+":"+s;
         //初始化计时
         clickStart(left);
-
-
         courseObserveDetail.StartPlayback(0,pars.ip,newstart,pars.endtime,pars.channel);
+
+        //在暂停的情况下拖动进度条
+        testPause(0);
+
     })
+
+    /**
+     * 判断暂停
+     * @author mao
+     * @version 1.0
+     * @date    2016-03-11
+     * @param   {number}   _param 0
+     */
+    function testPause(_param){
+        var g_iWndIndex = _param;
+        setTimeout(function(){
+           if($('.pause').css('display')!='none'){
+                var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
+                szInfo = "";
+
+                if (oWndInfo != null) {
+                    var iRet = WebVideoCtrl.I_Pause();
+                    if (0 == iRet) {
+                        szInfo = "暂停成功！";
+                        console.log("成功");
+                        //关闭计时器
+                        clearTimeout(timer);
+                    } else {
+                        szInfo = "暂停失败！";
+                        console.log("失败");
+                        setTimeout(function(){
+                            WebVideoCtrl.I_Pause();
+                            //关闭计时器
+                            clearTimeout(timer);
+                        },1000);
+                    }
+                }
+                console.log(oWndInfo.szIP + " " + szInfo);
+            } 
+        },2500);
+    }
+
+
     //选择标记点跳转视频
     $(".points li").click(function(){
         //拿到标记点初始时间
@@ -600,6 +639,8 @@ $(function(){
         clearTimeout(timer);
         progressMove(time_count);
         courseObserveDetail.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
+        //判断是否为暂停
+        testPause(0);
     })
 })
 
