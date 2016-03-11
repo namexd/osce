@@ -105,8 +105,8 @@ class TrainController extends  CommonController{
         ];
 
         $contentLen = mb_strlen($data['content']);
-        if($contentLen > 10000){
-            return redirect()->back()->withInput()->withErrors(['内容字数超过限制，请修改后重试！']);
+        if($contentLen > 10007){
+            return redirect()->back()->withInput()->withErrors(['内容字数超过限制，最多一万字，请修改后重试！']);
         }
         $result=InformTrain::create($data);
         if($result){
