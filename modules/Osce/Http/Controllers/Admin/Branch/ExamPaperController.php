@@ -15,6 +15,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Http\Controllers\CommonController;
+use Illuminate\Support\Facades\Auth;
 use DB;
 class ExamPaperController extends CommonController
 {
@@ -191,29 +192,28 @@ class ExamPaperController extends CommonController
      */
     public function getAddExams(Request $request){
         //验证试题类型ID
-//        $this->validate($request,[
-//            'subject_id'        => 'required',
-//            'ability_id'        => 'required',
-//            'difficult_id'        => 'required',
-//        ]);
+        $this->validate($request,[
+            'name'        => 'required',
+            'time'        => 'required',
+            'status'        => 'required',
+            'status2'        => 'required',
+            'question'        => 'required',
+        ]);
         DB::beginTransaction();
 
+        $user = Auth::user();
+        //接收参数
         $data = [
             'name' => $request -> name,
-            'code' => $request -> code,
-            'status' => $request -> status,
-            'status' => $request -> status,
+            'length' => $request -> time,
+            'mode' => $request -> status,
+            'type' => $request -> status2,
+            'created_user_id' => $user->id
         ];
-        $mode = $request -> mode;
-        $type = $request -> type;
 
-        if($mode == 1 && $type == 1){//自动-随机
-
-        }elseif($mode == 1 && $type == 2){//自动-统一
-
-        }elseif($mode == 2 && $type == 2){//手动-统一
-
-        }
+        //获取试卷类型
+        $status = $request -> status;
+        $status2 = $request -> status2;
 
         //向试卷表插入基础数据
         $examPaper = ExamPaper::create($data);
@@ -221,6 +221,18 @@ class ExamPaperController extends CommonController
             DB::rollback();
             return false;
         }
+
+        $examPaperID = $examPaper->id;
+        //dd($examPaperID);
+        if($status == 1 && $status2 == 1){//自动-随机
+
+        }elseif($status == 1 && $status2 == 2){//自动-统一
+
+        }elseif($status == 2 && $status2 == 2){//手动-统一
+
+        }
+
+
     }
 
     /**
@@ -231,23 +243,21 @@ class ExamPaperController extends CommonController
         die(json_encode($request->all()));
     }
 
-//    /**
-//     * 选择试题范围页面
-//     * @url       GET /osce/admin/exampaper/examp-questions
-//     * @access    public
-//     * @param Request $request get请求<br><br>
-//     * @param Exam $exam
-//     * @return view
-//     * @throws \Exception
-//     * @version   1.0
-//     * @author    weihuiguo <weihuiguo@misrobot.com>
-//     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-//     */
-//    public function getExampQuestions(){
-//        $label = $this->getExamLabelGet();
-//
-//        //查找试题类型
-//        $question = ExamQuestionType::where('status','=',1)->select('id','name')->get()->toArray();
-//        return view('osce::admin.resourcemanage.subject_papers_add',['label'=>$label,'question'=>$question]);
-//    }
+    /**
+     * 选择试题页面
+     * @url       GET /osce/admin/exampaper/examp-questions
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExampQuestions(){
+        $label = $this->getExamLabelGet();//标签
+        //dd($label);
+        return view('osce::admin.resourcemanage.subject_papers_add_detail',['labelList'=>$label]);
+    }
 }
