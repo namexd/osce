@@ -14,15 +14,30 @@
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'subject_papers_add}" />
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row table-head-style1 ">
-            <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">试卷预览</h5>
-            </div>
+        <div class="center">
+            <h2>{{$PaperPreviewArr["name"]}}</h2>
+            <p>考试时长：{{$PaperPreviewArr["time"]}}分钟　　　总分：40分</p>
         </div>
-        <div class="ibox-content">
-                        <h2>2016年第一期OSCE考试理论试卷</h2>
-            <p>考试时长：20分钟　　　总分：40分</p>
-        </div>
+
+        @if(!empty($PaperPreviewArr["item"]))
+            @foreach(@$PaperPreviewArr["item"] as $k =>$val )
+                <div class="form-group marb_25">
+                    <h4>{{$val["name"]}}</h4>
+                    @if(!empty($val["child"]))
+                        @foreach(@$val["child"] as $k => $val2 )
+                            <div class="form-group">
+                                <p>{{$k+1}}、{{$val2["name"]}}（　　）</p>
+                                @if(!empty($val2->examQuestionItem))
+                                    @foreach($val2->examQuestionItem as $val3 )
+                                        <span class="marr_15">{{$val3["name"]}}、{{$val3["content"]}}</span>
+                                    @endforeach
+                                @endif
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+            @endforeach
+        @endif
     </div>
 @stop{{-- 内容主体区域 --}}
 

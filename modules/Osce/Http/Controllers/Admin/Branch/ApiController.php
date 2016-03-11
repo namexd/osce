@@ -139,13 +139,14 @@ class ApiController extends CommonController
             $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
             foreach($PaperPreviewArr['item'] as $k => $v){
                 if(!empty($v['child'])){
-                    $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->get();
+                    $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->with('examQuestionItem')->get();
                     $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$v['type'])->select('name')->first();
                     $PaperPreviewArr['item'][$k]['name'] = $ExamQuestionTypeInfo['name'].'（共'.$v['num'].'题，每题'.$v['score'].'分）';
                     $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
                 }
             }
         }
+       // dd($PaperPreviewArr);
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
 }
