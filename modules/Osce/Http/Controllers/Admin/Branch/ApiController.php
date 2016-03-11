@@ -12,6 +12,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
 use Modules\Osce\Repositories\QuestionBankRepositories;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Illuminate\Http\Request;
 class ApiController extends CommonController
 {
@@ -133,8 +134,18 @@ class ApiController extends CommonController
         }
 
         if($mode == 1 && !empty($PaperPreviewArr['item'])){
+            $ExamQuestion = new ExamQuestion;
+            $ExamQuestionType = new ExamQuestionType;
             $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
+            foreach($PaperPreviewArr['item'] as $k => $v){
+                if(!empty($v['child'])){
+                    $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->get();
+                    $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$v['type'])->select('name')->first();
+                    $PaperPreviewArr['item'][$k]['name'] = $ExamQuestionTypeInfo['name'].'（共'.$v['num'].'题，每题'.$v['score'].'分）';
+                    $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
+                }
+            }
         }
-        dd($PaperPreviewArr);
+        return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
 }
