@@ -18,6 +18,6 @@ class TestAttach extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['test_result_id', 'url', 'type', 'name', 'description','standard_id'];
+    protected $fillable = ['test_result_id', 'url', 'type', 'name', 'description','standard_id','student_id'];
 
 }
