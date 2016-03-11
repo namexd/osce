@@ -104,8 +104,9 @@ class TrainController extends  CommonController{
             'clicks'             => 0,
         ];
 
-        $contentLen = mb_strlen($data['content']);
-        if($contentLen > 10007){
+        $contentLen = mb_strlen(strip_tags($data['content']));
+
+        if($contentLen > 10000){
             return redirect()->back()->withInput()->withErrors(['内容字数超过限制，最多一万字，请修改后重试！']);
         }
         $result=InformTrain::create($data);
@@ -209,7 +210,8 @@ class TrainController extends  CommonController{
         ]);
         $data = $request->only(['id','name','address','begin_dt','end_dt','teacher','content']);
         //限制内容长度（1W） TODO: Zhoufuxiang
-        $contentLen = mb_strlen($data['content']);
+        $contentLen = mb_strlen(strip_tags($data['content']));
+        
         if($contentLen > 10000){
             return redirect()->back()->withInput()->withErrors(['内容字数超过限制，请修改后重试！']);
         }
