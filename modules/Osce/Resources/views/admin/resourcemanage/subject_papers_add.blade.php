@@ -195,7 +195,7 @@
             </div>
         </div>
         <div class="ibox-content">
-            <form method="post" class="form-horizontal" id="sourceForm" action="">
+            <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.ExamPaperController.getAddExams')}}">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">试卷名称</label>
                     <div class="col-sm-10">
