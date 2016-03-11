@@ -72,7 +72,7 @@ class TestResult extends CommonModel
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
                  $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-
+                 $this->getSaveExamAttach($data['student_id'],$ExamResultId,$score);
             } else {
                 throw new \Exception('成绩提交失败',-1000);
             }
@@ -85,8 +85,16 @@ class TestResult extends CommonModel
 
     }
     //upload_document_id 音频 图片id集合去修改
-    private function getSaveExamAttach($uploadDocumentId,$ExamResultId){
-        $AttachData = TestAttach::whereIn('id',$uploadDocumentId)->get();
+    private function getSaveExamAttach($studentId,$ExamResultId,$score){
+        $list = [];
+        $arr = json_decode($score, true);
+        foreach($arr as $item){
+            $list[]=[
+               'standard_id' =>$item['standard_id']
+            ];
+        }
+        $standardId = array_column($list, 'standard_id');
+        $AttachData = TestAttach::where('student_id',$studentId)->whereIn('standard_id',$standardId)->get();
         foreach($AttachData as $item){
             $item->test_result_id = $ExamResultId;
             if(!$item->save()){
@@ -154,6 +162,12 @@ class TestResult extends CommonModel
         }
 
     }
+
+
+
+
+
+
 
     //获取考试成绩打分详情
     private function  getExamResult($score)
