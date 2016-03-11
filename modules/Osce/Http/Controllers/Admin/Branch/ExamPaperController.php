@@ -172,11 +172,12 @@ class ExamPaperController extends CommonController
      */
     public function getExamQuestions(Request $request)
     {
+        //dd($request->all());
         //验证试题类型ID
         $this->validate($request,[
-            'subject_id'        => 'sometime|integer',
-            'ability_id'        => 'sometime|integer',
-            'difficult_id'        => 'sometime|integer',
+            'subject_id'        => 'sometimes|integer',
+            'ability_id'        => 'sometimes|integer',
+            'difficult_id'        => 'sometimes|integer',
         ]);
 
         //接收筛选参数
@@ -191,9 +192,29 @@ class ExamPaperController extends CommonController
 
         $pageIndex = $request->page?$request->page:1;//获取页码
 
-        $questions = $ExamQuestion -> getExamQuestion($data,$pageIndex);
-        dd($questions);
-        exit;
+        $questions = $ExamQuestion -> getExamQuestion($data,$pageIndex)->toArray();
+        $question = array();
+        $label = '';
+        foreach($questions as $k=>$v){
+            $question[$k]['question_name'] = $v['name'];
+            $question[$k]['question_id'] = $v['id'];
+            $question[$k]['questtion_type'] = $v['tname'];
+
+            foreach($v['exam_question_label_relation'] as $kk=>$vv){
+                if($kk <= 3){
+                    $label .= $vv['exam_question_label']['name'].',';
+
+                }
+                break;
+            }
+            $question[$k]['label'] = trim($label,',');
+        }
+        //dd($question);
+        if($question){
+            return $this->success_data($question);
+        }else{
+            return $this->success_data('',0,'error');
+        }
     }
 
     /**
@@ -353,6 +374,7 @@ class ExamPaperController extends CommonController
      */
     public function getExampQuestions(){
         $label = $this->getExamLabelGet();//标签
+        //dd($label);
         return view('osce::admin.resourcemanage.subject_papers_add_detail2',['labelList'=>$label]);
     }
 }
