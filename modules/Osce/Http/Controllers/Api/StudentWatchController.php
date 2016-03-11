@@ -402,7 +402,6 @@ class StudentWatchController extends CommonController
                   continue;
               }
           }
-        \Log::alert($willStudents,$studentNum);
 
         return $studentNum;
     }
