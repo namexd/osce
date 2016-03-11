@@ -113,7 +113,7 @@
                         <span class="images_uploads upload btn btn-white">上传附件
                             <input type="file"  name="attchment" id="file0"/>
                         </span>
-                        <span class="file-msg">(上传文件类型为docx, xlsx，文件大小不得超过2M!)</span>
+                        <span class="file-msg">(文件大小不得超过2M!)</span>
                         <div class="upload_list upload_list_doc">
                             
                         </div>
