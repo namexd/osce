@@ -274,7 +274,6 @@ class ExamResultController extends CommonController{
         $info  =   TestAttach::find($id);
         $attchments =  $info->url;
         $fileNameArray   =  explode('/',$attchments);
-        dump(array_pop($fileNameArray),public_path().'/'.$attchments);
         $this->downloadfile(array_pop($fileNameArray),public_path().'/'.$attchments);
     }
     private function downloadfile($filename,$filepath){
@@ -282,7 +281,6 @@ class ExamResultController extends CommonController{
         $tFile=array_pop($file);
         $filename=md5($filename).'.'.$tFile;
         $filepath   =   iconv('utf-8', 'gbk', $filepath);
-
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename='.basename($filename));

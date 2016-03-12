@@ -198,7 +198,6 @@
                 //下载的图片dom结构
                 var str = '';
                 for(var i in img){
-                    alert(img[i]);
                     if(i==0){
                         str += '<div class="item active">'+
                               '<img style="height:200px; width:100%;" src="/'+img[i].src+'" alt="...">'+
