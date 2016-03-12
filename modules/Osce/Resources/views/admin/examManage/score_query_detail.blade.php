@@ -200,7 +200,7 @@
                 for(var i in img){
                     if(i==0){
                         str += '<div class="item active">'+
-                              '<img style="height:200px; width:100%;" src="'+img[i].src+'" alt="...">'+
+                              '<img style="height:200px; width:100%;" src="/'+img[i].src+'" alt="...">'+
                               '<div class="carousel-caption">'+
                                 '<a href="'+img[i].download+'" target="_blank">下载</a>'+
                               '</div>'+
