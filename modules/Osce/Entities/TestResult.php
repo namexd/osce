@@ -86,19 +86,19 @@ class TestResult extends CommonModel
     }
     //upload_document_id 音频 图片id集合去修改
     private function getSaveExamAttach($studentId,$ExamResultId,$score){
-
-        $list = [];
-        $arr = json_decode($score, true);
+        try{
+            $list = [];
+            $arr = json_decode($score, true);
 //            \Log::alert($arr);
-        foreach($arr as $item){
-            $list[]=[
-               'standard_id' =>$item['id']
-            ];
-        }
-        $standardId = array_column($list, 'standard_id');
+            foreach($arr as $item){
+                $list[]=[
+                    'standard_id' =>$item['id']
+                ];
+            }
+            $standardId = array_column($list, 'standard_id');
 
 
-        $AttachData = TestAttach::where('student_id','=',$studentId)->whereIn('standard_id',$standardId)->get();
+            $AttachData = TestAttach::where('student_id','=',$studentId)->whereIn('standard_id',$standardId)->get();
 
             foreach($AttachData as $item){
                 $item->test_result_id = $ExamResultId;
@@ -107,6 +107,10 @@ class TestResult extends CommonModel
                 }
 
             }
+        }catch (\Exception $ex){
+
+        }
+
 
     }
 
