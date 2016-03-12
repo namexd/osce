@@ -72,7 +72,7 @@ class TestResult extends CommonModel
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
                  $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-                 $this->getSaveExamAttach($data['student_id'],$ExamResultId,$score);
+//                 $this->getSaveExamAttach($data['student_id'],$ExamResultId,$score);
             } else {
                 throw new \Exception('成绩提交失败',-1000);
             }
@@ -96,11 +96,10 @@ class TestResult extends CommonModel
             ];
         }
         $standardId = array_column($list, 'standard_id');
+
+
         $AttachData = TestAttach::where('student_id','=',$studentId)->whereIn('standard_id',$standardId)->get();
-        \Log::alert($AttachData);
-        if(!$AttachData){
-            \Log::alert($AttachData);
-        }else{
+
             foreach($AttachData as $item){
                 $item->test_result_id = $ExamResultId;
                 if(!$item->save()){
@@ -108,7 +107,6 @@ class TestResult extends CommonModel
                 }
 
             }
-        }
 
     }
 
