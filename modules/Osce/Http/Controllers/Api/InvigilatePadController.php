@@ -430,7 +430,7 @@ class InvigilatePadController extends CommonController
                 if (!Common::imageMimeCheck($photos)) {
                     throw new \Exception('上传的文件类型不合法！', -120);
                 }
-
+                \Log::alert($studentId,$stationId,$standardId,$photos);
 
                 //拼装文件名,并插入数据库
                 $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId,$studentId);
