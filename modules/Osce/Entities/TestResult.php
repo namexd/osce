@@ -72,7 +72,7 @@ class TestResult extends CommonModel
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
                  $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-                 $this->getSaveExamAttach($data['student_id'],$ExamResultId,$score);
+//                 $this->getSaveExamAttach($data['student_id'],$ExamResultId,$score);
             } else {
                 throw new \Exception('成绩提交失败',-1000);
             }

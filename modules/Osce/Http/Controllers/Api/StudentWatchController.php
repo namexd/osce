@@ -196,7 +196,7 @@ class StudentWatchController extends CommonController
                 return $value;
             }
         });
-        $item   =    ($items);
+        $item   = array_shift($items);
         if(is_null($item)){
             throw new \Exception('队列异常');
         }
