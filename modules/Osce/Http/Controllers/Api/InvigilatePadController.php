@@ -73,12 +73,12 @@ class InvigilatePadController extends CommonController
             //将上传的文件遍历
 
             //拼凑文件名字
-            $fileName = '';
+            $fileName = time().'_'.mt_rand(0,99999);
             //获取文件的MIME类型
 //            $fileMime = $file->getMimeType();
-            foreach ($params as $param) {
-                $fileName .= $param . '_';
-            }
+//            foreach ($params as $param) {
+//                $fileName .= $param . '_';
+//            }
             $fileName .= mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
             //取得保存路径
             $savePath = 'osce/Attach/' . $type . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
