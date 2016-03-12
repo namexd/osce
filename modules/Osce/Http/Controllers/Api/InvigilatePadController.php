@@ -94,7 +94,7 @@ class InvigilatePadController extends CommonController
 //            $file->move($savePath, iconv("UTF-8", "gb2312", $fileName));
             $file->move($savePath, $fileName);
             //生成附件url地址
-            $attachUrl = urldecode($savePath . $fileName);
+            $attachUrl = urldecode($fileName);
             //将要插入数据库的数据拼装成数组
             $data = [
 
