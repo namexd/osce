@@ -282,6 +282,7 @@ class ExamResultController extends CommonController{
         $tFile=array_pop($file);
         $filename=md5($filename).'.'.$tFile;
         $filepath   =   iconv('utf-8', 'gbk', $filepath);
+
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename='.basename($filename));
