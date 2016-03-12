@@ -276,8 +276,8 @@ class ExamResultController extends CommonController{
         dump($attchments);
          $fileNameArray   =  explode('/',$attchments);
         dump($fileNameArray);
-        dump(array_pop($fileNameArray),public_path().'/'.$attchments);
-        $this->downloadfile(array_pop($fileNameArray),public_path().'/'.$attchments);
+        dump(array_pop($fileNameArray),public_path($fileNameArray[4]).'/'.$fileNameArray[5]);
+        $this->downloadfile(array_pop($fileNameArray),public_path($fileNameArray[4]).'/'.$fileNameArray[5]);
 
     }
     private function downloadfile($filename,$filepath){
