@@ -79,7 +79,7 @@ class InvigilatePadController extends CommonController
 //            foreach ($params as $param) {
 //                $fileName .= $param . '_';
 //            }
-            $fileName .= mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
+            $fileName .= '_'.mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
             //取得保存路径
             $savePath = 'osce/Attach/' . $type . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
 //            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . 13 . '_' . 13 . '/';
@@ -97,7 +97,6 @@ class InvigilatePadController extends CommonController
             $attachUrl = urldecode($savePath . $fileName);
             //将要插入数据库的数据拼装成数组
             $data = [
-
                 'test_result_id' => null,
                 'url' => $attachUrl,
                 'type' => $type,
