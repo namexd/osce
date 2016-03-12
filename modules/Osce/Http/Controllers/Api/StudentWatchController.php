@@ -204,7 +204,6 @@ class StudentWatchController extends CommonController
 //        $surplus = strtotime($item->end_dt)-time();
 //        $surplus = strtotime($item->station->mins);
         $surplus = ($item->station->mins)*60;
-        
         if($surplus<=0){
             //todo 调用jiangzhiheng接口
             $endStudentExam = ExamQueue::endStudentQueueExam($item->student_id);
