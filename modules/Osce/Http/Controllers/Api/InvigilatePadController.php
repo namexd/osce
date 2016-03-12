@@ -83,7 +83,7 @@ class InvigilatePadController extends CommonController
             //取得保存路径
             $savePath = 'osce/Attach/' . $type . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
 //            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . 13 . '_' . 13 . '/';
-            $savePath = public_path($savePath);
+//            $savePath = public_path($savePath);
             //TODO iconv用在windows环境下
 //            $savePath = iconv("UTF-8", "gb2312", $savePath);
             //如果没有这个文件夹，就新建一个文件夹
@@ -94,7 +94,7 @@ class InvigilatePadController extends CommonController
 //            $file->move($savePath, iconv("UTF-8", "gb2312", $fileName));
             $file->move($savePath, $fileName);
             //生成附件url地址
-            $attachUrl = urldecode($fileName);
+            $attachUrl = urldecode($savePath . $fileName);
             //将要插入数据库的数据拼装成数组
             $data = [
 
