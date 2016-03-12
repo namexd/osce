@@ -72,7 +72,7 @@ class TestResult extends CommonModel
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
                  $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-//                 $this->getSaveExamAttach($data['student_id'],$ExamResultId,$score);
+                 $this->getSaveExamAttach($data['student_id'],$ExamResultId,$score);
             } else {
                 throw new \Exception('成绩提交失败',-1000);
             }
@@ -97,21 +97,19 @@ class TestResult extends CommonModel
             }
             $standardId = array_column($list, 'standard_id');
 
-
+            if(TestAttach::whereIn('standard_id',$standardId)->count()==0){
+                throw new \Exception('该考试没有上传图片和音频');
+            }
             $AttachData = TestAttach::where('student_id','=',$studentId)->whereIn('standard_id',$standardId)->get();
-
             foreach($AttachData as $item){
                 $item->test_result_id = $ExamResultId;
                 if(!$item->save()){
                     throw new \Exception('修改图片音频结果失败',-1400);
                 }
-
             }
         }catch (\Exception $ex){
-
+            \Log::alert($ex->getMessage());
         }
-
-
     }
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
