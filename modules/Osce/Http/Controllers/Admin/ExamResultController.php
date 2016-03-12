@@ -275,15 +275,11 @@ class ExamResultController extends CommonController{
         $attchments =  $info->url;
         dump($attchments);
          $fileNameArray   =  explode('/',$attchments);
-        dump(array_pop($fileNameArray),'/'.$attchments);
-        $this->downloadfile(array_pop($fileNameArray),'/'.$attchments);
+        dump(array_pop($fileNameArray),public_path('osce').'/'.$attchments);
+        $this->downloadfile(array_pop($fileNameArray),public_path('osce').'/'.$attchments);
 
     }
     private function downloadfile($filename,$filepath){
-        $file=explode('.',$filename);
-        $tFile=array_pop($file);
-        $filename=md5($filename).'.'.$tFile;
-        $filepath   =   iconv('utf-8', 'gbk', $filepath);
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename='.basename($filename));
