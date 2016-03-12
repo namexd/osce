@@ -283,6 +283,8 @@ class InvigilatePadController extends CommonController
             ], [
                 'score.required' => '请检查评分标准分值',
             ]);
+            $uploadImagereTurn= Input::get('upload_image_return');
+            \Log::alert($uploadImagereTurn);
             $score = Input::get('score');
             $stationId = Input::get('station_id');
             $studentId = Input::get('student_id');
