@@ -374,6 +374,7 @@ class InvigilatePadController extends CommonController
      */
     public function postTestAttachImage(Request $request)
     {
+        \Log::alert('111');
         try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
@@ -386,8 +387,6 @@ class InvigilatePadController extends CommonController
             $stationId = $request->input('station_id');
             $standardId = $request->input('standard_id');
             $exam = Exam::where('status', 1)->first();
-            \Log::alert($studentId,$stationId,$standardId);
-
             if (is_null($exam)) {
                 throw new \Exception('当前没有正在进行的考试！', -701);
             }
