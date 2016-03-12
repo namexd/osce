@@ -274,6 +274,7 @@ class ExamResultController extends CommonController{
         $info  =   TestAttach::find($id);
         $attchments =  $info->url;
         $attchments=public_path($attchments);
+        dd($attchments);
         $fileNameArray   =   explode('/',$attchments);
         $this->downloadfile(array_pop($fileNameArray),$attchments);
     }
