@@ -377,15 +377,15 @@ class InvigilatePadController extends CommonController
 
         try {
             $this->validate($request, [
-                'student_id' => 'required|integer',
-                'station_id' => 'required|integer',
-                'standard_id' => 'required|integer'
+                'student_id' => 'required',
+                'station_id' => 'required',
+                'standard_id' => 'required'
             ]);
 
             //获取数据
-            $studentId = $request->input('student_id');
-            $stationId = $request->input('station_id');
-            $standardId = $request->input('standard_id');
+            $studentId = (int) $request->input('student_id');
+            $stationId = (int) $request->input('station_id');
+            $standardId = (int) $request->input('standard_id');
             $exam = Exam::where('status', 1)->first();
             if (is_null($exam)) {
                 throw new \Exception('当前没有正在进行的考试！', -701);
