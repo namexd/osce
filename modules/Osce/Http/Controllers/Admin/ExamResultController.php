@@ -349,6 +349,7 @@ class ExamResultController extends CommonController{
 
     //下载安装包
     public function getDownloadComponents(){
+        dump(public_path('download').'/WebComponents.exe');
         $this->downloadComponents('WebComponents.exe',public_path('download').'/WebComponents.exe');
     }
 
