@@ -196,12 +196,14 @@ class StudentWatchController extends CommonController
                 return $value;
             }
         });
-        $item   =   array_shift($items);
+        $item   = array_shift($items);
         if(is_null($item)){
             throw new \Exception('队列异常');
         }
 
-        $surplus = strtotime($item->end_dt)-time();
+//        $surplus = strtotime($item->end_dt)-time();
+//        $surplus = strtotime($item->station->mins);
+        $surplus = ($item->station->mins)*60;
         if($surplus<=0){
             //todo 调用jiangzhiheng接口
             $endStudentExam = ExamQueue::endStudentQueueExam($item->student_id);
@@ -334,7 +336,6 @@ class StudentWatchController extends CommonController
 
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
-
           if($examStudent == 0){
 
               $willStudents =$studentnum;
@@ -395,6 +396,7 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
+
           foreach($willStudents as $key=>$willStudent){
 //
               if($willStudent->student_id == $item->student_id){

@@ -200,14 +200,14 @@
                 for(var i in img){
                     if(i==0){
                         str += '<div class="item active">'+
-                              '<img style="height:200px; width:100%;" src="'+img[i].src+'" alt="...">'+
+                              '<img style="height:200px; width:100%;" src="/'+img[i].src+'" alt="...">'+
                               '<div class="carousel-caption">'+
                                 '<a href="'+img[i].download+'" target="_blank">下载</a>'+
                               '</div>'+
                             '</div>';
                     }else{
                         str += '<div class="item">'+
-                              '<img style="height:200px; width:100%;" src="'+img[i].src+'" alt="...">'+
+                              '<img style="height:200px; width:100%;" src="/'+img[i].src+'" alt="...">'+
                               '<div class="carousel-caption">'+
                                 '<a href="'+img[i].download+'" target="_blank">下载</a>'+
                               '</div>'+
@@ -309,7 +309,7 @@
                         <td><b>耗时</b></td>
                         <td>{{$result['time']}}</td>
                         <td><b>总成绩</b></td>
-                        <td>{{$result['score']}}</td>
+                        <td>{{$result['score']}}分</td>
                     </tr>
                     <tr>
                         <td><b>评价</b></td>
@@ -380,8 +380,8 @@
                                     {{$value['content']}}
                                 </div>
                             </td>
-                            <td>{{$value['tScore']}}</td>
-                            <td>{{$value['score']}}</td>
+                            <td>{{$value['tScore']}}分</td>
+                            <td>{{$value['score']}}分</td>
                             <td>
                                 <a href="javascript:void(0)">
                                     <span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span>
@@ -400,8 +400,8 @@
                                         {{$item['standard']->content}}
                                     </div>
                                 </td>
-                                <td>{{$item['standard']->score}}</td>
-                                <td>{{$item['score']}}</td>
+                                <td>{{$item['standard']->score}}分</td>
+                                <td>{{$item['score']}}分</td>
                                 <td>&nbsp;</td>
                                 {{--<td>--}}
                                     {{--<a href="javascript:void(0)">--}}

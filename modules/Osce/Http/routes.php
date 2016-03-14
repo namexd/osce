@@ -468,13 +468,7 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	}
 //
 //	return '失败';
-	$a = \Modules\Osce\Entities\Exam::where('id',415)->get();
-	$b = $a->first();
-	if (is_object($a)) {
-//		dd(true);
-	} else {
-		dd(false);
-	};
+	dd(time() * 1000);
 });
 //TODO:清空考试数据使用 	Zhoufuxiang
 Route::get('test/empty', function(\Illuminate\Http\Request $request) {

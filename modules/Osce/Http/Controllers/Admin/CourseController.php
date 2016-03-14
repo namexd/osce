@@ -36,8 +36,7 @@ class CourseController extends CommonController
                 'subject_id' => 'sometimes|integer',
             ]);
             //考试的下拉菜单
-//            $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
-            $examDownlist = Exam::select('id', 'name')->orderBy('begin_dt', 'desc')->get();
+            $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
 
             /*
              * 获取近段时间进行的考试
@@ -151,8 +150,7 @@ class CourseController extends CommonController
         ]);
         $examId = '';
         $message = '';
-//        $examDownlist = Exam::select('id', 'name')->where('exam.status', '<>', 0)->orderBy('begin_dt', 'desc')->get();
-        $examDownlist = Exam::select('id', 'name')->orderBy('begin_dt', 'desc')->get();
+        $examDownlist = Exam::select('id', 'name')->where('exam.status', '<>', 0)->orderBy('begin_dt', 'desc')->get();
 
         //获得最近的考试的id
         $lastExam = Exam::orderBy('begin_dt', 'desc')->where('exam.status', '<>', 0)->first();

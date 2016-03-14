@@ -224,7 +224,7 @@ class ExamResultController extends CommonController{
             $scores[$pid]['items'][] = [
                 'standard'  => $itm->standard,
                 'score'     => $itm->score,
-                'image'     => TestAttach::where('test_result_id',$result['id'])->where('standard_id',$itm->standard->id)->get(),
+                'image'     => TestAttach::where('test_result_id',$result['id'])->where('type','image')->where('standard_id',$itm->standard->id)->get(),
             ];
             $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore'])? $itemScore[$pid]['totalScore']:0) + $itm->score;
         }
@@ -239,7 +239,7 @@ class ExamResultController extends CommonController{
             $scores[$index]['content']  = $standardM->content;
             $scores[$index]['tScore']   = $standardM->score;
             $scores[$index]['score']    = $itemScore[$index]['totalScore'];
-            $scores[$index]['image']    = TestAttach::where('test_result_id',$result['id'])->where('standard_id',$index)->get();
+            $scores[$index]['image']    = TestAttach::where('test_result_id',$result['id'])->where('type','image')->where('standard_id',$index)->get();
 
             $standard[$index] = $itemScore[$index]['totalScore'];
             $avg[$index] = $standardModel->getCheckPointAvg($index, $result['subject_id']);
@@ -273,15 +273,14 @@ class ExamResultController extends CommonController{
         $id     =   $request->get('id');
         $info  =   TestAttach::find($id);
         $attchments =  $info->url;
-
-        $fileNameArray   =   explode('/',$attchments);
-        $this->downloadfile(array_pop($fileNameArray),$attchments);
+        $fileNameArray   =  explode('/',$attchments);
+        $this->downloadfile(array_pop($fileNameArray),public_path().'/'.$attchments);
     }
     private function downloadfile($filename,$filepath){
         $file=explode('.',$filename);
         $tFile=array_pop($file);
         $filename=md5($filename).'.'.$tFile;
-        $filepath   =   iconv('utf-8', 'gbk', $filepath);
+//        $filepath   =   iconv('utf-8', 'gbk', $filepath);
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename='.basename($filename));
@@ -315,31 +314,16 @@ class ExamResultController extends CommonController{
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             //根据考试id拿到场次id临时修改
-            $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get();
-            $examScreening = [];
-            foreach ($examScreeningId as $data) {
-                $examScreening[] = [
-                    'id' => $data->id,
-                ];
-            }
-            $examScreeningIds = array_column($examScreening, 'id');
+            $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get()->pluck('id');
             //更据考站id查询到
             $stationVcrId = StationVcr::where('station_id','=',$stationId)->first()->id;
             if(is_null($stationVcrId)){
                 throw new \Exception('没有找到相关联的摄像机');
             }
             //查询到页面需要的数据
-            $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningIds);
+            $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningId);
             //查询出时间锚点追加到数组中
             $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationVcrId);
-//            if($anchor){
-//                foreach($data as $key=>&$item){
-//                    foreach($anchor as $key1=>$list){
-//                        $item['anchor'] = $list['begin_dt'];
-////                        $item['end_dt'] = $list['end_dt'];
-//                    }
-//                }
-//            }
 
             return view('osce::admin.statisticalAnalysis.exam_video',['data'=>$data,'anchor'=>$anchor]);
         } catch (\Exception $ex) {
