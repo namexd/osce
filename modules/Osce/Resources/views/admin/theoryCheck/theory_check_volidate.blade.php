@@ -64,7 +64,7 @@
                                         <span class="admissionNum">201013031401</span>
                                     </div>
                                     <div class="btnBox">
-                                        <button class="btn btn-primary btn-lg font16" style="padding: 7px 40px;">进入考试</button>
+                                        <button class="btn btn-primary btn-lg font16" style="padding: 9px 40px;">进入考试</button>
                                     </div>
                                 </div>
                             </div>
