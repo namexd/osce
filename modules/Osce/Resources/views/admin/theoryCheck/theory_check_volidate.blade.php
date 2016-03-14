@@ -4,8 +4,6 @@
     <style>
         /*显示区域外边框*/
         .cBorder{border: 1px solid #e7eaec;}
-        /*得分*/
-        .showScore{padding: 20px 0 30px;color: #ff0101;}
     </style>
 @stop
 
