@@ -173,7 +173,7 @@ class NoticeController extends CommonController
             ]);
             $id     =   $request->get('id');
             $key    =   $request->get('attch_index');
-            $info  =   InformInfo::find($id);
+            $info   =   InformInfo::find($id);
             if (is_null($info)) {
                 //消息不存在
                 abort(404, '你要下载的东西不存在');
@@ -184,8 +184,8 @@ class NoticeController extends CommonController
                 throw new \Exception('没有找到相应的文件');
             }
 
-            $thisFile   =   $attchments[$key];
-            $fileNameArray   =   explode('/',$thisFile);
+            $thisFile       =   $attchments[$key];
+            $fileNameArray  =   explode('/',$thisFile);
 
             $this->downloadfile(array_pop($fileNameArray),public_path().$thisFile);
 
@@ -198,10 +198,15 @@ class NoticeController extends CommonController
      * 文件下载
      */
     private function downloadfile($filename,$filepath){
-        $file=explode('.',$filename);
-        $tFile=array_pop($file);
-        $filename=md5($filename).'.'.$tFile;
-        $filepath   =   iconv('utf-8', 'gbk', $filepath);
+        $file   = explode('.',$filename);
+        $tFile  = array_pop($file);
+        $filename = md5($filename).'.'.$tFile;
+        //TODO:Zhoufuxiang 2016-3-14
+        $encode = mb_detect_encoding($filepath, array("ASCII","GB2312","GBK","UTF-8",'BIG5'));
+        if($encode == 'UTF-8'){
+            $filepath = iconv('utf-8', 'gbk', $filepath);
+        }
+
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename='.basename($filename));

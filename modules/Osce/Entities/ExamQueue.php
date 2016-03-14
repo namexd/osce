@@ -633,13 +633,12 @@ class ExamQueue extends CommonModel
                     /*
                      * 将考试结束的时间写进锚点表里
                      */
-                    CommonController::storeAnchor($result->station_id, $result->student_id, $result->exam_id,
+                    CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
                         $teacherId, [strtotime($date)]);
                 }
                 $connection->commit();
                 return $queue;
-            } elseif ($queue->status == 3) {
-                $connection->commit();
+            } elseif ($queue->status == 3) { //通过传入的station_id进行多次点击结束考试的适配
                 return $queue;
             } else {
                 throw new \Exception('系统错误，请重试', -888);
