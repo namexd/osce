@@ -128,7 +128,7 @@
                             <td>{{$item->student_name}}</td>
                             <td>{{$item->begin_dt}}</td>
                             <td>{{$item->time}}</td>
-                            <td>{{$item->score}}</td>
+                            <td>{{$item->score}}分</td>
                             <td>
                                 <a href="{{route('osce.admin.getExamResultDetail')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span></a>
                             </td>

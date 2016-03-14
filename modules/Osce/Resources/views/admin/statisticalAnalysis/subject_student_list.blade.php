@@ -28,7 +28,7 @@
             <div class="row tabs">
                 <div class="col-sm-3 col-md-3">考试：{{$exam}}<span></span></div>
                 <div class="col-sm-3 col-md-3">科目：{{$subject}}<span></span></div>
-                <div class="col-sm-3 col-md-3">平均成绩：{{$avgScore}}<span></span></div>
+                <div class="col-sm-3 col-md-3">平均成绩：{{$avgScore}}分<span></span></div>
                 <div class="col-sm-3 col-md-3">平均用时：{{$avgTime}}<span></span></div>
             </div>
             <table class="table table-bordered">
@@ -46,7 +46,7 @@
                     <tr>
                         <td>{{$item->student_name}}</td>
                         <td>{{$item->ranking}}</td>
-                        <td>{{$item->exam_result_score}}</td>
+                        <td>{{$item->exam_result_score}}分</td>
                         <td>{{$item->exam_result_time}}</td>
                         <td>
                             <a href="{{route('osce.admin.getExamResultDetail')}}?id={{$item->exam_result_id}}">
