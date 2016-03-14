@@ -227,4 +227,22 @@ class QuestionBankRepositories  extends BaseRepository
             return  collect($questionIdArr);
         }
     }
+
+    /**
+     * 生成试卷
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $ExamPaperId
+     * @return array
+     * @author tangjun <tangjun@misrobot.com>
+     * @date   2016年3月14日14:27:03
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GenerateExamPaper($ExamPaperId){
+        $ExamPaper = new ExamPaper;
+        $ExamPaper->where('id','=',$ExamPaperId)->first();
+        $data = [];
+       return   $data;
+    }
 }
