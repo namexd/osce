@@ -516,7 +516,6 @@ class DiscussionController extends CommonController
      */
     public function getCheckQuestions(Request $request)
     {
-        \Log::info('params', $request->all());
         $this->validate($request, [
 //            'id' => 'required|integer',
             'id' => 'required',
