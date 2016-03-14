@@ -73,7 +73,7 @@ class InvigilatePadController extends CommonController
             //将上传的文件遍历
 
             //拼凑文件名字
-            $fileName = time().'_'.mt_rand(0,99999);
+            $fileName = time().'_'.mt_rand(0,99999) . '_';
             //获取文件的MIME类型
 //            $fileMime = $file->getMimeType();
 //            foreach ($params as $param) {
