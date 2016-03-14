@@ -11,6 +11,8 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
+use Modules\Osce\Repositories\QuestionBankRepositories;
+use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Illuminate\Http\Request;
 class ApiController extends CommonController
 {
@@ -95,7 +97,7 @@ class ApiController extends CommonController
     }
 
     /**
-     * @method
+     * @method  GET
      * @url /osce/admin/api/exam-paper-preview
      * @access public
      * @param $data
@@ -103,7 +105,48 @@ class ApiController extends CommonController
      * @date    2016年3月11日11:21:47
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function ExamPaperPreview(Request $request){
-        dd($request);
+    public function ExamPaperPreview(Request $request,QuestionBankRepositories $questionBankRepositories){
+        /*
+         *   `mode` 组卷方式(1.自动组卷，2.手工组卷),
+             `type` 试卷类型(1.随机试卷，2.统一试卷),
+        */
+        $this->validate($request,[
+            'name'        => 'required',
+            'time'        => 'required',
+            'status'        => 'required|integer',
+            'status2'        => 'required|integer',
+            'question'        => 'required|array',
+        ]);
+        //（1.包含，2.等于）
+
+        //组卷方式(1.自动组卷，2.手工组卷)
+        $mode = $request->status;
+        //试卷类型(1.随机试卷，2.统一试卷)
+        $type = $request->status2;
+        $PaperPreviewArr = [];
+        $PaperPreviewArr['name'] = $request->name;
+        $PaperPreviewArr['time'] = $request->time;
+
+        if(!empty($request->question)){
+            foreach($request->question as $k => $v){
+                $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
+            }
+        }
+
+        if($mode == 1 && !empty($PaperPreviewArr['item'])){
+            $ExamQuestion = new ExamQuestion;
+            $ExamQuestionType = new ExamQuestionType;
+            $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
+            foreach($PaperPreviewArr['item'] as $k => $v){
+                if(!empty($v['child'])){
+                    $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->with('examQuestionItem')->get();
+                    $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$v['type'])->select('name')->first();
+                    $PaperPreviewArr['item'][$k]['name'] = $ExamQuestionTypeInfo['name'].'（共'.$v['num'].'题，每题'.$v['score'].'分）';
+                    $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
+                }
+            }
+        }
+       // dd($PaperPreviewArr);
+        return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
 }

@@ -119,7 +119,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //处理编辑子项数据
         Route::post('api/editor-exam-paper-item',['uses'=>'ApiController@PostEditorExamPaperItem','as'=>'osce.admin.ApiController.PostEditorExamPaperItem']);
         //预览试卷控制器
-        Route::post('api/exam-paper-preview',['uses'=>'ApiController@ExamPaperPreview','as'=>'osce.admin.ApiController.ExamPaperPreview']);
+        Route::get('api/exam-paper-preview',['uses'=>'ApiController@ExamPaperPreview','as'=>'osce.admin.ApiController.ExamPaperPreview']);
 
 
 

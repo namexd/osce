@@ -55,6 +55,79 @@
             function checkbox(){
 
             }
+            //点击筛选是查找相关试题
+            var subject_id = $('#status0 option:selected').val();
+            var ability_id = $('#status1 option:selected').val();
+            var difficult_id = $('#status2 option:selected').val();
+            $('#search').click(function(){
+                //获取筛选条件
+
+                getexamquestions(subject_id,ability_id,difficult_id);
+            });
+
+            function getexamquestions(subject_id,ability_id,difficult_id){
+                $.ajax({
+                    type: "GET",
+                    url: "{{route('osce.admin.ExamPaperController.getExamQuestions')}}",
+                    data: {subject_id:subject_id,ability_id:ability_id,difficult_id:difficult_id},
+                    success: function(msg){
+                        if(msg.code){
+                            var data = msg.data.data;
+                            var pagedata = msg.data;
+                            var str = '';
+                            $(data).each(function(i){
+                                str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon">';
+                                str +='</div><input type="checkbox" value=""></label></td>';
+                                str +='<td>'+(i+1)+'</td>';
+                                str +='<td>'+this.question_name+'</td>';
+                                str +='<td>'+this.label+'</td>';
+                                str +='<td>'+this.questtion_type+'</td>';
+
+                                str +='</td></tr>';
+                            });
+                            $('.subjectBody').html(str);
+                            var page = 1;
+                            var pager = createPageDom(pagedata.total,pagedata.per_page,page);
+                            $('.pull-right').html(pager);
+                            $('.pull-left').html('共'+pagedata.total+'条');
+                        }else{
+                            $('.subjectBody').html();
+                            alert('没有数据');
+                        }
+                    }
+                });
+            }
+
+            getexamquestions(subject_id,ability_id,difficult_id);
+
+
+            function createPageDom(total,pagesize,page){
+                var string = '';
+                if(total>0){
+                    var sum = Math.ceil(total/pagesize);
+                    //TODO 拼凑上一页的按钮
+                    if(page == 1){
+                        string += '<li class="disabled"><span>«</span></li>';
+                    }else{
+                        string += '<li rel="prev" page="'+(page-1)+'" ><a href="javascript:void(0)">«</a></li>';
+                    }
+
+                    for(var i = 0;i<sum;i++){
+                        if(page == (i+1)){
+                            string += '<li class="active"><span>'+(i+1)+'</span></li>';
+                        }else{
+                            string += '<li page="'+(i+1)+'"><a href="javascript:void(0)">'+(i+1)+'</a></li>';
+                        }
+                    }
+                    //TODO 拼凑下一页的按钮
+                    if(page == sum){
+                        string += '<li class="disabled"><span>»</span></li>';
+                    }else{
+                        string += '<li rel="next" page="'+(page+1)+'" ><a href="javascript:void(0)">»</a></li>';
+                    }
+                }
+                return  string;
+            }
         })
     </script>
 @stop
@@ -68,33 +141,22 @@
 
         <div class="container-fluid ibox-content" style="border: none;">
             <div class="input-group row" style="width: 100%;margin:20px 0;">
-                <div class="form-group col-sm-4">
-                    <label class="col-sm-4 control-label">科目标签：</label>
-                    <div class="col-sm-8">
-                        <select id="status2"   class="form-control m-b" name="status2">
-                            <option value="0">全部</option>
-                            <option value="1">基础医学</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group col-sm-4">
-                    <label class="col-sm-4 control-label">能力标签：</label>
-                    <div class="col-sm-8">
-                        <select id="status2"   class="form-control m-b" name="status2">
-                            <option value="0">全部</option>
-                            <option value="1">基础医学</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group col-sm-4">
-                    <label class="col-sm-4 control-label">难度标签：</label>
-                    <div class="col-sm-8">
-                        <select id="status2"   class="form-control m-b" name="status2">
-                            <option value="0">全部</option>
-                            <option value="1">基础医学</option>
-                        </select>
-                    </div>
-                </div>
+                @if(@$labelList)
+                    @foreach($labelList as $k=>$label)
+                        <div class="form-group col-sm-4">
+                            <label class="col-sm-4 control-label">{{@$label['name']}}：</label>
+                            <div class="col-sm-8">
+                                <select id="status{{$k}}"   class="form-control m-b" name="status2">
+                                    <option value="0">全部</option>
+                                    @foreach(@$label['label_type_and_label'] as $list)
+                                        <option value="{{@$list['id']}}">{{@$list['name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+
                 <div class="col-sm-3">
                     <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
                 </div>
@@ -116,22 +178,7 @@
                     </tr>
                     </thead>
                     <tbody class="subjectBody">
-                    @if(!empty(@$data))
-                        @foreach(@$data as $k=>$val)
-                            <tr>
-                                <td>
-                                    <label class="check_label checkbox_input">
-                                        <div class="check_icon"></div>
-                                        <input type="checkbox" value="">
-                                    </label>
-                                </td>
-                                <td>{{@$k+1}}</td>
-                                <td>{{@$val['name']}}</td>
-                                <td>{{@$val['num']}}</td>
-                                <td>{{@$val['total_score']}}</td>
-                            </tr>
-                        @endforeach
-                    @endif
+
                     </tbody>
                 </table>
                 <div class="pull-left">
@@ -141,6 +188,13 @@
 
                     {{--{!! $data->appends(@$keyword)->render() !!}--}}
 
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-primary" type="submit">保存</button>
+                    <a class="btn btn-white" href="#">取消</a>
                 </div>
             </div>
         </div>
