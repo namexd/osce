@@ -65,9 +65,9 @@
                     <hr style="margin-top: 10px;margin-bottom: 10px">
                     <ul class="points">
 
-                            @forelse($anchor as $item)
+                            @forelse($data as $item)
 
-                                <li><span class="year">{{$item->begin_dt}}</span></li>
+                                <li><span class="year">{{$item->anchor}}</span></li>
                             @empty
                                 {{--@foreach($data as $item)--}}
 
