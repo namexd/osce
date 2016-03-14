@@ -34,6 +34,7 @@ class AnswerController extends CommonController
     public function formalPaperList()
     {
         $answer = new Answer();
+        //获取该理论考试相关信息
         $list = $answer->getFormalPaper();
         $data = [];
         if($list) {
