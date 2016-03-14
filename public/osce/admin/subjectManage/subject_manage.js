@@ -312,8 +312,17 @@ function subject_manage_add(){
                     'tag[]': {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '标签不能为空'
+                            callback: {
+                                message: '至少选择一个标签',
+                                callback:function(){
+                                    var $tagVal = $(".tag option:selected");
+                                    if($tagVal&&$tagVal.length>0){
+                                        return true;
+                                    }
+                                    else{
+                                        return false;
+                                    }
+                                }
                             }
                         }
                     }
@@ -356,8 +365,17 @@ function subject_manage_add(){
                     'tag[]': {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '标签不能为空'
+                            callback: {
+                                message: '至少选择一个标签',
+                                callback:function(){
+                                    var $tagVal = $(".tag option:selected");
+                                    if($tagVal&&$tagVal.length>0){
+                                        return true;
+                                    }
+                                    else{
+                                        return false;
+                                    }
+                                }
                             }
                         }
                     }
@@ -403,8 +421,17 @@ function subject_manage_add(){
                     'tag[]': {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '标签不能为空'
+                            callback: {
+                                message: '至少选择一个标签',
+                                callback:function(){
+                                    var $tagVal = $(".tag option:selected");
+                                    if($tagVal&&$tagVal.length>0){
+                                        return true;
+                                    }
+                                    else{
+                                        return false;
+                                    }
+                                }
                             }
                         }
                     }
@@ -437,16 +464,29 @@ function subject_manage_add(){
                         }
                     },
                     'tag[]': {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '标签不能为空'
+                            //notEmpty: {/*非空提示*/
+                            //    message: '至少选择一个标签'
+                            //}
+                            callback: {
+                                message: '至少选择一个标签',
+                                callback:function(){
+                                    var $tagVal = $(".tag option:selected");
+                                    if($tagVal&&$tagVal.length>0){
+                                        return true;
+                                    }
+                                    else{
+                                        return false;
+                                    }
+                                }
                             }
                         }
                     }
                 }
             });
         }
+
+
         $("#subjectType").change(function(){
             var type=$(this).val();
             if(type==1){
