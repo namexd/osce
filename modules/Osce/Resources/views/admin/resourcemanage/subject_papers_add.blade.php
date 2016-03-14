@@ -54,18 +54,28 @@
                 })
 
             })
-            $('tbody').on('click','.fa-pencil-square-o',function(){
-                $("#addForm").hide();
-                $("#editForm").show();
-                $(this).parent().parent().parent().parent().attr("sequence");
+            $('#paper tbody').on('click','.fa-pencil-square-o',function(){
+                var question_detail=$(this).parent().parent().parent().parent().find("input[name='question[]']").val();
+                layer.open({
+                    type: 2,
+                    title: '新增试题组成',
+                    area: ['90%', '530px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}?question_detail='+question_detail,
+                })
             });
-            $('#addForm').submit(function(){
+            /**
+             * 手动组卷情况下现则试题
+             */
+
+            $('#addForm').submit(function(){//添加题型
                 var now = $('#paper2').find('tbody').attr('index');
                 now = parseInt(now) + 1;//计数
                 var tpye2= $('select[name="question-type"] option:selected').text();//题目类型名字
                 var tpyeid= $('select[name="question-type"] option:selected').val();//题目类型ID
                 var score=$('input[name="question-score"]').val(); //每题分数
-                var html = '<tr sequence="'+parseInt(now)+'">'+
+                var html = '<tr sequence="'+parseInt(now)+'" id="handwork_'+parseInt(now)+'">'+
                         '<td>'+parseInt(now)+'<input name="question-type[]" type="hidden" value="'+tpyeid+"@"+score+'"/>'+'</td>'+
                         '<td>'+tpye2+'</td>'+
                         '<td></td>'+
@@ -84,16 +94,7 @@
                 return  false;
             })
 
-            /**
-             * 删除
-             */
-            $('tbody').on('click','.fa-trash-o',function(){
-                $(this).parent().parent().parent().parent().remove();
-            });
-            /**
-             * 手动组卷情况下现则试题
-             */
-            $('tbody').on('click','.fa-cog',function(){
+            $('#paper2 tbody').on('click','.fa-cog',function(){//添加题目
                 var  sequence=  $(this).parent().parent().parent().parent().attr("sequence");
                 var question_detail=$(this).parent().parent().parent().parent().find("input[name='question-type[]']").val();
                 var geturl='{{route('osce.admin.ExamPaperController.getExampQuestions')}}?question_detail='+question_detail+"&sequence="+sequence;
@@ -112,19 +113,38 @@
                 $("#editForm").hide();
             })
             // 编辑题型
-            $('tbody').on('click','.fa-pencil-square-o',function(){
+            $('#paper2 tbody').on('click','.fa-pencil-square-o',function(){
                 $("#addForm").hide();
                 $("#editForm").show();
-                $(this).parent().parent().parent().parent().attr("sequence");
+               var nowid= $(this).parent().parent().parent().parent().attr("id");
                 var question_detail=$(this).parent().parent().parent().parent().find("input[name='question-type[]']").val()
-                question_detail=question_detail.split();
+                question_detail=question_detail.split("@");
                 $('#typeSelect2').find('option').each(function(){
                     if($(this).val()==question_detail[0]){
-                        $(this).attr("selected", true);;
+                        $(this).attr("selected", true);
                     }
                 });
-                $('input[nme="question-score2"]').text(question_detail[1]);
+                console.log(question_detail[1]);
+                $('input[name="question-score2"]').val(question_detail[1]);
 
+                $('#editForm').submit(function(){//编辑题型
+                    var tpye2= $('select[name="question-type2"] option:selected').text();//题目类型名字
+                    var tpyeid= $('select[name="question-type2"] option:selected').val();//题目类型ID
+                    var score=$('input[name="question-score2"]').val(); //每题分数
+                    $("#"+nowid).children().find("input[name='question-type[]']").val(tpyeid+"@"+score);
+                    $("#"+nowid).children().eq(1).text(tpye2);
+                    $("#"+nowid).children().eq(3).text(score);
+                    $('.close').trigger('click');
+                    return  false;
+                })
+
+            });
+
+            /**
+             * 删除
+             */
+            $('tbody').on('click','.fa-trash-o',function(){
+                $(this).parent().parent().parent().parent().remove();
             });
 
             /**
@@ -338,7 +358,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">每题分数：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="question-score2" class="form-control" placeholder="仅支持大于0的正整数">
+                    <input type="text" name="question-score2"  class="form-control" placeholder="仅支持大于0的正整数">
                 </div>
             </div>
         </div>
