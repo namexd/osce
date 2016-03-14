@@ -692,6 +692,13 @@ class Exam extends CommonModel
 
         $examResult = ExamResult::whereIn('exam_screening_id',$examScreeningIds)->select('id')->get();
         $examResultIds = $examResult->pluck('id');
+        //删除考试场次-学生关系表
+        $exam_screening_student =ExamScreeningStudent::whereIn('exam_screening_id',$examResultIds)->get();
+        if(!$exam_screening_student->isEmpty()){
+            foreach($exam_screening_student as $item ){
+                $item->delect();
+            }
+        }
         //删除考试得分
         $examScores = ExamScore::whereIn('exam_result_id',$examResultIds)-> get();
         if (!$examScores->isEmpty()) {
