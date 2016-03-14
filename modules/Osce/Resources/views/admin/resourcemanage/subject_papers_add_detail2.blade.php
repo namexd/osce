@@ -15,14 +15,14 @@
             var subject_id = $('#status0 option:selected').val();
             var ability_id = $('#status1 option:selected').val();
             var difficult_id = $('#status2 option:selected').val();
-            var page = 2;
+            var page = 1;
             var array = [];//用于存放已选中的checkbook
             var number = [];//用于存放已选中的checkbook-最终选中的
 
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
             $('.form-horizontal').submit(function(){
                 getCheckboxVal();
-                parent.$('#list-body').append('<input class="questions" value="'+array+'">');
+                parent.$('#list-body').append('<input type="hidden" class="questions" value="'+array+'">');
                 //parent.$('#list-body').find('tbody').attr('index',now);
                 parent.layer.close(index);
                 return  false;

@@ -93,7 +93,11 @@
              * 手动组卷情况下现则试题
              */
             $('tbody').on('click','.fa-cog',function(){
+<<<<<<< HEAD
                console.log($(this).parent().parent().parent().parent().firstChild().find("input").val());
+=======
+
+>>>>>>> 6b34c30bc6b63330c724236be8f3cedae238cf8b
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
@@ -288,8 +292,6 @@
                                 <option value="{{ @$val['id'] }}">{{@$val['name']}}</option>
                             @endforeach
                         @endif
-                            <option value="1">单选题</option>
-                            <option value="2">多选题</option>
                     </select>
                 </div>
             </div>

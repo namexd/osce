@@ -131,7 +131,7 @@ class ExamPaperController extends CommonController
 
         //查找试题类型
         $question = ExamQuestionType::where('status','=',1)->select('id','name')->get()->toArray();
-        return view('osce::admin.resourcemanage.subject_papers_add',['label'=>$label,'question'=>$question]);
+        return view('osce::admin.resourcemanage.subject_papers_add',['label'=>$label,'ExamQuestionLabelTypeList'=>$question]);
     }
 
 
