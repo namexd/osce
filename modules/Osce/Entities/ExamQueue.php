@@ -627,6 +627,7 @@ class ExamQueue extends CommonModel
                 $queue->status = 3;
                 $queue->end_dt = $date;
                 $result = $queue->save();
+                dd($result);
                 if (!$result) {
                     throw new \Exception('状态修改失败！请重试', 2000);
                 } else {
