@@ -145,6 +145,10 @@ class StudentExamQueryController extends CommonController
 //                        throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
 //                    }
                 }
+                //转换耗时 TODO： zhoufuxiang 2016-3-14
+                date_default_timezone_set("UTC");
+                $stationType->time = date('H:i:s', $stationType->time);
+                date_default_timezone_set("PRC");
 
                 $stationData[] = [
                     'exam_result_id' => $stationType->exam_result_id,
