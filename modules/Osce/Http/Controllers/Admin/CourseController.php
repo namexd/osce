@@ -36,27 +36,28 @@ class CourseController extends CommonController
                 'subject_id' => 'sometimes|integer',
             ]);
             //考试的下拉菜单
-            $examDownlist = Exam::select('id', 'name')->where('exam.status','<>',0)->orderBy('begin_dt', 'desc')->get();
+            $examDownlist = Exam::select('id', 'name', 'status', 'begin_dt')->where('exam.status', '<>',
+                0)->orderBy('begin_dt', 'desc')->get();
 
             /*
              * 获取近段时间进行的考试
              */
-            $examObj = Exam::where('status','<>',0)->first();
+            $examObj = Exam::where('status', '<>', 0)->first();
 
             if (is_null($examObj)) {
                 $subjectData = [];
-                $examId      = '';
-                $subjectId   = '';
+                $examId = '';
+                $subjectId = '';
                 $subjectList = [];
-                $backMes     = '目前没有已结束的考试';
+                $backMes = '目前没有已结束的考试';
             } else {
-                $examId = $request->input('exam_id',$examObj->id);
+                $examId = $request->input('exam_id', $examObj->id);
                 $subjectId = $request->input('subject_id');
                 //科目列表数据
                 $subject = new Subject();
                 $exam = new Exam();
                 $subjectData = $exam->CourseControllerIndex($examId, $subjectId);
-                if (count($subjectData)==0) {
+                if (count($subjectData) == 0) {
                     $backMes = '该考试还未出成绩';
                 }
                 foreach ($subjectData as &$item) {
@@ -68,14 +69,15 @@ class CourseController extends CommonController
                     //如果avg不为空
                     if (!empty($avg)) {
                         if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
-                            $item->avg_score = number_format($avg->pluck('score')->sum()/$avg->pluck('score')->count(),2);
+                            $item->avg_score = number_format($avg->pluck('score')->sum() / $avg->pluck('score')->count(),
+                                2);
                             date_default_timezone_set("UTC");
-                            $item->avg_time = date('H:i:s',$avg->pluck('time')->sum()/$avg->pluck('time')->count());
+                            $item->avg_time = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
                             date_default_timezone_set("PRC");
                             $item->avg_total = $avg->count();
                         } else {
-                            $item->avg_score = 0;
-                            $item->avg_time = 0;
+                            $item->avg_score = 0.00;
+                            $item->avg_time = 0.00;
                             $item->avg_total = $avg->count();
                         }
                     }
@@ -84,13 +86,13 @@ class CourseController extends CommonController
                 $subjectList = $this->subjectDownlist($examId);
             }
             return view('osce::admin.statisticalAnalysis.subject_scores_list', [
-                    'data'            => $subjectData,
-                    'examDownlist'    => $examDownlist,
-                    'subjectDownlist' => $subjectList,
-                    'exam_id'         => $examId,
-                    'subject_id'      => $subjectId,
-                    'backMes'         => isset($backMes)?$backMes:''
-                ]);
+                'data' => $subjectData,
+                'examDownlist' => $examDownlist,
+                'subjectDownlist' => $subjectList,
+                'exam_id' => $examId,
+                'subject_id' => $subjectId,
+                'backMes' => isset($backMes) ? $backMes : ''
+            ]);
 
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
@@ -114,7 +116,7 @@ class CourseController extends CommonController
             'avg_score' => 'required',
             'avg_time' => 'required'
         ]);
-        
+
         //获得参数
         $examId = $request->input('exam_id');
         $subjectId = $request->input('subject_id');
@@ -122,7 +124,7 @@ class CourseController extends CommonController
         //将排名的数组循环插入表中
         date_default_timezone_set("UTC");
         foreach ($data as $key => &$item) {
-            $item->exam_result_time = date('H:i:s',$item->exam_result_time);
+            $item->exam_result_time = date('H:i:s', $item->exam_result_time);
             $item->ranking = $key + 1;
         }
         date_default_timezone_set("PRC");
@@ -175,12 +177,12 @@ class CourseController extends CommonController
                 $backMes = '该考试还未出成绩';
             }
         }
-        return view('osce::admin.statisticalAnalysis.student_scores_list',[
-            'data'          => $list,
-            'examDownlist'  => $examDownlist,
-            'exam_id'       => $examId,
-            'message'       => $message,
-            'backMes'       => isset($backMes)?$backMes:''
+        return view('osce::admin.statisticalAnalysis.student_scores_list', [
+            'data' => $list,
+            'examDownlist' => $examDownlist,
+            'exam_id' => $examId,
+            'message' => $message,
+            'backMes' => isset($backMes) ? $backMes : ''
         ]);
     }
 
@@ -192,25 +194,26 @@ class CourseController extends CommonController
      * @throws \Exception
      * @author zhouqiang
      */
-    public  function getStudentDetails(Request $request){
-        $this->validate($request,[
-          'student_id'=>'required|integer'
+    public function getStudentDetails(Request $request)
+    {
+        $this->validate($request, [
+            'student_id' => 'required|integer'
         ]);
-        $studentId= $request->get('student_id');
-        $examresultModel= new ExamResult();
-        $studentList= $examresultModel->getstudentData($studentId);
+        $studentId = $request->get('student_id');
+        $examresultModel = new ExamResult();
+        $studentList = $examresultModel->getstudentData($studentId);
 
-        if(!$studentList){
+        if (!$studentList) {
             throw new \Exception('数据查询失败');
         }
         //转化时间（耗时）
         date_default_timezone_set('UTC');
         foreach ($studentList as $key => &$item) {
-            $item->time = date('H:i:s',$item->time);
+            $item->time = date('H:i:s', $item->time);
         }
         date_default_timezone_set('PRC');
 
-        return view('osce::admin.statisticalAnalysis.student_subject_list',['studentList'=>$studentList]);
+        return view('osce::admin.statisticalAnalysis.student_subject_list', ['studentList' => $studentList]);
 
     }
 
@@ -224,10 +227,10 @@ class CourseController extends CommonController
     {
         //验证
         $this->validate($request, [
-            'exam_id'=>'sometimes|integer'
+            'exam_id' => 'sometimes|integer'
         ]);
 
-        $examId = $request->input('exam_id',"");
+        $examId = $request->input('exam_id', "");
 
         try {
             $subjectList = $this->subjectDownlist($examId);
