@@ -281,6 +281,8 @@ class ExamPaperController extends CommonController
         foreach($questions as $v){
             $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
         }
+
+        //查找筛选条件下的试题
         $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
         dd($examQuestion);
         if($status == 1 && $status2 == 1){//自动-随机
