@@ -49,8 +49,8 @@ class InvigilatePadController extends CommonController
 //        $examScreeningModel = new ExamScreening();
 //        $result = $examScreeningModel->getExamCheck();
         $a = strtotime('2016-03-04 10:59:14');
-        $c = strtotime('2016-03-04 11:03:14');
-        $b = ($c - $a) / 60;
+        $c = strtotime('2016-03-04 11:59:14');
+        $b = ($c - $a);
         dd($b);
 
 
@@ -67,23 +67,23 @@ class InvigilatePadController extends CommonController
      * @internal param $files
      * @internal param $testResultId
      */
-    protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId)
+    protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId,$studentId)
     {
         try {
             //将上传的文件遍历
 
             //拼凑文件名字
-            $fileName = '';
+            $fileName = time().'_'.mt_rand(0,99999) . '_';
             //获取文件的MIME类型
 //            $fileMime = $file->getMimeType();
-            foreach ($params as $param) {
-                $fileName .= $param . '_';
-            }
-            $fileName .= mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
+//            foreach ($params as $param) {
+//                $fileName .= $param . '_';
+//            }
+            $fileName .= '_'.mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
             //取得保存路径
             $savePath = 'osce/Attach/' . $type . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
 //            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . 13 . '_' . 13 . '/';
-            $savePath = public_path($savePath);
+//            $savePath = public_path($savePath);
             //TODO iconv用在windows环境下
 //            $savePath = iconv("UTF-8", "gb2312", $savePath);
             //如果没有这个文件夹，就新建一个文件夹
@@ -94,7 +94,7 @@ class InvigilatePadController extends CommonController
 //            $file->move($savePath, iconv("UTF-8", "gb2312", $fileName));
             $file->move($savePath, $fileName);
             //生成附件url地址
-            $attachUrl = $savePath . $fileName;
+            $attachUrl = urldecode($savePath . $fileName);
             //将要插入数据库的数据拼装成数组
             $data = [
                 'test_result_id' => null,
@@ -102,7 +102,8 @@ class InvigilatePadController extends CommonController
                 'type' => $type,
                 'name' => $fileName,
                 'description' => $date . '-' . $params['student_name'],
-                'standard_id' => $standardId
+                'standard_id' => $standardId,
+                 'student_id'=>$studentId,
             ];
 
             //将内容插入数据库
@@ -275,8 +276,8 @@ class InvigilatePadController extends CommonController
                 'student_id' => 'required',
                 'station_id' => 'required',
                 'exam_screening_id' => 'required',
-                'begin_dt' => 'required',
-                'end_dt' => 'required',
+//                'begin_dt' => 'required',
+//                'end_dt' => 'required',
                 'teacher_id' => 'required',
             ], [
                 'score.required' => '请检查评分标准分值',
@@ -293,7 +294,6 @@ class InvigilatePadController extends CommonController
             if (is_null($studentExamTime)) {
                 throw new \Exception('没有查询到该学生队列', -100);
             }
-
             $useTime = strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt);
 //            getMinutes
             $data = [
@@ -379,9 +379,8 @@ class InvigilatePadController extends CommonController
                 'station_id' => 'required|integer',
                 'standard_id' => 'required|integer'
             ]);
-
             //获取数据
-            $studentId = $request->input('student_id');
+            $studentId =  $request->input('student_id');
             $stationId = $request->input('station_id');
             $standardId = $request->input('standard_id');
             $exam = Exam::where('status', 1)->first();
@@ -431,8 +430,9 @@ class InvigilatePadController extends CommonController
 
 
                 //拼装文件名,并插入数据库
-                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId);
+                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId,$studentId);
             }
+//            header('print',$result->id);
             return response()->json($this->success_data([$result->id]));
 
         } catch (\Exception $ex) {
@@ -459,9 +459,7 @@ class InvigilatePadController extends CommonController
      * @date   2016-01-16  14:33
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postTestAttachRadio(
-        Request $request
-    ) {
+    public function postTestAttachRadio(Request $request) {
         try {
             //获取数据
             $studentId = $request->input('student_id');
@@ -509,7 +507,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错', -130);
                 }
 
-                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardId);
+                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardId,$studentId);
             }
 
             return response()->json($this->success_data([$result->id]));
@@ -682,8 +680,28 @@ class InvigilatePadController extends CommonController
             $date = date('Y-m-d H:i:s', $nowTime);
             $studentId = $request->get('student_id');
             $stationId = $request->get('station_id');
+            //开始考试时创建成绩
+//            $ExamResultData=[
+//                'student_id'=>$studentId,
+//                'exam_screening_id'=>Null,
+//                'station_id'=>$stationId,
+//                'begin_dt'=>$date,
+//                'end_dt'=>Null,
+//                'score'=>0,
+//                'score_dt'=>Null,
+//                'create_user_id'=>Null,
+//                'teacher_id'=>Null,
+//                'evaluate'=>Null,
+//                'operation'=>0,
+//                'skilled'=>0,
+//                'patient'=>0,
+//                'affinity'=>0,
+//
+//            ];
+//           if(!ExamResult::create($ExamResultData)){
+//               throw new \Exception('成绩创建失败',-106);
+//           }
             $ExamQueueModel = new ExamQueue();
-
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime);
 
 

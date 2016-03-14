@@ -200,14 +200,14 @@
                 for(var i in img){
                     if(i==0){
                         str += '<div class="item active">'+
-                              '<img style="height:200px; width:100%;" src="'+img[i].src+'" alt="...">'+
+                              '<img style="height:200px; width:100%;" src="/'+img[i].src+'" alt="...">'+
                               '<div class="carousel-caption">'+
                                 '<a href="'+img[i].download+'" target="_blank">下载</a>'+
                               '</div>'+
                             '</div>';
                     }else{
                         str += '<div class="item">'+
-                              '<img style="height:200px; width:100%;" src="'+img[i].src+'" alt="...">'+
+                              '<img style="height:200px; width:100%;" src="/'+img[i].src+'" alt="...">'+
                               '<div class="carousel-caption">'+
                                 '<a href="'+img[i].download+'" target="_blank">下载</a>'+
                               '</div>'+
@@ -382,7 +382,16 @@
                             </td>
                             <td>{{$value['tScore']}}</td>
                             <td>{{$value['score']}}</td>
-                            <td>&nbsp;</td>
+                            <td>
+                                <a href="javascript:void(0)">
+                                    <span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span>
+                                    <ul class="img" style="display:none;">
+                                        @foreach($value['image'] as $img)
+                                            <li value="{{$img->url}}" download="{{route('osce.admin.getDownloadImage',array('id'=>$img->id))}}"></li>
+                                        @endforeach
+                                    </ul>
+                                </a>
+                            </td>
                         </tr>
                         @forelse($value['items'] as $k => $item)
                             <tr>
@@ -393,16 +402,17 @@
                                 </td>
                                 <td>{{$item['standard']->score}}</td>
                                 <td>{{$item['score']}}</td>
-                                <td>
-                                    <a href="javascript:void(0)">
-                                        <span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span>
-                                        <ul class="img" style="display:none;">
-                                            @foreach($item['image'] as $k=>$img)
-                                                <li value="{{$img->url}}" download="{{route('osce.admin.getDownloadImage',array('id'=>$img->id))}}"></li>
-                                            @endforeach
-                                        </ul>
-                                    </a>
-                                </td>
+                                <td>&nbsp;</td>
+                                {{--<td>--}}
+                                    {{--<a href="javascript:void(0)">--}}
+                                        {{--<span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span>--}}
+                                        {{--<ul class="img" style="display:none;">--}}
+                                            {{--@foreach($item['image'] as $k=>$img)--}}
+                                                {{--<li value="{{$img->url}}" download="{{route('osce.admin.getDownloadImage',array('id'=>$img->id))}}"></li>--}}
+                                            {{--@endforeach--}}
+                                        {{--</ul>--}}
+                                    {{--</a>--}}
+                                {{--</td>--}}
                             </tr>
                         @empty
                         @endforelse

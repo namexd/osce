@@ -48,7 +48,7 @@ class TestResult extends CommonModel
         $connection->beginTransaction();
         try {
             //判断成绩是否已提交过
-            $this->getRemoveScore($data['station_id'],$data['student_id'],$data['exam_screening_id']);
+             $ExamResult=$this->getRemoveScore($data['station_id'],$data['student_id'],$data['exam_screening_id']);
 
 //            $examResult = $this->where('student_id', '=', $data['student_id'])
 //                ->where('exam_screening_id', '=', $data['exam_screening_id'])
@@ -62,11 +62,17 @@ class TestResult extends CommonModel
             $total  =   array_pluck($scoreData,'score');
             $total  =   array_sum($total);
             $data['score']  =   $total;
+//            function($data as $ExamResultKey=>$value ){
+//                $ExamResult->$ExamResultKey = $value;
+//            }
+//            if($ExamResult->save()){
+//
+//            }
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
                  $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-
+                 $this->getSaveExamAttach($data['student_id'],$ExamResultId,$score);
             } else {
                 throw new \Exception('成绩提交失败',-1000);
             }
@@ -79,16 +85,31 @@ class TestResult extends CommonModel
 
     }
     //upload_document_id 音频 图片id集合去修改
-    private function getSaveExamAttach($uploadDocumentId,$ExamResultId){
-        $AttachData = TestAttach::whereIn('id',$uploadDocumentId)->get();
-        foreach($AttachData as $item){
-            $item->test_result_id = $ExamResultId;
-            if(!$item->save()){
-                throw new \Exception('修改图片音频结果失败',-1400);
+    private function getSaveExamAttach($studentId,$ExamResultId,$score){
+        try{
+            $list = [];
+            $arr = json_decode($score, true);
+//            \Log::alert($arr);
+            foreach($arr as $item){
+                $list[]=[
+                    'standard_id' =>$item['id']
+                ];
             }
+            $standardId = array_column($list, 'standard_id');
 
+            if(is_null(TestAttach::whereIn('standard_id',$standardId)->get())){
+                throw new \Exception('该考试没有上传图片和音频');
+            }
+            $AttachData = TestAttach::where('student_id','=',$studentId)->whereIn('standard_id',$standardId)->get();
+            foreach($AttachData as $item){
+                $item->test_result_id = $ExamResultId;
+                if(!$item->save()){
+                    throw new \Exception('修改图片音频结果失败',-1400);
+                }
+            }
+        }catch (\Exception $ex){
+            \Log::alert($ex->getMessage());
         }
-
     }
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
@@ -148,6 +169,12 @@ class TestResult extends CommonModel
         }
 
     }
+
+
+
+
+
+
 
     //获取考试成绩打分详情
     private function  getExamResult($score)

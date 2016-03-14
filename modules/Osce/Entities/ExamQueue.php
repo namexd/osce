@@ -325,8 +325,6 @@ class ExamQueue extends CommonModel
             if ($examQueue->status == 2) {
                 return true;
             }
-
-
 //            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
             $status = $examQueue->update(['status' => 2]);
 

@@ -2,9 +2,10 @@
 
 @section('only_head_css')
 <link rel="stylesheet" href="{{asset('osce/wechat/css/resultquery.css')}}" type="text/css" />
+
 @stop
 @section('only_head_js')
-
+    <script src="{{asset('osce/wechat/js/jquerysession.js')}}"></script>
 @stop
 
 @section('content')

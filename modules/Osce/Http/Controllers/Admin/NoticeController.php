@@ -105,7 +105,7 @@ class NoticeController extends CommonController
         }
 
         try {
-            $contentLen = mb_strlen($content);
+            $contentLen = mb_strlen(strip_tags($content));
             if($contentLen > 10000){
                 throw new \Exception('内容字数超过限制，请修改后重试！');
             }
@@ -200,7 +200,7 @@ class NoticeController extends CommonController
         }
         $NoticeModel = new Notice();
         try {
-            $contentLen = mb_strlen($content);
+            $contentLen = mb_strlen(strip_tags($content));
             if($contentLen > 10000){
                 throw new \Exception('内容字数超过限制，请修改后重试！');
             }

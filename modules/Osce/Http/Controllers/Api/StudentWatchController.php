@@ -95,7 +95,6 @@ class StudentWatchController extends CommonController
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watchId->id)->where('is_end', '=', 0)->orderBy('signin_dt','desc')->first();
         if (!$watchStudent) {
-//            $code = -2;
             $data['title'] = '没有找到学生的腕表信息';
             return response()->json(
                 $this->success_data($data, $code)
@@ -109,16 +108,20 @@ class StudentWatchController extends CommonController
         $studentId = $watchStudent->student_id;
         // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
-
         $examId = $examInfo->exam_id;
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
-//        dd($examQueueCollect);
+        if(is_null($examQueueCollect)){
+            $code = -1;
+            $data['title'] = '学生队列信息不正确';
+            return response()->json(
+                $this->success_data($data, $code)
+            );
+
+        }
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect);
-
-
         return response()->json(
             $this->success_data($data, $code=$data['code'])
         );
@@ -193,12 +196,14 @@ class StudentWatchController extends CommonController
                 return $value;
             }
         });
-        $item   =   array_shift($items);
+        $item   = array_shift($items);
         if(is_null($item)){
             throw new \Exception('队列异常');
         }
 
-        $surplus = strtotime($item->end_dt)-time();
+//        $surplus = strtotime($item->end_dt)-time();
+//        $surplus = strtotime($item->station->mins);
+        $surplus = ($item->station->mins)*60;
         if($surplus<=0){
             //todo 调用jiangzhiheng接口
             $endStudentExam = ExamQueue::endStudentQueueExam($item->student_id);
@@ -323,14 +328,14 @@ class StudentWatchController extends CommonController
         });
         $item   =   array_shift($items);
 
-
         //判断前面是否有人考试
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
             ->count();
+
+
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
-
           if($examStudent == 0){
 
               $willStudents =$studentnum;
@@ -391,6 +396,7 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
+
           foreach($willStudents as $key=>$willStudent){
 //
               if($willStudent->student_id == $item->student_id){

@@ -17,6 +17,8 @@
 @stop
 @section('only_head_js')
 	<script type="text/javascript" src="{{asset('osce/wechat/js/examination.js')}}" ></script>
+    <script src="{{asset('osce/wechat/js/jquerysession.js')}}"></script>
+
 @stop
 
 @section('content')
