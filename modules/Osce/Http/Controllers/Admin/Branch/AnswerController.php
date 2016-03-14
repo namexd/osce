@@ -144,16 +144,21 @@ class AnswerController extends CommonController
         //$result = $answerModel->saveAnswer($data);
         $result=true;
         if($result){
-            //保存成功，调用查询该考生成绩的方法
-            $examPaperFormalData = $answerModel->selectGrade();
-            dd($examPaperFormalData);
             return response()->json(true);
         }else{
             return response()->json(false);
         }
     }
-
-
+    public function selectGrade()
+    {
+        $answerModel = new Answer();
+        //保存成功，调用查询该考生成绩的方法
+        $examPaperFormalData = $answerModel->selectGrade();
+        //dd($examPaperFormalData);
+        return view('osce::admin.theoryCheck.theory_check_complete', [
+            'data'                         =>$examPaperFormalData,//考试成绩及该考试相关信息
+        ]);
+    }
 
 
 
