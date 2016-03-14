@@ -518,7 +518,8 @@ class DiscussionController extends CommonController
     {
         \Log::info('params', $request->all());
         $this->validate($request, [
-            'id' => 'required|integer',
+//            'id' => 'required|integer',
+            'id' => 'required',
             'pagesize' => 'sometimes|integer',
         ]);
         $pagesize = $request->get('pagesize', 1);
