@@ -516,6 +516,7 @@ class DiscussionController extends CommonController
      */
     public function getCheckQuestions(Request $request)
     {
+        \Log::alert('11234'. '请求讨论内容详情！');
         $this->validate($request, [
             'id' => 'required|integer',
             'pagesize' => 'sometimes|integer',
@@ -528,7 +529,6 @@ class DiscussionController extends CommonController
         }
         $id = intval($request->get('id'));
 
-        \Log::alert($id. '请求讨论内容详情！');
 
         $discussionModel = new Discussion();
         $pagination = $discussionModel->getReplyPagination($id);
