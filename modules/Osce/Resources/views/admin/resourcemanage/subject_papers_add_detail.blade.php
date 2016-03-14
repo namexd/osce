@@ -45,7 +45,7 @@
                             '</tr>';
                     //记录计数
                     parent.$('#list-body').append(html);
-                    parent.$('#list-body').find('tbody').attr('index',now);
+                    parent.$('#list-body').attr('index',now);
                     parent.layer.close(index);
                 })
                 return  false;
