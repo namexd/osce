@@ -62,11 +62,12 @@
             $('#addForm').submit(function(){
                 var now = $('#paper2').find('tbody').attr('index');
                 now = parseInt(now) + 1;//计数
-                var tpye= $('select[name="question-type"] option:selected').text();//题目类型ID
+                var tpye2= $('select[name="question-type"] option:selected').text();//题目类型名字
+                var tpyeid= $('select[name="question-type"] option:selected').val();//题目类型ID
                 var score=$('input[name="question-score"]').val(); //每题分数
                 var html = '<tr sequence="'+parseInt(now)+'">'+
-                        '<td>'+parseInt(now)+'<input name="question-type[]" type="hidden" value="'+$(this).serialize()+'"/>'+'</td>'+
-                        '<td>'+tpye+'</td>'+
+                        '<td>'+parseInt(now)+'<input name="question-type[]" type="hidden" value="'+tpyeid+"@"+score+'"/>'+'</td>'+
+                        '<td>'+tpye2+'</td>'+
                         '<td></td>'+
                         '<td>'+score+'</td>'+
                         '<td></td>'+
@@ -93,18 +94,16 @@
              * 手动组卷情况下现则试题
              */
             $('tbody').on('click','.fa-cog',function(){
-<<<<<<< HEAD
-               console.log($(this).parent().parent().parent().parent().firstChild().find("input").val());
-=======
-
->>>>>>> 6b34c30bc6b63330c724236be8f3cedae238cf8b
+                var  sequence=  $(this).parent().parent().parent().parent().attr("sequence");
+                var question_detail=$(this).parent().parent().parent().parent().find("input[name='question-type[]']").val();
+                var geturl='{{route('osce.admin.ExamPaperController.getExampQuestions')}}?question_detail='+question_detail+"&sequence="+sequence;
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
                     area: ['90%', '530px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ExamPaperController.getExampQuestions')}}?'+$(".form-horizontal").serialize(),
+                    content:geturl,
                 })
             });
             // 添加新题型
@@ -117,6 +116,15 @@
                 $("#addForm").hide();
                 $("#editForm").show();
                 $(this).parent().parent().parent().parent().attr("sequence");
+                var question_detail=$(this).parent().parent().parent().parent().find("input[name='question-type[]']").val()
+                question_detail=question_detail.split();
+                $('#typeSelect2').find('option').each(function(){
+                    if($(this).val()==question_detail[0]){
+                        $(this).attr("selected", true);;
+                    }
+                });
+                $('input[nme="question-score2"]').text(question_detail[1]);
+
             });
 
             /**
@@ -284,11 +292,11 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="col-sm-3 control-label">标签类型：</label>
+                <label class="col-sm-3 control-label">题目类型：</label>
                 <div class="col-sm-9">
                     <select name="question-type" id="typeSelect" class="form-control">
-                        @if(!empty($examQuestionTypeList))
-                            @foreach($examQuestionTypeList as $key => $val)
+                        @if(!empty($ExamQuestionLabelTypeList))
+                            @foreach($ExamQuestionLabelTypeList as $key => $val)
                                 <option value="{{ @$val['id'] }}">{{@$val['name']}}</option>
                             @endforeach
                         @endif
@@ -316,22 +324,21 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="col-sm-3 control-label">标签类型：</label>
+                <label class="col-sm-3 control-label">题目类型：</label>
                 <div class="col-sm-9">
-                    <select name="question-type" id="typeSelect" class="form-control">
-                        @if(!empty(@$ExamQuestionLabelTypeList))
-                            @foreach(@$ExamQuestionLabelTypeList as $val)
-                                <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                    <select name="question-type2" id="typeSelect2" class="form-control">
+                        @if(!empty($ExamQuestionLabelTypeList))
+                            @foreach($ExamQuestionLabelTypeList as $key => $val)
+                                <option value="{{ @$val['id'] }}">{{@$val['name']}}</option>
                             @endforeach
                         @endif
-                            <option value="1">单选题</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">每题分数：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="question-score" class="form-control" placeholder="仅支持大于0的正整数">
+                    <input type="text" name="question-score2" class="form-control" placeholder="仅支持大于0的正整数">
                 </div>
             </div>
         </div>
