@@ -131,7 +131,7 @@ class ExamPaperController extends CommonController
 
         //查找试题类型
         $question = ExamQuestionType::where('status','=',1)->select('id','name')->get()->toArray();
-        return view('osce::admin.resourcemanage.subject_papers_add',['label'=>$label,'question'=>$question]);
+        return view('osce::admin.resourcemanage.subject_papers_add',['label'=>$label,'ExamQuestionLabelTypeList'=>$question]);
     }
 
 
@@ -281,6 +281,8 @@ class ExamPaperController extends CommonController
         foreach($questions as $v){
             $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
         }
+
+        //查找筛选条件下的试题
         $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
 
         if($status == 1 && $status2 == 1){//自动-随机

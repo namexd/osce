@@ -11,40 +11,20 @@
     <script type="text/javascript" src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
     <script>
         $(function(){
+            //点击筛选是查找相关试题
+            var subject_id = $('#status0 option:selected').val();
+            var ability_id = $('#status1 option:selected').val();
+            var difficult_id = $('#status2 option:selected').val();
+            var page = 1;
+            var array = [];//用于存放已选中的checkbook
+            var number = [];//用于存放已选中的checkbook-最终选中的
+
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
             $('.form-horizontal').submit(function(){
-                $.post($(this).attr('action'),$(this).serialize(),function(obj){
-                    /*给父页面传值*/
-                    var objvar=obj.toString().split("@");
-                    var typeall=objvar[1];
-                    var  tpye;//题目类型
-                    $('select[name="question-type"]').find('option').each(function(){
-                        if($(this).val()==typeall[0]){
-                            tpye=$(this).text();
-                        }
-                    });
-                    var typeall=typeall.split(",");
-                    var  questionnum=parseInt(typeall[1]);//题目数量
-                    var  questionscore=parseInt(typeall[2]);//题目分数
-                    var now = parent.$('#list-body').attr('index');
-                    now = parseInt(now) + 1;
-                    var html = '<tr>'+
-                            '<td>'+parseInt(now)+'<input name="question[]" type="hidden" value="'+obj+'"/>'+'</td>'+
-                            '<td>'+tpye+'</td>'+
-                            '<td>'+ objvar[0]+'</td>'+
-                            '<td>'+questionnum+'</td>'+
-                            '<td>'+questionscore+'</td>'+
-                            '<td>'+questionnum*questionscore+'</td>'+
-                            '<td>'+
-                            '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
-                            '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                            '</td>'+
-                            '</tr>';
-                    //记录计数
-                    parent.$('#list-body').append(html);
-                    parent.$('#list-body').find('tbody').attr('index',now);
-                    parent.layer.close(index);
-                })
+                getCheckboxVal();
+                parent.$('#list-body').append('<input type="hidden" class="questions" value="'+array+'">');
+                //parent.$('#list-body').find('tbody').attr('index',now);
+                parent.layer.close(index);
                 return  false;
 
             })
@@ -55,19 +35,16 @@
             function checkbox(){
 
             }
-            //点击筛选是查找相关试题
-            var subject_id = $('#status0 option:selected').val();
-            var ability_id = $('#status1 option:selected').val();
-            var difficult_id = $('#status2 option:selected').val();
-            var page = 2;
-            var array = [];//用于存放已选中的checkbook
-            var number = [];//用于存放已选中的checkbook-最终选中的
+
+            //筛选事件
             $('#search').click(function(){
 
                 //获取筛选条件
                 getexamquestions(subject_id,ability_id,difficult_id,page);
             });
 
+
+            //点击分页事件
             $('.pull-right').delegate('a','click',function(){
                 var page = $(this).parents('li').attr('page');
                 getCheckboxVal();
