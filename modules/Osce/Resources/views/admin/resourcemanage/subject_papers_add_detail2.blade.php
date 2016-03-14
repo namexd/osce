@@ -18,11 +18,14 @@
             var page = 1;
             var array = [];//用于存放已选中的checkbook
             var number = [];//用于存放已选中的checkbook-最终选中的
+            var question_type = $('.question_type').val();
+            var sequence = $('.sequence').val();
 
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
             $('.form-horizontal').submit(function(){
                 getCheckboxVal();
-                parent.$('#list-body').append('<input type="hidden" class="questions" value="'+array+'">');
+
+                parent.$('#list-body').append('<input type="hidden" class="questions" value="'+(array+"@"+sequence)+'">');
                 //parent.$('#list-body').find('tbody').attr('index',now);
                 parent.layer.close(index);
                 return  false;
@@ -40,7 +43,7 @@
             $('#search').click(function(){
 
                 //获取筛选条件
-                getexamquestions(subject_id,ability_id,difficult_id,page);
+                getexamquestions(subject_id,ability_id,difficult_id,pagequestion_type,sequence);
             });
 
 
@@ -48,15 +51,15 @@
             $('.pull-right').delegate('a','click',function(){
                 var page = $(this).parents('li').attr('page');
                 getCheckboxVal();
-                getexamquestions(subject_id,ability_id,difficult_id,page,array);
+                getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence);
             })
 
             //获取列表数据
-            function getexamquestions(subject_id,ability_id,difficult_id,page,array){
+            function getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence){
                 $.ajax({
                     type: "GET",
                     url: "{{route('osce.admin.ExamPaperController.getExamQuestions')}}",
-                    data: {subject_id:subject_id,ability_id:ability_id,difficult_id:difficult_id,page:page},
+                    data: {subject_id:subject_id,ability_id:ability_id,difficult_id:difficult_id,page:page,question_type:question_type,sequence:sequence},
                     success: function(msg){
                         if(msg.code){
                             var data = msg.data.data;
@@ -91,7 +94,7 @@
             }
 
             //默认加载
-            getexamquestions(subject_id,ability_id,difficult_id,page,array);
+            getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence);
 
             //ajax分页
             function createPageDom(total,pagesize,page){
@@ -204,7 +207,8 @@
 
                     </div>
                 </div>
-
+                <input type="hidden" class="question_type" value="{{@$question_type}}">
+                <input type="hidden" class="sequence" value="{{@$sequence}}">
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
                         <button class="btn btn-primary" type="submit">保存</button>
