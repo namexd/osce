@@ -13,6 +13,7 @@
     <script>
         $(function(){
             $(".tag").select2({});
+
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
             $('.form-horizontal').submit(function(){
                 $.post($(this).attr('action'),$(this).serialize(),function(obj){

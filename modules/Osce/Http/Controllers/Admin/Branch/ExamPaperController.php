@@ -185,7 +185,7 @@ class ExamPaperController extends CommonController
         if(intval($request -> subject_id) !== 0){
             array_push($data,intval($request -> subject_id));
         }
-
+        //dd($data);
         if(intval($request -> ability_id) !== 0){
             array_push($data,intval($request -> ability_id));
         }

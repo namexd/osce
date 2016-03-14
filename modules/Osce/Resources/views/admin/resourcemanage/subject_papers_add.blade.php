@@ -62,7 +62,7 @@
                 $("#editForm").show();
                 $(this).parent().parent().parent().parent().attr("sequence");
             });
-            $('.form-horizontal').submit(function(){
+            $('#addForm').submit(function(){
                 var now = $('#paper2').find('tbody').attr('index');
                 now = parseInt(now) + 1;//计数
                 var tpye= $('select[name="question-type"] option:selected').text();//题目类型ID
