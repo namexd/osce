@@ -199,12 +199,14 @@ class StudentExamQueryController extends CommonController
     public function  getExamDetails(Request $request)
     {
         $this->validate($request, [
-            'exam_screening_id' => 'required|integer'
+            'exam_screening_id' => 'required|integer',
+            'station_id'    => 'required|integer'
         ]);
 
         $examScreeningId = intval(Input::get('exam_screening_id'));
+        $station_id = intval(Input::get('station_id'));
         //根据考试场次id查询出该结果详情
-        $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->first();
+        $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->where('station_id', '=', $station_id)->first();
         //得到考试名字
         $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
 
