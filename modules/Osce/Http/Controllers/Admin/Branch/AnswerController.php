@@ -108,7 +108,7 @@ class AnswerController extends CommonController
 
             }
         }
-        dd($examCategoryFormalData);
+        //dd($examCategoryFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'data'                         =>$examCategoryFormalData,//试题信息
         ]);
@@ -152,26 +152,6 @@ class AnswerController extends CommonController
             return response()->json(false);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -28,7 +28,7 @@ class ExamQuestionLabelRelation extends Model
 
     //关联标签表
     public function ExamQuestionLabel (){
-        return $this->hasOne('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel', 'id','exam_question_label_id');//相对关联(参数：关联模型名称，本模型键名)
+        return $this->hasOne('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel', 'id','exam_question_label_id');
     }
     /**试卷标签表
      * @method
