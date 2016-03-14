@@ -33,7 +33,7 @@
 @stop
 @section('only_js')
     <script src="{{asset('osce/admin/js/webVideoCtrl.js')}}"></script>
-    <script src="{{asset('osce/admin/statisticalAnalysis/statistical_analysis.js')}}" ></script>
+    <script src="{{asset('osce/admin/statisticalAnalysis/statistical_analysis_update.js')}}" ></script>
 @stop
 
 @section('content')
