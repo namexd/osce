@@ -517,7 +517,8 @@ class DiscussionController extends CommonController
     public function getCheckQuestions(Request $request)
     {
         $this->validate($request, [
-            'id' => 'required|integer',
+//            'id' => 'required|integer',
+            'id' => 'required',
             'pagesize' => 'sometimes|integer',
         ]);
         $pagesize = $request->get('pagesize', 1);
@@ -527,6 +528,8 @@ class DiscussionController extends CommonController
             return redirect('osce/admin/login/index');
         }
         $id = intval($request->get('id'));
+
+
         $discussionModel = new Discussion();
         $pagination = $discussionModel->getReplyPagination($id);
 
