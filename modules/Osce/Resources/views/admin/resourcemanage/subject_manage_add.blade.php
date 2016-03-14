@@ -215,7 +215,7 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-sm btn-primary" id="sure" type="submit">确定</button>
+                                    <button class="btn btn-sm btn-primary" id="sure" type="submit" disabled>确定</button>
                                     <button class="btn btn-white btn-sm" id="cancel">取消</button>
                                 </div>
                             </div>
