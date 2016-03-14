@@ -15,7 +15,7 @@
             var subject_id = $('#status0 option:selected').val();
             var ability_id = $('#status1 option:selected').val();
             var difficult_id = $('#status2 option:selected').val();
-            var page = 2;
+            var page = 1;
             var array = [];//用于存放已选中的checkbook
             var number = [];//用于存放已选中的checkbook-最终选中的
 

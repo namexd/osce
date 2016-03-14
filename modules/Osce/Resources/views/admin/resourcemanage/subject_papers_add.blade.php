@@ -288,8 +288,6 @@
                                 <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
                             @endforeach
                         @endif
-                            <option value="1">单选题</option>
-                            <option value="2">多选题</option>
                     </select>
                 </div>
             </div>
