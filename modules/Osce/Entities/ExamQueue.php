@@ -638,8 +638,7 @@ class ExamQueue extends CommonModel
                 }
                 $connection->commit();
                 return $queue;
-            } elseif ($queue->status == 3) {
-                $connection->commit();
+            } elseif ($queue->status == 3) { //通过传入的station_id进行多次点击结束考试的适配
                 return $queue;
             } else {
                 throw new \Exception('系统错误，请重试', -888);
