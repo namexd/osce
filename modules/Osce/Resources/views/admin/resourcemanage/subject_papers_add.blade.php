@@ -93,7 +93,7 @@
              * 手动组卷情况下现则试题
              */
             $('tbody').on('click','.fa-cog',function(){
-                
+               console.log($(this).parent().parent().parent().parent().firstChild().find("input").val());
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
@@ -283,9 +283,9 @@
                 <label class="col-sm-3 control-label">标签类型：</label>
                 <div class="col-sm-9">
                     <select name="question-type" id="typeSelect" class="form-control">
-                        @if(!empty(@$ExamQuestionLabelTypeList))
-                            @foreach(@$ExamQuestionLabelTypeList as $val)
-                                <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                        @if(!empty($examQuestionTypeList))
+                            @foreach($examQuestionTypeList as $key => $val)
+                                <option value="{{ @$val['id'] }}">{{@$val['name']}}</option>
                             @endforeach
                         @endif
                             <option value="1">单选题</option>
