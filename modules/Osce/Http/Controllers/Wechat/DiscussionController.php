@@ -516,7 +516,7 @@ class DiscussionController extends CommonController
      */
     public function getCheckQuestions(Request $request)
     {
-        \Log::alert('11234'. '请求讨论内容详情！');
+        \Log::alert('11234'. $request->all());
         $this->validate($request, [
             'id' => 'required|integer',
             'pagesize' => 'sometimes|integer',
