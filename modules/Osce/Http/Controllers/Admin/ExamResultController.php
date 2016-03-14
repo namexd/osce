@@ -324,7 +324,6 @@ class ExamResultController extends CommonController{
             $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningId);
             //查询出时间锚点追加到数组中
             $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationVcrId);
-
             return view('osce::admin.statisticalAnalysis.exam_video',['data'=>$data,'anchor'=>$anchor]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
