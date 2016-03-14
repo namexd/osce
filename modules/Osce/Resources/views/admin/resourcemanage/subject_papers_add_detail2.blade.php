@@ -174,69 +174,68 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <form class="form-horizontal" method="post" action="{{ route('osce.admin.ApiController.PostEditorExamPaperItem') }}">
 
-        </form>
-
-        <div class="container-fluid ibox-content" style="border: none;">
-            <div class="input-group row" style="width: 100%;margin:20px 0;">
-                @if(@$labelList)
-                    @foreach($labelList as $k=>$label)
-                        <div class="form-group col-sm-4">
-                            <label class="col-sm-4 control-label">{{@$label['name']}}：</label>
-                            <div class="col-sm-8">
-                                <select id="status{{$k}}"   class="form-control m-b" name="status2">
-                                    <option value="0">全部</option>
-                                    @foreach(@$label['label_type_and_label'] as $list)
-                                        <option value="{{@$list['id']}}">{{@$list['name']}}</option>
-                                    @endforeach
-                                </select>
+            <div class="container-fluid ibox-content" style="border: none;">
+                <div class="input-group row" style="width: 100%;margin:20px 0;">
+                    @if(@$labelList)
+                        @foreach($labelList as $k=>$label)
+                            <div class="form-group col-sm-4">
+                                <label class="col-sm-4 control-label">{{@$label['name']}}：</label>
+                                <div class="col-sm-8">
+                                    <select id="status{{$k}}"   class="form-control m-b" name="status2">
+                                        <option value="0">全部</option>
+                                        @foreach(@$label['label_type_and_label'] as $list)
+                                            <option value="{{@$list['id']}}">{{@$list['name']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
-                @endif
+                        @endforeach
+                    @endif
 
-                <div class="col-sm-3">
-                    <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
+                    <div class="col-sm-3">
+                        <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
+                    </div>
+                </div>
+                <div class="list_all">
+                    <table class="table table-striped" id="table-striped" style="background:#fff">
+                        <thead>
+                        <tr>
+                            <th>
+                                <label class="check_label all_checked">
+                                    <div class="check_icon"></div>
+                                    <input type="checkbox" value="">
+                                </label>
+                            </th>
+                            <th>序号</th>
+                            <th>试题</th>
+                            <th>考核范围</th>
+                            <th>题目类型</th>
+                        </tr>
+                        </thead>
+                        <tbody class="subjectBody">
+
+                        </tbody>
+                    </table>
+                    <div class="pull-left">
+                        {{--共{{@$data->total()}}条--}}
+                    </div>
+                    <div class="pull-right">
+                        <ul class="pagination">
+                            {{--{!! $data->appends(@$keyword)->render() !!}--}}
+                        </ul>
+
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <button class="btn btn-primary" type="submit">保存</button>
+                        <a class="btn btn-white" href="#">取消</a>
+                    </div>
                 </div>
             </div>
-            <div class="list_all">
-                <table class="table table-striped" id="table-striped" style="background:#fff">
-                    <thead>
-                    <tr>
-                        <th>
-                            <label class="check_label all_checked">
-                                <div class="check_icon"></div>
-                                <input type="checkbox" value="">
-                            </label>
-                        </th>
-                        <th>序号</th>
-                        <th>试题</th>
-                        <th>考核范围</th>
-                        <th>题目类型</th>
-                    </tr>
-                    </thead>
-                    <tbody class="subjectBody">
-
-                    </tbody>
-                </table>
-                <div class="pull-left">
-                    {{--共{{@$data->total()}}条--}}
-                </div>
-                <div class="pull-right">
-                    <ul class="pagination">
-                        {{--{!! $data->appends(@$keyword)->render() !!}--}}
-                    </ul>
-
-
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-sm-4 col-sm-offset-2">
-                    <button class="btn btn-primary" type="submit">保存</button>
-                    <a class="btn btn-white" href="#">取消</a>
-                </div>
-            </div>
-        </div>
+        </form>
     </div>
 @stop{{-- 内容主体区域 --}}
 
