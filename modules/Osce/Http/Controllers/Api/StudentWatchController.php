@@ -202,8 +202,6 @@ class StudentWatchController extends CommonController
         }
 
         $surplus = strtotime($item->end_dt)-time();
-        dd($surplus);
-
 //        $surplus = strtotime($item->station->mins);
 //        $surplus = ($item->station->mins)*60;
         if($surplus<=0){
