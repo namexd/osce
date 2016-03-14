@@ -54,11 +54,16 @@ class StudentExamQueryController extends CommonController
                 // 根据老师id找到老师所监考得考试考站
                 $examModel = new Exam();
                 $ExamList = $examModel->getInvigilateTeacher($user->id);
+
                 return view('osce::wechat.resultquery.examination_list_teacher', ['ExamList' => $ExamList]);
             }
 
             //根据用户获得考试id
             $ExamIdList = Student::where('user_id', '=', $user->id)->select('exam_id')->get();
+            if(!$ExamIdList){
+                throw new \Exception('目前你还没有参加过考试。');
+
+            }
             $list = [];
             foreach ($ExamIdList as $key => $data) {
                 $list[$key] = [
@@ -68,6 +73,7 @@ class StudentExamQueryController extends CommonController
             $examIds = array_column($list, 'exam_id');
             $ExamModel = new Exam();
             $ExamList = $ExamModel->Examname($examIds);
+
             //根据考试id获取所有考试
             //dd($ExamList);
             return view('osce::wechat.resultquery.examination_list', ['ExamList' => $ExamList]);

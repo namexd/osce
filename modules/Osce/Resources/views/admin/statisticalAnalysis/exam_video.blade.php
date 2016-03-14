@@ -64,6 +64,7 @@
                     <h4>标记点</h4>
                     <hr style="margin-top: 10px;margin-bottom: 10px">
                     <ul class="points">
+
                             @forelse($anchor as $item)
 
                                 <li><span class="year">{{$item->begin_dt}}</span></li>
