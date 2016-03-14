@@ -19,8 +19,8 @@ function examination_list(){
 	//$.session.clear('exam_id');
 	var url=pars.ajaxurl;
 	var exam_id= $.session.get('exam_id');
-	if(exam_id=='undefined'){
-		return false;
+	//console.log(exam_id);
+	if(exam_id==undefined){
 	}else{
 		$.ajax({
 			type:"get",
@@ -33,9 +33,9 @@ function examination_list(){
 
 				$(".time").text("");
 				for (var i=0;i<res.data.length;i++) {
-					console.log('type1',typeof res.data[i].type);
+					//console.log('type1',typeof res.data[i].type);
 					var type=parseInt(res.data[i].type);
-					console.log('type2',typeof res.data[i].type);
+					//console.log('type2',typeof res.data[i].type);
 					var begin_time=(res.data[i].begin_dt).substring(0,10);
 					var end_time=(res.data[i].begin_dt).substring(0,10);
 					var time="";
@@ -87,7 +87,7 @@ function examination_list(){
 						default:
 							break;
 					}
-					console.log('dom',str);
+					//console.log('dom',str);
 					$("#exmination_ul").append(str);
 				}
 			}
@@ -128,9 +128,9 @@ function examination_list(){
 
 					$(".time").text("");
 					for (var i=0;i<res.data.length;i++) {
-						console.log('type1',typeof res.data[i].type);
+						//console.log('type1',typeof res.data[i].type);
 						var type=parseInt(res.data[i].type);
-						console.log('type2',typeof res.data[i].type);
+						//console.log('type2',typeof res.data[i].type);
 						var begin_time=(res.data[i].begin_dt).substring(0,10);
 						var end_time=(res.data[i].begin_dt).substring(0,10);
 						var time="";
@@ -182,7 +182,7 @@ function examination_list(){
 							default:
 								break;
 						}
-						console.log('dom',str);
+						//console.log('dom',str);
 						$("#exmination_ul").append(str);
 					}
 				}
@@ -223,7 +223,7 @@ function examination_list_teacher(){
 
             var id=$(this).attr('value');
 			var s_id=$(this).attr("data-id");
-			console.log(id,s_id)
+			//console.log(id,s_id)
 			var url=pars.ajaxurl;
 			if(id==0){
 				$("#time").text("");

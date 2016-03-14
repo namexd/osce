@@ -41,13 +41,11 @@
     <input type="hidden" id="parameter" value="{'ip':'{{$data[0]['ip']}}',
     'port':'{{$data[0]['port']}}','username':'{{$data[0]['username']}}',
     'password':'{{$data[0]['password']}}','channel':'{{$data[0]['channel']}}','download':'{{route('osce.admin.course.getDownloadComponents')}}',
-    'starttime':'{{$data[0]['begin_dt']}}','endtime':'{{$data[0]['end_dt']}}'}" />
-
+    'starttime':'{{$data[0]['begin_dt']}}','endtime':'{{$anchor->pop()->begin_dt}}'}" />
     @else
 
    <input type="hidden" id="parameter" value="{'ip':'',
     'port':'','username':'','password':'','channel':''}" />
-
     @endif
     <div class="wrapper-content">
         <div class="row table-head-style1 ">

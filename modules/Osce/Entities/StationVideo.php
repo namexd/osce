@@ -78,7 +78,7 @@ class StationVideo extends CommonModel
             ->where('station_video.exam_id','=',$examId)
             ->where('station_video.student_id',$studentId)
             ->where('station_vcr.station_id',$stationId)
-             ->orderBy('station_video.begin_dt')
+            ->orderBy('station_video.begin_dt')
             ->select(
                 'vcr.ip as ip',
                 'vcr.username as username',
@@ -86,8 +86,8 @@ class StationVideo extends CommonModel
                 'vcr.port as port',
                 'vcr.channel as channel',
                 'station_video.begin_dt as anchor',
-                'station_video.begin_dt as begin_dt',
-                'station_video.end_dt as end_dt'
+                'station_video.begin_dt as begin_dt'
+//                'station_video.end_dt as end_dt'
             )
             ->get();
 //

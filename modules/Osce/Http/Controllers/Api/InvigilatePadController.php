@@ -545,8 +545,7 @@ class InvigilatePadController extends CommonController
             //将戳过来的字符串变成数组
             $timeAnchor = explode(',', $timeAnchor);
 
-            return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId,
-                $timeAnchor)));
+            return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor)));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
