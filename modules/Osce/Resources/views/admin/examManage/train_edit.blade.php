@@ -63,13 +63,18 @@
 		        start.max = datas;
 		    }
 		}
+
 		$("#end").click(function(){
-			end.min = $('#start').val();
+			end.min = ($('#start').val()).split(' ')[0];
+            console.log(end.min)
 			laydate(end);
 		});
+
 		laydate.skin('molv');
 		laydate(start);
 		laydate(end);
+
+
  		$('#form1').bootstrapValidator({
             message: 'This value is not valid',
             feedbackIcons: {/*输入框不同状态，显示图片的样式*/

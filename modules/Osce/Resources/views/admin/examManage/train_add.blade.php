@@ -63,6 +63,14 @@
 		        start.max = datas;
 		    }
 		}
+
+        //时间最小值处理
+        $("#end").click(function(){
+            end.min = ($('#start').val()).split(' ')[0];
+            console.log(end.min)
+            laydate(end);
+        });
+
 		laydate.skin('molv');
 		laydate(start);
 		laydate(end);
