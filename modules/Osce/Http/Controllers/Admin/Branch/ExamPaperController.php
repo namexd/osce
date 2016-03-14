@@ -282,7 +282,7 @@ class ExamPaperController extends CommonController
             $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
         }
         $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
-        dd($examQuestion);
+
         if($status == 1 && $status2 == 1){//自动-随机
             //新增试卷-试卷构造表和标签类型关联数据添加
             $result = $this->addData($examPapers,$examPaperID,$QuestionBankRepositories);
