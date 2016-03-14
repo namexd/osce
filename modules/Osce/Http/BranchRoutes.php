@@ -123,8 +123,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::post('api/editor-exam-paper-item',['uses'=>'ApiController@PostEditorExamPaperItem','as'=>'osce.admin.ApiController.PostEditorExamPaperItem']);
         //预览试卷控制器
         Route::get('api/exam-paper-preview',['uses'=>'ApiController@ExamPaperPreview','as'=>'osce.admin.ApiController.ExamPaperPreview']);
+        //生成试卷的方法
+        Route::get('api/generate-exam-paper',['uses'=>'ApiController@GenerateExamPaper','as'=>'osce.admin.ApiController.GenerateExamPaper']);
 
-
+        //理论考试登录页面地址
+        Route::get('api/examinee-info',['uses'=>'ApiController@ExamineeInfo','as'=>'osce.admin.ApiController.ExamineeInfo']);
 
     });
 

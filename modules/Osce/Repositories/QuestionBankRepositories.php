@@ -241,8 +241,7 @@ class QuestionBankRepositories  extends BaseRepository
      */
     public function GenerateExamPaper($ExamPaperId){
         $ExamPaper = new ExamPaper;
-        $ExamPaper->where('id','=',$ExamPaperId)->first();
-        $data = [];
-       return   $data;
+        $ExamPaperInfo = $ExamPaper->where('id','=',$ExamPaperId)->first();
+        return   $ExamPaperInfo;
     }
 }

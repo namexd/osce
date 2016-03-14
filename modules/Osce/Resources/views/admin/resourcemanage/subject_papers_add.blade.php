@@ -93,6 +93,7 @@
              * 手动组卷情况下现则试题
              */
             $('tbody').on('click','.fa-cog',function(){
+                
                 layer.open({
                     type: 2,
                     title: '新增试题组成',

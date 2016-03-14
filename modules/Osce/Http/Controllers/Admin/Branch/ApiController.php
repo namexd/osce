@@ -12,6 +12,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
 use Modules\Osce\Repositories\QuestionBankRepositories;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Illuminate\Http\Request;
 class ApiController extends CommonController
@@ -147,5 +148,21 @@ class ApiController extends CommonController
             }
         }
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
+    }
+    public function GenerateExamPaper(QuestionBankRepositories $questionBankRepositories){
+        dd($questionBankRepositories->GenerateExamPaper(2));
+    }
+
+    /**
+     * @method
+     * @url /osce/
+     * @access public
+     * @return \Illuminate\View\View
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月14日15:40:51
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ExamineeInfo(){
+        return  view('osce::admin.theoryCheck.theory_check_volidate');
     }
 }
