@@ -627,14 +627,14 @@ class ExamQueue extends CommonModel
                 $queue->status = 3;
                 $queue->end_dt = $date;
                 $result = $queue->save();
-                dd($result);
+                dd($queue);
                 if (!$result) {
                     throw new \Exception('状态修改失败！请重试', 2000);
                 } else {
                     /*
                      * 将考试结束的时间写进锚点表里
                      */
-                    CommonController::storeAnchor($result->station_id, $result->student_id, $result->exam_id,
+                    CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
                         $teacherId, [strtotime($date)]);
                 }
                 $connection->commit();
