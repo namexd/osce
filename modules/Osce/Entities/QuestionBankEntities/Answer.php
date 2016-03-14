@@ -89,7 +89,7 @@ class Answer extends Model
         $examQuestionFormalModel = new ExamQuestionFormal();
         if(count($data)>0){
             foreach($data as $v){
-                $rowData['answer'] = $v['answer'];
+                $rowData['student_answer'] = $v['student_answer'];
                 $result = $examQuestionFormalModel->where('id','=',$v['id'])->update($rowData);
                 if(!$result){
                     DB::rollback();
@@ -99,6 +99,83 @@ class Answer extends Model
         }
         $DB->commit();
         return true;
+    }
+
+    /**查询该考生理论考试的成绩及该考试相关信息
+     * @method
+     * @url /osce/
+     * @access public
+     * @return float|int
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function selectGrade()
+    {
+        $answerModel = new Answer();
+        //查询该正式的试卷表信息
+        $examPaperFormalList=$answerModel->first();
+        //查询该考卷的所有试题信息
+        $getFormalPaperList = $answerModel->getFormalPaper();
+        $totalScore=0;//考生总分
+        if(count($getFormalPaperList)>0){
+            foreach($getFormalPaperList as $k=>$v){
+                if($v['examCategoryFormalId']==1){
+                    //单选题
+                    if($v['studentAnswer']==$v['answer']){
+                        $totalScore+=$v['score'];
+                    }
+                }elseif($v['examCategoryFormalId']==2){
+                    //多选题
+                    //判断考生答案是否包含@符号，有证明考生选择的是多个选项，无证明考生只选择了一个选项
+                    if(strstr($v['studentAnswer'],'@')){
+                        if($v['studentAnswer']==$v['answer']){
+                            $totalScore+=$v['score'];
+                        }elseif(strstr($v['answer'],$v['studentAnswer'])){
+                            $totalScore+=$v['score']/2;
+                        }
+                    }else{
+                        if(strstr($v['answer'],$v['studentAnswer'])){
+                            $totalScore+=$v['score']/2;
+                        }
+                    }
+                }elseif($v['examCategoryFormalId']==3){
+                    //不定性选择题
+                    //判断考生答案是否包含@符号，有证明考生选择的是多个选项，无证明考生只选择了一个选项
+                    if(strstr($v['studentAnswer'],'@')){
+                        if($v['studentAnswer']==$v['answer']){
+                            $totalScore+=$v['score'];
+                        }elseif(strstr($v['answer'],$v['studentAnswer'])){
+                            $totalScore+=$v['score']/2;
+                        }
+                    }else{
+                        if(strstr($v['answer'],$v['studentAnswer'])){
+                            $totalScore+=$v['score']/2;
+                        }
+                    }
+
+                }elseif($v['examCategoryFormalId']==4){
+                    //判断题
+                    if($v['studentAnswer']==$v['answer']){
+                        $totalScore+=$v['score'];
+                    }
+                }
+            }
+        }
+        $examPaperFormalList['totalScore']=$totalScore;
+        if($examPaperFormalList){
+            $examPaperFormalData=array(
+                'id'=>$examPaperFormalList->id,//编号
+                'exam_paper_id'=>$examPaperFormalList->exam_paper_id,//试卷id
+                'length'=>$examPaperFormalList->length,//考试时长
+                'name'=>$examPaperFormalList->name,//试卷名称
+                'total_score'=>$examPaperFormalList->total_score,//总分
+                'actual_length'=>$examPaperFormalList->actual_length,//考试用时
+                'totalScore'=>$examPaperFormalList->totalScore,//该考生成绩
+            );
+        }
+        return $examPaperFormalData;
+
     }
 
 
