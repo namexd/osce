@@ -195,7 +195,6 @@ class ExamResult extends CommonModel
 
 
     public function stationInfo($studentId,$examScreeningId){
-
      $builder=$this->leftJoin('station', function($join){
          $join -> on('station.id', '=', 'exam_result.station_id');
      })-> leftJoin('teacher', function($join){

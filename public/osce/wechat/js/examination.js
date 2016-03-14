@@ -46,6 +46,7 @@ function examination_list(){
 					}
 					$(".time").text(time);
 					var str="";
+
 					switch (type){
 						case 1:
 							str+='<li>'+
