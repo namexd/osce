@@ -87,18 +87,22 @@ class Answer extends Model
         $DB = \DB::connection('osce_mis');
         $DB->beginTransaction();
         $examQuestionFormalModel = new ExamQuestionFormal();
-        if(count($data)>0){
-            foreach($data as $v){
-                $rowData['student_answer'] = $v['student_answer'];
-                $result = $examQuestionFormalModel->where('id','=',$v['id'])->update($rowData);
-                if(!$result){
-                    DB::rollback();
-                    return false;
+        try{
+            if(count($data)>0){
+                foreach($data as $v){
+                    $rowData['student_answer'] = $v['student_answer'];
+                    $result = $examQuestionFormalModel->where('id','=',$v['id'])->update($rowData);
+                    if(!$result){
+                        throw new \Exception(' 保存考生答案失败！');
+                    }
                 }
             }
+            $DB->commit();
+            return true;
+        }catch (\Exception $ex){
+            $DB->rollback();
+            throw $ex;
         }
-        $DB->commit();
-        return true;
     }
 
     /**查询该考生理论考试的成绩及该考试相关信息
