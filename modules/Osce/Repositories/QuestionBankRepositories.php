@@ -189,7 +189,7 @@ class QuestionBankRepositories  extends BaseRepository
                         $data[$k]['child'][$val['label_type_id']][] = $val;
                     }
                 }
-                $data[$k]['question_type'] = $v['type'];
+                $data[$k]['question_type'] = !empty($v['type'])?$v['type']:$v['exam_question_type_id'];
                 $data[$k]['question_num'] = $v['num'];
                 $data[$k]['question_score'] = $v['score'];
                 $data[$k]['question_total_score'] = $v['total_score'];
@@ -246,10 +246,19 @@ class QuestionBankRepositories  extends BaseRepository
      */
     public function GenerateExamPaper($ExamPaperId){
         $ExamPaper = new ExamPaper;
-        $ExamPaperInfo = $ExamPaper->where('id','=',$ExamPaperId)->first();
+        $ExamPaperInfo = $ExamPaper->where('id','=',$ExamPaperId)->with(['ExamPaperStructure'=>function($ExamPaperStructure){
+            $ExamPaperStructure->with('ExamPaperStructureLabel');
+        }])->first();
         if(count($ExamPaperInfo)>0){
             if($ExamPaperInfo->type == 1){
-                //dd($ExamPaper->ExamPaperStructure);
+                if(count($ExamPaperInfo->ExamPaperStructure)>0){
+                    foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
+                        if(count($v->ExamPaperStructureLabel)){
+                            $ExamPaperInfo->ExamPaperStructure[$k]['structure_label'] = $v->ExamPaperStructureLabel;
+                        }
+                    }
+                }
+                $ExamPaperInfo['child'] = ($this->StructureExamQuestionArr($ExamPaperInfo->ExamPaperStructure));
             }elseif($ExamPaperInfo->type == 2){
 
             }
