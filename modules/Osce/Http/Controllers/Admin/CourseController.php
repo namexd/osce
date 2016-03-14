@@ -42,7 +42,7 @@ class CourseController extends CommonController
             /*
              * 获取近段时间进行的考试
              */
-            $examObj = Exam::where('status', '<>', 0)->first();
+            $examObj = Exam::where('status', '<>', 0)->orderBy('begin_dt', 'desc')->first();
 
             if (is_null($examObj)) {
                 $subjectData = [];
