@@ -451,6 +451,7 @@ $(function(){
                     setTimeout(function(){
                         clickPause(g_iWndIndex);
                     },1000);
+                    clearTimeout(timer);
                 }
                 //alert(oWndInfo.szIP + " " + szInfo);
             }
@@ -490,6 +491,7 @@ $(function(){
                     //timer=setTimeout(progressMove,step*1000);
                 } else {
                     szInfo = "恢复失败！";
+                    clearTimeout(timer);
                 }
                 //alert(oWndInfo.szIP + " " + szInfo);
             }
