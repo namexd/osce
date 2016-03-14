@@ -617,7 +617,8 @@ function categories(){
 
                         for(var i in res){
                             /*TODO: Zhoufuxiang 2016-2-26*/
-                           if(res[i].sort.indexOf('-') == -1){
+
+                           if((res[i].sort).split('-')[1] == undefined){
                                 index++;
                                //添加父级dom
                                html += '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
@@ -650,7 +651,7 @@ function categories(){
                         
                                for(var j in res){
                                    /*TODO: Zhoufuxiang 2016-2-26*/
-                                   if((res[j].sort.indexOf('-') == 1) && (res[j].sort.substr(0,1) == res[i].sort)){
+                                   if(((res[j].sort).split('-')[1] != undefined) && ((res[j].sort).split('-')[0] == res[i].sort)){
                         
                                        //处理子级dom
                                        html += '<tr child="'+res[j].sort.substr(res[j].sort.indexOf('-')+1, 3)+'" class="pid-'+index+'" >'+
@@ -688,6 +689,7 @@ function categories(){
                                }
                            }
                         }
+                        console.log(data)
                         $('tbody').attr('index',index);
                         $('tbody').append(html);
                     }else {
