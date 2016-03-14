@@ -312,7 +312,7 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId)
     {
         //开启事务
         $connection = DB::connection($this->connection);
@@ -320,6 +320,8 @@ class ExamQueue extends CommonModel
         try {
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
+            // 调用锚点方法
+            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
 
 //                查询学生是否已开始考试
             $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
