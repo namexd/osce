@@ -27,15 +27,15 @@ class AutomaticPlanArrangementController extends CommonController
      * @time 2016-02-22 18：01
      * @return \Illuminate\Http\JsonResponse
      */
-    function getIndex(Request $request) {
-
-        $this->validate($request,[
+    function getIndex(Request $request)
+    {
+        $this->validate($request, [
             'exam_id' => 'required|integer'
         ]);
 
         $examId = $request->input('exam_id');
         try {
-            $automaticPlanArrangement = new AutomaticPlanArrangement($examId,new ExamPlaceEntity(),new Exam());
+            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
             /** @var 考试id $examId */
             return response()->json($this->success_data($automaticPlanArrangement->output($examId)));
         } catch (\Exception $ex) {
@@ -51,17 +51,17 @@ class AutomaticPlanArrangementController extends CommonController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    function postBegin(Request $request) {
-        $this->validate($request,[
+    function postBegin(Request $request)
+    {
+        $this->validate($request, [
             'exam_id' => 'required|integer'
         ]);
 
         $examId = $request->input('exam_id');
 
         try {
-            $automaticPlanArrangement = new AutomaticPlanArrangement($examId,new ExamPlaceEntity(),new Exam());
-            $a = $this->success_data($automaticPlanArrangement->plan($examId));
-            return response()->json($a);
+            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
+            return response()->json($this->success_data($automaticPlanArrangement->plan($examId)));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
@@ -75,23 +75,22 @@ class AutomaticPlanArrangementController extends CommonController
      * @author Jiangzhiheng
      * @time 2016-02-23 17:30
      */
-    function postStore(Request $request, ExamPlan $examPlan) {
-        $this->validate($request,[
-           'exam_id' => 'required|integer'
+    function postStore(Request $request, ExamPlan $examPlan)
+    {
+        $this->validate($request, [
+            'exam_id' => 'required|integer'
         ]);
         $examId = $request->input('exam_id');
 
         //获取操作者
         $user = Auth::user();
-        ExamPlan::where('exam_id',$examId)->delete();
+        ExamPlan::where('exam_id', $examId)->delete();
         try {
-            $examPlan->storePlan($examId,$user);
+            $examPlan->storePlan($examId, $user);
 
-            return redirect()->route('osce.admin.exam.getIntelligence',['id'=>$examId]);
+            return redirect()->route('osce.admin.exam.getIntelligence', ['id' => $examId]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
-
-
     }
 }

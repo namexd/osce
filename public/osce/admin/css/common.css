@@ -129,9 +129,6 @@ a{-webkit-touch-callout:none;}
 .btn-default2{background-color: #fff;border-color: #ccc;color: #9c9c9c;}
 a.btn:hover {text-decoration: none;}
 
-
-
-
 .has-error .form-control{border-color: #ed5565!important;}
 
 .btn-primary[disabled]{background:#eee;color:#aaa;border:1px solid #aaa;}
@@ -331,3 +328,6 @@ table tbody tr td:last-child{width: 120px;}
 table + .pull-left,.pull-left + .pull-right{margin-top:12px!important;}
 /*手势*/
 .cursor{cursor: pointer}
+/*ie 下拉选择兼容*/
+.has-feedback .form-control{padding-right: 5px;}
+

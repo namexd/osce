@@ -2,9 +2,10 @@
 
 @section('only_head_css')
 <link rel="stylesheet" href="{{asset('osce/wechat/css/resultquery.css')}}" type="text/css" />
+
 @stop
 @section('only_head_js')
-
+    <script src="{{asset('osce/wechat/js/jquerysession.js')}}"></script>
 @stop
 
 @section('content')
@@ -36,28 +37,49 @@
         </div>
         <div class="form-group">
             <label for="">评价</label>
-            <div class="txt">{{$examresultList->evaluate}}</div>
+            <div class="txt">{{($examresultList->evaluate == 'null'?'':$examresultList->evaluate)}}</div>
         </div>
   	</div>
 
   	<div class="detail_box">
 	  	<table id="detail_tb">
 	  		<tr>
-	  			<th>序号</th>
-	  			<th>考核内容</th>
-	  			<th>满分</th>
-	  			<th>得分</th>
+	  			<th width="15%">序号</th>
+	  			<th width="55%">考核内容</th>
+	  			<th width="15%" style="text-align: center">满分</th>
+	  			<th width="15%" style="text-align: center">得分</th>
 	  		</tr>
-			@forelse($examScoreList as $examScore)
-	  		<tr class="active">
-	  			<td>{{$examScore->standard->pid==0? $examScore->standard->sort:$examScore->standard->parent->sort.'-'.$examScore->standard->sort}}</td>
-	  			<td>{{$examScore->standard->content}}</td>
-	  			<td>{{$examScore->standard->score}}</td>
-	  			<td>{{$examScore->score}}</td>
-	  		</tr>
-				@empty
 
-			@endforelse
+            @forelse($examScoreList as $key => $value)
+                <tr class="active">
+                    <td>{{$value['sort']}}</td>
+                    <td>{{$value['content']}}</td>
+                    <td style="text-align: center">{{$value['tScore']}}</td>
+                    <td style="text-align: center">{{$value['score']}}</td>
+                </tr>
+                @forelse($value['items'] as $k => $item)
+                    <tr>
+                        <td>{{$item['standard']->parent->sort.'-'.$item['standard']->sort}}</td>
+                        <td>{{$item['standard']->content}}</td>
+                        <td style="text-align: center">{{$item['standard']->score}}</td>
+                        <td style="text-align: center">{{$item['score']}}</td>
+                    </tr>
+                @empty
+                @endforelse
+            @empty
+            @endforelse
+
+
+
+			{{--@forelse($examScoreList as $examScore)--}}
+                {{--<tr class="active">--}}
+                    {{--<td>{{$examScore->standard->pid==0? $examScore->standard->sort:$examScore->standard->parent->sort.'-'.$examScore->standard->sort}}</td>--}}
+                    {{--<td>{{$examScore->standard->content}}</td>--}}
+                    {{--<td>{{$examScore->standard->score}}</td>--}}
+                    {{--<td>{{$examScore->score}}</td>--}}
+                {{--</tr>--}}
+            {{--@empty--}}
+			{{--@endforelse--}}
 
 	  	</table>
 	</div>

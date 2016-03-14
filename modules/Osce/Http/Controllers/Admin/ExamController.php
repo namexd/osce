@@ -12,11 +12,14 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\AutomaticPlanArrangement\AutomaticPlanArrangement;
+use Modules\Osce\Entities\AutomaticPlanArrangement\ExamPlaceEntity;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamPlanForRoom;
+use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Flows;
@@ -93,7 +96,7 @@ class ExamController extends CommonController
             $item->constitute = $this->getExamConstitute($item['id']);
         }
 
-        return view('osce::admin.exammanage.exam_assignment', ['data' => $data]);
+        return view('osce::admin.examManage.exam_assignment', ['data' => $data]);
 
     }
 
@@ -140,7 +143,7 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getAddExam(){
-        return view('osce::admin.exammanage.exam_add');
+        return view('osce::admin.examManage.exam_assignment_add');
     }
 
     /**
@@ -266,7 +269,7 @@ class ExamController extends CommonController
             $examData = Exam::findOrFail($id);
             $examScreeningData = ExamScreening::where(['exam_id' => $id])->get();
 
-            return view('osce::admin.exammanage.add_basic',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
+            return view('osce::admin.examManage.exam_basic_info',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -395,7 +398,7 @@ class ExamController extends CommonController
 
             $status=Exam::where('id','=',$exam_id)->select()->first()->status;
             //展示页面
-            return view('osce::admin.exammanage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword,'status'=>$status]);
+            return view('osce::admin.examManage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword,'status'=>$status]);
 
         } catch (\Exception $ex) {
             return redirect()->back()->withError($ex);
@@ -461,7 +464,7 @@ class ExamController extends CommonController
      */
     public function getAddExaminee(Request $request){
         $id = $request->get('id');
-        return view('osce::admin.exammanage.examinee_add', ['id' => $id]);
+        return view('osce::admin.examManage.examinee_manage_add', ['id' => $id]);
     }
 
     /**
@@ -492,33 +495,32 @@ class ExamController extends CommonController
             'mobile'        =>  'required',
             'code'          =>  'required',
             'images_path'   =>  'required',
-            'exam_sequence' =>  'required'
+            'exam_sequence' =>  'required',
+            'grade_class'   =>  'required',
+            'teacher_name'  =>  'required'
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
             'mobile.required'       =>  '手机号必填',
             'code.required'         =>  '学号必填',
             'images_path.required'  =>  '请上传照片',
-            'exam_sequence.required'=>  '准考证号必填'
+            'exam_sequence.required'=>  '准考证号必填',
+            'grade_class.required'  =>  '班级必填',
+            'teacher_name.required' =>  '班主任姓名必填'
         ]);
 
         //考试id
         $exam_id = $request->get('exam_id');
-        //考生数据
-        $examineeData = [
-            'name'          => $request  ->  get('name'),          //姓名
-            'gender'        => $request  ->  get('gender'),        //性别
-            'idcard'        => $request  ->  get('idcard'),        //身份证号
-            'mobile'        => $request  ->  get('mobile'),        //手机号
-            'code'          => $request  ->  get('code'),          //学号
-            'avator'        => $request  ->  get('images_path')[0],//照片
-            'email'         => $request  ->  get('email'),         //邮箱
-            'description'   => $request  ->  get('description'),   //备注
-            'exam_sequence' => $request  ->  input('exam_sequence') //准考证号
-        ];
+        $images  = $request->get('images_path');      //照片
+        //用户数据(姓名,性别,身份证号,手机号,学号,邮箱,照片)
+        $userData = $request->only('name','gender','idcard','mobile','code','email');
+        $userData['avatar'] = $images[0];      //照片
+        //考生数据(姓名,性别,身份证号,手机号,学号,邮箱,备注,准考证号,班级,班主任姓名)
+        $examineeData = $request->only('name','idcard','mobile','code','description','exam_sequence','grade_class','teacher_name');
+        $examineeData['avator'] = $images[0];  //照片
 
         try{
-            if($exam = $model -> addExaminee($exam_id, $examineeData))
+            if($exam = $model -> addExaminee($exam_id, $examineeData, $userData))
             {
                 return redirect()->route('osce.admin.exam.getExamineeManage', ['id' => $exam_id]);
             } else {
@@ -537,7 +539,7 @@ class ExamController extends CommonController
         $id =   $request    ->  get('id');
         $student    =   Student::findOrFail($id);
 
-        return view('osce::admin.exammanage.examinee_edit', ['item' => $student]);
+        return view('osce::admin.examManage.examinee_manage_edit', ['item' => $student]);
     }
 
     public function postEditExaminee(Request $request){
@@ -550,26 +552,24 @@ class ExamController extends CommonController
             'mobile'        =>  'required',
             'description'   =>  'sometimes',
             'images_path'   =>  'required',
-            'exam_sequence' =>  'required'
+            'exam_sequence' =>  'required',
+            'grade_class'   =>  'required',
+            'teacher_name'  =>  'required'
         ],[
             'name.required'         =>  '姓名必填',
             'idcard.required'       =>  '身份证号必填',
             'mobile.required'       =>  '手机号必填',
             'images_path.required'  =>  '请上传照片',
-            'exam_sequence.required'=>  '准考证号必填'
+            'exam_sequence.required'=>  '准考证号必填',
+            'grade_class.required'  =>  '班级必填',
+            'teacher_name.required' =>  '班主任姓名必填'
         ]);
-        $id =   $request->get('id');
+        $id         =   $request->get('id');
         $student    =   Student::find($id);
-        $images     =   $request->get('images_path');
-        $data   =   [
-            'name'          =>  $request->get('name'),
-            'idcard'        =>  $request->get('idcard'),
-            'mobile'        =>  $request->get('mobile'),
-            'code'          =>  $request->get('code'),
-            'avator'        =>  $images[0],
-            'description'   =>  $request->get('description'),
-            'exam_sequence' => $request  ->  input('exam_sequence') //准考证号
-        ];
+        $images     =   $request->get('images_path');   //照片
+        //考生数据(姓名,性别,身份证号,手机号,学号,邮箱,备注,准考证号,班级,班主任姓名)
+        $data = $request->only('name','idcard','mobile','code','description','exam_sequence','grade_class','teacher_name');
+        $data['avator'] = $images[0];  //照片
 
         try{
             if($student) {
@@ -633,20 +633,23 @@ class ExamController extends CommonController
             //获得上传的数据
             $exam_id= $id;
             $data   = Common::getExclData($request, 'student');
-            $exam   =   Exam::find($exam_id);
+            $exam   = Exam::find($exam_id);
             if($exam->status!=0)
             {
                 throw new \Exception('此考试当前状态下不允许新增');
             }
             //去掉sheet
             $studentList = array_shift($data);
+            //判断模板 列数、表头是否有误
+            $student->judgeTemplet($studentList);
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
-            if(!$student->importStudent($exam_id, $examineeData)){
-                throw new \Exception('学生导入数据失败，请修改重试');
+            $result = $student->importStudent($exam_id, $examineeData);
+            if(!$result){
+                throw new \Exception('学生导入数据失败，请参考模板修改后重试');
             }
 
-            return json_encode($this->success_data(['code'=>1]));
+            return json_encode($this->success_data([], 1, "成功导入{$result}个学生！"));
 
         } catch (\Exception $ex) {
             return json_encode($this->fail($ex));
@@ -680,15 +683,16 @@ class ExamController extends CommonController
               'student_name'   => 'sometimes',
         ]);
         //获取各字段
-        $exam_name      = trim($request->get('exam_name'));
-        $student_name   = trim($request->get('student_name'));
-        $formData = ['exam_name'=>$exam_name, 'student_name'=>$student_name];
+        $exam_name    = trim(e($request->get('exam_name')));
+        $student_name = trim($request->get('student_name'));
+        $formData     = ['exam_name'=>$exam_name, 'student_name'=>$student_name];
+
         //获取当前场所的类
-        $examModel= new Student();
+        $examModel = new Student();
         //从模型得到数据
-        $data=$examModel->getList($formData);
+        $data = $examModel->getList($formData);
         //展示页面
-        return view('osce::admin.exammanage.examinee_query', ['data'=>$data, 'exam_name'=>$exam_name, 'student_name'=>$student_name]);
+        return view('osce::admin.examManage.examinee_query', ['data'=>$data, 'exam_name'=>$exam_name, 'student_name'=>$student_name]);
     }
 
     /**
@@ -726,7 +730,7 @@ class ExamController extends CommonController
 
 
         //TODO:请蒋志恒 确认行代码还可以跑    如果 非必要 请及时删除 2016-01-17 22:28 罗海华
-        //return view('osce::admin.exammanage.sp_invitation', ['data' => $data]);
+        //return view('osce::admin.examManage.sp_invitation', ['data' => $data]);
     }
 
     /**
@@ -801,7 +805,7 @@ class ExamController extends CommonController
         }
 //        dd($examStationData);
         $status=Exam::where('id',$exam_id)->select('status')->first()->status;
-        return view('osce::admin.exammanage.examroom_assignment', [
+        return view('osce::admin.examManage.exam_room_assignment', [
             'id'                => $exam_id,
             'status'            => $status,
             'examRoomData'      => $serialnumberGroup,
@@ -1238,13 +1242,29 @@ class ExamController extends CommonController
             if ($ex->getCode() == 9999) {
                 $user   =   Auth::user();
                 $plan = [];
-                return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
+                return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
             }
         }
 //        $plan   =   $this           ->  getEmptyTime($plan);
         $user   =   Auth::user();
+        //如果$plan为空，就判断该考试在临时表中是否有数据
 
-        return view('osce::admin.exammanage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
+        try {
+            if (count($plan) == 0) {
+                if (ExamPlanRecord::where('exam_id', $id)->first()) {
+                    $automaticPlanArrangement = new AutomaticPlanArrangement($id, new ExamPlaceEntity(), new \Modules\Osce\Entities\AutomaticPlanArrangement\Exam());
+                    $plan = $automaticPlanArrangement->output($id);
+                    return view('osce::admin.examManage.smart_assignment', ['exam' => $exam, 'plan' => $plan])->withErrors('当前排考计划没有保存！');
+                } else {
+                    $plan = [];
+                }
+            }
+        }
+        catch (\Exception $ex)
+        {
+            return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
+        }
+        return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);
     }
 
     /**
@@ -1393,7 +1413,7 @@ class ExamController extends CommonController
             }
         }
        $status=Exam::where('id',$exam_id)->select('status')->first()->status;
-        return view('osce::admin.exammanage.station_assignment', [
+        return view('osce::admin.examManage.exam_station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,
             'stationData' => $stationData,
@@ -1635,7 +1655,7 @@ class ExamController extends CommonController
         $id = $request->input('id');
         $suc= $request->get('suc');
         $data = Exam::where('id',$id)->select(['rules','status'])->first();
-        return view('osce::admin.exammanage.waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
+        return view('osce::admin.examManage.exam_waiting_area', ['id'=>$id, 'data'=>$data, 'suc'=>$suc]);
     }
 
     public function postExamRemind(Request $request)
@@ -1782,7 +1802,7 @@ class ExamController extends CommonController
         $id =   $request    ->  get('id');
         $student    =   Student::find($id);
 
-        return view('osce::admin.exammanage.examinee_query_detail', ['item' => $student]);
+        return view('osce::admin.examManage.examinee_query_detail', ['item' => $student]);
     }
 
     /**
@@ -1790,35 +1810,63 @@ class ExamController extends CommonController
      * @url POST /osce/admin/exam/exam-sequence-unique
      * @author zhouchong <zhouchong@misrobot.com>     *
      */
-    public function postExamSequenceUnique(Request $request){
-       $this->validate($request,[
-           'exam_id' => 'required',
-           'exam_sequence' => 'required',
-           'id' => 'sometimes',
-       ]);
-       $examId=$request->input('exam_id');
-       $exam_sequence=$request->input('exam_sequence');
-       $studentId=$request->input('id');
-//       $examSequence=Student::where('exam_id',$examId)->select('exam_sequence')->first()->exam_sequence;
-       $id=Student::where('exam_id',$examId)->where('exam_sequence',$exam_sequence)->select('id')->first();
-        if(empty($studentId)){
-            if($id){
-                return json_encode(['valid' =>false]);
-            }else{
-                return json_encode(['valid' =>true]);
-            }
+    public function postExamSequenceUnique(Request $request)
+    {
+        $this->validate($request,[
+            'exam_id'        => 'required',
+            'exam_sequence'  => 'sometimes',
+            'mobile'         => 'sometimes',
+            'idcard'         => 'sometimes',
+            'code'           => 'sometimes',
+            'id'             => 'sometimes',
+        ]);
+        $examId      = $request->input('exam_id');
+        $examSequence= $request->input('exam_sequence');
+        $mobile      = $request->input('mobile');
+        $idcard      = $request->input('idcard');
+        $code        = $request->input('code');
+        $studentId   = $request->input('id');
+        //根据条件判断
+        if(!empty($mobile)){
+            $where = ['exam_id'=>$examId, 'mobile' => $mobile];
+        }elseif(!empty($idcard)){
+            $where = ['exam_id'=>$examId, 'idcard' => $idcard];
+        }elseif(!empty($code)){
+            $where = ['exam_id'=>$examId, 'code' => $code];
+        }elseif(!empty($examSequence)){
+            $where = ['exam_id'=>$examId, 'exam_sequence' => $examSequence];
         }else{
-            if($id){
-                if($id->id!=$studentId){
-                    return json_encode(['valid' =>false]);
-                }else{
-                    return json_encode(['valid' =>true]);
-                }
-            }else{
-                return json_encode(['valid' =>true]);
-            }
-
+            return json_encode(['valid' =>false]);
+        }
+        if(empty($studentId)){
+            $result = Student::where($where)->first();
+        }else{
+            $result = Student::where($where)->where('id', '<>', $studentId)->first();
+        }
+        //是否已存在
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
         }
 
+//       $id  = Student::where('exam_id',$examId)->where('exam_sequence',$examSequence)->select('id')->first();
+//        if(empty($studentId)){
+//            if($id){
+//                return json_encode(['valid' =>false]);
+//            }else{
+//                return json_encode(['valid' =>true]);
+//            }
+//        }else{
+//            if($id){
+//                if($id->id!=$studentId){
+//                    return json_encode(['valid' =>false]);
+//                }else{
+//                    return json_encode(['valid' =>true]);
+//                }
+//            }else{
+//                return json_encode(['valid' =>true]);
+//            }
+//        }
     }
 }

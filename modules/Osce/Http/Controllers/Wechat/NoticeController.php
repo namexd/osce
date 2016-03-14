@@ -149,15 +149,14 @@ class NoticeController extends CommonController
 
         $id = $request->get('id');
         $notice = InformInfo::find($id);
+        //消息不存在
         if (is_null($notice)) {
-            //消息不存在
-            abort(404, '你要查看的通知不存在');
+            return redirect()->back()->withErrors('你要查看的通知不存在！');
+//            abort(404, '你要查看的通知不存在');
         }
         if($notice->attachments){
             $notice->attachments = explode(',', $notice->attachments);
         }
-
-
 
         return view('osce::wechat.exammanage.exam_notice_detail', ['notice' => $notice]);
     }

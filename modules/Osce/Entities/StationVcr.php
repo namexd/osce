@@ -135,7 +135,7 @@ class StationVcr extends CommonModel
 
             $result=$result ->where('exam_room.exam_id', '=', $exam_id);
 
-            $result= $result->select(['station_vcr.id','vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
+            $result= $result->select(['station_vcr.id AS stationVcrId','vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
                 -> get();
 
             return $result;

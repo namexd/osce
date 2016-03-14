@@ -39,10 +39,10 @@ class AuthController extends BaseController
      * @date 2015年12月15日17:39:08
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function AuthManage(){
-
+    public function AuthManage(Request $request){
+        $succ = $request->input('succ');
         $roleList = $this->SysRoles->getRolesList();
-        return view('usermanage.rolemanage',['roleList'=>$roleList]);
+        return view('usermanage.rolemanage',['roleList'=>$roleList,'succ'=>$succ]);
     }
 
     /**
@@ -90,6 +90,13 @@ class AuthController extends BaseController
             'slug' => rand(1,999999),
             'description'=>Input::get('description')
         ];
+        //查看角色名是否已存在
+
+        $RoleName = DB::connection('sys_mis')->table('sys_roles')->where('name','=',$data['name'])->first();
+        if($RoleName){
+            return  redirect()->back()->withErrors(['该角色名已存在']);
+        }
+
         $addNewRole = DB::connection('sys_mis')->table('sys_roles')->insert($data);
 
         if($addNewRole){
@@ -249,9 +256,10 @@ class AuthController extends BaseController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function editRole(Request $Request){
-        //dd(Input::get());
+//        dd(Input::get());
         $this->validate($Request,[
             'name' => 'required|min:2|max:10',
+            'id'   => 'required'
         ],[
             'name.required' => '角色名必填',
             'name.min'      => '角色名长度至少为2个',
@@ -269,15 +277,23 @@ class AuthController extends BaseController
 //        }
         //TODO: zhoufuxiang 2016-2-23
         $name =  Input::get('name');
+        $id   =  Input::get('id');
         $des  =  Input::get('description');
         $addNewRole = SysRoles::where(['id'=>Input::get('id')])->first();
         if($addNewRole->name == $name && $addNewRole->description == $des){
             return  redirect()->back()->withErrors(['未做修改']);
         }
+        //查看角色名是否已存在
+        $RoleName = DB::connection('sys_mis')->table('sys_roles')->where('name',$name)->where('id','<>',$id)->first();
+        if($RoleName){
+            return  redirect()->back()->withErrors(['该角色名已存在']);
+        }
+
         $addNewRole->name        = $name;
         $addNewRole->description = $des;
         if($addNewRole->save()){
-            return redirect()->intended('/auth/auth-manage');
+//            return redirect()->intended('/auth/auth-manage');
+            return redirect()->route('auth.AuthManage',['succ'=>1]);
         }else{
             return  redirect()->back()->withErrors(['修改失败']);
         }

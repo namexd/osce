@@ -8,6 +8,8 @@
 namespace Modules\Osce\Entities;
 
 use DB;
+use Doctrine\Common\Persistence\ObjectManager;
+use Modules\Osce\Entities\Exam;
 
 class ExamQueue extends CommonModel
 {
@@ -18,24 +20,38 @@ class ExamQueue extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['exam_id', 'exam_screening_id', 'student_id', 'station_id', 'room_id', 'begin_dt', 'end_dt', 'status', 'created_user_id'];
+    protected $fillable = [
+        'exam_id',
+        'exam_screening_id',
+        'student_id',
+        'station_id',
+        'room_id',
+        'begin_dt',
+        'end_dt',
+        'status',
+        'created_user_id'
+    ];
     public $search = [];
 
-    public function station(){
-        return $this->hasOne('\Modules\Osce\Entities\Station','id','station_id');
+    public function station()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Station', 'id', 'station_id');
     }
 
-    public function room(){
-        return $this->hasOne('\Modules\Osce\Entities\Room','id','room_id');
+    public function room()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Room', 'id', 'room_id');
     }
 
 
-    public function examScreening(){
-        return $this->hasOne('\Modules\Osce\Entities\ExamScreening','id','exam_screening_id');
+    public function examScreening()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\ExamScreening', 'id', 'exam_screening_id');
     }
 
-    public function exam(){
-        return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
+    public function exam()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Exam', 'id', 'exam_id');
     }
 
 
@@ -146,7 +162,9 @@ class ExamQueue extends CommonModel
 //                'station.mins as mins',
 //                'exam_queue.exam_id as exam_id'
 //            ])->get();
-        return $this->where('student_id','=',$studentId)->get();
+        return $this->where('student_id', '=', $studentId)
+            ->orderBy('begin_dt', 'asc')
+            ->get();
     }
 
 
@@ -168,23 +186,23 @@ class ExamQueue extends CommonModel
     {
         try {
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
-                    ->where('exam_queue.room_id', $room_id)
-                    ->where('exam_queue.status', '<' , 3)
-                    ->where('student.exam_id', $examId)
-                    ->select(
-                        'student.id as student_id',
-                        'student.name as student_name',
-                        'student.user_id as student_user_id',
-                        'student.idcard as student_idcard',
-                        'student.mobile as student_mobile',
-                        'student.code as student_code',
-                        'student.avator as student_avator',
-                        'student.description as student_description'
-                    )
-                    ->orderBy('exam_queue.begin_dt', 'asc')
-                    ->groupBy('student.id')
-                    ->take(count($stations))
-                    ->get();
+                ->where('exam_queue.room_id', $room_id)
+                ->where('exam_queue.status', '<', 3)
+                ->where('student.exam_id', $examId)
+                ->select(
+                    'student.id as student_id',
+                    'student.name as student_name',
+                    'student.user_id as student_user_id',
+                    'student.idcard as student_idcard',
+                    'student.mobile as student_mobile',
+                    'student.code as student_code',
+                    'student.avator as student_avator',
+                    'student.description as student_description'
+                )
+                ->orderBy('exam_queue.begin_dt', 'asc')
+                ->groupBy('student.id')
+                ->take(count($stations))
+                ->get();
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -193,8 +211,8 @@ class ExamQueue extends CommonModel
     static public function examineeByStationId($stationId, $examId)
     {
         return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
-            ->where('exam_queue.station_id',$stationId)
-            ->where('exam_queue.status', '<' , 3)
+            ->where('exam_queue.station_id', $stationId)
+            ->where('exam_queue.status', '<', 3)
             ->where('student.exam_id', $examId)
             ->select(
                 'student.id as student_id',
@@ -224,7 +242,7 @@ class ExamQueue extends CommonModel
         try {
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
-                ->where('exam_queue.status', '<' ,3)
+                ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
                 ->skip(count($station))
                 ->take(count($station))
@@ -246,10 +264,10 @@ class ExamQueue extends CommonModel
         try {
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.station_id', $stationId)
-                ->where('exam_queue.status', '<' ,3)
+                ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->skip(1)  //TODO 可能要改
+                ->skip(1)//TODO 可能要改
                 ->take(1)
                 ->select(
                     'student.id as student_id',
@@ -262,6 +280,7 @@ class ExamQueue extends CommonModel
             throw $ex;
         }
     }
+
     /**
      * 学生腕表信息 下一场考试信息判断
      * @param $room_id
@@ -294,49 +313,102 @@ class ExamQueue extends CommonModel
 
     public function AlterTimeStatus($studentId, $stationId, $nowTime)
     {
-            //开启事务
-            $connection = DB::connection($this->connection);
-            $connection->beginTransaction();
+        //开启事务
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
         try {
+            //拿到正在考的考试
+            $exam = Exam::where('status', '=', 1)->first();
 
-            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
-                ->update(['status' => 2]);
+//                查询学生是否已开始考试
+            $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
+            if ($examQueue->status == 2) {
+                return true;
+            }
+//            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
+            $status = $examQueue->update(['status' => 2]);
+
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
                     ->orderBy('begin_dt', 'asc')
                     ->get();
-                foreach ($studentTimes as  $item) {
-                    if ($nowTime > strtotime($item->begin_dt) - (config('osce.begin_dt_buffer') * 60)) {
-                        $lateTime    =   time()-strtotime($item->begin_dt);
+                $nowQueue  =   null;
+                foreach($studentTimes as $stationTime){
+                    if($stationTime->status==2){
+                        $nowQueue = $stationTime;
+                        break;
+                    }
+                }
+                if(is_null($nowQueue))
+                {
+                    throw new \Exception('进入考试失败',-105);
+                }
+
+                $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
+                \Log::alert($lateTime.'迟到时间');
+                foreach ($studentTimes as $key=>$item) {
+                    if ($exam->sequence_mode == 2) {
+
+                        $stationTime = $item->station->mins ? $item->station->mins : 0;
+                        \Log::alert($stationTime.'以考站安排');
+                    } else {
+                        //这是已考场安排的需拿到room_id
+                        $stationTime    =   $this   ->  getRoomStationMaxTime($item->room_id);
+                        \Log::alert($stationTime.'以考场安排');
+                    }
+
+                    if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         if ($item->status == 2) {
                             $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
-                            $item->end_dt = date('Y-m-d H:i:s', $nowTime+$item->station->mins*60);
+                            $item->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
                         } else {
-                            $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) +$lateTime);
-                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) +$lateTime);
+                            $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $lateTime);
+                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $lateTime);
                         }
                         if (!$item->save()) {
-                            throw new \Exception('队列时间更新失败');
-                        }else{
-                            $connection->commit();
-                            return true;
+                            throw new \Exception('队列时间更新失败', -100);
                         }
-                    }else{
-                          $ExamTime= ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
-                            ->update(['begin_dt' => date('Y-m-d H:i:s', $nowTime ),'end_dt' => date('Y-m-d H:i:s', $nowTime+$item->station->mins*60)]);
-                        if($ExamTime){
-                            return true;
+                    } else {
+                        //查询到考站的标准时间
+                        $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
+                        if (is_null($ExamTime)) {
+                            throw new \Exception('没有找到对应的队列信息', -104);
+                        }
+                        $ExamTime->begin_dt = date('Y-m-d H:i:s', $nowTime);
+                        $ExamTime->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
+                        if (!$ExamTime->save()) {
+                            throw new \Exception('队列时间更新失败', -101);
                         }
                     }
                 }
+            } else {
+                throw new \Exception('队列状态更新失败', -102);
+
             }
-            return false;
+            $connection->commit();
+            return true;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
 
+    }
+
+    private function getRoomStationMaxTime($roomdId)
+    {
+        $tempStations = RoomStation::where('room_id', '=', $roomdId)->get();
+        $mins = 0;
+        //循环数组，找到mins最大的值
+        foreach ($tempStations as $v) {
+            $station = $v->station;
+            if (is_null($station)) {
+                continue;
+                //todo::暂时跳过不处理
+            }
+            $mins = $station->mins > $mins ? $station->mins : $mins;
+        }
+        return $mins;
     }
 
     /**
@@ -390,18 +462,18 @@ class ExamQueue extends CommonModel
 
 
                 $examScreening = ExamScreening::find($examScreeningId);
-                if(!$examScreening->real_start_dt){
-                    $nowTime=$time;
-                    if(strtotime($examScreening->begin_dt)<=$nowTime){
-                        $examScreening->real_start_dt = date('Y-m-d H:i:s',$nowTime);
-                        if(!$examScreening->save()){
+                if (!$examScreening->real_start_dt) {
+                    $nowTime = $time;
+                    if (strtotime($examScreening->begin_dt) <= $nowTime) {
+                        $examScreening->real_start_dt = date('Y-m-d H:i:s', $nowTime);
+                        if (!$examScreening->save()) {
                             throw new \Exception('开始考试失败');
                         }
                     }
                 }
-                $difference =  strtotime($examScreening->real_start_dt)-strtotime($examScreening->begin_dt);
-                if($difference<0){
-                    $difference =0;
+                $difference = strtotime($examScreening->real_start_dt) - strtotime($examScreening->begin_dt);
+                if ($difference < 0) {
+                    $difference = 0;
                 }
                 foreach ($objs as $item) {
                     if ($difference > 0) {
@@ -424,32 +496,38 @@ class ExamQueue extends CommonModel
     }
 
     /**
-     * 通过腕表id找到对应的
+     * 通过学生id找到对应的队列实例
      * @param $studentId
      * @return
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    static public function findQueueIdByStudentId($studentId)
+    static public function findQueueIdByStudentId($studentId, $stationId)
     {
         try {
-            //通过腕表id找到$examScreening和$student的实例
+            //通过学生id找到对应的examScreeningStudent实例
             $examScreening = ExamScreeningStudent::where('student_id', $studentId)->first();
 
             if (is_null($examScreening)) {
-                throw new \Exception('没找到对应的学生编号',2100);
+                throw new \Exception('没找到对应的学生编号', 2100);
             }
 
             //拿到$examScreeningId和$studentId
             $examScreeningId = $examScreening->exam_screening_id;
             //得到queue实例
-            $queue = ExamQueue::where('student_id', $studentId)
-                ->where('exam_screening_id', $examScreeningId)
-                ->where('status', 2)
-                ->first();
-
+            if (is_null($stationId)) {
+                $queue = ExamQueue::where('student_id', $studentId)
+                    ->where('exam_screening_id', $examScreeningId)
+                    ->where('status', 2)
+                    ->first();
+            } else {
+                $queue = ExamQueue::where('student_id', $studentId)
+                    ->where('station_id', $stationId)
+                    ->where('exam_screening_id', $examScreeningId)
+                    ->first();
+            }
             if (is_null($queue)) {
-                throw new \Exception('没有找到符合要求的学生',2200);
+                throw new \Exception('没有找到符合要求的学生', 2200);
             }
 
             return $queue;
@@ -474,7 +552,8 @@ class ExamQueue extends CommonModel
             })->leftJoin('student',
             function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
-            })->where('exam_queue.station_id', '=', $station_id)->where('exam_queue.exam_id', '=', $exam_id)->where('exam_queue.status', '=', 0)
+            })->where('exam_queue.station_id', '=', $station_id)->where('exam_queue.exam_id', '=',
+            $exam_id)->where('exam_queue.status', '=', 0)
             ->orderBy('begin_dt', 'asc')
             ->select([
                 'student.name as name',
@@ -501,7 +580,8 @@ class ExamQueue extends CommonModel
             })->leftJoin('student',
             function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
-            })->where('exam_queue.room_id', '=', $room_id)->where('exam_queue.exam_id', '=', $exam_id)->where('exam_queue.status', '=', 0)
+            })->where('exam_queue.room_id', '=', $room_id)->where('exam_queue.exam_id', '=',
+            $exam_id)->where('exam_queue.status', '=', 0)
             ->orderBy('begin_dt', 'asc')
             ->select([
                 'student.name as name',
@@ -513,15 +593,43 @@ class ExamQueue extends CommonModel
 
     /**
      * 结束学生队列考试
-     * @param $room_id $exam_id
-     * @return
+     * @param $studentId 学生id
+     * @param null $stationId
+     * @return Object 返回队列表对应的对象
      * @throws \Exception
-     * @author zhouqiang
+     * @author Jiangzhiheng
      */
 
-    public function getEndStudentQueueExam(){
+    static public function endStudentQueueExam($studentId, $stationId = null)
+    {
+        try {
+            //获取当前的服务器时间
+            $date = date('Y-m-d H:i:s');
 
+            //找到对应的方法找到queue实例
+            $queue = ExamQueue::findQueueIdByStudentId($studentId, $stationId);
 
+            /*
+             * 判断status状态
+             * 如果是2的话，就说明是第一次访问，修改状态
+             * 如果是3，就是明是重复访问，返回已经修改过的值
+             */
+            if ($queue->status == 2) {
+                //修改状态
+                $queue->status = 3;
+                $queue->end_dt = $date;
+                if (!$queue->save()) {
+                    throw new \Exception('状态修改失败！请重试', 2000);
+                }
+                return $queue;
+            } elseif ($queue->status == 3) {
+                return $queue;
+            } else {
+                throw new \Exception('系统错误，请重试', -888);
+            }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
 }

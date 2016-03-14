@@ -13,6 +13,9 @@ class OsceController extends Controller {
 			$SysMenus	=	new SysMenus();
 
 			$user	=	\Auth::user();
+			if(!$user){
+				throw new \Exception('没有找到用户，请登录');
+			}
 			//sys_user_role
 			$connection	=	\DB::connection('sys_mis');
 			$userRole	=	$connection	->	table('sys_user_role')	->	where('user_id','=',$user->id)->first();
@@ -29,6 +32,9 @@ class OsceController extends Controller {
 		catch(\Exception $ex)
 		{
 
+			if($ex->getCode()==0){
+				return redirect()->route('osce.admin.getIndex');
+			}
 			return redirect()->route('osce.admin.getIndex')->withErrors($ex->getMessage());
 		}
 		return view('osce::admin.layouts.admin',['list'=>$MenusList,'role_id'=>$userRole->role_id]);

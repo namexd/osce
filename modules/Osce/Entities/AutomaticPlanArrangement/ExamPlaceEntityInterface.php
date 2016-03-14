@@ -46,5 +46,5 @@ interface ExamPlaceEntityInterface
     /*
      * 考站的实例，以数组的方式返回
      */
-    function stationTotal($examId);
+    function stationTotal($exam);
 }

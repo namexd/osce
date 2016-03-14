@@ -32,8 +32,9 @@ class ConfigController extends CommonController
      * @date 2016-01-11 11：48
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getIndex()
+    public function getIndex(Request $request)
     {
+        $succ = $request->input('succ');
         //从文件获取配置数组
         $tempConfig = config('message');
         //从数据库获取配置
@@ -44,7 +45,7 @@ class ConfigController extends CommonController
             $tempDB = [];
             $tempDB[0]['value'] = [];
         }
-        return view('osce::admin.sysmanage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB]);
+        return view('osce::admin.systemManage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB, 'succ'=>$succ]);
     }
 
     /**
@@ -88,6 +89,7 @@ class ConfigController extends CommonController
                 'email_password' => 'required'
             ]);
 
+
             //获取输入值
             $formData = $request->only('message_type');
             $file = $request->only('sms_cnname', 'sms_url', 'sms_username', 'sms_password', 'wechat_use_alias',
@@ -117,7 +119,7 @@ class ConfigController extends CommonController
             }
 
             DB::connection('osce_mis')->commit();
-            return redirect()->route('osce.admin.config.getIndex');
+            return redirect()->route('osce.admin.config.getIndex',['succ'=>1]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -142,7 +144,7 @@ class ConfigController extends CommonController
         //从数据库之中获取配置
         $data = Area::all();
 
-        return view('osce::admin.sysmanage.system_settings_room', ['data' => $data]);
+        return view('osce::admin.systemManage.system_settings_room', ['data' => $data]);
 
     }
 
@@ -162,7 +164,7 @@ class ConfigController extends CommonController
      */
     public function getAreaStore()
     {
-        return view('osce::admin.sysmanage.system_add');
+        return view('osce::admin.systemManage.system_add');
     }
 
     /**
@@ -282,7 +284,7 @@ class ConfigController extends CommonController
             'token'        =>   $token,
             'encoding_key' =>   $encoding_key,
             ];
-        $str    =    view('osce::admin.sysmanage.wechat_config',$data)->render();
+        $str    =    view('osce::admin.systemManage.wechat_config',$data)->render();
         $str    =   '<?php '.$str;
         try
         {
@@ -314,7 +316,7 @@ class ConfigController extends CommonController
             'email_password'    =>   $emailPassword
         ];
 
-        $str = view('osce::admin.sysmanage.mail_config',$data)->render();
+        $str = view('osce::admin.systemManage.mail_config',$data)->render();
         $str = '<?php ' . $str;
 
         try
@@ -345,9 +347,9 @@ class ConfigController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWeChatHelp(Request $request){
+    public function getWeChatHelp(){
         $current_url    =   $_SERVER['HTTP_HOST'];
-        return view('osce::admin.sysmanage.system_help',['url'=>$current_url]);
+        return view('osce::admin.systemManage.system_help',['url'=>$current_url]);
 
     }
 }

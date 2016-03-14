@@ -48,24 +48,33 @@ class TestResult extends CommonModel
         $connection->beginTransaction();
         try {
             //判断成绩是否已提交过
-            $examResult = $this->where('student_id', '=', $data['student_id'])
-                ->where('exam_screening_id', '=', $data['exam_screening_id'])
-                ->where('station_id', '=', $data['station_id'])
-                ->count();
-            if ($examResult > 0) {
-                throw new \Exception('该成绩已提交过', -7);
-            }
+             $ExamResult=$this->getRemoveScore($data['station_id'],$data['student_id'],$data['exam_screening_id']);
+
+//            $examResult = $this->where('student_id', '=', $data['student_id'])
+//                ->where('exam_screening_id', '=', $data['exam_screening_id'])
+//                ->where('station_id', '=', $data['station_id'])
+//                ->count();
+//            if ($examResult > 0) {
+//                throw new \Exception('该成绩已提交过', -7);
+//            }
             $scoreData = $this->getExamResult($score);
             //拿到总成绩
             $total  =   array_pluck($scoreData,'score');
             $total  =   array_sum($total);
             $data['score']  =   $total;
+//            function($data as $ExamResultKey=>$value ){
+//                $ExamResult->$ExamResultKey = $value;
+//            }
+//            if($ExamResult->save()){
+//
+//            }
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
-                $scoreConserve = $this->getSaveExamEvaluate($scoreData, $ExamResultId);
+                 $this->getSaveExamEvaluate($scoreData, $ExamResultId);
+                 $this->getSaveExamAttach($data['student_id'],$ExamResultId,$score);
             } else {
-                throw new \Exception('成绩提交失败',-6);
+                throw new \Exception('成绩提交失败',-1000);
             }
             $connection->commit();
             return $testResult;
@@ -74,6 +83,33 @@ class TestResult extends CommonModel
             throw $ex;
         }
 
+    }
+    //upload_document_id 音频 图片id集合去修改
+    private function getSaveExamAttach($studentId,$ExamResultId,$score){
+        try{
+            $list = [];
+            $arr = json_decode($score, true);
+//            \Log::alert($arr);
+            foreach($arr as $item){
+                $list[]=[
+                    'standard_id' =>$item['id']
+                ];
+            }
+            $standardId = array_column($list, 'standard_id');
+
+            if(is_null(TestAttach::whereIn('standard_id',$standardId)->get())){
+                throw new \Exception('该考试没有上传图片和音频');
+            }
+            $AttachData = TestAttach::where('student_id','=',$studentId)->whereIn('standard_id',$standardId)->get();
+            foreach($AttachData as $item){
+                $item->test_result_id = $ExamResultId;
+                if(!$item->save()){
+                    throw new \Exception('修改图片音频结果失败',-1400);
+                }
+            }
+        }catch (\Exception $ex){
+            \Log::alert($ex->getMessage());
+        }
     }
 
     private function  getSaveExamEvaluate($scoreData, $ExamResultId)
@@ -84,11 +120,33 @@ class TestResult extends CommonModel
             $examScore=ExamScore::create($item);
             if(!$examScore)
             {
-                throw new \Exception('保存分数详情失败',-5);
+                throw new \Exception('保存分数详情失败',-1300);
             }
         }
     }
 
+    //删除已提交过得成绩
+    private function getRemoveScore($stationId,$studentId,$examscreeningId){
+        //判断成绩是否已提交过
+        try{
+        $examResult = $this->where('student_id', '=',$stationId )
+            ->where('exam_screening_id', '=', $studentId)
+            ->where('station_id', '=',$examscreeningId)
+            ->first();
+            if($examResult){
+          //拿到考试结果id去exam_score中删除数据
+                if(!$examResult->examScore()->delete())
+                {
+                    throw new \Exception('舍弃考试评分详情失败',-1100);
+                }
+                    if(!$examResult->delect()) {
+                        throw new \Exception('舍弃考试成绩失败',-1200);
+                    }
+            }
+        }catch (\Exception $ex){
+            throw $ex;
+        }
+    }
     /**
      *获取学生考试最终成绩
      * @param $studentId
@@ -112,6 +170,12 @@ class TestResult extends CommonModel
 
     }
 
+
+
+
+
+
+
     //获取考试成绩打分详情
     private function  getExamResult($score)
     {
@@ -119,6 +183,7 @@ class TestResult extends CommonModel
         $arr = json_decode($score, true);
         foreach ($arr as $item) {
             foreach ($item['test_term'] as $str) {
+
                 $list [] = [
                     'subject_id' => $str['subject_id'],
                     'standard_id' => $str['id'],

@@ -42,11 +42,13 @@ class CourseController extends CommonController
              * 获取近段时间进行的考试
              */
             $examObj = Exam::where('status','<>',0)->first();
+
             if (is_null($examObj)) {
                 $subjectData = [];
                 $examId      = '';
                 $subjectId   = '';
                 $subjectList = [];
+                $backMes     = '目前没有已结束的考试';
             } else {
                 $examId = $request->input('exam_id',$examObj->id);
                 $subjectId = $request->input('subject_id');
@@ -54,6 +56,9 @@ class CourseController extends CommonController
                 $subject = new Subject();
                 $exam = new Exam();
                 $subjectData = $exam->CourseControllerIndex($examId, $subjectId);
+                if (count($subjectData)==0) {
+                    $backMes = '该考试还未出成绩';
+                }
                 foreach ($subjectData as &$item) {
                     //找到按科目为基础的所有分数还有总人数
                     $avg = $subject->CourseControllerAvg(
@@ -78,13 +83,13 @@ class CourseController extends CommonController
 
                 $subjectList = $this->subjectDownlist($examId);
             }
-
-            return view('osce::admin.statistics_query.subject_scores_list', [
+            return view('osce::admin.statisticalAnalysis.subject_scores_list', [
                     'data'            => $subjectData,
                     'examDownlist'    => $examDownlist,
                     'subjectDownlist' => $subjectList,
                     'exam_id'         => $examId,
-                    'subject_id'      => $subjectId
+                    'subject_id'      => $subjectId,
+                    'backMes'         => isset($backMes)?$backMes:''
                 ]);
 
         } catch (\Exception $ex) {
@@ -123,7 +128,7 @@ class CourseController extends CommonController
         }
         date_default_timezone_set("PRC");
 
-        return view('osce::admin.statistics_query.subject_student_list', [
+        return view('osce::admin.statisticalAnalysis.subject_student_list', [
             'data' => $data,
             'exam' => $request->input('exam'),
             'subject' => $request->input('subject'),
@@ -171,7 +176,7 @@ class CourseController extends CommonController
                 $backMes = '该考试还未出成绩';
             }
         }
-        return view('osce::admin.statistics_query.student_scores_list',[
+        return view('osce::admin.statisticalAnalysis.student_scores_list',[
             'data'          => $list,
             'examDownlist'  => $examDownlist,
             'exam_id'       => $examId,
@@ -206,7 +211,7 @@ class CourseController extends CommonController
         }
         date_default_timezone_set('PRC');
 
-        return view('osce::admin.statistics_query.student_subject_list',['studentList'=>$studentList]);
+        return view('osce::admin.statisticalAnalysis.student_subject_list',['studentList'=>$studentList]);
 
     }
 

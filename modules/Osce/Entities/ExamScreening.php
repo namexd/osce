@@ -21,7 +21,7 @@ class ExamScreening extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id','exam_id', 'room_id', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'sort', 'total', 'nfc_tag','real_start_dt'];
+    protected $fillable = ['id', 'exam_id', 'room_id', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'sort', 'total', 'nfc_tag', 'real_start_dt'];
     protected $statuValues = [
         1 => '等候考试',
         2 => '正在考试',
@@ -29,17 +29,20 @@ class ExamScreening extends CommonModel
         4 => '未知状态',
     ];
 
-     //关联考试表
-    public function  ExamInfo(){
-        return $this->belongsTo('Modules\Osce\Entities\exam','exam_id','id');
+    //关联考试表
+    public function  ExamInfo()
+    {
+        return $this->belongsTo('Modules\Osce\Entities\Exam', 'exam_id', 'id');
     }
 
-    public function roomsRelation(){
-        return $this->hasMany('\Modules\Osce\Entities\ExamRoom','exam_id','exam_id');
+    public function roomsRelation()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\ExamRoom', 'exam_id', 'exam_id');
     }
 
-    public function invite(){
-        return $this->hasMany('\Modules\Osce\Entities\Invite','exam_screening_id','id');
+    public function invite()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\Invite', 'exam_screening_id', 'id');
     }
 
     /**
@@ -88,10 +91,8 @@ class ExamScreening extends CommonModel
 
 
     //根据考试id获得考站和老师数据
-    public function getStationList($examId){
-
-
-
+    public function getStationList($examId)
+    {
 
 
 //        $builder = $this->leftJoin (
@@ -137,7 +138,8 @@ class ExamScreening extends CommonModel
 
     }
 
-    public function closeExam($exam_id){
+    public function closeExam($exam_id)
+    {
 
     }
 
@@ -150,23 +152,25 @@ class ExamScreening extends CommonModel
      */
     public function screeningList($examId)
     {
-        return $this->where('exam_id',$examId)
-            ->orderBy('begin_dt','asc')
+        return $this->where('exam_id', $examId)
+            ->orderBy('begin_dt', 'asc')
             ->get();
     }
 
-    public function getNearestScreening($exam_id){
-        return  $this   ->  where('exam_id','=',$exam_id)
-                ->  where('status','=',0)
-                ->  OrderBy('begin_dt','asc')
-                ->  first();
+    public function getNearestScreening($exam_id)
+    {
+        return $this->where('exam_id', '=', $exam_id)
+            ->where('status', '=', 0)
+            ->OrderBy('begin_dt', 'asc')
+            ->first();
     }
 
-    public function getExamingScreening($exam_id){
-        return  $this   ->  where('exam_id','=',$exam_id)
-            ->  where('status','=',1)
-            ->  OrderBy('begin_dt','asc')
-            ->  first();
+    public function getExamingScreening($exam_id)
+    {
+        return $this->where('exam_id', '=', $exam_id)
+            ->where('status', '=', 1)
+            ->OrderBy('begin_dt', 'asc')
+            ->first();
     }
 
     /**
@@ -182,48 +186,44 @@ class ExamScreening extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-     public function getExamCheck()
+    public function getExamCheck()
     {
         //取得考试实例
-        $exam = Exam::where('status','=',1)->orderBy('begin_dt','desc')->first();
-        if(is_null($exam)){
+        $exam = Exam::where('status', '=', 1)->orderBy('begin_dt', 'desc')->first();
+        if (is_null($exam)) {
             throw new \Exception('没有找到考试');
         }
         //获取到当考试场次id
-        $ExamScreening = $this-> getExamingScreening($exam->id);
-        if(is_null($ExamScreening)){
+        $ExamScreening = $this->getExamingScreening($exam->id);
+        if (is_null($ExamScreening)) {
             $ExamScreening = $this->getNearestScreening($exam->id);
         }
         //根据考试场次id查询计划表所有考试学生
         $examPianModel = new ExamPlan();
-        $exampianStudent =  $examPianModel->getexampianStudent($ExamScreening->id);
+        $exampianStudent = $examPianModel->getexampianStudent($ExamScreening->id);
         //获取考试场次迟到的人数
-        $examAbsentStudent = ExamAbsent::where('exam_screening_id','=',$ExamScreening->id)
+        $examAbsentStudent = ExamAbsent::where('exam_screening_id', '=', $ExamScreening->id)
             ->groupBy('student_id')
-              ->count();
+            ->get()
+            ->count();
         //获取考试场次已考试完成的人数
-        $examFinishStudent= ExamScreeningStudent::where('is_end','=',1)
-            ->where('exam_screening_id','=',$ExamScreening->id)
+        $examFinishStudent = ExamScreeningStudent::where('is_end', '=', 1)
+            ->where('exam_screening_id', '=', $ExamScreening->id)
             ->get()
             ->count();
 
-        if($examAbsentStudent+$examFinishStudent >= $exampianStudent){
+        if ($examAbsentStudent + $examFinishStudent >= $exampianStudent) {
             $ExamScreening->status = 2;
-            if(!$ExamScreening->save()){
-                throw new \Exception('场次结束失败',-5);
+            if (!$ExamScreening->save()) {
+                throw new \Exception('场次结束失败', -5);
             }
-            if($exam->examScreening()->where('status','=',0)->count()==0)
-            {
-                $exam->status=2;
-                if(!$exam->save()){
-                    throw new \Exception('考试结束失败',-6);
+            if ($exam->examScreening()->where('status', '=', 0)->count() == 0) {
+                $exam->status = 2;
+                if (!$exam->save()) {
+                    throw new \Exception('考试结束失败', -6);
                 }
             }
         }
-
-
-
-
 
 
 //        $this->validate($request, [
@@ -249,8 +249,6 @@ class ExamScreening extends CommonModel
 //        );
 //
     }
-
-
 
 
 }

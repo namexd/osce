@@ -14,6 +14,7 @@ use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
+use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
@@ -53,11 +54,16 @@ class StudentExamQueryController extends CommonController
                 // 根据老师id找到老师所监考得考试考站
                 $examModel = new Exam();
                 $ExamList = $examModel->getInvigilateTeacher($user->id);
+
                 return view('osce::wechat.resultquery.examination_list_teacher', ['ExamList' => $ExamList]);
             }
 
             //根据用户获得考试id
             $ExamIdList = Student::where('user_id', '=', $user->id)->select('exam_id')->get();
+            if(!$ExamIdList){
+                throw new \Exception('目前你还没有参加过考试。');
+
+            }
             $list = [];
             foreach ($ExamIdList as $key => $data) {
                 $list[$key] = [
@@ -67,6 +73,7 @@ class StudentExamQueryController extends CommonController
             $examIds = array_column($list, 'exam_id');
             $ExamModel = new Exam();
             $ExamList = $ExamModel->Examname($examIds);
+
             //根据考试id获取所有考试
             //dd($ExamList);
             return view('osce::wechat.resultquery.examination_list', ['ExamList' => $ExamList]);
@@ -83,7 +90,7 @@ class StudentExamQueryController extends CommonController
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
      * @return json
-     * @version 1.0
+     * @version 0.4
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
@@ -92,7 +99,6 @@ class StudentExamQueryController extends CommonController
 
     public function getEveryExamList(Request $request)
     {
-
         $this->validate($request, [
             'exam_id' => 'required|integer',
             'student_id' => 'sometimes|integer'
@@ -110,8 +116,8 @@ class StudentExamQueryController extends CommonController
             //TODO 根据学生id查出学生姓名和电话监考老师成绩查询时用
             $studentInfo = Student::find($studentId);
             $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
+            // TODO 根据考试id找到对应的考试场次  zhouqiang  2016-3-7
 
-            //根据考试id找到对应的考试场次
 //        $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get();
 
 //        $examScreening = [];
@@ -129,15 +135,15 @@ class StudentExamQueryController extends CommonController
                 throw new \Exception('没有找到学生成绩信息');
             }
             $stationData = [];
-            foreach ($stationList as $stationType) {
+            foreach ($stationList as $key => $stationType) {
                 if ($stationType->type == 2) {
                     //获取到sp老师信息
                     $teacherModel = new Teacher();
                     $spteacher = $teacherModel->getSpTeacher($stationType->station_id, $examId);
 
-                    if (!$spteacher) {
-                        throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
-                    }
+//                    if (!$spteacher) {
+//                        throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
+//                    }
                 }
 
                 $stationData[] = [
@@ -148,7 +154,7 @@ class StudentExamQueryController extends CommonController
                     'grade_teacher' => $stationType->grade_teacher,
                     'type' => $stationType->type,
                     'station_name' => $stationType->station_name,
-                    'sp_name' => is_null($spteacher->name) ? '-' : $spteacher->name,
+                    'sp_name' => isset($spteacher->name) ? $spteacher->name : '-',
                     'begin_dt' => $examTime->begin_dt,
                     'end_dt' => $examTime->end_dt,
                     'exam_screening_id' => $stationType->exam_screening_id,
@@ -198,49 +204,66 @@ class StudentExamQueryController extends CommonController
         //得到考试名字
         $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
 
-
         //查询出详情列表
         $examscoreModel = new ExamScore();
         $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
 
-
-        $groupData = [];
-        foreach ($examScoreList as $examScore) {
-            $groupData[$examScore->standard->pid][] = $examScore;
+        //TODO: zhoufuxiang
+        $scores = [];
+        $itemScore = [];
+        foreach ($examScoreList as $itm) {
+            $pid = $itm->standard->pid;
+            $scores[$pid]['items'][] = [
+                'standard' => $itm->standard,
+                'score' => $itm->score,
+            ];
+            $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
         }
-        $indexData = [];
 
-        if (empty($groupData[0])) {
-            throw new \Exception('请检查该考站是否有评分详情');
+        foreach ($scores as $index => $item) {
+            //获取考核点信息
+            $standardM = Standard::where('id', $index)->first();
+            $scores[$index]['sort'] = $standardM->sort;
+            $scores[$index]['content'] = $standardM->content;
+            $scores[$index]['tScore'] = $standardM->score;
+            $scores[$index]['score'] = $itemScore[$index]['totalScore'];
         }
-        foreach ($groupData[0] as $group) {
-            $groupInfo = $group;
-            try {
-                $groupInfo['child'] = $groupData[$group->standard->id];  //排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
-            } catch (\Exception $ex) {
-                dd($group->standard->id, $groupData);
-            }
 
 
-            $indexData[] = $groupInfo;
+//        $groupData = [];
+//        foreach ($examScoreList as $examScore) {
+//            $groupData[$examScore->standard->pid][] = $examScore;
+//        }
+//        $indexData = [];
+//        if (empty($groupData[0])) {
+//            throw new \Exception('请检查该考站是否有评分详情');
+//        }
+//        foreach ($groupData[0] as $group) {
+//            $groupInfo = $group;
+//            try {
+//                $groupInfo['child'] = $groupData[$group->standard->id];  //排序array_multisort($volume, SORT_DESC, $edition, SORT_ASC, $data);
+//            } catch (\Exception $ex) {
+//
+//                dd($group->standard->id, $groupData);
+//            }
+//            $indexData[] = $groupInfo;
+//        }
+//        $list = [];
+//        foreach ($indexData as $goupData) {
+//            $childrens = is_null($goupData['child']) ? [] : $goupData['child'];
+//            unset($goupData['child']);
+//            $list[] = $goupData;
+//            foreach ($childrens as $children) {
+//                $list[] = $children;
+//            }
+//        }
 
-
-        }
-        $list = [];
-
-
-        foreach ($indexData as $goupData) {
-            $childrens = is_null($goupData['child']) ? [] : $goupData['child'];
-            unset($goupData['child']);
-            $list[] = $goupData;
-
-            foreach ($childrens as $children) {
-                $list[] = $children;
-            }
-        }
-//        dd($list);
-
-        return view('osce::wechat.resultquery.examination_detail', ['examScoreList' => $list], ['examresultList' => $examresultList, 'examName' => $examName]);
+        return view('osce::wechat.resultquery.examination_detail',
+            [
+                'examScoreList' => $scores,
+                'examresultList' => $examresultList,
+                'examName' => $examName
+            ]);
     }
 
 
@@ -334,7 +357,7 @@ class StudentExamQueryController extends CommonController
             if (!empty($avg)) {
 
                 if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
-                    $item['avg_score'] = $avg->pluck('score')->sum() / $avg->pluck('score')->count();
+                    $item['avg_score'] = number_format($avg->pluck('score')->sum() / $avg->pluck('score')->count(), 2);
                     date_default_timezone_set("UTC");
                     $item['avg_time'] = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
                     date_default_timezone_set("PRC");

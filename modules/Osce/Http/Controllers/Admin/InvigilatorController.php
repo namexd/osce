@@ -23,7 +23,7 @@ use DB;
 class InvigilatorController extends CommonController
 {
     public function getTest(){
-        return view('osce::admin.statistics_query.exam_vcr');
+        //return view('osce::admin.statistics_query.exam_vcr');
     }
     /**
      * 获取SP考教师列表
@@ -51,7 +51,7 @@ class InvigilatorController extends CommonController
         $list       =   $Invigilator    ->getSpInvigilatorInfo();
 
         $isSpValues =   $Invigilator    ->getIsSpValues();
-        return view('osce::admin.resourcemanage.sp_invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
+        return view('osce::admin.resourceManage.staff_manage_invigilator_sp',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
 
     /**
@@ -82,7 +82,7 @@ class InvigilatorController extends CommonController
         $isSpValues =   $Invigilator    ->  getIsSpValues();
 
 
-        return view('osce::admin.resourcemanage.invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
+        return view('osce::admin.resourceManage.staff_manage_invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
     /**
      *  新增监考老师 表单显示页面
@@ -102,7 +102,7 @@ class InvigilatorController extends CommonController
      *
      */
     public function getAddInvigilator(Request $request){
-        return view('osce::admin.resourcemanage.invigilator_add');
+        return view('osce::admin.resourceManage.staff_manage_invigilator_add');
     }
 
     /**
@@ -120,7 +120,7 @@ class InvigilatorController extends CommonController
      */
     public function getAddSpInvigilator(Request $request){
         $list   =   CaseModel::get();
-        return view('osce::admin.resourcemanage.sp_invigilator_add',['list'=>$list]);
+        return view('osce::admin.resourceManage.staff_manage_invigilator_sp_add',['list'=>$list]);
     }
     /**
      * 新增监考老师 提交表单
@@ -296,7 +296,7 @@ class InvigilatorController extends CommonController
         $InvigilatorModel    =   new Teacher();
         $invigilator    =   $InvigilatorModel    ->  find($id);
 
-        return view('osce::admin.resourcemanage.invigilator_edit',['item'=>$invigilator]);
+        return view('osce::admin.resourceManage.staff_manage_invigilator_edit',['item'=>$invigilator]);
     }
 
     /**
@@ -328,7 +328,7 @@ class InvigilatorController extends CommonController
         $InvigilatorModel    =   new Teacher();
         $invigilator    =   $InvigilatorModel    ->  find($id);
         $list   =   CaseModel::get();
-        return view('osce::admin.resourcemanage.sp_invigilator_edit',['item'=>$invigilator,'list'=>$list]);
+        return view('osce::admin.resourceManage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'list'=>$list]);
     }
 
     /**
@@ -388,6 +388,9 @@ class InvigilatorController extends CommonController
             }
 
         } catch(\Exception $ex){
+            if($ex->getCode()==23000){
+                return redirect()->back()->withErrors(['这个号码已有过关联，不能修改']);
+            }
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -448,6 +451,9 @@ class InvigilatorController extends CommonController
             }
 
         } catch(\Exception $ex){
+            if($ex->getCode()==23000){
+                return redirect()->back()->withErrors(['这个号码已有过关联，不能修改']);
+            }
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -686,6 +692,33 @@ class InvigilatorController extends CommonController
             $result = $model->where('code', $code)->first();
         }else{
             $result = $model->where('code', $code)->where('id', '<>', $id)->first();
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+    }
+    /**
+     * 判断身份证号是否已经存在
+     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     */
+    public function postIdcardUnique(Request $request)
+    {
+        $this->validate($request, [
+            'idcard'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $idcard = $request  -> get('idcard');
+        //实例化模型
+        $model =  new User();
+        //查询 该身份证号 是否存在
+        if(empty($id)){
+            $result = $model->where('idcard', $idcard)->first();
+        }else{
+            $result = $model->where('idcard', $idcard)->where('id', '<>', $id)->first();
         }
         if($result){
             return json_encode(['valid' =>false]);

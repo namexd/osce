@@ -8,8 +8,8 @@
 .see_msg{background:#fff;padding-bottom:10px;}
 .see_msg a{color:#1ab394;}
 
-/*详情*/
-.examination_msg{width:100%;border-left:2px solid #1ab394;box-sizing: border-box;padding:10px;background:#fff;}
+/*详情border-left:2px solid #1ab394;*/
+.examination_msg{width:100%;box-sizing: border-box;padding:10px;background:#fff;}
 /*列表样式2列表样式1*/
 .examination_msg .form-group{padding:0; margin-bottom: 0;}
 .examination_msg .form-group  label{position:absolute;z-index:10; left:3%;font-size:14px;margin-top:6px;width:82px;
@@ -17,7 +17,7 @@
 .examination_msg .form-group input{border:none;border-radius:0;border-width:0 0 1px 0;font-size:14px;padding-left:95px}
 .examination_msg .form-group .txt{width:100%;min-height:36px;line-height:24px;padding:6px 20px 6px  90px;
     font-size:14px;word-wrap: break-word;}
-.detail_box{width:100%;margin-top:15px;padding:10px 0;background:#fff;}
+.detail_box{width:100%;margin:15px 0;padding:10px 0;background:#fff;}
 #detail_tb{width:94%;margin:0 3%;padding:10px;box-sizing: border-box;}
-#detail_tb th,#detail_tb td{height:36px;line-height:36px;}
+#detail_tb th,#detail_tb td{line-height: 1.7em;padding: 5px 0;}
 #detail_tb .active td{background:#F9F9F9;border:1px solid #EFEFEF;border-width:1px 0;}

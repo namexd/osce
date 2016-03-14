@@ -45,7 +45,7 @@
                 <tr>
                     <td>{{$key+1}}</td>
                     <td>{{$item->id}}</td>
-                    <td>{{$item->name}}</td>
+                    <td><a href="{{route('osce.admin.exam.getEditExam',['id'=>$item->id])}}">{{$item->name}}</a> </td>
                     <td>{{date('Y-m-d H:i', strtotime($item->begin_dt))}} ~ {{date('Y-m-d H:i', strtotime($item->end_dt))}}</td>
                     <td>{{$item->total}}</td>
                     <td value="{{$item->id}}">
@@ -60,14 +60,12 @@
                         @endif
                     </td>
                     <td>
-                        @if($item->status==1)
+                        @if($item->status==2)
+                            考试已结束
+                        @else
                             <a href="{{route('osce.admin.getWaitDetail',['exam_id'=>$item->id])}}" target="_blank">
                                 <input class="btn btn-primary" type="button" value="大屏"/>
                             </a>
-                        @elseif($item->status==0)
-                            <input class="btn btn-primary" type="button" value="大屏" style="background-color: #CCC;border-color: #CCC;"/>
-                        @else
-                            考试已结束
                         @endif
                     </td>
                 </tr>

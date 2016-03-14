@@ -10,10 +10,14 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScore;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
+use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Standard;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -89,27 +93,41 @@ class ExamResultController extends CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function geExamResultList(Request $request){
-         $this->validate($request,[
-             'exam_id'     => 'sometimes',
-             'station_id'  => 'sometimes',
-             'name'        => 'sometimes',
-         ]);
+    public function geExamResultList(Request $request)
+    {
+        $this->validate($request,[
+            'exam_id'     => 'sometimes',
+            'station_id'  => 'sometimes',
+            'name'        => 'sometimes',
+        ]);
 
-         $examId=$request->get('exam_id');
-         $stationId=$request->get('station_id');
-         $name=$request->get('name');
+        $examId    = $request->get('exam_id');
+        $stationId = $request->get('station_id');
+        $name      = $request->get('name');
 
-         $stations=Station::select()->get();
-         $exams=Exam::select()->get();
-         $examResult=new ExamResult();
-         $examResults=$examResult->getResultList($examId,$stationId,$name);
-         foreach($examResults as $item){
-             date_default_timezone_set("UTC");
-             $item->time = date('H:i:s',$item->time);
-             date_default_timezone_set("PRC");
-         }
-         return view('osce::admin.exammanage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams,'exam_id'=>$examId,'station_id'=>$stationId,'name'=>$name]);
+        //存在考试ID，根据考试ID查询对应的考站
+        if(!empty($examId)){
+            $examInfo = Exam::where('id', $examId)->select('sequence_mode')->first();
+            if($examInfo->sequence_mode == 1){
+                $examRoomIds = ExamRoom::where('exam_id', $examId)->select('room_id')->get()->pluck('room_id');
+                $examStationIds = RoomStation::whereIn('room_id', $examRoomIds)->select('station_id')->get()->pluck('station_id');
+            }else{
+                $examStationIds = ExamStation::where('exam_id', $examId)->select('station_id')->get()->pluck('station_id');
+            }
+            $stations  = Station::whereIn('id',$examStationIds)->get();
+        }else{
+            $stations  = Station::select()->get();
+        }
+
+        $exams      = Exam::select()->get();
+        $examResult = new ExamResult();
+        $examResults= $examResult->getResultList($examId,$stationId,$name);
+        foreach($examResults as $item){
+            date_default_timezone_set("UTC");
+            $item->time = date('H:i:s',$item->time);
+            date_default_timezone_set("PRC");
+        }
+        return view('osce::admin.examManage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams,'exam_id'=>$examId,'station_id'=>$stationId,'name'=>$name]);
     }
 
     /**
@@ -206,7 +224,7 @@ class ExamResultController extends CommonController{
             $scores[$pid]['items'][] = [
                 'standard'  => $itm->standard,
                 'score'     => $itm->score,
-                'image'     => TestAttach::where('test_result_id',$result['id'])->where('standard_id',$itm->standard->id)->get(),
+                'image'     => TestAttach::where('test_result_id',$result['id'])->where('type','image')->where('standard_id',$itm->standard->id)->get(),
             ];
             $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore'])? $itemScore[$pid]['totalScore']:0) + $itm->score;
         }
@@ -221,11 +239,13 @@ class ExamResultController extends CommonController{
             $scores[$index]['content']  = $standardM->content;
             $scores[$index]['tScore']   = $standardM->score;
             $scores[$index]['score']    = $itemScore[$index]['totalScore'];
+            $scores[$index]['image']    = TestAttach::where('test_result_id',$result['id'])->where('type','image')->where('standard_id',$index)->get();
+
             $standard[$index] = $itemScore[$index]['totalScore'];
             $avg[$index] = $standardModel->getCheckPointAvg($index, $result['subject_id']);
         }
 
-        return view('osce::admin.exammanage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);
+        return view('osce::admin.examManage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);
 
     }
 
@@ -253,15 +273,14 @@ class ExamResultController extends CommonController{
         $id     =   $request->get('id');
         $info  =   TestAttach::find($id);
         $attchments =  $info->url;
-
-        $fileNameArray   =   explode('/',$attchments);
-        $this->downloadfile(array_pop($fileNameArray),$attchments);
+        $fileNameArray   =  explode('/',$attchments);
+        $this->downloadfile(array_pop($fileNameArray),public_path().'/'.$attchments);
     }
     private function downloadfile($filename,$filepath){
         $file=explode('.',$filename);
         $tFile=array_pop($file);
         $filename=md5($filename).'.'.$tFile;
-        $filepath   =   iconv('utf-8', 'gbk', $filepath);
+//        $filepath   =   iconv('utf-8', 'gbk', $filepath);
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename='.basename($filename));
@@ -271,6 +290,7 @@ class ExamResultController extends CommonController{
         header('Pragma: public');
         header('Content-Length: ' . filesize($filepath));
         readfile($filepath);
+
     }
 
     /**
@@ -281,6 +301,7 @@ class ExamResultController extends CommonController{
      */
     public function getResultVideo(Request $request)
     {
+
         try {
             $this->validate($request,[
                 'exam_id' => 'required|integer',
@@ -292,17 +313,58 @@ class ExamResultController extends CommonController{
             $examId = $request->input('exam_id');
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
-
+            //根据考试id拿到场次id临时修改
+            $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get()->pluck('id');
+//            $examScreening = [];
+//            foreach ($examScreeningId as $data) {
+//                $examScreening[] = [
+//                    'id' => $data->id,
+//                ];
+//            }
+//            $examScreeningIds = array_column($examScreening, 'id');
+            //更据考站id查询到
+            $stationVcrId = StationVcr::where('station_id','=',$stationId)->first()->id;
+            if(is_null($stationVcrId)){
+                throw new \Exception('没有找到相关联的摄像机');
+            }
             //查询到页面需要的数据
-            $data = StationVideo::label($examId,$studentId,$stationId);
+            $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningId);
+            //查询出时间锚点追加到数组中
+            $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationVcrId);
+//            if($anchor){
+//                foreach($data as &$item){
+//                    foreach($anchor as $list){
+//                        $item->anchor = $list['begin_dt'];
+////                        $item['end_dt'] = $list['end_dt'];
+//                    }
+//                }
+//            }
+//            dd($data);
 
-
-//            dd($examId,$studentId,$stationId,$data->toArray());
-            return view('osce::admin.statistics_query.exam_vcr',['data'=>$data]);
+            return view('osce::admin.statisticalAnalysis.exam_video',['data'=>$data,'anchor'=>$anchor]);
         } catch (\Exception $ex) {
-            return response()->back()->withErrors($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
+
+    //下载安装包
+    public function getDownloadComponents(){
+        dd(public_path('download').'/WebComponents.exe');
+        $this->downloadComponents('WebComponents.exe',public_path('download').'/WebComponents.exe');
+    }
+
+    private function downloadComponents($filename,$filepath){
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
+    }
+
 
     /**
      *ajax请求获取当前考试下的考站

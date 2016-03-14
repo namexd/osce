@@ -97,17 +97,17 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
     /*
      * 考站的实例，以数组的方式返回
      */
-    function stationTotal($examId)
+    function stationTotal($exam)
     {
         try {
             //根据考试id找到对应的考试模式（考站还是考场）
-            $sequenceMode = Exam::findOrFail($examId)->sequence_mode;
+            $sequenceMode = $exam->sequence_mode;
 
             //申明考站数组，直接返回这个数组
             $stations = [];
             if ($sequenceMode == 2) {
                 //获取该考试下的所有考站
-                $examFlowStations = ExamFlowStation::where('exam_id', '=', $examId)->get();
+                $examFlowStations = ExamFlowStation::where('exam_id', '=', $exam->id)->get();
 
                 if ($examFlowStations->isEmpty()) {
                     throw new \Exception('该场考试没有关联考站或考场！', -2);
@@ -132,7 +132,7 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                 }
             } elseif ($sequenceMode == 1) {
                 //获取该考试下的所有考场
-                $examFlowRooms = ExamFlowRoom::where('exam_id', $examId)->get();
+                $examFlowRooms = ExamFlowRoom::where('exam_id', $exam->id)->get();
 
                 if ($examFlowRooms->isEmpty()) {
                     throw new \Exception('该场考试没有关联考站或考场！', -2);
@@ -152,10 +152,9 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                         throw new \Exception('该考场没有关联考站！', -3);
                     }
                     $mins = 0;
-
                     //循环数组，找到mins最大的值
                     foreach ($tempStations as $v) {
-                        if (strtotime($v->mins) - $mins > 0) {
+                        if ($v->mins - $mins > 0) {
                             $mins = $v->mins;
                         }
                     }

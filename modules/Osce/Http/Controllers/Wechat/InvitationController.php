@@ -60,6 +60,7 @@ class InvitationController extends CommonController
         //根据老师id查询老师的信息和openid
         $teacher = new Teacher();
         $data = $teacher->invitationContent($teacher_id);
+
         //根据考试id查询出考试相关信息
         $ExamModel = new Exam();
 //        $ExamList = $ExamModel->where('id', $exam_id)->select('name', 'begin_dt', 'end_dt')->first()->toArray();
@@ -190,7 +191,7 @@ class InvitationController extends CommonController
                 $teacher =Teacher:: find($inviteModel->user_id);
             }
         } else {
-            throw new \Exception('请检查登陆稍后再试!');
+            return  redirect()->back()->withErrors(['该考试信息已被删除或者取消']);
         }
         $list = [
             'exam_name' => $inviteModel->name,

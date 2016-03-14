@@ -34,7 +34,7 @@
 
     <script type="text/javascript">
     	$(function(){
-	    	$('#Form1').bootstrapValidator({
+    		$('#Form1').bootstrapValidator({
 	              message: 'This value is not valid',
 	              feedbackIcons: {/*输入框不同状态，显示图片的样式*/
 	                  valid: 'glyphicon glyphicon-ok',
@@ -60,7 +60,7 @@
 	                  }
 	              }
 	        });
-	        $('#Form2').bootstrapValidator({
+    		$('#Form2').bootstrapValidator({
 	              message: 'This value is not valid',
 	              feedbackIcons: {/*输入框不同状态，显示图片的样式*/
 	                  valid: 'glyphicon glyphicon-ok',
@@ -86,6 +86,25 @@
 	                  }
 	              }
 	        });
+
+            $('#add_role').click(function(){
+                $('#Form1').css('display','none');
+                $('#Form1').find('input').val('');
+                //准备dom
+                setTimeout(function(){
+                    $('#Form1').data('bootstrapValidator').resetForm();
+                },500);
+                $('#Form1').show('slow');
+            });
+
+    		$(".edit_role").click(function(){
+    			$('#Form2').css('display','none');
+                //准备dom
+                setTimeout(function(){
+                    $('#Form2').data('bootstrapValidator').resetForm();
+                },500);
+                $('#Form2').show('slow');
+    		})
         })
 
         //点击关闭错误提示条
@@ -104,6 +123,11 @@
 
         })
 
+        $(function(){
+            @if(isset($_GET['succ']) && $_GET['succ']==1)
+                layer.msg('保存成功！',{skin:'msg-success',icon:1});
+            @endif
+        })
     </script>
 @stop
 
@@ -178,7 +202,7 @@
 @stop{{-- 内容主体区域 --}}
 
 @section('layer_content')
-    <form class="form-horizontal" id="Form1" novalidate="novalidate" method="post" action="{{url('/auth/add-new-role')}}">
+    <form class="form-horizontal validation-form" id="Form1" novalidate="novalidate" method="post" action="{{url('/auth/add-new-role')}}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">新增角色</h4>

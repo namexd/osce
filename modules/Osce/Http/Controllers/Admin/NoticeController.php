@@ -41,7 +41,7 @@ class NoticeController extends CommonController
     {
         $notice = new Notice();
         $list = $notice->getList();
-        return view('osce::admin.exammanage.exam_notice', ['list' => $list]);
+        return view('osce::admin.examManage.exam_notice', ['list' => $list]);
     }
 
     /**
@@ -61,7 +61,7 @@ class NoticeController extends CommonController
     public function getAddNotice(Request $request)
     {
         $list = Exam::get();
-        return view('osce::admin.exammanage.exam_notice_add', ['list' => $list]);
+        return view('osce::admin.examManage.exam_notice_add', ['list' => $list]);
     }
 
     /**
@@ -105,6 +105,10 @@ class NoticeController extends CommonController
         }
 
         try {
+            $contentLen = mb_strlen(strip_tags($content));
+            if($contentLen > 10000){
+                throw new \Exception('内容字数超过限制，请修改后重试！');
+            }
             if (!is_array($groups)) {
                 throw new \Exception('请选择接收人所属角色');
             }
@@ -148,8 +152,7 @@ class NoticeController extends CommonController
         $list = Exam::get();
         $id = $request->get('id');
         $item = Notice::find($id);
-
-        return view('osce::admin.exammanage.exam_notice_edit', ['item' => $item, 'list' => $list]);
+        return view('osce::admin.examManage.exam_notice_edit', ['item' => $item, 'list' => $list]);
     }
 
     /**
@@ -195,9 +198,12 @@ class NoticeController extends CommonController
         } else {
             $attach = '';
         }
-
         $NoticeModel = new Notice();
         try {
+            $contentLen = mb_strlen(strip_tags($content));
+            if($contentLen > 10000){
+                throw new \Exception('内容字数超过限制，请修改后重试！');
+            }
             if ($NoticeModel->editNotice($id, $name, $content, $attach, $groups)) {
                 return redirect()->route('osce.admin.notice.getList');
             } else {

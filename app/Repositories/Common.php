@@ -34,7 +34,6 @@ class Common{
     public static function sendSms($mobile,$message){
         $sender=\App::make('messages.sms');
         $sender->send($mobile,$message);
-        //(new SendReminderSms($mobile,$message))->onQueue('sms');
 
     }
 
@@ -163,6 +162,7 @@ class Common{
                 {
                     throw new \Exception('没有找到首行');
                 }
+
                 $keyList=$itemsInfo->toArray();
                 foreach($items as $rowNum=>$rows)
                 {
@@ -227,7 +227,6 @@ class Common{
         $weixinservice= App::make('wechat.staff');
         try{
             return $weixinservice->send($message)->to($openId);
-
         }
         catch(\Exception $ex)
         {
@@ -384,5 +383,58 @@ class Common{
         }
         $broadcast = new Broadcast(config('wechat.app_id'), config('wechat.secret'));
         $result =   $broadcast->send($message)->to($OpendIdArray);
+    }
+
+    /**
+     * 保存文件上传流数据
+     * @access public
+     *
+     * @param $path 保存路径
+     * @param callable|null $encrypt 文件保存前处理（例如编码，或者加密解密）
+     *
+     * @return bool|int
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2016-03-02 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    static public function receiveStreamFile($path,callable $encrypt=null){
+        $streamData = isset($GLOBALS['HTTP_RAW_POST_DATA'])? $GLOBALS['HTTP_RAW_POST_DATA'] : '';
+
+        if(empty($streamData)){
+            $streamData = file_get_contents('php://input');
+        }
+
+        if(!is_null($encrypt))
+        {
+            $streamData =   call_user_func($encrypt,$streamData);
+        }
+
+        if($streamData!=''){
+            $ret = file_put_contents($path, $streamData, true);
+        }else{
+            $ret = false;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * 判断图片文件的MIME类型
+     * @param $image
+     * @return bool
+     * @author Jiangzhiheng
+     * @time 2016-03-02 10:09
+     */
+    static public function imageMimeCheck($image) {
+        $fileMime =  $image->getMimeType();
+        $allowType = ['image/png','image/gif','image/jpeg'];
+        if (in_array($fileMime,$allowType)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

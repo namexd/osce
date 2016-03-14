@@ -68,6 +68,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('invigilator/add-sp-invigilator', 	['uses'=>'InvigilatorController@postAddSpInvigilator','as'=>'osce.admin.invigilator.postAddSpInvigilator']);
 		Route::post('invigilator/edit-sp-invigilator', 	['uses'=>'InvigilatorController@postEditSpInvigilator','as'=>'osce.admin.invigilator.postEditSpInvigilator']);
 		Route::post('invigilator/code-unique', 	['uses'=>'InvigilatorController@postCodeUnique','as'=>'osce.admin.invigilator.postCodeUnique']);	//判断编号是否存在
+		Route::post('invigilator/idcard-unique',['uses'=>'InvigilatorController@postIdcardUnique','as'=>'osce.admin.invigilator.postIdcardUnique']);	//判断身份证号是否存在
 
 
 		//设置
@@ -165,7 +166,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/add-exam', 	['uses'=>'ExamController@getAddExam','as'=>'osce.admin.exam.getAddExam']);		//新增考试
 		Route::post('exam/add-exam', 	['uses'=>'ExamController@postAddExam','as'=>'osce.admin.exam.postAddExam']);
 		Route::get('exam/examinee-manage', 	['uses'=>'ExamController@getExamineeManage','as'=>'osce.admin.exam.getExamineeManage']);  //考生管理
-		Route::post('exam/del-student', 		['uses'=>'ExamController@postDelStudent','as'=>'osce.admin.exam.postDelStudent']);		//删除考生
+		Route::post('exam/del-student', 	['uses'=>'ExamController@postDelStudent','as'=>'osce.admin.exam.postDelStudent']);		//删除考生
 		Route::get('exam/add-examinee', 	['uses'=>'ExamController@getAddExaminee','as'=>'osce.admin.exam.getAddExaminee']);		//添加考生
 		Route::get('exam/edit-examinee', 	['uses'=>'ExamController@getEidtExaminee','as'=>'osce.admin.exam.getEidtExaminee']);		//添加考生
 		Route::post('exam/add-examinee', 	['uses'=>'ExamController@postAddExaminee','as'=>'osce.admin.exam.postAddExaminee']);
@@ -202,6 +203,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('exam/intelligence', ['uses'=>'ExamController@postIntelligence','as'=>'osce.admin.exam.postIntelligence']);
 		Route::post('exam/save-exam-plan', ['uses'=>'ExamController@postSaveExamPlan','as'=>'osce.admin.exam.postSaveExamPlan']);
 		Route::get('exam/change-student', ['uses'=>'ExamController@getChangeStudent','as'=>'osce.admin.exam.getChangeStudent']);
+
+		//考生
+		Route::post('student/judge-student', ['uses'=>'StudentController@postJudgeStudent','as'=>'osce.admin.exam.postJudgeStudent']);		//删除考生
 
 		//成绩查询
 //		Route::get('exam/result-exam',['uses'=>'ExamResultController@getResultExam','as'=>'osce.admin.getResultExam']);
@@ -252,6 +256,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//视频的着陆页
 		Route::get('exam-result/result-video',['uses'=>'ExamResultController@getResultVideo','as'=>'osce.admin.course.getResultVideo']);
+		Route::get('exam-result/download-components',['uses'=>'ExamResultController@getDownloadComponents','as'=>'osce.admin.course.getDownloadComponents']);
 
 		//科目统计相关
 		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.course.getIndex']);
@@ -270,6 +275,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('vcr',['uses'=>'PadController@getVcr']);
 
 		Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
+		Route::get('teacher-vcr',['uses'=>'PadController@getTeacherVcr']);		//根据考场ID、考试ID和teacher_id获取考站的摄像头信息(接口)
 		Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
 
 		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
@@ -389,7 +395,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//pad的上传
 		Route::post('upload-image',['uses'=>'InvigilatePadController@postTestAttachImage','as'=>'osce.pad.InvigilatePad.postTestAttachImage']);
 		Route::post('upload-radio',['uses'=>'InvigilatePadController@postTestAttachRadio','as'=>'osce.pad.InvigilatePad.postTestAttachRadio']);
-		Route::post('store-anchor',['uses'=>'InvigilatePadController@StoreAnchor','as'=>'osce.pad.InvigilatePad.StoreAnchor']);
+		Route::post('store-anchor',['uses'=>'InvigilatePadController@postStoreAnchor','as'=>'osce.pad.InvigilatePad.StoreAnchor']);
 	});
 });
 
@@ -454,6 +460,34 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //		'id'	=> 'required'
 //	]);
 
+//	$exam_id = $request->get('id');
+//	if(empty($exam_id)){
+//		return '请传入id，id对应考试ID';
+//	}
+//
+//	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
+//	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
+//	$exam = new \Modules\Osce\Entities\Exam();
+//	if($exam->emptyData($exam_id)){
+//		return '成功';
+//	}
+//
+//	return '失败';
+	$a = \Modules\Osce\Entities\Exam::where('id',415)->get();
+	$b = $a->first();
+	if (is_object($a)) {
+//		dd(true);
+	} else {
+		dd(false);
+	};
+});
+//TODO:清空考试数据使用 	Zhoufuxiang
+Route::get('test/empty', function(\Illuminate\Http\Request $request) {
+//	//验证规则
+//	$this -> validate($request,[
+//		'id'	=> 'required'
+//	]);
+
 	$exam_id = $request->get('id');
 	if(empty($exam_id)){
 		return '请传入id，id对应考试ID';
@@ -461,10 +495,12 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 
 	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
 	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
-	$result3 = \Modules\Osce\Entities\ExamQueue::where('exam_id', $exam_id)->delete();
-	$result4 = \Modules\Osce\Entities\ExamPlan::where('exam_id', $exam_id)->delete();
+	$exam = new \Modules\Osce\Entities\Exam();
+	if($exam->emptyData($exam_id)){
+		return '成功';
+	}
 
-	return '成功';
+	return '失败';
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 

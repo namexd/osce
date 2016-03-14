@@ -75,8 +75,8 @@ class Station extends CommonModel
             if ($stationIdArray != []) {
                 $builder = $builder->whereNotIn($this->table.'.id',$stationIdArray);
             }
-            if(!empty($name)){
-                $builder = $builder->where($this->table.'.name', 'like', '%'.$name.'%');
+            if($name != ''){
+                $builder = $builder->where($this->table.'.name', 'like', '%\\' . $name.'%');
             }
 
             //开始查询

@@ -96,10 +96,14 @@ class Teacher extends CommonModel
                     'case_name'=>$Teacher['cname'],
                     'case_id'=>$Teacher['caseId'],
                 ];
-                $openId= Teacher::find($Teacher['id'])->userInfo;
-//                dd($openId);
-                $list[$k]['openid']=$openId['openid'];
+                $userInfo   = Teacher::find($Teacher['id'])->userInfo;
+                if(is_null($userInfo))
+                {
+                    throw new \Exception('没有找到对应的用户信息');
+                }
+                $list[$k]['openid']=$userInfo->openid;
             }
+
             return $list;
 
         }catch (\Exception $ex) {
@@ -492,18 +496,17 @@ class Teacher extends CommonModel
      *  @author   zhouqiang
      */
 
-    public function getSpTeacher($station,$examId){
+    public function getSpTeacher($station,$examId)
+    {
+        $spTeacher =  Teacher::leftJoin('station_teacher', function($join){
+                    $join -> on('teacher.id', '=', 'station_teacher.user_id');
+                })
+                ->where('station_teacher.station_id', $station)
+                ->where('station_teacher.exam_id', $examId)
+                ->where('teacher.type', 2)
+                ->first();
 
-
-          $spTeacher =  Teacher::leftJoin('station_teacher', function($join){
-            $join -> on('teacher.id', '=', 'station_teacher.user_id');
-        })
-              ->where('station_teacher.station_id','=',$station)
-              ->where('station_teacher.exam_id','=',$examId)
-            ->first();
-
-
-        return   $spTeacher;
+        return $spTeacher;
     }
 
 

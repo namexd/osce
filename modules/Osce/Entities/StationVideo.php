@@ -68,10 +68,10 @@ class StationVideo extends CommonModel
      * @param $stationId
      * @author Jiangzhiheng
      */
-    static public function label($examId, $studentId, $stationId)
+    static public function label($examId, $studentId, $stationId, $examScreeningId)
     {
-//        $connection = \DB::connection('osce_mis');
-//        $connection->enableQueryLog();
+////        $connection = \DB::connection('osce_mis');
+////        $connection->enableQueryLog();
             return StationVideo::Join('station_vcr','station_video.station_vcr_id','=','station_vcr.id')
             ->Join('vcr','vcr.id','=','station_vcr.vcr_id')
             ->Join('exam_result','exam_result.station_id','=','station_vcr.station_id')
@@ -90,9 +90,42 @@ class StationVideo extends CommonModel
                 'exam_result.end_dt as end_dt'
             )
             ->get();
-
-//        $c = $connection->getQueryLog();
-//        dd($c);
+//
+////        $c = $connection->getQueryLog();
+////        dd($c);
     }
+
+
+    static function  getTationVideo($examId, $studentId, $stationVcrId){
+
+        return  StationVideo::where('exam_id','=',$examId)
+            ->where('student_id','=',$studentId)
+            ->where('station_vcr_id','=',$stationVcrId)
+            ->orderBy('station_video.begin_dt')
+            ->get();
+    }
+
+
+    // TODO 临时修改运用
+//    static public function label($examId, $studentId, $stationId,$examScreeningIds)
+//    {
+//        return ExamResult::Join('station_vcr','exam_result.station_id','=','station_vcr.station_id')
+//            ->Join('vcr','vcr.id','=','station_vcr.vcr_id')
+//            ->where('exam_result.student_id',$studentId)
+//            ->where('exam_result.station_id',$stationId)
+//            ->whereIn('exam_result.exam_screening_id',$examScreeningIds)
+//            ->groupBy('exam_result.begin_dt')
+//            ->select(
+//                'vcr.ip as ip',
+//                'vcr.username as username',
+//                'vcr.password as password',
+//                'vcr.port as port',
+//                'vcr.channel as channel',
+//                'exam_result.begin_dt as anchor',
+//                'exam_result.begin_dt as begin_dt',
+//                'exam_result.end_dt as end_dt'
+//            )
+//            ->get();
+//    }
 
 }

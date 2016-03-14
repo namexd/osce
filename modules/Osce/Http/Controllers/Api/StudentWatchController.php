@@ -95,7 +95,6 @@ class StudentWatchController extends CommonController
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watchId->id)->where('is_end', '=', 0)->orderBy('signin_dt','desc')->first();
         if (!$watchStudent) {
-//            $code = -2;
             $data['title'] = '没有找到学生的腕表信息';
             return response()->json(
                 $this->success_data($data, $code)
@@ -109,16 +108,20 @@ class StudentWatchController extends CommonController
         $studentId = $watchStudent->student_id;
         // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
-
         $examId = $examInfo->exam_id;
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
-//        dd($examQueueCollect);
+        if(is_null($examQueueCollect)){
+            $code = -1;
+            $data['title'] = '学生队列信息不正确';
+            return response()->json(
+                $this->success_data($data, $code)
+            );
+
+        }
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect);
-
-
         return response()->json(
             $this->success_data($data, $code=$data['code'])
         );
@@ -171,7 +174,7 @@ class StudentWatchController extends CommonController
         $room =$item->room;
         $data   =   [
             'code'=>3,
-            'title'=>'将要考试进入考站',
+            'title'=>'请请入下面考站考试',
             'roomName'=>$room->name.'-'.$station->name,
         ];
         return $data;
@@ -181,21 +184,29 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为2时
 
     private function getStatusTwoExam($examQueueCollect){
+//        foreach ($examQueueCollect as $items) {
+//            if ($items->status == 2) {
+//                return $items;
+//            }
+//        }
+
         $items   =   array_where($examQueueCollect,function($key,$value){
             if($value ->status  ==  2)
             {
                 return $value;
             }
         });
-        $item   =   array_shift($items);
+        $item   = array_shift($items);
         if(is_null($item)){
             throw new \Exception('队列异常');
         }
-        $surplus = strtotime($item->end_dt)-time();
+
+//        $surplus = strtotime($item->end_dt)-time();
+//        $surplus = strtotime($item->station->mins);
+        $surplus = ($item->station->mins)*60;
         if($surplus<=0){
             //todo 调用jiangzhiheng接口
-            $examQueueModel = new ExamQueue();
-            $endStudentExam = $examQueueModel->getEndStudentQueueExam();
+            $endStudentExam = ExamQueue::endStudentQueueExam($item->student_id);
         };
         $data=[
             'code'      =>  4,
@@ -244,11 +255,24 @@ class StudentWatchController extends CommonController
         }
         else
         {
-            $data = [
-                'code'=> 5,
-                'title' => '当前考站考试完成，进入下一场考试考站名',
-                'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
-            ];
+
+            if(!is_null($nextExamQueue->station))
+            {
+
+                $data = [
+                    'code'=> 5,
+                    'title' => '当前考站考试完成，进入下一场考试考站名',
+                    'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
+                ];
+            }
+            else
+            {
+                $data = [
+                    'code'=> 5,
+                    'title' => '当前考站考试完成，进入下一场考试考场名',
+                    'nextExamName' =>$nextExamQueue->room->name,
+                ];
+            }
         }
         return $data;
     }
@@ -263,7 +287,7 @@ class StudentWatchController extends CommonController
         if ($ExamFinishStatus >= $studentExamSum){
             //查询出考试结果
             $examResult = ExamResult::where('student_id','=',$examQueue->student_id)->count();
-            if($examResult >= $studentExamSum){
+            if($examResult >= $ExamFinishStatus){
                 $testresultModel = new TestResult();
                 $score =  $testresultModel->AcquireExam($examQueue->student_id);
                 $data = [
@@ -304,14 +328,14 @@ class StudentWatchController extends CommonController
         });
         $item   =   array_shift($items);
 
-
         //判断前面是否有人考试
         $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
             ->whereBetween('status', [1, 2])
             ->count();
+
+
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
-
           if($examStudent == 0){
 
               $willStudents =$studentnum;
@@ -334,16 +358,31 @@ class StudentWatchController extends CommonController
                 'willRoomName'=> $examRoomName,
 
             ];
-        }else{
-            $data =[
-                'code'=> 2,
-                'title'=> '请进入考试教室',
-                'willStudents'=> '',
-                'estTime'=> '',
-                'willRoomName'=> '',
-                'roomName'=> $examRoomName,
+        }
+        else
+        {
+            if(is_null($item->station_id)){
+                $data =[
+                    'code'=> 3,
+                    'title'=> '你将要进入下面教室抽签考试',
+                    'willStudents'=> '',
+                    'estTime'=> '',
+                    'willRoomName'=> '',
+                    'roomName'=> $examRoomName,
 
-            ];
+                ];
+            }else{
+                $data =[
+                    'code'=> 3,
+                    'title'=> '你将要进入下面教室抽签考试',
+                    'willStudents'=> '',
+                    'estTime'=> '',
+                    'willRoomName'=> '',
+                    'roomName'=> $examRoomName.'-'.$item->station->name,
+
+                ];
+            }
+
         }
         return $data;
    }
@@ -357,6 +396,7 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
+
           foreach($willStudents as $key=>$willStudent){
 //
               if($willStudent->student_id == $item->student_id){

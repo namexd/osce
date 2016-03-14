@@ -44,18 +44,21 @@ class RoomController extends CommonController
             'keyword'   => 'sometimes'
         ]);
         //获取各字段
-        $keyword = e($request->input('keyword', ""));
+        $keyword = $request ->input('keyword', "");
         $type    = $request ->input('type', '0');
         $id      = $request ->input('id', '');
 
         try{
             //获取当前场所的类
             $data = $room->showRoomList($keyword, $type, $id);
+            if(count($data)==0){
+                return redirect()->route('osce.admin.room.getRoomList');
+            }
             //获取当前的标签
             $area = config('osce.room_cate');
             //展示页面
             $cateList   =   Area::groupBy('cate')->get();
-            return view('osce::admin.resourcemanage.examroom', ['area' => $cateList, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
+            return view('osce::admin.resourceManage.site_manage', ['area' => $cateList, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         } catch(\Exception $ex){
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -92,6 +95,7 @@ class RoomController extends CommonController
         $data = $model->showRoomList("", $type, $id);
 
 
+
         $cateList   =   Area::groupBy('cate')->select('cate')->get();
         //TODO:zhoufuxiang，查询没被其他考场关联的摄像机
         $model = new Vcr();
@@ -103,7 +107,7 @@ class RoomController extends CommonController
             $data->vcr_id = 0;
         }
         //将数据展示到页面
-        return view('osce::admin.resourcemanage.examroom_edit', ['data' => $data,'cateList'=>$cateList, 'vcr'=>$vcr, 'type'=>$type]);
+        return view('osce::admin.resourceManage.site_manage_edit', ['data' => $data,'cateList'=>$cateList, 'vcr'=>$vcr, 'type'=>$type]);
     }
 
     /**
@@ -119,7 +123,7 @@ class RoomController extends CommonController
      * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postEditRoom(Request $request)
+    public function postEditRoom(Request $request, Room $room)
     {
         //验证数据，暂时省略
         $this->validate($request, [
@@ -144,7 +148,20 @@ class RoomController extends CommonController
                 $room = new Room();
                 unset($formData['cate']);
                 $room->editRoomData($id, $vcr_id, $formData);
+            //TODO: Zhoufuxiang 16-3-7
+            } elseif($type == '考场'){
+                throw new \Exception('不能够修改为考场',-120);
+//                unset($formData['cate']);
+                //删除对应场所
+//                $area = new Area();
+//                if(!$area->deleteArea($id)){
+//                    throw new \Exception('场所修改失败！',-120);
+//                }
+//                //新建考场
+//                $room->createRoom($formData,$vcr_id,$user->id);
             } else {
+
+
                 $area = new Area();
                 $area->editAreaData($id, $vcr_id, $formData);
             }
@@ -179,7 +196,7 @@ class RoomController extends CommonController
             ->select(['id', 'name'])->get();     //关联摄像机
 
         $cateList   =   Area::groupBy('cate')->get();
-        return view('osce::admin.resourcemanage.examroom_add',['vcr' =>$vcr,'cateList'=>$cateList, 'type' => $type]);
+        return view('osce::admin.resourceManage.site_manage_add',['vcr' =>$vcr,'cateList'=>$cateList, 'type' => $type]);
     }
 
     /**

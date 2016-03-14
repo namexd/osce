@@ -40,7 +40,7 @@ class CaseController extends CommonController
         $CaseModel = new CaseModel();
         $data = $CaseModel->getList($paginate);
 
-        return view('osce::admin.resourcemanage.clinicalcase', ['data' => $data]);
+        return view('osce::admin.resourceManage.clinical_case_manage', ['data' => $data]);
     }
 
     /**
@@ -58,7 +58,7 @@ class CaseController extends CommonController
      */
     public function getCreateCase()
     {
-        return view('osce::admin.resourcemanage.clinicalcase_add');
+        return view('osce::admin.resourceManage.clinical_case_manage_add');
     }
 
     /**
@@ -127,7 +127,7 @@ class CaseController extends CommonController
         //通过id查到该条信息
         try {
             $data = CaseModel::findOrFail($id);
-            return view('osce::admin.resourcemanage.clinicalcase_edit',['data'=>$data]);
+            return view('osce::admin.resourceManage.clinical_case_manage_edit',['data'=>$data]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

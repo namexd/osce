@@ -29,7 +29,8 @@ Route::group(['prefix' => "api/1.0/public",'middleware' => ['cors']], function()
              return $userEnter;
         }catch (\Exception $ex) {
             if( $ex->getMessage()=='The user credentials were incorrect.'){
-                return \Response::json( [ 'code' => -1, 'msg' => $ex->getMessage()] );
+                return \Response::json( [ 'access_token' => 'defeat', 'token_type' =>'defeat','expires_in'=>0,'user_id'=>'defeat'] );
+
             }else{
                 return Response::json(Authorizer::issueAccessToken());
             }
