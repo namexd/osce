@@ -111,7 +111,7 @@ $(function(){
                             <td>{{$item->exam_name}}</td>
                             <td>{{$item->subject_name}}</td>
                             <td>{{$item->avg_total}}</td>
-                            <td>{{$item->avg_score}}</td>
+                            <td>{{$item->avg_score}}分</td>
                             <td>{{$item->avg_time}}</td>
                             <td><a href="{{route('osce.admin.course.getStudent',[
                                                 'exam_id'   =>$item->exam_id,

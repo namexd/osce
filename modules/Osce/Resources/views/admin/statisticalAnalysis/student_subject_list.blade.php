@@ -53,7 +53,7 @@
                         <td>{{$item->title}}</td>
                         <td>{{date('Y-m-d H:i', strtotime($item->begin_dt))}}</td>
                         <td>{{$item->time}}</td>
-                        <td>{{$item->score}}</td>
+                        <td>{{$item->score}}分</td>
                         <td>{{$item->grade_teacher}}</td>
                         <td>
                             <a href="{{route('osce.admin.course.getResultVideo',[

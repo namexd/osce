@@ -79,7 +79,7 @@
                             <td>{{$item->student_code}}</td>
                             <td>{{$item->exam_name}}</td>
                             <td>{{$item->station_total}}</td>
-                            <td>{{$item->score_total}}</td>
+                            <td>{{$item->score_total}}分</td>
                             <td>{{$item->ranking}}</td>
                             <td>
                                 <a href="{{route('osce.admin.course.getStudentDetails',['student_id'=>$item->student_id])}}">
