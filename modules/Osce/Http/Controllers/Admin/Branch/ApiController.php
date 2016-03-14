@@ -150,7 +150,7 @@ class ApiController extends CommonController
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
     public function GenerateExamPaper(QuestionBankRepositories $questionBankRepositories){
-        dd($questionBankRepositories->GenerateExamPaper(2));
+        dd($questionBankRepositories->GenerateExamPaper(20));
     }
 
     /**
