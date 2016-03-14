@@ -186,8 +186,18 @@ abstract class CommonController extends Controller
         }
     }
 
-
-
+    /**
+     * 上传锚点的保存
+     * @param $stationId 考站id
+     * @param $studentId 学生id
+     * @param $examId 考试id
+     * @param $teacherId 老师id
+     * @param array $timeAnchors 锚点数据
+     * @return array
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-14 10:50
+     */
     static public function storeAnchor($stationId, $studentId, $examId, $teacherId, array $timeAnchors)
     {
         $connection = \DB::connection('osce_mis');
@@ -224,8 +234,4 @@ abstract class CommonController extends Controller
         }
 
     }
-
-
-
-
 }

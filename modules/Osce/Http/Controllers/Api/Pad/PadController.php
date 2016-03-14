@@ -322,7 +322,8 @@ class PadController extends  CommonController{
     {
         $this->validate($request, [
             'student_id' => 'required|integer',
-//            'station_id' => 'required|integer'
+            'station_id' => 'sometimes|integer',
+            'user_id' => 'required|integer'
         ]);
 
         try {
@@ -331,9 +332,10 @@ class PadController extends  CommonController{
             //通过考生的腕表id来找到对应的队列id
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id', null);
+            $teacherId = $request->input('user_id');
 
             /** @var 学生id $studentId */
-            $queue = ExamQueue::endStudentQueueExam($studentId, $stationId);
+            $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
             return response()->json($this->success_data([$date,$queue->exam_screening_id]));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));

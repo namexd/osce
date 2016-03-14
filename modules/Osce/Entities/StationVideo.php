@@ -78,7 +78,7 @@ class StationVideo extends CommonModel
             ->where('station_video.exam_id','=',$examId)
             ->where('station_video.student_id',$studentId)
             ->where('station_vcr.station_id',$stationId)
-            ->groupBy('station_video.begin_dt')
+            ->orderBy('station_video.begin_dt')
             ->select(
                 'vcr.ip as ip',
                 'vcr.username as username',
