@@ -59,36 +59,51 @@
             var subject_id = $('#status0 option:selected').val();
             var ability_id = $('#status1 option:selected').val();
             var difficult_id = $('#status2 option:selected').val();
+            var page = 2;
+            var array = [];//用于存放已选中的checkbook
+            var number = [];//用于存放已选中的checkbook-最终选中的
             $('#search').click(function(){
-                //获取筛选条件
 
-                getexamquestions(subject_id,ability_id,difficult_id);
+                //获取筛选条件
+                getexamquestions(subject_id,ability_id,difficult_id,page);
             });
 
-            function getexamquestions(subject_id,ability_id,difficult_id){
+            $('.pull-right').delegate('a','click',function(){
+                var page = $(this).parents('li').attr('page');
+                getCheckboxVal();
+                getexamquestions(subject_id,ability_id,difficult_id,page,array);
+            })
+
+            //获取列表数据
+            function getexamquestions(subject_id,ability_id,difficult_id,page,array){
                 $.ajax({
                     type: "GET",
                     url: "{{route('osce.admin.ExamPaperController.getExamQuestions')}}",
-                    data: {subject_id:subject_id,ability_id:ability_id,difficult_id:difficult_id},
+                    data: {subject_id:subject_id,ability_id:ability_id,difficult_id:difficult_id,page:page},
                     success: function(msg){
                         if(msg.code){
                             var data = msg.data.data;
                             var pagedata = msg.data;
                             var str = '';
+
                             $(data).each(function(i){
-                                str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon">';
+                                if($.inArray(this.id,array) != -1){
+                                    str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon check" data="'+this.id+'">';
+                                }else{
+                                    str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon" data="'+this.id+'">';
+                                }
+
                                 str +='</div><input type="checkbox" value=""></label></td>';
                                 str +='<td>'+(i+1)+'</td>';
                                 str +='<td>'+this.question_name+'</td>';
                                 str +='<td>'+this.label+'</td>';
                                 str +='<td>'+this.questtion_type+'</td>';
-
                                 str +='</td></tr>';
                             });
                             $('.subjectBody').html(str);
-                            var page = 1;
+
                             var pager = createPageDom(pagedata.total,pagedata.per_page,page);
-                            $('.pull-right').html(pager);
+                            $('.pull-right .pagination').html(pager);
                             $('.pull-left').html('共'+pagedata.total+'条');
                         }else{
                             $('.subjectBody').html();
@@ -98,9 +113,10 @@
                 });
             }
 
-            getexamquestions(subject_id,ability_id,difficult_id);
+            //默认加载
+            getexamquestions(subject_id,ability_id,difficult_id,page,array);
 
-
+            //ajax分页
             function createPageDom(total,pagesize,page){
                 var string = '';
                 if(total>0){
@@ -128,6 +144,27 @@
                 }
                 return  string;
             }
+
+            //获取checkbox选中的值-公用方法
+            function getCheckboxVal(){
+                $('.check_icon').each(function(){
+                    //存储已选中元素
+                 if(($(this).attr('class') == 'check_icon check') && ($(this).attr('data') != undefined)){
+                     if($.inArray($(this).attr('data'), array) == -1){
+                         array.push(Number($(this).attr('data')));
+                     }
+                 }else{
+                     //取消选中时去除数组元素
+                        if($.inArray(Number($(this).attr('data')),array) != -1){
+                            array.splice($.inArray(Number($(this).attr('data')),array),1);
+                        }
+
+                 }
+
+                 });
+                 return array;
+            }
+
         })
     </script>
 @stop
@@ -185,8 +222,10 @@
                     {{--共{{@$data->total()}}条--}}
                 </div>
                 <div class="pull-right">
+                    <ul class="pagination">
+                        {{--{!! $data->appends(@$keyword)->render() !!}--}}
+                    </ul>
 
-                    {{--{!! $data->appends(@$keyword)->render() !!}--}}
 
                 </div>
             </div>

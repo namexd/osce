@@ -7,6 +7,10 @@
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
     <script>
+        var array = [];
+        $('#test').click(function(){
+            console.log(array);
+        });
         function categories(){
             $('#submit-btn').click(function(){
                 var flag = null;
@@ -189,6 +193,7 @@
 @stop
 
 @section('content')
+    <button id="test">11111111</button>
     <input type="hidden" id="parameter" value="{'pagename':'subject_papers_add}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
