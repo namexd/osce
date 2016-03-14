@@ -7,6 +7,14 @@
         /*选择框样式*/
         .check_other {display: inline-block;vertical-align: middle;}
         .check_top {top: 8px;display: block;}
+        /*按钮框下面线*/
+        .cBorder_b{border-bottom: 1px solid #e7eaec;}
+        /*选项样式*/
+        .padb{padding-bottom: 56px;}
+        .chooseOne{padding: 10px;margin-right: 5px;border-radius: 2px;cursor: pointer;}
+        .haveChoose{border: 1px solid #aeddd9;background-color: #aeddd9;}
+        .nowChoose{border: 1px solid #16beb0;background-color: #16beb0;color: #fff;}
+        .waitChoose{border: 1px solid #e7eaec;}
     </style>
 @stop
 
@@ -64,10 +72,21 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="btnBox" style="margin-top: 70px;">
+                            <div class="btnBox" style="margin: 70px 0 50px 0;">
                                 <button class="btn btn-primary" id="nextBtn">下一题</button>
                                 <button class="btn btn-primary" id="beforeBtn">上一题</button>
                                 <button class="btn btn-warning" id="goBtn">提交试卷</button>
+                                <span class="marl_10">剩余时间</span>
+                                <span class="font24" style="color: #ff0101;font-weight: 700;">10:10</span>
+                            </div>
+                            <div class="cBorder_b"></div>
+                            <div class="chooseBox">
+                                <div class="font16" style="padding: 20px 0;">本试卷包含以下试题</div>
+                                <div class="padb choose">
+                                    <span class="haveChoose left chooseOne">1.1</span>
+                                    <span class="nowChoose left chooseOne">1.2</span>
+                                    <span class="waitChoose left chooseOne">1.3</span>
+                                </div>
                             </div>
                         </div>
 

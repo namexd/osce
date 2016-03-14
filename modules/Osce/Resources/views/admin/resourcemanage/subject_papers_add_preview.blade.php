@@ -22,14 +22,14 @@
         @if(!empty($PaperPreviewArr["item"]))
             @foreach(@$PaperPreviewArr["item"] as $k =>$val )
                 <div class="form-group marb_25">
-                    <h4>{{$val["name"]}}</h4>
+                    <h4>{{@$val["name"]}}</h4>
                     @if(!empty($val["child"]))
-                        @foreach(@$val["child"] as $k => $val2 )
+                        @foreach($val["child"] as $k => $val2 )
                             <div class="form-group">
-                                <p>{{$k+1}}、{{$val2["name"]}}（　　）</p>
+                                <p>{{$k+1}}、{{@$val2["name"]}}（　　）</p>
                                 @if(!empty($val2->examQuestionItem))
                                     @foreach($val2->examQuestionItem as $val3 )
-                                        <span class="marr_15">{{$val3["name"]}}、{{$val3["content"]}}</span>
+                                        <span class="marr_15">{{@$val3["name"]}}、{{@$val3["content"]}}</span>
                                     @endforeach
                                 @endif
                             </div>
