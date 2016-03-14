@@ -527,6 +527,9 @@ class DiscussionController extends CommonController
             return redirect('osce/admin/login/index');
         }
         $id = intval($request->get('id'));
+
+        \Log::alert($id. '请求讨论内容详情！');
+
         $discussionModel = new Discussion();
         $pagination = $discussionModel->getReplyPagination($id);
 
