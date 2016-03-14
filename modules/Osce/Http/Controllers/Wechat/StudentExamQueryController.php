@@ -118,7 +118,7 @@ class StudentExamQueryController extends CommonController
             $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
             // TODO 根据考试id找到对应的考试场次  zhouqiang  2016-3-7
 
-//        $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get();
+        $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get()->pluck('id');
 
 //        $examScreening = [];
 //        foreach ($examScreeningId as $data) {
@@ -130,7 +130,7 @@ class StudentExamQueryController extends CommonController
 
             //根据场次id查询出考站的相关考试结果
             $ExamResultModel = new ExamResult();
-            $stationList = $ExamResultModel->stationInfo($studentId);
+            $stationList = $ExamResultModel->stationInfo($studentId,$examScreeningId);
             if (!$stationList) {
                 throw new \Exception('没有找到学生成绩信息');
             }
@@ -146,9 +146,9 @@ class StudentExamQueryController extends CommonController
 //                    }
                 }
                 //转换耗时 TODO： zhoufuxiang 2016-3-14
-                date_default_timezone_set("UTC");
-                $stationType->time = date('H:i:s', $stationType->time);
-                date_default_timezone_set("PRC");
+//                date_default_timezone_set("UTC");
+//                $stationType->time = date('H:i:s', $stationType->time);
+//                date_default_timezone_set("PRC");
 
                 $stationData[] = [
                     'exam_result_id' => $stationType->exam_result_id,
