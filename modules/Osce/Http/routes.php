@@ -468,7 +468,6 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	}
 //
 //	return '失败';
-	dd(time() * 1000);
 });
 //TODO:清空考试数据使用 	Zhoufuxiang
 Route::get('test/empty', function(\Illuminate\Http\Request $request) {
