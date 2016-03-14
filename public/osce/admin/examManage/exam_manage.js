@@ -307,7 +307,7 @@ function add_basic(){
             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
             '</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value=""/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
             '</td>'+
             '<td>0天'+hours+'小时'+minutes+'分</td>'+
             '<td>'+
