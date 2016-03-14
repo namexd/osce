@@ -13,4 +13,6 @@ use Illuminate\Support\Facades\Storage;
 class UploadController extends CommonController
 {
 
+
+
 }

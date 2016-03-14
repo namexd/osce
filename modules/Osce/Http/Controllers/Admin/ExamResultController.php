@@ -314,21 +314,21 @@ class ExamResultController extends CommonController{
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             //根据考试id拿到场次id临时修改
-            $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get();
-            $examScreening = [];
-            foreach ($examScreeningId as $data) {
-                $examScreening[] = [
-                    'id' => $data->id,
-                ];
-            }
-            $examScreeningIds = array_column($examScreening, 'id');
+            $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get()->pluck('id');
+//            $examScreening = [];
+//            foreach ($examScreeningId as $data) {
+//                $examScreening[] = [
+//                    'id' => $data->id,
+//                ];
+//            }
+//            $examScreeningIds = array_column($examScreening, 'id');
             //更据考站id查询到
             $stationVcrId = StationVcr::where('station_id','=',$stationId)->first()->id;
             if(is_null($stationVcrId)){
                 throw new \Exception('没有找到相关联的摄像机');
             }
             //查询到页面需要的数据
-            $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningIds);
+            $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningId);
             //查询出时间锚点追加到数组中
             $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationVcrId);
 //            if($anchor){
