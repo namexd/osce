@@ -194,7 +194,7 @@ class ExamResult extends CommonModel
      */
 
 
-    public function stationInfo($studentId){
+    public function stationInfo($studentId,$examScreeningId){
 
      $builder=$this->leftJoin('station', function($join){
          $join -> on('station.id', '=', 'exam_result.station_id');
@@ -202,6 +202,7 @@ class ExamResult extends CommonModel
          $join -> on('teacher.id', '=', 'exam_result.teacher_id');
      })
       ->where('exam_result.student_id',$studentId)
+         ->whereIn('exam_result.exam_screening_id',$examScreeningId)
          ->select([
          'exam_result.id as exam_result_id ',
          'exam_result.station_id as id',

@@ -55,7 +55,7 @@ function examination_list(){
 								'<dd style="width:100%">评价老师：'+res.data[i].grade_teacher+'</dd>'+
 								'</dl>'+
 								'<p class="clearfix see_msg">'+
-								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 								'</p>'+
 								'</li>';
 							break;
@@ -68,7 +68,7 @@ function examination_list(){
 								'<dd>SP病人：'+res.data[i].sp_name+'</dd>'+
 								'</dl>'+
 								'<p class="clearfix see_msg">'+
-								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 								'</p>'+
 								'</li>';
 							break;
@@ -80,7 +80,7 @@ function examination_list(){
 								'<dd>理论考试</dd>'+
 								'</dl>'+
 								'<p class="clearfix see_msg">'+
-								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 								'</p>'+
 								'</li>';
 							break;
@@ -150,7 +150,7 @@ function examination_list(){
 							    			'<dd style="width:100%">评价老师：'+res.data[i].grade_teacher+'</dd>'+
 							    		'</dl>'+
 							    		'<p class="clearfix see_msg">'+
-							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 							    		'</p>'+
 							    	'</li>';
 								break;
@@ -163,7 +163,7 @@ function examination_list(){
 							    			'<dd>SP病人：'+res.data[i].sp_name+'</dd>'+
 							    		'</dl>'+
 							    		'<p class="clearfix see_msg">'+
-							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 							    		'</p>'+
 							    	'</li>';
 								break;
@@ -175,7 +175,7 @@ function examination_list(){
 							    			'<dd>理论考试</dd>'+
 							    		'</dl>'+
 							    		'<p class="clearfix see_msg">'+
-							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 							    		'</p>'+
 							    	'</li>';
 								break;
