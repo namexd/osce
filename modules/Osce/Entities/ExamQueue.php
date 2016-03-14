@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities;
 use DB;
 use Doctrine\Common\Persistence\ObjectManager;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Http\Controllers\CommonController;
 
 class ExamQueue extends CommonModel
 {
@@ -311,7 +312,7 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId)
     {
         //开启事务
         $connection = DB::connection($this->connection);
@@ -319,6 +320,8 @@ class ExamQueue extends CommonModel
         try {
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
+            // 调用锚点方法
+            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
 
 //                查询学生是否已开始考试
             $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
@@ -333,29 +336,28 @@ class ExamQueue extends CommonModel
                     ->whereIn('exam_queue.status', [0, 2])
                     ->orderBy('begin_dt', 'asc')
                     ->get();
-                $nowQueue  =   null;
-                foreach($studentTimes as $stationTime){
-                    if($stationTime->status==2){
+                $nowQueue = null;
+                foreach ($studentTimes as $stationTime) {
+                    if ($stationTime->status == 2) {
                         $nowQueue = $stationTime;
                         break;
                     }
                 }
-                if(is_null($nowQueue))
-                {
-                    throw new \Exception('进入考试失败',-105);
+                if (is_null($nowQueue)) {
+                    throw new \Exception('进入考试失败', -105);
                 }
 
-                $lateTime   =   $nowTime  - strtotime($nowQueue   ->  begin_dt);
-                \Log::alert($lateTime.'迟到时间');
-                foreach ($studentTimes as $key=>$item) {
+                $lateTime = $nowTime - strtotime($nowQueue->begin_dt);
+                \Log::alert($lateTime . '迟到时间');
+                foreach ($studentTimes as $key => $item) {
                     if ($exam->sequence_mode == 2) {
 
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
-                        \Log::alert($stationTime.'以考站安排');
+                        \Log::alert($stationTime . '以考站安排');
                     } else {
                         //这是已考场安排的需拿到room_id
-                        $stationTime    =   $this   ->  getRoomStationMaxTime($item->room_id);
-                        \Log::alert($stationTime.'以考场安排');
+                        $stationTime = $this->getRoomStationMaxTime($item->room_id);
+                        \Log::alert($stationTime . '以考场安排');
                     }
 
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
@@ -371,7 +373,8 @@ class ExamQueue extends CommonModel
                         }
                     } else {
                         //查询到考站的标准时间
-                        $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
+                        $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=',
+                            $stationId)->first();
                         if (is_null($ExamTime)) {
                             throw new \Exception('没有找到对应的队列信息', -104);
                         }
@@ -498,6 +501,7 @@ class ExamQueue extends CommonModel
     /**
      * 通过学生id找到对应的队列实例
      * @param $studentId
+     * @param $stationId
      * @return
      * @throws \Exception
      * @author Jiangzhiheng
@@ -594,14 +598,18 @@ class ExamQueue extends CommonModel
     /**
      * 结束学生队列考试
      * @param $studentId 学生id
-     * @param null $stationId
+     * @param null $stationId 考站id
+     * @param null $teacherId 教师id
      * @return Object 返回队列表对应的对象
      * @throws \Exception
      * @author Jiangzhiheng
      */
 
-    static public function endStudentQueueExam($studentId, $stationId = null)
+    static public function endStudentQueueExam($studentId, $stationId = null, $teacherId = null)
     {
+
+        $connection = \DB::connection('osce_mis');
+        $connection->beginTransaction();
         try {
             //获取当前的服务器时间
             $date = date('Y-m-d H:i:s');
@@ -618,16 +626,27 @@ class ExamQueue extends CommonModel
                 //修改状态
                 $queue->status = 3;
                 $queue->end_dt = $date;
-                if (!$queue->save()) {
+                $result = $queue->save();
+                if (!$result) {
                     throw new \Exception('状态修改失败！请重试', 2000);
+                } else {
+                    /*
+                     * 将考试结束的时间写进锚点表里
+                     */
+                    CommonController::storeAnchor($result->station_id, $result->student_id, $result->exam_id,
+                        $teacherId, [strtotime($date)]);
                 }
+                $connection->commit();
                 return $queue;
             } elseif ($queue->status == 3) {
+                $connection->commit();
                 return $queue;
             } else {
                 throw new \Exception('系统错误，请重试', -888);
             }
+
         } catch (\Exception $ex) {
+            $connection->rollBack();
             throw $ex;
         }
     }

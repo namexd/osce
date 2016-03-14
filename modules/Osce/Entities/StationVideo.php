@@ -74,11 +74,11 @@ class StationVideo extends CommonModel
 ////        $connection->enableQueryLog();
             return StationVideo::Join('station_vcr','station_video.station_vcr_id','=','station_vcr.id')
             ->Join('vcr','vcr.id','=','station_vcr.vcr_id')
-            ->Join('exam_result','exam_result.station_id','=','station_vcr.station_id')
+//            ->Join('exam_result','exam_result.station_id','=','station_vcr.station_id')
             ->where('station_video.exam_id','=',$examId)
             ->where('station_video.student_id',$studentId)
             ->where('station_vcr.station_id',$stationId)
-            ->groupBy('station_video.begin_dt')
+             ->orderBy('station_video.begin_dt')
             ->select(
                 'vcr.ip as ip',
                 'vcr.username as username',
@@ -86,8 +86,8 @@ class StationVideo extends CommonModel
                 'vcr.port as port',
                 'vcr.channel as channel',
                 'station_video.begin_dt as anchor',
-                'exam_result.begin_dt as begin_dt',
-                'exam_result.end_dt as end_dt'
+                'station_video.begin_dt as begin_dt',
+                'station_video.end_dt as end_dt'
             )
             ->get();
 //

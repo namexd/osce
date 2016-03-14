@@ -680,6 +680,7 @@ class InvigilatePadController extends CommonController
             $date = date('Y-m-d H:i:s', $nowTime);
             $studentId = $request->get('student_id');
             $stationId = $request->get('station_id');
+            $teacherId =$request->get('user_id');
             //开始考试时创建成绩
 //            $ExamResultData=[
 //                'student_id'=>$studentId,
@@ -701,15 +702,8 @@ class InvigilatePadController extends CommonController
 //           if(!ExamResult::create($ExamResultData)){
 //               throw new \Exception('成绩创建失败',-106);
 //           }
-
-            // 调用锚点方法
-//                $this::storeAnchor($stationId, $studentId, $examId, $teacherId, array $timeAnchors);
             $ExamQueueModel = new ExamQueue();
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime);
-
-
-
-
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
                 return response()->json(

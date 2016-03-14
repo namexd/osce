@@ -315,13 +315,6 @@ class ExamResultController extends CommonController{
             $stationId = $request->input('station_id');
             //根据考试id拿到场次id临时修改
             $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get()->pluck('id');
-//            $examScreening = [];
-//            foreach ($examScreeningId as $data) {
-//                $examScreening[] = [
-//                    'id' => $data->id,
-//                ];
-//            }
-//            $examScreeningIds = array_column($examScreening, 'id');
             //更据考站id查询到
             $stationVcrId = StationVcr::where('station_id','=',$stationId)->first()->id;
             if(is_null($stationVcrId)){
@@ -329,18 +322,9 @@ class ExamResultController extends CommonController{
             }
             //查询到页面需要的数据
             $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningId);
+
             //查询出时间锚点追加到数组中
             $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationVcrId);
-//            if($anchor){
-//                foreach($data as &$item){
-//                    foreach($anchor as $list){
-//                        $item->anchor = $list['begin_dt'];
-////                        $item['end_dt'] = $list['end_dt'];
-//                    }
-//                }
-//            }
-//            dd($data);
-
             return view('osce::admin.statisticalAnalysis.exam_video',['data'=>$data,'anchor'=>$anchor]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
@@ -349,7 +333,6 @@ class ExamResultController extends CommonController{
 
     //下载安装包
     public function getDownloadComponents(){
-        dd(public_path('download').'/WebComponents.exe');
         $this->downloadComponents('WebComponents.exe',public_path('download').'/WebComponents.exe');
     }
 
