@@ -22,7 +22,7 @@
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
             $('.form-horizontal').submit(function(){
                 getCheckboxVal();
-                parent.$('#list-body').append('<input class="questions" value="'+array+'">');
+                parent.$('#list-body').append('<input type="hidden" class="questions" value="'+array+'">');
                 //parent.$('#list-body').find('tbody').attr('index',now);
                 parent.layer.close(index);
                 return  false;
