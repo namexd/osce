@@ -16,6 +16,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperStructure;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperStructureLabel;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperStructureQuestion;
 use Modules\Osce\Repositories\QuestionBankRepositories;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Support\Facades\Auth;
@@ -247,7 +248,8 @@ class ExamPaperController extends CommonController
             'status2'        => 'required',
             'question'        => 'required',
         ]);
-        DB::beginTransaction();
+        $DB = \DB::connection('osce_mis');
+        $DB->beginTransaction();
 
         $user = Auth::user();
         //接收参数
@@ -266,12 +268,13 @@ class ExamPaperController extends CommonController
         //判断当前数据是否存在
         $check = ExamPaper::where($data)->first();
         if($check){
+            $DB->rollBack();
             return redirect()->back()->withInput()->withErrors('试卷已存在');
         }
         //向试卷表插入基础数据
         $examPaper = ExamPaper::create($data);
         if(!$examPaper){
-            DB::rollback();
+            $DB->rollBack();
             return false;
         }
 
@@ -282,37 +285,73 @@ class ExamPaperController extends CommonController
             $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
         }
 
-        //查找筛选条件下的试题
-        $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
-
         if($status == 1 && $status2 == 1){//自动-随机
             //新增试卷-试卷构造表和标签类型关联数据添加
             $result = $this->addData($examPapers,$examPaperID,$QuestionBankRepositories);
             if(!$result){
-                DB::rollback();
+                $DB->rollBack();
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }
 
         }elseif($status == 1 && $status2 == 2){//自动-统一
+
             //新增试卷-试卷构造表和标签类型关联数据添加
             $result = $this->addData($examPapers,$examPaperID,$QuestionBankRepositories);
             if(!$result){
-                DB::rollback();
+                $DB->rollBack();
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }
+            //查找筛选条件下的试题
+            $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
 
-            //随机生成统一试题
+            //整理数据
+            foreach($examQuestion as $k=>$v){
+                $examQuestion[$k]['created_user_id'] = $user->id;
+                $examQuestion[$k]['exam_paper_id'] = $examPaperID;
+                $questionType = $this->checkQuestions($v['type']);
+
+                if(!count($v['child'])){
+                    $DB->rollBack();
+                    return redirect()->back()->withInput()->withErrors('没有'.$questionType.'类型的试题！');
+                }
+            }
+
+            //保存数据
+            foreach($examQuestion as $kk=>$vv){
+                $addPaperStructure = ExamPaperStructure::create($examQuestion);
+                if(!$addPaperStructure){
+                    $DB->rollBack();
+                    return redirect()->back()->withInput()->withErrors('系统异常');
+                }else{
+                    foreach($vv['child'] as $key=>$val){
+                        $arrs = [
+                            'exam_paper_structure_id' => $addPaperStructure->id,
+                            'exam_question_id' => $val,
+                        ];
+                        $addPaperStructureQuestion = ExamPaperStructureQuestion::create($arrs);
+                        if(!$addPaperStructureQuestion){
+                            $DB->rollBack();
+                            return redirect()->back()->withInput()->withErrors('系统异常');
+                        }
+                    }
+                }
+            }
 
 
         }elseif($status == 2 && $status2 == 2){//手动-统一
 
         }
 
-        DB::commit();
+        $DB->commit();
         return redirect()->back()->withInput()->withErrors('操作成功');
 
     }
 
+    //判断试题类型
+    public function checkQuestions($type){
+        $question = ExamQuestionType::where('id','=',$type)->pluck('name');
+        return $question;
+    }
     /**
      * 新增试卷-试卷构造表和标签类型关联数据添加
      * @access    public
