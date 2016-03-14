@@ -123,7 +123,6 @@ class QuestionBankRepositories  extends BaseRepository
                     $join->on('exam_question.id', '=', 'exam_question_label_relation.exam_question_id');
                 })
                     ->groupBy('exam_question.id')
-                    ->where('exam_question.exam_question_type_id', '=', $val['question_type'])
                     ->select(
                         'exam_question.id as id'
                     );
@@ -134,16 +133,22 @@ class QuestionBankRepositories  extends BaseRepository
 
                         //（1.包含，2.等于）
                         if ($v['0']['relation'] == 1) {
-                            $builder->where(function ($query) use ($labelIdArr) {
+                            $builder->orWhere(function ($query) use ($labelIdArr,$val) {
                                 foreach ($labelIdArr as $item) {
-                                    $query->orWhere('exam_question_label_id', '=', $item);
+                                    $query->orWhere(function ($query) use ($item,$val) {
+                                        $query
+                                            ->where('exam_question_label_id', '=', $item)
+                                            ->where('exam_question.exam_question_type_id', '=', $val['question_type']);
+                                    });
                                 }
                             });
 
                         } elseif ($v['0']['relation'] == 2) {
-                            $builder->where(function ($query) use ($labelIdArr) {
+                            $builder->orWhere(function ($query) use ($labelIdArr,$val) {
                                 foreach ($labelIdArr as $item) {
-                                    $query->where('exam_question_label_id', '=', $item);
+                                    $query
+                                        ->where('exam_question_label_id', '=', $item)
+                                        ->where('exam_question.exam_question_type_id', '=', $val['question_type']);
                                 }
                             });
                         }
@@ -242,6 +247,13 @@ class QuestionBankRepositories  extends BaseRepository
     public function GenerateExamPaper($ExamPaperId){
         $ExamPaper = new ExamPaper;
         $ExamPaperInfo = $ExamPaper->where('id','=',$ExamPaperId)->first();
+        if(count($ExamPaperInfo)>0){
+            if($ExamPaperInfo->type == 1){
+                //dd($ExamPaper->ExamPaperStructure);
+            }elseif($ExamPaperInfo->type == 2){
+
+            }
+        }
         return   $ExamPaperInfo;
     }
 }

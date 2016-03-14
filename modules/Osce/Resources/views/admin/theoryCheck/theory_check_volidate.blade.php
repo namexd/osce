@@ -3,7 +3,11 @@
 @section('only_css')
     <style>
         /*显示区域外边框*/
-        .cBorder{border: 1px solid #e7eaec;}
+        .cBorder{border: 5px solid #e7eaec;}
+        /*头像区别边框*/
+        .imgBorder{border: 1px solid #e7eaec;}
+        /*动态居中*/
+        .goCenter{width: 1000px;margin: 0 auto;}
     </style>
 @stop
 
@@ -33,18 +37,36 @@
             </div>
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
-                    <div class="ibox-content text-center p-md">
-                        <div class="p-md cBorder mart_10">
-                            <p class="font18" style="padding-top: 55px;">考试得分</p>
-                            <div class="showScore">
-                                <span class="" style="font-size: 40px;">85</span>
-                                <span class="font16">分</span>
+                    <div class="ibox-content text-left">
+                        <div class="font20 padt_20 goCenter">当前考生</div>
+                        <div class="p-md cBorder mart_10 overflow goCenter">
+                            <div class="col-sm-6">
+                                <div style="padding: 40px 60px;">
+                                    <img src="" alt="" class="imgBorder myImg" style="height: 250px;width: 196px;">
+                                </div>
                             </div>
-                            <div class="timeBox font16">
-                                <span>考试用时：18分钟</span>
-                            </div>
-                            <div class="" style="padding: 70px 0 55px;">
-                                <button class="btn btn-primary">确认</button>
+                            <div class="col-sm-6">
+                                <div style="padding: 40px 60px;">
+                                    <div class="nameBox font20 marb_25">
+                                        <span>考生姓名：</span>
+                                        <span class="stuName">江缤</span>
+                                    </div>
+                                    <div class="stuBox font20 marb_25">
+                                        <span>考生学号：</span>
+                                        <span class="stuNum">201013031401</span>
+                                    </div>
+                                    <div class="idBox font20 marb_25">
+                                        <span>身份证号：</span>
+                                        <span class="idNum">201013031401</span>
+                                    </div>
+                                    <div class="admissionBox font20 marb_25">
+                                        <span>准考证号：</span>
+                                        <span class="admissionNum">201013031401</span>
+                                    </div>
+                                    <div class="btnBox">
+                                        <button class="btn btn-primary btn-lg font16" style="padding: 9px 40px;">进入考试</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
