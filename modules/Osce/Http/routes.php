@@ -48,14 +48,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('arrangement/index',['uses'=>'AutomaticPlanArrangementController@getIndex','as'=>'osce.admin.arrangement.getIndex']);
 		Route::post('arrangement/store',['uses'=>'AutomaticPlanArrangementController@postStore','as'=>'osce.admin.arrangement.postStore']);
 
-		//TODO 唐俊
-		Route::get('subject-statistics/subject-grade-list',['uses'=>'SubjectStatisticsController@SubjectGradeList','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeList']);
-		//考生成绩统计
-		Route::get('testscores/test-score-list',['uses'=>'TestScoresController@TestScoreList','as'=>'osce.admin.TestScoresController.TestScoreList']);
-		//考试科目详细信息查询
-		Route::get('subject-statistics/subject-info',['uses'=>'SubjectStatisticsController@SubjectGradeInfo','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeInfo']);
-		//考试科目难度分析
-		Route::get('subject-statistics/subject-analyze',['uses'=>'SubjectStatisticsController@SubjectGradeAnalyze','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeAnalyze']);
+
 
 	});
 

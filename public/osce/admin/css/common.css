@@ -104,10 +104,10 @@ a{-webkit-touch-callout:none;}
 /*性别分类*/
 .course_student_type{overflow: hidden;}
 .radio_box{width:100%;height:20px;color:#333;margin: 5px 0;}
-.radio_label{position:relative;width:100px;}
+.radio_label{position:relative;}
 .radio_label .left{color:#333;}
-.radio_icon{width:16px;height:16px;margin:2px 5px;background:url("../images/green.png") no-repeat;background-size:100% auto; background-position:0 0}
-.radio_icon.check{background-position:0 -21px}
+.radio_icon{width:16px;height:16px;margin:2px 5px;background:url("../images/green.png") no-repeat;background-size:auto 16px; background-position:-79px 1px}
+.radio_icon.check{background-position:-111px 0}
 .radio_label input{position:absolute;left:-999px;top:0;opacity:0}
 
 /**
@@ -328,5 +328,6 @@ table tbody tr td:last-child{width: 120px;}
     width: 32px!important;
     background:url('../plugins/js/plugins/layer/skin/default/icon.png') no-repeat -224px 0!important;
 }
-
 table + .pull-left,.pull-left + .pull-right{margin-top:12px!important;}
+/*手势*/
+.cursor{cursor: pointer}

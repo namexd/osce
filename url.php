@@ -278,3 +278,4 @@ $data = [
     ],
 ];
 //dfsafasdfas
+https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxeeb197e3dee3357d&redirect_uri=http%3A%2F%2Fopenlab.hx.misrobot.com%2Fmsc%2Fwechat%2Flaboratory%2Flaboratory-list&response_type=code&scope=snsapi_base&state=123#wechat_redirect

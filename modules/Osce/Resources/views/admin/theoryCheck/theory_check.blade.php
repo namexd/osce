@@ -1,0 +1,83 @@
+@extends('osce::admin.layouts.admin_index')
+
+@section('only_css')
+    <style>
+        /*题目区域外边框*/
+        .cBorder{border: 1px solid #e7eaec;}
+        /*选择框样式*/
+        .check_other {display: inline-block;vertical-align: middle;}
+        .check_top {top: 8px;display: block;}
+    </style>
+@stop
+
+@section('only_js')
+    <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
+    <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
+@stop
+
+@section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'theory_check'}" />
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row table-head-style1 ">
+            <div class="col-xs-6 col-md-2">
+                <h5 class="title-label">理论考试</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-bottom: 0;">
+                    <div class="ibox-content text-center p-md">
+                        <h2>2016年第一期OSCE考试理论考试</h2>
+                        <span>考试时间：</span>
+                        <span class="checkTime">20分钟</span>
+                        <span style="margin-left: 1em;">总分：</span>
+                        <span class="score">100分</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content text-left p-md">
+                        <div class="bigTitle">
+                            <span class="font20">单选题</span>
+                            <span style="margin-left: 1em;">共<span class="subjectNum">5</span>题，</span>
+                            <span>每题<span class="subjectScore">5</span>分</span>
+                        </div>
+                        <div class="p-md cBorder mart_10">
+                            <div class="allSubject">
+                                <div class="subjectBox">
+                                    <span class="font20 subjectNo">1.1</span>
+                                    <span class="font20 marl_10 subjectContent">下列感染中，不具有传染性的是？</span>
+                                </div>
+                                <div class="answerBox">
+                                    <label class="check_label checkbox_input mart_20 check_top" style="">
+                                        <div class="check_icon check_other"></div>
+                                        <input type="checkbox" name="nosureAnswer"  value="A">
+                                        <span class="check_name">A</span>
+                                        <span class="marl_10 answer">隐形感染</span>
+                                    </label>
+                                    <label class="radio_label mart_20 check_top">
+                                        <div class="radio_icon left" ></div>
+                                        <input type="radio" name="oneAnswer" value="B">
+                                        <span class="radio_name">B</span>
+                                        <span class="marl_10 answer">显性感染</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="btnBox" style="margin-top: 70px;">
+                                <button class="btn btn-primary" id="nextBtn">下一题</button>
+                                <button class="btn btn-primary" id="beforeBtn">上一题</button>
+                                <button class="btn btn-warning" id="goBtn">提交试卷</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@stop{{-- 内容主体区域 --}}
+
+@section('layer_content')
+
+@stop

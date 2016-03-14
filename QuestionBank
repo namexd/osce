@@ -1,0 +1,212 @@
+
+--
+-- 表的结构 `exam_question_label_type`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_question_label_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `name` varchar(32) NOT NULL COMMENT '名称',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='标签类型' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_paper`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_paper` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `name` varchar(32) NOT NULL COMMENT '名称',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `mode` tinyint(1) DEFAULT NULL COMMENT '组卷方式(1.自动组卷，2.手工组卷)',
+  `type` tinyint(1) DEFAULT NULL COMMENT '试卷类型(1.随机试卷，2.统一试卷)',
+  `length` int(11) DEFAULT NULL COMMENT '考试时长',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='试卷表' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_question_label`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_question_label` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `label_type_id` int(11) NOT NULL COMMENT '标签类型编号',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `name` varchar(32) DEFAULT NULL COMMENT '标签名称',
+  `describe` varchar(255) DEFAULT NULL COMMENT '描述',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='试题标签表' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_question`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_question` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `exam_question_type_id` int(11) NOT NULL COMMENT '题目类型id',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `name` varchar(32) DEFAULT NULL COMMENT '题目名称',
+  `parsing` varchar(255) DEFAULT NULL COMMENT '题目内容解析',
+  `answer` varchar(32) DEFAULT NULL COMMENT '正确答案（a/abc/0,1）',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='试题表' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_question_type`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_question_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `name` varchar(32) DEFAULT NULL COMMENT '类型名称',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='题目类型表' AUTO_INCREMENT=1 ;
+
+
+--
+-- 表的结构 `exam_question_item`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_question_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `name` varchar(32) DEFAULT NULL COMMENT '选项名称:A/B/C/D',
+  `content` varchar(255) DEFAULT NULL COMMENT '选项内容/判断内容',
+  `exam_question_id` int(11) DEFAULT NULL COMMENT '试题id',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='试题子项表' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_question_label`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_question_label_relation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `exam_question_label_id` int(11) DEFAULT NULL COMMENT '试题标签id',
+  `exam_question_id` int(11) DEFAULT NULL COMMENT '试题id',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='试题和标签中间表' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_paper_structure`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_paper_structure` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `exam_paper_id` int(11) DEFAULT NULL COMMENT '所属试卷id',
+  `exam_question_type_id` int(11) DEFAULT NULL COMMENT '题目类型id',
+  `num` int(11) DEFAULT NULL COMMENT '题目数量',
+  `score` int(11) DEFAULT NULL COMMENT '分值',
+  `total_score` int(11) DEFAULT NULL COMMENT '总分',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='试卷构造表' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_paper_structure_label`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_paper_structure_label` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `label_type_id` int(11) DEFAULT NULL COMMENT '标签类型编号',
+  `exam_question_label_id` int(11) DEFAULT NULL COMMENT '试题标签编号',
+  `exam_paper_structure_id` int(11) DEFAULT NULL COMMENT '试卷构造表编号',
+  `relation` tinyint(1) DEFAULT NULL COMMENT '与试题的关系（1.包含，2.等于）',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='试卷构造和试题标签的关联表' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_paper_formal`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_paper_formal` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `exam_paper_id` int(11) DEFAULT NULL COMMENT '试卷id',
+  `length` int(11) DEFAULT NULL COMMENT '考试时长',
+  `name` varchar(255) DEFAULT NULL COMMENT '试题名称',
+  `total_score` int(11) DEFAULT NULL COMMENT '试卷总分',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='正式的试卷表' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_category_formal`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_category_formal` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `name` varchar(255) DEFAULT NULL COMMENT '试题类型名称',
+  `exam_question_type_id` int(11) DEFAULT NULL COMMENT '试题类型id',
+  `number` int(11) DEFAULT NULL COMMENT '试题数量',
+  `score` int(11) DEFAULT NULL COMMENT '单个试题的分值',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='正式试题分类表' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_question_formal`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_question_formal` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `name` varchar(255) DEFAULT NULL COMMENT '试题名称',
+  `exam_question_id` int(11) DEFAULT NULL COMMENT '试题id/记录试题出处',
+  `content` varchar(1024) DEFAULT NULL COMMENT '试题内容（A.内容，B.内容，C.内容）用,拼接试题内容',
+  `answer` varchar(20) DEFAULT NULL COMMENT '试题答案（a/abc/0,1）',
+  `parsing` varchar(255) DEFAULT NULL COMMENT '题目内容解析',
+  `exam_category_formal_id` int(11) DEFAULT NULL COMMENT '正式试题分类id',
+  `student_answer` varchar(20) DEFAULT NULL COMMENT '学生答案',
+  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='正式的试题表' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_paper_structure_question`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_paper_structure_question` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `exam_paper_structure_id` int(11) DEFAULT NULL COMMENT '试卷构造表id',
+  `exam_question_id` int(11) DEFAULT NULL COMMENT '试题表id',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='试卷构造表与试题表关系' AUTO_INCREMENT=1 ;

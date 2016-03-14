@@ -113,6 +113,7 @@ class CourseController extends CommonController
         //获得参数
         $examId = $request->input('exam_id');
         $subjectId = $request->input('subject_id');
+        //dd($examId.'='.$subjectId);
         $data = Student::getStudentByExamAndSubject($examId, $subjectId);
         //将排名的数组循环插入表中
         date_default_timezone_set("UTC");
