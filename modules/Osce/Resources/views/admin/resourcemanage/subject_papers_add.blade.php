@@ -29,9 +29,12 @@
                 if($(this).val()=="1"){
                     $("#paper").show();
                     $("#paper2").hide();
+                    $("#status2").removeAttr("disabled");
                 }else{
                     $("#paper2").show();
                     $("#paper").hide();
+                    $("#status2 option[text='统一试卷']").attr("selected", true);
+                    $("#status2").attr("disabled","disabled");
                 }
             })
             $("#add-new").click(function(){
@@ -269,7 +272,7 @@
 
                             </div>
                         </div>
-                        <div class="ibox float-e-margins" id="paper2" >
+                        <div class="ibox float-e-margins" id="paper2"  style="display: none;">
                             <div class="ibox-title" style="border-top:0;">
                                 <h5></h5>
                                 <div class="ibox-tools">
