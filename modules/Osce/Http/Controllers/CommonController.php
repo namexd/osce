@@ -141,7 +141,7 @@ abstract class CommonController extends Controller
     /**
      * 判断对象集合是否为空
      * 如果为空，报错
-     * @param $obj
+     * @param object $obj
      * @param string $message
      * @param int $code
      * @return bool
@@ -165,7 +165,7 @@ abstract class CommonController extends Controller
     /**
      * 判断对象是否为空
      * 如果为空，报错
-     * @param $obj
+     * @param object $obj
      * @param string $message
      * @param int $code
      * @return bool
