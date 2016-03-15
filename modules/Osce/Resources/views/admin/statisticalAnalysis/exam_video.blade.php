@@ -43,7 +43,6 @@
     'password':'{{$data[0]['password']}}','channel':'{{$data[0]['channel']}}','download':'{{route('osce.admin.course.getDownloadComponents')}}',
     'starttime':'{{$data[0]['begin_dt']}}','endtime':'{{$anchor->pop()->begin_dt}}'}" />
     @else
-
    <input type="hidden" id="parameter" value="{'ip':'',
     'port':'','username':'','password':'','channel':''}" />
     @endif

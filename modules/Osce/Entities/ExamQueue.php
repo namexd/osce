@@ -321,7 +321,7 @@ class ExamQueue extends CommonModel
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
             // 调用锚点方法
-            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
+            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime+3*60]);
 
 //                查询学生是否已开始考试
             $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
@@ -634,7 +634,7 @@ class ExamQueue extends CommonModel
                      * 将考试结束的时间写进锚点表里
                      */
                     CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
-                        $teacherId, [strtotime($date)]);
+                        $teacherId, [strtotime($date)+3*60]);
                 }
                 $connection->commit();
                 return $queue;
