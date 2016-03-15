@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
@@ -345,7 +346,36 @@ class ExamPaperController extends CommonController
 
 
         }elseif($status == 2 && $status2 == 2){//手动-统一
-            //dd($request->all());
+            //分割字符串-拼合数组
+            $questions = Input::get('question-type');
+            foreach($questions as $k=>$v){
+                $type[] = explode('@',$v);
+            }
+
+            foreach($type as $kk=>$vv){
+                $questionsID = explode(',',$vv[2]);
+                $structure['exam_paper_id'] = $examPaperID;
+                $structure['exam_question_type_id'] = $vv[0];
+                $structure['score'] = $vv[1];
+                $structure['num'] = count($questionsID);
+                $structure['total_score'] = count(explode(',',$vv[2])) * $vv[1];
+                $structure['created_user_id'] = $user->id;
+                $addPaperStructure = ExamPaperStructure::create($structure);
+                if(!$addPaperStructure){
+                    $DB->rollBack();
+                    return redirect()->back()->withInput()->withErrors('系统异常');
+                }else{
+                    foreach($questionsID as $val){
+                        $structure_question['exam_paper_structure_id'] = $addPaperStructure->id;
+                        $structure_question['exam_question_id'] = $val;
+                        $addStructureQuestion = ExamPaperStructureQuestion::create($structure_question);
+                        if(!$addStructureQuestion){
+                            $DB->rollBack();
+                            return redirect()->back()->withInput()->withErrors('系统异常');
+                        }
+                    }
+                }
+            }
         }
 
         $DB->commit();
@@ -444,7 +474,7 @@ class ExamPaperController extends CommonController
         if($request->question_detail){
             $type = explode('@',$request->question_detail);
         }
-
+       // dd($request->all());
         return view('osce::admin.resourcemanage.subject_papers_add_detail2',[
             'labelList'=>$label,
             'question_type'=>$type[0],

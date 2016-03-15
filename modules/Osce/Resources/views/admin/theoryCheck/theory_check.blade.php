@@ -16,11 +16,16 @@
         .nowChoose{border: 1px solid #16beb0;background-color: #16beb0;color: #fff;}
         .waitChoose{border: 1px solid #e7eaec;}
     </style>
+    <link href="osce/admin/plugins/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="osce/admin/plugins/css/plugins/steps/jquery.steps.css" rel="stylesheet">
 @stop
 
 @section('only_js')
     <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
+    <script>
+        $(document).ready(function(){$("#wizard").steps();$("#form").steps({bodyTag:"fieldset",onStepChanging:function(d,a,b){if(a>b){return true}if(b===3&&Number($("#age").val())<18){return false}var c=$(this);if(a<b){$(".body:eq("+b+") label.error",c).remove();$(".body:eq("+b+") .error",c).removeClass("error")}c.validate().settings.ignore=":disabled,:hidden";return c.valid()},onStepChanged:function(b,a,c){if(a===2&&Number($("#age").val())>=18){$(this).steps("next")}if(a===2&&c===3){$(this).steps("previous")}},onFinishing:function(c,a){var b=$(this);b.validate().settings.ignore=":disabled";return b.valid()},onFinished:function(c,a){var b=$(this);b.submit()}}).validate({errorPlacement:function(a,b){b.before(a)},rules:{confirm:{equalTo:"#password"}}})});
+    </script>
 @stop
 
 @section('content')
@@ -86,6 +91,66 @@
                                     <span class="haveChoose left chooseOne">1.1</span>
                                     <span class="nowChoose left chooseOne">1.2</span>
                                     <span class="waitChoose left chooseOne">1.3</span>
+                                </div>
+                            </div>
+
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>基础表单向导</h5>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="form_wizard.html#">
+                                            <i class="fa fa-wrench"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-user">
+                                            <li><a href="form_wizard.html#">选项1</a>
+                                            </li>
+                                            <li><a href="form_wizard.html#">选项2</a>
+                                            </li>
+                                        </ul>
+                                        <a class="close-link">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="ibox-content">
+                                    <p>
+                                        这是一个简单的表单向导示例
+                                    </p>
+                                    <div id="wizard">
+                                        <h1>第一步</h1>
+                                        <div class="step-content">
+                                            <div class="text-center m-t-md">
+                                                <h2>第一步</h2>
+                                                <p>
+                                                    这是第一步的内容
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <h1>第二步</h1>
+                                        <div class="step-content">
+                                            <div class="text-center m-t-md">
+                                                <h2>第二步</h2>
+                                                <p>
+                                                    这是第二步的内容
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <h1>第三步</h1>
+                                        <div class="step-content">
+                                            <div class="text-center m-t-md">
+                                                <h2>第三步</h2>
+                                                <p>
+                                                    这是第三步的内容
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

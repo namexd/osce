@@ -37,7 +37,6 @@
             $('.form-horizontal').submit(function(){
                 getCheckboxVal();
                 str = question_detail+'@'+array;
-                //console.log(str);
                 parent.$('#list-body tr').each(function(){
                     if($(this).attr('sequence') == sequence){
                         parent.$(this).find('input').val(str);
