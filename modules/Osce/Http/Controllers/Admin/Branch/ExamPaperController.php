@@ -431,13 +431,26 @@ class ExamPaperController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExampQuestions(Request $request){
+        if($request->question_detail){
+            $questionIDstr = explode('@',$request->question_detail);
+            if(count($questionIDstr) > 2){
+                $questionIDs = $questionIDstr[2];
+            }else{
+                $questionIDs = '';
+            }
+
+        }
         $label = $this->getExamLabelGet();//标签
-        $type = explode('@',$request->question_detail);
+        if($request->question_detail){
+            $type = explode('@',$request->question_detail);
+        }
+
         return view('osce::admin.resourcemanage.subject_papers_add_detail2',[
             'labelList'=>$label,
             'question_type'=>$type[0],
             'sequence'=>$request->sequence,
             'question_detail' => $request->question_detail,
+            'questionIDs' => $questionIDs,
         ]);
     }
 }

@@ -23,13 +23,19 @@
             var question_detail = $('.question_detail').val();
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
             var str = '';//拼接字符串返回给父页面
+            var questionIDs = $('.questionIDs').val().split(',');//之前已选中题目ID，但是并未保存
+            var questionArr = [];//试题ID转换
+
+            for(var i=0;i<questionIDs.length;i++){
+                questionArr.push(Number(questionIDs[i]));
+            }
             $('.form-horizontal').submit(function(){
                 getCheckboxVal();
                 str = question_detail+'@'+array;
 
                 parent.$('#list-body tr').each(function(){
                     if($(this).attr('sequence') == sequence){
-                        console.log(str);
+                        //.log(str);
                         parent.$(this).find('input').val(str);
                     }
                 });
@@ -51,7 +57,7 @@
             $('#search').click(function(){
 
                 //获取筛选条件
-                getexamquestions(subject_id,ability_id,difficult_id,pagequestion_type,sequence);
+                getexamquestions(subject_id,ability_id,difficult_id,pagequestion_type,sequence,questionArr);
             });
 
 
@@ -59,11 +65,11 @@
             $('.pull-right').delegate('a','click',function(){
                 var page = $(this).parents('li').attr('page');
                 getCheckboxVal();
-                getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence);
+                getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,questionArr);
             })
 
             //获取列表数据
-            function getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence){
+            function getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,questionArr){
                 $.ajax({
                     type: "GET",
                     url: "{{route('osce.admin.ExamPaperController.getExamQuestions')}}",
@@ -78,7 +84,13 @@
                                 if($.inArray(this.id,array) != -1){
                                     str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon check" data="'+this.id+'">';
                                 }else{
-                                    str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon" data="'+this.id+'">';
+                                    if($.inArray(this.id,questionArr) != -1 ){
+                                        //alert(1);
+                                        str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon check" data="'+this.id+'">';
+                                    }else{
+                                        // alert(2);
+                                        str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon" data="'+this.id+'">';
+                                    }
                                 }
 
                                 str +='</div><input type="checkbox" value=""></label></td>';
@@ -102,7 +114,7 @@
             }
 
             //默认加载
-            getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence);
+            getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,questionArr);
 
             //ajax分页
             function createPageDom(total,pagesize,page){
@@ -218,6 +230,7 @@
                 <input type="hidden" class="question_type" value="{{@$question_type}}">
                 <input type="hidden" class="sequence" value="{{@$sequence}}">
                 <input type="hidden" class="question_detail" value="{{@$question_detail}}">
+                <input type="hidden" class="questionIDs" value="{{@$questionIDs}}">
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
                         <button class="btn btn-primary" type="submit">保存</button>
