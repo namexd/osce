@@ -68,7 +68,17 @@
             /**
              * 手动组卷情况下现则试题
              */
-
+//            统一试卷总计
+            function editOneCount(){
+                var oneSubject = 0;
+                var oneScore = 0;
+                $('#paper2').find('tbody').find("tr").each(function(){
+                    oneScore += parseInt($(this).children().eq(4).text());
+                    oneSubject += parseInt($(this).children().eq(2).text());
+                });
+                $(".oneScore").text(oneScore);
+                $(".oneSubject").text(oneSubject);
+            }
             $('#addForm').submit(function(){//添加题型
                 var now = $('#paper2').find('tbody').attr('index');
                 now = parseInt(now) + 1;//计数
@@ -142,6 +152,7 @@
                     $("#"+nowid).children().eq(3).text(question_detail[1]);
                     $("#"+nowid).children().eq(4).text(question_detail[1]*$("#"+nowid).children().eq(2).text());
                     $('.close').trigger('click');
+                    editOneCount();
                     return  false;
                 })
 
@@ -253,15 +264,6 @@
                                             <td>总计</td>
                                             <td></td>
                                             <td></td>
-                                            <td>总题目数</td>
-                                            <td></td>
-                                            <td>总分</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="randomAll">0</td>
-                                            <td></td>
-                                            <td></td>
                                             <td class="randomSubject">0</td>
                                             <td></td>
                                             <td class="randomScore">0</td>
@@ -295,22 +297,14 @@
 
                                     </tbody>
                                     <tfoot>
-                                    <tr>
-                                        <td>总计</td>
-                                        <td></td>
-                                        <td>总题目数</td>
-                                        <td></td>
-                                        <td>总分</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="oneAll">0</td>
-                                        <td></td>
-                                        <td class="oneSubject">0</td>
-                                        <td></td>
-                                        <td class="oneScore">0</td>
-                                        <td></td>
-                                    </tr>
+                                        <tr>
+                                            <td>总计</td>
+                                            <td></td>
+                                            <td class="oneSubject">0</td>
+                                            <td></td>
+                                            <td class="oneScore">0</td>
+                                            <td></td>
+                                        </tr>
                                     </tfoot>
                                 </table>
 
