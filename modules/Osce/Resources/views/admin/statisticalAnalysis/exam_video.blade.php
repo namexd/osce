@@ -41,7 +41,7 @@
     <input type="hidden" id="parameter" value="{'ip':'{{$data[0]['ip']}}',
     'port':'{{$data[0]['port']}}','username':'{{$data[0]['username']}}',
     'password':'{{$data[0]['password']}}','channel':'{{$data[0]['channel']}}','download':'{{route('osce.admin.course.getDownloadComponents')}}',
-    'starttime':'{{$data[0]['begin_dt']-date('Y-m-d H:i:s',180)}}','endtime':'{{$anchor->pop()->begin_dt+date('Y-m-d H:i:s',180)}}'}" />
+    'starttime':'{{$data[0]['begin_dt']}}','endtime':'{{$anchor->pop()->begin_dt}}'}" />
     @else
    <input type="hidden" id="parameter" value="{'ip':'',
     'port':'','username':'','password':'','channel':''}" />
