@@ -29,9 +29,10 @@ class ApiController extends CommonController
     public function GetEditorExamPaperItem(QuestionBankRepositories $questionBankRepositories){
         $question_detail = \Input::get('question_detail','');
         $questionArr = [];
+        $questionInfo = [];
         if($question_detail){
-            $questionArr = $questionBankRepositories->StrToArr($question_detail);
-            $questionArr = $questionBankRepositories->HandlePaperPreviewArr(['0'=>$questionArr]);
+            $questionInfo = $questionBankRepositories->StrToArr($question_detail);
+            $questionArr = $questionBankRepositories->HandlePaperPreviewArr(['0'=>$questionInfo]);
         }
         //获取题目类型列表
         $examQuestionTypeModel= new ExamQuestionType();
@@ -54,10 +55,11 @@ class ApiController extends CommonController
                 }
             }
         }
-        
+       // dd($questionInfo);
         return  view('osce::admin.resourcemanage.subject_papers_add_detail',[
             'examQuestionLabelTypeList'=>$examQuestionLabelTypeList,
-            'examQuestionTypeList'=>$examQuestionTypeList
+            'examQuestionTypeList'=>$examQuestionTypeList,
+            'questionInfo'=>$questionInfo
         ]);
     }
 
