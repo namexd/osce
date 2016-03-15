@@ -282,10 +282,13 @@ class ExamPaperController extends CommonController
         }
 
         $examPaperID = $examPaper->id;
+
         $questions = $request->question;//获取标签参数
-        $examPapers = [];
-        foreach($questions as $v){
-            $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
+        if($questions){
+            $examPapers = [];
+            foreach($questions as $v){
+                $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
+            }
         }
 
         if($status == 1 && $status2 == 1){//自动-随机
@@ -342,7 +345,7 @@ class ExamPaperController extends CommonController
 
 
         }elseif($status == 2 && $status2 == 2){//手动-统一
-
+            //dd($request->all());
         }
 
         $DB->commit();
@@ -446,7 +449,11 @@ class ExamPaperController extends CommonController
             'labelList'=>$label,
             'question_type'=>$type[0],
             'sequence'=>$request->sequence,
+            'question_detail' => $request->question_detail,
             'questionIDs' => $questionIDs,
+            'labelList'=>$label,
         ]);
     }
 }
+
+

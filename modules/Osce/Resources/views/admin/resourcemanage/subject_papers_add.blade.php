@@ -54,7 +54,7 @@
 
             });
             $('#paper tbody').on('click','.fa-pencil-square-o',function(){
-                var question_detail=$(this).parent().parent().parent().parent().find("input[name='question[]']").val();
+                //var question_detail=$(this).parent().parent().parent().parent().find("input[name='question[]']").val();
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
