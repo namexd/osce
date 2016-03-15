@@ -177,6 +177,7 @@
 	    /*$(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
 	    });*/
+
 	    $(".fabu_btn").click(function(){
 	    	var start=$("#start").val();
 	    	var end=$("#end").val();
@@ -188,6 +189,10 @@
 	    		layer.alert('你还没有选择结束时间!',function(its){layer.close(its)});
               	return false;
 	    	}
+            if(Date.parse(start)>Date.parse(end)){
+                layer.alert('请正确设置开始时间和结束时间!',function(its){layer.close(its)});
+                return false;
+            }
 	    })
 
  	})

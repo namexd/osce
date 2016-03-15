@@ -143,7 +143,7 @@ function exam_add(){
             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
             '</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value=""/>'+
             '</td>'+
             '<td>0天'+hours+'小时'+minutes+'分</td>'+
             '<td>'+
@@ -307,7 +307,7 @@ function add_basic(){
             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
             '</td>'+
             '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="'+Time.getTime('YYYY-MM-DD hh:mm')+'"/>'+
+            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value=""/>'+
             '</td>'+
             '<td>0天'+hours+'小时'+minutes+'分</td>'+
             '<td>'+
@@ -438,9 +438,8 @@ function timePicker(background){
         istoday: false, //是否显示今天
         issure: true, //是否显示确认
         festival: true, //是否显示节日
-        min: '1900-01-01 00:00:00', //最小日期
+        min: laydate.now(), //最小日期
         max: '2099-12-31 23:59:59', //最大日期
-        start: '2014-6-15 23:00:00',    //开始日期
         fixed: true, //是否固定在可视区域
         zIndex: 99999999, //css z-index
         choose: function(date){ //选择好日期的回调
@@ -452,14 +451,42 @@ function timePicker(background){
                     minutes = Math.round((((current/(1000*60*60*24)-days)*24)-hours)*60);
                 thisElement.next().text(days+'天'+hours+'小时'+minutes+'分');
             }else{
+                //加三小时
+                var nextTime = new Date(Date.parse(date)+60*3*60*1000);
+                console.log(formatDateTime(nextTime))
+                thisElement.next().find('input').val(formatDateTime(nextTime));
+
                 var current = Date.parse((thisElement.next().find('input[type=text]').val()).split('-').join('/')) - Date.parse(date.split('-').join('/'));
                 var days = Math.floor(current/(1000*60*60*24)),
                     hours = Math.floor((current/(1000*60*60*24)-days)*24),
                     minutes = Math.round((((current/(1000*60*60*24)-days)*24)-hours)*60);
                 thisElement.next().next().text(days+'天'+hours+'小时'+minutes+'分');
+
+
+                
             }
         }
     };
+
+    /**
+     * 标准化时间转化成所要格式
+     * @author mao
+     * @version 1.0
+     * @date    2016-03-15
+     * @param   {date}   date 传入时间
+     * @return  {date}        所要格式时间
+     */
+    function formatDateTime(date) {  
+        var y = date.getFullYear();  
+        var m = date.getMonth() + 1;  
+        m = m < 10 ? ('0' + m) : m;  
+        var d = date.getDate();  
+        d = d < 10 ? ('0' + d) : d;  
+        var h = date.getHours();  
+        var minute = date.getMinutes();  
+        minute = minute < 10 ? ('0' + minute) : minute;  
+        return y + '-' + m + '-' + d+' '+h+':'+minute;  
+    }; 
 
 
     /**
@@ -473,9 +500,7 @@ function timePicker(background){
         //限制时间选择
         var thisElement = $(this).parent();
         if(!thisElement.prev().prev().length){
-
             option.max = (thisElement.next().find('input').val()).split(' ')[0];
-            option.min = '1900-01-01 00:00:00';
         }else{
             option.min = (thisElement.prev().find('input[type="text"]').val()).split(' ')[0];
             option.max = '2099-12-31 23:59:59';

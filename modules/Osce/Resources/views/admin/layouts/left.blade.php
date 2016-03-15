@@ -91,11 +91,11 @@
                                 </li>
                                 <li><a class="active J_menuItem" href="">考试整体分析</a>
                                 </li>
-                                <li><a class="active J_menuItem" href="">科目成绩分析</a>
+                                <li><a class="active J_menuItem" href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeList')}}">科目成绩分析</a>
                                 </li>
-                                <li><a class="active J_menuItem" href="">考生成绩分析</a>
+                                <li><a class="active J_menuItem" href="{{route('osce.admin.course.getStudentScore')}}">考生成绩分析</a>
                                 </li>
-                                <li><a class="active J_menuItem" href="">教学成绩分析</a>
+                                <li><a class="active J_menuItem" href="{{route('osce.admin.TestScoresController.TestScoreList')}}">教学成绩分析</a>
                                 </li>
                             </ul>
                         </li>

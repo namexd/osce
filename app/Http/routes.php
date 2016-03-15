@@ -6,10 +6,10 @@ $version='1.0';
 /*
  * 后台页面
  * */
+Route::get('/',['uses'=>'IndexController@Index']);  //域名对应的路径
+
 Route::group(['prefix' => "admin",'middleware' => []], function()
 {
-
-
     Route::controller('user', 'IndexController');
     Route::get('/login',['uses'=>'IndexController@Login']);
     Route::get('/index',['uses'=>'IndexController@Index']);

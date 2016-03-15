@@ -17,9 +17,13 @@ class IndexController extends BaseController
     public function index(){
         $user = Auth::user();
         if(empty($user->id)){
-            return redirect()->intended('/admin/login');
-        }else{
+            //TODO: zhoufuxiang 2016-3-15
             return view('index');
+//            return redirect()->intended('/admin/login');
+        }else{
+            //TODO: zhoufuxiang 2016-3-15
+            return redirect()->intended('/osce/admin/index');
+//            return view('index');
         }
     }
     public function login(){
