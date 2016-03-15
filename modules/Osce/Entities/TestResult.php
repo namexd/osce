@@ -49,7 +49,6 @@ class TestResult extends CommonModel
         try {
             //判断成绩是否已提交过
              $ExamResult=$this->getRemoveScore($data);
-
 //            $examResult = $this->where('student_id', '=', $data['student_id'])
 //                ->where('exam_screening_id', '=', $data['exam_screening_id'])
 //                ->where('station_id', '=', $data['station_id'])
