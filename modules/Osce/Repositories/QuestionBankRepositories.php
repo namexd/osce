@@ -250,6 +250,7 @@ class QuestionBankRepositories  extends BaseRepository
             $ExamPaperStructure->with('ExamPaperStructureLabel');
         }])->first();
         if(count($ExamPaperInfo)>0){
+            //随机试卷处理方法
             if($ExamPaperInfo->type == 1){
                 if(count($ExamPaperInfo->ExamPaperStructure)>0){
                     foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
@@ -258,9 +259,26 @@ class QuestionBankRepositories  extends BaseRepository
                         }
                     }
                 }
-                $ExamPaperInfo['child'] = ($this->StructureExamQuestionArr($ExamPaperInfo->ExamPaperStructure));
+                $ExamPaperInfo['item'] = ($this->StructureExamQuestionArr($ExamPaperInfo->ExamPaperStructure));
+                //统一试卷处理方法
             }elseif($ExamPaperInfo->type == 2){
-
+                $item = [];
+                if(count($ExamPaperInfo->ExamPaperStructure)>0){
+                    foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
+                        $arr = [];
+                        if(count($v->ExamPaperStructureQuestion)){
+                            $arr['type'] = $v['exam_question_type_id'];
+                            $arr['num'] = $v['num'];
+                            $arr['score'] = $v['score'];
+                            $arr['total_score'] = $v['total_score'];
+                            $arr['child'] = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
+                        }
+                        if(count($arr)>0){
+                            $item[] = $arr;
+                        }
+                    }
+                }
+                $ExamPaperInfo['item'] = $item;
             }
         }
         return   $ExamPaperInfo;
