@@ -12,7 +12,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
 use Modules\Osce\Repositories\QuestionBankRepositories;
-use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Illuminate\Http\Request;
 class ApiController extends CommonController
@@ -27,6 +27,7 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GetEditorExamPaperItem(){
+        $question_detail = \Input::get('question_detail');
         //获取题目类型列表
         $examQuestionTypeModel= new ExamQuestionType();
         $examQuestionTypeList = $examQuestionTypeModel->examQuestionTypeList();
@@ -149,8 +150,20 @@ class ApiController extends CommonController
         }
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
+
+    /**
+     * @method
+     * @url /osce/
+     * @access public
+     * @param QuestionBankRepositories $questionBankRepositories
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月15日09:22:47
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function GenerateExamPaper(QuestionBankRepositories $questionBankRepositories){
-        dd($questionBankRepositories->GenerateExamPaper(20));
+        $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper(20);
+        $ExamPaperFormal = new ExamPaperFormal;
+        $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
     }
 
     /**

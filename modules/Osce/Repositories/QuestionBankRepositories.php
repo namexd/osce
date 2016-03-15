@@ -258,7 +258,7 @@ class QuestionBankRepositories  extends BaseRepository
                         }
                     }
                 }
-                $ExamPaperInfo['child'] = ($this->StructureExamQuestionArr($ExamPaperInfo->ExamPaperStructure));
+                $ExamPaperInfo['item'] = ($this->StructureExamQuestionArr($ExamPaperInfo->ExamPaperStructure));
             }elseif($ExamPaperInfo->type == 2){
 
             }
