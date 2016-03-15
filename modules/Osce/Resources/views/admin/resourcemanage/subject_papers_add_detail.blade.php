@@ -13,7 +13,6 @@
     <script>
         $(function(){
             $(".tag").select2({});
-
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
             $('.form-horizontal').submit(function(){
                 $.post($(this).attr('action'),$(this).serialize(),function(obj){
@@ -31,38 +30,55 @@
                     var  questionscore=parseInt(typeall[2]);//题目分数
                     var now = parent.$('#list-body').attr('index');
                     now = parseInt(now) + 1;
-                    var html = '<tr>'+
-                            '<td>'+parseInt(now)+'<input name="question[]" type="hidden" value="'+obj+'"/>'+'</td>'+
-                            '<td>'+tpye+'</td>'+
-                            '<td>'+ objvar[0]+'</td>'+
-                            '<td>'+questionnum+'</td>'+
-                            '<td>'+questionscore+'</td>'+
-                            '<td>'+questionnum*questionscore+'</td>'+
-                            '<td>'+
-                            '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
-                            '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                            '</td>'+
-                            '</tr>';
-                    //记录计数
-                    parent.$('#list-body').append(html);
-                    parent.$('#list-body').attr('index',now);
-                    parent.layer.close(index);
-                })
-                return  false;
+                    var ordinal = parseInt($("#ordinal").val());
+                    if(ordinal > 0 ){
+                        parent.$('#list-body').find("tr").each(function(){
+                            if($(this).attr("ordinal") == ordinal){
+                                $(this).html('<td>'+ordinal+'<input name="question[]" type="hidden" value="'+obj+'"/>'+'</td>'+
+                                        '<td>'+tpye+'</td>'+
+                                        '<td>'+ objvar[0]+'</td>'+
+                                        '<td>'+questionnum+'</td>'+
+                                        '<td>'+questionscore+'</td>'+
+                                        '<td>'+questionnum*questionscore+'</td>'+
+                                        '<td>'+
+                                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
+                                        '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                        '</td>');
+                            }
+                        });
 
-            })
+                    }else{
+                        var html = '<tr ordinal="'+now+'">'+
+                                '<td>'+parseInt(now)+'<input name="question[]" type="hidden" value="'+obj+'"/>'+'</td>'+
+                                '<td>'+tpye+'</td>'+
+                                '<td>'+ objvar[0]+'</td>'+
+                                '<td>'+questionnum+'</td>'+
+                                '<td>'+questionscore+'</td>'+
+                                '<td>'+questionnum*questionscore+'</td>'+
+                                '<td>'+
+                                '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
+                                '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                '</td>'+
+                                '</tr>';
+                        //记录计数
+                        parent.$('#list-body').append(html);
+                        parent.$('#list-body').attr('index',now);
+                    }
+                    parent.layer.close(index);
+                });
+                return  false;
+            });
             //关闭iframe
             $('#closeIframe').click(function(){
                 parent.layer.close(index);
             });
-
-
         })
     </script>
 @stop
 
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'subject_papers_add}" />
+    <input type="hidden" id="ordinal" value="{{ @$ordinal }}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <form class="form-horizontal" method="post" action="{{ route('osce.admin.ApiController.PostEditorExamPaperItem') }}">
             <div class="modal-body">
