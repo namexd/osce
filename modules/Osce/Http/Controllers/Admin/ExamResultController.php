@@ -224,7 +224,7 @@ class ExamResultController extends CommonController{
             $scores[$pid]['items'][] = [
                 'standard'  => $itm->standard,
                 'score'     => $itm->score,
-                'image'     => TestAttach::where('test_result_id',$result['id'])->where('type','image')->where('standard_id',$itm->standard->id)->get(),
+                'image'     => TestAttach::where('test_result_id',$result['id'])->where('standard_id',$itm->standard->id)->get(),
             ];
             $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore'])? $itemScore[$pid]['totalScore']:0) + $itm->score;
         }
