@@ -47,12 +47,12 @@ class RoomController extends CommonController
         $keyword = $request ->input('keyword', "");
         $type    = $request ->input('type', '0');
         $id      = $request ->input('id', '');
-
         try{
             //获取当前场所的类
             $data = $room->showRoomList($keyword, $type, $id);
+
             if(count($data)==0){
-                return redirect()->route('osce.admin.room.getRoomList');
+                throw new \Exception('暂时没有考场相关记录，请新建',-1);
             }
             //获取当前的标签
             $area = config('osce.room_cate');
@@ -60,6 +60,11 @@ class RoomController extends CommonController
             $cateList   =   Area::groupBy('cate')->get();
             return view('osce::admin.resourceManage.site_manage', ['area' => $cateList, 'data' => $data,'type'=>$type,'keyword'=>$keyword]);
         } catch(\Exception $ex){
+            if($ex->getCode()==-1)
+            {
+                return view('osce::admin.resourceManage.site_manage',['area' => [], 'data' => [],'type'=>$type,'keyword'=>$keyword])->withErrors($ex->getMessage());;
+            }
+            //return redirect()->route('osce.admin.room.getRoomList');
             return redirect()->back()->withErrors($ex->getMessage());
         }
 

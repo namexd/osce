@@ -40,11 +40,12 @@
                         <li class="{{$type === '0'?'active':''}}">
                             <a href="{{route('osce.admin.room.getRoomList',['type'=>0])}}">考场</a>
                         </li>
-                        @foreach($area as $key => $item)
+                        @forelse($area as $key => $item)
                             <li class="{{($item['cate'] === $type)?'active':''}}">
                                 <a href="{{route('osce.admin.room.getRoomList',['type'=>$item->cate])}}">{{$item->cate}}</a>
                             </li>
-                        @endforeach
+                        @empty
+                        @endforelse
                     </ul>
                 </div>
             </div>
@@ -85,10 +86,10 @@
             </table>
 
             <div class="pull-left">
-                共{{$data->total()}}条
+                共{{count($data)>0? $data->total():0}}条
             </div>
             <div class="btn-group pull-right">
-                {!! $data->appends($_GET)->render() !!}
+                {!! count($data)>0? $data->appends($_GET)->render():'' !!}
             </div>
 
         </div>

@@ -177,6 +177,7 @@
 	    /*$(".upload_list").on("click",".fa-remove",function(){
 	    	$(this).parent("p").remove();
 	    });*/
+
 	    $(".fabu_btn").click(function(){
 	    	var start=$("#start").val();
 	    	var end=$("#end").val();
