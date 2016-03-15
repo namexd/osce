@@ -30,7 +30,7 @@
                         <h2>2016年第一期OSCE考试理论考试</h2>
                         <span>考试时间：</span>
                         <span class="checkTime">20分钟</span>
-                        <span style="margin-left: 1em;">总分：</span>
+                        <span class="marl_10">总分：</span>
                         <span class="score">100分</span>
                     </div>
                 </div>

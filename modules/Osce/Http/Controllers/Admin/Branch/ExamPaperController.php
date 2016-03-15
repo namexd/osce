@@ -179,6 +179,7 @@ class ExamPaperController extends CommonController
             'subject_id'        => 'sometimes|integer',
             'ability_id'        => 'sometimes|integer',
             'difficult_id'        => 'sometimes|integer',
+            'question_type'        => 'required|integer',
         ]);
 
         //接收筛选参数
@@ -194,12 +195,14 @@ class ExamPaperController extends CommonController
         if(intval($request -> difficult_id) !== 0){
             array_push($data,intval($request -> difficult_id));
         }
+
+        $question_type = $request->question_type;
         //根据筛选参数查找试题数据
         $ExamQuestion = new ExamQuestion();
 
         $pageIndex = $request->page?$request->page:1;//获取页码
 
-        $questions = $ExamQuestion -> getExamQuestion($data,$pageIndex)->toArray();
+        $questions = $ExamQuestion -> getExamQuestion($data,$pageIndex,$question_type)->toArray();
         //dd($questions);
         foreach($questions['data'] as $k=>$v){
             $label = '';
@@ -424,9 +427,13 @@ class ExamPaperController extends CommonController
      * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExampQuestions(){
+    public function getExampQuestions(Request $request){
         $label = $this->getExamLabelGet();//标签
-        //dd($label);
-        return view('osce::admin.resourcemanage.subject_papers_add_detail2',['labelList'=>$label]);
+        $type = explode('@',$request->question_detail);
+        return view('osce::admin.resourcemanage.subject_papers_add_detail2',[
+            'labelList'=>$label,
+            'question_type'=>$type[0],
+            'sequence'=>$request->sequence,
+        ]);
     }
 }

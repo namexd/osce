@@ -32,14 +32,13 @@
                 if($(this).val()=="1"){
                     $("#paper").show();
                     $("#paper2").hide();
-                    $("#status2").removeAttr("disabled");
+                    $("#status2").empty().append('<option value="1">随机试卷</option><option value="2">统一试卷</option>')
                 }else{
                     $("#paper2").show();
                     $("#paper").hide();
-                    $("#status2 option[text='统一试卷']").attr("selected", true);
-                    $("#status2").attr("disabled","disabled");
+                    $("#status2").empty().append('<option value="2">统一试卷</option>')
                 }
-            })
+            });
             /**
              * 自动组卷页面操作
              */
@@ -53,13 +52,13 @@
                     content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}',
                 })
 
-            })
+            });
             $('#paper tbody').on('click','.fa-pencil-square-o',function(){
                 var question_detail=$(this).parent().parent().parent().parent().find("input[name='question[]']").val();
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
-                    area: ['90%', '530px'],
+                    area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
                     content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}?question_detail='+question_detail,
@@ -92,7 +91,7 @@
                 $('#paper2').find('tbody').attr('index',now);
                 $('.close').trigger('click');
                 return  false;
-            })
+            });
 
             $('#paper2 tbody').on('click','.fa-cog',function(){//添加题目
                 var  sequence=  $(this).parent().parent().parent().parent().attr("sequence");
@@ -101,7 +100,7 @@
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
-                    area: ['90%', '530px'],
+                    area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
                     content:geturl,
@@ -111,7 +110,7 @@
             $("#add-new2").click(function(){
                 $("#addForm").show();
                 $("#editForm").hide();
-            })
+            });
             // 编辑题型
             $('#paper2 tbody').on('click','.fa-pencil-square-o',function(){
                 $("#addForm").hide();
@@ -154,11 +153,11 @@
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
-                    area: ['90%', '530px'],
+                    area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
                     content: '{{route('osce.admin.ApiController.ExamPaperPreview')}}?'+$(".form-horizontal").serialize(),
-                })
+                });
                 return  false;
 
             })
@@ -180,14 +179,14 @@
         <div class="ibox-content">
             <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.ExamPaperController.getAddExams')}}">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">试卷名称</label>
+                    <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>试卷名称</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="name" name="name">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">考试时长</label>
+                    <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>考试时长</label>
                     <div class="col-sm-10">
                         <input type="text"  class="form-control" id="code" name="time">
                     </div>
@@ -208,7 +207,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">试卷类型</label>
                     <div class="col-sm-10">
-                        <select id="status2"   class="form-control m-b" name="status2">
+                        <select id="status2" class="form-control m-b" name="status2">
                             <option value="1">随机试卷</option>
                             <option value="2">统一试卷</option>
                         </select>

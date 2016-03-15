@@ -321,7 +321,7 @@ class ExamQuestion extends Model
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamQuestion($data,$pageIndex){
+    public function getExamQuestion($data,$pageIndex,$question_type){
         $builder = $this->leftjoin('exam_question_type',function($join){
 
             $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
@@ -333,7 +333,7 @@ class ExamQuestion extends Model
                 $relation->whereIn('exam_question_label_relation.exam_question_label_id',$data);
             }
 
-        }])->select('exam_question_type.name as tname','exam_question.*')->paginate(config('msc.page_size'));//
+        }])->where('exam_question_type.id','=',$question_type)->select('exam_question_type.name as tname','exam_question.*')->paginate(config('msc.page_size'));//
         return $builder;
     }
 }
