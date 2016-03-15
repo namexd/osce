@@ -49,19 +49,20 @@
                     area: ['90%', '530px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}',
+                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}'
                 })
 
             });
             $('#paper tbody').on('click','.fa-pencil-square-o',function(){
-                //var question_detail=$(this).parent().parent().parent().parent().find("input[name='question[]']").val();
+                var question_detail=$(this).parent().parent().parent().parent().find("input[name='question[]']").val();
+                var ordinal = $(this).parent().parent().parent().parent().attr("ordinal");
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
                     area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}?question_detail='+question_detail,
+                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}?question_detail='+question_detail+"&ordinal="+ordinal
                 })
             });
             /**
@@ -103,7 +104,7 @@
                     area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content:geturl,
+                    content:geturl
                 })
             });
             // 添加新题型
@@ -116,7 +117,7 @@
                 $("#addForm").hide();
                 $("#editForm").show();
                var nowid= $(this).parent().parent().parent().parent().attr("id");
-                var question_detail=$(this).parent().parent().parent().parent().find("input[name='question-type[]']").val()
+                var question_detail=$(this).parent().parent().parent().parent().find("input[name='question-type[]']").val();
                 question_detail=question_detail.split("@");
                 $('#typeSelect2').find('option').each(function(){
                     if($(this).val()==question_detail[0]){
@@ -245,16 +246,28 @@
                                     </tr>
                                     </thead>
                                     <tbody index="0" id="list-body">
-                                        <tr>
-                                            <th>总计</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th>40</th>
-                                            <th>-</th>
-                                            <th>20</th>
-                                            <th></th>
-                                        </tr>
+
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>总计</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>总题目数</td>
+                                            <td></td>
+                                            <td>总分</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="randomAll">0</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="randomSubject">0</td>
+                                            <td></td>
+                                            <td class="randomScore">0</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
 
                             </div>
@@ -279,15 +292,26 @@
                                     </tr>
                                     </thead>
                                     <tbody index="0" id="list-body">
-                                    <tr>
-                                        <th>总计</th>
-                                        <th></th>
-                                        <th>40</th>
-                                        <th>-</th>
-                                        <th>20</th>
-                                        <th></th>
-                                    </tr>
+
                                     </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td>总计</td>
+                                        <td></td>
+                                        <td>总题目数</td>
+                                        <td></td>
+                                        <td>总分</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="oneAll">0</td>
+                                        <td></td>
+                                        <td class="oneSubject">0</td>
+                                        <td></td>
+                                        <td class="oneScore">0</td>
+                                        <td></td>
+                                    </tr>
+                                    </tfoot>
                                 </table>
 
                             </div>
