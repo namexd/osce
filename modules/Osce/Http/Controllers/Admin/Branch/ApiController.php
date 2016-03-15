@@ -59,7 +59,8 @@ class ApiController extends CommonController
         return  view('osce::admin.resourcemanage.subject_papers_add_detail',[
             'examQuestionLabelTypeList'=>$examQuestionLabelTypeList,
             'examQuestionTypeList'=>$examQuestionTypeList,
-            'questionInfo'=>$questionInfo
+            'questionInfo'=>$questionInfo,
+            'ordinal'=>\Input::get('ordinal','')
         ]);
     }
 
