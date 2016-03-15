@@ -189,6 +189,10 @@
 	    		layer.alert('你还没有选择结束时间!',function(its){layer.close(its)});
               	return false;
 	    	}
+            if(Date.parse(start)>Date.parse(end)){
+                layer.alert('请正确设置开始时间和结束时间!',function(its){layer.close(its)});
+                return false;
+            }
 	    })
  	})
  </script>
