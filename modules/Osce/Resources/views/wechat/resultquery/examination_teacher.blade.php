@@ -43,11 +43,11 @@
 		<li>
             <dl>
                 <dd>{{$item['station_name'].":".$item['score'].'分'}}</dd>
-                <dd>用时：{{$item['time']}}</dd>
+                <dd>用时：{{intval($item['time']/60)."分". round(($item['time']/60)-intval($item['time']/60))}}秒</dd>
                 <dd style="width:100%">评价老师：{{$item['grade_teacher']}}</dd>
             </dl>
             <p class="clearfix see_msg">
-                <a class="nou right" href="{{route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$item['exam_screening_id']])}}">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>
+                <a class="nou right" href="{{route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$item['exam_screening_id'],'station_id'=>$item['station_id']])}}">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>
             </p>
         </li>
 			@elseif($item['type']==2)
@@ -55,12 +55,12 @@
         <li>
             <dl>
                 <dd>{{$item['station_name'].":".$item['score'].'分'}}</dd>
-                <dd>用时：{{$item['time']}}</dd>
+                <dd>用时：{{intval($item['time']/60)."分". round(($item['time']/60)-intval($item['time']/60))}}秒</dd>
                 <dd class="tbl_type"><div class="tbl_cell" style="width:72px">评价老师：</div><div class="tbl_cell">{{$item['grade_teacher']}}</div></dd>
                 <dd>SP病人：{{$item['sp_name']}}</dd>
             </dl>
             <p class="clearfix see_msg">
-                <a class="nou right" href="{{route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$item['exam_screening_id']])}}">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>
+                <a class="nou right" href="{{route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$item['exam_screening_id'],'station_id'=>$item['station_id']])}}">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>
             </p>
         </li>
 			@elseif($item['type']==3)
@@ -71,7 +71,7 @@
                 <dd style="width:100%">理论考试</dd>
             </dl>
             <p class="clearfix see_msg">
-                <a class="nou right" href="{{route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$item['exam_screening_id']])}}">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>
+                <a class="nou right" href="{{route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$item['exam_screening_id'],'station_id'=>$item['station_id']])}}">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>
             </p>
         </li>
     </ul>
