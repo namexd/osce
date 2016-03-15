@@ -281,7 +281,6 @@
                                     <tbody index="0" id="list-body">
                                     <tr>
                                         <th>总计</th>
-
                                         <th></th>
                                         <th>40</th>
                                         <th>-</th>
