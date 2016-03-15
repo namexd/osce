@@ -340,7 +340,5 @@ class PadController extends  CommonController{
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
-
     }
-
 }

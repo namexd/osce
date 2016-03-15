@@ -19,8 +19,8 @@ function examination_list(){
 	//$.session.clear('exam_id');
 	var url=pars.ajaxurl;
 	var exam_id= $.session.get('exam_id');
-	if(exam_id=='undefined'){
-		return false;
+	//console.log(exam_id);
+	if(exam_id==undefined){
 	}else{
 		$.ajax({
 			type:"get",
@@ -33,9 +33,9 @@ function examination_list(){
 
 				$(".time").text("");
 				for (var i=0;i<res.data.length;i++) {
-					console.log('type1',typeof res.data[i].type);
+					//console.log('type1',typeof res.data[i].type);
 					var type=parseInt(res.data[i].type);
-					console.log('type2',typeof res.data[i].type);
+					//console.log('type2',typeof res.data[i].type);
 					var begin_time=(res.data[i].begin_dt).substring(0,10);
 					var end_time=(res.data[i].begin_dt).substring(0,10);
 					var time="";
@@ -46,6 +46,7 @@ function examination_list(){
 					}
 					$(".time").text(time);
 					var str="";
+
 					switch (type){
 						case 1:
 							str+='<li>'+
@@ -55,7 +56,7 @@ function examination_list(){
 								'<dd style="width:100%">评价老师：'+res.data[i].grade_teacher+'</dd>'+
 								'</dl>'+
 								'<p class="clearfix see_msg">'+
-								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 								'</p>'+
 								'</li>';
 							break;
@@ -68,7 +69,7 @@ function examination_list(){
 								'<dd>SP病人：'+res.data[i].sp_name+'</dd>'+
 								'</dl>'+
 								'<p class="clearfix see_msg">'+
-								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 								'</p>'+
 								'</li>';
 							break;
@@ -80,14 +81,14 @@ function examination_list(){
 								'<dd>理论考试</dd>'+
 								'</dl>'+
 								'<p class="clearfix see_msg">'+
-								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+								'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 								'</p>'+
 								'</li>';
 							break;
 						default:
 							break;
 					}
-					console.log('dom',str);
+					//console.log('dom',str);
 					$("#exmination_ul").append(str);
 				}
 			}
@@ -128,9 +129,9 @@ function examination_list(){
 
 					$(".time").text("");
 					for (var i=0;i<res.data.length;i++) {
-						console.log('type1',typeof res.data[i].type);
+						//console.log('type1',typeof res.data[i].type);
 						var type=parseInt(res.data[i].type);
-						console.log('type2',typeof res.data[i].type);
+						//console.log('type2',typeof res.data[i].type);
 						var begin_time=(res.data[i].begin_dt).substring(0,10);
 						var end_time=(res.data[i].begin_dt).substring(0,10);
 						var time="";
@@ -150,7 +151,7 @@ function examination_list(){
 							    			'<dd style="width:100%">评价老师：'+res.data[i].grade_teacher+'</dd>'+
 							    		'</dl>'+
 							    		'<p class="clearfix see_msg">'+
-							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 							    		'</p>'+
 							    	'</li>';
 								break;
@@ -163,7 +164,7 @@ function examination_list(){
 							    			'<dd>SP病人：'+res.data[i].sp_name+'</dd>'+
 							    		'</dl>'+
 							    		'<p class="clearfix see_msg">'+
-							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 							    		'</p>'+
 							    	'</li>';
 								break;
@@ -175,14 +176,14 @@ function examination_list(){
 							    			'<dd>理论考试</dd>'+
 							    		'</dl>'+
 							    		'<p class="clearfix see_msg">'+
-							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
+							    			'<a class="nou right" href="'+pars.detailUrl+'?exam_screening_id='+res.data[i].exam_screening_id+'&station_id='+res.data[i].station_id+'">考卷详情&nbsp;&gt;&nbsp;&nbsp;</a>'+
 							    		'</p>'+
 							    	'</li>';
 								break;
 							default:
 								break;
 						}
-						console.log('dom',str);
+						//console.log('dom',str);
 						$("#exmination_ul").append(str);
 					}
 				}
@@ -223,7 +224,7 @@ function examination_list_teacher(){
 
             var id=$(this).attr('value');
 			var s_id=$(this).attr("data-id");
-			console.log(id,s_id)
+			//console.log(id,s_id)
 			var url=pars.ajaxurl;
 			if(id==0){
 				$("#time").text("");

@@ -545,8 +545,7 @@ class InvigilatePadController extends CommonController
             //将戳过来的字符串变成数组
             $timeAnchor = explode(',', $timeAnchor);
 
-            return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId,
-                $timeAnchor)));
+            return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor)));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
@@ -565,42 +564,42 @@ class InvigilatePadController extends CommonController
      * @internal param $examScreenId
      * @internal param array $timeAnchors
      */
-    private function storeAnchor($stationId, $studentId, $examId, $teacherId, array $timeAnchors)
-    {
-        $connection = \DB::connection('osce_mis');
-        $connection->beginTransaction();
-        try {
-            //获得站点摄像机关联表
-            $stationVcr = StationVcr::where('station_id', $stationId)->first();
-            if (is_null($stationVcr)) {
-                throw new \Exception('该考站未关联摄像机', -200);
-            }
-
-            foreach ($timeAnchors as $timeAnchor) {
-                //拼凑数组
-                $data = [
-                    'station_vcr_id' => $stationVcr->id,
-                    'begin_dt' => date('Y-m-d H:i:s', $timeAnchor),
-                    'end_dt' => date('Y-m-d H:i:s', $timeAnchor),
-                    'created_user_id' => $teacherId,
-                    'exam_id' => $examId,
-                    'student_id' => $studentId,
-                ];
-
-                //将数据插入库
-                if (!$result = StationVideo::create($data)) {
-                    throw new \Exception('保存失败！请重试', -210);
-                }
-            }
-
-            $connection->commit();
-            return ['锚点上传成功！'];
-        } catch (\Exception $ex) {
-            $connection->rollBack();
-            throw $ex;
-        }
-
-    }
+//    private function storeAnchor($stationId, $studentId, $examId, $teacherId, array $timeAnchors)
+//    {
+//        $connection = \DB::connection('osce_mis');
+//        $connection->beginTransaction();
+//        try {
+//            //获得站点摄像机关联表
+//            $stationVcr = StationVcr::where('station_id', $stationId)->first();
+//            if (is_null($stationVcr)) {
+//                throw new \Exception('该考站未关联摄像机', -200);
+//            }
+//
+//            foreach ($timeAnchors as $timeAnchor) {
+//                //拼凑数组
+//                $data = [
+//                    'station_vcr_id' => $stationVcr->id,
+//                    'begin_dt' => date('Y-m-d H:i:s', $timeAnchor),
+//                    'end_dt' => date('Y-m-d H:i:s', $timeAnchor),
+//                    'created_user_id' => $teacherId,
+//                    'exam_id' => $examId,
+//                    'student_id' => $studentId,
+//                ];
+//
+//                //将数据插入库
+//                if (!$result = StationVideo::create($data)) {
+//                    throw new \Exception('保存失败！请重试', -210);
+//                }
+//            }
+//
+//            $connection->commit();
+//            return ['锚点上传成功！'];
+//        } catch (\Exception $ex) {
+//            $connection->rollBack();
+//            throw $ex;
+//        }
+//
+//    }
 
 
     /**
@@ -681,8 +680,6 @@ class InvigilatePadController extends CommonController
             $studentId = $request->get('student_id');
             $stationId = $request->get('station_id');
             $teacherId =$request->get('user_id');
-            //获取考试id
-            $examId = Exam::doingExam();
             //开始考试时创建成绩
 //            $ExamResultData=[
 //                'student_id'=>$studentId,
@@ -704,11 +701,8 @@ class InvigilatePadController extends CommonController
 //           if(!ExamResult::create($ExamResultData)){
 //               throw new \Exception('成绩创建失败',-106);
 //           }
-            // 调用锚点方法
-            CommonController::storeAnchor($stationId, $studentId, $examId->id, $teacherId, [$nowTime]);
-
             $ExamQueueModel = new ExamQueue();
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime);
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
                 return response()->json(

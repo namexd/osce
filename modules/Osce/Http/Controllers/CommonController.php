@@ -6,6 +6,8 @@
  */
 namespace Modules\Osce\Http\Controllers;
 
+use Modules\Osce\Entities\StationVcr;
+use Modules\Osce\Entities\StationVideo;
 use Pingpong\Modules\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 
@@ -86,10 +88,18 @@ abstract class CommonController extends Controller
         } else {
             $code = $ex->getCode();
         }
-        return [
-            'code' => $code,
-            'message' => '错误信息:' . $ex->getMessage(),
-        ];
+
+        if ('Trying to get property of non-object' == $ex->getMessage()) {
+            return [
+                'code' => -50000,
+                'message' => '错误信息:' . '当前系统错误，请重试！',
+            ];
+        } else {
+            return [
+                'code' => $code,
+                'message' => '错误信息:' . $ex->getMessage(),
+            ];
+        }
     }
 
     /**

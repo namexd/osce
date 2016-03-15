@@ -244,11 +244,9 @@ class DrawlotsController extends CommonController
             $station = StationTeacher::where('exam_id', '=', $exam->id)
                 ->where('user_id', '=', $teacherId)
                 ->first();
-
             if (is_null($station)) {
                 throw new \Exception('你没有参加此次考试', 7100);
             }
-
             /*
              * 判断当前考生是否是在当前的学生组中
              */
@@ -331,6 +329,9 @@ class DrawlotsController extends CommonController
 
             //将考试的id封装进去
             $station->exam_id = $exam->id;
+
+            //将当前的服务器时间返回
+            $station->service_time = time() * 1000;
 
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {

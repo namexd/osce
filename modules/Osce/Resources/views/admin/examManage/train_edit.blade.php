@@ -63,13 +63,24 @@
 		        start.max = datas;
 		    }
 		}
+
 		$("#end").click(function(){
-			end.min = $('#start').val();
+			end.min = ($('#start').val()).split(' ')[0];
 			laydate(end);
 		});
+
+        //时间最小值处理
+        $("#start").click(function(){
+
+            start.max = ($('#end').val()).split(' ')[0];
+            laydate(start);
+        });
+
 		laydate.skin('molv');
 		laydate(start);
 		laydate(end);
+
+
  		$('#form1').bootstrapValidator({
             message: 'This value is not valid',
             feedbackIcons: {/*输入框不同状态，显示图片的样式*/

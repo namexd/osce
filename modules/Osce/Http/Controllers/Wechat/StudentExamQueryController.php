@@ -118,7 +118,7 @@ class StudentExamQueryController extends CommonController
             $examTime = Exam::where('id', $examId)->select('begin_dt', 'end_dt', 'name')->first();
             // TODO 根据考试id找到对应的考试场次  zhouqiang  2016-3-7
 
-//        $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get();
+        $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get()->pluck('id');
 
 //        $examScreening = [];
 //        foreach ($examScreeningId as $data) {
@@ -130,7 +130,7 @@ class StudentExamQueryController extends CommonController
 
             //根据场次id查询出考站的相关考试结果
             $ExamResultModel = new ExamResult();
-            $stationList = $ExamResultModel->stationInfo($studentId);
+            $stationList = $ExamResultModel->stationInfo($studentId,$examScreeningId);
             if (!$stationList) {
                 throw new \Exception('没有找到学生成绩信息');
             }
@@ -145,6 +145,10 @@ class StudentExamQueryController extends CommonController
 //                        throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
 //                    }
                 }
+                //转换耗时 TODO： zhoufuxiang 2016-3-14
+//                date_default_timezone_set("UTC");
+//                $stationType->time = date('H:i:s', $stationType->time);
+//                date_default_timezone_set("PRC");
 
                 $stationData[] = [
                     'exam_result_id' => $stationType->exam_result_id,
@@ -195,12 +199,14 @@ class StudentExamQueryController extends CommonController
     public function  getExamDetails(Request $request)
     {
         $this->validate($request, [
-            'exam_screening_id' => 'required|integer'
+            'exam_screening_id' => 'required|integer',
+            'station_id'    => 'required|integer'
         ]);
 
         $examScreeningId = intval(Input::get('exam_screening_id'));
+        $station_id = intval(Input::get('station_id'));
         //根据考试场次id查询出该结果详情
-        $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->first();
+        $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->where('station_id', '=', $station_id)->first();
         //得到考试名字
         $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
 

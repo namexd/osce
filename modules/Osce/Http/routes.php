@@ -473,13 +473,6 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	}
 //
 //	return '失败';
-	$a = \Modules\Osce\Entities\Exam::where('id',415)->get();
-	$b = $a->first();
-	if (is_object($a)) {
-//		dd(true);
-	} else {
-		dd(false);
-	};
 });
 //TODO:清空考试数据使用 	Zhoufuxiang
 Route::get('test/empty', function(\Illuminate\Http\Request $request) {
@@ -496,6 +489,7 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
 	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
 	$exam = new \Modules\Osce\Entities\Exam();
+
 	if($exam->emptyData($exam_id)){
 		return '成功';
 	}
