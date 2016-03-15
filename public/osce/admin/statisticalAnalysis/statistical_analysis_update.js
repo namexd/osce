@@ -323,9 +323,10 @@ $(function(){
 		end = new Date(end);
 		end = Date.parse(end)/1000;
 
-
-    var allTime = end-start;//结束时间减去开始时间
-    var step = allTime/100;//代表几秒向右前进1px;
+    //结束时间减去开始时间
+    var allTime = end-start;
+    //时间步长
+    var step = 100/allTime;
     
     //初始化
     videoPlay.initVideo(600,300,1,"divPlugin",pars.download);
@@ -340,7 +341,7 @@ $(function(){
     	//开始进度条计数
     	timer = setInterval(function(){
     		progressMove();
-    	},step*1000);
+    	},1000);
 
     },1000);
     
@@ -367,7 +368,7 @@ $(function(){
 	    //进度条
 	    timer = setInterval(function(){
     		progressMove();
-    	},step*1000);
+    	},1000);
 
         videoPlay.resumePlay(0);
 	});
@@ -382,7 +383,7 @@ $(function(){
      */
 	function progressMove(){
 
-		i = Math.round(i);
+		//i = Math.round(i);
 		if(i>=100){
 	  		$(".progress-bar").css("width","0%");
 	  		//循环回放
@@ -390,7 +391,7 @@ $(function(){
 	  		i = 0;
 			return i;
 		}else{
-			i++;
+			i = i + step;
 	  		$(".progress-bar").css("width",i+"%");
 	  		return i;
 		}
@@ -423,7 +424,7 @@ $(function(){
         var seconds = Date.parse(dateTime);
 
         //加上进度条换算成时间值
-        seconds = seconds + percent*step*1000;
+        seconds = seconds + percent/step*1000;
         var dat = new Date(seconds);
         var year = dat.getFullYear();
         var month = dat.getMonth()+1;
@@ -445,7 +446,7 @@ $(function(){
         i = percent;  //计数器重置
     	timer = setInterval(function(){
     		progressMove();
-    	},step*1000);
+    	},1000);
         //启动回放
         videoPlay.StartPlayback(0,pars.ip,newstart,pars.endtime,pars.channel);
         //检测是否为暂停
@@ -460,15 +461,14 @@ $(function(){
         dateTime = (point).replace(/-/g,"/");
 		var pointTime = new Date(dateTime);
         var pointTime = Date.parse(dateTime);
-        console.log(step);
         //传入计算出的进度条长度
-        i = (pointTime/1000-start)/step;    //计数器重置
+        i = (pointTime/1000-start)*step;    //计数器重置
         $(".progress-bar").css("width",i+"%");
         //清除进度条
         clearInterval(timer);
         timer = setInterval(function(){
     		progressMove();
-    	},step*1000);
+    	},1000);
         //启动回放
         videoPlay.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
 
