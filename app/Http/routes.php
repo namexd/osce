@@ -6,7 +6,7 @@ $version='1.0';
 /*
  * 后台页面
  * */
-Route::get('/',['uses'=>'IndexController@index']);  //域名对应的路径
+Route::get('/',['uses'=>'IndexController@Index']);  //域名对应的路径
 
 Route::group(['prefix' => "admin",'middleware' => []], function()
 {
