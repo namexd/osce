@@ -154,7 +154,7 @@ class ApiController extends CommonController
             }
         }
 
-        if($mode == 1 && !empty($PaperPreviewArr['item'])){
+        if($type == 1 && !empty($PaperPreviewArr['item'])){
             $ExamQuestion = new ExamQuestion;
             $ExamQuestionType = new ExamQuestionType;
             $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
@@ -166,6 +166,8 @@ class ApiController extends CommonController
                     $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
                 }
             }
+        }elseif($type == 2){
+
         }
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
@@ -180,9 +182,16 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GenerateExamPaper(QuestionBankRepositories $questionBankRepositories){
+        //\DB::connection('osce_mis')->enableQueryLog();
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper(20);
+        //$queries = \DB::connection('osce_mis')->getQueryLog();
         $ExamPaperFormal = new ExamPaperFormal;
-        $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
+        if(count($ExamPaperInfo)>0){
+            $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
+        }else{
+            dd('试卷没有内容');
+        }
+
     }
 
     /**
