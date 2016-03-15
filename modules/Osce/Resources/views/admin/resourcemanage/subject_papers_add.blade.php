@@ -52,13 +52,13 @@
                     content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}',
                 })
 
-            })
+            });
             $('#paper tbody').on('click','.fa-pencil-square-o',function(){
                 var question_detail=$(this).parent().parent().parent().parent().find("input[name='question[]']").val();
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
-                    area: ['90%', '530px'],
+                    area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
                     content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}?question_detail='+question_detail,
@@ -91,7 +91,7 @@
                 $('#paper2').find('tbody').attr('index',now);
                 $('.close').trigger('click');
                 return  false;
-            })
+            });
 
             $('#paper2 tbody').on('click','.fa-cog',function(){//添加题目
                 var  sequence=  $(this).parent().parent().parent().parent().attr("sequence");
@@ -100,7 +100,7 @@
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
-                    area: ['90%', '530px'],
+                    area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
                     content:geturl,
@@ -110,7 +110,7 @@
             $("#add-new2").click(function(){
                 $("#addForm").show();
                 $("#editForm").hide();
-            })
+            });
             // 编辑题型
             $('#paper2 tbody').on('click','.fa-pencil-square-o',function(){
                 $("#addForm").hide();
@@ -153,11 +153,11 @@
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
-                    area: ['90%', '530px'],
+                    area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
                     content: '{{route('osce.admin.ApiController.ExamPaperPreview')}}?'+$(".form-horizontal").serialize(),
-                })
+                });
                 return  false;
 
             })
