@@ -32,14 +32,13 @@
                 if($(this).val()=="1"){
                     $("#paper").show();
                     $("#paper2").hide();
-                    $("#status2").removeAttr("disabled");
+                    $("#status2").empty().append('<option value="1">随机试卷</option><option value="2">统一试卷</option>')
                 }else{
                     $("#paper2").show();
                     $("#paper").hide();
-                    $("#status2 option[text='统一试卷']").attr("selected", true);
-                    $("#status2").attr("disabled","disabled");
+                    $("#status2").empty().append('<option value="2">统一试卷</option>')
                 }
-            })
+            });
             /**
              * 自动组卷页面操作
              */
@@ -180,14 +179,14 @@
         <div class="ibox-content">
             <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.ExamPaperController.getAddExams')}}">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">试卷名称</label>
+                    <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>试卷名称</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="name" name="name">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">考试时长</label>
+                    <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>考试时长</label>
                     <div class="col-sm-10">
                         <input type="text"  class="form-control" id="code" name="time">
                     </div>
@@ -208,7 +207,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">试卷类型</label>
                     <div class="col-sm-10">
-                        <select id="status2"   class="form-control m-b" name="status2">
+                        <select id="status2" class="form-control m-b" name="status2">
                             <option value="1">随机试卷</option>
                             <option value="2">统一试卷</option>
                         </select>
