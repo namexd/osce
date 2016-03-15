@@ -32,13 +32,14 @@
             $('.form-horizontal').submit(function(){
                 getCheckboxVal();
                 str = question_detail+'@'+array;
-
                 parent.$('#list-body tr').each(function(){
                     if($(this).attr('sequence') == sequence){
-                        //.log(str);
-                        parent.$(this).find('input').val(str);
+                         parent.$(this).find('input').val(str);
+                        parent.$(this).children().eq(2).text(array.length);
+                        parent.$(this).children().eq(4).text(array.length*parent.$(this).children().eq(3).text());
                     }
                 });
+
 
                 //parent.$('#list-body').find('tbody').attr('index',now);
                 parent.layer.close(index);
@@ -57,6 +58,7 @@
             $('#search').click(function(){
 
                 //获取筛选条件
+
                 getexamquestions(subject_id,ability_id,difficult_id,pagequestion_type,sequence,questionArr);
             });
 
@@ -65,6 +67,7 @@
             $('.pull-right').delegate('a','click',function(){
                 var page = $(this).parents('li').attr('page');
                 getCheckboxVal();
+
                 getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,questionArr);
             })
 

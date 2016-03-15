@@ -17,7 +17,7 @@ class ExamCategoryFormal extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'name','exam_question_type_name', 'exam_question_type_id','number','score','exam_paper_formal_id'];
+    protected $fillable = ['id', 'exam_question_type_name', 'exam_question_type_id','number','score','exam_paper_formal_id'];
 
     /**
      * 与正式的试题表的关系

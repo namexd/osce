@@ -34,7 +34,7 @@
                     <input type="text" placeholder="请输入标签名称" name="keyword" class="input-md form-control" style="width: 250px;">
 
                     <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
-                    <button type="submit" class="btn btn-sm btn-primary marl_10 pull-right" id="add"><a href="{{route('osce.admin.ExamPaperController.getAddExamPage')}}"> 新增</a></button>
+                    <a class="btn btn-sm btn-primary marl_10 pull-right" id="add" href="{{route('osce.admin.ExamPaperController.getAddExamPage')}}"> 新增</a></button>
                 </div>
                 <div class="list_all">
                     <table class="table table-striped" id="table-striped" style="background:#fff">
