@@ -26,8 +26,13 @@ class ApiController extends CommonController
      * @date    2016年3月10日14:19:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GetEditorExamPaperItem(){
-        $question_detail = \Input::get('question_detail');
+    public function GetEditorExamPaperItem(QuestionBankRepositories $questionBankRepositories){
+        $question_detail = \Input::get('question_detail','');
+        $questionArr = [];
+        if($question_detail){
+            $questionArr = $questionBankRepositories->StrToArr($question_detail);
+            $questionArr = $questionBankRepositories->HandlePaperPreviewArr(['0'=>$questionArr]);
+        }
         //获取题目类型列表
         $examQuestionTypeModel= new ExamQuestionType();
         $examQuestionTypeList = $examQuestionTypeModel->examQuestionTypeList();
@@ -36,8 +41,20 @@ class ApiController extends CommonController
         $examQuestionLabelTypeList = $examQuestionLabelTypeModel->examQuestionLabelTypeList();
         foreach($examQuestionLabelTypeList as $k=>$v){
             $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;
+
+            if(count($questionArr)>0){
+                foreach($questionArr as $val){
+                    if(count($val['child'])>0){
+                        foreach($val['child'] as $key => $value){
+                            if($key == $v['id']){
+                                $examQuestionLabelTypeList[$k]['examQuestionLabelSelectedList'] = $value;
+                            }
+                        }
+                    }
+                }
+            }
         }
-        //dd($examQuestionLabelTypeList);
+        
         return  view('osce::admin.resourcemanage.subject_papers_add_detail',[
             'examQuestionLabelTypeList'=>$examQuestionLabelTypeList,
             'examQuestionTypeList'=>$examQuestionTypeList
