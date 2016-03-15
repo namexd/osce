@@ -696,7 +696,7 @@ class Exam extends CommonModel
         $exam_screening_student =ExamScreeningStudent::whereIn('exam_screening_id',$examResultIds)->get();
         if(!$exam_screening_student->isEmpty()){
             foreach($exam_screening_student as $item ){
-                $item->delect();
+                $item->delete();
             }
         }
         //删除考试得分
