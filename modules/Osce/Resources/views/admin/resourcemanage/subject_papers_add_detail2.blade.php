@@ -20,11 +20,21 @@
             var number = [];//用于存放已选中的checkbook-最终选中的
             var question_type = $('.question_type').val();
             var sequence = $('.sequence').val();
-
+            var question_detail = $('.question_detail').val();
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+            var str = '';//拼接字符串返回给父页面
             $('.form-horizontal').submit(function(){
                 getCheckboxVal();
-                parent.$('#handwork_'+sequence).find("input").val(question_type+"@"+array+"@"+sequence+array);
+                str = question_detail+'@'+array;
+                parent.$('#list-body tr').each(function(){
+                    if($(this).attr('sequence') == sequence){
+                        parent.$(this).find('input').val(str);
+                        parent.$(this).children().eq(2).text(array.length);
+                        parent.$(this).children().eq(4).text(array.length*parent.$(this).children().eq(3).text());
+                    }
+                });
+
+
                 //parent.$('#list-body').find('tbody').attr('index',now);
                 parent.layer.close(index);
                 return  false;
@@ -208,6 +218,7 @@
                 </div>
                 <input type="hidden" class="question_type" value="{{@$question_type}}">
                 <input type="hidden" class="sequence" value="{{@$sequence}}">
+                <input type="hidden" class="question_detail" value="{{@$question_detail}}">
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
                         <button class="btn btn-primary" type="submit">保存</button>

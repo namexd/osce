@@ -123,16 +123,23 @@
                         $(this).attr("selected", true);
                     }
                 });
-                console.log(question_detail[1]);
                 $('input[name="question-score2"]').val(question_detail[1]);
 
                 $('#editForm').submit(function(){//编辑题型
-                    var tpye2= $('select[name="question-type2"] option:selected').text();//题目类型名字
-                    var tpyeid= $('select[name="question-type2"] option:selected').val();//题目类型ID
-                    var score=$('input[name="question-score2"]').val(); //每题分数
-                    $("#"+nowid).children().find("input[name='question-type[]']").val(tpyeid+"@"+score);
-                    $("#"+nowid).children().eq(1).text(tpye2);
-                    $("#"+nowid).children().eq(3).text(score);
+                    var new_question_detail="";
+                    for(var i=0; i<question_detail.length; i++){
+                        if(i==1){
+                            question_detail[1]=$('input[name="question-score2"]').val(); //修改每题分数重置
+                        }
+                        if(i==question_detail.length-1){
+                            new_question_detail=new_question_detail+question_detail[i];
+                        }else{
+                            new_question_detail=new_question_detail+question_detail[i]+"@";
+                        }
+                    }
+                    $("#"+nowid).children().find("input[name='question-type[]']").val(new_question_detail);
+                    $("#"+nowid).children().eq(3).text(question_detail[1]);
+                    $("#"+nowid).children().eq(4).text(question_detail[1]*$("#"+nowid).children().eq(2).text());
                     $('.close').trigger('click');
                     return  false;
                 })
@@ -345,7 +352,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">题目类型：</label>
                 <div class="col-sm-9">
-                    <select name="question-type2" id="typeSelect2" class="form-control">
+                    <select name="question-type2" id="typeSelect2" class="form-control" disabled>
                         @if(!empty($ExamQuestionLabelTypeList))
                             @foreach($ExamQuestionLabelTypeList as $key => $val)
                                 <option value="{{ @$val['id'] }}">{{@$val['name']}}</option>
