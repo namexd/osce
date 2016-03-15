@@ -111,6 +111,7 @@
             $("#add-new2").click(function(){
                 $("#addForm").show();
                 $("#editForm").hide();
+                $("#addForm")[0].reset();
             });
             // 编辑题型
             $('#paper2 tbody').on('click','.fa-pencil-square-o',function(){
@@ -125,7 +126,6 @@
                     }
                 });
                 $('input[name="question-score2"]').val(question_detail[1]);
-
                 $('#editForm').submit(function(){//编辑题型
                     var new_question_detail="";
                     for(var i=0; i<question_detail.length; i++){
@@ -164,7 +164,7 @@
                     area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ApiController.ExamPaperPreview')}}?'+$(".form-horizontal").serialize(),
+                    content: '{{route('osce.admin.ApiController.ExamPaperPreview')}}?'+$(".form-horizontal").serialize()
                 });
                 return  false;
 
