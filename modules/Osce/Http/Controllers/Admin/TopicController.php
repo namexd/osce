@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\SubjectItem;
 use Modules\Osce\Http\Controllers\CommonController;
+use Modules\Osce\Repositories\Common as OsceCommon;
 
 class TopicController extends CommonController
 {
@@ -154,16 +155,25 @@ class TopicController extends CommonController
             'desc' => 'sometimes',
             'content' => 'required',
             'score' => 'required',
+            'stem' => 'required',
+            'equipments' => 'required',
+            'goods' => 'required'
         ], [
             'id.required' => '课题ID必须',
             'title.required' => '课题名称必须',
             'content.required' => '评分标准必须',
             'score.required' => '评分必须',
+            'stem.required' => '题干必填',
+            'equipments.required' => '所需设备必填',
+            'goods.required' => '所需物品必填'
         ]);
 
         $data = [
             'title' => e($request->get('title')),
             'description' => $request->get('note'),
+            'stem' => $request->input('stem'),
+            'equipments' => $request->input('equipments'),
+            'goods' => $request->input('goods')
         ];
         $id = intval($request->get('id'));
 
@@ -235,6 +245,7 @@ class TopicController extends CommonController
 
         $id = $request->get('id');
         $subject = Subject::find($id);
+        OsceCommon::objIsNull($subject, '没有找到对应的科目', -1000);
 
         $items = $subject->items;
         $items = SubjectItem::builderItemTable($items);

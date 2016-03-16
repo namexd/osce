@@ -148,53 +148,7 @@ abstract class CommonController extends Controller
         return preg_match($rule, $value) === 1;
     }
 
-    /**
-     * 判断对象集合是否为空
-     * 如果为空，报错
-     * @param object $obj
-     * @param string $message
-     * @param int $code
-     * @return bool
-     * @throws \Exception
-     * @author Jiangzhiheng
-     * @time 2016-03-10 15:01
-     */
-    static public function objIsEmpty($obj, $message = '系统错误', $code = -999)
-    {
-        if (is_object($obj)) {
-            if (!$obj->isEmpty()) {
-                return true;
-            } else {
-                throw new \Exception($message, $code);
-            }
-        } else {
-            throw new \Exception('系统错误，请重试');
-        }
-    }
 
-    /**
-     * 判断对象是否为空
-     * 如果为空，报错
-     * @param object $obj
-     * @param string $message
-     * @param int $code
-     * @return bool
-     * @throws \Exception
-     * @author Jiangzhiheng
-     * @time 2016-03-10 15:19
-     */
-    static public function objIsNull($obj, $message = '系统错误', $code = -999)
-    {
-        if (is_object($obj)) {
-            if (!is_null($obj)) {
-                return true;
-            } else {
-                throw new \Exception($message, $code);
-            }
-        } else {
-            throw new \Exception('系统错误，请重试');
-        }
-    }
 
     /**
      * 上传锚点的保存
