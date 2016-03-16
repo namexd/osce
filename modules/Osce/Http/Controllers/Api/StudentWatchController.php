@@ -337,7 +337,7 @@ class StudentWatchController extends CommonController
 
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
-        dump($studentnum,'前面人数');
+        dump($studentnum,$item,'前面人数');
           if($examStudent == 0){
 
               $willStudents =$studentnum;
