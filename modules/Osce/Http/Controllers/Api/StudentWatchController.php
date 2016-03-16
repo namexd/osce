@@ -400,13 +400,13 @@ class StudentWatchController extends CommonController
             ->get();
          dump($willStudents,'denadia');
           foreach($willStudents as $key=>$willStudent){
-//
+            dump($willStudent->student_id,$item->student_id);
               if($willStudent->student_id == $item->student_id){
                   $studentNum=$key;
                   continue;
               }
           }
-
+        dump($studentNum, 'key');
         return $studentNum;
     }
 
