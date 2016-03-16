@@ -398,7 +398,7 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
-
+         dump($willStudents,'denadia');
           foreach($willStudents as $key=>$willStudent){
 //
               if($willStudent->student_id == $item->student_id){
@@ -406,6 +406,7 @@ class StudentWatchController extends CommonController
                   continue;
               }
           }
+
         return $studentNum;
     }
 
