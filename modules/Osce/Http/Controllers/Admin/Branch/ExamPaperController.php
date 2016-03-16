@@ -162,7 +162,7 @@ class ExamPaperController extends CommonController
 
                 foreach($paperDetail['exam_paper_structure'] as $kk=>$structure){
                     foreach($structure['exam_paper_structure_label'] as $structure_label=>$label){
-                        ExamQuestionLabel
+                        //ExamQuestionLabel::where()->
                     }
                 }
 
