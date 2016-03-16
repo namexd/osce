@@ -280,7 +280,6 @@ class StudentWatchController extends CommonController
 
                 return $data;
             }
-
         }
        return $nextData;
     }
