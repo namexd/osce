@@ -241,6 +241,8 @@
             var editUrl = '{{route('osce.admin.ExamPaperController.getEditExamPaper')}}';
             if(inputVal){
                 $('#sourceForm').attr('action',editUrl);
+                $('.status').attr('disabled',true);
+                $('.status2').attr('disabled',true);
             }
         })
     </script>
@@ -274,7 +276,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">组卷方式</label>
                     <div class="col-sm-10">
-                        <select id="status"   class="form-control m-b" name="status" disabled>
+                        <select id="status"   class="form-control m-b" name="status">
                             <option value="1" @if(@$paperDetail['mode'] == 1)selected="selected" @endif >自动组卷</option>
                             <option value="2" @if(@$paperDetail['mode'] == 2)selected="selected" @endif >手工组卷</option>
                         </select>
@@ -286,7 +288,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">试卷类型</label>
                     <div class="col-sm-10">
-                        <select id="status2" class="form-control m-b" name="status2" disabled>
+                        <select id="status2" class="form-control m-b" name="status2">
                             <option value="1" @if(@$paperDetail['type'] == 1)selected="selected" @endif >随机试卷</option>
                             <option value="2" @if(@$paperDetail['type'] == 2)selected="selected" @endif >统一试卷</option>
                         </select>
@@ -357,7 +359,7 @@
                                     <tbody index="0" id="list-body">
                                     @if(!empty(@$paperDetail['item']))
                                         @foreach(@$paperDetail['item'] as $k=>$detail)
-                                            <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}">
+                                            <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$detail['id']}}">
                                                 <td>{{@$k+1}}<input name="question-type[]" type="hidden" value="{{@$detail['type'].'@'.@$detail['score'].'@'.@$detail['child'].'@'.@$detail['id']}}"/></td>
                                                 <td>{{@$detail['typename']}}</td>
                                                 <td>{{@$detail['num']}}</td>
