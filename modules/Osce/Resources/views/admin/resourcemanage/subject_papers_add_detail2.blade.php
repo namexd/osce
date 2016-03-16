@@ -37,20 +37,24 @@
                 getCheckboxVal();
                 var detail = question_detail.split('@');
                 str = detail[0]+'@'+detail[1]+'@'+array;
-                parent.$('#list-body tr').each(function(){
+                var oneSubject = 0;
+                var oneScore = 0;
+                parent.$('#paper2 #list-body tr').each(function(){
                     if($(this).attr('sequence') == sequence){
                         parent.$(this).find('input').val(str);
                         parent.$(this).children().eq(2).text(array.length);
                         parent.$(this).children().eq(4).text(array.length*parent.$(this).children().eq(3).text());
                     }
+                    oneScore += parseInt(parent.$(this).children().eq(4).text());
+                    oneSubject += parseInt(parent.$(this).children().eq(2).text());
+                    parent.$(".oneScore").text(oneScore);
+                    parent.$(".oneSubject").text(oneSubject);
                 });
-
-
                 //parent.$('#list-body').find('tbody').attr('index',now);
                 parent.layer.close(index);
                 return  false;
 
-            })
+            });
             //关闭iframe
             $('#closeIframe').click(function(){
                 parent.layer.close(index);
@@ -72,7 +76,7 @@
                 var page = $(this).parents('li').attr('page');
                 getCheckboxVal();
                 getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,questionArr);
-            })
+            });
 
             //获取列表数据
             function getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,array,questionArr){
@@ -241,7 +245,7 @@
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
                         <button class="btn btn-primary" type="submit">保存</button>
-                        <a class="btn btn-white" href="#">取消</a>
+                        <a class="btn btn-white" href="#" id="closeIframe">取消</a>
                     </div>
                 </div>
             </div>
