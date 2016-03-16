@@ -88,14 +88,28 @@ class Answer extends Model
     {
         $DB = \DB::connection('osce_mis');
         $DB->beginTransaction();
-        $examQuestionFormalModel = new ExamQuestionFormal();
         try{
-            if(count($data)>0){
-                foreach($data as $v){
-                    $rowData['student_answer'] = $v['student_answer'];
-                    $result = $examQuestionFormalModel->where('id','=',$v['id'])->update($rowData);
-                    if(!$result){
-                        throw new \Exception(' 保存考生答案失败！');
+            if($data){
+                //保存考试用时
+                $examPaperFormalModel = new ExamPaperFormal();
+                $examPaperFormalData = array(
+                    'actual_length'=>$data['actualLength']
+                );
+                $result = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->update($examPaperFormalData);
+                if(!$result){
+                    throw new \Exception(' 保存考试用时失败！');
+                }
+                //保存考生答案
+                if(count($data['examQuestionFormalInfo'])>0){
+                    $examQuestionFormalModel = new ExamQuestionFormal();
+                    foreach($data['examQuestionFormalInfo'] as $v){
+                        $examQuestionFormalData = array(
+                            'student_answer'=>$v['studentAnswer']
+                        );
+                        $result = $examQuestionFormalModel->where('id','=',$v['examQuestionFormalId'])->update($examQuestionFormalData);
+                        if(!$result){
+                            throw new \Exception(' 保存考生答案失败！');
+                        }
                     }
                 }
             }
