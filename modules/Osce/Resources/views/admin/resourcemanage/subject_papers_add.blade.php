@@ -327,7 +327,7 @@
                                     @if(!empty(@$paperDetail['item']))
                                         @foreach(@$paperDetail['item'] as $k=>$detail)
                                             <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$detail['id']}}">
-                                                <td>{{@$k+1}}<input name="question-type[]" type="hidden" value="{{@$detail['type'].'@'.@$detail['score'].'@'.@$detail['child'].'@'.@$detail['id']}}"/></td>
+                                                <td>{{@$k+1}}</td>
                                                 <td>{{@$detail['typename']}}</td>
                                                 <td></td>
                                                 <td>{{@$detail['num']}}</td>
