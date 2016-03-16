@@ -272,7 +272,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">通道号</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="channel" name="channel">
+                                    <input type="text"  class="form-control" id="channel" name="channel" placeholder="摄像头编号，如摄像头通道号为D01，则值为'1'">
                                 </div>
                             </div>
 

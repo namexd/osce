@@ -306,9 +306,12 @@ class ExamQueue extends CommonModel
 
     /**
      * 开始考试时，改变时间和状态
-     * @param  $studentId $stationId
-     * @return
-     * @throws  \Exception
+     * @param $studentId $stationId
+     * @param $stationId
+     * @param $nowTime
+     * @param $teacherId
+     * @return bool
+     * @throws \Exception
      * @author  zhouqiang
      */
 
@@ -323,10 +326,7 @@ class ExamQueue extends CommonModel
 
 
 //                查询学生是否已开始考试
-            $examQueue = ExamQueue::where('student_id', '=', $studentId)
-                ->where('station_id', '=', $stationId)
-                ->where('exam_id','=',$exam->id)
-                ->first();
+            $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
             if ($examQueue->status == 2) {
                 return true;
             }
@@ -334,7 +334,6 @@ class ExamQueue extends CommonModel
             $status = $examQueue->update(['status' => 2]);
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
-                    ->where('exam_id','=',$exam->id)
                     ->whereIn('exam_queue.status', [0, 2])
                     ->orderBy('begin_dt', 'asc')
                     ->get();
@@ -348,51 +347,45 @@ class ExamQueue extends CommonModel
                 if (is_null($nowQueue)) {
                     throw new \Exception('进入考试失败', -105);
                 }
+
                 $lateTime = $nowTime - strtotime($nowQueue->begin_dt);
+                foreach ($studentTimes as $key => $item) {
+                    if ($exam->sequence_mode == 2) {
+                        $stationTime = $item->station->mins ? $item->station->mins : 0;
+                    } else {
+                        //这是已考场安排的需拿到room_id
+                        $stationTime = $this->getRoomStationMaxTime($item->room_id);
+                    }
 
-                if($lateTime>0){
-                    foreach ($studentTimes as $key => $item) {
-                        if ($exam->sequence_mode == 2) {
-
-                            $stationTime = $item->station->mins ? $item->station->mins : 0;
-
+                    if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
+                        if ($item->status == 2) {
+                            $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
+                            $item->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
                         } else {
-                            //这是已考场安排的需拿到room_id
-                            $stationTime = $this->getRoomStationMaxTime($item->room_id);
+                            $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $lateTime);
+                            $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $lateTime);
                         }
-
-//                        if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
-                            if ($item->status == 2) {
-                                $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
-                                $item->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
-                            } else {
-                                $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $lateTime);
-                                $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $lateTime);
-                            }
-                            if (!$item->save()) {
-                                throw new \Exception('队列时间更新失败', -100);
-                            }
+                        \Log::info('begin_exam', ['begin_dt' => $item->begin_dt, 'end_dt' => $item->end_dt]);
+                        if (!$item->save()) {
+                            throw new \Exception('队列时间更新失败', -100);
                         }
-//                    }
-                } else {
-
+                    } else {
                         //查询到考站的标准时间
-//                        $ExamTime = ExamQueue::where('student_id', '=', $studentId)
-//                            ->where('exam_id','=',$exam->id)
-//                            ->where('station_id', '=', $stationId)
-//                            ->first();
-//                        if (is_null($ExamTime)) {
-//                            throw new \Exception('没有找到对应的队列信息', -104);
-//                        }
-                             $nowQueue->begin_dt = date('Y-m-d H:i:s', $nowTime);
-                             $nowQueue->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
-                             if (!$nowQueue->save()) {
+                        $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=',
+                            $stationId)->first();
+                        if (is_null($ExamTime)) {
+                            throw new \Exception('没有找到对应的队列信息', -104);
+                        }
+                        $ExamTime->begin_dt = date('Y-m-d H:i:s', $nowTime);
+                        $ExamTime->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
+                        if (!$ExamTime->save()) {
                             throw new \Exception('队列时间更新失败', -101);
                         }
                     }
-
+                }
             } else {
                 throw new \Exception('队列状态更新失败', -102);
+
             }
             // 调用锚点方法
             CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
@@ -490,6 +483,7 @@ class ExamQueue extends CommonModel
                         $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $difference);
                         $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $difference);
                     }
+                    \Log::info('band_watch', ['begin_dt' => $item->begin_dt, 'end_dt' => $item->end_dt]);
 
                     $item->status = 0;
 

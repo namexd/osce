@@ -476,14 +476,10 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 });
 //TODO:清空考试数据使用 	Zhoufuxiang
 Route::get('test/empty', function(\Illuminate\Http\Request $request) {
-//	//验证规则
-//	$this -> validate($request,[
-//		'id'	=> 'required'
-//	]);
 
 	$exam_id = $request->get('id');
 	if(empty($exam_id)){
-		return '请传入id，id对应考试ID';
+		return '请传入参数id，id对应考试ID';
 	}
 
 	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
@@ -491,10 +487,10 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 	$exam = new \Modules\Osce\Entities\Exam();
 
 	if($exam->emptyData($exam_id)){
-		return '成功';
+		return '成功-'.rand(1000,9999);
 	}
 
-	return '失败';
+	return '失败-'.rand(1000,9999);
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 
