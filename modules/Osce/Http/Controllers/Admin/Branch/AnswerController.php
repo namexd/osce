@@ -110,7 +110,7 @@ class AnswerController extends CommonController
             'examPaperFormalData'          =>$examPaperFormalData,//正式试卷信息
         ]);
     }
-    /**保存答案
+    /**保存考生答案
      * @method
      * @url /osce/
      * @access public
