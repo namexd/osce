@@ -76,6 +76,27 @@
                             message: '描述不能为空'
                         }
                     }
+                },
+                stem: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '题干不能为空'
+                        }
+                    }
+                },
+                goods: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '物品不能为空'
+                        }
+                    }
+                },
+                equipments: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '设备不能为空'
+                        }
+                    }
                 }
             }
         });
