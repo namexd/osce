@@ -330,7 +330,8 @@ class StudentWatchController extends CommonController
         $item   =   array_shift($items);
 
         //判断前面是否有人考试
-        $examStudent = ExamQueue::where('room_id', '=', $item->room_id)->where('station_id','=',$item->station_id)
+        $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
+            ->where('station_id','=',$item->station_id)
             ->whereBetween('status', [1, 2])
             ->count();
 
