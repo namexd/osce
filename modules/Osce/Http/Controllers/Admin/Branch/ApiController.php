@@ -112,8 +112,8 @@ class ApiController extends CommonController
             '1'=>implode(',',
                 [
                     0=>empty($request->get('question-type'))?0:$request->get('question-type'),
-                    1=>empty($request->get('question-number'))?0:$request->get('question-number'),
-                    2=>empty($request->get('question-score'))?0:$request->get('question-score')
+                    1=>empty($request->get('questionNumber'))?0:$request->get('questionNumber'),
+                    2=>empty($request->get('questionScore'))?0:$request->get('questionScore')
                 ]
             ),
             '2'=>$LabelTypeStr,
@@ -141,7 +141,7 @@ class ApiController extends CommonController
             'time'        => 'required',
             'status'        => 'required|integer',
             'status2'        => 'required|integer',
-            'question'        => 'required|array',
+            //'question'        => 'required|array',
         ]);
         //（1.包含，2.等于）
 

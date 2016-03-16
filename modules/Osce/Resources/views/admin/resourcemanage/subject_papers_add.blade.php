@@ -68,16 +68,27 @@
             /**
              * 手动组卷情况下现则试题
              */
-//            统一试卷总计
+//            统一试卷总计封装
             function editOneCount(){
                 var oneSubject = 0;
                 var oneScore = 0;
-                $('#paper2').find('tbody').find("tr").each(function(){
+                $('#paper2 tbody').find("tr").each(function(){
                     oneScore += parseInt($(this).children().eq(4).text());
                     oneSubject += parseInt($(this).children().eq(2).text());
                 });
                 $(".oneScore").text(oneScore);
                 $(".oneSubject").text(oneSubject);
+            }
+            //自动组卷封装
+            function randomCount(){
+                var randomSubject = 0;
+                var randomScore = 0;
+                $('#paper #list-body').find("tr").each(function(){
+                    randomSubject += parseInt($(this).children().eq(3).text());
+                    randomScore += parseInt($(this).children().eq(5).text());
+                });
+                $(".randomSubject").text(randomSubject);
+                $(".randomScore").text(randomScore);
             }
             $('#addForm').submit(function(){//添加题型
                 var now = $('#paper2').find('tbody').attr('index');
@@ -88,9 +99,9 @@
                 var html = '<tr sequence="'+parseInt(now)+'" id="handwork_'+parseInt(now)+'">'+
                         '<td>'+parseInt(now)+'<input name="question-type[]" type="hidden" value="'+tpyeid+"@"+score+'"/>'+'</td>'+
                         '<td>'+tpye2+'</td>'+
-                        '<td></td>'+
+                        '<td>0</td>'+
                         '<td>'+score+'</td>'+
-                        '<td></td>'+
+                        '<td>0</td>'+
                         '<td>'+
                         '<a href="javascript:void(0)"><span class="read  state1 detail"><i data-toggle="modal" data-target="#myModal" class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
                         '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>'+
@@ -101,6 +112,7 @@
                 $('#paper2').find('tbody').append(html);
                 $('#paper2').find('tbody').attr('index',now);
                 $('.close').trigger('click');
+                editOneCount();
                 return  false;
             });
 
@@ -159,10 +171,18 @@
             });
 
             /**
-             * 删除
+             * 手工组卷的删除
              */
-            $('tbody').on('click','.fa-trash-o',function(){
+            $('#paper2 tbody').on('click','.fa-trash-o',function(){
                 $(this).parent().parent().parent().parent().remove();
+                editOneCount();
+            });
+            /**
+             * 自动组卷的删除
+             */
+            $('#paper tbody').on('click','.fa-trash-o',function(){
+                $(this).parent().parent().parent().parent().remove();
+                randomCount();
             });
 
             /**
@@ -318,7 +338,7 @@
                     <div class="col-sm-4 col-sm-offset-2">
                         <button class="btn btn-primary" type="submit">保存</button>
                         <button class="btn btn-primary" id="preview" type="button">预览</button>
-                        <a class="btn btn-white" href="{{route("osce.admin.machine.getMachineList",["cate_id"=>2])}}">取消</a>
+                        <a class="btn btn-white" href="{{route('osce.admin.ExamPaperController.getExamList')}}">取消</a>
                     </div>
                 </div>
             </form>

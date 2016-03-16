@@ -14,6 +14,17 @@
         $(function(){
             $(".tag").select2({});
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+            //自动组卷总计
+            function randomCount(){
+                var randomSubject = 0;
+                var randomScore = 0;
+                parent.$('#paper #list-body').find("tr").each(function(){
+                    randomSubject += parseInt($(this).children().eq(3).text());
+                    randomScore += parseInt($(this).children().eq(5).text());
+                });
+                parent.$(".randomSubject").text(randomSubject);
+                parent.$(".randomScore").text(randomScore);
+            }
             $('.form-horizontal').submit(function(){
                 $.post($(this).attr('action'),$(this).serialize(),function(obj){
                     /*给父页面传值*/
@@ -32,7 +43,7 @@
                     now = parseInt(now) + 1;
                     var ordinal = parseInt($("#ordinal").val());
                     if(ordinal > 0 ){
-                        parent.$('#list-body').find("tr").each(function(){
+                        parent.$('#paper #list-body').find("tr").each(function(){
                             if($(this).attr("ordinal") == ordinal){
                                 $(this).html('<td>'+ordinal+'<input name="question[]" type="hidden" value="'+obj+'"/>'+'</td>'+
                                         '<td>'+tpye+'</td>'+
@@ -46,7 +57,6 @@
                                         '</td>');
                             }
                         });
-
                     }else{
                         var html = '<tr ordinal="'+now+'">'+
                                 '<td>'+parseInt(now)+'<input name="question[]" type="hidden" value="'+obj+'"/>'+'</td>'+
@@ -64,6 +74,7 @@
                         parent.$('#list-body').append(html);
                         parent.$('#list-body').attr('index',now);
                     }
+                    randomCount();
                     parent.layer.close(index);
                 });
                 return  false;
