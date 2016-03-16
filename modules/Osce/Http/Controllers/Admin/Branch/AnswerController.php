@@ -75,6 +75,7 @@ class AnswerController extends CommonController
                         'id'=>$v1->id,
                         'number'=>$v1->number,
                         'score'=>$v1->score,
+                        'exam_question_type_id'=>$v1->exam_question_type_id,
                         'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
                     );
                     if($k1+1==1){

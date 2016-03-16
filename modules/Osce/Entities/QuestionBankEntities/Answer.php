@@ -65,6 +65,7 @@ class Answer extends Model
             'exam_category_formal.id as examCategoryFormalId',//正式试题类型id
             'exam_category_formal.name as typeName',//试题类型名称
             'exam_category_formal.score',//单个试题分值
+            'exam_category_formal.exam_question_type_id as examQuestionTypeId',//试题类型id
             'exam_question_formal.name as questionName',//试题名称
             'exam_question_formal.content',//试题内容
             'exam_question_formal.answer',//试题答案
@@ -124,12 +125,12 @@ class Answer extends Model
         $totalScore=0;//考生总分
         if(count($getFormalPaperList)>0){
             foreach($getFormalPaperList as $k=>$v){
-                if($v['examCategoryFormalId']==1){
+                if($v['examQuestionTypeId']==1){
                     //单选题
                     if($v['studentAnswer']==$v['answer']){
                         $totalScore+=$v['score'];
                     }
-                }elseif($v['examCategoryFormalId']==2){
+                }elseif($v['examQuestionTypeId']==2){
                     //多选题
                     //判断考生答案是否包含@符号，有证明考生选择的是多个选项，无证明考生只选择了一个选项
                     if(strstr($v['studentAnswer'],'@')){
@@ -143,7 +144,7 @@ class Answer extends Model
                             $totalScore+=$v['score']/2;
                         }
                     }
-                }elseif($v['examCategoryFormalId']==3){
+                }elseif($v['examQuestionTypeId']==3){
                     //不定性选择题
                     //判断考生答案是否包含@符号，有证明考生选择的是多个选项，无证明考生只选择了一个选项
                     if(strstr($v['studentAnswer'],'@')){
@@ -158,7 +159,7 @@ class Answer extends Model
                         }
                     }
 
-                }elseif($v['examCategoryFormalId']==4){
+                }elseif($v['examQuestionTypeId']==4){
                     //判断题
                     if($v['studentAnswer']==$v['answer']){
                         $totalScore+=$v['score'];
