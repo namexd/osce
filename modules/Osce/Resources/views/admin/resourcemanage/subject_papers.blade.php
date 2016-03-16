@@ -5,11 +5,13 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('osce/admin/subjectManage/subject_manage.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_check_tag'}" />
+
+    <input type="hidden" id="parameter" value="{'pagename':'subject_papers','delUrl':'{{route('osce.admin.ExamPaperController.getDeleteExam')}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -62,15 +64,16 @@
                                             <td>统一试卷</td>
                                         @endif
                                         <td>
-                                            <a href="javascript:void(0)">
-                                        <span class="read state1 detail">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
+        
+                                            <a href="{{route('osce.admin.ExamPaperController.getAddExamPage',['id'=>@$val['id']])}}">
+                                                <span class="read state1 detail">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
                                             </a>
-                                            <a href="{{route('osce.admin.ExamPaperController.getDeleteExam',['id'=>@$val['id']])}}">
-                                        <span class="read state2">
-                                            <i class="fa fa-trash-o fa-2x"></i>
-                                        </span>
+                                            <a href="javascript:void(0)">
+                                                <span class="read state2">
+                                                    <i class="fa fa-trash-o fa-2x" data="{{ @$val['id'] }}"></i>
+                                                </span>
                                             </a>
                                         </td>
                                     </tr>

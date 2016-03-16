@@ -246,9 +246,7 @@ class QuestionBankRepositories  extends BaseRepository
      */
     public function GenerateExamPaper($ExamPaperId){
         $ExamPaper = new ExamPaper;
-        $ExamPaperInfo = $ExamPaper->where('id','=',$ExamPaperId)->with(['ExamPaperStructure'=>function($ExamPaperStructure){
-            $ExamPaperStructure->with('ExamPaperStructureLabel');
-        }])->first();
+        $ExamPaperInfo = $ExamPaper->where('id','=',$ExamPaperId)->first();
         if(count($ExamPaperInfo)>0){
             //随机试卷处理方法
             if($ExamPaperInfo->type == 1){
