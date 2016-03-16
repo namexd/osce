@@ -306,9 +306,12 @@ class ExamQueue extends CommonModel
 
     /**
      * 开始考试时，改变时间和状态
-     * @param  $studentId $stationId
-     * @return
-     * @throws  \Exception
+     * @param $studentId $stationId
+     * @param $stationId
+     * @param $nowTime
+     * @param $teacherId
+     * @return bool
+     * @throws \Exception
      * @author  zhouqiang
      */
 
@@ -320,8 +323,7 @@ class ExamQueue extends CommonModel
         try {
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
-            // 调用锚点方法
-            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime+3*60]);
+
 
 //                查询学生是否已开始考试
             $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
@@ -330,7 +332,6 @@ class ExamQueue extends CommonModel
             }
 //            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
             $status = $examQueue->update(['status' => 2]);
-
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
@@ -348,16 +349,12 @@ class ExamQueue extends CommonModel
                 }
 
                 $lateTime = $nowTime - strtotime($nowQueue->begin_dt);
-                \Log::alert($lateTime . '迟到时间');
                 foreach ($studentTimes as $key => $item) {
                     if ($exam->sequence_mode == 2) {
-
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
-                        \Log::alert($stationTime . '以考站安排');
                     } else {
                         //这是已考场安排的需拿到room_id
                         $stationTime = $this->getRoomStationMaxTime($item->room_id);
-                        \Log::alert($stationTime . '以考场安排');
                     }
 
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
@@ -368,6 +365,7 @@ class ExamQueue extends CommonModel
                             $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $lateTime);
                             $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $lateTime);
                         }
+                        \Log::info('begin_exam', ['begin_dt' => $item->begin_dt, 'end_dt' => $item->end_dt]);
                         if (!$item->save()) {
                             throw new \Exception('队列时间更新失败', -100);
                         }
@@ -389,6 +387,8 @@ class ExamQueue extends CommonModel
                 throw new \Exception('队列状态更新失败', -102);
 
             }
+            // 调用锚点方法
+            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
             $connection->commit();
             return true;
         } catch (\Exception $ex) {
@@ -483,6 +483,7 @@ class ExamQueue extends CommonModel
                         $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $difference);
                         $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $difference);
                     }
+                    \Log::info('band_watch', ['begin_dt' => $item->begin_dt, 'end_dt' => $item->end_dt]);
 
                     $item->status = 0;
 
@@ -634,7 +635,7 @@ class ExamQueue extends CommonModel
                      * 将考试结束的时间写进锚点表里
                      */
                     CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
-                        $teacherId, [strtotime($date)+3*60]);
+                        $teacherId, [strtotime($date)]);
                 }
                 $connection->commit();
                 return $queue;

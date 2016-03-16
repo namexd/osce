@@ -499,6 +499,7 @@ class DrawlotsController extends CommonController
             foreach ($studentObjs as $studentObj) {
                 $studentObj->begin_dt = date('Y-m-d H:i:s', strtotime($studentBeginTime) + $diff);
                 $studentObj->end_dt = date('Y-m-d H:i:s', strtotime($studentEndTime) + $diff);
+                \Log::info('drawlots_time', ['begin_dt' => $studentObj->begin_dt, 'end_dt' => $studentObj->end_dt]);
                 if (!$studentObj->save()) {
                     throw new \Exception('抽签失败！', -1001);
                 }

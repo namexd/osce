@@ -72,12 +72,18 @@ class TopicController extends CommonController
             'content'       =>  'required',
             'score'         =>  'required',
             'description'   =>  'required',
+//            'stem' => 'required',
+//            'equipments' => 'required',
+//            'goods' => 'required'
         ],[
             'title.required'        =>  '名称必填',
             'title.unique'          =>  '该科目已存在',
             'content.required'      =>  '必须新增评分点',
             'score.required'        =>  '分数必填',
             'description.required'  =>  '必须新增考核项',
+//            'stem' => '题干必填',
+//            'equipments' => '所需设备必填',
+//            'goods' => '所需物品必填'
         ]);
 
         $content    = $request  ->get('content');

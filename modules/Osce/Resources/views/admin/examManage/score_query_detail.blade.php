@@ -383,6 +383,7 @@
                             <td>{{$value['tScore']}}分</td>
                             <td>{{$value['score']}}分</td>
                             <td>
+                                @if(count($value['image']) != 0)
                                 <a href="javascript:void(0)">
                                     <span class="read  state1 detail"><i class="fa fa-picture-o fa-2x"></i></span>
                                     <ul class="img" style="display:none;">
@@ -391,6 +392,9 @@
                                         @endforeach
                                     </ul>
                                 </a>
+                                {{--@else--}}
+                                    {{--<span class="read  state1 detail">未上传图片与音频</span>--}}
+                                @endif
                             </td>
                         </tr>
                         @forelse($value['items'] as $k => $item)
