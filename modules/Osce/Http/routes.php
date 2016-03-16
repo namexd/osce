@@ -486,10 +486,10 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 	$exam = new \Modules\Osce\Entities\Exam();
 
 	if($exam->emptyData($exam_id)){
-		return '成功';
+		return '成功-'.rand(1000,9999);
 	}
 
-	return '失败';
+	return '失败-'.rand(1000,9999);
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 
