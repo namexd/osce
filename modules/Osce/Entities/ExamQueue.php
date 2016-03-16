@@ -356,8 +356,8 @@ class ExamQueue extends CommonModel
                 if (is_null($nowQueue)) {
                     throw new \Exception('进入考试失败', -105);
                 }
-
                 $lateTime = $nowTime - strtotime($nowQueue->begin_dt);
+                //判断考生的迟到时间
                 if($lateTime<0){
                     $lateTime=0;
                 }
@@ -366,7 +366,6 @@ class ExamQueue extends CommonModel
                     ->where('student_id', '=', $studentId)
                     ->where('status','=',3)
                     ->git();
-
                 foreach ($studentTimes as $key => $item) {
                     foreach($endQueue as $endQueueTime){
                        if( strtotime($endQueueTime->begin_dt)>strtotime($item->begin_dt)){
