@@ -173,13 +173,32 @@ class IndexController extends CommonController
             );
             $watchModel = new WatchLog();
             $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);//插入使用记录
-            $ExamScreeingStudentId=ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
-            if($ExamScreeingStudentId){
-                ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->update(['is_end'=>0]);
-            }else{
-                ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'signin_dt'=>$updated_at,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);//签到
+            $examScreeningStudent   =   ExamScreeningStudent::where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
 
+            if(is_null($examScreeningStudent))
+            {
+                if(!ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'signin_dt'=>$updated_at,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]))
+                {
+                    throw new \Exception('签到失败');
+                }
             }
+            else
+            {
+                $examScreeningStudent-> is_end   =   0;
+                $examScreeningStudent-> watch_id =   $id;
+                $examScreeningStudent-> signin_dt =  $updated_at;
+                if(!$examScreeningStudent->save())
+                {
+                    throw new \Exception('签到失败');
+                }
+            }
+//            $ExamScreeingStudentId=ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
+//            if($ExamScreeingStudentId){
+//                ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->update(['is_end'=>0]);
+//            }else{
+//                ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'signin_dt'=>$updated_at,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);//签到
+//
+//            }
             ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);//更改考生状态
             Exam::where('id',$exam_id)->update(['status'=>1]);//更改考试状态
             return \Response::json(array('code' => 1));
