@@ -327,15 +327,14 @@
                                     @if(!empty(@$paperDetail['item']))
                                         @foreach(@$paperDetail['item'] as $k=>$detail)
                                             <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$detail['id']}}">
-                                                <td>{{@$k+1}}<input name="question-type[]" type="hidden" value="{{@$detail['type'].'@'.@$detail['score'].'@'.@$detail['child'].'@'.@$detail['id']}}"/></td>
+                                                <td>{{@$k+1}}</td>
                                                 <td>{{@$detail['typename']}}</td>
                                                 <td></td>
                                                 <td>{{@$detail['num']}}</td>
                                                 <td>{{@$detail['score']}}</td>
                                                 <td>{{@$detail['total_score']}}</td>
                                                 <td>
-                                                    <a href="javascript:void(0)"><span class="read  state1 detail"><i data-toggle="modal" data-target="#myModal" class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                                                    <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                 </td>
                                             </tr>

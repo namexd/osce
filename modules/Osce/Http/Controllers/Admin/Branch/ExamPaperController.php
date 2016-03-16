@@ -160,6 +160,12 @@ class ExamPaperController extends CommonController
                     $paperDetail['item'][$k]['child'] = implode(',',$detail['child']->toArray());
                 }
 
+                foreach($paperDetail['exam_paper_structure'] as $kk=>$structure){
+                    foreach($structure['exam_paper_structure_label'] as $structure_label=>$label){
+                        ExamQuestionLabel
+                    }
+                }
+
             }
 
             return view('osce::admin.resourcemanage.subject_papers_add',[
