@@ -41,7 +41,7 @@
                 var oneScore = 0;
                 parent.$('#paper2 #list-body tr').each(function(){
                     if($(this).attr('sequence') == sequence){
-                        parent.$(this).find('input').val(str);
+                        parent.$(this).find('input').val(str+'@'+$(this).attr('data'));
                         parent.$(this).children().eq(2).text(array.length);
                         parent.$(this).children().eq(4).text(array.length*parent.$(this).children().eq(3).text());
                     }

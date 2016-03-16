@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Repositories;
+use Auth;
 use Modules\Osce\Repositories\BaseRepository;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
@@ -265,6 +266,7 @@ class QuestionBankRepositories  extends BaseRepository
                     foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
                         $arr = [];
                         if(count($v->ExamPaperStructureQuestion)){
+                            $arr['id'] = $v['id'];
                             $arr['type'] = $v['exam_question_type_id'];
                             $arr['num'] = $v['num'];
                             $arr['score'] = $v['score'];
@@ -281,4 +283,32 @@ class QuestionBankRepositories  extends BaseRepository
         }
         return   $ExamPaperInfo;
     }
+
+    /**
+     * 检验用户是否是监考老师
+     * @method
+     * @url /osce/
+     * @access public
+     * @return bool
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月16日10:03:13
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function LoginAuth(){
+        $user = Auth::user();
+        $roles = [];
+        if(count($user->roles)>0){
+            $roles = $user
+                ->roles
+                ->pluck('id')
+                ->toArray();
+        }
+        //监考老师 目前的角色id为1
+        if(in_array(1,$roles)){
+            return  $user->id;
+        }else{
+            return  false;
+        }
+    }
+
 }

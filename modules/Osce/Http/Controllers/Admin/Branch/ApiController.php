@@ -7,6 +7,8 @@
  */
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
+use App\Entities\User;
+use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
@@ -15,8 +17,10 @@ use Modules\Osce\Repositories\QuestionBankRepositories;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Exam;
 class ApiController extends CommonController
 {
+    private $name;
     /**
      * @method
      * @url /osce/
@@ -149,13 +153,12 @@ class ApiController extends CommonController
         $PaperPreviewArr['name'] = $request->name;
         $PaperPreviewArr['time'] = $request->time;
 
-        if(!empty($request->question)){
-            foreach($request->question as $k => $v){
-                $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
+        if($type == 1){
+            if(!empty($request->question)){
+                foreach($request->question as $k => $v){
+                    $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
+                }
             }
-        }
-
-        if($type == 1 && !empty($PaperPreviewArr['item'])){
             $ExamQuestion = new ExamQuestion;
             $ExamQuestionType = new ExamQuestionType;
             $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
@@ -206,6 +209,57 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function ExamineeInfo(){
+        $this->name = \Route::currentRouteAction();
         return  view('osce::admin.theoryCheck.theory_check_volidate');
+    }
+
+    /**
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @return $this|\Illuminate\Http\RedirectResponse
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月16日09:49:31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function LoginAuth(Request $request,QuestionBankRepositories $questionBankRepositories){
+        $this   ->validate($request,[
+            'username'  =>  'required',
+            'password'  =>  'required',
+        ]);
+        $username   =   $request    ->  get('username');
+        $password   =   $request    ->  get('password');
+
+        if (Auth::attempt(['username' => $username, 'password' => $password]))
+        {
+            //检验登录的老师是否是监考老师
+            if($userId = $questionBankRepositories->LoginAuth()){
+                //获取本次考试的id
+                $Exam = Exam::where('status','=',1)->select('id')->first();
+                $ExamId = 0;
+                if(count($Exam)>0){
+                    $ExamId = $Exam->pluck('id');
+                }else{
+                    return redirect()->back()->withErrors('没有在进行的考试');
+                }
+
+                //根据监考老师的id和考试id，获取对应的考站id
+                if($ExamId>0){
+
+                }
+
+
+
+                $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
+                return redirect()->route('osce.admin.index');
+            }else{
+                return redirect()->back()->withErrors('你不是监考老师');
+            }
+        }
+        else
+        {
+            return redirect()->back()->withErrors('账号密码错误');
+        }
     }
 }
