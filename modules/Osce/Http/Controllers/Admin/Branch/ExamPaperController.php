@@ -148,9 +148,11 @@ class ExamPaperController extends CommonController
             //根据试卷ID查找试卷基础信息与评分标准
 
             $paperDetail = $QuestionBankRepositories->GenerateExamPaper($paperID);
-            //dd($paperDetail);
+
+
             if($paperDetail){
                 $paperDetail = $paperDetail->toArray();
+                dd($paperDetail);
                 //判断题目类型
                 $questionType = new ExamQuestionType();
                 foreach($paperDetail['item'] as $k=>$detail){
@@ -159,7 +161,7 @@ class ExamPaperController extends CommonController
                 }
 
             }
-            //dd($paperDetail);
+
             return view('osce::admin.resourcemanage.subject_papers_add',[
                 'label'=>$label,
                 'ExamQuestionLabelTypeList'=>$question,
@@ -305,6 +307,7 @@ class ExamPaperController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getAddExams(Request $request,QuestionBankRepositories $QuestionBankRepositories){
+       //dd($request->all());
         //验证试题类型ID
         $this->validate($request,[
             'name'        => 'required',
@@ -556,24 +559,7 @@ class ExamPaperController extends CommonController
                 }
             }
 
-//
-//
-//            0 => array:4 [▼
-//    0 => "1"
-//    1 => "2"
-//    2 => "29,34,35,36,37,38,39,55,57,58"
-//    3 => "27"
-//  ]
-//  1 => array:4 [▼
-//    0 => "2"
-//    1 => "2"
-//    2 => "31,32"
-//    3 => "28"
-//  ]
-//]
-
         }elseif($status == 2 && $status2 == 2){//手动-统一
-dd($request->all());
             //分割字符串-拼合数组
             $questions = Input::get('question-type');
             foreach($questions as $k=>$v){
@@ -593,8 +579,12 @@ dd($request->all());
                     $DB->rollBack();
                     return redirect()->back()->withInput()->withErrors('系统异常');
                 }else{
+                    if(!ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$vv[3])->delete()){
+                        $DB->rollBack();
+                        return redirect()->back()->withInput()->withErrors('系统异常');
+                    }
                     foreach($questionsID as $val){
-                        $structure_question['exam_paper_structure_id'] = $addPaperStructure->id;
+                        $structure_question['exam_paper_structure_id'] = $vv[3];
                         $structure_question['exam_question_id'] = $val;
                         $addStructureQuestion = ExamPaperStructureQuestion::create($structure_question);
                         if(!$addStructureQuestion){
@@ -602,6 +592,7 @@ dd($request->all());
                             return redirect()->back()->withInput()->withErrors('系统异常');
                         }
                     }
+
                 }
             }
         }

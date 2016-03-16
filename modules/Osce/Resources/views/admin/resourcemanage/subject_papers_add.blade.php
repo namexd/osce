@@ -241,8 +241,8 @@
             var editUrl = '{{route('osce.admin.ExamPaperController.getEditExamPaper')}}';
             if(inputVal){
                 $('#sourceForm').attr('action',editUrl);
-                $('.status').attr('disabled',true);
-                $('.status2').attr('disabled',true);
+                $('#status').attr('disabled','disabled');
+                $('#status2').attr('disabled','disabled');
             }
         })
     </script>
@@ -281,7 +281,9 @@
                             <option value="2" @if(@$paperDetail['mode'] == 2)selected="selected" @endif >手工组卷</option>
                         </select>
                     </div>
+                    @if(@$paperDetail['mode'])
                     <input type="hidden" name="status" value="{{@$paperDetail['mode']}}">
+                        @endif
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -293,7 +295,9 @@
                             <option value="2" @if(@$paperDetail['type'] == 2)selected="selected" @endif >统一试卷</option>
                         </select>
                     </div>
+                    @if(@$paperDetail['type'])
                     <input type="hidden" name="status2" value="{{@$paperDetail['type']}}">
+                        @endif
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
