@@ -39,6 +39,101 @@
                     $("#status2").empty().append('<option value="2">统一试卷</option>')
                 }
             });
+            //自动组卷验证
+                function autoValidate(){
+                    $("#sourceForm").bootstrapValidator({
+                        message: 'This value is not valid',
+                        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                            valid: 'glyphicon glyphicon-ok',
+                            invalid: 'glyphicon glyphicon-remove',
+                            validating: 'glyphicon glyphicon-refresh'
+                        },
+                        fields: {/*验证*/
+                            name: {/*键名username和input name值对应*/
+                                message: 'The username is not valid',
+                                validators: {
+                                    notEmpty: {/*非空提示*/
+                                        message: '试卷名称不能为空'
+                                    },
+                                    remote:{
+                                        url: '',//验证地址
+                                        message: '该试卷名称已存在',//提示消息
+                                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                        type: 'POST',//请求方式
+                                        data: function (validator) {
+
+                                        }
+                                    }
+                                }
+                            },
+                            time: {
+                                validators: {
+                                    notEmpty: {/*非空提示*/
+                                        message: '考试时长不能为空'
+                                    },
+                                    callback: {
+                                        message: '考试时长必须是20及以上的整数',
+                                        callback:function(){
+                                            if($("#code").val() >= 20){
+                                                return true;
+                                            }else{
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    })
+                }
+            //手动组卷验证
+            function handValidate(){
+                $("#sourceForm").bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {/*验证*/
+                        name: {/*键名username和input name值对应*/
+                            message: 'The username is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '试卷名称不能为空'
+                                },
+                                remote:{
+                                    url: '',//验证地址
+                                    message: '该试卷名称已存在',//提示消息
+                                    delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                    type: 'POST',//请求方式
+                                    data: function (validator) {
+
+                                    }
+                                }
+                            }
+                        },
+                        time: {
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '考试时长不能为空'
+                                },
+                                callback: {
+                                    message: '考试时长必须是20及以上的整数',
+                                    callback:function(){
+                                        if($("#code").val() >= 20){
+                                            return true;
+                                        }else{
+                                            return false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
             /**
              * 自动组卷页面操作
              */
@@ -268,7 +363,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>考试时长</label>
                     <div class="col-sm-10">
-                        <input type="text"  class="form-control" id="code" name="time" value="{{@$paperDetail['length']}}">
+                        <input type="number" class="form-control" id="code" name="time" value="{{@$paperDetail['length']}}" placeholder="请输入分钟数">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -415,7 +510,7 @@
                 <input type="hidden" name="paperid" value="{{@$paperDetail['id']}}">
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
-                        <button class="btn btn-primary" type="submit">保存</button>
+                        <button class="btn btn-primary" type="submit" disabled>保存</button>
                         <button class="btn btn-primary" id="preview" type="button">预览</button>
                         <a class="btn btn-white" href="{{route('osce.admin.ExamPaperController.getExamList')}}">取消</a>
                     </div>
