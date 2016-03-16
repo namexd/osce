@@ -188,7 +188,7 @@ class ExamLabelController extends CommonController
         ];
         $examTable=new ExamQuestionLabel();
         $add =  $examTable->where('id','=',e(Input::get('id')))->update($data);
-        if($data != false){
+        if($add != false){
 
             return redirect()->back()->withInput()->withErrors('修改成功');
 
