@@ -69,19 +69,10 @@ class AnswerController extends CommonController
                         'exam_question_type_id'=>$v1->exam_question_type_id,
                         'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
                     );
-                    if($k1+1==1){
-                        $examCategoryFormalData[$k1]['name']='一、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
-                    }elseif($k1+1==2){
-                        $examCategoryFormalData[$k1]['name']='二、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
-                    }elseif($k1+1==3){
-                        $examCategoryFormalData[$k1]['name']='三、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
-                    }elseif($k1+1==4){
-                        $examCategoryFormalData[$k1]['name']='四、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
-                    }elseif($k1+1==5){
-                        $examCategoryFormalData[$k1]['name']='五、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
-                    }elseif($k1+1==6){
+                    $examCategoryFormalData[$k1]['name']=$v1->name;
+              /*      if($k1+1==1){
                         $examCategoryFormalData[$k1]['name']='六、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
-                    }
+                    }*/
                     if(count($v1['exam_question_formal'])>0){
                         foreach($v1['exam_question_formal'] as $k2=>$v2){
                             $examCategoryFormalData[$k1]['exam_question_formal'][$k2]=array(
@@ -92,15 +83,15 @@ class AnswerController extends CommonController
                                 'answer' =>$v2->answer,
                                 'parsing' =>$v2->parsing,
                                 'exam_category_formal_id' =>$v2->exam_category_formal_id,
-                                'student_answer' =>$v2->student_answer
-                            ,                            );
-                            $serialNumber[]=($k1+1).'.'.($k2+1);//序列号
+                                'student_answer' =>$v2->student_answer,
+                                );
+                           // $serialNumber[]=($k1+1).'.'.($k2+1);//序列号
                         }
                     }else{
                         $examCategoryFormalData[$k1]['exam_question_formal']='';
                     }
                 }
-                $examCategoryFormalData['serialNumber'] = $serialNumber;
+                //$examCategoryFormalData['serialNumber'] = $serialNumber;
 
             }
         }
