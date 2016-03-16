@@ -12,6 +12,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
 use Modules\Osce\Repositories\QuestionBankRepositories;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Illuminate\Http\Request;
 class ApiController extends CommonController
@@ -25,7 +26,14 @@ class ApiController extends CommonController
      * @date    2016年3月10日14:19:34
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GetEditorExamPaperItem(){
+    public function GetEditorExamPaperItem(QuestionBankRepositories $questionBankRepositories){
+        $question_detail = \Input::get('question_detail','');
+        $questionArr = [];
+        $questionInfo = [];
+        if($question_detail){
+            $questionInfo = $questionBankRepositories->StrToArr($question_detail);
+            $questionArr = $questionBankRepositories->HandlePaperPreviewArr(['0'=>$questionInfo]);
+        }
         //获取题目类型列表
         $examQuestionTypeModel= new ExamQuestionType();
         $examQuestionTypeList = $examQuestionTypeModel->examQuestionTypeList();
@@ -34,11 +42,25 @@ class ApiController extends CommonController
         $examQuestionLabelTypeList = $examQuestionLabelTypeModel->examQuestionLabelTypeList();
         foreach($examQuestionLabelTypeList as $k=>$v){
             $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;
+
+            if(count($questionArr)>0){
+                foreach($questionArr as $val){
+                    if(count($val['child'])>0){
+                        foreach($val['child'] as $key => $value){
+                            if($key == $v['id']){
+                                $examQuestionLabelTypeList[$k]['examQuestionLabelSelectedList'] = $value;
+                            }
+                        }
+                    }
+                }
+            }
         }
-        //dd($examQuestionLabelTypeList);
+        // dd($questionInfo);
         return  view('osce::admin.resourcemanage.subject_papers_add_detail',[
             'examQuestionLabelTypeList'=>$examQuestionLabelTypeList,
-            'examQuestionTypeList'=>$examQuestionTypeList
+            'examQuestionTypeList'=>$examQuestionTypeList,
+            'questionInfo'=>$questionInfo,
+            'ordinal'=>\Input::get('ordinal','')
         ]);
     }
 
@@ -89,7 +111,7 @@ class ApiController extends CommonController
                     1=>empty($request->get('question-number'))?0:$request->get('question-number'),
                     2=>empty($request->get('question-score'))?0:$request->get('question-score')
                 ]
-                ),
+            ),
             '2'=>$LabelTypeStr,
             '3'=>$ExamQuestionLabelStr = implode(',',$request->tag)
         ];
@@ -133,7 +155,7 @@ class ApiController extends CommonController
             }
         }
 
-        if($mode == 1 && !empty($PaperPreviewArr['item'])){
+        if($type == 1 && !empty($PaperPreviewArr['item'])){
             $ExamQuestion = new ExamQuestion;
             $ExamQuestionType = new ExamQuestionType;
             $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
@@ -145,7 +167,44 @@ class ApiController extends CommonController
                     $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
                 }
             }
+        }elseif($type == 2){
+
         }
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
+    }
+
+    /**
+     * @method
+     * @url /osce/
+     * @access public
+     * @param QuestionBankRepositories $questionBankRepositories
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月15日09:22:47
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GenerateExamPaper(QuestionBankRepositories $questionBankRepositories){
+        //\DB::connection('osce_mis')->enableQueryLog();
+        $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper(20);
+        //$queries = \DB::connection('osce_mis')->getQueryLog();
+        $ExamPaperFormal = new ExamPaperFormal;
+        if(count($ExamPaperInfo)>0){
+            $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
+        }else{
+            dd('试卷没有内容');
+        }
+
+    }
+
+    /**
+     * @method
+     * @url /osce/
+     * @access public
+     * @return \Illuminate\View\View
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月14日15:40:51
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ExamineeInfo(){
+        return  view('osce::admin.theoryCheck.theory_check_volidate');
     }
 }

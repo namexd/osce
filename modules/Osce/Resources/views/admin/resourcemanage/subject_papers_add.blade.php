@@ -25,18 +25,23 @@
                     return false;
                 }
             });
+            /**
+             * 手工、自动组卷划分
+             */
             $("#status").change(function(){
                 if($(this).val()=="1"){
                     $("#paper").show();
                     $("#paper2").hide();
-                    $("#status2").removeAttr("disabled");
+                    $("#status2").empty().append('<option value="1">随机试卷</option><option value="2">统一试卷</option>')
                 }else{
                     $("#paper2").show();
                     $("#paper").hide();
-                    $("#status2 option[text='统一试卷']").attr("selected", true);
-                    $("#status2").attr("disabled","disabled");
+                    $("#status2").empty().append('<option value="2">统一试卷</option>')
                 }
-            })
+            });
+            /**
+             * 自动组卷页面操作
+             */
             $("#add-new").click(function(){
                 layer.open({
                     type: 2,
@@ -44,37 +49,50 @@
                     area: ['90%', '530px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}',
+                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}'
                 })
 
-            })
-
-            /**
-             * 手动组卷页面操作
-             */
-            $("#add-new2").click(function(){
-                $("#addForm").show();
-                $("#editForm").hide();
-            })
-
-            $('tbody').on('click','.fa-pencil-square-o',function(){
-                $("#addForm").hide();
-                $("#editForm").show();
-                $(this).parent().parent().parent().parent().attr("sequence");
             });
-            $('.form-horizontal').submit(function(){
+            $('#paper tbody').on('click','.fa-pencil-square-o',function(){
+                var question_detail=$(this).parent().parent().parent().parent().find("input[name='question[]']").val();
+                var ordinal = $(this).parent().parent().parent().parent().attr("ordinal");
+                layer.open({
+                    type: 2,
+                    title: '新增试题组成',
+                    area: ['90%', '600px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}?question_detail='+question_detail+"&ordinal="+ordinal
+                })
+            });
+            /**
+             * 手动组卷情况下现则试题
+             */
+//            统一试卷总计
+            function editOneCount(){
+                var oneSubject = 0;
+                var oneScore = 0;
+                $('#paper2').find('tbody').find("tr").each(function(){
+                    oneScore += parseInt($(this).children().eq(4).text());
+                    oneSubject += parseInt($(this).children().eq(2).text());
+                });
+                $(".oneScore").text(oneScore);
+                $(".oneSubject").text(oneSubject);
+            }
+            $('#addForm').submit(function(){//添加题型
                 var now = $('#paper2').find('tbody').attr('index');
                 now = parseInt(now) + 1;//计数
-                var tpye= $('select[name="question-type"] option:selected').text();//题目类型ID
+                var tpye2= $('select[name="question-type"] option:selected').text();//题目类型名字
+                var tpyeid= $('select[name="question-type"] option:selected').val();//题目类型ID
                 var score=$('input[name="question-score"]').val(); //每题分数
-                var html = '<tr sequence="'+parseInt(now)+'">'+
-                        '<td>'+parseInt(now)+'<input name="question-type[]" type="hidden" value="'+$(this).serialize()+'"/>'+'</td>'+
-                        '<td>'+tpye+'</td>'+
+                var html = '<tr sequence="'+parseInt(now)+'" id="handwork_'+parseInt(now)+'">'+
+                        '<td>'+parseInt(now)+'<input name="question-type[]" type="hidden" value="'+tpyeid+"@"+score+'"/>'+'</td>'+
+                        '<td>'+tpye2+'</td>'+
                         '<td></td>'+
                         '<td>'+score+'</td>'+
                         '<td></td>'+
                         '<td>'+
-                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
+                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i data-toggle="modal" data-target="#myModal" class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
                         '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>'+
                         '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
                         '</td>'+
@@ -84,7 +102,61 @@
                 $('#paper2').find('tbody').attr('index',now);
                 $('.close').trigger('click');
                 return  false;
-            })
+            });
+
+            $('#paper2 tbody').on('click','.fa-cog',function(){//添加题目
+                var  sequence=  $(this).parent().parent().parent().parent().attr("sequence");
+                var question_detail=$(this).parent().parent().parent().parent().find("input[name='question-type[]']").val();
+                var geturl='{{route('osce.admin.ExamPaperController.getExampQuestions')}}?question_detail='+question_detail+"&sequence="+sequence;
+                layer.open({
+                    type: 2,
+                    title: '新增试题组成',
+                    area: ['90%', '600px'],
+                    fix: false, //不固定
+                    maxmin: true,
+                    content:geturl
+                })
+            });
+            // 添加新题型
+            $("#add-new2").click(function(){
+                $("#addForm").show();
+                $("#editForm").hide();
+                $("#addForm")[0].reset();
+            });
+            // 编辑题型
+            $('#paper2 tbody').on('click','.fa-pencil-square-o',function(){
+                $("#addForm").hide();
+                $("#editForm").show();
+               var nowid= $(this).parent().parent().parent().parent().attr("id");
+                var question_detail=$(this).parent().parent().parent().parent().find("input[name='question-type[]']").val();
+                question_detail=question_detail.split("@");
+                $('#typeSelect2').find('option').each(function(){
+                    if($(this).val()==question_detail[0]){
+                        $(this).attr("selected", true);
+                    }
+                });
+                $('input[name="question-score2"]').val(question_detail[1]);
+                $('#editForm').submit(function(){//编辑题型
+                    var new_question_detail="";
+                    for(var i=0; i<question_detail.length; i++){
+                        if(i==1){
+                            question_detail[1]=$('input[name="question-score2"]').val(); //修改每题分数重置
+                        }
+                        if(i==question_detail.length-1){
+                            new_question_detail=new_question_detail+question_detail[i];
+                        }else{
+                            new_question_detail=new_question_detail+question_detail[i]+"@";
+                        }
+                    }
+                    $("#"+nowid).children().find("input[name='question-type[]']").val(new_question_detail);
+                    $("#"+nowid).children().eq(3).text(question_detail[1]);
+                    $("#"+nowid).children().eq(4).text(question_detail[1]*$("#"+nowid).children().eq(2).text());
+                    $('.close').trigger('click');
+                    editOneCount();
+                    return  false;
+                })
+
+            });
 
             /**
              * 删除
@@ -92,98 +164,25 @@
             $('tbody').on('click','.fa-trash-o',function(){
                 $(this).parent().parent().parent().parent().remove();
             });
-            /**
-             * 手动组卷情况下现则试题
-             */
-            $('tbody').on('click','.fa-cog',function(){
-                layer.open({
-                    type: 2,
-                    title: '新增试题组成',
-                    area: ['90%', '530px'],
-                    fix: false, //不固定
-                    maxmin: true,
-                    content: '{{route('osce.admin.ExamPaperController.getExampQuestions')}}?'+$(".form-horizontal").serialize(),
-                })
-            });
-            /**
-             * 考核分数自动加减
-             * @author mao
-             * @version 1.0
-             * @date    2016-01-20
-             */
-            $('tbody').on('change','select',function(){
-                var thisElement = $(this).parent().parent();
-                //改变value值,消除连续变换值的变化
-                var total = 0;//= parseInt(change.val())+parseInt($(this).val());
-                $('.'+className).each(function(key,elem){
-                    if($(elem).attr('parent')==parent){
-                        return;
-                    }else{
-                        total += parseInt($(elem).find('td').eq(2).find('select').val());
-                    }
-                });
-            });
 
-            $('#preview').click(function(){//预览整套试卷
+            /**
+             * 预览整套试卷
+             */
+            $('#preview').click(function(){
                 layer.open({
                     type: 2,
                     title: '新增试题组成',
-                    area: ['90%', '530px'],
+                    area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ApiController.ExamPaperPreview')}}?'+$(".form-horizontal").serialize(),
-                })
+                    content: '{{route('osce.admin.ApiController.ExamPaperPreview')}}?'+$(".form-horizontal").serialize()
+                });
                 return  false;
 
             })
-
 }
         $(function(){
             categories();
-            $.fn.modal.Constructor.prototype.enforceFocus =function(){};
-            /**
-             * 编辑和新增共用了一段代码，这里必须将验证单独拿出
-             * @author mao
-             * @version 1.0
-             * @date    2016-02-19
-             */
-            $('#sourceForm').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*验证*/
-                    title: {/*键名username和input name值对应*/
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '名称不能为空'
-                            },
-                            threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                            remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                                url: "{{route('osce.admin.topic.postNameUnique')}}",//验证地址
-                                message: '名称已经存在',//提示消息
-                                delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                type: 'POST',//请求方式
-                                /*自定义提交数据，默认值提交当前input value*/
-                                data: function(validator) {
-                                    return {
-                                        name: $('#title').val()
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    desc: {
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '描述不能为空'
-                            }
-                        }
-                    }
-                }
-            });
         })
     </script>
 @stop
@@ -199,14 +198,14 @@
         <div class="ibox-content">
             <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.ExamPaperController.getAddExams')}}">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">试卷名称</label>
+                    <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>试卷名称</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="name" name="name">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">考试时长</label>
+                    <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>考试时长</label>
                     <div class="col-sm-10">
                         <input type="text"  class="form-control" id="code" name="time">
                     </div>
@@ -227,7 +226,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">试卷类型</label>
                     <div class="col-sm-10">
-                        <select id="status2"   class="form-control m-b" name="status2">
+                        <select id="status2" class="form-control m-b" name="status2">
                             <option value="1">随机试卷</option>
                             <option value="2">统一试卷</option>
                         </select>
@@ -258,16 +257,19 @@
                                     </tr>
                                     </thead>
                                     <tbody index="0" id="list-body">
-                                        <tr>
-                                            <th>总计</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th>40</th>
-                                            <th>-</th>
-                                            <th>20</th>
-                                            <th></th>
-                                        </tr>
+
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>总计</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="randomSubject">0</td>
+                                            <td></td>
+                                            <td class="randomScore">0</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
 
                             </div>
@@ -292,16 +294,18 @@
                                     </tr>
                                     </thead>
                                     <tbody index="0" id="list-body">
-                                    <tr>
-                                        <th>总计</th>
 
-                                        <th></th>
-                                        <th>40</th>
-                                        <th>-</th>
-                                        <th>20</th>
-                                        <th></th>
-                                    </tr>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>总计</td>
+                                            <td></td>
+                                            <td class="oneSubject">0</td>
+                                            <td></td>
+                                            <td class="oneScore">0</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
 
                             </div>
@@ -323,7 +327,7 @@
 @stop{{-- 内容主体区域 --}}
 
 @section('layer_content')
-    {{--新增表单--}}
+    {{--手工组卷状态下新增试题类型--}}
     <form class="form-horizontal" id="addForm" novalidate="novalidate" method="post" action="{{ route('osce.admin.ExamLabelController.postAddExamQuestionLabel') }}">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -331,16 +335,14 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="col-sm-3 control-label">标签类型：</label>
+                <label class="col-sm-3 control-label">题目类型：</label>
                 <div class="col-sm-9">
                     <select name="question-type" id="typeSelect" class="form-control">
-                        @if(!empty(@$ExamQuestionLabelTypeList))
-                            @foreach(@$ExamQuestionLabelTypeList as $val)
-                                <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                        @if(!empty($ExamQuestionLabelTypeList))
+                            @foreach($ExamQuestionLabelTypeList as $key => $val)
+                                <option value="{{ @$val['id'] }}">{{@$val['name']}}</option>
                             @endforeach
                         @endif
-                            <option value="1">单选题</option>
-                            <option value="2">多选题</option>
                     </select>
                 </div>
             </div>
@@ -365,22 +367,21 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="col-sm-3 control-label">标签类型：</label>
+                <label class="col-sm-3 control-label">题目类型：</label>
                 <div class="col-sm-9">
-                    <select name="question-type" id="typeSelect" class="form-control">
-                        @if(!empty(@$ExamQuestionLabelTypeList))
-                            @foreach(@$ExamQuestionLabelTypeList as $val)
-                                <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                    <select name="question-type2" id="typeSelect2" class="form-control" disabled>
+                        @if(!empty($ExamQuestionLabelTypeList))
+                            @foreach($ExamQuestionLabelTypeList as $key => $val)
+                                <option value="{{ @$val['id'] }}">{{@$val['name']}}</option>
                             @endforeach
                         @endif
-                            <option value="1">单选题</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">每题分数：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="question-score" class="form-control" placeholder="仅支持大于0的正整数">
+                    <input type="text" name="question-score2"  class="form-control" placeholder="仅支持大于0的正整数">
                 </div>
             </div>
         </div>

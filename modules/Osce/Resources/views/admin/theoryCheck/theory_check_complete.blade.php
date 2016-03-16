@@ -2,9 +2,10 @@
 
 @section('only_css')
     <style>
-        /*题目区域外边框*/
+        /*显示区域外边框*/
         .cBorder{border: 1px solid #e7eaec;}
-
+        /*得分*/
+        .showScore{padding: 20px 0 30px;color: #ff0101;}
     </style>
 @stop
 
@@ -36,10 +37,18 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-content text-center p-md">
                         <div class="p-md cBorder mart_10">
-
-
+                            <p class="font18" style="padding-top: 55px;">考试得分</p>
+                            <div class="showScore">
+                                <span class="" style="font-size: 40px;">85</span>
+                                <span class="font16">分</span>
+                            </div>
+                            <div class="timeBox font16">
+                                <span>考试用时：18分钟</span>
+                            </div>
+                            <div class="" style="padding: 70px 0 55px;">
+                                <button class="btn btn-primary">确认</button>
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </div>

@@ -30,38 +30,55 @@
                     var  questionscore=parseInt(typeall[2]);//题目分数
                     var now = parent.$('#list-body').attr('index');
                     now = parseInt(now) + 1;
-                    var html = '<tr>'+
-                            '<td>'+parseInt(now)+'<input name="question[]" type="hidden" value="'+obj+'"/>'+'</td>'+
-                            '<td>'+tpye+'</td>'+
-                            '<td>'+ objvar[0]+'</td>'+
-                            '<td>'+questionnum+'</td>'+
-                            '<td>'+questionscore+'</td>'+
-                            '<td>'+questionnum*questionscore+'</td>'+
-                            '<td>'+
-                            '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
-                            '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                            '</td>'+
-                            '</tr>';
-                    //记录计数
-                    parent.$('#list-body').append(html);
-                    parent.$('#list-body').find('tbody').attr('index',now);
-                    parent.layer.close(index);
-                })
-                return  false;
+                    var ordinal = parseInt($("#ordinal").val());
+                    if(ordinal > 0 ){
+                        parent.$('#list-body').find("tr").each(function(){
+                            if($(this).attr("ordinal") == ordinal){
+                                $(this).html('<td>'+ordinal+'<input name="question[]" type="hidden" value="'+obj+'"/>'+'</td>'+
+                                        '<td>'+tpye+'</td>'+
+                                        '<td>'+ objvar[0]+'</td>'+
+                                        '<td>'+questionnum+'</td>'+
+                                        '<td>'+questionscore+'</td>'+
+                                        '<td>'+questionnum*questionscore+'</td>'+
+                                        '<td>'+
+                                        '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
+                                        '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                        '</td>');
+                            }
+                        });
 
-            })
+                    }else{
+                        var html = '<tr ordinal="'+now+'">'+
+                                '<td>'+parseInt(now)+'<input name="question[]" type="hidden" value="'+obj+'"/>'+'</td>'+
+                                '<td>'+tpye+'</td>'+
+                                '<td>'+ objvar[0]+'</td>'+
+                                '<td>'+questionnum+'</td>'+
+                                '<td>'+questionscore+'</td>'+
+                                '<td>'+questionnum*questionscore+'</td>'+
+                                '<td>'+
+                                '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
+                                '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                '</td>'+
+                                '</tr>';
+                        //记录计数
+                        parent.$('#list-body').append(html);
+                        parent.$('#list-body').attr('index',now);
+                    }
+                    parent.layer.close(index);
+                });
+                return  false;
+            });
             //关闭iframe
             $('#closeIframe').click(function(){
                 parent.layer.close(index);
             });
-
-
         })
     </script>
 @stop
 
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'subject_papers_add}" />
+    <input type="hidden" id="ordinal" value="{{ @$ordinal }}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <form class="form-horizontal" method="post" action="{{ route('osce.admin.ApiController.PostEditorExamPaperItem') }}">
             <div class="modal-body">
@@ -71,7 +88,7 @@
                         <select class="form-control" name="question-type">
                             @if(!empty($examQuestionTypeList))
                                 @foreach($examQuestionTypeList as $key => $val)
-                                    <option value="{{ @$val['id'] }}">{{@$val['name']}}</option>
+                                    <option value="{{ @$val['id'] }}" @if(@$questionInfo['type'] == @$val['id']) selected @endif>{{@$val['name']}}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -83,15 +100,41 @@
                             <label class="col-sm-3 control-label">{{@$sub['name']}}：</label>
                             <div class="col-sm-3">
                                 <select class="form-control" name="label-{{ @$sub['id'] }}">
-                                    <option value="1">包含</option>
-                                    <option value="2">等于</option>
+                                    <option value="1"
+                                            @if(!empty($sub['examQuestionLabelSelectedList']))
+                                                @foreach($sub['examQuestionLabelSelectedList'] as $k => $v)
+                                                    @if('1' == $v['relation'])
+                                                        selected
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                            >包含</option>
+                                    <option value="2"
+                                            @if(!empty($sub['examQuestionLabelSelectedList']))
+                                                @foreach($sub['examQuestionLabelSelectedList'] as $k => $v)
+                                                    @if('2' == $v['relation'])
+                                                        selected
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                            >等于</option>
                                 </select>
                             </div>
                             <div class="col-sm-6">
                                 <select class="form-control tag" name="tag[]" multiple="multiple" style="width: 100%">
                                     @if(!empty($sub['examQuestionLabel']))
                                         @foreach($sub['examQuestionLabel'] as $key => $val)
-                                            <option value="{{ @$val['id'] }}">{{@$val->name}}</option>
+                                            <option value="{{ @$val['id'] }}"
+                                            @if(!empty($sub['examQuestionLabelSelectedList']))
+                                                @foreach($sub['examQuestionLabelSelectedList'] as $k => $v)
+                                                    @if($val['id'] == $v['exam_question_label_id'])
+                                                            selected
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                                >
+                                                {{@$val->name}}
+                                            </option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -102,13 +145,13 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">题目数量：</label>
                     <div class="col-sm-9">
-                        <input name="question-number" type="number" class="form-control" placeholder="仅支持大于0的正整数" />
+                        <input name="question-number" type="number" class="form-control" value="{{@$questionInfo['num']}}" placeholder="仅支持大于0的正整数" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">每题分数：</label>
                     <div class="col-sm-9">
-                        <input name="question-score"  type="number"  class="form-control" placeholder="仅支持大于0的正整数" />
+                        <input name="question-score"  type="number"  class="form-control" value="{{@$questionInfo['score']}}" placeholder="仅支持大于0的正整数" />
                     </div>
                 </div>
             </div>
