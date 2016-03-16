@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
@@ -179,6 +180,7 @@ class ExamPaperController extends CommonController
             'subject_id'        => 'sometimes|integer',
             'ability_id'        => 'sometimes|integer',
             'difficult_id'        => 'sometimes|integer',
+            'question_type'        => 'required|integer',
         ]);
 
         //接收筛选参数
@@ -194,12 +196,14 @@ class ExamPaperController extends CommonController
         if(intval($request -> difficult_id) !== 0){
             array_push($data,intval($request -> difficult_id));
         }
+
+        $question_type = $request->question_type;
         //根据筛选参数查找试题数据
         $ExamQuestion = new ExamQuestion();
 
         $pageIndex = $request->page?$request->page:1;//获取页码
 
-        $questions = $ExamQuestion -> getExamQuestion($data,$pageIndex)->toArray();
+        $questions = $ExamQuestion -> getExamQuestion($data,$pageIndex,$question_type)->toArray();
         //dd($questions);
         foreach($questions['data'] as $k=>$v){
             $label = '';
@@ -244,9 +248,9 @@ class ExamPaperController extends CommonController
         $this->validate($request,[
             'name'        => 'required',
             'time'        => 'required',
-            'status'        => 'required',
+            'status'        => 'required|integer',
             'status2'        => 'required',
-            'question'        => 'required',
+            'question'        => 'sometimes',
         ]);
         $DB = \DB::connection('osce_mis');
         $DB->beginTransaction();
@@ -279,10 +283,13 @@ class ExamPaperController extends CommonController
         }
 
         $examPaperID = $examPaper->id;
+
         $questions = $request->question;//获取标签参数
-        $examPapers = [];
-        foreach($questions as $v){
-            $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
+        if($questions){
+            $examPapers = [];
+            foreach($questions as $v){
+                $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
+            }
         }
 
         if($status == 1 && $status2 == 1){//自动-随机
@@ -339,7 +346,36 @@ class ExamPaperController extends CommonController
 
 
         }elseif($status == 2 && $status2 == 2){//手动-统一
+            //分割字符串-拼合数组
+            $questions = Input::get('question-type');
+            foreach($questions as $k=>$v){
+                $type[] = explode('@',$v);
+            }
 
+            foreach($type as $kk=>$vv){
+                $questionsID = explode(',',$vv[2]);
+                $structure['exam_paper_id'] = $examPaperID;
+                $structure['exam_question_type_id'] = $vv[0];
+                $structure['score'] = $vv[1];
+                $structure['num'] = count($questionsID);
+                $structure['total_score'] = count(explode(',',$vv[2])) * $vv[1];
+                $structure['created_user_id'] = $user->id;
+                $addPaperStructure = ExamPaperStructure::create($structure);
+                if(!$addPaperStructure){
+                    $DB->rollBack();
+                    return redirect()->back()->withInput()->withErrors('系统异常');
+                }else{
+                    foreach($questionsID as $val){
+                        $structure_question['exam_paper_structure_id'] = $addPaperStructure->id;
+                        $structure_question['exam_question_id'] = $val;
+                        $addStructureQuestion = ExamPaperStructureQuestion::create($structure_question);
+                        if(!$addStructureQuestion){
+                            $DB->rollBack();
+                            return redirect()->back()->withInput()->withErrors('系统异常');
+                        }
+                    }
+                }
+            }
         }
 
         $DB->commit();
@@ -424,9 +460,30 @@ class ExamPaperController extends CommonController
      * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExampQuestions(){
+    public function getExampQuestions(Request $request){
+        if($request->question_detail){
+            $questionIDstr = explode('@',$request->question_detail);
+            if(count($questionIDstr) > 2){
+                $questionIDs = $questionIDstr[2];
+            }else{
+                $questionIDs = '';
+            }
+
+        }
         $label = $this->getExamLabelGet();//标签
-        //dd($label);
-        return view('osce::admin.resourcemanage.subject_papers_add_detail2',['labelList'=>$label]);
+        if($request->question_detail){
+            $type = explode('@',$request->question_detail);
+        }
+       // dd($request->all());
+        return view('osce::admin.resourcemanage.subject_papers_add_detail2',[
+            'labelList'=>$label,
+            'question_type'=>$type[0],
+            'sequence'=>$request->sequence,
+            'question_detail' => $request->question_detail,
+            'questionIDs' => $questionIDs,
+            'labelList'=>$label,
+        ]);
     }
 }
+
+
