@@ -69,7 +69,7 @@
                                 <div class="wizard">
                                 @if(!empty($val["exam_question_formal"]))
                                     @foreach($val["exam_question_formal"] as $k => $val2 )
-                                        <h1>1</h1>
+                                        <h1>{{$val2["serialNumber"]}} </h1>
                                         <div class="step-content">
                                             <div class="allSubject">
                                                 <div class="subjectBox">
