@@ -73,7 +73,6 @@ class AnswerController extends CommonController
                     if(count($v1['exam_question_formal'])>0){
                         foreach($v1['exam_question_formal'] as $k2=>$v2){
                             $examCategoryFormalData[]=array(
-
                                 'id' =>$v2->id,//正式试题信息
                                 'name' =>($k2+1).'、'.$v2->name,
                                 'exam_question_id' =>$v2->exam_question_id,
@@ -85,16 +84,28 @@ class AnswerController extends CommonController
                                 'serialNumber' =>($k1+1).'.'.($k2+1),
 
                                 'examCategoryFormalId'=>$v1->id,//正式试题分类信息
+                                'examCategoryFormalName'=>$v1->name,
                                 'examCategoryFormalNumber'=>$v1->number,
                                 'examCategoryFormalScore'=>$v1->score,
-                                'examCategoryFormalName'=>$v1->name,
                                 'exam_question_type_id'=>$v1->exam_question_type_id,
                                 'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
                                 );
                         }
-                    }else{
-                        $examCategoryFormalData[$k1]['exam_question_formal']='';
                     }
+                }
+            }
+        }
+
+        if(count($examCategoryFormalData)>0){
+            foreach($examCategoryFormalData as $key=>$val){
+                if($val['exam_question_type_id']==1){//单选
+                    $examCategoryFormalData[$key]['examCategoryFormalName']='一、'.$val['examCategoryFormalName'];
+                }elseif($val['exam_question_type_id']==2){//多选
+                    $examCategoryFormalData[$key]['examCategoryFormalName']='二、'.$val['examCategoryFormalName'];
+                }elseif($val['exam_question_type_id']==3){//不定向
+                    $examCategoryFormalData[$key]['examCategoryFormalName']='三、'.$val['examCategoryFormalName'];
+                }elseif($val['exam_question_type_id']==4){//判断
+                    $examCategoryFormalData[$key]['examCategoryFormalName']='四、'.$val['examCategoryFormalName'];
                 }
             }
         }
