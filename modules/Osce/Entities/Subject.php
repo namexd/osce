@@ -20,7 +20,7 @@ class Subject extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['title', 'score', 'sort', 'status', 'created_user_id', 'description'];
+    protected $fillable = ['title', 'score', 'sort', 'status', 'created_user_id', 'description', 'goods', 'stem', 'equipments'];
     public $search = [];
 
     public function user(){

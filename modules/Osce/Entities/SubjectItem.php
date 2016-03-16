@@ -129,6 +129,7 @@ class SubjectItem extends CommonModel
             }else{
                 $child  =   [];
                 $itemScore  =   $score[$prointIndex];
+//                dd($prointIndex, $answer, $score);
                 $itemAnswer =   array_key_exists($prointIndex,$answer)? $answer[$prointIndex]:[];
                 $itemScore  =   array_key_exists($prointIndex,$score)?   $score[$prointIndex]:[];
                 foreach($item as $contentIndex  =>  $content){
