@@ -28,7 +28,7 @@
 @section('only_js')
     <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
-    <script src="{{asset('osce/admin/plugins/js/plugins/staps/jquery.steps.min.js')}}"></script>
+    <script src="{{asset('msc/admin/plugins/js/plugins/staps/jquery.stepschange.js')}}"></script>
     <script>
         $(document).ready(function() {
             $(".wizard").steps();
