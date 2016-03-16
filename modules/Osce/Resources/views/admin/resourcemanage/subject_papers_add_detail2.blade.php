@@ -17,7 +17,6 @@
             var difficult_id = $('#status2 option:selected').val();
             var page = 1;
             var array = [];//用于存放已选中的checkbook
-            var number = [];//用于存放已选中的checkbook-最终选中的
             var question_type = $('.question_type').val();
             var sequence = $('.sequence').val();
             var question_detail = $('.question_detail').val();
@@ -36,7 +35,8 @@
             //console.log(questionArr);
             $('.form-horizontal').submit(function(){
                 getCheckboxVal();
-                str = question_detail+'@'+array;
+                var detail = question_detail.split('@');
+                str = detail[0]+'@'+detail[1]+'@'+array;
                 parent.$('#list-body tr').each(function(){
                     if($(this).attr('sequence') == sequence){
                         parent.$(this).find('input').val(str);
@@ -63,7 +63,7 @@
             $('#search').click(function(){
 
                 //获取筛选条件
-                getexamquestions(subject_id,ability_id,difficult_id,pagequestion_type,sequence,questionArr);
+                getexamquestions(subject_id,ability_id,difficult_id,page,pagequestion_type,sequence,questionArr);
             });
 
 
@@ -75,7 +75,8 @@
             })
 
             //获取列表数据
-            function getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,questionArr){
+            function getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,array,questionArr){
+                //console.log(array);
                 $.ajax({
                     type: "GET",
                     url: "{{route('osce.admin.ExamPaperController.getExamQuestions')}}",
@@ -94,7 +95,7 @@
                                         //alert(1);
                                         str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon check" data="'+this.id+'">';
                                     }else{
-                                        // alert(2);
+//                                        // alert(2);
                                         str +='<tr><td><label class="check_label checkbox_input"><div class="check_icon" data="'+this.id+'">';
                                     }
                                 }

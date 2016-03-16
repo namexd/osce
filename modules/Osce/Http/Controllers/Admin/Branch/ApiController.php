@@ -137,7 +137,7 @@ class ApiController extends CommonController
             'time'        => 'required',
             'status'        => 'required|integer',
             'status2'        => 'required|integer',
-            'question'        => 'required|array',
+            //'question'        => 'required|array',
         ]);
         //（1.包含，2.等于）
 
@@ -169,6 +169,7 @@ class ApiController extends CommonController
             }
         }elseif($type == 2){
 
+            dd($request->all());
         }
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
