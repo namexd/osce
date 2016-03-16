@@ -18,8 +18,6 @@
 @stop
 
 
-
-
 @section('content')
 <input type="hidden" id="parameter" value="{'pagename':'sbject_manage','del':'{{route('osce.admin.topic.getDelTopic')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">

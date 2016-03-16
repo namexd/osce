@@ -29,10 +29,6 @@
 </style>
 @stop
 
-
-
-
-
 @section('only_js')
 <script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script> 
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
