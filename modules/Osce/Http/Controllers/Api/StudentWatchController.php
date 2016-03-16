@@ -112,6 +112,7 @@ class StudentWatchController extends CommonController
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
+        dd($examQueueCollect);
         if(is_null($examQueueCollect)){
             $code = -1;
             $data['title'] = '学生队列信息不正确';
