@@ -257,6 +257,10 @@ class StudentWatchController extends CommonController
         else
         {
 
+            //调用状态为1的方法
+            $this->getStatusWaitExam($nextExamQueue);
+
+
             if(!is_null($nextExamQueue->station))
             {
 
