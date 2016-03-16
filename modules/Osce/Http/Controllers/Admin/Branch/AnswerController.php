@@ -121,16 +121,15 @@ class AnswerController extends CommonController
         }
 
         $this->validate($request, [
-           // 'examPaperFormalId'=>'required|integer',//正式的试卷表id
-           // 'examQuestionFormalId'=>'required|integer',//正式的试题表id
+           // 'examPaperFormalId'=>'required|integer',//正式试卷id
+           // 'examQuestionFormalId'=>'required|integer',//正式试题id
             'studentAnswer'        => 'sometimes|array',
         ]);
         $data =array(
             'id' =>$request->input('examQuestionFormalId'), //正式试题id
             'student_answer' =>$request->input('studentAnswer'), //考生答案
         );
-        //$examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
-        $examPaperFormalId =1; //正式的试卷表id
+
         $answerModel = new Answer();
         //提交过来的数据格式
         $case = array(
@@ -159,8 +158,15 @@ class AnswerController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function selectGrade($examPaperFormalId=1)
+    public function selectGrade(Request $request)
     {
+
+        $this->validate($request, [
+            // 'examPaperFormalId'=>'required|integer',//正式的试卷id
+
+        ]);
+        //$examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
+        $examPaperFormalId =1; //正式的试卷表id
         $answerModel = new Answer();
         //保存成功，调用查询该考生成绩的方法
         $examPaperFormalData = $answerModel->selectGrade($examPaperFormalId);
