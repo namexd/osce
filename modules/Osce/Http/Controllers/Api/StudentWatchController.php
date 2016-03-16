@@ -112,7 +112,6 @@ class StudentWatchController extends CommonController
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
-        dd($examQueueCollect);
         if(is_null($examQueueCollect)){
             $code = -1;
             $data['title'] = '学生队列信息不正确';
@@ -330,15 +329,20 @@ class StudentWatchController extends CommonController
         $item   =   array_shift($items);
 
         //判断前面是否有人考试
-        $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
-            ->where('station_id','=',$item->station_id)
-            ->whereBetween('status', [1, 2])
-            ->count();
-                dump($examStudent,'判定考试中人');
-
+        if(empty($item->station_id)){
+            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_id','=', $item->exam_id)
+                ->whereBetween('status', [1, 2])
+                ->count();
+        }else{
+            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_id','=', $item->exam_id)
+                ->where('station_id','=',$item->station_id)
+                ->whereBetween('status', [1, 2])
+                ->count();
+        }
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
-        dump($studentnum,$item,'前面人数');
           if($examStudent == 0){
 
               $willStudents =$studentnum;
@@ -351,7 +355,7 @@ class StudentWatchController extends CommonController
         $examtimes = date('H:i', (strtotime($item->begin_dt)));
         //判断进入如的考场教室名字
         $examRoomName = $item->room->name;
-        if($willStudents>=0){
+        if($willStudents>0){
 
             $data =[
                 'code'=> 1,
@@ -389,8 +393,6 @@ class StudentWatchController extends CommonController
         }
         return $data;
    }
-
-
     private function getWillStudent($item){
         $studentNum=0;
         $willStudents =  ExamQueue::where('room_id', '=', $item->room_id)
@@ -399,7 +401,6 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
-         dump($willStudents,'denadia');
           foreach($willStudents as $key=>$willStudent){
 
               if($willStudent->student_id == $item->student_id){
@@ -408,7 +409,6 @@ class StudentWatchController extends CommonController
                   continue;
               }
           }
-        dump($studentNum, 'key');
         return $studentNum;
     }
 
