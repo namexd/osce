@@ -556,9 +556,24 @@ class ExamPaperController extends CommonController
                 }
             }
 
+//
+//
+//            0 => array:4 [▼
+//    0 => "1"
+//    1 => "2"
+//    2 => "29,34,35,36,37,38,39,55,57,58"
+//    3 => "27"
+//  ]
+//  1 => array:4 [▼
+//    0 => "2"
+//    1 => "2"
+//    2 => "31,32"
+//    3 => "28"
+//  ]
+//]
 
         }elseif($status == 2 && $status2 == 2){//手动-统一
-
+dd($request->all());
             //分割字符串-拼合数组
             $questions = Input::get('question-type');
             foreach($questions as $k=>$v){
