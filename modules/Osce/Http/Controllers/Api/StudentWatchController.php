@@ -257,25 +257,32 @@ class StudentWatchController extends CommonController
         else
         {
 
-            if(!is_null($nextExamQueue->station))
-            {
+            //调用状态为1的方法
+            $nextData=$this->getStatusWaitExam($examQueueCollect);
+            if($nextData['willStudents']==0){
+                if(!is_null($nextExamQueue->station))
+                {
 
-                $data = [
-                    'code'=> 5,
-                    'title' => '当前考站考试完成，进入下一场考试考站名',
-                    'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
-                ];
+                    $data = [
+                        'code'=> 5,
+                        'title' => '当前考站考试完成，进入下一场考试考站名',
+                        'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
+                    ];
+                }
+                else
+                {
+                    $data = [
+                        'code'=> 5,
+                        'title' => '当前考站考试完成，进入下一场考试考场名',
+                        'nextExamName' =>$nextExamQueue->room->name,
+                    ];
+                }
+
+                return $data;
             }
-            else
-            {
-                $data = [
-                    'code'=> 5,
-                    'title' => '当前考站考试完成，进入下一场考试考场名',
-                    'nextExamName' =>$nextExamQueue->room->name,
-                ];
-            }
+
         }
-        return $data;
+       return $nextData;
     }
 
     private function  getExamComplete($examQueue){
@@ -318,7 +325,6 @@ class StudentWatchController extends CommonController
         }
 
     }
-
     //判断腕表提醒状态为0时
     private function getStatusWaitExam($examQueueCollect){
         $items   =   array_where($examQueueCollect,function($key,$value){
@@ -330,11 +336,18 @@ class StudentWatchController extends CommonController
         $item   =   array_shift($items);
 
         //判断前面是否有人考试
-        $examStudent = ExamQueue::where('room_id', '=', $item->room_id)->where('station_id','=',$item->station_id)
-            ->whereBetween('status', [1, 2])
-            ->count();
-
-
+        if(empty($item->station_id)){
+            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_id','=', $item->exam_id)
+                ->whereBetween('status', [1, 2])
+                ->count();
+        }else{
+            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_id','=', $item->exam_id)
+                ->where('station_id','=',$item->station_id)
+                ->whereBetween('status', [1, 2])
+                ->count();
+        }
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
           if($examStudent == 0){
@@ -349,7 +362,7 @@ class StudentWatchController extends CommonController
         $examtimes = date('H:i', (strtotime($item->begin_dt)));
         //判断进入如的考场教室名字
         $examRoomName = $item->room->name;
-        if($willStudents>=0){
+        if($willStudents>0){
 
             $data =[
                 'code'=> 1,
@@ -387,8 +400,6 @@ class StudentWatchController extends CommonController
         }
         return $data;
    }
-
-
     private function getWillStudent($item){
         $studentNum=0;
         $willStudents =  ExamQueue::where('room_id', '=', $item->room_id)
@@ -397,9 +408,8 @@ class StudentWatchController extends CommonController
             ->where('status','=',0)
             ->orderBy('begin_dt', 'asc')
             ->get();
-
           foreach($willStudents as $key=>$willStudent){
-//
+
               if($willStudent->student_id == $item->student_id){
                   $studentNum=$key;
                   continue;
