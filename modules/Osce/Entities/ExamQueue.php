@@ -326,12 +326,21 @@ class ExamQueue extends CommonModel
 
 
 //                查询学生是否已开始考试
-            $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
+            $examQueue = ExamQueue::where('student_id', '=', $studentId)
+                ->where('station_id', '=', $stationId)
+                ->whereIn('status',[1,2])
+                ->first();
+            if(is_null($examQueue)){
+                throw new \Exception('该学生还没有抽签', -107);
+            }
             if ($examQueue->status == 2) {
                 return true;
             }
-//            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
-            $status = $examQueue->update(['status' => 2]);
+
+//            修改队列状态
+            $examQueue->status=2;
+            $status = $examQueue->save();
+
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
@@ -349,7 +358,21 @@ class ExamQueue extends CommonModel
                 }
 
                 $lateTime = $nowTime - strtotime($nowQueue->begin_dt);
+                if($lateTime<0){
+                    $lateTime=0;
+                }
+                //拿到状态为三的队列
+                $endQueue =ExamQueue::where('exam_id','=',$exam->id)
+                    ->where('student_id', '=', $studentId)
+                    ->where('status','=',3)
+                    ->git();
+
                 foreach ($studentTimes as $key => $item) {
+                    foreach($endQueue as $endQueueTime){
+                       if( strtotime($endQueueTime->begin_dt)>strtotime($item->begin_dt)){
+                           throw new \Exception('当前队列开始时间不正确',-108);
+                       }
+                    }
                     if ($exam->sequence_mode == 2) {
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
                     } else {
@@ -362,6 +385,7 @@ class ExamQueue extends CommonModel
                             $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
                             $item->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
                         } else {
+
                             $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $lateTime);
                             $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $lateTime);
                         }
@@ -371,8 +395,10 @@ class ExamQueue extends CommonModel
                         }
                     } else {
                         //查询到考站的标准时间
-                        $ExamTime = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=',
-                            $stationId)->first();
+                        $ExamTime = ExamQueue::where('student_id', '=', $studentId)
+                            ->where('station_id', '=', $stationId)
+                            ->where('status', '=', 2)
+                            ->first();
                         if (is_null($ExamTime)) {
                             throw new \Exception('没有找到对应的队列信息', -104);
                         }
