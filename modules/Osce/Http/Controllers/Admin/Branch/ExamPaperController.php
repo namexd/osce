@@ -215,16 +215,38 @@ class ExamPaperController extends CommonController
 
                     if($kk <= 3){
                         $label .= $vv['exam_question_label']['name'].',';
-
                     }
+
                 }
                 $questions['data'][$k]['label'] = trim($label,',');
             }
 
             //continue;
         }
-        //dd($question);
+        //重新定义数组，方便排序
+        $newQuestions = array();
+        $newQuestions = $questions;
+        $newQuestions['data'] = array();
+       // dd($request->questionArr);
+        if($request->questionArr){
+            foreach($questions['data'] as $key=>$qq){
+
+                if(in_array($qq['id'],$request->questionArr)){
+
+                    array_unshift($newQuestions['data'],$questions['data'][$key]);
+                    //dd($newQuestions['data']);
+                }else{
+                    array_push($newQuestions['data'],$questions['data'][$key]);
+                }
+               // var_dump($request->questionArr);
+                //dd($newQuestions);
+            }
+            $questions = null;
+            $questions = $newQuestions;
+        }
+
         if($questions){
+
             return $this->success_data($questions);
         }else{
             return $this->success_data('',0,'error');
@@ -351,7 +373,6 @@ class ExamPaperController extends CommonController
             foreach($questions as $k=>$v){
                 $type[] = explode('@',$v);
             }
-
             foreach($type as $kk=>$vv){
                 $questionsID = explode(',',$vv[2]);
                 $structure['exam_paper_id'] = $examPaperID;
