@@ -173,8 +173,8 @@ class IndexController extends CommonController
             );
             $watchModel = new WatchLog();
             $watchModel->historyRecord($data,$student_id,$exam_id,$exam_screen_id);//插入使用记录
-            $examScreeningStudent   =   ExamScreeningStudent::where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
 
+            $examScreeningStudent   =   ExamScreeningStudent::where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
             if(is_null($examScreeningStudent))
             {
                 if(!ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'signin_dt'=>$updated_at,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]))

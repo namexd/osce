@@ -218,6 +218,8 @@ class StudentWatchController extends CommonController
            return $data;
 
     }
+
+
     //判断腕表提醒状态为3时
     private function getStatusThreeExam($examQueueCollect){
         $nextExamQueue  =   '';
@@ -257,26 +259,34 @@ class StudentWatchController extends CommonController
         else
         {
 
-            if(!is_null($nextExamQueue->station))
-            {
+            //调用状态为1的方法
+            $nextData=$this->getStatusWaitExam($examQueueCollect);
+            if($nextData['willStudents']==0){
+                if(!is_null($nextExamQueue->station))
+                {
 
-                $data = [
-                    'code'=> 5,
-                    'title' => '当前考站考试完成，进入下一场考试考站名',
-                    'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
-                ];
+                    $data = [
+                        'code'=> 5,
+                        'title' => '当前考站考试完成，进入下一场考试考站名',
+                        'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
+                    ];
+                }
+                else
+                {
+                    $data = [
+                        'code'=> 5,
+                        'title' => '当前考站考试完成，进入下一场考试考场名',
+                        'nextExamName' =>$nextExamQueue->room->name,
+                    ];
+                }
+
+                return $data;
             }
-            else
-            {
-                $data = [
-                    'code'=> 5,
-                    'title' => '当前考站考试完成，进入下一场考试考场名',
-                    'nextExamName' =>$nextExamQueue->room->name,
-                ];
-            }
+
         }
-        return $data;
+        return $nextData;
     }
+
 
     private function  getExamComplete($examQueue){
 
