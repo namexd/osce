@@ -106,7 +106,9 @@ class AnswerController extends CommonController
                     $examCategoryFormalData[$key]['examCategoryFormalName']='三、'.$val['examCategoryFormalName'];
                 }elseif($val['exam_question_type_id']==4){//判断
                     $examCategoryFormalData[$key]['examCategoryFormalName']='四、'.$val['examCategoryFormalName'];
+                    $examCategoryFormalData[$key]['content']=array('0'=>0,'1'=>1);
                 }
+
             }
         }
         //dd($examCategoryFormalData);
@@ -128,12 +130,12 @@ class AnswerController extends CommonController
     public function postSaveAnswer(Request $request)
     {
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
-        if($systemTimeStart){
+     /*   if($systemTimeStart){
             //设置时间周期为不超过两分钟
             if(time()-$systemTimeStart>120){
                 return response()->json(['status'=>'1','info'=>'超时']);
             }
-        }
+        }*/
 
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
@@ -146,12 +148,63 @@ class AnswerController extends CommonController
             'examPaperFormalId'=>'1',
             'actualLength'=>30,
             'examQuestionFormalInfo'=>array(
-                '0'=>array('examQuestionFormalId'=>1,'studentAnswer'=>'B'),
-                '1'=>array('examQuestionFormalId'=>2,'studentAnswer'=>'B@C@D'),
-                '2'=>array('examQuestionFormalId'=>3,'studentAnswer'=>'B@C'),
-                '3'=>array('examQuestionFormalId'=>4,'studentAnswer'=>'1'),
+                '0'=>array('examQuestionFormalId'=>1,'examQuestionTypeId'=>1,'studentAnswer'=>'0'),//试题id，试题类型，考生答案
+                '1'=>array('examQuestionFormalId'=>2,'examQuestionTypeId'=>2,'studentAnswer'=>'0@1@3'),
+                '2'=>array('examQuestionFormalId'=>3,'examQuestionTypeId'=>3,'studentAnswer'=>'1@2'),
+                '3'=>array('examQuestionFormalId'=>4,'examQuestionTypeId'=>4,'studentAnswer'=>'1'),
             )
         );
+        foreach($case['examQuestionFormalInfo'] as $k=>$v){
+            $newStudentAnswer='';
+            $studentAnswer = explode('@',$v['studentAnswer']);
+            foreach($studentAnswer as $val){
+                if($v['examQuestionTypeId']=='4'){//判断题
+                    $newStudentAnswer = $val;
+                }else{
+                    if($val=='0'){
+                        if($newStudentAnswer){
+                            $newStudentAnswer.='@A';
+                        }else{
+                            $newStudentAnswer ='A';
+                        }
+                    }elseif($val=='1'){
+                        if($newStudentAnswer){
+                            $newStudentAnswer.='@B';
+                        }else{
+                            $newStudentAnswer ='B';
+                        }
+                    }elseif($val=='2'){
+                        if($newStudentAnswer){
+                            $newStudentAnswer.='@C';
+                        }else{
+                            $newStudentAnswer ='C';
+                        }
+                    }elseif($val=='3'){
+                        if($newStudentAnswer){
+                            $newStudentAnswer.='@D';
+                        }else{
+                            $newStudentAnswer ='D';
+                        }
+                    }elseif($val=='4'){
+                        if($newStudentAnswer){
+                            $newStudentAnswer.='@E';
+                        }else{
+                            $newStudentAnswer ='E';
+                        }
+                    }elseif($val=='5'){
+                        if($newStudentAnswer){
+                            $newStudentAnswer.='@F';
+                        }else{
+                            $newStudentAnswer ='F';
+                        }
+                    }
+                }
+
+            }
+            $case['examQuestionFormalInfo'][$k]['studentAnswer']=$newStudentAnswer;
+
+        }
+        dd($case);
         //保存考生答案
         $answerModel = new Answer();
         //$result = $answerModel->saveAnswer($data);
