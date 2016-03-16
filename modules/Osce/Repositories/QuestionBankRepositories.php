@@ -265,6 +265,7 @@ class QuestionBankRepositories  extends BaseRepository
                     foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
                         $arr = [];
                         if(count($v->ExamPaperStructureQuestion)){
+                            $arr['id'] = $v['id'];
                             $arr['type'] = $v['exam_question_type_id'];
                             $arr['num'] = $v['num'];
                             $arr['score'] = $v['score'];

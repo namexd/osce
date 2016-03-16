@@ -92,7 +92,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('exampaper/exam-questions',['uses'=>'ExamPaperController@getExamQuestions','as'=>'osce.admin.ExamPaperController.getExamQuestions']);
         //试卷管理-新增试卷操作
         Route::post('exampaper/add-exams',['uses'=>'ExamPaperController@getAddExams','as'=>'osce.admin.ExamPaperController.getAddExams']);
-
+        //试卷管理-修改试卷
+        Route::post('exampaper/edit-exam-paper',['uses'=>'ExamPaperController@getEditExamPaper','as'=>'osce.admin.ExamPaperController.getEditExamPaper']);
         //题库管理列表
         Route::get('examQuestion/examQuestion-list',['uses'=>'ExamQuestionController@showExamQuestionList','as'=>'osce.admin.ExamQuestionController.showExamQuestionList']);
 
