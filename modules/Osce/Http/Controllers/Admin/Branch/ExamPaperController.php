@@ -152,7 +152,7 @@ class ExamPaperController extends CommonController
 
             if($paperDetail){
                 $paperDetail = $paperDetail->toArray();
-                dd($paperDetail);
+                //dd($paperDetail);
                 //判断题目类型
                 $questionType = new ExamQuestionType();
                 foreach($paperDetail['item'] as $k=>$detail){
