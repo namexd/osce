@@ -139,14 +139,13 @@ class AnswerController extends CommonController
 
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-            'actualLength' =>$request->input('actualLength'), //考试用时
+            'actualLength' =>time()-$systemTimeStart, //考试用时
             'examQuestionFormalInfo' >$request->input('examQuestionFormalInfo'),//正式试题信息
         );
 
         //提交过来的数据格式
         $case = array(
-            'examPaperFormalId'=>'1',
-            'actualLength'=>30,
+            'examPaperFormalId'=>'1',//试卷id
             'examQuestionFormalInfo'=>array(
                 '0'=>array('examQuestionFormalId'=>1,'examQuestionTypeId'=>1,'studentAnswer'=>'0'),//试题id，试题类型，考生答案
                 '1'=>array('examQuestionFormalId'=>2,'examQuestionTypeId'=>2,'studentAnswer'=>'0@1@3'),
