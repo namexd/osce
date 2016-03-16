@@ -62,10 +62,10 @@
                                             <td>统一试卷</td>
                                         @endif
                                         <td>
-                                            <a href="javascript:void(0)">
-                                        <span class="read state1 detail">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
+                                            <a href="{{route('osce.admin.ExamPaperController.getAddExamPage',['id'=>@$val['id']])}}">
+                                                <span class="read state1 detail">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
                                             </a>
                                             <a href="{{route('osce.admin.ExamPaperController.getDeleteExam',['id'=>@$val['id']])}}">
                                         <span class="read state2">
