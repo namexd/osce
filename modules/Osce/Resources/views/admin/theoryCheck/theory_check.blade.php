@@ -31,7 +31,7 @@
     <script src="{{asset('osce/admin/plugins/js/plugins/staps/jquery.steps.min.js')}}"></script>
     <script>
         $(document).ready(function() {
-            $("#wizard").steps();
+            $(".wizard").steps();
         });
     </script>
 @stop
@@ -48,17 +48,53 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins" style="margin-bottom: 0;">
                     <div class="ibox-content text-center p-md">
-                        <h2>2016年第一期OSCE考试理论考试</h2>
+                        <h2>{{$examPaperFormalData["name"]}}</h2>
                         <span>考试时间：</span>
-                        <span class="checkTime">20分钟</span>
+                        <span class="checkTime">{{$examPaperFormalData["length"]}}分钟</span>
                         <span style="margin-left: 1em;">总分：</span>
-                        <span class="score">100分</span>
+                        <span class="score">{{$examPaperFormalData["totalScore"]}}分</span>
                     </div>
                 </div>
             </div>
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content text-left p-md">
+                        @if(!empty($examCategoryFormalData))
+                            @foreach(@$examCategoryFormalData as $val )
+                                <div class="bigTitle">
+                                    <span class="font20">{{@$val["name"]}}</span>
+                                    <span style="margin-left: 1em;">共<span class="subjectNum">{{@$val["number"]}}</span>题，</span>
+                                    <span>每题<span class="subjectScore">{{@$val["score"]}}</span>分</span>
+                                </div>
+                                <div class="wizard">
+                                @if(!empty($val["exam_question_formal"]))
+                                    @foreach($val["exam_question_formal"] as $k => $val2 )
+                                        <h1>1</h1>
+                                        <div class="step-content">
+                                            <div class="allSubject">
+                                                <div class="subjectBox">
+                                                    <span class="font20 subjectNo"></span>
+                                                    <span class="font20 marl_10 subjectContent">{{ $val2["name"]}}</span>
+                                                </div>
+                                                <div class="answerBox">
+                                                    @if(!empty($val2["content"]))
+                                                        @foreach($val2["content"] as $k=> $val3 )
+                                                            <label class="check_label checkbox_input mart_20 check_top" style="">
+                                                                <div class="check_icon check_other"></div>
+                                                                <input type="checkbox" name="nosureAnswer"  value={{$k}}>
+                                                                <span class="marl_10 answer">{{@$val3}}</span>
+                                                            </label>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                                </div>
+                            @endforeach
+                        @endif
+
                         <div class="bigTitle">
                             <span class="font20">单选题</span>
                             <span style="margin-left: 1em;">共<span class="subjectNum">5</span>题，</span>
@@ -80,159 +116,6 @@
                                     <span class="haveChoose left chooseOne">1.1</span>
                                     <span class="nowChoose left chooseOne">1.2</span>
                                     <span class="waitChoose left chooseOne">1.3</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="wizard">
-                            <h1>1</h1>
-                            <div class="step-content">
-                                <div class="allSubject">
-                                    <div class="subjectBox">
-                                        <span class="font20 subjectNo">1.1</span>
-                                        <span class="font20 marl_10 subjectContent">下列感染中，不具有传染性的是？</span>
-                                    </div>
-                                    <div class="answerBox">
-                                        <label class="check_label checkbox_input mart_20 check_top" style="">
-                                            <div class="check_icon check_other"></div>
-                                            <input type="checkbox" name="nosureAnswer"  value="A">
-                                            <span class="check_name">A</span>
-                                            <span class="marl_10 answer">隐形感染</span>
-                                        </label>
-                                        <label class="radio_label mart_20 check_top">
-                                            <div class="radio_icon left" ></div>
-                                            <input type="radio" name="oneAnswer" value="B">
-                                            <span class="radio_name">B</span>
-                                            <span class="marl_10 answer">显性感染</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <h1>2</h1>
-                            <div class="allSubject">
-                                <div class="subjectBox">
-                                    <span class="font20 subjectNo">1.1</span>
-                                    <span class="font20 marl_10 subjectContent">下列感染中，不具有传染性的是？</span>
-                                </div>
-                                <div class="answerBox">
-                                    <label class="check_label checkbox_input mart_20 check_top" style="">
-                                        <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="nosureAnswer"  value="A">
-                                        <span class="check_name">A</span>
-                                        <span class="marl_10 answer">隐形感染</span>
-                                    </label>
-                                    <label class="radio_label mart_20 check_top">
-                                        <div class="radio_icon left" ></div>
-                                        <input type="radio" name="oneAnswer" value="B">
-                                        <span class="radio_name">B</span>
-                                        <span class="marl_10 answer">显性感染</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <h1>3</h1>
-                            <div class="allSubject">
-                                <div class="subjectBox">
-                                    <span class="font20 subjectNo">1.1</span>
-                                    <span class="font20 marl_10 subjectContent">下列感染中，不具有传染性的是？</span>
-                                </div>
-                                <div class="answerBox">
-                                    <label class="check_label checkbox_input mart_20 check_top" style="">
-                                        <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="nosureAnswer"  value="A">
-                                        <span class="check_name">A</span>
-                                        <span class="marl_10 answer">隐形感染</span>
-                                    </label>
-                                    <label class="radio_label mart_20 check_top">
-                                        <div class="radio_icon left" ></div>
-                                        <input type="radio" name="oneAnswer" value="B">
-                                        <span class="radio_name">B</span>
-                                        <span class="marl_10 answer">显性感染</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <h1>4</h1>
-                            <div class="allSubject">
-                                <div class="subjectBox">
-                                    <span class="font20 subjectNo">1.1</span>
-                                    <span class="font20 marl_10 subjectContent">下列感染中，不具有传染性的是？</span>
-                                </div>
-                                <div class="answerBox">
-                                    <label class="check_label checkbox_input mart_20 check_top" style="">
-                                        <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="nosureAnswer"  value="A">
-                                        <span class="check_name">A</span>
-                                        <span class="marl_10 answer">隐形感染</span>
-                                    </label>
-                                    <label class="radio_label mart_20 check_top">
-                                        <div class="radio_icon left" ></div>
-                                        <input type="radio" name="oneAnswer" value="B">
-                                        <span class="radio_name">B</span>
-                                        <span class="marl_10 answer">显性感染</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <h1>5</h1>
-                            <div class="allSubject">
-                                <div class="subjectBox">
-                                    <span class="font20 subjectNo">1.1</span>
-                                    <span class="font20 marl_10 subjectContent">下列感染中，不具有传染性的是？</span>
-                                </div>
-                                <div class="answerBox">
-                                    <label class="check_label checkbox_input mart_20 check_top" style="">
-                                        <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="nosureAnswer"  value="A">
-                                        <span class="check_name">A</span>
-                                        <span class="marl_10 answer">隐形感染</span>
-                                    </label>
-                                    <label class="radio_label mart_20 check_top">
-                                        <div class="radio_icon left" ></div>
-                                        <input type="radio" name="oneAnswer" value="B">
-                                        <span class="radio_name">B</span>
-                                        <span class="marl_10 answer">显性感染</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <h1>6</h1>
-                            <div class="allSubject">
-                                <div class="subjectBox">
-                                    <span class="font20 subjectNo">1.1</span>
-                                    <span class="font20 marl_10 subjectContent">下列感染中，不具有传染性的是？</span>
-                                </div>
-                                <div class="answerBox">
-                                    <label class="check_label checkbox_input mart_20 check_top" style="">
-                                        <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="nosureAnswer"  value="A">
-                                        <span class="check_name">A</span>
-                                        <span class="marl_10 answer">隐形感染</span>
-                                    </label>
-                                    <label class="radio_label mart_20 check_top">
-                                        <div class="radio_icon left" ></div>
-                                        <input type="radio" name="oneAnswer" value="B">
-                                        <span class="radio_name">B</span>
-                                        <span class="marl_10 answer">显性感染</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <h1>7</h1>
-                            <div class="allSubject">
-                                <div class="subjectBox">
-                                    <span class="font20 subjectNo">1.1</span>
-                                    <span class="font20 marl_10 subjectContent">下列感染中，不具有传染性的是？</span>
-                                </div>
-                                <div class="answerBox">
-                                    <label class="check_label checkbox_input mart_20 check_top" style="">
-                                        <div class="check_icon check_other"></div>
-                                        <input type="checkbox" name="nosureAnswer"  value="A">
-                                        <span class="check_name">A</span>
-                                        <span class="marl_10 answer">隐形感染</span>
-                                    </label>
-                                    <label class="radio_label mart_20 check_top">
-                                        <div class="radio_icon left" ></div>
-                                        <input type="radio" name="oneAnswer" value="B">
-                                        <span class="radio_name">B</span>
-                                        <span class="marl_10 answer">显性感染</span>
-                                    </label>
                                 </div>
                             </div>
                         </div>
