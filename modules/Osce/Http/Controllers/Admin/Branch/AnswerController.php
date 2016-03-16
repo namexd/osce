@@ -73,7 +73,6 @@ class AnswerController extends CommonController
                     if(count($v1['exam_question_formal'])>0){
                         foreach($v1['exam_question_formal'] as $k2=>$v2){
                             $examCategoryFormalData[]=array(
-
                                 'id' =>$v2->id,//正式试题信息
                                 'name' =>($k2+1).'、'.$v2->name,
                                 'exam_question_id' =>$v2->exam_question_id,
@@ -84,17 +83,29 @@ class AnswerController extends CommonController
                                 'student_answer' =>$v2->student_answer,
                                 'serialNumber' =>($k1+1).'.'.($k2+1),
 
-                                'examCategoryFormalId'=>$v1->id,//正式试题类型信息
+                                'examCategoryFormalId'=>$v1->id,//正式试题分类信息
+                                'examCategoryFormalName'=>$v1->name,
                                 'examCategoryFormalNumber'=>$v1->number,
                                 'examCategoryFormalScore'=>$v1->score,
-                                'examCategoryFormalName'=>$v1->name,
                                 'exam_question_type_id'=>$v1->exam_question_type_id,
                                 'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
                                 );
                         }
-                    }else{
-                        $examCategoryFormalData[$k1]['exam_question_formal']='';
                     }
+                }
+            }
+        }
+
+        if(count($examCategoryFormalData)>0){
+            foreach($examCategoryFormalData as $key=>$val){
+                if($val['exam_question_type_id']==1){//单选
+                    $examCategoryFormalData[$key]['examCategoryFormalName']='一、'.$val['examCategoryFormalName'];
+                }elseif($val['exam_question_type_id']==2){//多选
+                    $examCategoryFormalData[$key]['examCategoryFormalName']='二、'.$val['examCategoryFormalName'];
+                }elseif($val['exam_question_type_id']==3){//不定向
+                    $examCategoryFormalData[$key]['examCategoryFormalName']='三、'.$val['examCategoryFormalName'];
+                }elseif($val['exam_question_type_id']==4){//判断
+                    $examCategoryFormalData[$key]['examCategoryFormalName']='四、'.$val['examCategoryFormalName'];
                 }
             }
         }
@@ -117,33 +128,37 @@ class AnswerController extends CommonController
     public function postSaveAnswer(Request $request)
     {
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
-        //设置时间周期为不超过两分钟
-        if(time()-$systemTimeStart>120){
-            return response()->json(['status'=>'1','info'=>'超时']);
+        if($systemTimeStart){
+            //设置时间周期为不超过两分钟
+            if(time()-$systemTimeStart>120){
+                return response()->json(['status'=>'1','info'=>'超时']);
+            }
         }
 
-        $this->validate($request, [
-           // 'examPaperFormalId'=>'required|integer',//正式试卷id
-           // 'examQuestionFormalId'=>'required|integer',//正式试题id
-            'studentAnswer'        => 'sometimes|array',
-        ]);
         $data =array(
-            'id' =>$request->input('examQuestionFormalId'), //正式试题id
-            'student_answer' =>$request->input('studentAnswer'), //考生答案
+            'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
+            'actualLength' =>$request->input('actualLength'), //考试用时
+            'examQuestionFormalInfo' >$request->input('examQuestionFormalInfo'),//正式试题信息
         );
 
-        $answerModel = new Answer();
         //提交过来的数据格式
         $case = array(
-            '0'=>array('examQuestionFormalId'=>1,'studentAnswer'=>'B'),
-            '1'=>array('examQuestionFormalId'=>2,'studentAnswer'=>'B@C@D'),
-            '2'=>array('examQuestionFormalId'=>3,'studentAnswer'=>'B@C'),
-            '3'=>array('examQuestionFormalId'=>4,'studentAnswer'=>'1'),
+            'examPaperFormalId'=>'1',
+            'actualLength'=>30,
+            'examQuestionFormalInfo'=>array(
+                '0'=>array('examQuestionFormalId'=>1,'studentAnswer'=>'B'),
+                '1'=>array('examQuestionFormalId'=>2,'studentAnswer'=>'B@C@D'),
+                '2'=>array('examQuestionFormalId'=>3,'studentAnswer'=>'B@C'),
+                '3'=>array('examQuestionFormalId'=>4,'studentAnswer'=>'1'),
+            )
         );
         //保存考生答案
+        $answerModel = new Answer();
         //$result = $answerModel->saveAnswer($data);
         $result=true;
         if($result){
+            //删除session
+            \Session::forget('systemTimeStart');
             return response()->json(['status'=>'2','info'=>'保存成功']);
         }else{
             return response()->json(['status'=>'3','info'=>'保存失败']);
