@@ -58,7 +58,7 @@
                 var ordinal = $(this).parent().parent().parent().parent().attr("ordinal");
                 layer.open({
                     type: 2,
-                    title: '新增试题组成',
+                    title: '编辑试题组成',
                     area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
@@ -68,19 +68,37 @@
             /**
              * 手动组卷情况下现则试题
              */
-//            统一试卷总计
+//            统一试卷总计封装
             function editOneCount(){
                 var oneSubject = 0;
                 var oneScore = 0;
-                $('#paper2').find('tbody').find("tr").each(function(){
+                $('#paper2 tbody').find("tr").each(function(){
                     oneScore += parseInt($(this).children().eq(4).text());
                     oneSubject += parseInt($(this).children().eq(2).text());
                 });
                 $(".oneScore").text(oneScore);
                 $(".oneSubject").text(oneSubject);
             }
+            //自动组卷封装
+            function randomCount(){
+                var randomSubject = 0;
+                var randomScore = 0;
+                $('#paper #list-body').find("tr").each(function(){
+                    randomSubject += parseInt($(this).children().eq(3).text());
+                    randomScore += parseInt($(this).children().eq(5).text());
+                });
+                $(".randomSubject").text(randomSubject);
+                $(".randomScore").text(randomScore);
+            }
             $('#addForm').submit(function(){//添加题型
-                var now = $('#paper2').find('tbody').attr('index');
+                var now = 0;
+                var length = $('#list-body tr').length;//修改时获取tr数量
+                if(length){
+                    now = length;
+                }else{
+                    now = $('#paper2').find('tbody').attr('index');
+                }
+
                 now = parseInt(now) + 1;//计数
                 var tpye2= $('select[name="question-type"] option:selected').text();//题目类型名字
                 var tpyeid= $('select[name="question-type"] option:selected').val();//题目类型ID
@@ -88,9 +106,9 @@
                 var html = '<tr sequence="'+parseInt(now)+'" id="handwork_'+parseInt(now)+'">'+
                         '<td>'+parseInt(now)+'<input name="question-type[]" type="hidden" value="'+tpyeid+"@"+score+'"/>'+'</td>'+
                         '<td>'+tpye2+'</td>'+
-                        '<td></td>'+
+                        '<td>0</td>'+
                         '<td>'+score+'</td>'+
-                        '<td></td>'+
+                        '<td>0</td>'+
                         '<td>'+
                         '<a href="javascript:void(0)"><span class="read  state1 detail"><i data-toggle="modal" data-target="#myModal" class="fa fa-pencil-square-o fa-2x"></i></span></a>'+
                         '<a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>'+
@@ -101,6 +119,7 @@
                 $('#paper2').find('tbody').append(html);
                 $('#paper2').find('tbody').attr('index',now);
                 $('.close').trigger('click');
+                editOneCount();
                 return  false;
             });
 
@@ -159,10 +178,18 @@
             });
 
             /**
-             * 删除
+             * 手工组卷的删除
              */
-            $('tbody').on('click','.fa-trash-o',function(){
+            $('#paper2 tbody').on('click','.fa-trash-o',function(){
                 $(this).parent().parent().parent().parent().remove();
+                editOneCount();
+            });
+            /**
+             * 自动组卷的删除
+             */
+            $('#paper tbody').on('click','.fa-trash-o',function(){
+                $(this).parent().parent().parent().parent().remove();
+                randomCount();
             });
 
             /**
@@ -183,6 +210,40 @@
 }
         $(function(){
             categories();
+            if($("#status").val()=="1"){
+                $("#paper").show();
+                $("#paper2").hide();
+                var randomSubject = 0;
+                var randomScore = 0;
+                $('#paper #list-body').find("tr").each(function(){
+                    randomSubject += parseInt($(this).children().eq(3).text());
+                    randomScore += parseInt($(this).children().eq(5).text());
+                });
+                $(".randomSubject").text(randomSubject);
+                $(".randomScore").text(randomScore);
+            }else{
+                $("#paper2").show();
+                $("#paper").hide();
+                var oneSubject = 0;
+                var oneScore = 0;
+                $('#paper2 tbody').find("tr").each(function(){
+                    oneScore += parseInt($(this).children().eq(4).text());
+                    oneSubject += parseInt($(this).children().eq(2).text());
+                });
+                $(".oneScore").text(oneScore);
+                $(".oneSubject").text(oneSubject);
+
+            }
+
+            //当页面加载完，获取第一个input的值，判断是否是修改
+            var inputVal = $('#name').val();
+
+            var editUrl = '{{route('osce.admin.ExamPaperController.getEditExamPaper')}}';
+            if(inputVal){
+                $('#sourceForm').attr('action',editUrl);
+                $('.status').attr('disabled',true);
+                $('.status2').attr('disabled',true);
+            }
         })
     </script>
 @stop
@@ -200,14 +261,14 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>试卷名称</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="name" name="name">
+                        <input type="text" class="form-control" id="name" name="name" value="{{@$paperDetail['name']}}">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>考试时长</label>
                     <div class="col-sm-10">
-                        <input type="text"  class="form-control" id="code" name="time">
+                        <input type="text"  class="form-control" id="code" name="time" value="{{@$paperDetail['length']}}">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -216,10 +277,11 @@
                     <label class="col-sm-2 control-label">组卷方式</label>
                     <div class="col-sm-10">
                         <select id="status"   class="form-control m-b" name="status">
-                            <option value="1">自动组卷</option>
-                            <option value="2">手工组卷</option>
+                            <option value="1" @if(@$paperDetail['mode'] == 1)selected="selected" @endif >自动组卷</option>
+                            <option value="2" @if(@$paperDetail['mode'] == 2)selected="selected" @endif >手工组卷</option>
                         </select>
                     </div>
+                    <input type="hidden" name="status" value="{{@$paperDetail['mode']}}">
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -227,10 +289,11 @@
                     <label class="col-sm-2 control-label">试卷类型</label>
                     <div class="col-sm-10">
                         <select id="status2" class="form-control m-b" name="status2">
-                            <option value="1">随机试卷</option>
-                            <option value="2">统一试卷</option>
+                            <option value="1" @if(@$paperDetail['type'] == 1)selected="selected" @endif >随机试卷</option>
+                            <option value="2" @if(@$paperDetail['type'] == 2)selected="selected" @endif >统一试卷</option>
                         </select>
                     </div>
+                    <input type="hidden" name="status2" value="{{@$paperDetail['type']}}">
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
@@ -294,7 +357,22 @@
                                     </tr>
                                     </thead>
                                     <tbody index="0" id="list-body">
-
+                                    @if(!empty(@$paperDetail['item']))
+                                        @foreach(@$paperDetail['item'] as $k=>$detail)
+                                            <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$detail['id']}}">
+                                                <td>{{@$k+1}}<input name="question-type[]" type="hidden" value="{{@$detail['type'].'@'.@$detail['score'].'@'.@$detail['child'].'@'.@$detail['id']}}"/></td>
+                                                <td>{{@$detail['typename']}}</td>
+                                                <td>{{@$detail['num']}}</td>
+                                                <td>{{@$detail['score']}}</td>
+                                                <td>{{@$detail['total_score']}}</td>
+                                                <td>
+                                                    <a href="javascript:void(0)"><span class="read  state1 detail"><i data-toggle="modal" data-target="#myModal" class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
+                                                    <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        @endif
                                     </tbody>
                                     <tfoot>
                                         <tr>
@@ -314,11 +392,13 @@
 
                     </div>
                 </div>
+                {{--修改时，存试卷paperID--}}
+                <input type="hidden" name="paperid" value="{{@$paperDetail['id']}}">
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
                         <button class="btn btn-primary" type="submit">保存</button>
                         <button class="btn btn-primary" id="preview" type="button">预览</button>
-                        <a class="btn btn-white" href="{{route("osce.admin.machine.getMachineList",["cate_id"=>2])}}">取消</a>
+                        <a class="btn btn-white" href="{{route('osce.admin.ExamPaperController.getExamList')}}">取消</a>
                     </div>
                 </div>
             </form>

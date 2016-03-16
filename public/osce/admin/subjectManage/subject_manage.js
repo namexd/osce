@@ -9,7 +9,7 @@ $(function(){
         case "subject_check_tag":subject_check_tag();break;//考核标签
         case "subject_manage":subject_manage();break;//题库管理
         case "subject_manage_add":subject_manage_add();break;//题库管理新增
-        //case "subject_manage_edit":subject_manage_edit();break;//题库管理编辑
+        case "subject_papers":subject_papers();break;//试卷管理
     }
 });
 
@@ -522,7 +522,19 @@ function subject_manage_add(){
 
     });
 }
-
+//试卷管理
+function subject_papers(){
+    $(".fa-trash-o").click(function(){
+        var url = pars.delUrl;
+        var id = $(this).attr("data");
+        layer.confirm('是否确定删除该试卷？',{
+            title:'删除',
+            btn: ['确定','取消']
+        },function(){
+            location.href=url+"?id="+id;
+        })
+    });
+}
 
 
 
