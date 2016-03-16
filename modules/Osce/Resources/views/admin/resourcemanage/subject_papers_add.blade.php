@@ -79,6 +79,17 @@
                 $(".oneScore").text(oneScore);
                 $(".oneSubject").text(oneSubject);
             }
+            //自动组卷封装
+            function randomCount(){
+                var randomSubject = 0;
+                var randomScore = 0;
+                $('#paper #list-body').find("tr").each(function(){
+                    randomSubject += parseInt($(this).children().eq(3).text());
+                    randomScore += parseInt($(this).children().eq(5).text());
+                });
+                $(".randomSubject").text(randomSubject);
+                $(".randomScore").text(randomScore);
+            }
             $('#addForm').submit(function(){//添加题型
                 var now = $('#paper2').find('tbody').attr('index');
                 now = parseInt(now) + 1;//计数
@@ -160,17 +171,18 @@
             });
 
             /**
-             * 手工的删除
+             * 手工组卷的删除
              */
             $('#paper2 tbody').on('click','.fa-trash-o',function(){
                 $(this).parent().parent().parent().parent().remove();
                 editOneCount();
             });
             /**
-             * 自动的删除
+             * 自动组卷的删除
              */
             $('#paper tbody').on('click','.fa-trash-o',function(){
                 $(this).parent().parent().parent().parent().remove();
+                randomCount();
             });
 
             /**
