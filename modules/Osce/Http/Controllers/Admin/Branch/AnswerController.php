@@ -16,6 +16,8 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionFormal;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 
+
+
 /**考试答题控制器
  * Class Answer
  * @package Modules\Osce\Http\Controllers\Admin\Branch
@@ -33,6 +35,8 @@ class AnswerController extends CommonController
      */
     public function formalPaperList()
     {
+
+        \Session::put('systemTimeStart',time());//存入当前系统时间
         $answer = new Answer();
         //获取该理论考试相关信息
         $list = $answer->getFormalPaper();
@@ -124,6 +128,12 @@ class AnswerController extends CommonController
      */
     public function postSaveAnswer(Request $request)
     {
+        $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
+        //设置时间周期为不超过两分钟
+        if(time()-$systemTimeStart>120){
+            return response()->json(['status'=>'1','info'=>'超时']);
+        }
+
         $this->validate($request, [
            // 'examQuestionFormalId'=>'required|integer',//正式的试题表
             'studentAnswer'        => 'sometimes|array',
@@ -144,9 +154,9 @@ class AnswerController extends CommonController
         //$result = $answerModel->saveAnswer($data);
         $result=true;
         if($result){
-            return response()->json(true);
+            return response()->json(['status'=>'2','info'=>'保存成功']);
         }else{
-            return response()->json(false);
+            return response()->json(['status'=>'3','info'=>'保存失败']);
         }
     }
     public function selectGrade()
