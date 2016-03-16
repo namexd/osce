@@ -149,8 +149,43 @@ class ExamPaperController extends CommonController
 
             $paperDetail = $QuestionBankRepositories->GenerateExamPaper($paperID);
 
+            if(count($paperDetail)>0){
+                if(count($paperDetail->ExamPaperStructure)>0){
+                    $arr = [];
+                    foreach($paperDetail->ExamPaperStructure as $key => $val){
+                        if(count($val->structure_label)>0){
+                            $arr[] = $val;
+                        }
+                    }
+                    $paperDetail['item'] = $QuestionBankRepositories->HandlePaperPreviewArr($arr);
+                    dd($paperDetail);
+                    if(count($paperDetail['item'])>0){
 
-            if($paperDetail){
+                        $item = [];
+                        foreach($paperDetail['item'] as $k =>$v){
+                            $data = [];
+                            $data['question-type'] = $v['question_type'];
+                            $data['questionNumber'] = $v['question_num'];
+                            $data['questionScore'] = $v['question_score'];
+                            $data['tag'] = $this->GetExamQuestionLabelId($v['child']);
+                            if(count($v['child'])){
+                                foreach($v['child'] as $key => $val){
+                                    $data['label-'.$key] = $val[0]['relation'];
+                                }
+                            }
+                            $v['str'] = $QuestionBankRepositories->ArrToStr($data);
+                            $array = explode('@',$QuestionBankRepositories->ArrToStr($data));
+                            $v['strName'] = $array[0];
+                            $item[] = $v;
+                        }
+                        $paperDetail['item'] = $item;
+                    }
+                    dd($paperDetail);
+                }
+
+            }
+
+/*            if($paperDetail){
                 $paperDetail = $paperDetail->toArray();
                 //dd($paperDetail);
                 //判断题目类型
@@ -160,13 +195,16 @@ class ExamPaperController extends CommonController
                     $paperDetail['item'][$k]['child'] = implode(',',$detail['child']->toArray());
                 }
 
-                foreach($paperDetail['exam_paper_structure'] as $kk=>$structure){
-                    foreach($structure['exam_paper_structure_label'] as $structure_label=>$label){
-                        $paperDetail['exam_paper_structure'][$kk]['exam_paper_structure_label']['labname'] = ExamQuestionLabel::where('id','=',$label['exam_question_label_id'])->pluck('name');
-                    }
-                }
+                dd($paperDetail);
+//                foreach($paperDetail['exam_paper_structure'] as $kk=>$structure){
+//                    foreach($structure['exam_paper_structure_label'] as $structure_label=>$label){
+//                        $paperDetail['exam_paper_structure'][$kk]['exam_paper_structure_label']['labname'] = ExamQuestionLabel::where('id','=',$label['exam_question_label_id'])->pluck('name');
+//                    }
+//                }
+//
+//                dd($paperDetail);
 
-            }
+            }*/
 
             return view('osce::admin.resourcemanage.subject_papers_add',[
                 'label'=>$label,
@@ -707,6 +745,33 @@ class ExamPaperController extends CommonController
             'questionIDs' => $questionIDs,
             'labelList'=>$label,
         ]);
+    }
+
+    /**
+     * 获取试题标签id
+     * @url       GET /osce/admin/exampaper/examp-questions
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetExamQuestionLabelId($obj){
+        $IdArr = [];
+        if(count($obj)>0){
+
+            foreach($obj as $k => $v){
+                $IdArr = array_merge($IdArr,collect($v)->pluck('exam_question_label_id')->toArray());
+            }
+
+            return  $IdArr;
+        }else{
+            return  $IdArr;
+        }
+
     }
 }
 
