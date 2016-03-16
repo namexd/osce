@@ -31,7 +31,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.systemManage.system_help');
+        return view('osce::admin.examManage.exam_remind');
     }
 
     /**

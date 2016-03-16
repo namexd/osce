@@ -400,6 +400,8 @@ class StudentWatchController extends CommonController
         }
         return $data;
    }
+
+    
     private function getWillStudent($item){
         $studentNum=0;
         $willStudents =  ExamQueue::where('room_id', '=', $item->room_id)
