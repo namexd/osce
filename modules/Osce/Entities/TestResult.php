@@ -48,8 +48,7 @@ class TestResult extends CommonModel
         $connection->beginTransaction();
         try {
             //判断成绩是否已提交过
-             $ExamResult=$this->getRemoveScore($data['station_id'],$data['student_id'],$data['exam_screening_id']);
-
+             $ExamResult=$this->getRemoveScore($data);
 //            $examResult = $this->where('student_id', '=', $data['student_id'])
 //                ->where('exam_screening_id', '=', $data['exam_screening_id'])
 //                ->where('station_id', '=', $data['station_id'])
@@ -126,16 +125,16 @@ class TestResult extends CommonModel
     }
 
     //删除已提交过得成绩
-    private function getRemoveScore($stationId,$studentId,$examscreeningId){
+    private function getRemoveScore($data){
         //判断成绩是否已提交过
         try{
-        $examResult = $this->where('student_id', '=',$stationId )
-            ->where('exam_screening_id', '=', $studentId)
-            ->where('station_id', '=',$examscreeningId)
+        $examResult = $this->where('student_id', '=',$data['student_id'] )
+            ->where('exam_screening_id', '=', $data['exam_screening_id'])
+            ->where('station_id', '=',$data['station_id'])
             ->first();
             if($examResult){
           //拿到考试结果id去exam_score中删除数据
-                if(!$examResult->examScore()->delete())
+                if(!$examResult->examScore()->delect())
                 {
                     throw new \Exception('舍弃考试评分详情失败',-1100);
                 }

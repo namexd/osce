@@ -323,8 +323,7 @@ class ExamQueue extends CommonModel
         try {
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
-            // 调用锚点方法
-            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime+3*60]);
+
 
 //                查询学生是否已开始考试
             $examQueue = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)->first();
@@ -333,7 +332,6 @@ class ExamQueue extends CommonModel
             }
 //            $status = ExamQueue::where('student_id', '=', $studentId)->where('station_id', '=', $stationId)
             $status = $examQueue->update(['status' => 2]);
-
             if ($status) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
@@ -389,6 +387,8 @@ class ExamQueue extends CommonModel
                 throw new \Exception('队列状态更新失败', -102);
 
             }
+            // 调用锚点方法
+            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
             $connection->commit();
             return true;
         } catch (\Exception $ex) {
@@ -635,7 +635,7 @@ class ExamQueue extends CommonModel
                      * 将考试结束的时间写进锚点表里
                      */
                     CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
-                        $teacherId, [strtotime($date)+3*60]);
+                        $teacherId, [strtotime($date)]);
                 }
                 $connection->commit();
                 return $queue;
