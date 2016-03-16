@@ -84,6 +84,7 @@ class AnswerController extends CommonController
                                 'parsing' =>$v2->parsing,
                                 'exam_category_formal_id' =>$v2->exam_category_formal_id,
                                 'student_answer' =>$v2->student_answer,
+                                'serialNumber' =>($k1+1).'.'.($k2+1),
                                 );
                            // $serialNumber[]=($k1+1).'.'.($k2+1);//序列号
                         }
