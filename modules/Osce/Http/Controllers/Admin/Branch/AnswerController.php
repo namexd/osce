@@ -62,21 +62,19 @@ class AnswerController extends CommonController
                 }
                 //转换为数组格式
                 foreach($examCategoryFormalList as $k1=>$v1){
-                    $examCategoryFormalData[$k1]= array(
+            /*        $examCategoryFormalData[$k1]= array(
                         'id'=>$v1->id,
+                        'name'=>$v1->name,
                         'number'=>$v1->number,
                         'score'=>$v1->score,
                         'exam_question_type_id'=>$v1->exam_question_type_id,
                         'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
-                    );
-                    $examCategoryFormalData[$k1]['name']=$v1->name;
-              /*      if($k1+1==1){
-                        $examCategoryFormalData[$k1]['name']='六、'.$v1->name.'（共'.$v1->number.'题，每题'.$v1->score.'分）';
-                    }*/
+                    );*/
                     if(count($v1['exam_question_formal'])>0){
                         foreach($v1['exam_question_formal'] as $k2=>$v2){
-                            $examCategoryFormalData[$k1]['exam_question_formal'][$k2]=array(
-                                'id' =>$v2->id,
+                            $examCategoryFormalData[]=array(
+
+                                'id' =>$v2->id,//正式试题信息
                                 'name' =>($k2+1).'、'.$v2->name,
                                 'exam_question_id' =>$v2->exam_question_id,
                                 'content' =>explode(',',$v2->content),
@@ -85,19 +83,23 @@ class AnswerController extends CommonController
                                 'exam_category_formal_id' =>$v2->exam_category_formal_id,
                                 'student_answer' =>$v2->student_answer,
                                 'serialNumber' =>($k1+1).'.'.($k2+1),
+
+                                'examCategoryFormalId'=>$v1->id,//正式试题类型信息
+                                'examCategoryFormalNumber'=>$v1->number,
+                                'examCategoryFormalScore'=>$v1->score,
+                                'examCategoryFormalName'=>$v1->name,
+                                'exam_question_type_id'=>$v1->exam_question_type_id,
+                                'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
                                 );
-                           // $serialNumber[]=($k1+1).'.'.($k2+1);//序列号
                         }
                     }else{
                         $examCategoryFormalData[$k1]['exam_question_formal']='';
                     }
                 }
-                //$examCategoryFormalData['serialNumber'] = $serialNumber;
-
             }
         }
         //dd($examCategoryFormalData);
-        //dd($examPaperFormalData);
+        //dd($examCategoryFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'          =>$examPaperFormalData,//正式试卷信息
@@ -121,16 +123,15 @@ class AnswerController extends CommonController
         }
 
         $this->validate($request, [
-           // 'examPaperFormalId'=>'required|integer',//正式的试卷表id
-           // 'examQuestionFormalId'=>'required|integer',//正式的试题表id
+           // 'examPaperFormalId'=>'required|integer',//正式试卷id
+           // 'examQuestionFormalId'=>'required|integer',//正式试题id
             'studentAnswer'        => 'sometimes|array',
         ]);
         $data =array(
             'id' =>$request->input('examQuestionFormalId'), //正式试题id
             'student_answer' =>$request->input('studentAnswer'), //考生答案
         );
-        //$examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
-        $examPaperFormalId =1; //正式的试卷表id
+
         $answerModel = new Answer();
         //提交过来的数据格式
         $case = array(
@@ -159,8 +160,15 @@ class AnswerController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function selectGrade($examPaperFormalId=1)
+    public function selectGrade(Request $request)
     {
+
+        $this->validate($request, [
+            // 'examPaperFormalId'=>'required|integer',//正式的试卷id
+
+        ]);
+        //$examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
+        $examPaperFormalId =1; //正式的试卷表id
         $answerModel = new Answer();
         //保存成功，调用查询该考生成绩的方法
         $examPaperFormalData = $answerModel->selectGrade($examPaperFormalId);

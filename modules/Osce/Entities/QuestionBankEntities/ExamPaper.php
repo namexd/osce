@@ -86,7 +86,7 @@ class ExamPaper extends CommonModel
     }
 
     /**
-     * 添加试卷操作
+     * 根据试卷ID查找试卷基础信息与评分标准
      * @access    public
      * @param Exam $exam
      * @return view
@@ -95,15 +95,10 @@ class ExamPaper extends CommonModel
      * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function addExams($data){
-        DB::beginTransaction();
-        //向试卷表插入基础数据
-        $examPaper = ExamPaper::create($data);
-        if(!$examPaper){
-            DB::rollback();
-            return false;
-        }
-
-        //
+    public function getPaperDetails($id){
+//        $builder = $this->where('exam_paper.id','=',$id);
+//        $builder = $builder-> $builder = $this->where('exam_paper.id','=',$id);
+//        $builder = $builder->
     }
+
 }
