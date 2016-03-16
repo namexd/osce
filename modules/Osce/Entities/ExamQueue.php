@@ -329,8 +329,6 @@ class ExamQueue extends CommonModel
                 ->where('station_id', '=', $stationId)
                 ->whereIn('status',[1,2])
                 ->first();
-    
-
             if(is_null($examQueue)){
                 throw new \Exception('该学生还没有抽签', -107);
             }

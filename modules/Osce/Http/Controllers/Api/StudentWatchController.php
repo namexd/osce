@@ -333,10 +333,11 @@ class StudentWatchController extends CommonController
             ->where('station_id','=',$item->station_id)
             ->whereBetween('status', [1, 2])
             ->count();
-
+                dump($examStudent,'判定考试中人');
 
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
+        dump($studentnum,'前面人数');
           if($examStudent == 0){
 
               $willStudents =$studentnum;
