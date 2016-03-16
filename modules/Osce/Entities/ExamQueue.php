@@ -306,9 +306,12 @@ class ExamQueue extends CommonModel
 
     /**
      * 开始考试时，改变时间和状态
-     * @param  $studentId $stationId
-     * @return
-     * @throws  \Exception
+     * @param $studentId $stationId
+     * @param $stationId
+     * @param $nowTime
+     * @param $teacherId
+     * @return bool
+     * @throws \Exception
      * @author  zhouqiang
      */
 
@@ -348,16 +351,12 @@ class ExamQueue extends CommonModel
                 }
 
                 $lateTime = $nowTime - strtotime($nowQueue->begin_dt);
-                \Log::alert($lateTime . '迟到时间');
                 foreach ($studentTimes as $key => $item) {
                     if ($exam->sequence_mode == 2) {
-
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
-                        \Log::alert($stationTime . '以考站安排');
                     } else {
                         //这是已考场安排的需拿到room_id
                         $stationTime = $this->getRoomStationMaxTime($item->room_id);
-                        \Log::alert($stationTime . '以考场安排');
                     }
 
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
@@ -368,6 +367,7 @@ class ExamQueue extends CommonModel
                             $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $lateTime);
                             $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $lateTime);
                         }
+                        \Log::info('begin_exam', ['begin_dt' => $item->begin_dt, 'end_dt' => $item->end_dt]);
                         if (!$item->save()) {
                             throw new \Exception('队列时间更新失败', -100);
                         }
@@ -483,6 +483,7 @@ class ExamQueue extends CommonModel
                         $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $difference);
                         $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $difference);
                     }
+                    \Log::info('band_watch', ['begin_dt' => $item->begin_dt, 'end_dt' => $item->end_dt]);
 
                     $item->status = 0;
 
