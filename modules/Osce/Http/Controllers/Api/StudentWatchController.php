@@ -155,7 +155,6 @@ class StudentWatchController extends CommonController
             return $this->getStatusThreeExam($examQueueCollect);
         }
         return $this->getStatusWaitExam($examQueueCollect);
-
     }
     //判断腕表提醒状态为1时
     private function getStatusOneExam($examQueueCollect){
@@ -174,7 +173,7 @@ class StudentWatchController extends CommonController
         $room =$item->room;
         $data   =   [
             'code'=>3,
-            'title'=>'请请入下面考站考试',
+            'title'=>'请进入下面考站考试',
             'roomName'=>$room->name.'-'.$station->name,
         ];
         return $data;
@@ -256,6 +255,8 @@ class StudentWatchController extends CommonController
         }
         else
         {
+            //判断下一场考试中是否还有学生在等待考试或者在开始中
+
 
             //调用状态为1的方法
             $nextData=$this->getStatusWaitExam($examQueueCollect);
