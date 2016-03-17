@@ -156,6 +156,7 @@ class ApiController extends CommonController
 
         $ExamQuestion = new ExamQuestion;
         $ExamQuestionType = new ExamQuestionType;
+        //试卷类型(1.随机试卷，2.统一试卷)
         if($type == 1){
             if(!empty($request->question)){
                 foreach($request->question as $k => $v){
@@ -171,6 +172,7 @@ class ApiController extends CommonController
                     $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
                 }
             }
+        //试卷类型(1.随机试卷，2.统一试卷)
         }elseif($type == 2){
             $questionData = $request->get('question-type');
             if(count($questionData)>0){
