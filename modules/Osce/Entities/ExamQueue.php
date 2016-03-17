@@ -94,11 +94,6 @@ class ExamQueue extends CommonModel
             $students = $ExamQueue->getWaitStudentRoom($room_id, $exam_id);
             foreach ($students as $examQueue) {
                 foreach ($examQueue->student as $student) {
-//                    if($examQueue->name == ''){
-//                        $student->name = '';
-//                    }
-//                    $data[$roomName]['roomName']    = $roomName;
-//                    $data[$roomName]['student'][]   = $student;
                     $data[$roomName][] = $student;
                 }
             }
@@ -120,16 +115,10 @@ class ExamQueue extends CommonModel
 //            $students = $examFlowStation->queueStation()->where('exam_id', '=', $exam->id)->get();
             foreach ($students as $ExamQueue) {
                 foreach ($ExamQueue->student as $student) {
-//                    if($ExamQueue->name == ''){
-//                        $student->name = '';
-//                    }
-//                    $data[$stationName]['stationName'][] = $stationName;
-//                    $data[$stationName]['student'][]     = $student;
                     $data[$stationName][] = $student;
                 }
             }
         }
-//dd($data);
         return $data;
     }
 
@@ -595,16 +584,16 @@ class ExamQueue extends CommonModel
             ->select(['student.name as name', 'exam_queue.student_id', 'exam_queue.begin_dt'])
             ->distinct()->take(4)->get();
 
-//        if(count($builder) != 0){
-//            foreach ($builder as &$item) {
-//                //获取同一个人，在一场考试队列中是否有更早的考试
-//                $result = $this ->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)->where('status', '=', 0)
-//                                ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
-//                if($result){
-//                    $item->name = '';
-//                }
-//            }
-//        }
+        if(count($builder) != 0){
+            foreach ($builder as &$item) {
+                //获取同一个人，在一场考试队列中是否有更早的考试
+                $result = $this ->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)->where('status', '=', 0)
+                                ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
+                if($result){
+                    $item->name = '';
+                }
+            }
+        }
 
         return $builder;
     }
@@ -633,16 +622,16 @@ class ExamQueue extends CommonModel
             ->select(['student.name as name', 'exam_queue.student_id', 'exam_queue.begin_dt'])
             ->distinct()->take(4)->get();
 
-//        if(count($builder) != 0){
-//            foreach ($builder as &$item) {
-//                //获取同一个人，在一场考试队列中是否有更早的考试
-//                $result = $this ->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)->where('status', '=', 0)
-//                                ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
-//                if($result){
-//                    $item->name = '';
-//                }
-//            }
-//        }
+        if(count($builder) != 0){
+            foreach ($builder as &$item) {
+                //获取同一个人，在一场考试队列中是否有更早的考试
+                $result = $this ->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)->where('status', '=', 0)
+                                ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
+                if($result){
+                    $item->name = '';
+                }
+            }
+        }
 
         return $builder;
     }
@@ -703,4 +692,66 @@ class ExamQueue extends CommonModel
         }
     }
 
+    /**
+     * 获取 考站/考场 分页
+     */
+    public function getPageSize($exam_id, $pageSize = 4)
+    {
+        return $this->where('exam_id', $exam_id)->groupBy('station_id')->paginate($pageSize);
+    }
+
+    /**
+     * 获取候考考站对应学生列表
+     */
+    public function getWaitStationStudents($exam_id, $pageSize = 4)
+    {
+        $examFlowStationList = ExamFlowStation::where('exam_id', '=', $exam_id)->paginate($pageSize);
+        $data = [];
+        foreach ($examFlowStationList as $examFlowStation) {
+            $stationName = $examFlowStation->station->name;
+            $station_id  = $examFlowStation->station_id;
+            $ExamQueue   = new ExamQueue();
+            $students    = $ExamQueue->getWaitStudentStation($station_id, $exam_id);
+            foreach ($students as $ExamQueue) {
+                foreach ($ExamQueue->student as $student) {
+                    if($ExamQueue->name == ''){
+                        $student->name = '';
+                    }
+                    $data[$stationName]['name']      = $stationName;
+                    $data[$stationName]['student'][] = $student;
+                }
+            }
+        }
+        $data = array_values($data);
+
+        return $data;
+    }
+
+    /**
+     * 获取候考考场对应学生列表
+     */
+    public function getWaitRoomStudents($exam_id, $pageSize = 4)
+    {
+        $examFlowRoomList = ExamFlowRoom::where('exam_id', '=', $exam_id)->paginate($pageSize);
+        $data = [];
+        foreach ($examFlowRoomList as $examFlowRoom)
+        {
+            $roomName = $examFlowRoom->room->name;
+            $room_id  = $examFlowRoom->room_id;
+            $ExamQueue= new ExamQueue();
+            $students = $ExamQueue->getWaitStudentRoom($room_id, $exam_id);
+            foreach ($students as $examQueue) {
+                foreach ($examQueue->student as $student) {
+                    if($examQueue->name == ''){
+                        $student->name = '';
+                    }
+                    $data[$roomName]['name']      = $roomName;
+                    $data[$roomName]['student'][] = $student;
+                }
+            }
+        }
+        $data = array_values($data);
+
+        return $data;
+    }
 }

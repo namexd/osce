@@ -86,7 +86,7 @@ class AuthController extends BaseController
             'name.max'      => '角色名长度最多为10个'
         ]);
         $data = [
-            'name' => Input::get('name'),
+            'name' => trim(Input::get('name')),
             'slug' => rand(1,999999),
             'description'=>Input::get('description')
         ];
@@ -225,6 +225,9 @@ class AuthController extends BaseController
         $id = Input::get('id');
 
         if($id){
+            if($id == 5 || $id == 3){
+                return  redirect()->back()->withErrors(['管理员角色不能删除！']);
+            }
             $result = SysUserRole::where('role_id', $id)->first();
             if(!empty($result)){
                 return  redirect()->back()->withErrors(['该角色已绑定用户，请先去用户管理中解绑用户！']);
@@ -276,7 +279,7 @@ class AuthController extends BaseController
 //            return  redirect()->back()->withErrors(['修改失败']);
 //        }
         //TODO: zhoufuxiang 2016-2-23
-        $name =  Input::get('name');
+        $name =  trim(Input::get('name'));
         $id   =  Input::get('id');
         $des  =  Input::get('description');
         $addNewRole = SysRoles::where(['id'=>Input::get('id')])->first();
