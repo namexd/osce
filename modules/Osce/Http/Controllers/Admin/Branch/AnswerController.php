@@ -112,7 +112,7 @@ class AnswerController extends CommonController
             }
         }
         //dd($examCategoryFormalData);
-        //dd($examCategoryFormalData);
+        //dd($examPaperFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'          =>$examPaperFormalData,//正式试卷信息
@@ -130,7 +130,8 @@ class AnswerController extends CommonController
     public function postSaveAnswer(Request $request)
     {
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
-     /*   if($systemTimeStart){
+/*
+        if($systemTimeStart){
             //设置时间周期为不超过两分钟
             if(time()-$systemTimeStart>120){
                 return response()->json(['status'=>'1','info'=>'超时']);
@@ -140,24 +141,25 @@ class AnswerController extends CommonController
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
             'actualLength' =>time()-$systemTimeStart, //考试用时
-            'examQuestionFormalInfo' >$request->input('examQuestionFormalInfo'),//正式试题信息
+            'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
         );
-
-        //提交过来的数据格式
+ /*       //提交过来的数据格式
         $case = array(
             'examPaperFormalId'=>'1',//试卷id
             'examQuestionFormalInfo'=>array(
-                '0'=>array('examQuestionFormalId'=>1,'examQuestionTypeId'=>1,'studentAnswer'=>'0'),//试题id，试题类型，考生答案
-                '1'=>array('examQuestionFormalId'=>2,'examQuestionTypeId'=>2,'studentAnswer'=>'0@1@3'),
-                '2'=>array('examQuestionFormalId'=>3,'examQuestionTypeId'=>3,'studentAnswer'=>'1@2'),
-                '3'=>array('examQuestionFormalId'=>4,'examQuestionTypeId'=>4,'studentAnswer'=>'1'),
+                '0'=>array('exam_question_id'=>1,'examCategoryFormalId'=>1,'answer'=>'0'),//试题id，试题类型，考生答案
+                '1'=>array('exam_question_id'=>2,'examCategoryFormalId'=>2,'answer'=>'0@1@3'),
+                '2'=>array('exam_question_id'=>3,'examCategoryFormalId'=>3,'answer'=>'1@2'),
+                '3'=>array('exam_question_id'=>4,'examCategoryFormalId'=>4,'answer'=>'1'),
             )
-        );
+        );*/
+
         foreach($data['examQuestionFormalInfo'] as $k=>$v){
+
             $newStudentAnswer='';
-            $studentAnswer = explode('@',$v['studentAnswer']);
+            $studentAnswer = explode('@',$v['answer']);
             foreach($studentAnswer as $val){
-                if($v['examQuestionTypeId']=='4'){//判断题
+                if($v['examCategoryFormalId']=='4'){//判断题
                     $newStudentAnswer = $val;
                 }else{
                     if($val=='0'){
@@ -200,10 +202,10 @@ class AnswerController extends CommonController
                 }
 
             }
-            $data['examQuestionFormalInfo'][$k]['studentAnswer']=$newStudentAnswer;
 
+            $data['examQuestionFormalInfo'][$k]['answer']=$newStudentAnswer;
         }
-        dd($data);
+        //dd($data);
         //保存考生答案
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
@@ -215,7 +217,6 @@ class AnswerController extends CommonController
             return response()->json(['status'=>'3','info'=>'保存失败']);
         }
     }
-
     /**查询该考生理论考试成绩及该场考试相关信息
      * @method
      * @url /osce/
@@ -233,8 +234,8 @@ class AnswerController extends CommonController
             // 'examPaperFormalId'=>'required|integer',//正式的试卷id
 
         ]);
-        //$examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
-        $examPaperFormalId =1; //正式的试卷表id
+
+        $examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
         $answerModel = new Answer();
         //保存成功，调用查询该考生成绩的方法
         $examPaperFormalData = $answerModel->selectGrade($examPaperFormalId);
