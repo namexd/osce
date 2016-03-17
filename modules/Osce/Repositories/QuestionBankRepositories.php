@@ -13,6 +13,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelRelation;
+use Modules\Osce\Entities\Exam;
 class QuestionBankRepositories  extends BaseRepository
 {
 
@@ -373,7 +374,6 @@ class QuestionBankRepositories  extends BaseRepository
      */
     public function LoginAuth(){
         $user = Auth::user();
-        $roles = [];
         if(count($user->roles)>0){
             $roles = $user
                 ->roles
@@ -387,5 +387,48 @@ class QuestionBankRepositories  extends BaseRepository
             return  false;
         }
     }
+
+    /**
+     * 根据监考老师id获取相关信息
+     * @method
+     * @url /osce/
+     * @access public
+     * @return $this
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月17日10:05:55
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetExamInfo($userId){
+
+        try{
+            $Exam = new Exam;
+            //获取本次考试的id
+            $ExamInfo = $Exam->where('status','=',1)->select('id')->first();
+            if(empty($ExamInfo->id)){
+                throw new \Exception(' 没有在进行的考试');
+            }
+            //根据监考老师的id和考试id，获取对应的考站id
+            $builder = $Exam->leftJoin('station_teacher', function($join){
+                $join -> on('station_teacher.exam_id', '=', 'exam.id');
+            })
+                ->groupBy('station_teacher.user_id')
+                ->where('exam.id','=',$ExamInfo->id)
+                ->where('station_teacher.user_id','=',$userId)
+                ->select('station_teacher.station_id');
+
+            $station_id = $builder->pluck('station_id');
+
+            if(empty($station_id)){
+                throw new \Exception('你没有相关需要监考的考站');
+            }
+
+            return  ['StationId'=>$station_id,'ExamId'=>$ExamInfo->id];
+            //case_id
+        }catch (\Exception $ex){
+            return $ex->getMessage();
+        }
+
+    }
+
 
 }

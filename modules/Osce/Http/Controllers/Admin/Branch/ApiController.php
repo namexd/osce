@@ -156,6 +156,7 @@ class ApiController extends CommonController
 
         $ExamQuestion = new ExamQuestion;
         $ExamQuestionType = new ExamQuestionType;
+        //试卷类型(1.随机试卷，2.统一试卷)
         if($type == 1){
             if(!empty($request->question)){
                 foreach($request->question as $k => $v){
@@ -171,6 +172,7 @@ class ApiController extends CommonController
                     $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
                 }
             }
+        //试卷类型(1.随机试卷，2.统一试卷)
         }elseif($type == 2){
             $questionData = $request->get('question-type');
             if(count($questionData)>0){
@@ -218,8 +220,10 @@ class ApiController extends CommonController
      * @date    2016年3月14日15:40:51
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function ExamineeInfo(){
+    public function ExamineeInfo(QuestionBankRepositories $questionBankRepositories){
         $this->name = \Route::currentRouteAction();
+        $userId = $questionBankRepositories->LoginAuth();
+        dd($questionBankRepositories->GetExamInfo(347));
         return  view('osce::admin.theoryCheck.theory_check_volidate');
     }
 
@@ -245,19 +249,8 @@ class ApiController extends CommonController
         {
             //检验登录的老师是否是监考老师
             if($userId = $questionBankRepositories->LoginAuth()){
-                //获取本次考试的id
-                $Exam = Exam::where('status','=',1)->select('id')->first();
-                $ExamId = 0;
-                if(count($Exam)>0){
-                    $ExamId = $Exam->pluck('id');
-                }else{
-                    return redirect()->back()->withErrors('没有在进行的考试');
-                }
-
-                //根据监考老师的id和考试id，获取对应的考站id
-                if($ExamId>0){
-
-                }
+                //根据监考老师的id，获取对应的考站id
+                $ExamInfo = $questionBankRepositories->GetExamInfo($userId);
 
 
 
