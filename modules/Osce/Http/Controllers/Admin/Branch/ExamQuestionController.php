@@ -34,7 +34,7 @@ class ExamQuestionController extends CommonController
         ]);
         $formData['examQuestionLabelTypeId'] = $request->input('examQuestionLabelTypeId'); //试题类型id(2)
         $formData['examQuestionTypeId'] = $request->input('examQuestionTypeId');//题目类型id
-
+        dd($formData);
 
         //获取试题类型列表（标签类型）
         $examQuestionLabelTypeModel= new ExamQuestionLabelType();
@@ -271,7 +271,6 @@ class ExamQuestionController extends CommonController
         $this->validate($request, [
             'id'                      =>'required|integer',//试题表
             'examQuestionTypeId'    =>'sometimes|integer',
-            'name'                     => 'required|string',
             'parsing'                 => 'sometimes|string',
             'answer'                  => 'sometimes|array',
             'judge'                  => 'sometimes|integer',

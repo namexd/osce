@@ -104,9 +104,9 @@ class Answer extends Model
                     $examQuestionFormalModel = new ExamQuestionFormal();
                     foreach($data['examQuestionFormalInfo'] as $v){
                         $examQuestionFormalData = array(
-                            'student_answer'=>$v['studentAnswer']
+                            'student_answer'=>$v['answer']
                         );
-                        $result = $examQuestionFormalModel->where('id','=',$v['examQuestionFormalId'])->update($examQuestionFormalData);
+                        $result = $examQuestionFormalModel->where('id','=',$v['exam_question_id'])->update($examQuestionFormalData);
                         if(!$result){
                             throw new \Exception(' 保存考生答案失败！');
                         }

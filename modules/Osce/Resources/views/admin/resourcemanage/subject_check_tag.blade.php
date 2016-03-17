@@ -123,9 +123,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">描述：</label>
+                <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565">*</span>描述：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="describe" class="form-control" placeholder="最多输入10个字">
+                    <input type="text" name="describe" class="form-control add_des">
                 </div>
             </div>
         </div>
@@ -161,9 +161,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">描述：</label>
+                <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565">*</span>描述：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="describe" class="form-control edit_des" placeholder="最多输入10个字">
+                    <input type="text" name="describe" class="form-control edit_des">
                 </div>
             </div>
         </div>

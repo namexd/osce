@@ -25,11 +25,11 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins" style="margin-bottom: 0;">
                     <div class="ibox-content text-center p-md">
-                        <h2>2016年第一期OSCE考试理论考试</h2>
+                        <h2>{{$data['name']}}</h2>
                         <span>考试时间：</span>
-                        <span class="checkTime">20分钟</span>
+                        <span class="checkTime">{{$data['length']}}</span>
                         <span style="margin-left: 1em;">总分：</span>
-                        <span class="score">100分</span>
+                        <span class="score">{{$data['total_score']}}分</span>
                     </div>
                 </div>
             </div>
@@ -39,11 +39,11 @@
                         <div class="p-md cBorder mart_10">
                             <p class="font18" style="padding-top: 55px;">考试得分</p>
                             <div class="showScore">
-                                <span class="" style="font-size: 40px;">85</span>
+                                <span class="" style="font-size: 40px;">{{$data['totalScore']}}</span>
                                 <span class="font16">分</span>
                             </div>
                             <div class="timeBox font16">
-                                <span>考试用时：18分钟</span>
+                                <span>考试用时：{{$data['actual_length']}}分钟</span>
                             </div>
                             <div class="" style="padding: 70px 0 55px;">
                                 <button class="btn btn-primary">确认</button>
