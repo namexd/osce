@@ -35,8 +35,9 @@ class AnswerController extends CommonController
      */
     public function formalPaperList()
     {
-        $systemTimeStart =time();
-        \Session::put('systemTimeStart',$systemTimeStart);//将开始时间存入session中
+
+        \Session::put('systemTimeStart',time());//将开始时间存入session中
+        $systemTimeStart =\Session::get('systemTimeStart');
         //获取该理论考试相关信息
         $id = 1;//正式的试卷表ID
         //获取正式试卷表信息
