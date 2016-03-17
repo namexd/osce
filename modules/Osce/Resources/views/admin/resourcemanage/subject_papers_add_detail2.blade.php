@@ -67,7 +67,7 @@
             $('#search').click(function(){
 
                 //获取筛选条件
-                getexamquestions(subject_id,ability_id,difficult_id,page,pagequestion_type,sequence,questionArr);
+                getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,questionArr);
             });
 
 
