@@ -153,14 +153,14 @@ class ApiController extends CommonController
         $PaperPreviewArr['name'] = $request->name;
         $PaperPreviewArr['time'] = $request->time;
 
+        $ExamQuestion = new ExamQuestion;
+        $ExamQuestionType = new ExamQuestionType;
         if($type == 1){
             if(!empty($request->question)){
                 foreach($request->question as $k => $v){
                     $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
                 }
             }
-            $ExamQuestion = new ExamQuestion;
-            $ExamQuestionType = new ExamQuestionType;
             $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
             foreach($PaperPreviewArr['item'] as $k => $v){
                 if(!empty($v['child'])){
@@ -171,8 +171,17 @@ class ApiController extends CommonController
                 }
             }
         }elseif($type == 2){
-
-            dd($request->all());
+            $questionData = $request->get('question-type');
+            if(count($questionData)>0){
+                foreach($questionData as $k => $v){
+                    $questionInfo = explode('@',$v);
+                    $ExamQuestionId = explode(',',$questionInfo[2]);
+                    $ExamQuestionList = $ExamQuestion->whereIn('id',$ExamQuestionId)->with('examQuestionItem')->get();
+                    $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$questionInfo[0])->select('name')->first();
+                    $PaperPreviewArr['item'][$k]['name'] = $ExamQuestionTypeInfo['name'].'（共'.count($ExamQuestionId).'题，每题'.$questionInfo[1].'分）';
+                    $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
+                }
+            }
         }
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }

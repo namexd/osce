@@ -96,6 +96,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::post('exampaper/edit-exam-paper',['uses'=>'ExamPaperController@getEditExamPaper','as'=>'osce.admin.ExamPaperController.getEditExamPaper']);
         //题库管理列表
         Route::get('examQuestion/examQuestion-list',['uses'=>'ExamQuestionController@showExamQuestionList','as'=>'osce.admin.ExamQuestionController.showExamQuestionList']);
+        //试卷管理-验证试卷
+        Route::post('exampaper/check-name-only',['uses'=>'ExamPaperController@postCheckNameOnly','as'=>'osce.admin.ExamPaperController.postCheckNameOnly']);
 
         //题库管理新增
         Route::get('examQuestion/examQuestion-add',['uses'=>'ExamQuestionController@getExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.getExamQuestionAdd']);//新增页面
