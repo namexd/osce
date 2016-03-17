@@ -356,14 +356,14 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>试卷名称</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="name" name="name" value="{{@$paperDetail['name']}}">
+                        <input type="text" class="form-control" id="name" name="name" value=" @if(@$paperDetail['name']) {{@$paperDetail['name']}} @else {{@$paperDetails['name']}} @endif ">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>考试时长</label>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" id="code" name="time" value="{{@$paperDetail['length']}}" placeholder="请输入分钟数">
+                        <input type="number" class="form-control" id="code" name="time" value="@if(!empty(@$paperDetail['length'])){{@$paperDetail['length']}}@else{{@$paperDetails['length']}}@endif" placeholder="请输入分钟数">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -372,13 +372,19 @@
                     <label class="col-sm-2 control-label">组卷方式</label>
                     <div class="col-sm-10">
                         <select id="status"   class="form-control m-b" name="status">
-                            <option value="1" @if(@$paperDetail['mode'] == 1)selected="selected" @endif >自动组卷</option>
-                            <option value="2" @if(@$paperDetail['mode'] == 2)selected="selected" @endif >手工组卷</option>
+                            <option value="1"  @if(@$paperDetail['mode'])  @if(@$paperDetail['mode'] == 1)selected="selected" @endif @else  @if(@$paperDetails['mode'] == 1)selected="selected" @endif @endif >自动组卷</option>
+                            <option value="2" @if(@$paperDetail['mode'])  @if(@$paperDetail['mode'] == 2)selected="selected" @endif @else  @if(@$paperDetails['mode'] == 2)selected="selected" @endif @endif >手工组卷</option>
                         </select>
                     </div>
                     @if(@$paperDetail['mode'])
-                    <input type="hidden" name="status" value="{{@$paperDetail['mode']}}">
+                        @if(@$paperDetail['mode'])
+                            <input type="hidden" name="status" value="{{@$paperDetail['mode']}}">
                         @endif
+                    @else
+                        @if(@$paperDetails['mode'])
+                            <input type="hidden" name="status" value="{{@$paperDetails['mode']}}">
+                        @endif
+                    @endif
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -386,13 +392,19 @@
                     <label class="col-sm-2 control-label">试卷类型</label>
                     <div class="col-sm-10">
                         <select id="status2" class="form-control m-b" name="status2">
-                            <option value="1" @if(@$paperDetail['type'] == 1)selected="selected" @endif >随机试卷</option>
-                            <option value="2" @if(@$paperDetail['type'] == 2)selected="selected" @endif >统一试卷</option>
+                            <option value="1" @if(@$paperDetail['type'])  @if(@$paperDetail['type'] == 1)selected="selected" @endif @else  @if(@$paperDetails['type'] == 1)selected="selected" @endif @endif >随机试卷</option>
+                            <option value="2" @if(@$paperDetail['type'])  @if(@$paperDetail['type'] == 2)selected="selected" @endif @else  @if(@$paperDetails['type'] == 2)selected="selected" @endif @endif  >统一试卷</option>
                         </select>
                     </div>
                     @if(@$paperDetail['type'])
-                    <input type="hidden" name="status2" value="{{@$paperDetail['type']}}">
-                        @endif
+                            @if(@$paperDetail['type'])
+                                <input type="hidden" name="status2" value="{{@$paperDetail['type']}}">
+                            @endif
+                        @else
+                            @if(@$paperDetails['type'])
+                                <input type="hidden" name="status2" value="{{@$paperDetails['type']}}">
+                            @endif
+                    @endif
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
@@ -471,8 +483,8 @@
                                     </tr>
                                     </thead>
                                     <tbody index="0" id="list-body">
-                                    @if(!empty(@$paperDetail['item']))
-                                        @foreach(@$paperDetail['item'] as $k=>$detail)
+                                    @if(!empty(@$paperDetails->item))
+                                        @foreach(@$paperDetails->item as $k=>$detail)
                                             <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$detail['id']}}">
                                                 <td>{{@$k+1}}<input name="question-type[]" type="hidden" value="{{@$detail['type'].'@'.@$detail['score'].'@'.@$detail['child'].'@'.@$detail['id']}}"/></td>
                                                 <td>{{@$detail['typename']}}</td>
@@ -507,7 +519,7 @@
                     </div>
                 </div>
                 {{--修改时，存试卷paperID--}}
-                <input type="hidden" name="paperid" value="{{@$paperDetail['id']}}">
+                <input type="hidden" name="paperid" value="@if(@$paperDetail['id']){{@$paperDetail['id']}}@else{{@$paperDetails['id']}}@endif">
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
                         <button class="btn btn-primary" type="submit" disabled>保存</button>

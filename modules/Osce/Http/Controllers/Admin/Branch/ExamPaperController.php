@@ -185,6 +185,11 @@ class ExamPaperController extends CommonController
                         }
 
                     }
+                    return view('osce::admin.resourcemanage.subject_papers_add',[
+                        'label'=>$label,
+                        'ExamQuestionLabelTypeList'=>$question,
+                        'paperDetail' => $paperDetail,
+                    ]);
                 }else{
                     //统一试卷
                     if($paperDetail){
@@ -207,17 +212,17 @@ class ExamPaperController extends CommonController
                         //dd($paperDetail);
 
                     }
+                    return view('osce::admin.resourcemanage.subject_papers_add',[
+                        'label'=>$label,
+                        'ExamQuestionLabelTypeList'=>$question,
+                        'paperDetails' => $paperDetail,
+                    ]);
                 }
             }
 
-           // dd($paperDetail);
 
 
-            return view('osce::admin.resourcemanage.subject_papers_add',[
-                'label'=>$label,
-                'ExamQuestionLabelTypeList'=>$question,
-                'paperDetail' => $paperDetail,
-            ]);
+
         }else{
             return view('osce::admin.resourcemanage.subject_papers_add',[
                 'label'=>$label,
@@ -799,7 +804,7 @@ class ExamPaperController extends CommonController
             'name'   => 'required',
         ]);
 
-        $ExamQuestionLabelType = new ExamQuestionLabel();
+        $ExamQuestionLabelType = new ExamPaper();
         if(!empty($request['id'])){
             $ExamQuestionLabelTypeList = $ExamQuestionLabelType->where('name','=',$request['name'])->where('id','<>',$request['id'])->first();
         }else{
