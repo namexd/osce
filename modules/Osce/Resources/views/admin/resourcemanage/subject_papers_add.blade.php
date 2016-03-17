@@ -251,13 +251,15 @@
             $('#paper tbody').on('click','.fa-pencil-square-o',function(){
                 var question_detail=$(this).parent().parent().parent().parent().find("input[name='question[]']").val();
                 var ordinal = $(this).parent().parent().parent().parent().attr("ordinal");
+                var structureId = $(this).parent().parent().parent().parent().attr("structureId");
+
                 layer.open({
                     type: 2,
                     title: '编辑试题组成',
                     area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}?question_detail='+question_detail+"&ordinal="+ordinal
+                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}?question_detail='+question_detail+"&ordinal="+ordinal+"&structureId="+structureId
                 })
             });
             /**
@@ -533,13 +535,13 @@
                                     <tbody index="0" id="list-body">
                                     @if(!empty(@$paperDetail['item']))
                                         @foreach(@$paperDetail['item'] as $k=>$detail)
-                                            <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$detail['id']}}">
-                                                <td>{{@$k+1}}</td>
-                                                <td>{{@$detail['typename']}}</td>
-                                                <td></td>
-                                                <td>{{@$detail['num']}}</td>
-                                                <td>{{@$detail['score']}}</td>
-                                                <td>{{@$detail['total_score']}}</td>
+                                            <tr ordinal="{{@$k+1}}" structureId="{{@$detail['id']}}">
+                                                <td>{{@$k+1}}<input name="question[]" type="hidden" value="{{@$detail['str']}}"></td>
+                                                <td>{{@$detail['question_type_name']}}</td>
+                                                <td>{{@$detail['strName']}}</td>
+                                                <td>{{@$detail['question_num']}}</td>
+                                                <td>{{@$detail['question_score']}}</td>
+                                                <td>{{@$detail['question_total_score']}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
@@ -583,14 +585,14 @@
                                     </tr>
                                     </thead>
                                     <tbody index="0" id="list-body">
-                                    @if(!empty(@$paperDetails->item))
-                                        @foreach(@$paperDetails->item as $k=>$detail)
-                                            <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$detail['id']}}">
-                                                <td>{{@$k+1}}<input name="question-type[]" type="hidden" value="{{@$detail['type'].'@'.@$detail['score'].'@'.@$detail['child'].'@'.@$detail['id']}}"/></td>
-                                                <td>{{@$detail['typename']}}</td>
-                                                <td>{{@$detail['num']}}</td>
-                                                <td>{{@$detail['score']}}</td>
-                                                <td>{{@$detail['total_score']}}</td>
+                                    @if(!empty(@$paperDetails['item']))
+                                        @foreach(@$paperDetails['item'] as $k=>$details)
+                                            <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$details['id']}}">
+                                                <td>{{@$k+1}}<input name="question-type[]" type="hidden" value="{{@$details['type'].'@'.@$details['score'].'@'.@$details['child'].'@'.@$details['id']}}"/></td>
+                                                <td>{{@$details['typename']}}</td>
+                                                <td>{{@$details['num']}}</td>
+                                                <td>{{@$details['score']}}</td>
+                                                <td>{{@$details['total_score']}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read  state1 detail"><i data-toggle="modal" data-target="#myModal" class="fa fa-pencil-square-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
@@ -622,7 +624,7 @@
                 <input type="hidden" name="paperid" value="@if(@$paperDetail['id']){{@$paperDetail['id']}}@else{{@$paperDetails['id']}}@endif" id="paperId">
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
-                        <button class="btn btn-primary" type="submit" disabled>保存</button>
+                        <button class="btn btn-primary" type="submit">保存</button>
                         <button class="btn btn-primary" id="preview" type="button">预览</button>
                         <a class="btn btn-white" href="{{route('osce.admin.ExamPaperController.getExamList')}}">取消</a>
                     </div>

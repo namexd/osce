@@ -163,6 +163,7 @@ class ExamPaperController extends CommonController
                             if(count($paperDetail['item'])>0){
 
                                 $item = [];
+                                $questionType = new ExamQuestionType();
                                 foreach($paperDetail['item'] as $k =>$v){
                                     $data = [];
                                     $data['question-type'] = $v['question_type'];
@@ -174,9 +175,12 @@ class ExamPaperController extends CommonController
                                             $data['label-'.$key] = $val[0]['relation'];
                                         }
                                     }
-                                    $v['str'] = $QuestionBankRepositories->ArrToStr($data);
+                                    $v['str'] = $QuestionBankRepositories->ArrToStr($data).'@'.$paperDetail['ExamPaperStructure'][$k]['id'];
+                                    $v['id'] = $paperDetail['ExamPaperStructure'][$k]['id'];
                                     $array = explode('@',$QuestionBankRepositories->ArrToStr($data));
                                     $v['strName'] = $array[0];
+                                    $v['question_type_name'] = $questionType->where('id','=',$v['question_type'])->pluck('name');
+
                                     $item[] = $v;
                                 }
                                 $paperDetail['item'] = $item;
@@ -185,7 +189,7 @@ class ExamPaperController extends CommonController
                         }
 
                     }
-                    dd($paperDetail);
+                    //dd($paperDetail);
                     return view('osce::admin.resourcemanage.subject_papers_add',[
                         'label'=>$label,
                         'ExamQuestionLabelTypeList'=>$question,
@@ -202,15 +206,6 @@ class ExamPaperController extends CommonController
                             $paperDetail['item'][$k]['typename'] = $questionType->where('id','=',$detail['type'])->pluck('name');
                             $paperDetail['item'][$k]['child'] = implode(',',$detail['child']->toArray());
                         }
-
-                        //dd($paperDetail);
-//                        foreach($paperDetail['exam_paper_structure'] as $kk=>$structure){
-//                            foreach($structure['exam_paper_structure_label'] as $structure_label=>$label){
-//                                $paperDetail['exam_paper_structure'][$kk]['exam_paper_structure_label']['labname'] = ExamQuestionLabel::where('id','=',$label['exam_question_label_id'])->pluck('name');
-//                            }
-//                        }
-
-                        //dd($paperDetail);
 
                     }
                     return view('osce::admin.resourcemanage.subject_papers_add',[
@@ -514,6 +509,7 @@ class ExamPaperController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getEditExamPaper(Request $request,QuestionBankRepositories $QuestionBankRepositories){
+        //dd($request->all());
         //验证试题类型ID
         $this->validate($request,[
             'name'        => 'required',
@@ -563,7 +559,7 @@ class ExamPaperController extends CommonController
                 $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
             }
         }
-
+        //dd($examPapers);
         if($status == 1 && $status2 == 1){//自动-随机
             //新增试卷-试卷构造表和标签类型关联数据添加
             $result = $this->addData($examPapers,$examPaperID,$QuestionBankRepositories);
@@ -692,17 +688,22 @@ class ExamPaperController extends CommonController
                 'created_user_id' => $user->id,
             ];
 
-            $addExamPaperStructure = $ExamPaperStructure->create($papers);
+
+            $addExamPaperStructure = $ExamPaperStructure->where('id','=',$exam['structureid'])->update($papers);
             if(!$addExamPaperStructure){
                 DB::rollback();
                 return false;exit;
             }
 
+            if(!$ExamPaperStructureLabel->where('exam_paper_structure_id','=',$exam['structureid'])->delete()){
+                DB::rollback();
+                return false;exit;
+            }
             foreach($exam['structure_label'] as $structure_label){
                 //拼合试卷构造表和试题标签表关联的数据
-                $structure_label['exam_paper_structure_id'] = $addExamPaperStructure->id;
                 $structure_label['created_user_id'] = $user->id;
-
+                $structure_label['exam_paper_structure_id'] = $exam['structureid'];
+                $structure_label['updated_at'] = date('Y-m-d H:i:s');
                 $addExamPaperStructureLabel = $ExamPaperStructureLabel->create($structure_label);
                 if(!$addExamPaperStructureLabel){
                     DB::rollback();

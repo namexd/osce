@@ -51,10 +51,11 @@
                         var now = parent.$('#list-body').attr('index');
                         now = parseInt(now) + 1;
                         var ordinal = parseInt($("#ordinal").val());
+                        var structureId = parseInt($("#structureId").val());
                         if(ordinal > 0 ){
                             parent.$('#paper #list-body').find("tr").each(function(){
                                 if($(this).attr("ordinal") == ordinal){
-                                    $(this).html('<td>'+ordinal+'<input name="question[]" type="hidden" value="'+obj+'"/>'+'</td>'+
+                                    $(this).html('<td>'+ordinal+'<input name="question[]" type="hidden" value="'+obj+'@'+structureId+'"/>'+'</td>'+
                                             '<td>'+tpye+'</td>'+
                                             '<td>'+ objvar[0]+'</td>'+
                                             '<td>'+questionnum+'</td>'+
@@ -162,6 +163,7 @@
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'subject_papers_add}" />
     <input type="hidden" id="ordinal" value="{{ @$ordinal }}" />
+    <input type="hidden" id="structureId" value="{{ @$structureId }}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <form class="form-horizontal" method="post" action="{{ route('osce.admin.ApiController.PostEditorExamPaperItem') }}">
             <div class="modal-body">

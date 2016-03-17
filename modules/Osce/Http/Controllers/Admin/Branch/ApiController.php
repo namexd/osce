@@ -64,7 +64,8 @@ class ApiController extends CommonController
             'examQuestionLabelTypeList'=>$examQuestionLabelTypeList,
             'examQuestionTypeList'=>$examQuestionTypeList,
             'questionInfo'=>$questionInfo,
-            'ordinal'=>\Input::get('ordinal','')
+            'ordinal'=>\Input::get('ordinal',''),
+            'structureId'=>\Input::get('structureId',''),
         ]);
     }
 
