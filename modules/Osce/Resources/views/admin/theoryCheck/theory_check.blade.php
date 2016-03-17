@@ -13,6 +13,14 @@
             width: auto!important;
         }
         .check_label{cursor: pointer}
+
+        .colockbox{width:250px;height:30px;overflow: hidden; color:#000;}
+        .colockbox span{
+            float:left;display:block;
+            width:30px;height:29px;
+            line-height:29px;font-size:20px;
+            font-weight:bold;text-align:center;
+            color:#ff0101; margin-right:5px;}
     </style>
     <link href="{{asset('osce/admin/plugins/css/plugins/iCheck/custom.css')}}" rel="stylesheet">
     <link href="{{asset('osce/admin/plugins/css/plugins/steps/jquery.stepschange.css')}}" rel="stylesheet">
@@ -94,16 +102,43 @@
                 })
             })
 
-            $('.led2').ClassyLED({
-                type: 'time',
-                format: 'hh:mm',
-                color: '#ed1978',
-                backgroundColor: '#cccccc',
-                size: 14,
-                rounded: 4,
-                fontType: 1
-            });
         });
+        $(function(){
+            countDown("2016/3/17 19:17:30","#colockbox1");
+        });
+        function countDown(time,id){
+            var day_elem = $(id).find('.day');
+            var hour_elem = $(id).find('.hour');
+            var minute_elem = $(id).find('.minute');
+            var second_elem = $(id).find('.second');
+            var end_time = new Date(time).getTime(),//月份是实际月份-1
+                    sys_second = (end_time-new Date().getTime())/1000;
+            var timer = setInterval(function(){
+                if (sys_second > 1) {
+                    sys_second -= 1;
+                    var day = Math.floor((sys_second / 3600) / 24);
+                    var hour = Math.floor((sys_second / 3600) % 24);
+                    var minute = Math.floor((sys_second / 60) % 60);
+                    var second = Math.floor(sys_second % 60);
+                    day_elem && $(day_elem).text(day);//计算天
+                    $(hour_elem).text(hour<10?"0"+hour:hour);//计算小时
+                    $(minute_elem).text(minute<10?"0"+minute:minute);//计算分钟
+                    $(second_elem).text(second<10?"0"+second:second);//计算秒杀
+                } else {
+                    //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
+                    var examPaperFormalId=$('#examPaperFormalId').val();
+                    var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
+                    $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){
+                        if(obj.status=='2'){
+                            location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                        }
+                        if(obj.status=='3'){
+                            console.log('保存失败');
+                        }
+                    })
+                }
+            }, 1000);
+        }
     </script>
 @stop
 
@@ -193,9 +228,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btnBox" style="margin: 70px 0 50px 0;">
-                            <span class="marl_10">剩余时间</span>
-                            <span class="font24" style="color: #ff0101;font-weight: 700;">10:10</span>
+                        <div class="btnBox" style="margin:0 auto; padding:70px 0; text-align: center; width: 400px;">
+                            <span class="marl_10 left" style="height: 29px; line-height: 29px;">剩余时间：</span>
+                            <div class="colockbox" id="colockbox1"><span class="hour">00</span><span class="left">:</span> <span class="minute">00</span> <span class="left">:</span> <span class="second">00</span> </div>
                         </div>
                     </div>
 
