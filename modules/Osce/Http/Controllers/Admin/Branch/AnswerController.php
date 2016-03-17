@@ -137,10 +137,10 @@ class AnswerController extends CommonController
                 return response()->json(['status'=>'1','info'=>'超时']);
             }
         }*/
-
+        $actualLength = (time()-$systemTimeStart)/60;//考试用时
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-            'actualLength' =>time()-$systemTimeStart, //考试用时
+            'actualLength' =>sprintf("%.2f",$actualLength), //考试用时
             'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
         );
  /*       //提交过来的数据格式
@@ -231,7 +231,7 @@ class AnswerController extends CommonController
     {
 
         $this->validate($request, [
-            // 'examPaperFormalId'=>'required|integer',//正式的试卷id
+             'examPaperFormalId'=>'required|integer',//正式的试卷id
 
         ]);
 
