@@ -7,6 +7,13 @@
 @section('only_js')
     <script src="{{asset('osce/admin/subjectManage/subject_manage.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
+    <script>
+        $(function(){
+            $('#search').click(function(){
+                window.location.href="/osce/admin/exampaper/exam-list?keyword="+$('#keyword').val();
+            });
+        });
+    </script>
 @stop
 
 @section('content')
@@ -33,7 +40,7 @@
             <div class="container-fluid ibox-content" style="border: none;">
                 <div class="input-group" style="width: 100%;margin:20px 0;">
                     <label for="" class="pull-left exam-name">试卷名称：</label>
-                    <input type="text" placeholder="请输入标签名称" name="keyword" class="input-md form-control" style="width: 250px;">
+                    <input type="text" placeholder="请输入标签名称" name="keyword" class="input-md form-control" style="width: 250px;" id="keyword" value="{{@$keyword}}">
 
                     <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
                     <a class="btn btn-sm btn-primary marl_10 pull-right" id="add" href="{{route('osce.admin.ExamPaperController.getAddExamPage')}}"> 新增</a></button>
