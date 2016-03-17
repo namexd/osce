@@ -414,6 +414,10 @@ class ExamPaperController extends CommonController
             }
         }
 
+        if(!@$examPapers){
+            $DB->rollBack();
+            return redirect()->back()->withInput()->withErrors('未选择试题组成');
+        }
         if($status == 1 && $status2 == 1){//自动-随机
             //新增试卷-试卷构造表和标签类型关联数据添加
             $result = $this->addData($examPapers,$examPaperID,$QuestionBankRepositories);
@@ -828,13 +832,9 @@ class ExamPaperController extends CommonController
 
         }
         $label = $this->getExamLabelGet();//标签
-        if($request->question_detail){
-            $type = explode('@',$request->question_detail);
-        }
-       // dd($request->all());
         return view('osce::admin.resourcemanage.subject_papers_add_detail2',[
             'labelList'=>$label,
-            'question_type'=>$type[0],
+            'question_type'=>$questionIDstr[0],
             'sequence'=>$request->sequence,
             'question_detail' => $request->question_detail,
             'questionIDs' => $questionIDs,
