@@ -8,7 +8,7 @@ input.laydate-icon{
     background-image: none;
     padding-right: 27px;
     display: inline-block;
-    width: 151px;
+    width: 171px;
     line-height: 30px;
 }
 .time-modify{
