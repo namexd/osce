@@ -37,7 +37,7 @@
                                 <option value="">全部</option>
                             @if(!empty(@$examQuestionLabelTypeList))
                                 @foreach(@$examQuestionLabelTypeList as $val)
-                                    <option value="{{@$val['id']}}">{{@$val['name']}}</option>
+                                    <option value="{{@$val['id']}}" @if($formData['examQuestionLabelTypeId']==@$val['id']) selected @endif>{{@$val['name']}}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -46,7 +46,7 @@
                             <option value="">全部</option>
                             @if(!empty(@$examQuestionTypeList))
                                 @foreach(@$examQuestionTypeList as $val)
-                                    <option value="{{@$val['id']}}">{{@$val['name']}}</option>
+                                    <option value="{{@$val['id']}}" @if($formData['examQuestionTypeId']==@$val['id']) selected @endif>{{@$val['name']}}</option>
                                 @endforeach
                             @endif
                         </select>

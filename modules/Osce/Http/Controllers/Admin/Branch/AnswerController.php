@@ -112,7 +112,7 @@ class AnswerController extends CommonController
             }
         }
         //dd($examCategoryFormalData);
-        //dd($examCategoryFormalData);
+        //dd($examPaperFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'          =>$examPaperFormalData,//正式试卷信息
@@ -143,6 +143,8 @@ class AnswerController extends CommonController
             'examQuestionFormalInfo' >$request->input('examQuestionFormalInfo'),//正式试题信息
         );
 
+        return response()->json($data['examQuestionFormalInfo']);
+
         //提交过来的数据格式
         $case = array(
             'examPaperFormalId'=>'1',//试卷id
@@ -153,7 +155,7 @@ class AnswerController extends CommonController
                 '3'=>array('examQuestionFormalId'=>4,'examQuestionTypeId'=>4,'studentAnswer'=>'1'),
             )
         );
-        foreach($case['examQuestionFormalInfo'] as $k=>$v){
+        foreach($data['examQuestionFormalInfo'] as $k=>$v){
             $newStudentAnswer='';
             $studentAnswer = explode('@',$v['studentAnswer']);
             foreach($studentAnswer as $val){
@@ -200,14 +202,13 @@ class AnswerController extends CommonController
                 }
 
             }
-            $case['examQuestionFormalInfo'][$k]['studentAnswer']=$newStudentAnswer;
+            $data['examQuestionFormalInfo'][$k]['studentAnswer']=$newStudentAnswer;
 
         }
-        dd($case);
+        //dd($data);
         //保存考生答案
         $answerModel = new Answer();
-        //$result = $answerModel->saveAnswer($data);
-        $result=true;
+        $result = $answerModel->saveAnswer($data);
         if($result){
             //删除session
             \Session::forget('systemTimeStart');

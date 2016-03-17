@@ -79,6 +79,11 @@ class QuestionBankRepositories  extends BaseRepository
                 $NewArr['num'] = $AdditionalInfo['1'];
                 $NewArr['score'] = $AdditionalInfo['2'];
                 $NewArr['total_score'] = $AdditionalInfo['1']*$AdditionalInfo['2'];
+                if(@$arr['4']){
+                    $NewArr['structureid'] = $arr['4'];
+                }
+                //dd();
+                //dd($NewArr);
                 $lableType = explode(',',$arr[2]);
                 $lableArr = explode(',',$arr[3]);
                 $ExamQuestionLabelData = $ExamQuestionLabel->whereIn('id',$lableArr)->get();
@@ -103,6 +108,60 @@ class QuestionBankRepositories  extends BaseRepository
         return  $NewArr;
     }
 
+    /**
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $str
+     * @return array|bool
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月11日11:05:43
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function ArrToStr($data){
+        $ExamQuestionLabel = new ExamQuestionLabel;
+        //dd($request->all());
+        $ExamQuestionLabelData = $ExamQuestionLabel->whereIn('id',$data['tag'])->get();
+        $idArr = [];
+        $LabelNameStr = '';
+        foreach($ExamQuestionLabelData as $k => $v){
+            if($v->ExamQuestionLabelType){
+                if(!in_array($v->ExamQuestionLabelType['id'],$idArr)){
+                    $idArr[] = $v->ExamQuestionLabelType['id'];
+                    if(!empty($LabelNameStr)){
+                        $LabelNameStr .= ','.$v['name'];
+                    }else{
+                        $LabelNameStr .= $v['name'];
+                    }
+                }
+            }
+        }
+
+        $LabelTypeStr = '';
+        foreach($data as $key => $val){
+            if(preg_match('/^label-{1,3}/',$key)){
+                $arr = explode('-',$key);
+                if(!empty($LabelTypeStr)){
+                    $LabelTypeStr .= ','.$arr[1].'-'.$val;
+                }else{
+                    $LabelTypeStr .= $arr[1].'-'.$val;
+                }
+            }
+        }
+        $data = [
+            '0'=>$LabelNameStr,
+            '1'=>implode(',',
+                [
+                    0=>empty($data['question-type'])?0:$data['question-type'],
+                    1=>empty($data['questionNumber'])?0:$data['questionNumber'],
+                    2=>empty($data['questionScore'])?0:$data['questionScore']
+                ]
+            ),
+            '2'=>$LabelTypeStr,
+            '3'=>$ExamQuestionLabelStr = implode(',',$data['tag'])
+        ];
+        return implode('@',$data);
+    }
     /**
      * @method
      * @url /osce/

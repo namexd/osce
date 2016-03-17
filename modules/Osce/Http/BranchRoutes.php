@@ -96,6 +96,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::post('exampaper/edit-exam-paper',['uses'=>'ExamPaperController@getEditExamPaper','as'=>'osce.admin.ExamPaperController.getEditExamPaper']);
         //题库管理列表
         Route::get('examQuestion/examQuestion-list',['uses'=>'ExamQuestionController@showExamQuestionList','as'=>'osce.admin.ExamQuestionController.showExamQuestionList']);
+        //试卷管理-验证试卷
+        Route::post('exampaper/check-name-only',['uses'=>'ExamPaperController@postCheckNameOnly','as'=>'osce.admin.ExamPaperController.postCheckNameOnly']);
 
         //题库管理新增
         Route::get('examQuestion/examQuestion-add',['uses'=>'ExamQuestionController@getExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.getExamQuestionAdd']);//新增页面
@@ -113,7 +115,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //理论考试，答题时，试卷信息
         Route::get('answer/formalPaper-List',['uses'=>'AnswerController@formalPaperList','as'=>'osce.admin.AnswerController.formalPaperList']);
         //保存考生答案
-        Route::get('answer/postSaveAnswer',['uses'=>'AnswerController@postSaveAnswer','as'=>'osce.admin.AnswerController.postSaveAnswer']);
+        Route::post('answer/postSaveAnswer',['uses'=>'AnswerController@postSaveAnswer','as'=>'osce.admin.AnswerController.postSaveAnswer']);
 
         //查询该该考生理论考试的成绩
         Route::get('answer/selectGrade',['uses'=>'AnswerController@selectGrade','as'=>'osce.admin.AnswerController.selectGrade']);
