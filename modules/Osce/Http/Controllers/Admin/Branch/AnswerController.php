@@ -35,8 +35,14 @@ class AnswerController extends CommonController
      */
     public function formalPaperList()
     {
+        //将开始时间存入session中
+        if(\Session::get('systemTimeStart')){
+            $systemTimeStart =\Session::get('systemTimeStart');
+        }else{
+            \Session::put('systemTimeStart',time());
+        }
 
-        \Session::put('systemTimeStart',time());//存入当前系统时间
+        //dd(date('Y-m-d H:i:s',$systemTimeStart));
         //获取该理论考试相关信息
         $id = 1;//正式的试卷表ID
         //获取正式试卷表信息
@@ -50,6 +56,7 @@ class AnswerController extends CommonController
                 'length' => $examPaperFormalList->length,//正式试卷考试时间
                 'totalScore' => $examPaperFormalList->total_score,//正式试卷总分
             );
+          $systemTimeEnd =$systemTimeStart+$examPaperFormalData['length']*60; //结束时间
         }
         $examCategoryFormalData='';//正式试题信息(根据试题类型进行分类)
         if($examPaperFormalList){
@@ -111,11 +118,13 @@ class AnswerController extends CommonController
 
             }
         }
-        //dd($examCategoryFormalData);
+        //dd(date('Y/m/d H:i:s',$systemTimeStart).','.date('Y/m/d H:i:s',$systemTimeEnd));
         //dd($examPaperFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'          =>$examPaperFormalData,//正式试卷信息
+            'systemTimeStart'               =>date('Y/m/d H:i:s',$systemTimeStart),//开始时间
+            'systemTimeEnd'                 =>date('Y/m/d H:i:s',$systemTimeEnd),//结束时间
         ]);
     }
     /**保存考生答案

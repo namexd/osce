@@ -112,7 +112,7 @@
 .wizard > .steps .current a:hover,
 .wizard > .steps .current a:active
 {
-    background: #1AB394;
+    background: #16beb0;
     color: #fff;
     cursor: default;
 }
@@ -135,7 +135,7 @@
 
 .wizard > .content
 {
-    background: #eee;
+  /*  border: 1px #ccc dotted;*/
     display: block;
     margin: 5px 5px 10px 5px;
     min-height: 120px;
@@ -252,15 +252,14 @@
 .wizard > .actions a:hover,
 .wizard > .actions a:active
 {
-    background: #1AB394;
+    background: #16beb0;
     color: #fff;
     display: block;
-    padding: 0.5em 1em;
+    padding:7px 20px;
     text-decoration: none;
-
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    -webkit-border-radius:2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
 }
 
 .wizard > .actions .disabled a,

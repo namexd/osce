@@ -7,19 +7,20 @@
         /*选择框样式*/
         .check_other {display: inline-block;vertical-align: middle;}
         .check_top {top: 8px;display: block;}
-        /*按钮框下面线*/
-        .cBorder_b{border-bottom: 1px solid #e7eaec;}
-        /*选项样式*/
-        .padb{padding-bottom: 56px;}
-        .chooseOne{padding: 10px;margin-right: 5px;border-radius: 2px;cursor: pointer;}
-        .haveChoose{border: 1px solid #aeddd9;background-color: #aeddd9;}
-        .nowChoose{border: 1px solid #16beb0;background-color: #16beb0;color: #fff;}
-        .waitChoose{border: 1px solid #e7eaec;}
+
         /*覆盖页面样式*/
         .wizard > .steps > ul > li{;margin-right: 5px;border-radius: 2px;cursor: pointer;
             width: auto!important;
         }
         .check_label{cursor: pointer}
+
+        .colockbox{width:250px;height:30px;overflow: hidden; color:#000;}
+        .colockbox span{
+            float:left;display:block;
+            width:30px;height:29px;
+            line-height:29px;font-size:20px;
+            font-weight:bold;text-align:center;
+            color:#ff0101; margin-right:5px;}
     </style>
     <link href="{{asset('osce/admin/plugins/css/plugins/iCheck/custom.css')}}" rel="stylesheet">
     <link href="{{asset('osce/admin/plugins/css/plugins/steps/jquery.stepschange.css')}}" rel="stylesheet">
@@ -27,7 +28,11 @@
 @stop
 
 @section('only_js')
-    <script type="text/javascript" src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
+    <!--[if IE]>
+    <script src="{{asset('osce/admin/js/html5shiv.min.js')}}"></script>
+    <![endif]-->
+    <script type="text/javascript" src="{{asset('osce/admin/js/countdown/js/jquery.classyled.js')}}"></script>
+    <script type="text/javascript" src="{{asset('osce/admin/js/countdown/js/raphael.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/staps/jquery.stepschange.js')}}"></script>
     <script>
         $(document).ready(function() {
@@ -96,7 +101,44 @@
                     }
                 })
             })
+
         });
+        $(function(){
+            countDown("{{$systemTimeEnd}}","#colockbox1");
+        });
+        function countDown(time,id){
+            var day_elem = $(id).find('.day');
+            var hour_elem = $(id).find('.hour');
+            var minute_elem = $(id).find('.minute');
+            var second_elem = $(id).find('.second');
+            var end_time = new Date(time).getTime(),//月份是实际月份-1
+                    sys_second = (end_time-new Date().getTime())/1000;
+            var timer = setInterval(function(){
+                if (sys_second > 1) {
+                    sys_second -= 1;
+                    var day = Math.floor((sys_second / 3600) / 24);
+                    var hour = Math.floor((sys_second / 3600) % 24);
+                    var minute = Math.floor((sys_second / 60) % 60);
+                    var second = Math.floor(sys_second % 60);
+                    day_elem && $(day_elem).text(day);//计算天
+                    $(hour_elem).text(hour<10?"0"+hour:hour);//计算小时
+                    $(minute_elem).text(minute<10?"0"+minute:minute);//计算分钟
+                    $(second_elem).text(second<10?"0"+second:second);//计算秒杀
+                } else {
+                    //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
+                    var examPaperFormalId=$('#examPaperFormalId').val();
+                    var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
+                    $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){
+                        if(obj.status=='2'){
+                            location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                        }
+                        if(obj.status=='3'){
+                            console.log('保存失败');
+                        }
+                    })
+                }
+            }, 1000);
+        }
     </script>
 @stop
 
@@ -138,7 +180,7 @@
                                                 <div class="subjectBox   mart_10 " exam_question_id="{{$val["exam_question_id"]}}">
                                                     <span class="font16 subjectContent">{{ $val["name"]}}(　　　)</span>
                                                 </div>
-                                                @if($val["examCategoryFormalId"]===1||$val["examCategoryFormalId"]===4)
+                                                @if($val["examCategoryFormalId"]===1)
                                                     @foreach($val["content"] as $k=> $val2 )
                                                         <div class="answerBox" examCategoryFormalId="{{$val["examCategoryFormalId"]}}">
                                                             <label class="radio_label mart_20 check_top">
@@ -156,6 +198,23 @@
                                                                 <div class="check_icon check_other"></div>
                                                                 <input type="checkbox" name="{{$val["serialNumber"]}}" value="{{$k}}">
                                                                 <span class="check_name">{{@$val2}}</span>
+                                                            </label>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+                                                @if($val["examCategoryFormalId"]===4)
+                                                    @foreach($val["content"] as $k=> $val2 )
+                                                        <div class="answerBox" examCategoryFormalId="{{$val["examCategoryFormalId"]}}">
+                                                            <label class="radio_label mart_20 check_top">
+                                                                <div class="radio_icon left" ></div>
+                                                                <input type="radio" name="{{$val["serialNumber"]}}" value="{{$k}}">
+                                                                <span class="marl_10 answer">
+                                                                    @if($val2==0)
+                                                                        错误
+                                                                    @elseif($val2==1)
+                                                                        正确
+                                                                     @endif
+                                                                </span>
                                                             </label>
                                                         </div>
                                                     @endforeach
@@ -186,9 +245,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btnBox" style="margin: 70px 0 50px 0;">
-                            <span class="marl_10">剩余时间</span>
-                            <span class="font24" style="color: #ff0101;font-weight: 700;">10:10</span>
+                        <div class="btnBox" style="margin:0 auto; padding:70px 0; text-align: center; width: 400px;">
+                            <span class="marl_10 left" style="height: 29px; line-height: 29px;">剩余时间：</span>
+                            <div class="colockbox" id="colockbox1"><span class="hour">00</span><span class="left">:</span> <span class="minute">00</span> <span class="left">:</span> <span class="second">00</span> </div>
                         </div>
                     </div>
 
@@ -196,7 +255,7 @@
             </div>
         </div>
     </div>
-    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="wrapper wrapper-content animated fadeInRight"  style="display: none">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">理论考试</h5>
