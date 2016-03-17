@@ -7,14 +7,7 @@
         /*选择框样式*/
         .check_other {display: inline-block;vertical-align: middle;}
         .check_top {top: 8px;display: block;}
-        /*按钮框下面线*/
-        .cBorder_b{border-bottom: 1px solid #e7eaec;}
-        /*选项样式*/
-        .padb{padding-bottom: 56px;}
-        .chooseOne{padding: 10px;margin-right: 5px;border-radius: 2px;cursor: pointer;}
-        .haveChoose{border: 1px solid #aeddd9;background-color: #aeddd9;}
-        .nowChoose{border: 1px solid #16beb0;background-color: #16beb0;color: #fff;}
-        .waitChoose{border: 1px solid #e7eaec;}
+
         /*覆盖页面样式*/
         .wizard > .steps > ul > li{;margin-right: 5px;border-radius: 2px;cursor: pointer;
             width: auto!important;
@@ -27,7 +20,11 @@
 @stop
 
 @section('only_js')
-    <script type="text/javascript" src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
+    <!--[if IE]>
+    <script src="{{asset('osce/admin/js/html5shiv.min.js')}}"></script>
+    <![endif]-->
+    <script type="text/javascript" src="{{asset('osce/admin/js/countdown/js/jquery.classyled.js')}}"></script>
+    <script type="text/javascript" src="{{asset('osce/admin/js/countdown/js/raphael.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/staps/jquery.stepschange.js')}}"></script>
     <script>
         $(document).ready(function() {
@@ -92,6 +89,16 @@
                     location.href="{{route("osce.admin.AnswerController.selectGrade")}}";
                 })
             })
+
+            $('.led2').ClassyLED({
+                type: 'time',
+                format: 'hh:mm',
+                color: '#ed1978',
+                backgroundColor: '#cccccc',
+                size: 14,
+                rounded: 4,
+                fontType: 1
+            });
         });
     </script>
 @stop
@@ -192,7 +199,7 @@
             </div>
         </div>
     </div>
-    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="wrapper wrapper-content animated fadeInRight"  style="display: none">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">理论考试</h5>
