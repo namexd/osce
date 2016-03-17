@@ -136,9 +136,8 @@ class RoomController extends CommonController
             'name'          => 'required',
             'description'   => 'required',
             'type'          => 'required',
-            'floor' => 'required|integer',
-            'room_number' => 'required',
-            'proportion' => 'required'
+            'floor' => 'integer',
+            'proportion' => 'integer'
         ]);
 
         $id         = $request->input('id');
@@ -231,9 +230,8 @@ class RoomController extends CommonController
                 'code'          => 'sometimes',
                 'description'   => 'required',
                 'cate'          => 'required',
-                'floor' => 'required|integer',
-                'room_number' => 'required',
-                'proportion' => 'required'
+                'floor' => 'integer',
+                'proportion' => 'integer'
             ],[
                 'name.unique'   =>  '名称必须唯一',
                 'vcr_id.required'=> '摄像头不能为空'
