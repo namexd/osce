@@ -71,30 +71,29 @@ class ExamQueue extends CommonModel
 
     public function getStudent($mode, $exam_id)
     {
-        $exam = Exam::find($exam_id);
+//        $exam = Exam::find($exam_id);
         if ($mode == 1) {
-            return $this->getWaitRoom($exam);
+            return $this->getWaitRoom($exam_id);
 
         } elseif ($mode == 2) {
-            return $this->getWaitStation($exam);
+            return $this->getWaitStation($exam_id);
         }
 
     }
 
     //获取候考教室
-    protected function getWaitRoom($exam)
+    protected function getWaitRoom($exam_id)
     {
-        $examFlowRoomList = ExamFlowRoom::where('exam_id', '=', $exam->id)->paginate(config('osce.page_size'));
+        $examFlowRoomList = ExamFlowRoom::where('exam_id', '=', $exam_id)->paginate(config('osce.page_size'));
         $data = [];
         foreach ($examFlowRoomList as $examFlowRoom) {
             $roomName = $examFlowRoom->room->name;
             $room_id = $examFlowRoom->room_id;
 //            $students = $examFlowRoom->queueStudent()->where('exam_id', '=', $exam->id)->get();
             $ExamQueue = new ExamQueue();
-            $students = $ExamQueue->getWaitStudentRoom($room_id, $exam->id);
+            $students = $ExamQueue->getWaitStudentRoom($room_id, $exam_id);
             foreach ($students as $examQueue) {
                 foreach ($examQueue->student as $student) {
-//                  $student->roomName=$roomName;
                     $data[$roomName][] = $student;
                 }
             }
@@ -103,19 +102,18 @@ class ExamQueue extends CommonModel
     }
 
     //获取候考考站
-    protected function getWaitStation($exam)
+    protected function getWaitStation($exam_id)
     {
-        $examFlowStationList = ExamFlowStation::where('exam_id', '=', $exam->id)->paginate(config('osce.page_size'));
+        $examFlowStationList = ExamFlowStation::where('exam_id', '=', $exam_id)->paginate(config('osce.page_size'));
         $data = [];
         foreach ($examFlowStationList as $examFlowStation) {
             $stationName = $examFlowStation->station->name;
             $station_id = $examFlowStation->station_id;
             $ExamQueue = new ExamQueue();
-            $students = $ExamQueue->getWaitStudentStation($station_id, $exam->id);
+            $students = $ExamQueue->getWaitStudentStation($station_id, $exam_id);
 //            $students = $examFlowStation->queueStation()->where('exam_id', '=', $exam->id)->get();
             foreach ($students as $ExamQueue) {
                 foreach ($ExamQueue->student as $student) {
-//                   $student->stationName=$stationName;
                     $data[$stationName][] = $student;
                 }
             }
@@ -576,16 +574,27 @@ class ExamQueue extends CommonModel
         $builder = $this->leftJoin('exam_flow_station',
             function ($join) {
                 $join->on('exam_queue.station_id', '=', 'exam_flow_station.station_id');
-            })->leftJoin('student',
-            function ($join) {
+            })
+            ->leftJoin('student', function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
-            })->where('exam_queue.station_id', '=', $station_id)->where('exam_queue.exam_id', '=',
-            $exam_id)->where('exam_queue.status', '=', 0)
-            ->orderBy('begin_dt', 'asc')
-            ->select([
-                'student.name as name',
-                'student.id as student_id',
-            ])->distinct()->take(4)->get();
+            })
+            ->where('exam_queue.station_id', '=', $station_id)
+            ->where('exam_queue.exam_id', '=', $exam_id)
+            ->where('exam_queue.status', '=', 0)
+            ->orderBy('exam_queue.begin_dt', 'asc')
+            ->select(['student.name as name', 'exam_queue.student_id', 'exam_queue.begin_dt'])
+            ->distinct()->take(4)->get();
+
+        if(count($builder) != 0){
+            foreach ($builder as &$item) {
+                //获取同一个人，在一场考试队列中是否有更早的考试
+                $result = $this ->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)->where('status', '=', 0)
+                                ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
+                if($result){
+                    $item->name = '';
+                }
+            }
+        }
 
         return $builder;
     }
@@ -600,20 +609,31 @@ class ExamQueue extends CommonModel
      */
     public function getWaitStudentRoom($room_id = '', $exam_id = '')
     {
-
         $builder = $this->leftJoin('exam_flow_room',
             function ($join) {
                 $join->on('exam_queue.room_id', '=', 'exam_flow_room.room_id');
-            })->leftJoin('student',
-            function ($join) {
+            })
+            ->leftJoin('student', function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
-            })->where('exam_queue.room_id', '=', $room_id)->where('exam_queue.exam_id', '=',
-            $exam_id)->where('exam_queue.status', '=', 0)
-            ->orderBy('begin_dt', 'asc')
-            ->select([
-                'student.name as name',
-                'student.id as student_id',
-            ])->distinct()->take(4)->get();
+            })
+            ->where('exam_queue.room_id', '=', $room_id)
+            ->where('exam_queue.exam_id', '=', $exam_id)
+            ->where('exam_queue.status', '=', 0)
+            ->orderBy('exam_queue.begin_dt', 'asc')
+            ->select(['student.name as name', 'exam_queue.student_id', 'exam_queue.begin_dt'])
+            ->distinct()->take(4)->get();
+
+        if(count($builder) != 0){
+            foreach ($builder as &$item) {
+                //获取同一个人，在一场考试队列中是否有更早的考试
+                $result = $this ->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)->where('status', '=', 0)
+                                ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
+                if($result){
+                    $item->name = '';
+                }
+            }
+        }
+
         return $builder;
     }
 
@@ -673,4 +693,66 @@ class ExamQueue extends CommonModel
         }
     }
 
+    /**
+     * 获取 考站/考场 分页
+     */
+    public function getPageSize($exam_id, $pageSize = 4)
+    {
+        return $this->where('exam_id', $exam_id)->groupBy('station_id')->paginate($pageSize);
+    }
+
+    /**
+     * 获取候考考站对应学生列表
+     */
+    public function getWaitStationStudents($exam_id, $pageSize = 4)
+    {
+        $examFlowStationList = ExamFlowStation::where('exam_id', '=', $exam_id)->paginate($pageSize);
+        $data = [];
+        foreach ($examFlowStationList as $examFlowStation) {
+            $stationName = $examFlowStation->station->name;
+            $station_id  = $examFlowStation->station_id;
+            $ExamQueue   = new ExamQueue();
+            $students    = $ExamQueue->getWaitStudentStation($station_id, $exam_id);
+            foreach ($students as $ExamQueue) {
+                foreach ($ExamQueue->student as $student) {
+                    if($ExamQueue->name == ''){
+                        $student->name = '';
+                    }
+                    $data[$stationName]['name']      = $stationName;
+                    $data[$stationName]['student'][] = $student;
+                }
+            }
+        }
+        $data = array_values($data);
+
+        return $data;
+    }
+
+    /**
+     * 获取候考考场对应学生列表
+     */
+    public function getWaitRoomStudents($exam_id, $pageSize = 4)
+    {
+        $examFlowRoomList = ExamFlowRoom::where('exam_id', '=', $exam_id)->paginate($pageSize);
+        $data = [];
+        foreach ($examFlowRoomList as $examFlowRoom)
+        {
+            $roomName = $examFlowRoom->room->name;
+            $room_id  = $examFlowRoom->room_id;
+            $ExamQueue= new ExamQueue();
+            $students = $ExamQueue->getWaitStudentRoom($room_id, $exam_id);
+            foreach ($students as $examQueue) {
+                foreach ($examQueue->student as $student) {
+                    if($examQueue->name == ''){
+                        $student->name = '';
+                    }
+                    $data[$roomName]['name']      = $roomName;
+                    $data[$roomName]['student'][] = $student;
+                }
+            }
+        }
+        $data = array_values($data);
+
+        return $data;
+    }
 }

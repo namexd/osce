@@ -47,4 +47,47 @@ class OsceTvController extends  CommonController{
 //        return view('osce::admin.examManage.exam_remind');
     }
 
+    public function postWaitDetail(Request $request)
+    {
+        try{
+            $this->validate($request,[
+                'exam_id'   => 'required|integer',
+                'page'      => 'sometimes|integer'
+            ]);
+            $exam_id = $request->get('exam_id');
+            $page    = $request->get('page');
+            $pageSize= 4;
+            $exam    = Exam::where('id', '=', $exam_id)->select('sequence_mode')->first();
+            if($exam){
+                $mode = $exam->sequence_mode;
+            } else{
+                throw new \Exception('没找到当前考试！');
+            }
+            $ExamQueue  = new ExamQueue();
+            $pagination = $ExamQueue->getPageSize($exam_id, $pageSize);
+            //根据排序方式 获取数据
+            if ($mode == 1) {
+                $students   = $ExamQueue->getWaitRoomStudents($exam_id, $pageSize);
+            } elseif ($mode == 2) {
+                $students   = $ExamQueue->getWaitStationStudents($exam_id, $pageSize);
+            }
+
+            return response()->json(
+                $this->success_data(
+                    [
+                        'rows'      => $students,
+                        'total'     => ceil($pagination->total()/$pageSize),
+                        'page_size' => $pageSize,
+                        'page'      => $pagination->currentPage()
+                    ],
+                    1, '获取数据成功'
+                )
+            );
+
+        } catch(\Exception $ex){
+            return response()->json($this->fail($ex));
+        }
+    }
+
+
 }

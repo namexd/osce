@@ -234,7 +234,28 @@ class PadController extends  CommonController{
               $pagination=$examQueue->getPagination();
               $students = $examQueue->getStudent($mode, $exam_id);
               return response()->json(
-                  $this->success_rows(1, 'success', $pagination->total(), config('msc.page_size'), $pagination->currentPage(), $students)
+//                  $this->success_rows(1, 'success', $pagination->total(), config('msc.page_size'), $pagination->currentPage(), $students)
+                  $this->success_data(
+//                      [
+//                          'code' => 1,
+//                          'message' => '成功',
+//                          'data' => [
+//                                'rows' => $students,
+//                                'total'     => $pagination->total(),
+//                                'page_size' => config('msc.page_size'),
+//                                'page'      => $pagination->currentPage()
+//                          ]
+//                      ]
+
+
+                      [
+                        'rows'      => $students,
+                        'total'     => $pagination->total(),
+                        'page_size' => config('msc.page_size'),
+                        'page'      => $pagination->currentPage()
+                    ],
+                    1, '获取数据成功'
+                )
               );
           }catch( \Exception $ex){
               return response()->json(

@@ -74,23 +74,29 @@
              * @version 1.0
              * @date    2016-03-16
              */
-            function getExamInfo(res,nowPage) {
+            function getExamInfo(nowPage) {
 
                 //请求数据
                 $.ajax({
-                    type: 'get',
-                    url: '',
-                    data: {page:nowPage},
+                    type: 'post',
+                    url: '{{route('osce.admin.postWaitDetail')}}',
+                    data: {exam_id:{{$exams->id}}, page:nowPage},
                     success: function(res) {
                         var html = '',
-                            data = res.rows.data;
+                            data = res.data.rows;
 
                         if(res.code == 1) {
                             //todo
-                            for(var i = 0; i < data.length; i++) {
-                                html += '<dl><dt>'+ data[i].stationName +'</dt>';
-                                for(var j in data) {
-                                    html = html + '<dd>'+ data[i].student[j] +'</dd>';
+                            var number = data.length > 4 ? 4 : data.length;
+
+                            for(var i = 0; i < number; i++) {
+                                html += '<dl><dt>'+ data[i].name +'</dt>';
+                                for(var j in data[i].student) {
+                                    if(data[i].student[j].name == '') {
+                                        html = html + '<dd>&nbsp;</dd>';
+                                    } else {
+                                        html = html + '<dd>'+ data[i].student[j].name +'</dd>';
+                                    }
                                 }
                                 html += '</dl>'; 
                             }
@@ -98,14 +104,14 @@
                             $('#name_list').html(html);
 
                             //获取表头的列数，设置宽度
-                            var count = data.length,
+                            var count = number,
                                 _w = 100/count;
 
                             $("#name_list dl").css({width: _w+"%"});
 
                             //刷新数据
                             setTimeout(function() {
-                                if(nowPage < data.total) {
+                                if(nowPage < res.data.total) {
                                     nowPage ++;
                                 } else {
                                     nowPage = 1;
@@ -118,7 +124,7 @@
                 });
             }
             //启动数据
-            getExamInfo(res,1);
+            getExamInfo(1);
 
 
         })
