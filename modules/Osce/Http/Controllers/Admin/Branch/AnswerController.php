@@ -35,8 +35,8 @@ class AnswerController extends CommonController
      */
     public function formalPaperList()
     {
-
-        \Session::put('systemTimeStart',time());//存入当前系统时间
+        $systemTimeStart =time();
+        \Session::put('systemTimeStart',$systemTimeStart);//将开始时间存入session中
         //获取该理论考试相关信息
         $id = 1;//正式的试卷表ID
         //获取正式试卷表信息
@@ -50,6 +50,7 @@ class AnswerController extends CommonController
                 'length' => $examPaperFormalList->length,//正式试卷考试时间
                 'totalScore' => $examPaperFormalList->total_score,//正式试卷总分
             );
+          $systemTimeEnd =$systemTimeStart+$examPaperFormalData['length']*60; //结束时间
         }
         $examCategoryFormalData='';//正式试题信息(根据试题类型进行分类)
         if($examPaperFormalList){
@@ -111,11 +112,13 @@ class AnswerController extends CommonController
 
             }
         }
-        //dd($examCategoryFormalData);
+        //dd(date('Y/m/d H:i:s',$systemTimeStart).','.date('Y/m/d H:i:s',$systemTimeEnd));
         //dd($examPaperFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'          =>$examPaperFormalData,//正式试卷信息
+            'systemTimeStart'               =>date('Y/m/d H:i:s',$systemTimeStart),//开始时间
+            'systemTimeEnd'                 =>date('Y/m/d H:i:s',$systemTimeEnd),//结束时间
         ]);
     }
     /**保存考生答案
@@ -137,10 +140,10 @@ class AnswerController extends CommonController
                 return response()->json(['status'=>'1','info'=>'超时']);
             }
         }*/
-
+        $actualLength = (time()-$systemTimeStart)/60;//考试用时
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-            'actualLength' =>time()-$systemTimeStart, //考试用时
+            'actualLength' =>sprintf("%.2f",$actualLength), //考试用时
             'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
         );
  /*       //提交过来的数据格式
@@ -231,7 +234,7 @@ class AnswerController extends CommonController
     {
 
         $this->validate($request, [
-            // 'examPaperFormalId'=>'required|integer',//正式的试卷id
+             'examPaperFormalId'=>'required|integer',//正式的试卷id
 
         ]);
 

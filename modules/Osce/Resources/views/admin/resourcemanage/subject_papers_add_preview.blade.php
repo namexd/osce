@@ -16,7 +16,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="center">
             <h2>{{$PaperPreviewArr["name"]}}</h2>
-            <p>考试时长：{{$PaperPreviewArr["time"]}}分钟　　　总分：40分</p>
+            <p>考试时长：{{$PaperPreviewArr["time"]}}分钟　　　总分：{{@$PaperPreviewArr['total_score']}}分</p>
         </div>
 
         @if(!empty($PaperPreviewArr["item"]))
