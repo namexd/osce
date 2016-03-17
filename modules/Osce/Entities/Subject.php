@@ -20,16 +20,29 @@ class Subject extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['title', 'score', 'sort', 'status', 'created_user_id', 'description', 'goods', 'stem', 'equipments'];
+    protected $fillable = [
+        'title',
+        'score',
+        'sort',
+        'status',
+        'created_user_id',
+        'description',
+        'goods',
+        'stem',
+        'equipments'
+    ];
     public $search = [];
 
-    public function user(){
-        return $this->hasOne('App\Entities\User','created_user_id','id');
+    public function user()
+    {
+        return $this->hasOne('App\Entities\User', 'created_user_id', 'id');
     }
 
-    public function items(){
-        return $this->hasMany('Modules\Osce\Entities\SubjectItem','subject_id','id');
+    public function items()
+    {
+        return $this->hasMany('Modules\Osce\Entities\SubjectItem', 'subject_id', 'id');
     }
+
     /**
      * 获取课题列表（考核点的盒子的列表）
      * @access public
@@ -42,14 +55,12 @@ class Subject extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList($name){
-        if(!is_null($name))
-        {
-            return $this->where('title','like','%'.$name.'%')->paginate(config('osce.page_size'));
-        }
-        else
-        {
-            return $this->  paginate(config('osce.page_size'));
+    public function getList($name)
+    {
+        if (!is_null($name)) {
+            return $this->where('title', 'like', '%' . $name . '%')->paginate(config('osce.page_size'));
+        } else {
+            return $this->paginate(config('osce.page_size'));
         }
     }
 
@@ -71,25 +82,21 @@ class Subject extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addSubject($data,$points){
-        $connection =   DB::connection($this->connection);
-        $connection ->beginTransaction();
+    public function addSubject($data, $points)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
 
-        try{
-            if($subject =   $this   ->  create($data))
-            {
-                $this   ->  addPoint($subject,$points);
-            }
-            else
-            {
+        try {
+            if ($subject = $this->create($data)) {
+                $this->addPoint($subject, $points);
+            } else {
                 throw new \Exception('新增考核标准失败');
             }
-            $connection ->  commit();
+            $connection->commit();
             return $subject;
-        }
-        catch(\Exception $ex)
-        {
-            $connection ->  rollBack();
+        } catch (\Exception $ex) {
+            $connection->rollBack();
             throw $ex;
         }
     }
@@ -110,29 +117,24 @@ class Subject extends CommonModel
      * @date 2016-01-03 18:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function editTopic($id,$data,$points){
-        $subject    =   $this->findOrFail($id);
-        $connection =   DB::connection($this->connection);
-        $connection ->beginTransaction();
-        try{
-            foreach($data as $field=>$value)
-            {
-                $subject    ->  $field  =$value;
+    public function editTopic($id, $data, $points)
+    {
+        $subject = $this->findOrFail($id);
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
+            foreach ($data as $field => $value) {
+                $subject->$field = $value;
             }
-            if($subject    ->  save())
-            {
-                $this   ->  editPoint($subject,$points);
-            }
-            else
-            {
+            if ($subject->save()) {
+                $this->editPoint($subject, $points);
+            } else {
                 throw new \Exception('更新考核点信息失败');
             }
-            $connection ->commit();
+            $connection->commit();
             return $subject;
-        }
-        catch(\Exception $ex)
-        {
-            $connection ->rollBack();
+        } catch (\Exception $ex) {
+            $connection->rollBack();
             throw $ex;
         }
 
@@ -159,16 +161,14 @@ class Subject extends CommonModel
      * @date 2016-01-03
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    protected function addPoint($subject,array $points){
-        $SubjectItemModel    = new SubjectItem();
-        try{
-            foreach($points as $point)
-            {
-                $SubjectItemModel   -> addItem($subject,$point);
+    protected function addPoint($subject, array $points)
+    {
+        $SubjectItemModel = new SubjectItem();
+        try {
+            foreach ($points as $point) {
+                $SubjectItemModel->addItem($subject, $point);
             }
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             throw $ex;
         }
     }
@@ -188,52 +188,42 @@ class Subject extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    protected function editPoint($subject,array $points){
-        $SubjectItemModel    = new SubjectItem();
-        try{
-            $SubjectItemModel   ->delItemBySubject($subject);
-            foreach($points as $point)
-            {
-                $SubjectItemModel   -> addItem($subject,$point);
+    protected function editPoint($subject, array $points)
+    {
+        $SubjectItemModel = new SubjectItem();
+        try {
+            $SubjectItemModel->delItemBySubject($subject);
+            foreach ($points as $point) {
+                $SubjectItemModel->addItem($subject, $point);
             }
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             throw $ex;
         }
     }
-    public function delSubject($subject){
-        $connection =   DB::connection($this->connection);
-        $connection ->beginTransaction();
 
-        $SubjectItemModel    = new SubjectItem();
-        try
-        {
-            $SubjectItemModel   ->delItemBySubject($subject);
-            if($subject    ->  delete())
-            {
-                $connection ->commit();
+    public function delSubject($subject)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+
+        $SubjectItemModel = new SubjectItem();
+        try {
+            $SubjectItemModel->delItemBySubject($subject);
+            if ($subject->delete()) {
+                $connection->commit();
                 return true;
-            }
-            else
-            {
+            } else {
                 throw new \Exception('删除失败');
             }
-        }
-        catch(\Exception $ex)
-        {
-            $connection ->rollBack();
-            if($ex->getCode()==23000)
-            {
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            if ($ex->getCode() == 23000) {
                 throw new \Exception('该科目已经被使用了,不能删除');
-            }
-            else
-            {
+            } else {
                 throw $ex;
             }
         }
     }
-
 
 
     /**
@@ -242,15 +232,15 @@ class Subject extends CommonModel
      * @param $subjectId
      * @return
      */
-    public function CourseControllerAvg($examId,$subjectId)
+    public function CourseControllerAvg($examId, $subjectId)
     {
-        return ExamResult::leftJoin('station','exam_result.station_id','=','station.id')
-            ->leftJoin('subject','station.subject_id','=','subject.id')
-            ->leftJoin('exam_screening','exam_screening.id','=','exam_result.exam_screening_id')
-            ->leftJoin('exam','exam.id','=','exam_screening.exam_id')
-            ->where('exam.id','=',$examId)
-            ->where('exam.status','<>',0)
-            ->where('subject.id','=',$subjectId)
+        return ExamResult::leftJoin('station', 'exam_result.station_id', '=', 'station.id')
+            ->leftJoin('subject', 'station.subject_id', '=', 'subject.id')
+            ->leftJoin('exam_screening', 'exam_screening.id', '=', 'exam_result.exam_screening_id')
+            ->leftJoin('exam', 'exam.id', '=', 'exam_screening.exam_id')
+            ->where('exam.id', '=', $examId)
+            ->where('exam.status', '<>', 0)
+            ->where('subject.id', '=', $subjectId)
             ->select(
                 'exam_result.score',
                 'exam_result.time'
@@ -264,16 +254,17 @@ class Subject extends CommonModel
      * @param $subjectId
      * @return
      */
-     public  function  getSubjectList($examId){
-         $SubjectData = $this->leftJoin('station','station.subject_id','=','subject.id')
-                            ->leftJoin('exam_station','exam_station.station_id','=','station.id')
-                            ->where('exam_id','=',$examId)
-                            ->select(
-                                'subject.title as subject_name',
-                                'subject.id as id'
-                            )->get();
-                return  $SubjectData;
+    public function getSubjectList($examId)
+    {
+        $SubjectData = $this->leftJoin('station', 'station.subject_id', '=', 'subject.id')
+            ->leftJoin('exam_station', 'exam_station.station_id', '=', 'station.id')
+            ->where('exam_id', '=', $examId)
+            ->select(
+                'subject.title as subject_name',
+                'subject.id as id'
+            )->get();
+        return $SubjectData;
 
-     }
+    }
 
 }
