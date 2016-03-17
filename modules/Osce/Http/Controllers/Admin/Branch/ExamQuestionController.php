@@ -35,6 +35,7 @@ class ExamQuestionController extends CommonController
         $formData['examQuestionLabelTypeId'] = $request->input('examQuestionLabelTypeId'); //试题类型id(2)
         $formData['examQuestionTypeId'] = $request->input('examQuestionTypeId');//题目类型id
 
+
         //获取试题类型列表（标签类型）
         $examQuestionLabelTypeModel= new ExamQuestionLabelType();
         $examQuestionLabelTypeList = $examQuestionLabelTypeModel->examQuestionLabelTypeList();
@@ -79,7 +80,9 @@ class ExamQuestionController extends CommonController
             'data'                         =>$data,//对象型数据
             'list'                         =>$list ,//试题列表（数组型数据）
             'examQuestionLabelTypeList' =>$examQuestionLabelTypeList,//试题类型列表
-            'examQuestionTypeList'       =>$examQuestionTypeList //题目类型列表
+            'examQuestionTypeList'       =>$examQuestionTypeList, //题目类型列表
+            'formData'                    =>$formData
+
         ]);
     }
 

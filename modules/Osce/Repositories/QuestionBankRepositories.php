@@ -80,6 +80,11 @@ class QuestionBankRepositories  extends BaseRepository
                 $NewArr['num'] = $AdditionalInfo['1'];
                 $NewArr['score'] = $AdditionalInfo['2'];
                 $NewArr['total_score'] = $AdditionalInfo['1']*$AdditionalInfo['2'];
+                if(@$arr['4']){
+                    $NewArr['structureid'] = $arr['4'];
+                }
+                //dd();
+                //dd($NewArr);
                 $lableType = explode(',',$arr[2]);
                 $lableArr = explode(',',$arr[3]);
                 $ExamQuestionLabelData = $ExamQuestionLabel->whereIn('id',$lableArr)->get();

@@ -41,6 +41,105 @@
             });
             //自动组卷验证
                 function autoValidate(){
+                    var paperId = $("#paperId").val();
+                    if(paperId){
+                        $("#sourceForm").bootstrapValidator({
+                            message: 'This value is not valid',
+                            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                                valid: 'glyphicon glyphicon-ok',
+                                invalid: 'glyphicon glyphicon-remove',
+                                validating: 'glyphicon glyphicon-refresh'
+                            },
+                            fields: {/*验证*/
+                                name: {/*键名username和input name值对应*/
+                                    message: 'The username is not valid',
+                                    validators: {
+                                        notEmpty: {/*非空提示*/
+                                            message: '试卷名称不能为空'
+                                        },
+                                        remote:{
+                                            url: '/osce/admin/exampaper/check-name-only',//验证地址
+                                            message: '该试卷名称已存在',//提示消息
+                                            delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                            type: 'POST',//请求方式
+                                            data: function (validator) {
+                                                return{
+                                                    id:paperId
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                time: {
+                                    validators: {
+                                        notEmpty: {/*非空提示*/
+                                            message: '考试时长不能为空'
+                                        },
+                                        callback: {
+                                            message: '考试时长必须是20及以上的整数',
+                                            callback:function(){
+                                                if($("#code").val() >= 20){
+                                                    return true;
+                                                }else{
+                                                    return false;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                    }else{
+                        $("#sourceForm").bootstrapValidator({
+                            message: 'This value is not valid',
+                            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                                valid: 'glyphicon glyphicon-ok',
+                                invalid: 'glyphicon glyphicon-remove',
+                                validating: 'glyphicon glyphicon-refresh'
+                            },
+                            fields: {/*验证*/
+                                name: {/*键名username和input name值对应*/
+                                    message: 'The username is not valid',
+                                    validators: {
+                                        notEmpty: {/*非空提示*/
+                                            message: '试卷名称不能为空'
+                                        },
+                                        remote:{
+                                            url: '/osce/admin/exampaper/check-name-only',//验证地址
+                                            message: '该试卷名称已存在',//提示消息
+                                            delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                            type: 'POST',//请求方式
+                                            data: function (validator) {
+
+                                            }
+                                        }
+                                    }
+                                },
+                                time: {
+                                    validators: {
+                                        notEmpty: {/*非空提示*/
+                                            message: '考试时长不能为空'
+                                        },
+                                        callback: {
+                                            message: '考试时长必须是20及以上的整数',
+                                            callback:function(){
+                                                if($("#code").val() >= 20){
+                                                    return true;
+                                                }else{
+                                                    return false;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                    }
+                }
+            //手动组卷验证
+            function handValidate(){
+                var paperId = $("#paperId").val();
+                if(paperId){
                     $("#sourceForm").bootstrapValidator({
                         message: 'This value is not valid',
                         feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -56,7 +155,54 @@
                                         message: '试卷名称不能为空'
                                     },
                                     remote:{
-                                        url: '',//验证地址
+                                        url: '/osce/admin/exampaper/check-name-only',//验证地址
+                                        message: '该试卷名称已存在',//提示消息
+                                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                        type: 'POST',//请求方式
+                                        data: function (validator) {
+                                            return{
+                                                id:paperId
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            time: {
+                                validators: {
+                                    notEmpty: {/*非空提示*/
+                                        message: '考试时长不能为空'
+                                    },
+                                    callback: {
+                                        message: '考试时长必须是20及以上的整数',
+                                        callback:function(){
+                                            if($("#code").val() >= 20){
+                                                return true;
+                                            }else{
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    })
+                }else{
+                    $("#sourceForm").bootstrapValidator({
+                        message: 'This value is not valid',
+                        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                            valid: 'glyphicon glyphicon-ok',
+                            invalid: 'glyphicon glyphicon-remove',
+                            validating: 'glyphicon glyphicon-refresh'
+                        },
+                        fields: {/*验证*/
+                            name: {/*键名username和input name值对应*/
+                                message: 'The username is not valid',
+                                validators: {
+                                    notEmpty: {/*非空提示*/
+                                        message: '试卷名称不能为空'
+                                    },
+                                    remote:{
+                                        url: '/osce/admin/exampaper/check-name-only',//验证地址
                                         message: '该试卷名称已存在',//提示消息
                                         delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
                                         type: 'POST',//请求方式
@@ -86,52 +232,6 @@
                         }
                     })
                 }
-            //手动组卷验证
-            function handValidate(){
-                $("#sourceForm").bootstrapValidator({
-                    message: 'This value is not valid',
-                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                        valid: 'glyphicon glyphicon-ok',
-                        invalid: 'glyphicon glyphicon-remove',
-                        validating: 'glyphicon glyphicon-refresh'
-                    },
-                    fields: {/*验证*/
-                        name: {/*键名username和input name值对应*/
-                            message: 'The username is not valid',
-                            validators: {
-                                notEmpty: {/*非空提示*/
-                                    message: '试卷名称不能为空'
-                                },
-                                remote:{
-                                    url: '',//验证地址
-                                    message: '该试卷名称已存在',//提示消息
-                                    delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                    type: 'POST',//请求方式
-                                    data: function (validator) {
-
-                                    }
-                                }
-                            }
-                        },
-                        time: {
-                            validators: {
-                                notEmpty: {/*非空提示*/
-                                    message: '考试时长不能为空'
-                                },
-                                callback: {
-                                    message: '考试时长必须是20及以上的整数',
-                                    callback:function(){
-                                        if($("#code").val() >= 20){
-                                            return true;
-                                        }else{
-                                            return false;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                })
             }
 
             /**
@@ -151,13 +251,15 @@
             $('#paper tbody').on('click','.fa-pencil-square-o',function(){
                 var question_detail=$(this).parent().parent().parent().parent().find("input[name='question[]']").val();
                 var ordinal = $(this).parent().parent().parent().parent().attr("ordinal");
+                var structureId = $(this).parent().parent().parent().parent().attr("structureId");
+
                 layer.open({
                     type: 2,
                     title: '编辑试题组成',
                     area: ['90%', '600px'],
                     fix: false, //不固定
                     maxmin: true,
-                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}?question_detail='+question_detail+"&ordinal="+ordinal
+                    content: '{{route('osce.admin.ApiController.GetEditorExamPaperItem')}}?question_detail='+question_detail+"&ordinal="+ordinal+"&structureId="+structureId
                 })
             });
             /**
@@ -356,14 +458,14 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>试卷名称</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="name" name="name" value="{{@$paperDetail['name']}}">
+                        <input type="text" class="form-control" id="name" name="name" value="@if(@$paperDetail['name']){{@$paperDetail['name']}}@else{{@$paperDetails['name']}}@endif">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>考试时长</label>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" id="code" name="time" value="{{@$paperDetail['length']}}" placeholder="请输入分钟数">
+                        <input type="number" class="form-control" id="code" name="time" value="@if(!empty(@$paperDetail['length'])){{@$paperDetail['length']}}@else{{@$paperDetails['length']}}@endif" placeholder="请输入分钟数">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -372,13 +474,19 @@
                     <label class="col-sm-2 control-label">组卷方式</label>
                     <div class="col-sm-10">
                         <select id="status"   class="form-control m-b" name="status">
-                            <option value="1" @if(@$paperDetail['mode'] == 1)selected="selected" @endif >自动组卷</option>
-                            <option value="2" @if(@$paperDetail['mode'] == 2)selected="selected" @endif >手工组卷</option>
+                            <option value="1"  @if(@$paperDetail['mode'])  @if(@$paperDetail['mode'] == 1)selected="selected" @endif @else  @if(@$paperDetails['mode'] == 1)selected="selected" @endif @endif >自动组卷</option>
+                            <option value="2" @if(@$paperDetail['mode'])  @if(@$paperDetail['mode'] == 2)selected="selected" @endif @else  @if(@$paperDetails['mode'] == 2)selected="selected" @endif @endif >手工组卷</option>
                         </select>
                     </div>
                     @if(@$paperDetail['mode'])
-                    <input type="hidden" name="status" value="{{@$paperDetail['mode']}}">
+                        @if(@$paperDetail['mode'])
+                            <input type="hidden" name="status" value="{{@$paperDetail['mode']}}">
                         @endif
+                    @else
+                        @if(@$paperDetails['mode'])
+                            <input type="hidden" name="status" value="{{@$paperDetails['mode']}}">
+                        @endif
+                    @endif
                 </div>
                 <div class="hr-line-dashed"></div>
 
@@ -386,13 +494,19 @@
                     <label class="col-sm-2 control-label">试卷类型</label>
                     <div class="col-sm-10">
                         <select id="status2" class="form-control m-b" name="status2">
-                            <option value="1" @if(@$paperDetail['type'] == 1)selected="selected" @endif >随机试卷</option>
-                            <option value="2" @if(@$paperDetail['type'] == 2)selected="selected" @endif >统一试卷</option>
+                            <option value="1" @if(@$paperDetail['type'])  @if(@$paperDetail['type'] == 1)selected="selected" @endif @else  @if(@$paperDetails['type'] == 1)selected="selected" @endif @endif >随机试卷</option>
+                            <option value="2" @if(@$paperDetail['type'])  @if(@$paperDetail['type'] == 2)selected="selected" @endif @else  @if(@$paperDetails['type'] == 2)selected="selected" @endif @endif  >统一试卷</option>
                         </select>
                     </div>
                     @if(@$paperDetail['type'])
-                    <input type="hidden" name="status2" value="{{@$paperDetail['type']}}">
-                        @endif
+                            @if(@$paperDetail['type'])
+                                <input type="hidden" name="status2" value="{{@$paperDetail['type']}}">
+                            @endif
+                        @else
+                            @if(@$paperDetails['type'])
+                                <input type="hidden" name="status2" value="{{@$paperDetails['type']}}">
+                            @endif
+                    @endif
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
@@ -421,13 +535,13 @@
                                     <tbody index="0" id="list-body">
                                     @if(!empty(@$paperDetail['item']))
                                         @foreach(@$paperDetail['item'] as $k=>$detail)
-                                            <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$detail['id']}}">
-                                                <td>{{@$k+1}}</td>
-                                                <td>{{@$detail['typename']}}</td>
-                                                <td></td>
-                                                <td>{{@$detail['num']}}</td>
-                                                <td>{{@$detail['score']}}</td>
-                                                <td>{{@$detail['total_score']}}</td>
+                                            <tr ordinal="{{@$k+1}}" structureId="{{@$detail['id']}}">
+                                                <td>{{@$k+1}}<input name="question[]" type="hidden" value="{{@$detail['str']}}"></td>
+                                                <td>{{@$detail['question_type_name']}}</td>
+                                                <td>{{@$detail['strName']}}</td>
+                                                <td>{{@$detail['question_num']}}</td>
+                                                <td>{{@$detail['question_score']}}</td>
+                                                <td>{{@$detail['question_total_score']}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
@@ -471,14 +585,14 @@
                                     </tr>
                                     </thead>
                                     <tbody index="0" id="list-body">
-                                    @if(!empty(@$paperDetail['item']))
-                                        @foreach(@$paperDetail['item'] as $k=>$detail)
-                                            <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$detail['id']}}">
-                                                <td>{{@$k+1}}<input name="question-type[]" type="hidden" value="{{@$detail['type'].'@'.@$detail['score'].'@'.@$detail['child'].'@'.@$detail['id']}}"/></td>
-                                                <td>{{@$detail['typename']}}</td>
-                                                <td>{{@$detail['num']}}</td>
-                                                <td>{{@$detail['score']}}</td>
-                                                <td>{{@$detail['total_score']}}</td>
+                                    @if(!empty(@$paperDetails['item']))
+                                        @foreach(@$paperDetails['item'] as $k=>$details)
+                                            <tr sequence="{{@$k+1}}" id="handwork_{{@$k+1}}" data="{{@$details['id']}}">
+                                                <td>{{@$k+1}}<input name="question-type[]" type="hidden" value="{{@$details['type'].'@'.@$details['score'].'@'.@$details['child'].'@'.@$details['id']}}"/></td>
+                                                <td>{{@$details['typename']}}</td>
+                                                <td>{{@$details['num']}}</td>
+                                                <td>{{@$details['score']}}</td>
+                                                <td>{{@$details['total_score']}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read  state1 detail"><i data-toggle="modal" data-target="#myModal" class="fa fa-pencil-square-o fa-2x"></i></span></a>
                                                     <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
@@ -507,10 +621,10 @@
                     </div>
                 </div>
                 {{--修改时，存试卷paperID--}}
-                <input type="hidden" name="paperid" value="{{@$paperDetail['id']}}">
+                <input type="hidden" name="paperid" value="@if(@$paperDetail['id']){{@$paperDetail['id']}}@else{{@$paperDetails['id']}}@endif" id="paperId">
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
-                        <button class="btn btn-primary" type="submit" disabled>保存</button>
+                        <button class="btn btn-primary" type="submit">保存</button>
                         <button class="btn btn-primary" id="preview" type="button">预览</button>
                         <a class="btn btn-white" href="{{route('osce.admin.ExamPaperController.getExamList')}}">取消</a>
                     </div>
