@@ -261,12 +261,12 @@ class StudentWatchController extends CommonController
 
 
             //调用状态为1的方法
-            $nextData=$this->getStatusWaitExam($examQueueCollect);
-            if($nextData['willStudents']==0){
+            $Data=$this->getStatusWaitExam($examQueueCollect);
+
+            if($Data['willStudents']==0){
                 if(!is_null($nextExamQueue->station))
                 {
-
-                    $data = [
+                    $Data = [
                         'code'=> 5,
                         'title' => '，进入下一场考试考站名',
                         'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
@@ -274,17 +274,15 @@ class StudentWatchController extends CommonController
                 }
                 else
                 {
-                    $data = [
+                    $Data = [
                         'code'=> 5,
                         'title' => '，进入下一场考试考场名',
                         'nextExamName' =>$nextExamQueue->room->name,
                     ];
                 }
-
-                return $data;
             }
         }
-       return $nextData;
+       return $Data;
     }
 
 
