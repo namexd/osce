@@ -234,8 +234,8 @@ class AnswerController extends CommonController
             // 'examPaperFormalId'=>'required|integer',//正式的试卷id
 
         ]);
-        //$examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
-        $examPaperFormalId =1; //正式的试卷表id
+
+        $examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
         $answerModel = new Answer();
         //保存成功，调用查询该考生成绩的方法
         $examPaperFormalData = $answerModel->selectGrade($examPaperFormalId);
