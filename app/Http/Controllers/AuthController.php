@@ -92,7 +92,7 @@ class AuthController extends BaseController
         ];
         //查看角色名是否已存在
 
-        $RoleName = DB::connection('sys_mis')->table('sys_roles')->where('name','=',$data['name'])->first();
+        $RoleName = DB::connection('sys_mis')->table('sys_roles')->where('name','=',trim($data['name']))->first();
         if($RoleName){
             return  redirect()->back()->withErrors(['该角色名已存在']);
         }
@@ -279,7 +279,7 @@ class AuthController extends BaseController
 //            return  redirect()->back()->withErrors(['修改失败']);
 //        }
         //TODO: zhoufuxiang 2016-2-23
-        $name =  Input::get('name');
+        $name =  trim(Input::get('name'));
         $id   =  Input::get('id');
         $des  =  Input::get('description');
         $addNewRole = SysRoles::where(['id'=>Input::get('id')])->first();
