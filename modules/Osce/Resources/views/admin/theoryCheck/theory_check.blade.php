@@ -104,7 +104,7 @@
 
         });
         $(function(){
-            countDown("2016/3/17 19:17:30","#colockbox1");
+            countDown("{{$systemTimeEnd}}","#colockbox1");
         });
         function countDown(time,id){
             var day_elem = $(id).find('.day');
@@ -180,7 +180,7 @@
                                                 <div class="subjectBox   mart_10 " exam_question_id="{{$val["exam_question_id"]}}">
                                                     <span class="font16 subjectContent">{{ $val["name"]}}(　　　)</span>
                                                 </div>
-                                                @if($val["examCategoryFormalId"]===1||$val["examCategoryFormalId"]===4)
+                                                @if($val["examCategoryFormalId"]===1)
                                                     @foreach($val["content"] as $k=> $val2 )
                                                         <div class="answerBox" examCategoryFormalId="{{$val["examCategoryFormalId"]}}">
                                                             <label class="radio_label mart_20 check_top">
@@ -198,6 +198,23 @@
                                                                 <div class="check_icon check_other"></div>
                                                                 <input type="checkbox" name="{{$val["serialNumber"]}}" value="{{$k}}">
                                                                 <span class="check_name">{{@$val2}}</span>
+                                                            </label>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+                                                @if($val["examCategoryFormalId"]===4)
+                                                    @foreach($val["content"] as $k=> $val2 )
+                                                        <div class="answerBox" examCategoryFormalId="{{$val["examCategoryFormalId"]}}">
+                                                            <label class="radio_label mart_20 check_top">
+                                                                <div class="radio_icon left" ></div>
+                                                                <input type="radio" name="{{$val["serialNumber"]}}" value="{{$k}}">
+                                                                <span class="marl_10 answer">
+                                                                    @if($val2==0)
+                                                                        错误
+                                                                    @elseif($val2==1)
+                                                                        正确
+                                                                     @endif
+                                                                </span>
                                                             </label>
                                                         </div>
                                                     @endforeach
