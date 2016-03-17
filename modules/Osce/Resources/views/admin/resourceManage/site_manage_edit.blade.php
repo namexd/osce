@@ -64,6 +64,41 @@
                                 message: '地址不能为空'
                             }
                         }
+                    },
+                    floor: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+//                            notEmpty: {/*非空提示*/
+//                                message: '楼层不能为空'
+//                            },
+                            regexp: {
+                                regexp: /^[0-9]*$/,
+                                message: '楼层必须输入数字'
+                            }
+                        }
+                    },
+//                    room_number: {
+//                        /*键名username和input name值对应*/
+//                        message: 'The username is not valid',
+//                        validators: {
+//                            notEmpty: {/*非空提示*/
+//                                message: '房号不能为空'
+//                            }
+//                        }
+//                    },
+                    proportion: {
+                        /*键名username和input name值对应*/
+                        message: 'The username is not valid',
+                        validators: {
+//                            notEmpty: {/*非空提示*/
+//                                message: '可使用面积不能为空'
+//                            },
+                            regexp: {
+                                regexp: /^[0-9]*$/,
+                                message: '使用面积必须输入数字'
+                            }
+                        }
                     }
                 }
             });
@@ -148,6 +183,30 @@
                             <label class="col-sm-2 control-label">地址</label>
                             <div class="col-sm-10">
                                 <input type="text" ng-model="address" id="address" class="form-control" name="address" value="{{$data->address}}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">所在楼层</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="location" id="location" class="form-control" name="floor" value="{{$data->floor}}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">房号</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="location" id="location" class="form-control" name="room_number" value="{{$data->room_number}}">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">可使用面积</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="location" id="location" class="form-control" name="proportion" value="{{$data->proportion}}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

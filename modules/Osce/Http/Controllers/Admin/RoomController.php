@@ -135,12 +135,15 @@ class RoomController extends CommonController
             'id'            => 'required|integer',
             'name'          => 'required',
             'description'   => 'required',
-            'type'          => 'required'
+            'type'          => 'required',
+            'floor' => 'required|integer',
+            'room_number' => 'required',
+            'proportion' => 'required'
         ]);
 
         $id         = $request->input('id');
         $vcr_id     = $request->get('vcr_id');
-        $formData   = $request->only('name', 'description', 'address', 'code','cate');
+        $formData   = $request->only('name', 'description', 'address', 'code','cate', 'floor', 'room_number', 'proportion');
         $type       = empty($formData['cate'])? 0:$formData['cate'];
 
         $user = Auth::user();
@@ -228,6 +231,9 @@ class RoomController extends CommonController
                 'code'          => 'sometimes',
                 'description'   => 'required',
                 'cate'          => 'required',
+                'floor' => 'required|integer',
+                'room_number' => 'required',
+                'proportion' => 'required'
             ],[
                 'name.unique'   =>  '名称必须唯一',
                 'vcr_id.required'=> '摄像头不能为空'
@@ -235,7 +241,7 @@ class RoomController extends CommonController
         );
         try {
             //TODO   表单内容变化没有提交nfc字段
-            $formData = $request->only('name', 'address', 'code', 'description');
+            $formData = $request->only('name', 'address', 'code', 'description', 'floor', 'room_number', 'proportion');
             $cate   = $request->input('cate',0);
             $vcrId  = $request->get('vcr_id');
             if (!$user = Auth::user()) {

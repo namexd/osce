@@ -98,6 +98,7 @@ class ExamQueue extends CommonModel
                 }
             }
         }
+
         return $data;
     }
 
@@ -118,7 +119,6 @@ class ExamQueue extends CommonModel
                 }
             }
         }
-
         return $data;
     }
 
@@ -570,7 +570,6 @@ class ExamQueue extends CommonModel
      */
     public function getWaitStudentStation($station_id = '', $exam_id = '')
     {
-
         $builder = $this->leftJoin('exam_flow_station',
             function ($join) {
                 $join->on('exam_queue.station_id', '=', 'exam_flow_station.station_id');
