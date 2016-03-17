@@ -204,7 +204,7 @@
                     @endif
 
                     <div class="col-sm-3">
-                        <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
+                        <button type="button" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
                     </div>
                 </div>
                 <div class="list_all">
