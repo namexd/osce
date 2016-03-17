@@ -217,6 +217,8 @@ class StudentWatchController extends CommonController
            return $data;
 
     }
+
+
     //判断腕表提醒状态为3时
     private function getStatusThreeExam($examQueueCollect){
         $nextExamQueue  =   '';
@@ -284,6 +286,7 @@ class StudentWatchController extends CommonController
         }
        return $nextData;
     }
+
 
     private function  getExamComplete($examQueue){
 

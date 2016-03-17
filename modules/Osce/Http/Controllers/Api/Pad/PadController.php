@@ -222,26 +222,34 @@ class PadController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-       public function getWaitStudent(Request $request){
-           $this->validate($request,[
-               'exam_id' =>'required|integer'
-           ]);
-           $exam_id=$request->get('exam_id');
-           $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
-           $time=time();
-           $examQueue=new ExamQueue();
-          try {
-              $pagination=$examQueue->getPagination();
-              $students = $examQueue->getStudent($mode, $exam_id);
-              return response()->json(
-                  $this->success_rows(1, 'success', $pagination->total(), config('msc.page_size'), $pagination->currentPage(), $students)
-              );
-          }catch( \Exception $ex){
-              return response()->json(
-                  $this->fail($ex)
-              );
-          };
-       }
+    public function getWaitStudent(Request $request){
+        $this->validate($request,[
+        'exam_id' =>'required|integer'
+        ]);
+        $exam_id=$request->get('exam_id');
+        $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
+        $time=time();
+        $examQueue=new ExamQueue();
+        try {
+            $pagination= $examQueue->getPagination();
+            $students  = $examQueue->getStudent($mode, $exam_id);
+            return response()->json(
+                              $this->success_rows(1, 'success', $pagination->total(), config('msc.page_size'), $pagination->currentPage(), $students)
+//                $this->success_data(
+//                    [
+//                        'rows'      => $students,
+//                        'total'     => $pagination->total(),
+//                        'page_size' => config('msc.page_size'),
+//                        'page'      => $pagination->currentPage()
+//                    ],
+//                    1, '获取数据成功'
+//                )
+            );
+
+        }catch( \Exception $ex){
+            return response()->json($this->fail($ex));
+        };
+    }
 
 
     /**
