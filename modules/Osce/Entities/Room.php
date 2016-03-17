@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities;
 
 use DB;
 use Auth;
+use Modules\Osce\Repositories\Common;
 
 class Room extends CommonModel
 {
@@ -21,7 +22,17 @@ class Room extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'nfc', 'address', 'code', 'create_user_id', 'description'];
+    protected $fillable = [
+        'name',
+        'nfc',
+        'address',
+        'code',
+        'create_user_id',
+        'description',
+        'floor',
+        'room_number',
+        'proportion'
+    ];
     public $search = [];
 
     /**
@@ -35,16 +46,19 @@ class Room extends CommonModel
 
     public function station()
     {
-        return $this->belongsToMany('\Modules\Osce\Entities\Station','room_station','room_id','station_id');
+        return $this->belongsToMany('\Modules\Osce\Entities\Station', 'room_station', 'room_id', 'station_id');
     }
 
-    public function stations(){
-        return $this    ->  hasMany('\Modules\Osce\Entities\RoomStation','room_id','id');
+    public function stations()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\RoomStation', 'room_id', 'id');
     }
 
-    public function Vcrs(){
-        return $this->hasMany('\Modules\Osce\Entities\RoomVcr','room_id','id');
+    public function Vcrs()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\RoomVcr', 'room_id', 'id');
     }
+
     /**
      * 得到room的列表
      * @param string $keyword
@@ -69,20 +83,20 @@ class Room extends CommonModel
             } else {
                 //通过传入的$type来展示响应的数据
                 if ($type === "0") {
-                    $builder = Room::select(['id','name','address','description']);
+                    $builder = Room::select(['id', 'name', 'address', 'description']);
 
                     if ($keyword !== "") {
-                        $builder = $builder->where('name','like','%\\'.  $keyword . '%');
+                        $builder = $builder->where('name', 'like', '%\\' . $keyword . '%');
                     }
-                    return $builder -> paginate(config('osce.page_size'));
+                    return $builder->paginate(config('osce.page_size'));
 
                 } else {
-                    $builder = Area::select(['id','name','cate','description']);
+                    $builder = Area::select(['id', 'name', 'cate', 'description']);
 
                     if ($keyword != "") {
-                        $builder = $builder->where('name','like','%\\'.$keyword.'%');
+                        $builder = $builder->where('name', 'like', '%\\' . $keyword . '%');
                     }
-                    return $builder->where('cate',$type)->paginate(config('osce.page_size'));
+                    return $builder->where('cate', $type)->paginate(config('osce.page_size'));
                 }
             }
 
@@ -110,11 +124,11 @@ class Room extends CommonModel
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
             //根据id在关联表中寻找，如果有的话，就删除，否则就报错
-            if (!ExamFlowRoom::where('room_id',$id)->get()->isEmpty()) {
+            if (!ExamFlowRoom::where('room_id', $id)->get()->isEmpty()) {
                 throw new \Exception('该房间已经关联考试，不予删除！');
             }
 
-            $roomStations = RoomStation::where('room_id','=',$id)->get();
+            $roomStations = RoomStation::where('room_id', '=', $id)->get();
             if (!$roomStations->isEmpty()) {
                 //TODO:zhoufuxiang(修改bug#3599)
                 throw new \Exception('该考场下已关联了考站，请先去解除其关联关系。');
@@ -123,9 +137,9 @@ class Room extends CommonModel
 //                }
             }
 
-            $roomVcrs = RoomVcr::where('room_id','=',$id)->get();
+            $roomVcrs = RoomVcr::where('room_id', '=', $id)->get();
             if (!$roomVcrs->isEmpty()) {
-                if (!RoomVcr::where('room_id',$id)->delete()) {
+                if (!RoomVcr::where('room_id', $id)->delete()) {
                     throw new \Exception('房间摄像头关联删除失败');
                 }
                 foreach ($roomVcrs as $roomVcr) {
@@ -138,7 +152,7 @@ class Room extends CommonModel
             }
 
 
-            $room = $this->where('id','=',$id)->firstOrFail();
+            $room = $this->where('id', '=', $id)->firstOrFail();
             if (!$result = $room->delete()) {
                 throw new \Exception('房间删除失败');
             }
@@ -152,30 +166,39 @@ class Room extends CommonModel
 
     }
 
-
+    /**
+     * 修改房间
+     * @param $id
+     * @param $vcr_id
+     * @param $formData
+     * @return bool
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-17 10：16
+     */
     public function editRoomData($id, $vcr_id, $formData)
     {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
             $user = Auth::user();
-            if(!$user){
+            if (!$user) {
                 throw new \Exception('操作人不存在，请先登录');
             }
             //更新考场数据
-            $room    =$this->find($id);
-            foreach($formData as $field=>$value)
-            {
-                $room->$field   =   $value;
+            $room = $this->find($id);
+            Common::objIsNull($room);
+            foreach ($formData as $field => $value) {
+                $room->$field = $value;
             }
-            if(!$room->save()){
+            if (!$room->save()) {
                 throw new \Exception('数据修改失败！请重试');
             }
 
-            $roomVcrs = RoomVcr::where('room_id',$id)->get();
-            if(!$roomVcrs->isEmpty()){
+            $roomVcrs = RoomVcr::where('room_id', $id)->get();
+            if (!$roomVcrs->isEmpty()) {
                 $roomVcr = $roomVcrs->first();
-                if(!$roomVcr->delete()){
+                if (!$roomVcr->delete()) {
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
 
@@ -210,25 +233,35 @@ class Room extends CommonModel
             $connection->commit();
             return true;
 
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
     }
 
-    public function createRoom($formData,$vcrId,$userId)
+    /**
+     * 场所的增加
+     * @param $formData
+     * @param $vcrId
+     * @param $userId
+     * @return static
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-17
+     */
+    public function createRoom($formData, $vcrId, $userId)
     {
         try {
             $connection = DB::connection($this->connection);
-            $connection -> beginTransaction();
+            $connection->beginTransaction();
 
             if (!$room = $this->create($formData)) {
                 throw new \Exception('新建房间失败');
             }
 
-            $data=[
-                'room_id'=>$room->id,
-                'vcr_id'=>$vcrId,
+            $data = [
+                'room_id' => $room->id,
+                'vcr_id' => $vcrId,
                 'created_user_id' => $userId
             ];
 

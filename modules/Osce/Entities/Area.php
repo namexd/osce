@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities;
 
 use Illuminate\Support\Facades\DB;
 use Auth;
+
 class Area extends CommonModel
 {
 
@@ -21,7 +22,17 @@ class Area extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'code', 'cate', 'description','created_user_id','address'];
+    protected $fillable = [
+        'name',
+        'code',
+        'cate',
+        'description',
+        'created_user_id',
+        'address',
+        'floor',
+        'room_number',
+        'proportion'
+    ];
 
     /**
      * 摄像机和区域的关联
@@ -29,7 +40,7 @@ class Area extends CommonModel
      */
     public function areaVcr()
     {
-        return $this->belongsToMany('\Modules\Osce\Entities\Vcr','area_vcr','area_id','vcr_id');
+        return $this->belongsToMany('\Modules\Osce\Entities\Vcr', 'area_vcr', 'area_id', 'vcr_id');
     }
 
 
@@ -39,7 +50,7 @@ class Area extends CommonModel
      */
     public function showRoomCateList()
     {
-        return $this->select('id','name','cate')->get();
+        return $this->select('id', 'name', 'cate')->get();
     }
 
     /**
@@ -54,9 +65,9 @@ class Area extends CommonModel
             $connection = DB::connection($this->connection);
             $connection->beginTransaction();
             //根据id在关联表中寻找，如果有的话，就报错，不允许删除
-            $areaVcrs = AreaVcr::where('area_id',$id)->get();
+            $areaVcrs = AreaVcr::where('area_id', $id)->get();
             if (!$areaVcrs->isEmpty()) {
-                if (!AreaVcr::where('area_id',$id)->delete()) {
+                if (!AreaVcr::where('area_id', $id)->delete()) {
                     throw new \Exception('该区域已经与摄像头相关联，无法删除！');
                 }
                 foreach ($areaVcrs as $areaVcr) {
@@ -68,7 +79,7 @@ class Area extends CommonModel
                 }
             };
 
-            if (!$result = $this->where('id',$id)->delete()) {
+            if (!$result = $this->where('id', $id)->delete()) {
                 throw new \Exception('删除区域失败！');
             }
 
@@ -80,28 +91,38 @@ class Area extends CommonModel
         }
     }
 
+    /**
+     * 修改区域
+     * @param $id
+     * @param $vcr_id
+     * @param $formData
+     * @return bool
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-17 10：16
+     */
     public function editAreaData($id, $vcr_id, $formData)
     {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
             $user = Auth::user();
-            if(!$user){
+            if (!$user) {
                 throw new \Exception('操作人不存在，请先登录');
             }
             //更新考场数据
             $result = $this->updateData($id, $formData);
-            if(!$result){
+            if (!$result) {
                 throw new \Exception('数据修改失败！请重试');
             }
             //更新考场绑定摄像机的数据
             //先删除目前的关联
-            $areaVcrs = AreaVcr::where('area_id',$id)->get();
-            if(!$areaVcrs->isEmpty()){
+            $areaVcrs = AreaVcr::where('area_id', $id)->get();
+            if (!$areaVcrs->isEmpty()) {
                 $areaVcr = $areaVcrs->first();
-                    if(!$areaVcr->delete()){
-                        throw new \Exception('考场绑定摄像机失败！请重试');
-                    }
+                if (!$areaVcr->delete()) {
+                    throw new \Exception('考场绑定摄像机失败！请重试');
+                }
 
                 $data = [
                     'area_id' => $id,
@@ -133,25 +154,35 @@ class Area extends CommonModel
             $connection->commit();
             return true;
 
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
     }
 
+    /**
+     * 场所的新增
+     * @param $formData
+     * @param $vcrId
+     * @param $userId
+     * @return static
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-17 10:07
+     */
     public function createRoom($formData, $vcrId, $userId)
     {
         try {
             $connection = DB::connection($this->connection);
-            $connection -> beginTransaction();
+            $connection->beginTransaction();
 
             if (!$room = $this->create($formData)) {
                 throw new \Exception('新建房间失败');
             }
 
-            $data=[
-                'area_id'=>$room->id,
-                'vcr_id'=>$vcrId,
+            $data = [
+                'area_id' => $room->id,
+                'vcr_id' => $vcrId,
                 'created_user_id' => $userId
             ];
 
