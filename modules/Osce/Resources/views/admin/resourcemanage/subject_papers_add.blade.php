@@ -435,6 +435,7 @@
 
             var editUrl = '{{route('osce.admin.ExamPaperController.getEditExamPaper')}}';
             if(inputVal){
+                alert(11111111);
                 $('#sourceForm').attr('action',editUrl);
                 $('#status').attr('disabled','disabled');
                 $('#status2').attr('disabled','disabled');
@@ -456,7 +457,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>试卷名称</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="name" name="name" value=" @if(@$paperDetail['name']) {{@$paperDetail['name']}} @else {{@$paperDetails['name']}} @endif ">
+                        <input type="text" class="form-control" id="name" name="name" value="@if(@$paperDetail['name']){{@$paperDetail['name']}}@else{{@$paperDetails['name']}}@endif">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>

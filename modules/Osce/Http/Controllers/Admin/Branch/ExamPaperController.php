@@ -185,6 +185,7 @@ class ExamPaperController extends CommonController
                         }
 
                     }
+                    dd($paperDetail);
                     return view('osce::admin.resourcemanage.subject_papers_add',[
                         'label'=>$label,
                         'ExamQuestionLabelTypeList'=>$question,
