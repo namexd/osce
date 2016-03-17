@@ -306,11 +306,15 @@ class ExamQueue extends CommonModel
 
     /**
      * 开始考试时，改变时间和状态
-     * @param  $studentId $stationId
-     * @return
-     * @throws  \Exception
+     * @param $studentId $stationId
+     * @param $stationId
+     * @param $nowTime
+     * @param $teacherId
+     * @return bool
+     * @throws \Exception
      * @author  zhouqiang
      */
+
     public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId)
     {
         //开启事务
@@ -319,7 +323,6 @@ class ExamQueue extends CommonModel
         try {
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
-
 
 //                查询学生是否已开始考试
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
@@ -332,12 +335,9 @@ class ExamQueue extends CommonModel
             if ($examQueue->status == 2) {
                 return true;
             }
-
 //            修改队列状态
             $examQueue->status=2;
-            $status = $examQueue->save();
-
-            if ($status) {
+            if ( $examQueue->save()) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
                     ->orderBy('begin_dt', 'asc')
@@ -362,11 +362,12 @@ class ExamQueue extends CommonModel
                     ->where('student_id', '=', $studentId)
                     ->where('status','=',3)
                     ->get();
+
                 foreach ($studentTimes as $key => $item) {
                     foreach($endQueue as $endQueueTime){
-                        if( strtotime($endQueueTime->begin_dt)>strtotime($item->begin_dt)){
-                            throw new \Exception('当前队列开始时间不正确',-108);
-                        }
+                       if( strtotime($endQueueTime->begin_dt)>strtotime($item->begin_dt)){
+                           throw new \Exception('当前队列开始时间不正确',-108);
+                       }
                     }
                     if ($exam->sequence_mode == 2) {
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
@@ -503,8 +504,8 @@ class ExamQueue extends CommonModel
                     if ($difference > 0) {
                         $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $difference);
                         $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $difference);
-                        \Log::info('band_watch', ['begin_dt' => $item->begin_dt, 'end_dt' => $item->end_dt]);
                     }
+                    \Log::info('band_watch', ['begin_dt' => $item->begin_dt, 'end_dt' => $item->end_dt]);
 
                     $item->status = 0;
 
@@ -656,7 +657,7 @@ class ExamQueue extends CommonModel
                      * 将考试结束的时间写进锚点表里
                      */
                     CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
-                        $teacherId, [strtotime($date)+3*60]);
+                        $teacherId, [strtotime($date)]);
                 }
                 $connection->commit();
                 return $queue;

@@ -303,6 +303,21 @@ var videoPlay = (function(mod){
     }
 
 
+    mod.openVoice = function(){
+        var szInfo="";
+        setTimeout(function(){
+            var iRet = WebVideoCtrl.I_OpenSound();
+
+            if (0 == iRet) {
+                szInfo = "打开声音成功！";
+            } else {
+                szInfo = "打开声音失败！";
+            }
+            console.log(szInfo);
+        },2000);
+    }
+
+
     return mod;
 
 })(videoPlay||{});
@@ -344,6 +359,9 @@ $(function(){
     	},1000);
 
     },1000);
+
+    //打开声音
+    videoPlay.openVoice();
     
 
 
@@ -449,6 +467,7 @@ $(function(){
     	},1000);
         //启动回放
         videoPlay.StartPlayback(0,pars.ip,newstart,pars.endtime,pars.channel);
+        videoPlay.openVoice();
         //检测是否为暂停
         testPause(timer);
     });
@@ -471,6 +490,7 @@ $(function(){
     	},1000);
         //启动回放
         videoPlay.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
+        videoPlay.openVoice();
 
         //检测是否为暂停
         testPause(timer);

@@ -39,11 +39,12 @@ class TopicController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList(Request $request){
-        $name   =   e($request->get('name'));
-        $Subject    =   new Subject;
-        $list       =   $Subject    ->  getList($name);
-        return view('osce::admin.resourceManage.subject_manage',['list'=>$list, 'name'=>$name]);
+    public function getList(Request $request)
+    {
+        $name = e($request->get('name'));
+        $Subject = new Subject;
+        $list = $Subject->getList($name);
+        return view('osce::admin.resourceManage.subject_manage', ['list' => $list, 'name' => $name]);
     }
 
     /**
@@ -66,52 +67,59 @@ class TopicController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postAddTopic(Request $request){
-        $this   ->  validate($request,[
-            'title'         =>  'required|unique:osce_mis.subject,title',
-            'content'       =>  'required',
-            'score'         =>  'required',
-            'description'   =>  'required',
-        ],[
-            'title.required'        =>  '名称必填',
-            'title.unique'          =>  '该科目已存在',
-            'content.required'      =>  '必须新增评分点',
-            'score.required'        =>  '分数必填',
-            'description.required'  =>  '必须新增考核项',
+    public function postAddTopic(Request $request)
+    {
+        $this->validate($request, [
+            'title' => 'required|unique:osce_mis.subject,title',
+            'content' => 'required',
+            'score' => 'required',
+            'desc' => 'required',
+            'stem' => 'required',
+            'equipments' => 'required',
+            'goods' => 'required'
+        ], [
+            'title.required' => '名称必填',
+            'title.unique' => '该科目已存在',
+            'content.required' => '必须新增评分点',
+            'score.required' => '分数必填',
+            'desc.required' => '必须新增描述',
+            'stem.required' => '题干必填',
+            'equipments.required' => '所需设备必填',
+            'goods.required' => '所需物品必填'
         ]);
 
-        $content    = $request  ->get('content');
-        $score      = $request  ->get('score');
-        $answer     = $request  ->get('description');
+        $content = $request->get('content');
+        $score = $request->get('score');
+        $answer = $request->get('description');
 
-        try{
-            $formData = SubjectItem::builderItemData($content, $score,$answer);
-            $totalData   =  0;
-            foreach($score as $index=>$socrdata)
-            {
-                foreach($socrdata as $key=>$socre)
-                {
-                    if($key=='total')
-                    {
+        try {
+            $formData = SubjectItem::builderItemData($content, $score, $answer);
+            $totalData = 0;
+            foreach ($score as $index => $socrdata) {
+                foreach ($socrdata as $key => $socre) {
+                    if ($key == 'total') {
                         continue;
                     }
-                    $totalData  +=  $socre;
+                    $totalData += $socre;
                 }
             }
 
-            $data   =   [
-                'title'         =>  e($request  ->  get('title')),
-                'description'   =>  e($request  ->  get('desc')),
-                'score'         =>  $totalData,
+            $data = [
+                'title' => e($request->get('title')),
+                'description' => e($request->get('desc')),
+                'stem' => e($request->input('stem')),
+                'equipments' => e($request->input('equipments')),
+                'goods' => e($request->input('goods')),
+                'score' => $totalData,
             ];
 
-            $subjectModel   =   new Subject();
-            if($subjectModel->  addSubject($data,$formData)){
+            $subjectModel = new Subject();
+            if ($subjectModel->addSubject($data, $formData)) {
                 return redirect()->route('osce.admin.topic.getList');
-            } else{
+            } else {
                 throw new \Exception('新增失败！');
             }
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
 
@@ -138,39 +146,38 @@ class TopicController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postEditTopic(Request $request){
-        $this   ->  validate($request,[
-            'id'        =>  'required',
-            'title'     =>  'required',
-            'desc'      =>  'sometimes',
-            'content'   =>  'required',
-            'score'     =>  'required',
-        ],[
-            'id.required'       =>  '课题ID必须',
-            'title.required'    =>  '课题名称必须',
-            'content.required'  =>  '评分标准必须',
-            'score.required'    =>  '评分必须',
+    public function postEditTopic(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required',
+            'title' => 'required',
+            'desc' => 'sometimes',
+            'content' => 'required',
+            'score' => 'required',
+        ], [
+            'id.required' => '课题ID必须',
+            'title.required' => '课题名称必须',
+            'content.required' => '评分标准必须',
+            'score.required' => '评分必须',
         ]);
 
-        $data   =   [
-            'title'         =>  e($request  ->  get('title')),
-            'description'   =>  $request    ->  get('note'),
+        $data = [
+            'title' => e($request->get('title')),
+            'description' => $request->get('note'),
         ];
-        $id     =   intval($request ->get('id'));
+        $id = intval($request->get('id'));
 
-        $subjectModel   =   new Subject();
-        try{
-            $formData   =   SubjectItem::builderItemData($request->get('content'),$request->get('score'),$request->get('description'));
+        $subjectModel = new Subject();
+        try {
+            $formData = SubjectItem::builderItemData($request->get('content'), $request->get('score'),
+                $request->get('description'));
 
-            if($subjectModel   ->  editTopic($id,$data,$formData))
-            {
+            if ($subjectModel->editTopic($id, $data, $formData)) {
                 return redirect()->route('osce.admin.topic.getList');
-            } else{
+            } else {
                 throw new \Exception('编辑失败');
             }
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -195,7 +202,8 @@ class TopicController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getAddTopic(){
+    public function getAddTopic()
+    {
         return view('osce::admin.resourceManage.subject_manage_add');
     }
 
@@ -219,39 +227,34 @@ class TopicController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getEditTopic(Request $request){
-        $this   ->  validate($request,[
-            'id'    =>  'required'
+    public function getEditTopic(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required'
         ]);
 
-        $id         =   $request->get('id');
-        $subject    =   Subject::find($id);
+        $id = $request->get('id');
+        $subject = Subject::find($id);
 
-        $items      =   $subject->items;
-        $items      =   SubjectItem::builderItemTable($items);
-        $prointNum  =   1;
-        $optionNum  =   [
-            0=>0
+        $items = $subject->items;
+        $items = SubjectItem::builderItemTable($items);
+        $prointNum = 1;
+        $optionNum = [
+            0 => 0
         ];
-        foreach($items as $item)
-        {
-            if($item->pid==0)
-            {
+        foreach ($items as $item) {
+            if ($item->pid == 0) {
                 $prointNum++;
-            }
-            else
-            {
-                if(array_key_exists($item->pid,$optionNum))
-                {
+            } else {
+                if (array_key_exists($item->pid, $optionNum)) {
                     $optionNum[$item->pid]++;
-                }
-                else
-                {
-                    $optionNum[$item->pid]=1;
+                } else {
+                    $optionNum[$item->pid] = 1;
                 }
             }
         }
-        return view('osce::admin.resourceManage.subject_manage_edit',['item'=>$subject,'list'=>$items,'prointNum'=>$prointNum,'optionNum'=>$optionNum]);
+        return view('osce::admin.resourceManage.subject_manage_edit',
+            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum]);
     }
 
     /**
@@ -271,19 +274,18 @@ class TopicController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getDelTopic(Request $request){
-        $this->validate($request,[
-            'id'=>'required'
+    public function getDelTopic(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required'
         ]);
-        $id =   $request->get('id');
-        $SubjectModel   =   new Subject();
-        $subject =  $SubjectModel->find($id);
-        try{
-            $SubjectModel   ->  delSubject($subject);
-            return \Response::json(array('code'=>1));
-        }
-        catch(\Exception $ex)
-        {
+        $id = $request->get('id');
+        $SubjectModel = new Subject();
+        $subject = $SubjectModel->find($id);
+        try {
+            $SubjectModel->delSubject($subject);
+            return \Response::json(array('code' => 1));
+        } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)
             );
@@ -323,21 +325,21 @@ class TopicController extends CommonController
                 }
 
                 /*判断分数 TODO: Zhoufuxiang 2016-2-26*/
-                if(!strpos($items['sort'],'-')){
-                    if($key != 0 && $totalScore != 0){
+                if (!strpos($items['sort'], '-')) {
+                    if ($key != 0 && $totalScore != 0) {
                         throw new \Exception('分数有误，请修改后重试');
                     }
                     $sort = intval($items['sort']);
                     $totalScore = intval($items['score']);
-                }else{
-                    if(!isset($sort)){
+                } else {
+                    if (!isset($sort)) {
                         throw new \Exception('模板有误，请修改后重试');
                     }
-                    $sonSort = intval(substr($items['sort'],0,strpos($items['sort'],'-')));
+                    $sonSort = intval(substr($items['sort'], 0, strpos($items['sort'], '-')));
 
-                    if($sort == $sonSort){
-                        $totalScore = $totalScore-intval($items['score']);
-                        if($key+1 == count($data) && $totalScore != 0){
+                    if ($sort == $sonSort) {
+                        $totalScore = $totalScore - intval($items['score']);
+                        if ($key + 1 == count($data) && $totalScore != 0) {
                             throw new \Exception('分数有误，请修改后重试');
                         }
                     }
@@ -355,21 +357,21 @@ class TopicController extends CommonController
      */
     public function judgeTemplet($topicList)
     {
-        try{
+        try {
             $standard = ['序号', '考核点', '考核项', '评分标准', '分数'];
             foreach ($topicList as $key => $value) {
                 //模板列数
-                if(count($value) != 5){
+                if (count($value) != 5) {
                     throw new \Exception('模板列数有误');
                 }
                 foreach ($value as $index => $item) {
-                    if(!in_array($index, $standard)){
+                    if (!in_array($index, $standard)) {
                         throw new \Exception('模板表头有误');
                     }
                 }
             }
 
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             throw $ex;
         }
     }
@@ -388,14 +390,16 @@ class TopicController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getToppicTpl(){
-        $this->downloadfile('topic.xlsx',public_path('download').'/topic.xlsx');
+    public function getToppicTpl()
+    {
+        $this->downloadfile('topic.xlsx', public_path('download') . '/topic.xlsx');
     }
 
-    private function downloadfile($filename,$filepath){
+    private function downloadfile($filename, $filepath)
+    {
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Disposition: attachment; filename=' . basename($filename));
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -413,24 +417,24 @@ class TopicController extends CommonController
     public function postNameUnique(Request $request)
     {
         $this->validate($request, [
-            'title'     => 'required',
+            'title' => 'required',
         ]);
 
-        $id     = $request  -> get('id');
-        $name   = $request  -> get('title');
+        $id = $request->get('id');
+        $name = $request->get('title');
 
         //实例化模型
-        $model =  new Subject();
+        $model = new Subject();
         //查询 该名字 是否存在
-        if(empty($id)){
+        if (empty($id)) {
             $result = $model->where('title', $name)->first();
-        }else{
+        } else {
             $result = $model->where('title', $name)->where('id', '<>', $id)->first();
         }
-        if($result){
-            return json_encode(['valid' =>false]);
-        }else{
-            return json_encode(['valid' =>true]);
+        if ($result) {
+            return json_encode(['valid' => false]);
+        } else {
+            return json_encode(['valid' => true]);
         }
     }
 

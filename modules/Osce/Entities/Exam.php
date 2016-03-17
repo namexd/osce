@@ -680,14 +680,14 @@ class Exam extends CommonModel
         }
     }
 
-    public function emptyData($id)
+       public function emptyData($id)
     {
         try{
             //获得当前exam的实例
             $examObj = $this->findOrFail($id);
             //获取与考场相关的流程
 //            $flowIds = ExamFlow::where('exam_id',$id)->select('flow_id')->get()->pluck('flow_id'); //获得流程的id
-            $examScreening    = ExamScreening::where('exam_id', '=', $id);
+            $examScreening    = ExamScreening::where('exam_id',$id);
             $examScreeningObj = $examScreening->select('id')->get();
             $examScreeningIds = $examScreeningObj->pluck('id');
 
@@ -755,16 +755,17 @@ class Exam extends CommonModel
                             Flows::where('id',$flowId)->delete();
                         }
                     }
-            */
-//            Exam::doingExam();    //获取正在考试的考试
+            
+				   Exam::doingExam();    //获取正在考试的考试
 
-//            //删除考试场次-学生关系表
-//            $exam_screening_student =ExamScreeningStudent::whereIn('exam_screening_id',$examResultIds)->get();
-//            if(!$exam_screening_student->isEmpty()){
-//                foreach($exam_screening_student as $item ){
-//                    $item->delete();
-//                }
-//            }
+				   //删除考试场次-学生关系表
+				   $exam_screening_student =ExamScreeningStudent::whereIn('exam_screening_id',$examResultIds)->get();
+				   if(!$exam_screening_student->isEmpty()){
+					   foreach($exam_screening_student as $item ){
+						   $item->delete();
+					   }
+				   }
+			*/
             //修改考试考场学生表 考试场次终止为0
             foreach ($examScreeningObj as $item) {
                 $examScreeningStudent = ExamScreeningStudent::where('exam_screening_id', '=', $item->id)->get();       //TODO 更改考试场次终止为0
@@ -795,7 +796,6 @@ class Exam extends CommonModel
         } catch(\Exception $ex){
             return false;
         }
+
     }
-
-
 }
