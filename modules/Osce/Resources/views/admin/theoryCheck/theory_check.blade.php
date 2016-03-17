@@ -88,7 +88,12 @@
                 var examPaperFormalId=$('#examPaperFormalId').val();
                 var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){
-                    location.href="{{route("osce.admin.AnswerController.selectGrade")}}";
+                    if(obj.status=='2'){
+                        location.href="{{route("osce.admin.AnswerController.selectGrade")}}";
+                    }
+                    if(obj.status=='3'){
+                        console.log('保存失败');
+                    }
                 })
             })
         });
