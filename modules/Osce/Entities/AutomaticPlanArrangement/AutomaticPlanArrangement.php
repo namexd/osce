@@ -268,6 +268,8 @@ class AutomaticPlanArrangement
                 $undoneStudents[] = Student::findOrFail($studentNotOver);
             }
         }
+
+        
         //找到未考完的考生
         $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
         $undoneStudentsIds = $examPlanEntity->pluck('student_id');
