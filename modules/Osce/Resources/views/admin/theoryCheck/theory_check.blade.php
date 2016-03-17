@@ -84,10 +84,12 @@
                 localStorage.setItem("Storage_answer",JSON.stringify(Storage_answer_list));//设置本地存储
             }
             $(".actions").find("a[href='#finish']").click(function(){
-
-                $.post("{{route('osce.admin.AnswerController.postSaveAnswe')}}",localStorage.getItem("Storage_answer"),function(obj){
-                    console.log(obj);
-                    //window.location="{{route("osce.admin.AnswerController.selectGrade")}}";
+                //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
+                var examPaperFormalId=$('#examPaperFormalId').val();
+                var examQuestionFormalInfo=localStorage.getItem("Storage_answer");
+                $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){
+                    console.log(obj);return false;
+                    location.href="{{route("osce.admin.AnswerController.selectGrade")}}";
                 })
             })
         });
@@ -111,6 +113,7 @@
                         <span class="checkTime">{{$examPaperFormalData["length"]}}分钟</span>
                         <span style="margin-left: 1em;">总分：</span>
                         <span class="score">{{$examPaperFormalData["totalScore"]}}分</span>
+                        <input type="hidden" id="examPaperFormalId" value="{{$examPaperFormalData["id"]}}">
                     </div>
                 </div>
             </div>

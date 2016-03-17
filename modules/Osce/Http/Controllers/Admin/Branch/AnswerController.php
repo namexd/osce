@@ -112,7 +112,7 @@ class AnswerController extends CommonController
             }
         }
         //dd($examCategoryFormalData);
-        //dd($examCategoryFormalData);
+        //dd($examPaperFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'          =>$examPaperFormalData,//正式试卷信息
@@ -142,6 +142,8 @@ class AnswerController extends CommonController
             'actualLength' =>time()-$systemTimeStart, //考试用时
             'examQuestionFormalInfo' >$request->input('examQuestionFormalInfo'),//正式试题信息
         );
+
+        return response()->json($data['examQuestionFormalInfo']);
 
         //提交过来的数据格式
         $case = array(
@@ -203,7 +205,7 @@ class AnswerController extends CommonController
             $data['examQuestionFormalInfo'][$k]['studentAnswer']=$newStudentAnswer;
 
         }
-        dd($data);
+        //dd($data);
         //保存考生答案
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
