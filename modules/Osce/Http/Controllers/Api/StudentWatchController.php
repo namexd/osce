@@ -310,7 +310,7 @@ class StudentWatchController extends CommonController
             }else{
                 $data=[
                     'code'      =>  -1,
-                    'title'     =>  '当前考站考试已完成',
+                    'title'     =>  '当前考试已完成',
 //                    'surplus'   => 0,
                 ];
 
