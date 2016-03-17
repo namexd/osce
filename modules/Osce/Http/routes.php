@@ -234,6 +234,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//候考
 		Route::get('oscetv/wait-detail',['uses'=>'OsceTvController@getWaitDetail','as'=>'osce.admin.getWaitDetail']);
+		Route::post('oscetv/wait-detail',['uses'=>'OsceTvController@postWaitDetail','as'=>'osce.admin.postWaitDetail']);
 
 		//测试
 		Route::get('station/test', 	['uses'=>'StationController@getTest','as'=>'osce.admin.Station.getTest']);

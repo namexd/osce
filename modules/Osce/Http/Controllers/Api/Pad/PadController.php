@@ -180,30 +180,28 @@ class PadController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-       public function getTimingList(Request $request){
-            $this->validate($request,[
-                 'station_vcr_id'     =>'required|integer',
-                 'exam_id'            =>'required',
-                 'begin_dt'           =>'sometimes',
-                 'end_dt'             =>'sometimes',
-            ]);
-            $stationVcrId=$request->get('station_vcr_id');
-            $beginDt=$request->get('begin_dt');
-            $examId=$request->get('exam_id');
-            $endDt=$request->get('end_dt');
-           try{
-               $stationVideoModel=new StationVideo();
-               $vcrs=$stationVideoModel->getTiming($stationVcrId,$beginDt,$examId,$endDt);
-               return response()->json(
-                   $this->success_data($vcrs,1,'success')
-               );
-           }catch (\Exception $ex){
-               return response()->json(
-                   $this->fail($ex)
-               );
-           }
+    public function getTimingList(Request $request){
+        $this->validate($request,[
+            'station_vcr_id'     =>'required|integer',
+            'exam_id'            =>'required',
+            'begin_dt'           =>'sometimes',
+            'end_dt'             =>'sometimes',
+        ]);
+        $stationVcrId=$request->get('station_vcr_id');
+        $beginDt=$request->get('begin_dt');
+        $examId=$request->get('exam_id');
+        $endDt=$request->get('end_dt');
+        try{
+            $stationVideoModel=new StationVideo();
+            $vcrs=$stationVideoModel->getTiming($stationVcrId,$beginDt,$examId,$endDt);
+            return response()->json(
+                $this->success_data($vcrs,1,'success')
+            );
 
-       }
+        }catch (\Exception $ex){
+            return response()->json($this->fail($ex));
+        }
+    }
 
     /**
      *候考提醒(接口)
@@ -224,7 +222,7 @@ class PadController extends  CommonController{
      */
     public function getWaitStudent(Request $request){
         $this->validate($request,[
-        'exam_id' =>'required|integer'
+            'exam_id' =>'required|integer'
         ]);
         $exam_id=$request->get('exam_id');
         $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
@@ -233,17 +231,9 @@ class PadController extends  CommonController{
         try {
             $pagination= $examQueue->getPagination();
             $students  = $examQueue->getStudent($mode, $exam_id);
+
             return response()->json(
-                              $this->success_rows(1, 'success', $pagination->total(), config('msc.page_size'), $pagination->currentPage(), $students)
-//                $this->success_data(
-//                    [
-//                        'rows'      => $students,
-//                        'total'     => $pagination->total(),
-//                        'page_size' => config('msc.page_size'),
-//                        'page'      => $pagination->currentPage()
-//                    ],
-//                    1, '获取数据成功'
-//                )
+                $this->success_rows(1, 'success', $pagination->total(), config('msc.page_size'), $pagination->currentPage(), $students)
             );
 
         }catch( \Exception $ex){
