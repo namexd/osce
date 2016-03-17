@@ -225,6 +225,9 @@ class AuthController extends BaseController
         $id = Input::get('id');
 
         if($id){
+            if($id == 5 || $id == 3){
+                return  redirect()->back()->withErrors(['管理员角色不能删除！']);
+            }
             $result = SysUserRole::where('role_id', $id)->first();
             if(!empty($result)){
                 return  redirect()->back()->withErrors(['该角色已绑定用户，请先去用户管理中解绑用户！']);
