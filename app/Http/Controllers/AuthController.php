@@ -86,13 +86,13 @@ class AuthController extends BaseController
             'name.max'      => '角色名长度最多为10个'
         ]);
         $data = [
-            'name' => Input::get('name'),
+            'name' => trim(Input::get('name')),
             'slug' => rand(1,999999),
             'description'=>Input::get('description')
         ];
         //查看角色名是否已存在
 
-        $RoleName = DB::connection('sys_mis')->table('sys_roles')->where('name','=',trim($data['name']))->first();
+        $RoleName = DB::connection('sys_mis')->table('sys_roles')->where('name','=',$data['name'])->first();
         if($RoleName){
             return  redirect()->back()->withErrors(['该角色名已存在']);
         }
