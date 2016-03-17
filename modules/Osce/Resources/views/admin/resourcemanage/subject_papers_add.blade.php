@@ -435,7 +435,6 @@
 
             var editUrl = '{{route('osce.admin.ExamPaperController.getEditExamPaper')}}';
             if(inputVal){
-                alert(11111111);
                 $('#sourceForm').attr('action',editUrl);
                 $('#status').attr('disabled','disabled');
                 $('#status2').attr('disabled','disabled');
