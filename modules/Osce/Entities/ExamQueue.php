@@ -581,6 +581,7 @@ class ExamQueue extends CommonModel
             ->where('exam_queue.exam_id', '=', $exam_id)
             ->where('exam_queue.status', '=', 0)
             ->orderBy('exam_queue.begin_dt', 'asc')
+            ->orderBy('student.id', 'asc')
             ->select(['student.name as name', 'exam_queue.student_id', 'exam_queue.begin_dt'])
             ->distinct()->take(4)->get();
 
@@ -619,6 +620,7 @@ class ExamQueue extends CommonModel
             ->where('exam_queue.exam_id', '=', $exam_id)
             ->where('exam_queue.status', '=', 0)
             ->orderBy('exam_queue.begin_dt', 'asc')
+            ->orderBy('student.id', 'asc')
             ->select(['student.name as name', 'exam_queue.student_id', 'exam_queue.begin_dt'])
             ->distinct()->take(4)->get();
 
