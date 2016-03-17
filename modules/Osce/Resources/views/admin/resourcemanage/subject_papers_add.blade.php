@@ -32,13 +32,20 @@
                 if($(this).val()=="1"){
                     $("#paper").show();
                     $("#paper2").hide();
-                    $("#status2").empty().append('<option value="1">随机试卷</option><option value="2">统一试卷</option>')
+                    $("#status2").empty().append('<option value="1">随机试卷</option><option value="2">统一试卷</option>');
+                    autoValidate();
                 }else{
                     $("#paper2").show();
                     $("#paper").hide();
-                    $("#status2").empty().append('<option value="2">统一试卷</option>')
+                    $("#status2").empty().append('<option value="2">统一试卷</option>');
+                    handValidate();
                 }
             });
+            if($("#status option:selected").val() == 1){
+                autoValidate();
+            }else{
+                handValidate();
+            }
             //自动组卷验证
                 function autoValidate(){
                     var paperId = $("#paperId").val();
@@ -57,6 +64,7 @@
                                         notEmpty: {/*非空提示*/
                                             message: '试卷名称不能为空'
                                         },
+                                        threshold :  2 ,
                                         remote:{
                                             url: '/osce/admin/exampaper/check-name-only',//验证地址
                                             message: '该试卷名称已存在',//提示消息
@@ -64,6 +72,7 @@
                                             type: 'POST',//请求方式
                                             data: function (validator) {
                                                 return{
+//                                                    name:$("#name").val(),
                                                     id:paperId
                                                 }
                                             }
@@ -108,10 +117,7 @@
                                             url: '/osce/admin/exampaper/check-name-only',//验证地址
                                             message: '该试卷名称已存在',//提示消息
                                             delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                            type: 'POST',//请求方式
-                                            data: function (validator) {
-
-                                            }
+                                            type: 'POST'//请求方式
                                         }
                                     }
                                 },
@@ -205,10 +211,7 @@
                                         url: '/osce/admin/exampaper/check-name-only',//验证地址
                                         message: '该试卷名称已存在',//提示消息
                                         delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                        type: 'POST',//请求方式
-                                        data: function (validator) {
-
-                                        }
+                                        type: 'POST'//请求方式
                                     }
                                 }
                             },
@@ -232,8 +235,67 @@
                         }
                     })
                 }
+                //手工组卷新增弹出层验证
+                $("#addForm").bootstrapValidator({
+                        message: 'This value is not valid',
+                        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                            valid: 'glyphicon glyphicon-ok',
+                            invalid: 'glyphicon glyphicon-remove',
+                            validating: 'glyphicon glyphicon-refresh'
+                        },
+                        fields: {/*验证*/
+                            questionScore: {/*键名username和input name值对应*/
+                                message: 'The username is not valid',
+                                validators: {
+                                    notEmpty: {/*非空提示*/
+                                        message: '每题分数不能为空'
+                                    },
+                                    callback: {
+                                        message: '每题分数只能是1-20的正整数',
+                                        callback: function(){
+                                            var score = $("#addForm").find("input[name='questionScore']").val()
+                                            if(score >=1 && score <=20){
+                                                return true;
+                                            }else{
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                //手工组卷编辑弹出层验证
+                $("#editForm").bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {/*验证*/
+                        questionScore2: {/*键名username和input name值对应*/
+                            message: 'The username is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '每题分数不能为空'
+                                },
+                                callback: {
+                                    message: '每题分数只能是1-20的正整数',
+                                    callback: function(){
+                                        var score = $("#editForm").find("input[name='questionScore2']").val()
+                                        if(score >=1 && score <=20){
+                                            return true;
+                                        }else{
+                                            return false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
             }
-
             /**
              * 自动组卷页面操作
              */
@@ -299,7 +361,7 @@
                 now = parseInt(now) + 1;//计数
                 var tpye2= $('select[name="question-type"] option:selected').text();//题目类型名字
                 var tpyeid= $('select[name="question-type"] option:selected').val();//题目类型ID
-                var score=$('input[name="question-score"]').val(); //每题分数
+                var score=$('input[name="questionScore"]').val(); //每题分数
                 var html = '<tr sequence="'+parseInt(now)+'" id="handwork_'+parseInt(now)+'">'+
                         '<td>'+parseInt(now)+'<input name="question-type[]" type="hidden" value="'+tpyeid+"@"+score+'"/>'+'</td>'+
                         '<td>'+tpye2+'</td>'+
@@ -351,12 +413,12 @@
                         $(this).attr("selected", true);
                     }
                 });
-                $('input[name="question-score2"]').val(question_detail[1]);
+                $('input[name="questionScore2"]').val(question_detail[1]);
                 $('#editForm').submit(function(){//编辑题型
                     var new_question_detail="";
                     for(var i=0; i<question_detail.length; i++){
                         if(i==1){
-                            question_detail[1]=$('input[name="question-score2"]').val(); //修改每题分数重置
+                            question_detail[1]=$('input[name="questionScore2"]').val(); //修改每题分数重置
                         }
                         if(i==question_detail.length-1){
                             new_question_detail=new_question_detail+question_detail[i];
@@ -655,9 +717,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">每题分数：</label>
+                <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565;">*</span>每题分数：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="question-score" class="form-control" placeholder="仅支持大于0的正整数">
+                    <input type="number" name="questionScore" class="form-control" placeholder="仅支持大于0的正整数">
                 </div>
             </div>
         </div>
@@ -687,9 +749,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">每题分数：</label>
+                <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565;">*</span>每题分数：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="question-score2"  class="form-control" placeholder="仅支持大于0的正整数">
+                    <input type="number" name="questionScore2"  class="form-control" placeholder="仅支持大于0的正整数">
                 </div>
             </div>
         </div>

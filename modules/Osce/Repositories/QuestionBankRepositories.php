@@ -13,6 +13,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelRelation;
+use Modules\Osce\Entities\Exam;
 class QuestionBankRepositories  extends BaseRepository
 {
 
@@ -304,9 +305,10 @@ class QuestionBankRepositories  extends BaseRepository
      * @date   2016年3月14日14:27:03
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function GenerateExamPaper($ExamPaperId){
+    public function GenerateExamPaper($ExamPaperId,$Mark=0){
         $ExamPaper = new ExamPaper;
         $ExamPaperInfo = $ExamPaper->where('id','=',$ExamPaperId)->first();
+
         if(count($ExamPaperInfo)>0){
             //随机试卷处理方法
             if($ExamPaperInfo->type == 1){
@@ -321,23 +323,40 @@ class QuestionBankRepositories  extends BaseRepository
                 //统一试卷处理方法
             }elseif($ExamPaperInfo->type == 2){
                 $item = [];
-                if(count($ExamPaperInfo->ExamPaperStructure)>0){
-                    foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
-                        $arr = [];
-                        if(count($v->ExamPaperStructureQuestion)){
-                            $arr['id'] = $v['id'];
-                            $arr['type'] = $v['exam_question_type_id'];
-                            $arr['num'] = $v['num'];
-                            $arr['score'] = $v['score'];
-                            $arr['total_score'] = $v['total_score'];
-                            $arr['child'] = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
-                        }
-                        if(count($arr)>0){
-                            $item[] = $arr;
+                if($Mark && $ExamPaperInfo->mode == 1){
+
+                    if(count($ExamPaperInfo->ExamPaperStructure)>0){
+                        foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
+                            if(count($v->ExamPaperStructureLabel)){
+                                $ExamPaperInfo->ExamPaperStructure[$k]['structure_label'] = $v->ExamPaperStructureLabel;
+                            }
                         }
                     }
+                    $ExamPaperInfo['item'] = ($this->StructureExamQuestionArr($ExamPaperInfo->ExamPaperStructure));
+
+                }else{
+                    if(count($ExamPaperInfo->ExamPaperStructure)>0){
+                        foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
+                            $arr = [];
+                            if(count($v->ExamPaperStructureQuestion)){
+                                //dd($v->ExamPaperStructureQuestion);
+                                $arr['id'] = $v['id'];
+                                $arr['type'] = $v['exam_question_type_id'];
+                                $arr['num'] = $v['num'];
+                                $arr['score'] = $v['score'];
+                                $arr['total_score'] = $v['total_score'];
+                                $arr['child'] = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
+                            }
+                            if(count($arr)>0){
+                                $item[] = $arr;
+                            }
+                        }
+                    }
+                    $ExamPaperInfo['item'] = $item;
                 }
-                $ExamPaperInfo['item'] = $item;
+
+
+
             }
         }
         return   $ExamPaperInfo;
@@ -355,7 +374,6 @@ class QuestionBankRepositories  extends BaseRepository
      */
     public function LoginAuth(){
         $user = Auth::user();
-        $roles = [];
         if(count($user->roles)>0){
             $roles = $user
                 ->roles
@@ -369,5 +387,48 @@ class QuestionBankRepositories  extends BaseRepository
             return  false;
         }
     }
+
+    /**
+     * 根据监考老师id获取相关信息
+     * @method
+     * @url /osce/
+     * @access public
+     * @return $this
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月17日10:05:55
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetExamInfo($userId){
+
+        try{
+            $Exam = new Exam;
+            //获取本次考试的id
+            $ExamInfo = $Exam->where('status','=',1)->select('id')->first();
+            if(empty($ExamInfo->id)){
+                throw new \Exception(' 没有在进行的考试');
+            }
+            //根据监考老师的id和考试id，获取对应的考站id
+            $builder = $Exam->leftJoin('station_teacher', function($join){
+                $join -> on('station_teacher.exam_id', '=', 'exam.id');
+            })
+                ->groupBy('station_teacher.user_id')
+                ->where('exam.id','=',$ExamInfo->id)
+                ->where('station_teacher.user_id','=',$userId)
+                ->select('station_teacher.station_id');
+
+            $station_id = $builder->pluck('station_id');
+
+            if(empty($station_id)){
+                throw new \Exception('你没有相关需要监考的考站');
+            }
+
+            return  ['StationId'=>$station_id,'ExamId'=>$ExamInfo->id];
+            //case_id
+        }catch (\Exception $ex){
+            return $ex->getMessage();
+        }
+
+    }
+
 
 }

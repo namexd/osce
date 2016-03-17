@@ -50,6 +50,14 @@ function subject_check_tag(){
                         dataType: 'json'//请求方式
                     }
                 }
+            },
+            describe: {/*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '描述不能为空'
+                    }
+                }
             }
         }
     });
@@ -105,6 +113,14 @@ function subject_check_tag(){
                                     id:editId
                                 }
                             }
+                        }
+                    }
+                },
+                describe: {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '描述不能为空'
                         }
                     }
                 }
