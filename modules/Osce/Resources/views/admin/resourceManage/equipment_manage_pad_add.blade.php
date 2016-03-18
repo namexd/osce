@@ -5,102 +5,11 @@
 
 @section('only_js')
     <script src="{{asset('msc/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
-    <script>
-        $(function(){
-            $('#sourceForm').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*验证*/
-                    name: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: 'PAD名称不能为空'
-                            },
-                            threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                            remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                                url: '{{route('osce.admin.machine.postNameUnique')}}',//验证地址
-                                message: '设备名称已经存在',//提示消息
-                                delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                type: 'POST',//请求方式
-                                /*自定义提交数据，默认值提交当前input value*/
-                                data: function(validator) {
-                                    $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
-
-                                    return {
-                                        cate: '2',
-                                        name: $('[name="whateverNameAttributeInYourForm"]').val()
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    code: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '编号不能为空'
-                            },
-                            regexp: {
-                                regexp:  /^[a-zA-Z0-9:]+$/,
-                                message: '请输入正确的编号'
-                            },
-                            threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                            remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                                url: '{{route('osce.admin.machine.postNameUnique')}}',//验证地址
-                                message: '设备ID已经存在',//提示消息
-                                delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                type: 'POST',//请求方式
-                                /*自定义提交数据，默认值提交当前input value*/
-                                data: function(validator) {
-                                    return {
-                                        cate: '2',
-                                        name: $('[name="whateverNameAttributeInYourForm"]').val()
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    factory: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '厂家不能为空'
-                            }
-                        }
-                    },
-                    sp: {
-                        /*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '型号不能为空'
-                            }
-                        }
-                    }
-
-                }
-            });
-            /*时间选择*/
-            var start = {
-                elem: "#purchase_dt",
-                format: "YYYY-MM-DD",
-                min: "1970-00-00",
-		    	max: '2099-06-16 23:59:59'
-            };
-            laydate(start);
-        })
-    </script>
+    <script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script>
 @stop
 
 @section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'equipment_manage_pad_add','name': '{{route("osce.admin.machine.postNameUnique")}}','code': '{{route("osce.admin.machine.postNameUnique")}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="ibox float-e-margins">
@@ -146,13 +55,23 @@
                             </div>
                             <div class="hr-line-dashed"></div>
 
+
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">采购日期</label>
+                                <label class="col-sm-2 control-label">放置地点</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="laydate-icon" id="purchase_dt" name="purchase_dt" readonly="readonly">
+                                    <input type="text" class="form-control" id="place" name="place">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">采购日期</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="laydate-icon" id="purchase_dt" name="purchase_dt" readonly="readonly" placeholder="YYYY-MM-DD">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">状态</label>

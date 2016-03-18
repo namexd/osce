@@ -12,23 +12,25 @@ namespace Modules\Osce\Entities;
 
 use Modules\Osce\Entities\MachineInterface;
 use DB;
+
 class Pad extends CommonModel implements MachineInterface
 {
-    protected $connection	=	'osce_mis';
-    protected $table 		= 	'pad';
-    public $incrementing	=	true;
-    public $timestamps	    =	true;
-    protected   $fillable 	=	['code', 'name', 'status', 'create_user_id', 'factory', 'sp', 'purchase_dt'];
-    public      $search    =   [];
+    protected $connection = 'osce_mis';
+    protected $table = 'pad';
+    public $incrementing = true;
+    public $timestamps = true;
+    protected $fillable = ['code', 'name', 'status', 'create_user_id', 'factory', 'sp', 'purchase_dt', 'place'];
+    public $search = [];
 
-    protected $statuValues  =   [
-        1   =>  '使用中',
-        0   =>  '未使用',
-        2   =>  '报废',
-        3   =>  '维修',
+    protected $statuValues = [
+        1 => '使用中',
+        0 => '未使用',
+        2 => '报废',
+        3 => '维修',
     ];
 
-    public function getMachineStatuValues(){
+    public function getMachineStatuValues()
+    {
         return $this->statuValues;
     }
 
@@ -50,46 +52,38 @@ class Pad extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addMachine($data){
-        $connection =   DB::connection($this->connection);
-        $connection ->beginTransaction();
-        try
-        {
-            $machineData    =   [];
+    public function addMachine($data)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
+            $machineData = [];
 
-            if($vcr =   $this   ->  create($data))
-            {
-                $machineData=   [
-                    'item_id'    =>  $vcr    ->  id,
-                    'type'      =>  1,
+            if ($vcr = $this->create($data)) {
+                $machineData = [
+                    'item_id' => $vcr->id,
+                    'type' => 1,
                 ];
-            }
-            else
-            {
+            } else {
                 throw new \Exception('新增PAD失败');
             }
-            if(empty($machineData))
-            {
+            if (empty($machineData)) {
                 throw new \Exception('没有找到PAD新增数据');
             }
 
-            $machine    =   true;
-            if($machine)
-            {
-                $connection -> commit();
+            $machine = true;
+            if ($machine) {
+                $connection->commit();
                 return $vcr;
-            }
-            else
-            {
+            } else {
                 throw new   \Exception('新增PAD资源失败');
             }
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
     }
+
     /**
      * 编辑设备
      * @access public
@@ -109,35 +103,27 @@ class Pad extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editMachine($data){
-        $connection =   DB::connection($this->connection);
-        $connection ->beginTransaction();
-        try
-        {
-            $vcr            =   $this   ->  find($data['id']);
-            if($vcr)
-            {
-                foreach($data as $feild=> $value)
-                {
-                    if($feild=='id')
-                    {
+    public function editMachine($data)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
+            $vcr = $this->find($data['id']);
+            if ($vcr) {
+                foreach ($data as $feild => $value) {
+                    if ($feild == 'id') {
                         continue;
                     }
-                    $vcr    ->  $feild  =   $value;
+                    $vcr->$feild = $value;
                 }
-                if($vcr     ->  save())
-                {
+                if ($vcr->save()) {
 //                    $machine    =   Machine ::where('item_id','=',$vcr    ->  id)
 //                                            ->where('type','=',1)
 //                                            ->first();
+                } else {
+                    $machine = false;
                 }
-                else
-                {
-                    $machine    =   false;
-                }
-            }
-            else
-            {
+            } else {
                 throw new \Exception('没有找到该PAD');
             }
 
@@ -146,7 +132,7 @@ class Pad extends CommonModel implements MachineInterface
 //                $machine    ->  name    =   $data['name'];
 //                if($machine->save())
 //                {
-            $connection -> commit();
+            $connection->commit();
 //                }
 //                else
 //                {
@@ -159,9 +145,7 @@ class Pad extends CommonModel implements MachineInterface
 //            {
 //                throw new   \Exception('没有找到PAD资源信息');
 //            }
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
@@ -180,18 +164,18 @@ class Pad extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList($name, $status,$nfc_code=''){
-        $bulder =   $this;
-        if($name != ''){
-            $bulder =   $bulder    ->  where('name', 'like', '%\\'.$name.'%');
+    public function getList($name, $status, $nfc_code = '')
+    {
+        $bulder = $this;
+        if ($name != '') {
+            $bulder = $bulder->where('name', 'like', '%\\' . $name . '%');
         }
 
-        if($status != '')
-        {
-            $bulder =   $bulder    ->  where('status', '=', $status);
+        if ($status != '') {
+            $bulder = $bulder->where('status', '=', $status);
         }
-        $bulder = $bulder -> select(['id', 'code', 'name', 'status']);
+        $bulder = $bulder->select(['id', 'code', 'name', 'status']);
 
-        return  $bulder ->  paginate(config('osce.page_size'));
+        return $bulder->paginate(config('osce.page_size'));
     }
 }

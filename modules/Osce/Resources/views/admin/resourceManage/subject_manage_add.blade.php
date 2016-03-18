@@ -75,6 +75,27 @@
                             message: '描述不能为空'
                         }
                     }
+                },
+                goods: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '所需物品不能为空'
+                        }
+                    }
+                },
+                stem: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '题干不能为空'
+                        }
+                    }
+                },
+                equipments: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '所需设备不能为空'
+                        }
+                    }
                 }
             }
         });
@@ -83,7 +104,7 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'categories','Unique':'{{route('osce.admin.topic.postNameUnique')}}','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'subject_module','Unique':'{{route('osce.admin.topic.postNameUnique')}}','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">

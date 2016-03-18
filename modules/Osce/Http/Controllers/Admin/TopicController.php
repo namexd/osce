@@ -75,6 +75,9 @@ class TopicController extends CommonController
             'content' => 'required',
             'score' => 'required',
             'desc' => 'required',
+            'stem' => 'required',
+            'equipments' => 'required',
+            'goods' => 'required'
         ], [
             'title.required' => '名称必填',
             'title.unique' => '该科目已存在',
@@ -115,7 +118,7 @@ class TopicController extends CommonController
                 throw new \Exception('新增失败！');
             }
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage())->withInput();
         }
 
     }
@@ -149,11 +152,14 @@ class TopicController extends CommonController
             'desc' => 'sometimes',
             'content' => 'required',
             'score' => 'required',
+            'stem' => 'required',
+            'equipments' => 'required',
+            'goods' => 'required'
         ], [
-            'id.required' => '课题ID必须',
-            'title.required' => '课题名称必须',
-            'content.required' => '评分标准必须',
-            'score.required' => '评分必须',
+            'id.required' => '课题ID必须填写',
+            'title.required' => '课题名称必须填写',
+            'content.required' => '评分标准必须填写',
+            'score.required' => '评分必须填写',
         ]);
 
         $data = [

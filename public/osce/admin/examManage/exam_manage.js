@@ -452,8 +452,7 @@ function timePicker(background){
                 thisElement.next().text(days+'天'+hours+'小时'+minutes+'分');
             }else{
                 //加三小时
-                var nextTime = new Date(Date.parse(date)+60*3*60*1000);
-                console.log(formatDateTime(nextTime))
+                var nextTime = new Date(Date.parse(date.split('-').join('/'))+60*3*60*1000);
                 thisElement.next().find('input').val(formatDateTime(nextTime));
 
                 var current = Date.parse((thisElement.next().find('input[type=text]').val()).split('-').join('/')) - Date.parse(date.split('-').join('/'));
