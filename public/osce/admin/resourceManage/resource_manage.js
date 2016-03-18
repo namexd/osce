@@ -144,8 +144,16 @@ function equipment_manage_watch_edit() {
                         message: '型号不能为空'
                     }
                 }
+            },
+            place: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '放置地点不能为空'
+                    }
+                }
             }
-
         }
     });
     /*时间选择*/
@@ -244,6 +252,15 @@ function equipment_manage_watch_add() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '型号不能为空'
+                    }
+                }
+            },
+            place: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '放置地点不能为空'
                     }
                 }
             }
@@ -374,8 +391,16 @@ function equipment_manage_pad_add() {
                         message: '型号不能为空'
                     }
                 }
+            },
+            place: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '放置地点不能为空'
+                    }
+                }
             }
-
         }
     });
     /*时间选择*/
@@ -474,8 +499,16 @@ function equipment_manage_pad_edit() {
                         message: '型号不能为空'
                     }
                 }
+            },
+            place: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '放置地点不能为空'
+                    }
+                }
             }
-
         }
     });
     /*时间选择*/
@@ -664,6 +697,15 @@ function equipment_manage_video_add() {
                         message: '密码不能为空'
                     }
                 }
+            },
+            place: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '放置地点不能为空'
+                    }
+                }
             }
         }
     });
@@ -825,6 +867,15 @@ function equipment_manage_video_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '密码不能为空'
+                    }
+                }
+            },
+            place: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '放置地点不能为空'
                     }
                 }
             }
