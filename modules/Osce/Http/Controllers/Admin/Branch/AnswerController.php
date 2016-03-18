@@ -10,9 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
-use Modules\Osce\Entities\QuestionBankEntities\ExamCategoryFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
-use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionFormal;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\QuestionBankRepositories;
 use Illuminate\Http\Request;
@@ -39,24 +37,15 @@ class AnswerController extends CommonController
         $ExamPaperId = $request->get('id',45);
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
-
-
         $ExamPaperFormal = new ExamPaperFormal;
-
         //生成正式的试卷并且 返回id
         $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
-
-
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
             $systemTimeStart =\Session::get('systemTimeStart');
         }else{
             \Session::put('systemTimeStart',time());
         }
-
-        //dd(date('Y-m-d H:i:s',$systemTimeStart));
-        //获取该理论考试相关信息
-        //正式的试卷表ID
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
@@ -81,14 +70,6 @@ class AnswerController extends CommonController
                 }
                 //转换为数组格式
                 foreach($examCategoryFormalList as $k1=>$v1){
-            /*        $examCategoryFormalData[$k1]= array(
-                        'id'=>$v1->id,
-                        'name'=>$v1->name,
-                        'number'=>$v1->number,
-                        'score'=>$v1->score,
-                        'exam_question_type_id'=>$v1->exam_question_type_id,
-                        'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
-                    );*/
                     if(count($v1['exam_question_formal'])>0){
                         foreach($v1['exam_question_formal'] as $k2=>$v2){
                             $examCategoryFormalData[]=array(
@@ -130,7 +111,6 @@ class AnswerController extends CommonController
 
             }
         }
-        //dd(date('Y/m/d H:i:s',$systemTimeStart).','.date('Y/m/d H:i:s',$systemTimeEnd));
         //dd($examPaperFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
@@ -176,7 +156,6 @@ class AnswerController extends CommonController
         );*/
 
         foreach($data['examQuestionFormalInfo'] as $k=>$v){
-
             $newStudentAnswer='';
             $studentAnswer = explode('@',$v['answer']);
             foreach($studentAnswer as $val){
@@ -221,7 +200,6 @@ class AnswerController extends CommonController
                         }
                     }
                 }
-
             }
 
             $data['examQuestionFormalInfo'][$k]['answer']=$newStudentAnswer;
@@ -250,22 +228,19 @@ class AnswerController extends CommonController
      */
     public function selectGrade(Request $request)
     {
-
         $this->validate($request, [
              'examPaperFormalId'=>'required|integer',//正式的试卷id
 
         ]);
-
         $examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
         $answerModel = new Answer();
         //保存成功，调用查询该考生成绩的方法
         $examPaperFormalData = $answerModel->selectGrade($examPaperFormalId);
         //dd($examPaperFormalData);
         return view('osce::admin.theoryCheck.theory_check_complete', [
-            'data'                         =>$examPaperFormalData,//考试成绩及该考试相关信息
+            'data'  =>$examPaperFormalData,//考试成绩及该考试相关信息
         ]);
     }
-
 
 
 }
