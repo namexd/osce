@@ -173,7 +173,7 @@ class StudentWatchController extends CommonController
         $room =$item->room;
         $data   =   [
             'code'=>3,
-            'title'=>'请进入下面考站考试',
+            'title'=>'请进入以下考站考试',
             'roomName'=>$room->name.'-'.$station->name,
         ];
         return $data;
@@ -261,28 +261,28 @@ class StudentWatchController extends CommonController
 
 
             //调用状态为1的方法
-            $Data=$this->getStatusWaitExam($examQueueCollect);
+            $data=$this->getStatusWaitExam($examQueueCollect);
 
-            if($Data['willStudents']==0){
+            if($data['willStudents']==0){
                 if(!is_null($nextExamQueue->station))
                 {
-                    $Data = [
+                    $data = [
                         'code'=> 5,
-                        'title' => '，进入下一场考试考站名',
+                        'title' => '当前考场考试已完成，请进入下一个考场',
                         'nextExamName' =>$nextExamQueue->room->name.'-'.$nextExamQueue->station->name,
                     ];
                 }
                 else
                 {
-                    $Data = [
+                    $data = [
                         'code'=> 5,
-                        'title' => '，进入下一场考试考场名',
+                        'title' => '当前考场考试已完成，请进入下一个考场',
                         'nextExamName' =>$nextExamQueue->room->name,
                     ];
                 }
             }
         }
-       return $Data;
+       return $data;
     }
 
 
@@ -379,7 +379,7 @@ class StudentWatchController extends CommonController
             if(is_null($item->station_id)){
                 $data =[
                     'code'=> 3,
-                    'title'=> '你将要进入下面教室抽签考试',
+                    'title'=> '请进入以下考场考试',
                     'willStudents'=> '',
                     'estTime'=> '',
                     'willRoomName'=> '',
@@ -389,7 +389,7 @@ class StudentWatchController extends CommonController
             }else{
                 $data =[
                     'code'=> 3,
-                    'title'=> '你将要进入下面教室抽签考试',
+                    'title'=> '请进入以下考站考试',
                     'willStudents'=> '',
                     'estTime'=> '',
                     'willRoomName'=> '',
