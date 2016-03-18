@@ -564,13 +564,13 @@
                         </select>
                     </div>
                     @if(@$paperDetail['type'])
-                            @if(@$paperDetail['type'])
-                                <input type="hidden" name="status2" value="{{@$paperDetail['type']}}">
-                            @endif
-                        @else
-                            @if(@$paperDetails['type'])
-                                <input type="hidden" name="status2" value="{{@$paperDetails['type']}}">
-                            @endif
+                        @if(@$paperDetail['type'])
+                            <input type="hidden" name="status2" value="{{@$paperDetail['type']}}">
+                        @endif
+                    @else
+                        @if(@$paperDetails['type'])
+                            <input type="hidden" name="status2" value="{{@$paperDetails['type']}}">
+                        @endif
                     @endif
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -616,15 +616,15 @@
                                     @endif
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <td>总计</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="randomSubject">0</td>
-                                            <td></td>
-                                            <td class="randomScore">0</td>
-                                            <td></td>
-                                        </tr>
+                                    <tr>
+                                        <td>总计</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="randomSubject">0</td>
+                                        <td></td>
+                                        <td class="randomScore">0</td>
+                                        <td></td>
+                                    </tr>
                                     </tfoot>
                                 </table>
 
@@ -640,14 +640,14 @@
                             <div class="ibox-content" style="border-top:0;" id="paper2" >
                                 <table class="table table-bordered">
                                     <thead>
-                                        <tr>
-                                            <th width="10%">序号</th>
-                                            <th width="20%">题目类型</th>
-                                            <th width="10%">题目总量</th>
-                                            <th width="10%">每题分数</th>
-                                            <th width="10%">总分</th>
-                                            <th width="10%">操作</th>
-                                        </tr>
+                                    <tr>
+                                        <th width="10%">序号</th>
+                                        <th width="20%">题目类型</th>
+                                        <th width="10%">题目总量</th>
+                                        <th width="10%">每题分数</th>
+                                        <th width="10%">总分</th>
+                                        <th width="10%">操作</th>
+                                    </tr>
                                     </thead>
                                     <tbody index="0" id="list-body">
                                     @if(!empty(@$paperDetails['item']))
@@ -665,17 +665,17 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        @endif
+                                    @endif
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <td>总计</td>
-                                            <td></td>
-                                            <td class="oneSubject">0</td>
-                                            <td></td>
-                                            <td class="oneScore">0</td>
-                                            <td></td>
-                                        </tr>
+                                    <tr>
+                                        <td>总计</td>
+                                        <td></td>
+                                        <td class="oneSubject">0</td>
+                                        <td></td>
+                                        <td class="oneScore">0</td>
+                                        <td></td>
+                                    </tr>
                                     </tfoot>
                                 </table>
                             </div>
