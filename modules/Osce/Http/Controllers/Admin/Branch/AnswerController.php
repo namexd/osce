@@ -40,10 +40,12 @@ class AnswerController extends CommonController
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
 
+
         $ExamPaperFormal = new ExamPaperFormal;
 
         //生成正式的试卷并且 返回id
         $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
+
 
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
