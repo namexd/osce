@@ -352,13 +352,14 @@
                 var nowid= $(this).parent().parent().parent().parent().attr("id");
                 var question_detail=$(this).parent().parent().parent().parent().find("input[name='question-type[]']").val();
                 question_detail=question_detail.split("@");
+                console.log(question_detail);
                 $('#typeSelect2').find('option').each(function(){
                     if($(this).val()==question_detail[0]){
                         $(this).attr("selected", true);
                     }
                 });
                 $('input[name="questionScore2"]').val(question_detail[1]);
-                $('#editForm').submit(function(){//编辑题型
+                $('#editForm').unbind().submit(function(){//编辑题型
                     var new_question_detail="";
                     for(var i=0; i<question_detail.length; i++){
                         if(i==1){
@@ -370,14 +371,14 @@
                             new_question_detail=new_question_detail+question_detail[i]+"@";
                         }
                     }
+                    console.log(nowid+"     "+new_question_detail);
                     $("#"+nowid).children().find("input[name='question-type[]']").val(new_question_detail);
                     $("#"+nowid).children().eq(3).text(question_detail[1]);
-                    $("#"+nowid).children().eq(4).text(question_detail[1]*$("#"+nowid).children().eq(2).text());
+                    $("#"+nowid).children().eq(4).text(question_detail[1]*parseInt($("#"+nowid).children().eq(2).text()));
                     $('.close').trigger('click');
                     editOneCount();
                     return  false;
                 })
-
             });
 
             /**
@@ -564,13 +565,13 @@
                         </select>
                     </div>
                     @if(@$paperDetail['type'])
-                            @if(@$paperDetail['type'])
-                                <input type="hidden" name="status2" value="{{@$paperDetail['type']}}">
-                            @endif
-                        @else
-                            @if(@$paperDetails['type'])
-                                <input type="hidden" name="status2" value="{{@$paperDetails['type']}}">
-                            @endif
+                        @if(@$paperDetail['type'])
+                            <input type="hidden" name="status2" value="{{@$paperDetail['type']}}">
+                        @endif
+                    @else
+                        @if(@$paperDetails['type'])
+                            <input type="hidden" name="status2" value="{{@$paperDetails['type']}}">
+                        @endif
                     @endif
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -616,15 +617,15 @@
                                     @endif
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <td>总计</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="randomSubject">0</td>
-                                            <td></td>
-                                            <td class="randomScore">0</td>
-                                            <td></td>
-                                        </tr>
+                                    <tr>
+                                        <td>总计</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="randomSubject">0</td>
+                                        <td></td>
+                                        <td class="randomScore">0</td>
+                                        <td></td>
+                                    </tr>
                                     </tfoot>
                                 </table>
 
@@ -640,14 +641,14 @@
                             <div class="ibox-content" style="border-top:0;" id="paper2" >
                                 <table class="table table-bordered">
                                     <thead>
-                                        <tr>
-                                            <th width="10%">序号</th>
-                                            <th width="20%">题目类型</th>
-                                            <th width="10%">题目总量</th>
-                                            <th width="10%">每题分数</th>
-                                            <th width="10%">总分</th>
-                                            <th width="10%">操作</th>
-                                        </tr>
+                                    <tr>
+                                        <th width="10%">序号</th>
+                                        <th width="20%">题目类型</th>
+                                        <th width="10%">题目总量</th>
+                                        <th width="10%">每题分数</th>
+                                        <th width="10%">总分</th>
+                                        <th width="10%">操作</th>
+                                    </tr>
                                     </thead>
                                     <tbody index="0" id="list-body">
                                     @if(!empty(@$paperDetails['item']))
@@ -665,17 +666,17 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        @endif
+                                    @endif
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <td>总计</td>
-                                            <td></td>
-                                            <td class="oneSubject">0</td>
-                                            <td></td>
-                                            <td class="oneScore">0</td>
-                                            <td></td>
-                                        </tr>
+                                    <tr>
+                                        <td>总计</td>
+                                        <td></td>
+                                        <td class="oneSubject">0</td>
+                                        <td></td>
+                                        <td class="oneScore">0</td>
+                                        <td></td>
+                                    </tr>
                                     </tfoot>
                                 </table>
                             </div>
