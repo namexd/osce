@@ -76,6 +76,27 @@
                             message: '描述不能为空'
                         }
                     }
+                },
+                goods: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '所需物品不能为空'
+                        }
+                    }
+                },
+                stem: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '题干不能为空'
+                        }
+                    }
+                },
+                equipments: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '所需设备不能为空'
+                        }
+                    }
                 }
             }
         });
@@ -110,7 +131,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">题干</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control" name="stem" value="{{$item->stem}}"/>
+                                <input id="select_Category"  class="form-control" name="stem" value="{{$item->stem}}"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -118,7 +139,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">所需设备</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control" name="equipments" value="{{$item->equipments}}"/>
+                                <input id="select_Category" class="form-control" name="equipments" value="{{$item->equipments}}"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -126,7 +147,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">所需物品</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control" name="goods" value="{{$item->goods}}"/>
+                                <input id="select_Category" class="form-control" name="goods" value="{{$item->goods}}"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

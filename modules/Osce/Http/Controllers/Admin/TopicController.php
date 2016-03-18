@@ -84,9 +84,6 @@ class TopicController extends CommonController
             'content.required' => '必须新增评分点',
             'score.required' => '分数必填',
             'desc.required' => '必须新增描述',
-            'stem.required' => '题干必填',
-            'equipments.required' => '所需设备必填',
-            'goods.required' => '所需物品必填'
         ]);
 
         $content = $request->get('content');
@@ -159,13 +156,10 @@ class TopicController extends CommonController
             'equipments' => 'required',
             'goods' => 'required'
         ], [
-            'id.required' => '课题ID必须',
-            'title.required' => '课题名称必须',
-            'content.required' => '评分标准必须',
-            'score.required' => '评分必须',
-            'stem.required' => '题干必填',
-            'equipments.required' => '所需设备必填',
-            'goods.required' => '所需物品必填'
+            'id.required' => '课题ID必须填写',
+            'title.required' => '课题名称必须填写',
+            'content.required' => '评分标准必须填写',
+            'score.required' => '评分必须填写',
         ]);
 
         $data = [
