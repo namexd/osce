@@ -25,6 +25,21 @@
             var questionIDs = $('.questionIDs').val();//之前已选中题目ID，但是并未保存
             var questionArr = [];//试题ID转换
 
+            function GetDomInfo(){
+                subject_id = $('#status0 option:selected').val();
+                ability_id = $('#status1 option:selected').val();
+                difficult_id = $('#status2 option:selected').val();
+                page = 1;
+                array = [];//用于存放已选中的checkbook
+                question_type = $('.question_type').val();
+                sequence = $('.sequence').val();
+                question_detail = $('.question_detail').val();
+                index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                str = '';//拼接字符串返回给父页面
+                questionIDs = $('.questionIDs').val();//之前已选中题目ID，但是并未保存
+                questionArr = [];//试题ID转换
+            }
+
             if(questionIDs){
                 var a = questionIDs.split(',');
                 for(var i=0;i<a.length;i++){
@@ -65,7 +80,7 @@
 
             //筛选事件
             $('#search').click(function(){
-
+                GetDomInfo();
                 //获取筛选条件
                 getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,questionArr);
             });
@@ -74,6 +89,7 @@
             //点击分页事件
             $('.pull-right').delegate('a','click',function(){
                 var page = $(this).parents('li').attr('page');
+                GetDomInfo();
                 getCheckboxVal();
                 getexamquestions(subject_id,ability_id,difficult_id,page,question_type,sequence,questionArr);
             });
