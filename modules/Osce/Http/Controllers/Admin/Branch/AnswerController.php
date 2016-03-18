@@ -14,6 +14,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamCategoryFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionFormal;
 use Modules\Osce\Http\Controllers\CommonController;
+use Modules\Osce\Repositories\QuestionBankRepositories;
 use Illuminate\Http\Request;
 
 
@@ -33,8 +34,17 @@ class AnswerController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function formalPaperList()
+    public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
+        $ExamPaperId = $request->get('id',45);
+        //获取试卷信息
+        $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
+
+        $ExamPaperFormal = new ExamPaperFormal;
+
+        //生成正式的试卷并且 返回id
+        $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
+
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
             $systemTimeStart =\Session::get('systemTimeStart');
@@ -44,10 +54,10 @@ class AnswerController extends CommonController
 
         //dd(date('Y-m-d H:i:s',$systemTimeStart));
         //获取该理论考试相关信息
-        $id = 1;//正式的试卷表ID
+        //正式的试卷表ID
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
-        $examPaperFormalList = $examPaperFormalModel->where('id','=',$id)->first();
+        $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
         $examPaperFormalData ='';
         if($examPaperFormalList) {
             $examPaperFormalData = array(
