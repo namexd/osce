@@ -6,15 +6,29 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "exam_station":exam_station();break;
+        //考站管理
+        case "exam_station": exam_station();break;
+        case "exam_station_add": exam_station_add();break;
+        case "exam_station_edit": exam_station_edit();break;
+        //场所管理
         case "site_manage":site_manage();break;
         case "site_manage_add": site_manage_add(); break;
         case "site_manage_edit": site_manage_edit(); break;
+        //病例管理
         case "clinical_case_manage":clinical_case_manage();break;
+        case "clinical_case_manage_add":clinical_case_manage_add();break;
+        case "clinical_case_manage_edit":clinical_case_manage_edit();break;
+        //科目
         case "subject_module":subject_module();break;
-        case "invigilator":invigilator();break;
         case "subject_manage":subject_manage();break;
-        case "sp_invigilator":sp_invigilator();break;
+        //人员管理
+        case "staff_manage_invigilator":staff_manage_invigilator();break;
+        case "staff_manage_invigilator_add":staff_manage_invigilator_add();break;
+        case "staff_manage_invigilator_edit":staff_manage_invigilator_edit();break;
+        case "staff_manage_invigilator_sp":staff_manage_invigilator_sp();break;
+        case "staff_manage_invigilator_sp_add":staff_manage_invigilator_sp_add();break;
+        case "staff_manage_invigilator_sp_edit":staff_manage_invigilator_sp_edit();break;
+        //设备管理
         case "equipment_manage": equipment_manage(); break;
         case "equipment_manage_video": equipment_manage_video(); break;
         case "equipment_manage_video_add": equipment_manage_video_add(); break;
@@ -858,6 +872,157 @@ function exam_station(){
 }
 
 /**
+ * 考站新增
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function exam_station_add() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '考站已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                title: 'station',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    }
+                }
+            },
+            mins: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '时间限制不能为空'
+                    },
+                    regexp: {
+                        regexp: /^\+?[1-9][0-9]*$/,
+                        message: '请输入正确的时间'
+                    }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * 考站编辑
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function exam_station_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '考站已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                id: (location.href).split('=')[1],
+                                title: 'station',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    }
+                }
+            },
+            mins: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '时间限制不能为空'
+                    },
+                    regexp: {
+                        regexp: /^\+?[1-9][0-9]*$/,
+                        message: '请输入正确的时间'
+                    }
+                }
+            },
+            subject_id: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '请选择科目'
+                    }
+                }
+            },
+            case_id: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '请选择病例'
+                    }
+                }
+            },
+            room_id: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '请选择所属考场'
+                    }
+                }
+            },
+            vcr_id: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '请选择关联摄像机'
+                    }
+                }
+            }
+        }
+    });
+}
+
+/**
  * 病例
  * @author mao
  * @version 1.0
@@ -867,6 +1032,89 @@ function clinical_case_manage(){
    $(".delete").click(function(){
        deleteItems("post",pars.deletes,$(this).attr("value"),pars.firstpage)
    })
+}
+
+/**
+ * 病例管理新增
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function clinical_case_manage_add() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '病例名称已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            return {
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '病例名称不能为空'
+                    }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * 病例管理编辑
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function clinical_case_manage_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '病例名称已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            return {
+                                id: (location.href).split('=')[1],
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '病例名称不能为空'
+                    }
+                }
+            }
+        }
+    });
 }
 
 /**
@@ -1806,11 +2054,361 @@ function subject_module(){
 
 }
 
-function invigilator(){
+function staff_manage_invigilator(){
     //删除老师
     $(".delete").click(function(){
         deleteItems("post",pars.deletes,$(this).attr("tid"),pars.firstpage);
     })
+}
+
+/**
+ * 人员管理
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function staff_manage_invigilator_add() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '名称字数不超过20个'
+                    }
+                }
+            },
+            code: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '该教师编号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            return {
+                                code: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '教师编号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^\w+$/,
+                        message: '教师编号应该由数字，英文或下划线组成'
+                    }
+                }
+            },
+            mobile: {
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.mobile,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '号码已经存在',//提示消息
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                code: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '手机号码不能为空'
+                    },
+                    stringLength: {
+                        min: 11,
+                        max: 11,
+                        message: '请输入11位手机号码'
+                    },
+                    regexp: {
+                        regexp: /^1[3|7|5|8]{1}[0-9]{9}$/,
+                        message: '请输入正确的手机号码'
+                    }
+                }
+            },
+            idcard: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.idcard,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '身份证号已存在',//提示消息
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                idcard: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '身份证号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        message: '请输入正确的身份证号'
+                    }
+                }
+            },
+            email: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '邮箱不能为空'
+                    },
+                    regexp: {
+                        regexp: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ,
+                        message: '请输入正确的邮箱'
+                    }
+                }
+             }
+        }
+    });
+    $("#images_upload").change(function(){
+        $.ajaxFileUpload
+        ({
+            url:pars.url,
+            secureuri:false,//
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'json',//
+            success: function (data, status)
+            {
+                if(data.code){
+                    var href=data.data.path;
+                    $('.img_box').find('li').remove();
+                    $('#images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
+                    $('#images_upload').attr("class","images_upload1");
+                }
+            },
+            error: function (data, status, e)
+            {
+                layer.msg("通讯失败");
+            }
+        });
+    }) ;
+
+    //建立一個可存取到該file的url
+    var url='';
+    function getObjectURL(file) {
+        if (window.createObjectURL!=undefined) { // basic
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file) ;
+        }
+        return url;
+    }
+    $(".img_box").delegate(".del_img","click",function(){
+        $(this).parent("li").remove();
+        $('#images_upload').attr("class","images_upload");
+    });
+
+    //$(".image-box").find(".help-block").css({"color":"#a94442","text-align":"center","width":"280px"});//图片未选择提示语言颜色
+    //图片检测
+    $('#save').click(function(){
+        if($('.img_box').find('img').attr('src')==undefined){
+            layer.msg('请上传图片！',{skin:'msg-error',icon:1});
+            return false;
+        }
+    });
+}
+
+function staff_manage_invigilator_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '名称字数不超过20个'
+                    }
+                }
+            },
+            code: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '该教师编号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                id:  (location.href).split('=')[1],
+                                code: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '教师编号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^\w+$/,
+                        message: '教师编号应该由数字，英文或下划线组成'
+                    }
+                }
+            },
+            mobile: {
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.mobile,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '号码已经存在',//提示消息
+                        data: function(validator) {
+                            return {
+                                id: (location.href).split('=')[1],
+                                mobile: $('#mobile').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '手机号码不能为空'
+                    },
+                    stringLength: {
+                        min: 11,
+                        max: 11,
+                        message: '请输入11位手机号码'
+                    },
+                    regexp: {
+                        regexp: /^1[3|7|5|8]{1}[0-9]{9}$/,
+                        message: '请输入正确的手机号码'
+                    }
+                }
+            },
+            idcard: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.idcard,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '身份证号已存在',//提示消息
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                id: (location.href).split('=')[1],
+                                idcard: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '身份证号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        message: '请输入正确的身份证号'
+                    }
+                }
+            },
+            email: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '邮箱不能为空'
+                    },
+                    regexp: {
+                        regexp: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ,
+                        message: '请输入正确的邮箱'
+                    }
+                }
+            }
+        }
+    });
+    $("#images_upload").change(function(){
+        $.ajaxFileUpload
+        ({
+
+            url:pars.url,
+            secureuri:false,//
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'json',//
+            success: function (data, status)
+            {
+                if(data.code){
+                    var href=data.data.path;
+                    $('.img_box').find('li').remove();
+                    $('#images_upload').before('<li><img style="width:197px;height:250px;" src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
+                }
+            },
+            error: function (data, status, e)
+            {
+                layer.msg("通讯失败");
+            }
+        });
+    }) ;
+
+    //建立一個可存取到該file的url
+    var url='';
+    function getObjectURL(file) {
+        if (window.createObjectURL!=undefined) { // basic
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file) ;
+        }
+        return url;
+    }
+
+    /**
+     * 删除
+     * @author mao
+     * @version 1.0
+     * @date    2016-02-19
+     */
+    $(".img_box").delegate(".del_img","click",function(){
+        $(this).parent("li").remove();
+        $('#images_upload').attr("class","images_upload");
+    });
 }
 
 /**
@@ -1863,12 +2461,365 @@ function subject_manage(){
     })*/
 }
 
-function sp_invigilator(){
+function staff_manage_invigilator_sp(){
     //删除老师
     $(".delete").click(function(){
 
         deleteItems("post",pars.deletes,$(this).attr("tid"),pars.firstpage);
     })
+}
+
+/**
+ * sp老师新增
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function staff_manage_invigilator_sp_add() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '名称字数不超过20个'
+                    }
+                }
+            },
+            code: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '该教师编号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                code: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '教师编号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^\w+$/,
+                        message: '教师编号应该由数字，英文或下划线组成'
+                    }
+                }
+            },
+            mobile: {
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.mobile,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '号码已经存在'//提示消息
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '手机号码不能为空'
+                    },
+                    stringLength: {
+                        min: 11,
+                        max: 11,
+                        message: '请输入11位手机号码'
+                    },
+                    regexp: {
+                        regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
+                        message: '请输入正确的手机号码'
+                    }
+                }
+            },
+            idcard: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.idcard,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '身份证号已存在',//提示消息
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                idcard: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '身份证号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        message: '请输入正确的身份证号'
+                    }
+                }
+            },
+            email: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '邮箱不能为空'
+                    },
+                    regexp: {
+                        regexp: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ,
+                        message: '请输入正确的邮箱'
+                    }
+                }
+            }
+        }
+    });
+    $("#images_upload").change(function(){
+        $.ajaxFileUpload
+        ({
+
+            url:pars.url,
+            secureuri:false,//
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'json',//
+            success: function (data, status)
+            {
+                if(data.code){
+                    var href=data.data.path;
+                    $('.img_box').find('li').remove();
+                    $('#images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
+                    $('#images_upload').attr("class","images_upload1");
+                }
+            },
+            error: function (data, status, e)
+            {
+                layer.msg("通讯失败");
+            }
+        });
+    }) ;
+
+    //建立一個可存取到該file的url
+    var url='';
+    function getObjectURL(file) {
+        if (window.createObjectURL!=undefined) { // basic
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file) ;
+        }
+        return url;
+    }
+    $(".img_box").delegate(".del_img","click",function(){
+        $(this).parent("li").remove();
+        $('#images_upload').attr("class","images_upload");
+    });
+    
+    //图片检测
+    $('#save').click(function(){
+        if($('.img_box').find('img').attr('src')==undefined){
+            layer.msg('请上传图片！',{skin:'msg-error',icon:1});
+            return false;
+        }
+    });
+}
+
+/**
+ * sp老师编辑
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function staff_manage_invigilator_sp_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '名称字数不超过20个'
+                    }
+                }
+            },
+            code: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '该教师编号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                                                                                                                                
+                            return {
+                                id:  (location.href).split('=')[1],
+                                code: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '教师编号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^\w+$/,
+                        message: '教师编号应该由数字，英文或下划线组成'
+                    }
+                }
+            },
+            mobile: {
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.mobile,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '号码已经存在',//提示消息
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            return {
+                                id: (location.href).split('=')[1],
+                                mobile: $('#mobile').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '手机号码不能为空'
+                    },
+                    stringLength: {
+                        min: 11,
+                        max: 11,
+                        message: '请输入11位手机号码'
+                    },
+                    regexp: {
+                        regexp: /^1[3|7|5|8]{1}[0-9]{9}$/,
+                        message: '请输入正确的手机号码'
+                    }
+                }
+            },
+            idcard: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.idcard,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '身份证号已存在',//提示消息
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                id: (location.href).split('=')[1],
+                                idcard: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '身份证号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        message: '请输入正确的身份证号'
+                    }
+                }
+            },
+            email: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '邮箱不能为空'
+                    },
+                    regexp: {
+                        regexp: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ,
+                        message: '请输入正确的邮箱'
+                    }
+                }
+            }
+        }
+    });
+
+    $("#images_upload").change(function(){
+        $.ajaxFileUpload
+        ({
+
+            url:pars.url,
+            secureuri:false,//
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'json',//
+            success: function (data, status)
+            {
+                if(data.code){
+                    var href=data.data.path;
+                    $('.img_box').find('li').remove();
+                    $('#images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
+                }
+            },
+            error: function (data, status, e)
+            {
+                layer.msg("通讯失败");
+            }
+        });
+    }) ;
+
+    //建立一個可存取到該file的url
+    var url='';
+    function getObjectURL(file) {
+        if (window.createObjectURL!=undefined) { // basic
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file) ;
+        }
+        return url;
+    }
+
+    /**
+     * 删除
+     * @author mao
+     * @version 1.0
+     * @date    2016-02-19
+     */
+    $(".img_box").delegate(".del_img","click",function(){
+        $(this).parent("li").remove();
+        $('#images_upload').attr("class","images_upload");
+    });
+
 }
 
 //删除方法封装,其中id为当前dom的value值
