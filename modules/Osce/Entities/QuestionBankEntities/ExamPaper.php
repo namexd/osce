@@ -42,7 +42,7 @@ class ExamPaper extends CommonModel
     public function getExamPaperlist($keyword){
         $DB = \DB::connection('osce_mis');
         $builder = $this;
-        if(!empty($keyword)){
+        if($keyword == 0 || !empty($keyword)){
             $builder = $builder->where('name','like','%'.$keyword.'%');
         }
 
