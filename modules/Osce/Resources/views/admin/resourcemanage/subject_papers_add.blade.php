@@ -29,23 +29,18 @@
              * 手工、自动组卷划分
              */
             $("#status").change(function(){
+                judge();
                 if($(this).val()=="1"){
                     $("#paper").show();
                     $("#paper2").hide();
                     $("#status2").empty().append('<option value="1">随机试卷</option><option value="2">统一试卷</option>');
-                    autoValidate();
                 }else{
                     $("#paper2").show();
                     $("#paper").hide();
                     $("#status2").empty().append('<option value="2">统一试卷</option>');
-                    handValidate();
                 }
             });
-            if($("#status option:selected").val() == 1){
-                autoValidate();
-            }else{
-                handValidate();
-            }
+            autoValidate();
             //自动组卷验证
             function autoValidate(){
                 var paperId = $("#paperId").val();
@@ -143,99 +138,99 @@
                 }
             }
             //手动组卷验证
-            function handValidate(){
-                var paperId = $("#paperId").val();
-                if(paperId){
-                    $("#sourceForm").bootstrapValidator({
-                        message: 'This value is not valid',
-                        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                            valid: 'glyphicon glyphicon-ok',
-                            invalid: 'glyphicon glyphicon-remove',
-                            validating: 'glyphicon glyphicon-refresh'
-                        },
-                        fields: {/*验证*/
-                            name: {/*键名username和input name值对应*/
-                                message: 'The username is not valid',
-                                validators: {
-                                    notEmpty: {/*非空提示*/
-                                        message: '试卷名称不能为空'
-                                    },
-                                    remote:{
-                                        url: '/osce/admin/exampaper/check-name-only',//验证地址
-                                        message: '该试卷名称已存在',//提示消息
-                                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                        type: 'POST',//请求方式
-                                        data: function (validator) {
-                                            return{
-                                                id:paperId
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            time: {
-                                validators: {
-                                    notEmpty: {/*非空提示*/
-                                        message: '考试时长不能为空'
-                                    },
-                                    callback: {
-                                        message: '考试时长必须是20及以上的整数',
-                                        callback:function(){
-                                            if($("#code").val() >= 20){
-                                                return true;
-                                            }else{
-                                                return false;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    })
-                }else{
-                    $("#sourceForm").bootstrapValidator({
-                        message: 'This value is not valid',
-                        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                            valid: 'glyphicon glyphicon-ok',
-                            invalid: 'glyphicon glyphicon-remove',
-                            validating: 'glyphicon glyphicon-refresh'
-                        },
-                        fields: {/*验证*/
-                            name: {/*键名username和input name值对应*/
-                                message: 'The username is not valid',
-                                validators: {
-                                    notEmpty: {/*非空提示*/
-                                        message: '试卷名称不能为空'
-                                    },
-                                    remote:{
-                                        url: '/osce/admin/exampaper/check-name-only',//验证地址
-                                        message: '该试卷名称已存在',//提示消息
-                                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                                        type: 'POST'//请求方式
-                                    }
-                                }
-                            },
-                            time: {
-                                validators: {
-                                    notEmpty: {/*非空提示*/
-                                        message: '考试时长不能为空'
-                                    },
-                                    callback: {
-                                        message: '考试时长必须是20及以上的整数',
-                                        callback:function(){
-                                            if($("#code").val() >= 20){
-                                                return true;
-                                            }else{
-                                                return false;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    })
-                }
-            }
+//            function handValidate(){
+//                var paperId = $("#paperId").val();
+//                if(paperId){
+//                    $("#sourceForm").bootstrapValidator({
+//                        message: 'This value is not valid',
+//                        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+//                            valid: 'glyphicon glyphicon-ok',
+//                            invalid: 'glyphicon glyphicon-remove',
+//                            validating: 'glyphicon glyphicon-refresh'
+//                        },
+//                        fields: {/*验证*/
+//                            name: {/*键名username和input name值对应*/
+//                                message: 'The username is not valid',
+//                                validators: {
+//                                    notEmpty: {/*非空提示*/
+//                                        message: '试卷名称不能为空'
+//                                    },
+//                                    remote:{
+//                                        url: '/osce/admin/exampaper/check-name-only',//验证地址
+//                                        message: '该试卷名称已存在',//提示消息
+//                                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+//                                        type: 'POST',//请求方式
+//                                        data: function (validator) {
+//                                            return{
+//                                                id:paperId
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            },
+//                            time: {
+//                                validators: {
+//                                    notEmpty: {/*非空提示*/
+//                                        message: '考试时长不能为空'
+//                                    },
+//                                    callback: {
+//                                        message: '考试时长必须是20及以上的整数',
+//                                        callback:function(){
+//                                            if($("#code").val() >= 20){
+//                                                return true;
+//                                            }else{
+//                                                return false;
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    })
+//                }else{
+//                    $("#sourceForm").bootstrapValidator({
+//                        message: 'This value is not valid',
+//                        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+//                            valid: 'glyphicon glyphicon-ok',
+//                            invalid: 'glyphicon glyphicon-remove',
+//                            validating: 'glyphicon glyphicon-refresh'
+//                        },
+//                        fields: {/*验证*/
+//                            name: {/*键名username和input name值对应*/
+//                                message: 'The username is not valid',
+//                                validators: {
+//                                    notEmpty: {/*非空提示*/
+//                                        message: '试卷名称不能为空'
+//                                    },
+//                                    remote:{
+//                                        url: '/osce/admin/exampaper/check-name-only',//验证地址
+//                                        message: '该试卷名称已存在',//提示消息
+//                                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+//                                        type: 'POST'//请求方式
+//                                    }
+//                                }
+//                            },
+//                            time: {
+//                                validators: {
+//                                    notEmpty: {/*非空提示*/
+//                                        message: '考试时长不能为空'
+//                                    },
+//                                    callback: {
+//                                        message: '考试时长必须是20及以上的整数',
+//                                        callback:function(){
+//                                            if($("#code").val() >= 20){
+//                                                return true;
+//                                            }else{
+//                                                return false;
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    })
+//                }
+//            }
             //手动组卷每题分数至少为1
             $("#addForm input[name='questionScore']").change(function(){
                 if($(this).val() <= 0){
@@ -403,31 +398,78 @@
             /**
              * 预览整套试卷
              */
+                //预览判断
             $('#preview').click(function(){
-                layer.open({
-                    type: 2,
-                    title: '预览试卷',
-                    area: ['90%', '600px'],
-                    fix: false, //不固定
-                    maxmin: true,
-                    content: '{{route('osce.admin.ApiController.ExamPaperPreview')}}?'+$("#sourceForm").serialize()
-                });
-                return  false;
-            });
-            //保存
-            $("#sourceForm").submit(function(){
                 if($("#status option:selected").val() == 1){
                     var $tr = $("#paper #list-body").find("tr");
                     if($tr.length < 1){
-                        layer.alert("评分标准未设置！",{
-                            closeBtn: 0
+                        layer.alert("评分标准未设置！");
+                        return false;
+                    }else{
+                        layer.open({
+                            type: 2,
+                            title: '预览试卷',
+                            area: ['90%', '600px'],
+                            fix: false, //不固定
+                            maxmin: true,
+                            content: '{{route('osce.admin.ApiController.ExamPaperPreview')}}?'+$("#sourceForm").serialize()
                         });
+                        return true;
+                    }
+                }else{
+                    var $tr2 = $("#paper2 tfoot tr").find(".oneSubject").text();
+                    if($tr2 < 1){
+                        layer.alert("评分标准未设置！");
+                        return false;
+                    }else{
+                        layer.open({
+                            type: 2,
+                            title: '预览试卷',
+                            area: ['90%', '600px'],
+                            fix: false, //不固定
+                            maxmin: true,
+                            content: '{{route('osce.admin.ApiController.ExamPaperPreview')}}?'+$("#sourceForm").serialize()
+                        });
+                        return true;
+                    }
+                }
+            });
+            //点击保存判断是否表格有内容提示
+            function judge(){
+                var $name = $.trim($("#name").val());
+                var $time = $.trim($("#code").val());
+                if (!$name || !$time) {
+                    $("#preview").attr("disabled","disabled");
+                }else{
+                    $("#preview").removeAttr("disabled");
+                }
+            }
+            judge();
+            //输入框改变时判断提示
+            $("#name").change(function(){
+                judge();
+            });
+            $("#code").change(function(){
+                judge();
+            });
+            //保存
+            $("#save").click(function(){
+                if($("#status option:selected").val() == 1){
+                    var $tr = $("#paper #list-body").find("tr");
+                    if($tr.length < 1){
+                        layer.alert("评分标准未设置！");
                         return false;
                     }else{
                         return true;
                     }
                 }else{
-
+                    var $tr2 = $("#paper2 tfoot tr").find(".oneSubject").text();
+                    if($tr2 < 1){
+                        layer.alert("评分标准未设置！");
+                        return false;
+                    }else{
+                        return true;
+                    }
                 }
             });
             if($("#status").val()=="1"){
@@ -644,8 +686,8 @@
                 <input type="hidden" name="paperid" value="@if(@$paperDetail['id']){{@$paperDetail['id']}}@else{{@$paperDetails['id']}}@endif" id="paperId">
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-2">
-                        <button class="btn btn-primary" type="submit" id="among">保存</button>
-                        <button class="btn btn-primary" id="preview" type="button">预览</button>
+                        <button class="btn btn-primary" type="submit" id="save">保存</button>
+                        <button class="btn btn-primary" id="preview" type="button" @if(empty($paperDetail['id'])) disabled @endif>预览</button>
                         <a class="btn btn-white" href="{{route('osce.admin.ExamPaperController.getExamList')}}">取消</a>
                     </div>
                 </div>
