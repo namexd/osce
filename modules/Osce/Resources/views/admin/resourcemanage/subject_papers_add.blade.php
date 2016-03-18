@@ -352,13 +352,14 @@
                 var nowid= $(this).parent().parent().parent().parent().attr("id");
                 var question_detail=$(this).parent().parent().parent().parent().find("input[name='question-type[]']").val();
                 question_detail=question_detail.split("@");
+                console.log(question_detail);
                 $('#typeSelect2').find('option').each(function(){
                     if($(this).val()==question_detail[0]){
                         $(this).attr("selected", true);
                     }
                 });
                 $('input[name="questionScore2"]').val(question_detail[1]);
-                $('#editForm').submit(function(){//编辑题型
+                $('#editForm').unbind().submit(function(){//编辑题型
                     var new_question_detail="";
                     for(var i=0; i<question_detail.length; i++){
                         if(i==1){
@@ -370,14 +371,14 @@
                             new_question_detail=new_question_detail+question_detail[i]+"@";
                         }
                     }
+                    console.log(nowid+"     "+new_question_detail);
                     $("#"+nowid).children().find("input[name='question-type[]']").val(new_question_detail);
                     $("#"+nowid).children().eq(3).text(question_detail[1]);
-                    $("#"+nowid).children().eq(4).text(question_detail[1]*$("#"+nowid).children().eq(2).text());
+                    $("#"+nowid).children().eq(4).text(question_detail[1]*parseInt($("#"+nowid).children().eq(2).text()));
                     $('.close').trigger('click');
                     editOneCount();
                     return  false;
                 })
-
             });
 
             /**
