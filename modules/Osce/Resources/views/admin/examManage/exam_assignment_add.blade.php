@@ -27,7 +27,7 @@ input.laydate-icon{
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'exam_add','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'exam_assignment_add','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">

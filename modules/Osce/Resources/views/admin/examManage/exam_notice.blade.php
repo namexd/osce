@@ -12,49 +12,12 @@
 @stop
 
 @section('only_js')
-<script>
-    $(function(){
-        $('.fa-trash-o').click(function(){
-            var thisElement = $(this)
-            layer.confirm('确认删除？', {
-                title:'删除',
-                btn: ['确定','取消'] //按钮
-            }, function(){
-                $.ajax({
-                    type:'get',
-                    url:'{{route("osce.admin.notice.getDelNotice")}}',  //请求地址
-                    data:{id:thisElement.parent().parent().attr('value')},
-                    success:function(res){
-                        if(res.code!=1){
-                            layer.alert(res.message);
-                        }else{
-                            location.href = '{{route("osce.admin.notice.getList")}}';
-                        }
-                    }
-                });
-            });
-
-            /*$.ajax({
-                type:'get',
-                url:'{{route("osce.admin.notice.getDelNotice")}}',  //请求地址
-                data:{id:thisElement.parent().parent().attr('value')},
-                success:function(res){
-                    if(res.code!=1){
-                        layer.alert(res.message);
-                    }else{
-                        layer.alert('删除成功！',function(its){
-                            location.href = '{{route("osce.admin.notice.getList")}}';
-                        });
-                    }
-                }
-            });*/
-        });
-    })
-</script>
+ <script src="{{asset('osce/admin/examManage/exam_manage.js')}}" ></script>
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'exam_notice','URL':'{{route("osce.admin.notice.getDelNotice")}}','reloads':'{{route("osce.admin.notice.getList")}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">

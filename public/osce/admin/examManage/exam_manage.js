@@ -5,19 +5,66 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "exam_assignment":exam_assignment();break;
-        case "exam_add":exam_add();break;
-        case "add_basic":add_basic();break;
-        case "sp_invitation":sp_invitation();break;
-        case "examroom_assignment":examroom_assignment();break;
+        //考试安排
+        case "exam_assignment":exam_assignment();break;   
+        case "exam_assignment_add":exam_assignment_add();break;                //考试新增
+        case "exam_basic_info":exam_basic_info();break;             //基础信息
+        case "examroom_assignment":examroom_assignment();break;  //考场安排
+        case "station_assignment":station_assignment();break;    //考站安排
+        case "examinee_manage":examinee_manage();break;     //考生管理
+        case "examinee_manage_add":examinee_manage_add();break;       //考生新增
+        case "examinee_manage_edit":examinee_manage_edit();break;   //考生编辑
+        case "smart_assignment":smart_assignment();break;     //智能排考
+        //咨询&通知
+        case "exam_notice": exam_notice();break;
         case "exam_notice_add":exam_notice_add();break;
         case "exam_notice_edit":exam_notice_edit();break;
-        case "smart_assignment":smart_assignment();break;
-        case "examinee_manage":examinee_manage();break;
-        case "examinee_add":examinee_add();break;
-        case "station_assignment":station_assignment();break;
+        //考前培训
+        case "train_list": train_list();break
+        case "train_add": train_add();break
+        case "train_edit": train_edit();break
+        case "train_detail": train_detail();break
     }
 });
+
+/**
+ * 考前培训
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function train_list() {
+    $(".fa-trash-o").click(function(){
+        var thisElement=$(this);
+
+        layer.confirm('确认删除？', {
+            title:"删除",
+            btn: ['确定','取消'] //按钮
+        }, function(its){
+            $.ajax({
+                type:'get',
+                async:true,
+                url:pars.URL + "?id="+thisElement.parent().parent().parent().attr('value'),
+                success:function(data){
+                    if(data.code == 1){
+                        layer.msg('删除成功',{skin:'msg-success',icon:1});
+                        setTimeout(function () {
+                            location.href= pars.reloads+ '?page=1';
+                        },1000)
+
+                    }else {
+                        layer.close(its);
+                        layer.msg(data.message,{skin:'msg-error',icon:1});
+                    }
+                },
+                error:function(data){
+                    layer.close(its);
+                    layer.msg('没有权限！',{skin:'msg-error',icon:1});
+                }
+            })
+        });
+    })
+}
 
 /**
  * 考试安排
@@ -58,7 +105,7 @@ function exam_assignment(){
  * @date    2016-01-04
  * @return  {[type]}   [description]
  */
-function exam_add(){
+function exam_assignment_add(){
     //时间选择
     timePicker(pars.background_img);
 
@@ -198,7 +245,7 @@ function exam_add(){
  * @version 1.0
  * @date    2016-01-04
  */
-function add_basic(){
+function exam_basic_info(){
     //时间选择
     timePicker(pars.background_img);
 
@@ -533,75 +580,6 @@ function timePicker(background){
 
 }
 
-
-/*
- * 邀约sp老师
- * @author lizhiyuan
- * @version 2.0
- * @date    2016-01-05
- */
-function sp_invitation(){
-
-    //select2初始化
-    $(".js-example-basic-single").select2();
-
-    /**
-     * 获取数据
-     * @author mao
-     * @version 1.0
-     * @date    2016-01-06
-     */
-    $('.teacher-list').click(function(){
-        var thisElement = $(this);
-
-        var id = $(this).parent().parent().parent().attr('value');
-        var selected = [];
-
-        //选择的数据
-        thisElement.parent().siblings('.teacher-box').find('.teacher').each(function(key,elem){
-            selected.push($(elem).attr('value'));
-        });
-        $.ajax({
-            type:'get',
-            url: pars.teacher_list,   //修改请求地址
-            data:{id:id,selected:selected},
-            success:function(res){
-
-                var source = [];
-
-                if(res.code!=1){
-                    layer.alert('res.message');
-                }else{
-                    var data = res.data.rows;
-                    var html = '<option>选择</option>';
-                    for(var i in data){
-
-                        html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
-                    }
-                    thisElement.html(html);
-                }
-            }
-
-        });
-    });
-
-    $(".teacher-list").change(function(){
-
-        var $teacher=$(".teacher-list option:selected").text();
-        var id = $(".teacher-list option:selected").val();
-        var thisElement = $(this);
-
-        var sql='<div class="input-group teacher pull-left" value="'+id+'">'+
-            '<div class="pull-left">'+$teacher+'</div>'+
-            '<div class="pull-left"><i class="fa fa-times"></i></div></div>';
-        $(this).parents(".pull-right").prev().append(sql);
-    })
-
-    //删除
-    $(".teacher-box").delegate("i","click",function(){
-        $(this).parents(".teacher").remove();
-    })
-}
 
 
 function examroom_assignment(){
@@ -1979,6 +1957,36 @@ function exam_notice_edit(){
 
 }
 
+
+/**
+ * 资讯&通知
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function exam_notice() {
+    $('.fa-trash-o').click(function(){
+        var thisElement = $(this)
+        layer.confirm('确认删除？', {
+            title:'删除',
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                type:'get',
+                url:pars.URL,  //请求地址
+                data:{id:thisElement.parent().parent().attr('value')},
+                success:function(res){
+                    if(res.code!=1){
+                        layer.alert(res.message);
+                    }else{
+                        location.href = pars.reloads;
+                    }
+                }
+            });
+        });
+    });
+}
+
 /*
  * 考试通知 新增
  * @author lizhiyuan
@@ -2443,41 +2451,406 @@ function examinee_manage(){
                 }
             }
         });
-
-
-        /*layer.confirm('确认删除？',{
-            title:'删除',
-            btn: ['确定','取消'] 
-        },function(){
-            $.ajax({
-                type:'post',
-                async:true,
-                url:pars.deleteUrl,
-                data:{id:sid,exam_id:examId},
-                success:function(data){
-                    if(data.code ==1){
-                        layer.msg('删除成功！',{'skin':'msg-success','icon':1});
-                        location.reload();
-                    }else {
-                        layer.msg(data.message,{'skin':'msg-success','icon':1});
-                    }
-                }
-            })
-            //window.location.href=pars.deleteUrl+"?id="+sid+"&exam_id="+examId;
-        });*/
     })
 }
 
 /*
  * 新增考生
- * @author lizhiyuan
- * @version 2.0
- * @date    2016-01-12
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
  */
-function examinee_add(){
+function examinee_manage_add(){
+
+    $(".img_box").delegate(".del_img","click",function(){
+        $(this).parent("li").remove();
+        $('#images_upload').attr("class","images_upload");
+    });
+    /*{}{
+     * 下面是进行插件初始化
+     * 你只需传入相应的键值对
+     * */
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {/*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '用户名不能为空'
+                    }
+                }
+            },
+            code: {
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '学号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                exam_id: $("#exam_id").val(),
+                                code: $('[name="whateverNameAttributeInYourForm"]').val()
+                            };
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '学号不能为空'
+                    },
+                    regexp:{
+                        regexp: /^\d+$/,
+                        message: '请输入正确的学号'
+                    }
+                }
+            },
+            idcard: {
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.idcard,//验证地址
+                        message: '身份证号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                exam_id:$("#exam_id").val(),
+                                idcard: $('[name="whateverNameAttributeInYourForm"]').val()
+                            };
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '身份证号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        message: '请输入正确的身份证号'
+                    }
+                }
+            },
+            exam_sequence:{
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.exam_sequence,//验证地址
+                        message: '准考证号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                exam_id:$("#exam_id").val(),
+                                exam_sequence: $('[name="whateverNameAttributeInYourForm"]').val()
+                            };
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '准考证号不能为空'
+                    }
+                }
+            },
+            mobile: {
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.mobile,//验证地址
+                        message: '手机号码已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                exam_id:$("#exam_id").val(),
+                                mobile: $('[name="whateverNameAttributeInYourForm"]').val()
+                            };
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '手机号码不能为空'
+                    },
+                    stringLength: {
+                        min: 11,
+                        max: 11,
+                        message: '请输入11位手机号码'
+                    },
+                    regexp: {
+                        regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
+                        message: '请输入正确的手机号码'
+                    }
+                }
+            },
+            email:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '邮箱不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[a-z\d]+(\.[a-z\d]+)*@([\da-z](-[\da-z])?)+(\.{1,2}[a-z]+)+$/,
+                        message: '请输入正确的邮箱'
+                    }
+                }
+            }
+        }
+    });
+
+    $("#images_upload").change(function(){
+        $.ajaxFileUpload
+        ({
+
+            url:pars.header,
+            secureuri:false,//
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'json',//
+            success: function (data, status)
+            {
+                if(data.code){
+                    var href=data.data.path;
+                    $('.img_box').find('li').remove();
+                    $('#images_upload').before('<li><img src="'+href+'"/><input type="hidden" name="images_path[]" value="'+href+'"/><i class="fa fa-remove font16 del_img"></i></li>');
+                    $('#images_upload').attr("class","images_upload1");
+                }
+            },
+            error: function (data, status, e)
+            {
+                layer.msg("通讯失败");
+            }
+        });
+    }) ;
+
+    //图片检测
+    $('#save').click(function(){
+        if($('.img_box').find('img').attr('src')==undefined){
+            layer.msg('请上传图片！',{skin:'msg-error',icon:1});
+            return false;
+        }
+    });
+
+    //建立一個可存取到該file的url
+    var url='';
+    function getObjectURL(file) {
+        if (window.createObjectURL!=undefined) { // basic
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file) ;
+        }
+        return url;
+    }
+
+
     $(".return-pre").click(function() {
         location.href=pars.preUrl;
     })
+}
+
+/**
+ * 考生编辑
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function examinee_manage_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {/*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '用户名不能为空'
+                    }
+                }
+            },
+            code: {
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '学号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                id: pars.id,
+                                exam_id: pars.exam_id,
+                                code:  $('[name="whateverNameAttributeInYourForm"]').val()
+                            };
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '学号不能为空'
+                    },
+                    regexp:{
+                        regexp: /^\d+$/,
+                        message: '请输入正确的学号'
+                    }
+                }
+            },
+            idcard: {
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.idcard,//验证地址
+                        message: '身份证号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                id: pars.id,
+                                exam_id: pars.exam_id,
+                                idcard:  $('[name="whateverNameAttributeInYourForm"]').val()
+                            };
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '身份证号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        message: '请输入正确的身份证号'
+                    }
+                }
+            },
+            mobile: {
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.mobile,//验证地址
+                        message: '手机号码已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                id: pars.id,
+                                exam_id: pars.exam_id,
+                                mobile:  $('[name="whateverNameAttributeInYourForm"]').val()
+                            };
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '手机号码不能为空'
+                    },
+                    stringLength: {
+                        min: 11,
+                        max: 11,
+                        message: '请输入11位手机号码'
+                    },
+                    regexp: {
+                        regexp: /^1[3|5|7|8]{1}[0-9]{9}$/,
+                        message: '请输入正确的手机号码'
+                    }
+                }
+            },
+            exam_sequence:{
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.exam_sequence,//验证地址
+                        message: '准考证号已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                id: pars.id,
+                                exam_id: pars.exam_id,
+                                exam_sequence: $('[name="whateverNameAttributeInYourForm"]').val()
+                            };
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '准考证号不能为空'
+                    }
+                }
+            },
+            email:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '邮箱不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[a-z\d]+(\.[a-z\d]+)*@([\da-z](-[\da-z])?)+(\.{1,2}[a-z]+)+$/,
+                        message: '请输入正确的邮箱'
+                    }
+                }
+            }
+        }
+    });
+
+    $("#images_upload").change(function () {
+        $.ajaxFileUpload
+        ({
+            url: pars.header,
+            secureuri: false,//
+            fileElementId: 'file0',//必须要是 input file标签 ID
+            dataType: 'json',//
+            success: function (data, status) {
+                if (data.code) {
+                    var href = data.data.path;
+                    $('.img_box').find('li').remove();
+                    $('#images_upload').before('<li><img src="' + href + '"/><input type="hidden" name="images_path[]" value="' + href + '"/><i class="fa fa-remove font16 del_img"></i></li>');
+                }
+            },
+            error: function (data, status, e) {
+                $.alert({
+                    title: '提示：',
+                    content: '通讯失败!',
+                    confirmButton: '确定',
+                    confirm: function () {
+                    }
+                });
+            }
+        });
+    });
+
+    /**
+     * 删除
+     * @author mao
+     * @version 1.0
+     * @date    2016-02-19
+     */
+    $(".img_box").delegate(".del_img","click",function(){
+        $(this).parent("li").remove();
+        $('#images_upload').attr("class","images_upload");
+    });
+
+    //建立一個可存取到該file的url
+    var url = '';
+    function getObjectURL(file) {
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
 }
 
 function station_assignment(){

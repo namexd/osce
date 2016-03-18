@@ -11,64 +11,13 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('osce/admin/resourcemanage/resourcemanage.js')}}" ></script> 
-    
-    <script>
-		$(function(){
-
-            $(".fa-trash-o").click(function(){
-                var thisElement=$(this);
-
-                layer.confirm('确认删除？', {
-                	title:"删除",
-                    btn: ['确定','取消'] //按钮
-                }, function(its){
-                    $.ajax({
-                        type:'get',
-                        async:true,
-                        url:"{{route('osce.admin.getDelTrain')}}?id="+thisElement.parent().parent().parent().attr('value'),
-                        success:function(data){
-                            if(data.code == 1){
-                                layer.msg('删除成功',{skin:'msg-success',icon:1});
-                                setTimeout(function () {
-                                    location.href='{{route('osce.admin.getTrainList')}}?page=1';
-                                },1000)
-
-                            }else {
-                                layer.close(its);
-                                layer.msg(data.message,{skin:'msg-error',icon:1});
-                            }
-                        },
-                        error:function(data){
-                            layer.close(its);
-                            layer.msg('没有权限！',{skin:'msg-error',icon:1});
-                        }
-                    })
-                });
-            })
-
-
-
-		    /*$(".fa-trash-o").click(function(){
-		        var thisElement=$(this);
-		        layer.alert('确认删除？',function(){
-		            $.ajax({
-		                type:'get',
-		                async:false,
-		                url:"{{route('osce.admin.getDelTrain')}}?id="+thisElement.parent().parent().parent().attr('value'),
-		                success:function(data){
-		                    location.href='{{route('osce.admin.getTrainList')}}?page=1';
-		                }
-		            })
-		        });
-		    })*/
-		})
-	</script>
+    <script src="{{asset('osce/admin/resourcemanage/resourcemanage.js')}}" ></script>  
+    <script src="{{asset('osce/admin/examManage/exam_manage.js')}}" ></script>
 @stop
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':''}" />
+<input type="hidden" id="parameter" value="{'pagename':'train_list','URL':'{{route('osce.admin.getDelTrain')}}','reloads':'{{route('osce.admin.getTrainList')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row table-head-style1 ">
         <div class="col-xs-6 col-md-2">
