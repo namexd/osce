@@ -19,7 +19,7 @@ $(function(){
         case "clinical_case_manage_add":clinical_case_manage_add();break;
         case "clinical_case_manage_edit":clinical_case_manage_edit();break;
         //科目
-        case "subject_module":subject_module();break;
+        case "subject_module":subject_module();break;    //考点操作 新增&编辑
         case "subject_manage":subject_manage();break;
         //人员管理
         case "staff_manage_invigilator":staff_manage_invigilator();break;
