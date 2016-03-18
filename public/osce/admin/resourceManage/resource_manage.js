@@ -8,14 +8,837 @@ $(function(){
     switch(pars.pagename){
         case "exam_station":exam_station();break;
         case "site_manage":site_manage();break;
+        case "site_manage_add": site_manage_add(); break;
+        case "site_manage_edit": site_manage_edit(); break;
         case "clinical_case_manage":clinical_case_manage();break;
-        case "categories":categories();break;
+        case "subject_module":subject_module();break;
         case "invigilator":invigilator();break;
-        case "sbject_manage":sbject_manage();break;
+        case "subject_manage":subject_manage();break;
         case "sp_invigilator":sp_invigilator();break;
+        case "equipment_manage": equipment_manage(); break;
+        case "equipment_manage_video": equipment_manage_video(); break;
+        case "equipment_manage_video_add": equipment_manage_video_add(); break;
+        case "equipment_manage_video_edit": equipment_manage_video_edit(); break;
+        case "equipment_manage_pad": equipment_manage_pad(); break;
+        case "equipment_manage_pad_edit": equipment_manage_pad_edit(); break;
+        case "equipment_manage_pad_add": equipment_manage_pad_add(); break;
+        case "equipment_manage_watch": equipment_manage_watch(); break;
+        case "equipment_manage_watch_edit": equipment_manage_watch_edit(); break;
+        case "equipment_manage_watch_add": equipment_manage_watch_add(); break;
+
     }
 });
 
+/**
+ * 腕表管理
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-17
+ */
+function equipment_manage_watch() {
+    $(".fa-trash-o").click(function(){
+        var thisElement=$(this);
+        var eid=thisElement.attr("eid");
+        layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
+            $.ajax({
+                type:'post',
+                async:true,
+                url: pars.del,
+                data:{id:eid, cate_id:3},
+                success:function(data){
+                    if(data.code == 1){
+                        location.href= pars.url;
+                    }else {
+                        layer.msg(data.message,{skin:'msg-error',icon:1});
+                    }
+                }
+            })
+        });
+    })
+}
+
+/**
+ * 腕表管理编辑
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-17
+ */
+function equipment_manage_watch_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '腕表名称不能为空'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '腕表名称已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                id:(location.href).split('=')[1],
+                                cate: '3',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    }
+                }
+            },
+            code: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '设备ID不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9]+$/,
+                        message: '请输入正确的设备ID'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '设备ID已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            return {
+                                id: (location.href).split('=')[1],
+                                cate: '3',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+
+                        }
+                    }
+                }
+            },
+            factory: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '厂家不能为空'
+                    }
+                }
+            },
+            sp: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '型号不能为空'
+                    }
+                }
+            }
+
+        }
+    });
+    /*时间选择*/
+    var start = {
+        elem: "#purchase_dt",
+        format: "YYYY-MM-DD",
+        min: "1970-00-00",
+        max: "2099-06-16"
+    };
+    laydate(start);
+}
+
+/**
+ * 腕表管理新增
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-17
+ */
+function equipment_manage_watch_add() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '腕表名称已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                cate: '3',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '腕表名称不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '名称字数不超过20个'
+                    }
+                }
+            },
+            code: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '设备ID已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            return {
+                                cate: '3',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '设备ID不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9]+$/,
+                        message: '请输入正确的设备ID'
+                    }
+                }
+            },
+            factory: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '厂家不能为空'
+                    }
+                }
+            },
+            sp: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '型号不能为空'
+                    }
+                }
+            }
+        }
+    });
+    /*时间选择*/
+    var start = {
+        elem: "#purchase_dt",
+        format: "YYYY-MM-DD",
+        min: "1970-00-00",
+        max: "2099-06-16"
+    };
+    laydate(start);
+}
+
+/**
+ * pad管理
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-17
+ */
+function equipment_manage_pad() {
+    //删除用户
+    $(".fa-trash-o").click(function(){
+        var thisElement=$(this);
+        var eid=thisElement.attr("eid");
+        layer.alert('确认删除？',{title:"删除",title:"删除",btn:['确认','取消']},function(){
+            $.ajax({
+                type:'post',
+                async:true,
+                url:pars.del,
+                data:{id:eid, cate_id:2},
+                success:function(data){
+                    if(data.code == 1){
+                        location.href= pars.url;
+                    }else {
+                        layer.msg(data.message,{skin:'msg-error',icon:1});
+                    }
+                }
+            })
+        });
+    })
+}
+
+/**
+ * pad新增
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-17
+ */
+function equipment_manage_pad_add() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '设备名称已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                id:(location.href).split('=')[1],
+                                cate: '2',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: 'PAD名称不能为空'
+                    }
+                }
+            },
+            code: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9:]+$/,
+                        message: '请输入正确的编号'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '设备ID已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            return {
+                                id: (location.href).split('=')[1],
+                                cate: '2',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '编号不能为空'
+                    }
+                }
+            },
+            factory: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '厂家不能为空'
+                    }
+                }
+            },
+            sp: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '型号不能为空'
+                    }
+                }
+            }
+
+        }
+    });
+    /*时间选择*/
+    var start = {
+        elem: "#purchase_dt",
+        format: "YYYY-MM-DD",
+        min: "1970-00-00",
+        max: "2099-06-16"
+    };
+    laydate(start);
+}
+
+/**
+ * pad编辑
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-17
+ */
+function equipment_manage_pad_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '设备名称已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                id:(location.href).split('=')[1],
+                                cate: '2',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: 'PAD名称不能为空'
+                    }
+                }
+            },
+            code: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9:]+$/,
+                        message: '请输入正确的编号'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '设备ID已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            return {
+                                id: (location.href).split('=')[1],
+                                cate: '2',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
+                    notEmpty: {/*非空提示*/
+                        message: '编号不能为空'
+                    }
+                }
+            },
+            factory: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '厂家不能为空'
+                    }
+                }
+            },
+            sp: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '型号不能为空'
+                    }
+                }
+            }
+
+        }
+    });
+    /*时间选择*/
+    var start = {
+        elem: "#purchase_dt",
+        format: "YYYY-MM-DD",
+        min: "1970-00-00",
+        max: "2099-06-16"
+    };
+    laydate(start);
+}
+
+/**
+ * 摄像头管理
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-17
+ */
+function equipment_manage_video() {
+    //删除用户
+    $(".fa-trash-o").click(function(){
+        var thisElement=$(this);
+        var eid=thisElement.attr("eid");
+        layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
+            $.ajax({
+                type:'post',
+                async:true,
+                url: pars.del,
+                data:{id:eid, cate_id:1},
+                success:function(data){
+                    if(data.code == 1){
+                        location.href= pars.url;
+                    }else {
+                        layer.msg(data.message,{skin:'msg-error',icon:1});
+                    }
+                }
+            })
+        });
+    })
+}
+
+/**
+ * 摄像头管理
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-17
+ */
+function equipment_manage_video_add() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '摄像机名称已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                cate: '1',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    }
+                }
+            },
+            code: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '编号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9]+$/,
+                        message: '请输入正确的设备ID'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '设备ID已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            return {
+                                cate: '1',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    }
+                }
+            },
+            factory: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '厂家不能为空'
+                    }
+                }
+            },
+            sp: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '型号不能为空'
+                    }
+                }
+            },
+            ip: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: 'IP不能为空'
+                    }
+                }
+            },
+            port: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '端口不能为空'
+                    }
+                }
+            },
+            realport: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '实时端口不能为空'
+                    }
+                }
+            },
+            channel: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '通道号不能为空'
+                    }
+                }
+            },
+            description: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '功能描述不能为空'
+                    }
+                }
+            },
+            username: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '用户名不能为空'
+                    }
+                }
+            },
+            password: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '密码不能为空'
+                    }
+                }
+            }
+        }
+    });
+    /*时间选择*/
+    var start = {
+        elem: "#purchase_dt",
+        format: "YYYY-MM-DD",
+        min: "1970-00-00",
+        max: "2099-06-16"
+    };
+    laydate(start);
+}
+
+/**
+ * 摄像头管理编辑
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-17
+ * @return  {[type]}   [description]
+ */
+function equipment_manage_video_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '设备名称已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+
+                            return {
+                                id:(location.href).split('=')[1],
+                                cate: '1',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    }
+                }
+            },
+            code: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '编号不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9]+$/,
+                        message: '请输入正确的设备ID'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.code,//验证地址
+                        message: '设备ID已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            return {
+                                id: (location.href).split('=')[1],
+                                cate: '1',
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    }
+                }
+            },
+            factory: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '厂家不能为空'
+                    }
+                }
+            },
+            sp: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '型号不能为空'
+                    }
+                }
+            },
+            ip: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: 'IP不能为空'
+                    }
+                }
+            },
+            port: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '端口不能为空'
+                    }
+                }
+            },
+            realport: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '实时端口不能为空'
+                    }
+                }
+            },
+            channel: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '通道号不能为空'
+                    }
+                }
+            },
+            description: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '功能描述不能为空'
+                    }
+                }
+            },
+            username: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '用户名不能为空'
+                    }
+                }
+            },
+            password: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '密码不能为空'
+                    }
+                }
+            }
+        }
+    });
+    /*时间选择*/
+    var start = {
+        elem: "#purchase_dt",
+        format: "YYYY-MM-DD",
+        min: "1970-00-00",
+        max: "2099-06-16"
+    };
+    laydate(start);
+}
 
 /**
  * 考站管理
@@ -59,6 +882,232 @@ function site_manage(){
 }
 
 /**
+ * 场所管理新增
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function site_manage_add() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    },
+                    stringLength: {/*长度提示*/
+                        min: 2,
+                        max: 20,
+                        message: '名称长度请在2到20之间'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '名称已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            };
+                        }
+                    }
+                }
+            },
+            description: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '功能描述不能为空'
+                    }
+                }
+            },
+            address: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '地址不能为空'
+                    }
+                }
+            },
+            floor: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                   notEmpty: {/*非空提示*/
+                       message: '楼层不能为空'
+                   },
+                    regexp: {
+                        regexp: /^[0-9]*$/,
+                        message: '楼层必须输入数字'
+                    }
+                }
+            },
+           room_number: {
+               /*键名username和input name值对应*/
+               message: 'The username is not valid',
+               validators: {
+                   notEmpty: {/*非空提示*/
+                       message: '房号不能为空'
+                   }
+               }
+           },
+            proportion: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                   notEmpty: {/*非空提示*/
+                       message: '可使用面积不能为空'
+                   },
+                    regexp: {
+                        regexp: /^[0-9]*$/,
+                        message: '使用面积必须输入数字'
+                    }
+                }
+            }
+        }
+    });
+
+    //ie11下兼容问题
+    $(window).resize(function(){
+        $('.select2').css('width','100%');
+    });
+
+    //启动
+    $('#cate').select2({
+        tags: true,
+        tokenSeparators: [',', ' '],
+        maximumInputLength: 12
+    })
+}
+
+/**
+ * 场所管理编辑
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-18
+ */
+function site_manage_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '考场名称不能为空'
+                    },
+                    stringLength: {/*长度提示*/
+                        min: 2,
+                        max: 20,
+                        message: '名称长度请在2到20之间'
+                    },
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.name,//验证地址
+                        message: '考场名称已经存在',//提示消息
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
+                            return {
+                                id: (location.href).split('=')[1],
+                                name: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    }
+                }
+            },
+            description: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '功能描述不能为空'
+                    }
+                }
+            },
+            address: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '地址不能为空'
+                    }
+                }
+            },
+            floor: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                   notEmpty: {/*非空提示*/
+                       message: '楼层不能为空'
+                   },
+                    regexp: {
+                        regexp: /^[0-9]*$/,
+                        message: '楼层必须输入数字'
+                    }
+                }
+            },
+           room_number: {
+               /*键名username和input name值对应*/
+               message: 'The username is not valid',
+               validators: {
+                   notEmpty: {/*非空提示*/
+                       message: '房号不能为空'
+                   }
+               }
+           },
+            proportion: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                   notEmpty: {/*非空提示*/
+                       message: '可使用面积不能为空'
+                   },
+                    regexp: {
+                        regexp: /^[0-9]*$/,
+                        message: '使用面积必须输入数字'
+                    }
+                }
+            }
+        }
+    });
+
+    //ie11下兼容问题
+    $(window).resize(function(){
+        $('.select2').css('width','100%');
+    });
+
+    //启动
+    $('[name=cate]').select2({
+        tags: true,
+        tokenSeparators: [',', ' '],
+        maximumInputLength: 12
+    })
+
+}
+
+/**
  * 删除操作
  * @author mao
  * @version 1.0
@@ -94,8 +1143,13 @@ function deleteItem(url){
     })
 }
 
-
-function categories(){
+/**
+ * 新增考核点
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-17
+ */
+function subject_module(){
     $('#submit-btn').click(function(){
         var flag = null;
         $('tbody').find('.col-sm-10').each(function(key,elem){
@@ -767,21 +1821,46 @@ function invigilator(){
  * @return  {[type]}   [description]
  */
 
-function sbject_manage(){
-   $(".fa-trash-o").click(function(){
+function subject_manage(){
+
+    $(".fa-trash-o").click(function(){
         var thisElement=$(this);
+
+        layer.confirm('确认删除？', {
+            title:"删除",
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                type:'get',
+                async:true,
+                url: pars.del + "?id="+thisElement.parent().parent().parent().attr('value'),
+                success:function(res){
+
+                    if(res.code==1){
+                        location.href = (location.href).split('?')[0];
+                    }else{
+                        layer.alert(res.message)
+                    }
+                }
+            })
+        });
+    })
+
+
+   /*$(".fa-trash-o").click(function(){
+        var $that = $(this);
         layer.alert('确认删除？',function(){
             $.ajax({
                 type:'get',
                 async:false,
                 url:pars.del,
-                data:{id:thisElement.attr('value')},
+                data:{id: $that.parent().parent().parent().attr('value')},
                 success:function(data){
                     location.reload();
                 }
             })
         });
-    })
+    })*/
 }
 
 function sp_invigilator(){

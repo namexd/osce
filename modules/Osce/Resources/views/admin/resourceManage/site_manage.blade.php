@@ -6,7 +6,7 @@
             border: none;
             font-weight: bolder;
         }
-        .blank-panel .panel-heading {margin-left: -20px;}
+        .panel-heading .panel-options {margin-left: -20px;}
         #start,#end{width: 160px;}
         .input-group input{height: 34px;}
         .panel>.panel-collapse>.table, .panel>.table, .panel>.table-responsive>.table {margin-bottom: 20px;}
