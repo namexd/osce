@@ -41,6 +41,9 @@ class TestResult extends CommonModel
         return $this->hasOne('Modules\Osce\Entities\ExamScreening', 'id', 'exam_screening_id');
     }
 
+    public function examScore(){
+        return $this->hasMany('\Modules\Osce\Entities\ExamScore','exam_result_id','id');
+    }
 
     public function addTestResult($data,$score)
     {
