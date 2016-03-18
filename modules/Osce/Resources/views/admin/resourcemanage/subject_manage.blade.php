@@ -14,12 +14,12 @@
 @stop
 
 @section('only_js')
-
+<script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script>
 @stop
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'sbject_manage','del':'{{route('osce.admin.topic.getDelTopic')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'subject_manage','del':'{{route('osce.admin.topic.getDelTopic')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -80,31 +80,4 @@
         </div>
     </div>
 </div>
-<script>
-$(function(){
-    $(".fa-trash-o").click(function(){
-        var thisElement=$(this);
-
-        layer.confirm('确认删除？', {
-        	title:"删除",
-            btn: ['确定','取消'] //按钮
-        }, function(){
-            $.ajax({
-                type:'get',
-                async:true,
-                url:"{{route('osce.admin.topic.getDelTopic')}}?id="+thisElement.parent().parent().parent().attr('value'),
-                success:function(res){
-
-                    if(res.code==1){
-                        location.href = (location.href).split('?')[0];
-                    }else{
-                        layer.alert(res.message)
-                    }
-                    //location.href = (location.href).split('?')[0];
-                }
-            })
-        });
-    })
-})
-</script>
 @stop{{-- 内容主体区域 --}}

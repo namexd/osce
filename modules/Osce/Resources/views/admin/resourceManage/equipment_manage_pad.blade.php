@@ -15,11 +15,11 @@
 @stop
 
 @section('only_js')
-
+<script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script>
 @stop
 
-
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'equipment_manage_pad','del': '{{route("osce.admin.machine.postMachineDelete")}}','url': '{{route("osce.admin.machine.getMachineList",["cate_id"=>2])}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -123,28 +123,4 @@
             </div>
 
     </div>
-    <script>
-        $(function(){
-            //删除用户
-            $(".fa-trash-o").click(function(){
-                var thisElement=$(this);
-                var eid=thisElement.attr("eid");
-                layer.alert('确认删除？',{title:"删除",title:"删除",btn:['确认','取消']},function(){
-                    $.ajax({
-                        type:'post',
-                        async:true,
-                        url:'{{route('osce.admin.machine.postMachineDelete')}}',
-                        data:{id:eid, cate_id:2},
-                        success:function(data){
-                            if(data.code == 1){
-                                location.href='{{route("osce.admin.machine.getMachineList",["cate_id"=>2])}}'
-                            }else {
-                                layer.msg(data.message,{skin:'msg-error',icon:1});
-                            }
-                        }
-                    })
-                });
-            })
-        })
-    </script>
 @stop{{-- 内容主体区域 --}}
