@@ -48,7 +48,7 @@ class AnswerController extends CommonController
         }
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
-        $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
+        $examPaperFormalList = $examPaperFormalModel->where('id','=',1)->first();
         $examPaperFormalData ='';
         if($examPaperFormalList) {
             $examPaperFormalData = array(
