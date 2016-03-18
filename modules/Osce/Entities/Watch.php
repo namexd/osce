@@ -15,18 +15,29 @@ use DB;
 
 class Watch extends CommonModel implements MachineInterface
 {
-    protected $connection	=	'osce_mis';
-    protected $table 		= 	'watch';
-    public $incrementing	=	true;
-    public $timestamps	    =	true;
-    protected   $fillable 	=	['code', 'name', 'status', 'description', 'factory', 'sp', 'create_user_id', 'purchase_dt','nfc_code'];
-    public      $search    =   [];
+    protected $connection = 'osce_mis';
+    protected $table = 'watch';
+    public $incrementing = true;
+    public $timestamps = true;
+    protected $fillable = [
+        'code',
+        'name',
+        'status',
+        'description',
+        'factory',
+        'sp',
+        'create_user_id',
+        'purchase_dt',
+        'nfc_code',
+        'place'
+    ];
+    public $search = [];
 
-    protected $statuValues  =   [
-        1   =>  '使用中',
-        0   =>  '未使用',
-        2   =>  '报废',
-        3   =>  '维修',
+    protected $statuValues = [
+        1 => '使用中',
+        0 => '未使用',
+        2 => '报废',
+        3 => '维修',
     ];
 
     /**
@@ -41,7 +52,8 @@ class Watch extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getMachineStatuValues(){
+    public function getMachineStatuValues()
+    {
         return $this->statuValues;
     }
 
@@ -63,41 +75,32 @@ class Watch extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addMachine($data){
-        $connection =   DB::connection($this->connection);
-        $connection ->beginTransaction();
-        try
-        {
+    public function addMachine($data)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
 //            $machineData    =   [];
-            if($vcr =   $this   ->  create($data))
-            {
-                $machineData=   [
-                    'item_id'    =>  $vcr    ->  id,
-                    'type'      =>  1,
+            if ($vcr = $this->create($data)) {
+                $machineData = [
+                    'item_id' => $vcr->id,
+                    'type' => 1,
                 ];
-            }
-            else
-            {
+            } else {
                 throw new \Exception('新增腕表失败');
             }
-            if(empty($machineData))
-            {
+            if (empty($machineData)) {
                 throw new \Exception('没有找到腕表新增数据');
             }
             //$machine    =   Machine::create($machineData);
-            $machine    =   true;
-            if($machine)
-            {
-                $connection -> commit();
+            $machine = true;
+            if ($machine) {
+                $connection->commit();
                 return $vcr;
-            }
-            else
-            {
+            } else {
                 throw new   \Exception('新增腕表资源失败');
             }
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
@@ -122,35 +125,27 @@ class Watch extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editMachine($data){
-        $connection =   DB::connection($this->connection);
-        $connection ->beginTransaction();
-        try
-        {
-            $vcr            =   $this   ->  find($data['id']);
-            if($vcr)
-            {
-                foreach($data as $feild=> $value)
-                {
-                    if($feild=='id')
-                    {
+    public function editMachine($data)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
+            $vcr = $this->find($data['id']);
+            if ($vcr) {
+                foreach ($data as $feild => $value) {
+                    if ($feild == 'id') {
                         continue;
                     }
-                    $vcr    ->  $feild  =   $value;
+                    $vcr->$feild = $value;
                 }
-                if($vcr     ->  save())
-                {
+                if ($vcr->save()) {
 //                    $machine    =   Machine ::where('item_id','=',$vcr    ->  id)
 //                                            ->where('type','=',1)
 //                                            ->first();
+                } else {
+                    $machine = false;
                 }
-                else
-                {
-                    $machine    =   false;
-                }
-            }
-            else
-            {
+            } else {
                 throw new \Exception('没有找到该腕表');
             }
 
@@ -159,7 +154,7 @@ class Watch extends CommonModel implements MachineInterface
 //                $machine    ->  name    =   $data['name'];
 //                if($machine->save())
 //                {
-            $connection -> commit();
+            $connection->commit();
 //                }
 //                else
 //                {
@@ -172,9 +167,7 @@ class Watch extends CommonModel implements MachineInterface
 //            {
 //                throw new   \Exception('没有找到腕表资源信息');
 //            }
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
@@ -193,40 +186,37 @@ class Watch extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList($name='',$status='',$nfc_code=''){
-        $builder =   Watch::select();
+    public function getList($name = '', $status = '', $nfc_code = '')
+    {
+        $builder = Watch::select();
 
-        if($name != '')
-        {
-            $builder = $builder->where(function($query) use ($name){
-                    $query->orWhere('name', 'like', '%\\'.$name.'%')
-                          ->orWhere('code', 'like', '%\\'.$name.'%');
+        if ($name != '') {
+            $builder = $builder->where(function ($query) use ($name) {
+                $query->orWhere('name', 'like', '%\\' . $name . '%')
+                    ->orWhere('code', 'like', '%\\' . $name . '%');
             });
         }
-        if($status || ($status==0&&$status!=''))
-        {
-            $builder =   $builder    ->  where('status', '=', $status);
+        if ($status || ($status == 0 && $status != '')) {
+            $builder = $builder->where('status', '=', $status);
         }
-        $builder = $builder -> select(['id', 'code','name', 'status','nfc_code']);
+        $builder = $builder->select(['id', 'code', 'name', 'status', 'nfc_code']);
 
-        return  $builder -> orderBy('created_at','desc') ->  paginate(config('osce.page_size'));
+        return $builder->orderBy('created_at', 'desc')->paginate(config('osce.page_size'));
     }
 
     //返回全部数据
-    public function getWatch($code,$status){
-        $builder=$this->select();
+    public function getWatch($code, $status)
+    {
+        $builder = $this->select();
 
-        if($code)
-        {
-            $builder =   $builder    ->  where('code','like','%'.$code.'%');
+        if ($code) {
+            $builder = $builder->where('code', 'like', '%' . $code . '%');
         }
-        if($status )
-        {
-            if($status==-1)
-            {
-                $builder =   $builder    ->  where('status','=',0);
-            }else{
-                $builder =   $builder    ->  where('status','=',$status);
+        if ($status) {
+            if ($status == -1) {
+                $builder = $builder->where('status', '=', 0);
+            } else {
+                $builder = $builder->where('status', '=', $status);
             }
         }
 

@@ -57,12 +57,21 @@
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                <label class="col-sm-2 control-label">放置地点</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" id="place" name="place" value="{{$item['place']}}">
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">采购日期</label>
                                 <div class="col-sm-10">
                                     <input type="text"  class="laydate-icon" id="purchase_dt" name="purchase_dt" readonly="readonly" value="{{date('Y-m-d',strtotime($item['purchase_dt']))}}">
                                     {{--<input type="text"  class="form-control" id="purchase_dt" name="purchase_dt">--}}
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">状态</label>

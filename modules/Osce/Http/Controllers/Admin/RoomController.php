@@ -260,7 +260,7 @@ class RoomController extends CommonController
 
             return redirect()->route('osce.admin.room.getRoomList',['type'=>$cate]);
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage())->withInput();
         }
     }
 

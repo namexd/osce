@@ -15,18 +15,36 @@ use DB;
 
 class Vcr extends CommonModel implements MachineInterface
 {
-    protected $connection   =	'osce_mis';
-    protected $table 		= 	'vcr';
-    public $incrementing	=	true;
-    public $timestamps	    =	true;
-    protected   $fillable 	=	['id', 'name', 'code','ip','username','password','port','realport','channel','description','status','created_user_id','sp','factory','purchase_dt','used'];
-    public      $search     =   [];
+    protected $connection = 'osce_mis';
+    protected $table = 'vcr';
+    public $incrementing = true;
+    public $timestamps = true;
+    protected $fillable = [
+        'id',
+        'name',
+        'code',
+        'ip',
+        'username',
+        'password',
+        'port',
+        'realport',
+        'channel',
+        'description',
+        'status',
+        'created_user_id',
+        'sp',
+        'factory',
+        'purchase_dt',
+        'used',
+        'place'
+    ];
+    public $search = [];
 
-    protected $statuValues  =   [
-        1   =>  '在线',
-        0   =>  '离线',
-        2   =>  '报废',
-        3   =>  '维修',
+    protected $statuValues = [
+        1 => '在线',
+        0 => '离线',
+        2 => '报废',
+        3 => '维修',
     ];
 
     /**
@@ -40,8 +58,9 @@ class Vcr extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getMachineStatuValues(){
-        return $this    ->  statuValues;
+    public function getMachineStatuValues()
+    {
+        return $this->statuValues;
     }
 
     /**
@@ -70,18 +89,16 @@ class Vcr extends CommonModel implements MachineInterface
     public function addMachine($data)
     {
         $connection = DB::connection($this->connection);
-        $connection ->beginTransaction();
-        try
-        {
-            if($vcr = $this -> create($data))
-            {
-                $connection -> commit();
+        $connection->beginTransaction();
+        try {
+            if ($vcr = $this->create($data)) {
+                $connection->commit();
                 return $vcr;
             } else {
                 throw new \Exception('新增摄像机失败');
             }
 
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
@@ -114,30 +131,30 @@ class Vcr extends CommonModel implements MachineInterface
     public function editMachine($data)
     {
         $connection = DB::connection($this->connection);
-        $connection ->beginTransaction();
-        try{
-            $vcr = $this    -> find($data['id']);
+        $connection->beginTransaction();
+        try {
+            $vcr = $this->find($data['id']);
 
-            if($vcr) {
-                foreach($data as $feild=> $value) {
-                    if($feild=='id') {
+            if ($vcr) {
+                foreach ($data as $feild => $value) {
+                    if ($feild == 'id') {
                         continue;
                     }
-                    $vcr    ->  $feild  =   $value;
+                    $vcr->$feild = $value;
                 }
                 $connection->enableQueryLog();
-                $result = $vcr -> save();
+                $result = $vcr->save();
                 $a = $connection->getQueryLog();
-                if(!$result) {
+                if (!$result) {
                     throw new \Exception('修改失败，请重试！');
                 }
             } else {
                 throw new \Exception('没有找到该摄像机');
             }
-            $connection -> commit();
+            $connection->commit();
             return $vcr;
 
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
@@ -156,18 +173,18 @@ class Vcr extends CommonModel implements MachineInterface
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getList($name,$status,$nfc_code=''){
-        $bulder =   $this;
-        if($name != ''){
-            $bulder =   $bulder    ->  where('name', 'like', '%\\'.$name.'%');
+    public function getList($name, $status, $nfc_code = '')
+    {
+        $bulder = $this;
+        if ($name != '') {
+            $bulder = $bulder->where('name', 'like', '%\\' . $name . '%');
         }
-        if($status !='')
-        {
-            $bulder =   $bulder    ->  where('status', '=', $status);
+        if ($status != '') {
+            $bulder = $bulder->where('status', '=', $status);
         }
-        $bulder = $bulder -> select(['id', 'code', 'name', 'status']);
+        $bulder = $bulder->select(['id', 'code', 'name', 'status']);
 
-        return  $bulder ->  paginate(config('osce.page_size'));
+        return $bulder->paginate(config('osce.page_size'));
     }
 
 
@@ -197,15 +214,14 @@ class Vcr extends CommonModel implements MachineInterface
             $modelVcr = AreaVcr::where('area_id', $id)->first();
         }
 
-        $vcr = Vcr::whereNotIn('status',[2,3])
-            ->where('used',0)
+        $vcr = Vcr::whereNotIn('status', [2, 3])
+            ->where('used', 0)
             ->orWhere('id', $modelVcr->vcr_id)
             ->select(['id', 'name'])->get();
 
         $result = [$vcr, $modelVcr];
         return $result;     //关联摄像机
     }
-
 
 
 }
