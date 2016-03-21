@@ -2110,6 +2110,41 @@ function staff_manage_invigilator(){
     $(".delete").click(function(){
         deleteItems("post",pars.deletes,$(this).attr("tid"),pars.firstpage);
     })
+
+    /**
+     * 老师导入
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-21
+     */
+    $('#file1').change(function() {
+        $.ajaxFileUpload({
+            url:pars.excel,
+            secureuri:false,//
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'text',//
+            success: function (data, status)
+            {
+                if(data.code == 1){
+                    layer.close(index);
+                    layer.msg(data.message,{skin:'msg-success',icon:1},function(){
+                        location.reload();
+                    });
+                }else{
+                    layer.close(index);
+                    layer.msg(data.message,{skin:'msg-error',icon:1},function(){
+                        location.reload();
+                    });
+                }
+            },
+            error: function (data, status, e)
+            {
+                layer.close(index);
+                layer.alert(data.message);
+            }
+        });
+    });
+    
 }
 
 /**
