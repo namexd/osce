@@ -7,24 +7,43 @@
         .route-nav{
             margin-bottom: 30px;
         }
-        ul{
-            margin: 0;
+        ul{margin: 0;}
+        #file1{
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
         }
-
+        #file1 input{
+            position: absolute;
+            right: 0;
+            top: 0;
+            opacity: 0;
+            font-size: 100px;
+        }
+        .col-xs-6.col-md-3 a{float: right;}
     </style>
 @stop
 @section('only_js')
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
     <script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script>
 @stop
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator','deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}','firstpage':'{{route('osce.admin.invigilator.getInvigilatorList')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator',
+        'deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}',
+        'firstpage':'{{route('osce.admin.invigilator.getInvigilatorList')}}',
+        'excel':'{{route('osce.admin.invigilator.postImportTeachers')}}'}" />
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">人员管理</h5>
             </div>
-            <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.invigilator.getAddInvigilator')}}" class="btn btn-primary" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+            <div class="col-xs-6 col-md-3" style="float: right;">
+                <a  href="{{route('osce.admin.invigilator.getAddInvigilator')}}" class="btn btn-primary">新增</a>
+                <a href="{{route('osce.admin.invigilator.getdownloadTeacherImprotTpl')}}" class="btn btn-outline btn-default">下载模板</a>
+                <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1">导入老师
+                    <input type="file" name="teacher" id="file0" multiple="multiple" />
+                </a>
             </div>
         </div>
         <div class="container-fluid ibox-content">
