@@ -2118,11 +2118,16 @@ function staff_manage_invigilator(){
      * @date    2016-03-21
      */
     $('#file1').change(function() {
+        //加载中
+        var index = layer.load(0, {
+            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
         $.ajaxFileUpload({
             url:pars.excel,
+            type:'post',
             secureuri:false,//
             fileElementId:'file0',//必须要是 input file标签 ID
-            dataType: 'text',//
+            dataType: 'json',//
             success: function (data, status)
             {
                 if(data.code == 1){
@@ -2140,7 +2145,7 @@ function staff_manage_invigilator(){
             error: function (data, status, e)
             {
                 layer.close(index);
-                layer.alert(data.message);
+                layer.alert(data.message,{skin:'msg-error',icon:1});
             }
         });
     });
