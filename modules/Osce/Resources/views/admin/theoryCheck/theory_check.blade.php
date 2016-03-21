@@ -92,6 +92,7 @@
                 //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                 var examPaperFormalId=$('#examPaperFormalId').val();
                 var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
+                console.log(examQuestionFormalInfo);return false;
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){
                     if(obj.status=='2'){
                         location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
@@ -129,6 +130,7 @@
                     var examPaperFormalId=$('#examPaperFormalId').val();
                     var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){
+                        console.log(obj);
                         if(obj.status=='2'){
                             location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
                         }
@@ -177,7 +179,7 @@
                                             <span style="margin-left: 1em;">共<span class="subjectNum">{{@$val["examCategoryFormalNumber"]}}</span>题，</span>
                                             <span>每题<span class="subjectScore">{{@$val["examCategoryFormalScore"]}}</span>分</span>
                                             <div class="allSubject">
-                                                <div class="subjectBox   mart_10 " exam_question_id="{{$val["exam_question_id"]}}">
+                                                <div class="subjectBox   mart_10 " exam_question_id="{{$val["id"]}}">
                                                     <span class="font16 subjectContent">{{ $val["name"]}}(　　　)</span>
                                                 </div>
                                                 @if($val["exam_question_type_id"]===1)
