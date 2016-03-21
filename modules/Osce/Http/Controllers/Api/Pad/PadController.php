@@ -339,4 +339,28 @@ class PadController extends  CommonController{
             return response()->json($this->fail($ex));
         }
     }
+
+    /**
+     * 获取当前正在进行的所有考试 (接口)
+     * @method GET
+     * @url    /osce/pad/doing-exams
+     * @access public
+     *
+     * @return object
+     *
+     * @version 2.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}    2016-3-21
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDoingExams(Request $request)
+    {
+        //获取正在进行中的考试列表
+        $examList    = Exam::where('status','=', 1)->select(['id','name'])->get();
+
+        return response()->json(
+            $this->success_data($examList, 1, 'success')
+        );
+    }
+
 }
