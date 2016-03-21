@@ -38,13 +38,13 @@
         </div>
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content" style="border: none;">
-                <div class="input-group" style="width: 100%;margin:20px 0;">
+                <form class="input-group" style="width: 100%;margin:20px 0;">
                     <label for="" class="pull-left exam-name">试卷名称：</label>
-                    <input type="text" placeholder="请输入标签名称" name="keyword" class="input-md form-control" style="width: 250px;" id="keyword" value="{{@$keyword}}">
+                    <input type="text" placeholder="请输入标签名称" name="keyword" class="input-md form-control" value="{{ @$keyword }}" style="width: 250px;">
 
                     <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
                     <a class="btn btn-sm btn-primary marl_10 pull-right" id="add" href="{{route('osce.admin.ExamPaperController.getAddExamPage')}}"> 新增</a></button>
-                </div>
+                </form>
                 <div class="list_all">
                     <table class="table table-striped" id="table-striped" style="background:#fff">
                         <thead>
@@ -93,7 +93,7 @@
                     </div>
                     <div class="pull-right">
 
-                        {!! $data->appends($keyword)->render() !!}
+
 
                     </div>
                 </div>

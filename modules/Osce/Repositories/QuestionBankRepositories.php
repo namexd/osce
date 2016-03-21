@@ -14,6 +14,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelRelation;
 use Modules\Osce\Entities\Exam;
+use Cache;
 class QuestionBankRepositories  extends BaseRepository
 {
 
@@ -429,6 +430,7 @@ class QuestionBankRepositories  extends BaseRepository
         }
 
     }
+
 
 
 }
