@@ -282,6 +282,9 @@ class AuthController extends BaseController
         $name =  trim(Input::get('name'));
         $id   =  Input::get('id');
         $des  =  Input::get('description');
+        if($id == 5){
+            return  redirect()->back()->withErrors(['超级管理员不允许修改']);
+        }
         $addNewRole = SysRoles::where(['id'=>Input::get('id')])->first();
         if($addNewRole->name == $name && $addNewRole->description == $des){
             return  redirect()->back()->withErrors(['未做修改']);
