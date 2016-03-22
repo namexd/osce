@@ -224,7 +224,7 @@ class SubjectStatisticsController  extends CommonController
                 }
             }
         }
- 
+
 
         $StrList = [
             'stationNameStr' => $stationNameStr,

@@ -34,7 +34,7 @@ class AnswerController extends CommonController
      */
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
-        $ExamPaperId = $request->get('id',130);
+        $ExamPaperId = $request->get('id',129);
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
 
@@ -100,8 +100,7 @@ class AnswerController extends CommonController
             }
         }
 
-
-        if(count($examCategoryFormalData)>0){
+        if(count($examCategoryFormalData)>0&&!empty($examCategoryFormalData)){
             foreach($examCategoryFormalData as $key=>$val){
                 if($val['exam_question_type_id']==1){//单选
                     $examCategoryFormalData[$key]['examCategoryFormalName']='一、'.$val['examCategoryFormalName'];
@@ -144,7 +143,6 @@ class AnswerController extends CommonController
             }
         }*/
         $actualLength = (time()-$systemTimeStart)/60;//考试用时
-
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
             'actualLength' =>sprintf("%.2f",$actualLength), //考试用时
@@ -210,11 +208,9 @@ class AnswerController extends CommonController
 
             $data['examQuestionFormalInfo'][$k]['answer']=$newStudentAnswer;
         }
-        return response()->json($data);
         //保存考生答案
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
-
         if($result){
             //删除session
             \Session::forget('systemTimeStart');
