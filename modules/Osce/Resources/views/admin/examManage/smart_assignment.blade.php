@@ -58,8 +58,9 @@
         .title{
             border: 1px solid #ccc;
             background-color: #eee;
-            padding: 5px;
+            padding: 9px;
             font-weight: 700;
+            border-bottom: 0;
         }
         .time>li{
             border: 1px solid #ccc;
@@ -105,34 +106,34 @@
         /*标尺样式*/
         .axis{
             float: left;
-            margin-top: 32px;
+            margin-top: 40px;
             margin-left: 140px;
             margin-right: 10px;
             width: 2px;
-            background-color: #000;
+            background-color: #333;
         }
         .axis dl{cursor: pointer;}
-        .axis dl{background-color: #000;}
+        .axis dl{background-color: #333;}
         .axis dl .item{
             margin-left: 0px;
             height: 98px;
             width: 2px;
-            background-color: #000;
+            background-color: #333;
         }
         .axis dl .tick{
             margin-left: -5px;
             height: 2px;
             width: 2px;
-            border-right: 5px solid #000;
-            background-color: #000;
-            opacity: .4;
+            border-right: 5px solid #333;
+            background-color: #333;
+            opacity: .2;
         }
         .axis dl .tick-bar{
             margin-left: -7px;
             height: 2px;
             width: 2px;
-            border-right: 7px solid #000;
-            background-color: #000;
+            border-right: 7px solid #333;
+            background-color: #333;
         }
         .tick-bar span{
             z-index: 10;

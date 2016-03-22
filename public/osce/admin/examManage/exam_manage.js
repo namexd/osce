@@ -3054,9 +3054,12 @@ function smart_assignment(){
      * @return  {[string]}             [dom结构]
      */
     function generateAxis(startTime,endTime,step,pxs) {
-        if(pxs===undefined)pxs = 20;
 
-        console.log(startTime,endTime)
+        if(pxs===undefined)pxs = 20;
+        
+        //firefox,ie等的兼容性问题
+        var startTime = startTime.split('-').join('/'),
+            endTime = endTime.split('-').join('/');
 
         var allSeconds = Date.parse(endTime) - Date.parse(startTime),
             heigth = (allSeconds/1000/pxs), //20s对应1px
