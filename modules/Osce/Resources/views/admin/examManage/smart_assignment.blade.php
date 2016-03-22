@@ -22,10 +22,10 @@
             line-height: 30px;
         }
         .assign-box{
-            width:1000px;
+            width:100%;
             height: 600px;
             margin-top: 20px;
-            overflow: scroll;
+            overflow: auto;
         }
         .classroom-box>ul>li{
             float: left;
