@@ -121,7 +121,6 @@ class SubjectItem extends CommonModel
      */
     static public function builderItemData($content,$score,$answer){
         $data   =   [];
-
         foreach($content as $prointIndex => $item)
         {
             if(empty($item['title'])){
@@ -129,7 +128,9 @@ class SubjectItem extends CommonModel
             }else{
                 $child  =   [];
                 $itemScore  =   $score[$prointIndex];
+
 //                dd($prointIndex, $answer, $score);
+
                 $itemAnswer =   array_key_exists($prointIndex,$answer)? $answer[$prointIndex]:[];
                 $itemScore  =   array_key_exists($prointIndex,$score)?   $score[$prointIndex]:[];
                 foreach($item as $contentIndex  =>  $content){
