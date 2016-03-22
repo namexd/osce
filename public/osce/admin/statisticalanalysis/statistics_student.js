@@ -53,7 +53,7 @@ function statistics_student_score(){
                 polar: [{
                     indicator: subStr
                 }],
-                calculable: !0,
+                calculable: false,
                 series: [{
                     name: "考生成绩 vs 平均分",
                     type: "radar",
@@ -164,7 +164,7 @@ function subject_level (){
                 legend: {
                     data: ["得分","平均分"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     boundaryGap: !1,
