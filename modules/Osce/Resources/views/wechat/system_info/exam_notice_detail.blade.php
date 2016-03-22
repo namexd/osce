@@ -31,9 +31,6 @@
 
 @stop
 @section('only_head_js')
-    <script type="text/javascript">
-
-    </script>
 
 @stop
 

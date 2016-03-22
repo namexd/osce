@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamRoom;
+use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
@@ -259,19 +260,35 @@ class PadController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-       public function getExamRoom(Request $request){
-              $this->validate($request,[
-                  'exam_id'  =>'required|integer'
-              ]);
-              $examList=ExamRoom::where('exam_id',$request->get('exam_id'))->select()->get();
-              $rooms=[];
-              foreach($examList as $examRoom){
+    public function getExamRoom(Request $request){
+        $this->validate($request,[
+          'exam_id'  =>'required|integer'
+        ]);
+
+        //TODO: Zhoufuxiang 修改：2016-3-22
+        $exam_id = $request->get('exam_id');
+        $exam = Exam::where('id','=',$exam_id)->first();
+        $rooms=[];
+        if($exam->sequence_mode == 2){
+            $examStation = ExamStation::where('exam_id','=',$exam_id)->get();
+            if($examStation){
+                foreach ($examStation as $item) {
+                    $roomStation = RoomStation::where('station_id','=',$item->station_id)->first();
+                    $rooms[] = $roomStation->room;
+                }
+            }
+            $rooms = array_unique($rooms);
+        }else{
+            $examList = ExamRoom::where('exam_id','=',$exam_id)->get();
+            foreach($examList as $examRoom){
                 $rooms[]=$examRoom->room;
-              }
-              return response()->json(
-               $this->success_data($rooms,1,'success')
-           );
-       }
+            }
+        }
+
+        return response()->json(
+            $this->success_data($rooms,1,'success')
+        );
+    }
 
     /**
      * 根据考试id获取候考场所列表(接口)

@@ -5,79 +5,12 @@
 <link rel="stylesheet" href="{{asset('osce/wechat/css/discussion.css')}}" type="text/css" />
 @stop
 @section('only_head_js')
-<script type="text/javascript">
-	$(function(){
-
-        $(window).scroll(function(e){
-            if(away_top >= (page_height - window_height)&&now_page<totalpages){
-                now_page++;
-                //qj.page=now_page;//设置页码
-                getItem(now_page,url)
-                /*加载显示*/
-            }
-        });
-        //初始化
-        var now_page = 1;
-        var url = "{{route('osce.wechat.getQuestionList')}}";
-        //内容初始化
-        $('.history-list').empty();
-        getItem(now_page,url);
-
-        function getItem(current,url){
-            $.ajax({
-                type:'get',
-                url:url,
-                aysnc:true,
-                data:{id:current,pagesize:current},
-                success:function(res){
-                    totalpages = res.total;
-                    var html = '';
-                    var index = (current - 1)*10;
-                    data = res.data.rows;
-                    for(var i in data){
-                        //准备dom
-                        //计数
-                        var key = (index+1+parseInt(i))
-                        if(data[i].user==null)
-                        {
-                            var ThisName    ='-';
-                        }
-                        else
-                        {
-                            var ThisName    =   data[i].user.name;
-                        }
-                        //字数限制
-                        console.log((data[i].content).length);
-                        var content = '';
-                        if((data[i].content).length>45){
-                            content = (data[i].content).substring(0,45) + '...';
-                        }else{
-                            content = data[i].content;
-                        }
-
-                        html += '<li>'+
-						        	'<a class="nou" href="{{route('osce.wechat.getCheckQuestion')}}?id='+data[i].id+'">'+
-						        		'<p class="font14 fontb clo3 p_title">'+data[i].title+'</p>'+
-						        		'<p class="font12 clo9 main_txt">'+content+'</p>'+
-						        		'<p class="font12 p_bottom">'+
-						        			'<span class="student_name">'+ThisName+'</span>'+
-						        			'<span class="clo0">&nbsp;·&nbsp;</span>'+
-						        			'<span class="clo9">'+data[i].time+'</span>'+
-						        			'<span class="right comment"><img src="{{asset('osce/wechat/common/img/pinglun.png')}}" height="16"/>&nbsp;'+data[i].count+'&nbsp;</span>'+
-						        		'</p>'+
-						        	'</a>'+
-						        '</li>';
-                    }
-                    //插入
-                      $('#discussion_ul').append(html);
-                }
-            });
-        }
-	})
-</script>
+<script src="{{asset('osce/wechat/discussion/discussion.js')}}" ></script> 
 @stop
 
+
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'discussion_list','getUrl':'{{route('osce.wechat.getQuestionList')}}','URL':'{{route('osce.wechat.getCheckQuestion')}}','img':'{{asset('osce/wechat/common/img/pinglun.png')}}'}" />
     <div class="user_header">
         <a class="left header_btn" href="{{route('osce.wechat.index.getIndex')}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>
