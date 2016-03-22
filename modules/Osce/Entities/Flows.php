@@ -148,6 +148,26 @@ class Flows extends CommonModel
                             throw new \Exception('考站-老师关系添加失败！');
                         }
                     }
+
+                    //考试-试卷-考站关联  TODO: Zhoufuxiang 2016-3-22
+                    $station = Station::where('id', '=', $station_id)->select(['name', 'type', 'paper_id'])->first();
+                    if(!$station){
+                        throw new Exception('未找到对应考站');
+                    }
+                    if($station->type == 3){
+                        if(!isset($station->paper_id) || empty($station->paper_id)){
+                            throw new Exception($station->name.' (考站) 没有关联考卷!');
+                        }
+                        $examPaperStation = [
+                            'exam_id'       => $exam_id,
+                            'exam_paper_id' => $station->paper_id,
+                            'station_id'    => $station_id,
+                        ];
+                        //插入exam_paper_exam_station表
+                        if(!$examPaperStation = ExamPaperStation::create($examPaperStation)){
+                            throw new Exception('考试-试卷-考站关联添加失败');
+                        }
+                    }
                 }
             }
             $connection->commit();
@@ -237,6 +257,13 @@ class Flows extends CommonModel
 
             //删除排考记录表
             ExamPlanRecord::deleteRecord($exam_id);
+
+            //删除考试-试卷-考站关联  TODO: Zhoufuxiang 2016-3-22
+            if(!ExamPaperStation::where('exam_id', '=', $id)->get()->isEmpty()){
+                if(!ExamPaperStation::where('exam_id', '=', $id)->delete()){
+                    throw new \Exception('删除考试-试卷-考站关联失败，请重试！');
+                }
+            }
 
             //保存新的数据
             $this->saveExamroomAssignmen($exam_id,$roomData,$stationData);
