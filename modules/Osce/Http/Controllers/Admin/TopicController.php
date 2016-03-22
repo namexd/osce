@@ -77,20 +77,23 @@ class TopicController extends CommonController
             'desc' => 'required',
             'stem' => 'required',
             'equipments' => 'required',
-            'goods' => 'required'
+            'goods' => 'required',
+            'description'=>'required'
         ], [
             'title.required' => '名称必填',
             'title.unique' => '该科目已存在',
             'content.required' => '必须新增评分点',
             'score.required' => '分数必填',
             'desc.required' => '必须新增描述',
+            'description.required' => '请添加考核项',
+
         ]);
 
         $content = $request->get('content');
         $score = $request->get('score');
         $answer = $request->get('description');
 
-        try {
+//        try {
             $formData = SubjectItem::builderItemData($content, $score, $answer);
             $totalData = 0;
             foreach ($score as $index => $socrdata) {
@@ -117,9 +120,9 @@ class TopicController extends CommonController
             } else {
                 throw new \Exception('新增失败！');
             }
-        } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage())->withInput();
-        }
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withErrors($ex->getMessage())->withInput();
+//        }
 
     }
 
