@@ -135,13 +135,6 @@ class AnswerController extends CommonController
     public function postSaveAnswer(Request $request)
     {
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
-/*
-        if($systemTimeStart){
-            //设置时间周期为不超过两分钟
-            if(time()-$systemTimeStart>120){
-                return response()->json(['status'=>'1','info'=>'超时']);
-            }
-        }*/
         $actualLength = (time()-$systemTimeStart)/60;//考试用时
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
