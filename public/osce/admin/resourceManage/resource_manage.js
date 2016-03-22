@@ -977,6 +977,21 @@ function exam_station_add() {
             }
         }
     });
+
+    /**
+     * 显示考卷
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-22
+     */
+    $('select[name="type"]').change(function() {
+        var $this = $(this);
+        if($this.val() == 3) {
+            $('.paper-id').show();
+        }else{
+            $('.paper-id').hide();
+        }
+    });
 }
 
 /**
@@ -1071,6 +1086,30 @@ function exam_station_edit() {
             }
         }
     });
+
+    /**
+     * 显示考卷
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-22
+     */
+    $('select[name="type"]').change(function() {
+        var $this = $(this);
+        if($this.val() == 3) {
+            $('.paper-id').show();
+        }else{
+            $('.paper-id').hide();
+        }
+    });
+
+    //代码回显是否隐藏考卷
+    if($('select[name="type"]').val() == 3) {
+        $('.paper-id').show();
+    }else{
+        $('.paper-id').hide();
+    }
+
+
 }
 
 /**
