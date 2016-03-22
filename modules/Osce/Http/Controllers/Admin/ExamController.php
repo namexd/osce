@@ -875,6 +875,7 @@ class ExamController extends CommonController
     public function postExamroomAssignmen(Request $request)
     {
         try{
+
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');          //考试id
             $roomData       = $request  ->  get('room');        //考场数据
@@ -883,8 +884,6 @@ class ExamController extends CommonController
             //流程id
             //查看是否有本场考试
             Exam::findOrFail($exam_id);
-
-
             //查询 考试id是否有对应的考场数据
             $examRoom = new ExamRoom();
             $examRoomData = $examRoom -> getExamRoomData($exam_id);
@@ -907,7 +906,6 @@ class ExamController extends CommonController
         }
     }
 
-
     /**
      * 获取考场列表 接口
      * @api GET /osce/admin/exam/Room-list-data
@@ -927,12 +925,10 @@ class ExamController extends CommonController
         //获得所有的在room_station考场列表id
         $isExist = RoomStation::select(['room_id'])->groupBy('room_id')->get()->pluck('room_id');
         $data = Room::whereIn('id',$isExist)->select(['id', 'name'])->get();
-
         return response()->json(
             $this->success_data($data, 1, 'success')
         );
     }
-
     /**
      * 获取考站数据 接口
      * @api GET /osce/admin/exam/getStationData
@@ -959,7 +955,6 @@ class ExamController extends CommonController
 
         $roomStation = new RoomStation();
         $data = $roomStation->getRoomStationData($room_id);
-
         return response()->json(
             $this->success_data($data, 1, 'success')
         );
