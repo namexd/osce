@@ -11,11 +11,12 @@
 @stop
 
 @section('only_js')
-    
+<script src="{{asset('osce/admin/systemManage/system_manage.js')}}" ></script>  
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'user_manage','URL':'{{route('osce.admin.user.postDelUser')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row table-head-style1 ">
         <div class="col-xs-6 col-md-2">
@@ -74,33 +75,4 @@
         </div>
     </form>
 </div>
-<script>
-    $(function(){
-        //删除用户
-        $(".fa-trash-o").click(function(){
-            var thisElement=$(this);
-            var uid=thisElement.attr("uid");
-
-            layer.confirm('确认删除？', {
-            	title:"删除",
-                btn: ['确定','取消'] //按钮
-            }, function(){
-                $.ajax({
-                    type:'post',
-                    async:true,
-                    url:'{{route('osce.admin.user.postDelUser')}}',
-                    data:{id:uid},
-                    success:function(data){
-                        if(data.code == 1){
-                            location.reload();
-                        }else {
-                            layer.msg(data.message,{skin:'msg-error',type:1});
-                        }
-                    }
-                })
-            });
-        })
-
-    })
-</script>
 @stop{{-- 内容主体区域 --}}
