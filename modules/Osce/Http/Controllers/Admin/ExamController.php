@@ -840,7 +840,6 @@ class ExamController extends CommonController
             //查看是否有本场考试
             Exam::findOrFail($exam_id);
 
-
             //查询 考试id是否有对应的考场数据
             $examRoom = new ExamRoom();
             $examRoomData = $examRoom -> getExamRoomData($exam_id);
