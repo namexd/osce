@@ -175,7 +175,7 @@
                                         <div class="step-content">
                                             <span class="font20">{{@$val["examCategoryFormalName"]}}</span>
                                             <span style="margin-left: 1em;">共<span class="subjectNum">{{@$val["examCategoryFormalNumber"]}}</span>题，</span>
-                                            <span>每题<span class="subjectScore">{{@$val["examCategoryFormalScore"]}}</span>分{{$val["id"]}}</span>
+                                            <span>每题<span class="subjectScore">{{@$val["examCategoryFormalScore"]}}</span>分</span>
                                             <div class="allSubject">
                                                 <div class="subjectBox   mart_10 " exam_question_id="{{$val["id"]}}">
                                                     <span class="font16 subjectContent">{{ $val["name"]}}(　　　)</span>
