@@ -181,7 +181,7 @@ class Student extends CommonModel
             $total = 0;
             $sucNum = 0;    //导入成功的学生数
             $exiNum = 0;    //已经存在的学生数
-            //将数组导入到模型中的addInvigilator方法
+            //将数组导入到模型中的addExaminee方法
             foreach ($examineeData as $key => $studentData) {
                 $total++;       //获取处理过的考生总数
                 //性别处理

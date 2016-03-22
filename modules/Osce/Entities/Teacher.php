@@ -246,7 +246,7 @@ class Teacher extends CommonModel
     public function addInvigilator($role_id, $userData , $teacherData)
     {
         $connection = DB::connection($this->connection);
-        $connection->beginTransaction();
+        $connection ->beginTransaction();
         try{
             $mobile = $userData['mobile'];
             $user   = User::where('username', '=', $mobile)->first();
@@ -509,6 +509,162 @@ class Teacher extends CommonModel
         return $spTeacher;
     }
 
+    /**
+     * 判断老师模板表头及列数 TODO: zhoufuxiang 2016-03-21
+     */
+    public function judgeTemplet($data, $nameToEn)
+    {
+        try {
+            foreach ($nameToEn as $index => $item) {
+                $config[] = $index;
+            }
+//            $config = ['姓名','性别','学号','身份证号','联系电话','电子邮箱','头像','备注'];
+            foreach ($data as $value) {
+                $key = 0;
+                //模板列数
+                if (count($value) != count($config)) {
+                    throw new \Exception('模板列数有误');
+                }
+                foreach ($value as $index => $item) {
+                    $key++;
+                    if (!in_array($index, $config)) {
+                        throw new \Exception('第' . $key . '列模板表头有误');
+                    }
+                }
+            }
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 导入考生
+     */
+    public function importTeacher($teacherDatas, $operator)
+    {
+        $backArr = [];
+
+        try {
+            $sucNum = 0;    //导入成功的老师数
+            $exiNum = 0;    //已经存在的老师数
+            $role_id = config('osce.spRoleId',4);
+            //将数组导入到模型中的addInvigilator方法
+            foreach ($teacherDatas as $key => $teacherData)
+            {
+                //性别处理
+                $teacherData['gender'] = $this->handleSex($teacherData['gender']);
+                $teacherData['type']   = $this->handleType($teacherData['type']);       //老师类别处理
+                //姓名不能为空
+                if (empty(trim($teacherData['name']))) {
+                    if (!empty($teacherData['idcard']) && !empty($teacherData['mobile'])) {
+                        $backArr[] = ['key' => $key + 2, 'title' => 'name'];
+                    }
+                    continue;
+                }
+                //验证身份证号
+                if (!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', $teacherData['idcard'])) {
+                    throw new \Exception('第' . ($key + 2) . '行身份证号不符规格，请修改后重试！');
+                }
+                //验证手机号
+                if (!preg_match('/^1[3|5|7|8]{1}[0-9]{9}$/', $teacherData['mobile'])) {
+                    throw new \Exception('第' . ($key + 2) . '行手机号不符规格，请修改后重试！');
+                }
+
+                //根据条件：查找用户是否有账号和密码
+                $user = User::where(['username' => $teacherData['mobile']])->select(['id'])->first();
+                if ($user) {
+                    //根据用户ID查找老师 是否已经存在
+                    $teacher = $this->where('id', $user->id)->first();
+                } else {
+                    $teacher = false;
+                }
+
+                //老师已存在,则 跳过
+                if ($teacher) {
+                    $exiNum++;   continue;
+                }
+                //用户数据
+                $userData = [
+                    'name'   => $teacherData['name'],
+                    'gender' => $teacherData['gender'],
+                    'idcard' => $teacherData['idcard'],
+                    'mobile' => $teacherData['mobile'],
+                    'code'   => $teacherData['code'],
+                    'avatar' => $teacherData['avatar'],
+                    'email'  => $teacherData['email']
+                ];
+                //老师数据
+                $teacherData = [
+                    'name'      => $teacherData['name'],
+                    'type'      => $teacherData['type'],
+                    'code'      => $teacherData['code'],
+                    'case_id'   => 0,
+                    'status'    => 0,
+                    'create_user_id' => $operator->id,
+                    'description'    => $teacherData['description']
+                ];
+                //添加老师
+                if (!$this->addInvigilator($role_id, $userData , $teacherData)) {
+                    throw new \Exception('老师导入数据失败，请修改后重试');
+                } else {
+                    $sucNum++;      //添加成功的老师个数
+                }
+            } /*循环结束*/
+
+            $message = "成功导入{$sucNum}个老师";
+            if ($exiNum) {
+                $message .= "，有{$exiNum}个老师已存在";
+            }
+            //返回信息数组不为空
+            if (!empty($backArr)) {
+                $mes1 = '';
+                foreach ($backArr as $item) {
+                    if ($item['title'] == 'name') {
+                        $mes1 .= $item['key'] . '、';
+                    }
+                }
+                if ($mes1 != '') {
+                    $message .= '，第' . rtrim($mes1, '、') . '行姓名不能为空！';
+                }
+            }
+            if ($exiNum || isset($mes1)) {
+                if (isset($mes1)) {
+                    throw new \Exception(trim($message, '，'));
+                }
+                throw new \Exception(trim($message, '，'));
+            }
+
+            return $sucNum;     //返回导入成功的个数
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 性别处理
+     */
+    public function handleSex($sex)
+    {
+        if ($sex == '男') {
+            return 1;
+        } elseif ($sex == '女') {
+            return 2;
+        }
+        return 0;
+    }
+
+    /**
+     * 老师类别处理
+     */
+    public function handleType($type)
+    {
+        if ($type == '巡考老师') {
+            return 3;
+        }
+        return 1;
+    }
 
 
 }

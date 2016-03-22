@@ -48,12 +48,18 @@ class InvigilatePadController extends CommonController
     {
 //        $examScreeningModel = new ExamScreening();
 //        $result = $examScreeningModel->getExamCheck();
-        $a = strtotime('2016-03-04 10:59:14');
-        $c = strtotime('2016-03-04 11:59:14');
-        $b = ($c - $a);
-        dd($b);
+//        $numbers = array('1','2','3','4','5');
+////        srand((float)microtime()*1000000);
+//        shuffle($numbers);
+//
+//        while (list(,$number) = each($numbers)) {
+//            echo $number."<br/>";
+//        }
 
-
+        for ($i = 2; $i <= 5; $i++)
+        {
+            print "value is now " . $i . "<br>";
+        }
     }
 
 

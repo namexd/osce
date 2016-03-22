@@ -178,9 +178,15 @@
                         <td class="role_descrip">{{@$role->description}}</td>
 
                         <td class="opera">
-                            <span class="state1 edit_role modal-control" data-toggle="modal" data-target="#myModal" data="{{@$role->id}}"><i class="fa fa-pencil-square-o fa-2x"></i></span>
-                            <a class="state1 modal-control" href="{{ route('auth.SetPermissions',[@$role->id]) }}"><i class="fa  fa-cog fa-2x"></i></a>
-                            <span class="state2 delete" data="{{@$role->id}}"><i class="fa fa-trash-o fa-2x"></i></span>
+                            @if($role->id == 5)
+                                <span><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                                <a href="javascript:void(0);"><i class="fa  fa-cog fa-2x"></i></a>
+                                <span><i class="fa fa-trash-o fa-2x"></i></span>
+                            @else
+                                <span class="state1 edit_role modal-control" data-toggle="modal" data-target="#myModal" data="{{@$role->id}}"><i class="fa fa-pencil-square-o fa-2x"></i></span>
+                                <a class="state1 modal-control" href="{{ route('auth.SetPermissions',[@$role->id]) }}"><i class="fa  fa-cog fa-2x"></i></a>
+                                <span class="state2 delete" data="{{@$role->id}}"><i class="fa fa-trash-o fa-2x"></i></span>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
