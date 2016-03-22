@@ -13,7 +13,8 @@
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'site_manage_add','name': '{{route("osce.admin.room.postNameUnique")}}'}"  />
+
+<input type="hidden" id="parameter" value="{'pagename':'site_manage_edit','name': '{{route("osce.admin.room.postNameUnique")}}','id':'{{$data->id}}'}"  />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">

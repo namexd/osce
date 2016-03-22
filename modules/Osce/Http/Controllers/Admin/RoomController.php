@@ -308,7 +308,7 @@ class RoomController extends CommonController
 
     /**
      * 判断名称是否已经存在
-     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @url POST /osce/admin/resources-manager/name-unique
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
      */
     public function postNameUnique(Request $request)
@@ -318,6 +318,7 @@ class RoomController extends CommonController
         ]);
 
         $id     = $request  -> get('id');
+
         $value   = $request  -> get('name');
         $code   = $request  -> get('code');
         $name = 'name';
