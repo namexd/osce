@@ -23,161 +23,20 @@
 
 @section('only_js')
 	<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
+	<script src="{{asset('osce/admin/systemManage/system_manage.js')}}" ></script> 
     <script type="text/javascript">
-    	$(function(){
-    		$(".checkbox_input").click(function(){
-    			if($(this).find("input").is(':checked')){
-					$(this).find(".check_icon ").addClass("check");
-				}else{
-					$(this).find(".check_icon").removeClass("check");
-				}
-    		});
-   			/**
-		     * 下面是进行插件初始化
-		     * 你只需传入相应的键值对
-		     * */
-		    $('#list_form').bootstrapValidator({
-	            message: 'This value is not valid',
-	            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-	                valid: 'glyphicon glyphicon-ok',
-	                invalid: 'glyphicon glyphicon-remove',
-	                validating: 'glyphicon glyphicon-refresh'
-	            },
-	            fields: {/*验证*/
-	           		'message_type[]': {/*键名username和input name值对应*/
-	                    validators: {
-	                        notEmpty: {/*非空提示*/
-	                            message: '请至少选择一个'
-	                        }
-	                    }
-	               	},
-	                sms_cnname: {
-	                    validators: {
-	                        notEmpty: {/*非空提示*/
-	                            message: '请选择短信方式'
-	                        }
-	                    }
-	                    
-	                },
-	                sms_url: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '不能为空'
-		                    },
-		                    regexp: {
-		                        regexp: /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/,
-		                        message: '请输入正确网址'
-		                    }
-		                }
-		            },
-		            sms_username: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '用户名不能为空'
-		                    }
-		                }
-		            },
-		            sms_password: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '密码不能为空'
-		                    }
-		                }
-		            },
-		            wechat_use_alias: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '不能为空'
-		                    }
-		                }
-		            },
-		            wechat_app_id: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '不能为空'
-		                    }
-		                }
-		            },
-		            wechat_secret: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '不能为空'
-		                    }
-		                }
-		            },
-		            wechat_token: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '不能为空'
-		                    }
-		                }
-		            },
-		            wechat_encoding_key: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '不能为空'
-		                    }
-		                }
-		            },
-		            email_server: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '不能为空'
-		                    }
-		                }
-		            },
-		            email_port: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '端口不能为空'
-		                    },
-		                    regexp: {
-		                        regexp: /^[0-9]+$/,
-		                        message: '只能输入数字'
-		                    }
-		                }
-		            },
-		            email_protocol: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '不能为空'
-		                    }
-		                }
-		            },
-		            email_ssl: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '不能为空'
-		                    }
-		                }
-		            },
-		            email_username: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '用户名不能为空'
-		                    }
-		                }
-		            },
-		            email_password: {
-		                validators: {
-		                    notEmpty: {
-		                        message: '密码不能为空'
-		                    }
-		                }
-		            }
-	            }
-	        });
-       	});
 		//提示保存成功
 		$(function(){
 			@if(isset($_GET['succ']) && !empty($_GET['succ']))
                 layer.msg('保存成功！',{skin:'msg-success',icon:1});
 			@endif
         })
-    </script>
+    </script> 
 @stop
 
+
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'system_settings_media'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row table-head-style1 ">
         <div class="col-xs-6 col-md-2">
