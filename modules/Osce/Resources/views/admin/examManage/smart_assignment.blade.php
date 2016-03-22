@@ -37,14 +37,6 @@
             clear: both;
             height: 0;
         }
-        /*.time-list{
-            width: 200px;
-            margin-top: 5px;
-            text-align: center;
-        }
-        .time-list li{
-            border: 1px solid #ccc;
-        }*/
         ul,dl{
             padding: 0;
             margin: 0;
@@ -55,16 +47,12 @@
         .end{
             margin-top: 460px;
         }
-        dd{
+        li dl dd{
             float: left;
             cursor: pointer;
             margin: 5px;
         }
-        /*dl:hover{
-            background-color: #f4f4f4;
-            cursor: pointer;
-        }*/
-        dl{
+        li dl{
             border: 1px solid #ccc;
         }
         .title{
@@ -112,6 +100,59 @@
         }
         .screening_box>ul:first-child{
             width: 200px;
+        }
+
+        /*标尺样式*/
+        .axis{
+            float: left;
+            margin-top: 32px;
+            margin-left: 140px;
+            margin-right: 10px;
+            width: 2px;
+            background-color: #000;
+        }
+        .axis dl{cursor: pointer;}
+        .axis dl{background-color: #000;}
+        .axis dl .item{
+            margin-left: 0px;
+            height: 98px;
+            width: 2px;
+            background-color: #000;
+        }
+        .axis dl .tick{
+            margin-left: -5px;
+            height: 2px;
+            width: 2px;
+            border-right: 5px solid #000;
+            background-color: #000;
+            opacity: .4;
+        }
+        .axis dl .tick-bar{
+            margin-left: -7px;
+            height: 2px;
+            width: 2px;
+            border-right: 7px solid #000;
+            background-color: #000;
+        }
+        .tick-bar span{
+            z-index: 10;
+            display: inline-block;
+            width: 125px;
+            text-align: center;
+            font-size: 12px;
+            position: relative;
+            left: -125px;
+            top: -10px;
+        }
+        .tick span{
+            z-index: 10;
+            display: inline-block;
+            width: 125px;
+            text-align: center;
+            font-size: 12px;
+            position: relative;
+            left: -125px;
+            top: -10px;
         }
     </style>
 @stop

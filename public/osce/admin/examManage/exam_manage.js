@@ -2245,56 +2245,83 @@ function smart_assignment(){
         makePlan();
     })
 
+
+    /**
+     * 生成标尺
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-22
+     * @param   {string}   startTime 开始时间
+     * @param   {string}   endTime   结束时间
+     * @param   {[number]}   step      [多少px一个标度]
+     * @param   {[number]}   pxs       [对应1px的1s]
+     * @return  {[string]}             [dom结构]
+     */
+    function generateAxis(startTime,endTime,step,pxs) {
+        if(pxs===undefined)pxs = 20;
+
+        console.log(startTime,endTime)
+
+        var allSeconds = Date.parse(endTime) - Date.parse(startTime),
+            heigth = (allSeconds/1000/pxs), //20s对应1px
+            count = Math.ceil(heigth/step),
+            flag = 0,
+            html = '<div class="axis"><dl><dd class="tick-bar"><span>'+formatDateTime(new Date(startTime))+'</span></dd>';
+          
+        for(var i = 1; i <= count; i++) {
+            var time = new Date(i*1000*pxs*step + Date.parse(startTime)),
+                className = (flag < 5 ?'tick':'tick-bar');
+
+            html += '<dd class="item"></dd><dd class="'+className+'" title="'+ formatDateTime(time) +'"><span>'+ (flag < 5 ?'' : formatDateTime(time)) +'</span></dd>';
+            //间隔标签
+            if(flag < 5) {
+                flag ++;
+            }else{
+                flag = 0;
+            }
+        }
+
+        html += '</dl></div>';
+
+        /*//渲染dom
+        $('.axis dl').html(html);*/
+        //设定间隔的高度
+        //$('.axis dl .item').css('height',(step-2) + 'px');
+        return html;
+
+    }
+
+    /**
+     * 标准化时间转化成所要格式
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-15
+     * @param   {date}   date 传入时间
+     * @return  {date}        所要格式时间
+     */
+    function formatDateTime(date) {  
+        var y = date.getFullYear();  
+        var m = date.getMonth() + 1;  
+        m = m < 10 ? ('0' + m) : m;  
+        var d = date.getDate();  
+        d = d < 10 ? ('0' + d) : d;  
+        var h = date.getHours();  
+        var minute = date.getMinutes();
+
+        h = h < 10 ? ('0' + h) : h; 
+        minute = minute < 10 ? ('0' + minute) : minute;  
+        return y + '-' + m + '-' + d+' '+h+':'+minute;  
+    };
+
 //生成时间轴
     function makeTime(){
+
         for(var i in timesGroup ){
-            timesGroup[i]=unique(timesGroup[i]);
-            timesGroup[i]=timesGroup[i].sort(function(a,b){return a>b?1:-1});
-            /* times=unique(times);
-             times=times.sort(function(a,b){return a>b?1:-1});*/
-            var endtimeData=endtime[i];
-            //endtime=endtime.sort(function(a,b){return a>b?1:-1});
-            var lastHeight=endtimeData-timesGroup[i][timesGroup[i].length-1];
-            lastHeight=lastHeight/timeHeight;
-
-            var ul=$('<ul>');
-            var timeTitle=$('<li class="title">时间</li>');
-            ul.addClass("time");
-            ul.append(timeTitle);
-            $(".screening_"+i).before(ul);
-            for(var j in timesGroup[i]){
-                var li=$('<li>');
-                var span1=$('<span>');
-                span1.css("margin-right","10px");
-                var span2=$('<span>');
-                li.append(span1).append(span2);
-                var dat=new Date(timesGroup[i][j]*1000);
-                //var year=dat.getFullYear();
-                var month = dat.getMonth()+1;//取得月,js从0开始取,所以+1
-                var date1 = dat.getDate(); //取得天
-                var hour = dat.getHours();//取得小时
-                hour<10?hour='0'+hour:hour=hour;
-                var minutes = dat.getMinutes();//取得分钟
-                minutes<10?minutes='0'+minutes:minutes=minutes;
-                span1.html(month+"/"+date1);
-                span2.html(hour+":"+minutes);
-                ul.append(li);
-
-                //var timeHeight=times[times.length-1]-times[0];//时间轴的总高度值
-                //var every=timeHeight/(times.length-1);//每段时间高度
-                if(j>=timesGroup[i].length-1)
-                {
-                    li.css({"height":lastHeight+"px","line-height":lastHeight+"px"});
-                    continue;
-                }
-                else
-                {
-                    var next    =   timesGroup[i][parseInt(j)+parseInt(1)];
-                    var every   =   next-timesGroup[i][j];
-                    every=every/timeHeight;
-                    li.css({"height":every+"px","line-height":every+"px"});//时间段的高度
-                }
-            }
+            //实例化标尺
+            $(".screening_"+i).before(generateAxis(formatDateTime(new Date(eariestTime[i]*1000)),formatDateTime(new Date(endtime[i]*1000)),10));
+            //调整每个刻度的高度
+            $('.axis dl .item').css('height','8px');
+          
         }
 
 
