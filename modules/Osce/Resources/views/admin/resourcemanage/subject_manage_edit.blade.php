@@ -49,12 +49,13 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">题目类型</label>
                                 <div class="col-sm-10">
-                                    <select name="examQuestionTypeId" id="subjectType" class="form-control" style="width: 250px;">
+                                    <select name="examQuestionTypeId" id="subjectType" class="form-control" disabled style="width: 250px;">
                                         @if(!empty(@$examQuestionTypeList))
                                             @foreach(@$examQuestionTypeList as $val)
                                                 <option value="{{@$val['id']}}" @if($val['id']==$data['exam_question_type_id']) selected @endif>{{@$val['name']}}</option>
                                             @endforeach
                                         @endif
+                                            <input type="hidden" name="examQuestionTypeId" value="{{ @$data['exam_question_type_id'] }}">
                                     </select>
                                 </div>
                             </div>
