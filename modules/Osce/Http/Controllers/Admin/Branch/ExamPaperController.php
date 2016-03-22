@@ -693,7 +693,7 @@ class ExamPaperController extends CommonController
                 return redirect()->back()->withInput()->withErrors('修改自动随机试卷失败！');
             }
         }elseif($status == 1 && $status2 == 2){//自动-统一
-            $check = $this->editAutoUniteExam($request,$DB,$QuestionBankRepositories,$examPapers,$examPaperID,$user);
+            $check = $this->editAutoUniteExam($request,$DB,$QuestionBankRepositories,$examPapers,$examPaperID,$user);//exit;
             if(!$check){
                 $DB->rollBack();
                 return redirect()->back()->withInput()->withErrors('修改自动统一试卷失败');
@@ -809,95 +809,41 @@ class ExamPaperController extends CommonController
         //新增试卷-试卷构造表和标签类型关联数据添加
         $ExamPaperStructure = new ExamPaperStructure();
         $ExamPaperStructureLabel = new ExamPaperStructureLabel();
-        //dd($request->all());
-        //dd($examPapers);
         //查找筛选条件下的试题
         $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
 
         //整理数据-判断该类型下是否有试题
         foreach($examQuestion as $k=>$v){
             $questionType = $this->checkQuestions($v['type']);
-            if(!count($v['child'])){
-                $DB->rollBack();
-                return false;die;
-            }
         }
+
         foreach($examPapers as $kk=>$vv){
             $examPapers[$kk]['questions'] = $examQuestion[$kk]['child'];
         }
-
-
+        //dd($examPapers);
         foreach($examPapers as $exam) {
-            //拼合试卷构造表数据
-            $papers = [
-                'exam_paper_id' => $examPaperID,
-                'exam_question_type_id' => $exam['type'],
-                'num' => $exam['num'],
-                'score' => $exam['score'],
-                'total_score' => $exam['total_score'],
-                'created_user_id' => $user->id,
-            ];
-            //判断是否存在structureid-、
-            if($exam['structureid']){//存在修改
-                //修改Structure
-                $addExamPaperStructure = $ExamPaperStructure->where('id', '=', $exam['structureid'])->update($papers);
-
-                if (!$addExamPaperStructure) {
-                    $DB->rollBack();
+            //判断是否存在structureid
+            //echo $exam['structureid'].'<br>';
+            if(isset($exam['structureid'])){//存在修改
+                $check = $this->editManualUniteExamExist($examPapers,$examPaperID,$DB,$QuestionBankRepositories,$exam);
+                if(!$check){
+                    $DB->rollback();
                     return false;die;
-                }
-                //先删除ExamPaperStructureLabel表的当前数据
-                $del = $ExamPaperStructureLabel->where('exam_paper_structure_id', '=', $exam['structureid'])->delete();
-
-                if (!$del) {
-                    $DB->rollBack();
-                    return false;die;
-                }
-
-                foreach ($exam['structure_label'] as $structure_label) {
-                    //拼合试卷构造表和试题标签表关联的数据
-                    $structure_label['created_user_id'] = $user->id;
-                    $structure_label['exam_paper_structure_id'] = $exam['structureid'];
-                    $structure_label['updated_at'] = date('Y-m-d H:i:s');
-                    $addExamPaperStructureLabel = $ExamPaperStructureLabel->create($structure_label);
-
-                    if (!$addExamPaperStructureLabel) {
-                        $DB->rollBack();
-                        return false;die;
-                    }
-                }
-                //dd(intval($exam['structureid']));
-                //$find = ExamPaperStructureQuestion::where('exam_paper_structure_id','=',intval($exam['structureid']))->get();
-                $delPaperStructureQuestion = ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$exam['structureid'])->delete();
-                //dd($find);
-                if (!$delPaperStructureQuestion) {
-                    $DB->rollBack();
-                    return false;die;
-                }
-                //dd($exam['questions']);
-                foreach($exam['questions']->toArray() as $ww=>$qq){
-                    $arrs = [
-                        'exam_paper_structure_id' => $exam['structureid'],
-                        'exam_question_id' => $qq,
-                    ];
-                    $addPaperStructureQuestion = ExamPaperStructureQuestion::create($arrs);
-                    if(!$addPaperStructureQuestion){
-                        $DB->rollBack();
-                        return false;die;
-                    }
                 }
             }else{//不存在新增
-                dd($request->all());
+                $check = $this->editManualUniteExamNotExist($request,$examPapers,$examPaperID,$DB,$user,$QuestionBankRepositories,$exam);
+                if(!$check){
+                    $DB->rollback();
+                    return false;die;
+                }
             }
-
-
         }
         return true;
     }
 
 
     /**
-     * 新增试卷-手动统一
+     * 修改试卷-手动统一
      * @access    public
      * @param Request $request get请求<br><br>
      * @param Exam $exam
@@ -908,7 +854,6 @@ class ExamPaperController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function editManualUniteExam($request,$questions,$examPaperID,$DB,$user){
-        dd($request->all());
         //分割字符串-拼合数组
         $questions = Input::get('question-type');
         foreach($questions as $k=>$v){
@@ -922,30 +867,216 @@ class ExamPaperController extends CommonController
             $structure['total_score']           = count(explode(',',$vv[2])) * $vv[1];
             $structure['created_user_id']       = $user->id;
             $structure['updated_at']            = date('Y-m-d H:i:s');
-            //修改数据
-            $addPaperStructure = ExamPaperStructure::where('id','=',$vv[3])->update($structure);
-            if(!$addPaperStructure){
-                $DB->rollBack();
-                return redirect()->back()->withInput()->withErrors('系统异常');
-            }else{
-                if(!ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$vv[3])->delete()){
+            if($vv[3] !== 'undefined'){//Structureid存在的时候直接修改
+                //修改数据
+                $addPaperStructure = ExamPaperStructure::where('id','=',$vv[3])->update($structure);
+                if(!$addPaperStructure){
                     $DB->rollBack();
-                    return redirect()->back()->withInput()->withErrors('系统异常');
-                }
-                foreach($questionsID as $val){
-                    $structure_question['exam_paper_structure_id'] = $vv[3];
-                    $structure_question['exam_question_id'] = $val;
-                    $addStructureQuestion = ExamPaperStructureQuestion::create($structure_question);
-                    if(!$addStructureQuestion){
+                    return false;die;
+                }else{
+                    $delStructureQuestion = ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$vv[3])->delete();
+                    if(!$delStructureQuestion){
                         $DB->rollBack();
-                        return redirect()->back()->withInput()->withErrors('系统异常');
+                        return false;die;
+                    }
+                    foreach($questionsID as $val){
+                        $structure_question['exam_paper_structure_id'] = $vv[3];
+                        $structure_question['exam_question_id'] = $val;
+                        $addStructureQuestion = ExamPaperStructureQuestion::create($structure_question);
+                        if(count($addStructureQuestion) == 0){
+                            $DB->rollBack();
+                            return false;die;
+                        }
+                    }
+
+                }
+            }else{//Structureid不存在的时候直接新增
+                $questionsID = explode(',',$vv[2]);
+                $structure['exam_paper_id'] = $examPaperID;
+                $structure['exam_question_type_id'] = $vv[0];
+                $structure['score'] = $vv[1];
+                $structure['num'] = count($questionsID);
+                $structure['total_score'] = count(explode(',',$vv[2])) * $vv[1];
+                $structure['created_user_id'] = $user->id;
+                $addPaperStructure = ExamPaperStructure::create($structure);
+                if(!$addPaperStructure){
+                    $DB->rollBack();
+                    return false;die;
+                }else{
+                    foreach($questionsID as $val){
+                        $structure_question['exam_paper_structure_id'] = $addPaperStructure->id;
+                        $structure_question['exam_question_id'] = $val;
+                        $addStructureQuestion = ExamPaperStructureQuestion::create($structure_question);
+                        if(!$addStructureQuestion){
+                            $DB->rollBack();
+                            return false;die;
+                        }
                     }
                 }
-
             }
+
         }
         return true;
     }
+
+    /**
+     * 修改试卷-自动统一--评分标准不存在则新增
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function editManualUniteExamNotExist($request,$examPapers,$examPaperID,$DB,$user,$QuestionBankRepositories,$exam){
+        //新增试卷-试卷构造表和标签类型关联数据添加
+        $ExamPaperStructure = new ExamPaperStructure();
+        $ExamPaperStructureLabel = new ExamPaperStructureLabel();
+        $user = Auth::user();
+        //拼合试卷构造表数据
+        $papers = [
+            'exam_paper_id' => $examPaperID,
+            'exam_question_type_id' => $exam['type'],
+            'num' => $exam['num'],
+            'score' => $exam['score'],
+            'total_score' => $exam['total_score'],
+            'created_user_id' => $user->id,
+        ];
+
+        $addExamPaperStructure = $ExamPaperStructure->create($papers);
+
+        if(!$addExamPaperStructure){
+            $DB->rollback();
+            return false;exit;
+        }
+
+        foreach($exam['structure_label'] as $structure_label){
+            //拼合试卷构造表和试题标签表关联的数据
+            $structure_label['exam_paper_structure_id'] = $addExamPaperStructure->id;
+            $structure_label['created_user_id'] = $user->id;
+
+            $addExamPaperStructureLabel = $ExamPaperStructureLabel->create($structure_label);
+            if(!$addExamPaperStructureLabel){
+                $DB->rollback();
+                return false;exit;
+            }
+        }
+
+
+        //查找筛选条件下的试题
+        $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+
+        //整理数据
+        foreach($examQuestion as $k=>$v){
+            $examQuestion[$k]['created_user_id'] = $user->id;
+            $examQuestion[$k]['exam_paper_id'] = $examPaperID;
+            $questionType = $this->checkQuestions($v['type']);
+
+            if(!count($v['child'])){
+                $DB->rollBack();
+                return false;exit;
+            }
+        }
+
+        //保存数据
+        foreach($examQuestion as $kk=>$vv){
+            foreach($vv['child'] as $key=>$val){
+                $arrs = [
+                    'exam_paper_structure_id' => $addExamPaperStructure->id,
+                    'exam_question_id' => $val,
+                ];
+                $addPaperStructureQuestion = ExamPaperStructureQuestion::create($arrs);
+
+                if(!$addPaperStructureQuestion){
+                    $DB->rollBack();
+                    return false;exit;
+                }
+            }
+
+        }
+
+        return true;
+    }
+
+    /**
+     * 修改试卷-自动统一--评分标准存在则修改
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function editManualUniteExamExist($examPapers,$examPaperID,$DB,$QuestionBankRepositories,$exam)
+    {
+        //新增试卷-试卷构造表和标签类型关联数据添加
+        $ExamPaperStructure = new ExamPaperStructure();
+        $ExamPaperStructureLabel = new ExamPaperStructureLabel();
+        $user = Auth::user();
+        //拼合试卷构造表数据
+        $papers = [
+            'exam_paper_id' => $examPaperID,
+            'exam_question_type_id' => $exam['type'],
+            'num' => $exam['num'],
+            'score' => $exam['score'],
+            'total_score' => $exam['total_score'],
+            'created_user_id' => $user->id,
+        ];
+        $addExamPaperStructure = $ExamPaperStructure->where('id', '=', $exam['structureid'])->update($papers);
+
+        if (count($addExamPaperStructure) == 0) {
+            $DB->rollback();
+            return false;exit;
+        }
+        //先删除ExamPaperStructureLabel表的当前数据
+        if (!$ExamPaperStructureLabel->where('exam_paper_structure_id', '=', $exam['structureid'])->delete()) {
+            $DB->rollBack();
+            return false;exit;
+        }
+        foreach ($exam['structure_label'] as $structure_label) {
+            //拼合试卷构造表和试题标签表关联的数据
+            $structure_label['exam_paper_structure_id'] = $exam['structureid'];
+            $structure_label['created_user_id'] = $user->id;
+
+            $addExamPaperStructureLabel = $ExamPaperStructureLabel->create($structure_label);
+
+            if (count($addExamPaperStructureLabel) == 0) {
+                $DB->rollback();
+                return false;exit;
+            }
+        }
+
+        $delPaperStructureQuestion = ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$exam['structureid'])->delete();
+        if (!$delPaperStructureQuestion) {
+            $DB->rollBack();
+            return false;exit;
+        }
+
+        //查找筛选条件下的试题
+        $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+        //保存数据
+        foreach($examQuestion as $kk=>$vv){
+            foreach($vv['child'] as $key=>$val){
+                $arrs = [
+                    'exam_paper_structure_id' => $exam['structureid'],
+                    'exam_question_id' => $val,
+                ];
+                $addPaperStructureQuestion = ExamPaperStructureQuestion::create($arrs);
+
+                if(!$addPaperStructureQuestion){
+                    $DB->rollBack();
+                    return false;exit;
+                }
+            }
+        }
+
+        return true;
+    }
+
 
     //判断试题类型
     public function checkQuestions($type){
