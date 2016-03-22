@@ -1,6 +1,8 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-
+<style>
+    .paper-id{display: none;}
+</style>
 @stop
 
 @section('only_js')
@@ -34,6 +36,17 @@
                                     <select id="type" required  class="form-control" name="type">
                                         @foreach($placeCate as $key=>$item)
                                             <option value="{{$key}}">{{$item}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed paper-id"></div>
+                            <div class="form-group paper-id">
+                                <label class="col-sm-2 control-label">考卷</label>
+                                <div class="col-sm-10">
+                                    <select required  class="form-control" name="paper_id">
+                                        @foreach($papers as $paper)
+                                            <option value="{{$paper->id}}">{{$paper->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>

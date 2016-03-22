@@ -1,6 +1,8 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
-
+<style>
+    .paper-id{display: none;}
+</style>
 @stop
 
 @section('only_js')
@@ -9,7 +11,7 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'exam_station_add','name':'{{route('osce.admin.station.postNameUnique')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'exam_station_edit','name':'{{route('osce.admin.station.postNameUnique')}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="ibox float-e-margins">
@@ -40,6 +42,19 @@
                                                 @if($rollmsg['type'] == $key)
                                                     selected="selected"
                                                 @endif>{{$item}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed paper-id"></div>
+                            <div class="form-group paper-id">
+                                <label class="col-sm-2 control-label">考卷</label>
+                                <div class="col-sm-10">
+                                    <select required  class="form-control" name="paper_id">
+                                        @foreach($papers as $paper)
+                                            <option value="{{$paper->id}}" {{($paper->id == $rollmsg['paper_id'])?'selected=selected':''}}>
+                                                {{$paper->name}}
                                             </option>
                                         @endforeach
                                     </select>
