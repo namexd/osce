@@ -34,12 +34,16 @@ class AnswerController extends CommonController
      */
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
-        $ExamPaperId = $request->get('id',45);
+        $ExamPaperId = $request->get('id',130);
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
+
         $ExamPaperFormal = new ExamPaperFormal;
         //生成正式的试卷并且 返回id
         $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
+
+        $systemTimeStart = 0;
+
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
             $systemTimeStart =\Session::get('systemTimeStart');
@@ -48,7 +52,7 @@ class AnswerController extends CommonController
         }
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
-        $examPaperFormalList = $examPaperFormalModel->where('id','=',1)->first();
+        $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
         $examPaperFormalData ='';
         if($examPaperFormalList) {
             $examPaperFormalData = array(
@@ -76,7 +80,7 @@ class AnswerController extends CommonController
                                 'id' =>$v2->id,//正式试题信息
                                 'name' =>($k2+1).'、'.$v2->name,
                                 'exam_question_id' =>$v2->exam_question_id,
-                                'content' =>explode(',',$v2->content),
+                                'content' =>explode('|%|',$v2->content),
                                 'answer' =>$v2->answer,
                                 'parsing' =>$v2->parsing,
                                 'exam_category_formal_id' =>$v2->exam_category_formal_id,
@@ -96,6 +100,7 @@ class AnswerController extends CommonController
             }
         }
 
+
         if(count($examCategoryFormalData)>0){
             foreach($examCategoryFormalData as $key=>$val){
                 if($val['exam_question_type_id']==1){//单选
@@ -111,7 +116,7 @@ class AnswerController extends CommonController
 
             }
         }
-        //dd($examPaperFormalData);
+
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'          =>$examPaperFormalData,//正式试卷信息
@@ -139,6 +144,7 @@ class AnswerController extends CommonController
             }
         }*/
         $actualLength = (time()-$systemTimeStart)/60;//考试用时
+
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
             'actualLength' =>sprintf("%.2f",$actualLength), //考试用时
@@ -204,10 +210,11 @@ class AnswerController extends CommonController
 
             $data['examQuestionFormalInfo'][$k]['answer']=$newStudentAnswer;
         }
-        //dd($data);
+        return response()->json($data);
         //保存考生答案
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
+
         if($result){
             //删除session
             \Session::forget('systemTimeStart');

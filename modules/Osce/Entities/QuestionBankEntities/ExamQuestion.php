@@ -326,6 +326,30 @@ class ExamQuestion extends Model
 
             $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
 
+        })->leftjoin('exam_question_label_relation',function($join){
+
+            $join->on('exam_question_label_relation.exam_question_id','=','exam_question.id');
+
+        });
+        if(count($data)>0){
+            $builder->whereIn('exam_question_label_relation.exam_question_label_id',$data);
+        }
+        $data = $builder->where('exam_question_type.id','=',$question_type)
+            ->with(['ExamQuestionLabelRelation'=>function($ExamQuestionLabelRelation){
+                $ExamQuestionLabelRelation->with('ExamQuestionLabel');
+            }])
+            ->groupBy('exam_question.id')
+            ->select(
+                'exam_question_type.name as tname',
+                'exam_question.*'
+            )
+            ->paginate(config('msc.page_size'));
+        return $data;
+
+/*        $builder = $this->leftjoin('exam_question_type',function($join){
+
+            $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
+
         })->with(['ExamQuestionLabelRelation'=>function($relation) use($data){
 
             $relation->with('exam_question_label');
@@ -334,6 +358,6 @@ class ExamQuestion extends Model
             }
 
         }])->where('exam_question_type.id','=',$question_type)->select('exam_question_type.name as tname','exam_question.*')->paginate(config('msc.page_size'));//
-        return $builder;
+        return $builder;*/
     }
 }

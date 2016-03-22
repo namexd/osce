@@ -7,6 +7,13 @@
 @section('only_js')
     <script src="{{asset('osce/admin/subjectManage/subject_manage.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
+    <script>
+        $(function(){
+            $('#search').click(function(){
+                window.location.href="/osce/admin/exampaper/exam-list?keyword="+$('#keyword').val();
+            });
+        });
+    </script>
 @stop
 
 @section('content')
@@ -86,7 +93,7 @@
                     </div>
                     <div class="pull-right">
 
-                        {!! $data->appends($_GET)->render() !!}
+
 
                     </div>
                 </div>

@@ -356,8 +356,6 @@ class QuestionBankRepositories  extends BaseRepository
                     $ExamPaperInfo['item'] = $item;
                 }
 
-
-
             }
         }
         return   $ExamPaperInfo;

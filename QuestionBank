@@ -210,3 +210,17 @@ CREATE TABLE IF NOT EXISTS `exam_paper_structure_question` (
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='试卷构造表与试题表关系' AUTO_INCREMENT=1 ;
+
+--
+-- 表的结构 `exam_paper_exam_station`
+--
+
+CREATE TABLE IF NOT EXISTS `exam_paper_exam_station` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `exam_id` int(11) DEFAULT NULL COMMENT '考试id',
+  `exam_paper_id` int(11) DEFAULT NULL COMMENT '试卷id',
+  `station_id` int(11) DEFAULT NULL COMMENT '考站id',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='考试-试卷-考站关联表' AUTO_INCREMENT=1 ;
