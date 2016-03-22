@@ -316,9 +316,7 @@ class RoomController extends CommonController
         $this->validate($request, [
 //            'name'      => 'required',
         ]);
-
         $id     = $request  -> get('id');
-
         $value   = $request  -> get('name');
         $code   = $request  -> get('code');
         $name = 'name';
