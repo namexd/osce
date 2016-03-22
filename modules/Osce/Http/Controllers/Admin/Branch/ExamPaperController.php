@@ -303,7 +303,7 @@ class ExamPaperController extends CommonController
         $pageIndex = $request->page?$request->page:1;//获取页码
 
         $questions = $ExamQuestion -> getExamQuestion($data,$pageIndex,$question_type)->toArray();
-        //dd($questions);
+
         foreach($questions['data'] as $k=>$v){
             $label = '';
             $questions['data'][$k]['question_name'] = $v['name'];
@@ -312,16 +312,16 @@ class ExamPaperController extends CommonController
             if($v['exam_question_label_relation']){
                 foreach(@$v['exam_question_label_relation'] as $kk=>$vv){
 
-                    if($kk <= 3){
-                        $label .= $vv['exam_question_label']['name'].',';
-                    }
+                    $label .= $vv['exam_question_label']['name'].',';
 
                 }
+
                 $questions['data'][$k]['label'] = trim($label,',');
             }
 
             //continue;
         }
+
         //重新定义数组，方便排序
         $newQuestions = array();
         $newQuestions = $questions;

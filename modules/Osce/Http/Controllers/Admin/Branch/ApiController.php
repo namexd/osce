@@ -177,6 +177,7 @@ class ApiController extends CommonController
                     $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
                 }
             }
+
             $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
             foreach($PaperPreviewArr['item'] as $k => $v){
                 if(!empty($v['child'])){
@@ -193,7 +194,8 @@ class ApiController extends CommonController
                 $ExamPaperInfo = ExamPaper::where('id','=',$paperid)->first();
                 if(count($ExamPaperInfo->ExamPaperStructure)>0){
                     foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
-                        $PaperPreviewArr['item'][$k]['name'] = $str[$k].'、'.$v['name'].'（共'.$v['num'].'题，每题'.$v['score'].'分）';
+                        $name = ExamQuestionType::where('id','=',$v['exam_question_type_id'])->pluck('name');
+                        $PaperPreviewArr['item'][$k]['name'] = $str[$k].'、'.$name.'（共'.$v['num'].'题，每题'.$v['score'].'分）';
 
                         $ExamQuestionId = [];
                         if(count($v->ExamPaperStructureQuestion)>0){

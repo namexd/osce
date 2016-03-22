@@ -83,7 +83,7 @@ class ExamPaperFormal extends CommonModel
                                 $ExamQuestionInfo = ExamQuestion::where('id','=',$val)->first();
                                 //拼凑试题内容
                                 $content = '';
-                                if(!empty($ExamQuestionInfo->examQuestionItem)&&count($ExamQuestionInfo->examQuestionItem)>0){
+                                if(is_object($ExamQuestionInfo->examQuestionItem)&&count($ExamQuestionInfo->examQuestionItem)>0){
                                     foreach($ExamQuestionInfo->examQuestionItem as $value){
                                         if($content){
                                             $content .= '|%|'.$value['name'].'.'.$value['content'];
