@@ -19,56 +19,11 @@
 @stop
 
 @section('only_js')
-<script>
-    $(function(){
-
-        $('#select_Category').change(function(){
-
-            var examId = $(this).val();
-            $.ajax({
-                type:'get',
-                url:'{{route("osce.admin.getExamStationList")}}',
-                data:{exam_id:examId},
-                success:function(res){
-                    if(res.code!=1){
-                        layer.alert(res.message);
-                    }else{
-                        var data = res.data;
-                        var result = [];
-                        //数据结构
-                        for(var i in data){
-                            result.push({id:data[i][0].id,name:data[i][0].name});
-                        }
-
-                        //数据去重
-                        var _r = {},current = [];
-                        for(var i in result){
-                            if(!_r[result[i].id]){
-                                _r[result[i].id] = true;
-                                current.push(result[i]);
-                            }
-                        }
-
-                        //写入dom
-                        var html = '<option value="">全部考站</option>';
-                        for(var i in current){
-                            html += '<option value="'+current[i].id+'">'+current[i].name+'</option>';
-                        }
-
-                        $('#station_Category').html(html);
-                    }
-                },
-                error:function(res){
-                    layer.alert('通讯失败！')
-                }
-            });
-        });
-    })
-</script>
+<script src="{{asset('osce/admin/examManage/exam_manage.js')}}" ></script>
 @stop
 
-
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'score_query','URL':'{{route("osce.admin.getExamStationList")}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
