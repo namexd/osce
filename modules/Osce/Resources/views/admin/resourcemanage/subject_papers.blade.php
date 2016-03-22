@@ -93,7 +93,7 @@
                     </div>
                     <div class="pull-right">
 
-
+                        {!! $data->render() !!}
 
                     </div>
                 </div>
