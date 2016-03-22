@@ -45,8 +45,8 @@
                                 <label class="col-sm-2 control-label">考卷</label>
                                 <div class="col-sm-10">
                                     <select required  class="form-control" name="paper_id">
-                                        @foreach($subject as $key=>$item)
-                                            <option value="{{$item->id}}">{{$item->title}}</option>
+                                        @foreach($papers as $paper)
+                                            <option value="{{$paper->id}}">{{$paper->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>

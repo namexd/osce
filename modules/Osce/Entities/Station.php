@@ -21,7 +21,7 @@ class Station extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['name', 'mins', 'type', 'subject_id', 'description', 'code'];
+    protected $fillable = ['name', 'mins', 'type', 'subject_id', 'paper_id', 'description', 'code'];
 
     /**
      * 考站与老师的关联
@@ -208,6 +208,7 @@ class Station extends CommonModel
             $this->table . '.mins as mins',
             $this->table . '.create_user_id as create_user_id',
             $this->table . '.subject_id as subject_id',
+            $this->table . '.paper_id as paper_id',
             $this->table . '.description as description',
             $this->table . '.code as code',
             'station_vcr.vcr_id as vcr_id',
