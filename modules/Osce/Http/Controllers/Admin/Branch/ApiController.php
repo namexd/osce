@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
@@ -304,12 +305,19 @@ class ApiController extends CommonController
                 if(is_array($ExamInfo)){
                     //如果有对应的考试信息，查询考试和考站信息
                     $datas = $questionBankRepositories->getExamData($ExamInfo);
-                    dd($datas);
-                }else{
-                    dd($ExamInfo);
+                    $datainfo = array(
+                        'name'=>$datas['name'],
+                        'mins'=>$datas['mins'],
+                        'stationId'=>$ExamInfo['StationId'],
+                        'examId'=>$ExamInfo['ExamId'],
+                        'userId'=>$userId,
+                    );
+
+                    $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
+                    return view('osce::admin.theoryCheck.theory_check_volidate', [
+                        'data'=>$datainfo,
+                    ]);
                 }
-                $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
-                return redirect()->route('osce.admin.index');
             }else{
                 return redirect()->back()->withErrors('你不是监考老师');
             }
@@ -319,4 +327,47 @@ class ApiController extends CommonController
             return redirect()->back()->withErrors('账号密码错误');
         }
     }
+
+    /**刷完腕表后，获取该考生对应的试卷id
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamPaperId(Request $request)
+    {
+        $this->validate($request, [
+            'examId' => 'sometimes|integer',//试卷id
+            'stationId' => 'sometimes|integer',//试卷id
+        ]);
+        $examId = $request->input('examId');//考试id
+        $stationId = $request->input('stationId');//考站id
+        //根据考试id和考站id查询对应的试卷id
+        $examPaperExamStationModel = new ExamPaperExamStation();
+        $data = $examPaperExamStationModel->where('exam_id','=',$examId)->where('station_id','=',$stationId)->first();
+        if(!empty($data)){
+            $examPaperId = $data['exam_paper_id'];
+            return response()->json($examPaperId);
+        }else{
+            return response()->json(false);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
