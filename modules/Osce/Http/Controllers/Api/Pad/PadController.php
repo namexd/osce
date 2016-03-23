@@ -380,4 +380,90 @@ class PadController extends  CommonController{
         );
     }
 
+    /**
+     * 获取所有 历史考试(已经考完)、考场、摄像头 (接口)
+     * @method GET
+     * @url    /osce/pad/done-exams
+     * @access public
+     *
+     * @return object
+     *
+     * @version 2.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}    2016-3-23
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDoneExams(Request $request)
+    {
+        $exam_id = $request->get('exam_id');
+        $room_id = $request->get('room_id');
+        //获取已经考完的所有考试列表
+        $examList    = Exam::where('status','=', 2)->select(['id','name'])->get();
+        $rooms = [];
+        $vcrs  = [];
+        //未选考试，列出所有考试对应的考场
+        if(empty($exam_id)){
+            if(count($examList) != 0){
+                foreach ($examList as $value) {
+                    $exam_id = $value->id;
+                    $exam    = Exam::where('id','=',$exam_id)->first();
+                    $result  = $this->getRoomDatas($exam);      //根据考试获取对应的所有考场
+                    $rooms   = array_merge($rooms, $result);
+                }
+            }
+        }else{
+            $exam    = Exam::where('id','=',$exam_id)->first();
+            $rooms   = $this->getRoomDatas($exam);      //根据考试获取对应的所有考场
+        }
+        //未选考场，列出所有考场对应的摄像头
+        if(empty($room_id)){
+            //根据考场获取摄像头
+            if(count($rooms) != 0){
+                foreach ($rooms as $index => $room) {
+                    $roomVcr = RoomVcr::where('room_id',$room->id)->get();
+                    foreach($roomVcr as $item){
+                        $vcrs[] = $item->getVcr;
+                    }
+                }
+            }
+        }else{
+            $roomVcr = RoomVcr::where('room_id',$room_id)->get();
+            foreach($roomVcr as $item){
+                $vcrs[] = $item->getVcr;
+            }
+        }
+
+        $data = [
+            'examList'  => $examList,
+            'rooms'     => $rooms,
+            'vcrs'      => $vcrs,
+        ];
+
+        return response()->json(
+            $this->success_data($data, 1, 'success')
+        );
+    }
+
+    public function getRoomDatas($exam){
+        //根据考试获取对应的所有考场
+        $rooms   = [];
+        if($exam->sequence_mode == 2){
+            $examStation = ExamStation::where('exam_id','=',$exam->id)->get();
+            if($examStation){
+                foreach ($examStation as $item) {
+                    $roomStation = RoomStation::where('station_id','=',$item->station_id)->first();
+                    $rooms[] = $roomStation->room;
+                }
+            }
+            $rooms = array_unique($rooms);
+        }else{
+            $examList = ExamRoom::where('exam_id','=',$exam->id)->get();
+            foreach($examList as $examRoom){
+                $rooms[]=$examRoom->room;
+            }
+        }
+
+        return $rooms;
+    }
+
 }
