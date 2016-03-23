@@ -121,7 +121,7 @@ class AnswerController extends CommonController
 
             }
         }
-      // dd(date('Y/m/d H:i:s',$systemTimeStart).','.date('Y/m/d H:i:s',$systemTimeEnd));
+      //dd(date('Y/m/d H:i:s',$systemTimeStart).','.date('Y/m/d H:i:s',$systemTimeEnd));
 //        dd($studentId);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
@@ -151,6 +151,7 @@ class AnswerController extends CommonController
             'actualLength' =>sprintf("%.2f",$actualLength), //考试用时
             'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
         );
+
  /*       //提交过来的数据格式
         $case = array(
             'examPaperFormalId'=>'1',//试卷id
@@ -161,56 +162,59 @@ class AnswerController extends CommonController
                 '3'=>array('exam_question_id'=>4,'examCategoryFormalId'=>4,'answer'=>'1'),
             )
         );*/
-
-        foreach($data['examQuestionFormalInfo'] as $k=>$v){
-            $newStudentAnswer='';
-            $studentAnswer = explode('@',$v['answer']);
-            foreach($studentAnswer as $val){
-                if($v['examCategoryFormalId']=='4'){//判断题
-                    $newStudentAnswer = $val;
-                }else{
-                    if($val=='0'){
-                        if($newStudentAnswer){
-                            $newStudentAnswer.='@A';
-                        }else{
-                            $newStudentAnswer ='A';
-                        }
-                    }elseif($val=='1'){
-                        if($newStudentAnswer){
-                            $newStudentAnswer.='@B';
-                        }else{
-                            $newStudentAnswer ='B';
-                        }
-                    }elseif($val=='2'){
-                        if($newStudentAnswer){
-                            $newStudentAnswer.='@C';
-                        }else{
-                            $newStudentAnswer ='C';
-                        }
-                    }elseif($val=='3'){
-                        if($newStudentAnswer){
-                            $newStudentAnswer.='@D';
-                        }else{
-                            $newStudentAnswer ='D';
-                        }
-                    }elseif($val=='4'){
-                        if($newStudentAnswer){
-                            $newStudentAnswer.='@E';
-                        }else{
-                            $newStudentAnswer ='E';
-                        }
-                    }elseif($val=='5'){
-                        if($newStudentAnswer){
-                            $newStudentAnswer.='@F';
-                        }else{
-                            $newStudentAnswer ='F';
+        if(!empty($data['examQuestionFormalInfo']) && count($data['examQuestionFormalInfo'])>0 ){
+            foreach($data['examQuestionFormalInfo'] as $k=>$v){
+                $newStudentAnswer='';
+                $studentAnswer = explode('@',$v['answer']);
+                foreach($studentAnswer as $val){
+                    if($v['examCategoryFormalId']=='4'){//判断题
+                        $newStudentAnswer = $val;
+                    }else{
+                        if($val=='0'){
+                            if($newStudentAnswer){
+                                $newStudentAnswer.='@A';
+                            }else{
+                                $newStudentAnswer ='A';
+                            }
+                        }elseif($val=='1'){
+                            if($newStudentAnswer){
+                                $newStudentAnswer.='@B';
+                            }else{
+                                $newStudentAnswer ='B';
+                            }
+                        }elseif($val=='2'){
+                            if($newStudentAnswer){
+                                $newStudentAnswer.='@C';
+                            }else{
+                                $newStudentAnswer ='C';
+                            }
+                        }elseif($val=='3'){
+                            if($newStudentAnswer){
+                                $newStudentAnswer.='@D';
+                            }else{
+                                $newStudentAnswer ='D';
+                            }
+                        }elseif($val=='4'){
+                            if($newStudentAnswer){
+                                $newStudentAnswer.='@E';
+                            }else{
+                                $newStudentAnswer ='E';
+                            }
+                        }elseif($val=='5'){
+                            if($newStudentAnswer){
+                                $newStudentAnswer.='@F';
+                            }else{
+                                $newStudentAnswer ='F';
+                            }
                         }
                     }
                 }
-            }
 
-            $data['examQuestionFormalInfo'][$k]['answer']=$newStudentAnswer;
+                $data['examQuestionFormalInfo'][$k]['answer']=$newStudentAnswer;
+            }
         }
+
+
         //保存考生答案
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);

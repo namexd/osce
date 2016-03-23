@@ -100,7 +100,7 @@ class Answer extends Model
                     throw new \Exception(' 保存考试用时失败！');
                 }
                 //保存考生答案
-                if(count($data['examQuestionFormalInfo'])>0){
+                if(count($data['examQuestionFormalInfo'])>0 && !empty($data['examQuestionFormalInfo'])){
                     $examQuestionFormalModel = new ExamQuestionFormal();
                     foreach($data['examQuestionFormalInfo'] as $v){
                         $examQuestionFormalData = array(

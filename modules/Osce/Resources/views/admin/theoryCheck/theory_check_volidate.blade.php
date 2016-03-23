@@ -17,14 +17,25 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'theory_validate','paperUrl':'{{ route('osce.admin.ApiController.getExamPaperId') }}','examUrl':'{{ route('osce.admin.AnswerController.formalPaperList') }}'}" />
-    <input type="hidden" class="allData" data="{{ $data['stationId'] }}" userId="{{ $data['userId'] }}" examId="{{ $data['examId'] }}">
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row table-head-style1 ">
-            <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">理论考试</h5>
+        @if(empty($data))
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content text-center">
+                            <div class="font20" style="padding: 40% 20px;">你没有相关需要监考的考站</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        @else
+            <input type="hidden" id="parameter" value="{'pagename':'theory_validate','paperUrl':'{{ route('osce.admin.ApiController.getExamPaperId') }}','examUrl':'{{ route('osce.admin.AnswerController.formalPaperList') }}'}" />
+            <input type="hidden" class="allData" data="{{ $data['stationId'] }}" userId="{{ $data['userId'] }}" examId="{{ $data['examId'] }}">
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="row table-head-style1 ">
+                    <div class="col-xs-6 col-md-2">
+                        <h5 class="title-label">理论考试</h5>
+                    </div>
+                </div>
         {{--学生信息展示--}}
         <div class="row showImf" style="display: none;">
             <div class="col-lg-12">
@@ -93,6 +104,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 @stop{{-- 内容主体区域 --}}
 
