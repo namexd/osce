@@ -628,6 +628,7 @@ class InvigilatorController extends CommonController
 
             //将数组导入到模型中的addInvigilator方法
             if ($teacher->addInvigilator($data)) {
+
                 throw new \Exception('系统出错，请重试！');
             } else {
                 echo json_encode($this->success_data());

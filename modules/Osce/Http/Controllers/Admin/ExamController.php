@@ -825,7 +825,6 @@ class ExamController extends CommonController
         }
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
-
         $inviteData = Invite::status($exam_id);
 
         //将邀请状态插入$stationData
@@ -845,8 +844,9 @@ class ExamController extends CommonController
                 }
             }
         }
-//        dd($examStationData);
+
         $status=Exam::where('id',$exam_id)->select('status')->first()->status;
+
         return view('osce::admin.examManage.exam_room_assignment', [
             'id'                => $exam_id,
             'status'            => $status,
@@ -919,12 +919,14 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
+
     public function getRoomListData()
     {
         //如果改考场下面没有关联考站，就不给展示在列表
         //获得所有的在room_station考场列表id
         $isExist = RoomStation::select(['room_id'])->groupBy('room_id')->get()->pluck('room_id');
         $data = Room::whereIn('id',$isExist)->select(['id', 'name'])->get();
+
         return response()->json(
             $this->success_data($data, 1, 'success')
         );
@@ -982,7 +984,6 @@ class ExamController extends CommonController
         $formData = $request -> get('teacher');
         $teacher = new Teacher();
         $data = $teacher->getTeacherList($formData);
-
         return response()->json(
             $this->success_data($data, 1, 'success')
         );
@@ -1435,7 +1436,6 @@ class ExamController extends CommonController
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
         $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
-
 //        $invite = new Invite();
         $inviteData = Invite::status($exam_id);
 
