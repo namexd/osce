@@ -258,8 +258,8 @@ class ApiController extends CommonController
      */
     public function ExamineeInfo(QuestionBankRepositories $questionBankRepositories){
         $this->name = \Route::currentRouteAction();
-        $userId = $questionBankRepositories->LoginAuth();
-        dd($questionBankRepositories->GetExamInfo(347));
+        //$userId = $questionBankRepositories->LoginAuth();
+        //dd($questionBankRepositories->GetExamInfo(347));
         return  view('osce::admin.theoryCheck.theory_check_volidate');
     }
 
