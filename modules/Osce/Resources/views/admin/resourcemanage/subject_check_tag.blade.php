@@ -153,6 +153,7 @@
                 <div class="col-sm-9">
                     <select name="label_type_id" id="" class="form-control edit_type">
                         @if(!empty(@$ExamQuestionLabelTypeList))
+
                             @foreach(@$ExamQuestionLabelTypeList as $val)
                                 <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
                             @endforeach

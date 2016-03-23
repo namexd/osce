@@ -91,6 +91,9 @@ class ExamPaperController extends CommonController
         $DB = \DB::connection('osce_mis');
         $DB->beginTransaction();
         $Paper = new ExamPaper();
+
+        $paperDetails = $Paper->where('id','=',$id)->first();
+
         //删除试卷
         $delete = $Paper->where('id','=',$id)->delete();
         if(!$delete){
@@ -98,25 +101,74 @@ class ExamPaperController extends CommonController
             return redirect()->back()->withInput()->withErrors('系统异常');
         }
 
-        //查找试卷构造表
-        $exam_paper_structure = ExamPaperStructure::where('exam_paper_id','=',$id)->first();
-        //dd($exam_paper_structure);
-        if($exam_paper_structure){
-            $paper_structure_id = $exam_paper_structure->id;
-            if(!$exam_paper_structure->delete()){
+        if($paperDetails->mode == 1 && $paperDetails->type == 1){//自动随机- 删除
+            //查找试卷构造表
+            $exam_paper_structure = ExamPaperStructure::where('exam_paper_id','=',$id)->first();
+            //dd($exam_paper_structure);
+            if($exam_paper_structure){
+                $paper_structure_id = $exam_paper_structure->id;
+                if(!$exam_paper_structure->delete()){
+                    $DB->rollback();
+                    return redirect()->back()->withInput()->withErrors('系统异常');
+                }
+            }
+            $paper_structure_id = @$paper_structure_id?@$paper_structure_id:0;
+            //删除试卷构造表和标签关联表数据
+            if(ExamPaperStructureLabel::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
+                $DB->commit();
+                return redirect()->back()->withInput()->withErrors('操作成功');
+            }else{
+                $DB->rollBack();
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+        }else if($paperDetails->mode == 1 && $paperDetails->type == 2){//自动统一 - 删除
+            //查找试卷构造表
+            $exam_paper_structure = ExamPaperStructure::where('exam_paper_id','=',$id)->first();
+            //dd($exam_paper_structure);
+            if($exam_paper_structure){
+                $paper_structure_id = $exam_paper_structure->id;
+                if(!$exam_paper_structure->delete()){
+                    $DB->rollback();
+                    return redirect()->back()->withInput()->withErrors('系统异常');
+                }
+            }
+            $paper_structure_id = @$paper_structure_id?@$paper_structure_id:0;
+            //删除试卷构造表和标签关联表数据
+            if(ExamPaperStructureLabel::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
+                $DB->rollback();
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+
+            if(ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
+                $DB->commit();
+                return redirect()->back()->withInput()->withErrors('操作成功');
+            }else{
+                $DB->rollback();
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+        }else{//手动统一
+
+            //查找试卷构造表
+            $exam_paper_structure = ExamPaperStructure::where('exam_paper_id','=',$id)->first();
+            //dd($exam_paper_structure);
+            if($exam_paper_structure){
+                $paper_structure_id = $exam_paper_structure->id;
+                if(!$exam_paper_structure->delete()){
+                    $DB->rollback();
+                    return redirect()->back()->withInput()->withErrors('系统异常');
+                }
+            }
+            $paper_structure_id = @$paper_structure_id?@$paper_structure_id:0;
+            //删除试卷构造表和标签关联表数据
+            if(ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
+                $DB->commit();
+                return redirect()->back()->withInput()->withErrors('操作成功');
+            }else{
                 $DB->rollback();
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }
         }
-        $paper_structure_id = @$paper_structure_id?@$paper_structure_id:0;
-        //删除试卷构造表和标签关联表数据
-        if(ExamPaperStructureLabel::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
-            $DB->commit();
-            return redirect()->back()->withInput()->withErrors('操作成功');
-        }else{
-            $DB->rollBack();
-            return redirect()->back()->withInput()->withErrors('系统异常');
-        }
+
     }
 
     /**
