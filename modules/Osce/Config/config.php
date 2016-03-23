@@ -71,6 +71,7 @@ return [
 	'studentRoleId'		=>	2,
 	'adminRoleId'		=>	3,
 	'superRoleId'		=>	5,
+	'patrolRoleId'		=>	6,		//巡考老师角色 TODO: Zhoufuxiang  2016-3-23
 
 	//场所类型的管理
 	'room_cate' => [

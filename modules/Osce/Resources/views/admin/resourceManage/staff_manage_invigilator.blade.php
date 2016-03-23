@@ -31,7 +31,7 @@
     <input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator',
         'deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}',
         'firstpage':'{{route('osce.admin.invigilator.getInvigilatorList')}}',
-        'excel':'{{route('osce.admin.invigilator.postImportTeachers')}}'}" />
+        'excel':'{{route('osce.admin.invigilator.postImportTeachers',['type'=>$type])}}'}" />
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
@@ -48,7 +48,8 @@
         </div>
         <div class="container-fluid ibox-content">
             <ul class="nav nav-tabs teacher-tabs">
-                <li role="presentation" class="active"><a href="{{route('osce.admin.invigilator.getInvigilatorList')}}">监巡考老师</a></li>
+                <li role="presentation" class="{{($type==1)?'active':''}}"><a href="{{route('osce.admin.invigilator.getInvigilatorList')}}">监考老师</a></li>
+                <li role="presentation" class="{{($type==3)?'active':''}}"><a href="{{route('osce.admin.invigilator.getInvigilatorList',['type'=>3])}}">巡考老师</a></li>
                 <li role="presentation"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP老师</a></li>
             </ul>
             <table class="table table-striped" id="table-striped">
