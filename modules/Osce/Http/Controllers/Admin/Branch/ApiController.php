@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
@@ -336,9 +337,35 @@ class ApiController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamPaperId(Request $request){
-
-       // $exam_paper_exam_station
-
+    public function getExamPaperId(Request $request)
+    {
+        $this->validate($request, [
+            'examId' => 'sometimes|integer',//试卷id
+            'stationId' => 'sometimes|integer',//试卷id
+        ]);
+        $examId = $request->input('examId');//考试id
+        $stationId = $request->input('stationId');//考站id
+        //根据考试id和考站id查询对应的试卷id
+        $examPaperExamStationModel = new ExamPaperExamStation();
+        $data = $examPaperExamStationModel->where('exam_id','=',$examId)->where('station_id','=',$stationId)->first();
+        if(!empty($data)){
+            $examPaperId = $data['exam_paper_id'];
+            return response()->json($examPaperId);
+        }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
