@@ -301,7 +301,12 @@
                 }else{
                     now = $('#paper2').find('tbody').attr('index');
                 }
-                now = parseInt(now) + 1;//计数
+                if($('#list-body tr').length){
+                    now = parseInt($('#list-body tr').length) + 1;
+                }else{
+                    now = parseInt(now) + 1;//计数
+                }
+
                 var tpye2= $('select[name="question-type"] option:selected').text();//题目类型名字
                 var tpyeid= $('select[name="question-type"] option:selected').val();//题目类型ID
                 var score=$('input[name="questionScore"]').val(); //每题分数
