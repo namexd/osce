@@ -306,7 +306,8 @@ class ApiController extends CommonController
                     $datas = $questionBankRepositories->getExamData($ExamInfo);
                     $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
                     return view('osce::admin.theoryCheck.theory_check_volidate', [
-                        'data'=>$datas
+                        'data'=>$datas,
+                        'stationId'=>$ExamInfo['StationId']
                     ]);
                 }
             }else{
