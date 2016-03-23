@@ -33,9 +33,6 @@ class InvigilatorController extends CommonController
      * @param Request $request get 请求<br><br>
      * <b>get请求字段：</b>
      * * string        type        是否为sp老师(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
      *
      * @return view {姓名：$item->name,是否为sp老师：$isSpValues[$item->type]}
      *
@@ -47,9 +44,7 @@ class InvigilatorController extends CommonController
      */
     public function getSpInvigilatorList(Request $request){
        $Invigilator    =   new Teacher();
-
         $list       =   $Invigilator    ->getSpInvigilatorInfo();
-
         $isSpValues =   $Invigilator    ->getIsSpValues();
         return view('osce::admin.resourceManage.staff_manage_invigilator_sp',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
@@ -62,9 +57,6 @@ class InvigilatorController extends CommonController
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
      *
      * @return view
      *
@@ -72,17 +64,13 @@ class InvigilatorController extends CommonController
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2015-12-29 17:01
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
-    public function getInvigilatorList(){
-        $Invigilator    =   new Teacher();
-
-        $list       =   $Invigilator    ->  getInvigilatorList();
-
-        $isSpValues =   $Invigilator    ->  getIsSpValues();
-
-
-        return view('osce::admin.resourceManage.staff_manage_invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
+    public function getInvigilatorList(Request $request){
+        $type = $request->get('type');
+        $Invigilator = new Teacher();
+        $list        = $Invigilator -> getInvigilatorList((empty($type) || $type==1)?1:3);
+        $isSpValues  = $Invigilator -> getIsSpValues();
+        return view('osce::admin.resourceManage.staff_manage_invigilator',['list'=>$list,'isSpValues'=>$isSpValues,'type'=>(empty($type) || $type==1)?1:3]);
     }
     /**
      *  新增监考老师 表单显示页面
@@ -748,10 +736,15 @@ class InvigilatorController extends CommonController
     public function postImportTeachers(Request $request, Teacher $teacher)
     {
         try {
+            $this->validate($request,[
+               'type'   => 'required|integer'
+            ]);
+            $type   =   $request->get('type');
             $user   =   Auth::user();
             if(empty($user)){
                 throw new \Exception('未找到当前操作人信息');
             }
+
             //获得上传的数据
             $data   = Common::getExclData($request, 'teacher');
             //去掉sheet

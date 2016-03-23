@@ -217,9 +217,8 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getInvigilatorList(){
-        return  $this   ->  whereIn('type',[1,3])
-            ->  paginate(config('osce.page_size'));
+    public function getInvigilatorList($type = 1){
+        return  $this->where('type','=',$type)->paginate(config('osce.page_size'));
     }
 
     /**
