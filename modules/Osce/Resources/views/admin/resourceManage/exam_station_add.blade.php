@@ -33,7 +33,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考站类型</label>
                                 <div class="col-sm-10">
-                                    <select id="type" required  class="form-control" name="type">
+                                    <select id="type"  class="form-control" name="type">
                                         @foreach($placeCate as $key=>$item)
                                             <option value="{{$key}}">{{$item}}</option>
                                         @endforeach
@@ -44,7 +44,7 @@
                             <div class="form-group paper-id">
                                 <label class="col-sm-2 control-label">考卷</label>
                                 <div class="col-sm-10">
-                                    <select required  class="form-control" name="paper_id">
+                                    <select  class="form-control" name="paper_id">
                                         @foreach($papers as $paper)
                                             <option value="{{$paper->id}}">{{$paper->name}}</option>
                                         @endforeach

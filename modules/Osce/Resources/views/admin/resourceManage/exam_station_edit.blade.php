@@ -28,7 +28,7 @@
                                 <label class="col-sm-2 control-label">考站名称</label>
 
                                 <div class="col-sm-10">
-                                    <input type="text" required class="form-control" id="name" name="name" value="{{$rollmsg['name']}}">
+                                    <input type="text"  class="form-control" id="name" name="name" value="{{$rollmsg['name']}}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -36,7 +36,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考站类型</label>
                                 <div class="col-sm-10">
-                                    <select id="type" required  class="form-control" name="type" >
+                                    <select id="type"   class="form-control" name="type" >
                                         @foreach($placeCate as $key=>$item)
                                             <option value="{{$key}}"
                                                 @if($rollmsg['type'] == $key)
@@ -51,7 +51,7 @@
                             <div class="form-group paper-id">
                                 <label class="col-sm-2 control-label">考卷</label>
                                 <div class="col-sm-10">
-                                    <select required  class="form-control" name="paper_id">
+                                    <select   class="form-control" name="paper_id">
                                         @foreach($papers as $paper)
                                             <option value="{{$paper->id}}" {{($paper->id == $rollmsg['paper_id'])?'selected=selected':''}}>
                                                 {{$paper->name}}
@@ -65,7 +65,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">时间限制(分钟)</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  required  ng-model="num" id="code" class="form-control" name="mins" value="{{$rollmsg['mins']}}" placeholder="请输入分钟数">
+                                    <input type="text"    ng-model="num" id="code" class="form-control" name="mins" value="{{$rollmsg['mins']}}" placeholder="请输入分钟数">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -90,7 +90,7 @@
                             <div class="form-group noTheory" {!! $rollmsg['type']==3? 'style="display:none;"':'' !!}>
                                 <label class="col-sm-2 control-label">病例</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control" name="case_id">
+                                    <select id=""   class="form-control" name="case_id">
                                         <option value="">请选择</option>
                                         @foreach($case as $key=>$item)
                                             <option value="{{$item['id']}}"
@@ -107,7 +107,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" required>所属考场</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control" name="room_id">
+                                    <select id=""   class="form-control" name="room_id">
                                         <option value="">请选择</option>
                                         @foreach($room as $key=>$item)
                                             <option value="{{$item['id']}}"
@@ -124,7 +124,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">关联摄像机</label>
                                 <div class="col-sm-10">
-                                    <select id="" required  class="form-control" name="vcr_id">
+                                    <select id=""   class="form-control" name="vcr_id">
                                         <option value="">请选择</option>
                                         @foreach($vcr as $key=>$item)
                                             <option value="{{$item['id']}}"
