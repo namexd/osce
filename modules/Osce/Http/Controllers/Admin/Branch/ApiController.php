@@ -351,6 +351,8 @@ class ApiController extends CommonController
         if(!empty($data)){
             $examPaperId = $data['exam_paper_id'];
             return response()->json($examPaperId);
+        }else{
+            return response()->json(false);
         }
     }
 
