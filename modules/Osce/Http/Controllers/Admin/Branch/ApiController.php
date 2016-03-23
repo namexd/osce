@@ -171,7 +171,7 @@ class ApiController extends CommonController
         $ExamQuestionType = new ExamQuestionType;
         $paperid = $request->paperid;
         //试卷类型(1.随机试卷，2.统一试卷)
-        if($type == 1 || $mode == 1 && $type == 2 && empty($paperid)){
+        if($type == 1 || $mode == 1 && $type == 2){
             if(!empty($request->question)){
                 foreach($request->question as $k => $v){
                     $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
@@ -190,7 +190,7 @@ class ApiController extends CommonController
             }
         //试卷类型(统一试卷)
         }elseif($type == 2){
-            if($mode == 1 && $paperid>0){
+            /*if($mode == 1 && $paperid>0){
                 $ExamPaperInfo = ExamPaper::where('id','=',$paperid)->first();
                 if(count($ExamPaperInfo->ExamPaperStructure)>0){
                     foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
@@ -207,7 +207,7 @@ class ApiController extends CommonController
                         $PaperPreviewArr['total_score'] += intval($v['num']*$v['score']);
                     }
                 }
-            }elseif($mode == 2){
+            }elseif($mode == 2){*/
                 $questionData = $request->get('question-type');
                 if(count($questionData)>0){
                     foreach($questionData as $k => $v){
@@ -220,7 +220,7 @@ class ApiController extends CommonController
                         $PaperPreviewArr['total_score'] += intval(count($ExamQuestionId)*$questionInfo[1]);
                     }
                 }
-            }
+            //}
         }
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
@@ -258,12 +258,25 @@ class ApiController extends CommonController
      */
     public function ExamineeInfo(QuestionBankRepositories $questionBankRepositories){
         $this->name = \Route::currentRouteAction();
-        $userId = $questionBankRepositories->LoginAuth();
-        dd($questionBankRepositories->GetExamInfo(347));
+        //$userId = $questionBankRepositories->LoginAuth();
+        //dd($questionBankRepositories->GetExamInfo(347));
         return  view('osce::admin.theoryCheck.theory_check_volidate');
     }
 
-    /**
+    /**监考老师登录界面
+     * @method
+     * @url /osce/
+     * @access public
+     * @return \Illuminate\View\View
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function LoginAuthView(){
+        return  view('osce::admin.theoryTest.theory_login');
+    }
+
+    /**监考老师登录数据交互
      * @method
      * @url /osce/
      * @access public
@@ -281,15 +294,20 @@ class ApiController extends CommonController
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
 
+
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
             //检验登录的老师是否是监考老师
             if($userId = $questionBankRepositories->LoginAuth()){
                 //根据监考老师的id，获取对应的考站id
-                $ExamInfo = $questionBankRepositories->GetExamInfo($userId);
-
-
-
+                $ExamInfo = $questionBankRepositories->GetExamInfo(343);
+                if(is_array($ExamInfo)){
+                    //如果有对应的考试信息，查询考试和考站信息
+                    $datas = $questionBankRepositories->getExamData($ExamInfo);
+                    dd($datas);
+                }else{
+                    dd($ExamInfo);
+                }
                 $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
                 return redirect()->route('osce.admin.index');
             }else{
