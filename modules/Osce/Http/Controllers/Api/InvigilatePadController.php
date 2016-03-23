@@ -165,7 +165,7 @@ class InvigilatePadController extends CommonController
 
     }
 
-    
+
     /**
      * 根据考站ID和考试ID获取科目信息(考核点、考核项、评分参考)
      * @method GET
