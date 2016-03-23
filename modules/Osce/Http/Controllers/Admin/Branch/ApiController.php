@@ -326,4 +326,19 @@ class ApiController extends CommonController
             return redirect()->back()->withErrors('账号密码错误');
         }
     }
+
+    /**刷完腕表后，获取该考生对应的试卷id
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamPaperId(Request $request){
+
+       // $exam_paper_exam_station
+
+    }
 }
