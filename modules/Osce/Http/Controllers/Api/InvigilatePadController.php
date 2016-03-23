@@ -159,13 +159,13 @@ class InvigilatePadController extends CommonController
             );
         } else {
             return response()->json(
-                $this->fail(new \Exception('学生信息查询失败', 2))
+                $this->fail(new \Exception('学生信息查询失败', -2))
             );
         }
 
-
     }
 
+    
     /**
      * 根据考站ID和考试ID获取科目信息(考核点、考核项、评分参考)
      * @method GET
