@@ -34,7 +34,10 @@ class AnswerController extends CommonController
      */
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
-        $ExamPaperId = $request->get('id',129);
+        $ExamPaperId = $request->input('id');//试卷id
+        $stationId = $request->input('stationId');//考站id
+        $userId = $request->input('userId');//老师id
+        $studentId = $request->input('studentId');//学生id
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
 
@@ -44,12 +47,15 @@ class AnswerController extends CommonController
 
         $systemTimeStart = 0;
 
+
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
             $systemTimeStart =\Session::get('systemTimeStart');
         }else{
             \Session::put('systemTimeStart',time());
         }
+
+
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
@@ -115,12 +121,16 @@ class AnswerController extends CommonController
 
             }
         }
-
+      // dd(date('Y/m/d H:i:s',$systemTimeStart).','.date('Y/m/d H:i:s',$systemTimeEnd));
+//        dd($studentId);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
-            'examPaperFormalData'          =>$examPaperFormalData,//正式试卷信息
-            'systemTimeStart'               =>date('Y/m/d H:i:s',$systemTimeStart),//开始时间
-            'systemTimeEnd'                 =>date('Y/m/d H:i:s',$systemTimeEnd),//结束时间
+            'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
+            'systemTimeStart'              =>date('Y/m/d H:i:s',$systemTimeStart),//开始时间
+            'systemTimeEnd'                =>date('Y/m/d H:i:s',$systemTimeEnd),//结束时间
+            'stationId'                    => $stationId,//考站id
+            'userId'                       => $userId,//老师id
+            'studentId'                       =>$studentId,//学生id
         ]);
     }
     /**保存考生答案

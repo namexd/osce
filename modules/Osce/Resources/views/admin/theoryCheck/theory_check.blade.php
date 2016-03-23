@@ -31,9 +31,9 @@
     <!--[if IE]>
     <script src="{{asset('osce/admin/js/html5shiv.min.js')}}"></script>
     <![endif]-->
-    <script type="text/javascript" src="{{asset('osce/admin/js/countdown/js/jquery.classyled.js')}}"></script>
-    <script type="text/javascript" src="{{asset('osce/admin/js/countdown/js/raphael.js')}}"></script>
-    <script src="{{asset('osce/admin/plugins/js/plugins/staps/jquery.stepschange.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/jquery.classyled.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/raphael.js') }}"></script>
+    <script src="{{ asset('osce/admin/plugins/js/plugins/staps/jquery.stepschange.js') }}"></script>
     <script>
         $(document).ready(function() {
             $(".wizard").steps();
@@ -42,10 +42,11 @@
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
                 var answer="";//答案
                 if($(this).children("input").checked=="true"){
-                    alert($(this).children("input").checked);
                     $(this).children(".check_icon").removeClass("check");
+                    $(this).children("input").attr("checked",false);
                 }else{
                     $(this).children(".check_icon").addClass("check");
+                    $(this).children("input").attr("checked",true);
                 }
                 $(this).parent().parent().find(".check").each(function(index, element){//查找被选中的项
                     if(index==0){
@@ -53,7 +54,7 @@
                     }else{
                         answer=answer+"@"+$(element).next("input").val();
                     }
-                })
+                });
                 Set_answer(examCategoryFormalId,exam_question_id,answer);//保存成绩
             });
 
@@ -82,7 +83,7 @@
                     for(i=0;i<Storage_answer_list.length;i++){
                         if(Storage_answer_list[i].exam_question_id == exam_question_id){
                             Storage_answer_list.splice(i,1);
-                        };
+                        }
                     }
                 }
                 Storage_answer_list.push(Storage_answer);
@@ -92,9 +93,23 @@
                 //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                 var examPaperFormalId=$('#examPaperFormalId').val();
                 var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
+                var stationId = $(".allData").attr("stationId");
+                var userId = $(".allData").attr("userId");
+                var studentId = $(".allData").attr("studentId");
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){
                     if(obj.status=='2'){
-                        location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                        $.ajax({
+                            url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
+                            cache:false,
+                            dataType:"json",
+                            type:"get",
+                            success:function(res){
+                                if(res.code == 1){
+                                    location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                                }
+                            }
+                        });
+
                     }
                     if(obj.status=='3'){
                         console.log('保存失败');
@@ -106,44 +121,45 @@
         $(function(){
             countDown("{{$systemTimeEnd}}","#colockbox1");
         });
-        function countDown(time,id){
-            var day_elem = $(id).find('.day');
-            var hour_elem = $(id).find('.hour');
-            var minute_elem = $(id).find('.minute');
-            var second_elem = $(id).find('.second');
-            var end_time = new Date(time).getTime(),//月份是实际月份-1
-                    sys_second = (end_time-new Date().getTime())/1000;
-            var timer = setInterval(function(){
-                if (sys_second > 1) {
-                    sys_second -= 1;
-                    var day = Math.floor((sys_second / 3600) / 24);
-                    var hour = Math.floor((sys_second / 3600) % 24);
-                    var minute = Math.floor((sys_second / 60) % 60);
-                    var second = Math.floor(sys_second % 60);
-                    day_elem && $(day_elem).text(day);//计算天
-                    $(hour_elem).text(hour<10?"0"+hour:hour);//计算小时
-                    $(minute_elem).text(minute<10?"0"+minute:minute);//计算分钟
-                    $(second_elem).text(second<10?"0"+second:second);//计算秒杀
-                } else {
-                    //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
-                    var examPaperFormalId=$('#examPaperFormalId').val();
-                    var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
-                    $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){
-                        if(obj.status=='2'){
-                            location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
-                        }
-                        if(obj.status=='3'){
-                            console.log('保存失败');
-                        }
-                    })
-                }
-            }, 1000);
-        }
+        {{--function countDown(time,id){--}}
+            {{--var day_elem = $(id).find('.day');--}}
+            {{--var hour_elem = $(id).find('.hour');--}}
+            {{--var minute_elem = $(id).find('.minute');--}}
+            {{--var second_elem = $(id).find('.second');--}}
+            {{--var end_time = new Date(time).getTime(),//月份是实际月份-1--}}
+                    {{--sys_second = (end_time-new Date().getTime())/1000;--}}
+            {{--var timer = setInterval(function(){--}}
+                {{--if (sys_second > 1) {--}}
+                    {{--sys_second -= 1;--}}
+                    {{--var day = Math.floor((sys_second / 3600) / 24);--}}
+                    {{--var hour = Math.floor((sys_second / 3600) % 24);--}}
+                    {{--var minute = Math.floor((sys_second / 60) % 60);--}}
+                    {{--var second = Math.floor(sys_second % 60);--}}
+                    {{--day_elem && $(day_elem).text(day);//计算天--}}
+                    {{--$(hour_elem).text(hour<10?"0"+hour:hour);//计算小时--}}
+                    {{--$(minute_elem).text(minute<10?"0"+minute:minute);//计算分钟--}}
+                    {{--$(second_elem).text(second<10?"0"+second:second);//计算秒杀--}}
+                {{--} else {--}}
+                    {{--//var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";--}}
+                    {{--var examPaperFormalId=$('#examPaperFormalId').val();--}}
+                    {{--var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));--}}
+                    {{--$.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){--}}
+                        {{--if(obj.status=='2'){--}}
+                            {{--location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;--}}
+                        {{--}--}}
+                        {{--if(obj.status=='3'){--}}
+                            {{--console.log('保存失败');--}}
+                        {{--}--}}
+                    {{--})--}}
+                {{--}--}}
+            {{--}, 1000);--}}
+        {{--}--}}
     </script>
 @stop
 
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'theory_check'}" />
+    <input type="hidden" class="allData" stationId="{{ $stationId }}" userId="{{ $userId }}" studentId="{{ $studentId }}">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
