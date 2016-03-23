@@ -301,14 +301,13 @@ class ApiController extends CommonController
             if($userId = $questionBankRepositories->LoginAuth()){
                 //根据监考老师的id，获取对应的考站id
                 $ExamInfo = $questionBankRepositories->GetExamInfo(343);
-                dd($ExamInfo);
                 if(is_array($ExamInfo)){
-                    dd(1);
+                    //如果有对应的考试信息，查询考试和考站信息
+                    $datas = $questionBankRepositories->getExamData($ExamInfo);
+                    dd($datas);
                 }else{
-                    dd(2);
+                    dd($ExamInfo);
                 }
-
-
                 $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
                 return redirect()->route('osce.admin.index');
             }else{
