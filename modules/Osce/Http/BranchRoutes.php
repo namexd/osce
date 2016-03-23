@@ -131,6 +131,12 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //生成试卷的方法
         Route::get('api/generate-exam-paper',['uses'=>'ApiController@GenerateExamPaper','as'=>'osce.admin.ApiController.GenerateExamPaper']);
 
+        //监考老师登录界面
+        Route::get('api/LoginAuthView',['uses'=>'ApiController@LoginAuthView','as'=>'osce.admin.ApiController.LoginAuthView']);
+
+        //监考老师登录数据交互
+        Route::post('api/LoginAuth-info',['uses'=>'ApiController@LoginAuth','as'=>'osce.admin.ApiController.LoginAuthInfo']);
+
         //理论考试登录页面地址
         Route::get('api/examinee-info',['uses'=>'ApiController@ExamineeInfo','as'=>'osce.admin.ApiController.ExamineeInfo']);
 

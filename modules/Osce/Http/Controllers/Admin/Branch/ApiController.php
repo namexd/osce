@@ -263,7 +263,20 @@ class ApiController extends CommonController
         return  view('osce::admin.theoryCheck.theory_check_volidate');
     }
 
-    /**
+    /**监考老师登录界面
+     * @method
+     * @url /osce/
+     * @access public
+     * @return \Illuminate\View\View
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function LoginAuthView(){
+        return  view('osce::admin.theoryTest.theory_login');
+    }
+
+    /**监考老师登录数据交互
      * @method
      * @url /osce/
      * @access public
@@ -281,13 +294,19 @@ class ApiController extends CommonController
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
 
+
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
             //检验登录的老师是否是监考老师
             if($userId = $questionBankRepositories->LoginAuth()){
                 //根据监考老师的id，获取对应的考站id
-                $ExamInfo = $questionBankRepositories->GetExamInfo($userId);
-
+                $ExamInfo = $questionBankRepositories->GetExamInfo(343);
+                dd($ExamInfo);
+                if(is_array($ExamInfo)){
+                    dd(1);
+                }else{
+                    dd(2);
+                }
 
 
                 $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
