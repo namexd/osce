@@ -177,25 +177,37 @@ class QuestionBankRepositories  extends BaseRepository
     {
         $structureArr = $this->HandlePaperPreviewArr($structureArr);
         $ExamQuestionLabelRelation = new ExamQuestionLabelRelation;
+        $ExamQuestion = new ExamQuestion;
         $arr = [];
         if (!empty($structureArr)) {
             foreach ($structureArr as $key => $val) {
                 //\DB::connection('osce_mis')->enableQueryLog();
-                $builder = $ExamQuestionLabelRelation->leftJoin('exam_question', function ($join) {
+                //建立一个查询包含关系的对象
+                $orBuilder = $ExamQuestionLabelRelation->leftJoin('exam_question', function ($join) {
                     $join->on('exam_question.id', '=', 'exam_question_label_relation.exam_question_id');
                 })
                     ->groupBy('exam_question.id')
                     ->select(
                         'exam_question.id as id'
                     );
-
+                //建立一个查询等于关系的对象
+                $andBuilder = $ExamQuestion->leftJoin('exam_question_label_relation',function($join){
+                    $join->on('exam_question.id', '=', 'exam_question_label_relation.exam_question_id');
+                })
+                    ->groupBy('exam_question.id')
+                    ->select(
+                        'exam_question.id as id'
+                    );
+                //存放包含关系的标签 id分组
+                $orIdArr = [];
+                //存放等于关系的标签 id分组
+                $andIdArr = [];
                 if (!empty($val['child'])) {
                     foreach ($val['child'] as $k => $v) {
                         $labelIdArr = collect($v)->pluck('exam_question_label_id');
-
                         //（1.包含，2.等于）
                         if ($v['0']['relation'] == 1) {
-                            $builder->orWhere(function ($query) use ($labelIdArr,$val) {
+                            $orBuilder->orWhere(function ($query) use ($labelIdArr,$val) {
                                 foreach ($labelIdArr as $item) {
                                     $query->orWhere(function ($query) use ($item,$val) {
                                         $query
@@ -204,22 +216,63 @@ class QuestionBankRepositories  extends BaseRepository
                                     });
                                 }
                             });
+                            $orIdArr[] = $labelIdArr;
 
                         } elseif ($v['0']['relation'] == 2) {
-                            $builder->orWhere(function ($query) use ($labelIdArr,$val) {
-                                foreach ($labelIdArr as $item) {
-                                    $query
-                                        ->where('exam_question_label_id', '=', $item)
-                                        ->where('exam_question.exam_question_type_id', '=', $val['question_type']);
-                                }
+                            $andBuilder->orWhere(function ($query) use ($labelIdArr,$val) {
+                                $query->whereIn('exam_question_label_id', $labelIdArr)
+                                    ->where('exam_question.exam_question_type_id', '=', $val['question_type']);
                             });
+                            $andIdArr[] = $labelIdArr;
                         }
                     }
-                    $questionList = $builder->get();
-                    $questionIdArr = [];
-                    if(count($questionList)>0){
-                        $questionIdArr = $this->RandQuestionId($questionList->pluck('id'),$val['question_num']);
+                    $orQuestionList = [];
+                    $andQuestionList = [];
+
+                    $orQuestionId = [];
+                    //如果有相关包含关系的标签id 表示需要查询
+                    if(count($orIdArr)>0){
+                        $orQuestionList = $orBuilder->get();
+                        if(count($orQuestionList)>0){
+                            $orQuestionId = $orQuestionList->pluck('id')->toArray();
+                        }
                     }
+
+                    //如果有相关等于关系的标签id 表示需要查询
+                    if(count($andIdArr)>0){
+                        $andQuestionList = $andBuilder->get();
+                    }
+
+                    $andQuestionId = [];
+                    if(count($andQuestionList)>0){
+                        $QuestionId = $andQuestionList->pluck('id');
+                        $ExamQuestionList = $ExamQuestion->whereIn('id',$QuestionId)->with('ExamQuestionLabelRelation')->get();
+                        foreach($ExamQuestionList as $k => $v){
+                            $flag = false;
+                            if(count($v->ExamQuestionLabelRelation) > 0){
+                                $labelId = $v->ExamQuestionLabelRelation->pluck('exam_question_label_id');
+                                foreach($andIdArr as $key => $vel){
+                                    if($this->IsContain($vel,$labelId->toArray())){
+                                        $flag = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if($flag){
+                                $andQuestionId[] = $v['id'];
+                            }
+                        }
+                    }
+
+                    //$q = \DB::connection('osce_mis')->getQueryLog();
+                    //合并包含 与 等于关系 查询出来的 试题id
+                    $QuestionId = array_merge($orQuestionId,$andQuestionId);
+
+                    $questionIdArr = [];
+                    if(count($QuestionId)>0){
+                        $questionIdArr = $this->RandQuestionId($QuestionId,$val['question_num']);
+                    }
+                    
                     $arr[$key]['type'] = $val['question_type'];
                     $arr[$key]['num'] = $val['question_num'];
                     $arr[$key]['score'] = $val['question_score'];
@@ -429,6 +482,26 @@ class QuestionBankRepositories  extends BaseRepository
 
     }
 
+    /**
+     * 判断 $array 是否包含 $arr
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $arr
+     * @param $array
+     * @return bool
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月23日10:23:04
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function IsContain($arr,$array){
+        foreach($arr as $v){
+            if(!in_array($v,$array)){
+                return  false;
+            }
+        }
+        return  true;
+    }
 
 
 }
