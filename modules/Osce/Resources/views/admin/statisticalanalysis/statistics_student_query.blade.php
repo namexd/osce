@@ -8,7 +8,13 @@
 @stop
 
 @section('only_js')
+<script type="text/javascript">
+    $("input[type=radio]").click(function () {
+          $("input[type=radio]").removeAttr('checked');
+          $(this).prop("checked",true)
+    });
 
+</script>
 @stop
 
 @section('content')
@@ -29,7 +35,7 @@
 
 
                 <div class="form-group marb_25">
-                    <h4>一、单选题 　<p>共四题,每题5分</p></h4>
+                            <h4>一、单选题 　<p>共四题,每题5分</p></h4>
                             <div class="form-group">
                                     <p>下列感染中，不具有传染性的是？</p>
                                     <span class="marr_15"><input type="radio" name="A">A.潜伏期感染</span>
