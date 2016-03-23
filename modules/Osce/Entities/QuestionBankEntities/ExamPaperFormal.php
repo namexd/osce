@@ -8,6 +8,8 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Osce\Entities\CommonModel;
+use phpDocumentor\Reflection\DocBlock\Type\Collection;
+
 class ExamPaperFormal extends CommonModel
 {
     protected $connection = 'osce_mis';
@@ -81,9 +83,11 @@ class ExamPaperFormal extends CommonModel
                         if(count($v['child'])>0){
                             foreach($v['child'] as $val){
                                 $ExamQuestionInfo = ExamQuestion::where('id','=',$val)->first();
+                                //dd($ExamQuestionInfo->examQuestionItem);
+                                //dd(count($ExamQuestionInfo->examQuestionItem));
                                 //拼凑试题内容
                                 $content = '';
-                                if(is_object($ExamQuestionInfo->examQuestionItem)&&count($ExamQuestionInfo->examQuestionItem)>0){
+                                if(!empty($ExamQuestionInfo->examQuestionItem)){
                                     foreach($ExamQuestionInfo->examQuestionItem as $value){
                                         if($content){
                                             $content .= '|%|'.$value['name'].'.'.$value['content'];
