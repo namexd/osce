@@ -24,7 +24,7 @@ function subject_statistics(){
                 legend: {
                     data: ["平均成绩"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     data: standardStr
@@ -112,7 +112,7 @@ function subject_level(){
                 legend: {
                     data: ["合格率"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     boundaryGap: !1,
@@ -219,7 +219,7 @@ function examation_statistics(){
                 legend: {
                     data: ["平均成绩"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     data: stationNameStr
@@ -321,7 +321,7 @@ function statistics_check(){
                 legend: {
                     data: ["合格率"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     data: standardContentStr

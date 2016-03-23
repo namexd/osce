@@ -92,7 +92,6 @@
                 //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                 var examPaperFormalId=$('#examPaperFormalId').val();
                 var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
-                console.log(examQuestionFormalInfo);return false;
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){
                     if(obj.status=='2'){
                         location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
@@ -130,7 +129,6 @@
                     var examPaperFormalId=$('#examPaperFormalId').val();
                     var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",{examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId},function(obj){
-                        console.log(obj);
                         if(obj.status=='2'){
                             location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
                         }

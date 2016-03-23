@@ -205,8 +205,8 @@
                 <div class="input-group row" style="width: 100%;margin:20px 0;">
                     @if(@$labelList)
                         @foreach($labelList as $k=>$label)
-                            <div class="form-group col-sm-4">
-                                <label class="col-sm-4 control-label">{{@$label['name']}}：</label>
+                            <div class="form-group col-sm-3">
+                                <label class="col-sm-4 control-label" style="white-space: nowrap;">{{@$label['name']}}：</label>
                                 <div class="col-sm-8">
                                     <select id="status{{$k}}"   class="form-control m-b" name="status2">
                                         <option value="0">全部</option>
@@ -219,7 +219,7 @@
                         @endforeach
                     @endif
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <button type="button" class="btn btn-sm btn-primary marl_10" id="search">查询</button>
                     </div>
                 </div>
