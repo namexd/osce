@@ -304,12 +304,11 @@ class ApiController extends CommonController
                 if(is_array($ExamInfo)){
                     //如果有对应的考试信息，查询考试和考站信息
                     $datas = $questionBankRepositories->getExamData($ExamInfo);
-                    dd($datas);
-                }else{
-                    dd($ExamInfo);
+                    $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
+                    return view('osce::admin.theoryCheck.theory_check_volidate', [
+                        'data'=>$datas
+                    ]);
                 }
-                $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
-                return redirect()->route('osce.admin.index');
             }else{
                 return redirect()->back()->withErrors('你不是监考老师');
             }

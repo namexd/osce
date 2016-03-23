@@ -80,7 +80,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins" style="margin-bottom: 0;">
                     <div class="ibox-content text-center p-md">
-                        <h2>2016年第一期OSCE考试理论考试</h2>
+                        <h2>{{$data['name']}}</h2>
                     </div>
                 </div>
             </div>
