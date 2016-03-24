@@ -435,7 +435,7 @@ class QuestionBankRepositories  extends BaseRepository
                 ->toArray();
         }
         //监考老师 目前的角色id为1
-        if(in_array(1,$roles)){
+        if(in_array(config('osce.teacherRoleId'),$roles)){
             return  $user->id;
         }else{
             return  false;
