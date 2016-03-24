@@ -19,8 +19,8 @@ $(function(){
         case "clinical_case_manage_add":clinical_case_manage_add();break;
         case "clinical_case_manage_edit":clinical_case_manage_edit();break;
         //科目
-        case "subject_module":subject_module();break;    //考点操作 新增&编辑
-        case "subject_manage":subject_manage();break;
+        case "course_module":course_module();break;    //考点操作 新增&编辑
+        case "course_manage":course_manage();break;
         //人员管理
         case "staff_manage_invigilator":staff_manage_invigilator();break;
         case "staff_manage_invigilator_add":staff_manage_invigilator_add();break;
@@ -1474,7 +1474,7 @@ function deleteItem(url){
  * @version 2.0.1
  * @date    2016-03-17
  */
-function subject_module(){
+function course_module(){
     $('#submit-btn').click(function(){
         var flag = null;
         $('tbody').find('.col-sm-10').each(function(key,elem){
@@ -2532,7 +2532,7 @@ function staff_manage_invigilator_edit() {
  * @return  {[type]}   [description]
  */
 
-function subject_manage(){
+function course_manage(){
 
     $(".fa-trash-o").click(function(){
         var thisElement=$(this);
@@ -2962,7 +2962,11 @@ function deleteArea(type,url,id,areaType,firstpage){
             },
             success:function(data){
                 if(data.code == 1){
-                    location.href= $('.nav-tabs').find('.active').find('a').attr('href');
+                    if(data.data.type == 0){
+                        location.href = firstpage;
+                    }else {
+                        location.href= $('.nav-tabs').find('.active').find('a').attr('href');
+                    }
                 }else {
                     layer.msg(data.message,{skin:'msg-error',icon:1});
                 }
