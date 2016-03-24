@@ -7,8 +7,9 @@
  */
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
+
 use App\Entities\User;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
@@ -19,6 +20,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Illuminate\Http\Request;
+
 class ApiController extends CommonController
 {
     private $name;
@@ -292,6 +294,7 @@ class ApiController extends CommonController
             'username'  =>  'required',
             'password'  =>  'required',
         ]);
+
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
 
@@ -299,6 +302,7 @@ class ApiController extends CommonController
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
 
+            //dd(Auth::user());
             //检验登录的老师是否是监考老师
             if($userId = $questionBankRepositories->LoginAuth()){
                 $datainfo='';
