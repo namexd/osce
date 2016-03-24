@@ -168,6 +168,8 @@ class ExamPaperController extends CommonController
                 $DB->rollBack();
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }
+
+            
         }
 
     }
