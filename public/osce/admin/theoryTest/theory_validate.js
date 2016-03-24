@@ -7,6 +7,7 @@ $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
         case "theory_validate":theory_validate();break;//理论考试进入验证页面
+        case "theory_complete":theory_complete();break;//理论考试完成页面
     }
 });
 
@@ -59,18 +60,28 @@ function theory_validate(){
                         cache:false,
                         type:"get",
                         success:function(res){
-                            console.log(stationId);
                             if(res){
                                 location.href=examUrl+"?id="+res+"&stationId="+stationId+"&userId="+userId+"&studentId="+studentId;
+                            }else{
+                                //layer.msg('没有对应的试卷信息！',{skin:'msg-error',type:1});
+                                layer.alert('没有对应的试卷信息！');
                             }
                         }
                     })
+                }else{
+                    layer.confirm('开始考试失败！');
                 }
             }
         })
     });
 }
-
+//理论考试完成页面
+function theory_complete(){
+    $("#sure").click(function(){
+        var url = pars.goUrl;
+        location.href=url;
+    })
+}
 
 
 
