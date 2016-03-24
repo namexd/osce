@@ -3109,7 +3109,7 @@ function smart_assignment(){
 
         h = h < 10 ? ('0' + h) : h; 
         minute = minute < 10 ? ('0' + minute) : minute;  
-        return y + '-' + m + '-' + d+' '+h+':'+minute;  
+        return m + '-' + d+' '+h+':'+minute;  
     };
 
 //生成时间轴

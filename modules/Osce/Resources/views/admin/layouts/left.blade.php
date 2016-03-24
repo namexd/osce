@@ -65,7 +65,8 @@
                                 </li>
                                 <li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}">科目管理</a>
                                 </li>
-
+                                <li><a  class="J_menuItem" href="{{route('osce.admin.ExamLabelController.getExamLabel')}}">试卷管理</a>
+                                </li>
                             </ul>
                         </li>
                         <li>

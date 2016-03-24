@@ -333,6 +333,8 @@ class DrawlotsController extends CommonController
             //将当前的服务器时间返回
             $station->service_time = time() * 1000;
 
+            $station->station_type = $station->type;
+
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
