@@ -37,6 +37,7 @@ class Flows extends CommonModel
     public function examFlowRoomRelation(){
         return $this->hasMany('\Modules\Osce\Entities\ExamFlowRoom','flow_id','id');
     }
+    
 
     /**
      * 以考场的为中心的保存
@@ -152,11 +153,11 @@ class Flows extends CommonModel
                     //考试-试卷-考站关联  TODO: Zhoufuxiang 2016-3-22
                     $station = Station::where('id', '=', $station_id)->select(['name', 'type', 'paper_id'])->first();
                     if(!$station){
-                        throw new Exception('未找到对应考站');
+                        throw new \Exception('未找到对应考站');
                     }
                     if($station->type == 3){
                         if(!isset($station->paper_id) || empty($station->paper_id)){
-                            throw new Exception($station->name.' (考站) 没有关联考卷!');
+                            throw new \Exception($station->name.' (考站) 没有关联考卷!');
                         }
                         $examPaperStation = [
                             'exam_id'       => $exam_id,
@@ -165,7 +166,7 @@ class Flows extends CommonModel
                         ];
                         //插入exam_paper_exam_station表
                         if(!$examPaperStation = ExamPaperStation::create($examPaperStation)){
-                            throw new Exception('考试-试卷-考站关联添加失败');
+                            throw new \Exception('考试-试卷-考站关联添加失败');
                         }
                     }
                 }
