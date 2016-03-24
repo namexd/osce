@@ -191,7 +191,7 @@ class ApiController extends CommonController
             }
         //试卷类型(统一试卷)
         }elseif($type == 2){
-            /*if($mode == 1 && $paperid>0){
+            if($mode == 1 && $paperid>0){
                 $ExamPaperInfo = ExamPaper::where('id','=',$paperid)->first();
                 if(count($ExamPaperInfo->ExamPaperStructure)>0){
                     foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
@@ -208,7 +208,7 @@ class ApiController extends CommonController
                         $PaperPreviewArr['total_score'] += intval($v['num']*$v['score']);
                     }
                 }
-            }elseif($mode == 2){*/
+            }elseif($mode == 2){
                 $questionData = $request->get('question-type');
                 if(count($questionData)>0){
                     foreach($questionData as $k => $v){
@@ -221,7 +221,7 @@ class ApiController extends CommonController
                         $PaperPreviewArr['total_score'] += intval(count($ExamQuestionId)*$questionInfo[1]);
                     }
                 }
-            //}
+            }
         }
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
