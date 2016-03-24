@@ -201,14 +201,14 @@
             }
             $('#addForm').submit(function(){//添加题型
                 var now = 0;
-                var length = $('#list-body tr').length;//修改时获取tr数量
+                var length = $('#paper2 tbody tr').length;//修改时获取tr数量
                 if(length){
                     now = length;
                 }else{
                     now = $('#paper2').find('tbody').attr('index');
                 }
-                if($('#list-body tr').length){
-                    now = parseInt($('#list-body tr').length) + 1;
+                if($('#paper2 tbody tr').length){
+                    now = parseInt($('#paper2 tbody tr').length) + 1;
                 }else{
                     now = parseInt(now) + 1;//计数
                 }
