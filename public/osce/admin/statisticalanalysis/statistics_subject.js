@@ -76,7 +76,7 @@ function subject_statistics(){
                     $(".subjectBody").append('<tr>' +
                         '<td>'+this.number+'</td>' +
                         '<td>'+this.title+'</td>' +
-                        '<td>'+this.mins+'</td>' +
+                        '<td>'+this.mins+'分钟'+'</td>' +
                         '<td>'+this.timeAvg+'</td>' +
                         '<td>'+this.scoreAvg+'</td>' +
                         '<td>'+this.studentQuantity+'</td>' +
