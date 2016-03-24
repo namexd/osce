@@ -137,100 +137,6 @@
                     })
                 }
             }
-            //手动组卷验证
-//            function handValidate(){
-//                var paperId = $("#paperId").val();
-//                if(paperId){
-//                    $("#sourceForm").bootstrapValidator({
-//                        message: 'This value is not valid',
-//                        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-//                            valid: 'glyphicon glyphicon-ok',
-//                            invalid: 'glyphicon glyphicon-remove',
-//                            validating: 'glyphicon glyphicon-refresh'
-//                        },
-//                        fields: {/*验证*/
-//                            name: {/*键名username和input name值对应*/
-//                                message: 'The username is not valid',
-//                                validators: {
-//                                    notEmpty: {/*非空提示*/
-//                                        message: '试卷名称不能为空'
-//                                    },
-//                                    remote:{
-//                                        url: '/osce/admin/exampaper/check-name-only',//验证地址
-//                                        message: '该试卷名称已存在',//提示消息
-//                                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-//                                        type: 'POST',//请求方式
-//                                        data: function (validator) {
-//                                            return{
-//                                                id:paperId
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            },
-//                            time: {
-//                                validators: {
-//                                    notEmpty: {/*非空提示*/
-//                                        message: '考试时长不能为空'
-//                                    },
-//                                    callback: {
-//                                        message: '考试时长必须是20及以上的整数',
-//                                        callback:function(){
-//                                            if($("#code").val() >= 20){
-//                                                return true;
-//                                            }else{
-//                                                return false;
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    })
-//                }else{
-//                    $("#sourceForm").bootstrapValidator({
-//                        message: 'This value is not valid',
-//                        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-//                            valid: 'glyphicon glyphicon-ok',
-//                            invalid: 'glyphicon glyphicon-remove',
-//                            validating: 'glyphicon glyphicon-refresh'
-//                        },
-//                        fields: {/*验证*/
-//                            name: {/*键名username和input name值对应*/
-//                                message: 'The username is not valid',
-//                                validators: {
-//                                    notEmpty: {/*非空提示*/
-//                                        message: '试卷名称不能为空'
-//                                    },
-//                                    remote:{
-//                                        url: '/osce/admin/exampaper/check-name-only',//验证地址
-//                                        message: '该试卷名称已存在',//提示消息
-//                                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-//                                        type: 'POST'//请求方式
-//                                    }
-//                                }
-//                            },
-//                            time: {
-//                                validators: {
-//                                    notEmpty: {/*非空提示*/
-//                                        message: '考试时长不能为空'
-//                                    },
-//                                    callback: {
-//                                        message: '考试时长必须是20及以上的整数',
-//                                        callback:function(){
-//                                            if($("#code").val() >= 20){
-//                                                return true;
-//                                            }else{
-//                                                return false;
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    })
-//                }
-//            }
             //手动组卷每题分数至少为1
             $("#addForm input[name='questionScore']").change(function(){
                 if($(this).val() <= 0){
@@ -388,6 +294,9 @@
              * 手工组卷的删除
              */
             $('#paper2 tbody').on('click','.fa-trash-o',function(){
+                var index = $(this).parent().parent().parent().parent().children().first('td').text();
+                index = parseInt(index)-1;
+                $('#paper2 tbody').attr("index",index);
                 $(this).parent().parent().parent().parent().remove();
                 editOneCount();
             });
@@ -395,6 +304,9 @@
              * 自动组卷的删除
              */
             $('#paper tbody').on('click','.fa-trash-o',function(){
+                var index = $(this).parent().parent().parent().parent().children().first('td').text();
+                index = parseInt(index)-1;
+                $('#paper tbody').attr("index",index);
                 $(this).parent().parent().parent().parent().remove();
                 randomCount();
             });
