@@ -10,7 +10,7 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_check_tag'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'subject_check_tag','delUrl':'{{ route('osce.admin.ExamLabelController.getDeleteExamQuestionLabel') }}','editUrl':'{{ route('osce.admin.ExamLabelController.getEditExamQuestionLabel') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">

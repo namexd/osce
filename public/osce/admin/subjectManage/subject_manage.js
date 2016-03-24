@@ -65,10 +65,11 @@ function subject_check_tag(){
     //显示
     $(".edit").click(function(){
         var $editId = $(this).attr("dataId");
+        var editUrl = pars.editUrl;
         $("#editForm").show();
         $("#addForm").hide();
         $.ajax({
-            url:'/osce/admin/exam/exam-getLabel?id='+$editId,
+            url:editUrl+'?id='+$editId,
             type:"get",
             cache:false,
             dataType:"json",
@@ -130,12 +131,13 @@ function subject_check_tag(){
     //删除
     $(".delete").click(function(){
         var id = $(this).attr("dataId");
+        var delUrl = pars.delUrl;
         layer.confirm('是否确定删除该标签？',{
             title:'删除',
             btn: ['确定','取消']
         },function(){
             $.ajax({
-                url:'/osce/admin/exam/exam-deleteLabel?id='+id,
+                url:delUrl+'?id='+id,
                 type:"get",
                 cache:false,
                 success:function(res){
