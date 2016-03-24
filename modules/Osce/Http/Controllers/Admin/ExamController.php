@@ -1452,6 +1452,7 @@ class ExamController extends CommonController
             }
         }
        $status=Exam::where('id',$exam_id)->select('status')->first()->status;
+
         return view('osce::admin.examManage.exam_station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,
