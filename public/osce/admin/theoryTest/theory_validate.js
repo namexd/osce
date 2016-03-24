@@ -62,12 +62,13 @@ function theory_validate(){
                             if(res){
                                 location.href=examUrl+"?id="+res+"&stationId="+stationId+"&userId="+userId+"&studentId="+studentId;
                             }else{
-                                layer.msg('没有对应的试卷信息！',{skin:'msg-error',type:1});
+                                //layer.msg('没有对应的试卷信息！',{skin:'msg-error',type:1});
+                                layer.confirm('没有对应的试卷信息！');
                             }
                         }
                     })
                 }else{
-                    layer.msg('开始考试失败！',{skin:'msg-error',type:1});
+                    layer.confirm('开始考试失败！');
                 }
             }
         })
