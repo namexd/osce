@@ -65,6 +65,8 @@ function theory_validate(){
                             }
                         }
                     })
+                }else{
+                    layer.msg('开始考试失败！',{skin:'msg-error',type:1});
                 }
             }
         })
