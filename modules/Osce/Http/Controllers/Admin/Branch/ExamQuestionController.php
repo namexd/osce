@@ -79,7 +79,9 @@ class ExamQuestionController extends CommonController
             'data'                         =>$data,//对象型数据
             'list'                         =>$list ,//试题列表（数组型数据）
             'examQuestionLabelTypeList' =>$examQuestionLabelTypeList,//试题类型列表
-            'examQuestionTypeList'       =>$examQuestionTypeList //题目类型列表
+            'examQuestionTypeList'       =>$examQuestionTypeList, //题目类型列表
+            'formData'                    =>$formData
+
         ]);
     }
 
@@ -268,7 +270,6 @@ class ExamQuestionController extends CommonController
         $this->validate($request, [
             'id'                      =>'required|integer',//试题表
             'examQuestionTypeId'    =>'sometimes|integer',
-            'name'                     => 'required|string',
             'parsing'                 => 'sometimes|string',
             'answer'                  => 'sometimes|array',
             'judge'                  => 'sometimes|integer',

@@ -33,12 +33,15 @@
                 <div class="input-group" style="width: 100%;margin:20px 0;">
                     <form action="" method="get" class="left">
                         <label for="" class="pull-left exam-name">标签名称：</label>
-                        <input type="text" placeholder="请输入标签名称" name="tagName" class="input-md form-control" style="width: 250px;">
+                        <input type="text" placeholder="请输入标签名称" name="tagName" @if(!empty($keyWords)) value="{{$keyWords}}" @endif class="input-md form-control" style="width: 250px;">
                         <label for="" class="pull-left exam-name" style="margin-left: 20px;">标签类型：</label>
                         <select name="tagType" id="tagType" class="input-sm form-control subject_select" style="width: 250px;height: 34px">
+                            <option value="" @if(empty($id) ) selected="selected" @endif>全部</option>
                             @if(!empty(@$ExamQuestionLabelTypeList))
                                 @foreach(@$ExamQuestionLabelTypeList as $val)
-                                    <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
+                                    <option value="{{ $val['id'] }}" @if(!empty($id)&& $val['id']==$id) selected="selected" @endif>
+                                        {{ $val['name'] }}
+                                    </option>
                                 @endforeach
                             @endif
                         </select>
@@ -82,14 +85,10 @@
                             @endif
                         </tbody>
                     </table>
-                    <div class="pull-left">共10条</div>
+                    <div class="pull-left">共{{$datalist->total()}}条</div>
                     <div class="btn-group pull-right">
-                        <ul class="pagination">
-                            <li class="disabled"><span>«</span></li>
-                            <li class="active"><span>1</span></li>
-                            <li><a href="">2</a></li>
-                            <li><a href="" rel="next">»</a></li>
-                        </ul>
+                        {!! $datalist->appends($_GET)->render() !!}
+
                     </div>
                 </div>
             </div>
@@ -124,9 +123,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">描述：</label>
+                <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565">*</span>描述：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="describe" class="form-control" placeholder="最多输入10个字">
+                    <input type="text" name="describe" class="form-control add_des">
                 </div>
             </div>
         </div>
@@ -154,6 +153,7 @@
                 <div class="col-sm-9">
                     <select name="label_type_id" id="" class="form-control edit_type">
                         @if(!empty(@$ExamQuestionLabelTypeList))
+
                             @foreach(@$ExamQuestionLabelTypeList as $val)
                                 <option value="{{ $val['id'] }}">{{ $val['name'] }}</option>
                             @endforeach
@@ -162,9 +162,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">描述：</label>
+                <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565">*</span>描述：</label>
                 <div class="col-sm-9">
-                    <input type="text" name="describe" class="form-control edit_des" placeholder="最多输入10个字">
+                    <input type="text" name="describe" class="form-control edit_des">
                 </div>
             </div>
         </div>

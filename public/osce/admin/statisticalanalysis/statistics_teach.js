@@ -22,7 +22,7 @@ function statistics_teach_score(){
                 legend: {
                     data: ["平均成绩","最高分","最低分"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     data: teacherStr
@@ -164,7 +164,7 @@ function teach_detail(){
                 legend: {
                     data: ["得分","平均分"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     boundaryGap: !1,
