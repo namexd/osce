@@ -65,11 +65,10 @@ function subject_check_tag(){
     //显示
     $(".edit").click(function(){
         var $editId = $(this).attr("dataId");
-        var editUrl = pars.editUrl;
         $("#editForm").show();
         $("#addForm").hide();
         $.ajax({
-            url:editUrl+'?id='+$editId,
+            url:'/osce/admin/exam/exam-getlabel?id='+$editId,
             type:"get",
             cache:false,
             dataType:"json",

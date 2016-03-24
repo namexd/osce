@@ -210,7 +210,7 @@ class SubjectStatisticsController  extends CommonController
                     'stationId'        => $item->stationId,//考站id
                     'stationName'      => $item->stationName,//考站名称
                     'teacherName'      => $item->teacherName,//评分老师
-                    'examMins'          => gmstrftime('%H:%M:%S',($item->examMins)*60),//考试限时
+                    'examMins'          =>$item->examMins.'分钟',// //考试限时,gmstrftime('%H:%M:%S',($item->examMins)*60),
                     'timeAvg'           => $subjectStatisticsRepositories->timeTransformation(sprintf("%01.2f", $item->timeAvg)),//平均耗时
                     'scoreAvg'          =>sprintf("%01.2f", $item->scoreAvg),//平均成绩
                     'studentQuantity'  => $item->studentQuantity,//考试人数
