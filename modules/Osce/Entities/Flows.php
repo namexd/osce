@@ -37,7 +37,7 @@ class Flows extends CommonModel
     public function examFlowRoomRelation(){
         return $this->hasMany('\Modules\Osce\Entities\ExamFlowRoom','flow_id','id');
     }
-    
+
 
     /**
      * 以考场的为中心的保存
