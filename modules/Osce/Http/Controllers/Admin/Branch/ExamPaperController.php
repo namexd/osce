@@ -864,7 +864,7 @@ class ExamPaperController extends CommonController
                 }
             }
         }
-
+        //dd($idArrays);
         /**删除数据库存在但页面并没有传值过来的数据**/
         if(!empty($idArrays)){
             $delExamPaperStructure = $ExamPaperStructure->whereIn('id',$idArrays)->delete();
