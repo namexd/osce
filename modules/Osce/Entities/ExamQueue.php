@@ -680,7 +680,7 @@ class ExamQueue extends CommonModel
                     CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
                         $teacherId, [strtotime($date)]);
                 }
-//                $connection->commit();
+                $connection->commit();
                 return $queue;
             } elseif ($queue->status == 3) { //通过传入的station_id进行多次点击结束考试的适配
                 return $queue;
