@@ -409,7 +409,7 @@ class PadController extends  CommonController{
         if(empty($exam_id)){
             if(count($examList) != 0){
                 foreach ($examList as $exam) {
-                    $result  = $this->getRoomDatas($exam);      //根据考试获取对应的所有考场
+                    $result  = $this->getRoomDatas($exam, $room_id);      //根据考试获取对应的所有考场、摄像机
                     $rooms   = array_merge($rooms, $result);
                 }
             }
@@ -417,7 +417,7 @@ class PadController extends  CommonController{
             $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
             $rooms  = $this->getRoomDatas($exam);      //根据考试获取对应的所有考场
         }
-        $rooms = array_unique($rooms);      //去重
+        $rooms = array_values(array_unique($rooms));      //去重
 
         //未选考场，列出所有考场对应的摄像头
         if(empty($room_id)){
@@ -436,9 +436,9 @@ class PadController extends  CommonController{
                 $vcrs[] = $item->getVcr;
             }
         }
-        $vcrs = array_unique($vcrs);      //去重
+        $vcrs = array_values(array_unique($vcrs));      //去重
 
-        //返回数据组合
+        //组合返回数据
         $data = [
             'examList'  => $examList,   //考试列表
             'rooms'     => $rooms,      //考场列表
@@ -450,24 +450,40 @@ class PadController extends  CommonController{
         );
     }
 
+    /**
+     * 根据考试获取对应的所有考场
+     * TODO:Zhoufuxiang 2016-3-23
+     * @return object
+     */
     public function getRoomDatas($exam){
-        //根据考试获取对应的所有考场
         $rooms   = [];
+        $vcrs    = [];
         if($exam->sequence_mode == 2){
+            //根据考试获取 对应考站
             $examStation = ExamStation::where('exam_id','=',$exam->id)->get();
-            if($examStation){
+            if(count($examStation)){
                 foreach ($examStation as $item) {
+                    //根据考站获取对应的摄像机
+                    $stationVcr = StationVcr::where('station_id','=',$item->station_id)->first();
+                    $vcrs[] = $stationVcr->vcr;
+                    //获取考站对应的考场
                     $roomStation = RoomStation::where('station_id','=',$item->station_id)->first();
                     $rooms[] = $roomStation->room;
                 }
             }
-            $rooms = array_unique($rooms);
         }else{
-            $examList = ExamRoom::where('exam_id','=',$exam->id)->get();
-            foreach($examList as $examRoom){
-                $rooms[]=$examRoom->room;
+            $examRooms = ExamRoom::where('exam_id','=',$exam->id)->get();
+            foreach($examRooms as $examRoom){
+                $rooms[] = $examRoom->room;
+                $roomVcr = RoomVcr::where('room_id','=',$examRoom->room->id)->get();
+                foreach($roomVcr as $vcr){
+                    $vcrs[] = $vcr->getVcr;
+                }
             }
         }
+        $rooms = array_unique($rooms);
+        $vcrs  = array_unique($vcrs);
+        $data  = [$rooms, $vcrs];
 
         return $rooms;
     }
