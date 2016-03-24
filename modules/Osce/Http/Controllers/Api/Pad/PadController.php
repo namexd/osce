@@ -412,7 +412,7 @@ class PadController extends  CommonController{
 //        $exam_id = $request->get('exam_id');
 //        $room_id = $request->get('room_id');
         //获取已经考完的所有考试列表
-        $examList = Exam::where('status','=', 2)->select(['id','name','sequence_mode'])->paginate(10);
+        $examList = Exam::where('status','=', 2)->select(['id','name'])->paginate(10);
 //        $rooms    = [];     //考试下对应的所有考场
 //        //未选考试，列出所有考试对应的所有考场
 //        if(empty($exam_id)){
@@ -442,7 +442,8 @@ class PadController extends  CommonController{
 //            'rooms'     => $rooms,      //考场列表
 //            'vcrs'      => $vcrs,       //摄像机列表
         ];
-
+//        dd($examList->toArray()['data']);
+        return $this->success_rows(1,'获取成功',$examList->lastPage(),$examList->perPage(),$examList->currentPage(),$examList->toArray()['data']);
         return response()->json(
             $this->success_data($data, 1, 'success')
         );
