@@ -134,7 +134,7 @@ class ExamPaperController extends CommonController
             }
             $paper_structure_id = @$paper_structure_id?@$paper_structure_id:0;
             //删除试卷构造表和标签关联表数据
-            if(ExamPaperStructureLabel::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
+            if(!ExamPaperStructureLabel::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
                 $DB->rollback();
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }
@@ -155,18 +155,21 @@ class ExamPaperController extends CommonController
                 $paper_structure_id = $exam_paper_structure->id;
                 if(!$exam_paper_structure->delete()){
                     $DB->rollback();
-                    return redirect()->back()->withInput()->withErrors('系统异常');
+                    return redirect()->back()->withInput()->withErrors('系统异常1');
                 }
             }
             $paper_structure_id = @$paper_structure_id?@$paper_structure_id:0;
+            //dd($paper_structure_id);
             //删除试卷构造表和标签关联表数据
-            if(ExamPaperStructureLabel::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
+            if(ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
                 $DB->commit();
                 return redirect()->back()->withInput()->withErrors('操作成功');
             }else{
                 $DB->rollBack();
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }
+
+            
         }
 
     }
@@ -656,9 +659,10 @@ class ExamPaperController extends CommonController
             $structure['total_score'] = count(explode(',',$vv[2])) * $vv[1];
             $structure['created_user_id'] = $user->id;
             $addPaperStructure = ExamPaperStructure::create($structure);
+            //dd($addPaperStructure);
             if(!$addPaperStructure){
                 $DB->rollBack();
-                return redirect()->back()->withInput()->withErrors('系统异常');
+                return false;die;
             }else{
                 foreach($questionsID as $val){
                     $structure_question['exam_paper_structure_id'] = $addPaperStructure->id;
@@ -666,7 +670,7 @@ class ExamPaperController extends CommonController
                     $addStructureQuestion = ExamPaperStructureQuestion::create($structure_question);
                     if(!$addStructureQuestion){
                         $DB->rollBack();
-                        return redirect()->back()->withInput()->withErrors('系统异常');
+                        return false;die;
                     }
                 }
             }
@@ -737,6 +741,7 @@ class ExamPaperController extends CommonController
                 $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
             }
         }
+
         if($status == 1 && $status2 == 1){//自动-随机
             $check = $this->editAutoRandomExam($request,$QuestionBankRepositories,$examPapers,$examPaperID,$DB);
             if(!$check){
@@ -805,8 +810,8 @@ class ExamPaperController extends CommonController
             /**存储数据库存在但页面并没有传值过来**/
             $key = array_search(@$exam['structureid'], $idArrays);
 
-            if ($key >= 0) {
-                array_splice($idArrays, $key,@$exam['structureid']);
+            if ($key !== false) {
+                unset($idArrays[$key]);
             }
             /*********************************/
 
@@ -910,7 +915,7 @@ class ExamPaperController extends CommonController
             $key = array_search(@$v['structureid'], $idArrays);
 
             if ($key >= 0) {
-                array_splice($idArrays, $key,@$v['structureid']);
+                unset($idArrays[$key]);
             }
             /*********************************/
         }
@@ -1013,7 +1018,7 @@ class ExamPaperController extends CommonController
                 $key = array_search(@$vv[3], $idArrays);
 
                 if ($key >= 0) {
-                    array_splice($idArrays, $key,@$vv[3]);
+                    unset($idArrays[$key]);
                 }
                 /*********************************/
 
