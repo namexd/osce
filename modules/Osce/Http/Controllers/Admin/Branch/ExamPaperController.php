@@ -494,7 +494,7 @@ class ExamPaperController extends CommonController
         }
 
         $DB->commit();
-        return redirect()->back()->withInput()->withErrors('操作成功');
+        return redirect()->route('osce.admin.ExamPaperController.getExamList');
 
     }
 
@@ -737,7 +737,6 @@ class ExamPaperController extends CommonController
                 $examPapers[] = $QuestionBankRepositories->StrToArr($v);//字符串转换为数组
             }
         }
-        //dd($examPapers);
         if($status == 1 && $status2 == 1){//自动-随机
             $check = $this->editAutoRandomExam($request,$QuestionBankRepositories,$examPapers,$examPaperID,$DB);
             if(!$check){
@@ -778,6 +777,19 @@ class ExamPaperController extends CommonController
         $user = Auth::user();
         $ExamPaperStructure = new ExamPaperStructure();
         $ExamPaperStructureLabel = new ExamPaperStructureLabel();
+        $idArrays = [];
+        //判断传数据库里的structureid是否传过来
+        $structureids = $ExamPaperStructure->where('exam_paper_id', '=', $examPaperID)->select('id')->get();
+        if ($structureids) {
+            $structureids = $structureids->toArray();
+            foreach ($structureids as $val) {
+                if (!in_array($val['id'], $idArrays)) {
+                    $idArrays[] = $val['id'];
+                }
+
+            }
+        }
+
 
         foreach($examPapers as $k=>$exam) {
             //拼合试卷构造表数据
@@ -789,6 +801,15 @@ class ExamPaperController extends CommonController
                 'total_score' => $exam['total_score'],
                 'created_user_id' => $user->id,
             ];
+
+            /**存储数据库存在但页面并没有传值过来**/
+            $key = array_search(@$exam['structureid'], $idArrays);
+
+            if ($key >= 0) {
+                array_splice($idArrays, $key,@$exam['structureid']);
+            }
+            /*********************************/
+
             $check = 0;
             if ($ExamPaperStructure->where('id', '=', @$exam['structureid'])->first()) {
                 $check = 1;
@@ -799,13 +820,13 @@ class ExamPaperController extends CommonController
 
                 if (!$addExamPaperStructure) {
                     $DB->rollBack();
-                    return redirect()->back()->withInput()->withErrors('系统异常1');
+                    return redirect()->back()->withInput()->withErrors('系统异常');
                 }
 
 
                 if ($ExamPaperStructureLabel->where('exam_paper_structure_id', '=', $exam['structureid'])->delete() === false) {
                     $DB->rollBack();
-                    return redirect()->back()->withInput()->withErrors('系统异常2');
+                    return redirect()->back()->withInput()->withErrors('系统异常');
                 }
 
                 foreach ($exam['structure_label'] as $structure_label) {
@@ -817,7 +838,7 @@ class ExamPaperController extends CommonController
                     //var_dump($addExamPaperStructureLabel);
                     if (!$addExamPaperStructureLabel) {
                         $DB->rollBack();
-                        return redirect()->back()->withInput()->withErrors('系统异常3');
+                        return redirect()->back()->withInput()->withErrors('系统异常');
                     }
                 }
 
@@ -827,7 +848,7 @@ class ExamPaperController extends CommonController
                 //dd($addExamPaperStructure);
                 if (!$addExamPaperStructure) {
                     $DB->rollBack();
-                    return redirect()->back()->withInput()->withErrors('系统异常4');
+                    return redirect()->back()->withInput()->withErrors('系统异常');
                 }
 
                 foreach ($exam['structure_label'] as $structure_label) {
@@ -838,11 +859,26 @@ class ExamPaperController extends CommonController
                     $addExamPaperStructureLabel = $ExamPaperStructureLabel->create($structure_label);
                     if (!$addExamPaperStructureLabel) {
                         $DB->rollBack();
-                        return redirect()->back()->withInput()->withErrors('系统异常5');
+                        return redirect()->back()->withInput()->withErrors('系统异常');
                     }
                 }
             }
         }
+        //dd($idArrays);
+        /**删除数据库存在但页面并没有传值过来的数据**/
+        if(!empty($idArrays)){
+            $delExamPaperStructure = $ExamPaperStructure->whereIn('id',$idArrays)->delete();
+            if (!$delExamPaperStructure) {
+                $DB->rollBack();
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+
+            if ($ExamPaperStructureLabel->whereIn('exam_paper_structure_id',$idArrays)->delete() === false) {
+                $DB->rollBack();
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+        }
+
         return true;
     }
 
@@ -861,21 +897,38 @@ class ExamPaperController extends CommonController
         //新增试卷-试卷构造表和标签类型关联数据添加
         $ExamPaperStructure = new ExamPaperStructure();
         $ExamPaperStructureLabel = new ExamPaperStructureLabel();
+        $idArrays = [];
+
         //查找筛选条件下的试题
         $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
 
         //整理数据-判断该类型下是否有试题
         foreach($examQuestion as $k=>$v){
             $questionType = $this->checkQuestions($v['type']);
-        }
 
-        foreach($examPapers as $kk=>$vv){
-            $examPapers[$kk]['questions'] = $examQuestion[$kk]['child'];
+            /**存储数据库存在但页面并没有传值过来**/
+            $key = array_search(@$v['structureid'], $idArrays);
+
+            if ($key >= 0) {
+                array_splice($idArrays, $key,@$v['structureid']);
+            }
+            /*********************************/
+        }
+        //判断传数据库里的structureid是否传过来
+        $structureids = $ExamPaperStructure->where('exam_paper_id', '=', $examPaperID)->select('id')->get();
+        if ($structureids) {
+            $structureids = $structureids->toArray();
+            foreach ($structureids as $val) {
+                if (!in_array($val['id'], $idArrays)) {
+                    $idArrays[] = $val['id'];
+                }
+
+            }
         }
         //dd($examPapers);
         foreach($examPapers as $exam) {
             //判断是否存在structureid
-            //echo $exam['structureid'].'<br>';
+
             if(isset($exam['structureid'])){//存在修改
                 $check = $this->editManualUniteExamExist($examPapers,$examPaperID,$DB,$QuestionBankRepositories,$exam);
                 if(!$check){
@@ -888,6 +941,26 @@ class ExamPaperController extends CommonController
                     $DB->rollback();
                     return false;die;
                 }
+            }
+        }
+
+        /**删除数据库存在但页面并没有传值过来的数据**/
+        if(!empty($idArrays)){
+            $delExamPaperStructure = $ExamPaperStructure->whereIn('id',$idArrays)->delete();
+            if (!$delExamPaperStructure) {
+                $DB->rollBack();
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+
+            if ($ExamPaperStructureLabel->whereIn('exam_paper_structure_id',$idArrays)->delete() === false) {
+                $DB->rollBack();
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+
+            $delPaperStructureQuestion = ExamPaperStructureQuestion::whereIn('exam_paper_structure_id',$idArrays)->delete();
+            if (!$delPaperStructureQuestion) {
+                $DB->rollBack();
+                return false;exit;
             }
         }
         return true;
@@ -906,11 +979,26 @@ class ExamPaperController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function editManualUniteExam($request,$questions,$examPaperID,$DB,$user){
+        $idArrays = [];
+        $ExamPaperStructure = new ExamPaperStructure();
+        //判断传数据库里的structureid是否传过来
+        $structureids = $ExamPaperStructure->where('exam_paper_id', '=', $examPaperID)->select('id')->get();
+        if ($structureids) {
+            $structureids = $structureids->toArray();
+            foreach ($structureids as $val) {
+                if (!in_array($val['id'], $idArrays)) {
+                    $idArrays[] = $val['id'];
+                }
+
+            }
+        }
+
         //分割字符串-拼合数组
         $questions = Input::get('question-type');
         foreach($questions as $k=>$v){
             $type[] = explode('@',$v);
         }
+        //dd($type);
         foreach($type as $kk=>$vv){
             $questionsID = explode(',',$vv[2]);
             $structure['exam_question_type_id'] = $vv[0];
@@ -920,6 +1008,15 @@ class ExamPaperController extends CommonController
             $structure['created_user_id']       = $user->id;
             $structure['updated_at']            = date('Y-m-d H:i:s');
             if($vv[3] !== 'undefined'){//Structureid存在的时候直接修改
+
+                /**存储数据库存在但页面并没有传值过来**/
+                $key = array_search(@$vv[3], $idArrays);
+
+                if ($key >= 0) {
+                    array_splice($idArrays, $key,@$vv[3]);
+                }
+                /*********************************/
+
                 //修改数据
                 $addPaperStructure = ExamPaperStructure::where('id','=',$vv[3])->update($structure);
                 if(!$addPaperStructure){
@@ -967,6 +1064,21 @@ class ExamPaperController extends CommonController
                 }
             }
 
+        }
+
+        /**删除数据库存在但页面并没有传值过来的数据**/
+        if(!empty($idArrays)){
+            $delExamPaperStructure = $ExamPaperStructure->whereIn('id',$idArrays)->delete();
+            if (!$delExamPaperStructure) {
+                $DB->rollBack();
+                return redirect()->back()->withInput()->withErrors('系统异常');
+            }
+
+            $delPaperStructureQuestion = ExamPaperStructureQuestion::whereIn('exam_paper_structure_id',$idArrays)->delete();
+            if (!$delPaperStructureQuestion) {
+                $DB->rollBack();
+                return false;exit;
+            }
         }
         return true;
     }
