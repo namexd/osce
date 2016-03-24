@@ -105,7 +105,7 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_module','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'course_module','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">

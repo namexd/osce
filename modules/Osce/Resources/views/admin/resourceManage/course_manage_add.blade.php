@@ -30,10 +30,10 @@
 @stop
 
 @section('only_js')
-<script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script> 
+<script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script>
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
-<script> 
+<script>
     $(function(){
         /**
          * 编辑和新增共用了一段代码，这里必须将验证单独拿出
@@ -60,8 +60,7 @@
                             /*自定义提交数据，默认值提交当前input value*/
                             data: function(validator) {
                                 return {
-                                    name: $('#title').val(),
-                                    id:$('#id').val()
+                                    name: $('#title').val()
                                 }
                             }
                         },
@@ -70,7 +69,7 @@
                         }
                     }
                 },
-                note: {
+                desc: {
                     validators: {
                         notEmpty: {/*非空提示*/
                             message: '描述不能为空'
@@ -101,29 +100,27 @@
             }
         });
     })
-</script> 
+</script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_module','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'course_module','Unique':'{{route('osce.admin.topic.postNameUnique')}}','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>编辑科目</h5>
+            <h5>新增科目</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
 
                 <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.topic.postEditTopic')}}">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.topic.postAddTopic')}}">
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
-
                             <div class="col-sm-10">
-                                <input type="hidden" class="form-control" id="id" name="id" value="{{$item->id}}">
-                                <input type="text" required class="form-control" id="title" name="title" value="{{$item->title}}">
+                                <input type="text" required class="form-control" id="title" name="title"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -131,7 +128,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">题干</label>
                             <div class="col-sm-10">
-                                <input id="select_Category"  class="form-control" name="stem" value="{{$item->stem}}"/>
+                                <input id="select_Category" class="form-control" name="stem"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -139,7 +136,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">所需设备</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="equipments" value="{{$item->equipments}}"/>
+                                <input id="select_Category" class="form-control" name="equipments"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -147,7 +144,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">所需物品</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="goods" value="{{$item->goods}}"/>
+                                <input id="select_Category" class="form-control" name="goods"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -155,11 +152,11 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control" name="note" value="{{$item->description}}"/>
+                                <input id="select_Category" class="form-control" name="desc"/>
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">评分标准</label>
                             <div class="col-sm-10">
@@ -167,8 +164,11 @@
                                     <div class="ibox-title">
                                         <h5></h5>
                                         <div class="ibox-tools">
-                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;display:none;">下载模板</a>
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
+                                            <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;color:#333;">
+                                                导入<input type="file" name="topic" id="file0" multiple="multiple" />
+                                            </a>
+                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
                                         </div>
                                     </div>
                                     <div class="ibox-content">
@@ -181,64 +181,21 @@
                                                     <th width="160">操作</th>
                                                 </tr>
                                             </thead>
-                                            <tbody index="{{$prointNum-1}}">
-                                            @forelse($list as $data)
-                                                <tr class="pid-{{$data->pid==0? $data->sort:$data->parent->sort}}"  current="{{$optionNum[$data->id] or 0}}" {{$data->pid==0? 'parent='.$data->sort.'':'child='.$data->sort.''}}>
-                                                    <td>{{$data->pid==0? $data->sort:$data->parent->sort.'-'.$data->sort}}</td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <label class="col-sm-2 control-label">{{$data->pid==0? '考核点:':'考核项:'}}</label>
-                                                            <div class="col-sm-10">
-                                                                <input id="select_Category"  class="form-control" name="{{$data->pid==0? 'content['.$data->sort.'][title]':'content['.$data->parent->sort.']['.$data->sort.']'}}" value="{{$data->content}}"/>
-                                                            </div>
-                                                        </div>
-                                                        @if($data->pid!=0)
-                                                        <div class="form-group">
-                                                            <label class="col-sm-2 control-label">评分标准:</label>
-                                                            <div class="col-sm-10">
-                                                                <input id="select_Category" class="form-control" name="description[{{$data->parent->sort}}][{{$data->sort}}]" value="{{$data->answer}}">
-                                                            </div>
-                                                        </div>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <select {!! $data->pid==0? 'style="display:none;"':''!!} class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
-                                                            @for($i=1;$i<=config('osce.topticOptionMaxNumer',15);$i++)
-                                                            <option value="{{$i}}" {{$data->score==$i? 'selected="selected"':''}}>{{$i}}</option>
-                                                            @endfor
-                                                        </select>
-                                                        <span {!! $data->pid!=0? 'style="display:none;"':''!!}>{{$data->score}}</span>
-                                                    </td>
-                                                    @if($data->pid==0)
-                                                    <td>
-                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up parent-up fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down parent-down fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>
-                                                    </td>
-                                                    @else
-                                                    <td>
-                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up child-up fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down child-down fa-2x"></i></span></a>
-                                                    </td>
-                                                    @endif
-                                                </tr>
-                                            @empty
-                                            @endforelse
+                                            <tbody index="0">
+
                                             </tbody>
                                         </table>
 
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
-
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" id="submit-btn" type="submit">保存</button>
+                                <input class="btn btn-primary" id="submit-btn" type="submit" value="保存">
                                 <a class="btn btn-white" href="{{route("osce.admin.topic.getList")}}">取消</a>
                             </div>
                         </div>
