@@ -319,7 +319,7 @@ class ApiController extends CommonController
             //检验登录的老师是否是监考老师
             if(!$questionBankRepositories->LoginAuth())
             {
-                throw new \Exception('你不是监考老师');
+                throw new \Exception('你不是监考老师',1000);
             }
 
             //根据监考老师的id，获取对应的考站id
@@ -343,6 +343,10 @@ class ApiController extends CommonController
         }
         catch(\Exception $ex)
         {
+            if($ex->getCode()===1000)
+            {
+                return redirect()->route('osce.admin.getIndex')->withErrors($ex->getMessage());
+            }
             return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
         }
 
