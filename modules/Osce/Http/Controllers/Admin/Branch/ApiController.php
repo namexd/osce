@@ -289,7 +289,7 @@ class ApiController extends CommonController
      * @date    2016年3月16日09:49:31
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function LoginAuth(Request $request,QuestionBankRepositories $questionBankRepositories){
+    public function LoginAuth(Request $request){
         $this   ->validate($request,[
             'username'  =>  'required',
             'password'  =>  'required',
@@ -299,36 +299,52 @@ class ApiController extends CommonController
         $password   =   $request    ->  get('password');
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
-
-            //检验登录的老师是否是监考老师
-            if($userId = $questionBankRepositories->LoginAuth()){
-                //根据监考老师的id，获取对应的考站id
-                $ExamInfo = $questionBankRepositories->GetExamInfo($userId);
-                if(is_array($ExamInfo)){
-                    //如果有对应的考试信息，查询考试和考站信息
-                    $datas = $questionBankRepositories->getExamData($ExamInfo);
-                    $datainfo = array(
-                        'name'=>$datas['name'],
-                        'mins'=>$datas['mins'],
-                        'stationId'=>$ExamInfo['StationId'],
-                        'examId'=>$ExamInfo['ExamId'],
-                        'userId'=>$userId,
-                    );
-                }else{
-                    $datainfo='';
-                }
-                User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
-                return view('osce::admin.theoryCheck.theory_check_volidate', [
-                    'data'=>$datainfo,
-                ]);
-            }else{
-                return redirect()->back()->withErrors('你不是监考老师');
-            }
+            return redirect()->route('osce.admin.ApiController.LoginAuthWait');
         }
         else
         {
             return redirect()->back()->withErrors('账号密码错误');
         }
+    }
+
+    public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
+        try{
+            $user=Auth::user();
+            if(is_null($user))
+            {
+                throw new \Exception('用户未登录');
+            }
+
+            //根据监考老师的id，获取对应的考站id
+            $ExamInfo = $questionBankRepositories->GetExamInfo(343);
+            //检验登录的老师是否是监考老师
+            if(!$questionBankRepositories->LoginAuth())
+            {
+                throw new \Exception('你不是监考老师');
+            }
+            if(is_array($ExamInfo)){
+                //如果有对应的考试信息，查询考试和考站信息
+                $datas = $questionBankRepositories->getExamData($ExamInfo);
+                $datainfo = array(
+                    'name'=>$datas['name'],
+                    'mins'=>$datas['mins'],
+                    'stationId'=>$ExamInfo['StationId'],
+                    'examId'=>$ExamInfo['ExamId'],
+                    'userId'=>$user->id,
+                );
+            }else{
+                $datainfo='';
+            }
+
+            return view('osce::admin.theoryCheck.theory_check_volidate', [
+                'data'=>$datainfo,
+            ]);
+        }
+        catch(\Exception $ex)
+        {
+            return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
+        }
+
     }
 
     /**刷完腕表后，获取该考生对应的试卷id
