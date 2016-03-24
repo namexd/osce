@@ -7,6 +7,7 @@ $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
         case "theory_validate":theory_validate();break;//理论考试进入验证页面
+        case "theory_complete":theory_complete();break;//理论考试完成页面
     }
 });
 
@@ -78,7 +79,13 @@ function theory_validate(){
         })
     });
 }
-
+//理论考试完成页面
+function theory_complete(){
+    $("#sure").click(function(){
+        var url = pars.goUrl;
+        location.href=url;
+    })
+}
 
 
 
