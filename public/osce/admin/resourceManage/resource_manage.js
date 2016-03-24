@@ -2962,7 +2962,11 @@ function deleteArea(type,url,id,areaType,firstpage){
             },
             success:function(data){
                 if(data.code == 1){
-                    location.href= $('.nav-tabs').find('.active').find('a').attr('href');
+                    if(data.data.type == 0){
+                        location.href = firstpage;
+                    }else {
+                        location.href= $('.nav-tabs').find('.active').find('a').attr('href');
+                    }
                 }else {
                     layer.msg(data.message,{skin:'msg-error',icon:1});
                 }
