@@ -174,8 +174,7 @@ class ApiController extends CommonController
         $ExamQuestionType = new ExamQuestionType;
         $paperid = $request->paperid;
         //试卷类型(1.随机试卷，2.统一试卷)
-        //if($type == 1 || $mode == 1 && $type == 2){
-        if($type == 1 ){
+        if($type == 1 || $mode == 1 && $type == 2){
 
             if(!empty($request->question)){
                 foreach($request->question as $k => $v){
