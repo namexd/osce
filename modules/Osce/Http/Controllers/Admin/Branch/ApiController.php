@@ -193,7 +193,7 @@ class ApiController extends CommonController
             }
         //试卷类型(统一试卷)
         }elseif($type == 2){
-            /*if($mode == 1 && $paperid>0){
+            if($mode == 1 && $paperid>0){
                 $ExamPaperInfo = ExamPaper::where('id','=',$paperid)->first();
                 if(count($ExamPaperInfo->ExamPaperStructure)>0){
                     foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
@@ -210,7 +210,7 @@ class ApiController extends CommonController
                         $PaperPreviewArr['total_score'] += intval($v['num']*$v['score']);
                     }
                 }
-            }elseif($mode == 2){*/
+            }elseif($mode == 2){
                 $questionData = $request->get('question-type');
                 if(count($questionData)>0){
                     foreach($questionData as $k => $v){
@@ -223,7 +223,7 @@ class ApiController extends CommonController
                         $PaperPreviewArr['total_score'] += intval(count($ExamQuestionId)*$questionInfo[1]);
                     }
                 }
-            //}
+            }
         }
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
@@ -297,18 +297,13 @@ class ApiController extends CommonController
 
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
-
-
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
 
-            //dd(Auth::user());
             //检验登录的老师是否是监考老师
             if($userId = $questionBankRepositories->LoginAuth()){
-                $datainfo='';
                 //根据监考老师的id，获取对应的考站id
-                $ExamInfo = $questionBankRepositories->GetExamInfo(343);
-//                dd($ExamInfo);
+                $ExamInfo = $questionBankRepositories->GetExamInfo($userId);
                 if(is_array($ExamInfo)){
                     //如果有对应的考试信息，查询考试和考站信息
                     $datas = $questionBankRepositories->getExamData($ExamInfo);
@@ -319,10 +314,10 @@ class ApiController extends CommonController
                         'examId'=>$ExamInfo['ExamId'],
                         'userId'=>$userId,
                     );
-
+                }else{
+                    $datainfo='';
                 }
-
-                $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
+                User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
                 return view('osce::admin.theoryCheck.theory_check_volidate', [
                     'data'=>$datainfo,
                 ]);
