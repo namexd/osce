@@ -294,17 +294,12 @@ class ApiController extends CommonController
         ]);
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
-
-
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
-
             //检验登录的老师是否是监考老师
             if($userId = $questionBankRepositories->LoginAuth()){
-                $datainfo='';
                 //根据监考老师的id，获取对应的考站id
-                $ExamInfo = $questionBankRepositories->GetExamInfo(343);
-//                dd($ExamInfo);
+                $ExamInfo = $questionBankRepositories->GetExamInfo($userId);
                 if(is_array($ExamInfo)){
                     //如果有对应的考试信息，查询考试和考站信息
                     $datas = $questionBankRepositories->getExamData($ExamInfo);
@@ -315,10 +310,10 @@ class ApiController extends CommonController
                         'examId'=>$ExamInfo['ExamId'],
                         'userId'=>$userId,
                     );
-
+                }else{
+                    $datainfo='';
                 }
-
-                $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
+                User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
                 return view('osce::admin.theoryCheck.theory_check_volidate', [
                     'data'=>$datainfo,
                 ]);
