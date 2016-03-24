@@ -64,16 +64,12 @@ function theory_validate(){
                                 location.href=examUrl+"?id="+res+"&stationId="+stationId+"&userId="+userId+"&studentId="+studentId;
                             }else{
                                 //layer.msg('没有对应的试卷信息！',{skin:'msg-error',type:1});
-                                layer.confirm('没有对应的试卷信息！',{
-                                    closeBtn:0
-                                });
+                                layer.alert('没有对应的试卷信息！');
                             }
                         }
                     })
                 }else{
-                    layer.confirm('开始考试失败！',{
-                        closeBtn:0
-                    });
+                    layer.confirm('开始考试失败！');
                 }
             }
         })
