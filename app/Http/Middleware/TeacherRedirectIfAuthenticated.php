@@ -10,6 +10,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+//use Illuminate\Support\Facades\Auth;
+use Auth;
 
 class TeacherRedirectIfAuthenticated
 {
@@ -41,7 +43,7 @@ class TeacherRedirectIfAuthenticated
     public function handle($request, Closure $next)
     {
         if ($this->auth->check()) {
-            return redirect()->route('osce.admin.ApiController.LoginAuthView');
+            return redirect()->route('osce.admin.ApiController.LoginAuthInfo');
         }
 
         return $next($request);
