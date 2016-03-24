@@ -169,7 +169,7 @@ class ExamPaperController extends CommonController
                 return redirect()->back()->withInput()->withErrors('系统异常');
             }
 
-            
+
         }
 
     }

@@ -310,6 +310,7 @@ class TestScoresController  extends CommonController
                 $datalist[$k]['avgScore'] = sprintf('%.2f',$v->avgScore);
             }
         }
+
         $data = [
             'datalist' => $datalist,
             'teacherStr' => trim($teacherStr,','),
@@ -381,13 +382,12 @@ class TestScoresController  extends CommonController
     public function getGradeDetail(Request $request,TestScoreRepositories $TestScoreRepositories,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $examID = $request->examid;
         $subjectID = $request->subid;
-        $ResultID = $request->resultID;
+        $classid = $request->classid;
         //班级成绩明细简介
-
-        $data = $TestScoreRepositories->getExamDetails($examID,$ResultID,$subjectID);
+        $data = $TestScoreRepositories->getExamDetails($examID,$classid,$subjectID);
         $data->time = date('Y-m-d H:i',strtotime($data->begin_dt)).' ~ '.date('H:i',strtotime($data->end_dt));
         //列表数据
-       $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID);
+       $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID,$classid);
         foreach($datalist as $k=>$v){
             $datalist[$k]['time'] = $subjectStatisticsRepositories->timeTransformation($v->time);
         }
