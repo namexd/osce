@@ -45,14 +45,12 @@ class AnswerController extends CommonController
         //生成正式的试卷并且 返回id
         $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
 
-        $systemTimeStart = 0;
-
-
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
             $systemTimeStart =\Session::get('systemTimeStart');
         }else{
-            \Session::put('systemTimeStart',time());
+            $systemTimeStart=time();
+            \Session::put('systemTimeStart',$systemTimeStart);
         }
 
 
