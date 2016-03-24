@@ -395,31 +395,35 @@ class PadController extends  CommonController{
      */
     public function getDoneExams(Request $request)
     {
+        $this->validate($request,[
+            'exam_id'   => 'sometimes|integer',
+            'room_id'   => 'sometimes|integer'
+        ]);
         $exam_id = $request->get('exam_id');
         $room_id = $request->get('room_id');
         //获取已经考完的所有考试列表
-        $examList    = Exam::where('status','=', 2)->select(['id','name'])->get();
-        $rooms = [];
-        $vcrs  = [];
-        //未选考试，列出所有考试对应的考场
+        $examList = Exam::where('status','=', 2)->select(['id','name','sequence_mode'])->get();
+        $rooms    = [];     //考试下对应的所有考场
+        $vcrs     = [];     //考场对应的所有摄像机
+        //未选考试，列出所有考试对应的所有考场
         if(empty($exam_id)){
             if(count($examList) != 0){
-                foreach ($examList as $value) {
-                    $exam_id = $value->id;
-                    $exam    = Exam::where('id','=',$exam_id)->first();
+                foreach ($examList as $exam) {
                     $result  = $this->getRoomDatas($exam);      //根据考试获取对应的所有考场
                     $rooms   = array_merge($rooms, $result);
                 }
             }
         }else{
-            $exam    = Exam::where('id','=',$exam_id)->first();
-            $rooms   = $this->getRoomDatas($exam);      //根据考试获取对应的所有考场
+            $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
+            $rooms  = $this->getRoomDatas($exam);      //根据考试获取对应的所有考场
         }
+        $rooms = array_unique($rooms);      //去重
+
         //未选考场，列出所有考场对应的摄像头
         if(empty($room_id)){
             //根据考场获取摄像头
             if(count($rooms) != 0){
-                foreach ($rooms as $index => $room) {
+                foreach ($rooms as $room) {
                     $roomVcr = RoomVcr::where('room_id',$room->id)->get();
                     foreach($roomVcr as $item){
                         $vcrs[] = $item->getVcr;
@@ -432,11 +436,13 @@ class PadController extends  CommonController{
                 $vcrs[] = $item->getVcr;
             }
         }
+        $vcrs = array_unique($vcrs);      //去重
 
+        //返回数据组合
         $data = [
-            'examList'  => $examList,
-            'rooms'     => $rooms,
-            'vcrs'      => $vcrs,
+            'examList'  => $examList,   //考试列表
+            'rooms'     => $rooms,      //考场列表
+            'vcrs'      => $vcrs,       //摄像机列表
         ];
 
         return response()->json(

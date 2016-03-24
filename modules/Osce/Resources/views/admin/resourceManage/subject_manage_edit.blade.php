@@ -1,19 +1,12 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
 <link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
+<link href="{{asset('osce/common/select2-4.0.0/css/select2.min.css')}}" rel="stylesheet">
 <style>
     table tr td .form-group {
         margin-bottom: 0;
     }
     td input{margin: 5px 0;}
-    #file0{
-        height: 34px;
-        width: 70px;
-        opacity: 0;
-        position: relative;
-        top: -20px;
-        left: 0;
-    }
     .ibox-content{padding-top: 20px;}
     .btn-outline:hover{color: #fff!important;}
     .form-group .ibox-title{border-top: 0;}
@@ -26,229 +19,188 @@
         margin-bottom: 0;
         text-align: center;
     }
+    .check_other {display: inline-block;vertical-align: middle;}
+    .check_top {top: 8px;margin-right: 10px;}
+    /*select2样式*/
+    .select2-container--default .select2-selection--multiple{border: 1px solid #e5e6e7;border-radius:2px;}
 </style>
 @stop
 
 @section('only_js')
-<script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script> 
-<script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
-<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
-<script> 
-    $(function(){
-        /**
-         * 编辑和新增共用了一段代码，这里必须将验证单独拿出
-         * @author mao
-         * @version 1.0
-         * @date    2016-02-19
-         */
-        $('#sourceForm').bootstrapValidator({
-            message: 'This value is not valid',
-            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {/*验证*/
-                title: {/*键名username和input name值对应*/
-                    validators: {
-                        threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                        remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                            url: "{{route('osce.admin.topic.postNameUnique')}}",//验证地址
-                            message: '名称已经存在',//提示消息
-                            delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                            type: 'POST',//请求方式
-                            /*自定义提交数据，默认值提交当前input value*/
-                            data: function(validator) {
-                                return {
-                                    name: $('#title').val(),
-                                    id:$('#id').val()
-                                }
-                            }
-                        },
-                        notEmpty: {/*非空提示*/
-                            message: '名称不能为空'
-                        }
-                    }
-                },
-                note: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '描述不能为空'
-                        }
-                    }
-                },
-                goods: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '所需物品不能为空'
-                        }
-                    }
-                },
-                stem: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '题干不能为空'
-                        }
-                    }
-                },
-                equipments: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '所需设备不能为空'
-                        }
-                    }
-                }
-            }
-        });
-    })
-</script> 
+    <script src="{{asset('osce/admin/subjectManage/subject_manage.js')}}"></script>
+    <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
+    <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
+    <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_module','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
-<div class="wrapper wrapper-content animated fadeInRight">
-
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>编辑科目</h5>
+    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add'}">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row table-head-style1 ">
+            <div class="col-xs-6 col-md-2">
+                <h5 class="title-label">编辑试题</h5>
+            </div>
         </div>
-        <div class="ibox-content">
-            <div class="row">
-
-                <div class="col-md-12 ">
-                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.topic.postEditTopic')}}">
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">名称</label>
-
-                            <div class="col-sm-10">
-                                <input type="hidden" class="form-control" id="id" name="id" value="{{$item->id}}">
-                                <input type="text" required class="form-control" id="title" name="title" value="{{$item->title}}">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">题干</label>
-                            <div class="col-sm-10">
-                                <input id="select_Category"  class="form-control" name="stem" value="{{$item->stem}}"/>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">所需设备</label>
-                            <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="equipments" value="{{$item->equipments}}"/>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">所需物品</label>
-                            <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="goods" value="{{$item->goods}}"/>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">描述</label>
-                            <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control" name="note" value="{{$item->description}}"/>
-                            </div>
-                        </div>
-
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">评分标准</label>
-                            <div class="col-sm-10">
-                                <div class="ibox float-e-margins">
-                                    <div class="ibox-title">
-                                        <h5></h5>
-                                        <div class="ibox-tools">
-                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;display:none;">下载模板</a>
-                                            <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
-                                        </div>
-                                    </div>
-                                    <div class="ibox-content">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>序号</th>
-                                                    <th>考核内容</th>
-                                                    <th width="120">分数</th>
-                                                    <th width="160">操作</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody index="{{$prointNum-1}}">
-                                            @forelse($list as $data)
-                                                <tr class="pid-{{$data->pid==0? $data->sort:$data->parent->sort}}"  current="{{$optionNum[$data->id] or 0}}" {{$data->pid==0? 'parent='.$data->sort.'':'child='.$data->sort.''}}>
-                                                    <td>{{$data->pid==0? $data->sort:$data->parent->sort.'-'.$data->sort}}</td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <label class="col-sm-2 control-label">{{$data->pid==0? '考核点:':'考核项:'}}</label>
-                                                            <div class="col-sm-10">
-                                                                <input id="select_Category"  class="form-control" name="{{$data->pid==0? 'content['.$data->sort.'][title]':'content['.$data->parent->sort.']['.$data->sort.']'}}" value="{{$data->content}}"/>
-                                                            </div>
-                                                        </div>
-                                                        @if($data->pid!=0)
-                                                        <div class="form-group">
-                                                            <label class="col-sm-2 control-label">评分标准:</label>
-                                                            <div class="col-sm-10">
-                                                                <input id="select_Category" class="form-control" name="description[{{$data->parent->sort}}][{{$data->sort}}]" value="{{$data->answer}}">
-                                                            </div>
-                                                        </div>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <select {!! $data->pid==0? 'style="display:none;"':''!!} class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
-                                                            @for($i=1;$i<=config('osce.topticOptionMaxNumer',15);$i++)
-                                                            <option value="{{$i}}" {{$data->score==$i? 'selected="selected"':''}}>{{$i}}</option>
-                                                            @endfor
-                                                        </select>
-                                                        <span {!! $data->pid!=0? 'style="display:none;"':''!!}>{{$data->score}}</span>
-                                                    </td>
-                                                    @if($data->pid==0)
-                                                    <td>
-                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up parent-up fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down parent-down fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>
-                                                    </td>
-                                                    @else
-                                                    <td>
-                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up child-up fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down child-down fa-2x"></i></span></a>
-                                                    </td>
-                                                    @endif
-                                                </tr>
-                                            @empty
-                                            @endforelse
-                                            </tbody>
-                                        </table>
-
-                                    </div>
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="{{ route('osce.admin.ExamQuestionController.postExamQuestionEdit') }}">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">题目类型</label>
+                                <div class="col-sm-10">
+                                    <select name="examQuestionTypeId" id="subjectType" class="form-control" disabled style="width: 250px;">
+                                        @if(!empty(@$examQuestionTypeList))
+                                            @foreach(@$examQuestionTypeList as $val)
+                                                <option value="{{@$val['id']}}" @if($val['id']==$data['exam_question_type_id']) selected @endif>{{@$val['name']}}</option>
+                                            @endforeach
+                                        @endif
+                                            <input type="hidden" name="examQuestionTypeId" value="{{ @$data['exam_question_type_id'] }}">
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-
-                        <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" id="submit-btn" type="submit">保存</button>
-                                <a class="btn btn-white" href="{{route("osce.admin.topic.getList")}}">取消</a>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>题目</label>
+                                <div class="col-sm-10">
+                                    <textarea name="name" id="subjectName" cols="10" rows="5" class="form-control">{{ $data['name'] }}</textarea>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-
+                            @if(@$data['exam_question_type_id'] != 4)
+                                <div class="hr-line-dashed chooseLine"></div>
+                                <div class="form-group choose">
+                                    <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>选项</label>
+                                    <div class="col-sm-10">
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-title">
+                                                <div class="ibox-tools">
+                                                    <span class="btn btn-primary" id="addChose">新增选项</span>
+                                                </div>
+                                            </div>
+                                            <div class="ibox-content">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <td>选项</td>
+                                                            <td>内容</td>
+                                                            <td>操作</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if(!empty($examQuestionItemList))
+                                                            @foreach($examQuestionItemList as $key=>$val)
+                                                                <tr>
+                                                                    <td>{{ @$val['name'] }}</td>
+                                                                    <input type="hidden" name="examQuestionItemName[]" value="{{ @$val['name'] }}">
+                                                                    <td>
+                                                                        <div class="form-group">
+                                                                            <div class="col-sm-12">
+                                                                                <input type="text" class="form-control" name="content[]" value="{{ @$val['content'] }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    @if($key+1==count($examQuestionItemList) && count($examQuestionItemList)>2)
+                                                                        <td>
+                                                                            <a href="javascript:void(0)" class="delete">
+                                                                                <span class="read state2 detail">
+                                                                                    <i class="fa fa-trash-o fa-2x"></i>
+                                                                                </span>
+                                                                            </a>
+                                                                        </td>
+                                                                    @else
+                                                                    <td></td>
+                                                                    @endif
+                                                                </tr>
+                                                        @endforeach
+                                                        @endif
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565">*</span>正确答案</label>
+                                @if(@$data['exam_question_type_id'] != 4)
+                                <div class="col-sm-10" id="checkbox_div">
+                                        @if(!empty($examQuestionItemList))
+                                            @foreach($examQuestionItemList as $k => $v)
+                                                <label class="check_label checkbox_input check_top">
+                                                    <div class="check_icon check_other  @foreach($data['answer'] as $val) @if($val == $v['name']) check @endif   @endforeach"></div>
+                                                    <input type="checkbox" name="answer[]" @foreach($data['answer'] as $val)@if($val == $v['name']) checked="checked" @endif @endforeach  value="{{ $v['name'] }}">
+                                                    <span class="check_name">{{ $v['name'] }}</span>
+                                                </label>
+                                            @endforeach
+                                        @endif
+                                </div>
+                                    @else
+                                        <div class="col-sm-10" id="radiobox_div">
+                                            <label class="radio_label" style="top: 8px;">
+                                                @if($data['answer']==1)
+                                                    <div class="radio_icon check" style="float: left"></div>
+                                                    @else
+                                                    <div class="radio_icon" style="float: left"></div>
+                                                @endif
+                                                <input type="radio" name="judge" value="1" @if($data['answer']==1) checked @endif>
+                                                <span class="radio_name" style="float: left">正确</span>
+                                            </label>
+                                            <label class="radio_label" style="top: 8px;">
+                                                @if($data['answer']==0)
+                                                    <div class="radio_icon check" style="float: left"></div>
+                                                @else
+                                                    <div class="radio_icon" style="float: left"></div>
+                                                @endif
+                                                <input type="radio" name="judge" value="0" @if($data['answer']==0) checked @endif>
+                                                <span class="radio_name" style="float: left">错误</span>
+                                            </label>
+                                        </div>
+                                @endif
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">解析</label>
+                                <div class="col-sm-10">
+                                    <textarea name="parsing" id="subjectDes" cols="10" rows="5" class="form-control">{{ $data['parsing'] }}</textarea>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565">*</span>考核范围</label>
+                                <div class="col-sm-10">
+                                    @if(!empty($examQuestionLabelTypeList))
+                                        @foreach($examQuestionLabelTypeList as $k => $v)
+                                            <div style="margin-bottom: 10px" class="clear">
+                                                <label class="col-sm-2 control-label">{{ @$v['name'] }}</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control tag" name="tag[]" multiple="multiple">
+                                                        @if(!empty($v['examQuestionLabelList']))
+                                                            @foreach($v['examQuestionLabelList'] as $key => $val)
+                                                                <option value="{{ $val['id'] }}"
+                                                                        @foreach($v['examQuestionLabelList_'] as $val2)@if($val['id'] == $val2['id']) selected @endif @endforeach>{{@$val['name']}}
+                                                                </option>
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <input type="hidden" name="id" value="{{ @$data['id'] }}">
+                                    <button class="btn btn-sm btn-primary" id="sure" type="submit" disabled>确定</button>
+                                    <a href="" onclick="history.go(-1)" class="btn btn-white btn-sm" id="cancel">取消</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
-
-</div>
 @stop{{-- 内容主体区域 --}}
