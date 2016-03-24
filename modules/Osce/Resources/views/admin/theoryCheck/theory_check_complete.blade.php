@@ -10,11 +10,11 @@
 @stop
 
 @section('only_js')
-
+    <script src="{{asset('osce/admin/theoryTest/theory_validate.js')}}"> </script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'theory_check'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'theory_complete','goUrl':'{{ route('osce.admin.ApiController.LoginAuthView') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -46,7 +46,7 @@
                                 <span>考试用时：{{$data['actual_length']}}分钟</span>
                             </div>
                             <div class="" style="padding: 70px 0 55px;">
-                                <button class="btn btn-primary">确认</button>
+                                <button class="btn btn-primary" id="sure">确认</button>
                             </div>
                         </div>
                     </div>
