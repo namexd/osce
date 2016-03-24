@@ -81,8 +81,8 @@
                                     '</td>'+
                                     '</tr>';
                             //记录计数
-                            parent.$('#list-body').append(html);
-                            parent.$('#list-body').attr('index',now);
+                            parent.$('#paper #list-body').append(html);
+                            parent.$('#paper #list-body').attr('index',now);
                         }
                         randomCount();
                         parent.layer.close(index);
