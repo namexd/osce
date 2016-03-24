@@ -316,14 +316,14 @@ class ApiController extends CommonController
             {
                 throw new \Exception('用户未登录');
             }
-
-            //根据监考老师的id，获取对应的考站id
-            $ExamInfo = $questionBankRepositories->GetExamInfo(343);
             //检验登录的老师是否是监考老师
             if(!$questionBankRepositories->LoginAuth())
             {
                 throw new \Exception('你不是监考老师');
             }
+
+            //根据监考老师的id，获取对应的考站id
+            $ExamInfo = $questionBankRepositories->GetExamInfo($user);
             if(is_array($ExamInfo)){
                 //如果有对应的考试信息，查询考试和考站信息
                 $datas = $questionBankRepositories->getExamData($ExamInfo);
@@ -337,7 +337,6 @@ class ApiController extends CommonController
             }else{
                 $datainfo='';
             }
-
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data'=>$datainfo,
             ]);
