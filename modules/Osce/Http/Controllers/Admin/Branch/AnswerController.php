@@ -45,6 +45,9 @@ class AnswerController extends CommonController
         //生成正式的试卷并且 返回id
         $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
 
+
+
+
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
             $systemTimeStart =\Session::get('systemTimeStart');
@@ -54,9 +57,10 @@ class AnswerController extends CommonController
         }
 
 
+
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
-        $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
+        $examPaperFormalList = $examPaperFormalModel->where('id','=',31)->first();
         $examPaperFormalData ='';
         if($examPaperFormalList) {
             $examPaperFormalData = array(
