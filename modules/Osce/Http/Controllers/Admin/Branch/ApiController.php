@@ -301,10 +301,9 @@ class ApiController extends CommonController
 
             //检验登录的老师是否是监考老师
             if($userId = $questionBankRepositories->LoginAuth()){
-                $datainfo='';
+
                 //根据监考老师的id，获取对应的考站id
                 $ExamInfo = $questionBankRepositories->GetExamInfo(343);
-//                dd($ExamInfo);
                 if(is_array($ExamInfo)){
                     //如果有对应的考试信息，查询考试和考站信息
                     $datas = $questionBankRepositories->getExamData($ExamInfo);
@@ -316,6 +315,8 @@ class ApiController extends CommonController
                         'userId'=>$userId,
                     );
 
+                }else{
+                    $datainfo='';
                 }
 
                 $user = User::where('id', $userId)->update(['lastlogindate' => date('Y-m-d H:i:s', time())]);
