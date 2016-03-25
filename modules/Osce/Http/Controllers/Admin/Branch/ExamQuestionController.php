@@ -75,7 +75,7 @@ class ExamQuestionController extends CommonController
             }
         }
 
-        return view('osce::admin.resourcemanage.subject_manage', [
+        return view('osce::admin.resourceManage.subject_manage', [
             'data'                         =>$data,//对象型数据
             'list'                         =>$list ,//试题列表（数组型数据）
             'examQuestionLabelTypeList' =>$examQuestionLabelTypeList,//试题类型列表
@@ -105,7 +105,7 @@ class ExamQuestionController extends CommonController
             $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;
         }
 
-        return view('osce::admin.resourcemanage.subject_manage_add', [
+        return view('osce::admin.resourceManage.subject_manage_add', [
             'examQuestionTypeList'       => $examQuestionTypeList, //题目类型列表
             'examQuestionLabelTypeList' => $examQuestionLabelTypeList, //考核范围列表
         ]);
@@ -243,7 +243,7 @@ class ExamQuestionController extends CommonController
 
        // dd($data);
         //dd($examQuestionLabelTypeList);
-        return view('osce::admin.resourcemanage.subject_manage_edit', [
+        return view('osce::admin.resourceManage.subject_manage_edit', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
             'data'                          =>$data ,//试题信息
             'examQuestionItemList'       =>$examQuestionItemList ,//试题子项表列表
