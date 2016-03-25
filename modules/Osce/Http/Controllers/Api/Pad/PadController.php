@@ -196,10 +196,17 @@ class PadController extends  CommonController{
 
         try{
             $stationVideoModel = new StationVideo();
-            $vcrs=$stationVideoModel->getTiming($vcrId,$beginDt,$examId,$endDt);
-            $videoLabels = $stationVideoModel->getVideoLabel($examId, $vcrId, $beginDt, $endDt);
+            $vcrs = $stationVideoModel->getTiming($vcrId,$beginDt,$examId,$endDt);
+            //获取标记点列表
+            $videoLabels = $stationVideoModel->getVideoLabels($examId, $vcrId, $beginDt, $endDt);
+            //组合返回数据
+            $data = [
+                'vcrs'          => $vcrs,
+                'videoLabels'   => $videoLabels
+            ];
+
             return response()->json(
-                $this->success_data($vcrs,1,'success')
+                $this->success_data($data, 1, 'success')
             );
 
         }catch (\Exception $ex){
