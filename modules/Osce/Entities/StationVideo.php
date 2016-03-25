@@ -21,30 +21,21 @@ class StationVideo extends CommonModel
     public $search = [];
 
 
-    public function getTiming($stationVcrId,$beginDt,$examId,$endDt){
-        $beginDt=strtotime($beginDt);
-        $endDt=strtotime($endDt);
-        $builder=$this->leftJoin('station_vcr',function($join){
-            $join->on('station_video.station_vcr_id','=','station_vcr.id');
-        })->leftJoin('vcr',function($join){
-            $join->on('station_vcr.vcr_id','=','vcr.id');
-        });
-        $builder=$builder->where('station_video.station_vcr_id',$stationVcrId)->where('station_video.exam_id',$examId);
+    public function getTiming($vcrId,$beginDt,$examId,$endDt){
+        $beginDt= strtotime($beginDt);
+        $endDt  = strtotime($endDt);
+        $builder= $this->leftJoin('station_vcr',function($join){
+                        $join->on('station_video.station_vcr_id','=','station_vcr.id');
+                    })->leftJoin('vcr',function($join){
+                        $join->on('station_vcr.vcr_id','=','vcr.id');
+                    });
+        $builder= $builder->where('station_vcr.vcr_id',$vcrId)
+                          ->where('station_video.exam_id',$examId);
         if($beginDt){
-            $builder=$builder->whereRaw(
-                'unix_timestamp('.'station_video.begin_dt'.') >= ?',
-                [
-                    $beginDt
-                ]
-            );
+            $builder=$builder->whereRaw('unix_timestamp(station_video.begin_dt) >= ?',[$beginDt]);
         }
         if($endDt){
-            $builder=$builder->whereRaw(
-                'unix_timestamp('.'station_video.end_dt'.') >= ?',
-                [
-                    $endDt
-                ]
-            );
+            $builder=$builder->whereRaw('unix_timestamp(station_video.end_dt) >= ?',[$endDt]);
         }
 
         $builder=$builder->select([
