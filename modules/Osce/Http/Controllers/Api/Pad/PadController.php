@@ -294,6 +294,7 @@ class PadController extends  CommonController{
             $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
             $rooms  = $this->getRoomDatas($exam);       //根据考试获取对应的所有考场
         }
+        $rooms = array_values(array_unique($rooms));    //去重，并取值（键排序）
 
         return response()->json(
             $this->success_data($rooms,1,'success')
@@ -391,7 +392,7 @@ class PadController extends  CommonController{
     }
 
     /**
-     * 获取所有 历史考试(已经考完)、考场、摄像头 (接口)
+     * 获取所有 历史考试(已经考完) (接口)
      * @method GET
      * @url    /osce/pad/done-exams
      * @access public
@@ -405,47 +406,15 @@ class PadController extends  CommonController{
      */
     public function getDoneExams(Request $request)
     {
-//        $this->validate($request,[
-//            'exam_id'   => 'sometimes|integer',
-//            'room_id'   => 'sometimes|integer'
-//        ]);
-//        $exam_id = $request->get('exam_id');
-//        $room_id = $request->get('room_id');
         //获取已经考完的所有考试列表
         $examList = Exam::where('status','=', 2)->select(['id','name'])->paginate(10);
-//        $rooms    = [];     //考试下对应的所有考场
-//        //未选考试，列出所有考试对应的所有考场
-//        if(empty($exam_id)){
-//            if(count($examList) != 0){
-//                foreach ($examList as $exam) {
-//                    $result  = $this->getRoomDatas($exam);      //根据考试获取对应的所有考场
-//                    $rooms   = array_merge($rooms, $result);
-//                }
-//            }
-//        }else{
-//            $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
-//            $rooms  = $this->getRoomDatas($exam);       //根据考试获取对应的所有考场
-//        }
-//        $rooms = array_values(array_unique($rooms));    //去重
-//
-//        //传入了考场ID,才获取对应的摄像机
-//        if(empty($room_id)){
-//            $vcrs = [];
-//        }else{
-//            $vcrs = $this->getVcrsDatas($exam_id, $room_id);     //考场对应的所有摄像机
-//        }
 
-
-        //组合返回数据
-        $data = [
-            'examList'  => $examList,   //考试列表
-//            'rooms'     => $rooms,      //考场列表
-//            'vcrs'      => $vcrs,       //摄像机列表
-        ];
-//        dd($examList->toArray()['data']);
-        return $this->success_rows(1,'获取成功',$examList->lastPage(),$examList->perPage(),$examList->currentPage(),$examList->toArray()['data']);
-        return response()->json(
-            $this->success_data($data, 1, 'success')
+        //返回数据
+        return $this->success_rows(1,'获取成功',
+            $examList->lastPage(),
+            $examList->perPage(),
+            $examList->currentPage(),
+            $examList->toArray()['data']
         );
     }
 
@@ -521,6 +490,7 @@ class PadController extends  CommonController{
                 $vcrs[] = $roomVcr->vcr;
             }
         }
+        $vcrs = array_values(array_unique($vcrs));      //去重，并取值（键排序）
 
         return $vcrs;
     }
@@ -552,7 +522,7 @@ class PadController extends  CommonController{
                 $vcrs[] = $roomVcr->getVcr;
             }
         }
-        $vcrs = array_unique($vcrs);
+        $vcrs = array_values(array_unique($vcrs));      //去重，并取值（键排序）
 
         return $vcrs;
     }
@@ -573,7 +543,7 @@ class PadController extends  CommonController{
                 $vcrs = array_merge($vcrs, $vcr);
             }
         }
-        $vcrs = array_unique($vcrs);
+        $vcrs = array_values(array_unique($vcrs));      //去重，并取值（键排序）
 
         return $vcrs;
     }
