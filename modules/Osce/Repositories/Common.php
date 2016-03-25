@@ -175,7 +175,7 @@ class Common
      * @author Jiangzhiheng
      * @time 2016-03-10 15:01
      */
-    static public function objIsEmpty($obj, $message = '系统错误', $code = -999)
+    static public function objIsEmpty($obj, $code = -999, $message = '系统错误')
     {
         if (is_object($obj)) {
             if (!$obj->isEmpty()) {
@@ -191,7 +191,7 @@ class Common
     /**
      * 判断对象是否为空
      * 如果为空，报错
-     * @param object $obj
+     * @param $value
      * @param string $message
      * @param int $code
      * @return bool
@@ -199,16 +199,40 @@ class Common
      * @author Jiangzhiheng
      * @time 2016-03-10 15:19
      */
-    static public function objIsNull($obj, $message = '系统错误', $code = -999)
+    static public function valueIsNull($value, $code = -999, $message = '系统错误')
     {
-        if (is_object($obj)) {
-            if (!is_null($obj)) {
+            if (!is_null($value)) {
                 return true;
             } else {
                 throw new \Exception($message, $code);
             }
-        } else {
-            throw new \Exception('系统错误，请重试');
+    }
+
+    /**
+     * 求一维数组的最大公约数
+     * @param array $arrays
+     * @param null $temp
+     * @return mixed|null
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-03-21 17:52
+     */
+    static public function mixCommonDivisor(array $arrays, $temp = null)
+    {
+        if (is_null($temp)) {
+            $arrays = array_unique($arrays);
+            sort($arrays);
+            $temp = array_pop($arrays);
+            self::valueIsNull($temp);
         }
+        foreach ($arrays as $array) {
+            if ($array % $temp != 0) {
+                $temp = $temp - 1;
+                self::mixCommonDivisor($arrays, $temp);
+            } else {
+                continue;
+            }
+        }
+        return $temp;
     }
 }

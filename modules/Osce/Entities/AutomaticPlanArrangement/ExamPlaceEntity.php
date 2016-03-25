@@ -126,6 +126,7 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                     //将serialnumber和room_id放入$temp对象
                     $temp->sequence_mode = $sequenceMode;
                     $temp->serialnumber = $examFlowStation->serialnumber;
+                    $temp->flow_id = $examFlowStation->flow_id;
                     $temp->room_id = $roomId;
                     $temp->needNum = 1;
                     $stations[] = $temp;
@@ -163,6 +164,7 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                     $temp->mins = $mins;
                     //将serialnumber写进room
                     $temp->serialnumber = $examFlowRoom->serialnumber;
+                    $temp->flow_id = $examFlowRoom->flow_id;
                     $temp->sequence_mode = $sequenceMode;
                     $temp->needNum = $tempStations->count();
                     $stations[] = $temp;
