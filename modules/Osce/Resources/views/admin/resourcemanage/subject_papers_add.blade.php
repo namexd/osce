@@ -143,9 +143,19 @@
                     $(this).val("1");
                 }
             });
+            $("#sure").click(function () {
+                if(!$("#addForm input[name='questionScore']").val()){
+                    $("#addForm input[name='questionScore']").val('1');
+                }
+            });
             $("#editForm input[name='questionScore2']").change(function(){
                 if($(this).val() <= 0){
                     $(this).val("1");
+                }
+            });
+            $("#editSure").click(function () {
+                if(!$("#editForm input[name='questionScore2']").val()){
+                    $("#editForm input[name='questionScore2']").val('1');
                 }
             });
             /**
@@ -635,7 +645,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565;">*</span>每题分数：</label>
                 <div class="col-sm-9">
-                    <input type="number" name="questionScore" class="form-control" placeholder="仅支持大于0的正整数">
+                    <input type="number" name="questionScore" class="form-control" placeholder="仅支持大于0的数">
                 </div>
             </div>
         </div>
@@ -667,7 +677,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565;">*</span>每题分数：</label>
                 <div class="col-sm-9">
-                    <input type="number" name="questionScore2"  class="form-control" placeholder="仅支持大于0的正整数">
+                    <input type="number" name="questionScore2"  class="form-control" placeholder="仅支持大于0的数">
                 </div>
             </div>
         </div>

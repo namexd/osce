@@ -15,6 +15,18 @@ if(!empty($errorsInfo))
 </div>
 @empty
 @endforelse
+
+{{-- 添加成功提示 --}}
+@if (session('success'))
+    <div class="pnotice success-notice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;display: none;">
+        <div class="" style="background-color: #f2dede;">
+            <div style="float: left;" style="color: #a94442;">{{ session('success') }}</div>
+            <div style="float:right;margin-right: 2px;cursor: pointer;" class="closeNotice close-success-notice">&nbsp;X&nbsp;</div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+@endif
+
 <script>
     $(function(){
         $('.closeNotice').click(function(){
@@ -29,5 +41,15 @@ if(!empty($errorsInfo))
            layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{skin:'msg-error',icon:1});
         }
 
+        // 成功提示
+        $('.close-success-notice').click(function(){
+            $(this).parents('.success-notice').remove();
+        });
+        var msg = $('.success-notice').find('div').find('div').eq(0).text();
+        if(msg==''){
+            return;
+        }else{
+            layer.msg($('.success-notice').find('div').find('div').eq(0).text(),{skin:'msg-success',icon:1});
+        }
     })
 </script>

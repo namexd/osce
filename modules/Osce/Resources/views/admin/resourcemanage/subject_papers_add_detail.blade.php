@@ -132,7 +132,24 @@
                                 regexp: {
                                     regexp : /^([1-9]\d?|100)$/,
                                     message: '题目数量只能是1-100的正整数'
-                                }
+                                },
+                                remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                                    url: '/osce/admin/exampaper/check-questions-num',//验证地址
+                                    message: '所选题目数量不足',//提示消息
+                                    delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                    type: 'POST',//请求方式
+                                    /**自定义提交数据，默认值提交当前input value*/
+                                       data: function(validator) {
+                                        console.log($('select[name=label-3]').val()+'@'+$('.tags_0').val()+','+$('select[name=label-2]').val()+'@'+$('.tags_1').val()+','+$('select[name=label-1]').val()+'@'+$('.tags_2').val());
+                                           return {
+                                               question:$('select[name=question-type]').val(),
+                                               tag1: $('select[name=label-3]').val()+'@'+$('.tags_0').val(),
+                                               tag2: $('select[name=label-2]').val()+'@'+$('.tags_1').val(),
+                                               tag3: $('select[name=label-1]').val()+'@'+$('.tags_2').val(),
+                                           };
+                                        }
+
+                                },
                             }
                         },
                         questionScore: {/*键名username和input name值对应*/
@@ -206,7 +223,7 @@
                                 </select>
                             </div>
                             <div class="col-sm-6">
-                                <select class="form-control tag" name="tag[]" multiple="multiple" style="width: 100%">
+                                <select class="form-control tag tags_{{$k}}" name="tag[]" multiple="multiple" style="width: 100%">
                                     @if(!empty($sub['examQuestionLabel']))
                                         @foreach($sub['examQuestionLabel'] as $key => $val)
                                             <option value="{{ @$val['id'] }}"

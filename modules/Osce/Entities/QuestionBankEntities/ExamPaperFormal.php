@@ -83,11 +83,13 @@ class ExamPaperFormal extends CommonModel
                         if(count($v['child'])>0){
                             foreach($v['child'] as $val){
                                 $ExamQuestionInfo = ExamQuestion::where('id','=',$val)->first();
+
+
                                 //dd($ExamQuestionInfo->examQuestionItem);
                                 //dd(count($ExamQuestionInfo->examQuestionItem));
                                 //拼凑试题内容
                                 $content = '';
-                                if(!empty($ExamQuestionInfo->examQuestionItem)){
+                                if($ExamQuestionInfo->examQuestionItem){
                                     foreach($ExamQuestionInfo->examQuestionItem as $value){
                                         if($content){
                                             $content .= '|%|'.$value['name'].'.'.$value['content'];
@@ -105,6 +107,7 @@ class ExamPaperFormal extends CommonModel
                                     'parsing'=>$ExamQuestionInfo['parsing'],
                                     'exam_category_formal_id'=>$ExamCategoryFormalInfo['id'],
                                 ];
+
                                 if(!ExamQuestionFormal::create($ExamQuestionData)){
                                     throw new \Exception(' 创建试题表数据失败！');
                                 }

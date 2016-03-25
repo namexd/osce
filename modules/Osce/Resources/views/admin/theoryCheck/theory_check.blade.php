@@ -205,37 +205,37 @@
                                             <span style="margin-left: 1em;">共<span class="subjectNum">{{@$val["examCategoryFormalNumber"]}}</span>题，</span>
                                             <span>每题<span class="subjectScore">{{@$val["examCategoryFormalScore"]}}</span>分</span>
                                             <div class="allSubject">
-                                                <div class="subjectBox   mart_10 " exam_question_id="{{$val["id"]}}">
-                                                    <span class="font16 subjectContent">{{ $val["name"]}}(　　　)</span>
+                                                <div class="subjectBox   mart_10 " exam_question_id="{{@$val["id"]}}">
+                                                    <span class="font16 subjectContent">{{ @$val["name"]}}(　　　)</span>
                                                 </div>
-                                                @if($val["exam_question_type_id"]===1)
-                                                    @foreach($val["content"] as $k=> $val2 )
-                                                        <div class="answerBox" examCategoryFormalId="{{$val["exam_question_type_id"]}}">
+                                                @if(@$val["examQuestionTypeId"]==1)
+                                                    @foreach(@$val["content"] as $k=> $val2 )
+                                                        <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
                                                             <label class="radio_label mart_20 check_top">
                                                                 <div class="radio_icon left" ></div>
-                                                                <input type="radio" name="{{$val["serialNumber"]}}" value="{{$k}}">
+                                                                <input type="radio" name="{{@$val["serialNumber"]}}" value="{{@$k}}">
                                                                 <span class="marl_10 answer">{{@$val2}}</span>
                                                             </label>
                                                         </div>
                                                     @endforeach
                                                 @endif
-                                                @if($val["exam_question_type_id"]===2||$val["exam_question_type_id"]===3)
-                                                    @foreach($val["content"] as $k=> $val2 )
-                                                        <div class="answerBox" examCategoryFormalId="{{$val["exam_question_type_id"]}}">
+                                                @if(@$val["examQuestionTypeId"]==2||@$val["examQuestionTypeId"]==3)
+                                                    @foreach(@$val["content"] as $k=> $val2 )
+                                                        <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
                                                             <label class="check_label checkbox_input mart_20 check_top" style="">
                                                                 <div class="check_icon check_other"></div>
-                                                                <input type="checkbox" name="{{$val["serialNumber"]}}" value="{{$k}}">
+                                                                <input type="checkbox" name="{{@$val["serialNumber"]}}" value="{{@$k}}">
                                                                 <span class="check_name">{{@$val2}}</span>
                                                             </label>
                                                         </div>
                                                     @endforeach
                                                 @endif
-                                                @if($val["exam_question_type_id"]===4)
+                                                @if(@$val["examQuestionTypeId"]==4)
                                                     @foreach($val["content"] as $k=> $val2 )
-                                                        <div class="answerBox" examCategoryFormalId="{{$val["exam_question_type_id"]}}">
+                                                        <div class="answerBox" examCategoryFormalId="{{@$val["exam_question_type_id"]}}">
                                                             <label class="radio_label mart_20 check_top">
                                                                 <div class="radio_icon left" ></div>
-                                                                <input type="radio" name="{{$val["serialNumber"]}}" value="{{$k}}">
+                                                                <input type="radio" name="{{@$val["serialNumber"]}}" value="{{@$k}}">
                                                                 <span class="marl_10 answer">
                                                                     @if($val2==0)
                                                                         错误
