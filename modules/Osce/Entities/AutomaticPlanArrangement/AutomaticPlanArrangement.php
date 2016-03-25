@@ -193,7 +193,7 @@ class AutomaticPlanArrangement
         //获取考试实体的最大公约数
         $mixCommonDivisors = [];
         foreach ($this->_T as $item) {
-            $mixCommonDivisors[] = $item->mins;
+            $mixCommonDivisors[] = $item->mins  +   config('osce.begin_dt_buffer');
         }
         $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
 
@@ -203,8 +203,12 @@ class AutomaticPlanArrangement
         $efg = 0;
         $min    =   $this->doorStatus;
         $max = $this->doorStatus;
+        $i = $beginDt;
+        $k  =   3;
+        $step = $mixCommonDivisor * 60;
         //开始计时器
-        for ($i = $beginDt; $i <= $endDt; $i += 60) {
+//        for ($i = $beginDt; $i <= $endDt; $i += $mixCommonDivisor * 60) {
+        while ($i <= $endDt) {
             foreach ($this->_T as &$station) {
                 /*
                  * 考试实体状态判断,使用exam_plan_record来判断状态
@@ -241,25 +245,50 @@ class AutomaticPlanArrangement
 
                         $this->tempPlan[] = $result;
                     }
-                    $station->timer += 60;
+                    $station->timer += $step;
                     //反之，则是关门状态
                 } else {
-
                     $tempValues = $this->examPlanRecordIsOpenDoor($station, $screen);
                     if ($station->timer >= $station->mins * 60 + config('osce.begin_dt_buffer') * 60) {
                         $station->timer = 0;
                         //将结束时间写在表内
                         foreach ($tempValues as $tempValue) {
+                            if(!empty($tempValue->end_dt))
+                            {
+                                continue;
+                            }
                             $tempValue->end_dt = date('Y-m-d H:i:s', $i);
                             if (!$tempValue->save()) {
                                 throw new \Exception('开门失败！', -10);
                             } else {
+                                $k  =   1;
                                 $this->doorStatus++;
                             }
                         }
                     } else {
-                        $station->timer += 60;
+                        $station->timer += $step;
                     }
+                }
+            }
+            if ($k === 3) {
+                $step = $mixCommonDivisor   *   60;
+                $i += $step;
+            }
+            if ($k === 2) {
+                $step = $mixCommonDivisor * 60;
+                $k  =   3;
+                $i += $step;
+            }
+            if ($k === 1) {
+                $k = 2;
+            }
+
+
+            if (count($this->_S_ING) == 0 && count($this->_S) == 0 ){
+                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->first();  //通过查询数据表中是否有没有写入end_dt的数据
+                if(is_null($examPlanNull))
+                {
+                    break;
                 }
             }
         }

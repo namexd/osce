@@ -222,7 +222,7 @@ class Common
         if (is_null($temp)) {
             $arrays = array_unique($arrays);
             sort($arrays);
-            $temp = array_pop($arrays);
+            $temp = array_shift($arrays);
             self::valueIsNull($temp);
         }
         foreach ($arrays as $array) {
