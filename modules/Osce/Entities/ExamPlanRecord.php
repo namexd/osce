@@ -26,7 +26,9 @@ class ExamPlanRecord extends CommonModel
         'exam_screening_id',
         'end_dt',
         'begin_dt',
-        'serialnumber'
+        'serialnumber',
+        'flow_id',
+        'group'
     ];
 
     public function student()
