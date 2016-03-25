@@ -129,20 +129,20 @@
             opacity: .2;
         }
         .axis dl .tick-bar{
-            margin-left: -7px;
+            margin-left: -10px;
             height: 2px;
             width: 2px;
-            border-right: 7px solid #333;
+            border-right: 10px solid #333;
             background-color: #333;
         }
         .tick-bar span{
             z-index: 10;
             display: inline-block;
-            width: 125px;
+            width: 90px;
             text-align: center;
             font-size: 12px;
             position: relative;
-            left: -125px;
+            left: -95px;
             top: -10px;
         }
         .tick span{
