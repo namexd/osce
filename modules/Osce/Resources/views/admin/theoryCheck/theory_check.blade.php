@@ -208,7 +208,7 @@
                                                 <div class="subjectBox   mart_10 " exam_question_id="{{$val["id"]}}">
                                                     <span class="font16 subjectContent">{{ $val["name"]}}(　　　)</span>
                                                 </div>
-                                                @if($val["examQuestionTypeId"]===1)
+                                                @if($val["examQuestionTypeId"]==1)
                                                     @foreach($val["content"] as $k=> $val2 )
                                                         <div class="answerBox" examCategoryFormalId="{{$val["examQuestionTypeId"]}}">
                                                             <label class="radio_label mart_20 check_top">
@@ -219,7 +219,7 @@
                                                         </div>
                                                     @endforeach
                                                 @endif
-                                                @if($val["examQuestionTypeId"]===2||$val["examQuestionTypeId"]===3)
+                                                @if($val["examQuestionTypeId"]==2||$val["examQuestionTypeId"]==3)
                                                     @foreach($val["content"] as $k=> $val2 )
                                                         <div class="answerBox" examCategoryFormalId="{{$val["examQuestionTypeId"]}}">
                                                             <label class="check_label checkbox_input mart_20 check_top" style="">
@@ -230,9 +230,9 @@
                                                         </div>
                                                     @endforeach
                                                 @endif
-                                                @if($val["examQuestionTypeId"]===4)
+                                                @if($val["examQuestionTypeId"]==4)
                                                     @foreach($val["content"] as $k=> $val2 )
-                                                        <div class="answerBox" examCategoryFormalId="{{$val["examQuestionTypeId"]}}">
+                                                        <div class="answerBox" examCategoryFormalId="{{$val["exam_question_type_id"]}}">
                                                             <label class="radio_label mart_20 check_top">
                                                                 <div class="radio_icon left" ></div>
                                                                 <input type="radio" name="{{$val["serialNumber"]}}" value="{{$k}}">
