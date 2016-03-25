@@ -140,6 +140,7 @@
                                     type: 'POST',//请求方式
                                     /**自定义提交数据，默认值提交当前input value*/
                                        data: function(validator) {
+                                        console.log($('select[name=label-3]').val()+'@'+$('.tags_0').val()+','+$('select[name=label-2]').val()+'@'+$('.tags_1').val()+','+$('select[name=label-1]').val()+'@'+$('.tags_2').val());
                                            return {
                                                question:$('select[name=question-type]').val(),
                                                tag1: $('select[name=label-3]').val()+'@'+$('.tags_0').val(),
