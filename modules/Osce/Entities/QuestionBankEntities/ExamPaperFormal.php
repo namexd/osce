@@ -97,7 +97,6 @@ class ExamPaperFormal extends CommonModel
                                             $content .= $value['name'].'.'.$value['content'];
                                         }
 
-
                                     }
                                 }
                                 $ExamQuestionData = [

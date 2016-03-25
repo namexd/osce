@@ -101,6 +101,7 @@ class AnswerController extends CommonController
                 }
             }
         }
+        //dd($examCategoryFormalData);
 
         if(count($examCategoryFormalData)>0&&!empty($examCategoryFormalData)){
             foreach($examCategoryFormalData as $key=>$val){
