@@ -41,7 +41,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('case/case-list', ['uses'=>'CaseController@getCaseList','as'=>'osce.admin.case.getCaseList']);  //病例的着陆页
 		Route::get('case/edit-case', ['uses'=>'CaseController@getEditCase','as'=>'osce.admin.case.getEditCase']);  //病例的修改页
 		Route::get('case/create-case', ['uses'=>'CaseController@getCreateCase','as'=>'osce.admin.case.getCreateCase']);  //病例的添加页
-		Route::post('case/name-unique', 	['uses'=>'CaseController@postNameUnique','as'=>'osce.admin.case.postNameUnique']);	//判断名称是否存在
+		Route::post('case/name-unique',['uses'=>'CaseController@postNameUnique','as'=>'osce.admin.case.postNameUnique']);	//判断名称是否存在
 
 		//智能排考
 		Route::post('arrangement/begin',['uses'=>'AutomaticPlanArrangementController@postBegin','as'=>'osce.admin.arrangement.postBegin']);
@@ -67,8 +67,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilator/edit-sp-invigilator',['uses'=>'InvigilatorController@getEditSpInvigilator','as'=>'osce.admin.invigilator.getEditSpInvigilator']);
 		Route::post('invigilator/add-sp-invigilator', 	['uses'=>'InvigilatorController@postAddSpInvigilator','as'=>'osce.admin.invigilator.postAddSpInvigilator']);
 		Route::post('invigilator/edit-sp-invigilator', 	['uses'=>'InvigilatorController@postEditSpInvigilator','as'=>'osce.admin.invigilator.postEditSpInvigilator']);
-		Route::post('invigilator/code-unique', 	['uses'=>'InvigilatorController@postCodeUnique','as'=>'osce.admin.invigilator.postCodeUnique']);	//判断编号是否存在
-		Route::post('invigilator/idcard-unique',['uses'=>'InvigilatorController@postIdcardUnique','as'=>'osce.admin.invigilator.postIdcardUnique']);	//判断身份证号是否存在
+		Route::post('invigilator/code-unique', 	['uses'=>'InvigilatorController@postCodeUnique','as'=>'osce.admin.invigilator.postCodeUnique']);			//判断编号是否存在
+		Route::post('invigilator/idcard-unique',['uses'=>'InvigilatorController@postIdcardUnique','as'=>'osce.admin.invigilator.postIdcardUnique']);		//判断身份证号是否存在
+		Route::post('invigilator/import-teachers',['uses'=>'InvigilatorController@postImportTeachers','as'=>'osce.admin.invigilator.postImportTeachers']);	//导入老师
+		Route::get('invigilator/download-teacher-improt-tpl',['uses'=>'InvigilatorController@getdownloadTeacherImprotTpl','as'=>'osce.admin.invigilator.getdownloadTeacherImprotTpl']);	//下载老师模板
 
 
 		//设置
@@ -276,8 +278,12 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('vcr',['uses'=>'PadController@getVcr']);
 
 		Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
-		Route::get('teacher-vcr',['uses'=>'PadController@getTeacherVcr']);		//根据考场ID、考试ID和teacher_id获取考站的摄像头信息(接口)
-		Route::get('timing-vcr',['uses'=>'PadController@getTimingList']);
+		Route::get('teacher-vcr',['uses'=>'PadController@getTeacherVcr']);		//根据考场ID、考试ID和teacher_id获取考站的摄像头信息(接口) zhoufuxiang 2016-3-9
+		Route::get('timing-vcr', ['uses'=>'PadController@getTimingList']);
+		Route::get('doing-exams',['uses'=>'PadController@getDoingExams']);		//获取当前正在进行的所有考试 	 (接口) zhoufuxiang 2016-3-21
+		Route::get('done-exams', ['uses'=>'PadController@getDoneExams']);		//获取所有的 历史考试(已经考完) (接口) zhoufuxiang 2016-3-23
+		Route::get('all-rooms',  ['uses'=>'PadController@getAllRooms']);		//获取所有的 历史考试的考场列表 (接口) zhoufuxiang 2016-3-25
+		Route::get('all-vcrs-list', ['uses'=>'PadController@getAllVcrsList']);	//历史回放，获取所有已经考完的考试对应的摄像头列表(接口) zhoufuxiang 2016-3-25
 
 		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
 

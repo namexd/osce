@@ -353,7 +353,6 @@ class StudentExamQueryController extends CommonController
             $studentModel = new Student();
             //找到按科目为基础的所有分数还有总人数
             $avg = $subjectModel->CourseControllerAvg($examId, $subjectId);
-
             //如果avg不为空
             $item = [
                 'exam_begin_dt' => $examTime->begin_dt,
@@ -387,7 +386,7 @@ class StudentExamQueryController extends CommonController
                     'student_name' => $student->student_name,
                     'student_id' => $student->student_id,
                     'exam_id' => $examId,
-                    'Scores' => $StudentScores,
+                    'Scores' =>$student->exam_result_score,
 
                 ];
             }

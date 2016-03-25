@@ -913,14 +913,17 @@ class ExamPlan extends CommonModel
             $result = [];
             foreach ($data as $item) {
                 $array = [
-                    'exam_id' => $examId,
+                    'exam_id'         => $examId,
                     'exam_screening_id' => $item->exam_screening_id,
-                    'student_id' => $item->student_id,
-                    'station_id' => $item->station_id,
-                    'room_id' => $item->room_id,
-                    'begin_dt' => $item->begin_dt,
-                    'end_dt' => $item->end_dt,
-                    'status' => 0,
+                    'student_id'      => $item->student_id,
+                    'station_id'      => $item->station_id,
+                    'room_id'         => $item->room_id,
+                    'begin_dt'        => $item->begin_dt,
+                    'end_dt'          => $item->end_dt,
+                    'status'          => 0,
+                    'group'           => $item->group,
+                    'flow_id'         => $item->flow_id,
+                    'serialnumber'    => $item->serialnumber,
                     'created_user_id' => $user->id,
                 ];
                 $a = ExamPlan::create($array);

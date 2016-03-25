@@ -390,6 +390,8 @@ class DrawlotsController extends CommonController
             $examinee = new Examinee($exam, ['id' => $id]);
             $station = $examinee->getStation();
 
+            $station->station_type = $station->type;
+
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));

@@ -53,7 +53,6 @@ class ExamFlowStation extends CommonModel
             $exam = Exam::findOrFail($examId)->first();
 
             foreach ($room as $key => $item) {
-//                dd($room);
                 foreach ($item as $v) {
                     //根据station_id查对应的名字
                     $station = Station::findOrFail($v)->first();
@@ -148,7 +147,6 @@ class ExamFlowStation extends CommonModel
                 $this->stationTeacherAssociation($examId, $value, $user);
             }
 
-
             $connection->commit();
             return true;
         } catch (Exception $ex) {
@@ -203,6 +201,24 @@ class ExamFlowStation extends CommonModel
             if (!$examFlowsStationResult = ExamFlowStation::create($examFlowsStationData)) {
                 throw new Exception('考试流程考站关联添加失败');
             }
+
+            //考试-试卷-考站关联  TODO: Zhoufuxiang 2016-3-22
+            $station = Station::where('id','=',$value)->select(['name', 'type', 'paper_id'])->first();
+            if($station->type == 3){
+                if(!isset($station->paper_id) || empty($station->paper_id)){
+                    throw new Exception($station->name.' (考站) 没有关联考卷!');
+                }
+                $examPaperStation = [
+                    'exam_id'       => $examId,
+                    'exam_paper_id' => $station->paper_id,
+                    'station_id'    => $value,
+                ];
+                //插入exam_paper_exam_station表
+                if(!$examPaperStation = ExamPaperStation::create($examPaperStation)){
+                    throw new Exception('考试-试卷-考站关联添加失败');
+                }
+            }
+
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -295,6 +311,14 @@ class ExamFlowStation extends CommonModel
                     throw new \Exception('删除流程失败，请重试！');
                 }
             }
+
+            //删除考试-试卷-考站关联  TODO: Zhoufuxiang 2016-3-22
+            if(!ExamPaperStation::where('exam_id', '=', $id)->get()->isEmpty()){
+                if(!ExamPaperStation::where('exam_id', '=', $id)->delete()){
+                    throw new \Exception('删除考试-试卷-考站关联失败，请重试！');
+                }
+            }
+
         } catch (Exception $ex) {
             throw $ex;
         }

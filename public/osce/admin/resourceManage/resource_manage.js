@@ -19,8 +19,8 @@ $(function(){
         case "clinical_case_manage_add":clinical_case_manage_add();break;
         case "clinical_case_manage_edit":clinical_case_manage_edit();break;
         //科目
-        case "subject_module":subject_module();break;    //考点操作 新增&编辑
-        case "subject_manage":subject_manage();break;
+        case "course_module":course_module();break;    //考点操作 新增&编辑
+        case "course_manage":course_manage();break;
         //人员管理
         case "staff_manage_invigilator":staff_manage_invigilator();break;
         case "staff_manage_invigilator_add":staff_manage_invigilator_add();break;
@@ -101,7 +101,6 @@ function equipment_manage_watch_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 id:(location.href).split('=')[1],
@@ -207,7 +206,6 @@ function equipment_manage_watch_add() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 cate: '3',
@@ -346,7 +344,6 @@ function equipment_manage_pad_add() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 id:(location.href).split('=')[1],
@@ -454,8 +451,6 @@ function equipment_manage_pad_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
-
                             return {
                                 id:(location.href).split('=')[1],
                                 cate: '2',
@@ -594,7 +589,6 @@ function equipment_manage_video_add() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 cate: '1',
@@ -764,7 +758,6 @@ function equipment_manage_video_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 id:(location.href).split('=')[1],
@@ -949,7 +942,6 @@ function exam_station_add() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 title: 'station',
@@ -975,6 +967,21 @@ function exam_station_add() {
                     }
                 }
             }
+        }
+    });
+
+    /**
+     * 显示考卷
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-22
+     */
+    $('select[name="type"]').change(function() {
+        var $this = $(this);
+        if($this.val() == 3) {
+            $('.paper-id').show();
+        }else{
+            $('.paper-id').hide();
         }
     });
 }
@@ -1006,8 +1013,6 @@ function exam_station_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
-
                             return {
                                 id: (location.href).split('=')[1],
                                 title: 'station',
@@ -1071,6 +1076,30 @@ function exam_station_edit() {
             }
         }
     });
+
+    /**
+     * 显示考卷
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-22
+     */
+    $('select[name="type"]').change(function() {
+        var $this = $(this);
+        if($this.val() == 3) {
+            $('.paper-id').show();
+        }else{
+            $('.paper-id').hide();
+        }
+    });
+
+    //代码回显是否隐藏考卷
+    if($('select[name="type"]').val() == 3) {
+        $('.paper-id').show();
+    }else{
+        $('.paper-id').hide();
+    }
+
+
 }
 
 /**
@@ -1214,9 +1243,7 @@ function site_manage_add() {
                         delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
-                        data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
-                            return {
+                        data: function(validator) {                            return {
                                 name: $('[name="whateverNameAttributeInYourForm"]').val()
                             };
                         }
@@ -1327,9 +1354,8 @@ function site_manage_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                             return {
-                                id: (location.href).split('=')[1],
+                                id: pars.id,
                                 name: $('[name="whateverNameAttributeInYourForm"]').val()
                             }
                         }
@@ -1448,7 +1474,7 @@ function deleteItem(url){
  * @version 2.0.1
  * @date    2016-03-17
  */
-function subject_module(){
+function course_module(){
     $('#submit-btn').click(function(){
         var flag = null;
         $('tbody').find('.col-sm-10').each(function(key,elem){
@@ -2110,6 +2136,46 @@ function staff_manage_invigilator(){
     $(".delete").click(function(){
         deleteItems("post",pars.deletes,$(this).attr("tid"),pars.firstpage);
     })
+
+    /**
+     * 老师导入
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-21
+     */
+    $('#file1').change(function() {
+        //加载中
+        var index = layer.load(0, {
+            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+        $.ajaxFileUpload({
+            url:pars.excel,
+            type:'post',
+            secureuri:false,//
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'json',//
+            success: function (data, status)
+            {
+                if(data.code == 1){
+                    layer.close(index);
+                    layer.msg(data.message,{skin:'msg-success',icon:1},function(){
+                        location.reload();
+                    });
+                }else{
+                    layer.close(index);
+                    layer.msg(data.message,{skin:'msg-error',icon:1},function(){
+                        location.reload();
+                    });
+                }
+            },
+            error: function (data, status, e)
+            {
+                layer.close(index);
+                layer.alert(data.message,{skin:'msg-error',icon:1});
+            }
+        });
+    });
+    
 }
 
 /**
@@ -2177,7 +2243,6 @@ function staff_manage_invigilator_add() {
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
 
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                             return {
                                 code: $('[name="whateverNameAttributeInYourForm"]').val()
                             }
@@ -2209,7 +2274,6 @@ function staff_manage_invigilator_add() {
                         message: '身份证号已存在',//提示消息
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 idcard: $('[name="whateverNameAttributeInYourForm"]').val()
@@ -2324,7 +2388,6 @@ function staff_manage_invigilator_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 id:  (location.href).split('=')[1],
@@ -2382,7 +2445,6 @@ function staff_manage_invigilator_edit() {
                         message: '身份证号已存在',//提示消息
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 id: (location.href).split('=')[1],
@@ -2470,7 +2532,7 @@ function staff_manage_invigilator_edit() {
  * @return  {[type]}   [description]
  */
 
-function subject_manage(){
+function course_manage(){
 
     $(".fa-trash-o").click(function(){
         var thisElement=$(this);
@@ -2560,7 +2622,6 @@ function staff_manage_invigilator_sp_add() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 code: $('[name="whateverNameAttributeInYourForm"]').val()
@@ -2611,7 +2672,6 @@ function staff_manage_invigilator_sp_add() {
                         message: '身份证号已存在',//提示消息
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 idcard: $('[name="whateverNameAttributeInYourForm"]').val()
@@ -2732,7 +2792,6 @@ function staff_manage_invigilator_sp_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                                                                                                                                 
                             return {
                                 id:  (location.href).split('=')[1],
@@ -2791,7 +2850,6 @@ function staff_manage_invigilator_sp_edit() {
                         message: '身份证号已存在',//提示消息
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
 
                             return {
                                 id: (location.href).split('=')[1],
@@ -2904,7 +2962,11 @@ function deleteArea(type,url,id,areaType,firstpage){
             },
             success:function(data){
                 if(data.code == 1){
-                    location.href= $('.nav-tabs').find('.active').find('a').attr('href');
+                    if(data.data.type == 0){
+                        location.href = firstpage;
+                    }else {
+                        location.href= $('.nav-tabs').find('.active').find('a').attr('href');
+                    }
                 }else {
                     layer.msg(data.message,{skin:'msg-error',icon:1});
                 }

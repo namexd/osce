@@ -24,7 +24,15 @@ return [
 			'分数'=>'score',
 		],
 		'teacher'=>[
-			//暂时空置
+			'姓名'		=>	'name',
+			'性别'		=>	'gender',
+			'教师编号'	=>	'code',
+			'身份证号'	=>	'idcard',
+			'联系电话'	=>	'mobile',
+			'教师类别'	=>  'type',
+			'电子邮箱'	=>	'email',
+			'头像'		=>	'avatar',
+			'备注'		=>	'description',
 		],
 		'student'=>[
 			'姓名'		=>	'name',
@@ -59,10 +67,11 @@ return [
 	],
 	'prepare'			=>	10,
 	'spRoleId'			=>	4,
-	'invigilatorRoleId'	=>	1,
+	'invigilatorRoleId'	=>	env('invigilatorRoleId',77),
 	'studentRoleId'		=>	2,
 	'adminRoleId'		=>	3,
 	'superRoleId'		=>	5,
+	'patrolRoleId'		=>	6,		//巡考老师角色 TODO: Zhoufuxiang  2016-3-23
 
 	//场所类型的管理
 	'room_cate' => [

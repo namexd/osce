@@ -20,12 +20,808 @@ $(function(){
         case "exam_notice_add":exam_notice_add();break;
         case "exam_notice_edit":exam_notice_edit();break;
         //考前培训
-        case "train_list": train_list();break
-        case "train_add": train_add();break
-        case "train_edit": train_edit();break
-        case "train_detail": train_detail();break
+        case "train_list": train_list();break;
+        case "train_add": train_add();break;
+        case "train_edit": train_edit();break;
+        //成绩查询
+        case "score_query": score_query();break;
+        case "score_query": score_query_detail();break;
     }
 });
+
+/**
+ * 成绩查询
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-22
+ */
+function score_query() {
+    $('#select_Category').change(function(){
+
+        var examId = $(this).val();
+        $.ajax({
+            type:'get',
+            url:pars.URL,
+            data:{exam_id:examId},
+            success:function(res){
+                if(res.code!=1){
+                    layer.alert(res.message);
+                }else{
+                    var data = res.data;
+                    var result = [];
+                    //数据结构
+                    for(var i in data){
+                        result.push({id:data[i][0].id,name:data[i][0].name});
+                    }
+
+                    //数据去重
+                    var _r = {},current = [];
+                    for(var i in result){
+                        if(!_r[result[i].id]){
+                            _r[result[i].id] = true;
+                            current.push(result[i]);
+                        }
+                    }
+
+                    //写入dom
+                    var html = '<option value="">全部考站</option>';
+                    for(var i in current){
+                        html += '<option value="'+current[i].id+'">'+current[i].name+'</option>';
+                    }
+
+                    $('#station_Category').html(html);
+                }
+            },
+            error:function(res){
+                layer.alert('通讯失败！')
+            }
+        });
+    });
+}
+
+
+function score_query_detail() {
+    /**
+     * 图表统计
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-29
+     * @param   {array}   standard     考核点分数
+     * @param   {string}   student_name 学生姓名
+     * @param   {array}   avg          考核点平均分
+     * @param   {array}   xAxis          考核点
+     */
+    function charts(standard,student_name,avg,xAxis){
+
+        //考核点数据较少处理
+        if(xAxis.length<8){
+            var len = 7 - xAxis.length;
+            for(var i = 0;i<=len;i++){
+                xAxis.push('');
+            }
+        }
+
+        var option = {
+            title : {
+                text: '图表分析',
+                textStyle:{
+                    fontFamily:'Microsoft YaHei',
+                    fontSize:16,
+                    color:'#676a6c'
+                }
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:[student_name,'平均分'],
+                x:'right'
+            },
+            toolbox: {
+                show : false
+            },
+            calculable : false,
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    axisLine : {
+                        lineStyle : {
+                            color: '#ddd',
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    data : xAxis//['考核点1','考核点2','','','','','']
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    axisLine : {
+                        lineStyle : {
+                            color: '#ddd',
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    axisLabel : {
+                        formatter: '{value} 分'
+                    }
+                }
+            ],
+            series : [
+                {
+                    name:student_name,
+                    type:'line',
+                    smooth:true,
+                    symbol:'emptyCircle',
+                    symbolSize:4,
+                    itemStyle: {
+                        normal: {
+                            color:'#1ab394',
+                            lineStyle:{
+                                color:'#1ab394'
+                            },
+                            areaStyle: {
+                                color:'rgba(26,179,148,.3)',
+                                type: 'default'
+                            }
+                        }
+                    },
+                    data:standard//[30, 82, 34, 91, 90, 30, 10]
+                },
+                {
+                    name:'平均分',
+                    type:'line',
+                    symbol:'emptyCircle',
+                    symbolSize:4,
+                    smooth:true,
+                    itemStyle: {
+                        normal: {
+                            color:'#ccc',
+                            lineStyle:{
+                                color:'#ccc'
+                            },
+                            areaStyle: {
+                                type: 'default'
+                            }
+                        }
+                    },
+                    data:avg//[55, 67, 76, 68, 60, 68, 77]
+                }
+            ]
+        };
+
+        var myChart = echarts.init(document.getElementById('score')); 
+        myChart.setOption(option);
+    }
+
+    //考核点分数
+    var standard = [],avg = [],xAxis = [];
+    $('#standard li').each(function(key,elem){
+        standard.push($(elem).attr('value'));
+    });
+
+    $('#avg li').each(function(key,elem){
+        avg.push($(elem).attr('value'));
+    });
+
+    if(standard.length>avg.length){
+        for(var i in standard){
+            xAxis.push('考核点'+(parseInt(i)+1));
+        }
+    }else{
+        for(var i in standard){
+            xAxis.push('考核点'+(parseInt(i)+1));
+        }
+    }
+    //触发图表格
+    charts(standard,$('#student').text(),avg,xAxis);
+
+
+    /**
+     * 图片下载页面弹出
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-28
+     */
+    $('.fa-picture-o').click(function(){
+
+        //获取img数据
+        var img = [];
+        $(this).parent().siblings('.img').find('li').each(function(key,elem){
+
+            img.push({src:$(elem).attr('value'),download:$(elem).attr('download')});
+        });
+
+        //下载的图片dom结构
+        var str = '';
+        for(var i in img){
+            if(i==0){
+                str += '<div class="item active">'+
+                      '<img style="height:200px; width:100%;" src="/'+img[i].src+'" alt="...">'+
+                      '<div class="carousel-caption">'+
+                        '<a href="'+img[i].download+'" target="_blank">下载</a>'+
+                      '</div>'+
+                    '</div>';
+            }else{
+                str += '<div class="item">'+
+                      '<img style="height:200px; width:100%;" src="/'+img[i].src+'" alt="...">'+
+                      '<div class="carousel-caption">'+
+                        '<a href="'+img[i].download+'" target="_blank">下载</a>'+
+                      '</div>'+
+                    '</div>';
+            }
+            
+        }
+
+        //轮播dom准备
+        var html = '<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:220px;">'+
+                      '<div class="carousel-inner" role="listbox">'+str+'</div>'+
+                      '<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">'+
+                        '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>'+
+                        '<span class="sr-only">Previous</span>'+
+                      '</a>'+
+                      '<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">'+
+                        '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+
+                        '<span class="sr-only">Next</span>'+
+                      '</a>'+
+                    '</div>';
+
+
+
+        //弹出容器
+        layer.open({
+            type: 1,
+            closeBtn: 0, //不显示关闭按钮
+            title:'',
+            area: ['420px', '240px'],
+            shift: 2,
+            shadeClose: true, //开启遮罩关闭
+            content: html
+        });
+
+    });
+}
+
+/**
+ * 考前培训新增
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-22
+ */ 
+function train_add() {
+    var start={
+            elem: '#start',
+            event: 'click',
+            format: 'YYYY/MM/DD hh:mm',
+            min: laydate.now(),
+            max: '2099-06-16 23:59',
+            istime: true,
+            istoday:false,
+            choose: function(datas){
+                end.min = datas;
+            }
+        }
+        var end={
+            elem: '#end',
+            event: 'click',
+            format: 'YYYY/MM/DD hh:mm',
+            min: laydate.now(),
+            max: '2099-06-16 23:59',
+            istime: true,
+            istoday:false,
+            choose: function(datas){
+                start.max = datas;
+            }
+        }
+
+        //时间最小值处理
+        $("#end").click(function(){
+            end.min = ($('#start').val()).split(' ')[0];
+            laydate(end);
+        });
+
+        //时间最小值处理
+        $("#start").click(function(){
+
+            start.max = ($('#end').val()).split(' ')[0];
+            laydate(start);
+        });
+
+        laydate.skin('molv');
+        laydate(start);
+        laydate(end);
+        
+        $('#form1').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {/*验证*/
+                name: {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '用户名不能为空'
+                        },
+                        stringLength: {
+                            max:64,
+                            message: '用户名必须少于64字符'
+                        }
+                    }
+                },
+                address: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '地址不能为空'
+                        },
+                        stringLength: {
+                            max:64,
+                            message: '地址长度必须少于64字符'
+                        }
+                    }
+                },
+                teacher: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '讲师不能为空'
+                        }
+                   }
+                },
+                content: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '内容不能为空'
+                        }
+                   }
+                }
+            }
+        });
+        $(".upload").change(function(){
+            var files=document.getElementById("file0").files;
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
+
+            $.ajaxFileUpload
+            ({
+                url:pars.URL,
+                secureuri:false,//
+                fileElementId:'file0',//必须要是 input file标签 ID
+                dataType: 'json',//
+                success: function (data, status)
+                {
+                    if(data.code!=1){
+                        layer.msg('只能上传后缀为".xlsx"或".docx"的文件！',{skin:'msg-error',icon:1});
+                    }else{
+                        var val=data.url;
+                        var point = val.lastIndexOf(".");
+                        var type = val.substr(point);
+                        var str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                        $(".upload_list_doc").append(str);
+                    }
+                    /*if(data.state=='SUCCESS'){
+                        var val=data.url;
+                        var point = val.lastIndexOf(".");
+                        var type = val.substr(point);
+                        console.log(type);
+                        if(type===".xlsx"|type===".doc"|type===".docx"){
+                            var str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" /><i class="fa fa-2x fa-delicious"></i>&nbsp;'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                            $(".upload_list_doc").append(str);
+                        }else{
+                            layer.msg('只能上传后缀为".xlsx"或".docx"的文件！',{skin:'msg-error',icon:1});
+                        }
+                    }*/
+                },
+                error: function (data, status, e)
+                {
+                    layer.msg('上传失败！',{skin:'msg-error',icon:1});
+                }
+            });
+        }) ;
+        /*$(".upload_list").on("click",".fa-remove",function(){
+            $(this).parent("p").remove();
+        });*/
+
+        $(".fabu_btn").click(function(){
+            var start=$("#start").val();
+            var end=$("#end").val();
+            if(start==""){
+                layer.alert('你还没有选择开始时间!',function(its){layer.close(its)});
+                return false;
+            }
+            if(end==""){
+                layer.alert('你还没有选择结束时间!',function(its){layer.close(its)});
+                return false;
+            }
+            if(Date.parse(start)>Date.parse(end)){
+                layer.alert('请正确设置开始时间和结束时间!',function(its){layer.close(its)});
+                return false;
+            }
+        })
+
+
+    var ue = UE.getEditor('editor',{
+        serverUrl:'/osce/api/communal-api/editor-upload'
+    });
+    /**
+     * 获取文本编辑内容
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     * @return  {[type]}   [为本内容]
+     */
+    function getContent(){
+
+        var arr = [];
+        arr.push(UE.getEditor('editor').getContent());
+        return arr.join("\n");
+    }
+
+    function delAttch(){
+        if(confirm('确认删除附件？'))
+        {
+            $(this).remove();
+        }
+    }
+
+    //验证content
+    $('.btn-primary').click(function(){
+        if(getContent()==''){
+            layer.alert('内容不能为空！');
+            return false;
+        }else{
+            return true;
+        }
+    })
+
+    /**
+     * checkbox
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-20
+     */
+    $(".checkbox_input").click(function(){
+        if($(this).find("input").is(':checked')){
+            $(this).find(".check_icon ").addClass("check");
+        }else{
+            $(this).find(".check_icon").removeClass("check");
+        }
+    });
+
+    /**
+     * 附件上传
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     */
+    $(".images_uploads").change(function(){
+        var files=document.getElementById("file0").files;
+        var kb=Math.floor(files[0].size/1024);
+        //console.log(kb);
+        if(kb>2048){
+            layer.alert('文件大小不得超过2M!');
+            $("#file0").val('');
+            return false;
+        }
+        $.ajaxFileUpload({
+            url:pars.url,
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'json',
+            success: function (data, status){
+               if(data.code==1){
+                   str='<p><input type="hidden" name="attach[]" id="" value="'+data.data.path+'" />'+data.data.name+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                    //var ln=$(".upload_list").children("p").length;
+                    //添加
+                    $(".upload_list").append(str);
+                }
+            },
+            error:function(res){
+                var data = JSON.parse(res.responseText);
+                var str = '';
+
+                for(var i in data){
+                    str += data[i][0];
+                }
+
+                layer.alert(str);
+            }
+        });
+    }) ;
+
+    /**
+     * 删除
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-19
+     */
+    $(".upload_list").on("click",".fa-remove",function(){
+
+        var thisElement = $(this);
+        layer.confirm('确认删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        }, function(index){
+
+            thisElement.parent("p").remove();
+            layer.close(index);
+        }); 
+
+    });
+}
+
+/**
+ * 考前培训编辑
+ * @author mao
+ * @version 2.0.1
+ * @date    2016-03-22
+ */
+function train_edit() {
+    var start={
+            elem: '#start',
+            event: 'click',
+            format: 'YYYY/MM/DD hh:mm:ss',
+            min: laydate.now(),
+            max: '2099-06-16 23:59:59',
+            istime: true,
+            istoday:false,
+            choose: function(datas){
+                end.min = datas;
+            }
+        }
+        var end={
+            elem: '#end',
+            event: 'click',
+            format: 'YYYY/MM/DD hh:mm:ss',
+            min: laydate.now(),
+            max: '2099-06-16 23:59:59',
+            istime: true,
+            istoday:false,
+            choose: function(datas){
+                start.max = datas;
+            }
+        }
+
+        $("#end").click(function(){
+            end.min = ($('#start').val()).split(' ')[0];
+            laydate(end);
+        });
+
+        //时间最小值处理
+        $("#start").click(function(){
+
+            start.max = ($('#end').val()).split(' ')[0];
+            laydate(start);
+        });
+
+        laydate.skin('molv');
+        laydate(start);
+        laydate(end);
+
+
+        $('#form1').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {/*验证*/
+                name: {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '用户名不能为空'
+                        },
+                        stringLength: {
+                            max:64,
+                            message: '用户名必须少于64字符'
+                        }
+                    }
+                },
+                address: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '地址不能为空'
+                        },
+                        stringLength: {
+                            max:64,
+                            message: '地址长度必须少于64字符'
+                        }
+                    }
+                },
+                teacher: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '讲师不能为空'
+                        }
+                   }
+                },
+                content: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '内容不能为空'
+                        }
+                   }
+                }
+            }
+        });
+        $(".upload").change(function(){
+            var files=document.getElementById("file0").files;
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
+
+            $.ajaxFileUpload
+            ({
+                url:pars.URL,
+                secureuri:false,//
+                fileElementId:'file0',//必须要是 input file标签 ID
+                dataType: 'json',//
+                success: function (data, status)
+                {
+                    if(data.code!=1){
+                        layer.msg('只能上传后缀为".xlsx"或".docx"的文件！',{skin:'msg-error',icon:1});
+                    }else{
+                        str='<p><input type="hidden" name="file[]" id="" value="'+data.url+'" />'+data.title+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                        var ln=$(".upload_list").children("p").length;
+                        if(ln<=1){
+                            $(".upload_list").append(str);
+                        }else{
+                            layer.msg('最多上传2个文件！',{skin:'msg-error',icon:1});
+                        }
+                    }
+                },
+                error: function (data, status, e)
+                {
+                    layer.alert('上传失败！',{skin:'msg-error',icon:1});
+                }
+            });
+        }) ;
+        /*$(".upload_list").on("click",".fa-remove",function(){
+            $(this).parent("p").remove();
+        });*/
+        
+        $(".fabu_btn").click(function(){
+            var start=$("#start").val();
+            var end=$("#end").val();
+            if(start==""){
+                layer.alert('你还没有选择开始时间!',function(its){layer.close(its)});
+                return false;
+            }
+            if(end==""){
+                layer.alert('你还没有选择结束时间!',function(its){layer.close(its)});
+                return false;
+            }
+            if(Date.parse(start)>Date.parse(end)){
+                layer.alert('请正确设置开始时间和结束时间!',function(its){layer.close(its)});
+                return false;
+            }
+        });
+
+
+
+        var ue = UE.getEditor('editor',{
+        serverUrl:'/osce/api/communal-api/editor-upload'
+    });
+    /**
+     * 获取文本编辑内容
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     * @return  {[type]}   [为本内容]
+     */
+    function getContent(){
+
+        var arr = [];
+        arr.push(UE.getEditor('editor').getContent());
+        return arr.join("\n");
+    }
+
+    function delAttch(){
+        if(confirm('确认删除附件？'))
+        {
+            $(this).remove();
+        }
+    }
+
+    //验证content
+    $('.btn-primary').click(function(){
+        if(getContent()==''){
+            layer.alert('内容不能为空！');
+            return false;
+        }else{
+            return true;
+        }
+    })
+
+    /**
+     * checkbox
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-20
+     */
+    $(".checkbox_input").click(function(){
+        if($(this).find("input").is(':checked')){
+            $(this).find(".check_icon ").addClass("check");
+        }else{
+            $(this).find(".check_icon").removeClass("check");
+        }
+    });
+
+    /**
+     * 附件上传
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-15
+     */
+    $(".images_uploads").change(function(){
+        var files=document.getElementById("file0").files;
+        var kb=Math.floor(files[0].size/1024);
+        //console.log(kb);
+        if(kb>2048){
+            layer.alert('文件大小不得超过2M!');
+            $("#file0").val('');
+            return false;
+        }
+        $.ajaxFileUpload({
+            url:pars.url,
+            fileElementId:'file0',//必须要是 input file标签 ID
+            dataType: 'json',
+            success: function (data, status){
+               if(data.code==1){
+                   str='<p><input type="hidden" name="attach[]" id="" value="'+data.data.path+'" />'+data.data.name+'&nbsp;<i class="fa fa-2x fa-remove clo6"></i></p>';
+                    //var ln=$(".upload_list").children("p").length;
+                    //添加
+                    $(".upload_list").append(str);
+                }
+            },
+            error:function(res){
+                var data = JSON.parse(res.responseText);
+                var str = '';
+
+                for(var i in data){
+                    str += data[i][0];
+                }
+
+                layer.alert(str);
+            }
+        });
+    }) ;
+
+    /**
+     * 删除
+     * @author mao
+     * @version 1.0
+     * @date    2016-01-19
+     */
+    $(".upload_list").on("click",".fa-remove",function(){
+
+        var thisElement = $(this);
+        layer.confirm('确认删除？',{
+            title:'删除',
+            btn: ['确定','取消'] 
+        }, function(index){
+
+            thisElement.parent("p").remove();
+            layer.close(index);
+        }); 
+
+    });
+}
+
 
 /**
  * 考前培训
@@ -2245,56 +3041,108 @@ function smart_assignment(){
         makePlan();
     })
 
+
+    /**
+     * 生成标尺
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-22
+     * @param   {string}   startTime 开始时间
+     * @param   {string}   endTime   结束时间
+     * @param   {[number]}   step      [多少px一个标度]
+     * @param   {[number]}   pxs       [对应1px的1s]
+     * @return  {[string]}             [dom结构]
+     */
+    function generateAxis(startTime,endTime,step,pxs) {
+
+        if(pxs===undefined)pxs = 20;
+        
+        //firefox,ie等的兼容性问题
+        var startTime = startTime.split('-').join('/'),
+            endTime = endTime.split('-').join('/');
+
+        var allSeconds = Date.parse(endTime) - Date.parse(startTime),
+            heigth = (allSeconds/1000/pxs), //20s对应1px
+            count = Math.ceil(heigth/step),
+            flag = 0,
+            html = '<div class="axis"><dl><dd class="tick-bar"><span>'+formatShowTime(new Date(startTime))+'</span></dd>';
+         
+        for(var i = 1; i <= count; i++) {
+            var time = new Date(i*1000*pxs*step + Date.parse(startTime)),
+                className = (flag < 5 ?'tick':'tick-bar');
+
+            html += '<dd class="item"></dd><dd class="'+className+'" title="'+ formatShowTime(time) +'"><span>'+ (flag < 5 ?'' : formatShowTime(time)) +'</span></dd>';
+            //间隔标签
+            if(flag < 5) {
+                flag ++;
+            }else{
+                flag = 0;
+            }
+        }
+
+        html += '</dl></div>';
+
+        /*//渲染dom
+        $('.axis dl').html(html);*/
+        //设定间隔的高度
+        //$('.axis dl .item').css('height',(step-2) + 'px');
+        return html;
+
+    }
+
+    /**
+     * 标准化时间转化成所要格式
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-15
+     * @param   {date}   date 传入时间
+     * @return  {date}        所要格式时间
+     */
+    function formatDateTime(date) {
+        var y = date.getFullYear();  
+        var m = date.getMonth() + 1;  
+        m = m < 10 ? ('0' + m) : m;  
+        var d = date.getDate();  
+        d = d < 10 ? ('0' + d) : d;  
+        var h = date.getHours();  
+        var minute = date.getMinutes();
+
+        h = h < 10 ? ('0' + h) : h; 
+        minute = minute < 10 ? ('0' + minute) : minute;
+        return y + '-' + m + '-' + d+' '+h+':'+minute;  
+    };
+
+    /**
+     * 标准化显示时间转化成所要格式
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-25
+     * @param   {date}   date 传入时间
+     * @return  {date}        所要格式时间
+     */
+    function formatShowTime(date) {
+        var y = date.getFullYear();  
+        var m = date.getMonth() + 1;  
+        m = m < 10 ? ('0' + m) : m;  
+        var d = date.getDate();  
+        d = d < 10 ? ('0' + d) : d;  
+        var h = date.getHours();  
+        var minute = date.getMinutes();
+
+        h = h < 10 ? ('0' + h) : h; 
+        minute = minute < 10 ? ('0' + minute) : minute;
+        return m + '-' + d+' '+h+':'+minute;
+    }
+
 //生成时间轴
     function makeTime(){
+
         for(var i in timesGroup ){
-            timesGroup[i]=unique(timesGroup[i]);
-            timesGroup[i]=timesGroup[i].sort(function(a,b){return a>b?1:-1});
-            /* times=unique(times);
-             times=times.sort(function(a,b){return a>b?1:-1});*/
-            var endtimeData=endtime[i];
-            //endtime=endtime.sort(function(a,b){return a>b?1:-1});
-            var lastHeight=endtimeData-timesGroup[i][timesGroup[i].length-1];
-            lastHeight=lastHeight/timeHeight;
-
-            var ul=$('<ul>');
-            var timeTitle=$('<li class="title">时间</li>');
-            ul.addClass("time");
-            ul.append(timeTitle);
-            $(".screening_"+i).before(ul);
-            for(var j in timesGroup[i]){
-                var li=$('<li>');
-                var span1=$('<span>');
-                span1.css("margin-right","10px");
-                var span2=$('<span>');
-                li.append(span1).append(span2);
-                var dat=new Date(timesGroup[i][j]*1000);
-                //var year=dat.getFullYear();
-                var month = dat.getMonth()+1;//取得月,js从0开始取,所以+1
-                var date1 = dat.getDate(); //取得天
-                var hour = dat.getHours();//取得小时
-                hour<10?hour='0'+hour:hour=hour;
-                var minutes = dat.getMinutes();//取得分钟
-                minutes<10?minutes='0'+minutes:minutes=minutes;
-                span1.html(month+"/"+date1);
-                span2.html(hour+":"+minutes);
-                ul.append(li);
-
-                //var timeHeight=times[times.length-1]-times[0];//时间轴的总高度值
-                //var every=timeHeight/(times.length-1);//每段时间高度
-                if(j>=timesGroup[i].length-1)
-                {
-                    li.css({"height":lastHeight+"px","line-height":lastHeight+"px"});
-                    continue;
-                }
-                else
-                {
-                    var next    =   timesGroup[i][parseInt(j)+parseInt(1)];
-                    var every   =   next-timesGroup[i][j];
-                    every=every/timeHeight;
-                    li.css({"height":every+"px","line-height":every+"px"});//时间段的高度
-                }
-            }
+            //实例化标尺
+            $(".screening_"+i).before(generateAxis(formatDateTime(new Date(eariestTime[i]*1000)),formatDateTime(new Date(endtime[i]*1000)),10));
+            //调整每个刻度的高度
+            $('.axis dl .item').css('height','8px');
+          
         }
 
 
@@ -2496,7 +3344,6 @@ function examinee_manage_add(){
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                             return {
                                 exam_id: $("#exam_id").val(),
                                 code: $('[name="whateverNameAttributeInYourForm"]').val()
@@ -2522,7 +3369,6 @@ function examinee_manage_add(){
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                             return {
                                 exam_id:$("#exam_id").val(),
                                 idcard: $('[name="whateverNameAttributeInYourForm"]').val()
@@ -2548,7 +3394,6 @@ function examinee_manage_add(){
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                             return {
                                 exam_id:$("#exam_id").val(),
                                 exam_sequence: $('[name="whateverNameAttributeInYourForm"]').val()
@@ -2570,7 +3415,6 @@ function examinee_manage_add(){
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                             return {
                                 exam_id:$("#exam_id").val(),
                                 mobile: $('[name="whateverNameAttributeInYourForm"]').val()
@@ -2689,7 +3533,6 @@ function examinee_manage_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                             return {
                                 id: pars.id,
                                 exam_id: pars.exam_id,
@@ -2716,7 +3559,6 @@ function examinee_manage_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                             return {
                                 id: pars.id,
                                 exam_id: pars.exam_id,
@@ -2743,7 +3585,6 @@ function examinee_manage_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                             return {
                                 id: pars.id,
                                 exam_id: pars.exam_id,
@@ -2775,7 +3616,6 @@ function examinee_manage_edit() {
                         type: 'POST',//请求方式
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
-                            $(".btn-primary").css({"background":"#16beb0","border":"1px solid #16beb0","color":"#fff","opacity":"1"});
                             return {
                                 id: pars.id,
                                 exam_id: pars.exam_id,

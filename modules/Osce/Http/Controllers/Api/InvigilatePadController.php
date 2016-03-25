@@ -48,12 +48,18 @@ class InvigilatePadController extends CommonController
     {
 //        $examScreeningModel = new ExamScreening();
 //        $result = $examScreeningModel->getExamCheck();
-        $a = strtotime('2016-03-04 10:59:14');
-        $c = strtotime('2016-03-04 11:59:14');
-        $b = ($c - $a);
-        dd($b);
+//        $numbers = array('1','2','3','4','5');
+////        srand((float)microtime()*1000000);
+//        shuffle($numbers);
+//
+//        while (list(,$number) = each($numbers)) {
+//            echo $number."<br/>";
+//        }
 
-
+        for ($i = 2; $i <= 5; $i++)
+        {
+            print "value is now " . $i . "<br>";
+        }
     }
 
 
@@ -153,12 +159,12 @@ class InvigilatePadController extends CommonController
             );
         } else {
             return response()->json(
-                $this->fail(new \Exception('学生信息查询失败', 2))
+                $this->fail(new \Exception('学生信息查询失败', -2))
             );
         }
 
-
     }
+
 
     /**
      * 根据考站ID和考试ID获取科目信息(考核点、考核项、评分参考)
@@ -709,9 +715,9 @@ class InvigilatePadController extends CommonController
                     $this->success_data([$date], 1, '开始考试成功')
                 );
             }
-            return response()->json(
-                $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
-            );
+//            return response()->json(
+//                $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
+//            );
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage() . '');
             return response()->json($this->fail($ex));

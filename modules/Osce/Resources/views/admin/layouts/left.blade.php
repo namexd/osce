@@ -65,7 +65,8 @@
                                 </li>
                                 <li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}">科目管理</a>
                                 </li>
-
+                                <li><a  class="J_menuItem" href="{{route('osce.admin.ExamLabelController.getExamLabel')}}">试卷管理</a>
+                                </li>
                             </ul>
                         </li>
                         <li>
@@ -93,9 +94,9 @@
                                 </li>
                                 <li><a class="active J_menuItem" href="{{route('osce.admin.SubjectStatisticsController.SubjectGradeList')}}">科目成绩分析</a>
                                 </li>
-                                <li><a class="active J_menuItem" href="{{route('osce.admin.course.getStudentScore')}}">考生成绩分析</a>
+                                <li><a class="active J_menuItem" href="{{route('osce.admin.TestScoresController.TestScoreList')}}">考生成绩分析</a>
                                 </li>
-                                <li><a class="active J_menuItem" href="{{route('osce.admin.TestScoresController.TestScoreList')}}">教学成绩分析</a>
+                                <li><a class="active J_menuItem" href="{{route('osce.admin.TestScoresController.testScoresCount')}}">教学成绩分析</a>
                                 </li>
                             </ul>
                         </li>

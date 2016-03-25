@@ -33,9 +33,6 @@ class InvigilatorController extends CommonController
      * @param Request $request get 请求<br><br>
      * <b>get请求字段：</b>
      * * string        type        是否为sp老师(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
      *
      * @return view {姓名：$item->name,是否为sp老师：$isSpValues[$item->type]}
      *
@@ -47,9 +44,7 @@ class InvigilatorController extends CommonController
      */
     public function getSpInvigilatorList(Request $request){
        $Invigilator    =   new Teacher();
-
         $list       =   $Invigilator    ->getSpInvigilatorInfo();
-
         $isSpValues =   $Invigilator    ->getIsSpValues();
         return view('osce::admin.resourceManage.staff_manage_invigilator_sp',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
@@ -62,9 +57,6 @@ class InvigilatorController extends CommonController
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
      *
      * @return view
      *
@@ -72,17 +64,13 @@ class InvigilatorController extends CommonController
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2015-12-29 17:01
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
-    public function getInvigilatorList(){
-        $Invigilator    =   new Teacher();
-
-        $list       =   $Invigilator    ->  getInvigilatorList();
-
-        $isSpValues =   $Invigilator    ->  getIsSpValues();
-
-
-        return view('osce::admin.resourceManage.staff_manage_invigilator',['list'=>$list,'isSpValues'=>$isSpValues]);
+    public function getInvigilatorList(Request $request){
+        $type = $request->get('type');
+        $Invigilator = new Teacher();
+        $list        = $Invigilator -> getInvigilatorList((empty($type) || $type==1)?1:3);
+        $isSpValues  = $Invigilator -> getIsSpValues();
+        return view('osce::admin.resourceManage.staff_manage_invigilator',['list'=>$list,'isSpValues'=>$isSpValues,'type'=>(empty($type) || $type==1)?1:3]);
     }
     /**
      *  新增监考老师 表单显示页面
@@ -628,6 +616,7 @@ class InvigilatorController extends CommonController
 
             //将数组导入到模型中的addInvigilator方法
             if ($teacher->addInvigilator($data)) {
+
                 throw new \Exception('系统出错，请重试！');
             } else {
                 echo json_encode($this->success_data());
@@ -726,4 +715,80 @@ class InvigilatorController extends CommonController
             return json_encode(['valid' =>true]);
         }
     }
+
+    /**
+     * Excel导入监、巡考老师
+     * @api POST /osce/admin/exam/import-teachers
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME} 2016-03-21
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function postImportTeachers(Request $request, Teacher $teacher)
+    {
+        try {
+            $this->validate($request,[
+               'type'   => 'required|integer'
+            ]);
+            $type   =   $request->get('type');
+            $user   =   Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+
+            //获得上传的数据
+            $data   = Common::getExclData($request, 'teacher');
+            //去掉sheet
+            $teacherList = array_shift($data);
+            //判断模板 列数、表头是否有误
+            $teacher->judgeTemplet($teacherList, config('osce.importForCnToEn.teacher'));
+            //将中文表头转为英文
+            $teacherData = Common::arrayChTOEn($teacherList, 'osce.importForCnToEn.teacher');
+            $result = $teacher->importTeacher($teacherData, $user);
+            if(!$result){
+                throw new \Exception('老师导入数据失败，请参考模板修改后重试');
+            }
+
+            return json_encode($this->success_data([], 1, "成功导入{$result}个老师！"));
+
+        } catch (\Exception $ex) {
+            return json_encode($this->fail($ex));
+        }
+    }
+    /**
+     * 下载学生导入模板
+     * @url GET /osce/admin/invigilator/download-teacher-improt-tpl
+     * @access public
+     *
+     * @return void
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2015-03-21
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getdownloadTeacherImprotTpl(){
+        $this->downloadfile('teacher.xlsx',public_path('download').'/teacher.xlsx');
+    }
+    private function downloadfile($filename,$filepath){
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($filename));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filepath));
+        readfile($filepath);
+    }
+
 }

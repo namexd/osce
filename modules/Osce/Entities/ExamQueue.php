@@ -330,7 +330,7 @@ class ExamQueue extends CommonModel
                 ->whereIn('status',[1,2])
                 ->first();
             if(is_null($examQueue)){
-                throw new \Exception('该学生还没有抽签', -107);
+                throw new \Exception('该学生还没有抽签', -105);
             }
             if ($examQueue->status == 2) {
                 return true;
@@ -350,7 +350,7 @@ class ExamQueue extends CommonModel
                     }
                 }
                 if (is_null($nowQueue)) {
-                    throw new \Exception('进入考试失败', -105);
+                    throw new \Exception('进入考试失败', -103);
                 }
                 $lateTime = $nowTime - strtotime($nowQueue->begin_dt);
                 //判断考生的迟到时间
@@ -366,7 +366,7 @@ class ExamQueue extends CommonModel
                 foreach ($studentTimes as $key => $item) {
                     foreach($endQueue as $endQueueTime){
                        if( strtotime($endQueueTime->begin_dt)>strtotime($item->begin_dt)){
-                           throw new \Exception('当前队列开始时间不正确',-108);
+                           throw new \Exception('当前队列开始时间不正确',-104);
                        }
                     }
                     if ($exam->sequence_mode == 2) {
@@ -396,17 +396,17 @@ class ExamQueue extends CommonModel
                             ->where('status', '=', 2)
                             ->first();
                         if (is_null($ExamTime)) {
-                            throw new \Exception('没有找到对应的队列信息', -104);
+                            throw new \Exception('没有找到对应的队列信息', -102);
                         }
                         $ExamTime->begin_dt = date('Y-m-d H:i:s', $nowTime);
                         $ExamTime->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
                         if (!$ExamTime->save()) {
-                            throw new \Exception('队列时间更新失败', -101);
+                            throw new \Exception('队列时间更新失败', -100);
                         }
                     }
                 }
             } else {
-                throw new \Exception('队列状态更新失败', -102);
+                throw new \Exception('队列状态更新失败', -101);
 
             }
             // 调用锚点方法

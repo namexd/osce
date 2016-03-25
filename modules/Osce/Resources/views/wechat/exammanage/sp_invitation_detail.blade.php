@@ -31,76 +31,12 @@
 
 @stop
 @section('only_head_js')
-    <script type="text/javascript">
-
-        $(function(){
-
-            $('.agree').click(function(){
-
-                   var id =$(this).attr('data');
-                   var status = $(this).val();
-//                 var url ='/osce/wechat/invitation/invitation-respond';
-                 $.ajax("{{route('osce.wechat.invitation.getInvitationRespond')}}",{
-//                     url:url,
-                     type:'get',
-                     dataType:"json",
-                     data:{
-                         id:id,
-                         status:status
-
-                     },
-
-                     success:function(data){
-                         if(data.code==1){
-                            layer.msg('操作成功!',{icon: 1,time:2000},function(){
-                             	window.location.reload();
-							});    
-
-                         }
-
-                     },
-                     error:function() {
-                        layer.msg('操作失败!'); 
-                     }
-                 })
-             })
-
-            $('.rejected').click(function(){
-
-                var id =$(this).attr('data');
-                var status = $(this).val();
-//                 var url ='/osce/wechat/invitation/invitation-respond';
-                $.ajax("{{route('osce.wechat.invitation.getInvitationRespond')}}",{
-//                     url:url,
-                    type:'get',
-                    dataType:"json",
-                    data:{
-                        id:id,
-                        status:status
-
-                    },
-
-                    success:function(data){
-                        if(data.code==1){
-                            layer.msg('操作成功!',{time: 2000,icon: 1},function(){
-                             	window.location.reload();
-							});
-                        }
-                    },
-                    error:function() {
-                        layer.msg('操作失败!'); 
-                    }
-                })
-            })
-
-        })
-
-    </script>
-
+<script src="{{asset('osce/wechat/exammanage/exam_manage.js')}}" ></script> 
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'sp_invitation_detail','agree':'{{route('osce.wechat.invitation.getInvitationRespond')}}','rejected':'{{route('osce.wechat.invitation.getInvitationRespond')}}'}" />
     <div class="user_header">
         <a class="left header_btn" href="{{route('osce.wechat.invitation.getList')}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>

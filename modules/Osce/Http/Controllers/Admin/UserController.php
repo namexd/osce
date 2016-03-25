@@ -222,17 +222,18 @@ class UserController extends CommonController
             $roleId = SysUserRole::where('user_id', $id)->select()->first();
             $roles = SysRoles::select()->get();
             $data = [];
+
             foreach ($roles as $role) {
                 if ($roleId) {
                     $user_role_id = $roleId->role_id;
-                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != $user_role_id) {
+                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.patrolRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != $user_role_id) {
                         $data[] = [
                             'role_id' => $role->id,
                             'role_name' => $role->name,
                         ];
                     }
                 } else {
-                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId')) {
+                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.patrolRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId')) {
                         $data[] = [
                             'role_id' => $role->id,
                             'role_name' => $role->name,

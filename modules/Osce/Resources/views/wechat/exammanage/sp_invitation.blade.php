@@ -26,16 +26,6 @@
     </style>
 @stop
 @section('only_head_js')
-    <script type="text/javascript">
-        $.(function(){
-            $('.check').click(function(){
-//                alert(1111);
-            })
-
-
-        })
-      
-    </script>
 
 @stop
 

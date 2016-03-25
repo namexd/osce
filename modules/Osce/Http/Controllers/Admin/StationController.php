@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Entities\ExamFlowStation;
+use Modules\Osce\Entities\ExamPaper;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\Place as Place;
 use Modules\Osce\Entities\Room;
@@ -19,6 +20,7 @@ use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
+use Auth;
 use DB;
 
 class StationController extends CommonController
@@ -82,13 +84,15 @@ class StationController extends CommonController
     public function getAddStation(Request $request)
     {
         //验证略
-        list($placeCate, $vcr, $case, $room, $subject) = $this->dropDownList();
+        list($placeCate, $vcr, $case, $room, $subject, $papers) = $this->dropDownList();
 
         //获得上次的时间限制
         $time = session('time');
         //将下拉菜单的数据传到页面上
         return view('osce::admin.resourceManage.exam_station_add',
-            ['placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case, 'room' => $room, 'subject' => $subject, 'time' => $time]);
+            [   'placeCate' => $placeCate, 'case'   => $case,   'room' => $room, 'vcr' => $vcr,
+                'subject'   => $subject,   'papers' => $papers, 'time' => $time
+            ]);
     }
 
     /**
@@ -134,6 +138,19 @@ class StationController extends CommonController
             $vcrId  = $request->input('vcr_id');
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
+            //TODO:考卷 Zhoufuxiang，2016-3-22
+            $paperId= $request->input('paper_id');
+            if($stationData['type'] == 3){
+                if(empty($paperId)){
+                    throw new \Exception('考卷必选！');
+                }
+                $stationData['paper_id'] = $paperId;
+            }
+            $user = Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+            $stationData['create_user_id'] = $user->id;
 
             //如果该考场id已经在考试中注册，就不允许增添考站到该考场
             if (!ExamRoom::where('room_id',$roomId)->get()->isEmpty()) {
@@ -185,7 +202,7 @@ class StationController extends CommonController
         $id = $request->input('id');
         //获取编辑考场的数据
         $rollMsg = $model->rollmsg($id);
-        list($placeCate, $vcr, $case, $room, $subject) = $this->dropDownList($id);
+        list($placeCate, $vcr, $case, $room, $subject, $papers) = $this->dropDownList($id);
 
         //判断在关联表中是否有数据
         $examFlowStation = ExamFlowStation::where('station_id',$id)->first();
@@ -193,9 +210,9 @@ class StationController extends CommonController
 
         //将下拉菜单的数据传到页面上
         return view('osce::admin.resourceManage.exam_station_edit',
-            [   'placeCate' => $placeCate, 'vcr' => $vcr, 'case' => $case,
-                'room' => $room, 'subject' => $subject, 'rollmsg' => $rollMsg,
-                'status' => $status
+            [   'placeCate' => $placeCate, 'vcr'  => $vcr,  'status' => $status,
+                'subject'   => $subject,   'room' => $room, 'papers' => $papers,
+                'rollmsg'   => $rollMsg,   'case' => $case
             ]);
     }
 
@@ -242,6 +259,22 @@ class StationController extends CommonController
             $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
             $id     = $request->input('id');
+            //TODO:考卷 Zhoufuxiang，2016-3-22
+            $paperId= $request->input('paper_id');
+            if($placeData['type'] == 3){
+                if(empty($paperId)){
+                    throw new \Exception('考卷必选！');
+                }
+                $placeData['paper_id'] = $paperId;
+            }else{
+                $placeData['paper_id'] = null;
+            }
+            $user = Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+            $placeData['create_user_id'] = $user->id;
+
             $formData = [$placeData, $vcrId, $caseId, $roomId];
 
             $model->updateStation($formData, $id);
@@ -313,8 +346,9 @@ class StationController extends CommonController
         $case   = CaseModel::all(['id', 'name']);
         $room   = Room::all(['id', 'name']);        //房间
         $subject= Subject::all(['id', 'title']);
+        $papers = ExamPaper::where('status', '=', 1)->select(['id', 'name'])->get();   //考卷 Zhoufuxiang 2016-3-22
 
-        return array($placeCate, $vcr, $case, $room, $subject);  //评分标准
+        return array($placeCate, $vcr, $case, $room, $subject, $papers);  //评分标准
     }
 
     /**

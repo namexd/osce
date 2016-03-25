@@ -39,7 +39,6 @@ class AutomaticPlanArrangement
 
     //已经考完的考生
     protected $_S_END = [];
-
     //考站队列
     protected $_Q_STA = [];
 

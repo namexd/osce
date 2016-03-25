@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamRoom;
+use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
@@ -99,7 +100,7 @@ class PadController extends  CommonController{
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
      * * int        room_id          考场ID(必须的)
-     * * int        exam_id           考试ID(必须的)
+     * * int        exam_id          考试ID(必须的)
      *
      * @return ${response}
      *
@@ -110,13 +111,14 @@ class PadController extends  CommonController{
      */
     public function getStudentVcr(Request $request){
         $this->validate($request,[
-            'room_id' => 'required|integer',
-            'exam_id'    => 'required|integer'
+            'room_id'   => 'required|integer',
+            'exam_id'   => 'required|integer'
         ]);
-        $room_id=$request->get('room_id');
-        $exam_id=$request->get('exam_id');
-        $stationModel=new StationVcr();
-        $stationVcrs=$stationModel->getStionVcr($room_id,$exam_id);
+        $room_id = $request->get('room_id');
+        $exam_id = $request->get('exam_id');
+
+        $stationModel = new StationVcr();
+        $stationVcrs  = $stationModel->getStionVcr($room_id,$exam_id);
 
         return response()->json(
             $this->success_data($stationVcrs,1,'success')
@@ -182,20 +184,29 @@ class PadController extends  CommonController{
 
     public function getTimingList(Request $request){
         $this->validate($request,[
-            'station_vcr_id'     =>'required|integer',
-            'exam_id'            =>'required',
-            'begin_dt'           =>'sometimes',
-            'end_dt'             =>'sometimes',
+            'vcr_id'    =>'required|integer',
+            'exam_id'   =>'required',
+            'begin_dt'  =>'sometimes',
+            'end_dt'    =>'sometimes',
         ]);
-        $stationVcrId=$request->get('station_vcr_id');
-        $beginDt=$request->get('begin_dt');
-        $examId=$request->get('exam_id');
-        $endDt=$request->get('end_dt');
+        $vcrId  = $request->get('vcr_id');
+        $examId = $request->get('exam_id');
+        $beginDt= $request->get('begin_dt');
+        $endDt  = $request->get('end_dt');
+
         try{
-            $stationVideoModel=new StationVideo();
-            $vcrs=$stationVideoModel->getTiming($stationVcrId,$beginDt,$examId,$endDt);
+            $stationVideoModel = new StationVideo();
+            $vcrs = $stationVideoModel->getTiming($vcrId,$beginDt,$examId,$endDt);
+            //获取标记点列表
+            $videoLabels = $stationVideoModel->getVideoLabels($examId, $vcrId, $beginDt, $endDt);
+            //组合返回数据
+            $data = [
+                'vcrs'          => $vcrs,
+                'videoLabels'   => $videoLabels
+            ];
+
             return response()->json(
-                $this->success_data($vcrs,1,'success')
+                $this->success_data($data, 1, 'success')
             );
 
         }catch (\Exception $ex){
@@ -259,19 +270,20 @@ class PadController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-       public function getExamRoom(Request $request){
-              $this->validate($request,[
-                  'exam_id'  =>'required|integer'
-              ]);
-              $examList=ExamRoom::where('exam_id',$request->get('exam_id'))->select()->get();
-              $rooms=[];
-              foreach($examList as $examRoom){
-                $rooms[]=$examRoom->room;
-              }
-              return response()->json(
-               $this->success_data($rooms,1,'success')
-           );
-       }
+    public function getExamRoom(Request $request){
+        $this->validate($request,[
+          'exam_id'  =>'required|integer'
+        ]);
+
+        $exam_id = $request->get('exam_id');
+        $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
+        $rooms  = $this->getRoomDatas($exam);           //根据考试获取对应的所有考场
+        $rooms  = array_values(array_unique($rooms));    //去重，并取值（键排序）
+
+        return response()->json(
+            $this->success_data($rooms,1,'success')
+        );
+    }
 
     /**
      * 根据考试id获取候考场所列表(接口)
@@ -339,4 +351,212 @@ class PadController extends  CommonController{
             return response()->json($this->fail($ex));
         }
     }
+
+    /**
+     * 获取当前正在进行的所有考试 (接口)
+     * @method GET
+     * @url    /osce/pad/doing-exams
+     * @access public
+     *
+     * @return object
+     *
+     * @version 2.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}    2016-3-21
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDoingExams(Request $request)
+    {
+        //获取正在进行中的考试列表
+        $examList    = Exam::where('status','=', 1)->select(['id','name'])->get();
+
+        return response()->json(
+            $this->success_data($examList, 1, 'success')
+        );
+    }
+
+    /**
+     * 获取所有 历史考试(已经考完) (接口)
+     * @method GET
+     * @url    /osce/pad/done-exams
+     * @access public
+     *
+     * @return object
+     *
+     * @version 2.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}    2016-3-23
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDoneExams(Request $request)
+    {
+        //获取已经考完的所有考试列表
+        $examList = Exam::where('status','=', 2)->select(['id','name', 'begin_dt', 'end_dt'])->paginate(10);
+
+        //返回数据
+        return $this->success_rows(1,'获取成功',
+            $examList->lastPage(),
+            $examList->perPage(),
+            $examList->currentPage(),
+            $examList->toArray()['data']
+        );
+    }
+
+    /**
+     *历史回放，获取所有已经考完的考试对应的摄像头列表(接口)
+     * @method GET
+     * @url     /osce/pad/all-vcrs-list
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        room_id          考场ID
+     * * int        exam_id          考试ID
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME} 2016-3-25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAllVcrsList(Request $request)
+    {
+        $this->validate($request,[
+            'room_id'   => 'sometimes|integer',
+            'exam_id'   => 'sometimes|integer'
+        ]);
+        $room_id = $request->get('room_id');
+        $exam_id = $request->get('exam_id');
+        $vcrModel = new  Vcr();
+        if(!empty($exam_id) && !empty($room_id)){
+            $vcrIds  = $vcrModel->getVcrIds($room_id,$exam_id);
+
+        }elseif (!empty($room_id)){
+            $vcrIds = $vcrModel->getVcrIdsToRoom($room_id);
+
+        }elseif (!empty($exam_id)){
+            $vcrIds = $vcrModel->getVcrIdsToExam($exam_id);
+
+        }else{
+            $vcrIds = $vcrModel->getVcrIdsToAllExam();
+        }
+        //分页获取摄像机信息
+        $vcrs = Vcr::whereIn('id', $vcrIds)->select(['id','name'])->paginate(10);
+
+        //返回分页数据
+        return $this->success_rows(1,'获取成功',
+            $vcrs->lastPage(),      $vcrs->perPage(),
+            $vcrs->currentPage(),   $vcrs->toArray()['data']
+        );
+    }
+
+    /**
+     *历史回放，获取所有已经考完的考试对应的摄像头列表(接口)
+     * @method GET
+     * @url     /osce/pad/all-rooms
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        room_id          考场ID
+     * * int        exam_id          考试ID
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME} 2016-3-25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAllRooms(Request $request){
+        $this->validate($request,[
+            'exam_id'  =>'sometimes|integer'
+        ]);
+
+        $exam_id = $request->get('exam_id');
+        $roomIds   = [];
+        if(empty($exam_id)){
+            //未选考试，列出所有考试对应的所有考场
+            $examList = Exam::where('status','=', 2)->select(['id','name','sequence_mode'])->get();
+            if(count($examList) != 0){
+                foreach ($examList as $exam) {
+                    $roomId  = $this->getRoomDatas($exam, true);      //根据考试获取对应的所有考场
+                    $roomIds = array_merge($roomIds, $roomId);
+                }
+            }
+
+        }else{
+            $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
+            $roomIds  = $this->getRoomDatas($exam, true);       //根据考试获取对应的所有考场
+        }
+        $roomIds = array_values(array_unique($roomIds));    //去重，并取值（键排序）
+        $rooms = Room::whereIn('id', $roomIds)->select(['id', 'name'])->paginate(10);
+
+        //返回分页数据
+        return $this->success_rows(1,'获取成功',
+            $rooms->lastPage(),      $rooms->perPage(),
+            $rooms->currentPage(),   $rooms->toArray()['data']
+        );
+
+    }
+    /**
+     * 根据考试获取对应的所有考场
+     * TODO:Zhoufuxiang 2016-3-23
+     * @return object
+     */
+    public function getRoomDatas($exam, $status = false){
+        $rooms   = [];
+        $roomIds = [];
+        if($exam->sequence_mode == 2){
+            //根据考试获取 对应考站
+            $examStation = ExamStation::where('exam_id','=',$exam->id)->get();
+            if(count($examStation)){
+                foreach ($examStation as $item) {
+                    //获取考站对应的考场
+                    $roomStation = RoomStation::where('station_id','=',$item->station_id)->first();
+                    $rooms[] = $roomStation->room;
+                    $roomIds[] = $roomStation->room_id;
+                }
+            }
+        }else{
+            $examRooms = ExamRoom::where('exam_id','=',$exam->id)->get();
+            foreach($examRooms as $examRoom){
+                $rooms[] = $examRoom->room;
+                $roomIds[] = $examRoom->room_id;
+            }
+        }
+        $rooms = array_unique($rooms);
+        $roomIds = array_unique($roomIds);
+
+        if($status){
+            return $roomIds;
+        }else{
+            return $rooms;
+        }
+    }
+
+    /**
+     * 根据考试和考场获取对应的所有摄像机
+     * TODO:Zhoufuxiang 2016-3-24
+     * @return object
+     */
+    public function getVcrsDatas($exam_id, $room_id){
+        $vcrs = [];
+        $examStation = ExamStation::where('exam_id','=',$exam_id)->get();
+        if(count($examStation)){
+            foreach ($examStation as $item) {
+                $roomVcr = StationVcr::where('station_id',$item->station_id)->first();
+                $vcrs[] = $roomVcr->vcr;
+            }
+        }
+        //根据考场获取摄像头
+        $roomVcr = RoomVcr::where('room_id',$room_id)->get();
+        foreach($roomVcr as $item){
+            $vcrs[] = $item->getVcr;
+        }
+
+        return $vcrs;
+    }
+
 }

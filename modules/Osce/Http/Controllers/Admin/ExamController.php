@@ -756,6 +756,47 @@ class ExamController extends CommonController
         );
     }
 
+
+    /**
+     * 判断是以考室还是以考站的考试安排着陆页
+     * @url GET /osce/admin/exam/choose-exam-arrange
+     * @access public
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * id    考试id
+     * @return View
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date  2016-01-18
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getChooseExamArrange(Request $request)
+    {
+        $this->validate($request ,[
+            'id' => 'required|integer',
+        ]);
+
+        try {
+            $id = $request->get('id');
+            //通过id找到对应的模式
+            $examMode = Exam::findOrFail($id)->sequence_mode;
+            switch ($examMode) {
+                case '1' :
+                    $result =  $this->getExamroomAssignment($request);
+                    break;
+                case '2' :
+                    $result = $this->getStationAssignment($request);
+                    break;
+                default:
+                    $result =  $this->getExamroomAssignment($request);
+            }
+            return $result;
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
     /**
      * 考场安排
      * @url GET /osce/admin/exam/getExamroomAssignment
@@ -777,13 +818,13 @@ class ExamController extends CommonController
         $examRoom = new ExamRoom();
         //获取考试id对应的考场数据
         $examRoomData = $examRoom -> getExamRoomData($exam_id);
+
         $serialnumberGroup = [];
         foreach ($examRoomData as $item) {
             $serialnumberGroup[$item->serialnumber][$item->id] = $item;
         }
         //获取考试对应的考站数据
         $examStationData = $examRoom -> getExamStation($exam_id) -> groupBy('station_id');
-
         $inviteData = Invite::status($exam_id);
 
         //将邀请状态插入$stationData
@@ -803,8 +844,9 @@ class ExamController extends CommonController
                 }
             }
         }
-//        dd($examStationData);
+
         $status=Exam::where('id',$exam_id)->select('status')->first()->status;
+
         return view('osce::admin.examManage.exam_room_assignment', [
             'id'                => $exam_id,
             'status'            => $status,
@@ -833,14 +875,15 @@ class ExamController extends CommonController
     public function postExamroomAssignmen(Request $request)
     {
         try{
+
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');          //考试id
             $roomData       = $request  ->  get('room');        //考场数据
             $stationData    = $request  ->  get('station');     //考站数据
+            //生成一个方案标识，solution_mark
+            //流程id
             //查看是否有本场考试
             Exam::findOrFail($exam_id);
-
-
             //查询 考试id是否有对应的考场数据
             $examRoom = new ExamRoom();
             $examRoomData = $examRoom -> getExamRoomData($exam_id);
@@ -863,7 +906,6 @@ class ExamController extends CommonController
         }
     }
 
-
     /**
      * 获取考场列表 接口
      * @api GET /osce/admin/exam/Room-list-data
@@ -877,6 +919,7 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
+
     public function getRoomListData()
     {
         //如果改考场下面没有关联考站，就不给展示在列表
@@ -888,7 +931,6 @@ class ExamController extends CommonController
             $this->success_data($data, 1, 'success')
         );
     }
-
     /**
      * 获取考站数据 接口
      * @api GET /osce/admin/exam/getStationData
@@ -915,7 +957,6 @@ class ExamController extends CommonController
 
         $roomStation = new RoomStation();
         $data = $roomStation->getRoomStationData($room_id);
-
         return response()->json(
             $this->success_data($data, 1, 'success')
         );
@@ -943,7 +984,6 @@ class ExamController extends CommonController
         $formData = $request -> get('teacher');
         $teacher = new Teacher();
         $data = $teacher->getTeacherList($formData);
-
         return response()->json(
             $this->success_data($data, 1, 'success')
         );
@@ -1396,7 +1436,6 @@ class ExamController extends CommonController
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
         $stationData = $station->stationTeacherList($exam_id)->groupBy('station_id');
-
 //        $invite = new Invite();
         $inviteData = Invite::status($exam_id);
 
@@ -1413,6 +1452,7 @@ class ExamController extends CommonController
             }
         }
        $status=Exam::where('id',$exam_id)->select('status')->first()->status;
+
         return view('osce::admin.examManage.exam_station_assignment', [
             'id'          => $exam_id,
             'roomData'    => $roomData,
@@ -1509,46 +1549,6 @@ class ExamController extends CommonController
         }
         catch(\Exception $ex)
         {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
-    }
-
-    /**
-     * 判断是以考室还是以考站的考试安排着陆页
-     * @url GET /osce/admin/exam/choose-exam-arrange
-     * @access public
-     * @param Request $request
-     * <b>get请求字段：</b>
-     * id    考试id
-     * @return View
-     * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
-     * @date  2016-01-18
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
-     */
-    public function getChooseExamArrange(Request $request)
-    {
-        $this->validate($request ,[
-            'id' => 'required|integer',
-        ]);
-
-        try {
-            $id = $request->get('id');
-            //通过id找到对应的模式
-            $examMode = Exam::findOrFail($id)->sequence_mode;
-            switch ($examMode) {
-                case '1' :
-                    $result =  $this->getExamroomAssignment($request);
-                    break;
-                case '2' :
-                    $result = $this->getStationAssignment($request);
-                    break;
-                default:
-                    $result =  $this->getExamroomAssignment($request);
-            }
-            return $result;
-        } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }

@@ -86,64 +86,12 @@
 @stop
 @section('only_head_js')
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
-<script>
-$(function(){
-    //回复
-    $("#context").keyup(function(){
-        var content=$("#context").val();
-        $(".sum").text(content.length);
-    });
-
-    $('.btn2').click(function(){
-        var content = $('#context').val();
-        if(content==''){
-            $.alert({
-                title: '提示：',
-                content: '回复内容不能为空!',
-                confirmButton: '确定',
-                confirm: function(){
-                }
-            });
-            return;
-        }
-        if(content.length>200){
-            $.alert({
-                title: '提示：',
-                content: '回复内容不能超过200字!',
-                confirmButton: '确定',
-                confirm: function(){
-                }
-            });
-            return;
-        }
-
-        $.ajax({
-            type:'post',
-            url:'{{route("osce.wechat.postAddReply")}}',
-            data:{content:content,id:$('input[name=id]').val()},
-            success:function(res){
-                if(res.code!=1){
-                    layer.alert(res.message);
-                }else{
-                	$.alert({
-		                title: '提示：',
-		                content: '回复成功!',
-		                confirmButton: '确定',
-		                confirm: function(){
-		                	location.href = '{{route("osce.wechat.getCheckQuestion")}}?id='+$('input[name=id]').val();
-		                }
-		            });
-                }
-            }
-        });
-    });
-
-})
-</script> 
+<script src="{{asset('osce/wechat/discussion/discussion.js')}}" ></script> 
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'discussion_response','post':'{{route("osce.wechat.postAddReply")}}','URL':'{{route("osce.wechat.getCheckQuestion")}}'}" />
     <ul class="option">
         <li><a href="#">编辑</a></li>
         <li><a href="">删除</a></li>

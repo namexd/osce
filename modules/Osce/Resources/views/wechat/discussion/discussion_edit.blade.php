@@ -13,42 +13,12 @@
 @stop
 @section('only_head_js')
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
-<script>
-$(function(){
-    $('#list_form').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {/*验证*/
-                    title: {/*键名username和input name值对应*/
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '标题不能为空！'
-                            }
-                        }
-                    },
-                    content: {/*键名username和input name值对应*/
-                        validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '不能为空！'
-                            },
-                            stringLength: {
-                                max:200,
-                                message: '内容长度必须少于200字符'
-                            }
-                        }
-                    }
-                }
-            });
-})
-</script> 
+<script src="{{asset('osce/wechat/discussion/discussion.js')}}" ></script> 
 @stop
 
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'discussion_edit'}" />
     <div class="user_header">
         <a class="left header_btn" href="{{route('osce.wechat.getCheckQuestion',['id'=>$id])}}">
             <i class="fa fa-angle-left clof font26 icon_return"></i>

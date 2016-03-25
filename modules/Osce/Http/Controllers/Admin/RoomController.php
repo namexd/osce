@@ -173,7 +173,7 @@ class RoomController extends CommonController
                 $area = new Area();
                 $area->editAreaData($id, $vcr_id, $formData);
             }
-            return redirect()->route('osce.admin.room.getRoomList');
+            return redirect()->route('osce.admin.room.getRoomList',['type'=>$type]);
 
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
@@ -286,7 +286,7 @@ class RoomController extends CommonController
                 'type' => 'sometimes'
             ]);
 
-            $id = $request->input('id');
+            $id   = $request->input('id');
             $type = $request->input('type','0');
             if (!$id) {
                 throw new \Exception('没有该房间！');
@@ -297,9 +297,14 @@ class RoomController extends CommonController
             } else {
                 $area = new Area();
                 $area->deleteArea($id);
+                //查询判断，该场所区域是否还存在 TODO:Zhoufuxiang 2016-3-24
+                $result = Area::where('cate','=',$type)->first();
+                if(empty($result)){
+                    $type = 0;
+                }
             }
 
-            return $this->success_data(['删除成功！']);
+            return $this->success_data(['type'=>$type], 1, '删除成功！');
         } catch (\Exception $ex) {
             return $this->fail($ex);
         }
@@ -308,7 +313,7 @@ class RoomController extends CommonController
 
     /**
      * 判断名称是否已经存在
-     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @url POST /osce/admin/resources-manager/name-unique
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
      */
     public function postNameUnique(Request $request)
@@ -316,10 +321,9 @@ class RoomController extends CommonController
         $this->validate($request, [
 //            'name'      => 'required',
         ]);
-
         $id     = $request  -> get('id');
-        $value   = $request  -> get('name');
-        $code   = $request  -> get('code');
+        $value  = trim($request  -> get('name'));
+        $code   = trim($request  -> get('code'));
         $name = 'name';
         if(!empty($code)){
             $name = 'code';
