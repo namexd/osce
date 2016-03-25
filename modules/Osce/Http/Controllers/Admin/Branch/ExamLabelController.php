@@ -135,7 +135,7 @@ class ExamLabelController extends CommonController
         ];
         $add = ExamQuestionLabel::create($data);
         if ($add != false) {
-            return redirect()->back()->withInput()->withErrors('添加成功');
+            return redirect()->back()->with('success', '添加成功');
         } else {
             return redirect()->back()->withInput()->withErrors('添加失败');
         }
@@ -193,7 +193,7 @@ class ExamLabelController extends CommonController
         $add =  $examTable->where('id','=',e(Input::get('id')))->update($data);
         if($add != false){
 
-            return redirect()->back()->withInput()->withErrors('修改成功');
+            return redirect()->back()->with('success', '修改成功');
 
         }else{
  
