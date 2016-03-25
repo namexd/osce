@@ -193,7 +193,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <input type="hidden" name="id" value="{{ @$data['id'] }}">
-                                    <button class="btn btn-sm btn-primary" id="sure" type="submit" disabled>确定</button>
+                                    <button class="btn btn-sm btn-primary" id="sure" type="submit">确定</button>
                                     <a href="{{ route('osce.admin.ExamQuestionController.showExamQuestionList') }}" class="btn btn-white btn-sm" id="cancel">取消</a>
                                 </div>
                             </div>
