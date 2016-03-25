@@ -6,11 +6,12 @@
  * Time: 15:42
  */
 
-namespace Modules\Osce\Entities\ExamMidway\Drawlots;
+namespace Modules\Osce\Entities\ExamMidway;
 
 
 use Modules\Osce\Entities\Exam;
-use Modules\Osce\Entities\ExamMidway\Examinee\Examinee;
+use Modules\Osce\Entities\ExamMidway;
+
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamRecordFlows;
 use Modules\Osce\Entities\Station;
@@ -58,21 +59,25 @@ class Drawlots
             }
 
             //判断目前是否可以在这个考场考试
-            $mode = $this->exam->sequence_mode == 1 ? 'Room' : 'Station';
+            if ($this->exam->sequence_mode == 2) {
+                $mode = new StationMode($this->teacherId, $this->exam);
+            } elseif ($this->exam->sequence_mode == 1) {
+                $mode = new RoomMode($this->teacherId, $this->exam);
+            }
             $examinee = new Examinee($this->exam, ['id' => $this->teacherId]);
+            $examinee->setMode($mode);
             $student = $examinee->examinee();
             $studentIds = $student->pluck('student_id');
-            if (!$studentIds->search($this->student->id)) {
+            if ($studentIds->search($this->student->id) === false) {
                 throw new \Exception('当前考生不应该在此处抽签', -1);
             }
 
-            list($object, $array) = $this->mode->station($student, $this->exam);
+            list($object, $array) = $this->mode->station($this->student, $this->exam);
 
             if (!$object->save()) {
                 throw new \Exception('抽签失败！', -20);
             }
-
-            $obj = $this->judgeTime($student->id);
+            $obj = $this->judgeTime($this->student->id);
 
             $array['after_begin_dt'] = $obj->begin_dt;
             $array['after_end_dt'] = $obj->end_dt;
@@ -83,7 +88,7 @@ class Drawlots
 
             //将阻塞状态变成0
             if (!ExamQueue::where('exam_id', $this->exam->id)
-                ->where('student_id', $student->student_id)
+                ->where('student_id', $this->student->id)
                 ->update(['blocking' => 0])
             ) {
                 throw new \Exception('抽签失败！请重试', -2);
@@ -133,7 +138,7 @@ class Drawlots
     }
 }
 
-class StationMode implements DrawModeInterface
+class DrawStationMode implements DrawModeInterface
 {
     /**
      * 返回station的实例
@@ -148,7 +153,7 @@ class StationMode implements DrawModeInterface
     {
         // TODO: Implement station() method.
         try {
-            $examQueue = ExamQueue::where('student_id', $student->student_id)
+            $examQueue = ExamQueue::where('student_id', $student->id)
                 ->where('exam_id', $exam->id)
                 ->where('status', 0)
                 ->orderBy('begin_dt', 'asc')
@@ -170,7 +175,6 @@ class StationMode implements DrawModeInterface
                 }
 
                 $tempObj->status = 1;
-
                 $array = [
                     'exam_queue_id' => $tempObj->id,
                     'before_status' => 0,
@@ -224,7 +228,7 @@ class StationMode implements DrawModeInterface
     }
 }
 
-class RoomMode implements DrawModeInterface
+class DrawRoomMode implements DrawModeInterface
 {
     /**
      * 返回station的实例

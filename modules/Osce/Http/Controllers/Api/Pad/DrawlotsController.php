@@ -14,9 +14,11 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamMidway\Drawlots;
-use Modules\Osce\Entities\ExamMidway\Examinee\Examinee;
-use Modules\Osce\Entities\ExamMidway\Examinee\RoomMode;
-use Modules\Osce\Entities\ExamMidway\Examinee\StationMode;
+use Modules\Osce\Entities\ExamMidway\Examinee;
+use Modules\Osce\Entities\ExamMidway\RoomMode;
+use Modules\Osce\Entities\ExamMidway\StationMode;
+use Modules\Osce\Entities\ExamMidway\DrawRoomMode;
+use Modules\Osce\Entities\ExamMidway\DrawStationMode;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
@@ -313,14 +315,14 @@ class DrawlotsController extends CommonController
 
             //使用抽签的方法进行抽签操作
 //            $result = $this->drawlots($student, $roomId, $teacherId, $exam);
-            $model = new Drawlots\Drawlots($student, $teacherId, $exam, $roomId);
+            $model = new Drawlots($student, $teacherId, $exam, $roomId);
             switch ($exam->sequence_mode) {
                 case 1:
-                    $model->mode(new Drawlots\RoomMode());
+                    $model->mode(new DrawRoomMode());
                     $result = $model->drawlots();
                     break;
                 case 2:
-                    $model->mode(new Drawlots\StationMode());
+                    $model->mode(new DrawStationMode());
                     $result = $model->drawlots();
                     break;
                 default:
