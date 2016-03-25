@@ -113,16 +113,26 @@ class StationVideo extends CommonModel
 //            ->get();
 //    }
 
-
-    public function  getVideoLabel($examId, $vcrId, $beginDt, $endDt)
+    /**
+     * 获取考试、摄像机对应的所有标记点（锚点）
+     * TODO:Zhoufuxiang 2016-3-25
+     * @return object
+     */
+    public function  getVideoLabels($examId, $vcrId, $beginDt, $endDt)
     {
-        $result = $this->leftJoin('station_vcr','station_vcr.id','=','station_video.station_vcr_id')
-        ->where('station_video.exam_id','=',$examId)
-        ->where('station_vcr.vcr_id','=',$vcrId)
-        ->orderBy('station_video.begin_dt')
-        ->get();
+        $builder = $this->leftJoin('station_vcr','station_vcr.id','=','station_video.station_vcr_id')
+                        ->where('station_video.exam_id','=',$examId)
+                        ->where('station_vcr.vcr_id','=',$vcrId)
+                        ->orderBy('station_video.begin_dt');
 
-        return $result;
+        if($beginDt){
+            $builder= $builder->whereRaw('unix_timestamp(station_video.begin_dt) >= ?',[$beginDt]);
+        }
+        if($endDt){
+            $builder= $builder->whereRaw('unix_timestamp(station_video.end_dt) >= ?',[$endDt]);
+        }
+
+        return $builder->get();
     }
 
 }
