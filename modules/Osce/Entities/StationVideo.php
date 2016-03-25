@@ -39,7 +39,8 @@ class StationVideo extends CommonModel
         }
 
         $builder = $builder->select(['vcr.name', 'vcr.code', 'vcr.ip', 'vcr.username',
-                                    'vcr.port', 'vcr.realport', 'vcr.channel', 'vcr.status']);
+                                    'vcr.port', 'vcr.realport', 'vcr.channel', 'vcr.status',
+                                    ]);
         $data = $builder->get();
 
         return $data;
@@ -111,5 +112,17 @@ class StationVideo extends CommonModel
 //            )
 //            ->get();
 //    }
+
+
+    public function  getVideoLabel($examId, $vcrId, $beginDt, $endDt)
+    {
+        $result = $this->leftJoin('station_vcr','station_vcr.id','=','station_video.station_vcr_id')
+        ->where('station_video.exam_id','=',$examId)
+        ->where('station_vcr.vcr_id','=',$vcrId)
+        ->orderBy('station_video.begin_dt')
+        ->get();
+
+        return $result;
+    }
 
 }

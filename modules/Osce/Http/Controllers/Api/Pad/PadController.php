@@ -197,6 +197,7 @@ class PadController extends  CommonController{
         try{
             $stationVideoModel = new StationVideo();
             $vcrs=$stationVideoModel->getTiming($vcrId,$beginDt,$examId,$endDt);
+            $videoLabels = $stationVideoModel->getVideoLabel($examId, $vcrId, $beginDt, $endDt);
             return response()->json(
                 $this->success_data($vcrs,1,'success')
             );
@@ -383,7 +384,7 @@ class PadController extends  CommonController{
     public function getDoneExams(Request $request)
     {
         //获取已经考完的所有考试列表
-        $examList = Exam::where('status','=', 2)->select(['id','name'])->paginate(10);
+        $examList = Exam::where('status','=', 2)->select(['id','name', 'begin_dt', 'end_dt'])->paginate(10);
 
         //返回数据
         return $this->success_rows(1,'获取成功',
