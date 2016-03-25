@@ -32,22 +32,15 @@ class StationVideo extends CommonModel
         $builder= $builder->where('station_vcr.vcr_id',$vcrId)
                           ->where('station_video.exam_id',$examId);
         if($beginDt){
-            $builder=$builder->whereRaw('unix_timestamp(station_video.begin_dt) >= ?',[$beginDt]);
+            $builder= $builder->whereRaw('unix_timestamp(station_video.begin_dt) >= ?',[$beginDt]);
         }
         if($endDt){
-            $builder=$builder->whereRaw('unix_timestamp(station_video.end_dt) >= ?',[$endDt]);
+            $builder= $builder->whereRaw('unix_timestamp(station_video.end_dt) >= ?',[$endDt]);
         }
 
-        $builder=$builder->select([
-            'vcr.name as name',
-            'vcr.code as code',
-            'vcr.ip as ip',
-            'vcr.username as username',
-            'vcr.port as port',
-            'vcr.channel as channel',
-            'vcr.status as status',
-        ]);
-        $data=$builder->get();
+        $builder = $builder->select(['vcr.name', 'vcr.code', 'vcr.ip', 'vcr.username',
+                                    'vcr.port', 'vcr.realport', 'vcr.channel', 'vcr.status']);
+        $data = $builder->get();
 
         return $data;
     }
