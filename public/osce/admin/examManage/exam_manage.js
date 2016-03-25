@@ -3065,13 +3065,13 @@ function smart_assignment(){
             heigth = (allSeconds/1000/pxs), //20s对应1px
             count = Math.ceil(heigth/step),
             flag = 0,
-            html = '<div class="axis"><dl><dd class="tick-bar"><span>'+formatDateTime(new Date(startTime))+'</span></dd>';
-          
+            html = '<div class="axis"><dl><dd class="tick-bar"><span>'+formatShowTime(new Date(startTime))+'</span></dd>';
+         
         for(var i = 1; i <= count; i++) {
             var time = new Date(i*1000*pxs*step + Date.parse(startTime)),
                 className = (flag < 5 ?'tick':'tick-bar');
 
-            html += '<dd class="item"></dd><dd class="'+className+'" title="'+ formatDateTime(time) +'"><span>'+ (flag < 5 ?'' : formatDateTime(time)) +'</span></dd>';
+            html += '<dd class="item"></dd><dd class="'+className+'" title="'+ formatShowTime(time) +'"><span>'+ (flag < 5 ?'' : formatShowTime(time)) +'</span></dd>';
             //间隔标签
             if(flag < 5) {
                 flag ++;
@@ -3098,7 +3098,7 @@ function smart_assignment(){
      * @param   {date}   date 传入时间
      * @return  {date}        所要格式时间
      */
-    function formatDateTime(date) {  
+    function formatDateTime(date) {
         var y = date.getFullYear();  
         var m = date.getMonth() + 1;  
         m = m < 10 ? ('0' + m) : m;  
@@ -3108,9 +3108,31 @@ function smart_assignment(){
         var minute = date.getMinutes();
 
         h = h < 10 ? ('0' + h) : h; 
-        minute = minute < 10 ? ('0' + minute) : minute;  
-        return m + '-' + d+' '+h+':'+minute;  
+        minute = minute < 10 ? ('0' + minute) : minute;
+        return y + '-' + m + '-' + d+' '+h+':'+minute;  
     };
+
+    /**
+     * 标准化显示时间转化成所要格式
+     * @author mao
+     * @version 2.0.1
+     * @date    2016-03-25
+     * @param   {date}   date 传入时间
+     * @return  {date}        所要格式时间
+     */
+    function formatShowTime(date) {
+        var y = date.getFullYear();  
+        var m = date.getMonth() + 1;  
+        m = m < 10 ? ('0' + m) : m;  
+        var d = date.getDate();  
+        d = d < 10 ? ('0' + d) : d;  
+        var h = date.getHours();  
+        var minute = date.getMinutes();
+
+        h = h < 10 ? ('0' + h) : h; 
+        minute = minute < 10 ? ('0' + minute) : minute;
+        return m + '-' + d+' '+h+':'+minute;
+    }
 
 //生成时间轴
     function makeTime(){
