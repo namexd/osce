@@ -129,17 +129,13 @@ class ExamQuestionController extends CommonController
             'parsing'                 => 'sometimes|string',
             'answer'                  => 'sometimes|array',
             'judge'                  => 'sometimes|integer',
-
             'examQuestionItemName'  => 'sometimes|array',//试题子项表
             'content'                 => 'sometimes|array',
-
             'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
 
         //试题和标签中间表数据
-
         $ExamQuestionLabelRelationData = $request->input('tag');
-
 
         //试题表数据
         $examQuestionData =array(
@@ -273,10 +269,8 @@ class ExamQuestionController extends CommonController
             'parsing'                 => 'sometimes|string',
             'answer'                  => 'sometimes|array',
             'judge'                  => 'sometimes|integer',
-
             'examQuestionItemName'  => 'sometimes|array',//试题子项表
             'content'                 => 'sometimes|array',
-
             'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
 
