@@ -25,6 +25,7 @@ class StationTeacher extends CommonModel
         return $this->belongsTo('\Modules\Osce\Entities\Station','station_id','id');
     }
 
+
     //根据老师的 用户id，查询对对应的考试ID集
     public function getExamToUser($user_id)
     {

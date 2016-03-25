@@ -69,6 +69,7 @@ class Teacher extends CommonModel
             ->where('station_teacher.user_id', $id)
             ->select(
                 'room.id as room_id',
+                'station_teacher.station_id',
                 'room.name as room_name')
             ->first();
     }

@@ -243,14 +243,14 @@ class DrawRoomMode implements DrawModeInterface
     {
         // TODO: Implement station() method.
         //获取当前考生应该什么考场和流程
-        $object = ExamQueue::where('student_id', $student->student_id)
+        $object = ExamQueue::where('student_id', $student->id)
             ->where('exam_id', $exam->id)
             ->where('status', 0)
             ->orderBy('begin_dt', 'asc')
             ->first();
 
         //获得这个考场下面有哪些考站
-        $stationIds = RoomStation::where('room', $object->room_id)->get()->pluck('station_id');
+        $stationIds = RoomStation::where('room_id', $object->room_id)->get()->pluck('station_id');
 
         //得到目前这个考场下面有哪些考站正在使用
         $diff = $this->diffStationId($exam, $object, $stationIds);
@@ -301,7 +301,7 @@ class DrawRoomMode implements DrawModeInterface
             ->get()
             ->pluck('station_id');
 
-        return $stationIds->diff($usedIds);
+        return collect(array_diff($stationIds->toArray(), $usedIds->toArray()));
     }
 
     /**
