@@ -123,7 +123,8 @@ class StationVideo extends CommonModel
         $builder = $this->leftJoin('station_vcr','station_vcr.id','=','station_video.station_vcr_id')
                         ->where('station_video.exam_id','=',$examId)
                         ->where('station_vcr.vcr_id','=',$vcrId)
-                        ->orderBy('station_video.begin_dt');
+                        ->orderBy('station_video.begin_dt')
+                        ->select(['station_video.*']);
 
         if($beginDt){
             $builder= $builder->whereRaw('unix_timestamp(station_video.begin_dt) >= ?',[$beginDt]);
