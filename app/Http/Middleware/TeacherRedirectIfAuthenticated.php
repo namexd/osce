@@ -42,7 +42,7 @@ class TeacherRedirectIfAuthenticated
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->check()) {
+        if (!is_null(Auth::user())) {
             return redirect()->route('osce.admin.ApiController.LoginAuthWait');
         }
         return $next($request);
