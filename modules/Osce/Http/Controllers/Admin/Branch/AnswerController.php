@@ -53,8 +53,9 @@ class AnswerController extends CommonController
         }
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
-        $examPaperFormalList = $examPaperFormalModel->where('id','=',31)->first();
+        $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
         $examPaperFormalData ='';
+        $systemTimeEnd =0;
         if($examPaperFormalList) {
             $examPaperFormalData = array(
                 'id' => $examPaperFormalList->id,//正式试卷id
@@ -116,8 +117,6 @@ class AnswerController extends CommonController
 
             }
         }
-      //dd(date('Y/m/d H:i:s',$systemTimeStart).','.date('Y/m/d H:i:s',$systemTimeEnd));
-//        dd($studentId);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
