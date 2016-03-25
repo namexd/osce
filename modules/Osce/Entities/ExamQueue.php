@@ -11,6 +11,7 @@ use DB;
 use Doctrine\Common\Persistence\ObjectManager;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Http\Controllers\CommonController;
+use Modules\Osce\Repositories\Common;
 
 class ExamQueue extends CommonModel
 {
@@ -234,7 +235,8 @@ class ExamQueue extends CommonModel
     /**
      * 从队列里取出下一组考生的接口
      * @param $room_id
-     * @param $stationNum
+     * @param $examId
+     * @param $station
      * @return
      * @throws \Exception
      * @author Jiangzhiheng
@@ -506,8 +508,6 @@ class ExamQueue extends CommonModel
                         $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $difference);
                         $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $difference);
                     }
-                    \Log::info('band_watch', ['begin_dt' => $item->begin_dt, 'end_dt' => $item->end_dt]);
-
                     $item->status = 0;
 
                     //将数据插入数据库
@@ -682,6 +682,14 @@ class ExamQueue extends CommonModel
                      */
                     CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
                         $teacherId, [strtotime($date)]);
+
+                    //将该学生的阻塞状态变成1
+                    if (!ExamQueue::where('exam_id', $queue->exam_id)
+                        ->where('student_id', $studentId)
+                        ->update(['blocking' => 1])
+                    ) {
+                        throw new \Exception('抽签失败！请重试', -2);
+                    }
                 }
                 $connection->commit();
                 return $queue;

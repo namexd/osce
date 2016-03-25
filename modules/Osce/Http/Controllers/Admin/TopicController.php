@@ -241,7 +241,7 @@ class TopicController extends CommonController
 
         $id = $request->get('id');
         $subject = Subject::find($id);
-        OsceCommon::objIsNull($subject, '没有找到对应的科目', -1000);
+        OsceCommon::valueIsNull($subject, -1000, '没有找到对应的科目');
 
         $items = $subject->items;
         $items = SubjectItem::builderItemTable($items);
