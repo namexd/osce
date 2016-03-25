@@ -216,7 +216,7 @@ class ApiController extends CommonController
                 if(count($questionData)>0){
                     foreach($questionData as $k => $v){
                         $questionInfo = explode('@',$v);
-                        $ExamQuestionId = explode(',',$questionInfo[2]);
+                        $ExamQuestionId = isset($questionInfo[2])&&!empty($questionInfo[2])?explode(',',$questionInfo[2]):[];
                         $ExamQuestionList = $ExamQuestion->whereIn('id',$ExamQuestionId)->with('examQuestionItem')->get();
                         $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$questionInfo[0])->select('name')->first();
                         $PaperPreviewArr['item'][$k]['name'] = $str[$k].'、'.$ExamQuestionTypeInfo['name'].'（共'.count($ExamQuestionId).'题，每题'.$questionInfo[1].'分）';
@@ -226,6 +226,12 @@ class ApiController extends CommonController
                 }
             }
         }
+
+       /* if($type == 1 ){//随机试卷
+
+        }else{
+
+        }*/
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
 
