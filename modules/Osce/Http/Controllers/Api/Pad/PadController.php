@@ -184,18 +184,19 @@ class PadController extends  CommonController{
 
     public function getTimingList(Request $request){
         $this->validate($request,[
-            'station_vcr_id'     =>'required|integer',
-            'exam_id'            =>'required',
-            'begin_dt'           =>'sometimes',
-            'end_dt'             =>'sometimes',
+            'vcr_id'    =>'required|integer',
+            'exam_id'   =>'required',
+            'begin_dt'  =>'sometimes',
+            'end_dt'    =>'sometimes',
         ]);
-        $stationVcrId=$request->get('station_vcr_id');
-        $beginDt=$request->get('begin_dt');
-        $examId=$request->get('exam_id');
-        $endDt=$request->get('end_dt');
+        $vcrId  = $request->get('vcr_id');
+        $examId = $request->get('exam_id');
+        $beginDt= $request->get('begin_dt');
+        $endDt  = $request->get('end_dt');
+
         try{
-            $stationVideoModel=new StationVideo();
-            $vcrs=$stationVideoModel->getTiming($stationVcrId,$beginDt,$examId,$endDt);
+            $stationVideoModel = new StationVideo();
+            $vcrs=$stationVideoModel->getTiming($vcrId,$beginDt,$examId,$endDt);
             return response()->json(
                 $this->success_data($vcrs,1,'success')
             );
