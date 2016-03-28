@@ -112,7 +112,8 @@
                         });
                     }
                     if(obj.status=='2'){
-                        console.log('保存失败');
+                        layer.confirm('保存失败！');
+
                     }
                 })
             })
@@ -162,7 +163,7 @@
                             });
                         }
                         if(obj.status=='2'){
-                            console.log('保存失败');
+                            layer.confirm('保存失败！');
                         }
                     })
                 }
