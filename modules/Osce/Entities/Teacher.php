@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities;
 
 
+use App\Entities\SysUserRole;
 use App\Entities\User;
 use DB;
 use Modules\Osce\Repositories\Common;
@@ -379,7 +380,7 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editInvigilator($id, $userData, $teacherData)
+    public function editInvigilator($id, $userData, $teacherData, $role_id)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -411,6 +412,27 @@ class Teacher extends CommonModel
             if(!$userInfo->save()){
                 throw new   \Exception('教务人员用户信息变更失败');
             }
+            //更改用户角色
+            $userRole = SysUserRole::where('user_id','=',$userInfo->id)->first();
+            if($userRole){
+                if($userRole->role_id != $role_id){
+                    $userRole->role_id = $role_id;
+
+                    if(!$userRole->save()){
+                        throw new   \Exception('教务人员角色信息变更失败');
+                    }
+                }
+            }else{
+                DB::table('sys_user_role')->insert(
+                    [
+                        'role_id'    => $role_id,
+                        'user_id'    => $userInfo->id,
+                        'created_at' => time(),
+                        'updated_at' => time(),
+                    ]
+                );
+            }
+
             $connection->commit();
             return $teacher;
 
