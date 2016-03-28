@@ -2978,7 +2978,10 @@ function smart_assignment(){
             li.addClass("room_inner_col");
             ul.append(li);
         }
-        return ul;
+
+        var html = $('<div class="box-table">');
+        html.append(ul);
+        return html;
     }
     //生成列表
     function maketotal(data){
@@ -3038,6 +3041,11 @@ function smart_assignment(){
     }
     $('#makePlan').click(function(){
 
+        //数据初始化
+        timesGroup  =   [];
+        eariestTime =   [];
+        endtime=[];
+
         makePlan();
     })
 
@@ -3065,7 +3073,7 @@ function smart_assignment(){
             heigth = (allSeconds/1000/pxs), //20s对应1px
             count = Math.ceil(heigth/step),
             flag = 0,
-            html = '<div class="axis"><dl><dd class="tick-bar"><span>'+formatShowTime(new Date(startTime))+'</span></dd>';
+            html = '<div><div class="axis"><dl><dd class="tick-bar"><span>'+formatShowTime(new Date(startTime))+'</span></dd>';
          
         for(var i = 1; i <= count; i++) {
             var time = new Date(i*1000*pxs*step + Date.parse(startTime)),
@@ -3080,7 +3088,7 @@ function smart_assignment(){
             }
         }
 
-        html += '</dl></div>';
+        html += '</dl></div></div>';
 
         /*//渲染dom
         $('.axis dl').html(html);*/
@@ -3136,6 +3144,7 @@ function smart_assignment(){
 
 //生成时间轴
     function makeTime(){
+
 
         for(var i in timesGroup ){
             //实例化标尺
