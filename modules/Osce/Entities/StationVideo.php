@@ -21,42 +21,27 @@ class StationVideo extends CommonModel
     public $search = [];
 
 
-    public function getTiming($stationVcrId,$beginDt,$examId,$endDt){
-        $beginDt=strtotime($beginDt);
-        $endDt=strtotime($endDt);
-        $builder=$this->leftJoin('station_vcr',function($join){
-            $join->on('station_video.station_vcr_id','=','station_vcr.id');
-        })->leftJoin('vcr',function($join){
-            $join->on('station_vcr.vcr_id','=','vcr.id');
-        });
-        $builder=$builder->where('station_video.station_vcr_id',$stationVcrId)->where('station_video.exam_id',$examId);
+    public function getTiming($vcrId,$beginDt,$examId,$endDt){
+        $beginDt= strtotime($beginDt);
+        $endDt  = strtotime($endDt);
+        $builder= $this->leftJoin('station_vcr',function($join){
+                        $join->on('station_video.station_vcr_id','=','station_vcr.id');
+                    })->leftJoin('vcr',function($join){
+                        $join->on('station_vcr.vcr_id','=','vcr.id');
+                    });
+        $builder= $builder->where('station_vcr.vcr_id',$vcrId)
+                          ->where('station_video.exam_id',$examId);
         if($beginDt){
-            $builder=$builder->whereRaw(
-                'unix_timestamp('.'station_video.begin_dt'.') >= ?',
-                [
-                    $beginDt
-                ]
-            );
+            $builder= $builder->whereRaw('unix_timestamp(station_video.begin_dt) >= ?',[$beginDt]);
         }
         if($endDt){
-            $builder=$builder->whereRaw(
-                'unix_timestamp('.'station_video.end_dt'.') >= ?',
-                [
-                    $endDt
-                ]
-            );
+            $builder= $builder->whereRaw('unix_timestamp(station_video.end_dt) >= ?',[$endDt]);
         }
 
-        $builder=$builder->select([
-            'vcr.name as name',
-            'vcr.code as code',
-            'vcr.ip as ip',
-            'vcr.username as username',
-            'vcr.port as port',
-            'vcr.channel as channel',
-            'vcr.status as status',
-        ]);
-        $data=$builder->get();
+        $builder = $builder->select(['vcr.name', 'vcr.code', 'vcr.ip', 'vcr.username',
+                                    'vcr.port', 'vcr.realport', 'vcr.channel', 'vcr.status',
+                                    ]);
+        $data = $builder->get();
 
         return $data;
     }
@@ -127,5 +112,28 @@ class StationVideo extends CommonModel
 //            )
 //            ->get();
 //    }
+
+    /**
+     * 获取考试、摄像机对应的所有标记点（锚点）
+     * TODO:Zhoufuxiang 2016-3-25
+     * @return object
+     */
+    public function  getVideoLabels($examId, $vcrId, $beginDt, $endDt)
+    {
+        $builder = $this->leftJoin('station_vcr','station_vcr.id','=','station_video.station_vcr_id')
+                        ->where('station_video.exam_id','=',$examId)
+                        ->where('station_vcr.vcr_id','=',$vcrId)
+                        ->orderBy('station_video.begin_dt')
+                        ->select(['station_video.*']);
+
+        if($beginDt){
+            $builder= $builder->whereRaw('unix_timestamp(station_video.begin_dt) >= ?',[$beginDt]);
+        }
+        if($endDt){
+            $builder= $builder->whereRaw('unix_timestamp(station_video.end_dt) >= ?',[$endDt]);
+        }
+
+        return $builder->get();
+    }
 
 }

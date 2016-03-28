@@ -184,20 +184,29 @@ class PadController extends  CommonController{
 
     public function getTimingList(Request $request){
         $this->validate($request,[
-            'station_vcr_id'     =>'required|integer',
-            'exam_id'            =>'required',
-            'begin_dt'           =>'sometimes',
-            'end_dt'             =>'sometimes',
+            'vcr_id'    =>'required|integer',
+            'exam_id'   =>'required',
+            'begin_dt'  =>'sometimes',
+            'end_dt'    =>'sometimes',
         ]);
-        $stationVcrId=$request->get('station_vcr_id');
-        $beginDt=$request->get('begin_dt');
-        $examId=$request->get('exam_id');
-        $endDt=$request->get('end_dt');
+        $vcrId  = $request->get('vcr_id');
+        $examId = $request->get('exam_id');
+        $beginDt= $request->get('begin_dt');
+        $endDt  = $request->get('end_dt');
+
         try{
-            $stationVideoModel=new StationVideo();
-            $vcrs=$stationVideoModel->getTiming($stationVcrId,$beginDt,$examId,$endDt);
+            $stationVideoModel = new StationVideo();
+            $vcrs = $stationVideoModel->getTiming($vcrId,$beginDt,$examId,$endDt);
+            //获取标记点列表
+            $videoLabels = $stationVideoModel->getVideoLabels($examId, $vcrId, $beginDt, $endDt);
+            //组合返回数据
+            $data = [
+                'vcrs'          => $vcrs,
+                'videoLabels'   => $videoLabels
+            ];
+
             return response()->json(
-                $this->success_data($vcrs,1,'success')
+                $this->success_data($data, 1, 'success')
             );
 
         }catch (\Exception $ex){
@@ -263,27 +272,13 @@ class PadController extends  CommonController{
      */
     public function getExamRoom(Request $request){
         $this->validate($request,[
-          'exam_id'  =>'sometimes|integer'
+          'exam_id'  =>'required|integer'
         ]);
 
-        //TODO: Zhoufuxiang 修改：2016-3-22
         $exam_id = $request->get('exam_id');
-        $rooms   = [];
-        if(empty($exam_id)){
-            //未选考试，列出所有考试对应的所有考场
-            $examList = Exam::where('status','=', 2)->select(['id','name','sequence_mode'])->paginate(10);
-            if(count($examList) != 0){
-                foreach ($examList as $exam) {
-                    $result  = $this->getRoomDatas($exam);      //根据考试获取对应的所有考场
-                    $rooms   = array_merge($rooms, $result);
-                }
-            }
-
-        }else{
-            $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
-            $rooms  = $this->getRoomDatas($exam);       //根据考试获取对应的所有考场
-        }
-        $rooms = array_values(array_unique($rooms));    //去重，并取值（键排序）
+        $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
+        $rooms  = $this->getRoomDatas($exam);           //根据考试获取对应的所有考场
+        $rooms  = array_values(array_unique($rooms));    //去重，并取值（键排序）
 
         return response()->json(
             $this->success_data($rooms,1,'success')
@@ -396,7 +391,7 @@ class PadController extends  CommonController{
     public function getDoneExams(Request $request)
     {
         //获取已经考完的所有考试列表
-        $examList = Exam::where('status','=', 2)->select(['id','name'])->paginate(10);
+        $examList = Exam::where('status','=', 2)->select(['id','name', 'begin_dt', 'end_dt'])->paginate(10);
 
         //返回数据
         return $this->success_rows(1,'获取成功',
@@ -457,12 +452,62 @@ class PadController extends  CommonController{
     }
 
     /**
+     *历史回放，获取所有已经考完的考试对应的摄像头列表(接口)
+     * @method GET
+     * @url     /osce/pad/all-rooms
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * int        room_id          考场ID
+     * * int        exam_id          考试ID
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME} 2016-3-25
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAllRooms(Request $request){
+        $this->validate($request,[
+            'exam_id'  =>'sometimes|integer'
+        ]);
+
+        $exam_id = $request->get('exam_id');
+        $roomIds   = [];
+        if(empty($exam_id)){
+            //未选考试，列出所有考试对应的所有考场
+            $examList = Exam::where('status','=', 2)->select(['id','name','sequence_mode'])->get();
+            if(count($examList) != 0){
+                foreach ($examList as $exam) {
+                    $roomId  = $this->getRoomDatas($exam, true);      //根据考试获取对应的所有考场
+                    $roomIds = array_merge($roomIds, $roomId);
+                }
+            }
+
+        }else{
+            $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
+            $roomIds  = $this->getRoomDatas($exam, true);       //根据考试获取对应的所有考场
+        }
+        $roomIds = array_values(array_unique($roomIds));    //去重，并取值（键排序）
+        $rooms = Room::whereIn('id', $roomIds)->select(['id', 'name'])->paginate(10);
+
+        //返回分页数据
+        return $this->success_rows(1,'获取成功',
+            $rooms->lastPage(),      $rooms->perPage(),
+            $rooms->currentPage(),   $rooms->toArray()['data']
+        );
+
+    }
+    /**
      * 根据考试获取对应的所有考场
      * TODO:Zhoufuxiang 2016-3-23
      * @return object
      */
-    public function getRoomDatas($exam){
+    public function getRoomDatas($exam, $status = false){
         $rooms   = [];
+        $roomIds = [];
         if($exam->sequence_mode == 2){
             //根据考试获取 对应考站
             $examStation = ExamStation::where('exam_id','=',$exam->id)->get();
@@ -471,17 +516,24 @@ class PadController extends  CommonController{
                     //获取考站对应的考场
                     $roomStation = RoomStation::where('station_id','=',$item->station_id)->first();
                     $rooms[] = $roomStation->room;
+                    $roomIds[] = $roomStation->room_id;
                 }
             }
         }else{
             $examRooms = ExamRoom::where('exam_id','=',$exam->id)->get();
             foreach($examRooms as $examRoom){
                 $rooms[] = $examRoom->room;
+                $roomIds[] = $examRoom->room_id;
             }
         }
         $rooms = array_unique($rooms);
+        $roomIds = array_unique($roomIds);
 
-        return $rooms;
+        if($status){
+            return $roomIds;
+        }else{
+            return $rooms;
+        }
     }
 
     /**
