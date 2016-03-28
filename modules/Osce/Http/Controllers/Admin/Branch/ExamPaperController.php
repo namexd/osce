@@ -116,7 +116,7 @@ class ExamPaperController extends CommonController
             //删除试卷构造表和标签关联表数据
             if(ExamPaperStructureLabel::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
                 $DB->commit();
-                return redirect()->back()->withInput()->withErrors('操作成功');
+                return back()->with('success', '操作成功');
             }else{
                 $DB->rollBack();
                 return redirect()->back()->withInput()->withErrors('系统异常');
@@ -141,7 +141,7 @@ class ExamPaperController extends CommonController
 
             if(ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
                 $DB->commit();
-                return redirect()->back()->withInput()->withErrors('操作成功');
+                return back()->with('success', '操作成功');
             }else{
                 $DB->rollback();
                 return redirect()->back()->withInput()->withErrors('系统异常');
@@ -163,7 +163,7 @@ class ExamPaperController extends CommonController
             //删除试卷构造表和标签关联表数据
             if(ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$paper_structure_id)->delete()){
                 $DB->commit();
-                return redirect()->back()->withInput()->withErrors('操作成功');
+                return back()->with('success', '操作成功');
             }else{
                 $DB->rollBack();
                 return redirect()->back()->withInput()->withErrors('系统异常');
