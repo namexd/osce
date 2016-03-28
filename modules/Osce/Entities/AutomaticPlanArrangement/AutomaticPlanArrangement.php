@@ -195,8 +195,10 @@ class AutomaticPlanArrangement
         foreach ($this->_T as $item) {
             $mixCommonDivisors[] = $item->mins  +   config('osce.begin_dt_buffer');
         }
+//        $mixCommonDivisors  =   [
+//            15,25
+//        ];
         $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
-
         $this->doorStatus = $this->_T_Count;
 
         $abcd = 0;
