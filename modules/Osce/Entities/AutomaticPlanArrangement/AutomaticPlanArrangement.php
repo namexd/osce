@@ -291,7 +291,6 @@ class AutomaticPlanArrangement
 //                    break;
 //                }
 //            }
-            sleep(1);
         }
 
         //获取未走完流程的考生
