@@ -176,58 +176,6 @@ class ApiController extends CommonController
         $ExamQuestionType = new ExamQuestionType;
         $paperid = $request->paperid;
         //试卷类型(1.随机试卷，2.统一试卷)
-        /*if($type == 1 || $mode == 1 && $type == 2){
-            if(!empty($request->question)){
-                foreach($request->question as $k => $v){
-                    $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
-                }
-            }
-
-            $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
-
-            foreach($PaperPreviewArr['item'] as $k => $v){
-                if(!empty($v['child'])){
-                    $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->with('examQuestionItem')->get();
-                    $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$v['type'])->select('name')->first();
-                    $PaperPreviewArr['item'][$k]['name'] = $str[$k].'、'.$ExamQuestionTypeInfo['name'].'（共'.$v['num'].'题，每题'.$v['score'].'分）';
-                    $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
-                    $PaperPreviewArr['total_score'] += intval($v['num']*$v['score']);
-                }
-            }
-        //试卷类型(统一试卷)
-        }elseif($type == 2){
-            if($mode == 1 && $paperid>0){
-                $ExamPaperInfo = ExamPaper::where('id','=',$paperid)->first();
-                if(count($ExamPaperInfo->ExamPaperStructure)>0){
-                    foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
-                        $name = ExamQuestionType::where('id','=',$v['exam_question_type_id'])->pluck('name');
-                        $PaperPreviewArr['item'][$k]['name'] = $str[$k].'、'.$name.'（共'.$v['num'].'题，每题'.$v['score'].'分）';
-
-                        $ExamQuestionId = [];
-                        if(count($v->ExamPaperStructureQuestion)>0){
-                            $ExamQuestionId = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
-                        }
-
-                        $ExamQuestionList = $ExamQuestion->whereIn('id',$ExamQuestionId)->with('examQuestionItem')->get();
-                        $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
-                        $PaperPreviewArr['total_score'] += intval($v['num']*$v['score']);
-                    }
-                }
-            }elseif($mode == 2){
-                $questionData = $request->get('question-type');
-                if(count($questionData)>0){
-                    foreach($questionData as $k => $v){
-                        $questionInfo = explode('@',$v);
-                        $ExamQuestionId = isset($questionInfo[2])&&!empty($questionInfo[2])?explode(',',$questionInfo[2]):[];
-                        $ExamQuestionList = $ExamQuestion->whereIn('id',$ExamQuestionId)->with('examQuestionItem')->get();
-                        $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$questionInfo[0])->select('name')->first();
-                        $PaperPreviewArr['item'][$k]['name'] = $str[$k].'、'.$ExamQuestionTypeInfo['name'].'（共'.count($ExamQuestionId).'题，每题'.$questionInfo[1].'分）';
-                        $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
-                        $PaperPreviewArr['total_score'] += intval(count($ExamQuestionId)*$questionInfo[1]);
-                    }
-                }
-            }
-        }*/
 //-_-------------------------------------------
         //`mode` 组卷方式(1.自动组卷，2.手工组卷),
           //   `type` 试卷类型(1.随机试卷，2.统一试卷),
@@ -255,7 +203,6 @@ class ApiController extends CommonController
                     //-----------------
                     $flag_tag=false;
                     //随机试卷
-
                     if(count($ExamPaperInfo)>0){
                         $strArr=[];
                         if(count($ExamPaperInfo->ExamPaperStructure)>0){
@@ -266,7 +213,6 @@ class ApiController extends CommonController
                                 }
                             }
                             $paperDetail['item'] = $questionBankRepositories->HandlePaperPreviewArr($arr);
-
                             if(count($paperDetail['item'])>0){
                                 foreach($paperDetail['item'] as $k =>$v){
                                     $data = [];
@@ -285,12 +231,10 @@ class ApiController extends CommonController
                         }
                         if(count($request->question)&&count($strArr)) {//判段有没有修改操作
                             $flag = false;
-                            foreach ($strArr as $val) {
-                                foreach ($request->question as $v) {
-                                    if ($val != $v) {
+                            foreach ($strArr as $key=>$val) {
+                                    if ($strArr[$key]!= $request->question[$key]) {
                                         $flag = true;
                                         break;
-                                    }
                                 }
                             }
                             if($flag||count($request->question)!=count($strArr)){//不相等以修改
@@ -298,8 +242,6 @@ class ApiController extends CommonController
                             }
                         }
                     }
-
-
                     //-----------------
                 if(!$flag_tag){//没有缓存 第一次预览
 
@@ -312,6 +254,7 @@ class ApiController extends CommonController
                                 $ExamQuestionId = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
                             }
                             $ExamQuestionList = $ExamQuestion->whereIn('id', $ExamQuestionId)->with('examQuestionItem')->get();
+
                             $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
                             $PaperPreviewArr['total_score'] += intval($v['num'] * $v['score']);
                         }
@@ -323,7 +266,7 @@ class ApiController extends CommonController
                             }
                         }
                         $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
-                        \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
+                       \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
                         foreach($PaperPreviewArr['item'] as $k => $v){
                             if(!empty($v['child'])){
                                 $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->with('examQuestionItem')->get();
@@ -376,7 +319,9 @@ class ApiController extends CommonController
                             $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
                         }
                     }
+
                     $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
+                    \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
                     foreach($PaperPreviewArr['item'] as $k => $v){
                         if(!empty($v['child'])){
                             $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->with('examQuestionItem')->get();
@@ -386,7 +331,8 @@ class ApiController extends CommonController
                             $PaperPreviewArr['total_score'] += intval($v['num']*$v['score']);
                         }
                     }
-                    \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
+
+
                 }
             }else{ //mode 2 type 只能为2
                 $questionData = $request->get('question-type');

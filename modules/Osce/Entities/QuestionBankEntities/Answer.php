@@ -8,6 +8,8 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScreeningStudent;
 
 /**考生答题时，正式试卷模型
  * Class Answer
@@ -112,6 +114,44 @@ class Answer extends Model
                         }
                     }
                 }
+            }
+            $DB->commit();
+            return true;
+        }catch (\Exception $ex){
+            $DB->rollback();
+            throw $ex;
+        }
+    }
+    /**向考试结果记录表新增一条数据
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $data
+     * @return bool
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function createExamResult($data)
+    {
+        $DB = \DB::connection('osce_mis');
+        $DB->beginTransaction();
+        try{
+            $score = $this->selectGrade($data['examPaperFormalId'])['totalScore'];//获取该考生成绩
+            $exam_screening_id = ExamScreeningStudent::where('student_id','=',$data['studentId'])->first();
+            $examResultData=array(
+                'student_id'=>$data['studentId'],
+                'exam_screening_id'=>$exam_screening_id->exam_screening_id,
+                'station_id'=>$data['stationId'],
+                'time'=>$data['time'],
+                'score'=>$score,
+                'teacher_id'=>$data['teacherId'],
+                'begin_dt'=>$data['begin_dt'],//考试开始时间
+                'end_dt'=>$data['end_dt'],//考试结束时间
+                
+            );
+            if(!ExamResult::create($examResultData)){
+                throw new \Exception(' 插入考试结果记录表失败！');
             }
             $DB->commit();
             return true;
