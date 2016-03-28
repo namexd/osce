@@ -18,7 +18,7 @@
             <thead>
             <tr>
                 <th>#</th>
-                <th>考核点</th>
+                <th>考核项</th>
                 <th>平均成绩</th>
                 <th>考试人数</th>
                 <th>通过率</th>

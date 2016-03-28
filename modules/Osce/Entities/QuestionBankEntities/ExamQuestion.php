@@ -321,8 +321,32 @@ class ExamQuestion extends Model
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamQuestion($data,$pageIndex){
+    public function getExamQuestion($data,$pageIndex,$question_type){
         $builder = $this->leftjoin('exam_question_type',function($join){
+
+            $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
+
+        })->leftjoin('exam_question_label_relation',function($join){
+
+            $join->on('exam_question_label_relation.exam_question_id','=','exam_question.id');
+
+        });
+        if(count($data)>0){
+            $builder->whereIn('exam_question_label_relation.exam_question_label_id',$data);
+        }
+        $data = $builder->where('exam_question_type.id','=',$question_type)
+            ->with(['ExamQuestionLabelRelation'=>function($ExamQuestionLabelRelation){
+                $ExamQuestionLabelRelation->with('ExamQuestionLabel');
+            }])
+            ->groupBy('exam_question.id')
+            ->select(
+                'exam_question_type.name as tname',
+                'exam_question.*'
+            )
+            ->paginate(config('msc.page_size'));
+        return $data;
+
+/*        $builder = $this->leftjoin('exam_question_type',function($join){
 
             $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
 
@@ -333,7 +357,23 @@ class ExamQuestion extends Model
                 $relation->whereIn('exam_question_label_relation.exam_question_label_id',$data);
             }
 
-        }])->select('exam_question_type.name as tname','exam_question.*')->paginate(config('msc.page_size'));//
-        return $builder;
+        }])->where('exam_question_type.id','=',$question_type)->select('exam_question_type.name as tname','exam_question.*')->paginate(config('msc.page_size'));//
+        return $builder;*/
+    }
+
+    //获取试题数量
+    public function getQuestionsNum($data){
+        //分割标签条件
+//        $tag1 = explode('@',$data['tag1']);
+//        $tag2 = explode('@',$data['tag2']);
+//        $tag3 = explode('@',$data['tag3']);
+//        if($tag1){
+//            $builder = $this->where('exam_question_label_relation.exam_question_label_id','=',$question_type);
+//        }
+//        $question_type = $data['question'];
+//        $builder = $this->where('exam_question_type_id','=',$question_type)->leftjoin('exam_question_label_relation',function($join){
+//            $join->on('exam_question_label_relation.exam_question_id','=','exam_question.id');
+//        })->get();
+//        dd($builder);
     }
 }

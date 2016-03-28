@@ -1,5 +1,6 @@
 /*! 
- * jQuery Steps v1.0.6 - 04/27/2014
+ * jQuery Steps v1.0.6 - 03/16/2016
+ * may修改以适应formalPaper-List页面的列表
  * Copyright (c) 2014 Rafael Staib (http://www.jquery-steps.com)
  * Licensed under MIT http://www.opensource.org/licenses/MIT
  */
@@ -176,9 +177,9 @@
         b.preventDefault();
         var c = a(this), d = c.parent().parent().parent().parent(), f = m(d), g = n(d), i = c.attr("href");
         switch (i.substring(i.lastIndexOf("#") + 1)) {
-            case"cancel":
+           /* case"cancel":
                 e(d);
-                break;
+                break;*/
             case"finish":
                 h(d, g);
                 break;
@@ -250,7 +251,7 @@
     function L(a, b, c) {
         if (b.enablePagination) {
             var d = '<{0} class="actions {1}"><ul role="menu" aria-label="{2}">{3}</ul></{0}>', e = '<li><a href="#{0}" role="menuitem">{1}</a></li>', f = "";
-            b.forceMoveForward || (f += e.format("previous", b.labels.previous)), f += e.format("next", b.labels.next), b.enableFinishButton && (f += e.format("finish", b.labels.finish)), b.enableCancelButton && (f += e.format("cancel", b.labels.cancel)), a.append(d.format(b.actionContainerTag, b.clearFixCssClass, b.labels.pagination, f)), D(a, b, c), A(a, b, c)
+            b.forceMoveForward || (f += e.format("previous", b.labels.previous)), f += e.format("next", b.labels.next), b.enableFinishButton && (f += e.format("finish", b.labels.finish)), /*b.enableCancelButton && (f += e.format("cancel", b.labels.cancel)),*/ a.append(d.format(b.actionContainerTag, b.clearFixCssClass, b.labels.pagination, f)), D(a, b, c), A(a, b, c)/*去掉取消 */
         }
     }
 
@@ -263,7 +264,7 @@
     }
 
     function N(b, c, d, e, f) {
-        var g = q(b), h = g + V + f, j = g + W + f, k = g + X + f, l = b.find(".steps > ul"), m = M(c.titleTemplate, {
+            var g = q(b), h = g + V + f, j = g + W + f, k = g + X + f, l = b.find(".steps > ul"), m = M(c.titleTemplate, {
             index: f + 1,
             title: e.html()
         }), n = a('<li role="tab"><a id="' + h + '" href="#' + k + '" aria-controls="' + j + '">' + m + "</a></li>");
@@ -389,7 +390,7 @@
         cssClass: "wizard",
         clearFixCssClass: "clearfix",
         stepsOrientation: _.horizontal,
-        titleTemplate: '<span class="number">#index#.</span> #title#',
+        titleTemplate: '<span class="number"> #title#</span>',
         loadingTemplate: '<span class="spinner"></span> #text#',
         autoFocus: !1,
         enableAllSteps: !1,
@@ -422,9 +423,9 @@
             cancel: "取消",
             current: "当前步骤：",
             pagination: "分页",
-            finish: "完成",
-            next: "下一步",
-            previous: "上一步",
+            finish: "提交试卷",
+            next: "下一题",
+            previous: "上一题",
             loading: "加载中 ..."
         }
     }
