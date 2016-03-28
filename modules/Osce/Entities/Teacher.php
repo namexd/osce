@@ -602,13 +602,17 @@ class Teacher extends CommonModel
         try {
             $sucNum = 0;    //导入成功的老师数
             $exiNum = 0;    //已经存在的老师数
-            $role_id = config('osce.spRoleId',4);
             //将数组导入到模型中的addInvigilator方法
             foreach ($teacherDatas as $key => $teacherData)
             {
                 //性别处理
                 $teacherData['gender'] = $this->handleSex($teacherData['gender']);
                 $teacherData['type']   = $this->handleType($teacherData['type']);       //老师类别处理
+                if($teacherData['type'] == 1){
+                    $role_id = config('osce.invigilatorRoleId',1);
+                }else{
+                    $role_id = config('osce.patrolRoleId',6);
+                }
                 //姓名不能为空
                 if (empty(trim($teacherData['name']))) {
                     if (!empty($teacherData['idcard']) && !empty($teacherData['mobile'])) {
