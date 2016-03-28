@@ -142,6 +142,10 @@ class DrawlotsController extends CommonController
 //                $item->student_avator = url($item->student_avator);
 //            }
 
+            foreach ($students as $student) {
+                unset($student['blocking']);
+            }
+
             return response()->json($this->success_data($students));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
