@@ -134,9 +134,12 @@ class StationVcr extends CommonModel
                     $join -> on('room_station.station_id', '=', 'station_vcr.station_id');
                 })    ->leftJoin('vcr', function($join){
                     $join -> on('vcr.id', '=', 'station_vcr.vcr_id');
-                })->leftJoin('station', function($join) {
+                })-> leftJoin('exam_station', function($join){
+                    $join -> on('exam_station.station_id', '=', 'station_vcr.station_id');
+                }) ->leftJoin('station', function($join) {
                     $join->on('station.id', '=', 'station_vcr.station_id');
                 });
+                $result=$result ->where('exam_station.station_id', '=', $exam_id);
             }else{
                 $result = $this->leftJoin('room_station', function($join){
                     $join -> on('room_station.station_id', '=', 'station_vcr.station_id');
@@ -147,7 +150,6 @@ class StationVcr extends CommonModel
                 })->leftJoin('station', function($join) {
                     $join->on('station.id', '=', 'station_vcr.station_id');
                 });
-
              $result=$result ->where('exam_room.exam_id', '=', $exam_id);
             }
              $result=$result ->where('room_station.room_id',$room_id);
