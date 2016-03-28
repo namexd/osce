@@ -126,9 +126,10 @@ class InvigilatePadController extends CommonController
                 'name' => $fileName,
                 'description' => $date . '-' . $params['student_name'],
                 'standard_id' => $standardId,
-                 'student_id'=>$studentId,
+                'student_id'=>$studentId,
             ];
 
+//            \Log::debug('TestAttach', $data);
             //将内容插入数据库
             if (!$result = TestAttach::create($data)) {
                 if (!Storage::delete($attachUrl)) {
