@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities;
 
 
 use Modules\Osce\Entities\AutomaticPlanArrangement\Exam;
+use Modules\Osce\Repositories\Common;
 
 class StationVcr extends CommonModel
 {
@@ -126,19 +127,30 @@ class StationVcr extends CommonModel
     //获取考站摄像机信息
     public function getStionVcr($room_id,$exam_id){
         try{
-            //获取到考试
-            $result = $this->leftJoin('room_station', function($join){
-                $join -> on('room_station.station_id', '=', 'station_vcr.station_id');
-            })-> leftJoin('exam_room', function($join){
-                $join -> on('exam_room.room_id', '=', 'room_station.room_id');
-            })    ->leftJoin('vcr', function($join){
-                $join -> on('vcr.id', '=', 'station_vcr.vcr_id');
-            })->leftJoin('station', function($join) {
+            $exam = \Modules\Osce\Entities\Exam::doingExam($exam_id);
+            Common::valueIsNull($exam, -1, '没有找到对应的考试');
+            if($exam->sequence_mode == 2){
+                $result = $this->leftJoin('room_station', function($join){
+                    $join -> on('room_station.station_id', '=', 'station_vcr.station_id');
+                })    ->leftJoin('vcr', function($join){
+                    $join -> on('vcr.id', '=', 'station_vcr.vcr_id');
+                })->leftJoin('station', function($join) {
                     $join->on('station.id', '=', 'station_vcr.station_id');
-            });
-             $result=$result ->where('room_station.room_id',$room_id);
+                });
+            }else{
+                $result = $this->leftJoin('room_station', function($join){
+                    $join -> on('room_station.station_id', '=', 'station_vcr.station_id');
+                })-> leftJoin('exam_room', function($join){
+                    $join -> on('exam_room.room_id', '=', 'room_station.room_id');
+                })    ->leftJoin('vcr', function($join){
+                    $join -> on('vcr.id', '=', 'station_vcr.vcr_id');
+                })->leftJoin('station', function($join) {
+                    $join->on('station.id', '=', 'station_vcr.station_id');
+                });
 
-//            $result=$result ->where('exam_room.exam_id', '=', $exam_id);
+             $result=$result ->where('exam_room.exam_id', '=', $exam_id);
+            }
+             $result=$result ->where('room_station.room_id',$room_id);
 
             $result= $result->select(['station.name as station_name','station_vcr.id AS stationVcrId','vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
                 -> get();
