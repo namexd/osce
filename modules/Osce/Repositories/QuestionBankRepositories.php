@@ -310,6 +310,7 @@ class QuestionBankRepositories  extends BaseRepository
                 $data[$k]['question_num'] = $v['num'];
                 $data[$k]['question_score'] = $v['score'];
                 $data[$k]['question_total_score'] = $v['total_score'];
+                $data[$k]['id'] = @$v['id'];
             }
         }
         return $data;
@@ -530,6 +531,32 @@ class QuestionBankRepositories  extends BaseRepository
         return  true;
     }
 
+    /**
+     * 获取试题标签id
+     * @url       GET /osce/admin/exampaper/examp-questions
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetExamQuestionLabelId($obj){
+        $IdArr = [];
+        if(count($obj)>0){
+
+            foreach($obj as $k => $v){
+                $IdArr = array_merge($IdArr,collect($v)->pluck('exam_question_label_id')->toArray());
+            }
+
+            return  $IdArr;
+        }else{
+            return  $IdArr;
+        }
+
+    }
 
 
 

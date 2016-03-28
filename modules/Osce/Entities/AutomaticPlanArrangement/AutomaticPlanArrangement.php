@@ -143,7 +143,7 @@ class AutomaticPlanArrangement
             foreach ($this->screen as $item) {
                 $this->screenPlan($examId, $item);
                 //判断是否还有必要进行下场排考
-                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->first();  //通过查询数据表中是否有没有写入end_dt的数据
+                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id', $examId)->first();  //通过查询数据表中是否有没有写入end_dt的数据
                 if (count($this->_S_ING) == 0 && count($this->_S) == 0 && is_null($examPlanNull)) {
                     return $this->output($examId);
                 }
@@ -195,8 +195,8 @@ class AutomaticPlanArrangement
         foreach ($this->_T as $item) {
             $mixCommonDivisors[] = $item->mins  +   config('osce.begin_dt_buffer');
         }
-        $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
 
+        $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
         $this->doorStatus = $this->_T_Count;
 
         $abcd = 0;
@@ -284,15 +284,16 @@ class AutomaticPlanArrangement
             }
 
 
-            if (count($this->_S_ING) == 0 && count($this->_S) == 0 ){
-                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->first();  //通过查询数据表中是否有没有写入end_dt的数据
-                if(is_null($examPlanNull))
-                {
-                    break;
-                }
-            }
+//            if (count($this->_S_ING) == 0 && count($this->_S) == 0 ){
+//                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id', $examId)->first();  //通过查询数据表中是否有没有写入end_dt的数据
+//                if(is_null($examPlanNull))
+//                {
+//                    break;
+//                }
+//            }
+            sleep(1);
         }
-        \Log::info('time', [$abcd, $efg, $min, $max]);
+
         //获取未走完流程的考生
         $ExamFlowModel = new ExamFlow();
         $flowsNum = $ExamFlowModel->studentFlowCount($this->_Exam);
