@@ -412,8 +412,10 @@ class Teacher extends CommonModel
             if(!$userInfo->save()){
                 throw new   \Exception('教务人员用户信息变更失败');
             }
+
             //更改用户角色
-            $userRole = SysUserRole::where('user_id','=',$userInfo->id)->first();
+            $rolse = [config('osce.invigilatorRoleId',1),config('osce.patrolRoleId',6)];
+            $userRole = SysUserRole::where('user_id','=',$userInfo->id)->whereIn('role_id',$rolse)->first();
             if($userRole){
                 if($userRole->role_id != $role_id){
                     $userRole->role_id = $role_id;
