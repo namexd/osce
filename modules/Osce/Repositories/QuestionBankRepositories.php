@@ -209,7 +209,7 @@ class QuestionBankRepositories  extends BaseRepository
                         $labelIdArr = collect($v)->pluck('exam_question_label_id');
                         //（1.包含，2.等于）
                         if ($v['0']['relation'] == 1) {
-                            $orBuilder->orWhere(function ($query) use ($labelIdArr,$val) {
+                           $orBuilder->orWhere(function ($query) use ($labelIdArr,$val) {
                                 foreach ($labelIdArr as $item) {
                                     $query->orWhere(function ($query) use ($item,$val) {
                                         $query
@@ -229,16 +229,42 @@ class QuestionBankRepositories  extends BaseRepository
                         }
                     }
                     $orQuestionList = [];
+
                     $andQuestionList = [];
 
-                    $orQuestionId = [];
+
                     //如果有相关包含关系的标签id 表示需要查询
                     if(count($orIdArr)>0){
                         $orQuestionList = $orBuilder->get();
-                        if(count($orQuestionList)>0){
-                            $orQuestionId = $orQuestionList->pluck('id')->toArray();
+                    }
+
+                    $orQuestionId = [];
+
+                    //计算同时满足多个条件的数据
+                    if(count($orQuestionList)>0){
+                        $orQuestionIdArr = $orQuestionList->pluck('id');
+                        $orExamQuestionList = $ExamQuestion->whereIn('id',$orQuestionIdArr)->with('ExamQuestionLabelRelation')->get();
+                        foreach($orExamQuestionList as $k => $v){
+                            $flag = false;
+                            if(count($v->ExamQuestionLabelRelation) > 0){
+                                $labelId = $v->ExamQuestionLabelRelation->pluck('exam_question_label_id');
+                                foreach($orIdArr as $key => $vel){
+                                    if(!$this->IsContainTwo($vel,$labelId->toArray())){
+                                        $flag = false;
+                                        break;
+                                    }
+                                    $flag = true;
+                                }
+                            }
+                            if($flag){
+                                $orQuestionId[] = $v['id'];
+                            }
                         }
                     }
+
+
+                    //$sql = \DB::connection('osce_mis')->getQueryLog();
+                    //dd($orQuestionId);
 
                     //如果有相关等于关系的标签id 表示需要查询
                     if(count($andIdArr)>0){
@@ -246,18 +272,21 @@ class QuestionBankRepositories  extends BaseRepository
                     }
 
                     $andQuestionId = [];
+
+                    //计算同时满足多个条件的数据
                     if(count($andQuestionList)>0){
-                        $QuestionId = $andQuestionList->pluck('id');
-                        $ExamQuestionList = $ExamQuestion->whereIn('id',$QuestionId)->with('ExamQuestionLabelRelation')->get();
-                        foreach($ExamQuestionList as $k => $v){
+                        $andQuestionIdArr = $andQuestionList->pluck('id');
+                        $andExamQuestionList = $ExamQuestion->whereIn('id',$andQuestionIdArr)->with('ExamQuestionLabelRelation')->get();
+                        foreach($andExamQuestionList as $k => $v){
                             $flag = false;
                             if(count($v->ExamQuestionLabelRelation) > 0){
                                 $labelId = $v->ExamQuestionLabelRelation->pluck('exam_question_label_id');
                                 foreach($andIdArr as $key => $vel){
-                                    if($this->IsContain($vel,$labelId->toArray())){
-                                        $flag = true;
+                                    if(!$this->IsContain($vel,$labelId->toArray())){
+                                        $flag = false;
                                         break;
                                     }
+                                    $flag = true;
                                 }
                             }
                             if($flag){
@@ -267,8 +296,13 @@ class QuestionBankRepositories  extends BaseRepository
                     }
 
                     //$q = \DB::connection('osce_mis')->getQueryLog();
+
                     //合并包含 与 等于关系 查询出来的 试题id
-                    $QuestionId = array_merge($orQuestionId,$andQuestionId);
+                    if(count($orIdArr)>0 && count($andIdArr)>0){
+                        $QuestionId = array_intersect($orQuestionId,$andQuestionId);
+                    }else{
+                        $QuestionId = array_merge($orQuestionId,$andQuestionId);
+                    }
 
                     $questionIdArr = [];
                     if(count($QuestionId)>0){
@@ -529,6 +563,27 @@ class QuestionBankRepositories  extends BaseRepository
             }
         }
         return  true;
+    }
+
+    /**
+     * 判断 $array 是否包含 $arr 其中一个元素
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $arr
+     * @param $array
+     * @return bool
+     * @author tangjun <tangjun@misrobot.com>
+     * @date    2016年3月23日10:23:04
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function IsContainTwo($arr,$array){
+        foreach($arr as $v){
+            if(in_array($v,$array)){
+                return  true;
+            }
+        }
+        return  false;
     }
 
     /**
