@@ -71,7 +71,7 @@
                                         <td>
                                             <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" class="edit" dataId="{{ $val['id'] }}">
                                                 <span class="read state1 detail">
-                                                    <i class="fa fa-cog fa-2x"></i>
+                                                    <i class="fa fa-pencil-square-o fa-2x"></i>
                                                 </span>
                                             </a>
                                             <a href="javascript:void(0)" class="delete" dataId="{{ $val['id'] }}">

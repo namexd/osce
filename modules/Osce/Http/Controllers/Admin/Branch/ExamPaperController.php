@@ -1447,11 +1447,28 @@ class ExamPaperController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postCheckQuestionsNum(Request $request){
+
         $data = $request->all();
+
         $ExamQuestion = new ExamQuestion();
         //查找当前条件下的试题数量
-        $questions = $ExamQuestion->getQuestionsNum($data);
-
-
+        $result= $ExamQuestion->getQuestionsNum($data);
+        return response()->json(['valid'=>$result]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
