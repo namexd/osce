@@ -341,6 +341,7 @@ class DrawlotsController extends CommonController
 
         } catch (\Exception $ex) {
             \DB::connection('osce_mis')->rollBack();
+            \Log::alert('Error', [$ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
