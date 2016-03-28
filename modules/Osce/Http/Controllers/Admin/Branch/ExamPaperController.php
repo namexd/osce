@@ -482,6 +482,7 @@ class ExamPaperController extends CommonController
             }
         }elseif($status == 1 && $status2 == 2){//自动-统一
             $check = $this->addAutoUniteExam($request,$QuestionBankRepositories,$examPapers,$examPaperID,$DB);
+
             if(!$check){
                 $DB->rollBack();
                 return redirect()->back()->withInput()->withErrors('添加自动统一试卷失败！');
@@ -600,14 +601,13 @@ class ExamPaperController extends CommonController
 
 
         //查找筛选条件下的试题
-        $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
-
+        //$examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+        $examQuestion=\Cache::get(md5($request->name))?\Cache::get(md5($request->name)):$QuestionBankRepositories->StructureExamQuestionArr($examPapers);
         //整理数据
         foreach($examQuestion as $k=>$v){
             $examQuestion[$k]['created_user_id'] = $user->id;
             $examQuestion[$k]['exam_paper_id'] = $examPaperID;
             $questionType = $this->checkQuestions($v['type']);
-
             if(!count($v['child'])){
                 $DB->rollBack();
                 return redirect()->back()->withInput()->withErrors('没有'.$questionType.'类型的试题！');
@@ -622,7 +622,6 @@ class ExamPaperController extends CommonController
                     'exam_question_id' => $val,
                 ];
                 $addPaperStructureQuestion = ExamPaperStructureQuestion::create($arrs);
-
                 if(!$addPaperStructureQuestion){
                     $DB->rollBack();
                     return redirect()->back()->withInput()->withErrors('系统异常');
@@ -729,12 +728,14 @@ class ExamPaperController extends CommonController
         }
         //修改基础数据
         $examPaper = ExamPaper::where('id','=',$examPaperID)->update($data);
+
         if(!$examPaper){
             $DB->rollBack();
             return false;
         }
 
         $questions = $request->question;//获取标签参数
+
         if($questions){
             $examPapers = [];
             foreach($questions as $v){
@@ -749,6 +750,7 @@ class ExamPaperController extends CommonController
                 return redirect()->back()->withInput()->withErrors('修改自动随机试卷失败！');
             }
         }elseif($status == 1 && $status2 == 2){//自动-统一
+
             $check = $this->editAutoUniteExam($request,$DB,$QuestionBankRepositories,$examPapers,$examPaperID,$user);//exit;
             if(!$check){
                 $DB->rollBack();
@@ -761,9 +763,8 @@ class ExamPaperController extends CommonController
                 return redirect()->back()->withInput()->withErrors('修改手动统一试卷失败');
             }
         }
-
         $DB->commit();
-        return redirect()->back()->withInput()->withErrors('操作成功');
+        return back()->with('success', '操作成功');
     }
 
     /**
@@ -905,15 +906,13 @@ class ExamPaperController extends CommonController
         $idArrays = [];
 
         //查找筛选条件下的试题
-        $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+        $examQuestion =\Cache::get(md5($request->name))?:$QuestionBankRepositories->StructureExamQuestionArr($examPapers);
 
         //整理数据-判断该类型下是否有试题
         foreach($examQuestion as $k=>$v){
             $questionType = $this->checkQuestions($v['type']);
-
             /**存储数据库存在但页面并没有传值过来**/
             $key = array_search(@$v['structureid'], $idArrays);
-
             if ($key >= 0) {
                 unset($idArrays[$key]);
             }
@@ -927,35 +926,15 @@ class ExamPaperController extends CommonController
                 if (!in_array($val['id'], $idArrays)) {
                     $idArrays[] = $val['id'];
                 }
-
             }
         }
-        //dd($examPapers);
-        foreach($examPapers as $exam) {
-            //判断是否存在structureid
-
-            if(isset($exam['structureid'])){//存在修改
-                $check = $this->editManualUniteExamExist($examPapers,$examPaperID,$DB,$QuestionBankRepositories,$exam);
-                if(!$check){
-                    $DB->rollback();
-                    return false;die;
-                }
-            }else{//不存在新增
-                $check = $this->editManualUniteExamNotExist($request,$examPapers,$examPaperID,$DB,$user,$QuestionBankRepositories,$exam);
-                if(!$check){
-                    $DB->rollback();
-                    return false;die;
-                }
-            }
-        }
-
         /**删除数据库存在但页面并没有传值过来的数据**/
         if(!empty($idArrays)){
-            $delExamPaperStructure = $ExamPaperStructure->whereIn('id',$idArrays)->delete();
+            /*$delExamPaperStructure = $ExamPaperStructure->whereIn('id',$idArrays)->delete();
             if (!$delExamPaperStructure) {
                 $DB->rollBack();
                 return redirect()->back()->withInput()->withErrors('系统异常');
-            }
+            }*/
 
             if ($ExamPaperStructureLabel->whereIn('exam_paper_structure_id',$idArrays)->delete() === false) {
                 $DB->rollBack();
@@ -968,6 +947,28 @@ class ExamPaperController extends CommonController
                 return false;exit;
             }
         }
+        foreach($examPapers as $exam) {
+            //判断是否存在structureid
+
+            if(isset($exam['structureid'])){//存在修改
+                $check = $this->editManualUniteExamExist($examPapers,$examPaperID,$DB,$QuestionBankRepositories,$exam,$examQuestion);
+
+                if(!$check){
+                    $DB->rollback();
+                    return false;die;
+                }
+            }else{//不存在新增
+                $check = $this->editManualUniteExamNotExist($request,$examPapers,$examPaperID,$DB,$user,$QuestionBankRepositories,$exam,$examQuestion);
+
+                if(!$check){
+                    $DB->rollback();
+                    return false;die;
+                }
+            }
+        }
+
+
+
         return true;
     }
 
@@ -1099,7 +1100,7 @@ class ExamPaperController extends CommonController
      * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function editManualUniteExamNotExist($request,$examPapers,$examPaperID,$DB,$user,$QuestionBankRepositories,$exam){
+    public function editManualUniteExamNotExist($request,$examPapers,$examPaperID,$DB,$user,$QuestionBankRepositories,$exam,$examQuestion){
         //新增试卷-试卷构造表和标签类型关联数据添加
         $ExamPaperStructure = new ExamPaperStructure();
         $ExamPaperStructureLabel = new ExamPaperStructureLabel();
@@ -1135,8 +1136,7 @@ class ExamPaperController extends CommonController
 
 
         //查找筛选条件下的试题
-        $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
-
+        //$examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
         //整理数据
         foreach($examQuestion as $k=>$v){
             $examQuestion[$k]['created_user_id'] = $user->id;
@@ -1180,7 +1180,7 @@ class ExamPaperController extends CommonController
      * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function editManualUniteExamExist($examPapers,$examPaperID,$DB,$QuestionBankRepositories,$exam)
+    public function editManualUniteExamExist($examPapers,$examPaperID,$DB,$QuestionBankRepositories,$exam,$examQuestion)
     {
         //新增试卷-试卷构造表和标签类型关联数据添加
         $ExamPaperStructure = new ExamPaperStructure();
@@ -1202,31 +1202,36 @@ class ExamPaperController extends CommonController
             return false;exit;
         }
         //先删除ExamPaperStructureLabel表的当前数据
-        if (!$ExamPaperStructureLabel->where('exam_paper_structure_id', '=', $exam['structureid'])->delete()) {
-            $DB->rollBack();
-            return false;exit;
+        if($ExamPaperStructureLabel->where('exam_paper_structure_id', '=', $exam['structureid'])->first()) {//判断数据库有没有数据
+
+            if (!$ExamPaperStructureLabel->where('exam_paper_structure_id', '=', $exam['structureid'])->delete()) {dd('***');
+                $DB->rollBack();
+                return false;
+                exit;
+            }
         }
+        if( ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$exam['structureid'])->first()) {//判断数据库有没有数据
+            $delPaperStructureQuestion = ExamPaperStructureQuestion::where('exam_paper_structure_id', '=', $exam['structureid'])->delete();
+            if (!$delPaperStructureQuestion) {
+                $DB->rollBack();
+                return false;
+                exit;
+            }
+        }
+
         foreach ($exam['structure_label'] as $structure_label) {
             //拼合试卷构造表和试题标签表关联的数据
             $structure_label['exam_paper_structure_id'] = $exam['structureid'];
             $structure_label['created_user_id'] = $user->id;
-
             $addExamPaperStructureLabel = $ExamPaperStructureLabel->create($structure_label);
-
-            if (count($addExamPaperStructureLabel) == 0) {
+            if(!$addExamPaperStructureLabel){
                 $DB->rollback();
                 return false;exit;
             }
         }
-
-        $delPaperStructureQuestion = ExamPaperStructureQuestion::where('exam_paper_structure_id','=',$exam['structureid'])->delete();
-        if (!$delPaperStructureQuestion) {
-            $DB->rollBack();
-            return false;exit;
-        }
-
         //查找筛选条件下的试题
-        $examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+        //$examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+
         //保存数据
         foreach($examQuestion as $kk=>$vv){
             foreach($vv['child'] as $key=>$val){
@@ -1236,13 +1241,14 @@ class ExamPaperController extends CommonController
                 ];
                 $addPaperStructureQuestion = ExamPaperStructureQuestion::create($arrs);
 
-                if(!$addPaperStructureQuestion){
+                if(!$addPaperStructureQuestion instanceof ExamPaperStructureQuestion){
+
                     $DB->rollBack();
                     return false;exit;
                 }
             }
         }
-
+     
         return true;
     }
 
