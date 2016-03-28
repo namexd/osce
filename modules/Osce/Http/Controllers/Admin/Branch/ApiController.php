@@ -524,7 +524,7 @@ class ApiController extends CommonController
         {
             if($ex->getCode()===1000)
             {
-                return redirect()->route('osce.admin.getIndex')->withErrors($ex->getMessage());
+                return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
             }
             return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
         }
