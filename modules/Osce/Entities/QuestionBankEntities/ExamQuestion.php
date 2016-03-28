@@ -394,9 +394,7 @@ class ExamQuestion extends Model
             }
         }else{
             //查询对应的试题数量
-            $number = count($examQuestionModel->leftJoin('exam_question_label_relation', function ($join) {
-                $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
-            })->where('exam_question.exam_question_type_id','=',$data['question'])->get());
+            $number = count($examQuestionModel->where('exam_question.exam_question_type_id','=',$data['question'])->get());
 
             if($questionNumber>$number){
                 return false;
