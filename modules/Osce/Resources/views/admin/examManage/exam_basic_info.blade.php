@@ -155,7 +155,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2 time-modify">
                                     <button id="save" class="btn btn-primary" type="submit" {{$examData['status']==0?'':'style=display:none;'}}>保存</button>
-                                    <a class="btn btn-white" href="{{route("osce.admin.exam.getExamList")}}">取消</a>
+                                    <a class="btn btn-white" href="javascript:history.back(-1)" {{--href="{{route("osce.admin.exam.getExamList")}}"--}}>取消</a> 
                                 </div>
                             </div>
                         </form>

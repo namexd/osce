@@ -206,30 +206,35 @@ function subject_manage_add(){
         $("#addChose").click(function(){
             $('#sourceForm').data('bootstrapValidator').destroy();
             var old= $("tbody").find("tr").last().children().first().html();
-            $("tbody").find("tr").last().before().children().last().empty();
-            $("tbody").append('<tr>' +
-                '<td>'+strToInt[old]+'</td>' +
-                '<input type="hidden" name="examQuestionItemName[]" value="'+strToInt[old]+'"/>' +
-                '<td>' +
-                '<div class="form-group">' +
-                '<div class="col-sm-12">' +
-                '<input type="text" class="form-control" name="content[]"/>' +
-                '</div>' +
-                '</div>' +
-                '</td>' +
-                '<td>' +
-                '<a href="javascript:void(0)" class="delete">' +
-                '<span class="read state2 detail">' +
-                '<i class="fa fa-trash-o fa-2x"></i>' +
-                '</span>' +
-                '</a>' +
-                '</td>' +
-                '</tr>');
-            $("#checkbox_div").append('<label class="check_label checkbox_input check_top">' +
-                '<div class="check_icon check_other"></div>' +
-                '<input type="checkbox" name="answer[]" value="'+strToInt[old]+'"/>' +
-                '<span class="check_name">'+strToInt[old]+'</span>' +
-                '</label>');
+            if(old == "J"){
+                layer.alert("最多只能有10个选项！");
+            }else{
+                $("tbody").find("tr").last().before().children().last().empty();
+                $("tbody").append('<tr>' +
+                    '<td>'+strToInt[old]+'</td>' +
+                    '<input type="hidden" name="examQuestionItemName[]" value="'+strToInt[old]+'"/>' +
+                    '<td>' +
+                    '<div class="form-group">' +
+                    '<div class="col-sm-12">' +
+                    '<input type="text" class="form-control" name="content[]"/>' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td>' +
+                    '<a href="javascript:void(0)" class="delete">' +
+                    '<span class="read state2 detail">' +
+                    '<i class="fa fa-trash-o fa-2x"></i>' +
+                    '</span>' +
+                    '</a>' +
+                    '</td>' +
+                    '</tr>');
+                $("#checkbox_div").append('<label class="check_label checkbox_input check_top">' +
+                    '<div class="check_icon check_other"></div>' +
+                    '<input type="checkbox" name="answer[]" value="'+strToInt[old]+'"/>' +
+                    '<span class="check_name">'+strToInt[old]+'</span>' +
+                    '</label>');
+            }
+
             if($("#subjectType").val()==1){
                 oneValidator();
             }else if($("#subjectType").val()==2){

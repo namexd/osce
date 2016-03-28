@@ -20,23 +20,10 @@ class Vcr extends CommonModel implements MachineInterface
     public $incrementing = true;
     public $timestamps = true;
     protected $fillable = [
-        'id',
-        'name',
-        'code',
-        'ip',
-        'username',
-        'password',
-        'port',
-        'realport',
-        'channel',
-        'description',
-        'status',
-        'created_user_id',
-        'sp',
-        'factory',
-        'purchase_dt',
-        'used',
-        'place'
+        'id',   'name',   'code',     'username', 'password',
+        'ip',   'port',   'realport', 'channel',  'description',
+        'sp',   'status', 'factory',  'place',    'created_user_id',
+        'used', 'purchase_dt'
     ];
     public $search = [];
 
@@ -221,6 +208,105 @@ class Vcr extends CommonModel implements MachineInterface
 
         $result = [$vcr, $modelVcr];
         return $result;     //关联摄像机
+    }
+
+    /**
+     * 根据考场获取对应的所有摄像机
+     * TODO:Zhoufuxiang 2016-3-24
+     * @return object
+     */
+    public function getVcrIdsToRoom($room_id){
+        $vcrIds = [];
+        //根据考场获取摄像头
+        $roomVcr = RoomVcr::where('room_id','=',$room_id)->select(['id','vcr_id'])->get();
+        foreach($roomVcr as $item){
+            $vcrIds[] = $item->vcr_id;
+        }
+        //根据考场获取对应的考站
+        $roomStation = RoomStation::where('room_id','=',$room_id)->get();
+        if(count($roomStation)){
+            foreach ($roomStation as $item ) {
+                //根据考站获取对应的摄像机
+                $stationVcr = StationVcr::where('station_id','=',$item->station_id)->select(['id','vcr_id'])->first();
+                $vcrIds[] = $stationVcr->vcr_id;
+            }
+        }
+        $vcrIds = array_values(array_unique($vcrIds));  //去重，并取值（键排序）
+
+        return $vcrIds;
+    }
+
+    /**
+     * 根据考试获取对应的所有摄像机
+     * TODO:Zhoufuxiang 2016-3-24
+     * @return object
+     */
+    public function getVcrIdsToExam($exam_id){
+        $vcrIds = [];
+        //获取对应考试信息
+        $exam = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
+        if($exam->sequence_mode == 2){
+            //根据考试获取 对应考站
+            $examStation = ExamStation::where('exam_id','=',$exam->id)->get();
+            if(count($examStation)){
+                foreach ($examStation as $item) {
+                    //根据考站获取对应的摄像机
+                    $stationVcr = StationVcr::where('station_id',$item->station_id)->first();
+                    $vcrIds[] = $stationVcr->vcr_id;
+                }
+            }
+        }else{
+            $examRooms = ExamRoom::where('exam_id','=',$exam->id)->get();
+            foreach($examRooms as $examRoom){
+                //根据考站获取对应的摄像机
+                $roomVcr = RoomVcr::where('room_id',$examRoom->room_id)->first();
+                $vcrIds[] = $roomVcr->vcr_id;
+            }
+        }
+        $vcrIds = array_values(array_unique($vcrIds));  //去重，并取值（键排序）
+
+        return $vcrIds;
+    }
+
+    /**
+     * 获取所有考试 对应的所有摄像机
+     * TODO:Zhoufuxiang 2016-3-24
+     * @return object
+     */
+    public function getVcrIdsToAllExam(){
+        $vcrIds = [];
+        //根据考场获取摄像头
+        $exams = Exam::where('status','=',2)->select(['id','name'])->get();
+        //存在已经考完的考试
+        if(count($exams)){
+            foreach ($exams as $exam) {
+                $vcrId = $this->getVcrIdsToExam($exam->id);     //根据对应考试获取对应摄像机
+                $vcrIds = array_merge($vcrIds, $vcrId);
+            }
+        }
+        $vcrIds = array_values(array_unique($vcrIds));      //去重，并取值（键排序）
+
+        return $vcrIds;
+    }
+
+    /**
+     * 根据考试和考场获取对应的所有摄像机
+     * TODO:Zhoufuxiang 2016-3-24
+     * @return object
+     */
+    public function getVcrIds($room_id, $exam_id)
+    {
+        $vcrIds = [];
+        //根据考场获取摄像头
+        $roomVcr  = RoomVcr::where('room_id','=',$room_id)->select(['id','vcr_id'])->first();
+        $vcrIds[] = $roomVcr->vcr_id;
+        //根据考试获取对应的摄像机
+        $vcrId  = $this->getVcrIdsToExam($exam_id);
+        $vcrIds = array_merge($vcrIds, $vcrId);
+
+        $vcrIds = array_values(array_unique($vcrIds));  //去重，并取值（键排序）
+
+        return $vcrIds;
     }
 
 

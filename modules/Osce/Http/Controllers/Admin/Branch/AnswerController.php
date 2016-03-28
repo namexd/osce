@@ -51,6 +51,7 @@ class AnswerController extends CommonController
             $systemTimeStart=time();
             \Session::put('systemTimeStart',$systemTimeStart);
         }
+
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
@@ -93,7 +94,7 @@ class AnswerController extends CommonController
                                 'examCategoryFormalName'=>$v1->name,
                                 'examCategoryFormalNumber'=>$v1->number,
                                 'examCategoryFormalScore'=>$v1->score,
-                                'exam_question_type_id'=>$v1->exam_question_type_id,
+                                'examQuestionTypeId'=>$v1->exam_question_type_id,
                                 'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
                                 );
                         }
@@ -101,23 +102,24 @@ class AnswerController extends CommonController
                 }
             }
         }
-        //dd($examCategoryFormalData);
+
 
         if(count($examCategoryFormalData)>0&&!empty($examCategoryFormalData)){
             foreach($examCategoryFormalData as $key=>$val){
-                if($val['exam_question_type_id']==1){//单选
+                if($val['examQuestionTypeId']==1){//单选
                     $examCategoryFormalData[$key]['examCategoryFormalName']='一、'.$val['examCategoryFormalName'];
-                }elseif($val['exam_question_type_id']==2){//多选
+                }elseif($val['examQuestionTypeId']==2){//多选
                     $examCategoryFormalData[$key]['examCategoryFormalName']='二、'.$val['examCategoryFormalName'];
-                }elseif($val['exam_question_type_id']==3){//不定向
+                }elseif($val['examQuestionTypeId']==3){//不定向
                     $examCategoryFormalData[$key]['examCategoryFormalName']='三、'.$val['examCategoryFormalName'];
-                }elseif($val['exam_question_type_id']==4){//判断
+                }elseif($val['examQuestionTypeId']==4){//判断
                     $examCategoryFormalData[$key]['examCategoryFormalName']='四、'.$val['examCategoryFormalName'];
                     $examCategoryFormalData[$key]['content']=array('0'=>0,'1'=>1);
                 }
 
             }
         }
+        //dd($examCategoryFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息

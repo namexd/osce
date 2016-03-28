@@ -11,8 +11,23 @@
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script>
+
+
         $(function(){
+           /* $('#sure').click(function(){
+                var question=$('select[name=question-type]').val();
+                var questionNumber=$('#questionNumber').val();
+                var tag1=$('select[name=label-3]').val()+'@'+$('.tags_0').val();
+                var tag2=$('select[name=label-2]').val()+'@'+$('.tags_1').val();
+                var tag3=$('select[name=label-1]').val()+'@'+$('.tags_2').val();
+                $.post("{{route('osce.admin.ExamPaperController.postCheckQuestionsNum')}}",{question:question,tag1:tag1,tag2:tag2,tag3:tag3,questionNumber:questionNumber},function(obj){
+                    console.log(obj);{vaild:}
+                });
+
+            })*/
+
             $(".tag").select2({});
+            //return false;
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
             //自动组卷总计
             function randomCount(){
@@ -132,7 +147,24 @@
                                 regexp: {
                                     regexp : /^([1-9]\d?|100)$/,
                                     message: '题目数量只能是1-100的正整数'
-                                }
+                                },
+                                remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                                    url: '/osce/admin/exampaper/check-questions-num',//验证地址
+                                    message: '题目数量超出所选标签包含的题目数量',//提示消息
+                                    delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                                    type: 'POST',//请求方式
+                                    /**自定义提交数据，默认值提交当前input value*/
+                                       data: function(validator) {
+                                           return {
+                                               question:$('select[name=question-type]').val(),
+                                               questionNumber:$('#questionNumber').val(),
+                                               tag1: $('select[name=label-3]').val()+'@'+$('.tags_0').val(),
+                                               tag2: $('select[name=label-2]').val()+'@'+$('.tags_1').val(),
+                                               tag3: $('select[name=label-1]').val()+'@'+$('.tags_2').val(),
+                                           };
+                                        }
+
+                                },
                             }
                         },
                         questionScore: {/*键名username和input name值对应*/
@@ -157,6 +189,8 @@
                 })
             }
         })
+
+
     </script>
 @stop
 
@@ -206,7 +240,7 @@
                                 </select>
                             </div>
                             <div class="col-sm-6">
-                                <select class="form-control tag" name="tag[]" multiple="multiple" style="width: 100%">
+                                <select class="form-control tag tags_{{$k}}" name="tag[]" multiple="multiple" style="width: 100%">
                                     @if(!empty($sub['examQuestionLabel']))
                                         @foreach($sub['examQuestionLabel'] as $key => $val)
                                             <option value="{{ @$val['id'] }}"
@@ -230,7 +264,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565">*</span>题目数量：</label>
                     <div class="col-sm-9">
-                        <input name="questionNumber" type="number" class="form-control questionNumber" value="{{@$questionInfo['num']}}" placeholder="仅支持大于0的正整数" />
+                        <input id="questionNumber" name="questionNumber" type="number" class="form-control questionNumber" value="{{@$questionInfo['num']}}" placeholder="仅支持大于0的正整数" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -241,7 +275,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success" id='sure' disabled>确定</button>
+                {{--<button type="submit" class="btn btn-success" id='sure' disabled onclick="alert(1)">确定</button>--}}
+                <button type="submit" class="btn btn-success" id="sure">确定</button>
                 <button type="button" class="btn btn-white" id="closeIframe">取消</button>
             </div>
         </form>

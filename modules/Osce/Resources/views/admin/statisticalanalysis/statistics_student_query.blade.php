@@ -4,6 +4,9 @@
     <link href="{{asset('osce/common/select2-4.0.0/css/select2.min.css')}}" rel="stylesheet">
     <style>
         body{background-color: #fff!important;}
+        .check_name{margin-left:5px}
+        .check_label{margin-left:48px;}
+        .group_border{border-bottom:1px solid #e7eaec}
     </style>
 @stop
 
@@ -22,34 +25,67 @@
 @stop
 
 @section('content')
-    <div class="row table-head-style1">
+<!--理论考试展示页面-->
+    <div class="row table-head-style1" style="border-bottom:1px solid  #e7eaec">
         <div class="col-xs-6 col-md-2">
             <h5 class="title-label">考生成绩统计统计</h5>
         </div>
         <div class="col-xs-6 col-md-2" style="float: right;">
-            <a href="javascript:history.go(-1)" class="btn btn-primary" style="float: right;">返回</a>
+            <a href="javascript:history.go(-1)" class="btn btn-outline btn-default" style="float: right;">返回</a>
         </div>
     </div>
     <input type="hidden" id="parameter" value="{'pagename':'subject_papers_add}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="center">
-            <h2>2016第一期OSCE考试理论考试</h2>
-            <p>考试姓名：张三　　　考试用时：15分钟25秒 　　　最后得分：80</p>
+            @if(!empty($examItems))
+            <h2>{{ @$examItems['exam_name'] }}</h2>
+            <p>考试姓名：<span>张三</span>　　　考试用时：<span>{{ @$examItems['length'] }}</span>分<span>{{ @$examItems['total_score'] }}</span>秒 　　　最后得分：<span>{{ @$examItems['stuScore'] }}</span>分</p>
+            @endif
         </div>
 
 
                 <div class="form-group marb_25">
-                            <h4>一、单选题 　<p>共四题,每题5分</p></h4>
-                            <div class="form-group">
-                                    <p>下列感染中，不具有传染性的是？</p>
-                                    <span class="marr_15"><input type="radio" name="answer"   value="A">A.潜伏期感染</span>
-                                　　<span class="marr_15"><input type="radio" name="answer"   value="B">B.显性感染潜伏期</span>
-                               　　 <span class="marr_15"><input type="radio" name="answer"   value="C">C.显性感染症状明显期</span>　
-                                    <span class="marr_15"><input type="radio" name="answer"   value="D">D.病因携带状态</span>
-                            </div>
-                            <p>考生答案：<span>D</span>（A）</p>
-                            <p>解析：女，35岁，餐后突然起上腹持续疼痛，呕吐8h,查体：脉搏116次/分，收缩压68mmHg,上腹有压痛,肠鸣音无明显异常，WBC，14x109L尿定粉</p>
+                     @if(!empty($data))
+                         @foreach(@$data as $val)
+                            @if(@$val['questionType']=='1')
+                            <h3>{{@$val['Title']}}</h3>
 
+                            <div class="form-group group_border">
+                                @foreach(@$val['child'] as $val1)
+                                    <h4>{{ @$val1['exam_question_name'] }}</h4>
+                                    @foreach(@$val1['contentItem'] as $k=>$val2)
+
+                                    <span class="marr_15">
+
+                                        <label class="check_label all_checked " style="margin:10px">
+                                            @if($val1['answer']==$k)
+                                                <div class="check_icon check " style="float:left"></div>
+                                            @else
+                                                <div class="check_icon  " style="float:left"></div>
+                                            @endif
+                                            <input type="checkbox"  value="">
+                                            <span class="check_name" style="float:left">{{ @$val2}}</span>
+
+                                        </label>
+
+                                    </span>
+
+                                    @endforeach
+
+                                 <div class="text">
+                                    @if(!empty($val1['parsing']))
+                                    <p>考生答案：<span style="color:#ed5565">D</span>（A）</p>
+                                    <p>{{$val1['parsing']}}</p>
+                                    @endif
+                                 </div>
+                                    　
+                            @endforeach
+                            </div>
+
+
+                            @endif
+                @endforeach
+                @endif
                 </div>
 
     </div>

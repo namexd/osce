@@ -74,7 +74,7 @@
         
                                             <a href="{{route('osce.admin.ExamPaperController.getAddExamPage',['id'=>@$val['id']])}}">
                                                 <span class="read state1 detail">
-                                                    <i class="fa fa-cog fa-2x"></i>
+                                                    <i class="fa fa-pencil-square-o fa-2x"></i>
                                                 </span>
                                             </a>
                                             <a href="javascript:void(0)">

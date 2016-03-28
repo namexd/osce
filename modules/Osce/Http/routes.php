@@ -282,6 +282,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('timing-vcr', ['uses'=>'PadController@getTimingList']);
 		Route::get('doing-exams',['uses'=>'PadController@getDoingExams']);		//获取当前正在进行的所有考试 (接口) zhoufuxiang 2016-3-21
 		Route::get('done-exams', ['uses'=>'PadController@getDoneExams']);		//获取所有的 历史考试(已经考完) (接口) zhoufuxiang 2016-3-23
+		Route::get('all-vcrs-list', ['uses'=>'PadController@getAllVcrsList']);	//历史回放，获取所有已经考完的考试对应的摄像头列表(接口) zhoufuxiang 2016-3-25
 
 		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
 

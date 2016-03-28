@@ -1433,4 +1433,42 @@ class ExamPaperController extends CommonController
             die(json_encode(['valid'=>true]));
         }
     }
+
+    /**
+     * 获取试题标签id
+     * @url       POST /osce/admin/exampaper/check-questions-num
+     * @access    public
+     * @param Request $request get请求<br><br>
+     * @param Exam $exam
+     * @return view
+     * @throws \Exception
+     * @version   1.0
+     * @author    weihuiguo <weihuiguo@misrobot.com>
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postCheckQuestionsNum(Request $request){
+
+        $data = $request->all();
+
+        $ExamQuestion = new ExamQuestion();
+        //查找当前条件下的试题数量
+        $result= $ExamQuestion->getQuestionsNum($data);
+        return response()->json(['valid'=>$result]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
