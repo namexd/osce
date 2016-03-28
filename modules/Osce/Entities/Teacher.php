@@ -32,19 +32,50 @@ class Teacher extends CommonModel
     ];
 
     /**
-     * 通过教师去寻找对应的考站
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function teacherStation()
-    {
-        return $this->belongsToMany('\Modules\Osce\Entities\Station','station_teacher','user_id','station_id');
-    }
-    /**
      * 用户关联
      */
     public function userInfo(){
         return $this    ->  hasOne('\App\Entities\User','id','id');
     }
+
+    /**
+     * 通过老师id去寻找对应的应该在的考站id
+     * @param $id
+     * @param $exam
+     * @return
+     */
+    static public function stationIds($id, $exam)
+    {
+        return StationTeacher::where('exam_id', $exam->id)
+            ->where('user_id', $id)
+            ->get()
+            ->pluck('station_id');
+    }
+
+
+    /**
+     * 通过老师id找到对应的room
+     * @param $id
+     * @param $exam
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-03-23
+     */
+    static public function room($id, $exam)
+    {
+        return StationTeacher::leftJoin('room_station', 'room_station.station_id', '=', 'station_teacher.station_id')
+            ->leftJoin('room', 'room.id', '=', 'room_station.room_id')
+            ->where('station_teacher.exam_id', $exam->id)
+            ->where('station_teacher.user_id', $id)
+            ->select(
+                'room.id as room_id',
+                'station_teacher.station_id',
+                'room.name as room_name')
+            ->first();
+    }
+
+
+
     /**
      * 获取是否为SP老师的值
      * @access public
