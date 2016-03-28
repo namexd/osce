@@ -133,10 +133,9 @@ class StationVcr extends CommonModel
                 $join -> on('exam_room.room_id', '=', 'room_station.room_id');
             })    ->leftJoin('vcr', function($join){
                 $join -> on('vcr.id', '=', 'station_vcr.vcr_id');
-            })
-                ->leftJoin('station', function($join) {
+            })->leftJoin('station', function($join) {
                     $join->on('station.id', '=', 'station_vcr.station_id');
-                });
+            });
              $result=$result ->where('room_station.room_id',$room_id);
 
 //            $result=$result ->where('exam_room.exam_id', '=', $exam_id);
