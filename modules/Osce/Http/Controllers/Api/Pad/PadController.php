@@ -442,7 +442,7 @@ class PadController extends  CommonController{
             $vcrIds = $vcrModel->getVcrIdsToAllExam();
         }
         //分页获取摄像机信息
-        $vcrs = Vcr::whereIn('id', $vcrIds)->select(['id','name'])->paginate(10);
+        $vcrs = Vcr::whereIn('id', $vcrIds)->paginate(10);
 
         //返回分页数据
         return $this->success_rows(1,'获取成功',

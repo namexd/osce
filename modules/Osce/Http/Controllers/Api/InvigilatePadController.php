@@ -244,36 +244,6 @@ class InvigilatePadController extends CommonController
     }
 
     /**
-     * 提交评价
-     * @method GET
-     * @url /osce/api/invigilatepad/save-exam-evaluate
-     * @access public
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * int     subject_id    考试项目id  (必须的)
-     * * int     standard_id  评分标准 id   (必须的)
-     * * int     score       根据评分标准所得的分值
-     * * string         evaluate     评价内容
-     *
-     * @return  json
-     *
-     * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    private function postSaveExamEvaluate($scoreData, $ExamResultId)
-    {
-        $data = [];
-        foreach ($scoreData as $data) {
-//            $data['exam_result_id'] = $ExamResultId;
-            $Save = ExamScore::create($data);
-            return $Save;
-        }
-
-    }
-
-    /**
      * 提交成绩评分详情，考试结果
      * @method post
      * @url /osce/api/invigilatepad/save-exam-result
