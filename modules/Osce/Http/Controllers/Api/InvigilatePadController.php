@@ -46,6 +46,23 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
+        $info = array('coffee', 'brown', 'caffeine');
+
+// 列出所有变量
+        list($drink, $color, $power) = $info;
+        echo "$drink is $color and $power makes it special.\n";
+
+// 列出他们的其中一个
+        list($drink, , $power) = $info;
+        echo "$drink has $power.\n";
+
+// 或者让我们跳到仅第三个
+        list( , , $power) = $info;
+        echo "I need $power!\n";
+
+// list() 不能对字符串起作用
+        list($bar) = "abcde";
+        var_dump($bar); // NULL
 //        $examScreeningModel = new ExamScreening();
 //        $result = $examScreeningModel->getExamCheck();
 //        $numbers = array('1','2','3','4','5');
@@ -55,7 +72,7 @@ class InvigilatePadController extends CommonController
 //        while (list(,$number) = each($numbers)) {
 //            echo $number."<br/>";
 //        }
-
+//
         for ($i = 2; $i <= 5; $i++)
         {
             print "value is now " . $i . "<br>";

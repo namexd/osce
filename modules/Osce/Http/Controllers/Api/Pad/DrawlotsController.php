@@ -241,7 +241,7 @@ class DrawlotsController extends CommonController
     public function getStation(Request $request)
     {
         \DB::connection('osce_mis')->beginTransaction();
-//        try {
+        try {
             //验证
             $this->validate($request, [
                 'uid' => 'required|string',
@@ -335,10 +335,10 @@ class DrawlotsController extends CommonController
             \DB::connection('osce_mis')->commit();
             return response()->json($this->success_data($result));
 
-//        } catch (\Exception $ex) {
-//            \DB::connection('osce_mis')->rollBack();
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            \DB::connection('osce_mis')->rollBack();
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -459,7 +459,6 @@ class DrawlotsController extends CommonController
                 if (!$examQueue->save()) {
                     throw new \Exception('抽签失败！请重试！', 3700);
                 };
-
                 //将考站的信息返回
                 return Station::findOrFail($ranStationId);
             } else {
@@ -549,6 +548,7 @@ class DrawlotsController extends CommonController
 
         //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
         $studentObj = ExamQueue::where('student_id', $uid)->where('status', 1)->first();
+
         if (!$studentObj) {
             throw new \Exception('当前没有符合条件的队列！', -1000);
         }
