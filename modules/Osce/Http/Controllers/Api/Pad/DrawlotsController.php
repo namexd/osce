@@ -142,6 +142,10 @@ class DrawlotsController extends CommonController
 //                $item->student_avator = url($item->student_avator);
 //            }
 
+            foreach ($students as $student) {
+                unset($student['blocking']);
+            }
+
             return response()->json($this->success_data($students));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -337,6 +341,7 @@ class DrawlotsController extends CommonController
 
         } catch (\Exception $ex) {
             \DB::connection('osce_mis')->rollBack();
+            \Log::alert('Error', [$ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
