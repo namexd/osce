@@ -268,7 +268,7 @@ class DrawRoomMode implements DrawModeInterface
 
             if (!$emptyRoomId->isEmpty()) {
                 //获得这个考场下面有哪些考站
-                $stationIds = RoomStation::where('room_id', $emptyRoomId->toArray())
+                $stationIds = RoomStation::whereIn('room_id', $emptyRoomId->toArray())
                     ->get()->pluck('station_id');
                 $diff = $this->diffStationId($exam, $object, $stationIds);
 
