@@ -117,13 +117,16 @@ class PadController extends  CommonController{
         $room_id = $request->get('room_id');
         $exam_id = $request->get('exam_id');
 
+
         $stationModel = new StationVcr();
         $stationVcrs  = $stationModel->getStionVcr($room_id,$exam_id);
+
 
         return response()->json(
             $this->success_data($stationVcrs,1,'success')
         );
     }
+
 
     /**
      * 根据考场ID、考试ID和teacher_id获取考站的摄像头信息(接口)
@@ -442,7 +445,7 @@ class PadController extends  CommonController{
             $vcrIds = $vcrModel->getVcrIdsToAllExam();
         }
         //分页获取摄像机信息
-        $vcrs = Vcr::whereIn('id', $vcrIds)->select(['id','name'])->paginate(10);
+        $vcrs = Vcr::whereIn('id', $vcrIds)->paginate(10);
 
         //返回分页数据
         return $this->success_rows(1,'获取成功',
