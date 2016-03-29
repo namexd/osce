@@ -218,6 +218,9 @@ class DrawlotsController extends CommonController
 //            } else {
 //                throw new \Exception('考试模式不存在！', -703);
 //            }
+
+            //从集合中移除blocking
+            $students->forget('blocking');
             return response()->json($this->success_data($students));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
