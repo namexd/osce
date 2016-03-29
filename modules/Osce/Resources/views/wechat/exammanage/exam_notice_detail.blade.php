@@ -30,10 +30,15 @@
             width: 100%;
         }
         .notice-file a{
-            display: inherit;
+            display: inline-block;
             overflow: hidden;
             text-overflow:ellipsis;
             white-space:nowrap;
+        }
+        .copy{
+            margin-left: 10px;
+            vertical-align: super;
+            color: #337ab7;
         }
     </style>
 
@@ -74,7 +79,7 @@
                                 <a href="{{ route('osce.wechat.notice.getDownloadDocument',['id'=>$notice->id,'attch_index'=>$key])}}">
                                     <?php $pathInfo = explode('/',$list) ?>
                                         {{array_pop($pathInfo)}}
-                                </a><br />
+                                </a><span class="copy">复制</span><br />
                             @endforeach
                         @endif
                     </div>
@@ -82,4 +87,33 @@
             </li>
         </ul>
     </div>
+    <script src="{{asset('osce/wechat/common/js/jquery.zclip.min.js')}}"></script> 
+    <script>
+        $(function() {
+            /**
+             * 复制到剪切版
+             * @author mao
+             * @version 3.2
+             * @date    2016-03-29 
+             */
+            $(".copy").zclip({
+                path: "{{asset('osce/wechat/common/js/ZeroClipboard.swf')}}",
+                copy: function(){
+                return $(this).siblings().attr('href');
+                },
+                beforeCopy:function(){/* 按住鼠标时的操作 */
+                    /*$(this).css("color","orange");*/
+                },
+                afterCopy:function(){/* 复制成功后的操作 */
+                    $.alert({
+                        title: '提示：',
+                        content: '下载地址复制成功！',
+                        confirmButton: '确定',
+                        confirm: function(){
+                        }
+                    });
+                }
+            });
+        })
+    </script>
 @stop
