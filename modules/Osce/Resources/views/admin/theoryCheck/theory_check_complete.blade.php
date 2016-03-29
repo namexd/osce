@@ -43,7 +43,7 @@
                                 <span class="font16">分</span>
                             </div>
                             <div class="timeBox font16">
-                                <span>考试用时：{{$data['actual_length']}}分钟</span>
+                                <span>考试用时：{{$data['actual_length']}}分秒</span>
                             </div>
                             <div class="" style="padding: 70px 0 55px;">
                                 <button class="btn btn-primary" id="sure">确认</button>
