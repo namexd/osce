@@ -170,9 +170,13 @@ class InvigilatePadController extends CommonController
         $stationId = (int)$request->input('station_id');
         $studentModel = new  Student();
         $studentData = $studentModel->studentList($stationId);
-        if ($studentData) {
+        if ($studentData['nextTester']) {
             return response()->json(
                 $this->success_data($studentData, 1, '验证完成')
+            );
+        } elseif (empty($studentData['waitingList'])) {
+            return response()->json(
+                $this->success_data($studentData, 2, '考试已经结束')
             );
         } else {
             return response()->json(
