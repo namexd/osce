@@ -248,7 +248,7 @@ class QuestionBankRepositories  extends BaseRepository
                             $flag = false;
                             if(count($v->ExamQuestionLabelRelation) > 0){
                                 $labelId = $v->ExamQuestionLabelRelation->pluck('exam_question_label_id');
-                                foreach($orIdArr as $key => $vel){
+                                foreach($orIdArr as $vel){
                                     if(!$this->IsContainTwo($vel,$labelId->toArray())){
                                         $flag = false;
                                         break;
@@ -281,7 +281,7 @@ class QuestionBankRepositories  extends BaseRepository
                             $flag = false;
                             if(count($v->ExamQuestionLabelRelation) > 0){
                                 $labelId = $v->ExamQuestionLabelRelation->pluck('exam_question_label_id');
-                                foreach($andIdArr as $key => $vel){
+                                foreach($andIdArr as  $vel){
                                     if(!$this->IsContain($vel,$labelId->toArray())){
                                         $flag = false;
                                         break;
@@ -303,12 +303,10 @@ class QuestionBankRepositories  extends BaseRepository
                     }else{
                         $QuestionId = array_merge($orQuestionId,$andQuestionId);
                     }
-
                     $questionIdArr = [];
                     if(count($QuestionId)>0){
                         $questionIdArr = $this->RandQuestionId($QuestionId,$val['question_num']);
                     }
-                    
                     $arr[$key]['type'] = $val['question_type'];
                     $arr[$key]['num'] = $val['question_num'];
                     $arr[$key]['score'] = $val['question_score'];
