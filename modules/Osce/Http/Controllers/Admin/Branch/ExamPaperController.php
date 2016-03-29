@@ -439,7 +439,7 @@ class ExamPaperController extends CommonController
             'length' => $request -> time,
             'mode' => $request -> status,
             'type' => $request -> status2,
-            'created_user_id' => $user->id
+            'created_user_id' => empty($user->id)?0:$user->id,
         ];
 
         //获取试卷类型

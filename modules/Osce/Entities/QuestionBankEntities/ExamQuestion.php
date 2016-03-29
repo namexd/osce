@@ -388,18 +388,23 @@ class ExamQuestion extends Model
                 }
             }
         }
-        $structureArr['structure_label'] = $structure_label;
-        $structureArr['num'] = $data['questionNumber'];
-        $structureArr['type'] = $data['question'];
-        $structureArr['score'] = 0;
-        $structureArr['total_score'] = 0;
-        $structureInfo = $questionBankRepositories->StructureExamQuestionArr([0=>$structureArr]);
+        if(count($structure_label)>0){
+            $structureArr['structure_label'] = $structure_label;
+            $structureArr['num'] = $data['questionNumber'];
+            $structureArr['type'] = $data['question'];
+            $structureArr['score'] = 0;
+            $structureArr['total_score'] = 0;
+            $structureInfo = $questionBankRepositories->StructureExamQuestionArr([0=>$structureArr]);
 
-        if(count($structureInfo[0]['child']) >= $data['questionNumber']){
-            return true;
+            if(count($structureInfo[0]['child']) >= $data['questionNumber']){
+                return true;
+            }else{
+                return count($structureInfo[0]['child']);
+            }
         }else{
-            return count($structureInfo[0]['child']);
+            return false;
         }
+
 /*        if($questionNumber>$totalNumber){
             return false;
         }else{
