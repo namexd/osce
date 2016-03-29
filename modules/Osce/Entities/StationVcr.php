@@ -137,7 +137,7 @@ class StationVcr extends CommonModel
                     $join->on('station.id', '=', 'station_vcr.station_id');
                 });
                 $result=$result ->where('exam_station.station_id', '=', $exam_id);
-
+                dd($result);
             }else{
                 $result = $this->leftJoin('room_station', function($join){
                     $join -> on('room_station.station_id', '=', 'station_vcr.station_id');
