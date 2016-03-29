@@ -43,6 +43,7 @@ class UserController extends CommonController
     public function getStaffList(Request $request, Common $common)
     {
         $list = $common->getUserList();
+        
         return view('osce::admin.systemManage.user_manage', ['list' => $list]);
     }
 
