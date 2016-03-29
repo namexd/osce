@@ -227,6 +227,7 @@ class AutomaticPlanArrangement
                 if (!$tempBool) {
                     //获取实体所需要的学生清单
                     $students = $this->needStudents($station, $screen, $examId);
+//                    dump(count($students));
                     if (count($students) == 0) {
                         continue;
                     }
@@ -453,7 +454,9 @@ class AutomaticPlanArrangement
             default:
                 throw new \Exception('没有对应的考试排序模式！');
         }
-
+//        echo '=====';
+//        dump($this->sequenceCate);
+//        dump(count($result));
         return $result;
     }
 
@@ -921,10 +924,19 @@ class AutomaticPlanArrangement
          * 再将人从学生池里抽人进入侯考区
          * 直接使用array_shift函数
          */
+//
+//        dump(count($result));
         if (count($result) < $station->needNum) {
-            for ($i = 0; $i <= $station->needNum - count($result); $i++) {
+//            dump(count($this->_S_ING));
+//            dump($station->needNum);
+//            dump($station->needNum - count($result));
+            $hasStudentNum  =   $station->needNum - count($result);
+            for ($i = 0; $i <= $hasStudentNum; $i++) {
+//                echo count($this->_S_ING);
+//                echo '+';
                 if (count($this->_S_ING) > 0) {
                     $thisStudent = array_shift($this->_S_ING);
+                    //dump($thisStudent);
                     if (!is_null($thisStudent)) {
                         $result[] = $thisStudent;
                     }
@@ -939,6 +951,7 @@ class AutomaticPlanArrangement
             }
             return $result;
         }
+
         return $result;
     }
 }
