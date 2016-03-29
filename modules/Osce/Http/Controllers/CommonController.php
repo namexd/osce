@@ -9,7 +9,7 @@ namespace Modules\Osce\Http\Controllers;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Pingpong\Modules\Routing\Controller;
-use DB;
+use Illuminate\Support\Facades\DB;
 abstract class CommonController extends Controller
 {
 
