@@ -108,6 +108,7 @@
             float: left;
             overflow:auto;
             white-space:nowrap;
+            margin-bottom: 40px;
         }
 
         /*标尺样式*/
