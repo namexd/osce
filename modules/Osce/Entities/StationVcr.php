@@ -162,6 +162,7 @@ class StationVcr extends CommonModel
 
     public function getStationVcr($exam_id,$room_id){
         $exam = Exam::where('id','=',$exam_id)->first();
+        dd($exam,$exam_id);
         $data = [];
         if($exam->sequence_mode==2){
             //根据考试获取 对应考站
