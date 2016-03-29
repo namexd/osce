@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use DB;
 use Auth;
+use Modules\Osce\Repositories\QuestionBankRepositories;
+
 /**试题模型
  * Class ExamQuestion
  * @package Modules\Osce\Entities
@@ -361,8 +363,50 @@ class ExamQuestion extends Model
         return $builder;*/
     }
     //获取试题数量
-    public function getQuestionsNum($data){
-        $examQuestionModel = new ExamQuestion();
+    public function getQuestionsNum($data,$questionBankRepositories){
+        //$questionBankRepositories->StructureExamQuestionArr();
+/*        "question" => "1"
+  "questionNumber" => "1"*/
+        $structureArr = [];
+        $structure_label  = [];
+        foreach($data as $k => $v){
+            if(preg_match('/^tag\\d$/',$k)){
+                $strArr = explode('@',$v);
+                $lableType = explode(',',$strArr[1]);
+                $labelTypeIdArr = explode('tag',$k);
+                if(count($lableType)>0){
+                    foreach($lableType as $v){
+                        if($v>0){
+                            $structure_label [] = [
+                                "label_type_id" => $labelTypeIdArr[1],
+                                "exam_question_label_id" => $v,
+                                "relation" => $strArr[0]
+                            ];
+                        }
+
+                    }
+                }
+            }
+        }
+        $structureArr['structure_label'] = $structure_label;
+        $structureArr['num'] = $data['questionNumber'];
+        $structureArr['type'] = $data['question'];
+        $structureArr['score'] = 0;
+        $structureArr['total_score'] = 0;
+        $structureInfo = $questionBankRepositories->StructureExamQuestionArr([0=>$structureArr]);
+
+        if(count($structureInfo[0]['child']) >= $data['questionNumber']){
+            return true;
+        }else{
+            return count($structureInfo[0]['child']);
+        }
+/*        if($questionNumber>$totalNumber){
+            return false;
+        }else{
+            return true;
+        }*/
+
+/*        $examQuestionModel = new ExamQuestion();
         //传入的标签类型Id和标签id
         //分割标签条件
         $tag1 = explode('@',$data['tag1']);
@@ -423,12 +467,7 @@ class ExamQuestion extends Model
                 }
             }
             $totalNumber=$number1+$number2+$number3;
-        }
-        if($questionNumber>$totalNumber){
-            return false;
-        }else{
-            return true;
-        }
+        }*/
 
 
 

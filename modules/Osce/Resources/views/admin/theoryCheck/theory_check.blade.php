@@ -96,6 +96,7 @@
                 var stationId = $(".allData").attr("stationId");
                 var userId = $(".allData").attr("userId");
                 var studentId = $(".allData").attr("studentId");
+                var examId = $(".allData").attr("examId");
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                         {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
                     if(obj.status=='1'){
@@ -106,6 +107,7 @@
                             type:"get",
                             success:function(res){
                                 if(res.code == 1){
+                                    //查询该考生成绩
                                     location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
                                 }
                             }
@@ -147,6 +149,7 @@
                     var stationId = $(".allData").attr("stationId");
                     var userId = $(".allData").attr("userId");
                     var studentId = $(".allData").attr("studentId");
+                    var examId = $(".allData").attr("examId");
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                             {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
                         if(obj.status=='1'){
@@ -174,7 +177,7 @@
 
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'theory_check'}" />
-    <input type="hidden" class="allData" stationId="{{ $stationId }}" userId="{{ $userId }}" studentId="{{ $studentId }}">
+    <input type="hidden" class="allData" stationId="{{ $stationId }}" userId="{{ $userId }}" studentId="{{ $studentId }}" examId="{{ $examId }}">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">

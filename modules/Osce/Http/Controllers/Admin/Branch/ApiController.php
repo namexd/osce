@@ -200,49 +200,12 @@ class ApiController extends CommonController
                 }else{//type 2
                     //没有修改
                     $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($paperid,1);
+                    $flag_tag=$questionBankRepositories-> updateMsg($request->question,$ExamPaperInfo);
                     //-----------------
-                    $flag_tag=false;
-                    //随机试卷
-                    if(count($ExamPaperInfo)>0){
-                        $strArr=[];
-                        if(count($ExamPaperInfo->ExamPaperStructure)>0){
-                            $arr = [];
-                            foreach($ExamPaperInfo->ExamPaperStructure as $key => $val){
-                                if(count($val->structure_label)>0){
-                                    $arr[] = $val;
-                                }
-                            }
-                            $paperDetail['item'] = $questionBankRepositories->HandlePaperPreviewArr($arr);
-                            if(count($paperDetail['item'])>0){
-                                foreach($paperDetail['item'] as $k =>$v){
-                                    $data = [];
-                                    $data['question-type'] = $v['question_type'];
-                                    $data['questionNumber'] = $v['question_num'];
-                                    $data['questionScore'] = $v['question_score'];
-                                    $data['tag'] = $questionBankRepositories->GetExamQuestionLabelId($v['child']);
-                                    if(count($v['child'])){
-                                        foreach($v['child'] as $key => $val){
-                                            $data['label-'.$key] = $val[0]['relation'];
-                                        }
-                                    }
-                                    $strArr[] = $questionBankRepositories->ArrToStr($data).'@'.$v['id'];
-                                }
-                            }
-                        }
-                        if(count($request->question)&&count($strArr)) {//判段有没有修改操作
-                            $flag = false;
-                            foreach ($strArr as $key=>$val) {
-                                    if ($strArr[$key]!= $request->question[$key]) {
-                                        $flag = true;
-                                        break;
-                                }
-                            }
-                            if($flag||count($request->question)!=count($strArr)){//不相等以修改
-                                $flag_tag=true;
-                            }
-                        }
-                    }
+
+
                     //-----------------
+
                 if(!$flag_tag){//没有缓存 第一次预览
 
                     if(count($ExamPaperInfo->ExamPaperStructure)>0) {
@@ -277,8 +240,6 @@ class ApiController extends CommonController
                             }
                         }
                     }
-
-
                 }
             }else{ //mode 2 type 只能为2
                 $questionData = $request->get('question-type');
@@ -321,6 +282,7 @@ class ApiController extends CommonController
                     }
 
                     $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
+
                     \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
                     foreach($PaperPreviewArr['item'] as $k => $v){
                         if(!empty($v['child'])){
@@ -334,6 +296,7 @@ class ApiController extends CommonController
 
 
                 }
+
             }else{ //mode 2 type 只能为2
                 $questionData = $request->get('question-type');
                 if(count($questionData)>0){
@@ -402,6 +365,7 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthView(){
+
         return  view('osce::admin.theoryTest.theory_login');
     }
 
@@ -452,24 +416,23 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
-        try{
+        try {
             $user = Auth::user();
 
             // 检查用户是否登录
-            if(is_null($user))
-            {
+            if (is_null($user)) {
                 throw new \Exception('用户未登录', 1000);
             }
 
             //检验登录的老师是否是监考老师
-            if(!$questionBankRepositories->LoginAuth())
-            {
-                throw new \Exception('你不是监考老师',1001);
+            if (!$questionBankRepositories->LoginAuth()) {
+                throw new \Exception('你不是监考老师', 1001);
             }
 
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
-            if(is_array($ExamInfo)){
+            if (is_array($ExamInfo)) {
+
                 //如果有对应的考试信息，查询考试和考站信息
                 $datas = $questionBankRepositories->getExamData($ExamInfo);
                 $datainfo = array(
@@ -479,10 +442,9 @@ class ApiController extends CommonController
                     'examId'    => $ExamInfo['ExamId'],
                     'userId'    => $user->id,
                 );
-            }else{
+            } else {
                 $datainfo = '';
             }
-
 
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $datainfo,
@@ -498,7 +460,6 @@ class ApiController extends CommonController
                 return redirect()->route('osce.admin.getIndex')->withErrors($ex->getMessage());
             }
         }
-
     }
 
     /**刷完腕表后，获取该考生对应的试卷id

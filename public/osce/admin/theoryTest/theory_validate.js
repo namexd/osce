@@ -33,6 +33,8 @@ function theory_validate(){
                         $(".myImg").attr("src",res.data.avator);
                         $(".goTest").attr("studentId",res.data.student_id);
                         clearInterval(timer);
+                    }else{
+                        $('#examinfo').html('理论考试已结束')
                     }
                 }
             })
@@ -61,7 +63,7 @@ function theory_validate(){
                         type:"get",
                         success:function(res){
                             if(res){
-                                location.href=examUrl+"?id="+res+"&stationId="+stationId+"&userId="+userId+"&studentId="+studentId;
+                                location.href=examUrl+"?id="+res+"&stationId="+stationId+"&userId="+userId+"&studentId="+studentId+"&examId="+examId;
                             }else{
                                 //layer.msg('没有对应的试卷信息！',{skin:'msg-error',type:1});
                                 layer.alert('没有对应的试卷信息！');

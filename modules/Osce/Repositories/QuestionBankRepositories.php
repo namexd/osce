@@ -248,7 +248,7 @@ class QuestionBankRepositories  extends BaseRepository
                             $flag = false;
                             if(count($v->ExamQuestionLabelRelation) > 0){
                                 $labelId = $v->ExamQuestionLabelRelation->pluck('exam_question_label_id');
-                                foreach($orIdArr as $key => $vel){
+                                foreach($orIdArr as $vel){
                                     if(!$this->IsContainTwo($vel,$labelId->toArray())){
                                         $flag = false;
                                         break;
@@ -281,7 +281,7 @@ class QuestionBankRepositories  extends BaseRepository
                             $flag = false;
                             if(count($v->ExamQuestionLabelRelation) > 0){
                                 $labelId = $v->ExamQuestionLabelRelation->pluck('exam_question_label_id');
-                                foreach($andIdArr as $key => $vel){
+                                foreach($andIdArr as  $vel){
                                     if(!$this->IsContain($vel,$labelId->toArray())){
                                         $flag = false;
                                         break;
@@ -303,12 +303,10 @@ class QuestionBankRepositories  extends BaseRepository
                     }else{
                         $QuestionId = array_merge($orQuestionId,$andQuestionId);
                     }
-
                     $questionIdArr = [];
                     if(count($QuestionId)>0){
                         $questionIdArr = $this->RandQuestionId($QuestionId,$val['question_num']);
                     }
-                    
                     $arr[$key]['type'] = $val['question_type'];
                     $arr[$key]['num'] = $val['question_num'];
                     $arr[$key]['score'] = $val['question_score'];
@@ -500,7 +498,7 @@ class QuestionBankRepositories  extends BaseRepository
         try{
             $Exam = new Exam;
             //获取本次考试的id
-            $ExamInfo = $Exam->where('status','=',1)->select('id')->first();
+            $ExamInfo = $Exam->where('status','=',1)->select('id','name')->first();
             if(empty($ExamInfo->id)){
                 throw new \Exception(' 没有在进行的考试');
             }
@@ -515,37 +513,12 @@ class QuestionBankRepositories  extends BaseRepository
             if(empty($station_id)){
                 throw new \Exception('你没有相关需要监考的考站');
             }
-            return  ['StationId'=>$station_id,'ExamId'=>$ExamInfo->id];
+            return  ['StationId'=>$station_id,'ExamId'=>$ExamInfo->id,'ExamName'=>$ExamInfo->name];
         }catch (\Exception $ex){
             return $ex->getMessage();
         }
 
     }
-
-    /**根据考试id和考站id查询对应的考试信息
-     * @method
-     * @url /osce/
-     * @access public
-     * @param $ExamInfo
-     * @author xumin <xumin@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getExamData($ExamInfo){
-        $stationTeacher = new StationTeacher();
-        $data = $stationTeacher->leftJoin('exam', function ($join) { //考试
-            $join->on('station_teacher.exam_id', '=', 'exam.id');
-        })->leftJoin('station', function ($join) { //考站
-            $join->on('station_teacher.station_id', '=', 'station.id');
-
-        })->where('exam.id','=',$ExamInfo['ExamId'])->where('station.id','=',$ExamInfo['StationId'])
-           ->select([
-            'exam.name',//考试名称
-            'station.mins',//标准考试时间(分钟)'
-        ])->first();
-        return $data;
-    }
-
     /**
      * 判断 $array 是否包含 $arr
      * @method
@@ -614,7 +587,93 @@ class QuestionBankRepositories  extends BaseRepository
         }
 
     }
+/*
+ * 判读页面修改过没
+ * */
+    public function updateMsg($question,$ExamPaperInfo){
+        $flag_tag=false;
+        //随机试卷
+        if(count($ExamPaperInfo)>0){
+            $strArr=[];
+            if(count($ExamPaperInfo->ExamPaperStructure)>0){
+                $arr = [];
+                foreach($ExamPaperInfo->ExamPaperStructure as $key => $val){
+                    if(count($val->structure_label)>0){
+                        $arr[] = $val;
+                    }
+                }
+                $paperDetail['item'] = $this->HandlePaperPreviewArr($arr);
+                if(count($paperDetail['item'])>0){
+                    foreach($paperDetail['item'] as $k =>$v){
+                        $data = [];
+                        $data['question-type'] = $v['question_type'];
+                        $data['questionNumber'] = $v['question_num'];
+                        $data['questionScore'] = $v['question_score'];
+                        $data['tag'] = $this->GetExamQuestionLabelId($v['child']);
+                        if(count($v['child'])){
+                            foreach($v['child'] as $key => $val){
+                                $data['label-'.$key] = $val[0]['relation'];
+                            }
+                        }
+                        $strArr[] = $this->ArrToStr($data).'@'.$v['id'];
+                    }
+                }
+            }
+            if(count($question)&&count($strArr)) {//判段有没有修改操作
+                $flag = false;
 
+                if($strArr != $question){
+                    $flag = true;
+                }
+                if($flag||count($question)!=count($strArr)){//不相等以修改
+                    $flag_tag = true;
+                }
+            }
+        }
 
+        return $flag_tag;
+    }
+    /**
+     * 判断是否使用缓存
+     * @method
+     * @access public
+     * @param $examPapersInfo
+     * @param $casheList
+     * @return $data
+     * @author tangjun <tangjun@misrobot.com>
+     * @date  2016年3月28日 18:19:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function CheckIdentical($examPapersInfo,$casheList){
+
+        if(empty($casheList)){
+            return $examPapersInfo;
+        }else{
+
+            if(count($examPapersInfo) != count($casheList) ){
+                return $examPapersInfo;
+            }else{
+
+                $examPapersInfoType = collect($examPapersInfo)->pluck('type');
+                $examPapersInfoNum = collect($examPapersInfo)->pluck('num');
+                $examPapersInfoScore = collect($examPapersInfo)->pluck('score');
+
+                $casheListType = collect($casheList)->pluck('type');
+                $casheListNum = collect($casheList)->pluck('num');
+                $casheListScore = collect($casheList)->pluck('score');
+                if(
+                    $examPapersInfoType->toArray() == $casheListType->toArray()
+                    && $examPapersInfoNum->toArray() == $casheListNum->toArray()
+                    && $examPapersInfoScore->toArray() == $casheListScore->toArray()
+                )
+                {
+                   return $casheList;
+                }else{
+                    return $examPapersInfo;
+                }
+
+            }
+        }
+    }
 
 }
