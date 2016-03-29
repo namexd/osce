@@ -17,12 +17,12 @@
 @stop
 
 @section('content')
-        @if(empty($data))
+        @if($data['status'] == 0)
             <div class="row">
                 <div class="col-lg-12">
                     <div class="ibox float-e-margins">
                         <div class="ibox-content text-center">
-                            <div class="font20" style="padding: 40% 20px;">你没有相关需要监考的考站</div>
+                            <div class="font20" style="padding: 20% 20px;">{{$data['info']}}</div>
                         </div>
                     </div>
                 </div>
@@ -41,11 +41,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins" style="margin-bottom: 0;">
                     <div class="ibox-content text-center p-md">
-                        <h2>2016年第一期OSCE考试理论考试</h2>
-                        <span>考试时间：</span>
-                        <span class="checkTime">20分钟</span>
-                        <span class="marl_10">总分：</span>
-                        <span class="score">100分</span>
+                        <h2>{{$data['name']}}</h2>
                     </div>
                 </div>
             </div>
@@ -99,7 +95,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content text-center">
-                        <div class="font20" style="padding: 30% 20px;">等待学生</div>
+                        <div class="font20" style="padding: 30% 20px;" id="examinfo">等待学生进入考试</div>
                     </div>
                 </div>
             </div>
