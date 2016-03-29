@@ -207,7 +207,6 @@ class AnswerController extends CommonController
                         }
                     }
                 }
-
                 $data['examQuestionFormalInfo'][$k]['answer']=$newStudentAnswer;
             }
         }
@@ -261,7 +260,5 @@ class AnswerController extends CommonController
             'data'  =>$examPaperFormalData,//考试成绩及该考试相关信息
         ]);
     }
-
-
 
 }
