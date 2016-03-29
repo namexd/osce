@@ -172,9 +172,8 @@ class InvigilatePadController extends CommonController
         $stationId = (int)$request->input('station_id');
         $studentModel = new  Student();
         $studentData = $studentModel->studentList($stationId);
-        dd($studentData);
-        $studentData->avator = asset($studentData->avator);
         if ($studentData) {
+            $studentData->avator = asset($studentData->avator);
             return response()->json(
                 $this->success_data($studentData, 1, '验证完成')
             );
@@ -324,7 +323,7 @@ class InvigilatePadController extends CommonController
                 try {
                     $examResultModel = new ExamResult();
 
-                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id']);
+                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'],$stationId);
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
