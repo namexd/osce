@@ -45,7 +45,9 @@ class InvigilatePadController extends CommonController
 //    测试
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
-    {
+    {;
+      $bar =  asset('djhf');
+        dd($bar);
         $info = array('coffee', 'brown', 'caffeine');
 
 // 列出所有变量
