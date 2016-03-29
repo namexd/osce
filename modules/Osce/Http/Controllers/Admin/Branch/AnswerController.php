@@ -213,12 +213,18 @@ class AnswerController extends CommonController
         //保存考生答案
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
+
+ /*       $minute = 0;
+        $secone = 0;
+        if($data['actualLength']/60>=1){
+
+        }*/
         if($result){
             $arr=array(
                 'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
                 'studentId' =>$request->input('studentId'),//学生Id
                 'stationId' => $request->input('stationId'),//考站id
-                'time'=>$data['actualLength'],//考试用时
+                'time'=>$data['actualLength'],//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
                 'teacherId'=>$request->input('teacherId'),//评分人编号
                 'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
                 'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
