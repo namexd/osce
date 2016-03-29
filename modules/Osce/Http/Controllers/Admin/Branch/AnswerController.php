@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -34,6 +35,7 @@ class AnswerController extends CommonController
      */
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
+        $examId = $request->input('examId');//考试id
         $ExamPaperId = $request->input('id');//试卷id
         $stationId = $request->input('stationId');//考站id
         $userId = $request->input('userId');//老师id
@@ -119,7 +121,7 @@ class AnswerController extends CommonController
 
             }
         }
-        //dd($examCategoryFormalData);
+       //dd(date('Y/m/d H:i:s',$systemTimeStart).'和'.date('Y/m/d H:i:s',$systemTimeEnd));
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -128,6 +130,7 @@ class AnswerController extends CommonController
             'stationId'                    => $stationId,//考站id
             'userId'                       => $userId,//老师id
             'studentId'                       =>$studentId,//学生id
+            'examId'                       =>$examId,//考试
         ]);
     }
     /**保存考生答案
@@ -141,8 +144,10 @@ class AnswerController extends CommonController
      */
     public function postSaveAnswer(Request $request)
     {
+
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
-        $actualLength = (time()-$systemTimeStart)/60;//考试用时
+        $systemTimeEnd  =time();//考试结束时间
+        $actualLength = ($systemTimeEnd-$systemTimeStart)/60;//考试用时
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
             'actualLength' =>sprintf("%.2f",$actualLength), //考试用时
@@ -210,17 +215,30 @@ class AnswerController extends CommonController
                 $data['examQuestionFormalInfo'][$k]['answer']=$newStudentAnswer;
             }
         }
-
-
         //保存考生答案
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
         if($result){
-            //删除session
-            \Session::forget('systemTimeStart');
-            return response()->json(['status'=>'2','info'=>'保存成功']);
+            $arr=array(
+                'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
+                'studentId' =>$request->input('studentId'),//学生Id
+                'stationId' => $request->input('stationId'),//考站id
+                'time'=>$data['actualLength'],//考试用时
+                'teacherId'=>$request->input('teacherId'),//评分人编号
+                'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
+                'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
+            );
+            //将向考试结果记录表增加一条数据
+            $result = $answerModel->createExamResult($arr);
+            if($result){
+                //删除session
+                \Session::forget('systemTimeStart');
+                return response()->json(['status'=>'1','info'=>'保存成功']);
+            }else{
+                return response()->json(['status'=>'2','info'=>'保存失败']);
+            }
         }else{
-            return response()->json(['status'=>'3','info'=>'保存失败']);
+            return response()->json(['status'=>'2','info'=>'保存失败']);
         }
     }
     /**查询该考生理论考试成绩及该场考试相关信息
@@ -237,7 +255,6 @@ class AnswerController extends CommonController
     {
         $this->validate($request, [
              'examPaperFormalId'=>'required|integer',//正式的试卷id
-
         ]);
         $examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
         $answerModel = new Answer();
@@ -248,8 +265,6 @@ class AnswerController extends CommonController
             'data'  =>$examPaperFormalData,//考试成绩及该考试相关信息
         ]);
     }
-
-
 
 
 
