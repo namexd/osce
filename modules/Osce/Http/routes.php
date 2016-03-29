@@ -478,7 +478,7 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	if($exam->emptyData($exam_id)){
 //		return '成功';
 //	}
-	dd(\Modules\Osce\Entities\Flows::where('created_user_id', 224)->update(['description' => 123]));
+	dd(url('/images/head.png'));
 //
 //	return '失败';
 });
