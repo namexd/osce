@@ -557,7 +557,93 @@ class QuestionBankRepositories  extends BaseRepository
         }
 
     }
+/*
+ * 判读页面修改过没
+ * */
+    public function updateMsg($question,$ExamPaperInfo){
+        $flag_tag=false;
+        //随机试卷
+        if(count($ExamPaperInfo)>0){
+            $strArr=[];
+            if(count($ExamPaperInfo->ExamPaperStructure)>0){
+                $arr = [];
+                foreach($ExamPaperInfo->ExamPaperStructure as $key => $val){
+                    if(count($val->structure_label)>0){
+                        $arr[] = $val;
+                    }
+                }
+                $paperDetail['item'] = $this->HandlePaperPreviewArr($arr);
+                if(count($paperDetail['item'])>0){
+                    foreach($paperDetail['item'] as $k =>$v){
+                        $data = [];
+                        $data['question-type'] = $v['question_type'];
+                        $data['questionNumber'] = $v['question_num'];
+                        $data['questionScore'] = $v['question_score'];
+                        $data['tag'] = $this->GetExamQuestionLabelId($v['child']);
+                        if(count($v['child'])){
+                            foreach($v['child'] as $key => $val){
+                                $data['label-'.$key] = $val[0]['relation'];
+                            }
+                        }
+                        $strArr[] = $this->ArrToStr($data).'@'.$v['id'];
+                    }
+                }
+            }
+            if(count($question)&&count($strArr)) {//判段有没有修改操作
+                $flag = false;
 
+                if($strArr != $question){
+                    $flag = true;
+                }
+                if($flag||count($question)!=count($strArr)){//不相等以修改
+                    $flag_tag = true;
+                }
+            }
+        }
 
+        return $flag_tag;
+    }
+    /**
+     * 判断是否使用缓存
+     * @method
+     * @access public
+     * @param $examPapersInfo
+     * @param $casheList
+     * @return $data
+     * @author tangjun <tangjun@misrobot.com>
+     * @date  2016年3月28日 18:19:24
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function CheckIdentical($examPapersInfo,$casheList){
+
+        if(empty($casheList)){
+            return $examPapersInfo;
+        }else{
+
+            if(count($examPapersInfo) != count($casheList) ){
+                return $examPapersInfo;
+            }else{
+
+                $examPapersInfoType = collect($examPapersInfo)->pluck('type');
+                $examPapersInfoNum = collect($examPapersInfo)->pluck('num');
+                $examPapersInfoScore = collect($examPapersInfo)->pluck('score');
+
+                $casheListType = collect($casheList)->pluck('type');
+                $casheListNum = collect($casheList)->pluck('num');
+                $casheListScore = collect($casheList)->pluck('score');
+                if(
+                    $examPapersInfoType->toArray() == $casheListType->toArray()
+                    && $examPapersInfoNum->toArray() == $casheListNum->toArray()
+                    && $examPapersInfoScore->toArray() == $casheListScore->toArray()
+                )
+                {
+                   return $casheList;
+                }else{
+                    return $examPapersInfo;
+                }
+
+            }
+        }
+    }
 
 }

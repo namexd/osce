@@ -567,8 +567,9 @@ class ExamPaperController extends CommonController
         //新增试卷-试卷构造表和标签类型关联数据添加
         $ExamPaperStructure = new ExamPaperStructure();
         $ExamPaperStructureLabel = new ExamPaperStructureLabel();
+        $addExamPaperStructureId = [];
         $user = Auth::user();
-        foreach($examPapers as $exam){
+        foreach($examPapers as $key => $exam){
             //拼合试卷构造表数据
             $papers = [
                 'exam_paper_id' => $examPaperID,
@@ -581,10 +582,10 @@ class ExamPaperController extends CommonController
 
             $addExamPaperStructure = $ExamPaperStructure->create($papers);
             if(!$addExamPaperStructure){
-                DB::rollback();
+                $DB->rollback();
                 return false;exit;
             }
-
+            $addExamPaperStructureId[$key] = $addExamPaperStructure->id;
             foreach($exam['structure_label'] as $structure_label){
                 //拼合试卷构造表和试题标签表关联的数据
                 $structure_label['exam_paper_structure_id'] = $addExamPaperStructure->id;
@@ -592,7 +593,7 @@ class ExamPaperController extends CommonController
 
                 $addExamPaperStructureLabel = $ExamPaperStructureLabel->create($structure_label);
                 if(!$addExamPaperStructureLabel){
-                    DB::rollback();
+                    $DB->rollback();
                     return false;exit;
                 }
             }
@@ -600,9 +601,16 @@ class ExamPaperController extends CommonController
         }
 
 
+
         //查找筛选条件下的试题
         //$examQuestion = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
-        $examQuestion=\Cache::get(md5($request->name))?\Cache::get(md5($request->name)):$QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+//       $examQuestion=\Cache::get(md5($request->name))?\Cache::get(md5($request->name)):$QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+        $casheList=\Cache::get(md5($request->name));
+        $examPapersInfo = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+        $examQuestion = $QuestionBankRepositories->CheckIdentical($examPapersInfo,$casheList);
+
+
+
         //整理数据
         foreach($examQuestion as $k=>$v){
             $examQuestion[$k]['created_user_id'] = $user->id;
@@ -616,9 +624,10 @@ class ExamPaperController extends CommonController
 
         //保存数据
         foreach($examQuestion as $kk=>$vv){
+
             foreach($vv['child'] as $key=>$val){
                 $arrs = [
-                    'exam_paper_structure_id' => $addExamPaperStructure->id,
+                    'exam_paper_structure_id' => $addExamPaperStructureId[$kk],
                     'exam_question_id' => $val,
                 ];
                 $addPaperStructureQuestion = ExamPaperStructureQuestion::create($arrs);
@@ -903,23 +912,41 @@ class ExamPaperController extends CommonController
         //新增试卷-试卷构造表和标签类型关联数据添加
         $ExamPaperStructure = new ExamPaperStructure();
         $ExamPaperStructureLabel = new ExamPaperStructureLabel();
-        $idArrays = [];
 
+        //$idArrays = [];
+        //exam_paper_structure_id
+        $structureids = $ExamPaperStructure->where('exam_paper_id', '=', $examPaperID)->select('id')->get();
+
+        if(count($structureids)>0){
+            $ExamPaperStructureLabel->whereIn('exam_paper_structure_id',$structureids->pluck('id'))->delete();
+            ExamPaperStructureQuestion::whereIn('exam_paper_structure_id',$structureids->pluck('id'))->delete();
+            $ExamPaperStructure->where('exam_paper_id', '=', $examPaperID)->delete();
+        }
+        return  $this->addAutoUniteExam($request,$QuestionBankRepositories,$examPapers,$examPaperID,$DB);
         //查找筛选条件下的试题
-        $examQuestion =\Cache::get(md5($request->name))?:$QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+/*        $casheList=\Cache::get(md5($request->name));
+        $examPapersInfo = $QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+        $examQuestion = $QuestionBankRepositories->CheckIdentical($examPapersInfo,$casheList);*/
+
+        //$examQuestion =\Cache::get(md5($request->name))?:$QuestionBankRepositories->StructureExamQuestionArr($examPapers);
+
+
 
         //整理数据-判断该类型下是否有试题
-        foreach($examQuestion as $k=>$v){
+        /**存储数据库存在但页面并没有传值过来**/
+
+/*        foreach($examQuestion as $k=>$v){
             $questionType = $this->checkQuestions($v['type']);
-            /**存储数据库存在但页面并没有传值过来**/
+
             $key = array_search(@$v['structureid'], $idArrays);
             if ($key >= 0) {
                 unset($idArrays[$key]);
             }
-            /*********************************/
-        }
+
+        }*/
+
         //判断传数据库里的structureid是否传过来
-        $structureids = $ExamPaperStructure->where('exam_paper_id', '=', $examPaperID)->select('id')->get();
+/*        $structureids = $ExamPaperStructure->where('exam_paper_id', '=', $examPaperID)->select('id')->get();
         if ($structureids) {
             $structureids = $structureids->toArray();
             foreach ($structureids as $val) {
@@ -927,14 +954,9 @@ class ExamPaperController extends CommonController
                     $idArrays[] = $val['id'];
                 }
             }
-        }
+        }*/
         /**删除数据库存在但页面并没有传值过来的数据**/
-        if(!empty($idArrays)){
-            /*$delExamPaperStructure = $ExamPaperStructure->whereIn('id',$idArrays)->delete();
-            if (!$delExamPaperStructure) {
-                $DB->rollBack();
-                return redirect()->back()->withInput()->withErrors('系统异常');
-            }*/
+/*        if(!empty($idArrays)){
 
             if ($ExamPaperStructureLabel->whereIn('exam_paper_structure_id',$idArrays)->delete() === false) {
                 $DB->rollBack();
@@ -947,6 +969,7 @@ class ExamPaperController extends CommonController
                 return false;exit;
             }
         }
+
         foreach($examPapers as $exam) {
             //判断是否存在structureid
 
@@ -969,7 +992,7 @@ class ExamPaperController extends CommonController
 
 
 
-        return true;
+        return true;*/
     }
 
 
@@ -1188,6 +1211,7 @@ class ExamPaperController extends CommonController
         $user = Auth::user();
         //拼合试卷构造表数据
         $papers = [
+            'id'   =>$exam['structureid'],
             'exam_paper_id' => $examPaperID,
             'exam_question_type_id' => $exam['type'],
             'num' => $exam['num'],
@@ -1196,15 +1220,33 @@ class ExamPaperController extends CommonController
             'created_user_id' => $user->id,
         ];
         $addExamPaperStructure = $ExamPaperStructure->where('id', '=', $exam['structureid'])->update($papers);
-
+        //$addExamPaperStructure = $ExamPaperStructure->create($papers);
         if (count($addExamPaperStructure) == 0) {
             $DB->rollback();
             return false;exit;
         }
+
+        /*$papers = [
+            'exam_paper_id' => $examPaperID,
+            'exam_question_type_id' => $exam['type'],
+            'num' => $exam['num'],
+            'score' => $exam['score'],
+            'total_score' => $exam['total_score'],
+            'created_user_id' => $user->id,
+        ];
+
+        $addExamPaperStructure = $ExamPaperStructure->create($papers);
+        if(!$addExamPaperStructure){
+            DB::rollback();
+            return false;exit;
+        }*/
+
+
+
         //先删除ExamPaperStructureLabel表的当前数据
         if($ExamPaperStructureLabel->where('exam_paper_structure_id', '=', $exam['structureid'])->first()) {//判断数据库有没有数据
 
-            if (!$ExamPaperStructureLabel->where('exam_paper_structure_id', '=', $exam['structureid'])->delete()) {dd('***');
+            if (!$ExamPaperStructureLabel->where('exam_paper_structure_id', '=', $exam['structureid'])->delete()) {
                 $DB->rollBack();
                 return false;
                 exit;
@@ -1452,13 +1494,13 @@ class ExamPaperController extends CommonController
      * @author    weihuiguo <weihuiguo@misrobot.com>
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postCheckQuestionsNum(Request $request){
+    public function postCheckQuestionsNum(Request $request,QuestionBankRepositories $questionBankRepositories){
 
         $data = $request->all();
 
         $ExamQuestion = new ExamQuestion();
         //查找当前条件下的试题数量
-        $result= $ExamQuestion->getQuestionsNum($data);
+        $result= $ExamQuestion->getQuestionsNum($data,$questionBankRepositories);
         return response()->json(['valid'=>$result]);
     }
 
