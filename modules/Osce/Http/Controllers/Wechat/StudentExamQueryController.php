@@ -205,7 +205,7 @@ class StudentExamQueryController extends CommonController
     {
         $this->validate($request, [
             'exam_screening_id' => 'required|integer',
-            'station_id'    => 'required|integer'
+//            'station_id'    => 'required|integer'
         ]);
 
         $examScreeningId = intval(Input::get('exam_screening_id'));
