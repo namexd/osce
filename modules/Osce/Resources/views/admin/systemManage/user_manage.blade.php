@@ -47,7 +47,13 @@
                     <td>{{$item->username}}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->gender}}</td>
-                    <td>{{$item->roles[0]->name}}</td>
+                    <?php $name = ','; ?>
+                    @if($item->roles->pluck('name')->count())
+                        @for($i=0;$i<$item->roles->pluck('name')->count();$i++)
+                            <?php $name .= $item->roles->pluck('name')[$i].','; ?>
+                        @endfor
+                    @endif
+                    <td>{{trim($name,',')}}</td>
                     <td>{{$item->mobile}}</td>
                     <td>{{$item->lastlogindate}}</td>
                     <td>
