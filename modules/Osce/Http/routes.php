@@ -479,7 +479,7 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	if($exam->emptyData($exam_id)){
 //		return '成功';
 //	}
-	dd(url('/images/head.png'));
+	dd(asset('/images/head.png'));
 //
 //	return '失败';
 });

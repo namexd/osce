@@ -410,6 +410,7 @@ class PadController extends  CommonController{
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
             return response()->json($this->success_data([$date,$queue->exam_screening_id]));
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
