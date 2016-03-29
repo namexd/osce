@@ -67,7 +67,7 @@ return [
 	],
 	'prepare'			=>	10,
 	'spRoleId'			=>	4,
-	'invigilatorRoleId'	=>	env('invigilatorRoleId',77),
+	'invigilatorRoleId'	=>	env('invigilatorRoleId',1),
 	'studentRoleId'		=>	2,
 	'adminRoleId'		=>	3,
 	'superRoleId'		=>	5,

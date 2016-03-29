@@ -15,6 +15,7 @@ use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\ExamFlowRoom;
+use Modules\Osce\Repositories\Common;
 
 class AutomaticPlanArrangement
 {
@@ -64,6 +65,8 @@ class AutomaticPlanArrangement
     protected $timer = 0;
 
     protected $exam_id = 0;
+
+    protected $doorStatus = 0;
 
 
     /**
@@ -140,7 +143,7 @@ class AutomaticPlanArrangement
             foreach ($this->screen as $item) {
                 $this->screenPlan($examId, $item);
                 //判断是否还有必要进行下场排考
-                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->first();  //通过查询数据表中是否有没有写入end_dt的数据
+                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id', $examId)->first();  //通过查询数据表中是否有没有写入end_dt的数据
                 if (count($this->_S_ING) == 0 && count($this->_S) == 0 && is_null($examPlanNull)) {
                     return $this->output($examId);
                 }
@@ -187,14 +190,40 @@ class AutomaticPlanArrangement
 
         //将学生由总清单放入侯考区队列
         $this->_S_ING = $this->waitExamQueue();
+        //获取考试实体的最大公约数
+        $mixCommonDivisors = [];
+        foreach ($this->_T as $item) {
+            $mixCommonDivisors[] = $item->mins  +   config('osce.begin_dt_buffer');
+        }
+
+        $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
+        $this->doorStatus = $this->_T_Count;
+
+        $abcd = 0;
+        $efg = 0;
+        $min    =   $this->doorStatus;
+        $max = $this->doorStatus;
+        $i = $beginDt;
+        $k  =   3;
+        $step = $mixCommonDivisor * 60;
         //开始计时器
-        for ($i = $beginDt; $i <= $endDt; $i += 60) {
+//        for ($i = $beginDt; $i <= $endDt; $i += $mixCommonDivisor * 60) {
+        while ($i <= $endDt) {
             foreach ($this->_T as &$station) {
                 /*
                  * 考试实体状态判断,使用exam_plan_record来判断状态
                  * 如果为false，就说明是开门状态
                  */
-                $tempBool = $this->ckeckStatus($station, $screen);
+                $abcd++;
+                if ($this->doorStatus > 0) {
+                    $tempBool = $this->ckeckStatus($station, $screen);
+                    $efg++;
+                    $min=$min>$this->doorStatus? $this->doorStatus:$min;
+                    $max = $max < $this->doorStatus ? $this->doorStatus : $max;
+                } else {
+                    $tempBool = true;
+                }
+
                 if (!$tempBool) {
                     //获取实体所需要的学生清单
                     $students = $this->needStudents($station, $screen, $examId);
@@ -209,11 +238,14 @@ class AutomaticPlanArrangement
                         $result = ExamPlanRecord::create($data);
                         if (!$result) {
                             throw new \Exception('关门失败！', -11);
+                        } else {
+                            $this->doorStatus--;
                         }
+
 
                         $this->tempPlan[] = $result;
                     }
-                    $station->timer += 60;
+                    $station->timer += $step;
                     //反之，则是关门状态
                 } else {
                     $tempValues = $this->examPlanRecordIsOpenDoor($station, $screen);
@@ -221,16 +253,44 @@ class AutomaticPlanArrangement
                         $station->timer = 0;
                         //将结束时间写在表内
                         foreach ($tempValues as $tempValue) {
+                            if(!empty($tempValue->end_dt))
+                            {
+                                continue;
+                            }
                             $tempValue->end_dt = date('Y-m-d H:i:s', $i);
                             if (!$tempValue->save()) {
                                 throw new \Exception('开门失败！', -10);
+                            } else {
+                                $k  =   1;
+                                $this->doorStatus++;
                             }
                         }
                     } else {
-                        $station->timer += 60;
+                        $station->timer += $step;
                     }
                 }
             }
+            if ($k === 3) {
+                $step = $mixCommonDivisor   *   60;
+                $i += $step;
+            }
+            if ($k === 2) {
+                $step = $mixCommonDivisor * 60;
+                $k  =   3;
+                $i += $step;
+            }
+            if ($k === 1) {
+                $k = 2;
+            }
+
+
+//            if (count($this->_S_ING) == 0 && count($this->_S) == 0 ){
+//                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id', $examId)->first();  //通过查询数据表中是否有没有写入end_dt的数据
+//                if(is_null($examPlanNull))
+//                {
+//                    break;
+//                }
+//            }
         }
 
         //获取未走完流程的考生
@@ -348,6 +408,7 @@ class AutomaticPlanArrangement
                 'exam_screening_id' => $screen->id,
                 'begin_dt' => date('Y-m-d H:i:s', $i),
                 'serialnumber' => $station->serialnumber,
+                'flow_id' => $station->flow_id
             ];
         } elseif ($this->sequenceMode == 2) {
             $data = [
@@ -358,6 +419,7 @@ class AutomaticPlanArrangement
                 'exam_screening_id' => $screen->id,
                 'begin_dt' => date('Y-m-d H:i:s', $i),
                 'serialnumber' => $station->serialnumber,
+                'flow_id' => $station->flow_id
             ];
         } else {
             throw new \Exception('系统错误，请重试！', -5);

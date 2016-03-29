@@ -626,14 +626,29 @@ class Exam extends CommonModel
       }
 
     /**
-     * 查询当前正在进行的考试 TODO 此为智能排考所用
+     * 查询当前正在进行的考试
+     * @param null $examId
      * @return mixed
+     * @throws \Exception
      * @author Jiangzhiheng
      * @time
      */
-    static public function doingExam()
+    static public function doingExam($examId = null)
     {
-        return Exam::where('status',1)->first();
+        try {
+            if (is_null($examId)) {
+                $exam = Exam::where('status', 1)->get();
+                if ($exam->count() != 1) {
+                    throw new \Exception('获取当前考试信息失败！', -9999);
+                } else {
+                    return $exam->first();
+                }
+            } else {
+                return Exam::find($examId);
+            }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     /**

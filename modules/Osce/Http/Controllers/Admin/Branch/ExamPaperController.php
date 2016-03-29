@@ -439,7 +439,7 @@ class ExamPaperController extends CommonController
             'length' => $request -> time,
             'mode' => $request -> status,
             'type' => $request -> status2,
-            'created_user_id' => $user->id
+            'created_user_id' => empty($user->id)?0:$user->id,
         ];
 
         //获取试卷类型
@@ -1482,16 +1482,17 @@ class ExamPaperController extends CommonController
         }
     }
 
-    /**
-     * 获取试题标签id
-     * @url       POST /osce/admin/exampaper/check-questions-num
-     * @access    public
-     * @param Request $request get请求<br><br>
-     * @param Exam $exam
-     * @return view
-     * @throws \Exception
-     * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
+
+
+    /**获取试题数量
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @param QuestionBankRepositories $questionBankRepositories
+     * @return \Illuminate\Http\JsonResponse
+     * @author xumin <xumin@misrobot.com>
+     * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postCheckQuestionsNum(Request $request,QuestionBankRepositories $questionBankRepositories){
