@@ -25,7 +25,7 @@ $(function(){
         case "train_edit": train_edit();break;
         //成绩查询
         case "score_query": score_query();break;
-        case "score_query": score_query_detail();break;
+        case "score_query_detail": score_query_detail();break;
     }
 });
 
@@ -216,6 +216,8 @@ function score_query_detail() {
             xAxis.push('考核点'+(parseInt(i)+1));
         }
     }
+
+    console.log(standard,avg,xAxis)
     //触发图表格
     charts(standard,$('#student').text(),avg,xAxis);
 
