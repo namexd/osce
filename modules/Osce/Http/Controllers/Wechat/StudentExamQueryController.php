@@ -61,6 +61,7 @@ class StudentExamQueryController extends CommonController
 
             //根据用户获得考试id
             $studentId = Student::where('user_id', '=', $user->id)->get()->pluck('id');
+            dd($studentId);
             $ExamIdList = ExamQueue::whereIn('student_id', '=', $studentId)->select('exam_id')->get();
             if(!$ExamIdList){
                 throw new \Exception('目前你还没有参加过考试。');
