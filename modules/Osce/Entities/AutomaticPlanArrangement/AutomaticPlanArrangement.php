@@ -834,8 +834,10 @@ class AutomaticPlanArrangement
          * 再将人从学生池里抽人进入侯考区
          * 直接使用array_shift函数
          */
+
         if (count($result) < $station->needNum) {
-            for ($i = 0; $i <= $station->needNum - count($result); $i++) {
+            $hasStudentNum  =   $station->needNum - count($result);
+            for ($i = 0; $i < $hasStudentNum; $i++) {
                 if (count($this->_S_ING) > 0) {
                     $thisStudent = array_shift($this->_S_ING);
                     if (!is_null($thisStudent)) {
