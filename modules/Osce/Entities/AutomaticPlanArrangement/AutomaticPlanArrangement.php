@@ -931,7 +931,7 @@ class AutomaticPlanArrangement
 //            dump($station->needNum);
 //            dump($station->needNum - count($result));
             $hasStudentNum  =   $station->needNum - count($result);
-            for ($i = 0; $i <= $hasStudentNum; $i++) {
+            for ($i = 0; $i < $hasStudentNum; $i++) {
 //                echo count($this->_S_ING);
 //                echo '+';
                 if (count($this->_S_ING) > 0) {
