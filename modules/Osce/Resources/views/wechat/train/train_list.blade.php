@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{asset('osce/wechat/css/train.css')}}" type="text/css" />
 @stop
 @section('only_head_js')
-<script src="{{asset('osce/wechat/exammanage/exam_manage.js')}}" ></script> 
+<script src="{{asset('osce/wechat/train/train.js')}}" ></script>
 @stop
 
 

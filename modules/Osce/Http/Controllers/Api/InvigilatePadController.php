@@ -45,7 +45,9 @@ class InvigilatePadController extends CommonController
 //    测试
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
-    {
+    {;
+      $bar =  asset('djhf');
+        dd($bar);
         $info = array('coffee', 'brown', 'caffeine');
 
 // 列出所有变量
@@ -126,7 +128,7 @@ class InvigilatePadController extends CommonController
                 'name' => $fileName,
                 'description' => $date . '-' . $params['student_name'],
                 'standard_id' => $standardId,
-                 'student_id'=>$studentId,
+                'student_id'=>$studentId,
             ];
 
             //将内容插入数据库
@@ -171,6 +173,7 @@ class InvigilatePadController extends CommonController
         $studentModel = new  Student();
         $studentData = $studentModel->studentList($stationId);
         if ($studentData) {
+            $studentData->avator = asset($studentData->avator);
             return response()->json(
                 $this->success_data($studentData, 1, '验证完成')
             );
@@ -320,7 +323,7 @@ class InvigilatePadController extends CommonController
                 try {
                     $examResultModel = new ExamResult();
 
-                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id']);
+                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'],$stationId);
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
@@ -534,11 +537,10 @@ class InvigilatePadController extends CommonController
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
             $teacherId = $request->input('user_id');
-
             //将戳过来的字符串变成数组
             $timeAnchor = explode(',', $timeAnchor);
 
-            return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor)));
+            return response()->json($this->success_data(self::storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor)));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }

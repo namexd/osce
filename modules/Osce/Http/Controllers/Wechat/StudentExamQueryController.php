@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
@@ -60,6 +61,7 @@ class StudentExamQueryController extends CommonController
 
             //根据用户获得考试id
             $ExamIdList = Student::where('user_id', '=', $user->id)->select('exam_id')->get();
+
             if(!$ExamIdList){
                 throw new \Exception('目前你还没有参加过考试。');
 
@@ -77,6 +79,7 @@ class StudentExamQueryController extends CommonController
             //根据考试id获取所有考试
             //dd($ExamList);
             return view('osce::wechat.resultquery.examination_list', ['ExamList' => $ExamList]);
+
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -119,6 +122,8 @@ class StudentExamQueryController extends CommonController
             // TODO 根据考试id找到对应的考试场次  zhouqiang  2016-3-7
 
         $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get()->pluck('id');
+            //判断学生参加过那几场考试
+//            $examScreeningId = ExamQueue::where('exam_id','=',$examId)->where('student_id','=',$studentId)->get()->pluck('id');
 
 //        $examScreening = [];
 //        foreach ($examScreeningId as $data) {
@@ -200,13 +205,16 @@ class StudentExamQueryController extends CommonController
     {
         $this->validate($request, [
             'exam_screening_id' => 'required|integer',
-            'station_id'    => 'required|integer'
+//            'station_id'    => 'required|integer'
         ]);
 
         $examScreeningId = intval(Input::get('exam_screening_id'));
         $station_id = intval(Input::get('station_id'));
         //根据考试场次id查询出该结果详情
         $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->where('station_id', '=', $station_id)->first();
+        if(is_null($examresultList)){
+            throw new \Exception('该考试结果不存在');
+        }
         //得到考试名字
         $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
 

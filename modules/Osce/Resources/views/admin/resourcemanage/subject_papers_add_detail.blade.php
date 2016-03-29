@@ -214,7 +214,7 @@
                     </div>
                 </div>
                 @if(@$examQuestionLabelTypeList)
-                    @foreach(@$examQuestionLabelTypeList as $k =>$sub)
+                    @foreach(@$examQuestionLabelTypeList as $key =>$sub)
                         <div class="form-group">
                             <label class="col-sm-3 control-label">{{@$sub['name']}}：</label>
                             <div class="col-sm-3">
@@ -240,7 +240,7 @@
                                 </select>
                             </div>
                             <div class="col-sm-6">
-                                <select class="form-control tag tags_{{$k}}" name="tag[]" multiple="multiple" style="width: 100%">
+                                <select class="form-control tag tags_{{$key}}" name="tag[]" multiple="multiple" style="width: 100%">
                                     @if(!empty($sub['examQuestionLabel']))
                                         @foreach($sub['examQuestionLabel'] as $key => $val)
                                             <option value="{{ @$val['id'] }}"

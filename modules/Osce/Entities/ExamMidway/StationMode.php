@@ -13,7 +13,7 @@ use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\Teacher;
 
-class StationMode
+class StationMode implements ModeInterface
 {
     /*
          * 老师所在的stationid的集合
@@ -49,6 +49,7 @@ class StationMode
      */
     function getFlow()
     {
+        // TODO: Implement getFlow() method.
         try {
             return ExamFlowStation::where('exam_id', $this->exam->id)
                 ->whereIn('station_id', $this->stationIds->toArray())
@@ -67,6 +68,7 @@ class StationMode
      */
     function getExaminee(array $serialnumber)
     {
+        // TODO: Implement getExaminee() method.
         $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
             ->whereIn('exam_queue.station_id', $this->stationIds)
             ->where('exam_queue.status', '<', 3)
@@ -124,6 +126,7 @@ class StationMode
      */
     function getNextExaminee(array $serialnumber)
     {
+        // TODO: Implement getNextExaminee() method.
         $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
             ->orWhereIn('exam_queue.station_id', $this->stationIds)
             ->where('exam_queue.status', '<', 3)
@@ -131,7 +134,8 @@ class StationMode
             ->select(
                 'student.id as student_id',
                 'student.name as student_name',
-                'student.code as student_code'
+                'student.code as student_code',
+                'exam_queue.blocking as blocking'
             )
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->groupBy('student.id')

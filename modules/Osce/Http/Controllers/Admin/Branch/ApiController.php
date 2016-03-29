@@ -177,58 +177,6 @@ class ApiController extends CommonController
         $ExamQuestionType = new ExamQuestionType;
         $paperid = $request->paperid;
         //试卷类型(1.随机试卷，2.统一试卷)
-        /*if($type == 1 || $mode == 1 && $type == 2){
-            if(!empty($request->question)){
-                foreach($request->question as $k => $v){
-                    $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
-                }
-            }
-
-            $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
-
-            foreach($PaperPreviewArr['item'] as $k => $v){
-                if(!empty($v['child'])){
-                    $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->with('examQuestionItem')->get();
-                    $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$v['type'])->select('name')->first();
-                    $PaperPreviewArr['item'][$k]['name'] = $str[$k].'、'.$ExamQuestionTypeInfo['name'].'（共'.$v['num'].'题，每题'.$v['score'].'分）';
-                    $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
-                    $PaperPreviewArr['total_score'] += intval($v['num']*$v['score']);
-                }
-            }
-        //试卷类型(统一试卷)
-        }elseif($type == 2){
-            if($mode == 1 && $paperid>0){
-                $ExamPaperInfo = ExamPaper::where('id','=',$paperid)->first();
-                if(count($ExamPaperInfo->ExamPaperStructure)>0){
-                    foreach($ExamPaperInfo->ExamPaperStructure as $k => $v){
-                        $name = ExamQuestionType::where('id','=',$v['exam_question_type_id'])->pluck('name');
-                        $PaperPreviewArr['item'][$k]['name'] = $str[$k].'、'.$name.'（共'.$v['num'].'题，每题'.$v['score'].'分）';
-
-                        $ExamQuestionId = [];
-                        if(count($v->ExamPaperStructureQuestion)>0){
-                            $ExamQuestionId = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
-                        }
-
-                        $ExamQuestionList = $ExamQuestion->whereIn('id',$ExamQuestionId)->with('examQuestionItem')->get();
-                        $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
-                        $PaperPreviewArr['total_score'] += intval($v['num']*$v['score']);
-                    }
-                }
-            }elseif($mode == 2){
-                $questionData = $request->get('question-type');
-                if(count($questionData)>0){
-                    foreach($questionData as $k => $v){
-                        $questionInfo = explode('@',$v);
-                        $ExamQuestionId = isset($questionInfo[2])&&!empty($questionInfo[2])?explode(',',$questionInfo[2]):[];
-                        $ExamQuestionList = $ExamQuestion->whereIn('id',$ExamQuestionId)->with('examQuestionItem')->get();
-                        $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$questionInfo[0])->select('name')->first();
-                        $PaperPreviewArr['item'][$k]['name'] = $str[$k].'、'.$ExamQuestionTypeInfo['name'].'（共'.count($ExamQuestionId).'题，每题'.$questionInfo[1].'分）';
-                        $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
-                        $PaperPreviewArr['total_score'] += intval(count($ExamQuestionId)*$questionInfo[1]);
-                    }
-                }
-            }
-        }*/
 //-_-------------------------------------------
         //`mode` 组卷方式(1.自动组卷，2.手工组卷),
           //   `type` 试卷类型(1.随机试卷，2.统一试卷),
@@ -253,55 +201,12 @@ class ApiController extends CommonController
                 }else{//type 2
                     //没有修改
                     $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($paperid,1);
+                    $flag_tag=$questionBankRepositories-> updateMsg($request->question,$ExamPaperInfo);
                     //-----------------
-                    $flag_tag=false;
-                    //随机试卷
-
-                    if(count($ExamPaperInfo)>0){
-                        $strArr=[];
-                        if(count($ExamPaperInfo->ExamPaperStructure)>0){
-                            $arr = [];
-                            foreach($ExamPaperInfo->ExamPaperStructure as $key => $val){
-                                if(count($val->structure_label)>0){
-                                    $arr[] = $val;
-                                }
-                            }
-                            $paperDetail['item'] = $questionBankRepositories->HandlePaperPreviewArr($arr);
-
-                            if(count($paperDetail['item'])>0){
-                                foreach($paperDetail['item'] as $k =>$v){
-                                    $data = [];
-                                    $data['question-type'] = $v['question_type'];
-                                    $data['questionNumber'] = $v['question_num'];
-                                    $data['questionScore'] = $v['question_score'];
-                                    $data['tag'] = $questionBankRepositories->GetExamQuestionLabelId($v['child']);
-                                    if(count($v['child'])){
-                                        foreach($v['child'] as $key => $val){
-                                            $data['label-'.$key] = $val[0]['relation'];
-                                        }
-                                    }
-                                    $strArr[] = $questionBankRepositories->ArrToStr($data).'@'.$v['id'];
-                                }
-                            }
-                        }
-                        if(count($request->question)&&count($strArr)) {//判段有没有修改操作
-                            $flag = false;
-                            foreach ($strArr as $val) {
-                                foreach ($request->question as $v) {
-                                    if ($val != $v) {
-                                        $flag = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if($flag||count($request->question)!=count($strArr)){//不相等以修改
-                                $flag_tag=true;
-                            }
-                        }
-                    }
 
 
                     //-----------------
+
                 if(!$flag_tag){//没有缓存 第一次预览
 
                     if(count($ExamPaperInfo->ExamPaperStructure)>0) {
@@ -313,6 +218,7 @@ class ApiController extends CommonController
                                 $ExamQuestionId = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
                             }
                             $ExamQuestionList = $ExamQuestion->whereIn('id', $ExamQuestionId)->with('examQuestionItem')->get();
+
                             $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
                             $PaperPreviewArr['total_score'] += intval($v['num'] * $v['score']);
                         }
@@ -324,7 +230,7 @@ class ApiController extends CommonController
                             }
                         }
                         $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
-                        \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
+                       \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
                         foreach($PaperPreviewArr['item'] as $k => $v){
                             if(!empty($v['child'])){
                                 $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->with('examQuestionItem')->get();
@@ -335,8 +241,6 @@ class ApiController extends CommonController
                             }
                         }
                     }
-
-
                 }
             }else{ //mode 2 type 只能为2
                 $questionData = $request->get('question-type');
@@ -377,7 +281,10 @@ class ApiController extends CommonController
                             $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
                         }
                     }
+
                     $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
+
+                    \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
                     foreach($PaperPreviewArr['item'] as $k => $v){
                         if(!empty($v['child'])){
                             $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->with('examQuestionItem')->get();
@@ -387,8 +294,10 @@ class ApiController extends CommonController
                             $PaperPreviewArr['total_score'] += intval($v['num']*$v['score']);
                         }
                     }
-                    \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
+
+
                 }
+
             }else{ //mode 2 type 只能为2
                 $questionData = $request->get('question-type');
                 if(count($questionData)>0){
@@ -457,6 +366,7 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthView(){
+
         return  view('osce::admin.theoryTest.theory_login');
     }
 
@@ -471,16 +381,17 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuth(Request $request){
-        $this   ->validate($request,[
+        $this->validate($request,[
             'username'  =>  'required',
             'password'  =>  'required',
         ]);
 
-        $username   =   $request    ->  get('username');
-        $password   =   $request    ->  get('password');
+        $username = $request->get('username');
+        $password = $request->get('password');
+
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
-            return redirect()->route('osce.admin.ApiController.LoginAuthWait');
+            return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
         }
         else
         {
@@ -488,47 +399,66 @@ class ApiController extends CommonController
         }
     }
 
+    /**
+     * 监考老师登录后等待界面
+     * @method GET
+     * @url /osce/admin/api/loginauth-wait
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2016-03-29 11:05
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
-        try{
-            $user=Auth::user();
-            if(is_null($user))
-            {
-                throw new \Exception('用户未登录');
-            }
-            //检验登录的老师是否是监考老师
-            if(!$questionBankRepositories->LoginAuth())
-            {
-                throw new \Exception('你不是监考老师',1000);
+        try {
+            $user = Auth::user();
+
+            // 检查用户是否登录
+            if (is_null($user)) {
+                throw new \Exception('用户未登录', 1000);
             }
 
+            //检验登录的老师是否是监考老师
+            if (!$questionBankRepositories->LoginAuth()) {
+                throw new \Exception('你不是监考老师', 1001);
+            }
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
-            if(is_array($ExamInfo)){
-                //如果有对应的考试信息，查询考试和考站信息
-                $datas = $questionBankRepositories->getExamData($ExamInfo);
-                $datainfo = array(
-                    'name'=>$datas['name'],
-                    'mins'=>$datas['mins'],
-                    'stationId'=>$ExamInfo['StationId'],
-                    'examId'=>$ExamInfo['ExamId'],
-                    'userId'=>$user->id,
+            if (is_array($ExamInfo)) {
+                $data = array(
+                    'status'=>1,
+                    'name'      => $ExamInfo['ExamName'],
+                    'stationId' => $ExamInfo['StationId'],
+                    'examId'    => $ExamInfo['ExamId'],
+                    'userId'    => $user->id,
                 );
-            }else{
-                $datainfo='';
+            } else {
+                $data = array(
+                    'status'=>0,
+                    'info'=>$ExamInfo
+                );
             }
             return view('osce::admin.theoryCheck.theory_check_volidate', [
-                'data'=>$datainfo,
+                'data' => $data,
             ]);
         }
         catch(\Exception $ex)
         {
-            if($ex->getCode()===1000)
+            if ($ex->getCode() === 1000) {
+                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
+            }
+            if($ex->getCode() === 1001)
             {
                 return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
             }
-            return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
         }
-
     }
 
     /**刷完腕表后，获取该考生对应的试卷id
