@@ -60,7 +60,9 @@ class StudentExamQueryController extends CommonController
             }
 
             //根据用户获得考试id
-            $ExamIdList = Student::where('user_id', '=', $user->id)->select('exam_id')->get();
+            $studentId = Student::where('user_id', '=', $user->id)->select('exam_id')->get()->pulck('id');
+            $ExamIdList = ExamQueue::whereIn('student_id', '=', $studentId)->select('exam_id')->get();
+            
             if(!$ExamIdList){
                 throw new \Exception('目前你还没有参加过考试。');
 
@@ -78,6 +80,7 @@ class StudentExamQueryController extends CommonController
             //根据考试id获取所有考试
             //dd($ExamList);
             return view('osce::wechat.resultquery.examination_list', ['ExamList' => $ExamList]);
+
         } catch (\Exception $ex) {
             throw $ex;
         }
