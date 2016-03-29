@@ -429,26 +429,24 @@ class ApiController extends CommonController
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('你不是监考老师', 1001);
             }
-
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
             if (is_array($ExamInfo)) {
-
-                //如果有对应的考试信息，查询考试和考站信息
-                $datas = $questionBankRepositories->getExamData($ExamInfo);
-                $datainfo = array(
-                    'name'      => $datas['name'],
-                    'mins'      => $datas['mins'],
+                $data = array(
+                    'status'=>1,
+                    'name'      => $ExamInfo['ExamName'],
                     'stationId' => $ExamInfo['StationId'],
                     'examId'    => $ExamInfo['ExamId'],
                     'userId'    => $user->id,
                 );
             } else {
-                $datainfo = '';
+                $data = array(
+                    'status'=>0,
+                    'info'=>$ExamInfo
+                );
             }
-
             return view('osce::admin.theoryCheck.theory_check_volidate', [
-                'data' => $datainfo,
+                'data' => $data,
             ]);
         }
         catch(\Exception $ex)

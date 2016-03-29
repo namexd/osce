@@ -17,12 +17,12 @@
 @stop
 
 @section('content')
-        @if(empty($data))
+        @if($data['status'] == 0)
             <div class="row">
                 <div class="col-lg-12">
                     <div class="ibox float-e-margins">
                         <div class="ibox-content text-center">
-                            <div class="font20" style="padding: 40% 20px;">{{$data['info']}}</div>
+                            <div class="font20" style="padding: 20% 20px;">{{$data['info']}}</div>
                         </div>
                     </div>
                 </div>

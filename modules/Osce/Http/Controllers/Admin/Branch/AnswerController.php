@@ -53,7 +53,6 @@ class AnswerController extends CommonController
             $systemTimeStart=time();
             \Session::put('systemTimeStart',$systemTimeStart);
         }
-
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
@@ -104,8 +103,6 @@ class AnswerController extends CommonController
                 }
             }
         }
-
-
         if(count($examCategoryFormalData)>0&&!empty($examCategoryFormalData)){
             foreach($examCategoryFormalData as $key=>$val){
                 if($val['examQuestionTypeId']==1){//单选
@@ -118,7 +115,6 @@ class AnswerController extends CommonController
                     $examCategoryFormalData[$key]['examCategoryFormalName']='四、'.$val['examCategoryFormalName'];
                     $examCategoryFormalData[$key]['content']=array('0'=>0,'1'=>1);
                 }
-
             }
         }
        //dd(date('Y/m/d H:i:s',$systemTimeStart).'和'.date('Y/m/d H:i:s',$systemTimeEnd));
@@ -211,7 +207,6 @@ class AnswerController extends CommonController
                         }
                     }
                 }
-
                 $data['examQuestionFormalInfo'][$k]['answer']=$newStudentAnswer;
             }
         }
@@ -265,7 +260,5 @@ class AnswerController extends CommonController
             'data'  =>$examPaperFormalData,//考试成绩及该考试相关信息
         ]);
     }
-
-
 
 }

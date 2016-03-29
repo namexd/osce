@@ -633,6 +633,31 @@ class QuestionBankRepositories  extends BaseRepository
 
         return $flag_tag;
     }
+
+    /**根据考试id和考站id查询对应的考试信息
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $ExamInfo
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamData($ExamInfo){
+        $stationTeacher = new StationTeacher();
+        $data = $stationTeacher->leftJoin('exam', function ($join) { //考试
+            $join->on('station_teacher.exam_id', '=', 'exam.id');
+        })->leftJoin('station', function ($join) { //考站
+            $join->on('station_teacher.station_id', '=', 'station.id');
+
+        })->where('exam.id','=',$ExamInfo['ExamId'])->where('station.id','=',$ExamInfo['StationId'])
+            ->select([
+                'exam.name',//考试名称
+                'station.mins',//标准考试时间(分钟)'
+            ])->first();
+        return $data;
+    }
+
     /**
      * 判断是否使用缓存
      * @method

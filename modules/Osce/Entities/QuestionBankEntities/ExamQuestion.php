@@ -311,9 +311,6 @@ class ExamQuestion extends Model
         }
     }
 
-//    public function exam_question_label_relation(){
-//        return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelRelation','exam_question_id','id');
-//    }
     /**根据标签查找试题
      * @method
      * @url /osce/
@@ -347,26 +344,20 @@ class ExamQuestion extends Model
             )
             ->paginate(config('msc.page_size'));
         return $data;
-
-/*        $builder = $this->leftjoin('exam_question_type',function($join){
-
-            $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
-
-        })->with(['ExamQuestionLabelRelation'=>function($relation) use($data){
-
-            $relation->with('exam_question_label');
-            if(!empty($data)){
-                $relation->whereIn('exam_question_label_relation.exam_question_label_id',$data);
-            }
-
-        }])->where('exam_question_type.id','=',$question_type)->select('exam_question_type.name as tname','exam_question.*')->paginate(config('msc.page_size'));//
-        return $builder;*/
     }
-    //获取试题数量
+
+    /**获取试题数量
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $data
+     * @param $questionBankRepositories
+     * @return bool|int
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function getQuestionsNum($data,$questionBankRepositories){
-        //$questionBankRepositories->StructureExamQuestionArr();
-/*        "question" => "1"
-  "questionNumber" => "1"*/
         $structureArr = [];
         $structure_label  = [];
         foreach($data as $k => $v){
@@ -404,121 +395,5 @@ class ExamQuestion extends Model
         }else{
             return false;
         }
-
-/*        if($questionNumber>$totalNumber){
-            return false;
-        }else{
-            return true;
-        }*/
-
-/*        $examQuestionModel = new ExamQuestion();
-        //传入的标签类型Id和标签id
-        //分割标签条件
-        $tag1 = explode('@',$data['tag1']);
-        $tag2 = explode('@',$data['tag2']);
-        $tag3 = explode('@',$data['tag3']);
-        $questionNumber = $data['questionNumber'];//用户输入的题目数量
-        $number1=0;$number2=0;$number3=0;
-        if(($tag1[0]==1&&!empty($tag1[1]))||($tag2[0]==1&&!empty($tag2[1]))||($tag3[0]==1&&!empty($tag3[1]))){
-            //查询对应的试题数量
-            $totalNumber = count($examQuestionModel->where('id','=',$data['question'])->get());
-        }else{
-            if(!empty($tag1[1])&&$tag1[0]==2){
-                if(strstr($tag1[1],',')){//选择多个
-                    $tag1[1] = explode(',',$tag1[1]);
-                    foreach($tag1[1] as $val1){
-                        //查询对应的试题数量
-                        $number1+=count($examQuestionModel
-                            ->select('exam_question.id')->leftJoin('exam_question_label_relation', function ($join) {
-                            $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
-                        })->where('exam_question.exam_question_type_id','=',$data['question'])->where('exam_question_label_relation.exam_question_label_id','=',$val1)->get());
-                    }
-                }else{
-                    $number1=count($examQuestionModel->select('exam_question.id')->leftJoin('exam_question_label_relation', function ($join) {
-                        $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
-                    })->where('exam_question.exam_question_type_id','=',$data['question'])->where('exam_question_label_relation.exam_question_label_id','=',$tag1[1])->get());
-                }
-                return $number1;
-            }elseif(!empty($tag2[1])&&$tag2[0]==2){
-                if(strstr($tag2[1],',')){//选择多个
-                    $tag2[1] = explode(',',$tag2[1]);
-                    foreach($tag2[1] as $val2){
-                        //查询对应的试题数量
-                        $number2+=count($examQuestionModel->leftJoin('exam_question_label_relation', function ($join) {
-                            $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
-                        })->where('exam_question.exam_question_type_id','=',$data['question'])->where('exam_question_label_relation.exam_question_label_id','=',$val2)->get());
-                    }
-                }else{
-                    $number2=count($examQuestionModel->leftJoin('exam_question_label_relation', function ($join) {
-                        $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
-                    })->where('exam_question.exam_question_type_id','=',$data['question'])
-                        ->where('exam_question_label_relation.exam_question_label_id','=',$tag2[1])->get());
-                }
-            }elseif(!empty($tag3[1])&&$tag3[0]==2){
-                if(strstr($tag3[1],',')){//选择多个
-                    $tag3[1] = explode(',',$tag3[1]);
-                    foreach($tag3[1] as $val3){
-                        //查询对应的试题数量
-                        $number3+=count($examQuestionModel->leftJoin('exam_question_label_relation', function ($join) {
-                            $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
-                        })->where('exam_question.exam_question_type_id','=',$data['question'])
-                            ->where('exam_question_label_relation.exam_question_label_id','=',$val3)->get());
-                    }
-                }else{
-                    $number3=count($examQuestionModel->leftJoin('exam_question_label_relation', function ($join) {
-                        $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
-                    })->where('exam_question.exam_question_type_id','=',$data['question'])
-                        ->where('exam_question_label_relation.exam_question_label_id','=',$tag3[1])->get());
-                }
-            }
-            $totalNumber=$number1+$number2+$number3;
-        }*/
-
-
-
-
-
-
-
-
-
-
-        /*     //标签id
-             if($tag1[0]==2&&$tag2[0]==2&&$tag3[0]==2){//等于
-                 $examQuestionLabelId = $tag1[1].','.$tag2[1].','.$tag3[1];
-                 if(strstr($examQuestionLabelId,',')){//选择了多个标签
-                     $examQuestionLabelId = explode(',',$examQuestionLabelId);
-                     //查询对应的试题数量
-                     $number = count($examQuestionModel->leftJoin('exam_question_label_relation', function ($join) {
-                         $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
-                     })->leftJoin('exam_question_label', function ($join) {
-                         $join->on('exam_question_label_relation.exam_question_label_id', '=', 'exam_question_label.id');
-                     })->where('exam_question.exam_question_type_id','=',$data['question'])
-                         ->whereIn('exam_question_label_relation.exam_question_label_id',$examQuestionLabelId)->get());
-                 }else{//只选择了一个标签
-                     //查询对应的试题数量
-                     $number = count($examQuestionModel->leftJoin('exam_question_label_relation', function ($join) {
-                         $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
-                     })->leftJoin('exam_question_label', function ($join) {
-                         $join->on('exam_question_label_relation.exam_question_label_id', '=', 'exam_question_label.id');
-                     })->where('exam_question.exam_question_type_id','=',$data['question'])
-                         ->where('exam_question_label.id','=',$examQuestionLabelId)->get());
-                 }
-
-                 if($questionNumber>$number){
-                     return false;
-                 }else{
-                     return true;
-                 }
-             }else{
-                 //查询对应的试题数量
-                 $number = count($examQuestionModel->where('exam_question.exam_question_type_id','=',$data['question'])->get());
-
-                 if($questionNumber>$number){
-                     return false;
-                 }else{
-                     return true;
-                 }
-             }*/
     }
 }
