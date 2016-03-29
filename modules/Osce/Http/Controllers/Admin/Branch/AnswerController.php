@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -34,6 +35,7 @@ class AnswerController extends CommonController
      */
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
+        $examId = $request->input('examId');//考试id
         $ExamPaperId = $request->input('id');//试卷id
         $stationId = $request->input('stationId');//考站id
         $userId = $request->input('userId');//老师id
@@ -128,6 +130,7 @@ class AnswerController extends CommonController
             'stationId'                    => $stationId,//考站id
             'userId'                       => $userId,//老师id
             'studentId'                       =>$studentId,//学生id
+            'examId'                       =>$examId,//考试
         ]);
     }
     /**保存考生答案
@@ -262,8 +265,6 @@ class AnswerController extends CommonController
             'data'  =>$examPaperFormalData,//考试成绩及该考试相关信息
         ]);
     }
-
-
 
 
 

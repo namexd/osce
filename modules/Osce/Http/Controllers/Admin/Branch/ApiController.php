@@ -402,6 +402,7 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthView(){
+
         return  view('osce::admin.theoryTest.theory_login');
     }
 
@@ -433,6 +434,17 @@ class ApiController extends CommonController
         }
     }
 
+    /**监考老师等待学生考试界面
+     * @method
+     * @url /osce/
+     * @access public
+     * @param QuestionBankRepositories $questionBankRepositories
+     * @return $this|\Illuminate\View\View
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
         try{
             $user=Auth::user();
@@ -449,20 +461,21 @@ class ApiController extends CommonController
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
             if(is_array($ExamInfo)){
-                //如果有对应的考试信息，查询考试和考站信息
-                $datas = $questionBankRepositories->getExamData($ExamInfo);
-                $datainfo = array(
-                    'name'=>$datas['name'],
-                    'mins'=>$datas['mins'],
+                $data = array(
+                    'status'=>1,
+                    'name'=>$ExamInfo['ExamName'],//考试名称
                     'stationId'=>$ExamInfo['StationId'],
                     'examId'=>$ExamInfo['ExamId'],
                     'userId'=>$user->id,
                 );
             }else{
-                $datainfo='';
+                $data=array(
+                    'status'=>0,
+                    'info'=>$ExamInfo
+                );
             }
             return view('osce::admin.theoryCheck.theory_check_volidate', [
-                'data'=>$datainfo,
+                'data'=>$data,
             ]);
         }
         catch(\Exception $ex)
