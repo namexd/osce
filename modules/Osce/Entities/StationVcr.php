@@ -129,13 +129,11 @@ class StationVcr extends CommonModel
             $exam = Exam::doingExam($exam_id);
             Common::valueIsNull($exam, -1, '没有找到对应的考试');
             if($exam->sequence_mode == 2){
-                $result = $this->leftJoin('room_station', function($join){
-                    $join -> on('room_station.station_id', '=', 'station_vcr.station_id');
-                })->leftJoin('vcr', function($join){
-                    $join -> on('vcr.id', '=', 'station_vcr.vcr_id');
-                })-> leftJoin('exam_station', function($join){
+                $result = $this -> leftJoin('exam_station', function($join){
                     $join -> on('exam_station.station_id', '=', 'station_vcr.station_id');
-                }) ->leftJoin('station', function($join) {
+                }) ->leftJoin('vcr', function($join){
+                    $join -> on('vcr.id', '=', 'station_vcr.vcr_id');
+                })->leftJoin('station', function($join) {
                     $join->on('station.id', '=', 'station_vcr.station_id');
                 });
                 $result=$result ->where('exam_station.station_id', '=', $exam_id);
