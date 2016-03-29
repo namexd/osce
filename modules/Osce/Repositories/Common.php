@@ -246,4 +246,16 @@ class Common
         }
         return $i;
     }
+
+    static  public function getRoleIdByTeacherType($type){
+        $relation  =   [
+            1=>config('osce.invigilatorRoleId'),
+//            2=>config('osce.studentRoleId'),
+//            3=>config('osce.adminRoleId'),
+            2=>config('osce.spRoleId'),
+//            5=>config('osce.superRoleId'),
+            3=>config('osce.patrolRoleId'),
+        ];
+        return  $relation[$type];
+    }
 }

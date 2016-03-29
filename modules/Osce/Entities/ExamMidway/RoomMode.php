@@ -14,7 +14,7 @@ use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Teacher;
 
-class RoomMode
+class RoomMode implements ModeInterface
 {
     /*
          * 老师所在的room
@@ -38,7 +38,7 @@ class RoomMode
         $this->id = $id;
         $this->exam = $exam;
         $this->room = Teacher::room($id, $exam);
-        $this->_T_Count = RoomStation::where('room_id','=',$this->room->room_id)->count();
+        $this->_T_Count = RoomStation::where('room_id', '=', $this->room->room_id)->count();
     }
 
     /**

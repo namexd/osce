@@ -13,7 +13,7 @@ use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\Teacher;
 
-class StationMode
+class StationMode implements ModeInterface
 {
     /*
          * 老师所在的stationid的集合
@@ -131,7 +131,8 @@ class StationMode
             ->select(
                 'student.id as student_id',
                 'student.name as student_name',
-                'student.code as student_code'
+                'student.code as student_code',
+                'exam_queue.blocking as blocking'
             )
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->groupBy('student.id')

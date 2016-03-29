@@ -396,6 +396,8 @@ class Teacher extends CommonModel
             if(!empty($code)){
                 throw new \Exception('该教师编号已经有别人使用！');
             }
+            $roleId = Common::getRoleIdByTeacherType($teacherData['type']);
+
             foreach($teacherData as $feild => $value) {
                 $teacher    ->  $feild  =   $value;
             }
@@ -403,6 +405,19 @@ class Teacher extends CommonModel
                 throw new   \Exception('教务人员信息变更失败');
             }
 
+            $connection = DB::connection('sys_mis');
+            if($connection->table('sys_user_role')->where('user_id', $id)->where('role_id', $roleId)->count()>0)
+            {
+                $connection->table('sys_user_role')->where('user_id', $id)->where('role_id', $roleId)->update(['role_id'=>Common::getRoleIdByTeacherType($teacher['type'])]);
+            }
+            else
+            {
+                $connection->table('sys_user_role')->insert([
+                    'role_id'=>Common::getRoleIdByTeacherType($teacher['type']),
+                    'user_id'=> $id
+                ]);
+            }
+//            dd($id, $roleId, $teacher['type']);
             //教务人员用户信息变更
             $userInfo   =   $teacher->userInfo;
             foreach($userData as $feild => $value) {
@@ -444,12 +459,16 @@ class Teacher extends CommonModel
             }
             //教务人员用户信息变更
             $userInfo   =   $teacher->userInfo;
+            $roleId     =   $userData['type'];
             foreach($userData as $feild => $value) {
                 $userInfo    ->  $feild  =   $value;
             }
             if(!$userInfo->save()){
                 throw new   \Exception('教务人员用户信息变更失败');
             }
+            $connection = DB::connection('sys_mis');
+            $connection->table('sys_user_role')->where('user_id', $id)->where('role_id', $roleId)->update(['role_id'=>Common::getRoleIdByTeacherType($teacher['type'])]);
+
             $connection->commit();
             return $teacher;
 
