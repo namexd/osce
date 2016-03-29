@@ -658,7 +658,7 @@ class ExamPaperController extends CommonController
         foreach($questions as $k=>$v){
             $type[] = explode('@',$v);
         }
-        
+
         foreach($type as $kk=>$vv) {
             if (isset($vv[2]) && !empty($vv[2])) {
                 $questionsID = explode(',', $vv[2]);
@@ -1030,7 +1030,12 @@ class ExamPaperController extends CommonController
         //分割字符串-拼合数组
         $questions = Input::get('question-type');
         foreach($questions as $k=>$v){
-            $type[] = explode('@',$v);
+            $arr= explode('@',$v);
+            if(isset($arr[2])&&!empty($arr[2])){
+                $type[] =$arr;
+            }
+
+
         }
         //dd($type);
         foreach($type as $kk=>$vv){
