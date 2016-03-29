@@ -129,6 +129,9 @@ class StationVcr extends CommonModel
             $exam = Exam::doingExam($exam_id);
             Common::valueIsNull($exam, -1, '没有找到对应的考试');
             if($exam->sequence_mode == 2){
+                //根据考试拿到考站
+                $stationId = ExamStation::where('exam_id','=',$exam_id)->get();
+                dd($stationId);
                 $result = $this -> leftJoin('exam_station', function($join){
                     $join -> on('exam_station.station_id', '=', 'station_vcr.station_id');
                 }) ->leftJoin('vcr', function($join){
