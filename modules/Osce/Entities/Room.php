@@ -187,7 +187,7 @@ class Room extends CommonModel
             }
             //更新考场数据
             $room = $this->find($id);
-            Common::objIsNull($room);
+            Common::valueIsNull($room);
             foreach ($formData as $field => $value) {
                 $room->$field = $value;
             }
