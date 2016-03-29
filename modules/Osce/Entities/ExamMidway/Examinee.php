@@ -62,7 +62,7 @@ class Examinee
 
             //将图片地址加上域名
             foreach ($students as &$student) {
-                $student->student_avator = url($student->student_avator);
+                $student->student_avator = asset($student->student_avator);
             }
 
             return $students;
