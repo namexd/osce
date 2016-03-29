@@ -172,7 +172,6 @@ class InvigilatePadController extends CommonController
         $stationId = (int)$request->input('station_id');
         $studentModel = new  Student();
         $studentData = $studentModel->studentList($stationId);
-
         if ($studentData) {
             $studentData->avator = asset($studentData->avator);
             return response()->json(
