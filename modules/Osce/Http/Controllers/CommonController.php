@@ -10,7 +10,6 @@ use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Pingpong\Modules\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-
 abstract class CommonController extends Controller
 {
 

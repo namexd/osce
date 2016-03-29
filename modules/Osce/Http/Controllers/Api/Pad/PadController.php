@@ -92,7 +92,7 @@ class PadController extends  CommonController{
        }
 
     /**
-     *根据考场ID和考试ID获取考场和考站的摄像头列表(接口)
+     *根据考场ID和考试ID获取 考场和考站的 摄像头列表(接口)
      * @method GET
      * @url api/1.0/private/osce/pad/student-vcr
      * @access public
@@ -117,11 +117,73 @@ class PadController extends  CommonController{
         $room_id = $request->get('room_id');
         $exam_id = $request->get('exam_id');
 
+
         $stationModel = new StationVcr();
         $stationVcrs  = $stationModel->getStionVcr($room_id,$exam_id);
 
+
         return response()->json(
             $this->success_data($stationVcrs,1,'success')
+        );
+    }
+
+
+    /**
+     * 根据考场ID和考试ID获取 考站列表、考站对应的摄像机信息 (接口)
+     * @api GET /osce/pad/stations-vcrs
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getStationsVcrs(Request $request){
+        $this->validate($request,[
+            'room_id'   => 'required|integer',
+            'exam_id'   => 'required|integer'
+        ]);
+        $room_id = $request->get('room_id');
+        $exam_id = $request->get('exam_id');
+        $exam    = Exam::where('id','=',$exam_id)->first();
+        $data    = [];
+        if($exam->sequence_mode==2){
+            //根据考试获取 对应考站
+            $examStation = ExamStation::leftJoin('room_station','room_station.station_id','=','exam_station.station_id')
+                ->where('exam_station.exam_id','=',$exam_id)->where('room_station.room_id','=',$room_id)->get();
+            if(count($examStation)){
+                foreach ($examStation as $item) {
+                    //根据考站获取对应的摄像机
+                    $data[] = StationVcr::leftJoin('station','station.id','=','station_vcr.station_id')
+                        ->leftJoin('vcr','vcr.id','=','station_vcr.vcr_id')
+                        ->where('station_vcr.station_id',$item->station_id)
+                        ->select(['station.id as station_id','station.name as station_name','vcr.id as vcr_id','vcr.name as vcr_name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
+                        ->first();
+                }
+            }
+        }else{
+            $examRooms = ExamRoom::where('exam_id','=',$exam->id)->where('room_id','=',$room_id)->get();
+            foreach($examRooms as $examRoom){
+                //根据考站获取对应的摄像机
+                $data[] = RoomVcr::leftJoin('room_station','room_station.id','=','room_vcr.room_id')
+                            ->leftJoin('station','station.id','=','room_station.station_id')
+                            ->leftJoin('vcr','vcr.id','=','room_vcr.vcr_id')
+                            ->where('room_vcr.room_id',$examRoom->room_id)
+                            ->select(['station.id as station_id','station.name as station_name','vcr.id as vcr_id','vcr.name as vcr_name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
+                            ->first();
+            }
+        }
+
+        return response()->json(
+            $this->success_data($data,1,'success')
         );
     }
 

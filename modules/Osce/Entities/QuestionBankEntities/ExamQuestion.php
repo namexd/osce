@@ -321,8 +321,32 @@ class ExamQuestion extends Model
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamQuestion($data,$pageIndex){
+    public function getExamQuestion($data,$pageIndex,$question_type){
         $builder = $this->leftjoin('exam_question_type',function($join){
+
+            $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
+
+        })->leftjoin('exam_question_label_relation',function($join){
+
+            $join->on('exam_question_label_relation.exam_question_id','=','exam_question.id');
+
+        });
+        if(count($data)>0){
+            $builder->whereIn('exam_question_label_relation.exam_question_label_id',$data);
+        }
+        $data = $builder->where('exam_question_type.id','=',$question_type)
+            ->with(['ExamQuestionLabelRelation'=>function($ExamQuestionLabelRelation){
+                $ExamQuestionLabelRelation->with('ExamQuestionLabel');
+            }])
+            ->groupBy('exam_question.id')
+            ->select(
+                'exam_question_type.name as tname',
+                'exam_question.*'
+            )
+            ->paginate(config('msc.page_size'));
+        return $data;
+
+/*        $builder = $this->leftjoin('exam_question_type',function($join){
 
             $join->on('exam_question_type.id','=','exam_question.exam_question_type_id');
 
@@ -333,7 +357,50 @@ class ExamQuestion extends Model
                 $relation->whereIn('exam_question_label_relation.exam_question_label_id',$data);
             }
 
-        }])->select('exam_question_type.name as tname','exam_question.*')->paginate(config('msc.page_size'));//
-        return $builder;
+        }])->where('exam_question_type.id','=',$question_type)->select('exam_question_type.name as tname','exam_question.*')->paginate(config('msc.page_size'));//
+        return $builder;*/
+    }
+    //获取试题数量
+    public function getQuestionsNum($data){
+        $examQuestionModel = new ExamQuestion();
+        //传入的标签类型Id和标签id
+        //分割标签条件
+        $tag1 = explode('@',$data['tag1']);
+        $tag2 = explode('@',$data['tag2']);
+        $tag3 = explode('@',$data['tag3']);
+        $questionNumber = $data['questionNumber'];//用户输入的题目数量
+        //标签id
+        if($tag1[0]==2&&$tag2[0]==2&&$tag3[0]==2){//等于
+            $examQuestionLabelId = $tag1[1].','.$tag2[1].','.$tag3[1];
+            if(strstr($examQuestionLabelId,',')){//选择了多个标签
+                $examQuestionLabelId = explode(',',$examQuestionLabelId);
+                //查询对应的试题数量
+                $number = count($examQuestionModel->leftJoin('exam_question_label_relation', function ($join) {
+                    $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
+                })->where('exam_question.exam_question_type_id','=',$data['question'])
+                    ->whereIn('exam_question_label_relation.exam_question_label_id',$examQuestionLabelId)->get());
+            }else{//只选择了一个标签
+                //查询对应的试题数量
+                $number = count($examQuestionModel->leftJoin('exam_question_label_relation', function ($join) {
+                    $join->on('exam_question_label_relation.exam_question_id', '=', 'exam_question.id');
+                })->where('exam_question.exam_question_type_id','=',$data['question'])
+                    ->where('exam_question_label_relation.exam_question_label_id','=',$examQuestionLabelId)->get());
+            }
+
+            if($questionNumber>$number){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            //查询对应的试题数量
+            $number = count($examQuestionModel->where('exam_question.exam_question_type_id','=',$data['question'])->get());
+
+            if($questionNumber>$number){
+                return false;
+            }else{
+                return true;
+            }
+        }
     }
 }

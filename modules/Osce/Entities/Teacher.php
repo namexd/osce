@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities;
 
 
+use App\Entities\SysUserRole;
 use App\Entities\User;
 use DB;
 use Modules\Osce\Repositories\Common;
@@ -379,7 +380,7 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editInvigilator($id, $userData, $teacherData)
+    public function editInvigilator($id, $userData, $teacherData, $role_id)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -411,6 +412,29 @@ class Teacher extends CommonModel
             if(!$userInfo->save()){
                 throw new   \Exception('教务人员用户信息变更失败');
             }
+
+            //更改用户角色
+            $rolse = [config('osce.invigilatorRoleId',1),config('osce.patrolRoleId',6)];
+            $userRole = SysUserRole::where('user_id','=',$userInfo->id)->whereIn('role_id',$rolse)->first();
+            if($userRole){
+                if($userRole->role_id != $role_id){
+                    $userRole->role_id = $role_id;
+
+                    if(!$userRole->save()){
+                        throw new   \Exception('教务人员角色信息变更失败');
+                    }
+                }
+            }else{
+                DB::table('sys_user_role')->insert(
+                    [
+                        'role_id'    => $role_id,
+                        'user_id'    => $userInfo->id,
+                        'created_at' => time(),
+                        'updated_at' => time(),
+                    ]
+                );
+            }
+
             $connection->commit();
             return $teacher;
 
@@ -578,13 +602,17 @@ class Teacher extends CommonModel
         try {
             $sucNum = 0;    //导入成功的老师数
             $exiNum = 0;    //已经存在的老师数
-            $role_id = config('osce.spRoleId',4);
             //将数组导入到模型中的addInvigilator方法
             foreach ($teacherDatas as $key => $teacherData)
             {
                 //性别处理
                 $teacherData['gender'] = $this->handleSex($teacherData['gender']);
                 $teacherData['type']   = $this->handleType($teacherData['type']);       //老师类别处理
+                if($teacherData['type'] == 1){
+                    $role_id = config('osce.invigilatorRoleId',1);
+                }else{
+                    $role_id = config('osce.patrolRoleId',6);
+                }
                 //姓名不能为空
                 if (empty(trim($teacherData['name']))) {
                     if (!empty($teacherData['idcard']) && !empty($teacherData['mobile'])) {

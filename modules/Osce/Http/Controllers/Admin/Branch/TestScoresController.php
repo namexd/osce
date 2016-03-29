@@ -75,7 +75,7 @@ class TestScoresController  extends CommonController
             //\DB::connection("osce_mis")->enableQueryLog();
 
         $singledata = $TestScoreRepositories->getTestSubject($examid,$student_id,'')->toArray();
-       // dd(\DB::connection("osce_mis")->getQueryLog());
+        //dd($singledata);
 
         //查找所有科目
         $subject = $subjectStatisticsRepositories->subjectDownlist($examid);
@@ -85,7 +85,6 @@ class TestScoresController  extends CommonController
         }
         //查找当前考试所有科目平均成绩
         $avgdata = $TestScoreRepositories->getTestSubject($examid,'',$subjectId)->toArray();
-
         $avgInfo = [];
         foreach($singledata as $k=>$v){
             foreach($avgdata as $kk=>$vv){
@@ -96,7 +95,8 @@ class TestScoresController  extends CommonController
                 }
                 $avgdata[$kk]['scoreAvg'] = sprintf('%.2f',$vv['scoreAvg']);
             }
-            $singledata[$k]['mins'] = $subjectStatisticsRepositories->timeTransformation($v['mins']);
+            //dd($v['mins']);
+            $singledata[$k]['mins'] = $v['mins'].'分钟';
             $singledata[$k]['time'] = $subjectStatisticsRepositories->timeTransformation($v['time']);
         }
         //重新排列 平均成绩数组的顺序
@@ -310,6 +310,7 @@ class TestScoresController  extends CommonController
                 $datalist[$k]['avgScore'] = sprintf('%.2f',$v->avgScore);
             }
         }
+
         $data = [
             'datalist' => $datalist,
             'teacherStr' => trim($teacherStr,','),
@@ -381,13 +382,12 @@ class TestScoresController  extends CommonController
     public function getGradeDetail(Request $request,TestScoreRepositories $TestScoreRepositories,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $examID = $request->examid;
         $subjectID = $request->subid;
-        $ResultID = $request->resultID;
+        $classid = $request->classid;
         //班级成绩明细简介
-
-        $data = $TestScoreRepositories->getExamDetails($examID,$ResultID,$subjectID);
+        $data = $TestScoreRepositories->getExamDetails($examID,$classid,$subjectID);
         $data->time = date('Y-m-d H:i',strtotime($data->begin_dt)).' ~ '.date('H:i',strtotime($data->end_dt));
         //列表数据
-       $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID);
+       $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID,$classid);
         foreach($datalist as $k=>$v){
             $datalist[$k]['time'] = $subjectStatisticsRepositories->timeTransformation($v->time);
         }

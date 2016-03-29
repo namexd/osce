@@ -75,11 +75,13 @@ class ExamQuestionController extends CommonController
             }
         }
 
-        return view('osce::admin.resourcemanage.subject_manage', [
+        return view('osce::admin.resourceManage.subject_manage', [
             'data'                         =>$data,//对象型数据
             'list'                         =>$list ,//试题列表（数组型数据）
             'examQuestionLabelTypeList' =>$examQuestionLabelTypeList,//试题类型列表
-            'examQuestionTypeList'       =>$examQuestionTypeList //题目类型列表
+            'examQuestionTypeList'       =>$examQuestionTypeList, //题目类型列表
+            'formData'                    =>$formData
+
         ]);
     }
 
@@ -103,7 +105,7 @@ class ExamQuestionController extends CommonController
             $examQuestionLabelTypeList[$k]['examQuestionLabelList'] = $v->examQuestionLabel;
         }
 
-        return view('osce::admin.resourcemanage.subject_manage_add', [
+        return view('osce::admin.resourceManage.subject_manage_add', [
             'examQuestionTypeList'       => $examQuestionTypeList, //题目类型列表
             'examQuestionLabelTypeList' => $examQuestionLabelTypeList, //考核范围列表
         ]);
@@ -123,21 +125,17 @@ class ExamQuestionController extends CommonController
 
         $this->validate($request, [
             'examQuestionTypeId'    =>'sometimes|integer',//试题表
-            'name'                     => 'required|string',
+            'name'                     => 'sometimes|string',
             'parsing'                 => 'sometimes|string',
             'answer'                  => 'sometimes|array',
             'judge'                  => 'sometimes|integer',
-
-            'examQuestionItemName'  => 'required|array',//试题子项表
+            'examQuestionItemName'  => 'sometimes|array',//试题子项表
             'content'                 => 'sometimes|array',
-
             'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
 
         //试题和标签中间表数据
-
         $ExamQuestionLabelRelationData = $request->input('tag');
-
 
         //试题表数据
         $examQuestionData =array(
@@ -245,7 +243,7 @@ class ExamQuestionController extends CommonController
 
        // dd($data);
         //dd($examQuestionLabelTypeList);
-        return view('osce::admin.resourcemanage.subject_manage_edit', [
+        return view('osce::admin.resourceManage.subject_manage_edit', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
             'data'                          =>$data ,//试题信息
             'examQuestionItemList'       =>$examQuestionItemList ,//试题子项表列表
@@ -266,16 +264,13 @@ class ExamQuestionController extends CommonController
     public function postExamQuestionEdit(Request $request)
     {
         $this->validate($request, [
-            'id'                      =>'required|integer',//试题表
+            'id'                      =>'sometimes|integer',//试题表
             'examQuestionTypeId'    =>'sometimes|integer',
-            'name'                     => 'required|string',
             'parsing'                 => 'sometimes|string',
             'answer'                  => 'sometimes|array',
             'judge'                  => 'sometimes|integer',
-
-            'examQuestionItemName'  => 'required|array',//试题子项表
+            'examQuestionItemName'  => 'sometimes|array',//试题子项表
             'content'                 => 'sometimes|array',
-
             'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
 

@@ -24,7 +24,7 @@ function subject_statistics(){
                 legend: {
                     data: ["平均成绩"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     data: standardStr
@@ -76,7 +76,7 @@ function subject_statistics(){
                     $(".subjectBody").append('<tr>' +
                         '<td>'+this.number+'</td>' +
                         '<td>'+this.title+'</td>' +
-                        '<td>'+this.mins+'</td>' +
+                        '<td>'+this.mins+'分钟'+'</td>' +
                         '<td>'+this.timeAvg+'</td>' +
                         '<td>'+this.scoreAvg+'</td>' +
                         '<td>'+this.studentQuantity+'</td>' +
@@ -112,7 +112,7 @@ function subject_level(){
                 legend: {
                     data: ["合格率"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     boundaryGap: !1,
@@ -219,7 +219,7 @@ function examation_statistics(){
                 legend: {
                     data: ["平均成绩"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     data: stationNameStr
@@ -321,7 +321,7 @@ function statistics_check(){
                 legend: {
                     data: ["合格率"]
                 },
-                calculable: !0,
+                calculable: false,
                 xAxis: [{
                     type: "category",
                     data: standardContentStr
