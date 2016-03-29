@@ -25,7 +25,6 @@
             width:100%;
             height: 600px;
             margin-top: 20px;
-            overflow: auto;
         }
         .classroom-box>ul>li{
             float: left;
@@ -58,9 +57,8 @@
         .title{
             border: 1px solid #ccc;
             background-color: #eee;
-            padding: 9px;
+            padding: 5px;
             font-weight: 700;
-            border-bottom: 0;
         }
         .time>li{
             border: 1px solid #ccc;
@@ -89,9 +87,10 @@
         p{
             margin: 0;
         }
+        .tables{float: left;}
         .tables>li{
             width: 250px;
-            float: left;
+            display: inline-block;
         }
         .screening_box>ul{
             float: left;
@@ -99,50 +98,58 @@
         .screening_box{
             margin-top: 10px;
         }
-        .screening_box>ul:first-child{
-            width: 200px;
+        .screening_box>div:first-child{
+            width: 10%;
+            float: left;
+        }
+        .box-table{
+            display: block;
+            width: 90%;
+            float: left;
+            overflow:auto;
+            white-space:nowrap;
         }
 
         /*标尺样式*/
         .axis{
             float: left;
-            margin-top: 40px;
+            margin-top: 32px;
             margin-left: 140px;
             margin-right: 10px;
             width: 2px;
-            background-color: #333;
+            background-color: #000;
         }
         .axis dl{cursor: pointer;}
-        .axis dl{background-color: #333;}
+        .axis dl{background-color: #000;}
         .axis dl .item{
             margin-left: 0px;
             height: 98px;
             width: 2px;
-            background-color: #333;
+            background-color: #000;
         }
         .axis dl .tick{
             margin-left: -5px;
             height: 2px;
             width: 2px;
-            border-right: 5px solid #333;
-            background-color: #333;
-            opacity: .2;
+            border-right: 5px solid #000;
+            background-color: #000;
+            opacity: .4;
         }
         .axis dl .tick-bar{
-            margin-left: -10px;
+            margin-left: -7px;
             height: 2px;
             width: 2px;
-            border-right: 10px solid #333;
-            background-color: #333;
+            border-right: 7px solid #000;
+            background-color: #000;
         }
         .tick-bar span{
             z-index: 10;
             display: inline-block;
-            width: 90px;
+            width: 125px;
             text-align: center;
             font-size: 12px;
             position: relative;
-            left: -95px;
+            left: -125px;
             top: -10px;
         }
         .tick span{
