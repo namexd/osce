@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
@@ -119,6 +120,8 @@ class StudentExamQueryController extends CommonController
             // TODO 根据考试id找到对应的考试场次  zhouqiang  2016-3-7
 
         $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get()->pluck('id');
+            //判断学生参加过那几场考试
+//            $examScreeningId = ExamQueue::where('exam_id','=',$examId)->where('student_id','=',$studentId)->get()->pluck('id');
 
 //        $examScreening = [];
 //        foreach ($examScreeningId as $data) {
