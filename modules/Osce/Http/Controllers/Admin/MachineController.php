@@ -437,7 +437,7 @@ class MachineController extends CommonController
         ]);
 
         $data = $request->only('id', 'name', 'code', 'ip', 'username', 'password', 'port', 'realport',
-            'channel', 'description', 'status', 'factory', 'sp', 'purchase_dt');
+            'channel', 'description', 'status', 'factory', 'sp', 'purchase_dt', 'place');
 
         try {
             $model = new Vcr();
@@ -596,6 +596,7 @@ class MachineController extends CommonController
             'factory' => e($request->get('factory')),
             'sp' => $request->get('sp'),
             'purchase_dt' => $request->get('purchase_dt'),
+            'place' => $request->input('place')
         ];
 
         try {
@@ -791,6 +792,7 @@ class MachineController extends CommonController
             'description' => $request->get('description'),
             'status' => $request->get('status'),
             'purchase_dt' => $request->get('purchase_dt'),
+            'place' => $request->input('place')
         ];
         $code = Watch::where('id', $request->get('id'))->select('code')->first()->code;
         if ($code != $request->get('code')) {

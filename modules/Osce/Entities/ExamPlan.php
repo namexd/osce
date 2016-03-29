@@ -29,7 +29,10 @@ class ExamPlan extends CommonModel
         'begin_dt',
         'end_dt',
         'status',
-        'created_user_id'
+        'created_user_id',
+        'flow_id',
+        'serialnumber',
+        'group'
     ];
 
     protected $stations = [];

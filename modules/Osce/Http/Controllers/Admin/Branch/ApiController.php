@@ -9,7 +9,8 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use App\Entities\User;
-use Auth;
+// use Auth;
+use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
@@ -445,7 +446,7 @@ class ApiController extends CommonController
         {
             if($ex->getCode()===1000)
             {
-                return redirect()->route('osce.admin.getIndex')->withErrors($ex->getMessage());
+                return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
             }
             return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
         }

@@ -46,6 +46,23 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
+        $info = array('coffee', 'brown', 'caffeine');
+
+// 列出所有变量
+        list($drink, $color, $power) = $info;
+        echo "$drink is $color and $power makes it special.\n";
+
+// 列出他们的其中一个
+        list($drink, , $power) = $info;
+        echo "$drink has $power.\n";
+
+// 或者让我们跳到仅第三个
+        list( , , $power) = $info;
+        echo "I need $power!\n";
+
+// list() 不能对字符串起作用
+        list($bar) = "abcde";
+        var_dump($bar); // NULL
 //        $examScreeningModel = new ExamScreening();
 //        $result = $examScreeningModel->getExamCheck();
 //        $numbers = array('1','2','3','4','5');
@@ -55,7 +72,7 @@ class InvigilatePadController extends CommonController
 //        while (list(,$number) = each($numbers)) {
 //            echo $number."<br/>";
 //        }
-
+//
         for ($i = 2; $i <= 5; $i++)
         {
             print "value is now " . $i . "<br>";
@@ -222,36 +239,6 @@ class InvigilatePadController extends CommonController
             }
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage());
-        }
-
-    }
-
-    /**
-     * 提交评价
-     * @method GET
-     * @url /osce/api/invigilatepad/save-exam-evaluate
-     * @access public
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * int     subject_id    考试项目id  (必须的)
-     * * int     standard_id  评分标准 id   (必须的)
-     * * int     score       根据评分标准所得的分值
-     * * string         evaluate     评价内容
-     *
-     * @return  json
-     *
-     * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    private function postSaveExamEvaluate($scoreData, $ExamResultId)
-    {
-        $data = [];
-        foreach ($scoreData as $data) {
-//            $data['exam_result_id'] = $ExamResultId;
-            $Save = ExamScore::create($data);
-            return $Save;
         }
 
     }
@@ -547,11 +534,11 @@ class InvigilatePadController extends CommonController
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
             $teacherId = $request->input('user_id');
-
+            \Log::alert('anchor', $timeAnchor);
             //将戳过来的字符串变成数组
             $timeAnchor = explode(',', $timeAnchor);
 
-            return response()->json($this->success_data($this->storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor)));
+            return response()->json($this->success_data(self::storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor)));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
