@@ -535,7 +535,6 @@ class InvigilatePadController extends CommonController
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
             $teacherId = $request->input('user_id');
-            \Log::alert('anchor', $timeAnchor);
             //将戳过来的字符串变成数组
             $timeAnchor = explode(',', $timeAnchor);
 
