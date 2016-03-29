@@ -110,21 +110,24 @@ class PadController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentVcr(Request $request){
-        $this->validate($request,[
-            'room_id'   => 'required|integer',
-            'exam_id'   => 'required|integer'
-        ]);
-        $room_id = $request->get('room_id');
-        $exam_id = $request->get('exam_id');
+        try{
+            $this->validate($request,[
+                'room_id'   => 'required|integer',
+                'exam_id'   => 'required|integer'
+            ]);
+            $room_id = $request->get('room_id');
+            $exam_id = $request->get('exam_id');
 
+            $stationModel = new StationVcr();
+            $stationVcrs  = $stationModel->getStationVcr($exam_id,$room_id);
 
-        $stationModel = new StationVcr();
-        $stationVcrs  = $stationModel->getStionVcr($room_id,$exam_id);
+            return response()->json(
+                $this->success_data($stationVcrs,1,'success')
+            );
+        }catch (\Exception $ex){
+            return response()->json($this->fail($ex));
+        }
 
-
-        return response()->json(
-            $this->success_data($stationVcrs,1,'success')
-        );
     }
 
 
@@ -153,37 +156,14 @@ class PadController extends  CommonController{
         ]);
         $room_id = $request->get('room_id');
         $exam_id = $request->get('exam_id');
-        $exam    = Exam::where('id','=',$exam_id)->first();
-        $data    = [];
-        if($exam->sequence_mode==2){
-            //根据考试获取 对应考站
-            $examStation = ExamStation::leftJoin('room_station','room_station.station_id','=','exam_station.station_id')
-                ->where('exam_station.exam_id','=',$exam_id)->where('room_station.room_id','=',$room_id)->get();
-            if(count($examStation)){
-                foreach ($examStation as $item) {
-                    //根据考站获取对应的摄像机
-                    $data[] = StationVcr::leftJoin('station','station.id','=','station_vcr.station_id')
-                        ->leftJoin('vcr','vcr.id','=','station_vcr.vcr_id')
-                        ->where('station_vcr.station_id',$item->station_id)
-                        ->select(['station.id as station_id','station.name as station_name','vcr.id as vcr_id','vcr.name as vcr_name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
-                        ->first();
-                }
-            }
-        }else{
-            $examRooms = ExamRoom::where('exam_id','=',$exam->id)->where('room_id','=',$room_id)->get();
-            foreach($examRooms as $examRoom){
-                //根据考站获取对应的摄像机
-                $data[] = RoomVcr::leftJoin('room_station','room_station.id','=','room_vcr.room_id')
-                            ->leftJoin('station','station.id','=','room_station.station_id')
-                            ->leftJoin('vcr','vcr.id','=','room_vcr.vcr_id')
-                            ->where('room_vcr.room_id',$examRoom->room_id)
-                            ->select(['station.id as station_id','station.name as station_name','vcr.id as vcr_id','vcr.name as vcr_name','vcr.ip','vcr.status','vcr.port','vcr.channel','vcr.username','vcr.password'])
-                            ->first();
-            }
-        }
+
+        $stationVcr = new StationVcr();
+        $datas   = $stationVcr->getStationVcr($exam_id,$room_id);
+
+
 
         return response()->json(
-            $this->success_data($data,1,'success')
+            $this->success_data($datas,1,'success')
         );
     }
 
@@ -551,7 +531,7 @@ class PadController extends  CommonController{
 
         }else{
             $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
-            $roomIds  = $this->getRoomDatas($exam, true);       //根据考试获取对应的所有考场
+            $roomIds  = $this->getRoomDatas($exam, true);   //根据考试获取对应的所有考场
         }
         $roomIds = array_values(array_unique($roomIds));    //去重，并取值（键排序）
         $rooms = Room::whereIn('id', $roomIds)->select(['id', 'name'])->paginate(10);
