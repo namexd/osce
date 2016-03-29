@@ -416,16 +416,17 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuth(Request $request){
-        $this   ->validate($request,[
+        $this->validate($request,[
             'username'  =>  'required',
             'password'  =>  'required',
         ]);
 
-        $username   =   $request    ->  get('username');
-        $password   =   $request    ->  get('password');
+        $username = $request->get('username');
+        $password = $request->get('password');
+
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
-            return redirect()->route('osce.admin.ApiController.LoginAuthWait');
+            return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
         }
         else
         {
@@ -433,17 +434,37 @@ class ApiController extends CommonController
         }
     }
 
+    /**
+     * 监考老师登录后等待界面
+     * @method GET
+     * @url /osce/admin/api/loginauth-wait
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2016-03-29 11:05
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
         try{
-            $user=Auth::user();
+            $user = Auth::user();
+
+            // 检查用户是否登录
             if(is_null($user))
             {
-                throw new \Exception('用户未登录');
+                throw new \Exception('用户未登录', 1000);
             }
+
             //检验登录的老师是否是监考老师
             if(!$questionBankRepositories->LoginAuth())
             {
-                throw new \Exception('你不是监考老师',1000);
+                throw new \Exception('你不是监考老师',1001);
             }
 
             //根据监考老师的id，获取对应的考站id
@@ -452,26 +473,30 @@ class ApiController extends CommonController
                 //如果有对应的考试信息，查询考试和考站信息
                 $datas = $questionBankRepositories->getExamData($ExamInfo);
                 $datainfo = array(
-                    'name'=>$datas['name'],
-                    'mins'=>$datas['mins'],
-                    'stationId'=>$ExamInfo['StationId'],
-                    'examId'=>$ExamInfo['ExamId'],
-                    'userId'=>$user->id,
+                    'name'      => $datas['name'],
+                    'mins'      => $datas['mins'],
+                    'stationId' => $ExamInfo['StationId'],
+                    'examId'    => $ExamInfo['ExamId'],
+                    'userId'    => $user->id,
                 );
             }else{
-                $datainfo='';
+                $datainfo = '';
             }
+
+
             return view('osce::admin.theoryCheck.theory_check_volidate', [
-                'data'=>$datainfo,
+                'data' => $datainfo,
             ]);
         }
         catch(\Exception $ex)
         {
-            if($ex->getCode()===1000)
+            if ($ex->getCode() === 1000) {
+                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
+            }
+            if($ex->getCode() === 1001)
             {
                 return redirect()->route('osce.admin.getIndex')->withErrors($ex->getMessage());
             }
-            return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
         }
 
     }

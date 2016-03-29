@@ -468,9 +468,11 @@ class QuestionBankRepositories  extends BaseRepository
                 ->roles
                 ->pluck('id')
                 ->toArray();
+        } else {
+            $roles = [];
         }
         //监考老师 目前的角色id为1
-        if(in_array(config('osce.invigilatorRoleId'),$roles)){
+        if(in_array(config('osce.invigilatorRoleId'), $roles)){
             return  $user->id;
         }else{
             return  false;
