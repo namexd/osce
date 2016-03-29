@@ -186,7 +186,7 @@ class DrawStationMode implements DrawModeInterface
                     'after_room_id' => $tempObj->room_dt,
                     'after_station_id' => $tempObj->station_id,
                     'ctrl_desc' => '抽签',
-                    'created_user_id' => Auth::user()->id,
+                    'created_user_id' => null
                 ];
 
             } else { //如果本来去的考站被占用了,就给一个同流程的考站
@@ -212,7 +212,7 @@ class DrawStationMode implements DrawModeInterface
                         'after_room_id' => $model->room_dt,
                         'after_station_id' => $model->station_id,
                         'ctrl_desc' => '抽签',
-                        'created_user_id' => Auth::user()->id,
+                        'created_user_id' => null
                     ];
                 } else {
                     throw new \Exception('当前没有考站可供该考生考试', -5);
@@ -325,7 +325,7 @@ class DrawRoomMode implements DrawModeInterface
             'before_room_id' => $object->room_id,
             'before_station_id' => $object->station_id,
             'ctrl_desc' => '抽签',
-            'created_user_id' => Auth::user()->id
+            'created_user_id' => null
         ];
 
         $object->station_id = $diff->random();

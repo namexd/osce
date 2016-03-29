@@ -33,7 +33,7 @@ class Common
         }
 
         //获取当前的moulde名字
-        $pathArray = explode('\\',get_class($this));
+        $pathArray = explode('\\', get_class($this));
         $thisMoulde = array_pop($pathArray);    //删除数组中的最后一个元素
         $modelNameToTableNameArray = [
             $thisMoulde => $this->table
@@ -45,123 +45,130 @@ class Common
 //            $model =
 //        }
     }
-    static public function getRandStr($length,$word=''){
-        $word   =   $word   ===''? '1234567890':$word;
-        $str    =   '';
 
-        for($i=0;$i<$length;$i++)
-        {
-            $randNum    =   rand(0,strlen($word)-1);
-            $str        .=   $word[$randNum];
+    static public function getRandStr($length, $word = '')
+    {
+        $word = $word === '' ? '1234567890' : $word;
+        $str = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $randNum = rand(0, strlen($word) - 1);
+            $str .= $word[$randNum];
         }
         return $str;
     }
-    static public function registerUser($data,$password){
-        $form_user              =   $data;
-        $form_user['username']  =   $data['username'];
-        $form_user['mobile']    =   $data['username'];
-        $form_user['openid']    =   '';
-        $form_user['password']  =   bcrypt($password);
-        $user=\App\Entities\User::create($form_user);
-        if($user)
-        {
+
+    static public function registerUser($data, $password)
+    {
+        $form_user = $data;
+        $form_user['username'] = $data['username'];
+        $form_user['mobile'] = $data['username'];
+        $form_user['openid'] = '';
+        $form_user['password'] = bcrypt($password);
+        $user = \App\Entities\User::create($form_user);
+        if ($user) {
             return $user;
-        }
-        else
-        {
+        } else {
             throw new \Exception('创建用户失败');
         }
     }
 
-    public function getUserList(){
-        $noAdminRole    =   [
+    public function getUserList()
+    {
+        $noAdminRole = [
             config('config.teacherRoleId'),
             config('config.examineeRoleId'),
             config('config.spRoleId'),
             config('config.superRoleId')
         ];
 
-        return User::select('users.id', 'users.username', 'users.name', 'users.gender', 'users.mobile', 'users.lastlogindate')
-            -> leftJoin('sys_user_role',function($join){
-                $join->on('users.id','=','sys_user_role.user_id');
+        return User::select('users.id', 'users.username', 'users.name', 'users.gender', 'users.mobile',
+            'users.lastlogindate')
+            ->leftJoin('sys_user_role', function ($join) {
+                $join->on('users.id', '=', 'sys_user_role.user_id');
             })
 //            -> where('sys_user_role.role_id','=',config('osce.adminRoleId',3))
-            -> whereNotIn('sys_user_role.role_id', $noAdminRole)
-            -> paginate(config('osce.page_size'));
+            ->whereNotIn('sys_user_role.role_id', $noAdminRole)
+            ->paginate(config('osce.page_size'));
     }
 
     public function createAdminUser($data)
     {
-        if(config('APP_DEBUG')){
-            $password   =  123456;
-        } else{
-            $password   =  123456;
+        if (config('APP_DEBUG')) {
+            $password = 123456;
+        } else {
+            $password = 123456;
 //            $password   =   Common::getRandStr(6);
         }
 
         DB::beginTransaction();
-        try{
-            $user   =   Common::registerUser(['username'=>$data['mobile'],],$password);
-            if(is_null($user)){
+        try {
+            $user = Common::registerUser(['username' => $data['mobile'],], $password);
+            if (is_null($user)) {
                 throw new \Exception('创建用户失败');
             }
-            $user   ->  name    =   $data['name'];
-            $user   ->  gender  =   $data['gender'];
+            $user->name = $data['name'];
+            $user->gender = $data['gender'];
 
             DB::table('sys_user_role')->insert([
-                    'role_id'=>config('osce.adminRoleId',3),
-                    'user_id'=>$user->id,
-                    'created_at'=>time(),
-                    'updated_at'=>time(),
+                'role_id' => config('osce.adminRoleId', 3),
+                'user_id' => $user->id,
+                'created_at' => time(),
+                'updated_at' => time(),
             ]);
 
-            if(!$result = $user ->save()){
+            if (!$result = $user->save()) {
                 throw new \Exception('初始化资料失败');
             }
 
             DB::commit();
-            $this   ->  sendRegisterEms($data['mobile'],$password);
-            return  $result;
+            $this->sendRegisterEms($data['mobile'], $password);
+            return $result;
 
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             DB::rollBack();
             throw $ex;
         }
     }
 
-    public function relativeAdminUser($user){
-        if(DB::table('sys_user_role')->where('role_id','=',config('osce.adminRoleId',3))->where('user_id','=',$user->id)->count())
-        {
+    public function relativeAdminUser($user)
+    {
+        if (DB::table('sys_user_role')->where('role_id', '=', config('osce.adminRoleId', 3))->where('user_id', '=',
+            $user->id)->count()
+        ) {
             throw new \Exception('该管理员已经添加了');
         }
         DB::table('sys_user_role')->insert([
-            'role_id'=>config('osce.adminRoleId',3),
-            'user_id'=>$user->id,
-            'created_at'=>time(),
-            'updated_at'=>time(),
+            'role_id' => config('osce.adminRoleId', 3),
+            'user_id' => $user->id,
+            'created_at' => time(),
+            'updated_at' => time(),
         ]);
     }
-    public function updateAdminUser($id,$data){
-        try{
+
+    public function updateAdminUser($id, $data)
+    {
+        try {
             //查询手机号是否已经存在
-            $result = User::where('mobile',$data['mobile'])->where('id', '<>', $id)->first();
-            if($result){
+            $result = User::where('mobile', $data['mobile'])->where('id', '<>', $id)->first();
+            if ($result) {
                 throw new \Exception('手机号已经存在');
             }
-            $user   =   User::find($id);
-            foreach($data as $feild =>  $value)
-            {
-                $user   ->  $feild  =   $value;
+            $user = User::find($id);
+            foreach ($data as $feild => $value) {
+                $user->$feild = $value;
             }
-            return  $user->save();
+            return $user->save();
 
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             throw $ex;
         }
     }
-    static public function sendRegisterEms($mobile,$password){
-        $sender=\App::make('messages.sms');
-        $sender->send($mobile,'恭喜你已经成功注册OSCE考试系统，请使用手机号进行登录，登录密码:'.$password.',请不要轻易将密码告诉他人【敏行医学】');
+
+    static public function sendRegisterEms($mobile, $password)
+    {
+        $sender = \App::make('messages.sms');
+        $sender->send($mobile, '恭喜你已经成功注册OSCE考试系统，请使用手机号进行登录，登录密码:' . $password . ',请不要轻易将密码告诉他人【敏行医学】');
     }
 
     /**
@@ -201,11 +208,11 @@ class Common
      */
     static public function valueIsNull($value, $code = -999, $message = '系统错误')
     {
-            if (!is_null($value)) {
-                return true;
-            } else {
-                throw new \Exception($message, $code);
-            }
+        if (!is_null($value)) {
+            return true;
+        } else {
+            throw new \Exception($message, $code);
+        }
     }
 
     /**
@@ -222,17 +229,21 @@ class Common
         if (is_null($temp)) {
             $arrays = array_unique($arrays);
             sort($arrays);
-            $temp = array_shift($arrays);
+            $temp = $arrays[0];
             self::valueIsNull($temp);
         }
-        foreach ($arrays as $array) {
-            if ($array % $temp != 0) {
-                $temp = $temp - 1;
-                self::mixCommonDivisor($arrays, $temp);
-            } else {
-                continue;
+
+        for ($i = $temp; $i > 1; $i--) {
+            $result = 0;
+            foreach ($arrays as $array) {
+                if ($array % $i) {
+                    $result++;
+                }
+            }
+            if ($result == 0) {
+                break;
             }
         }
-        return $temp;
+        return $i;
     }
 }

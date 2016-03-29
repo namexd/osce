@@ -63,10 +63,12 @@ class ExamLabelController extends CommonController
     public function getExamLabel(Request $Request, ExamQuestionLabel $examQuestionLabel)
     {
 
-        $where['keyword'] = Input::get('tagName', '');
-        $where['id'] = Input::get('tagType', '');
+        $keyWords=Input::get('tagName', '');
+        $where['keyword'] =$keyWords;
+        $id=Input::get('tagType', '');
+        //dd($id);
+        $where['id'] = $id;
 
-        //获取标签列表
         $datalist = $examQuestionLabel->getFilteredPaginateList($where);
 
         //获取标签类型列表
@@ -77,11 +79,12 @@ class ExamLabelController extends CommonController
         foreach($datalist as $k=>$v){
             $datalist[$k]['LabelType']=empty($v->ExamQuestionLabelType->name)?'-':$v->ExamQuestionLabelType->name;
         }
-
-        return view('osce::admin.resourcemanage.subject_check_tag',
+            return view('osce::admin.resourcemanage.subject_check_tag',
             [
                 'ExamQuestionLabelTypeList' => $ExamQuestionLabelTypeList,
-                'datalist' => $datalist
+                'datalist' => $datalist,
+                'id'=>$id,
+                'keyWords'=>$keyWords
             ]);
 
     }
@@ -132,7 +135,7 @@ class ExamLabelController extends CommonController
         ];
         $add = ExamQuestionLabel::create($data);
         if ($add != false) {
-            return redirect()->back()->withInput()->withErrors('添加成功');
+            return redirect()->back()->with('success', '添加成功');
         } else {
             return redirect()->back()->withInput()->withErrors('添加失败');
         }
@@ -188,9 +191,9 @@ class ExamLabelController extends CommonController
         ];
         $examTable=new ExamQuestionLabel();
         $add =  $examTable->where('id','=',e(Input::get('id')))->update($data);
-        if($data != false){
+        if($add != false){
 
-            return redirect()->back()->withInput()->withErrors('修改成功');
+            return redirect()->back()->with('success', '修改成功');
 
         }else{
  

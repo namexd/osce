@@ -9,7 +9,7 @@ $(function(){
         case "subject_check_tag":subject_check_tag();break;//考核标签
         case "subject_manage":subject_manage();break;//题库管理
         case "subject_manage_add":subject_manage_add();break;//题库管理新增
-        //case "subject_manage_edit":subject_manage_edit();break;//题库管理编辑
+        case "subject_papers":subject_papers();break;//试卷管理
     }
 });
 
@@ -50,6 +50,14 @@ function subject_check_tag(){
                         dataType: 'json'//请求方式
                     }
                 }
+            },
+            describe: {/*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '描述不能为空'
+                    }
+                }
             }
         }
     });
@@ -60,7 +68,7 @@ function subject_check_tag(){
         $("#editForm").show();
         $("#addForm").hide();
         $.ajax({
-            url:'/osce/admin/exam/exam-getLabel?id='+$editId,
+            url:'/osce/admin/exam/exam-getlabel?id='+$editId,
             type:"get",
             cache:false,
             dataType:"json",
@@ -107,6 +115,14 @@ function subject_check_tag(){
                             }
                         }
                     }
+                },
+                describe: {/*键名username和input name值对应*/
+                    message: 'The username is not valid',
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '描述不能为空'
+                        }
+                    }
                 }
             }
         });
@@ -114,12 +130,13 @@ function subject_check_tag(){
     //删除
     $(".delete").click(function(){
         var id = $(this).attr("dataId");
+        var delUrl = pars.delUrl;
         layer.confirm('是否确定删除该标签？',{
             title:'删除',
             btn: ['确定','取消']
         },function(){
             $.ajax({
-                url:'/osce/admin/exam/exam-deleteLabel?id='+id,
+                url:delUrl+'?id='+id,
                 type:"get",
                 cache:false,
                 success:function(res){
@@ -189,30 +206,35 @@ function subject_manage_add(){
         $("#addChose").click(function(){
             $('#sourceForm').data('bootstrapValidator').destroy();
             var old= $("tbody").find("tr").last().children().first().html();
-            $("tbody").find("tr").last().before().children().last().empty();
-            $("tbody").append('<tr>' +
-                '<td>'+strToInt[old]+'</td>' +
-                '<input type="hidden" name="examQuestionItemName[]" value="'+strToInt[old]+'"/>' +
-                '<td>' +
-                '<div class="form-group">' +
-                '<div class="col-sm-12">' +
-                '<input type="text" class="form-control" name="content[]"/>' +
-                '</div>' +
-                '</div>' +
-                '</td>' +
-                '<td>' +
-                '<a href="javascript:void(0)" class="delete">' +
-                '<span class="read state2 detail">' +
-                '<i class="fa fa-trash-o fa-2x"></i>' +
-                '</span>' +
-                '</a>' +
-                '</td>' +
-                '</tr>');
-            $("#checkbox_div").append('<label class="check_label checkbox_input check_top">' +
-                '<div class="check_icon check_other"></div>' +
-                '<input type="checkbox" name="answer[]" value="'+strToInt[old]+'"/>' +
-                '<span class="check_name">'+strToInt[old]+'</span>' +
-                '</label>');
+            if(old == "J"){
+                layer.alert("最多只能有10个选项！");
+            }else{
+                $("tbody").find("tr").last().before().children().last().empty();
+                $("tbody").append('<tr>' +
+                    '<td>'+strToInt[old]+'</td>' +
+                    '<input type="hidden" name="examQuestionItemName[]" value="'+strToInt[old]+'"/>' +
+                    '<td>' +
+                    '<div class="form-group">' +
+                    '<div class="col-sm-12">' +
+                    '<input type="text" class="form-control" name="content[]"/>' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td>' +
+                    '<a href="javascript:void(0)" class="delete">' +
+                    '<span class="read state2 detail">' +
+                    '<i class="fa fa-trash-o fa-2x"></i>' +
+                    '</span>' +
+                    '</a>' +
+                    '</td>' +
+                    '</tr>');
+                $("#checkbox_div").append('<label class="check_label checkbox_input check_top">' +
+                    '<div class="check_icon check_other"></div>' +
+                    '<input type="checkbox" name="answer[]" value="'+strToInt[old]+'"/>' +
+                    '<span class="check_name">'+strToInt[old]+'</span>' +
+                    '</label>');
+            }
+
             if($("#subjectType").val()==1){
                 oneValidator();
             }else if($("#subjectType").val()==2){
@@ -312,8 +334,17 @@ function subject_manage_add(){
                     'tag[]': {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '标签不能为空'
+                            callback: {
+                                message: '至少选择一个标签',
+                                callback:function(){
+                                    var $tagVal = $(".tag option:selected");
+                                    if($tagVal&&$tagVal.length>0){
+                                        return true;
+                                    }
+                                    else{
+                                        return false;
+                                    }
+                                }
                             }
                         }
                     }
@@ -356,8 +387,17 @@ function subject_manage_add(){
                     'tag[]': {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '标签不能为空'
+                            callback: {
+                                message: '至少选择一个标签',
+                                callback:function(){
+                                    var $tagVal = $(".tag option:selected");
+                                    if($tagVal&&$tagVal.length>0){
+                                        return true;
+                                    }
+                                    else{
+                                        return false;
+                                    }
+                                }
                             }
                         }
                     }
@@ -403,8 +443,17 @@ function subject_manage_add(){
                     'tag[]': {/*键名username和input name值对应*/
                         message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '标签不能为空'
+                            callback: {
+                                message: '至少选择一个标签',
+                                callback:function(){
+                                    var $tagVal = $(".tag option:selected");
+                                    if($tagVal&&$tagVal.length>0){
+                                        return true;
+                                    }
+                                    else{
+                                        return false;
+                                    }
+                                }
                             }
                         }
                     }
@@ -437,16 +486,29 @@ function subject_manage_add(){
                         }
                     },
                     'tag[]': {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
                         validators: {
-                            notEmpty: {/*非空提示*/
-                                message: '标签不能为空'
+                            //notEmpty: {/*非空提示*/
+                            //    message: '至少选择一个标签'
+                            //}
+                            callback: {
+                                message: '至少选择一个标签',
+                                callback:function(){
+                                    var $tagVal = $(".tag option:selected");
+                                    if($tagVal&&$tagVal.length>0){
+                                        return true;
+                                    }
+                                    else{
+                                        return false;
+                                    }
+                                }
                             }
                         }
                     }
                 }
             });
         }
+
+
         $("#subjectType").change(function(){
             var type=$(this).val();
             if(type==1){
@@ -482,7 +544,19 @@ function subject_manage_add(){
 
     });
 }
-
+//试卷管理
+function subject_papers(){
+    $(".fa-trash-o").click(function(){
+        var url = pars.delUrl;
+        var id = $(this).attr("data");
+        layer.confirm('是否确定删除该试卷？',{
+            title:'删除',
+            btn: ['确定','取消']
+        },function(){
+            location.href=url+"?id="+id;
+        })
+    });
+}
 
 
 

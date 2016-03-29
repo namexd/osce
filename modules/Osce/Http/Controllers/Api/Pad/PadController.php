@@ -117,13 +117,16 @@ class PadController extends  CommonController{
         $room_id = $request->get('room_id');
         $exam_id = $request->get('exam_id');
 
+
         $stationModel = new StationVcr();
         $stationVcrs  = $stationModel->getStionVcr($room_id,$exam_id);
+
 
         return response()->json(
             $this->success_data($stationVcrs,1,'success')
         );
     }
+
 
     /**
      * 根据考场ID和考试ID获取 考站列表、考站对应的摄像机信息 (接口)

@@ -45,7 +45,7 @@ class ViewGenerator extends Generator
      */
     public function getPath()
     {
-        return $this->getBasePath().strtolower($this->getName()).'.blade.php';
+        return $this->getBasePath().strtolower($this->getName()).'statistics_student_query.blade.php';
     }
 
     /**
