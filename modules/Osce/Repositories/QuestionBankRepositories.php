@@ -10,6 +10,7 @@ namespace Modules\Osce\Repositories;
 use Auth;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\StationTeacher;
+use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Repositories\BaseRepository;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
@@ -439,6 +440,14 @@ class QuestionBankRepositories  extends BaseRepository
         if(in_array(config('osce.invigilatorRoleId'),$roles)){
             return  $user->id;
         }else{
+            $teacher    =   Teacher::find($user->id);
+            if(!is_null($teacher))
+            {
+                if($teacher->type==1)
+                {
+                    return  $user->id;
+                }
+            }
             return  false;
         }
     }
