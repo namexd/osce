@@ -213,12 +213,6 @@ class AnswerController extends CommonController
         //保存考生答案
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
-
- /*       $minute = 0;
-        $secone = 0;
-        if($data['actualLength']/60>=1){
-
-        }*/
         if($result){
             $arr=array(
                 'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
@@ -261,10 +255,35 @@ class AnswerController extends CommonController
         $answerModel = new Answer();
         //保存成功，调用查询该考生成绩的方法
         $examPaperFormalData = $answerModel->selectGrade($examPaperFormalId);
-        //dd($examPaperFormalData);
+        $time = $examPaperFormalData['actual_length']*60;
+        $minute = 0;$second=0;
+        if($time>=60){
+            $minute = intval($time/60);
+            $second = $time - $minute*60;
+        }else{
+            $second = $time;
+        }
         return view('osce::admin.theoryCheck.theory_check_complete', [
             'data'  =>$examPaperFormalData,//考试成绩及该考试相关信息
+            'minute'=>$minute,
+            'second'=>$second
         ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
