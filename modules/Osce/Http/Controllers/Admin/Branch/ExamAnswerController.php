@@ -46,7 +46,7 @@ class ExamAnswerController extends CommonController
         $child = [];
         $data = [];
         $stuScore = 0;
-        $examPaperFormalInfo = $examPaperFormal->where('id', '=', 1)->first();
+        $examPaperFormalInfo = $examPaperFormal->where('id', '=', 147)->first();
        //dd($examPaperFormalInfo);
        //dd($examPaperFormalInfo->ExamCategoryFormal);
         $examItems['exam_name'] = $examPaperFormalInfo['name']; //试题名称
@@ -62,7 +62,7 @@ class ExamAnswerController extends CommonController
                     foreach ($v->ExamQuestionFormal as $key => $item) {
 
                         $child[$key]['exam_question_name'] = $key + 1 . '.' . '' . $item['name'] .'?'; // 拼接试题名称
-                        $child[$key]['contentItem'] = explode(',', $item['content']); //试题内容（A.内容，B.内容，C.内容）用,拼接试题内容
+                        $child[$key]['contentItem'] = explode('|%|', $item['content']); //试题内容（A.内容，B.内容，C.内容）用,拼接试题内容
 
                         foreach($child[$key]['contentItem'] as $kkk => $vvv){ //将$child[$key]['contentItem']中的 . 替换成冒号：
 
