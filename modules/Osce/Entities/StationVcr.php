@@ -160,4 +160,37 @@ class StationVcr extends CommonModel
         }
     }
 
+    public function getStationVcr($exam_id,$room_id){
+        $exam = Exam::where('id','=',$exam_id)->first();
+        $data = [];
+        if($exam->sequence_mode==2){
+            //根据考试获取 对应考站
+            $examStation = ExamStation::leftJoin('room_station','room_station.station_id','=','exam_station.station_id')
+                ->where('exam_station.exam_id','=',$exam_id)->where('room_station.room_id','=',$room_id)->get();
+            if(count($examStation)){
+                foreach ($examStation as $item) {
+                    //根据考站获取对应的摄像机
+                    $data[] = $this->leftJoin('station','station.id','=','station_vcr.station_id')
+                                ->leftJoin('vcr','vcr.id','=','station_vcr.vcr_id')
+                                ->where('station_vcr.station_id',$item->station_id)
+                                ->select(['station.id as station_id','station.name as station_name',
+                                    'vcr.id as vcr_id','vcr.name as vcr_name','vcr.ip','vcr.status',
+                                    'vcr.port','vcr.channel','vcr.username','vcr.password'])
+                                ->first();
+                }
+            }
+        }else{
+            //根据考站获取对应的摄像机
+            $data = RoomVcr::leftJoin('room_station','room_station.id','=','room_vcr.room_id')
+                    ->leftJoin('station','station.id','=','room_station.station_id')
+                    ->leftJoin('vcr','vcr.id','=','room_vcr.vcr_id')
+                    ->where('room_vcr.room_id','=',$room_id)
+                    ->select(['station.id as station_id','station.name as station_name',
+                        'vcr.id as vcr_id','vcr.name as vcr_name','vcr.ip','vcr.status',
+                        'vcr.port','vcr.channel','vcr.username','vcr.password'])
+                    ->first();
+        }
+        return $data;
+    }
+
 }
