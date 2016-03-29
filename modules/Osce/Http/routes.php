@@ -479,7 +479,7 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	if($exam->emptyData($exam_id)){
 //		return '成功';
 //	}
-	dd(asset('/images/head.png'));
+	dd(config('osce.spRoleId'));
 //
 //	return '失败';
 });
