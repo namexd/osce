@@ -110,6 +110,7 @@ class PadController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentVcr(Request $request){
+        
         $this->validate($request,[
             'room_id'   => 'required|integer',
             'exam_id'   => 'required|integer'
@@ -118,7 +119,7 @@ class PadController extends  CommonController{
         $exam_id = $request->get('exam_id');
 
         $stationModel = new StationVcr();
-        $stationVcrs  = $stationModel->getStationVcr($room_id,$exam_id);
+        $stationVcrs  = $stationModel->getStationVcr($exam_id,$room_id);
 
         return response()->json(
             $this->success_data($stationVcrs,1,'success')
