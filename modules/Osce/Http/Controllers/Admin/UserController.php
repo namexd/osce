@@ -220,7 +220,8 @@ class UserController extends CommonController
          $id=$request->get('id');
         try {
             $roleId = SysUserRole::where('user_id', $id)->select()->first();
-            $roles = SysRoles::select()->get();
+            $roles = SysRoles::whereNotIn('name', ['监考老师', '巡考老师', '超级管理员', '考生'])->get();
+
             $data = [];
 
             foreach ($roles as $role) {
