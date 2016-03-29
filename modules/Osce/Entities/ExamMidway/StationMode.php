@@ -49,6 +49,7 @@ class StationMode implements ModeInterface
      */
     function getFlow()
     {
+        // TODO: Implement getFlow() method.
         try {
             return ExamFlowStation::where('exam_id', $this->exam->id)
                 ->whereIn('station_id', $this->stationIds->toArray())
@@ -67,6 +68,7 @@ class StationMode implements ModeInterface
      */
     function getExaminee(array $serialnumber)
     {
+        // TODO: Implement getExaminee() method.
         $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
             ->whereIn('exam_queue.station_id', $this->stationIds)
             ->where('exam_queue.status', '<', 3)
@@ -124,6 +126,7 @@ class StationMode implements ModeInterface
      */
     function getNextExaminee(array $serialnumber)
     {
+        // TODO: Implement getNextExaminee() method.
         $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
             ->orWhereIn('exam_queue.station_id', $this->stationIds)
             ->where('exam_queue.status', '<', 3)
