@@ -79,9 +79,11 @@
                                         <input type="file" multiple="multiple" id="picFile">
                                     </a>
                                     <div class="picBox">
-                                        @foreach(@$data['image'] as $val)
-                                            <img src="{{$val}}" alt="">
-                                        @endforeach
+                                        @if(!empty($data['image']))
+                                            @foreach($data['image'] as $val)
+                                                <img src="{{$val}}" alt="">
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>

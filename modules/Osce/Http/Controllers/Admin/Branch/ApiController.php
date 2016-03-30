@@ -127,7 +127,7 @@ class ApiController extends CommonController
         die(implode('@',$data));
     }
 
-    /**
+    /**试卷预览
      * @method  GET
      * @url /osce/admin/api/exam-paper-preview
      * @access public
@@ -313,9 +313,10 @@ class ApiController extends CommonController
                 }
             }
         }
-
-  //-------------------------------------
-        return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
+  //------------------------------------
+        return  view('osce::admin.resourcemanage.subject_papers_add_preview', [
+                'PaperPreviewArr'=>$PaperPreviewArr,
+            ]);
     }
 
     /**
