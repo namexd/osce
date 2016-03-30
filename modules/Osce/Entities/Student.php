@@ -389,11 +389,9 @@ class Student extends CommonModel
      * @param $watch_id
      * @return bool
      */
-
-
     public function studentList($stationId)
     {
-        // 查询下一个代考考生信息
+        // 查询下一个待考考生信息
         $nextTester =  Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
         })->leftjoin('station_teacher', function ($join) {
@@ -412,7 +410,7 @@ class Student extends CommonModel
                 'student.exam_sequence as exam_sequence',
             ])->first();
 
-        // 查询考试是否结束
+        // 查询考试是否结束 // edit by wangjiang 2016-03-29 for 查询考试是否结束
         $waitingList = Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
         })->leftjoin('station_teacher', function ($join) {
