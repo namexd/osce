@@ -115,7 +115,7 @@
         .axis{
             float: left;
             margin-top: 32px;
-            margin-left: 140px;
+            margin-left: 90%;
             margin-right: 10px;
             width: 2px;
             background-color: #000;
