@@ -30,7 +30,7 @@
                 @if(!empty(@$examItems))
                     <h2>{{ @$examItems['exam_name'] }}</h2>
                     <div>
-                        <span>考试姓名：</span><span>张三</span>
+                        <span>考试姓名：</span><span>{{$examItems['student_name']}}</span>
                         <span style="margin-left: 1em;">考试用时：</span><span>{{ @$examItems['actual_length'] }}</span>
                         <span style="margin-left: 1em;">最后得分：</span><span>{{ @$examItems['stuScore'] }}</span>分
                     </div>

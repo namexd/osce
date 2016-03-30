@@ -12,6 +12,10 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamCategoryFormal;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Student;
+
+
+
 
 
 class ExamAnswerController extends CommonController
@@ -38,23 +42,31 @@ class ExamAnswerController extends CommonController
      * @date    2016年3月29日15:09:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function  getStudentAnswer(Request $request)
+    public function  getStudentAnswer($student_id)
     {
-        $id = $request->get('id');
-        $examPaperFormal = new ExamPaperFormal();
+
+        $id = intval($student_id);//学生id
+
+
+        $studentMsg=Student::where('id',$id)->first();
+
         $examItems = [];
         $child = [];
         $data = [];
         $stuScore = 0;
-        $examPaperFormalInfo = $examPaperFormal->where('id', '=', 147)->first();
-       //dd($examPaperFormalInfo);
-       //dd($examPaperFormalInfo->ExamCategoryFormal);
+        //\DB::connection('osce_mis')->enableQueryLog();
+        $examPaperFormalInfo = ExamPaperFormal::where('student_id',$studentMsg->id)->first();
+        //$q = \DB::connection('osce_mis')->getQueryLog();
+        if(is_null($examPaperFormalInfo)){
+            abort(404,'试卷不存在');
+        }
+
+        $examItems['student_name'] = $studentMsg->name; //试题名称
         $examItems['exam_name'] = $examPaperFormalInfo['name']; //试题名称
         $examItems['length'] = $examPaperFormalInfo['length'];  //考试时长
         $examItems['total_score'] = $examPaperFormalInfo['total_score']; //试卷总分
         $examItems['actual_length'] = $this->timeTransformation(sprintf('%.2f',$examPaperFormalInfo['actual_length']));//考试使用时长*/
-        // dd($examItems);
-        //dd($this->arr_foreach($data));
+
         if (count($examPaperFormalInfo->ExamCategoryFormal) > 0) {
             foreach ($examPaperFormalInfo->ExamCategoryFormal as $k => $v) {
                 if (count($v->ExamQuestionFormal) > 0) {
@@ -113,16 +125,10 @@ class ExamAnswerController extends CommonController
                 $arr = ['0' => '一', '1' => '二', '2' => '三', '3' => '四', '4' => '五', '5' => '六', '6' => '七', '7' => '八', '8' => '九', '9' => '十'];
                 $data[$k]['Title'] = $arr[$k] . '、' . $v['name'] . ' ' . '共' . $v['number'] . '题，' . '每题' . $v['score'] . '分' . ' ';
                 $data[$k]['questionType']=$v['exam_question_type_id'];
-                /* $v['name']; //试题类型名称
-                  $v['number']; //试题数量
-                  $v['score'];  //单个试题的分值*/
                 $examItems['stuScore'] = $stuScore;//考试最终成绩
                 $data[$k]['child'] = $child;
             }
         }
-
-       //dd($examItems);
-       //dd($data);
          return view('osce::admin.statisticalAnalysis.statistics_student_query',
              [
                  'examItems'=>$examItems,
