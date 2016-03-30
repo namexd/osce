@@ -33,7 +33,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.resourceManage.staff_manage_invigilator_patrol_edit');
+        return view('osce::admin.resourceManage.staff_manage_invigilator_patrol_add');
     }
 
     /**
