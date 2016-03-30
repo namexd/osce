@@ -24,7 +24,7 @@
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'user_manage_change_role','URL':'{{route('')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'user_manage_change_role','URL':''}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
