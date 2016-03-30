@@ -147,13 +147,15 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::post('api/loginauth-info',['uses'=>'ApiController@LoginAuth','as'=>'osce.admin.ApiController.LoginAuthInfo']);
 
         //理论考试登录成功页面
-        Route::get('api/loginauth-wait',['uses'=>'ApiController@LoginAuthWait','as'=>'osce.admin.ApiController.LoginAuthWait']);
+        Route::get('api/loginauth-wait/{type}',['uses'=>'ApiController@LoginAuthWait','as'=>'osce.admin.ApiController.LoginAuthWait']);
 
         //理论考试登录页面地址
         Route::get('api/examinee-info',['uses'=>'ApiController@ExamineeInfo','as'=>'osce.admin.ApiController.ExamineeInfo']);
 
         //获取考试id
         Route::get('api/get-exampaperid',['uses'=>'ApiController@getExamPaperId','as'=>'osce.admin.ApiController.getExamPaperId']);
+        //学生登录验证跳转页面
+        Route::get('api/student-exam-index',['uses'=>'ApiController@getStudentExamIndex','as'=>'osce.admin.ApiController.getStudentExamIndex']);
     });
 
 });

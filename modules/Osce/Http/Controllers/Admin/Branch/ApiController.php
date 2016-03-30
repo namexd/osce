@@ -9,8 +9,8 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use App\Entities\User;
-// use Auth;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
@@ -21,6 +21,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Illuminate\Http\Request;
+
 
 class ApiController extends CommonController
 {
@@ -127,7 +128,7 @@ class ApiController extends CommonController
         die(implode('@',$data));
     }
 
-    /**试卷预览
+    /**
      * @method  GET
      * @url /osce/admin/api/exam-paper-preview
      * @access public
@@ -179,7 +180,7 @@ class ApiController extends CommonController
         //试卷类型(1.随机试卷，2.统一试卷)
 //-_-------------------------------------------
         //`mode` 组卷方式(1.自动组卷，2.手工组卷),
-          //   `type` 试卷类型(1.随机试卷，2.统一试卷),
+        //   `type` 试卷类型(1.随机试卷，2.统一试卷),
         if($paperid) {//修改
             if($mode==1){
                 if($type==1){
@@ -207,30 +208,30 @@ class ApiController extends CommonController
 
                     //-----------------
 
-                if(!$flag_tag){//没有缓存 第一次预览
+                    if(!$flag_tag){//没有缓存 第一次预览
 
-                    if(count($ExamPaperInfo->ExamPaperStructure)>0) {
-                        foreach ($ExamPaperInfo->ExamPaperStructure as $k => $v) {
-                            $name = ExamQuestionType::where('id', '=', $v['exam_question_type_id'])->pluck('name');
-                            $PaperPreviewArr['item'][$k]['name'] = $str[$k] . '、' . $name . '（共' . $v['num'] . '题，每题' . $v['score'] . '分）';
-                            $ExamQuestionId = [];
-                            if (count($v->ExamPaperStructureQuestion) > 0) {
-                                $ExamQuestionId = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
+                        if(count($ExamPaperInfo->ExamPaperStructure)>0) {
+                            foreach ($ExamPaperInfo->ExamPaperStructure as $k => $v) {
+                                $name = ExamQuestionType::where('id', '=', $v['exam_question_type_id'])->pluck('name');
+                                $PaperPreviewArr['item'][$k]['name'] = $str[$k] . '、' . $name . '（共' . $v['num'] . '题，每题' . $v['score'] . '分）';
+                                $ExamQuestionId = [];
+                                if (count($v->ExamPaperStructureQuestion) > 0) {
+                                    $ExamQuestionId = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
+                                }
+                                $ExamQuestionList = $ExamQuestion->whereIn('id', $ExamQuestionId)->with('examQuestionItem')->get();
+
+                                $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
+                                $PaperPreviewArr['total_score'] += intval($v['num'] * $v['score']);
                             }
-                            $ExamQuestionList = $ExamQuestion->whereIn('id', $ExamQuestionId)->with('examQuestionItem')->get();
-
-                            $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
-                            $PaperPreviewArr['total_score'] += intval($v['num'] * $v['score']);
                         }
-                    }
-                }else{//修改过随机试卷
+                    }else{//修改过随机试卷
                         if(!empty($request->question)){
                             foreach($request->question as $k => $v){
                                 $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
                             }
                         }
                         $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
-                       \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
+                        \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
                         foreach($PaperPreviewArr['item'] as $k => $v){
                             if(!empty($v['child'])){
                                 $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->with('examQuestionItem')->get();
@@ -313,10 +314,9 @@ class ApiController extends CommonController
                 }
             }
         }
-  //------------------------------------
-        return  view('osce::admin.resourcemanage.subject_papers_add_preview', [
-                'PaperPreviewArr'=>$PaperPreviewArr,
-            ]);
+
+        //-------------------------------------
+        return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
 
     /**
@@ -367,6 +367,7 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthView(){
+
         return  view('osce::admin.theoryTest.theory_login');
     }
 
@@ -384,16 +385,29 @@ class ApiController extends CommonController
         $this->validate($request,[
             'username'  =>  'required',
             'password'  =>  'required',
-            'role_type' =>  'required|in:1,2', // edit by wangjiang at 2016-03-30 14:26 for 增加理论考试登录角色判断(1-监考老师 2-学生)
         ]);
 
         $username = $request->get('username');
         $password = $request->get('password');
-        $roleType = $request->input('role_type');
 
-        if (Auth::attempt(['username' => $username, 'password' => $password])) {
-            return redirect()->route('osce.admin.ApiController.LoginAuthWait')->with('examLoginRoleType', $roleType); //必须是redirect
-        } else {
+
+        if (Auth::attempt(['username' => $username, 'password' => $password]))
+        {
+            //获取当前登录账户的角色名称
+            $user = new User();
+            $userInfo = $user->getUserRoleName($username);
+
+            if($userInfo->name == '监考老师'){
+                return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
+            }else if($userInfo->name == '考生'){
+                return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
+            }else{
+                return redirect()->back()->withErrors('你没有权限！');
+            }
+
+        }
+        else
+        {
             return redirect()->back()->withErrors('账号密码错误');
         }
     }
@@ -406,7 +420,7 @@ class ApiController extends CommonController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        $type        登录角色（1-监考老师 2-考生）
      *
      * @return view
      *
@@ -415,57 +429,48 @@ class ApiController extends CommonController
      * @date 2016-03-29 11:05
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function LoginAuthWait(){
-        //edit by wangjiang at 2016-03-30 14:44 for 重构理论考试登录
-        $questionBankRepositories = new QuestionBankRepositories();
-        $user = Auth::user();
+    public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
+        try {
+            $user = Auth::user();
 
-        // 检查用户是否登录
-        if (is_null($user)) {
-            return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('请登录');
-        }
-
-        // 检查登录角色session是否存在
-        if (empty(session('examLoginRoleType'))) {
-            return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('请选择登录角色');
-        }
-
-        if (session('examLoginRoleType') == 1) {
-
-            //检验登录的老师是否是监考老师
-            if (!$questionBankRepositories->LoginAuth(session('examLoginRoleType'))) {
-                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('你不是监考老师');
+            // 检查用户是否登录
+            if (is_null($user)) {
+                throw new \Exception('用户未登录', 1000);
             }
 
+            //检验登录的老师是否是监考老师
+            if (!$questionBankRepositories->LoginAuth()) {
+                throw new \Exception('你不是监考老师', 1001);
+            }
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
             if (is_array($ExamInfo)) {
-                $data = [
-                    'status'    => 1,
+                $data = array(
+                    'status'=>1,
                     'name'      => $ExamInfo['ExamName'],
                     'stationId' => $ExamInfo['StationId'],
                     'examId'    => $ExamInfo['ExamId'],
                     'userId'    => $user->id,
-                ];
+                );
             } else {
-                $data = [
-                    'status' => 0,
-                    'info'   => $ExamInfo,
-                ];
+                $data = array(
+                    'status'=>0,
+                    'info'=>$ExamInfo
+                );
             }
-
-            dd($data);
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
-        } else {
-
-            //检验登录的学生是否是考生
-            if (!$questionBankRepositories->LoginAuth(session('examLoginRoleType'))) {
-                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('你不是考生');
+        }
+        catch(\Exception $ex)
+        {
+            if ($ex->getCode() === 1000) {
+                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
             }
-
-            // todo 学生登录处理
+            if($ex->getCode() === 1001)
+            {
+                return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
+            }
         }
     }
 
@@ -497,7 +502,25 @@ class ApiController extends CommonController
         }
     }
 
+    /**刷完腕表后，获取该考生对应的试卷id
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentExamIndex(){
+        $user = Auth::user();
 
+        $studentModel = new Student();
+        $userInfo = $studentModel->getStudentExamInfo($user->id);
+        dd($userInfo);
+        return view('osce::admin.theoryCheck.theory_check_volidate', [
+        ]);
+
+    }
 
 
 
