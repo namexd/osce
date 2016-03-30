@@ -11,6 +11,8 @@
         width: 197px;
         height: 251px;
     }
+    .select2-container--default{width:100% !important;}
+    .select2-container--default .select2-selection--multiple{border:1px solid #e5e6e7;}
     </style>
 @stop
 
@@ -97,7 +99,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">支持考试项目</label>
                             <div class="col-sm-10">
-                                <select class="form-control data-example-ajax" name="type" multiple="multiple">
+                                <select class="form-control data-example-ajax" name="subject[]" multiple="multiple">
                                     <option value="">请选择</option>
                                 </select>
                             </div>
