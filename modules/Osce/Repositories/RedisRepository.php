@@ -11,9 +11,9 @@ namespace Modules\Osce\Repositories;
 use Redis;
 class RedisRepository extends BaseRepository
 {
-    public function publish()
+    public function publish($user, $message)
     {
         $redis = Redis::connection('message');
-        $redis->publish();
+        $redis->publish($user, $message);
     }
 }
