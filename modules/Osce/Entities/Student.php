@@ -534,7 +534,8 @@ class Student extends CommonModel
                 'student.id as student_id',
                 'exam_result.id as exam_result_id',
                 'exam_result.score as exam_result_score',
-                'exam_result.time as exam_result_time'
+                'exam_result.time as exam_result_time',
+                'station.type as station_type'
             )
             ->paginate(config('osce.page_size'));
     }
@@ -637,10 +638,7 @@ class Student extends CommonModel
         return $this->hasMany('Modules\Osce\Entities\ExamScreeningStudent', 'student_id', 'id');
     }
 
-    //exam_screening
-    public function screeningStudent(){
-        return $this->hasMany('Modules\Osce\Entities\ExamScreeningStudent', 'student_id', 'id');
-    }
+    
 
     //获取用Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel户的信息及已报的考试
     public function getStudentExamInfo($userid){

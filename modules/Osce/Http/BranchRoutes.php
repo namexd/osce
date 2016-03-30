@@ -68,7 +68,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //编辑试卷标签验证
         Route::get('exam/exam-editverify', ['uses'=>'ExamLabelController@examEditLabelVerify','as'=>'osce.admin.ExamLabelController.examEditLabelVerify']);
         //答卷查询
-        Route::get('answer/student-answer', ['uses'=>'ExamAnswerController@getStudentAnswer','as'=>'osce.admin.ExamAnswerController.getStudentAnswer']);
+        Route::get('answer/student-answer/{student_id}', ['uses'=>'ExamAnswerController@getStudentAnswer','as'=>'osce.admin.ExamAnswerController.getStudentAnswer']);
 
         //试卷标签验证
         Route::post('exam/exam-verify', ['uses'=>'ExamLabelController@postCheckNameOnly','as'=>'osce.admin.ExamLabelController.postCheckNameOnly']);

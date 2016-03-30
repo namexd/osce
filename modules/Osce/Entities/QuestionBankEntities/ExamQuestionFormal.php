@@ -17,7 +17,7 @@ class ExamQuestionFormal extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'name', 'exam_question_id','content','answer','parsing','exam_category_formal_id'];
+    protected $fillable = ['id', 'name', 'exam_question_id','content','answer','parsing','exam_category_formal_id','image'];
     /**
      * 与试题表的关系
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
