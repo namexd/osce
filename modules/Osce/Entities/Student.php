@@ -391,13 +391,15 @@ class Student extends CommonModel
      */
 
 
-    public function studentList($stationId)
+    public function studentList($stationId,$exam)
     {
         return Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
         })->leftjoin('station_teacher', function ($join) {
             $join->on('exam_queue.station_id', '=', 'station_teacher.station_id');
-        })->where('exam_queue.station_id', '=', $stationId)
+        })
+            ->where('exam_queue.station_id', '=', $stationId)
+            ->where('exam_queue.exam_id','=',$exam->id)
             ->whereIn('exam_queue.status', [1, 2])
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->select([

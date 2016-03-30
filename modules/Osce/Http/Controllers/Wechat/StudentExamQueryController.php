@@ -213,6 +213,7 @@ class StudentExamQueryController extends CommonController
             $station_id = intval(Input::get('station_id'));
             //根据考试场次id查询出该结果详情
             $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->where('station_id', '=', $station_id)->first();
+
             if(is_null($examresultList)){
                 throw new \Exception('该考试结果不存在');
             }
