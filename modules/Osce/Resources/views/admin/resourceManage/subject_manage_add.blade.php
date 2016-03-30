@@ -38,8 +38,8 @@
     <script>
         //试题图片上传
         $(function(){
-            $(".upload").change(function(){
-                var files=document.getElementById("file").files;
+            $(".btn-default").change(function(){
+                var files=document.getElementById("picFile").files;
                 var kb=Math.floor(files[0].size/1024);
                 if(kb>2048){
                     layer.alert('图片大小不得超过2M!');
@@ -50,7 +50,7 @@
                 ({
                     url:"{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}",
                     secureuri:false,//
-                    fileElementId:'file',//必须要是 input file标签 ID
+                    fileElementId:'picFile',//必须要是 input file标签 ID
                     dataType: 'json',
                     success: function (data, status)
                     {
@@ -124,10 +124,10 @@
                                 <div class="col-sm-10">
                                     <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file" title="请选择图片">
                                         选择图片
-                                        <input type="file" multiple="multiple" id="picFile">
+                                        <input type="file" multiple="multiple" id="picFile" name="image">
                                     </a>
                                     <div class="picBox">
-                                        haha
+
                                     </div>
                                 </div>
                             </div>
