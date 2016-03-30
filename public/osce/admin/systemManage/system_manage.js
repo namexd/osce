@@ -40,10 +40,18 @@ function user_manage_change_role() {
             url:pars.URL,
             data:req,
             success:function(res) {
-                if(res.code == 1) {
-                    layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
+                console.log(res);
+                if(res.code > 0) {
+                    if(res.code ==2){
+                        layer.alert(res.message,{title:"删除",btn:['确认','取消']},function(){
+                            $('form').submit();
+                        });
+                    }else {
                         $('form').submit();
-                    });
+                    }
+
+                }else {
+                    layer.alert(res.message);
                 }
             }
         });
