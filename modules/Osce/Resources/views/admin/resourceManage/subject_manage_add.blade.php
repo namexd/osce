@@ -23,6 +23,9 @@
     .check_top {top: 8px;margin-right: 10px;}
     /*select2样式*/
     .select2-container--default .select2-selection--multiple{border: 1px solid #e5e6e7;border-radius:2px;}
+    /*图片上传*/
+    #file {position: relative;overflow: hidden;}
+    #file input{position: absolute;right: 0;top: 0;font-size: 100px;}
 </style>
 @stop
 
@@ -36,18 +39,18 @@
         //试题图片上传
         $(function(){
             $(".upload").change(function(){
-                var files=document.getElementById("file0").files;
+                var files=document.getElementById("file").files;
                 var kb=Math.floor(files[0].size/1024);
                 if(kb>2048){
                     layer.alert('图片大小不得超过2M!');
-                    $("#file0").val('');
+                    $("#file").val('');
                     return false;
                 }
                 $.ajaxFileUpload
                 ({
                     url:"{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}",
                     secureuri:false,//
-                    fileElementId:'file0',//必须要是 input file标签 ID
+                    fileElementId:'file',//必须要是 input file标签 ID
                     dataType: 'json',
                     success: function (data, status)
                     {
@@ -56,7 +59,7 @@
                             var point = path.lastIndexOf(".");
                             var type = path.substr(point);//图片类型
                             var str='<input type="hidden" name="file[]" value="'+path+'" />';
-                            $(".upload_list_doc").append(str);
+                            $(".picBox").append(str);
                         }else{
                             layer.msg('图片上传失败');
                         }
@@ -115,12 +118,19 @@
                                     <textarea name="name" id="subjectName" cols="10" rows="5" class="form-control"></textarea>
                                 </div>
                             </div>
-
-                            <div>
-                                试题图片<input type="file" name="image" class="upload" id="file0"/>
-                                <div class="upload_list_doc"></div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">图片</label>
+                                <div class="col-sm-10">
+                                    <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file" title="请选择图片">
+                                        选择图片
+                                        <input type="file" multiple="multiple" id="picFile">
+                                    </a>
+                                    <div class="picBox">
+                                        haha
+                                    </div>
+                                </div>
                             </div>
-
                             <div class="hr-line-dashed chooseLine"></div>
                             <div class="form-group choose">
                                 <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>选项</label>
