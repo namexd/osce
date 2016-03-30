@@ -390,6 +390,7 @@ class ApiController extends CommonController
         $username = $request->get('username');
         $password = $request->get('password');
 
+
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
             //获取当前登录账户的角色名称
@@ -419,7 +420,7 @@ class ApiController extends CommonController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        $type        登录角色（1-监考老师 2-考生）
      *
      * @return view
      *
