@@ -432,7 +432,7 @@ class ApiController extends CommonController
         if (session('examLoginRoleType') == 1) {
 
             //检验登录的老师是否是监考老师
-            if (!$questionBankRepositories->LoginAuth()) {
+            if (!$questionBankRepositories->LoginAuth(session('examLoginRoleType'))) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('你不是监考老师');
             }
 
@@ -453,11 +453,17 @@ class ApiController extends CommonController
                 ];
             }
 
-
+            dd($data);
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
         } else {
+
+            //检验登录的学生是否是考生
+            if (!$questionBankRepositories->LoginAuth(session('examLoginRoleType'))) {
+                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('你不是考生');
+            }
+
             // todo 学生登录处理
         }
     }

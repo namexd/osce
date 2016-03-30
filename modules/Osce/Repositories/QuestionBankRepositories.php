@@ -450,31 +450,28 @@ class QuestionBankRepositories  extends BaseRepository
     }
 
     /**
-     * 检验用户是否是监考老师
+     * 根据登录角色判断理论考试登录的人员是否是监考老师（或者考生）
      * @method
      * @url /osce/
+     * @param int $type 登录角色(1-监考老师 2-学生)
      * @access public
      * @return bool
      * @author tangjun <tangjun@misrobot.com>
      * @date    2016年3月16日10:03:13
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function LoginAuth(){
-        $user = Auth::user();
-        if(count($user->roles)>0){
-            $roles = $user
-                ->roles
-                ->pluck('id')
-                ->toArray();
-        } else {
-            $roles = [];
+    public function LoginAuth($type){
+        //edit by wangjiang at 2016-03-30 15:15 for 重构理论考试登录判断是否是监考老师或者考生方法
+        $roles = Auth::user()->roles->pluck('id')->toArray();
+
+        if (empty($roles)) {
+            return false;
         }
-        //监考老师 目前的角色id为1
-        if(in_array(config('osce.invigilatorRoleId'), $roles)){
-            return  $user->id;
-        }else{
-            return  false;
-        }
+
+        return in_array(
+            $type == 1 ? config('osce.invigilatorRoleId') : config('osce.studentRoleId'),
+            $roles
+        ) ? true : false;
     }
 
     /**
