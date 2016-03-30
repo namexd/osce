@@ -2374,6 +2374,37 @@ function staff_manage_invigilator_add() {
             return false;
         }
     });
+
+    /**
+     * 多选下拉框
+     * @author mao
+     * @version 3.3
+     * @date    2016-03-30
+     */
+    $(".data-example-ajax").select2({
+      ajax: {
+        type:'get',
+        url: pars.get_subject,
+        dataType: 'json',
+        delay: 250,
+        processResults: function (res) {
+          
+            //数据格式化
+            var str = [];
+            var data = res.data;
+            for(var i in data){
+                str.push({id:data[i].id,text:data[i].title});
+            }
+
+            //加载入数据
+            return {
+                results: str
+            };
+        }
+      }
+    });
+
+
 }
 
 function staff_manage_invigilator_edit() {

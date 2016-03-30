@@ -803,4 +803,22 @@ class InvigilatorController extends CommonController
         readfile($filepath);
     }
 
+    /**
+     * 异步获取 所有考试项目
+     * @author Zhoufuxiang 2016-3-30
+     * @return string
+     */
+    public function getSubjects(){
+        try{
+            $data = Subject::all();
+
+            return response()->json(
+                $this->success_data($data, 1, 'success')
+            );
+
+        }catch (\Exception $ex){
+            return $this->fail($ex);
+        }
+    }
+
 }
