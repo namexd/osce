@@ -481,7 +481,8 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	if($exam->emptyData($exam_id)){
 //		return '成功';
 //	}
-	dd(config('osce.spRoleId'));
+	$redis = Redis::connection('message');
+    $redis->publish(1, 'test');
 //
 //	return '失败';
 });
