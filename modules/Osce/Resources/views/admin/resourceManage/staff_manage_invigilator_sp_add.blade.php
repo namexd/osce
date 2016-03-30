@@ -94,11 +94,11 @@
 
                         <div class="form-group">
                             <div class="select-floor">
-                                <label class="col-sm-2 control-label">病例</label>
+                                <label class="col-sm-2 control-label">支持考试项目</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" name="case_id">
                                         @forelse($list as $option)
-                                            <option value="{{$option->id}}">{{$option->name}}</option>
+                                            <option value="{{$option->id}}">{{$option->title}}</option>
                                         @empty
                                         @endforelse
                                     </select>
