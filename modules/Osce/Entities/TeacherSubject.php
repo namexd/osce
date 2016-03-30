@@ -20,4 +20,9 @@ class TeacherSubject extends CommonModel
     protected $hidden       = [];
     protected $fillable     = ['teacher_id', 'subject_id', 'created_user_id'];
 
+
+    public function subject(){
+        return $this->hasOne('\Modules\Osce\Entities\Subject','id','subject_id');
+    }
+
 }
