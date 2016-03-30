@@ -156,6 +156,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('user/edit-user', 	['uses'=>'UserController@postEditUser','as'=>'osce.admin.user.postEditUser']);
 		Route::get('user/change-users-role', 	['uses'=>'UserController@getChangeUsersRole','as'=>'osce.admin.user.getChangeUsersRole']);
 		Route::post('user/edit-user-role', 	['uses'=>'UserController@postEditUserRole','as'=>'osce.admin.user.postEditUserRole']);
+		Route::get('user/judge-user-role',['uses'=>'UserController@getJudgeUserRole','as'=>'osce.admin.user.getJudgeUserRole']);
 
 		//考试
 		Route::get('exam/exam-list', 	['uses'=>'ExamController@getExamList','as'=>'osce.admin.exam.getExamList']);
