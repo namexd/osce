@@ -34,11 +34,7 @@
             overflow: hidden;
             text-overflow:ellipsis;
             white-space:nowrap;
-        }
-        .copy{
-            margin-left: 10px;
-            vertical-align: super;
-            color: #337ab7;
+            vertical-align: middle;
         }
     </style>
 
