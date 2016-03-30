@@ -66,6 +66,16 @@
                                     <textarea name="name" id="subjectName" cols="10" rows="5" class="form-control">{{ $data['name'] }}</textarea>
                                 </div>
                             </div>
+                            <div>
+                                试题图片
+                                <input type="file" name="image" class="upload" id="file0"/>
+                                <div class="upload_list_doc" style="width: 200px;">
+                                    @foreach(@$data['image'] as $val)
+                                        <img src="{{$val}}" alt="">
+                                        @endforeach
+                                </div>
+                            </div>
+
                             @if(@$data['exam_question_type_id'] != 4)
                                 <div class="hr-line-dashed chooseLine"></div>
                                 <div class="form-group choose">

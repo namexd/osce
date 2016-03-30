@@ -7,12 +7,13 @@
  */
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
+use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionItem;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
-use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
+
 
 class ExamQuestionController extends CommonController
 {
@@ -111,6 +112,31 @@ class ExamQuestionController extends CommonController
         ]);
     }
 
+
+    /**试题图片上传
+     * @method
+     * @url /osce/examquestion/examquestion-upload
+     * @access public
+     * @param Request $request
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postQuestionUpload(Request $request){
+        if ($request->hasFile('image'))
+        {
+            $file   =   $request->file('image');
+            $path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
+            $destinationPath    =   public_path($path);
+            //.'.'.$file->getClientOriginalExtension()
+            $fileName           =   $file->getClientOriginalName();
+            $file->move($destinationPath,$fileName);
+            $pathReturn    =   '/'.$path.$fileName;
+        }
+        return json_encode(
+            $this->success_data($pathReturn,1,'上传成功')
+        );
+    }
     /**新增试题数据交互
      * @method
      * @url /osce/admin/examQuestion/examQuestion-add
@@ -122,15 +148,16 @@ class ExamQuestionController extends CommonController
      */
     public function postExamQuestionAdd(Request $request)
     {
-
         $this->validate($request, [
             'examQuestionTypeId'    =>'sometimes|integer',//试题表
             'name'                     => 'sometimes|string',
             'parsing'                 => 'sometimes|string',
             'answer'                  => 'sometimes|array',
             'judge'                  => 'sometimes|integer',
+
             'examQuestionItemName'  => 'sometimes|array',//试题子项表
             'content'                 => 'sometimes|array',
+
             'examQuestionLabelId'      =>'sometimes|array',//试题和标签中间表
         ]);
 
@@ -142,8 +169,10 @@ class ExamQuestionController extends CommonController
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
+            'image'                    =>serialize($request->input('file')),//试题图片
 
         );
+
         //判断是否为判断题
         if($request->input('examQuestionTypeId')=='4'){
             $examQuestionData['answer'] = $request->input('judge');//正确答案（0-错误，1-正确,）
@@ -232,6 +261,7 @@ class ExamQuestionController extends CommonController
             $data['id'] = $list->id;
             $data['exam_question_type_id'] = $list->exam_question_type_id;//题目类型
             $data['name'] = $list->name;//题目名称
+            $data['image'] = unserialize($list->image);;//题目图片
             $data['parsing'] = $list->parsing;//解析
             if($data['exam_question_type_id']==4){
                 $data['answer'] = $list->answer;//正确答案
@@ -240,8 +270,7 @@ class ExamQuestionController extends CommonController
             }
         }
 
-
-       // dd($data);
+        //dd($data);
         //dd($examQuestionLabelTypeList);
         return view('osce::admin.resourceManage.subject_manage_edit', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
@@ -285,6 +314,7 @@ class ExamQuestionController extends CommonController
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
+            'image'                    =>serialize($request->input('file')),//试题图片
 
         );
 

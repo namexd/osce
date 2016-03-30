@@ -106,6 +106,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //题库管理新增
         Route::get('examquestion/examquestion-add',['uses'=>'ExamQuestionController@getExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.getExamQuestionAdd']);//新增页面
         Route::post('examquestion/examquestion-add',['uses'=>'ExamQuestionController@postExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.postExamQuestionAdd']);//新增数据交互
+        //题库图片上传
+        Route::post('examquestion/examquestion-upload',['uses'=>'ExamQuestionController@postQuestionUpload','as'=>'osce.admin.ExamQuestionController.postQuestionUpload']);
 
         //题库管理编辑
         Route::get('examquestion/examquestion-edit/{id}',['uses'=>'ExamQuestionController@getExamQuestionEdit','as'=>'osce.admin.ExamQuestionController.getExamQuestionEdit']);//编辑页面
