@@ -78,7 +78,7 @@
                                         选择图片
                                         <input type="file" multiple="multiple" id="picFile">
                                     </a>
-                                    <div class="picBox">
+                                    <div class="picBox" style="width: 200px">
                                         @if(!empty($data['image']))
                                             @foreach($data['image'] as $val)
                                                 <img src="{{$val}}" alt="">

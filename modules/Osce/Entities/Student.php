@@ -534,7 +534,8 @@ class Student extends CommonModel
                 'student.id as student_id',
                 'exam_result.id as exam_result_id',
                 'exam_result.score as exam_result_score',
-                'exam_result.time as exam_result_time'
+                'exam_result.time as exam_result_time',
+                'station.type as station_type'
             )
             ->paginate(config('osce.page_size'));
     }

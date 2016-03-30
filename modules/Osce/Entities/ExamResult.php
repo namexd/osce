@@ -71,7 +71,9 @@ class ExamResult extends CommonModel
             'exam_result.time as time',
             'exam_result.score as score',
             'student.name as student_name',
+            'student.id as student_id',
             'station.name as station_name',
+            'station.type as station_type',
         ])->paginate(config('osce.page_size'));
 
         $data=$builder;

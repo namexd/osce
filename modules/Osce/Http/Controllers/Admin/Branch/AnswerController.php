@@ -35,9 +35,9 @@ class AnswerController extends CommonController
      */
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
-        $examId = $request->input('examId');//考试id
-        $ExamPaperId = $request->input('id');//试卷id
-        $stationId = $request->input('stationId');//考站id
+        $examId = $request->input('examId');//考试id  421
+        $ExamPaperId = $request->input('id');//试卷id  132
+        $stationId = $request->input('stationId');//考站id 20
         $userId = $request->input('userId');//老师id
         $studentId = $request->input('studentId');//学生id
         //获取试卷信息
@@ -118,7 +118,6 @@ class AnswerController extends CommonController
                 }
             }
         }
-        dd($examCategoryFormalData);
        //dd(date('Y/m/d H:i:s',$systemTimeStart).'和'.date('Y/m/d H:i:s',$systemTimeEnd));
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
