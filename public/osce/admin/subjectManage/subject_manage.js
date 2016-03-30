@@ -540,8 +540,45 @@ function subject_manage_add(){
                 $('#sourceForm').data('bootstrapValidator').destroy();
                 chooseValidator();
             }
-        })
-
+        });
+        //图片上传
+        $("#file").change(function(){
+            var url = pars.imgUrl;
+            var files=document.getElementById("picFile").files;
+            // var point = path.lastIndexOf(".");
+            //var type = path.substr(point);//图片类型
+            var kb=Math.floor(files[0].size/1024);
+            if(kb>2048){
+                layer.alert('图片大小不得超过2M!');
+                $("#picFile").val('');
+                return false;
+            }
+            if($(".picBox p").length > 4){
+                layer.alert('最多只能上传5张图片!');
+                return false;
+            }
+            $.ajaxFileUpload
+            ({
+                url:url,
+                secureuri:false,//
+                fileElementId:'picFile',//必须要是 input file标签 ID
+                dataType: 'json',
+                success: function (data)
+                {
+                    if(data.data.status){
+                        var path=data.data.path;//图片存放路径
+                        var picName = data.data.name;//图片名称
+                        $(".picBox").append('<p><input type="hidden" name="image[]" value="'+path+'"/>"'+picName+'"<i class="fa fa-2x fa-remove clo6"></i></p>');
+                    }else{
+                        layer.alert('图片格式错误!');
+                    }
+                }
+            });
+        });
+        //删除图片选项
+        $(".picBox").on("click",".fa-remove",function(){
+            $(this).parent().remove();
+        });
     });
 }
 //试卷管理
