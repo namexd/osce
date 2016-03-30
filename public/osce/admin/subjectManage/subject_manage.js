@@ -568,7 +568,7 @@ function subject_manage_add(){
                     if(data.data.status){
                         var path=data.data.path;//图片存放路径
                         var picName = data.data.name;//图片名称
-                        $(".picBox").append('<p><input type="hidden" name="image[]" value="'+path+'"/>"'+picName+'"<i class="fa fa-2x fa-remove clo6"></i></p>');
+                        $(".picBox").append('<p><input type="hidden" name="image[]" value="'+path+'"/><input type="hidden" name="imageName[]" value="'+picName+'"/>"'+picName+'"<i class="fa fa-2x fa-remove clo6"></i></p>');
                     }else{
                         layer.alert('图片格式错误!');
                     }
