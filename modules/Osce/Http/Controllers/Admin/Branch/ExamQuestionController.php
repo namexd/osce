@@ -131,18 +131,28 @@ class ExamQuestionController extends CommonController
         if ($request->hasFile('file'))
         {
             $file   =   $request->file('file');
+            $fileName           =   $file->getClientOriginalName();
+
+
+            $type = substr($fileName, strrpos($fileName,'.'));
+            $status = 1;
+            $arr = array(".png",'.jpg');
+            if(!in_array($type,$arr)){
+                $status = 0;
+            }
             $path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
             $destinationPath    =   public_path($path);
-            $fileName           =   $file->getClientOriginalName();
+
             $file->move($destinationPath,$fileName);
             $pathReturn    =   '/'.$path.$fileName;
             $data   =   [
                 'path'=>$pathReturn,
-                'name'=>$fileName
+                'name'=>$fileName,
+                'status'=>$status
             ];
         }
         return json_encode(
-            $this->success_data($data,1,'上传成功')
+            $this->success_data($data)
         );
     }
 
