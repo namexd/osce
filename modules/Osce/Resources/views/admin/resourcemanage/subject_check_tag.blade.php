@@ -1,7 +1,9 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
-
+    <style>
+        #myModalLabel{color: #16BEB0;}
+    </style>
 @stop
 
 @section('only_js')
@@ -130,7 +132,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-success" id='sure'>确定</button>
+            <button type="submit" class="btn btn-primary" id='sure'>确定</button>
             <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
         </div>
     </form>
@@ -169,7 +171,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-success" id='editSure'>确定</button>
+            <button type="submit" class="btn btn-primary" id='editSure'>确定</button>
             <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
         </div>
     </form>
