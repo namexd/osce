@@ -352,11 +352,21 @@ class StudentWatchController extends CommonController
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
           if($examStudent == 0){
-
               $willStudents =$studentnum;
           }else{
                 $willStudents = $studentnum+1;
           }
+
+        if ($studentnum == 0) {
+            $a = ExamQueue::where('student_id', $item->student_id)
+                ->where('exam_id', $item->exam_id)
+                ->orderBy('begin_dt', 'asc')
+                ->first();
+            $a->stick = 1;
+            if (!$a->save()) {
+                throw new \Exception('系统错误，请重试', -1);
+            };
+        }
 
 
         //判断预计考试时间
@@ -418,6 +428,7 @@ class StudentWatchController extends CommonController
                   continue;
               }
           }
+
         return $studentNum;
     }
 

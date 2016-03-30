@@ -119,29 +119,6 @@ class DrawlotsController extends CommonController
                     break;
             }
 
-
-//            if ($exam->sequence_mode == 1) {
-//                list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
-//                //从队列表中通过考场ID得到对应的考生信息
-//                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
-//            } elseif ($exam->sequence_mode == 2) {
-//                //获取当前老师对应的考站id
-//                $station = StationTeacher::where('exam_id', '=', $exam->id)
-//                    ->where('user_id', '=', $id)
-//                    ->first();
-//                if (is_null($station)) {
-//                    throw new \Exception('你没有参加此次考试');
-//                }
-//                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
-//            } else {
-//                throw new \Exception('没有这种考试模式！', -702);
-//            }
-//
-//            //将学生照片的地址换成绝对路径
-//            foreach ($examQueue as &$item) {
-//                $item->student_avator = url($item->student_avator);
-//            }
-
             foreach ($students as $student) {
                 unset($student['blocking']);
             }
@@ -345,7 +322,7 @@ class DrawlotsController extends CommonController
 
         } catch (\Exception $ex) {
             $connection->rollBack();
-            \Log::alert('Error', [$ex->getLine(), $ex->getFile(), $ex->getMessage()]);
+            
             return response()->json($this->fail($ex));
         }
     }

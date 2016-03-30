@@ -92,6 +92,7 @@ class StationMode implements ModeInterface
         if ($collection->isEmpty()) {
             $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->whereIn('exam_queue.serialnumber', $serialnumber)
+                ->where('exam_queue.stick', 0)
                 ->where('exam_queue.status', '<', 3)
                 ->where('blocking', 1)
                 ->where('student.exam_id', $this->exam->id)
@@ -117,16 +118,10 @@ class StationMode implements ModeInterface
                     ->orderBy('begin_dt', 'asc')->first();
                 $a->station_id = $this->stationIds[0];
                 $a->save();
-
-                ExamQueue::where('exam_id', $this->exam->id)
-                    ->where('student_id', $query->first()->student_id)
-                    ->update(['blocking' => 0]);
-
                 return $query;
             }
 
         } else {
-            ExamQueue::where('student_id', $collection->first()->student_id)->update(['blocking' => 0]);
             return $collection;
         }
 
@@ -177,7 +172,7 @@ class StationMode implements ModeInterface
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
-                    ->skip(2)
+                    ->skip(1)
                     ->take(1)
                     ->get();
 
