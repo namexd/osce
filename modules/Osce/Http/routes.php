@@ -58,6 +58,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilator/invigilator-list', 	['uses'=>'InvigilatorController@getInvigilatorList','as'=>'osce.admin.invigilator.getInvigilatorList']);
 		Route::get('invigilator/add-invigilator', 	['uses'=>'InvigilatorController@getAddInvigilator','as'=>'osce.admin.invigilator.getAddInvigilator']);
 		Route::post('invigilator/add-invigilator', 	['uses'=>'InvigilatorController@postAddInvigilator','as'=>'osce.admin.invigilator.postAddInvigilator']);
+		Route::get('invigilator/add-examination', 	['uses'=>'InvigilatorController@getAddExamination','as'=>'osce.admin.invigilator.getAddExamination']);
 
 		Route::get('invigilator/edit-invigilator', 	['uses'=>'InvigilatorController@getEditInvigilator','as'=>'osce.admin.invigilator.getEditInvigilator']);
 		Route::post('invigilator/edit-invigilator', ['uses'=>'InvigilatorController@postEditInvigilator','as'=>'osce.admin.invigilator.postEditInvigilator']);

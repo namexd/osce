@@ -112,11 +112,10 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
-
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="description" id="note" value=" {{$item->description}}"/>
+                                <input type="text" class="form-control" name="description"  value=" {{$item->description}}"/>
                             </div>
                         </div>
                         <div class="form-group">

@@ -93,8 +93,14 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
+    public  function getAddExamination(Request $request){
+        return view('osce::admin.resourceManage.staff_manage_invigilator_patrol_add');
+
+    }
     public function getAddInvigilator(Request $request){
+
         return view('osce::admin.resourceManage.staff_manage_invigilator_add');
+
     }
 
     /**
@@ -289,9 +295,16 @@ class InvigilatorController extends CommonController
             'id'    =>  'required',
         ]);
         $id         =   intval($request    ->  get('id'));
-
         $teacher    =   new Teacher();
         $invigilator=   $teacher -> find($id);
+        
+        if(!$invigilator){
+            throw  new \Exception('没有找到对应老师');
+        }
+        if($invigilator->type==3){
+            return view('osce::admin.resourceManage.staff_manage_invigilator_patrol_edit',['item'=>$invigilator]);
+        }
+        
         $subjects   =   TeacherSubject::where('teacher_id','=',$id)
                         ->leftJoin('teacher', 'teacher.id', '=', 'teacher_subject.teacher_id')
                         ->leftJoin('subject', 'subject.id', '=', 'teacher_subject.subject_id')
@@ -333,6 +346,7 @@ class InvigilatorController extends CommonController
         $teacher    =   new Teacher();
 //        $invigilator    =   $InvigilatorModel    ->  find($id);
         $invigilator=   $teacher -> find($id);
+//        dd($invigilator);
    
         $subjects   =   TeacherSubject::where('teacher_id','=',$id)->get();
 //        $list   =   Subject::get();
