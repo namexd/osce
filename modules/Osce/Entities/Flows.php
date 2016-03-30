@@ -131,10 +131,30 @@ class Flows extends CommonModel
                     $station_id = $item['id'];
                     //根据考站id，获取对应的病例id
                     $stationCase = StationCase::where('station_id', $station_id)->first();
-                    if(empty($stationCase)){
-                        throw new \Exception('找不到考站对应的病例对象');
+                    if(!is_null($stationCase))
+                    {
+                        $station    =   $stationCase->station;
+                        if(is_null($station))
+                        {
+                            throw new \Exception('找不到考站');
+                        }
+                        if(empty($stationCase)&&$station->type!=3){
+                            throw new \Exception('找不到考站对应的病例对象');
+                        }
                     }
-                    $case_id = $stationCase->case_id;
+                    else
+                    {
+                        $station    =   Station::find($station_id);
+                        if(is_null($station))
+                        {
+                            throw new \Exception('找不到考站');
+                        }
+
+                        if($station->type!=3){
+                            throw new \Exception('找不到考站对应的病例对象');
+                        }
+                    }
+                    $case_id = is_null($stationCase)? null:$stationCase->case_id;
                     foreach ($teacherIDs as $teacherID) {
                         //考站-老师关系表 数据
                         $stationTeacher = [

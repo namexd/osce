@@ -773,6 +773,7 @@ class ExamController extends CommonController
      */
     public function getChooseExamArrange(Request $request)
     {
+
         $this->validate($request ,[
             'id' => 'required|integer',
         ]);
@@ -786,7 +787,9 @@ class ExamController extends CommonController
                     $result =  $this->getExamroomAssignment($request);
                     break;
                 case '2' :
+
                     $result = $this->getStationAssignment($request);
+
                     break;
                 default:
                     $result =  $this->getExamroomAssignment($request);
@@ -874,7 +877,7 @@ class ExamController extends CommonController
      */
     public function postExamroomAssignmen(Request $request)
     {
-        try{
+//        try{
 
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $exam_id        = $request  ->  get('id');          //考试id
@@ -901,9 +904,9 @@ class ExamController extends CommonController
             }
             return redirect()->route('osce.admin.exam.getExamroomAssignment', ['id'=>$exam_id,'succ'=>1]);
 
-        } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch(\Exception $ex){
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**
@@ -1432,6 +1435,7 @@ class ExamController extends CommonController
 
         $exam_id = $request->input('id');
 
+
         //展示已经关联的考站和老师列表
         $station = new Station();
         $roomData = $station->stationEcho($exam_id)->groupBy('serialnumber');
@@ -1484,7 +1488,7 @@ class ExamController extends CommonController
      */
     public function postStationAssignment(Request $request , ExamFlowStation $examFlowStation)
     {
-        try {
+//        try {
             //验证
             $this->validate($request, [
                 'form_data' => 'required|array',
@@ -1509,9 +1513,9 @@ class ExamController extends CommonController
             }
 
             return redirect()->route('osce.admin.exam.getStationAssignment',['id'=>$examId, 'succ'=>1]);
-        } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**

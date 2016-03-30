@@ -284,8 +284,32 @@ class Station extends CommonModel
             //改变考站病历表的状态
             $stationCaseData = [
                 'case_id'=>$caseId,
+                'station_id'=>$id
             ];
-            $result = StationCase::where('station_id','=',$id)->update($stationCaseData);
+
+            //拿到考站
+//            $station = Station::find($id);
+
+            $StationCase= StationCase::where('station_id','=',$id)->first();
+
+            if(is_null($StationCase)&& $stationData['type']==3){
+                $result = true;
+            }
+            //如果是理论考站改为其他考站就改变考站的类型
+//            if(is_null($StationCase) && $stationData['type']==3){
+//
+//                $result = StationCase::create($stationCaseData);
+//            }
+            //如果是其他考站改为理论考站就删除
+            if(!is_null($StationCase)&& $stationData['type']==3){
+
+                $result = StationCase::where('station_id','=',$id)->delete();
+            }
+            if(!is_null($StationCase)&& $stationData['type']!=3){
+
+                $result = StationCase::where('station_id','=',$id)->update($stationCaseData);
+            }
+
             if (!$result) {
                 $connection->rollBack();
                 throw new \Exception('更改病例关联失败');

@@ -22,6 +22,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
+use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
 
 class StationController extends CommonController
 {
@@ -146,6 +147,11 @@ class StationController extends CommonController
                 }
                 $stationData['paper_id'] = $paperId;
             }
+            if($stationData['type'] ==1 || $stationData['type']==2){
+                if(empty($caseId)){
+                    throw new \Exception('病例必选');
+                }
+            }
             $user = Auth::user();
             if(empty($user)){
                 throw new \Exception('未找到当前操作人信息');
@@ -229,6 +235,7 @@ class StationController extends CommonController
      */
     public function postEditStation(Request $request, Station $model)
     {
+
         //验证数据，暂时省略
         $this->validate($request, [
             'id'            => 'required|integer',
@@ -239,7 +246,7 @@ class StationController extends CommonController
 //            'description'   => 'required',
 //            'code'          => 'required',
             'vcr_id'        => 'required|integer',
-            'case_id'       => 'required|integer',
+//            'case_id'       => 'required|integer',
             'room_id'       => 'required|integer',
         ],[
             'name.required'       =>  '考站名称必填',
@@ -247,12 +254,12 @@ class StationController extends CommonController
             'type.required'       =>  '考站类型必选',
             'mins.required'       =>  '时间限制必填',
             'subject_id.required' =>  '科目必选',
-            'case_id.required'    =>  '病例必选',
+//            'case_id.required'    =>  '病例必选',
             'room_id.required'    =>  '考场必选',
             'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
-        try {
+//        try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $placeData = $request->only('name', 'type', 'subject_id', 'mins');
             $vcrId  = $request->input('vcr_id');
@@ -269,6 +276,12 @@ class StationController extends CommonController
             }else{
                 $placeData['paper_id'] = null;
             }
+
+            if($placeData['type'] ==1 || $placeData['type']==2){
+                if(empty($caseId)){
+                    throw new \Exception('病例必选');
+                }
+            }
             $user = Auth::user();
             if(empty($user)){
                 throw new \Exception('未找到当前操作人信息');
@@ -281,9 +294,9 @@ class StationController extends CommonController
 
             return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
 
-        } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**
