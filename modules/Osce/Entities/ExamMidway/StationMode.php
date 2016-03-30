@@ -107,6 +107,7 @@ class StationMode implements ModeInterface
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
+                    ->skip(1)
                     ->take(1)
                     ->get();
 
@@ -161,7 +162,7 @@ class StationMode implements ModeInterface
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
-                    ->skip(1)
+                    ->skip(2)
                     ->take(1)
                     ->get();
 
