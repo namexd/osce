@@ -391,7 +391,7 @@ class ApiController extends CommonController
         $roleType = $request->input('role_type');
 
         if (Auth::attempt(['username' => $username, 'password' => $password])) {
-            return redirect()->route('osce.admin.ApiController.LoginAuthWait')->with('examLoginRoleType', $roleType); //必须是redirect
+            return redirect()->route('osce.admin.ApiController.LoginAuthWait', [$roleType]); //必须是redirect
         } else {
             return redirect()->back()->withErrors('账号密码错误');
         }
@@ -405,7 +405,7 @@ class ApiController extends CommonController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        $type        登录角色（1-监考老师 2-考生）
      *
      * @return view
      *
@@ -414,7 +414,7 @@ class ApiController extends CommonController
      * @date 2016-03-29 11:05
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function LoginAuthWait(){
+    public function LoginAuthWait($type){
         //edit by wangjiang at 2016-03-30 14:44 for 重构理论考试登录
         $questionBankRepositories = new QuestionBankRepositories();
         $user = Auth::user();
@@ -424,15 +424,10 @@ class ApiController extends CommonController
             return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('请登录');
         }
 
-        // 检查登录角色session是否存在
-        if (empty(session('examLoginRoleType'))) {
-            return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('请选择登录角色');
-        }
-
-        if (session('examLoginRoleType') == 1) {
+        if ($type == 1) {
 
             //检验登录的老师是否是监考老师
-            if (!$questionBankRepositories->LoginAuth(session('examLoginRoleType'))) {
+            if (!$questionBankRepositories->LoginAuth($type)) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('你不是监考老师');
             }
 
@@ -460,7 +455,7 @@ class ApiController extends CommonController
         } else {
 
             //检验登录的学生是否是考生
-            if (!$questionBankRepositories->LoginAuth(session('examLoginRoleType'))) {
+            if (!$questionBankRepositories->LoginAuth($type)) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('你不是考生');
             }
 
