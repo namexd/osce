@@ -27,7 +27,7 @@
 
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>编辑监巡考老师</h5>
+                <h5>编辑考官</h5>
             </div>
             <div class="ibox-content">
                 <div class="row">
