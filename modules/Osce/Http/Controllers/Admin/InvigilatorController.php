@@ -298,8 +298,9 @@ class InvigilatorController extends CommonController
                         ->select(['teacher_subject.teacher_id', 'teacher_subject.subject_id',
                                   'teacher.name as teacher_name', 'subject.title as subject_name'])
                         ->get();
+        
 
-        return view('osce::admin.resourceManage.staff_manage_invigilator_edit',['item'=>$invigilator, 'subject'=>$subjects]);
+        return view('osce::admin.resourceManage.staff_manage_invigilator_edit',['item'=>$invigilator, 'subjects'=>$subjects]);
     }
 
     /**

@@ -103,10 +103,9 @@
                                 <label class="col-sm-2 control-label">支持考试项目</label>
                                 <div class="col-sm-10">
                                     <select class="form-control data-example-ajax"  name="subject[]"  multiple="multiple">
-                                        @foreach($subject as $item)
-                                            <option selected="selected" value="{{$item->subject_id}}">{{$item->subject_name}}</option>
+                                        @foreach($subjects as $subject)
+                                            <option selected="selected" value="{{$subject->subject_id}}">{{$subject->subject_name}}</option>
                                         @endforeach
-                                        <option value="">请选择</option>
                                     </select>
                                 </div>
                             </div>
