@@ -295,10 +295,13 @@ class ExamQuestionController extends CommonController
 
         //dd($data);
         $imageInfo = [];
-        foreach($data['image'] as $k=>$v){
-            $imageInfo[$k]['imagePath']=$v;
-            $imageInfo[$k]['imageName']=$data['imageName'][$k];
+        if($data['image']){
+            foreach($data['image'] as $k=>$v){
+                $imageInfo[$k]['imagePath']=$v;
+                $imageInfo[$k]['imageName']=$data['imageName'][$k];
+            }
         }
+
         //dd($imageInfo);
         //dd($examQuestionLabelTypeList);
         return view('osce::admin.resourceManage.subject_manage_edit', [

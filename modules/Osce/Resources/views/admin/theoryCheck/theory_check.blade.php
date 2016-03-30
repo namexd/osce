@@ -207,7 +207,7 @@
                                     @foreach(@$examCategoryFormalData as $val )
                                         <h1>{{$val["serialNumber"]}} </h1>
                                         <div class="step-content">
-                                            <span class="font20">{{@$val["examCategoryFormalName"]}}</span>
+                                            <span class="font20" style="font-weight: 700;">{{@$val["examCategoryFormalName"]}}</span>
                                             <span style="margin-left: 1em;">共<span class="subjectNum">{{@$val["examCategoryFormalNumber"]}}</span>题，</span>
                                             <span>每题<span class="subjectScore">{{@$val["examCategoryFormalScore"]}}</span>分</span>
                                             <div class="allSubject">
