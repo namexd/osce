@@ -72,6 +72,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('invigilator/import-teachers',['uses'=>'InvigilatorController@postImportTeachers','as'=>'osce.admin.invigilator.postImportTeachers']);	//导入老师
 		Route::get('invigilator/download-teacher-improt-tpl',['uses'=>'InvigilatorController@getdownloadTeacherImprotTpl','as'=>'osce.admin.invigilator.getdownloadTeacherImprotTpl']);	//下载老师模板
 
+		Route::get('invigilator/subjects', ['uses'=>'InvigilatorController@getSubjects', 'as'=>'osce.admin.invigilator.getSubjects']);		//异步获取 所有考试项目
+
 
 		//设置
 		Route::get('config/index',  ['uses'=>'ConfigController@getIndex','as'=>'osce.admin.config.getIndex']);
