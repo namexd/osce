@@ -458,7 +458,7 @@ class Teacher extends CommonModel
 
     }
 
-    public function editSpInvigilator($id, $userData, $teacherData){
+    public function editSpInvigilator($id, $userData, $teacherData,$subjects){
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try{
@@ -490,7 +490,30 @@ class Teacher extends CommonModel
             }
             $connection = DB::connection('sys_mis');
             $connection->table('sys_user_role')->where('user_id', $id)->where('role_id', $roleId)->update(['role_id'=>Common::getRoleIdByTeacherType($teacher['type'])]);
+            
+            //插入老师-考试项目 关系 TODO:zhouqiang 2016-3-30
+            $user = Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+            if(count($subjects)>0){
+                foreach ($subjects as $subject) {
+                    $result = TeacherSubject::where('teacher_id','=',$id)->where('subject_id','=',$subject)->first();
+                    if($result){
+                        continue;   //存在，则跳过
 
+                    }else{
+                        $subjectData = [
+                            'teacher_id'        => $id,
+                            'subject_id'        => $subject,
+                            'created_user_id'   => $user->id,
+                        ];
+                        if(!TeacherSubject::create($subjectData)){
+                            throw new \Exception('老师-考试项目关系绑定失败！');
+                        }
+                    }
+                }
+            }
             $connection->commit();
             return $teacher;
 

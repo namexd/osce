@@ -220,6 +220,7 @@ class InvigilatorController extends CommonController
             'images_path'   =>  'required',
             'case_id'       =>  'sometimes',
             'description'   =>  'sometimes',
+            'subject'       =>  'sometimes'
         ],[
             'name.required'         =>  '监考教师姓名必填',
             'idcard.required'       =>  '身份证号必填',
@@ -244,11 +245,11 @@ class InvigilatorController extends CommonController
             $teacherData['case_id']         = intval($request->get('case_id'));
             $teacherData['status']          = 0;
             $teacherData['create_user_id']  = $user->id;
-            //
             $role_id = config('osce.spRoleId',4);
-
+            //获取支持的考试项目
+            $subjects = $request->get('subject');
             $Invigilator    =   new Teacher();
-            if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData)){
+            if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData,$subjects)){
                 return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
             } else{
                 throw new \Exception('新增失败');
@@ -328,10 +329,12 @@ class InvigilatorController extends CommonController
         $id             =   intval($request    ->  get('id'));
         //查询出关联的科目
 
-        $InvigilatorModel    =   new Teacher();
-        $invigilator    =   $InvigilatorModel    ->  find($id);
-        $list   =   Subject::get();
-        return view('osce::admin.resourceManage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'list'=>$list]);
+        $teacher    =   new Teacher();
+//        $invigilator    =   $InvigilatorModel    ->  find($id);
+        $invigilator=   $teacher -> find($id);
+        $subjects   =   TeacherSubject::where('teacher_id','=',$id)->get();
+//        $list   =   Subject::get();
+        return view('osce::admin.resourceManage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'subject'=>$subjects]);
     }
     /**
      * 编辑监考老师信息
@@ -443,11 +446,12 @@ class InvigilatorController extends CommonController
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','type','case_id','description');  //姓名、编号、类型、病例
-
+        $subjects    = $request -> get('subject');
         try{
             $TeahcerModel   =   new Teacher();
 
-            if($TeahcerModel    ->  editSpInvigilator($id,$userData,$teacherData))
+            if($TeahcerModel    ->  editSpInvigilator($id, $userData, $teacherData, $subjects))
+                
             {
                 return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
             } else{
