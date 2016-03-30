@@ -246,7 +246,7 @@ function user_manage_add() {
 	                        message: '请输入11位正确的手机号码'
 	                    }
 	                }
-	            },
+	            }
             }
         });
 }
@@ -300,7 +300,7 @@ function user_manage_edit() {
                             message: '请输入11位正确的手机号码'
                         }
                     }
-                },
+                }
             }
         });
 }

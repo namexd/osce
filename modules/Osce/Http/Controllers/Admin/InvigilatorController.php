@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Invigilator;
 use Modules\Osce\Entities\StationTeacher;
+use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -107,7 +108,7 @@ class InvigilatorController extends CommonController
      *
      */
     public function getAddSpInvigilator(Request $request){
-        $list   =   CaseModel::get();
+        $list   =   Subject::get();
         return view('osce::admin.resourceManage.staff_manage_invigilator_sp_add',['list'=>$list]);
     }
     /**
@@ -254,6 +255,7 @@ class InvigilatorController extends CommonController
         }
     }
 
+
     /**
      *
      * @url GET /osce/admin/invigilator/edit-invigilator
@@ -316,13 +318,13 @@ class InvigilatorController extends CommonController
             'id'    =>  'required',
         ]);
         $id             =   intval($request    ->  get('id'));
+        //查询出关联的科目
 
         $InvigilatorModel    =   new Teacher();
         $invigilator    =   $InvigilatorModel    ->  find($id);
-        $list   =   CaseModel::get();
+        $list   =   Subject::get();
         return view('osce::admin.resourceManage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'list'=>$list]);
     }
-
     /**
      * 编辑监考老师信息
      * @url POST /osce/admin/invigilator/edit-invigilator

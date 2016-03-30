@@ -26,7 +26,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新增监巡考老师</h5>
+            <h5>新增考官</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -85,20 +85,19 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">教师类别</label>
+                            <label class="col-sm-2 control-label">电子邮箱</label>
                             <div class="col-sm-10">
-                                <select class="form-control" name="type">
-                                    <option value="1">监考老师</option>
-                                    <option value="3">巡考老师</option>
-                                </select>
+                                <input type="text" class="form-control" name="email" id="email">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">电子邮箱</label>
+                            <label class="col-sm-2 control-label">支持考试项目</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="email" id="email">
+                                <select class="form-control" name="type">
+                                    <option value="">请选择</option>
+                                </select>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

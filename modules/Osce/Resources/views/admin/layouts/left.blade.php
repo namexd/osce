@@ -53,18 +53,18 @@
                         <li class="active">
                             <a href="#"><i class="fa fa-list-alt"></i> <span class="nav-label">资源管理</span><span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a class="active J_menuItem" href="{{route('osce.admin.case.getCaseList')}}">病例管理</a>
-                                </li>
                                 <li><a class="active J_menuItem" href="{{route('osce.admin.invigilator.getInvigilatorList')}}">人员管理</a>
-                                </li>
-                                <li><a class="active J_menuItem" href="{{route('osce.admin.Station.getStationList')}}">考站管理</a>
-                                </li>
-                                <li><a  class="J_menuItem" href="{{route('osce.admin.room.getRoomList')}}">场所管理</a>
                                 </li>
                                 <li><a  class="J_menuItem" href="{{route('osce.admin.machine.getMachineList')}}">设备管理</a>
                                 </li>
-                                <li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}">科目管理</a>
+                                <li><a  class="J_menuItem" href="{{route('osce.admin.room.getRoomList')}}">场所管理</a>
                                 </li>
+                                <li><a  class="J_menuItem" href="{{route('osce.admin.topic.getList')}}">考试项目管理</a>
+                                </li>
+                                <li><a class="active J_menuItem" href="{{route('osce.admin.Station.getStationList')}}">考站管理</a>
+                                </li>
+                                {{--<li><a class="active J_menuItem" href="{{route('osce.admin.case.getCaseList')}}">病例管理</a>--}}
+                                {{--</li>--}}
                                 <li><a  class="J_menuItem" href="{{route('osce.admin.ExamLabelController.getExamLabel')}}">试卷管理</a>
                                 </li>
                             </ul>
