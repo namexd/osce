@@ -65,6 +65,9 @@
                             <label class="col-sm-2 control-label">关联摄像机</label>
                             <div class="col-sm-10">
                                 <select name="vcr_id" id="vcr_id" class="form-control">
+
+                                        <option value="0" {{($data->vcr_id==0)?'selected=selected':''}}>请选择</option>
+
                                     @foreach($vcr as $key=>$item)
                                         <option value="{{$item->id}}" {{($data->vcr_id==$item->id)?'selected=selected':''}}>{{$item->name}}</option>
                                     @endforeach
