@@ -150,7 +150,6 @@ class InvigilatorController extends CommonController
             'idcard.required'       =>  '身份证号必填',
             'mobile.required'       =>  '手机号必填',
             'email.required'        =>  '邮箱必填',
-            'type.required'         =>  '监考教师类型必填',
             'code.required'         =>  '监考教师编号必填',
             'subject.required'      =>  '考试项目必选',
             'images_path.required'  =>  '请上传照片',
@@ -376,9 +375,7 @@ class InvigilatorController extends CommonController
         //老师数据
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
         $subjects    = $request -> get('subject');      //获取考试项目
-        //获取角色ID，
-        $role_id = config('osce.invigilatorRoleId',1);
-
+        
         try{
             $teacherModel   =   new Teacher();
 

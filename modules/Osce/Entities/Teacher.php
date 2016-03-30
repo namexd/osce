@@ -13,7 +13,7 @@ use App\Entities\SysUserRole;
 use App\Entities\User;
 use DB;
 use Modules\Osce\Repositories\Common;
-use Overtrue\Wechat\Auth;
+use Auth;
 
 class Teacher extends CommonModel
 {
@@ -406,7 +406,6 @@ class Teacher extends CommonModel
             if(!empty($code)){
                 throw new \Exception('该教师编号已经有别人使用！');
             }
-            $roleId = Common::getRoleIdByTeacherType($teacherData['type']);
 
             foreach($teacherData as $feild => $value) {
                 $teacher    ->  $feild  =   $value;
