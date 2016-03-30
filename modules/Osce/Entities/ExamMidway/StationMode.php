@@ -111,7 +111,7 @@ class StationMode implements ModeInterface
                     ->get();
 
         } else {
-            return collect([]);
+            return $collection;
         }
 
     }
@@ -166,7 +166,7 @@ class StationMode implements ModeInterface
                     ->get();
 
         } else {
-            return collect([]);
+            return $collection;
         }
     }
 }
