@@ -176,7 +176,7 @@ class InvigilatePadController extends CommonController
                 $this->success_data($studentData, 1, '验证完成')
             );
         } elseif (empty($studentData['waitingList'])) {
-            $studentData->avator =assert($studentData->avator);
+            $studentData->avator =asset($studentData->avator);
             return response()->json(
                 $this->success_data($studentData, 2, '考试已经结束')
             );
