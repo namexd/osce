@@ -38,8 +38,11 @@
     <script>
         //试题图片上传
         $(function(){
-            $(".btn-default").change(function(){
+            var pathArr = [];
+            $("#file").change(function(){
                 var files=document.getElementById("picFile").files;
+               // var point = path.lastIndexOf(".");
+                //var type = path.substr(point);//图片类型
                 var kb=Math.floor(files[0].size/1024);
                 if(kb>2048){
                     layer.alert('图片大小不得超过2M!');
@@ -56,10 +59,8 @@
                     {
                         if(data.code){
                             var path=data.data;//图片存放路径
-                            var point = path.lastIndexOf(".");
-                            var type = path.substr(point);//图片类型
-                            var str='<input type="hidden" name="file[]" value="'+path+'" />';
-                            $(".picBox").append(str);
+                            pathArr.push(path);
+                            $("#fileBox").val(pathArr);
                         }else{
                             layer.msg('图片上传失败');
                         }
@@ -127,7 +128,7 @@
                                         <input type="file" multiple="multiple" id="picFile" name="file">
                                     </a>
                                     <div class="picBox">
-
+                                        <input type="hidden" name="file" value="" id="fileBox">
                                     </div>
                                 </div>
                             </div>

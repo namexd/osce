@@ -44,13 +44,6 @@
                             @foreach(@$val['child'] as $val1)
                                 <div class="group_border" style="padding: 1em 0;">
                                     <h4>{{ @$val1['exam_question_name'] }}</h4>
-                                    <div class="picBox" style="width: 200px">
-                                        @if(!empty($val1['exam_question_image']))
-                                            @foreach($val1['exam_question_image'] as $item)
-                                                <img src="{{$item}}" alt="">
-                                            @endforeach
-                                        @endif
-                                    </div>
                                     @if(@$val['questionType'] == 4)
                                         <span class="marr_15">
                                             <label class="check_label" style="margin:10px">
