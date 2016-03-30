@@ -433,11 +433,19 @@ class PadController extends  CommonController{
      */
     public function getDoneExams(Request $request)
     {
+      $page = $request->get('pagesize',1);
         //获取已经考完的所有考试列表
         $examList = Exam::where('status','=', 2)->select(['id','name', 'begin_dt', 'end_dt'])->paginate(10);
-
+//        return response()->json(
+//            $this->success_rows(1, 'success', $noticeList['total'], config('osce.page_size'), $page, $list)
+//        );
+//        return response()->json(
+//            $this->success_rows(1, 'success', $pagination->total(), $pagesize = config('msc.page_size'),
+//                $pagination->currentPage(), $data)
+//        );
         //返回数据
         return $this->success_rows(1,'获取成功',
+
             $examList->lastPage(),
             $examList->perPage(),
             $examList->currentPage(),

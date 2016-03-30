@@ -43,7 +43,7 @@ class UserController extends CommonController
     public function getStaffList(Request $request, Common $common)
     {
         $list = $common->getUserList();
-        
+
         return view('osce::admin.systemManage.user_manage', ['list' => $list]);
     }
 
@@ -164,6 +164,17 @@ class UserController extends CommonController
             $user = Auth::user();
             if ($user->id == $id) {
                 throw new \Exception('此为当前登录人的账号，无法删除自己！');
+            }
+            $noAdminRole = [
+                config('config.teacherRoleId'),
+                config('config.examineeRoleId'),
+                config('config.spRoleId'),
+                config('config.superRoleId'),
+                config('config.patrolRoleId')
+            ];
+            $userRole = SysUserRole::where('user_id','=',$id)->whereNotIn('role_id',$noAdminRole)->first();
+            if($userRole){
+                throw new \Exception('该用户拥有多重角色，无法删除！');
             }
             $user = User::find($id);
             if ($user->delete()) {
@@ -290,9 +301,30 @@ class UserController extends CommonController
         ]);
         $user_id = $request->input('user_id');
         $role_id = $request->input('role_id');
-        $result = SysUserRole::where('user_id', '=', $user_id)->update([
-            'role_id' => $role_id
-        ]);
+        $noAdminRole = [
+            config('config.teacherRoleId'),
+            config('config.examineeRoleId'),
+            config('config.spRoleId'),
+            config('config.superRoleId'),
+            config('config.patrolRoleId')
+        ];
+        //查询该用户为（非老师、超级管理员）的角色
+        $userTeacherRole = SysUserRole::where('user_id','=',$user_id)->whereNotIn('role_id',$noAdminRole)->where('role_id','<>',$role_id)->first();
+        if(!$userTeacherRole){
+            return redirect()->back()->withErrors('老师角色不能变更!');
+        }
+        //存在所需变更的角色，则删除原来的其他 （非老师、超管）角色
+        $userRole= SysUserRole::where('user_id','=',$user_id)->where('role_id','=',$role_id)->first();
+        if($userRole){
+            $result = SysUserRole::where('user_id','=',$user_id)->whereNotIn('role_id',$noAdminRole)->where('role_id','<>',$role_id)->delete();
+
+        }else{
+
+            $result  = SysUserRole::where('user_id', '=', $user_id)->whereNotIn('role_id',$noAdminRole)->update([
+                'role_id' => $role_id
+            ]);
+        }
+
 
         if ($result) {
             return redirect()->route('osce.admin.user.getStaffList')->with('message', '修改成功!');
