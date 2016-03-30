@@ -170,8 +170,10 @@ class InvigilatePadController extends CommonController
             'station_id.required' => '考站编号必须'
         ]);
         $stationId = (int)$request->input('station_id');
+        //查询当前考试
+        $exam = Exam::doingExam();
         $studentModel = new  Student();
-        $studentData = $studentModel->studentList($stationId);
+        $studentData = $studentModel->studentList($stationId,$exam);
         if ($studentData) {
             $studentData->avator = asset($studentData->avator);
             return response()->json(
