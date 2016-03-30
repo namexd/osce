@@ -69,6 +69,7 @@
                                     <textarea name="name" id="subjectName" cols="10" rows="5" class="form-control">{{ $data['name'] }}</textarea>
                                 </div>
                             </div>
+
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">图片</label>
@@ -77,8 +78,12 @@
                                         选择图片
                                         <input type="file" multiple="multiple" id="picFile">
                                     </a>
-                                    <div class="picBox">
-                                        haha
+                                    <div class="picBox" style="width: 200px">
+                                        @if(!empty($data['image']))
+                                            @foreach($data['image'] as $val)
+                                                <img src="{{$val}}" alt="">
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>

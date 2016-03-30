@@ -106,6 +106,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //题库管理新增
         Route::get('examquestion/examquestion-add',['uses'=>'ExamQuestionController@getExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.getExamQuestionAdd']);//新增页面
         Route::post('examquestion/examquestion-add',['uses'=>'ExamQuestionController@postExamQuestionAdd','as'=>'osce.admin.ExamQuestionController.postExamQuestionAdd']);//新增数据交互
+        //题库图片上传
+        Route::post('examquestion/examquestion-upload',['uses'=>'ExamQuestionController@postQuestionUpload','as'=>'osce.admin.ExamQuestionController.postQuestionUpload']);
 
         //题库管理编辑
         Route::get('examquestion/examquestion-edit/{id}',['uses'=>'ExamQuestionController@getExamQuestionEdit','as'=>'osce.admin.ExamQuestionController.getExamQuestionEdit']);//编辑页面
@@ -138,21 +140,22 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //生成试卷的方法
         Route::get('api/generate-exam-paper',['uses'=>'ApiController@GenerateExamPaper','as'=>'osce.admin.ApiController.GenerateExamPaper']);
 
-        //监考老师登录界面
+        //理论考试登录界面
         Route::get('api/loginauth-view',['uses'=>'ApiController@LoginAuthView','as'=>'osce.admin.ApiController.LoginAuthView','middleware'=>['teacher-guest']]);
 
-        //监考老师登录数据交互
+        //理论考试登录数据交互
         Route::post('api/loginauth-info',['uses'=>'ApiController@LoginAuth','as'=>'osce.admin.ApiController.LoginAuthInfo']);
 
-        // 理论考试等待页面
-        Route::get('api/loginauth-wait',['uses'=>'ApiController@LoginAuthWait','as'=>'osce.admin.ApiController.LoginAuthWait']);
+        //理论考试登录成功页面
+        Route::get('api/loginauth-wait/{type}',['uses'=>'ApiController@LoginAuthWait','as'=>'osce.admin.ApiController.LoginAuthWait']);
 
         //理论考试登录页面地址
         Route::get('api/examinee-info',['uses'=>'ApiController@ExamineeInfo','as'=>'osce.admin.ApiController.ExamineeInfo']);
 
         //获取考试id
         Route::get('api/get-exampaperid',['uses'=>'ApiController@getExamPaperId','as'=>'osce.admin.ApiController.getExamPaperId']);
-
+        //学生登录验证跳转页面
+        Route::get('api/student-exam-index',['uses'=>'ApiController@getStudentExamIndex','as'=>'osce.admin.ApiController.getStudentExamIndex']);
     });
 
 });

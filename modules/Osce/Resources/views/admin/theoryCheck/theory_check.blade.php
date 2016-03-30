@@ -214,6 +214,13 @@
                                                 <div class="subjectBox   mart_10 " exam_question_id="{{@$val["id"]}}">
                                                     <span class="font16 subjectContent">{{ @$val["name"]}}(　　　)</span>
                                                 </div>
+                                                <div class="picBox" style="width: 200px">
+                                                    @if(!empty($val['image']))
+                                                        @foreach($val['image'] as $item)
+                                                            <img src="{{$item}}" alt="">
+                                                        @endforeach
+                                                    @endif
+                                                </div>
                                                 @if(@$val["examQuestionTypeId"]==1)
                                                     @foreach(@$val["content"] as $k=> $val2 )
                                                         <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">

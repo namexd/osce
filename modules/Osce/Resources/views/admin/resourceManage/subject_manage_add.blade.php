@@ -34,6 +34,56 @@
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
+    <script>
+        //试题图片上传
+        $(function(){
+            $(".btn-default").change(function(){
+                var files=document.getElementById("picFile").files;
+                var kb=Math.floor(files[0].size/1024);
+                if(kb>2048){
+                    layer.alert('图片大小不得超过2M!');
+                    $("#picFile").val('');
+                    return false;
+                }
+                $.ajaxFileUpload
+                ({
+                    url:"{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}",
+                    secureuri:false,//
+                    fileElementId:'picFile',//必须要是 input file标签 ID
+                    dataType: 'json',
+                    success: function (data, status)
+                    {
+                        if(data.code){
+                            var path=data.data;//图片存放路径
+                            var point = path.lastIndexOf(".");
+                            var type = path.substr(point);//图片类型
+                            var str='<input type="hidden" name="file[]" value="'+path+'" />';
+                            $(".picBox").append(str);
+                        }else{
+                            layer.msg('图片上传失败');
+                        }
+                    }
+                });
+            })
+        })
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @stop
 
 @section('content')
@@ -48,7 +98,7 @@
             <div class="ibox-content">
                 <div class="row">
                     <div class="col-md-12 ">
-                        <form method="post" class="form-horizontal" id="sourceForm" action="{{ route('osce.admin.ExamQuestionController.postExamQuestionAdd') }}">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="{{ route('osce.admin.ExamQuestionController.postExamQuestionAdd') }}" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">题目类型</label>
                                 <div class="col-sm-10">
@@ -74,10 +124,10 @@
                                 <div class="col-sm-10">
                                     <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file" title="请选择图片">
                                         选择图片
-                                        <input type="file" multiple="multiple" id="picFile">
+                                        <input type="file" multiple="multiple" id="picFile" name="file">
                                     </a>
                                     <div class="picBox">
-                                        haha
+
                                     </div>
                                 </div>
                             </div>

@@ -27,6 +27,13 @@
                         @foreach($val["child"] as $k => $val2 )
                             <div class="form-group">
                                 <p>{{$k+1}}、{{@$val2["name"]}}（　　）</p>
+                                <div class="picBox" style="width: 200px">
+                                    @if(!empty($val2["image"]))
+                                        @foreach(unserialize($val2["image"]) as $item)
+                                            <img src="{{$item}}" alt="">
+                                        @endforeach
+                                    @endif
+                                </div>
                                 @if(!empty($val2->examQuestionItem))
                                     @foreach($val2->examQuestionItem as $val3 )
                                         <span class="marr_15">{{@$val3["name"]}}、{{@$val3["content"]}}</span>
