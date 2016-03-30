@@ -192,7 +192,7 @@ class AutomaticPlanArrangement
         //将学生由总清单放入侯考区队列
         $this->_S_ING = $this->waitExamQueue();
 
-        $studentTotalNum    =   count($this->_S_ING);
+        $studentTotalNum    =   count($this->_S);
 
             //获取考试实体的最大公约数
         $mixCommonDivisors = [];
