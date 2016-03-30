@@ -980,10 +980,15 @@ function exam_station_add() {
         var $this = $(this);
         if($this.val() == 3) {
             $('.paper-id').show();
-        }else{
+            $('.sub-id').hide();
+        } else {
             $('.paper-id').hide();
+            $('.sub-id').show();
         }
     });
+
+
+
 }
 
 /**
@@ -1087,16 +1092,20 @@ function exam_station_edit() {
         var $this = $(this);
         if($this.val() == 3) {
             $('.paper-id').show();
-        }else{
+            $('.sub-id').hide();
+        } else {
             $('.paper-id').hide();
+            $('.sub-id').show();
         }
     });
 
     //代码回显是否隐藏考卷
     if($('select[name="type"]').val() == 3) {
         $('.paper-id').show();
-    }else{
+        $('.sub-id').hide();
+    } else {
         $('.paper-id').hide();
+        $('.sub-id').show();
     }
 
 

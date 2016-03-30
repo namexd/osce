@@ -291,6 +291,7 @@ class DrawRoomMode implements DrawModeInterface
      * @param $stationIds
      * @author Jiangzhiheng
      * @time
+     * @return \Illuminate\Support\Collection
      */
     private function diffStationId($exam, $object, $stationIds)
     {
@@ -305,6 +306,7 @@ class DrawRoomMode implements DrawModeInterface
     }
 
     /**
+     * 抽签逻辑
      * @param $student
      * @param $exam
      * @param $diff
@@ -332,7 +334,6 @@ class DrawRoomMode implements DrawModeInterface
         $room = RoomStation::where('station_id', $object->station_id)->first();
         $object->status = 1;
         $object->room_id = $room->room_id;
-
 
 
         $array['after_status'] = 1;

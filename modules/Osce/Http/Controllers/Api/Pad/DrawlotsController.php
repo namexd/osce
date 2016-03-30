@@ -218,6 +218,9 @@ class DrawlotsController extends CommonController
 //            } else {
 //                throw new \Exception('考试模式不存在！', -703);
 //            }
+
+            //从集合中移除blocking
+            $students->forget('blocking');
             return response()->json($this->success_data($students));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -244,7 +247,8 @@ class DrawlotsController extends CommonController
      */
     public function getStation(Request $request)
     {
-        \DB::connection('osce_mis')->beginTransaction();
+        $connection = \DB::connection('osce_mis');
+        $connection->beginTransaction();
         try {
             //验证
             $this->validate($request, [
@@ -336,12 +340,12 @@ class DrawlotsController extends CommonController
 
             //判断时间
             $this->judgeTime($watchLog->student_id);
-            \DB::connection('osce_mis')->commit();
+            $connection->commit();
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
-            \DB::connection('osce_mis')->rollBack();
-            \Log::alert('Error', [$ex->getLine(), $ex->getMessage()]);
+            $connection->rollBack();
+            \Log::alert('Error', [$ex->getLine(), $ex->getFile(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }

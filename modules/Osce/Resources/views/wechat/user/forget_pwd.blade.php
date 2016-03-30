@@ -44,6 +44,7 @@
             <input class="btn" type="submit" style="background:#1ab394;" value="提交审核" />
         </form>
     </div>
+    <span id="url" style="display: none;">{{(isset($_GET['reUrl'])?$_GET['reUrl']:'')}}</span>
 @stop
 @section('footer_js')
 	<script type="text/javascript" src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
@@ -119,6 +120,13 @@
 		            }
 		        }
 		    });
+
+            @if(isset($_GET['succ']) && $_GET['succ'] ==1)
+                layer.msg('保存成功！',function (it) {
+
+                    location.href = $('#url').text();
+                });
+            @endif
         })
     </script>
 @stop
