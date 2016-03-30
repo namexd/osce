@@ -98,7 +98,7 @@
                                 <div class="col-sm-10">
                                     <select class="form-control" name="case_id">
                                         @forelse($list as $option)
-                                            <option value="{{$option->id}}">{{$option->name}}</option>
+                                            <option value="{{$option->id}}">{{$option->title}}</option>
                                         @empty
                                         @endforelse
                                     </select>

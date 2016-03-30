@@ -9,7 +9,7 @@
     .blank-panel .panel-heading {margin-left: -20px;}
     #start,#end{width: 160px;}
     .input-group input{height: 34px;}
-    .ibox-content{padding: 0 20px  20px;}
+    .ibox-content{padding: 20px;}
     </style>
 @stop
 
@@ -30,6 +30,12 @@
             </div>
         </div>
     <div class="container-fluid ibox-content" id="list_form">
+        <ul class="nav nav-tabs teacher-tabs">
+            <li role="presentation" class="active"><a href="{{route('osce.admin.topic.getList')}}">考试项目</a></li>
+            <li role="presentation"><a href="{{route('osce.admin.case.getCaseList')}}">病例</a></li>
+            <li role="presentation"><a href="#">用物</a></li>
+        </ul>
+        
         <div class="panel blank-panel">
           <form method="get" action="{{route('osce.admin.topic.getList')}}">
             <div class="input-group" style="width: 290px;margin:20px 0;">
@@ -43,8 +49,7 @@
             <table class="table table-striped" id="table-striped">
                 <thead>
                 <tr>
-                    <th>#</th>
-                    <th>科目名称</th>
+                    <th>项目名称</th>
                     <th>描述</th>
                     <th>操作</th>
                 </tr>
@@ -53,7 +58,6 @@
                 @forelse($list as $key => $item)
 
                     <tr>
-                        <td>{{$key+1}}</td>
                         <td>{{$item->title}}</td>
                         <td>{{$item->description}}</td>
                         <td value="{{$item->id}}">
