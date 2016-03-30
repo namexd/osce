@@ -108,6 +108,16 @@
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
+                                <label class="col-sm-2 control-label">支持考试项目</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="type">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">备注</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" name="description" id="note" value="{{$item->description}}">

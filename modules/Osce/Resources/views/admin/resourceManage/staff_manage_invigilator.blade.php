@@ -39,33 +39,31 @@
                 <h5 class="title-label">人员管理</h5>
             </div>
             <div class="col-xs-6 col-md-3" style="float: right;">
-                <a  href="{{route('osce.admin.invigilator.getAddInvigilator')}}" class="btn btn-primary">新增</a>
                 <a href="{{route('osce.admin.invigilator.getdownloadTeacherImprotTpl')}}" class="btn btn-outline btn-default">下载模板</a>
-                <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1">导入老师
+                <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1">导入
                     <input type="file" name="teacher" id="file0" multiple="multiple" />
                 </a>
+                <a  href="{{route('osce.admin.invigilator.getAddInvigilator')}}" class="btn btn-primary">新增</a>
             </div>
         </div>
         <div class="container-fluid ibox-content">
             <ul class="nav nav-tabs teacher-tabs">
-                <li role="presentation" class="{{($type==1)?'active':''}}"><a href="{{route('osce.admin.invigilator.getInvigilatorList')}}">监考老师</a></li>
-                <li role="presentation" class="{{($type==3)?'active':''}}"><a href="{{route('osce.admin.invigilator.getInvigilatorList',['type'=>3])}}">巡考老师</a></li>
-                <li role="presentation"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP老师</a></li>
+                <li role="presentation" class="{{($type==1)?'active':''}}"><a href="{{route('osce.admin.invigilator.getInvigilatorList')}}">考官</a></li>
+                <li role="presentation"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP</a></li>
+                <li role="presentation" class="{{($type==3)?'active':''}}"><a href="{{route('osce.admin.invigilator.getInvigilatorList',['type'=>3])}}">巡考</a></li>
             </ul>
             <table class="table table-striped" id="table-striped">
                 <thead>
                     <tr>
-                        <th>#</th>
                         <th>姓名</th>
                         <th>联系电话</th>
-                        <th>最后登录时间</th>
+                        <th>最近登录</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($list as $key => $item)
                     <tr>
-                        <td>{{$key+1}}</td>
                         <td>{{$item->name}}</td>
                         <td>{{$item->userInfo->mobile or '-'}}</td>
                         <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
