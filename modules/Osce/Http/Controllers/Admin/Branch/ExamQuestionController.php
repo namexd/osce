@@ -122,6 +122,7 @@ class ExamQuestionController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
+    
     public function postQuestionUpload(Request $request){
         if ($request->hasFile('file'))
         {
@@ -137,6 +138,7 @@ class ExamQuestionController extends CommonController
             $this->success_data($pathReturn,1,'上传成功')
         );
     }
+
     /**新增试题数据交互
      * @method
      * @url /osce/admin/examQuestion/examQuestion-add
