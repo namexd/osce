@@ -13,6 +13,7 @@ use App\Entities\SysUserRole;
 use App\Entities\User;
 use DB;
 use Modules\Osce\Repositories\Common;
+use Overtrue\Wechat\Auth;
 
 class Teacher extends CommonModel
 {
@@ -388,7 +389,7 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editInvigilator($id, $userData, $teacherData, $role_id, $subjects)
+    public function editInvigilator($id, $userData, $teacherData, $subjects)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -423,7 +424,30 @@ class Teacher extends CommonModel
             if(!$userInfo->save()){
                 throw new   \Exception('教务人员用户信息变更失败');
             }
-            
+
+            //插入老师-考试项目 关系 TODO:Zhoufuxiang 2016-3-30
+            $user = Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+            if(count($subjects)>0){
+                foreach ($subjects as $subject) {
+                    $result = TeacherSubject::where('teacher_id','=',$id)->where('subject_id','=',$subject)->first();
+                    if($result){
+                        continue;   //存在，则跳过
+
+                    }else{
+                        $subjectData = [
+                            'teacher_id'        => $id,
+                            'subject_id'        => $subject,
+                            'created_user_id'   => $user->id,
+                        ];
+                        if(!TeacherSubject::create($subjectData)){
+                            throw new \Exception('老师-考试项目关系绑定失败！');
+                        }
+                    }
+                }
+            }
 
             $connection->commit();
             return $teacher;
