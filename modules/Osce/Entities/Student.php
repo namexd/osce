@@ -391,7 +391,7 @@ class Student extends CommonModel
      */
 
 
-    public function studentList($stationId,$exam)
+    public function studentList($stationId ,$exam)
     {
         return Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
