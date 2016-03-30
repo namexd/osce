@@ -31,18 +31,20 @@ function user_manage_change_role() {
     $('#save').click(function() {
         var req = {};
 
+        req['user_id'] = (location.href).split('=')[1];
+        req['roleIds'] = $('select').val();
         //数据验证
         $.ajax({
             type:'get',
             aysnc:false,
-            url:'',
+            url:'http://127.0.0.1:3000/getdata',
+            dataType:'jsonp',
             data:req,
             success:function(res) {
-                if(res.code != 1) {
-                    layer.msg(data.message,{skin:'msg-error',icon:1});
-                    return false;
-                } else {
-
+                if(res.code == 1) {
+                    layer.alert('确认删除？',{title:"删除",btn:['确认','取消']},function(){
+                        $('form').submit();
+                    });
                 }
             }
         });

@@ -51,7 +51,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
 								<input type="hidden" name="user_id" value="{{ $user_id }}">
-                                <button class="btn btn-primary" id="save" type="submit">保存</button>
+                                <input class="btn btn-primary" id="save" value="保存" type="button">
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
                             </div>
                         </div>
