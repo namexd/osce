@@ -464,11 +464,12 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 Route::get('test/test', function(\Illuminate\Http\Request $request) {
     $redis = Redis::connection('message');
-    $redis->publish(1, 'message');
+    dd($redis);
+    $redis->publish(1, json_encode(['test' => 'message']));
 });
 Route::get('redis', function(){
     $redis = Redis::connection('message');
-    $redis->subscribe(1, function($message){
+    $redis->psubscribe(['*'], function($message, $channel){
         echo $message;
     });
 });
