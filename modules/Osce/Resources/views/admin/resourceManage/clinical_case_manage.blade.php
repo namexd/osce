@@ -73,22 +73,6 @@
             </nav>
            
         </div>
-        <div class="test">test</div>
     </div>
 </div>
-<script>
-    $(function() {
-        $('.test').click(function() {
-            layer.open({
-              type: 2,
-              title: '新增科目',
-              shadeClose: true,
-              shade: 0.8,
-              area: ['90%', '90%'],
-              content: '{{route('osce.admin.topic.getAddTopic')}}' //iframe的url
-            }); 
-        });
-        
-    })
-</script>
 @stop{{-- 内容主体区域 --}}
