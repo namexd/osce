@@ -28,10 +28,7 @@
     <script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script>
 @stop
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator',
-        'deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}',
-        'firstpage':'{{route('osce.admin.invigilator.getInvigilatorList')}}',
-        'excel':'{{route('osce.admin.invigilator.postImportTeachers',['type'=>$type])}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator'}" />
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
@@ -39,18 +36,18 @@
                 <h5 class="title-label">人员管理</h5>
             </div>
             <div class="col-xs-6 col-md-3" style="float: right;">
-                <a href="{{route('osce.admin.invigilator.getdownloadTeacherImprotTpl')}}" class="btn btn-outline btn-default">下载模板</a>
+                <a href="" class="btn btn-outline btn-default">下载模板</a>
                 <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1">导入
                     <input type="file" name="teacher" id="file0" multiple="multiple" />
                 </a>
-                <a  href="{{route('osce.admin.invigilator.getAddInvigilator')}}" class="btn btn-primary">新增</a>
+                <a  href="" class="btn btn-primary">新增</a>
             </div>
         </div>
         <div class="container-fluid ibox-content">
             <ul class="nav nav-tabs teacher-tabs">
-                <li role="presentation" class="{{($type==1)?'active':''}}"><a href="{{route('osce.admin.invigilator.getInvigilatorList')}}">考官</a></li>
-                <li role="presentation"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP</a></li>
-                <li role="presentation" class="{{($type==3)?'active':''}}"><a href="{{route('osce.admin.invigilator.getInvigilatorList',['type'=>3])}}">巡考</a></li>
+                <li role="presentation"><a href="">考官</a></li>
+                <li role="presentation"><a href="">SP</a></li>
+                <li role="presentation" class="active"><a href="">巡考</a></li>
             </ul>
             <table class="table table-striped" id="table-striped">
                 <thead>
@@ -62,27 +59,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($list as $key => $item)
                     <tr>
-                        <td>{{$item->name}}</td>
-                        <td>{{$item->userInfo->mobile or '-'}}</td>
-                        <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td>
-                            <a href="{{route('osce.admin.invigilator.postEditInvigilator',['id'=>$item->id])}}">
+                            <a href="">
                                 <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>
                             </a>
-                            <a href="javascript:void(0)" class="delete" tid="{{$item->id}}"><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                            <a href="javascript:void(0)" class="delete" tid=""><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         </td>
                     </tr>
-                    @empty
-                    @endforelse
                 </tbody>
             </table>
                 <div class="pull-left">
-                    共{{$list->total()}}条
+                    共1条
                 </div>
                 <div class="pull-right">
-                    {!! $list->appends($_GET)->render() !!}
+
                 </div>
         </div>
     </div>

@@ -7,7 +7,13 @@
         font-weight: bolder;
     }
     #start,#end{width: 160px;}
-
+    .description-this{
+        display: inline-block;
+        width: 293px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
     </style>
 @stop
 
@@ -29,10 +35,14 @@
         </div>
     </div>
     <div class="container-fluid ibox-content" id="list_form">
+        <ul class="nav nav-tabs teacher-tabs">
+            <li role="presentation"><a href="{{route('osce.admin.topic.getList')}}">考试项目</a></li>
+            <li role="presentation" class="active"><a href="{{route('osce.admin.case.getCaseList')}}">病例</a></li>
+            <li role="presentation"><a href="#">用物</a></li>
+        </ul>
         <table class="table table-striped" id="table-striped">
             <thead>
                 <tr>
-                    <th>#</th>
                     <th>病例</th>
                     <th>描述</th>
                     <th>操作</th>
@@ -41,9 +51,8 @@
             <tbody>
             @foreach($data as $key => $item)
                 <tr>
-                    <td>{{$key+1}}</td>
                     <td><span class="description" title="{{$item->name}}">{{$item->name}}</span></td>
-                    <td><span class="description" title="{{$item->description}}">{{$item->description}}</span></td>
+                    <td><span class="description-this" title="{{$item->description}}">{{$item->description}}</span></td>
                     <td>
                         <a href="{{route('osce.admin.case.getEditCase')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                         <a href="javascript:void(0)" class="delete" value="{{$item->id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>

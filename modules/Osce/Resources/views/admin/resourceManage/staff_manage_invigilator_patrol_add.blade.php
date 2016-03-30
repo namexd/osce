@@ -25,7 +25,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新增SP</h5>
+            <h5>新增巡考</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -88,21 +88,6 @@
                             <label class="col-sm-2 control-label">电子邮箱</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="email" id="email">
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-                        <div class="form-group">
-                            <div class="select-floor">
-                                <label class="col-sm-2 control-label">支持考试项目</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" name="case_id">
-                                        @forelse($list as $option)
-                                            <option value="{{$option->id}}">{{$option->title}}</option>
-                                        @empty
-                                        @endforelse
-                                    </select>
-                                </div>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

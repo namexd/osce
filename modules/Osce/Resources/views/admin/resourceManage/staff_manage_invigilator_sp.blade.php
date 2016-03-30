@@ -1,9 +1,26 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
     <style>
-
-
-
+        .active{
+            font-weight: 700;
+        }
+        .route-nav{
+            margin-bottom: 30px;
+        }
+        ul{margin: 0;}
+        #file1{
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+        }
+        #file1 input{
+            position: absolute;
+            right: 0;
+            top: 0;
+            opacity: 0;
+            font-size: 100px;
+        }
+        .col-xs-6.col-md-3 a{float: right;}
     </style>
 @stop
 @section('only_js')
@@ -16,22 +33,25 @@
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">人员管理</h5>
             </div>
-            <div class="col-xs-6 col-md-2" style="float: right;">
-                <a  href="{{route('osce.admin.invigilator.getAddSpInvigilator')}}" class="btn btn-primary" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+            <div class="col-xs-6 col-md-3" style="float: right;">
+                <a href="{{route('osce.admin.invigilator.getdownloadTeacherImprotTpl')}}" class="btn btn-outline btn-default">下载模板</a>
+                <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1">导入
+                    <input type="file" name="teacher" id="file0" multiple="multiple" />
+                </a>
+                <a  href="{{route('osce.admin.invigilator.getAddSpInvigilator')}}" class="btn btn-primary" style="float: right;">新增</a>
             </div>
         </div>
         <div class="container-fluid ibox-content">
             <ul class="nav nav-tabs teacher-tabs">
-                <li role="presentation"><a href="{{route('osce.admin.invigilator.getInvigilatorList',['type'=>1])}}">监考老师</a></li>
-                <li role="presentation"><a href="{{route('osce.admin.invigilator.getInvigilatorList',['type'=>3])}}">巡考老师</a></li>
-                <li role="presentation"  class="active"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP老师</a></li>
+                <li role="presentation"><a href="{{route('osce.admin.invigilator.getInvigilatorList',['type'=>1])}}">考官</a></li>
+                <li role="presentation"  class="active"><a href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">SP</a></li>
+                <li role="presentation"><a href="{{route('osce.admin.invigilator.getInvigilatorList',['type'=>3])}}">巡考</a></li>
             </ul>
             <table class="table table-striped" id="table-striped">
                 <thead>
                 <tr>
-                    <th>#</th>
                     <th>姓名</th>
-                    <th>病例</th>
+                    <th>考试项目</th>
                     <th>联系电话</th>
                     <th>最后登录时间</th>
                     <th>操作</th>
@@ -40,11 +60,9 @@
                 <tbody>
                 @forelse($list as $key => $item)
                     <tr>
-                        <td>{{$key+1}}</td>
                         <td>{{$item->name}}</td>
                         <td>{{$item->case_name}}</td>
                         <td>{{$item->userInfo->mobile or '-'}}</td>
-
                         <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
                         <td value="{{$item->id}}">
                             <a href="{{route('osce.admin.invigilator.getEditSpInvigilator',['id'=>$item->id])}}">

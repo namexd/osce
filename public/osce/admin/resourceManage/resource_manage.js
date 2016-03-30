@@ -28,6 +28,7 @@ $(function(){
         case "staff_manage_invigilator_sp":staff_manage_invigilator_sp();break;
         case "staff_manage_invigilator_sp_add":staff_manage_invigilator_sp_add();break;
         case "staff_manage_invigilator_sp_edit":staff_manage_invigilator_sp_edit();break;
+
         //设备管理
         case "equipment_manage": equipment_manage(); break;
         case "equipment_manage_video": equipment_manage_video(); break;
@@ -2310,7 +2311,7 @@ function staff_manage_invigilator_add() {
                         message: '请输入正确的邮箱'
                     }
                 }
-             }
+            }
         }
     });
     $("#images_upload").change(function(){
