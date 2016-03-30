@@ -291,7 +291,12 @@ class InvigilatorController extends CommonController
 
         $teacher    =   new Teacher();
         $invigilator=   $teacher -> find($id);
-        $subjects   =   TeacherSubject::where('teacher_id','=',$id)->get();
+        $subjects   =   TeacherSubject::where('teacher_id','=',$id)
+                        ->leftJoin('teacher', 'teacher.id', '=', 'teacher_subject.teacher_id')
+                        ->leftJoin('subject', 'subject.id', '=', 'teacher_subject.subject_id')
+                        ->select(['teacher_subject.teacher_id', 'teacher_subject.subject_id',
+                                  'teacher.name as teacher_name', 'subject.title as subject_name'])
+                        ->get();
 
         return view('osce::admin.resourceManage.staff_manage_invigilator_edit',['item'=>$invigilator, 'subject'=>$subjects]);
     }
@@ -375,7 +380,7 @@ class InvigilatorController extends CommonController
         //老师数据
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
         $subjects    = $request -> get('subject');      //获取考试项目
-        
+
         try{
             $teacherModel   =   new Teacher();
 
