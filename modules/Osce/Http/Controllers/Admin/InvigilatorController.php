@@ -26,6 +26,7 @@ class InvigilatorController extends CommonController
     public function getTest(){
         //return view('osce::admin.statistics_query.exam_vcr');
     }
+
     /**
      * 获取SP考教师列表
      * @url GET /osce/admin/invigilator/sp-invigilator-list
@@ -70,9 +71,10 @@ class InvigilatorController extends CommonController
         $type = $request->get('type');
         $Invigilator = new Teacher();
         $list        = $Invigilator -> getInvigilatorList((empty($type) || $type==1)?1:3);
-        $isSpValues  = $Invigilator -> getIsSpValues();
-        return view('osce::admin.resourceManage.staff_manage_invigilator',['list'=>$list,'isSpValues'=>$isSpValues,'type'=>(empty($type) || $type==1)?1:3]);
+
+        return view('osce::admin.resourceManage.staff_manage_invigilator',['list'=>$list,'type'=>(empty($type) || $type==1)?1:3]);
     }
+
     /**
      *  新增监考老师 表单显示页面
      * @api GET /osce/admin/invigilator/add-invigilator
@@ -138,8 +140,8 @@ class InvigilatorController extends CommonController
             'idcard'        =>  'required',
             'mobile'        =>  'required',
             'email'         =>  'required',
-            'type'          =>  'required|in:1,3',
             'code'          =>  'required',
+            'subject'       =>  'required',
             'images_path'   =>  'required',
             'description'   =>  'sometimes',
         ],[
@@ -149,7 +151,7 @@ class InvigilatorController extends CommonController
             'email.required'        =>  '邮箱必填',
             'type.required'         =>  '监考教师类型必填',
             'code.required'         =>  '监考教师编号必填',
-            'type.in'               =>  '监考教师类型不对',
+            'subject.required'      =>  '考试项目必选',
             'images_path.required'  =>  '请上传照片',
         ]);
         $user   =   Auth::user();
@@ -160,20 +162,21 @@ class InvigilatorController extends CommonController
         $userData = $request -> only('name', 'gender','idcard','mobile','email','code');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
-        $teacherData = $request -> only('name','code','type','description');  //姓名、编号、类型、备注
-        $teacherData['case_id']         = 0;
+        $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
+        $teacherData['type']            = 1;
+        $teacherData['case_id']         = null;
         $teacherData['status']          = 1;
         $teacherData['create_user_id']  = $user->id;
-        //根据老师类型，选择角色
-        if($teacherData['type'] == 1){
-            $role_id = config('osce.invigilatorRoleId',1);
-        }elseif ($teacherData['type'] == 3){
-            $role_id = config('osce.patrolRoleId',6);
-        }
+
+        //获取支持的考试项目
+        $subjects = $request->get('subject');
+
+        //从配置中获取角色对应的ID号, 考官角色默认为1
+        $role_id = config('osce.invigilatorRoleId',1);
 
         $Invigilator    =   new Teacher();
         try{
-            if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData)){
+            if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             } else{
                 throw new \Exception('新增失败');
@@ -284,11 +287,10 @@ class InvigilatorController extends CommonController
         $this   ->  validate($request,[
             'id'    =>  'required',
         ]);
-        $id             =   intval($request    ->  get('id'));
+        $id         =   intval($request    ->  get('id'));
 
-
-        $InvigilatorModel    =   new Teacher();
-        $invigilator    =   $InvigilatorModel    ->  find($id);
+        $teacher    =   new Teacher();
+        $invigilator=   $teacher -> find($id);
 
         return view('osce::admin.resourceManage.staff_manage_invigilator_edit',['item'=>$invigilator]);
     }
@@ -357,30 +359,28 @@ class InvigilatorController extends CommonController
             'idcard'        =>  'required',
             'mobile'        =>  'required',
             'email'         =>  'required',
-            'type'          =>  'required|in:1,3',
             'code'          =>  'required',
+            'subject'       =>  'required',
             'images_path'   =>  'required',
             'description'   =>  'sometimes',
         ],[
             'images_path.required'  => '请上传头像',
+            'subject.required'      => '考试项目必选',
         ]);
         $id             =   (int)$request    ->  get('id');
         //用户数据
         $userData = $request -> only('name', 'gender','idcard','mobile','email','code');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
-        $teacherData = $request -> only('name','code','type','description');  //姓名、编号、类型、备注
-        //根据老师类型，选择角色
-        if($teacherData['type'] == 1){
-            $role_id = config('osce.invigilatorRoleId',1);
-        }elseif ($teacherData['type'] == 3){
-            $role_id = config('osce.patrolRoleId',6);
-        }
+        $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
+        $subjects    = $request -> get('subject');      //获取考试项目
+        //获取角色ID，
+        $role_id = config('osce.invigilatorRoleId',1);
 
         try{
             $teacherModel   =   new Teacher();
 
-            if($result = $teacherModel ->  editInvigilator($id, $userData, $teacherData, $role_id))
+            if($result = $teacherModel ->  editInvigilator($id, $userData, $teacherData, $role_id, $subjects))
             {
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             } else{

@@ -2314,6 +2314,15 @@ function staff_manage_invigilator_add() {
                         message: '请输入正确的邮箱'
                     }
                 }
+            },/*TODO: chenxia 2016-3-30*/
+            type: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '支持考试项目不能为空'
+                    }
+                }
             }
         }
     });
@@ -2484,6 +2493,15 @@ function staff_manage_invigilator_edit() {
                     regexp: {
                         regexp: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ,
                         message: '请输入正确的邮箱'
+                    }
+                }
+            },/*TODO: chenxia 2016-3-30*/
+            type: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '支持考试项目不能为空'
                     }
                 }
             }
@@ -2712,6 +2730,16 @@ function staff_manage_invigilator_sp_add() {
                         message: '请输入正确的邮箱'
                     }
                 }
+            },
+            /*TODO: chenxia 2016-3-30*/
+            type: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '支持考试项目不能为空'
+                    }
+                }
             }
         }
     });
@@ -2889,6 +2917,16 @@ function staff_manage_invigilator_sp_edit() {
                     regexp: {
                         regexp: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ,
                         message: '请输入正确的邮箱'
+                    }
+                }
+            },
+            /*TODO: chenxia 2016-3-30*/
+            type: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '支持考试项目不能为空'
                     }
                 }
             }

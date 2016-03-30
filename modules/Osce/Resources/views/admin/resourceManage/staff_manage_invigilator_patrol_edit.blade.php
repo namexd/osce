@@ -22,10 +22,11 @@
 
 @section('content')
 <input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_patrol_edit'}" />
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>编辑巡考</h5>
+            <h5>新增巡考</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
