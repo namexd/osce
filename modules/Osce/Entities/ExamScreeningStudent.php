@@ -78,4 +78,10 @@ class ExamScreeningStudent extends CommonModel
         }
     }
 
+
+    //exam_screening
+    public function screening(){
+        return $this->hasOne('Modules\Osce\Entities\ExamScreening', 'id', 'exam_screening_id');
+    }
+
 }
