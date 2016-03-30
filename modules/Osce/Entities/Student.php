@@ -391,13 +391,16 @@ class Student extends CommonModel
      */
 
 
-    public function studentList($stationId)
+    public function studentList($stationId ,$exam)
     {
-        return Student::leftjoin('exam_queue', function ($join) {
+        // 查询下一个代考考生信息
+        $nextTester =  Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
         })->leftjoin('station_teacher', function ($join) {
             $join->on('exam_queue.station_id', '=', 'station_teacher.station_id');
-        })->where('exam_queue.station_id', '=', $stationId)
+        })
+            ->where('exam_queue.station_id', '=', $stationId)
+            ->where('exam_queue.exam_id','=',$exam->id)
             ->whereIn('exam_queue.status', [1, 2])
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->select([
@@ -409,8 +412,22 @@ class Student extends CommonModel
                 'exam_queue.status as status',
                 'student.id as student_id',
                 'student.exam_sequence as exam_sequence',
-            ])
+            ])->first();
+
+        // 查询考试是否结束
+        $waitingList = Student::leftjoin('exam_queue', function ($join) {
+            $join->on('student.id', '=', 'exam_queue.student_id');
+        })->leftjoin('station_teacher', function ($join) {
+            $join->on('exam_queue.station_id', '=', 'station_teacher.station_id');
+        })->where('exam_queue.station_id', '=', $stationId)
+            ->where('exam_queue.status', '<>', 3)
             ->first();
+
+
+        return [
+            'nextTester'  => $nextTester,
+            'waitingList' => $waitingList,
+        ];
     }
 
     //考生查询

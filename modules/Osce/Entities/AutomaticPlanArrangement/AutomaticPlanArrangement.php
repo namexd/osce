@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities\AutomaticPlanArrangement;
 
 
+use Illuminate\Support\Facades\DB;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowStation;
@@ -190,7 +191,10 @@ class AutomaticPlanArrangement
 
         //将学生由总清单放入侯考区队列
         $this->_S_ING = $this->waitExamQueue();
-        //获取考试实体的最大公约数
+
+        $studentTotalNum    =   count($this->_S);
+
+            //获取考试实体的最大公约数
         $mixCommonDivisors = [];
         foreach ($this->_T as $item) {
             $mixCommonDivisors[] = $item->mins  +   config('osce.begin_dt_buffer');
@@ -199,8 +203,9 @@ class AutomaticPlanArrangement
         $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
         $this->doorStatus = $this->_T_Count;
 
-        $abcd = 0;
-        $efg = 0;
+        $ExamFlowModel  =   new ExamFlow();
+        $flowsNum = $ExamFlowModel->studentFlowCount($this->_Exam);
+
         $min    =   $this->doorStatus;
         $max = $this->doorStatus;
         $i = $beginDt;
@@ -214,10 +219,10 @@ class AutomaticPlanArrangement
                  * 考试实体状态判断,使用exam_plan_record来判断状态
                  * 如果为false，就说明是开门状态
                  */
-                $abcd++;
+//                $abcd++;
                 if ($this->doorStatus > 0) {
                     $tempBool = $this->ckeckStatus($station, $screen);
-                    $efg++;
+//                    $efg++;
                     $min=$min>$this->doorStatus? $this->doorStatus:$min;
                     $max = $max < $this->doorStatus ? $this->doorStatus : $max;
                 } else {
@@ -227,15 +232,18 @@ class AutomaticPlanArrangement
                 if (!$tempBool) {
                     //获取实体所需要的学生清单
                     $students = $this->needStudents($station, $screen, $examId);
-//                    dump(count($students));
+
                     if (count($students) == 0) {
                         continue;
                     }
 
                     //变更学生的状态(写记录)
+//                    echo '====';
                     foreach ($students as &$student) {
                         //拼装数据
                         $data = $this->dataBuilder($examId, $screen, $student, $station, $i);
+//                        dump($i);
+//                        echo 'here',$station->id;
                         $result = ExamPlanRecord::create($data);
                         if (!$result) {
                             throw new \Exception('关门失败！', -11);
@@ -249,16 +257,23 @@ class AutomaticPlanArrangement
                     $station->timer += $step;
                     //反之，则是关门状态
                 } else {
+                    if($k  ===   2)
+                    {
+                        continue;
+                    }
                     $tempValues = $this->examPlanRecordIsOpenDoor($station, $screen);
                     if ($station->timer >= $station->mins * 60 + config('osce.begin_dt_buffer') * 60) {
                         $station->timer = 0;
                         //将结束时间写在表内
+//                        echo 'there',$station->id;
                         foreach ($tempValues as $tempValue) {
+//                            dump($tempValue->end_dt);
+//                            dump($tempValue);
                             if(!empty($tempValue->end_dt))
                             {
                                 continue;
                             }
-                            $tempValue->end_dt = date('Y-m-d H:i:s', $i);
+                            $tempValue->end_dt = date('Y-m-d H:i:s', $i + 1);
                             if (!$tempValue->save()) {
                                 throw new \Exception('开门失败！', -10);
                             } else {
@@ -275,6 +290,7 @@ class AutomaticPlanArrangement
                 $step = $mixCommonDivisor   *   60;
                 $i += $step;
             }
+
             if ($k === 2) {
                 $step = $mixCommonDivisor * 60;
                 $k  =   3;
@@ -285,13 +301,32 @@ class AutomaticPlanArrangement
             }
 
 
-//            if (count($this->_S_ING) == 0 && count($this->_S) == 0 ){
+            if (count($this->_S_ING) == 0 && count($this->_S) == 0 ){
 //                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id', $examId)->first();  //通过查询数据表中是否有没有写入end_dt的数据
 //                if(is_null($examPlanNull))
 //                {
 //                    break;
 //                }
-//            }
+                $total  =   ExamPlanRecord::  where('exam_id', '=', $examId)
+                ->whereNotNull('end_dt')
+                ->groupBy('student_id')
+                ->select(\DB::raw(
+                    implode(',',
+                        [
+                            'count(`id`) as flowsNum',
+                            'id',
+                            'student_id',
+                        ]
+                    )
+                ))
+                ->Having('flowsNum', '=', $flowsNum)->get();
+
+                if($studentTotalNum==count($total))
+                {
+                    break;
+                }
+            }
+//            sleep(1);
         }
 
         //获取未走完流程的考生
@@ -407,7 +442,7 @@ class AutomaticPlanArrangement
                 'room_id' => $station->id,
                 'exam_id' => $examId,
                 'exam_screening_id' => $screen->id,
-                'begin_dt' => date('Y-m-d H:i:s', $i),
+                'begin_dt' => date('Y-m-d H:i:s', $i + 1),
                 'serialnumber' => $station->serialnumber,
                 'flow_id' => $station->flow_id
             ];
@@ -418,7 +453,7 @@ class AutomaticPlanArrangement
                 'station_id' => $station->id,
                 'exam_id' => $examId,
                 'exam_screening_id' => $screen->id,
-                'begin_dt' => date('Y-m-d H:i:s', $i),
+                'begin_dt' => date('Y-m-d H:i:s', $i + 1),
                 'serialnumber' => $station->serialnumber,
                 'flow_id' => $station->flow_id
             ];
@@ -443,20 +478,17 @@ class AutomaticPlanArrangement
         //获取正在考的考生
         switch ($this->sequenceCate) {
             case 1:
-                $result = $this->randomMode($station, $screen, $examId);
+                $result = $this->randomMode($station, $screen, $examId);  //随机
                 break;
             case 2:
-                $result = $this->orderMode($station, $screen);
+                $result = $this->orderMode($station, $screen);  //顺序
                 break;
             case 3:
-                $result = $this->pollMode($station, $screen, $examId);
+                $result = $this->pollMode($station, $screen, $examId);   //轮循
                 break;
             default:
                 throw new \Exception('没有对应的考试排序模式！');
         }
-//        echo '=====';
-//        dump($this->sequenceCate);
-//        dump(count($result));
         return $result;
     }
 
@@ -834,8 +866,10 @@ class AutomaticPlanArrangement
          * 再将人从学生池里抽人进入侯考区
          * 直接使用array_shift函数
          */
+
         if (count($result) < $station->needNum) {
-            for ($i = 0; $i <= $station->needNum - count($result); $i++) {
+            $hasStudentNum  =   $station->needNum - count($result);
+            for ($i = 0; $i < $hasStudentNum; $i++) {
                 if (count($this->_S_ING) > 0) {
                     $thisStudent = array_shift($this->_S_ING);
                     if (!is_null($thisStudent)) {
@@ -865,8 +899,40 @@ class AutomaticPlanArrangement
      */
     private function orderMode($station, $screen)
     {
+//        $result = [];
+//        $testStudents = $this->orderTestStudent($station, $screen);
+//        if ($station->serialnumber == 1) {
+//            for ($i = 0; $i < $station->needNum; $i++) {
+//                if (count($this->_S_ING) > 0) {
+//                    $thisStudent = array_shift($this->_S_ING);
+//                    if (!is_null($thisStudent)) {
+//                        $result[] = $thisStudent;
+//                    }
+//                    if (count($this->_S) > 0) {
+//                        if (is_array($this->_S)) {
+//                            $this->_S_ING[] = array_shift($this->_S);
+//                        } else {
+//                            $this->_S_ING[] = $this->_S->shift();
+//                        }
+//                    }
+//                }
+//            }
+//            return $result;
+//        } else {
+//            if (count($testStudents) <= $station->needNum) {
+//                $result = $testStudents;
+//                return $result;
+//            } elseif (count($testStudents) > $station->needNum) {
+//                for ($i = 0; $i < $station->needNum; $i++) {
+//                    $result[] = $testStudents->shift();
+//                }
+//                return $result;
+//            }
+//            return $result;
+//        }
+
+        //获取第一个流程的学生
         $result = [];
-        $testStudents = $this->orderTestStudent($station, $screen);
         if ($station->serialnumber == 1) {
             for ($i = 0; $i < $station->needNum; $i++) {
                 if (count($this->_S_ING) > 0) {
@@ -884,16 +950,32 @@ class AutomaticPlanArrangement
                 }
             }
             return $result;
-        } else {
-            if (count($testStudents) <= $station->needNum) {
-                $result = $testStudents;
-                return $result;
-            } elseif (count($testStudents) > $station->needNum) {
-                for ($i = 0; $i < $station->needNum; $i++) {
-                    $result[] = $testStudents->shift();
+        } else { //就说明是第二或者是以后的流程,从考完了上一个流程的学生里找
+            $studentIds = ExamPlanRecord::where('exam_screening_id', $screen->id)
+                ->where('serialnumber', $station->serialnumber - 1)
+                ->whereNotNull('end_dt')
+                ->get()
+                ->pluck('student_id')
+                ->toArray();
+
+            $usedStudentIds = ExamPlanRecord::where('exam_screening_id', $screen->id)
+                ->where('serialnumber', '=', $station->serialnumber)
+                ->get()
+                ->pluck('student_id')
+                ->toArray();
+
+            $resultArray = array_diff($studentIds, $usedStudentIds);
+
+            $result = Student::whereIn('id', $resultArray)->get()->all();
+
+            if (count($this->_S) > 0) {
+                if (is_array($this->_S)) {
+                    $this->_S_ING[] = array_shift($this->_S);
+                } else {
+                    $this->_S_ING[] = $this->_S->shift();
                 }
-                return $result;
             }
+
             return $result;
         }
     }
@@ -931,7 +1013,7 @@ class AutomaticPlanArrangement
 //            dump($station->needNum);
 //            dump($station->needNum - count($result));
             $hasStudentNum  =   $station->needNum - count($result);
-            for ($i = 0; $i <= $hasStudentNum; $i++) {
+            for ($i = 0; $i < $hasStudentNum; $i++) {
 //                echo count($this->_S_ING);
 //                echo '+';
                 if (count($this->_S_ING) > 0) {

@@ -45,9 +45,7 @@ class InvigilatePadController extends CommonController
 //    测试
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
-    {;
-      $bar =  asset('djhf');
-        dd($bar);
+    {
         $info = array('coffee', 'brown', 'caffeine');
 
 // 列出所有变量
@@ -128,7 +126,7 @@ class InvigilatePadController extends CommonController
                 'name' => $fileName,
                 'description' => $date . '-' . $params['student_name'],
                 'standard_id' => $standardId,
-                'student_id'=>$studentId,
+                 'student_id'=>$studentId,
             ];
 
             //将内容插入数据库
@@ -170,12 +168,18 @@ class InvigilatePadController extends CommonController
             'station_id.required' => '考站编号必须'
         ]);
         $stationId = (int)$request->input('station_id');
+         $exam = Exam::doingExam();
         $studentModel = new  Student();
-        $studentData = $studentModel->studentList($stationId);
-        if ($studentData) {
-            $studentData->avator = asset($studentData->avator);
+        $studentData = $studentModel->studentList($stationId,$exam);
+        if ($studentData['nextTester']) {
+//            dd($studentData['nextTester']);
+            $studentData['nextTester']->avator =asset($studentData['nextTester']->avator);
             return response()->json(
-                $this->success_data($studentData, 1, '验证完成')
+                $this->success_data($studentData['nextTester'], 1, '验证完成')
+            );
+        } elseif (empty($studentData['waitingList'])) {
+            return response()->json(
+                $this->success_data($studentData, 2, '考试已经结束')
             );
         } else {
             return response()->json(
@@ -323,7 +327,7 @@ class InvigilatePadController extends CommonController
                 try {
                     $examResultModel = new ExamResult();
 
-                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'],$stationId);
+                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id']);
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
@@ -537,6 +541,7 @@ class InvigilatePadController extends CommonController
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
             $teacherId = $request->input('user_id');
+            \Log::alert('anchor', $timeAnchor);
             //将戳过来的字符串变成数组
             $timeAnchor = explode(',', $timeAnchor);
 

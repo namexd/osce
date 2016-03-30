@@ -99,8 +99,6 @@ class RoomController extends CommonController
         $type = $request->input('type');
         $data = $model->showRoomList("", $type, $id);
 
-
-
         $cateList   =   Area::groupBy('cate')->select('cate')->get();
         //TODO:zhoufuxiang，查询没被其他考场关联的摄像机
         $model = new Vcr();
@@ -151,7 +149,7 @@ class RoomController extends CommonController
             throw new \Exception('操作人不存在，请先登录');
         }
 
-        try {
+//        try {
             if ($type === 0) {
                 $room = new Room();
                 unset($formData['cate']);
@@ -175,9 +173,9 @@ class RoomController extends CommonController
             }
             return redirect()->route('osce.admin.room.getRoomList',['type'=>$type]);
 
-        } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
 
     }
 
@@ -198,10 +196,10 @@ class RoomController extends CommonController
         $id = $request->input('id');
         $type = $request->input('type');
 
-        //TODO:zhoufuxiang，查询没有被其他考场关联的摄像机
-        $vcr = Vcr::where('used',0)
-            ->whereNotIn('status',[2,3])
-            ->select(['id', 'name'])->get();     //关联摄像机
+        //关联摄像机
+        $vcr = Vcr::where('used', 0)
+            ->whereNotIn('status', [2, 3])
+            ->select('id', 'name')->get();
 
         $cateList   =   Area::groupBy('cate')->get();
         return view('osce::admin.resourceManage.site_manage_add',['vcr' =>$vcr,'cateList'=>$cateList, 'type' => $type]);
@@ -225,7 +223,7 @@ class RoomController extends CommonController
     {
         //验证
         $this->validate($request, [
-                'vcr_id'        => 'required',
+                'vcr_id'        => 'sometimes',
                 'name'          => 'required|unique:osce_mis.room,name',
                 'address'       => 'required',
                 'code'          => 'sometimes',
@@ -236,14 +234,13 @@ class RoomController extends CommonController
                 'proportion' => 'required|integer'
             ],[
                 'name.unique'   =>  '名称必须唯一',
-                'vcr_id.required'=> '摄像头不能为空'
             ]
         );
         try {
             //TODO   表单内容变化没有提交nfc字段
             $formData = $request->only('name', 'address', 'code', 'description', 'floor', 'room_number', 'proportion');
-            $cate   = $request->input('cate',0);
-            $vcrId  = $request->get('vcr_id');
+            $cate   = $request->input('cate', 0);
+            $vcrId  = $request->input('vcr_id', null);
             if (!$user = Auth::user()) {
                 throw new \Exception('当前操作者没有登陆');
             }

@@ -88,11 +88,12 @@ class StationMode implements ModeInterface
             ->groupBy('student.id')
             ->take(1)
             ->get();
-        if (!is_null($collection->first())) {
-            if ($collection->first()->blocking != 1) {
+        if ($collection->isEmpty()) {
+
                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
                     ->where('exam_queue.status', '<', 3)
+                    ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
                         'student.id as student_id',
@@ -106,13 +107,12 @@ class StationMode implements ModeInterface
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
+                    ->skip(1)
                     ->take(1)
                     ->get();
-            } else {
-                return $collection;
-            }
+
         } else {
-            return collect([]);
+            return $collection;
         }
 
     }
@@ -143,11 +143,12 @@ class StationMode implements ModeInterface
             ->take(1)
             ->get();
 
-        if (!is_null($collection->first())) {
-            if ($collection->first()->blocking != 1) {
+        if ($collection->isEmpty()) {
+
                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
                     ->where('exam_queue.status', '<', 3)
+                    ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
                         'student.id as student_id',
@@ -161,14 +162,12 @@ class StationMode implements ModeInterface
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
-                    ->skip(1)
+                    ->skip(2)
                     ->take(1)
                     ->get();
-            } else {
-                return $collection;
-            }
+
         } else {
-            return collect([]);
+            return $collection;
         }
     }
 }

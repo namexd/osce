@@ -20,5 +20,7 @@ class StationCase extends CommonModel
     protected $hidden = [];
     protected $fillable = ['case_id', 'station_id', 'create_user_id'];
 
-
+    public function station(){
+        return $this->belongsTo('\Modules\Osce\Entities\Station','station_id','id');
+    }
 }

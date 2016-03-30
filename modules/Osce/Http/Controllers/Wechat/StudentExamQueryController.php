@@ -203,45 +203,47 @@ class StudentExamQueryController extends CommonController
 
     public function  getExamDetails(Request $request)
     {
-        $this->validate($request, [
-            'exam_screening_id' => 'required|integer',
+        try{
+            $this->validate($request, [
+                'exam_screening_id' => 'required|integer',
 //            'station_id'    => 'required|integer'
-        ]);
+            ]);
 
-        $examScreeningId = intval(Input::get('exam_screening_id'));
-        $station_id = intval(Input::get('station_id'));
-        //根据考试场次id查询出该结果详情
-        $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->where('station_id', '=', $station_id)->first();
-        if(is_null($examresultList)){
-            throw new \Exception('该考试结果不存在');
-        }
-        //得到考试名字
-        $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
+            $examScreeningId = intval(Input::get('exam_screening_id'));
+            $station_id = intval(Input::get('station_id'));
+            //根据考试场次id查询出该结果详情
+            $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->where('station_id', '=', $station_id)->first();
 
-        //查询出详情列表
-        $examscoreModel = new ExamScore();
-        $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
+            if(is_null($examresultList)){
+                throw new \Exception('该考试结果不存在');
+            }
+            //得到考试名字
+            $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
 
-        //TODO: zhoufuxiang
-        $scores = [];
-        $itemScore = [];
-        foreach ($examScoreList as $itm) {
-            $pid = $itm->standard->pid;
-            $scores[$pid]['items'][] = [
-                'standard' => $itm->standard,
-                'score' => $itm->score,
-            ];
-            $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
-        }
+            //查询出详情列表
+            $examscoreModel = new ExamScore();
+            $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
 
-        foreach ($scores as $index => $item) {
-            //获取考核点信息
-            $standardM = Standard::where('id', $index)->first();
-            $scores[$index]['sort'] = $standardM->sort;
-            $scores[$index]['content'] = $standardM->content;
-            $scores[$index]['tScore'] = $standardM->score;
-            $scores[$index]['score'] = $itemScore[$index]['totalScore'];
-        }
+            //TODO: zhoufuxiang
+            $scores = [];
+            $itemScore = [];
+            foreach ($examScoreList as $itm) {
+                $pid = $itm->standard->pid;
+                $scores[$pid]['items'][] = [
+                    'standard' => $itm->standard,
+                    'score' => $itm->score,
+                ];
+                $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
+            }
+
+            foreach ($scores as $index => $item) {
+                //获取考核点信息
+                $standardM = Standard::where('id', $index)->first();
+                $scores[$index]['sort'] = $standardM->sort;
+                $scores[$index]['content'] = $standardM->content;
+                $scores[$index]['tScore'] = $standardM->score;
+                $scores[$index]['score'] = $itemScore[$index]['totalScore'];
+            }
 
 
 //        $groupData = [];
@@ -272,12 +274,17 @@ class StudentExamQueryController extends CommonController
 //            }
 //        }
 
-        return view('osce::wechat.resultquery.examination_detail',
-            [
-                'examScoreList' => $scores,
-                'examresultList' => $examresultList,
-                'examName' => $examName
-            ]);
+            return view('osce::wechat.resultquery.examination_detail',
+                [
+                    'examScoreList' => $scores,
+                    'examresultList' => $examresultList,
+                    'examName' => $examName
+                ]);
+
+        }catch (\Exception $ex){
+            return  redirect()->back()->withErrors($ex->getMessage());
+        }
+
     }
 
 
@@ -324,7 +331,6 @@ class StudentExamQueryController extends CommonController
             );
         }
     }
-
 
     /**
      * 监考老师查询科目成绩和学生情况
