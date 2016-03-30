@@ -274,7 +274,7 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addInvigilator($role_id, $userData , $teacherData)
+    public function addInvigilator($role_id, $userData , $teacherData, $subjects)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -321,20 +321,28 @@ class Teacher extends CommonModel
             $teacher = $this->where('id', $user->id)->first();
             if($teacher){
                 throw new \Exception('该教职员工已经存在');
-//                //TODO:蒋志恒2016.1.10修改，去掉错误抛出，改为重写teacher
-//                $teacher->name = $data['name'];
-//                $teacher = $teacher->save();
-//                if (!$teacher) {
-//                    throw new \Exception('保存老师名字失败，请重试！');
-//                } else {
-//                    return $teacher;
-//                }
+
             } else{
                 $teacherData['id'] = $user -> id;
                 if(!($teacher = $this -> create($teacherData))){
                     throw new \Exception('教职员工创建失败');
                 }
             }
+
+            //插入老师-考试项目 关系 TODO:Zhoufuxiang 2016-3-30
+            if(count($subjects)>0){
+                foreach ($subjects as $index => $subject) {
+                    $subjectData = [
+                        'teacher_id'        => $user->id,
+                        'subject_id'        => $subject,
+                        'created_user_id'   => $teacherData['create_user_id'],
+                    ];
+                    if(!TeacherSubject::create($subjectData)){
+                        throw new \Exception('老师-考试项目关系绑定失败！');
+                    }
+                }
+            }
+
             $connection->commit();
             return $teacher;
 
@@ -380,7 +388,7 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editInvigilator($id, $userData, $teacherData, $role_id)
+    public function editInvigilator($id, $userData, $teacherData, $role_id, $subjects)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -406,19 +414,7 @@ class Teacher extends CommonModel
                 throw new   \Exception('教务人员信息变更失败');
             }
 
-            $connection = DB::connection('sys_mis');
-            if($connection->table('sys_user_role')->where('user_id', $id)->where('role_id', $roleId)->count()>0)
-            {
-                $connection->table('sys_user_role')->where('user_id', $id)->where('role_id', $roleId)->update(['role_id'=>Common::getRoleIdByTeacherType($teacher['type'])]);
-            }
-            else
-            {
-                $connection->table('sys_user_role')->insert([
-                    'role_id'=>Common::getRoleIdByTeacherType($teacher['type']),
-                    'user_id'=> $id
-                ]);
-            }
-//            dd($id, $roleId, $teacher['type']);
+
             //教务人员用户信息变更
             $userInfo   =   $teacher->userInfo;
             foreach($userData as $feild => $value) {
@@ -427,28 +423,7 @@ class Teacher extends CommonModel
             if(!$userInfo->save()){
                 throw new   \Exception('教务人员用户信息变更失败');
             }
-
-            //更改用户角色
-            $rolse = [config('osce.invigilatorRoleId',1),config('osce.patrolRoleId',6)];
-            $userRole = SysUserRole::where('user_id','=',$userInfo->id)->whereIn('role_id',$rolse)->first();
-            if($userRole){
-                if($userRole->role_id != $role_id){
-                    $userRole->role_id = $role_id;
-
-                    if(!$userRole->save()){
-                        throw new   \Exception('教务人员角色信息变更失败');
-                    }
-                }
-            }else{
-                DB::table('sys_user_role')->insert(
-                    [
-                        'role_id'    => $role_id,
-                        'user_id'    => $userInfo->id,
-                        'created_at' => time(),
-                        'updated_at' => time(),
-                    ]
-                );
-            }
+            
 
             $connection->commit();
             return $teacher;
