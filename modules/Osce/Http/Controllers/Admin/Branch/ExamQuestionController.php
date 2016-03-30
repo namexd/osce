@@ -124,6 +124,10 @@ class ExamQuestionController extends CommonController
      */
 
     public function postQuestionUpload(Request $request){
+        $data   =   [
+            'path'  =>  '',
+            'name'=>''
+        ];
         if ($request->hasFile('file'))
         {
             $file   =   $request->file('file');
@@ -132,9 +136,13 @@ class ExamQuestionController extends CommonController
             $fileName           =   $file->getClientOriginalName();
             $file->move($destinationPath,$fileName);
             $pathReturn    =   '/'.$path.$fileName;
+            $data   =   [
+                'path'=>$pathReturn,
+                'name'=>$fileName
+            ];
         }
         return json_encode(
-            $this->success_data($pathReturn,1,'上传成功')
+            $this->success_data($data,1,'上传成功')
         );
     }
 
