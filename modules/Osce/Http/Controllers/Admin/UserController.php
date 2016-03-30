@@ -300,4 +300,21 @@ class UserController extends CommonController
         return redirect()->back()->withErrors('修改权限失败!');
 
     }
+
+    public function getJudgeUserRole(Request $request){
+        $this->validate($request,[
+            'user_id'   => 'required',
+            'roleIds'   => 'required',
+        ]);
+        $user_id = $request->get('user_id');
+        $roleIds = $request->get('roleIds');
+        $roles   = [
+            config('osce.invigilatorRoleId'),
+            config('osce.patrolRoleId'),
+            config('osce.spRoleId')
+        ];
+
+        $result  = SysUserRole::whereIn('user_id', $roles)->get();
+
+    }
 }

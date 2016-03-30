@@ -294,7 +294,7 @@ class InvigilatorController extends CommonController
         $invigilator=   $teacher -> find($id);
         $subjects   =   TeacherSubject::where('teacher_id','=',$id)->get();
 
-        return view('osce::admin.resourceManage.staff_manage_invigilator_edit',['item'=>$invigilator, 'subjects'=>$subjects]);
+        return view('osce::admin.resourceManage.staff_manage_invigilator_edit',['item'=>$invigilator, 'subject'=>$subjects]);
     }
 
     /**
@@ -382,7 +382,7 @@ class InvigilatorController extends CommonController
         try{
             $teacherModel   =   new Teacher();
 
-            if($result = $teacherModel ->  editInvigilator($id, $userData, $teacherData, $role_id, $subjects))
+            if($result = $teacherModel ->  editInvigilator($id, $userData, $teacherData, $subjects))
             {
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             } else{
