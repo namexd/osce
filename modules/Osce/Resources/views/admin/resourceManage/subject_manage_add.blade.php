@@ -43,7 +43,7 @@
                 var kb=Math.floor(files[0].size/1024);
                 if(kb>2048){
                     layer.alert('图片大小不得超过2M!');
-                    $("#file").val('');
+                    $("#picFile").val('');
                     return false;
                 }
                 $.ajaxFileUpload
@@ -124,7 +124,7 @@
                                 <div class="col-sm-10">
                                     <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file" title="请选择图片">
                                         选择图片
-                                        <input type="file" multiple="multiple" id="picFile" name="image">
+                                        <input type="file" multiple="multiple" id="picFile">
                                     </a>
                                     <div class="picBox">
 
