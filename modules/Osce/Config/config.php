@@ -68,7 +68,7 @@ return [
 	'prepare'			=>	10,
 	'spRoleId'			=>	4,
 	'invigilatorRoleId'	=>	env('invigilatorRoleId',1),
-	'studentRoleId'		=>	2,
+	'studentRoleId'		=>	env('studentRoleId',78),
 	'adminRoleId'		=>	3,
 	'superRoleId'		=>	5,
 	'patrolRoleId'		=>	6,		//巡考老师角色 TODO: Zhoufuxiang  2016-3-23

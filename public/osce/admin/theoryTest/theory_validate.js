@@ -23,6 +23,11 @@ function theory_validate(){
                 cache:false,
                 dateType:'json',
                 success:function(res){
+                    // edit by wangjiang 2016-03-30 for 查询考试是否结束
+                    if (res.code == 2) {
+                        $('#examinfo').html('理论考试已结束')
+                    }
+
                     if(res.code == 1){
                         $(".showImf").show();
                         $(".wait").hide();
@@ -32,10 +37,9 @@ function theory_validate(){
                         $(".admissionNum").text(res.data.exam_sequence);
                         $(".myImg").attr("src",res.data.avator);
                         $(".goTest").attr("studentId",res.data.student_id);
-                        clearInterval(timer);
-                    }else{
-                        $('#examinfo').html('理论考试已结束')
                     }
+
+                    clearInterval(timer);
                 }
             })
         },5000);
