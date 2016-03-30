@@ -463,8 +463,7 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 //TODO:测试用
 Route::get('test/test', function(\Illuminate\Http\Request $request) {
-
-	dd(array_diff([2,4,1], [2,4,8]));
+    
 });
 //TODO:清空考试数据使用 	Zhoufuxiang
 Route::get('test/empty', function(\Illuminate\Http\Request $request) {
