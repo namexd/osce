@@ -1,5 +1,6 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
+    <link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
     <style>
     .img_box{
         width:197px;
@@ -16,12 +17,13 @@
 @section('only_js')
     <script src="{{asset('osce/admin/plugins/js/plugins/webuploader/webuploader.min.js')}}"></script>
     <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
+<script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
     <script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script>
 @stop
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_add','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_add','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}','get_subject':'{{route('osce.admin.invigilator.getSubjects')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -95,7 +97,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">支持考试项目</label>
                             <div class="col-sm-10">
-                                <select class="form-control" name="type">
+                                <select class="form-control data-example-ajax" name="type" multiple="multiple">
                                     <option value="">请选择</option>
                                 </select>
                             </div>
