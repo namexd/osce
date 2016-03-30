@@ -468,7 +468,7 @@ Route::get('test/test', function() {
 });
 Route::get('redis', function(){
     $redis = Redis::connection('message');
-    $redis->subscribe(['test-channel'], function($message){
+    $redis->subscribe('test-channel', function($message){
         echo $message;
     });
 });
