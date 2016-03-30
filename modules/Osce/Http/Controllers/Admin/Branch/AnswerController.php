@@ -218,7 +218,7 @@ class AnswerController extends CommonController
                 'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
                 'studentId' =>$request->input('studentId'),//学生Id
                 'stationId' => $request->input('stationId'),//考站id
-                'time'=>$data['actualLength'],//考试用时
+                'time'=>$data['actualLength'],//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
                 'teacherId'=>$request->input('teacherId'),//评分人编号
                 'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
                 'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
@@ -255,10 +255,35 @@ class AnswerController extends CommonController
         $answerModel = new Answer();
         //保存成功，调用查询该考生成绩的方法
         $examPaperFormalData = $answerModel->selectGrade($examPaperFormalId);
-        //dd($examPaperFormalData);
+        $time = $examPaperFormalData['actual_length']*60;
+        $minute = 0;$second=0;
+        if($time>=60){
+            $minute = intval($time/60);
+            $second = $time - $minute*60;
+        }else{
+            $second = $time;
+        }
         return view('osce::admin.theoryCheck.theory_check_complete', [
             'data'  =>$examPaperFormalData,//考试成绩及该考试相关信息
+            'minute'=>$minute,
+            'second'=>$second
         ]);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
