@@ -2379,9 +2379,9 @@ function staff_manage_invigilator_add() {
           
             //数据格式化
             var str = [];
-            var data = res.data.rows;
+            var data = res.data;
             for(var i in data){
-                str.push({id:data[i].id,text:data[i].name});
+                str.push({id:data[i].id,text:data[i].title});
             }
 
             //加载入数据
