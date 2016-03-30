@@ -2315,7 +2315,7 @@ function staff_manage_invigilator_add() {
                     }
                 }
             },/*TODO: chenxia 2016-3-30*/
-            type: {
+            'subject[]': {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
@@ -2527,7 +2527,7 @@ function staff_manage_invigilator_edit() {
                     }
                 }
             },/*TODO: chenxia 2016-3-30*/
-            type: {
+            'subject[]': {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
@@ -2792,7 +2792,7 @@ function staff_manage_invigilator_sp_add() {
                 }
             },
             /*TODO: chenxia 2016-3-30*/
-            type: {
+            'subject[]': {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
@@ -2995,7 +2995,7 @@ function staff_manage_invigilator_sp_edit() {
                     }
                 }
             },
-            email: {
+            'subject[]': {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {

@@ -11,7 +11,10 @@
         width: 197px;
         height: 251px;
     }
+    .select2-container--default{width:100% !important;}
      .select2-container--default .select2-selection--multiple{border:1px solid #e5e6e7;}
+     .select2-container--default .select2-selection--multiple:focus{border-color:1px solid #1ab394 !important;}
+      .select2-container--default .select2-selection--multiple .select2-selection--multiple:focus{border-color:1px solid #1ab394 !important;}
 </style>
 @stop
 
@@ -98,11 +101,13 @@
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
-
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">支持考试项目</label>
                                 <div class="col-sm-10">
                                     <select class="form-control data-example-ajax"  name="subject[]"  multiple="multiple">
+                                        @foreach($subject as $key => $item)
+                                            <option selected="selected" value="{{$item->id}}"></option>
+                                        @endforeach
                                         <option value="">请选择</option>
                                     </select>
                                 </div>

@@ -11,6 +11,10 @@
             width: 197px;
             height: 251px;
         }
+         .select2-container--default{width:100% !important;}
+             .select2-container--default .select2-selection--multiple{border:1px solid #e5e6e7;}
+             .select2-container--default .select2-selection--multiple:focus{border-color:1px solid #1ab394 !important;}
+              .select2-container--default .select2-selection--multiple .select2-selection--multiple:focus{border-color:1px solid #1ab394 !important;}
     </style>
 @stop
 
