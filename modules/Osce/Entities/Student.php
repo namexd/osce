@@ -633,4 +633,23 @@ class Student extends CommonModel
         }
     }
 
+
+    //user表关联学生表
+    public function screeningStudent(){
+        return $this->hasMany('Modules\Osce\Entities\ExamScreeningStudent', 'student_id', 'id');
+    }
+
+    //exam_screening
+    public function screeningStudent(){
+        return $this->hasMany('Modules\Osce\Entities\ExamScreeningStudent', 'student_id', 'id');
+    }
+
+    //获取用Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel户的信息及已报的考试
+    public function getStudentExamInfo($userid){
+        $builder = $this->where('student.user_id','=',$userid)->groupBy('student.id')->with(['screeningStudent'=>function($screeningStudent){
+            $screeningStudent->where('exam_screening_student.is_signin','=',1)->where('exam_screening_student.is_end','=',1)->with('');
+        }])->groupBy('student.id')->get();
+        dd($builder);
+    }
+
 }

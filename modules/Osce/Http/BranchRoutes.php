@@ -153,6 +153,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //获取考试id
         Route::get('api/get-exampaperid',['uses'=>'ApiController@getExamPaperId','as'=>'osce.admin.ApiController.getExamPaperId']);
 
+        //学生登录验证跳转页面
+        Route::get('api/student-exam-index',['uses'=>'ApiController@getStudentExamIndex','as'=>'osce.admin.ApiController.getStudentExamIndex']);
     });
 
 });

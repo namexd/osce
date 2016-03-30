@@ -9,7 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use App\Entities\User;
-// use Auth;
+
 use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -21,6 +21,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Illuminate\Http\Request;
+
 
 class ApiController extends CommonController
 {
@@ -391,6 +392,9 @@ class ApiController extends CommonController
 
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
+            //获取当前登录账户的角色名称
+            $user = new User();
+            $userInfo = $user->getUserRoleName($username,$password);
             return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
         }
         else
