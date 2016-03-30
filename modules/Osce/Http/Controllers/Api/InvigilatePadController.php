@@ -172,8 +172,8 @@ class InvigilatePadController extends CommonController
         $studentModel = new  Student();
         $studentData = $studentModel->studentList($stationId,$exam);
         if ($studentData['nextTester']) {
-            dd($studentData['nextTester']);
-            $studentData['nextTester']->avator =asset($studentData->avator);
+//            dd($studentData['nextTester']);
+            $studentData['nextTester']->avator =asset($studentData['nextTester']->avator);
             return response()->json(
                 $this->success_data($studentData['nextTester'], 1, '验证完成')
             );
