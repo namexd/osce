@@ -1,6 +1,7 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
+    <link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
 	<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
     <style>
 	    button.btn.btn-white.dropdown-toggle {
@@ -17,10 +18,13 @@
 @stop
 
 @section('only_js')
+	<script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
 	<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
+	<script src="{{asset('osce/admin/systemManage/system_manage.js')}}" ></script>
 @stop
 
 @section('content')
+<input type="hidden" id="parameter" value="{'pagename':'user_manage_change_role','URL':''}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -34,7 +38,7 @@
 							<div class="form-group">
 								<label class="col-sm-2 control-label">角色选择:</label>
 								<div class="col-sm-10">
-									<select class="form-control" name="role_id" style="width: 500px;">
+									<select class="form-control" name="role_id" style="width: 500px;" multiple="multiple">
 										    @if($role_id)
 											<option value="{{ $role_id->role_id }}" selected="selected">{{ $role_id->role->name }}</option>
 										    @endif
@@ -47,7 +51,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
 								<input type="hidden" name="user_id" value="{{ $user_id }}">
-                                <button class="btn btn-primary" type="submit">保存</button>
+                                <input class="btn btn-primary" id="save" value="保存" type="button">
                                 <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
                             </div>
                         </div>
@@ -59,6 +63,7 @@
             </div>
         </div>
     </div>
-
+    <script>
+    </script>
 </div>
 @stop{{-- 内容主体区域 --}}
