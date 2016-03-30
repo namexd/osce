@@ -26,6 +26,8 @@
     /*图片上传*/
     #file {position: relative;overflow: hidden;}
     #file input{position: absolute;right: 0;top: 0;font-size: 100px;}
+    .file-msg{color: #42b2b1;}
+    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
 </style>
 @stop
 
@@ -38,7 +40,6 @@
     <script>
         //试题图片上传
         $(function(){
-            var pathArr = [];
             $("#file").change(function(){
                 var files=document.getElementById("picFile").files;
                // var point = path.lastIndexOf(".");
@@ -49,18 +50,23 @@
                     $("#picFile").val('');
                     return false;
                 }
+                if($(".picBox p").length > 4){
+                    layer.alert('最多只能上传5张图片!');
+                    return false;
+                }
                 $.ajaxFileUpload
                 ({
                     url:"{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}",
                     secureuri:false,//
                     fileElementId:'picFile',//必须要是 input file标签 ID
                     dataType: 'json',
-                    success: function (data, status)
+                    success: function (data)
                     {
+                        console.log(data);
                         if(data.code){
-                            var path=data.data;//图片存放路径
-                            pathArr.push(path);
-                            $("#fileBox").val(pathArr);
+                            var path=data.data.path;//图片存放路径
+                            var picName = data.data.name;//图片名称
+                            $(".picBox").append('<p><input type="hidden" name="image[]" value="'+path+'"/>"'+picName+'"<i class="fa fa-2x fa-remove clo6"></i></p>');
                         }else{
                             layer.msg('图片上传失败');
                         }
@@ -121,14 +127,15 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">图片</label>
+                                <label class="col-sm-2 control-label">题目图片</label>
                                 <div class="col-sm-10">
                                     <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file" title="请选择图片">
                                         选择图片
-                                        <input type="file" multiple="multiple" id="picFile" name="file">
+                                        <input type="file" id="picFile" name="file">
                                     </a>
-                                    <div class="picBox">
-                                        <input type="hidden" name="file" value="" id="fileBox">
+                                    <span class="file-msg">(文件大小不得超过2M!)</span>
+                                    <div class="picBox upload_list">
+
                                     </div>
                                 </div>
                             </div>

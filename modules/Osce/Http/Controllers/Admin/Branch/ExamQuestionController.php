@@ -179,7 +179,7 @@ class ExamQuestionController extends CommonController
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'image'                    =>serialize($request->input('file')),//试题图片
+            'image'                    =>serialize($request->input('image')),//试题图片
 
         );
 
@@ -325,7 +325,7 @@ class ExamQuestionController extends CommonController
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'image'                    =>serialize($request->input('file')),//试题图片
+            'image'                    =>serialize($request->input('image')),//试题图片
 
         );
 
