@@ -168,13 +168,15 @@ class InvigilatePadController extends CommonController
             'station_id.required' => '考站编号必须'
         ]);
         $stationId = (int)$request->input('station_id');
+         $exam = Exam::doingExam();
         $studentModel = new  Student();
-        $studentData = $studentModel->studentList($stationId);
+        $studentData = $studentModel->studentList($stationId,$exam);
         if ($studentData['nextTester']) {
             return response()->json(
                 $this->success_data($studentData, 1, '验证完成')
             );
         } elseif (empty($studentData['waitingList'])) {
+            $studentData->avator =assert($studentData->avator);
             return response()->json(
                 $this->success_data($studentData, 2, '考试已经结束')
             );
