@@ -37,8 +37,7 @@ function user_manage_change_role() {
         $.ajax({
             type:'get',
             aysnc:false,
-            url:'http://127.0.0.1:3000/getdata',
-            dataType:'jsonp',
+            url:pars.URL,
             data:req,
             success:function(res) {
                 if(res.code == 1) {
