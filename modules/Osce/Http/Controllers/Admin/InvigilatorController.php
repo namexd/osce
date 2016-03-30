@@ -332,6 +332,7 @@ class InvigilatorController extends CommonController
         $teacher    =   new Teacher();
 //        $invigilator    =   $InvigilatorModel    ->  find($id);
         $invigilator=   $teacher -> find($id);
+   
         $subjects   =   TeacherSubject::where('teacher_id','=',$id)->get();
 //        $list   =   Subject::get();
         return view('osce::admin.resourceManage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'subject'=>$subjects]);
@@ -431,10 +432,10 @@ class InvigilatorController extends CommonController
             'idcard'        =>  'required',
             'mobile'        =>  'required',
             'email'         =>  'required',
-            'type'          =>  'required|in:2',
+//            'type'          =>  'required|in:2',
             'code'          =>  'required',
             'images_path'   =>  'required',
-            'case_id'       =>  'required',
+//            'case_id'       =>  'required',
             'description'   =>  'sometimes',
         ],[
             'images_path.required'  => '请上传头像',
@@ -443,11 +444,12 @@ class InvigilatorController extends CommonController
         $id                 =   (int)$request    ->  get('id');
         //用户数据
         $userData = $request -> only('name', 'gender','idcard','mobile','email','code');
+
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
-        $teacherData = $request -> only('name','code','type','case_id','description');  //姓名、编号、类型、病例
+        $teacherData = $request -> only('name','code','case_id','description');  //姓名、编号、类型、病例
         $subjects    = $request -> get('subject');
-        try{
+//        try{
             $TeahcerModel   =   new Teacher();
 
             if($TeahcerModel    ->  editSpInvigilator($id, $userData, $teacherData, $subjects))
@@ -457,13 +459,13 @@ class InvigilatorController extends CommonController
             } else{
                 throw new \Exception('编辑失败');
             }
-
-        } catch(\Exception $ex){
-            if($ex->getCode()==23000){
-                return redirect()->back()->withErrors(['这个号码已有过关联，不能修改']);
-            }
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//
+//        } catch(\Exception $ex){
+//            if($ex->getCode()==23000){
+//                return redirect()->back()->withErrors(['这个号码已有过关联，不能修改']);
+//            }
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
     /**
      * 发送预约邀请

@@ -105,8 +105,8 @@
                                 <div class="col-sm-10">
                                     <select class="form-control data-example-ajax"  name="subject[]"  multiple="multiple">
                                         @foreach($subject as $item)
-                                          <option value="{{$item->subject_id}}">请选择</option>
-                                            @endforeach
+                                            <option selected="selected" value="{{$item->subject_id}}">{{$item->subject->title}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
