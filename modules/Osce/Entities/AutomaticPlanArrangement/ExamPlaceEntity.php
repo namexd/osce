@@ -130,6 +130,8 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                     $temp->room_id = $roomId;
                     $temp->needNum = 1;
                     $stations[] = $temp;
+                    $sortBy = collect($stations)->sortBy('serialnumber');
+                    $stations = $sortBy->all();
                 }
             } elseif ($sequenceMode == 1) {
                 //获取该考试下的所有考场
@@ -168,6 +170,8 @@ class ExamPlaceEntity implements ExamPlaceEntityInterface
                     $temp->sequence_mode = $sequenceMode;
                     $temp->needNum = $tempStations->count();
                     $stations[] = $temp;
+                    $sortBy = collect($stations)->sortBy('serialnumber');
+                    $stations = $sortBy->all();
                 }
             } else {
                 throw new \Exception('非法操作！请重试', -1);
