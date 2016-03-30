@@ -148,6 +148,7 @@ class ExamQuestionController extends CommonController
      */
     public function postExamQuestionAdd(Request $request)
     {
+
         $this->validate($request, [
             'examQuestionTypeId'    =>'sometimes|integer',//试题表
             'name'                     => 'sometimes|string',
@@ -172,6 +173,7 @@ class ExamQuestionController extends CommonController
             'image'                    =>serialize($request->input('file')),//试题图片
 
         );
+
 
         //判断是否为判断题
         if($request->input('examQuestionTypeId')=='4'){
