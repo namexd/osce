@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities\ExamMidway;
 
 
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\Teacher;
@@ -89,29 +90,43 @@ class StationMode implements ModeInterface
             ->take(1)
             ->get();
         if ($collection->isEmpty()) {
+            $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                ->whereIn('exam_queue.serialnumber', $serialnumber)
+                ->where('exam_queue.status', '<', 3)
+                ->where('blocking', 1)
+                ->where('student.exam_id', $this->exam->id)
+                ->select(
+                    'student.id as student_id',
+                    'student.name as student_name',
+                    'student.user_id as student_user_id',
+                    'student.idcard as student_idcard',
+                    'student.mobile as student_mobile',
+                    'student.code as student_code',
+                    'student.avator as student_avator',
+                    'student.description as student_description'
+                )
+                ->orderBy('exam_queue.begin_dt', 'asc')
+                ->groupBy('student.id')
+                ->take(1)
+                ->get();
+            if ($query->isEmpty()) {
+                return collect([]);
+            } else {
+                $a = ExamQueue::where('student_id', $query->first()->student_id)
+                    ->where('status', 0)->where('blocking', 1)
+                    ->orderBy('begin_dt', 'asc')->first();
+                $a->station_id = $this->stationIds[0];
+                $a->save();
 
-                return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
-                    ->whereIn('exam_queue.serialnumber', $serialnumber)
-                    ->where('exam_queue.status', '<', 3)
-                    ->where('blocking', 1)
-                    ->where('student.exam_id', $this->exam->id)
-                    ->select(
-                        'student.id as student_id',
-                        'student.name as student_name',
-                        'student.user_id as student_user_id',
-                        'student.idcard as student_idcard',
-                        'student.mobile as student_mobile',
-                        'student.code as student_code',
-                        'student.avator as student_avator',
-                        'student.description as student_description'
-                    )
-                    ->orderBy('exam_queue.begin_dt', 'asc')
-                    ->groupBy('student.id')
-                    ->skip(1)
-                    ->take(1)
-                    ->get();
+                ExamQueue::where('exam_id', $this->exam->id)
+                    ->where('student_id', $query->first()->student_id)
+                    ->update(['blocking' => 0]);
+
+                return $query;
+            }
 
         } else {
+            ExamQueue::where('student_id', $collection->first()->student_id)->update(['blocking' => 0]);
             return $collection;
         }
 
