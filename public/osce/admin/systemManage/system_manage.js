@@ -19,6 +19,36 @@ $(function(){
     }
 });
 
+/**
+ * 角色更改
+ * @author mao
+ * @version 3.3
+ * @date    2016-03-30
+ */
+function user_manage_change_role() {
+    $('select').select2();
+
+    $('#save').click(function() {
+        var req = {};
+
+        //数据验证
+        $.ajax({
+            type:'get',
+            aysnc:false,
+            url:'',
+            data:req,
+            success:function(res) {
+                if(res.code != 1) {
+                    layer.msg(data.message,{skin:'msg-error',icon:1});
+                    return false;
+                } else {
+
+                }
+            }
+        });
+    });
+}
+
 function system_settings_media() {
 	$(".checkbox_input").click(function(){
 		if($(this).find("input").is(':checked')){
