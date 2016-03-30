@@ -41,7 +41,7 @@
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
                 var answer="";//答案
-                if($(this).children("input").checked=="true"){
+                if($(this).children(".check_icon").hasClass("check")){
                     $(this).children(".check_icon").removeClass("check");
                     $(this).children("input").attr("checked",false);
                 }else{
