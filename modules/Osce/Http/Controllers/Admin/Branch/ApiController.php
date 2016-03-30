@@ -366,7 +366,6 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthView(){
-
         return  view('osce::admin.theoryTest.theory_login');
     }
 
@@ -384,17 +383,16 @@ class ApiController extends CommonController
         $this->validate($request,[
             'username'  =>  'required',
             'password'  =>  'required',
+            'role_type' =>  'required|in:1,2', // edit by wangjiang at 2016-03-30 14:26 for 增加理论考试登录角色判断(1-监考老师 2-学生)
         ]);
 
         $username = $request->get('username');
         $password = $request->get('password');
+        $roleType = $request->input('role_type');
 
-        if (Auth::attempt(['username' => $username, 'password' => $password]))
-        {
-            return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
-        }
-        else
-        {
+        if (Auth::attempt(['username' => $username, 'password' => $password])) {
+            return redirect()->route('osce.admin.ApiController.LoginAuthWait')->with('examLoginRoleType', $roleType); //必须是redirect
+        } else {
             return redirect()->back()->withErrors('账号密码错误');
         }
     }
@@ -416,48 +414,51 @@ class ApiController extends CommonController
      * @date 2016-03-29 11:05
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
-        try {
-            $user = Auth::user();
+    public function LoginAuthWait(){
+        //edit by wangjiang at 2016-03-30 14:44 for 重构理论考试登录
+        $questionBankRepositories = new QuestionBankRepositories();
+        $user = Auth::user();
 
-            // 检查用户是否登录
-            if (is_null($user)) {
-                throw new \Exception('用户未登录', 1000);
-            }
+        // 检查用户是否登录
+        if (is_null($user)) {
+            return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('请登录');
+        }
+
+        // 检查登录角色session是否存在
+        if (empty(session('examLoginRoleType'))) {
+            return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('请选择登录角色');
+        }
+
+        if (session('examLoginRoleType') == 1) {
 
             //检验登录的老师是否是监考老师
             if (!$questionBankRepositories->LoginAuth()) {
-                throw new \Exception('你不是监考老师', 1001);
+                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors('你不是监考老师');
             }
+
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
             if (is_array($ExamInfo)) {
-                $data = array(
-                    'status'=>1,
+                $data = [
+                    'status'    => 1,
                     'name'      => $ExamInfo['ExamName'],
                     'stationId' => $ExamInfo['StationId'],
                     'examId'    => $ExamInfo['ExamId'],
                     'userId'    => $user->id,
-                );
+                ];
             } else {
-                $data = array(
-                    'status'=>0,
-                    'info'=>$ExamInfo
-                );
+                $data = [
+                    'status' => 0,
+                    'info'   => $ExamInfo,
+                ];
             }
+
+
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
-        }
-        catch(\Exception $ex)
-        {
-            if ($ex->getCode() === 1000) {
-                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }
-            if($ex->getCode() === 1001)
-            {
-                return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
-            }
+        } else {
+            // todo 学生登录处理
         }
     }
 
