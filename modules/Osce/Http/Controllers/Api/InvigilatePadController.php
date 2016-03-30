@@ -45,8 +45,9 @@ class InvigilatePadController extends CommonController
 //    测试
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
-    {;
-      $bar =  asset('djhf');
+    {
+        ;
+        $bar = asset('djhf');
         dd($bar);
         $info = array('coffee', 'brown', 'caffeine');
 
@@ -59,7 +60,7 @@ class InvigilatePadController extends CommonController
         echo "$drink has $power.\n";
 
 // 或者让我们跳到仅第三个
-        list( , , $power) = $info;
+        list(, , $power) = $info;
         echo "I need $power!\n";
 
 // list() 不能对字符串起作用
@@ -75,8 +76,7 @@ class InvigilatePadController extends CommonController
 //            echo $number."<br/>";
 //        }
 //
-        for ($i = 2; $i <= 5; $i++)
-        {
+        for ($i = 2; $i <= 5; $i++) {
             print "value is now " . $i . "<br>";
         }
     }
@@ -92,19 +92,19 @@ class InvigilatePadController extends CommonController
      * @internal param $files
      * @internal param $testResultId
      */
-    protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId,$studentId)
+    protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId, $studentId)
     {
         try {
             //将上传的文件遍历
 
             //拼凑文件名字
-            $fileName = time().'_'.mt_rand(0,99999) . '_';
+            $fileName = time() . '_' . mt_rand(0, 99999) . '_';
             //获取文件的MIME类型
 //            $fileMime = $file->getMimeType();
 //            foreach ($params as $param) {
 //                $fileName .= $param . '_';
 //            }
-            $fileName .= '_'.mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
+            $fileName .= '_' . mt_rand() . '.' . $file->getClientOriginalExtension(); //获取文件名的正式版
             //取得保存路径
             $savePath = 'osce/Attach/' . $type . '/' . $date . '/' . $params['student_name'] . '_' . $params['student_code'] . '/';
 //            $savePath = 'osce/Attach/' . $fileMime . '/' . $date . '/' . 13 . '_' . 13 . '/';
@@ -128,7 +128,7 @@ class InvigilatePadController extends CommonController
                 'name' => $fileName,
                 'description' => $date . '-' . $params['student_name'],
                 'standard_id' => $standardId,
-                'student_id'=>$studentId,
+                'student_id' => $studentId,
             ];
 
             //将内容插入数据库
@@ -173,7 +173,7 @@ class InvigilatePadController extends CommonController
         //查询当前考试
         $exam = Exam::doingExam();
         $studentModel = new  Student();
-        $studentData = $studentModel->studentList($stationId,$exam);
+        $studentData = $studentModel->studentList($stationId, $exam);
         if ($studentData) {
             $studentData->avator = asset($studentData->avator);
             return response()->json(
@@ -325,7 +325,7 @@ class InvigilatePadController extends CommonController
                 try {
                     $examResultModel = new ExamResult();
 
-                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'],$stationId);
+                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'], $stationId);
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
@@ -378,7 +378,7 @@ class InvigilatePadController extends CommonController
                 'standard_id' => 'required|integer'
             ]);
             //获取数据
-            $studentId =  $request->input('student_id');
+            $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             $standardId = $request->input('standard_id');
             $exam = Exam::where('status', 1)->first();
@@ -428,7 +428,7 @@ class InvigilatePadController extends CommonController
 
 
                 //拼装文件名,并插入数据库
-                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId,$studentId);
+                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId, $studentId);
             }
 //            header('print',$result->id);
             return response()->json($this->success_data([$result->id]));
@@ -457,7 +457,8 @@ class InvigilatePadController extends CommonController
      * @date   2016-01-16  14:33
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postTestAttachRadio(Request $request) {
+    public function postTestAttachRadio(Request $request)
+    {
         try {
             //获取数据
             $studentId = $request->input('student_id');
@@ -505,7 +506,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错', -130);
                 }
 
-                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardId,$studentId);
+                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardId, $studentId);
             }
 
             return response()->json($this->success_data([$result->id]));
@@ -676,7 +677,7 @@ class InvigilatePadController extends CommonController
             $date = date('Y-m-d H:i:s', $nowTime);
             $studentId = $request->get('student_id');
             $stationId = $request->get('station_id');
-            $teacherId =$request->get('user_id');
+            $teacherId = $request->get('user_id');
             //开始考试时创建成绩
 //            $ExamResultData=[
 //                'student_id'=>$studentId,
@@ -699,7 +700,7 @@ class InvigilatePadController extends CommonController
 //               throw new \Exception('成绩创建失败',-106);
 //           }
             $ExamQueueModel = new ExamQueue();
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime, $teacherId);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
                 return response()->json(
