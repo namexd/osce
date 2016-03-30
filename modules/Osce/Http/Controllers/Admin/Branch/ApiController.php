@@ -357,7 +357,7 @@ class ApiController extends CommonController
         return  view('osce::admin.theoryCheck.theory_check_volidate');
     }
 
-    /**监考老师登录界面
+    /**理论考试登录界面
      * @method
      * @url /osce/
      * @access public
@@ -367,11 +367,10 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthView(){
-
         return  view('osce::admin.theoryTest.theory_login');
     }
 
-    /**监考老师登录数据交互
+    /**理论考试登录数据交互
      * @method
      * @url /osce/
      * @access public
@@ -393,6 +392,7 @@ class ApiController extends CommonController
 
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
+            /*
             //获取当前登录账户的角色名称
             $user = new User();
             $userInfo = $user->getUserRoleName($username);
@@ -400,6 +400,18 @@ class ApiController extends CommonController
             if($userInfo->name == '监考老师'){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($userInfo->name == '考生'){
+                return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
+            }else{
+                return redirect()->back()->withErrors('你没有权限！');
+            }
+            */
+
+            $questionBankRepositories = new QuestionBankRepositories();
+            $roleType = $questionBankRepositories->getExamLoginUserRoleType();
+
+            if($roleType == 1){
+                return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
+            }else if($roleType == 2){
                 return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
             }else{
                 return redirect()->back()->withErrors('你没有权限！');
