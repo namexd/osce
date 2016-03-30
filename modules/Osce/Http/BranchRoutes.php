@@ -153,6 +153,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //获取考试id
         Route::get('api/get-exampaperid',['uses'=>'ApiController@getExamPaperId','as'=>'osce.admin.ApiController.getExamPaperId']);
 
+        //获取当前考站所在流程考试是否已经结束
+        Route::get('api/exam-paper-status',['uses'=>'ApiController@getExamPaperStatus','as'=>'osce.admin.ApiController.getExamPaperStatus']);
     });
 
 });
