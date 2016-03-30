@@ -89,10 +89,11 @@ class StationMode implements ModeInterface
             ->take(1)
             ->get();
         if ($collection->isEmpty()) {
-            if ($collection->first()->blocking != 1) {
+
                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
                     ->where('exam_queue.status', '<', 3)
+                    ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
                         'student.id as student_id',
@@ -108,9 +109,7 @@ class StationMode implements ModeInterface
                     ->groupBy('student.id')
                     ->take(1)
                     ->get();
-            } else {
-                return $collection;
-            }
+
         } else {
             return collect([]);
         }
@@ -144,10 +143,11 @@ class StationMode implements ModeInterface
             ->get();
 
         if ($collection->isEmpty()) {
-            if ($collection->first()->blocking != 1) {
+
                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
                     ->where('exam_queue.status', '<', 3)
+                    ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
                         'student.id as student_id',
@@ -164,9 +164,7 @@ class StationMode implements ModeInterface
                     ->skip(1)
                     ->take(1)
                     ->get();
-            } else {
-                return $collection;
-            }
+
         } else {
             return collect([]);
         }
