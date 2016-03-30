@@ -296,10 +296,10 @@ class Station extends CommonModel
                 $result = true;
             }
             //如果是理论考站改为其他考站就改变考站的类型
-//            if(is_null($StationCase) && $stationData['type']==3){
-//
-//                $result = StationCase::create($stationCaseData);
-//            }
+            if(is_null($StationCase) && $stationData['type']!=3){
+
+                $result = StationCase::create($stationCaseData);
+            }
             //如果是其他考站改为理论考站就删除
             if(!is_null($StationCase)&& $stationData['type']==3){
 
@@ -309,6 +309,7 @@ class Station extends CommonModel
 
                 $result = StationCase::where('station_id','=',$id)->update($stationCaseData);
             }
+
 
             if (!$result) {
                 $connection->rollBack();
