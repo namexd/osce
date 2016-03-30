@@ -122,14 +122,13 @@ class ExamQuestionController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    
+
     public function postQuestionUpload(Request $request){
         if ($request->hasFile('file'))
         {
             $file   =   $request->file('file');
             $path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
             $destinationPath    =   public_path($path);
-            //.'.'.$file->getClientOriginalExtension()
             $fileName           =   $file->getClientOriginalName();
             $file->move($destinationPath,$fileName);
             $pathReturn    =   '/'.$path.$fileName;

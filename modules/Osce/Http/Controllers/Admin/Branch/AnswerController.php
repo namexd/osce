@@ -45,7 +45,7 @@ class AnswerController extends CommonController
 
         $ExamPaperFormal = new ExamPaperFormal;
         //生成正式的试卷并且 返回id
-        $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
+        $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo,$studentId);
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
             $systemTimeStart =\Session::get('systemTimeStart');
@@ -83,6 +83,7 @@ class AnswerController extends CommonController
                             $examCategoryFormalData[]=array(
                                 'id' =>$v2->id,//正式试题信息
                                 'name' =>($k2+1).'、'.$v2->name,
+                                'image' =>unserialize($v2->image),
                                 'exam_question_id' =>$v2->exam_question_id,
                                 'content' =>explode('|%|',$v2->content),
                                 'answer' =>$v2->answer,
@@ -117,6 +118,7 @@ class AnswerController extends CommonController
                 }
             }
         }
+        dd($examCategoryFormalData);
        //dd(date('Y/m/d H:i:s',$systemTimeStart).'和'.date('Y/m/d H:i:s',$systemTimeEnd));
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
