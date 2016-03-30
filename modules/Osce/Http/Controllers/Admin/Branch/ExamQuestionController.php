@@ -123,9 +123,9 @@ class ExamQuestionController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postQuestionUpload(Request $request){
-        if ($request->hasFile('image'))
+        if ($request->hasFile('file'))
         {
-            $file   =   $request->file('image');
+            $file   =   $request->file('file');
             $path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
             $destinationPath    =   public_path($path);
             //.'.'.$file->getClientOriginalExtension()
@@ -263,7 +263,7 @@ class ExamQuestionController extends CommonController
             $data['id'] = $list->id;
             $data['exam_question_type_id'] = $list->exam_question_type_id;//题目类型
             $data['name'] = $list->name;//题目名称
-            $data['image'] = unserialize($list->image);;//题目图片
+            $data['image'] = unserialize($list->image);//题目图片
             $data['parsing'] = $list->parsing;//解析
             if($data['exam_question_type_id']==4){
                 $data['answer'] = $list->answer;//正确答案

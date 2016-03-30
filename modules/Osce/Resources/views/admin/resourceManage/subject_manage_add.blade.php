@@ -124,7 +124,7 @@
                                 <div class="col-sm-10">
                                     <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file" title="请选择图片">
                                         选择图片
-                                        <input type="file" multiple="multiple" id="picFile">
+                                        <input type="file" multiple="multiple" id="picFile" name="file">
                                     </a>
                                     <div class="picBox">
 
