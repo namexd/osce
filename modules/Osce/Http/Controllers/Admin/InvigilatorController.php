@@ -17,6 +17,7 @@ use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\CaseModel;
+use Modules\Osce\Entities\TeacherSubject;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 use DB;
@@ -291,8 +292,9 @@ class InvigilatorController extends CommonController
 
         $teacher    =   new Teacher();
         $invigilator=   $teacher -> find($id);
+        $subjects   =   TeacherSubject::where('teacher_id','=',$id)->get();
 
-        return view('osce::admin.resourceManage.staff_manage_invigilator_edit',['item'=>$invigilator]);
+        return view('osce::admin.resourceManage.staff_manage_invigilator_edit',['item'=>$invigilator, 'subjects'=>$subjects]);
     }
 
     /**

@@ -92,17 +92,6 @@
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">老师类型</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" name="type">
-                                        <option value="1" {{$item->type==1? 'selected="selected"':''}}>监考老师</option>
-                                        <option value="3" {{$item->type==3? 'selected="selected"':''}}>巡考老师</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-
-                            <div class="form-group">
                                 <label class="col-sm-2 control-label">电子邮箱</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" name="email" id="email" value="{{$item->userInfo->email}}">
