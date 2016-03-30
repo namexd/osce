@@ -37,10 +37,11 @@
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add'}">
+    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add','imgUrl':'{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}'}">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">

@@ -348,6 +348,7 @@ class ExamQuestionController extends CommonController
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
             'image'                    =>serialize($request->input('image')),//试题图片
+            'imageName'                    =>serialize($request->input('imageName')),//试题图片
 
         );
 
