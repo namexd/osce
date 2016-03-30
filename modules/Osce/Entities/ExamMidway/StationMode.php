@@ -88,7 +88,7 @@ class StationMode implements ModeInterface
             ->groupBy('student.id')
             ->take(1)
             ->get();
-        if (!is_null($collection->first())) {
+        if (is_null($collection->first())) {
             if ($collection->first()->blocking != 1) {
                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
@@ -143,7 +143,7 @@ class StationMode implements ModeInterface
             ->take(1)
             ->get();
 
-        if (!is_null($collection->first())) {
+        if (is_null($collection->first())) {
             if ($collection->first()->blocking != 1) {
                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
