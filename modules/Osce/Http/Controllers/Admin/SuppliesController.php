@@ -68,15 +68,11 @@ class SuppliesController extends CommonController
         ]);
         $id = $request->get('id');
         $name = $request->get('name');
-        $data=[
-            'id'=>$id,
-            'name'=>$name
-        ];
-
-//        if(){
-//
-//        }
-
+        $Supplies =Supplies::find($id);
+        $Supplies->name =  $name;
+        if(!$Supplies->save()){
+            throw new \Exception('修改用物失败');
+        }
     }
 
     //删除用物
