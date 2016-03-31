@@ -27,7 +27,7 @@
     </style>
     <link href="{{asset('osce/admin/plugins/css/plugins/iCheck/custom.css')}}" rel="stylesheet">
     <link href="{{asset('osce/admin/plugins/css/plugins/steps/jquery.stepschange.css')}}" rel="stylesheet">
-
+    <link href="{{asset('osce/admin/plugins/js/plugins/fancybox/jquery.fancybox.css')}}" rel="stylesheet">
 @stop
 
 @section('only_js')
