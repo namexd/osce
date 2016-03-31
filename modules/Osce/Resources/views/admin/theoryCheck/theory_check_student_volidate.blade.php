@@ -66,10 +66,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="ibox-content mart_20">
-                        <div class="font20">待考考试</div>
-                        <div>
-                            
+                    <div class="ibox-content mart_20 text-left">
+                        <div class="font20 padt_20 goCenter">待考考试</div>
+                        <div class="goCenter mart_15">
+                            <a href="" class="btn btn-primary btn-rounded">hnbn</a>
                         </div>
                     </div>
                 </div>
