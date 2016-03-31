@@ -2995,7 +2995,7 @@ function staff_manage_invigilator_sp_edit() {
                     }
                 }
             },
-            'subject[]': {
+            email: {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
@@ -3009,7 +3009,7 @@ function staff_manage_invigilator_sp_edit() {
                 }
             },
             /*TODO: chenxia 2016-3-30*/
-            type: {
+            'subject[]': {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
