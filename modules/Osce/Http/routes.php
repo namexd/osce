@@ -123,6 +123,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('topic/toppic-tpl', 	['uses'=>'TopicController@getToppicTpl','as'=>'osce.admin.topic.getToppicTpl']);
 		Route::get('topic/del-topic', 	['uses'=>'TopicController@getDelTopic','as'=>'osce.admin.topic.getDelTopic']);
 		Route::post('topic/name-unique',['uses'=>'TopicController@postNameUnique','as'=>'osce.admin.topic.postNameUnique']);	//判断名称是否存在
+		Route::get('topic/subject-cases',['uses'=>'TopicController@getSubjectCases','as'=>'osce.admin.topic.getSubjectCases']);	//获取病例
 
 		//病例
 		Route::post('case/delete', 	['uses'=>'CaseController@postDelete','as'=>'osce.admin.case.postDelete']);
