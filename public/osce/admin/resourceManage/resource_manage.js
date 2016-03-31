@@ -3675,3 +3675,34 @@ function res_manage_edit() {
         }
     });
 }
+/**
+ * 用物管理
+ * @author chenxia
+ * @version 3.3
+ * @date    2016-03-31
+ */
+function res_manage(){
+
+    $(".fa-trash-o").click(function(){
+        var thisElement=$(this);
+
+        layer.confirm('确认删除？', {
+            title:"删除",
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                type:'get',
+                async:true,
+                url: pars.del + "?id="+thisElement.parent().parent().parent().attr('value'),
+                success:function(res){
+
+                    if(res.code==1){
+                        location.href = (location.href).split('?')[0];
+                    }else{
+                        layer.alert(res.message)
+                    }
+                }
+            })
+        });
+    })
+}

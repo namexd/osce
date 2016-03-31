@@ -14,7 +14,25 @@ use Modules\Osce\Entities\Supplies;
 use Modules\Osce\Http\Controllers\CommonController;
 class SuppliesController extends CommonController
 {
-    //获取用物列表
+    
+    
+   
+    /**
+     * 获取用物列表
+     * @method GET
+     * @url osce/admin/supplies/list
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        name  用物名
+     * *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2016-3-31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public  function getList(Request $request)
     {
 
@@ -28,12 +46,44 @@ class SuppliesController extends CommonController
         return view('osce::admin.resourceManage.res_manage', ['list' => $list, 'name' => $name]);
     }
 
-    //新增用物着陆页面
+
+    /**
+     * 新增用物着陆页面
+     * @method GET
+     * @url osce/admin/supplies/add-supplies
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * @return ${response}
+     * string        name  用物名
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2016-3-31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
     public function getAddSupplies(){
         return view('osce::admin.resourceManage.res_manage_add');
     }
 
-    //提交新增用物
+
+
+    /**
+     * 提交新增用物
+     * @method GET
+     * @url osce/admin/supplies/add-supplies
+     * @access public
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * string        name  用物名
+     * @return ${response}
+
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2016-3-31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
     public function postAddSupplies(Request $request){
         $this->validate($request,[
             'name'=>'required'
@@ -49,7 +99,24 @@ class SuppliesController extends CommonController
         }
     }
 
-    //编辑用物着陆页面
+
+
+
+    /**
+     * 编辑用物着陆页面
+     * @method GET
+     * @url osce/admin/supplies/edit-supplies
+     * @access public
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * int        id  用物编号
+     * @return ${response}
+
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2016-3-31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function getEditSupplies(Request $request){
         $id = $request->get('id');
 
@@ -58,11 +125,24 @@ class SuppliesController extends CommonController
             throw new \Exception('没有找到相关用物');
         }
 
-        return view('osce::admin.resourceManage.res_manage_add',['data'=>$data]);
+        return view('osce::admin.resourceManage.res_manage_edit',['data'=>$data]);
 
     }
     
-    //提交编辑用物表单
+    /**
+     * 提交编辑用物表单
+     * @method GET
+     * @url osce/admin/supplies/edit-supplies
+     * @access public
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * int        id  用物编号
+     * @return ${response}
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2016-3-31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public  function postEditSupplies(Request $request){
         $this->validate($request,[
             'id'=>'required',
@@ -77,7 +157,22 @@ class SuppliesController extends CommonController
         }
     }
 
-    //删除用物
+
+
+    /**
+     * 删除用物
+     * @method GET
+     * @url osce/admin/supplies/del-supplies
+     * @access public
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * int        id  用物编号
+     * @return ${response}
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date 2016-3-31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public  function getDelSupplies(Request $request){
 
         $this->validate($request, [
@@ -97,6 +192,7 @@ class SuppliesController extends CommonController
         }
 
     }
+
     //ajax 获取用物列表
 
 //    public function get

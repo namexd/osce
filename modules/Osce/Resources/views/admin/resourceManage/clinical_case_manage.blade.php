@@ -38,7 +38,7 @@
         <ul class="nav nav-tabs teacher-tabs">
             <li role="presentation"><a href="{{route('osce.admin.topic.getList')}}">考试项目</a></li>
             <li role="presentation" class="active"><a href="{{route('osce.admin.case.getCaseList')}}">病例</a></li>
-            <li role="presentation"><a href="#">用物</a></li>
+            <li role="presentation"><a href="{{route('osce.admin.supplies.getList')}}">用物</a></li>
         </ul>
         <table class="table table-striped" id="table-striped">
             <thead>
