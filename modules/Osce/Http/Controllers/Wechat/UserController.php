@@ -273,6 +273,14 @@ class UserController  extends CommonController
      *
      */
     public function getForgetPassword(Request $request){
+        //TODO:Zhoufuxiang 2016-3-29
+        $succ  = $request->get('succ');
+        $reUrl = $request->get('reUrl');
+        if($succ == 1){
+
+            return view('osce::wechat.user.forget_pwd',['succ'=>1,'reUrl'=>$reUrl]);
+        }
+
         session(['referer'=>$request->server('HTTP_REFERER')]);
         return view('osce::wechat.user.forget_pwd');
     }
@@ -397,7 +405,9 @@ class UserController  extends CommonController
                 $user   -> password = $password;
                 if($user-> save()){
                     $referer    =   session('referer');
-                    return  redirect()      ->  intended($referer);
+                    //TODO:Zhoufuxiang 2016-3-29
+                    return  redirect()->route('osce.wechat.user.getForgetPassword',['succ'=>1,'reUrl'=>$referer]);
+//                    return  redirect()      ->  intended($referer);
 
                 } else{
                     throw new \Exception('修改密码失败');

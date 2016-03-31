@@ -16,29 +16,37 @@ function theory_validate(){
     //请求接口获取学生信息
     function queryAjax(){
         var stationId = $(".allData").attr("data");
+        var examId = $(".allData").attr("examId");
         var timer = setInterval(function(){
             $.ajax({
-                url:'/osce/api/invigilatepad/authentication?station_id='+stationId,
+                url:'/osce/api/exam-paper-status?stationId='+stationId+'&examId='+examId,
                 type:'get',
                 cache:false,
                 dateType:'json',
                 success:function(res){
-                    // edit by wangjiang 2016-03-30 for 查询考试是否结束
                     if (res.code == 2) {
                         $('#examinfo').html('理论考试已结束');
                         clearInterval(timer);
-                    }
-
-                    if(res.code == 1){
-                        $(".showImf").show();
-                        $(".wait").hide();
-                        $(".stuName").text(res.data.name);
-                        $(".stuNum").text(res.data.code);
-                        $(".idNum").text(res.data.idcard);
-                        $(".admissionNum").text(res.data.exam_sequence);
-                        $(".myImg").attr("src",res.data.avator);
-                        $(".goTest").attr("studentId",res.data.student_id);
-                        clearInterval(timer);
+                    } else {
+                        $.ajax({
+                            url:'/osce/api/invigilatepad/authentication?station_id='+stationId,
+                            type:'get',
+                            cache:false,
+                            dateType:'json',
+                            success:function(res){
+                                if(res.code == 1){
+                                    $(".showImf").show();
+                                    $(".wait").hide();
+                                    $(".stuName").text(res.data.name);
+                                    $(".stuNum").text(res.data.code);
+                                    $(".idNum").text(res.data.idcard);
+                                    $(".admissionNum").text(res.data.exam_sequence);
+                                    $(".myImg").attr("src",res.data.avator);
+                                    $(".goTest").attr("studentId",res.data.student_id);
+                                    clearInterval(timer);
+                                }
+                            }
+                        })
                     }
                 }
             })

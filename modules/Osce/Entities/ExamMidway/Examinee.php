@@ -62,8 +62,7 @@ class Examinee
 
             //将图片地址加上域名
             foreach ($students as &$student) {
-                $student->avator = url($student->avator);
-                $student->serialnumber = $serialnumber;
+                $student->student_avator = asset($student->student_avator);
             }
 
             return $students;
@@ -158,23 +157,6 @@ class Examinee
     }
 }
 
-//class StationMode implements ModeInterface
-//{
-//
-//}
 
-//class RoomMode implements ModeInterface
-//{
-//
-//}
 
-interface ModeInterface
-{
-    function getFlow();
-
-    function getExaminee(array $serialnumber);
-
-    function getNextExaminee(array $serialnumber);
-
-}
 

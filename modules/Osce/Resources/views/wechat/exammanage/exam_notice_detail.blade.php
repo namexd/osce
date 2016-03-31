@@ -30,10 +30,11 @@
             width: 100%;
         }
         .notice-file a{
-            display: inherit;
+            display: inline-block;
             overflow: hidden;
             text-overflow:ellipsis;
             white-space:nowrap;
+            vertical-align: middle;
         }
     </style>
 
@@ -74,7 +75,7 @@
                                 <a href="{{ route('osce.wechat.notice.getDownloadDocument',['id'=>$notice->id,'attch_index'=>$key])}}">
                                     <?php $pathInfo = explode('/',$list) ?>
                                         {{array_pop($pathInfo)}}
-                                </a><br />
+                                </a>&nbsp;&nbsp;<span class="copy-this" data-clipboard-action="copy">复制下载链接</span><input type="text" style="display: none;" value="" /><br />
                             @endforeach
                         @endif
                     </div>
@@ -82,4 +83,22 @@
             </li>
         </ul>
     </div>
+    <script>
+        $(function() {
+            /**
+             * 复制到剪切版
+             * @author mao
+             * @version 3.2
+             * @date    2016-03-29 
+             */
+            $('.copy-this').click(function() {
+                var $this = $(this);
+
+                //显示下载地址
+                $this.hide();
+                $this.parent().find('input').show();
+                $this.parent().find('input').val($this.parent().find('a').attr('href'));
+            });
+        })
+    </script>
 @stop
