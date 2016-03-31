@@ -366,16 +366,14 @@ class InvigilatorController extends CommonController
         $this   ->  validate($request,[
             'id'    =>  'required',
         ]);
-        $id             =   intval($request    ->  get('id'));
-        //查询出关联的科目
+        $id         =   intval($request    ->  get('id'));
 
         $teacher    =   new Teacher();
-
         $invigilator=   $teacher -> find($id);
-
-   
+        //查询出关联的科目
         $subjects   =   TeacherSubject::where('teacher_id','=',$id)->get();
-        return view('osce::admin.resourceManage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'subject'=>$subjects]);
+
+        return view('osce::admin.resourceManage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'subjects'=>$subjects]);
     }
     /**
      * 编辑监考老师信息

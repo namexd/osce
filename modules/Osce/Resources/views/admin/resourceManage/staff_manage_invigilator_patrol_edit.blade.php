@@ -101,7 +101,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="description" id="note" value="{{$item->description}}">
+                                <input type="text" class="form-control" name="description" id="description" value="{{$item->description}}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -109,8 +109,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit" id="save">保存</button>
-                                <a class="btn btn-white" href="{{route("osce.admin.invigilator.getSpInvigilatorList")}}">取消</a>
-{{--								<a class="btn btn-white" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">取消</a>--}}
+                                <a class="btn btn-white" href="{{route("osce.admin.invigilator.getInvigilatorList",['type'=>3])}}">取消</a>
                             </div>
                         </div>
                     </div>
