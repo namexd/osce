@@ -104,8 +104,8 @@
                                 <label class="col-sm-2 control-label">支持考试项目</label>
                                 <div class="col-sm-10">
                                     <select class="form-control data-example-ajax"  name="subject[]"  multiple="multiple">
-                                        @foreach($subject as $item)
-                                            <option selected="selected" value="{{$item->subject_id}}">{{$item->subject->title}}</option>
+                                        @foreach($subjects as $subject)
+                                            <option selected="selected" value="{{$subject->subject_id}}">{{$subject->subject->title}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -122,7 +122,6 @@
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
                                 <a class="btn btn-white" href="{{route("osce.admin.invigilator.getSpInvigilatorList")}}">取消</a>
-{{--								<a class="btn btn-white" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">取消</a>--}}
                             </div>
                         </div>
                     </div>

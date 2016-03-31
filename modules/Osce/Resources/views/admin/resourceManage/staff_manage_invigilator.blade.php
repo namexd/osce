@@ -29,8 +29,8 @@
 @stop
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator',
-        'deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}',
-        'firstpage':'{{route('osce.admin.invigilator.getInvigilatorList')}}',
+        'deletes':'{{route('osce.admin.invigilator.postDelInvitation',['type'=>$type])}}',
+        'firstpage':'{{route('osce.admin.invigilator.getInvigilatorList',['type'=>$type])}}',
         'excel':'{{route('osce.admin.invigilator.postImportTeachers',['type'=>$type])}}'}" />
 
     <div class="wrapper wrapper-content animated fadeInRight">

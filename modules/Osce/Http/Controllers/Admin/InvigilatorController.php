@@ -179,22 +179,23 @@ class InvigilatorController extends CommonController
         if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
         }
+        $type = $request->get('type',1);
         //用户数据
         $userData = $request -> only('name', 'gender','idcard','mobile','email','code');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
-        if($request->get('type')==1){
+        if($type == 1){
             if(is_null($request->get('subject'))){
                 throw new \Exception('考试项目必选');
             }
             //从配置中获取角色对应的ID号, 考官角色默认为1
             $role_id = config('osce.invigilatorRoleId',1);
         }else{
-            //从配置中获取角色对应的ID号, 考官角色默认为1
+            //从配置中获取角色对应的ID号, 考官角色默认为3
             $role_id = config('osce.invigilatorRoleId',3);
         }
-        $teacherData['type']            = $request->get('type');
+        $teacherData['type']            = $type;
         $teacherData['case_id']         = null;
         $teacherData['status']          = 1;
         $teacherData['create_user_id']  = $user->id;
@@ -208,7 +209,7 @@ class InvigilatorController extends CommonController
         $Invigilator    =   new Teacher();
         try{
             if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
-                return redirect()->route('osce.admin.invigilator.getInvigilatorList');
+                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type]);
             } else{
                 throw new \Exception('新增失败');
             }
@@ -327,6 +328,7 @@ class InvigilatorController extends CommonController
             throw  new \Exception('没有找到对应老师');
         }
         if($invigilator->type==3){
+            
             return view('osce::admin.resourceManage.staff_manage_invigilator_patrol_edit',['item'=>$invigilator]);
         }
         
@@ -365,16 +367,14 @@ class InvigilatorController extends CommonController
         $this   ->  validate($request,[
             'id'    =>  'required',
         ]);
-        $id             =   intval($request    ->  get('id'));
-        //查询出关联的科目
+        $id         =   intval($request    ->  get('id'));
 
         $teacher    =   new Teacher();
-
         $invigilator=   $teacher -> find($id);
-
-   
+        //查询出关联的科目
         $subjects   =   TeacherSubject::where('teacher_id','=',$id)->get();
-        return view('osce::admin.resourceManage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'subject'=>$subjects]);
+
+        return view('osce::admin.resourceManage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'subjects'=>$subjects]);
     }
     /**
      * 编辑监考老师信息
@@ -609,20 +609,49 @@ class InvigilatorController extends CommonController
      */
     public function postDelInvitation(Request $request){
         $id             =   $request    ->  get('id');
-
+        $type           =   $request    ->  get('type');
+        //开启事务
+        $connection = DB::connection('osce_mis');
+        $connection->beginTransaction();
         try{
             if(!is_null($id))
             {
                 if(StationTeacher::where('user_id', $id)->first() || ExamSpTeacher::where('teacher_id',$id)->first()){
                     throw new \Exception('该老师已被关联，无法删除！');
                 }
+                //删除老师—考试项目关系（巡考老师没有关联考试项目）
+                if($type !=3){
+                    $result = TeacherSubject::where('teacher_id','=',$id)->get();
+                    if(count($result)>0){
+                        foreach ($result as $index => $item) {
+                            if(!$item->delete()){
+                                throw new \Exception('删除老师—考试项目关系失败，请重试！');
+                            }
+                        }
+                    }
+                }
+                //删除用户对应的老师角色
+                $role_id   = \Modules\Osce\Repositories\Common::getRoleIdByTeacherType($type);      //通过考试类型获取角色id
+                $connect   = \DB::connection('sys_mis');
+                $connect->beginTransaction();
+                $user_role = \DB::table('sys_user_role')->where('user_id','=',$id)->where('role_id','=',$role_id)->delete();
+                if(!$user_role){
+                    $connect->rollBack();
+                    throw new \Exception('删除用户对应老师角色关系失败，请重试！');
+                }
 
+                //删除老师
                 if(!Teacher::where('id',$id)->delete()){
 
                     throw new \Exception('删除老师失败，请重试！');
                 }
+
+                $connect->commit();
+                $connection->commit();
                 return $this->success_data('删除成功！');
+
             } else {
+                $connection->rollBack();
                 throw new \Exception('没有找到该老师的相关信息');
             }
         }
