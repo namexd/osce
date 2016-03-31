@@ -179,22 +179,23 @@ class InvigilatorController extends CommonController
         if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
         }
+        $type = $request->get('type',1);
         //用户数据
         $userData = $request -> only('name', 'gender','idcard','mobile','email','code');
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
-        if($request->get('type')==1){
+        if($type == 1){
             if(is_null($request->get('subject'))){
                 throw new \Exception('考试项目必选');
             }
             //从配置中获取角色对应的ID号, 考官角色默认为1
             $role_id = config('osce.invigilatorRoleId',1);
         }else{
-            //从配置中获取角色对应的ID号, 考官角色默认为1
+            //从配置中获取角色对应的ID号, 考官角色默认为3
             $role_id = config('osce.invigilatorRoleId',3);
         }
-        $teacherData['type']            = $request->get('type');
+        $teacherData['type']            = $type;
         $teacherData['case_id']         = null;
         $teacherData['status']          = 1;
         $teacherData['create_user_id']  = $user->id;
@@ -208,7 +209,7 @@ class InvigilatorController extends CommonController
         $Invigilator    =   new Teacher();
         try{
             if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
-                return redirect()->route('osce.admin.invigilator.getInvigilatorList');
+                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type]);
             } else{
                 throw new \Exception('新增失败');
             }

@@ -172,7 +172,7 @@
                                         </div>
                                     </div>
                                     <div class="ibox-content">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered" id="judgement">
                                             <thead>
                                                 <tr>
                                                     <th>序号</th>

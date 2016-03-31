@@ -1521,7 +1521,7 @@ function course_module(){
      */
     $('#add-new').click(function(){
         //计数器标志
-        var index = $('table').find('tbody').attr('index');
+        var index = $('#judgement').find('tbody').attr('index');
         index = parseInt(index) + 1;
         var html = '<tr parent="'+index+'" current="0"  class="pid-'+index+'">'+
                 '<td>'+parseInt(index)+'</td>'+
@@ -1548,8 +1548,8 @@ function course_module(){
                 '</td>'+
                 '</tr>';
         //记录计数
-        $('table').find('tbody').attr('index',index);
-        $('tbody').append(html);
+        $('#judgement').find('tbody').attr('index',index);
+        $('#judgement tbody').append(html);
     });
 
     /**
@@ -1558,7 +1558,7 @@ function course_module(){
      * @version  1.0
      * @date        2015-12-31
      */
-    $('tbody').on('click','.fa-plus',function(){
+    $('#judgement tbody').on('click','.fa-plus',function(){
         var thisElement = $(this).parent().parent().parent().parent();
 
         var parent = thisElement.attr('parent'),
@@ -1662,7 +1662,7 @@ function course_module(){
     function increment(thisElement){
         var update_P = 0,
                 str = '.'+thisElement.attr('class');
-        $('tbody').find(str).each(function(key,elem){
+        $('#judgement tbody').find(str).each(function(key,elem){
 
             if($(elem).attr('child')!=undefined){
                 $(elem).attr('child',key);
@@ -1684,7 +1684,7 @@ function course_module(){
      * @param   {[type]}   ){                     var thisElement [description]
      * @return  {[type]}       [description]
      */
-    $('tbody').on('click','.fa-trash-o',function(){
+    $('#judgement tbody').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.attr('child')==undefined){
             //父类删除
@@ -1710,7 +1710,7 @@ function course_module(){
             });
 
             //父类计数更新
-            $('tbody').attr('index',parseInt($('tbody').attr('index'))-1)
+            $('#judgement tbody').attr('index',parseInt($('tbody').attr('index'))-1)
 
         }else{
             //子类删除
@@ -1772,7 +1772,7 @@ function course_module(){
      * @date    2015-12-31
      * @version [1.0]
      */
-    $('tbody').on('click','.child-up',function(){
+    $('#judgement tbody').on('click','.child-up',function(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.prev().attr('child')!=undefined){
             var thisInput = thisElement.find('input:first').val(),
@@ -1800,7 +1800,7 @@ function course_module(){
      * @date    2015-12-31
      * @version [1.0]
      */
-    $('tbody').on('click','.child-down',function(){
+    $('#judgement tbody').on('click','.child-down',function(){
         var thisElement = $(this).parent().parent().parent().parent();
         if(thisElement.next().attr('child')!=undefined){
             var thisInput = thisElement.find('input:first').val(),
@@ -1828,7 +1828,7 @@ function course_module(){
      * @version 1.0
      * @date    2016-01-19
      */
-    $('tbody').on('click','.parent-up',function(){
+    $('#judgement tbody').on('click','.parent-up',function(){
 
         var thisElement = $(this).parent().parent().parent().parent();
         var className = thisElement.attr('class');
@@ -1858,7 +1858,7 @@ function course_module(){
         $('.pid-'+preIndex+'[parent="'+preIndex+'"]').before(thisDOM);
 
         //更新序号
-        $('tbody tr').each(function(key,elem){
+        $('#judgement tbody tr').each(function(key,elem){
             if($(elem).attr('child')==undefined){
                 $(elem).attr('parent',parent);
                 $(elem).find('td').eq(0).text(parent);
@@ -1904,7 +1904,7 @@ function course_module(){
      * @version 1.0
      * @date    2016-01-19
      */
-    $('tbody').on('click','.parent-down',function(){
+    $('#judgement tbody').on('click','.parent-down',function(){
 
         var thisElement = $(this).parent().parent().parent().parent();
         var className = thisElement.attr('class');
@@ -1935,7 +1935,7 @@ function course_module(){
         $('.pid-'+preIndex+':last').after(thisDOM);
 
         //更新序号
-        $('tbody tr').each(function(key,elem){
+        $('#judgement tbody tr').each(function(key,elem){
             if($(elem).attr('child')==undefined){
                 $(elem).attr('parent',parent);
                 $(elem).find('td').eq(0).text(parent);
@@ -2144,6 +2144,30 @@ function course_module(){
 
 
         });
+
+        /**
+         * 新增病例
+         * @author mao
+         * @version 3.3
+         * @date    2016-03-31
+         */
+        $('#select-clinical').change(function() {
+            var $that = $(this);
+
+            var value = $that.val();
+
+            if(value == -999) {
+                layer.open({
+                  type: 2,
+                  title: '病例新增',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  content: pars.clinical_add //iframe的url
+                });
+            }
+        });
+
 
 
 }
@@ -3320,6 +3344,7 @@ function staff_manage_invigilator_patrol_add() {
         }
     });
 }
+
 /**
  * 人员管理
  * @author chenxia
@@ -3361,6 +3386,7 @@ function staff_manage_invigilator_patrol_edit() {
                         /*自定义提交数据，默认值提交当前input value*/
                         data: function(validator) {
                             return {
+                                id: (location.href).split('=')[1],
                                 code: $('[name="whateverNameAttributeInYourForm"]').val()
                             }
                         }
@@ -3386,6 +3412,7 @@ function staff_manage_invigilator_patrol_edit() {
                         data: function(validator) {
 
                             return {
+                                id: (location.href).split('=')[1],
                                 code: $('[name="whateverNameAttributeInYourForm"]').val()
                             }
                         }
@@ -3418,6 +3445,7 @@ function staff_manage_invigilator_patrol_edit() {
                         data: function(validator) {
 
                             return {
+                                id: (location.href).split('=')[1],
                                 idcard: $('[name="whateverNameAttributeInYourForm"]').val()
                             }
                         }
