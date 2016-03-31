@@ -8,7 +8,7 @@
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'res_manage_add','name':''}" />
+<input type="hidden" id="parameter" value="{'pagename':'res_manage_add'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">

@@ -8,7 +8,7 @@
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'res_manage_edit','name':''}" />
+<input type="hidden" id="parameter" value="{'pagename':'res_manage_edit'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -23,7 +23,8 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">用物名称</label>
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" name="name" value="">
+                                <input type="hidden" required class="form-control" id="name" name="name" value="{{$data->name}}">
+                                <input type="text" required class="form-control" id="name" name="name" value="{{$data->name}}">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
