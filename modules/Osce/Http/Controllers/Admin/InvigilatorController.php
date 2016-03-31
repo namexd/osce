@@ -183,6 +183,17 @@ class InvigilatorController extends CommonController
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
+        if($request->get('type')==1 ){
+            if(is_null($request->get('subject'))){
+                throw new \Exception('考试项目必选');
+            }
+            //从配置中获取角色对应的ID号, 考官角色默认为1
+            $role_id = config('osce.invigilatorRoleId',1);
+        }else{
+            //从配置中获取角色对应的ID号, 考官角色默认为1
+            $role_id = config('osce.invigilatorRoleId',3);
+        }
+
         $teacherData['type']            = 1;
         $teacherData['case_id']         = null;
         $teacherData['status']          = 1;
@@ -358,12 +369,11 @@ class InvigilatorController extends CommonController
         //查询出关联的科目
 
         $teacher    =   new Teacher();
-//        $invigilator    =   $InvigilatorModel    ->  find($id);
+
         $invigilator=   $teacher -> find($id);
-//        dd($invigilator);
+
    
         $subjects   =   TeacherSubject::where('teacher_id','=',$id)->get();
-//        $list   =   Subject::get();
         return view('osce::admin.resourceManage.staff_manage_invigilator_sp_edit',['item'=>$invigilator,'subject'=>$subjects]);
     }
     /**
@@ -399,7 +409,7 @@ class InvigilatorController extends CommonController
             'mobile'        =>  'required',
             'email'         =>  'required',
             'code'          =>  'required',
-            'subject'       =>  'required',
+//            'subject'       =>  'required',
             'images_path'   =>  'required',
             'description'   =>  'sometimes',
         ],[
@@ -412,6 +422,13 @@ class InvigilatorController extends CommonController
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
+
+        if($request->get('type')==1){
+            if(is_null($request->get('subject'))){
+                throw new \Exception('考试项目必选');
+            }
+        }
+
         $subjects    = $request -> get('subject');      //获取考试项目
 
         try{
