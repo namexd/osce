@@ -68,6 +68,8 @@ class Supply extends CommonModel
         }
     }
 
+    
+    
     public function getSupplyList(){
         //查询出数据
         $builder = $this->select([
