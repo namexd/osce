@@ -2165,6 +2165,34 @@ function course_module(){
         });
 
 
+        $('#add-things').click(function() {
+            var html = '';
+
+            html = '<tr>'+
+                        '<td>'+
+                            '<select class="form-control things-select"/>'+
+                                '<option value="1" selected="selected">温度计</option>'+
+                            '</select>'+
+                        '</td>'+
+                        '<td>'+
+                            '<input class="form-control" type="text" value="1"/>'+
+                        '</td>'+
+                        '<td>'+
+                            '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                        '</td>'+
+                    '</tr>';
+
+            $('#things-use').find('tbody').append(html);
+
+            $('.things-select').select2({
+                tags: true,
+                tokenSeparators: [',', ' '],
+                maximumInputLength: 12
+            });
+
+        });
+
+
 
 }
 
