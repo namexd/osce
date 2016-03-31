@@ -48,11 +48,19 @@
                         <td>{{$item->ranking}}</td>
                         <td>{{$item->exam_result_score}}分</td>
                         <td>{{$item->exam_result_time}}</td>
+                        @if($item->station_type==3)
+                            <td>
+                                <a href="{{route('osce.admin.ExamAnswerController.getStudentAnswer',['student_id'=>$item->student_id])}}">
+                                    <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
+                                </a>
+                            </td>
+                        @else
                         <td>
                             <a href="{{route('osce.admin.getExamResultDetail')}}?id={{$item->exam_result_id}}">
                                 <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
                             </a>
                         </td>
+                        @endif
                     </tr>
                 @endforeach
                 </tbody>

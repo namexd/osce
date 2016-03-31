@@ -78,4 +78,23 @@ class ExamScreeningStudent extends CommonModel
         }
     }
 
+
+    //exam_screening
+    public function screening(){
+        return $this->hasOne('Modules\Osce\Entities\ExamScreening', 'id', 'exam_screening_id');
+    }
+
+
+    //查找学生所报考试
+    public function getExamings($student){
+        $builder = $this->where('student_id','=',$student)->where('exam_screening_student.is_signin','=',1)->where('exam_screening_student.is_end','=',1)->with(['screening'=>function($screening){
+            $screening->with(['examQueue'=>function($examQueue){
+                    $examQueue->where('exam_queue.status','!=',3)->with(['examstation'=>function($examstation){
+                        $examstation->with('exam');
+                    }]);
+                }]);
+        }])->get();
+
+        return $builder;
+    }
 }

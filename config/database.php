@@ -154,7 +154,12 @@ return [
             'port'     => 6379,
             'database' => 2,
         ],
-
+        'message' => [
+            'host' => 'cloud.misrobot.com',
+            'port' => 6379,
+            'database' => 3,
+            'password' => 'gogoMisrobot123'
+        ]
     ],
 
 ];

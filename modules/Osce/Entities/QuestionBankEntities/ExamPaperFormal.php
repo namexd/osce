@@ -42,7 +42,7 @@ class ExamPaperFormal extends CommonModel
      * @date    2016年3月15日09:28:01
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function CreateExamPaper($ExamPaperInfo){
+    public function CreateExamPaper($ExamPaperInfo,$studentId){
         //throw new \Exception(' 插入试题和标签中间表失败！')
         $DB = \DB::connection('osce_mis');
         $DB->beginTransaction();
@@ -58,6 +58,7 @@ class ExamPaperFormal extends CommonModel
                 'exam_paper_id'=>$ExamPaperInfo['id'],
                 'length'=>$ExamPaperInfo['length'],
                 'name'=>$ExamPaperInfo['name'],
+                'student_id'=>$studentId,
                 'total_score'=>$total_score
             ];
             //创建真实试卷
@@ -83,8 +84,6 @@ class ExamPaperFormal extends CommonModel
                         if(count($v['child'])>0){
                             foreach($v['child'] as $val){
                                 $ExamQuestionInfo = ExamQuestion::where('id','=',$val)->first();
-
-
                                 //dd($ExamQuestionInfo->examQuestionItem);
                                 //dd(count($ExamQuestionInfo->examQuestionItem));
                                 //拼凑试题内容
@@ -101,12 +100,14 @@ class ExamPaperFormal extends CommonModel
                                 }
                                 $ExamQuestionData = [
                                     'name'=>$ExamQuestionInfo['name'],
+                                    'image'=>$ExamQuestionInfo['image'],
                                     'exam_question_id'=>$ExamQuestionInfo['id'],
                                     'content'=>$content,
                                     'answer'=>$ExamQuestionInfo['answer'],
                                     'parsing'=>$ExamQuestionInfo['parsing'],
                                     'exam_category_formal_id'=>$ExamCategoryFormalInfo['id'],
                                 ];
+
 
                                 if(!ExamQuestionFormal::create($ExamQuestionData)){
                                     throw new \Exception(' 创建试题表数据失败！');
