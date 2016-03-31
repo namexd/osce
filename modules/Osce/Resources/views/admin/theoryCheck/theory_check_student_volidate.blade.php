@@ -14,11 +14,11 @@
 @stop
 
 @section('only_js')
-    {{--<script src="{{asset('osce/admin/theoryTest/theory_validate.js')}}"> </script>--}}
+    <script src="{{asset('osce/admin/theoryTest/theory_validate.js')}}"> </script>
 @stop
 
 @section('content')
-            <input type="hidden" id="parameter" value="{'pagename':'theory_validate','paperUrl':'{{ route('osce.admin.ApiController.getExamPaperId') }}','examUrl':'{{ route('osce.admin.AnswerController.formalPaperList') }}'}" />
+            <input type="hidden" id="parameter" value="{'pagename':'theory_student_validate'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -48,19 +48,19 @@
                                 <div style="padding: 40px 60px;">
                                     <div class="nameBox font20 marb_40">
                                         <span>考生姓名：</span>
-                                        <span class="stuName"></span>
+                                        <span class="stuName">{{@$userInfo->name}}</span>
                                     </div>
                                     <div class="stuBox font20 marb_40">
                                         <span>考生学号：</span>
-                                        <span class="stuNum"></span>
+                                        <span class="stuNum">{{@$userInfo->code}}</span>
                                     </div>
                                     <div class="idBox font20 marb_40">
                                         <span>身份证号：</span>
-                                        <span class="idNum"></span>
+                                        <span class="idNum">{{@$userInfo->idcard}}</span>
                                     </div>
                                     <div class="admissionBox font20 marb_40">
                                         <span>准考证号：</span>
-                                        <span class="admissionNum"></span>
+                                        <span class="admissionNum">{{@$userInfo->exam_sequence}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +69,17 @@
                     <div class="ibox-content mart_20 text-left">
                         <div class="font20 padt_20 goCenter">待考考试</div>
                         <div class="goCenter mart_15">
-                            <a href="" class="btn btn-primary btn-rounded">hnbn</a>
+                            {{--@if(!empty(@$examing))--}}
+                                {{--@foreach($examing as $k=>$v)--}}
+                                    {{--@foreach($v['screening']['exam_queue'] as $k=>$v)--}}
+                                        @if(@$examData['status'] == 1)
+                                            <a href="javascript:void(0)" class="btn btn-primary btn-rounded examing" student="{{@$examData['student_id']}}" station="{{@$examData['station_id']}}" teacher="{{@$examData['teacher_id']}}" paper="{{@$examData['paper_id']}}" exam="{{@$examData['exam_id']}}">{{@$examData['exam_name']}}</a>
+                                        @else
+                                            <a href="/osce/admin/examanswer/student-answer/{{@$examData['student_id']}}" class="btn btn-primary btn-rounded">{{@$examData['exam_name']}}</a>
+                                        @endif
+                                    {{--@endforeach--}}
+                                {{--@endforeach--}}
+                            {{--@endif--}}
                         </div>
                     </div>
                 </div>
