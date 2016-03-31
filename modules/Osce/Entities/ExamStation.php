@@ -21,4 +21,7 @@ class ExamStation extends CommonModel
         return $this->hasMany('Modules\Osce\Entities\Station','id','station_id');
     }
 
+    public function exam(){
+        return $this->hasMany('Modules\Osce\Entities\Exam','id','exam_id');
+    }
 }

@@ -390,10 +390,10 @@ class Student extends CommonModel
      * @return bool
      */
 
-
     public function studentList($stationId ,$exam)
+
     {
-        // 查询下一个代考考生信息
+        // 查询下一个待考考生信息
         $nextTester =  Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
         })->leftjoin('station_teacher', function ($join) {
@@ -414,7 +414,7 @@ class Student extends CommonModel
                 'student.exam_sequence as exam_sequence',
             ])->first();
 
-        // 查询考试是否结束
+        // 查询考试是否结束 // edit by wangjiang 2016-03-29 for 查询考试是否结束
         $waitingList = Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
         })->leftjoin('station_teacher', function ($join) {
@@ -538,7 +538,8 @@ class Student extends CommonModel
                 'student.id as student_id',
                 'exam_result.id as exam_result_id',
                 'exam_result.score as exam_result_score',
-                'exam_result.time as exam_result_time'
+                'exam_result.time as exam_result_time',
+                'station.type as station_type'
             )
             ->paginate(config('osce.page_size'));
     }
@@ -633,6 +634,21 @@ class Student extends CommonModel
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+
+    //user表关联学生表
+    public function screeningStudent(){
+        return $this->hasMany('Modules\Osce\Entities\ExamScreeningStudent', 'student_id', 'id');
+    }
+
+
+
+    //获取用Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel户的信息及已报的考试
+    public function getStudentExamInfo($userId,$examID){
+        //查找当前学生信息
+        $studentInfo = $this->where('student.user_id','=',$userId)->where('student.exam_id','=',$examID)->first();
+        return $studentInfo;
     }
 
 }

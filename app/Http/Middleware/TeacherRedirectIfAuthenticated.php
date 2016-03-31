@@ -12,6 +12,7 @@ use Closure;
 use Illuminate\Contracts\Auth\Guard;
 //use Illuminate\Support\Facades\Auth;
 use Auth;
+use Modules\Osce\Repositories\QuestionBankRepositories;
 
 class TeacherRedirectIfAuthenticated
 {
@@ -42,9 +43,22 @@ class TeacherRedirectIfAuthenticated
      */
     public function handle($request, Closure $next)
     {
-        if (!is_null(Auth::user())) {
+        if (!Auth::check()) {
+            return $next($request);
+        }
+
+        $questionBankRepositories = new QuestionBankRepositories();
+        $roleType = $questionBankRepositories->getExamLoginUserRoleType();
+
+        if ($roleType == 1) {
             return redirect()->route('osce.admin.ApiController.LoginAuthWait');
         }
+
+        if ($roleType == 2) {
+            return redirect()->route('osce.admin.ApiController.getStudentExamIndex');
+        }
+
+
         return $next($request);
     }
 }

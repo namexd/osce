@@ -35,9 +35,9 @@ class AnswerController extends CommonController
      */
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
-        $examId = $request->input('examId');//考试id
-        $ExamPaperId = $request->input('id');//试卷id
-        $stationId = $request->input('stationId');//考站id
+        $examId = $request->input('examId');//考试id  421
+        $ExamPaperId = $request->input('id');//试卷id  132
+        $stationId = $request->input('stationId');//考站id 20
         $userId = $request->input('userId');//老师id
         $studentId = $request->input('studentId');//学生id
         //获取试卷信息
@@ -45,7 +45,7 @@ class AnswerController extends CommonController
 
         $ExamPaperFormal = new ExamPaperFormal;
         //生成正式的试卷并且 返回id
-        $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo);
+        $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo,$studentId);
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
             $systemTimeStart =\Session::get('systemTimeStart');
@@ -83,6 +83,7 @@ class AnswerController extends CommonController
                             $examCategoryFormalData[]=array(
                                 'id' =>$v2->id,//正式试题信息
                                 'name' =>($k2+1).'、'.$v2->name,
+                                'image' =>unserialize($v2->image),
                                 'exam_question_id' =>$v2->exam_question_id,
                                 'content' =>explode('|%|',$v2->content),
                                 'answer' =>$v2->answer,

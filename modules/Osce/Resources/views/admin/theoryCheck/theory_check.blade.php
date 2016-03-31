@@ -21,10 +21,13 @@
             line-height:29px;font-size:20px;
             font-weight:bold;text-align:center;
             color:#ff0101; margin-right:5px;}
+        /*图片样式*/
+        .pic{padding: 1em;}
+        .pic:hover{cursor: pointer;}
     </style>
     <link href="{{asset('osce/admin/plugins/css/plugins/iCheck/custom.css')}}" rel="stylesheet">
     <link href="{{asset('osce/admin/plugins/css/plugins/steps/jquery.stepschange.css')}}" rel="stylesheet">
-
+    <link href="{{asset('osce/admin/plugins/js/plugins/fancybox/jquery.fancybox.css')}}" rel="stylesheet">
 @stop
 
 @section('only_js')
@@ -34,9 +37,15 @@
     <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/jquery.classyled.js') }}"></script>
     <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/raphael.js') }}"></script>
     <script src="{{ asset('osce/admin/plugins/js/plugins/staps/jquery.stepschange.js') }}"></script>
+    <script src="{{ asset('osce/admin/plugins/js/plugins/fancybox/jquery.fancybox.js') }}"></script>
     <script>
         $(document).ready(function() {
             $(".wizard").steps();
+            //            图片点击显示大图
+            $('.fancybox').fancybox({
+                openEffect: 'none',
+                closeEffect: 'none'
+            });
             $(".check_label").change(function(){
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
@@ -207,12 +216,21 @@
                                     @foreach(@$examCategoryFormalData as $val )
                                         <h1>{{$val["serialNumber"]}} </h1>
                                         <div class="step-content">
-                                            <span class="font20">{{@$val["examCategoryFormalName"]}}</span>
+                                            <span class="font20" style="font-weight: 700;">{{@$val["examCategoryFormalName"]}}</span>
                                             <span style="margin-left: 1em;">共<span class="subjectNum">{{@$val["examCategoryFormalNumber"]}}</span>题，</span>
                                             <span>每题<span class="subjectScore">{{@$val["examCategoryFormalScore"]}}</span>分</span>
                                             <div class="allSubject">
                                                 <div class="subjectBox   mart_10 " exam_question_id="{{@$val["id"]}}">
                                                     <span class="font16 subjectContent">{{ @$val["name"]}}(　　　)</span>
+                                                </div>
+                                                <div class="picBox">
+                                                    @if(!empty($val['image']))
+                                                        @foreach($val['image'] as $item)
+                                                            <a href="{{$item}}" class="fancybox">
+                                                                <img src="{{$item}}" alt="image" class="pic" style="height: 150px;width: 150px;">
+                                                            </a>
+                                                        @endforeach
+                                                    @endif
                                                 </div>
                                                 @if(@$val["examQuestionTypeId"]==1)
                                                     @foreach(@$val["content"] as $k=> $val2 )

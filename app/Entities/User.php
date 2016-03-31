@@ -76,4 +76,17 @@ class User extends Model implements AuthenticatableContract,
     {
         return $this->belongsToMany('App\Entities\SysRoles', 'sys_user_role', 'user_id', 'role_id');
     }
+
+    //获取当前登录用户的角色
+    public function getUserRoleName($username){
+        $builder = $this->where('users.username','=',$username)->leftjoin('sys_user_role',function($join){
+            $join->on('sys_user_role.user_id','=','users.id');
+        })->leftjoin('sys_roles',function($join){
+            $join->on('sys_roles.id','=','sys_user_role.role_id');
+        })->select('sys_roles.name')->first();
+
+        return $builder;
+    }
+
+
 }

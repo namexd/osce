@@ -9,9 +9,19 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use App\Entities\User;
-// use Auth;
 use Illuminate\Support\Facades\Auth;
+
+use Modules\Osce\Entities\Student;
+
+use Modules\Osce\Entities\ExamAbsent;
+use Modules\Osce\Entities\ExamFlowRoom;
+use Modules\Osce\Entities\ExamFlowStation;
+use Modules\Osce\Entities\ExamPlan;
+use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamScreening;
+
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
+use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
@@ -20,7 +30,9 @@ use Modules\Osce\Repositories\QuestionBankRepositories;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
+use Modules\Osce\Entities\Exam;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\ExamScreeningStudent;
 
 class ApiController extends CommonController
 {
@@ -179,7 +191,7 @@ class ApiController extends CommonController
         //试卷类型(1.随机试卷，2.统一试卷)
 //-_-------------------------------------------
         //`mode` 组卷方式(1.自动组卷，2.手工组卷),
-          //   `type` 试卷类型(1.随机试卷，2.统一试卷),
+        //   `type` 试卷类型(1.随机试卷，2.统一试卷),
         if($paperid) {//修改
             if($mode==1){
                 if($type==1){
@@ -207,30 +219,30 @@ class ApiController extends CommonController
 
                     //-----------------
 
-                if(!$flag_tag){//没有缓存 第一次预览
+                    if(!$flag_tag){//没有缓存 第一次预览
 
-                    if(count($ExamPaperInfo->ExamPaperStructure)>0) {
-                        foreach ($ExamPaperInfo->ExamPaperStructure as $k => $v) {
-                            $name = ExamQuestionType::where('id', '=', $v['exam_question_type_id'])->pluck('name');
-                            $PaperPreviewArr['item'][$k]['name'] = $str[$k] . '、' . $name . '（共' . $v['num'] . '题，每题' . $v['score'] . '分）';
-                            $ExamQuestionId = [];
-                            if (count($v->ExamPaperStructureQuestion) > 0) {
-                                $ExamQuestionId = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
+                        if(count($ExamPaperInfo->ExamPaperStructure)>0) {
+                            foreach ($ExamPaperInfo->ExamPaperStructure as $k => $v) {
+                                $name = ExamQuestionType::where('id', '=', $v['exam_question_type_id'])->pluck('name');
+                                $PaperPreviewArr['item'][$k]['name'] = $str[$k] . '、' . $name . '（共' . $v['num'] . '题，每题' . $v['score'] . '分）';
+                                $ExamQuestionId = [];
+                                if (count($v->ExamPaperStructureQuestion) > 0) {
+                                    $ExamQuestionId = $v->ExamPaperStructureQuestion->pluck('exam_question_id');
+                                }
+                                $ExamQuestionList = $ExamQuestion->whereIn('id', $ExamQuestionId)->with('examQuestionItem')->get();
+
+                                $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
+                                $PaperPreviewArr['total_score'] += intval($v['num'] * $v['score']);
                             }
-                            $ExamQuestionList = $ExamQuestion->whereIn('id', $ExamQuestionId)->with('examQuestionItem')->get();
-
-                            $PaperPreviewArr['item'][$k]['child'] = $ExamQuestionList;
-                            $PaperPreviewArr['total_score'] += intval($v['num'] * $v['score']);
                         }
-                    }
-                }else{//修改过随机试卷
+                    }else{//修改过随机试卷
                         if(!empty($request->question)){
                             foreach($request->question as $k => $v){
                                 $PaperPreviewArr['item'][$k] = $questionBankRepositories->StrToArr($v);
                             }
                         }
                         $PaperPreviewArr['item'] = $questionBankRepositories->StructureExamQuestionArr($PaperPreviewArr['item']);
-                       \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
+                        \Cache::put($PaperNameMd5,$PaperPreviewArr['item'],config('osce.minutes',5));
                         foreach($PaperPreviewArr['item'] as $k => $v){
                             if(!empty($v['child'])){
                                 $ExamQuestionList = $ExamQuestion->whereIn('id',$v['child'])->with('examQuestionItem')->get();
@@ -314,7 +326,7 @@ class ApiController extends CommonController
             }
         }
 
-  //-------------------------------------
+        //-------------------------------------
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
 
@@ -366,7 +378,6 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthView(){
-
         return  view('osce::admin.theoryTest.theory_login');
     }
 
@@ -391,7 +402,32 @@ class ApiController extends CommonController
 
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
-            return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
+            /*
+            //获取当前登录账户的角色名称
+            $user = new User();
+            $userInfo = $user->getUserRoleName($username);
+
+            if($userInfo->name == '监考老师'){
+                return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
+            }else if($userInfo->name == '考生'){
+                return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
+            }else{
+                return redirect()->back()->withErrors('你没有权限！');
+            }
+            */
+
+            //获取当前登录账户的角色名称
+            $questionBankRepositories = new QuestionBankRepositories();
+            $roleType = $questionBankRepositories->getExamLoginUserRoleType();
+
+            if($roleType == 1){
+                return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
+            }else if($roleType == 2){
+                return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
+            }else{
+                return redirect()->back()->withErrors('你没有权限！');
+            }
+
         }
         else
         {
@@ -489,18 +525,126 @@ class ApiController extends CommonController
         }
     }
 
+    /**学生登录成功后跳转页
+     * @method
+     * @url api/student-exam-index
+     * @access public
+     * @param Request $request
+     * @author xumin <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentExamIndex(){
+        $user = Auth::user();
+        //查找当前正在进行的考试--之后会改
+        $examing = Exam::where('status','=',1)->first();
+
+        $studentModel = new Student();
+        $userInfo = $studentModel->getStudentExamInfo($user->id,$examing->id);
+
+        $ExamScreeningStudent = new ExamScreeningStudent();
+        $examing = $ExamScreeningStudent->getExamings($userInfo->id);
+
+        dd($examing->toArray());
+        return view('osce::admin.theoryCheck.theory_check_volidate', [
+        ]);
+    }
+/**
+     *  获取当前考站所在流程考试是否已经结束
+     * @url GET /osce/admin/api/exam-paper-status
+     * @access public
+     *
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * * string        examId        考试ID(必须的)
+     * * string        stationId     考站ID(必须的)
+     *
+     * @return JSON
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getExamPaperStatus(Request $request)
+    {
+        $this->validate($request, [
+            'examId' => 'sometimes|integer',//考试ID
+            'stationId' => 'sometimes|integer',//考站ID
+        ]);
+
+        $examId = $request->get('examId');
+        $stationId = $request->get('stationId');
+
+        try {
+            $examScreeningModel = new ExamScreening();
+            //获取正在进行的考试
+            $examScreening = $examScreeningModel->getExamingScreening($examId);
+            if (is_null($examScreening)) {
+                //获取最近一场考试
+                $examScreening = $examScreeningModel->getNearestScreening($examId);
+            }
+
+            $exam = $examScreening->ExamInfo;
 
 
 
 
+            if ($exam->sequence_mode == 1) {
+                //若果是考场模式
+                //room_station
+                $roomStation = RoomStation::where('station_id', '=', $stationId)->first();
 
+                $roomId = $roomStation->room_id;
 
+                $flowRoom = ExamFlowRoom::where('room_id', '=', $roomId)
+                    ->where('exam_id', '=', $examId)
+                    ->first();
+                $serialnumber = $flowRoom->serialnumber;
 
+            } else {
+                //若果是考站
+                $flowStation = ExamFlowStation::where('station_id', '=', $stationId)
+                    ->where('exam_id', '=', $examId)
+                    ->first();
+                $serialnumber = $flowStation->serialnumber;
+            }
 
+            $count = ExamQueue::where('serialnumber', '=', $serialnumber)
+                ->where('status', '=', 3)
+                ->where('exam_id', '=', $examId)
+                ->where('exam_screening_id', '=', $examScreening->id)
+                ->count();
 
+            $screeningTotal = ExamPlan::where('exam_id', '=', $examId)
+                ->where('exam_screening_id', '=', $examScreening->id)
+                ->groupBy('student_id')->count();
+            $absentTotal = ExamAbsent::where('exam_id', '=', $examId)
+                ->where('exam_screening_id', '=', $examScreening->id)
+                ->count();
 
+            //如果  场次人数 <= 当前流程已考人数+缺考人数 为 未考完；反之  已考完
+            if ($screeningTotal <= $count + $absentTotal) {
+                $this->success_data(true, 1);
+            } else {
+                $this->success_data(false, 2);
+            }
+        } catch (\Exception $ex) {
+            $this->success_data('', 0, $ex->getMessage());
+        }
+    }
+    /**调接口进入考试
 
-
-
-
+     * @method
+     * @url api/wait-examing
+     * @access public
+     * @param Request $request
+     * @author xumin <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWaitExaming(request $request){
+        
+    }
 }

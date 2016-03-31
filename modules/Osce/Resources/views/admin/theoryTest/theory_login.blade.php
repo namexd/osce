@@ -93,6 +93,17 @@
 					<img src="{{asset('osce/images/logo.png')}}" width="100%"/>
 				</div>
 				<form class="m-t" role="form" id="loginForm" method="post" action="{{ route('osce.admin.ApiController.LoginAuthInfo') }}">
+					<!--
+					<h3 class="tt">
+						角色
+					</h3>
+					<div class="form-group">
+						<select class="form-control" name="role_type">
+							<option value="1">监考老师</option>
+							<option value="2">学生</option>
+						</select>
+					</div>
+					-->
 					<h3 class="tt">
 						用户名
 					</h3>
