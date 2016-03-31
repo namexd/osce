@@ -133,7 +133,7 @@ class ExamAnswerController extends CommonController
             }
         }
         //dd($data);
-         return view('osce::admin.statisticalAnalysis.statistics_student_query',
+         return view('osce::admin.statisticalanalysis.statistics_student_query',
              [
                  'examItems'=>$examItems,
                  'data'=>$data
