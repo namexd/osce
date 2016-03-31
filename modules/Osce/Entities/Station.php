@@ -114,11 +114,11 @@ class Station extends CommonModel
      */
     public function addStation($formData)
     {
+        //开启事务
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
         try {
-            //开启事务
-            $connection = DB::connection($this->connection);
-            $connection->beginTransaction();
-            list($stationData, $vcrId, $caseId, $roomId) = $formData;
+            list($stationData, $vcrId, $roomId) = $formData;
             //将station表的数据插入station表
             $result = $this->create($stationData);
 
@@ -149,14 +149,14 @@ class Station extends CommonModel
             }
 
             //添加考站病历表的状态
-            $stationCaseData = [
-                'case_id'=>$caseId,
-                'station_id' => $station_id
-            ];
-            $result = StationCase::create($stationCaseData);
-            if ($result === false) {
-                throw new \Exception('添加病历表失败');
-            }
+//            $stationCaseData = [
+//                'case_id'=>$caseId,
+//                'station_id' => $station_id
+//            ];
+//            $result = StationCase::create($stationCaseData);
+//            if ($result === false) {
+//                throw new \Exception('添加病历表失败');
+//            }
 
             //将房间相关插入关联表
             $StationRoomData = [
@@ -240,7 +240,7 @@ class Station extends CommonModel
             if(!empty($examFlowStation)){
                 throw new \Exception('此考站已关联到考试流程中，不能做修改、保存操作！请点取消键返回！');
             }
-            list($stationData, $vcrId, $caseId,$roomId) = $formData;
+            list($stationData, $vcrId, $roomId) = $formData;
             //将原来的摄像机的状态回位
             //通过传入的考站的id找到原来的摄像机
             $originalVcrObj = StationVcr::where('station_id', '=', $id)->select('vcr_id')->first();
@@ -307,14 +307,14 @@ class Station extends CommonModel
 
 
             //改变考站病历表的状态
-            $stationCaseData = [
-                'case_id'=>$caseId,
-            ];
-            $result = StationCase::where('station_id','=',$id)->update($stationCaseData);
-            if (!$result) {
-                $connection->rollBack();
-                throw new \Exception('更改病例关联失败');
-            }
+//            $stationCaseData = [
+//                'case_id'=>$caseId,
+//            ];
+//            $result = StationCase::where('station_id','=',$id)->update($stationCaseData);
+//            if (!$result) {
+//                $connection->rollBack();
+//                throw new \Exception('更改病例关联失败');
+//            }
 
             //改变考站房间的状态
             $stationRoomData = [

@@ -70,39 +70,39 @@
                             </div>
                             <div class="hr-line-dashed sub-id"></div>
 
-                            <div class="form-group noTheory sub-id">
-                                <label class="col-sm-2 control-label">科目</label>
-                                <div class="col-sm-10">
-                                    <select id="" required  class="form-control" name="subject_id">
-                                        <option value="">请选择</option>
-                                        @foreach($subject as $key=>$item)
-                                            <option value="{{$item['id']}}"
-                                                    @if($rollmsg['subject_id'] == $item['id'])
-                                                    selected="selected"
-                                                    @endif
-                                            >{{$item['title']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed sub-id"></div>
+                            {{--<div class="form-group noTheory sub-id">--}}
+                                {{--<label class="col-sm-2 control-label">科目</label>--}}
+                                {{--<div class="col-sm-10">--}}
+                                    {{--<select id="" required  class="form-control" name="subject_id">--}}
+                                        {{--<option value="">请选择</option>--}}
+                                        {{--@foreach($subject as $key=>$item)--}}
+                                            {{--<option value="{{$item['id']}}"--}}
+                                                    {{--@if($rollmsg['subject_id'] == $item['id'])--}}
+                                                    {{--selected="selected"--}}
+                                                    {{--@endif--}}
+                                            {{-->{{$item['title']}}</option>--}}
+                                        {{--@endforeach--}}
+                                    {{--</select>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                            {{--<div class="hr-line-dashed sub-id"></div>--}}
 
-                            <div class="form-group noTheory sub-id">
-                                <label class="col-sm-2 control-label">病例</label>
-                                <div class="col-sm-10">
-                                    <select id=""   class="form-control" name="case_id">
-                                        <option value="">请选择</option>
-                                        @foreach($case as $key=>$item)
-                                            <option value="{{$item['id']}}"
-                                                @if($rollmsg['case_id'] == $item['id'])
-                                                    selected="selected"
-                                                @endif
-                                            >{{$item['name']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed noTheory"></div>
+                            {{--<div class="form-group noTheory sub-id">--}}
+                                {{--<label class="col-sm-2 control-label">病例</label>--}}
+                                {{--<div class="col-sm-10">--}}
+                                    {{--<select id=""   class="form-control" name="case_id">--}}
+                                        {{--<option value="">请选择</option>--}}
+                                        {{--@foreach($case as $key=>$item)--}}
+                                            {{--<option value="{{$item['id']}}"--}}
+                                                {{--@if($rollmsg['case_id'] == $item['id'])--}}
+                                                    {{--selected="selected"--}}
+                                                {{--@endif--}}
+                                            {{-->{{$item['name']}}</option>--}}
+                                        {{--@endforeach--}}
+                                    {{--</select>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                            {{--<div class="hr-line-dashed noTheory"></div>--}}
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" required>所属考场</label>
