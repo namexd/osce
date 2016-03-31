@@ -26,6 +26,9 @@
     /*图片上传*/
     #file {position: relative;overflow: hidden;}
     #file input{position: absolute;right: 0;top: 0;font-size: 100px;}
+    .file-msg{color: #42b2b1;}
+    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
+    .fa-remove:hover{cursor: pointer;}
 </style>
 @stop
 
@@ -34,10 +37,11 @@
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add'}">
+    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add','imgUrl':'{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}'}">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -72,16 +76,22 @@
 
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">图片</label>
+                                <label class="col-sm-2 control-label">题目图片</label>
                                 <div class="col-sm-10">
                                     <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file" title="请选择图片">
                                         选择图片
-                                        <input type="file" multiple="multiple" id="picFile">
+                                        <input type="file" id="picFile" name="file">
                                     </a>
-                                    <div class="picBox" style="width: 200px">
-                                        @if(!empty($data['image']))
-                                            @foreach($data['image'] as $val)
-                                                <img src="{{$val}}" alt="">
+                                    <span class="file-msg">(文件大小不得超过2M!)</span>
+                                    <div class="picBox upload_list" style="width: 200px">
+                                        @if(!empty($imageInfo))
+                                            @foreach($imageInfo as $val)
+                                                <p>
+                                                    <input type="hidden" name="image[]" value="{{$val['imagePath']}}"/>
+                                                    <input type="hidden" name="imageName[]" value="{{$val['imageName']}}">
+                                                    {{$val['imageName']}}
+                                                    <i class="fa fa-2x fa-remove clo6"></i>
+                                                </p>
                                             @endforeach
                                         @endif
                                     </div>

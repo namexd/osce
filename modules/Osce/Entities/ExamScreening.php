@@ -250,5 +250,9 @@ class ExamScreening extends CommonModel
 //
     }
 
+    //查找学生考试队列exam_queue
+    public function examQueue(){
+        return $this->hasMany('Modules\Osce\Entities\ExamQueue', 'exam_screening_id', 'id');
+    }
 
 }

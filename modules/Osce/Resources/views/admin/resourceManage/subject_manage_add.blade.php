@@ -28,6 +28,7 @@
     #file input{position: absolute;right: 0;top: 0;font-size: 100px;}
     .file-msg{color: #42b2b1;}
     .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
+    .fa-remove:hover{cursor: pointer;}
 </style>
 @stop
 
@@ -37,64 +38,11 @@
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
     <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
-    <script>
-        //试题图片上传
-        $(function(){
-            $("#file").change(function(){
-                var files=document.getElementById("picFile").files;
-               // var point = path.lastIndexOf(".");
-                //var type = path.substr(point);//图片类型
-                var kb=Math.floor(files[0].size/1024);
-                if(kb>2048){
-                    layer.alert('图片大小不得超过2M!');
-                    $("#picFile").val('');
-                    return false;
-                }
-                if($(".picBox p").length > 4){
-                    layer.alert('最多只能上传5张图片!');
-                    return false;
-                }
-                $.ajaxFileUpload
-                ({
-                    url:"{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}",
-                    secureuri:false,//
-                    fileElementId:'picFile',//必须要是 input file标签 ID
-                    dataType: 'json',
-                    success: function (data)
-                    {
-                        console.log(data);
-                        if(data.code){
-                            var path=data.data.path;//图片存放路径
-                            var picName = data.data.name;//图片名称
-                            $(".picBox").append('<p><input type="hidden" name="image[]" value="'+path+'"/>"'+picName+'"<i class="fa fa-2x fa-remove clo6"></i></p>');
-                        }else{
-                            layer.msg('图片上传失败');
-                        }
-                    }
-                });
-            })
-        })
-
-    </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add'}">
+    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add','imgUrl':'{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}'}">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
