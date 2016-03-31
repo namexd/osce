@@ -39,7 +39,29 @@ class Supplies extends CommonModel
         
         
     }
-    //
+    public function delSubject($subject)
+    {
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+
+//        $SubjectItemModel = new SubjectItem();
+        try {
+//            $SubjectItemModel->delItemBySubject($subject);
+            if ($this->delete()) {
+                $connection->commit();
+                return true;
+            } else {
+                throw new \Exception('删除失败');
+            }
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            if ($ex->getCode() == 23000) {
+                throw new \Exception('该科目已经被使用了,不能删除');
+            } else {
+                throw $ex;
+            }
+        }
+    }
 
 
     
