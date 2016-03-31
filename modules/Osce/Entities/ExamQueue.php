@@ -767,4 +767,10 @@ class ExamQueue extends CommonModel
 
         return $data;
     }
+
+
+    //exam_station
+    public function examstation(){
+        return $this->hasOne('Modules\Osce\Entities\ExamStation', 'station_id', 'station_id');
+    }
 }

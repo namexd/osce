@@ -32,7 +32,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\Exam;
 use Illuminate\Http\Request;
-
+use Modules\Osce\Entities\ExamScreeningStudent;
 
 class ApiController extends CommonController
 {
@@ -541,7 +541,11 @@ class ApiController extends CommonController
 
         $studentModel = new Student();
         $userInfo = $studentModel->getStudentExamInfo($user->id,$examing->id);
-        dd($userInfo);
+
+        $ExamScreeningStudent = new ExamScreeningStudent();
+        $examing = $ExamScreeningStudent->getExamings($userInfo->id);
+
+        dd($examing->toArray());
         return view('osce::admin.theoryCheck.theory_check_volidate', [
         ]);
     }
@@ -583,6 +587,9 @@ class ApiController extends CommonController
             }
 
             $exam = $examScreening->ExamInfo;
+
+
+
 
             if ($exam->sequence_mode == 1) {
                 //若果是考场模式
@@ -627,7 +634,8 @@ class ApiController extends CommonController
             $this->success_data('', 0, $ex->getMessage());
         }
     }
-    /**理论考试等待进入页面
+    /**调接口进入考试
+
      * @method
      * @url api/wait-examing
      * @access public
@@ -636,16 +644,7 @@ class ApiController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWaitExaming(){
-        $user = Auth::user();
-        //查找当前正在进行的考试--之后会改
-        $examing = Exam::where('status','=',1)->first();
-
-        $studentModel = new Student();
-        $userInfo = $studentModel->getStudentExamInfo($user->id,$examing->id);
-        dd($userInfo->toArray());
-        return view('osce::admin.theoryCheck.theory_check_volidate', [
-        ]);
-
+    public function getWaitExaming(request $request){
+        
     }
 }

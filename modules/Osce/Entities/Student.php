@@ -646,16 +646,9 @@ class Student extends CommonModel
 
     //获取用Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel户的信息及已报的考试
     public function getStudentExamInfo($userId,$examID){
-
-        $builder = $this->where('student.user_id','=',$userId)->where('student.exam_id','=',$examID)->with(['screeningStudent'=>function($screeningStudent){
-            $screeningStudent->where('exam_screening_student.is_signin','=',1)->where('exam_screening_student.is_end','=',1)->with(['screening'=>function($screening){
-                $screening->with(['examQueue'=>function($examQueue){
-                    $examQueue->where('exam_queue.status','!=',3)->with('exam');
-                }]);
-            }]);
-        }])->groupBy('student.id')->get();
-
-        return $builder;
+        //查找当前学生信息
+        $studentInfo = $this->where('student.user_id','=',$userId)->where('student.exam_id','=',$examID)->first();
+        return $studentInfo;
     }
 
 }
