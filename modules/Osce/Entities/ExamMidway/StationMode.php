@@ -94,7 +94,6 @@ class StationMode implements ModeInterface
                 ->groupBy('student.id')
                 ->take(1)
                 ->get();
-            dd($collection);
 
             if ($collection->isEmpty()) {
                 $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
@@ -117,6 +116,7 @@ class StationMode implements ModeInterface
                     ->groupBy('student.id')
                     ->take(1)
                     ->get();
+                dd($query);
                 //实现首位固定
                 foreach ($query as $student) {
                     $stick = ExamQueue::where('exam_id', $this->exam->id)
