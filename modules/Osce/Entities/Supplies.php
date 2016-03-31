@@ -47,7 +47,7 @@ class Supplies extends CommonModel
 //        $SubjectItemModel = new SubjectItem();
         try {
 //            $SubjectItemModel->delItemBySubject($subject);
-            if ($this->delete()) {
+            if ($subject->delete()) {
                 $connection->commit();
                 return true;
             } else {
