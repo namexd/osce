@@ -112,7 +112,6 @@ class CaseModel extends CommonModel
      * @return mixed
      */
     public function getCasesList($caseName){
-
         //查询出数据
         $builder = $this->select([
             'id',
