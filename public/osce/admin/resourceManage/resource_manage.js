@@ -1134,6 +1134,7 @@ function clinical_case_manage(){
  * @date    2016-03-18
  */
 function clinical_case_manage_add() {
+
     $('#sourceForm').bootstrapValidator({
         message: 'This value is not valid',
         feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -1490,7 +1491,7 @@ function deleteItem(url){
 function course_module(){
     $('#submit-btn').click(function(){
         var flag = null;
-        $('tbody').find('.col-sm-10').each(function(key,elem){
+        $('#judgement tbody').find('.col-sm-10').each(function(key,elem){
             flag = true;
 
             if($(elem).find('input').val()==''){
@@ -1506,6 +1507,19 @@ function course_module(){
             layer.alert('请新增考核点！');
             return false;
         }
+
+        //验证与总分是否相等
+        var total = 0;
+        $('#judgement tbody').find('tr').each(function(key,elem) {
+            if($(elem).attr('parent')!=undefined){
+                total += parseInt($(elem).find('td').eq(2).find('span').text());
+            }
+        });
+        if(total != parseInt($('#total').val())){
+            layer.alert('与总分不一致！');
+            return false;
+        }
+
     });
 
 
@@ -2147,10 +2161,13 @@ function course_module(){
          * @version 3.3
          * @date    2016-03-31
          */
-        $.ajax({
-            type:'get',
-            url:pars.clinicalList,
-            success:function(res) {
+        $('#select-clinical').select2({
+            placeholder:'==请选择==',
+            ajax: {
+            url: pars.clinicalList,
+            dataType: 'json',
+            delay: 250,
+            processResults: function (res) {
                 if(res.code == 1){
                     var data = res.data,
                         str = [];
@@ -2159,10 +2176,12 @@ function course_module(){
                         str.push({id:data[i].id,text:data[i].name});
                     }
                     str.push({id:-999,text:'==新增病例=='});
-
-                    $('#select-clinical').select2({data:str});
+                    return{
+                        results:str
+                    }
                 }
             }
+        }
         });
 
         /**
@@ -2188,7 +2207,7 @@ function course_module(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: pars.clinical_add //iframe的url
+                  content: pars.clinical_add+"?value=-999"
                 });
             }
         });
