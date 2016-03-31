@@ -316,6 +316,8 @@ class TopicController extends CommonController
             'id' => 'required'
         ]);
         $id = $request->get('id');
+        //检查该考试项目是否关联老师
+        
         $SubjectModel = new Subject();
         $subject = $SubjectModel->find($id);
         try {
