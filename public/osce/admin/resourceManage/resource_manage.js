@@ -2005,7 +2005,7 @@ function course_module(){
 
                         /*序号置0，内容清空 TODO: Zhoufuxiang 2016-2-26*/
                         var index = 0;
-                        $('tbody').html('');
+                        $('#judgement tbody').html('');
 
                         for(var i in res){
                             /*TODO: Zhoufuxiang 2016-2-26*/
@@ -2082,8 +2082,8 @@ function course_module(){
                            }
                         }
                         console.log(data)
-                        $('tbody').attr('index',index);
-                        $('tbody').append(html);
+                        $('#judgement tbody').attr('index',index);
+                        $('#judgement tbody').append(html);
                     }else {
                         layer.alert(data.message+'，请参考下载模板！');
                         //layer.alert('文件导入错误，请参考下载模板！');
@@ -2152,7 +2152,7 @@ function course_module(){
             url:pars.clinicalList,
             success:function(res) {
                 if(res.code == 1){
-                    var data = res.data.rows,
+                    var data = res.data,
                         str = [];
 
                     for(var i in data) {
@@ -2200,16 +2200,16 @@ function course_module(){
          * @date    2016-03-31
          */
         $('#add-things').click(function() {
-            var html = '';
+            var html = '',
+                index = $('#things-use').find('tbody').attr('index');
 
+            index = parseInt(index) + 1;
             html = '<tr>'+
                         '<td>'+
-                            '<select class="form-control js-example-basic-single" style="width: 481px;">'+
-                                '<option value="温度计">温度计</option>'+
-                            '</select>'+
+                            '<select class="form-control js-example-basic-single" name="goods['+index+'][name]" style="width: 481px;"></select>'+
                         '</td>'+
                         '<td>'+
-                            '<input class="form-control" type="text" value="1"/>'+
+                            '<input class="form-control" type="text" value="1" name="goods['+index+'][number]"/>'+
                         '</td>'+
                         '<td>'+
                             '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -2243,7 +2243,6 @@ function course_module(){
             });
         });
 
-        $('select[name="category"]').select2();
 
 
 }
