@@ -463,8 +463,10 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 //TODO:测试用
 Route::get('test/test', function() {
-    $redis = Redis::connection('message');
-    $redis->publish('test-channel', json_encode(['test' => 'message']));
+//    $redis = Redis::connection('message');
+//    $redis->publish('test-channel', json_encode(['test' => 'message']));
+	$a = serialize(['station_id' => 1, 'teacher_id' => 2]);
+	dd(unserialize($a));
 });
 Route::get('redis', function(){
     $redis = Redis::connection('message');

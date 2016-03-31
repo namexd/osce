@@ -388,6 +388,11 @@ class PadController extends  CommonController{
 
             /** @var 学生id $studentId */
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
+
+            //将该条信息的首位置零
+            $queue->stick = null;
+            $queue->save();
+
             return response()->json($this->success_data([$date,$queue->exam_screening_id]));
         } catch (\Exception $ex) {
             \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
