@@ -65,6 +65,18 @@ class Examinee
                 $student->student_avator = asset($student->student_avator);
             }
 
+            ///实现首位固定
+            foreach ($students as $student) {
+                $stick = ExamQueue::where('exam_id', $this->exam->id)
+                    ->where('student_id', $student->student_id)
+                    ->orderBy('begin_dt', 'asc')
+                    ->first();
+                $stick->stick = 1;
+                if (!$stick->save()) {
+                    throw new \Exception('系统异常，请重试', -5);
+                }
+            }
+
             return $students;
         } catch (\Exception $ex) {
             throw $ex;
