@@ -462,9 +462,17 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 });
 
 //TODO:测试用
-Route::get('test/test', function(\Illuminate\Http\Request $request) {
-    
+Route::get('test/test', function() {
+    $redis = Redis::connection('message');
+    $redis->publish('test-channel', json_encode(['test' => 'message']));
 });
+Route::get('redis', function(){
+    $redis = Redis::connection('message');
+    $redis->subscribe('test-channel', function($message){
+        echo $message;
+    });
+});
+
 //TODO:清空考试数据使用 	Zhoufuxiang
 Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 
