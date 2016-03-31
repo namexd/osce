@@ -23,7 +23,7 @@ class Supplies extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['name', 'created_user_id', 'archived'];
+    protected $fillable     = ['name', 'create_user_id', 'archived'];
     
 
     public $search = [];

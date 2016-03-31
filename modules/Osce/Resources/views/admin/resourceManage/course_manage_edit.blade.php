@@ -72,7 +72,7 @@
                         }
                     }
                 },
-                case_id: {
+                cases: {
                     validators: {
                         notEmpty: {/*非空提示*/
                             message: '病例不能为空！'
@@ -169,9 +169,9 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例</label>
                             <div class="col-sm-10">
-                                <select id="select-clinical" class="form-control" name="cases" multiple="multiple">
+                                <select id="select-clinical" class="form-control" name="cases[]" multiple="multiple">
                                 @forelse($subjectCases as $subjectCase)
-                                    <option value="{{$subjectCase->id}}" selected="selected">{{$subjectCase->cases->name}}</option>
+                                    <option value="{{$subjectCase->cases_id}}" selected="selected">{{$subjectCase->cases->name}}</option>
                                 @empty
                                 @endforelse
                                 </select>
@@ -190,7 +190,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control" name="note" value="{{$item->description}}"/>
+                                <input id="select_Category" required  class="form-control" name="desc" value="{{$item->description}}"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

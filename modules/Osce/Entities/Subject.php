@@ -101,8 +101,10 @@ class Subject extends CommonModel
                     throw new \Exception('创建考试项目——病例关系失败');
                 }
                 //添加考试项目——用物关系
-                if(!$this->addSubjectGoods($subject->id, $goods, $user->id)){
-                    throw new \Exception('创建考试项目——用物关系失败');
+                if(!empty($goods)){
+                    if(!$this->addSubjectGoods($subject->id, $goods, $user->id)){
+                        throw new \Exception('创建考试项目——用物关系失败');
+                    }
                 }
 
             } else {
@@ -132,17 +134,34 @@ class Subject extends CommonModel
      * @date 2016-01-03 18:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function editTopic($id, $data, $points)
+    public function editTopic($id, $data, $points, $cases, $goods)
     {
         $subject = $this->findOrFail($id);
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
+
         try {
+            $user = \Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+
             foreach ($data as $field => $value) {
                 $subject->$field = $value;
             }
             if ($subject->save()) {
                 $this->editPoint($subject, $points);
+
+                //添加考试项目——病例关系
+                if(!$this->addSubjectCases($subject->id, $cases, $user->id, $id)){
+                    throw new \Exception('编辑考试项目——病例关系失败');
+                }
+                //编辑考试项目——用物关系
+                if(!$this->editSubjectGoods($subject->id, $goods, $user->id)){
+                    throw new \Exception('编辑考试项目——用物关系失败');
+                }
+
+
             } else {
                 throw new \Exception('更新考核点信息失败');
             }
@@ -339,16 +358,45 @@ class Subject extends CommonModel
      * @author Zhoufuxiang 2016-3-31
      * @return bool
      */
-    public function addSubjectCases($subject_id, $cases, $user_id){
-        foreach ($cases as $case_id) {
-            $data = [
-                'subject_id'        => $subject_id,
-                'cases_id'          => $case_id,
-                'created_user_id'   => $user_id,
-            ];
-            if(!SubjectCases::create($data)){
-                return false;
+    public function addSubjectCases($subject_id, $cases, $user_id, $id = ''){
+        if($id == ''){
+            foreach ($cases as $case_id) {
+                $data = [
+                    'subject_id'        => $subject_id,
+                    'cases_id'          => $case_id,
+                    'created_user_id'   => $user_id,
+                ];
+                if(!SubjectCases::create($data)){
+                    return false;
+                }
             }
+        }else{
+            // 存在$id 为编辑
+            $result = SubjectCases::where('subject_id','=',$id)->get();
+            $original = $result->pluck('cases_id')->toArray();
+
+            $caseDels  = array_diff($original, $cases);     //多余的，删除
+            $caseAdds  = array_diff($cases, $original);     //新添的，增加
+            if(!empty($caseDels)){
+                foreach ($caseDels as $caseDel) {
+                    if(!SubjectCases::where('cases_id','=',$caseDel)->where('subject_id','=',$id)->delete()){
+                        return false;
+                    }
+                }
+            }
+            if(!empty($caseAdds)){
+                foreach ($caseAdds as $caseAdd) {
+                    $data = [
+                        'subject_id'        => $subject_id,
+                        'cases_id'          => $caseAdd,
+                        'created_user_id'   => $user_id,
+                    ];
+                    if(!SubjectCases::create($data)){
+                        return false;
+                    }
+                }
+            }
+
         }
 
         return true;
@@ -390,6 +438,36 @@ class Subject extends CommonModel
                 'created_user_id'   => $user_id,
             ];
             if(!SubjectSupplies::create($data)){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
+     * 编辑考试项目——用物关系
+     * @param $subject_id
+     * @param $goods
+     * @param $user_id
+     * @author Zhoufuxiang 2016-3-31
+     * @return bool
+     */
+    public function editSubjectGoods($subject_id, $goods, $user_id){
+        $result = SubjectSupplies::where('subject_id','=',$subject_id)->get();
+
+        //删除原有的
+        if(count($result)>0){
+            foreach ($result as $item) {
+                if(!$item->delete()){
+                    return false;
+                }
+            }
+        }
+        //重新添加
+        if(!empty($goods)){
+            if(!$this->addSubjectGoods($subject_id, $goods, $user_id)){
                 return false;
             }
         }
