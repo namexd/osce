@@ -2,6 +2,7 @@
 
 @section('only_css')
     <link href="{{asset('osce/common/select2-4.0.0/css/select2.min.css')}}" rel="stylesheet">
+    <link href="{{asset('osce/admin/plugins/js/plugins/fancybox/jquery.fancybox.css')}}" rel="stylesheet">
     <style>
         .check_name{margin-left:5px}
         .check_label{margin-left:48px;}
@@ -11,7 +12,14 @@
 @stop
 
 @section('only_js')
-
+    <script src="{{ asset('osce/admin/plugins/js/plugins/fancybox/jquery.fancybox.js') }}"></script>
+    <script>
+        //            图片点击显示大图
+        $('.fancybox').fancybox({
+            openEffect: 'none',
+            closeEffect: 'none'
+        });
+    </script>
 @stop
 
 @section('content')
@@ -44,6 +52,15 @@
                             @foreach(@$val['child'] as $val1)
                                 <div class="group_border" style="padding: 1em 0;">
                                     <h4>{{ @$val1['exam_question_name'] }}</h4>
+                                    <div class="picBox">
+                                        @if(!empty($val1['exam_question_image']))
+                                            @foreach($val1['exam_question_image'] as $item)
+                                                <a href="{{$item}}" class="fancybox">
+                                                    <img src="{{$item}}" alt="image" class="pic" style="height: 150px;width: 150px;">
+                                                </a>
+                                            @endforeach
+                                        @endif
+                                    </div>
                                     @if(@$val['questionType'] == 4)
                                         <span class="marr_15">
                                             <label class="check_label" style="margin:10px">

@@ -132,7 +132,7 @@ class ExamQuestionController extends CommonController
         {
             $status = 1;
             $file   =   $request->file('file');
-            $oldfileName           =   $file->getClientOriginalName();
+            $oldfileName           =   $file->getClientOriginalName();//获取上传图片的名称
             $type = substr($oldfileName, strrpos($oldfileName,'.'));//图片格式
             $imageName = rand(1000,9999);//图片名字
             $newfileName=$imageName.$type;
@@ -152,13 +152,11 @@ class ExamQuestionController extends CommonController
                 'name'=>$newfileName,
                 'status'=>$status
             ];
-
         }
         return json_encode(
             $this->success_data($data)
         );
     }
-
     /**新增试题数据交互
      * @method
      * @url /osce/admin/examQuestion/examQuestion-add

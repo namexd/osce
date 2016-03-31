@@ -563,6 +563,7 @@ function subject_manage_add(){
                 secureuri:false,//
                 fileElementId:'picFile',//必须要是 input file标签 ID
                 dataType: 'json',
+                type:"POST",
                 success: function (data)
                 {
                     if(data.data.status){

@@ -363,7 +363,29 @@ class SubjectStatisticsRepositories  extends BaseRepository
             ->orderBy('end_dt','desc')
             ->get();
     }
+    /**
+     * 获取除开理论考试外的所有已经完成的考试
+     * @method
+     * @url /osce/
+     * @access public
+     * @param int $status
+     * @return mixed
+     * @author wt <wangtao@misrobot.com>
+     * @date    2016年3月31日
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function GetExamListNoStandardGrade($status = 2){
 
+        return $this->ExamModel->leftJoin('exam_station', 'exam.id', '=', 'exam_station.exam_id')
+            ->leftJoin('station', 'station.id', '=', 'exam_station.station_id')
+            ->where('status','=',$status)
+            ->where('station.type','<>',3)
+            ->select('exam.id as id','exam.name as name')
+            ->orderBy('end_dt','desc')
+            ->get();
+
+
+    }
     /**
      * 出科目的下拉菜单
      * @param $examId
