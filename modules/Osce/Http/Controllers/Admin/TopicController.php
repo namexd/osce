@@ -14,10 +14,13 @@ use Illuminate\Http\Request;
 use League\Flysystem\Exception;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Osce\Entities\CaseModel;
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\SubjectCases;
 use Modules\Osce\Entities\SubjectItem;
 use Modules\Osce\Entities\SubjectSupply;
+use Modules\Osce\Entities\Supply;
+use Modules\Osce\Entities\TeacherSubject;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common as OsceCommon;
 
@@ -343,8 +346,6 @@ class TopicController extends CommonController
             'id' => 'required'
         ]);
         $id = $request->get('id');
-        //检查该考试项目是否关联老师
-        
         $SubjectModel = new Subject();
         $subject = $SubjectModel->find($id);
         try {
@@ -502,6 +503,10 @@ class TopicController extends CommonController
             return json_encode(['valid' => true]);
         }
     }
+
+
+
+
     // 考试项目获取病例数据
    public  function getSubjectCases(Request $request){
        $this->validate($request,[
@@ -535,6 +540,25 @@ class TopicController extends CommonController
 }
 
 
+
+    //获取用物接口
+    public  function getSubjectSupply(){
+        try{
+
+            $caseModel = new Supply();
+            
+                //查询出所有的病例
+                $supplyList = $caseModel->getSupplyList();
+
+            return response()->json(
+                $this->success_data($supplyList, 1, '病例获取成功')
+            );
+        }catch (\Exception $ex){
+            return response()->json($this->fail($ex));
+
+        }
+
+    }
 
 
 

@@ -46,6 +46,8 @@ class Supply extends CommonModel
 
 //        $SubjectItemModel = new SubjectItem();
         try {
+            //判断该用物是否关联考试项目
+
 //            $SubjectItemModel->delItemBySubject($subject);
             if ($subject->delete()) {
                 $connection->commit();
@@ -63,5 +65,15 @@ class Supply extends CommonModel
         }
     }
 
+    public function getSupplyList(){
+        //查询出数据
+        $builder = $this->select([
+            'id',
+            'name',
+        ])->get();
+        return $builder;
+
+
+    }
 
 }
