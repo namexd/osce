@@ -93,14 +93,28 @@ class InvigilatorController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public  function getAddExamination(Request $request){
-        return view('osce::admin.resourceManage.staff_manage_invigilator_patrol_add');
-
-    }
     public function getAddInvigilator(Request $request){
-
         return view('osce::admin.resourceManage.staff_manage_invigilator_add');
+    }
 
+    /**
+     *  新增巡考老师 表单显示页面
+     * @api GET /osce/admin/invigilator/add-patrol
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2015-03-30 15:14
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public  function getAddPatrol(Request $request){
+        return view('osce::admin.resourceManage.staff_manage_invigilator_patrol_add');
     }
 
     /**
