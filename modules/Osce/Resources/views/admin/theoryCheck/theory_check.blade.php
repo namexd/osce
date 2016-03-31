@@ -234,7 +234,7 @@
                                             <span>每题<span class="subjectScore">{{@$val["examCategoryFormalScore"]}}</span>分</span>
                                             <div class="allSubject">
                                                 <div class="subjectBox   mart_10 " exam_question_id="{{@$val["id"]}}">
-                                                    <span class="font16 subjectContent">{{ @$val["name"]}}(　　　)</span>
+                                                    <span class="font16 subjectContent">{{ @$val["name"]}}</span>
                                                 </div>
                                                 <div class="picBox">
                                                     @if(!empty($val['image']))
