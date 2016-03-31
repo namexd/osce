@@ -55,8 +55,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	Route::group(['prefix'=>'admin','namespace'=>'Admin'],function(){
         //监考老师
 
-		Route::get('invigilator/invigilator-list', 	['uses'=>'InvigilatorController@getInvigilatorList','as'=>'osce.admin.invigilator.getInvigilatorList']);
-		Route::get('invigilator/add-invigilator', 	['uses'=>'InvigilatorController@getAddInvigilator','as'=>'osce.admin.invigilator.getAddInvigilator']);
+		Route::get('invigilator/invigilator-list', 	['uses'=>'InvigilatorController@getInvigilatorList','as'=>'osce.admin.invigilator.getInvigilatorList']);	//监考、巡考老师 列表页
+		Route::get('invigilator/add-invigilator', 	['uses'=>'InvigilatorController@getAddInvigilator','as'=>'osce.admin.invigilator.getAddInvigilator']);		//新增监考老师表单页
+		Route::get('invigilator/add-patrol', 		['uses'=>'InvigilatorController@getAddPatrol','as'=>'osce.admin.invigilator.getAddPatrol']);				//新增巡考老师表单页
 		Route::post('invigilator/add-invigilator', 	['uses'=>'InvigilatorController@postAddInvigilator','as'=>'osce.admin.invigilator.postAddInvigilator']);
 		Route::get('invigilator/add-examination', 	['uses'=>'InvigilatorController@getAddExamination','as'=>'osce.admin.invigilator.getAddExamination']);
 

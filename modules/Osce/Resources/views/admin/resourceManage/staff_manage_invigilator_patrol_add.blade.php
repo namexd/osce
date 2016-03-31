@@ -22,7 +22,7 @@
 
 @section('content')
 
-<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_patrol_edit','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_patrol_add','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}'}" />
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
@@ -31,7 +31,7 @@
         </div>
         <div class="ibox-content">
             <div class="row">
-                <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddSpInvigilator')}}">
+                <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddInvigilator')}}">
 
                     <div class="col-md-3 col-sm-3 image-box">
                         <ul class="img_box">
@@ -46,7 +46,7 @@
                             <label class="col-sm-2 control-label">姓名</label>
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="name" name="name">
-                                <input type="hidden" required class="form-control" id="type" name="type" value="2">
+                                <input type="hidden" required class="form-control" id="type" name="type" value="3">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
