@@ -464,7 +464,7 @@ class TopicController extends CommonController
            }else{
                $casesList = $caseModel->getList($caseName);
            }
-           
+
            return response()->json(
                $this->success_data($casesList, 1, '病例获取成功')
            );
@@ -472,8 +472,6 @@ class TopicController extends CommonController
            return response()->json($this->fail($ex));
 
        }
-
-       
        
 }
 
