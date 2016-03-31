@@ -43,6 +43,10 @@ $(function(){
         case "equipment_manage_watch": equipment_manage_watch(); break;
         case "equipment_manage_watch_edit": equipment_manage_watch_edit(); break;
         case "equipment_manage_watch_add": equipment_manage_watch_add(); break;
+        //用物管理
+        case "res_manage":res_manage();break;
+        case "res_manage_add":res_manage_add();break;
+        case "res_manage_edit":res_manage_edit();break;
 
     }
 });
@@ -3488,6 +3492,60 @@ function staff_manage_invigilator_patrol_edit() {
         if($('.img_box').find('img').attr('src')==undefined){
             layer.msg('请上传图片！',{skin:'msg-error',icon:1});
             return false;
+        }
+    });
+}
+/**
+ * 用物管理
+ * @author chenxia
+ * @version 3.3.1
+ * @date    2016-03-31
+ */
+function res_manage_add() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    }
+                }
+            }
+        }
+    });
+}
+/**
+ * 用物管理
+ * @author chenxia
+ * @version 3.3.1
+ * @date    2016-03-31
+ */
+function res_manage_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    }
+                }
+            }
         }
     });
 }
