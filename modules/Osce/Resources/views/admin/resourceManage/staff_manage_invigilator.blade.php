@@ -29,8 +29,8 @@
 @stop
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator',
-        'deletes':'{{route('osce.admin.invigilator.postDelInvitation')}}',
-        'firstpage':'{{route('osce.admin.invigilator.getInvigilatorList')}}',
+        'deletes':'{{route('osce.admin.invigilator.postDelInvitation',['type'=>$type])}}',
+        'firstpage':'{{route('osce.admin.invigilator.getInvigilatorList',['type'=>$type])}}',
         'excel':'{{route('osce.admin.invigilator.postImportTeachers',['type'=>$type])}}'}" />
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -43,7 +43,12 @@
                 <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1">导入
                     <input type="file" name="teacher" id="file0" multiple="multiple" />
                 </a>
-                <a  href="{{route('osce.admin.invigilator.getAddInvigilator')}}" class="btn btn-primary">新增</a>
+                @if($type==1)
+                    <a  href="{{route('osce.admin.invigilator.getAddInvigilator')}}" class="btn btn-primary">新增</a>     {{--//进入新增监考老师表单页--}}
+                @else
+                    <a  href="{{route('osce.admin.invigilator.getAddPatrol')}}" class="btn btn-primary">新增</a>          {{--//进入新增巡考老师表单页--}}
+                @endif
+
             </div>
         </div>
         <div class="container-fluid ibox-content">

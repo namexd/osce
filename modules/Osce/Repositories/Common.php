@@ -258,4 +258,22 @@ class Common
         ];
         return  $relation[$type];
     }
+
+    /**
+     * 通过角色ID，获取对应的老师的类型
+     * @param $role_id
+     * @author Zhoufuxiang 2016-3-30
+     * @return int
+     */
+    static  public function getTeacherTypeByRoleId($role_id){
+
+        switch ($role_id){
+            case config('osce.invigilatorRoleId') : return 1;
+                                                    break;
+            case config('osce.spRoleId')          : return 2;
+                                                    break;
+            case config('osce.patrolRoleId')      : return 3;
+                                                    break;
+        }
+    }
 }
