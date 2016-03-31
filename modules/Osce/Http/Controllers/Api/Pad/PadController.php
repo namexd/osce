@@ -391,7 +391,10 @@ class PadController extends  CommonController{
 
             //将该条信息的首位置零
             $queue->stick = null;
-            $queue->save();
+            if (!$queue->save()) {
+                throw new \Exception('结束考试失败', -10);
+            }
+
 
             return response()->json($this->success_data([$date,$queue->exam_screening_id]));
         } catch (\Exception $ex) {
