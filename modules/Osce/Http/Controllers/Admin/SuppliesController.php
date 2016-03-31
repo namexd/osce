@@ -186,7 +186,6 @@ class SuppliesController extends CommonController
         $SuppliesModel = new Supplies();
         $subject = $SuppliesModel->find($id);
         try {
-
             $SuppliesModel->delSubject($subject);
             return \Response::json(array('code' => 1));
         } catch (\Exception $ex) {

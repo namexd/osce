@@ -223,7 +223,56 @@ class Subject extends CommonModel
 
         $SubjectItemModel = new SubjectItem();
         try {
+            //拿到当前开始
+            $exam = Exam::doingExam();
+            //考试考试下面所有的老师
+            $TeacherArray= StationTeacher::where('exam_id','=',$exam->id)->get()->pluck('user_id');
+            if(!is_null($TeacherArray)){
+
+                //拿到考试项目关联的老师
+                $TeacherId = array_diff($TeacherArray->all(), [null]);
+                $TeacherSubjects = TeacherSubject::whereIn('teacher_id',$TeacherId)->get();
+
+                if(!$TeacherSubjects->isEmpty()){
+                    throw new \Exception('支持该考试项目的老师已被安排考试');
+                }else{
+
+                    //删除和老师关联
+                    $TeacherSubjects = TeacherSubject::where('subject_id','=',$subject->id)->get();
+                    if($TeacherSubjects){
+                        foreach ($TeacherSubjects as $teacher){
+                            if(!$teacher->delete()){
+                                throw new \Exception('删除关联老师失败');
+                            }
+                        }
+                    }
+                }
+            }
+
+        //删除和病例关联
+            $SubjectCases=SubjectCases::where('subject_id','=',$subject->id)->get();
+            if($SubjectCases){
+                foreach ($SubjectCases as $case){
+                    if(!$case->delete()){
+                        throw new \Exception('删除病例失败');
+                    }
+                }
+            }
+
+        //删除和用物关联
+            $SubjectSupplies =   SubjectSupplies::where('subject_id','=',$subject->id)->get();
+            if($SubjectSupplies){
+                foreach ($SubjectSupplies as $supplies){
+                    if(!$supplies->delete()){
+                        throw new \Exception('删除用物失败');
+                    }
+                }
+            }
+
+            
+            
             $SubjectItemModel->delItemBySubject($subject);
+            
             if ($subject->delete()) {
                 $connection->commit();
                 return true;
