@@ -110,7 +110,7 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'course_module','Unique':'{{route('osce.admin.topic.postNameUnique')}}','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinical_add':'{{route('osce.admin.case.getCreateCase')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'course_module','Unique':'{{route('osce.admin.topic.postNameUnique')}}','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinical_add':'{{route('osce.admin.case.getCreateCase')}}','clinicalList':'{{route('osce.admin.topic.getSubjectCases')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -172,8 +172,6 @@
                             <label class="col-sm-2 control-label">病例</label>
                             <div class="col-sm-10">
                                 <select id="select-clinical" class="form-control" name="category" multiple="multiple" />
-                                    <option value="1">胃疼</option>
-                                    <option value="-999">=新增病例=</option>
                                 </select>
                             </div>
                         </div>

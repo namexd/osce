@@ -2158,6 +2158,7 @@ function course_module(){
                     for(var i in data) {
                         str.push({id:data[i].id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增病例=='});
 
                     $('#select-clinical').select2({data:str});
                 }
