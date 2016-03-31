@@ -30,7 +30,7 @@
         </div>
         <div class="ibox-content">
             <div class="row">
-                <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddSpInvigilator')}}">
+                <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postEditInvigilator')}}">
 
                     <div class="col-md-3 col-sm-3 image-box">
                         <ul class="img_box">

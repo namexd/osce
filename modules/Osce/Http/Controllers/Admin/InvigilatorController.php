@@ -162,7 +162,7 @@ class InvigilatorController extends CommonController
             'mobile'        =>  'required',
             'email'         =>  'required',
             'code'          =>  'required',
-            'subject'       =>  'required',
+//            'subject'       =>  'required',
             'images_path'   =>  'required',
             'description'   =>  'sometimes',
         ],[
@@ -171,9 +171,10 @@ class InvigilatorController extends CommonController
             'mobile.required'       =>  '手机号必填',
             'email.required'        =>  '邮箱必填',
             'code.required'         =>  '监考教师编号必填',
-            'subject.required'      =>  '考试项目必选',
+//            'subject.required'      =>  '考试项目必选',
             'images_path.required'  =>  '请上传照片',
         ]);
+
         $user   =   Auth::user();
         if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
@@ -183,7 +184,7 @@ class InvigilatorController extends CommonController
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
-        if($request->get('type')==1 ){
+        if($request->get('type')==1){
             if(is_null($request->get('subject'))){
                 throw new \Exception('考试项目必选');
             }
@@ -193,8 +194,7 @@ class InvigilatorController extends CommonController
             //从配置中获取角色对应的ID号, 考官角色默认为1
             $role_id = config('osce.invigilatorRoleId',3);
         }
-
-        $teacherData['type']            = 1;
+        $teacherData['type']            = $request->get('type');
         $teacherData['case_id']         = null;
         $teacherData['status']          = 1;
         $teacherData['create_user_id']  = $user->id;
@@ -202,8 +202,8 @@ class InvigilatorController extends CommonController
         //获取支持的考试项目
         $subjects = $request->get('subject');
 
-        //从配置中获取角色对应的ID号, 考官角色默认为1
-        $role_id = config('osce.invigilatorRoleId',1);
+//        //从配置中获取角色对应的ID号, 考官角色默认为1
+//        $role_id = config('osce.invigilatorRoleId',1);
 
         $Invigilator    =   new Teacher();
         try{
@@ -609,13 +609,16 @@ class InvigilatorController extends CommonController
      */
     public function postDelInvitation(Request $request){
         $id             =   $request    ->  get('id');
+
         try{
             if(!is_null($id))
             {
                 if(StationTeacher::where('user_id', $id)->first() || ExamSpTeacher::where('teacher_id',$id)->first()){
                     throw new \Exception('该老师已被关联，无法删除！');
                 }
+
                 if(!Teacher::where('id',$id)->delete()){
+
                     throw new \Exception('删除老师失败，请重试！');
                 }
                 return $this->success_data('删除成功！');
