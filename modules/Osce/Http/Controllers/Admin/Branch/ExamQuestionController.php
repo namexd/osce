@@ -124,17 +124,35 @@ class ExamQuestionController extends CommonController
      */
 
     public function postQuestionUpload(Request $request){
+        $data   =   [
+            'path'  =>  '',
+            'name'=>''
+        ];
         if ($request->hasFile('file'))
         {
             $file   =   $request->file('file');
-            $path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
-            $destinationPath    =   public_path($path);
             $fileName           =   $file->getClientOriginalName();
-            $file->move($destinationPath,$fileName);
-            $pathReturn    =   '/'.$path.$fileName;
+            $type = substr($fileName, strrpos($fileName,'.'));
+            $status = 1;
+            $arr = array(".png",'.jpg');
+            if(!in_array($type,$arr)){
+                $status = 0;
+            }
+            if($status){
+                $path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
+                $destinationPath    =   public_path($path);
+                $file->move($destinationPath,$fileName);
+                $pathReturn    =   '/'.$path.$fileName;
+            }
+            $data   =   [
+                'path'=>$pathReturn,
+                'name'=>$fileName,
+                'status'=>$status
+            ];
+
         }
         return json_encode(
-            $this->success_data($pathReturn,1,'上传成功')
+            $this->success_data($data)
         );
     }
 
@@ -171,7 +189,8 @@ class ExamQuestionController extends CommonController
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'image'                    =>serialize($request->input('file')),//试题图片
+            'image'                    =>serialize($request->input('image')),//试题图片
+            'imageName'                    =>serialize($request->input('imageName')),//试题图片
 
         );
 
@@ -265,6 +284,7 @@ class ExamQuestionController extends CommonController
             $data['exam_question_type_id'] = $list->exam_question_type_id;//题目类型
             $data['name'] = $list->name;//题目名称
             $data['image'] = unserialize($list->image);//题目图片
+            $data['imageName'] = unserialize($list->imageName);//图片名称
             $data['parsing'] = $list->parsing;//解析
             if($data['exam_question_type_id']==4){
                 $data['answer'] = $list->answer;//正确答案
@@ -274,6 +294,15 @@ class ExamQuestionController extends CommonController
         }
 
         //dd($data);
+        $imageInfo = [];
+        if($data['image']){
+            foreach($data['image'] as $k=>$v){
+                $imageInfo[$k]['imagePath']=$v;
+                $imageInfo[$k]['imageName']=$data['imageName'][$k];
+            }
+        }
+
+        //dd($imageInfo);
         //dd($examQuestionLabelTypeList);
         return view('osce::admin.resourceManage.subject_manage_edit', [
             'examQuestionTypeList'       =>$examQuestionTypeList,//题目类型列表
@@ -281,6 +310,7 @@ class ExamQuestionController extends CommonController
             'examQuestionItemList'       =>$examQuestionItemList ,//试题子项表列表
             'examQuestionLabelTypeList' =>$examQuestionLabelTypeList ,//考核范围列表
             '$newContent'              =>$newContent,
+            'imageInfo'              =>$imageInfo,
         ]);
     }
 
@@ -317,7 +347,8 @@ class ExamQuestionController extends CommonController
             'exam_question_type_id' =>$request->input('examQuestionTypeId'),//题目类型id
             'name'                     =>$request->input('name'),//题目名称
             'parsing'                 =>$request->input('parsing'),//题目内容解析
-            'image'                    =>serialize($request->input('file')),//试题图片
+            'image'                    =>serialize($request->input('image')),//试题图片
+            'imageName'                    =>serialize($request->input('imageName')),//试题图片
 
         );
 

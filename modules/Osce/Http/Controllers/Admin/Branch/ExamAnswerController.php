@@ -49,7 +49,9 @@ class ExamAnswerController extends CommonController
 
 
         $studentMsg=Student::where('id',$id)->first();
-
+        if(is_null($studentMsg)){
+            abort(404,'学生不存在');
+        }
         $examItems = [];
         $child = [];
         $data = [];

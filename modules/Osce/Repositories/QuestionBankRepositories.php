@@ -478,41 +478,6 @@ class QuestionBankRepositories  extends BaseRepository
     }
 
     /**
-     * 判断理论考试登录用户角色类型
-     * @method GET
-     * @url /osce/admin/
-     * @access public
-     *
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     *
-     * @return mixed
-     *
-     * @version 1.0
-     * @author wangjiang <wangjiang@misrobot.com>
-     * @date 2016-03-30 16:15
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getExamLoginUserRoleType () {
-        $roles = Auth::user()->roles->pluck('id')->toArray();
-
-        if (empty($roles)) {
-            return false;
-        }
-
-        if (in_array(config('osce.invigilatorRoleId'), $roles)) {
-            return 1;
-        }
-
-        if (in_array(config('osce.studentRoleId'), $roles)) {
-            return 2;
-        }
-
-        return false;
-    }
-
-    /**
      * 根据监考老师id获取相关信息
      * @method
      * @url /osce/

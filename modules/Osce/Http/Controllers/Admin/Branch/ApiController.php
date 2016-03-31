@@ -20,6 +20,7 @@ use Modules\Osce\Repositories\QuestionBankRepositories;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
+use Modules\Osce\Entities\Exam;
 use Illuminate\Http\Request;
 
 
@@ -357,7 +358,7 @@ class ApiController extends CommonController
         return  view('osce::admin.theoryCheck.theory_check_volidate');
     }
 
-    /**理论考试登录界面
+    /**监考老师登录界面
      * @method
      * @url /osce/
      * @access public
@@ -367,10 +368,11 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthView(){
+
         return  view('osce::admin.theoryTest.theory_login');
     }
 
-    /**理论考试登录数据交互
+    /**监考老师登录数据交互
      * @method
      * @url /osce/
      * @access public
@@ -389,10 +391,8 @@ class ApiController extends CommonController
         $username = $request->get('username');
         $password = $request->get('password');
 
-
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
-            /*
             //获取当前登录账户的角色名称
             $user = new User();
             $userInfo = $user->getUserRoleName($username);
@@ -400,18 +400,6 @@ class ApiController extends CommonController
             if($userInfo->name == '监考老师'){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($userInfo->name == '考生'){
-                return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
-            }else{
-                return redirect()->back()->withErrors('你没有权限！');
-            }
-            */
-
-            $questionBankRepositories = new QuestionBankRepositories();
-            $roleType = $questionBankRepositories->getExamLoginUserRoleType();
-
-            if($roleType == 1){
-                return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
-            }else if($roleType == 2){
                 return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
             }else{
                 return redirect()->back()->withErrors('你没有权限！');
@@ -432,7 +420,7 @@ class ApiController extends CommonController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * int        $type        登录角色（1-监考老师 2-考生）
+     * * string        参数英文名        参数中文名(必须的)
      *
      * @return view
      *
@@ -514,36 +502,47 @@ class ApiController extends CommonController
         }
     }
 
-    /**刷完腕表后，获取该考生对应的试卷id
+    /**学生登录成功后跳转页
      * @method
-     * @url /osce/
+     * @url api/student-exam-index
      * @access public
      * @param Request $request
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <weihuiguo@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentExamIndex(){
         $user = Auth::user();
+        //查找当前正在进行的考试--之后会改
+        $examing = Exam::where('status','=',1)->first();
 
         $studentModel = new Student();
-        $userInfo = $studentModel->getStudentExamInfo($user->id);
+        $userInfo = $studentModel->getStudentExamInfo($user->id,$examing->id);
         dd($userInfo);
         return view('osce::admin.theoryCheck.theory_check_volidate', [
         ]);
 
     }
 
+    /**理论考试等待进入页面
+     * @method
+     * @url api/wait-examing
+     * @access public
+     * @param Request $request
+     * @author xumin <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWaitExaming(){
+        $user = Auth::user();
+        //查找当前正在进行的考试--之后会改
+        $examing = Exam::where('status','=',1)->first();
 
+        $studentModel = new Student();
+        $userInfo = $studentModel->getStudentExamInfo($user->id,$examing->id);
+        dd($userInfo->toArray());
+        return view('osce::admin.theoryCheck.theory_check_volidate', [
+        ]);
 
-
-
-
-
-
-
-
-
-
-
+    }
 }

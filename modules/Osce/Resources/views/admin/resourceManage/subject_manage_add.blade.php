@@ -26,6 +26,9 @@
     /*图片上传*/
     #file {position: relative;overflow: hidden;}
     #file input{position: absolute;right: 0;top: 0;font-size: 100px;}
+    .file-msg{color: #42b2b1;}
+    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
+    .fa-remove:hover{cursor: pointer;}
 </style>
 @stop
 
@@ -35,59 +38,11 @@
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
     <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
-    <script>
-        //试题图片上传
-        $(function(){
-            $(".btn-default").change(function(){
-                var files=document.getElementById("picFile").files;
-                var kb=Math.floor(files[0].size/1024);
-                if(kb>2048){
-                    layer.alert('图片大小不得超过2M!');
-                    $("#picFile").val('');
-                    return false;
-                }
-                $.ajaxFileUpload
-                ({
-                    url:"{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}",
-                    secureuri:false,//
-                    fileElementId:'picFile',//必须要是 input file标签 ID
-                    dataType: 'json',
-                    success: function (data, status)
-                    {
-                        if(data.code){
-                            var path=data.data;//图片存放路径
-                            var point = path.lastIndexOf(".");
-                            var type = path.substr(point);//图片类型
-                            var str='<input type="hidden" name="file[]" value="'+path+'" />';
-                            $(".picBox").append(str);
-                        }else{
-                            layer.msg('图片上传失败');
-                        }
-                    }
-                });
-            })
-        })
-
-    </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add'}">
+    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add','imgUrl':'{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}'}">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -120,13 +75,14 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">图片</label>
+                                <label class="col-sm-2 control-label">题目图片</label>
                                 <div class="col-sm-10">
                                     <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file" title="请选择图片">
                                         选择图片
-                                        <input type="file" multiple="multiple" id="picFile" name="file">
+                                        <input type="file" id="picFile" name="file">
                                     </a>
-                                    <div class="picBox">
+                                    <span class="file-msg">(文件大小不得超过2M!)</span>
+                                    <div class="picBox upload_list">
 
                                     </div>
                                 </div>
