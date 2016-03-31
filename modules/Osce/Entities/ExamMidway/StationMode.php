@@ -98,7 +98,7 @@ class StationMode implements ModeInterface
             if ($collection->isEmpty()) {
                 $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
-                    ->where('exam_queue.stick', 0)
+                    ->where('exam_queue.stick', null)
                     ->where('exam_queue.status', '<', 3)
                     ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
@@ -116,7 +116,6 @@ class StationMode implements ModeInterface
                     ->groupBy('student.id')
                     ->take(1)
                     ->get();
-                dd($query);
                 //实现首位固定
                 foreach ($query as $student) {
                     $stick = ExamQueue::where('exam_id', $this->exam->id)
@@ -124,7 +123,6 @@ class StationMode implements ModeInterface
                         ->orderBy('begin_dt', 'asc')
                         ->first();
                     $stick->stick = $this->stationIds[0];
-                    \Log::alert('stick', $stick->toArray());
                     if (!$stick->save()) {
                         throw new \Exception('系统异常，请重试', -5);
                     }
