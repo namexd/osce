@@ -12,10 +12,12 @@ use App\Entities\SysRoles;
 use App\Entities\SysUserRole;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Staff;
+use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use App\Entities\User;
 use Auth;
+use DB;
 
 class UserController extends CommonController
 {
@@ -222,15 +224,15 @@ class UserController extends CommonController
         ]);
         $id = $request->get('id');
         try {
-            $roleId = SysUserRole::where('user_id', $id)->select()->first();
+            $roleId= SysUserRole::where('user_id', $id)->get();
             $roles = SysRoles::whereNotIn('name', ['监考老师', '巡考老师', '超级管理员', '考生'])->get();
 
             $data = [];
 
             foreach ($roles as $role) {
                 if ($roleId) {
-                    $user_role_id = $roleId->role_id;
-                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.patrolRoleId') && $role->id != config('config.spRoleId') && $role->id != config('config.teacherRoleId') && $role->id != $user_role_id) {
+                    $user_role_id = $roleId->pluck('role_id')->toArray();
+                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.patrolRoleId') && $role->id != config('config.spRoleId') && $role->id != config('config.teacherRoleId') && !in_array($role->id, $user_role_id)) {
                         $data[] = [
                             'role_id' => $role->id,
                             'role_name' => $role->name,
@@ -248,13 +250,15 @@ class UserController extends CommonController
             }
 
             return view('osce::admin.systemManage.user_manage_change_role')->with([
-                'role_id' => $roleId,
+                'role_ids' => $roleId,
                 'data' => $data,
                 'user_id' => $id
             ]);
+
         } catch (\Exception $ex) {
+
             return view('osce::admin.systemManage.user_manage_change_role')->with([
-                'role_id' => $roleId,
+                'role_ids' => $roleId,
                 'data' => $data,
                 'user_id' => $id
             ])->withErrors($ex->getMessage());
@@ -281,6 +285,9 @@ class UserController extends CommonController
      */
     public function postEditUserRole(Request $request)
     {
+        $connection = \DB::connection('sys_mis');
+        $connection->beginTransaction();
+
         $this->validate($request, [
             'role_id' => 'required',
             'user_id' => 'required'
@@ -289,32 +296,110 @@ class UserController extends CommonController
             'user_id' => '该用户不存在',
         ]);
         $user_id = $request->input('user_id');
-        $role_id = $request->input('role_id');
-        $result = SysUserRole::where('user_id', '=', $user_id)->update([
-            'role_id' => $role_id
-        ]);
+        $roleIds = $request->input('role_id');
 
-        if ($result) {
-            return redirect()->route('osce.admin.user.getStaffList')->with('message', '修改成功!');
-        }
-        return redirect()->back()->withErrors('修改权限失败!');
+        $original= SysUserRole::where('user_id','=',$user_id)->get()->pluck('role_id')->toArray();
+        $diff1s  = array_diff($original, $roleIds);
+        $diff2s  = array_diff($roleIds, $original);
 
-    }
-
-    public function getJudgeUserRole(Request $request){
-        $this->validate($request,[
-            'user_id'   => 'required',
-            'roleIds'   => 'required',
-        ]);
-        $user_id = $request->get('user_id');
-        $roleIds = $request->get('roleIds');
+        //老师角色 集合
         $roles   = [
             config('osce.invigilatorRoleId'),
             config('osce.patrolRoleId'),
             config('osce.spRoleId')
         ];
 
-        $result  = SysUserRole::whereIn('user_id', $roles)->get();
+        //将其他不同的角色，加入数据库中
+        if(count($diff2s)>0){
+            foreach ($diff2s as $diff2) {
+                $data = ['role_id' => $diff2, 'user_id' => $user_id];
+                if(!SysUserRole::create($data)){
+
+                    $connection->rollBack();
+                    return redirect()->back()->withErrors('修改权限失败!');
+                }
+                //如果该用户曾经 有老师的角色，则还原归档
+                if(in_array($diff2, $roles)){
+                    $teacher = Teacher::where('id','=',$user_id)->first();
+                    if($teacher){
+                        $teacher->archived = 0;
+                        $teacher->type     = Common::getTeacherTypeByRoleId($diff2);
+                        if(!$teacher->save()){
+                            $connection->rollBack();
+                            return redirect()->back()->withErrors('老师角色归档还原失败!');
+                        }
+                    }
+                }
+            }
+        }
+        //删除 已经不需要的 用户对应 角色关系
+        if(count($diff1s)>0){
+            foreach ($diff1s as $diff1) {
+                //如果删除的角色中，有老师角色，则将老师归档
+                if(in_array($diff1, $roles)){
+                    $teacher = Teacher::where('id','=',$user_id)->first();
+                    if($teacher){
+                        $teacher->archived = 1;
+                        if(!$teacher->save()){
+                            $connection->rollBack();
+                            return redirect()->back()->withErrors('老师角色归档失败!');
+                        }
+                    }
+                }
+                //删除用户对应 角色关系
+                if(!SysUserRole::where('user_id','=',$user_id)->where('role_id','=',$diff1)->delete()){
+
+                    $connection->rollBack();
+                    return redirect()->back()->withErrors('修改权限失败!');
+                }
+            }
+        }
+
+        $connection->commit();
+
+        return redirect()->route('osce.admin.user.getStaffList')->with('message', '修改成功!');
+
+    }
+
+    /**
+     * 异步判断，删除用户对应的角色中是否有老师角色
+     * @param Request $request
+     * @author Zhoufuxiang 2016-3-30
+     * @return string
+     */
+    public function getJudgeUserRole(Request $request){
+        try{
+            $this->validate($request,[
+                'user_id'   => 'required',
+                'roleIds'   => 'required',
+            ],[
+                'roleIds.required' => '角色必选！'
+            ]);
+
+            $user_id = $request->get('user_id');
+            $roleIds = $request->get('roleIds');
+            $roles   = [
+                config('osce.invigilatorRoleId'),
+                config('osce.patrolRoleId'),
+                config('osce.spRoleId')
+            ];
+
+            $original= SysUserRole::where('user_id','=',$user_id)->get()->pluck('role_id')->toArray();
+            $diff = array_diff($original, $roleIds);
+            if(!empty($diff)){
+                foreach ($diff as $item) {
+                    if(in_array($item, $roles)){
+                        return $this->success_data('',2,'警告：该用户原有的老师角色 确定要删除！');
+                    }
+                }
+            }
+
+            return $this->success_data('',1,'success');
+
+        } catch (\Exception $ex){
+
+            return $this->success_data('',-1,'请选择角色！');
+        }
 
     }
 }

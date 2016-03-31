@@ -2344,7 +2344,7 @@ function staff_manage_invigilator_add() {
             },
             error: function (data, status, e)
             {
-                layer.msg("通讯失败");
+                layer.msg('通讯失败！',{skin:'msg-error',icon:1});
             }
         });
     }) ;
@@ -3460,7 +3460,7 @@ function staff_manage_invigilator_patrol_edit() {
                 },
                 error: function (data, status, e)
                 {
-                    layer.msg("通讯失败");
+                    layer.msg(data.message,{skin:'msg-error',icon:1});
                 }
             });
     }) ;
