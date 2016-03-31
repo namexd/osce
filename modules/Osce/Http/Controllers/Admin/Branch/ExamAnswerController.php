@@ -101,9 +101,8 @@ class ExamAnswerController extends CommonController
                             $studentAnswerAarry=explode('@',$item['student_answer']);//将$item['student_answer']利用@符号拆成数组传到前端
                             $child[$key]['studentAnswerAarry'] = $studentAnswerAarry;
 
-                        }elseif ($item['answer'] == '1' || $item['answer'] == '0'){  //当为判断题时，进行答案中，0,1与错误、正确之间的转换
-
-                                $studentAnswer =$answerArr[$item['student_answer']];
+                        }elseif (intval($item['answer']) === 1 || $item['answer'] === 0){  //当为判断题时，进行答案中，0,1与错误、正确之间的转换
+                                $studentAnswer =empty($item['student_answer'])?'未填':$answerArr[$item['student_answer']];
                                 $child[$key]['student_answer'] = $studentAnswer;
                                 $child[$key]['studentAnswerAarry'] = null;
                             }else {
