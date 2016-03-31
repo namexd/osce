@@ -327,6 +327,7 @@ class InvigilatorController extends CommonController
             throw  new \Exception('没有找到对应老师');
         }
         if($invigilator->type==3){
+            
             return view('osce::admin.resourceManage.staff_manage_invigilator_patrol_edit',['item'=>$invigilator]);
         }
         
@@ -402,6 +403,7 @@ class InvigilatorController extends CommonController
      */
     public function postEditInvigilator(Request $request)
     {
+        dd($request->all());
         $this   ->  validate($request,[
             'id'            =>  'required',
             'name'          =>  'required',
