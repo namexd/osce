@@ -27,6 +27,7 @@
         margin-bottom: 0;
         text-align: center;
     }
+    .display-none{display: none;}
 </style>
 @stop
 
@@ -78,6 +79,13 @@
                         }
                     }
                 },
+                case_id: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '病例不能为空！'
+                        }
+                    }
+                },
                 time: {
                     validators: {
                         notEmpty: {/*非空提示*/
@@ -107,7 +115,7 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'course_module','Unique':'{{route('osce.admin.topic.postNameUnique')}}','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinical_add':'{{route('osce.admin.case.getCreateCase')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'course_module','Unique':'{{route('osce.admin.topic.postNameUnique')}}','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinical_add':'{{route('osce.admin.case.getCreateCase')}}','clinicalList':'{{route('osce.admin.topic.getSubjectCases')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -128,7 +136,7 @@
                         </div>
                         <div class="hr-line-dashed"></div>
 
-                        <div class="form-group">
+                        <div class="form-group display-none">
                             <label class="col-sm-2 control-label">类别</label>
                             <div class="col-sm-10">
                                 <select id="select_Category" class="form-control" name="category"/>
@@ -138,9 +146,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div>
+                        <div class="hr-line-dashed display-none"></div>
 
-                        <div class="form-group">
+                        <div class="form-group display-none">
                             <label class="col-sm-2 control-label">操作</label>
                             <div class="col-sm-5">
                                 <select id="select_Category" class="form-control" name="category"/>
@@ -155,22 +163,20 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div>
+                        <div class="hr-line-dashed display-none"></div>
 
-                        <div class="form-group">
+                        <div class="form-group display-none">
                             <label class="col-sm-2 control-label">时间间隔</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="time"/>
+                                <input id="time" class="form-control" name="time"/>
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div>
+                        <div class="hr-line-dashed display-none"></div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例</label>
                             <div class="col-sm-10">
-                                <select id="select-clinical" class="form-control" name="category"/>
-                                    <option value="1">胃疼</option>
-                                    <option value="-999">=新增病例=</option>
+                                <select id="select-clinical" class="form-control" name="case_id" multiple="multiple" />
                                 </select>
                             </div>
                         </div>
@@ -179,7 +185,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">总分</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="total"/>
+                                <input id="total" class="form-control" name="total"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -187,7 +193,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="desc"/>
+                                <input id="desc" class="form-control" name="desc"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -206,25 +212,12 @@
                                         <table class="table table-bordered" id="things-use">
                                             <thead>
                                                 <tr>
-                                                    <th>用物</th>
+                                                    <th width="481">用物</th>
                                                     <th>数量</th>
                                                     <th width="160">操作</th>
                                                 </tr>
                                             </thead>
                                             <tbody index="0">
-                                                <tr>
-                                                    <td>
-                                                        <select class="form-control things-select"/>
-                                                            <option value="1" selected="selected">温度计</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control" type="text" value="1"/>
-                                                    </td>
-                                                    <td>
-                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                    </td>
-                                                </tr>
                                             </tbody>
                                         </table>
 
@@ -276,6 +269,8 @@
                                 <a class="btn btn-white" href="{{route("osce.admin.topic.getList")}}">取消</a>
                             </div>
                         </div>
+
+
                     </form>
 
                 </div>

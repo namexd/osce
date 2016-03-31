@@ -116,8 +116,8 @@ class StationController extends CommonController
 //            'description'   => 'required',
 //            'code'          => 'required',
             'mins'          => 'required',
-            'subject_id'    => 'required|integer',
-            'case_id'       => 'required|integer',
+//            'subject_id'    => 'required|integer',
+//            'case_id'       => 'required|integer',
             'room_id'       => 'required|integer',
             'vcr_id'        => 'required|integer'
         ],[
@@ -125,8 +125,8 @@ class StationController extends CommonController
             'name.unique'         =>  '考站名称必须唯一',
             'type.required'       =>  '考站类型必选',
             'mins.required'       =>  '时间限制必填',
-            'subject_id.required' =>  '科目必选',
-            'case_id.required'    =>  '病例必选',
+//            'subject_id.required' =>  '科目必选',
+//            'case_id.required'    =>  '病例必选',
             'room_id.required'    =>  '考场必选',
             'vcr_id.required'     =>  '关联摄像机必选',
         ]);
@@ -134,9 +134,9 @@ class StationController extends CommonController
         DB::connection('osce_mis')->beginTransaction();
         try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $stationData = $request->only('name', 'type', 'mins', 'subject_id');
+            $stationData = $request->only('name', 'type', 'mins');
             $vcrId  = $request->input('vcr_id', null);
-            $caseId = $request->input('case_id');
+//            $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
             //TODO:考卷 Zhoufuxiang，2016-3-22
             $paperId= $request->input('paper_id');
@@ -158,7 +158,7 @@ class StationController extends CommonController
             }
 
             //将参数放进一个数组中，方便传送
-            $formData = [$stationData, $vcrId, $caseId, $roomId];
+            $formData = [$stationData, $vcrId, $roomId];
 
             //将当前时间限定的值放入session
             $time = $request->input('mins');
@@ -235,28 +235,28 @@ class StationController extends CommonController
             'name'          => 'required',
             'type'          => 'required|integer',
             'mins'          => 'required|integer',
-            'subject_id'    => 'required|integer',
+//            'subject_id'    => 'required|integer',
 //            'description'   => 'required',
 //            'code'          => 'required',
             'vcr_id'        => 'required|integer',
-            'case_id'       => 'required|integer',
+//            'case_id'       => 'required|integer',
             'room_id'       => 'required|integer',
         ],[
             'name.required'       =>  '考站名称必填',
             'name.unique'         =>  '考站名称必须唯一',
             'type.required'       =>  '考站类型必选',
             'mins.required'       =>  '时间限制必填',
-            'subject_id.required' =>  '科目必选',
-            'case_id.required'    =>  '病例必选',
+//            'subject_id.required' =>  '科目必选',
+//            'case_id.required'    =>  '病例必选',
             'room_id.required'    =>  '考场必选',
             'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
         try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $placeData = $request->only('name', 'type', 'subject_id', 'mins');
+            $placeData = $request->only('name', 'type', 'mins');
             $vcrId  = $request->input('vcr_id');
-            $caseId = $request->input('case_id');
+//            $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
             $id     = $request->input('id');
             //TODO:考卷 Zhoufuxiang，2016-3-22
@@ -275,7 +275,7 @@ class StationController extends CommonController
             }
             $placeData['create_user_id'] = $user->id;
 
-            $formData = [$placeData, $vcrId, $caseId, $roomId];
+            $formData = [$placeData, $vcrId, $roomId];
 
             $model->updateStation($formData, $id);
 

@@ -1138,6 +1138,7 @@ function clinical_case_manage(){
  * @date    2016-03-18
  */
 function clinical_case_manage_add() {
+
     $('#sourceForm').bootstrapValidator({
         message: 'This value is not valid',
         feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -1494,7 +1495,7 @@ function deleteItem(url){
 function course_module(){
     $('#submit-btn').click(function(){
         var flag = null;
-        $('tbody').find('.col-sm-10').each(function(key,elem){
+        $('#judgement tbody').find('.col-sm-10').each(function(key,elem){
             flag = true;
 
             if($(elem).find('input').val()==''){
@@ -1510,6 +1511,19 @@ function course_module(){
             layer.alert('请新增考核点！');
             return false;
         }
+
+        //验证与总分是否相等
+        var total = 0;
+        $('#judgement tbody').find('tr').each(function(key,elem) {
+            if($(elem).attr('parent')!=undefined){
+                total += parseInt($(elem).find('td').eq(2).find('span').text());
+            }
+        });
+        if(total != parseInt($('#total').val())){
+            layer.alert('与总分不一致！');
+            return false;
+        }
+
     });
 
 
@@ -2009,7 +2023,7 @@ function course_module(){
 
                         /*序号置0，内容清空 TODO: Zhoufuxiang 2016-2-26*/
                         var index = 0;
-                        $('tbody').html('');
+                        $('#judgement tbody').html('');
 
                         for(var i in res){
                             /*TODO: Zhoufuxiang 2016-2-26*/
@@ -2086,8 +2100,8 @@ function course_module(){
                            }
                         }
                         console.log(data)
-                        $('tbody').attr('index',index);
-                        $('tbody').append(html);
+                        $('#judgement tbody').attr('index',index);
+                        $('#judgement tbody').append(html);
                     }else {
                         layer.alert(data.message+'，请参考下载模板！');
                         //layer.alert('文件导入错误，请参考下载模板！');
@@ -2107,7 +2121,7 @@ function course_module(){
          * @version 1.0
          * @date    2016-01-20
          */
-        $('tbody').on('change','select',function(){
+        $('#judgement tbody').on('change','select',function(){
             var thisElement = $(this).parent().parent();
             //父亲节点
             var className = thisElement.attr('class'),
@@ -2146,40 +2160,79 @@ function course_module(){
         });
 
         /**
+         * 病例列表
+         * @author mao
+         * @version 3.3
+         * @date    2016-03-31
+         */
+        $('#select-clinical').select2({
+            placeholder:'==请选择==',
+            ajax: {
+            url: pars.clinicalList,
+            dataType: 'json',
+            delay: 250,
+            processResults: function (res) {
+                if(res.code == 1){
+                    var data = res.data,
+                        str = [];
+
+                    for(var i in data) {
+                        str.push({id:data[i].id,text:data[i].name});
+                    }
+                    str.push({id:-999,text:'==新增病例=='});
+                    return{
+                        results:str
+                    }
+                }
+            }
+        }
+        });
+
+        /**
          * 新增病例
          * @author mao
          * @version 3.3
          * @date    2016-03-31
          */
-        $('#select-clinical').change(function() {
-            var $that = $(this);
+        $('#select-clinical').on("select2:select",function(e) {
+            var arr = $(this).val();
 
-            var value = $that.val();
+            //去掉新增病例项
+            for(var i in arr) {
+                if(arr[i] == -999) delete arr[i]
+            }
+            //重置
+            $(this).val(arr).trigger("change");
 
-            if(value == -999) {
+            if(e.params.data.id == -999) {
                 layer.open({
                   type: 2,
                   title: '病例新增',
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: pars.clinical_add //iframe的url
+                  content: pars.clinical_add+"?value=-999"
                 });
             }
         });
 
-
+        /**
+         * 新增物品
+         * @author mao
+         * @version 3.3
+         * @date    2016-03-31
+         */
         $('#add-things').click(function() {
-            var html = '';
+            var html = '',
+                index = $('#things-use').find('tbody').attr('index');
 
+            index = parseInt(index) + 1;
             html = '<tr>'+
                         '<td>'+
-                            '<select class="form-control things-select"/>'+
-                                '<option value="1" selected="selected">温度计</option>'+
-                            '</select>'+
+                            '<select class="form-control js-example-basic-single" name="goods['+index+'][name]" style="width: 481px;"></select>'+
                         '</td>'+
                         '<td>'+
-                            '<input class="form-control" type="text" value="1"/>'+
+                            '<input class="form-control" type="text" value="1" name="goods['+index+'][number]"/>'+
                         '</td>'+
                         '<td>'+
                             '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -2188,12 +2241,29 @@ function course_module(){
 
             $('#things-use').find('tbody').append(html);
 
-            $('.things-select').select2({
-                tags: true,
-                tokenSeparators: [',', ' '],
-                maximumInputLength: 12
-            });
+            //启动select2
+            $('#things-use .js-example-basic-single').select2({
+                tags:true
+            })
+            
 
+        });
+
+        /**
+         * 删除物品
+         * @author mao
+         * @version 3.3
+         * @date    2016-03-31
+         */
+        $('#things-use').on('click', '.fa-trash-o', function() {
+            var $that = $(this).parent().parent().parent().parent();
+            layer.confirm('确认删除？', {
+                title:"删除",
+                btn: ['确定','取消'] //按钮
+            }, function(its){
+                $that.remove();
+                layer.close(its);
+            });
         });
 
 
