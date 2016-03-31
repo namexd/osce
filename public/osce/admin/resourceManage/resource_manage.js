@@ -43,6 +43,10 @@ $(function(){
         case "equipment_manage_watch": equipment_manage_watch(); break;
         case "equipment_manage_watch_edit": equipment_manage_watch_edit(); break;
         case "equipment_manage_watch_add": equipment_manage_watch_add(); break;
+        //用物管理
+        case "res_manage":res_manage();break;
+        case "res_manage_add":res_manage_add();break;
+        case "res_manage_edit":res_manage_edit();break;
 
     }
 });
@@ -1134,6 +1138,7 @@ function clinical_case_manage(){
  * @date    2016-03-18
  */
 function clinical_case_manage_add() {
+
     $('#sourceForm').bootstrapValidator({
         message: 'This value is not valid',
         feedbackIcons: {/*输入框不同状态，显示图片的样式*/
@@ -1490,7 +1495,7 @@ function deleteItem(url){
 function course_module(){
     $('#submit-btn').click(function(){
         var flag = null;
-        $('tbody').find('.col-sm-10').each(function(key,elem){
+        $('#judgement tbody').find('.col-sm-10').each(function(key,elem){
             flag = true;
 
             if($(elem).find('input').val()==''){
@@ -1506,6 +1511,19 @@ function course_module(){
             layer.alert('请新增考核点！');
             return false;
         }
+
+        //验证与总分是否相等
+        var total = 0;
+        $('#judgement tbody').find('tr').each(function(key,elem) {
+            if($(elem).attr('parent')!=undefined){
+                total += parseInt($(elem).find('td').eq(2).find('span').text());
+            }
+        });
+        if(total != parseInt($('#total').val())){
+            layer.alert('与总分不一致！');
+            return false;
+        }
+
     });
 
 
@@ -2005,7 +2023,7 @@ function course_module(){
 
                         /*序号置0，内容清空 TODO: Zhoufuxiang 2016-2-26*/
                         var index = 0;
-                        $('tbody').html('');
+                        $('#judgement tbody').html('');
 
                         for(var i in res){
                             /*TODO: Zhoufuxiang 2016-2-26*/
@@ -2082,8 +2100,8 @@ function course_module(){
                            }
                         }
                         console.log(data)
-                        $('tbody').attr('index',index);
-                        $('tbody').append(html);
+                        $('#judgement tbody').attr('index',index);
+                        $('#judgement tbody').append(html);
                     }else {
                         layer.alert(data.message+'，请参考下载模板！');
                         //layer.alert('文件导入错误，请参考下载模板！');
@@ -2147,22 +2165,27 @@ function course_module(){
          * @version 3.3
          * @date    2016-03-31
          */
-        $.ajax({
-            type:'get',
-            url:pars.clinicalList,
-            success:function(res) {
+        $('#select-clinical').select2({
+            placeholder:'==请选择==',
+            ajax: {
+            url: pars.clinicalList,
+            dataType: 'json',
+            delay: 250,
+            processResults: function (res) {
                 if(res.code == 1){
-                    var data = res.data.rows,
+                    var data = res.data,
                         str = [];
 
                     for(var i in data) {
                         str.push({id:data[i].id,text:data[i].name});
                     }
                     str.push({id:-999,text:'==新增病例=='});
-
-                    $('#select-clinical').select2({data:str});
+                    return{
+                        results:str
+                    }
                 }
             }
+        }
         });
 
         /**
@@ -2188,7 +2211,7 @@ function course_module(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: pars.clinical_add //iframe的url
+                  content: pars.clinical_add+"?value=-999"
                 });
             }
         });
@@ -2200,16 +2223,16 @@ function course_module(){
          * @date    2016-03-31
          */
         $('#add-things').click(function() {
-            var html = '';
+            var html = '',
+                index = $('#things-use').find('tbody').attr('index');
 
+            index = parseInt(index) + 1;
             html = '<tr>'+
                         '<td>'+
-                            '<select class="form-control js-example-basic-single" style="width: 481px;">'+
-                                '<option value="温度计">温度计</option>'+
-                            '</select>'+
+                            '<select class="form-control js-example-basic-single" name="goods['+index+'][name]" style="width: 481px;"></select>'+
                         '</td>'+
                         '<td>'+
-                            '<input class="form-control" type="text" value="1"/>'+
+                            '<input class="form-control" type="text" value="1" name="goods['+index+'][number]"/>'+
                         '</td>'+
                         '<td>'+
                             '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -2243,7 +2266,6 @@ function course_module(){
             });
         });
 
-        $('select[name="category"]').select2();
 
 
 }
@@ -2419,7 +2441,7 @@ function staff_manage_invigilator_add() {
                     }
                 }
             },/*TODO: chenxia 2016-3-30*/
-            type: {
+            'subject[]': {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
@@ -2631,7 +2653,7 @@ function staff_manage_invigilator_edit() {
                     }
                 }
             },/*TODO: chenxia 2016-3-30*/
-            type: {
+            'subject[]': {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
@@ -2896,7 +2918,7 @@ function staff_manage_invigilator_sp_add() {
                 }
             },
             /*TODO: chenxia 2016-3-30*/
-            type: {
+            'subject[]': {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
@@ -3113,7 +3135,7 @@ function staff_manage_invigilator_sp_edit() {
                 }
             },
             /*TODO: chenxia 2016-3-30*/
-            type: {
+            'subject[]': {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
@@ -3596,6 +3618,60 @@ function staff_manage_invigilator_patrol_edit() {
         if($('.img_box').find('img').attr('src')==undefined){
             layer.msg('请上传图片！',{skin:'msg-error',icon:1});
             return false;
+        }
+    });
+}
+/**
+ * 用物管理
+ * @author chenxia
+ * @version 3.3
+ * @date    2016-03-31
+ */
+function res_manage_add() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    }
+                }
+            }
+        }
+    });
+}
+/**
+ * 用物管理
+ * @author chenxia
+ * @version 3.3
+ * @date    2016-03-31
+ */
+function res_manage_edit() {
+    $('#sourceForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {/*验证*/
+            name: {
+                /*键名username和input name值对应*/
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '名称不能为空'
+                    }
+                }
+            }
         }
     });
 }

@@ -11,6 +11,8 @@
             width: 197px;
             height: 251px;
         }
+         .select2-container--default{width:100% !important;}
+         .select2-container--default .select2-selection--multiple{border:1px solid #e5e6e7;}
     </style>  
 @stop
 
@@ -118,6 +120,7 @@
                                 <input type="text" class="form-control" name="description"  value=" {{$item->description}}"/>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
