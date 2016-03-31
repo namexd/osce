@@ -565,7 +565,6 @@ function subject_manage_add(){
                 dataType: 'json',
                 success: function (data)
                 {
-                    //console.log(data);
                     if(data.data.status){
                         var path=data.data.path;//图片存放路径
                         var picName = data.data.name;//图片名称

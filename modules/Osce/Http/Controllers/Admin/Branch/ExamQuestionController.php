@@ -147,65 +147,16 @@ class ExamQuestionController extends CommonController
                 $file->move($destinationPath,$newfileName);
                 $pathReturn    =   '/'.$path.$newfileName;
             }
-
-
-
-
             $data   =   [
                 'path'=>$pathReturn,
                 'name'=>$newfileName,
                 'status'=>$status
             ];
-
         }
         return json_encode(
             $this->success_data($data)
         );
     }
-
-    public function postQuestionUpload2(Request $request){
-        $data   =   [
-            'path'  =>  '',
-            'name'=>''
-        ];
-        if ($request->hasFile('file'))
-        {
-            $status = 1;
-            $file   =   $request->file('file');
-            $type = $file->getClientMimeType();//获取上传图片的类型
-            $imageName = rand(1000,9999);//图片名字
-            $newfileName=$imageName.$type;
-            $arr = array('.jpg','.jpeg',".png");
-            if(!in_array($type,$arr)){
-                $status = 0;
-            }
-            if($status){
-                //$path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
-                $path   =   'osce/question/'.date('Y-m-d').'/';
-                $destinationPath    =   public_path($path);
-                $result = $file->move($destinationPath,$newfileName);
-                return json_encode(
-                    $this->success_data($result)
-                );
-
-                $pathReturn    =   '/'.$path.$newfileName;
-            }
-
-
-
-
-            $data   =   [
-                'path'=>$pathReturn,
-                'name'=>$newfileName,
-                'status'=>$status
-            ];
-
-        }
-        return json_encode(
-            $this->success_data($data)
-        );
-    }
-
     /**新增试题数据交互
      * @method
      * @url /osce/admin/examQuestion/examQuestion-add
