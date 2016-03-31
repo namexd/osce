@@ -73,7 +73,7 @@ class StationMode implements ModeInterface
     {
         // TODO: Implement getExaminee() method.
         $sticks = ExamQueue::where('exam_id', $this->exam->id)->whereIn('stick', $this->stationIds)->get();
-
+        dd($sticks);
         if ($sticks->isEmpty()) {
             $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->whereIn('exam_queue.station_id', $this->stationIds)
@@ -94,7 +94,7 @@ class StationMode implements ModeInterface
                 ->groupBy('student.id')
                 ->take(1)
                 ->get();
-            dd($collection);
+
 
             if ($collection->isEmpty()) {
                 $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
