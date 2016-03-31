@@ -67,6 +67,7 @@ class RoomMode implements ModeInterface
             $sticks = ExamQueue::where('exam_id', $this->exam->id)->where('stick', $this->room->room_id)->get();
             if (count($sticks) < $this->_T_Count) {
                 $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+
                     ->whereIn('exam_queue.room_id', $this->room->id)
                     ->where('exam_queue.status', '<', 3)
                     ->where('student.exam_id', $this->exam->id)
@@ -133,6 +134,7 @@ class RoomMode implements ModeInterface
                         ->orderBy('begin_dt', 'asc')
                         ->first();
                     $stick->stick = $this->room->id;
+                    \Log::alert('stick', $stick->toArray());
                     if (!$stick->save()) {
                         throw new \Exception('系统异常，请重试', -5);
                     }
