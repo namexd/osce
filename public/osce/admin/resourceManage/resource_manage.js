@@ -3554,7 +3554,7 @@ function staff_manage_invigilator_patrol_edit() {
 /**
  * 用物管理
  * @author chenxia
- * @version 3.3.1
+ * @version 3.3
  * @date    2016-03-31
  */
 function res_manage_add() {
@@ -3581,7 +3581,7 @@ function res_manage_add() {
 /**
  * 用物管理
  * @author chenxia
- * @version 3.3.1
+ * @version 3.3
  * @date    2016-03-31
  */
 function res_manage_edit() {
