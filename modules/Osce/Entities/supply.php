@@ -14,10 +14,10 @@ use Modules\Osce\Repositories\Common;
 use Modules\Osce\Entities\CommonModel;
 
 
-class Supplies extends CommonModel
+class Supply extends CommonModel
 {
     protected $connection   = 'osce_mis';
-    protected $table        = 'supplies';
+    protected $table        = 'supply';
     public    $timestamps   = true;
     protected $primaryKey   = 'id';
     public    $incrementing = true;

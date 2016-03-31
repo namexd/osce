@@ -214,12 +214,12 @@
                                                     <th width="160">操作</th>
                                                 </tr>
                                             </thead>
-                                            <tbody index="{{count($subjectSupplies)}}">
-                                            @forelse($subjectSupplies as $key => $subjectSupply)
+                                            <tbody index="{{count($subjectSupplys)}}">
+                                            @forelse($subjectSupplys as $key => $subjectSupply)
                                                 <tr>
                                                     <td>
                                                         <select class="form-control js-example-basic-single" name="goods[{{$key+1}}][name]" style="width: 481px;">
-                                                            <option>{{$subjectSupply->supplies->name}}</option>
+                                                            <option>{{$subjectSupply->supply->name}}</option>
                                                         </select>
                                                     </td>
                                                     <td>
