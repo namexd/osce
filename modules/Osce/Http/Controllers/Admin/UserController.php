@@ -40,20 +40,23 @@ class UserController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getStaffList(Request $request,Common $common){
-        $list   =   $common->getUserList();
-        return view('osce::admin.systemManage.user_manage',['list'=>$list]);
+    public function getStaffList(Request $request, Common $common)
+    {
+        $list = $common->getUserList();
+
+        return view('osce::admin.systemManage.user_manage', ['list' => $list]);
     }
 
-    public function getEditStaff(Request $request){
-        $this   ->  validate($request,[
-            'id'    =>  'required',
+    public function getEditStaff(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required',
         ]);
 
-        $id =   $request    ->get('id');
+        $id = $request->get('id');
 
-        $staff  =   User::find($id);
-        return view('osce::admin.systemManage.user_manage_edit',['item'=>$staff]);
+        $staff = User::find($id);
+        return view('osce::admin.systemManage.user_manage_edit', ['item' => $staff]);
     }
 
     /**
@@ -69,7 +72,8 @@ class UserController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getAddUser(){
+    public function getAddUser()
+    {
         return view('osce::admin.systemManage.user_manage_add');
     }
 
@@ -94,106 +98,115 @@ class UserController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postAddUser(Request $request,Common $common){
-        $this->validate($request,[
-            'name'  =>  'required',
-            'gender'=>  'sometimes|in:0,1,2'
+    public function postAddUser(Request $request, Common $common)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'gender' => 'sometimes|in:0,1,2'
         ]);
-        $mobile     =   e($request    ->  get('mobile'));
-        $name       =   e($request    ->  get('name'));
-        $gender     =   intval($request    ->  get('gender'));
-        $data       =   [
-            'name'      =>  $name,
-            'mobile'    =>  $mobile,
-            'gender'    =>  $gender,
+        $mobile = e($request->get('mobile'));
+        $name = e($request->get('name'));
+        $gender = intval($request->get('gender'));
+        $data = [
+            'name' => $name,
+            'mobile' => $mobile,
+            'gender' => $gender,
         ];
-        try{
-            $user   =   User::where('mobile','=',$mobile)->first();
-            if(!is_null($user))
-            {
+        try {
+            $user = User::where('mobile', '=', $mobile)->first();
+            if (!is_null($user)) {
                 //throw new \Exception('该手机已经被注册了');
 
-                $common ->  relativeAdminUser($user);
-            }
-            else
-            {
-                $user   =   $common     ->  createAdminUser($data);
+                $common->relativeAdminUser($user);
+            } else {
+                $user = $common->createAdminUser($data);
             }
 
             return redirect()->route('osce.admin.user.getStaffList');
 
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
-    public function postEditUser(Request $request,Common $common){
-        $this->validate($request,[
-            'name'  =>  'required',
-            'gender'=>  'sometimes|in:0,1,2'
+    public function postEditUser(Request $request, Common $common)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'gender' => 'sometimes|in:0,1,2'
         ]);
-        $id         =   intval($request     ->  get('id'));
-        $mobile     =   e($request          ->  get('mobile'));
-        $name       =   e($request          ->  get('name'));
-        $gender     =   intval($request     ->  get('gender'));
-        $data       =   [
-            'name'      =>  $name,
-            'mobile'    =>  $mobile,
-            'gender'    =>  $gender,
+        $id = intval($request->get('id'));
+        $mobile = e($request->get('mobile'));
+        $name = e($request->get('name'));
+        $gender = intval($request->get('gender'));
+        $data = [
+            'name' => $name,
+            'mobile' => $mobile,
+            'gender' => $gender,
         ];
-        try{
-            if(!$common     ->  updateAdminUser($id,$data))
-            {
+        try {
+            if (!$common->updateAdminUser($id, $data)) {
                 throw new \Exception('用户修改失败');
             }
             return redirect()->route('osce.admin.user.getStaffList');
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
-    public function postDelUser(Request $request){
-        $this->validate($request,[
-            'id'  =>  'required'
+    public function postDelUser(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required'
         ]);
-        $id =   intval($request    ->  get('id'));
-        try{
-            $user   =   Auth::user();
-            if($user->id ==$id){
+        $id = intval($request->get('id'));
+        try {
+            $user = Auth::user();
+            if ($user->id == $id) {
                 throw new \Exception('此为当前登录人的账号，无法删除自己！');
             }
-            $user   =   User::find($id);
-            if($user->delete()){
+            $noAdminRole = [
+                config('config.teacherRoleId'),
+                config('config.examineeRoleId'),
+                config('config.spRoleId'),
+                config('config.superRoleId'),
+                config('config.patrolRoleId')
+            ];
+            $userRole = SysUserRole::where('user_id','=',$id)->whereNotIn('role_id',$noAdminRole)->first();
+            if($userRole){
+                throw new \Exception('该用户拥有多重角色，无法删除！');
+            }
+            $user = User::find($id);
+            if ($user->delete()) {
                 return $this->success_data('删除成功！');
-            } else{
+            } else {
                 throw new \Exception('删除失败！');
             }
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return $this->fail($ex);
         }
     }
-    public function getLogout() {
 
-        if(Auth::check())
-        {
-            $nowTime =time();
-            try{
+    public function getLogout()
+    {
+
+        if (Auth::check()) {
+            $nowTime = time();
+            try {
                 Auth::logout();
                 //修改用户最后登录时间
-                $user =Auth::user();
-                if($user){
+                $user = Auth::user();
+                if ($user) {
                     throw new \Exception('未找到当前用户信息');
-                }else{
-                    $connection=\DB::connection('sys_mis');
-                    $connection->table('users')->where('id',$user->id)->update(['lastlogindate'=>$nowTime]);
+                } else {
+                    $connection = \DB::connection('sys_mis');
+                    $connection->table('users')->where('id', $user->id)->update(['lastlogindate' => $nowTime]);
                 }
-            } catch (\Exception $ex){
-                return redirect()->route('osce.admin.postIndex')->with('message','你现在已经退出登录了!');
+            } catch (\Exception $ex) {
+                return redirect()->route('osce.admin.postIndex')->with('message', '你现在已经退出登录了!');
             }
         }
-        return redirect()->route('osce.admin.postIndex')->with('message','你现在已经退出登录了!');
+        return redirect()->route('osce.admin.postIndex')->with('message', '你现在已经退出登录了!');
     }
 
     /**
@@ -213,27 +226,29 @@ class UserController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getChangeUsersRole(Request $request){
-        $this->validate($request,[
-            'id'  =>  'required'
+    public function getChangeUsersRole(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required'
         ]);
-         $id=$request->get('id');
+        $id = $request->get('id');
         try {
             $roleId = SysUserRole::where('user_id', $id)->select()->first();
-            $roles = SysRoles::select()->get();
+            $roles = SysRoles::whereNotIn('name', ['监考老师', '巡考老师', '超级管理员', '考生'])->get();
+
             $data = [];
 
             foreach ($roles as $role) {
                 if ($roleId) {
                     $user_role_id = $roleId->role_id;
-                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.patrolRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId') && $role->id != $user_role_id) {
+                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.patrolRoleId') && $role->id != config('config.spRoleId') && $role->id != config('config.teacherRoleId') && $role->id != $user_role_id) {
                         $data[] = [
                             'role_id' => $role->id,
                             'role_name' => $role->name,
                         ];
                     }
                 } else {
-                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.patrolRoleId') && $role->id != config('config.teacherRoleId') && $role->id != config('config.teacherRoleId')) {
+                    if ($role->id != config('config.teacherRoleId') && $role->id != config('config.patrolRoleId') && $role->id != config('config.spRoleId') && $role->id != config('config.teacherRoleId')) {
                         $data[] = [
                             'role_id' => $role->id,
                             'role_name' => $role->name,
@@ -275,24 +290,46 @@ class UserController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postEditUserRole(Request $request){
-              $this->validate($request,[
-                  'role_id'  => 'required',
-                  'user_id'  => 'required'
-              ],[
-                  'role_id'  => '请选择角色',
-                  'user_id'  => '该用户不存在',
-              ]);
-               $user_id=$request->input('user_id');
-               $role_id=$request->input('role_id');
-               $result=SysUserRole::where('user_id','=',$user_id)->update([
-                      'role_id' =>  $role_id
-                  ]);
+    public function postEditUserRole(Request $request)
+    {
+        $this->validate($request, [
+            'role_id' => 'required',
+            'user_id' => 'required'
+        ], [
+            'role_id' => '请选择角色',
+            'user_id' => '该用户不存在',
+        ]);
+        $user_id = $request->input('user_id');
+        $role_id = $request->input('role_id');
+        $noAdminRole = [
+            config('config.teacherRoleId'),
+            config('config.examineeRoleId'),
+            config('config.spRoleId'),
+            config('config.superRoleId'),
+            config('config.patrolRoleId')
+        ];
+        //查询该用户为（非老师、超级管理员）的角色
+        $userTeacherRole = SysUserRole::where('user_id','=',$user_id)->whereNotIn('role_id',$noAdminRole)->where('role_id','<>',$role_id)->first();
+        if(!$userTeacherRole){
+            return redirect()->back()->withErrors('老师角色不能变更!');
+        }
+        //存在所需变更的角色，则删除原来的其他 （非老师、超管）角色
+        $userRole= SysUserRole::where('user_id','=',$user_id)->where('role_id','=',$role_id)->first();
+        if($userRole){
+            $result = SysUserRole::where('user_id','=',$user_id)->whereNotIn('role_id',$noAdminRole)->where('role_id','<>',$role_id)->delete();
 
-               if($result){
-                    return redirect()->route('osce.admin.user.getStaffList')->with('message','修改成功!');
-               }
-                    return redirect()->back()->withErrors('修改权限失败!');
+        }else{
+
+            $result  = SysUserRole::where('user_id', '=', $user_id)->whereNotIn('role_id',$noAdminRole)->update([
+                'role_id' => $role_id
+            ]);
+        }
+
+
+        if ($result) {
+            return redirect()->route('osce.admin.user.getStaffList')->with('message', '修改成功!');
+        }
+        return redirect()->back()->withErrors('修改权限失败!');
 
     }
 }

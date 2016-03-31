@@ -284,6 +284,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('done-exams', ['uses'=>'PadController@getDoneExams']);		//获取所有的 历史考试(已经考完) (接口) zhoufuxiang 2016-3-23
 		Route::get('all-rooms',  ['uses'=>'PadController@getAllRooms']);		//获取所有的 历史考试的考场列表 (接口) zhoufuxiang 2016-3-25
 		Route::get('all-vcrs-list', ['uses'=>'PadController@getAllVcrsList']);	//历史回放，获取所有已经考完的考试对应的摄像头列表(接口) zhoufuxiang 2016-3-25
+		Route::get('stations-vcrs', ['uses'=>'PadController@getStationsVcrs']);	//根据考场ID和考试ID获取 考站列表、考站对应的摄像机信息 (接口) zhoufuxiang 2016-3-28
 
 		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
 
@@ -462,25 +463,7 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 //TODO:测试用
 Route::get('test/test', function(\Illuminate\Http\Request $request) {
-//	//验证规则
-//	$this -> validate($request,[
-//		'id'	=> 'required'
-//	]);
-
-//	$exam_id = $request->get('id');
-//	if(empty($exam_id)){
-//		return '请传入id，id对应考试ID';
-//	}
-//
-//	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
-//	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
-//	$exam = new \Modules\Osce\Entities\Exam();
-//	if($exam->emptyData($exam_id)){
-//		return '成功';
-//	}
-	dd(\Modules\Osce\Entities\Flows::where('created_user_id', 224)->update(['description' => 123]));
-//
-//	return '失败';
+    
 });
 //TODO:清空考试数据使用 	Zhoufuxiang
 Route::get('test/empty', function(\Illuminate\Http\Request $request) {
@@ -495,10 +478,10 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 	$exam = new \Modules\Osce\Entities\Exam();
 
 	if($exam->emptyData($exam_id)){
-		return '成功-'.rand(1000,9999);
+		return '成功-' . mt_rand(1000,9999);
 	}
 
-	return '失败-'.rand(1000,9999);
+	return '失败-' . mt_rand(1000,9999);
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 

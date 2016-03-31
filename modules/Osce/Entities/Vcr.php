@@ -197,14 +197,29 @@ class Vcr extends CommonModel implements MachineInterface
     {
         if ($type === '0') {
             $modelVcr = RoomVcr::where('room_id', $id)->first();
+            if (is_null($modelVcr)) {
+                $vcr = Vcr::whereNotIn('status', [2, 3])
+                    ->where('used', 0)
+                    ->select(['id', 'name'])->get();
+            } else {
+                $vcr = Vcr::whereNotIn('status', [2, 3])
+                    ->where('used', 0)
+                    ->orWhere('id', $modelVcr->vcr_id)
+                    ->select(['id', 'name'])->get();
+            }
         } else {
             $modelVcr = AreaVcr::where('area_id', $id)->first();
+            if (is_null($modelVcr)) {
+                $vcr = Vcr::whereNotIn('status', [2, 3])
+                    ->where('used', 0)
+                    ->select(['id', 'name'])->get();
+            } else {
+                $vcr = Vcr::whereNotIn('status', [2, 3])
+                    ->where('used', 0)
+                    ->orWhere('id', $modelVcr->vcr_id)
+                    ->select(['id', 'name'])->get();
+            }
         }
-
-        $vcr = Vcr::whereNotIn('status', [2, 3])
-            ->where('used', 0)
-            ->orWhere('id', $modelVcr->vcr_id)
-            ->select(['id', 'name'])->get();
 
         $result = [$vcr, $modelVcr];
         return $result;     //关联摄像机

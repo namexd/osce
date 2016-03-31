@@ -202,10 +202,10 @@ class NoticeController extends CommonController
         $tFile  = array_pop($file);
         $filename = md5($filename).'.'.$tFile;
         //TODO:Zhoufuxiang 2016-3-14
-        $encode = mb_detect_encoding($filepath, array("ASCII","GB2312","GBK","UTF-8",'BIG5'));
-        if($encode == 'UTF-8'){
-            $filepath = iconv('utf-8', 'gbk', $filepath);
-        }
+//        $encode = mb_detect_encoding($filepath, array("ASCII","GB2312","GBK","UTF-8",'BIG5'));
+//        if($encode == 'UTF-8'){
+//            $filepath = iconv('utf-8', 'gbk', $filepath);
+//        }
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');

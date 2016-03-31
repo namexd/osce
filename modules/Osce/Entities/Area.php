@@ -123,24 +123,24 @@ class Area extends CommonModel
                 if (!$areaVcr->delete()) {
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
+                if ($vcr_id !== '0') {
+                    $data = [
+                        'area_id' => $id,
+                        'vcr_id' => $vcr_id,
+                        'created_user_id' => $user->id
+                    ];
 
-                $data = [
-                    'area_id' => $id,
-                    'vcr_id' => $vcr_id,
-                    'created_user_id' => $user->id
-                ];
+                    if (!AreaVcr::create($data)) {
+                        throw new \Exception('考场绑定摄像机失败！请重试');
+                    };
 
-                if (!AreaVcr::create($data)) {
-                    throw new \Exception('考场绑定摄像机失败！请重试');
-                };
-
-                //修改当前摄像机状态
-                $vcr = Vcr::FindOrFail($vcr_id);
-                $vcr->used = 1;
-                if (!$vcr->save()) {
-                    throw new \Exception('考场绑定摄像机失败！请重试');
+                    //修改当前摄像机状态
+                    $vcr = Vcr::FindOrFail($vcr_id);
+                    $vcr->used = 1;
+                    if (!$vcr->save()) {
+                        throw new \Exception('考场绑定摄像机失败！请重试');
+                    }
                 }
-
                 //将原来的摄像机的状态恢复
                 $vcr = Vcr::findOrFail($areaVcr->vcr_id);
                 $vcr->used = 0;
@@ -148,7 +148,9 @@ class Area extends CommonModel
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
             } else {
-                throw new \Exception('该场所并未绑定设备，请删除此场所');
+                if ($vcr_id !== '0') {
+                    $this->vcr($vcr_id, $user->id, Area::find($id));
+                }
             }
 
             $connection->commit();
@@ -180,26 +182,41 @@ class Area extends CommonModel
                 throw new \Exception('新建房间失败');
             }
 
-            $data = [
-                'area_id' => $room->id,
-                'vcr_id' => $vcrId,
-                'created_user_id' => $userId
-            ];
-
-            if (!AreaVcr::create($data)) {
-                throw new \Exception('新建房间失败');
-            }
-
-            $vcr = Vcr::findOrFail($vcrId);
-            $vcr->used = 1;
-            if (!$vcr->save()) {
-                throw new \Exception('新建房间失败');
+            if ($vcrId !== "0") {
+                $this->vcr($vcrId, $userId, $room);
             }
 
             $connection->commit();
             return $room;
         } catch (\Exception $ex) {
             throw $ex;
+        }
+    }
+
+    /**
+     * @param $vcrId
+     * @param $userId
+     * @param $room
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time
+     */
+    private function vcr($vcrId, $userId, $room)
+    {
+        $data = [
+            'area_id' => $room->id,
+            'vcr_id' => $vcrId,
+            'created_user_id' => $userId
+        ];
+
+        if (!AreaVcr::create($data)) {
+            throw new \Exception('新建房间失败');
+        }
+
+        $vcr = Vcr::findOrFail($vcrId);
+        $vcr->used = 1;
+        if (!$vcr->save()) {
+            throw new \Exception('新建房间失败');
         }
     }
 

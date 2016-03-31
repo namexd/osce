@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
@@ -60,6 +61,7 @@ class StudentExamQueryController extends CommonController
 
             //根据用户获得考试id
             $ExamIdList = Student::where('user_id', '=', $user->id)->select('exam_id')->get();
+
             if(!$ExamIdList){
                 throw new \Exception('目前你还没有参加过考试。');
 
@@ -77,6 +79,7 @@ class StudentExamQueryController extends CommonController
             //根据考试id获取所有考试
             //dd($ExamList);
             return view('osce::wechat.resultquery.examination_list', ['ExamList' => $ExamList]);
+
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -119,6 +122,8 @@ class StudentExamQueryController extends CommonController
             // TODO 根据考试id找到对应的考试场次  zhouqiang  2016-3-7
 
         $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get()->pluck('id');
+            //判断学生参加过那几场考试
+//            $examScreeningId = ExamQueue::where('exam_id','=',$examId)->where('student_id','=',$studentId)->get()->pluck('id');
 
 //        $examScreening = [];
 //        foreach ($examScreeningId as $data) {
@@ -198,42 +203,47 @@ class StudentExamQueryController extends CommonController
 
     public function  getExamDetails(Request $request)
     {
-        $this->validate($request, [
-            'exam_screening_id' => 'required|integer',
-            'station_id'    => 'required|integer'
-        ]);
+        try{
+            $this->validate($request, [
+                'exam_screening_id' => 'required|integer',
+//            'station_id'    => 'required|integer'
+            ]);
 
-        $examScreeningId = intval(Input::get('exam_screening_id'));
-        $station_id = intval(Input::get('station_id'));
-        //根据考试场次id查询出该结果详情
-        $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->where('station_id', '=', $station_id)->first();
-        //得到考试名字
-        $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
+            $examScreeningId = intval(Input::get('exam_screening_id'));
+            $station_id = intval(Input::get('station_id'));
+            //根据考试场次id查询出该结果详情
+            $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->where('station_id', '=', $station_id)->first();
 
-        //查询出详情列表
-        $examscoreModel = new ExamScore();
-        $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
+            if(is_null($examresultList)){
+                throw new \Exception('该考试结果不存在');
+            }
+            //得到考试名字
+            $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
 
-        //TODO: zhoufuxiang
-        $scores = [];
-        $itemScore = [];
-        foreach ($examScoreList as $itm) {
-            $pid = $itm->standard->pid;
-            $scores[$pid]['items'][] = [
-                'standard' => $itm->standard,
-                'score' => $itm->score,
-            ];
-            $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
-        }
+            //查询出详情列表
+            $examscoreModel = new ExamScore();
+            $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
 
-        foreach ($scores as $index => $item) {
-            //获取考核点信息
-            $standardM = Standard::where('id', $index)->first();
-            $scores[$index]['sort'] = $standardM->sort;
-            $scores[$index]['content'] = $standardM->content;
-            $scores[$index]['tScore'] = $standardM->score;
-            $scores[$index]['score'] = $itemScore[$index]['totalScore'];
-        }
+            //TODO: zhoufuxiang
+            $scores = [];
+            $itemScore = [];
+            foreach ($examScoreList as $itm) {
+                $pid = $itm->standard->pid;
+                $scores[$pid]['items'][] = [
+                    'standard' => $itm->standard,
+                    'score' => $itm->score,
+                ];
+                $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
+            }
+
+            foreach ($scores as $index => $item) {
+                //获取考核点信息
+                $standardM = Standard::where('id', $index)->first();
+                $scores[$index]['sort'] = $standardM->sort;
+                $scores[$index]['content'] = $standardM->content;
+                $scores[$index]['tScore'] = $standardM->score;
+                $scores[$index]['score'] = $itemScore[$index]['totalScore'];
+            }
 
 
 //        $groupData = [];
@@ -264,12 +274,17 @@ class StudentExamQueryController extends CommonController
 //            }
 //        }
 
-        return view('osce::wechat.resultquery.examination_detail',
-            [
-                'examScoreList' => $scores,
-                'examresultList' => $examresultList,
-                'examName' => $examName
-            ]);
+            return view('osce::wechat.resultquery.examination_detail',
+                [
+                    'examScoreList' => $scores,
+                    'examresultList' => $examresultList,
+                    'examName' => $examName
+                ]);
+
+        }catch (\Exception $ex){
+            return  redirect()->back()->withErrors($ex->getMessage());
+        }
+
     }
 
 
@@ -316,7 +331,6 @@ class StudentExamQueryController extends CommonController
             );
         }
     }
-
 
     /**
      * 监考老师查询科目成绩和学生情况

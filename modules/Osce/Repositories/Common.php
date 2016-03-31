@@ -79,17 +79,17 @@ class Common
             config('config.teacherRoleId'),
             config('config.examineeRoleId'),
             config('config.spRoleId'),
-            config('config.superRoleId')
+            config('config.superRoleId'),
+            config('config.patrolRoleId')
         ];
 
-        return User::select('users.id', 'users.username', 'users.name', 'users.gender', 'users.mobile',
-            'users.lastlogindate')
-            ->leftJoin('sys_user_role', function ($join) {
-                $join->on('users.id', '=', 'sys_user_role.user_id');
-            })
-//            -> where('sys_user_role.role_id','=',config('osce.adminRoleId',3))
-            ->whereNotIn('sys_user_role.role_id', $noAdminRole)
-            ->paginate(config('osce.page_size'));
+        return User::select('users.id', 'users.username', 'users.name', 'users.gender', 'users.mobile', 'users.lastlogindate')
+                ->leftJoin('sys_user_role', function ($join) {
+                    $join->on('users.id', '=', 'sys_user_role.user_id');
+                })
+//                -> where('sys_user_role.role_id','=',config('osce.adminRoleId',3))
+                ->whereNotIn('sys_user_role.role_id', $noAdminRole)
+                ->paginate(config('osce.page_size'));
     }
 
     public function createAdminUser($data)
@@ -245,5 +245,17 @@ class Common
             }
         }
         return $i;
+    }
+
+    static  public function getRoleIdByTeacherType($type){
+        $relation  =   [
+            1=>config('osce.invigilatorRoleId'),
+//            2=>config('osce.studentRoleId'),
+//            3=>config('osce.adminRoleId'),
+            2=>config('osce.spRoleId'),
+//            5=>config('osce.superRoleId'),
+            3=>config('osce.patrolRoleId'),
+        ];
+        return  $relation[$type];
     }
 }
