@@ -68,7 +68,7 @@ return [
 	'prepare'			=>	10,
 	'spRoleId'			=>	4,
 
-	'invigilatorRoleId'	=>	env('invigilatorRoleId',1),
+	'invigilatorRoleId'	=>	env('invigilatorRoleId',77),
 	'studentRoleId'		=>	env('studentRoleId',78),
 
 

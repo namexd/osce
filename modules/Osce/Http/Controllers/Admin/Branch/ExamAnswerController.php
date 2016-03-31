@@ -47,18 +47,19 @@ class ExamAnswerController extends CommonController
 
         $id = intval($student_id);//学生id
 
-
         $studentMsg=Student::where('id',$id)->first();
         if(is_null($studentMsg)){
             abort(404,'学生不存在');
         }
+
         $examItems = [];
         $child = [];
         $data = [];
         $stuScore = 0;
-        //\DB::connection('osce_mis')->enableQueryLog();
+        \DB::connection('osce_mis')->enableQueryLog();
         $examPaperFormalInfo = ExamPaperFormal::where('student_id',$studentMsg->id)->first();
-        //$q = \DB::connection('osce_mis')->getQueryLog();
+        $q = \DB::connection('osce_mis')->getQueryLog();
+        //dd($q);
         if(is_null($examPaperFormalInfo)){
             abort(404,'试卷不存在');
         }
@@ -76,6 +77,7 @@ class ExamAnswerController extends CommonController
                     foreach ($v->ExamQuestionFormal as $key => $item) {
 
                         $child[$key]['exam_question_name'] = $key + 1 . '.' . '' . $item['name'] .'?'; // 拼接试题名称
+                        $child[$key]['exam_question_image'] = unserialize($item['image']); //试题图片
                         $child[$key]['contentItem'] = explode('|%|', $item['content']); //试题内容（A.内容，B.内容，C.内容）用,拼接试题内容
 
                         foreach($child[$key]['contentItem'] as $kkk => $vvv){ //将$child[$key]['contentItem']中的 . 替换成冒号：
@@ -131,6 +133,7 @@ class ExamAnswerController extends CommonController
                 $data[$k]['child'] = $child;
             }
         }
+        //dd($data);
          return view('osce::admin.statisticalAnalysis.statistics_student_query',
              [
                  'examItems'=>$examItems,
