@@ -186,6 +186,7 @@ class SuppliesController extends CommonController
         $SuppliesModel = new Supplies();
         $subject = $SuppliesModel->find($id);
         try {
+
             $SuppliesModel->delSubject($subject);
             return \Response::json(array('code' => 1));
         } catch (\Exception $ex) {
@@ -200,7 +201,6 @@ class SuppliesController extends CommonController
     //ajax 获取用物列表
 
 //    public function get
-
 
 
 }
