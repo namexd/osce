@@ -25,8 +25,8 @@ class SubjectSupplies extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Subject', 'id', 'subject_id');
     }
 
-//    public function supplies(){
-//        return $this->hasOne('\Modules\Osce\Entities\supplies', 'id', 'supplies_id');
-//    }
+   public function supplies(){
+       return $this->hasOne('\Modules\Osce\Entities\supplies', 'id', 'supplies_id');
+   }
 
 }
