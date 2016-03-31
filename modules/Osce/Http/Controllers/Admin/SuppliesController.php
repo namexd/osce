@@ -96,6 +96,8 @@ class SuppliesController extends CommonController
 
         if(!Supplies::create($data)){
             throw new \Exception('添加用物失败');
+        }else{
+            return redirect()->route('osce.admin.supplies.getList');
         }
     }
 
@@ -154,6 +156,8 @@ class SuppliesController extends CommonController
         $Supplies->name =  $name;
         if(!$Supplies->save()){
             throw new \Exception('修改用物失败');
+        }else{
+            return redirect()->route('osce.admin.supplies.getList');
         }
     }
 
