@@ -147,6 +147,7 @@ class StationMode implements ModeInterface
                         ->where('student_id', $student->student_id)
                         ->orderBy('begin_dt', 'asc')
                         ->first();
+                    dd($this->room);
                     $stick->stick = $this->room->id;
                     \Log::alert('stick', $stick->toArray());
                     if (!$stick->save()) {
