@@ -134,12 +134,13 @@ class ExamQuestionController extends CommonController
             $fileName           =   $file->getClientOriginalName();
             $type = substr($fileName, strrpos($fileName,'.'));
             $status = 1;
-            $arr = array(".png",'.jpg');
+            $arr = array('.jpg','.jpeg',".png");
             if(!in_array($type,$arr)){
                 $status = 0;
             }
             if($status){
-                $path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
+                //$path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
+                $path   =   'osce/question/'.date('Y-m-d').'/';
                 $destinationPath    =   public_path($path);
                 $file->move($destinationPath,$fileName);
                 $pathReturn    =   '/'.$path.$fileName;
