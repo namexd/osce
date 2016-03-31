@@ -27,6 +27,9 @@
         margin-bottom: 0;
         text-align: center;
     }
+    .select2-container--default .select2-selection--single{border:1px solid #e5e6e7;height:34px;line-height:34px;}
+    .select2-container--default .select2-selection--single .select2-selection__rendered{line-height:34px;}
+    .display-none{display: none;}
 </style>
 @stop
 
@@ -128,7 +131,7 @@
                         </div>
                         <div class="hr-line-dashed"></div>
 
-                        <div class="form-group">
+                        <div class="form-group display-none">
                             <label class="col-sm-2 control-label">类别</label>
                             <div class="col-sm-10">
                                 <select id="select_Category" class="form-control" name="category"/>
@@ -138,9 +141,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div>
+                        <div class="hr-line-dashed display-none"></div>
 
-                        <div class="form-group">
+                        <div class="form-group display-none">
                             <label class="col-sm-2 control-label">操作</label>
                             <div class="col-sm-5">
                                 <select id="select_Category" class="form-control" name="category"/>
@@ -155,20 +158,20 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div>
+                        <div class="hr-line-dashed display-none"></div>
 
-                        <div class="form-group">
+                        <div class="form-group display-none">
                             <label class="col-sm-2 control-label">时间间隔</label>
                             <div class="col-sm-10">
                                 <input id="select_Category" class="form-control" name="time"/>
                             </div>
                         </div>
-                        <div class="hr-line-dashed"></div>
+                        <div class="hr-line-dashed display-none"></div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例</label>
                             <div class="col-sm-10">
-                                <select id="select-clinical" class="form-control" name="category"/>
+                                <select id="select-clinical" class="form-control" name="category" multiple="multiple" />
                                     <option value="1">胃疼</option>
                                     <option value="-999">=新增病例=</option>
                                 </select>
@@ -206,25 +209,12 @@
                                         <table class="table table-bordered" id="things-use">
                                             <thead>
                                                 <tr>
-                                                    <th>用物</th>
+                                                    <th width="481">用物</th>
                                                     <th>数量</th>
                                                     <th width="160">操作</th>
                                                 </tr>
                                             </thead>
                                             <tbody index="0">
-                                                <tr>
-                                                    <td>
-                                                        <select class="form-control things-select"/>
-                                                            <option value="1" selected="selected">温度计</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control" type="text" value="1"/>
-                                                    </td>
-                                                    <td>
-                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                    </td>
-                                                </tr>
                                             </tbody>
                                         </table>
 
