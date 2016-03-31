@@ -149,7 +149,7 @@ class ExamQuestionController extends CommonController
                 'name'=>$fileName,
                 'status'=>$status
             ];
-            
+
         }
         return json_encode(
             $this->success_data($data)
