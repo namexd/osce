@@ -60,7 +60,6 @@ class SuppliesController extends CommonController
 
     }
     
-
     //提交编辑用物表单
     public  function postEditSupplies(Request $request){
         $this->validate($request,[
