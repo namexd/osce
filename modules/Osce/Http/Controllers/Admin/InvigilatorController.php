@@ -422,8 +422,9 @@ class InvigilatorController extends CommonController
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
+        $type = $request->get('type',1);
 
-        if($request->get('type')==1){
+        if($type==1){
             if(is_null($request->get('subject'))){
                 throw new \Exception('考试项目必选');
             }
@@ -436,7 +437,7 @@ class InvigilatorController extends CommonController
 
             if($result = $teacherModel ->  editInvigilator($id, $userData, $teacherData, $subjects))
             {
-                return redirect()->route('osce.admin.invigilator.getInvigilatorList');
+                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=>$type]);
             } else{
                 throw new \Exception('编辑失败');
             }

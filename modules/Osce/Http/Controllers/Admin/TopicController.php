@@ -445,7 +445,7 @@ class TopicController extends CommonController
         }
     }
     // 考试项目获取病例数据
-    public  function  get
+//    public  function
 
 
 

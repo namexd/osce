@@ -1,6 +1,7 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
 <link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
+<link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
 <style>
     table tr td .form-group {
         margin-bottom: 0;
@@ -30,9 +31,10 @@
 @stop
 
 @section('only_js')
-<script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script>
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
+<script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
+<script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script>
 <script>
     $(function(){
         /**
@@ -201,7 +203,7 @@
                                         </div>
                                     </div>
                                     <div class="ibox-content">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered" id="things-use">
                                             <thead>
                                                 <tr>
                                                     <th>用物</th>
@@ -212,14 +214,12 @@
                                             <tbody index="0">
                                                 <tr>
                                                     <td>
-                                                        <select class="form-control"/>
-                                                            <option value="1">温度计</option>
+                                                        <select class="form-control things-select"/>
+                                                            <option value="1" selected="selected">温度计</option>
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <select class="form-control"/>
-                                                            <option value="1">温度计</option>
-                                                        </select>
+                                                        <input class="form-control" type="text" value="1"/>
                                                     </td>
                                                     <td>
                                                         <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
