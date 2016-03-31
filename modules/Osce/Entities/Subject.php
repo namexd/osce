@@ -101,8 +101,10 @@ class Subject extends CommonModel
                     throw new \Exception('创建考试项目——病例关系失败');
                 }
                 //添加考试项目——用物关系
-                if(!$this->addSubjectGoods($subject->id, $goods, $user->id)){
-                    throw new \Exception('创建考试项目——用物关系失败');
+                if(!empty($goods)){
+                    if(!$this->addSubjectGoods($subject->id, $goods, $user->id)){
+                        throw new \Exception('创建考试项目——用物关系失败');
+                    }
                 }
 
             } else {
@@ -415,9 +417,12 @@ class Subject extends CommonModel
             }
         }
         //重新添加
-        if(!$this->addSubjectGoods($subject_id, $goods, $user_id)){
-            return false;
+        if(!empty($goods)){
+            if(!$this->addSubjectGoods($subject_id, $goods, $user_id)){
+                return false;
+            }
         }
+
         return true;
     }
 

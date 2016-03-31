@@ -103,7 +103,7 @@ class TopicController extends CommonController
             'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
             'desc'      => 'required',    //描述
-            'goods'     => 'required',    //所需用物
+            'goods'     => 'sometimes',    //所需用物
 //            'stem'      => 'required',    //题干
 //            'equipments'=> 'required',    //所需设备
             'content'   => 'required',    //评分标准
@@ -199,7 +199,7 @@ class TopicController extends CommonController
             'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
             'desc'      => 'required',    //描述
-            'goods'     => 'required',    //所需用物
+            'goods'     => 'sometimes',   //所需用物
 //            'stem'      => 'required',    //题干
 //            'equipments'=> 'required',    //所需设备
             'content'   => 'required',    //评分标准
@@ -216,14 +216,16 @@ class TopicController extends CommonController
             'description.required'   => '请添加考核项',
         ]);
 
+        //考试项目基础数据
         $data = [
             'title'       => e($request->get('title')),
             'description' => $request->get('desc'),
             'stem'        => $request->input('stem'),
             'equipments'  => $request->input('equipments'),
-            'goods'       => ''
+            'goods'       => '',
+            'score'       => $request->input('total')
         ];
-        $id = intval($request->get('id'));
+        $id      = intval($request->get('id'));
         $content = $request->get('content');        //评分标准（所有内容）
         $score   = $request->get('score');          //考核点、考核项对应的分数
         $answer  = $request->get('description');    //考核项下面的评分标准
@@ -233,6 +235,19 @@ class TopicController extends CommonController
         $subjectModel = new Subject();
         try {
             $formData = SubjectItem::builderItemData($content, $score, $answer);
+            $totalData = 0;
+            foreach ($score as $index => $socrdata) {
+                foreach ($socrdata as $key => $socre) {
+                    if ($key == 'total') {
+                        continue;
+                    }
+                    $totalData += $socre;
+                }
+            }
+            //判断总分与考核项分数是否正确
+            if($totalData != $data['score']){
+                throw new \Exception('考核项分数之和与总分不相等！');
+            }
 
             if ($subjectModel->editTopic($id, $data, $formData, $cases, $goods)) {
 
