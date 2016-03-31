@@ -94,7 +94,7 @@ class StationMode implements ModeInterface
                 ->groupBy('student.id')
                 ->take(1)
                 ->get();
-
+            dd($collection);
 
             if ($collection->isEmpty()) {
                 $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
