@@ -130,10 +130,12 @@ class ExamQuestionController extends CommonController
         ];
         if ($request->hasFile('file'))
         {
-            $file   =   $request->file('file');
-            $fileName           =   $file->getClientOriginalName();
-            $type = substr($fileName, strrpos($fileName,'.'));
             $status = 1;
+            $file   =   $request->file('file');
+            $oldfileName           =   $file->getClientOriginalName();
+            $type = substr($oldfileName, strrpos($oldfileName,'.'));//图片格式
+            $imageName = rand(1000,9999);//图片名字
+            $newfileName=$imageName.$type;
             $arr = array('.jpg','.jpeg',".png");
             if(!in_array($type,$arr)){
                 $status = 0;
@@ -142,12 +144,12 @@ class ExamQuestionController extends CommonController
                 //$path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
                 $path   =   'osce/question/'.date('Y-m-d').'/';
                 $destinationPath    =   public_path($path);
-                $file->move($destinationPath,$fileName);
-                $pathReturn    =   '/'.$path.$fileName;
+                $file->move($destinationPath,$newfileName);
+                $pathReturn    =   '/'.$path.$newfileName;
             }
             $data   =   [
                 'path'=>$pathReturn,
-                'name'=>$fileName,
+                'name'=>$newfileName,
                 'status'=>$status
             ];
 
