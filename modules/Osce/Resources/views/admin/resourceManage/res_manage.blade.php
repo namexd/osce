@@ -18,14 +18,14 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'res_manage','del':'{{route('osce.admin.topic.getDelTopic')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'res_manage','del':'{{route('osce.admin.supplies.getDelSupplies')}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">用物管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
-                 <a  href="" class="btn btn-primary" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                 <a  href="{{route('osce.admin.supplies.getAddSupplies')}}" class="btn btn-primary" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
              </div>
         </div>
         <div class="container-fluid ibox-content" id="list_form">
@@ -56,7 +56,7 @@
                         <tr>
                             <td>{{$item->name}}</td>
                             <td value="{{$item->id}}">
-                                <a href=""><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                                <a href="{{route('osce.admin.supplies.getEditSupplies',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                                 <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                             </td>
                         </tr>

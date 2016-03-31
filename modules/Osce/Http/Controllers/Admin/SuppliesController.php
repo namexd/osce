@@ -56,7 +56,7 @@ class SuppliesController extends CommonController
 
         $data = Supplies::find($id);
 
-        return view('osce::admin.resourceManage.res_manage_add',['data'=>$data]);
+        return view('osce::admin.resourceManage.res_manage_edit',['data'=>$data]);
 
     }
     
