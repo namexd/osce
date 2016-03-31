@@ -105,7 +105,7 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'course_module','Unique':'{{route('osce.admin.topic.postNameUnique')}}','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'course_module','Unique':'{{route('osce.admin.topic.postNameUnique')}}','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinical_add':'{{route('osce.admin.case.getCreateCase')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -166,7 +166,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例</label>
                             <div class="col-sm-10">
-                                <select id="select_Category" class="form-control" name="category"/>
+                                <select id="select-clinical" class="form-control" name="category"/>
                                     <option value="1">胃疼</option>
                                     <option value="-999">=新增病例=</option>
                                 </select>
@@ -191,7 +191,46 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            
+                            <label class="col-sm-2 control-label">物品准备</label>
+                            <div class="col-sm-10">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5></h5>
+                                        <div class="ibox-tools">
+                                            <button type="button" class="btn btn-outline btn-default" id="add-things">新增物品</button>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>用物</th>
+                                                    <th>数量</th>
+                                                    <th width="160">操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody index="0">
+                                                <tr>
+                                                    <td>
+                                                        <select class="form-control"/>
+                                                            <option value="1">温度计</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control"/>
+                                                            <option value="1">温度计</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
@@ -210,7 +249,7 @@
                                         </div>
                                     </div>
                                     <div class="ibox-content">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered" id="judgement">
                                             <thead>
                                                 <tr>
                                                     <th>序号</th>
