@@ -444,4 +444,10 @@ class TopicController extends CommonController
             return json_encode(['valid' => true]);
         }
     }
+    // 考试项目获取病例数据
+    public  function  get
+
+
+
+
 }
