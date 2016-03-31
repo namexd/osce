@@ -114,7 +114,7 @@ class SubjectItem extends CommonModel
      * @param $answer
      * @return array
 
-    @version 1.0
+     * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2016-01-03 17:57
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
