@@ -178,7 +178,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">总分</label>
                             <div class="col-sm-10">
-                                <input id="total" class="form-control" name="total"/>
+                                <input id="total" class="form-control" name="total" value="{{$item->score}}"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

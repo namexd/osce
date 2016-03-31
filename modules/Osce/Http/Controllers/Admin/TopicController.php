@@ -15,7 +15,9 @@ use League\Flysystem\Exception;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Entities\Subject;
+use Modules\Osce\Entities\SubjectCases;
 use Modules\Osce\Entities\SubjectItem;
+use Modules\Osce\Entities\SubjectSupplies;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common as OsceCommon;
 
@@ -279,8 +281,16 @@ class TopicController extends CommonController
                 }
             }
         }
+
+        //获取考试项目——病例关系数据
+        $subjectCases = SubjectCases::where('subject_id','=',$id)->get();
+        //获取考试项目——用物关系数据
+        $subjectSupplies = SubjectSupplies::where('subject_id','=',$id)->get();
+
         return view('osce::admin.resourceManage.course_manage_edit',
-            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum]);
+            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,
+             'subjectCases' => $subjectCases, 'subjectSupplies' => $subjectSupplies,
+            ]);
     }
 
     /**
