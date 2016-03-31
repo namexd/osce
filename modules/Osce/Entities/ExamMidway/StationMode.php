@@ -155,7 +155,7 @@ class StationMode implements ModeInterface
                 return $collection;
             }
         } else {
-            return Student::whereIn('id', $sticks->first()->student_id)->select(
+            return Student::where('id', $sticks->first()->student_id)->select(
                 'student.id as student_id',
                 'student.name as student_name',
                 'student.user_id as student_user_id',
