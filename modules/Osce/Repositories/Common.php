@@ -258,4 +258,16 @@ class Common
         ];
         return  $relation[$type];
     }
+
+    static  public function getTeacherTypeByRoleId($role_id){
+
+        switch ($role_id){
+            case config('osce.invigilatorRoleId') : return 1;
+                                                    break;
+            case config('osce.spRoleId')          : return 2;
+                                                    break;
+            case config('osce.patrolRoleId')      : return 3;
+                                                    break;
+        }
+    }
 }

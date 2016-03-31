@@ -24,7 +24,7 @@
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'user_manage_change_role','URL':''}" />
+<input type="hidden" id="parameter" value="{'pagename':'user_manage_change_role','URL':'{{route('osce.admin.user.getJudgeUserRole')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -38,10 +38,12 @@
 							<div class="form-group">
 								<label class="col-sm-2 control-label">角色选择:</label>
 								<div class="col-sm-10">
-									<select class="form-control" name="role_id" style="width: 500px;" multiple="multiple">
-										    @if($role_id)
-											<option value="{{ $role_id->role_id }}" selected="selected">{{ $role_id->role->name }}</option>
-										    @endif
+									<select class="form-control" name="role_id[]" style="width: 500px;" multiple="multiple">
+											@forelse($role_ids as $role_id)
+												<option value="{{ $role_id->role_id }}" selected="selected">{{ $role_id->role->name }}</option>
+											@empty
+											@endforelse
+
 										    @foreach($data as $item)
 											<option value="{{ $item['role_id'] }}">{{ $item['role_name'] }}</option>
 											@endforeach
