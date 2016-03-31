@@ -123,7 +123,7 @@ class StationMode implements ModeInterface
                         ->where('student_id', $student->student_id)
                         ->orderBy('begin_dt', 'asc')
                         ->first();
-                    $stick->stick = $this->room->id;
+                    $stick->stick = $this->stationIds[0];
                     \Log::alert('stick', $stick->toArray());
                     if (!$stick->save()) {
                         throw new \Exception('系统异常，请重试', -5);
@@ -147,9 +147,7 @@ class StationMode implements ModeInterface
                         ->where('student_id', $student->student_id)
                         ->orderBy('begin_dt', 'asc')
                         ->first();
-                    dd($this->room);
-                    $stick->stick = $this->room->id;
-                    \Log::alert('stick', $stick->toArray());
+                    $stick->stick = $this->stationIds[0];
                     if (!$stick->save()) {
                         throw new \Exception('系统异常，请重试', -5);
                     }
