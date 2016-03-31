@@ -50,10 +50,57 @@ class SuppliesController extends CommonController
         }
     }
 
-
     //编辑用物着陆页面
+    public function getEditSupplies(Request $request){
+        $id = $request->get('id');
+
+        $data = Supplies::find($id);
+
+        return view('osce::admin.resourceManage.res_manage_add',['data'=>$data]);
+
+    }
     
 
     //提交编辑用物表单
+    public  function postEditSupplies(Request $request){
+        $this->validate($request,[
+            'id'=>'required',
+            'name'=>'required'
+        ]);
+        $id = $request->get('id');
+        $name = $request->get('name');
+        $data=[
+            'id'=>$id,
+            'name'=>$name
+        ];
+
+//        if(){
+//
+//        }
+
+    }
+
+    //删除用物
+    public  function getDelSupplies(Request $request){
+
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+        $id = $request->get('id');
+        $SuppliesModel = new Supplies();
+        $subject = $SuppliesModel->find($id);
+        try {
+            $SuppliesModel->delSubject($subject);
+            return \Response::json(array('code' => 1));
+        } catch (\Exception $ex) {
+            return response()->json(
+                $this->fail($ex)
+            );
+            //return redirect()->back()->withErrors($ex->getMessage());
+        }
+
+    }
+
+
 
 }
