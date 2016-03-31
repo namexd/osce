@@ -76,24 +76,25 @@
                         }
                     }
                 },
-                goods: {
+                time: {
                     validators: {
                         notEmpty: {/*非空提示*/
-                            message: '所需物品不能为空'
+                            message: '时间间隔不能为空'
+                        },
+                        regexp: {
+                            regexp: /^([0-9]+)$/,
+                            message: '请输入正确的时间间隔'
                         }
                     }
                 },
-                stem: {
+                total: {
                     validators: {
                         notEmpty: {/*非空提示*/
-                            message: '题干不能为空'
-                        }
-                    }
-                },
-                equipments: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '所需设备不能为空'
+                            message: '总分不能为空'
+                        },
+                        regexp: {
+                            regexp: /^([0-9]+)$/,
+                            message: '请输入正确的总分'
                         }
                     }
                 }
@@ -126,25 +127,57 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">题干</label>
+                            <label class="col-sm-2 control-label">类别</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="stem"/>
+                                <select id="select_Category" class="form-control" name="category"/>
+                                    <option value="1">问诊</option>
+                                    <option value="2">查询</option>
+                                    <option value="3">操作</option>
+                                </select>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">所需设备</label>
-                            <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="equipments"/>
+                            <label class="col-sm-2 control-label">操作</label>
+                            <div class="col-sm-5">
+                                <select id="select_Category" class="form-control" name="category"/>
+                                    <option value="1">内科</option>
+                                    <option value="2">外科</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-5">
+                                <select id="select_Category" class="form-control" name="category"/>
+                                    <option value="1">胸穿</option>
+                                    <option value="2">腹穿</option>
+                                </select>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">所需物品</label>
+                            <label class="col-sm-2 control-label">时间间隔</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="goods"/>
+                                <input id="select_Category" class="form-control" name="time"/>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">病例</label>
+                            <div class="col-sm-10">
+                                <select id="select_Category" class="form-control" name="category"/>
+                                    <option value="1">胃疼</option>
+                                    <option value="-999">=新增病例=</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">总分</label>
+                            <div class="col-sm-10">
+                                <input id="select_Category" class="form-control" name="total"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -154,6 +187,11 @@
                             <div class="col-sm-10">
                                 <input id="select_Category" class="form-control" name="desc"/>
                             </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            
                         </div>
                         <div class="hr-line-dashed"></div>
 

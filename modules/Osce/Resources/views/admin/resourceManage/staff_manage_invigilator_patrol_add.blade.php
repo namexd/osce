@@ -22,7 +22,7 @@
 
 @section('content')
 
-<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_patrol_edit','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_patrol_add','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}'}" />
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
@@ -31,7 +31,7 @@
         </div>
         <div class="ibox-content">
             <div class="row">
-                <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddSpInvigilator')}}">
+                <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.invigilator.postAddInvigilator')}}">
 
                     <div class="col-md-3 col-sm-3 image-box">
                         <ul class="img_box">
