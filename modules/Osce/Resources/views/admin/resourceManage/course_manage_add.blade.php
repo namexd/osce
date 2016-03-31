@@ -200,11 +200,11 @@
                                     <div class="ibox-title">
                                         <h5></h5>
                                         <div class="ibox-tools">
-                                            <button type="button" class="btn btn-outline btn-default" id="add-goods">新增物品</button>
+                                            <button type="button" class="btn btn-outline btn-default" id="add-things">新增物品</button>
                                         </div>
                                     </div>
                                     <div class="ibox-content">
-                                        <table class="table table-bordered" id="goods">
+                                        <table class="table table-bordered" id="things-use">
                                             <thead>
                                                 <tr>
                                                     <th width="481">用物</th>
