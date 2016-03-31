@@ -169,7 +169,11 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例</label>
                             <div class="col-sm-10">
-                                <select id="select-clinical" class="form-control" name="case_id" multiple="multiple" />
+                                <select id="select-clinical" class="form-control" name="cases" multiple="multiple">
+                                @forelse($subjectCases as $subjectCase)
+                                    <option value="{{$subjectCase->id}}" selected="selected">{{$subjectCase->cases->name}}</option>
+                                @empty
+                                @endforelse
                                 </select>
                             </div>
                         </div>
@@ -210,7 +214,21 @@
                                                     <th width="160">操作</th>
                                                 </tr>
                                             </thead>
-                                            <tbody index="0">
+                                            <tbody index="{{count($subjectSupplies)}}">
+                                            @forelse($subjectSupplies as $key => $subjectSupply)
+                                                <tr>
+                                                    <td>
+                                                        <select class="form-control js-example-basic-single" name="goods[{{$key+1}}][name]" style="width: 481px;">
+                                                            <option>{{$subjectSupply->supplies->name}}</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" value="{{$subjectSupply->num}}" name="goods[{{$key+1}}][number]">
+                                                    </td>
+                                                    <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
+                                                </tr>
+                                            @empty
+                                            @endforelse
                                             </tbody>
                                         </table>
 
