@@ -146,7 +146,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //理论考试登录数据交互
         Route::post('api/loginauth-info',['uses'=>'ApiController@LoginAuth','as'=>'osce.admin.ApiController.LoginAuthInfo']);
 
-        //理论考试登录成功页面
+        //监考老师登录成功页面
         Route::get('api/loginauth-wait',['uses'=>'ApiController@LoginAuthWait','as'=>'osce.admin.ApiController.LoginAuthWait']);
 
         //理论考试登录页面地址
@@ -155,11 +155,15 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //获取考试id
         Route::get('api/get-exampaperid',['uses'=>'ApiController@getExamPaperId','as'=>'osce.admin.ApiController.getExamPaperId']);
 
+
         //学生登录验证跳转页面
         Route::get('api/student-exam-index',['uses'=>'ApiController@getStudentExamIndex','as'=>'osce.admin.ApiController.getStudentExamIndex']);
 
         //学生等待进入考试页面
         Route::get('api/wait-examing',['uses'=>'ApiController@getWaitExaming','as'=>'osce.admin.ApiController.getWaitExaming']);
+
+        //获取当前考站所在流程考试是否已经结束
+        Route::get('api/exam-paper-status',['uses'=>'ApiController@getExamPaperStatus','as'=>'osce.admin.ApiController.getExamPaperStatus']);
     });
 
 });

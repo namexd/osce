@@ -256,10 +256,11 @@ class ExamFlowStation extends CommonModel
             }
 
             foreach ($teacherIDs as $teacherID) {
+                $thisStation=StationCase::where('station_id', $value['station_id'])->first();
                 $stationTeacherData = [
                     'station_id' => $value['station_id'],
                     'user_id' => $teacherID,
-                    'case_id' => StationCase::where('station_id', $value['station_id'])->first()->case_id,
+                    'case_id' => is_null($thisStation)? null:$thisStation->case_id,
                     'exam_id' => $examId,
                     'created_user_id' => $user->id,
                     'type' => empty($value['teacher_id']) ? 2 : 1

@@ -92,7 +92,7 @@ class PadController extends  CommonController{
        }
 
     /**
-     *根据考场ID和考试ID获取考场和考站的摄像头列表(接口)
+     *根据考场ID和考试ID获取 考场和考站的 摄像头列表(接口)
      * @method GET
      * @url api/1.0/private/osce/pad/student-vcr
      * @access public
@@ -110,6 +110,46 @@ class PadController extends  CommonController{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentVcr(Request $request){
+        try{
+            $this->validate($request,[
+                'room_id'   => 'required|integer',
+                'exam_id'   => 'required|integer'
+            ]);
+            $room_id = $request->get('room_id');
+            $exam_id = $request->get('exam_id');
+
+            $stationModel = new StationVcr();
+            $stationVcrs  = $stationModel->getStationVcr($exam_id,$room_id);
+
+            return response()->json(
+                $this->success_data($stationVcrs,1,'success')
+            );
+        }catch (\Exception $ex){
+            return response()->json($this->fail($ex));
+        }
+
+    }
+
+
+    /**
+     * 根据考场ID和考试ID获取 考站列表、考站对应的摄像机信息 (接口)
+     * @api GET /osce/pad/stations-vcrs
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return object
+     *
+     * @version 1.0
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getStationsVcrs(Request $request){
         $this->validate($request,[
             'room_id'   => 'required|integer',
             'exam_id'   => 'required|integer'
@@ -117,16 +157,15 @@ class PadController extends  CommonController{
         $room_id = $request->get('room_id');
         $exam_id = $request->get('exam_id');
 
+        $stationVcr = new StationVcr();
+        $datas   = $stationVcr->getStationVcr($exam_id,$room_id);
 
-        $stationModel = new StationVcr();
-        $stationVcrs  = $stationModel->getStionVcr($room_id,$exam_id);
 
 
         return response()->json(
-            $this->success_data($stationVcrs,1,'success')
+            $this->success_data($datas,1,'success')
         );
     }
-
 
     /**
      * 根据考场ID、考试ID和teacher_id获取考站的摄像头信息(接口)
@@ -351,6 +390,7 @@ class PadController extends  CommonController{
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
             return response()->json($this->success_data([$date,$queue->exam_screening_id]));
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
@@ -393,11 +433,19 @@ class PadController extends  CommonController{
      */
     public function getDoneExams(Request $request)
     {
+      $page = $request->get('pagesize',1);
         //获取已经考完的所有考试列表
         $examList = Exam::where('status','=', 2)->select(['id','name', 'begin_dt', 'end_dt'])->paginate(10);
-
+//        return response()->json(
+//            $this->success_rows(1, 'success', $noticeList['total'], config('osce.page_size'), $page, $list)
+//        );
+//        return response()->json(
+//            $this->success_rows(1, 'success', $pagination->total(), $pagesize = config('msc.page_size'),
+//                $pagination->currentPage(), $data)
+//        );
         //返回数据
         return $this->success_rows(1,'获取成功',
+
             $examList->lastPage(),
             $examList->perPage(),
             $examList->currentPage(),
@@ -491,7 +539,7 @@ class PadController extends  CommonController{
 
         }else{
             $exam   = Exam::where('id','=',$exam_id)->select(['id','name','sequence_mode'])->first();
-            $roomIds  = $this->getRoomDatas($exam, true);       //根据考试获取对应的所有考场
+            $roomIds  = $this->getRoomDatas($exam, true);   //根据考试获取对应的所有考场
         }
         $roomIds = array_values(array_unique($roomIds));    //去重，并取值（键排序）
         $rooms = Room::whereIn('id', $roomIds)->select(['id', 'name'])->paginate(10);

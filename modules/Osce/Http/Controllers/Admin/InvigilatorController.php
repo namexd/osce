@@ -163,8 +163,12 @@ class InvigilatorController extends CommonController
         $teacherData['case_id']         = 0;
         $teacherData['status']          = 1;
         $teacherData['create_user_id']  = $user->id;
-        //
-        $role_id = config('osce.invigilatorRoleId',1);
+        //根据老师类型，选择角色
+        if($teacherData['type'] == 1){
+            $role_id = config('osce.invigilatorRoleId',1);
+        }elseif ($teacherData['type'] == 3){
+            $role_id = config('osce.patrolRoleId',6);
+        }
 
         $Invigilator    =   new Teacher();
         try{
@@ -364,11 +368,17 @@ class InvigilatorController extends CommonController
         $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
         //老师数据
         $teacherData = $request -> only('name','code','type','description');  //姓名、编号、类型、备注
+        //根据老师类型，选择角色
+        if($teacherData['type'] == 1){
+            $role_id = config('osce.invigilatorRoleId',1);
+        }elseif ($teacherData['type'] == 3){
+            $role_id = config('osce.patrolRoleId',6);
+        }
 
         try{
             $teacherModel   =   new Teacher();
 
-            if($result = $teacherModel ->  editInvigilator($id, $userData, $teacherData))
+            if($result = $teacherModel ->  editInvigilator($id, $userData, $teacherData, $role_id))
             {
                 return redirect()->route('osce.admin.invigilator.getInvigilatorList');
             } else{
