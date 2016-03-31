@@ -191,6 +191,7 @@ class StationMode implements ModeInterface
             ->skip(1)
             ->take(1)
             ->get();
+        dd($collection);
 
         if ($collection->isEmpty()) {
 
@@ -202,12 +203,7 @@ class StationMode implements ModeInterface
                     ->select(
                         'student.id as student_id',
                         'student.name as student_name',
-                        'student.user_id as student_user_id',
-                        'student.idcard as student_idcard',
-                        'student.mobile as student_mobile',
-                        'student.code as student_code',
-                        'student.avator as student_avator',
-                        'student.description as student_description'
+                        'student.code as student_code'
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
