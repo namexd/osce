@@ -33,7 +33,8 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\Exam;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\ExamScreeningStudent;
-
+use Modules\Osce\Http\Controllers\Api\InvigilatePadController;
+use Modules\Osce\Http\Controllers\Admin\Branch\AnswerController;
 class ApiController extends CommonController
 {
     private $name;
@@ -417,12 +418,12 @@ class ApiController extends CommonController
             */
 
             //获取当前登录账户的角色名称
-            $questionBankRepositories = new QuestionBankRepositories();
-            $roleType = $questionBankRepositories->getExamLoginUserRoleType();
+            $user = new User();
+            $userInfo = $user->getUserRoleName($username);
 
-            if($roleType == 1){
+            if($userInfo->name == '监考老师'){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
-            }else if($roleType == 2){
+            }else if($userInfo->name == '考生'){
                 return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
             }else{
                 return redirect()->back()->withErrors('你没有权限！');
@@ -535,19 +536,27 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentExamIndex(){
-        $user = Auth::user();
-        //查找当前正在进行的考试--之后会改
-        $examing = Exam::where('status','=',1)->first();
+//        $user = Auth::user();
+//        //查找当前正在进行的考试--之后会改
+//        $examing = Exam::where('status','=',1)->first();
+//
+//        $studentModel = new Student();
+//        $userInfo = $studentModel->getStudentExamInfo($user->id,$examing->id);
+//
+//        $ExamScreeningStudent = new ExamScreeningStudent();
+//        $examing = $ExamScreeningStudent->getExamings($userInfo->id);
 
-        $studentModel = new Student();
-        $userInfo = $studentModel->getStudentExamInfo($user->id,$examing->id);
-
-        $ExamScreeningStudent = new ExamScreeningStudent();
-        $examing = $ExamScreeningStudent->getExamings($userInfo->id);
-
-        dd($examing->toArray());
-        return view('osce::admin.theoryCheck.theory_check_volidate', [
-        ]);
+//        if(count($examing) > 0){
+//            $examing = $examing->toArray();
+//        }
+//
+//        foreach($examing as $key=>$val){
+//            foreach($val['screening']['exam_queue'] as $v){
+//
+//            }
+//        }
+        //dd($examing->toArray());
+        return view('osce::admin.theoryCheck.theory_check_student_volidate');
     }
 /**
      *  获取当前考站所在流程考试是否已经结束
@@ -644,7 +653,14 @@ class ApiController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWaitExaming(request $request){
-        
+    public function getWaitExaming(request $request,QuestionBankRepositories $questionBankRepositories){
+        $request['examId']     = $request->examId;     //考试id
+        $request['id']         = $request->id;         //试卷id
+        $request['stationId']  = $request->stationId;  //考站id
+        $request['userId']     = $request->userId;     //老师id
+        $request['studentId']  = $request->studentId;  //学生id
+
+        $Answer = new AnswerController();
+        $examQuestions = $Answer->formalPaperList($request,$questionBankRepositories);
     }
 }
