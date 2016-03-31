@@ -49,6 +49,31 @@ class TopicController extends CommonController
     }
 
     /**
+     * 新增课题表单
+     * @url /osce/admin/topic/add-topic
+     * @access public
+     *
+     *
+     * <b>get 请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date ${DATE}${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getAddTopic()
+    {
+        return view('osce::admin.resourceManage.course_manage_add');
+    }
+
+    /**
      * 新增课题（考核点的盒子）
      * @url /osce/admin/topic/add-topic
      * @access public
@@ -71,55 +96,65 @@ class TopicController extends CommonController
     public function postAddTopic(Request $request)
     {
         $this->validate($request, [
-            'title' => 'required|unique:osce_mis.subject,title',
-            'content' => 'required',
-            'score' => 'required',
-            'desc' => 'required',
-            'stem' => 'required',
-            'equipments' => 'required',
-            'goods' => 'required',
-            'description'=>'required'
+            'title'     => 'required|unique:osce_mis.subject,title',    //名称
+            'case_id'   => 'required',    //病例
+            'total'     => 'required',    //总分
+            'desc'      => 'required',    //描述
+            'goods'     => 'required',    //所需物品
+            'stem'      => 'required',    //题干
+            'equipments'=> 'required',    //所需设备
+            'content'   => 'required',    //评分标准
+            'score'     => 'required',    //考核点、考核项分数
+            'answer'    => 'required',    //考核项
         ], [
-            'title.required' => '名称必填',
-            'title.unique' => '该科目已存在',
-            'content.required' => '必须新增评分点',
-            'score.required' => '分数必填',
-            'desc.required' => '必须新增描述',
-            'description.required' => '请添加考核项',
+            'title.required'    => '名称必填',
+            'title.unique'      => '该科目已存在',
+            'case_id.required'  => '请选择病例',
+            'total.required'    => '总分必填',
+            'desc.required'     => '必须填写描述',
+            'content.required'  => '必须新增评分点',
+            'score.required'    => '分数必填',
+            'answer.required'   => '请添加考核项',
         ]);
 
-        $content = $request->get('content');
-        $score = $request->get('score');
-        $answer = $request->get('description');
+        $content = $request->get('content');        //评分标准（所有内容）
+        $score   = $request->get('score');          //考核点、考核项对应的分数
+        $answer  = $request->get('answer');         //考核项下面的评分标准
 
         try {
             $formData = SubjectItem::builderItemData($content, $score, $answer);
-            $totalData = 0;
-            foreach ($score as $index => $socrdata) {
-                foreach ($socrdata as $key => $socre) {
-                    if ($key == 'total') {
-                        continue;
-                    }
-                    $totalData += $socre;
-                }
-            }
+//            $totalData = 0;
+//            foreach ($score as $index => $socrdata) {
+//                foreach ($socrdata as $key => $socre) {
+//                    if ($key == 'total') {
+//                        continue;
+//                    }
+//                    $totalData += $socre;
+//                }
+//            }
 
             $data = [
-                'title' => e($request->get('title')),
-                'description' => e($request->get('desc')),
-                'stem' => e($request->input('stem')),
-                'equipments' => e($request->input('equipments')),
-                'goods' => e($request->input('goods')),
-                'score' => $totalData,
+                'title'      => e($request->get('title')),
+                'score'      => intval($request->get('total')),     //总分
+                'description'=> e($request->get('desc')),
+                'stem'       => e($request->input('stem')),         //题干
+                'goods'      => e($request->input('goods')),        //所需物品
+                'equipments' => e($request->input('equipments')),   //所需设备
             ];
+            dd($formData,$data);
 
             $subjectModel = new Subject();
             if ($subjectModel->addSubject($data, $formData)) {
+
                 return redirect()->route('osce.admin.topic.getList');
+
             } else {
+
                 throw new \Exception('新增失败！');
             }
+
         } catch (\Exception $ex) {
+
             return redirect()->back()->withErrors($ex->getMessage())->withInput();
         }
 
@@ -186,31 +221,6 @@ class TopicController extends CommonController
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
-    }
-
-    /**
-     * 新增课题表单
-     * @url /osce/admin/topic/add-topic
-     * @access public
-     *
-     *
-     * <b>get 请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     *
-     * @return view
-     *
-     * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
-     */
-    public function getAddTopic()
-    {
-        return view('osce::admin.resourceManage.course_manage_add');
     }
 
     /**
