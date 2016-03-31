@@ -100,6 +100,7 @@
                                 <label class="col-sm-2 control-label">关联摄像机</label>
                                 <div class="col-sm-10">
                                     <select id=""  class="form-control" name="vcr_id">
+                                        <option value="0">请选择</option>
                                         @foreach($vcr as $key=>$item)
                                             <option value="{{$item->id}}">{{$item->name}}</option>
                                         @endforeach
