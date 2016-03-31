@@ -8,7 +8,7 @@
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'res_manage_add','name':''}" />
+<input type="hidden" id="parameter" value="{'pagename':'res_manage_add'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -31,7 +31,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
-                                <a class="btn btn-white" href="">取消</a>
+                                <a class="btn btn-white" href="{{route("osce.admin.supplies.getList")}}">取消</a>
                                 {{--<a href="{{route('osce.admin.case.getCaseList')}}" class="btn btn-white">取消</a>--}}
                             </div>
                         </div>

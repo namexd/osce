@@ -125,7 +125,7 @@ class SuppliesController extends CommonController
             throw new \Exception('没有找到相关用物');
         }
 
-        return view('osce::admin.resourceManage.res_manage_add',['data'=>$data]);
+        return view('osce::admin.resourceManage.res_manage_edit',['data'=>$data]);
 
     }
     
