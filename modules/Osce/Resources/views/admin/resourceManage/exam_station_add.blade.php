@@ -60,29 +60,29 @@
                             </div>
                             <div class="hr-line-dashed sub-id"></div>
 
-                            <div class="form-group sub-id">
-                                <label class="col-sm-2 control-label">科目</label>
-                                <div class="col-sm-10">
-                                    <select id="subject_id"  class="form-control" name="subject_id">
-                                        @foreach($subject as $key=>$item)
-                                            <option value="{{$item->id}}">{{$item->title}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed noTheory sub-id"></div>
+                            {{--<div class="form-group sub-id">--}}
+                                {{--<label class="col-sm-2 control-label">科目</label>--}}
+                                {{--<div class="col-sm-10">--}}
+                                    {{--<select id="subject_id"  class="form-control" name="subject_id">--}}
+                                        {{--@foreach($subject as $key=>$item)--}}
+                                            {{--<option value="{{$item->id}}">{{$item->title}}</option>--}}
+                                        {{--@endforeach--}}
+                                    {{--</select>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                            {{--<div class="hr-line-dashed noTheory sub-id"></div>--}}
 
-                            <div class="form-group noTheory sub-id">
-                                <label class="col-sm-2 control-label">病例</label>
-                                <div class="col-sm-10">
-                                    <select id=""  class="form-control" name="case_id">
-                                        @foreach($case as $item)
-                                            <option value="{{$item->id}}">{{$item->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
+                            {{--<div class="form-group noTheory sub-id">--}}
+                                {{--<label class="col-sm-2 control-label">病例</label>--}}
+                                {{--<div class="col-sm-10">--}}
+                                    {{--<select id=""  class="form-control" name="case_id">--}}
+                                        {{--@foreach($case as $item)--}}
+                                            {{--<option value="{{$item->id}}">{{$item->name}}</option>--}}
+                                        {{--@endforeach--}}
+                                    {{--</select>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                            {{--<div class="hr-line-dashed"></div>--}}
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">所属考场</label>

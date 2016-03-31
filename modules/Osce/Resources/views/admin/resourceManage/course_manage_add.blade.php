@@ -163,7 +163,7 @@
                         <div class="form-group display-none">
                             <label class="col-sm-2 control-label">时间间隔</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="time"/>
+                                <input id="time" class="form-control" name="time"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed display-none"></div>
@@ -171,7 +171,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例</label>
                             <div class="col-sm-10">
-                                <select id="select-clinical" class="form-control" name="category" multiple="multiple" />
+                                <select id="select-clinical" class="form-control" name="case_id" multiple="multiple" />
                                 </select>
                             </div>
                         </div>
@@ -180,7 +180,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">总分</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="total"/>
+                                <input id="total" class="form-control" name="total"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -188,7 +188,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="desc"/>
+                                <input id="desc" class="form-control" name="desc"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -200,11 +200,11 @@
                                     <div class="ibox-title">
                                         <h5></h5>
                                         <div class="ibox-tools">
-                                            <button type="button" class="btn btn-outline btn-default" id="add-things">新增物品</button>
+                                            <button type="button" class="btn btn-outline btn-default" id="add-goods">新增物品</button>
                                         </div>
                                     </div>
                                     <div class="ibox-content">
-                                        <table class="table table-bordered" id="things-use">
+                                        <table class="table table-bordered" id="goods">
                                             <thead>
                                                 <tr>
                                                     <th width="481">用物</th>
@@ -264,6 +264,8 @@
                                 <a class="btn btn-white" href="{{route("osce.admin.topic.getList")}}">取消</a>
                             </div>
                         </div>
+
+
                     </form>
 
                 </div>
