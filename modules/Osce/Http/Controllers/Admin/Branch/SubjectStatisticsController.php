@@ -313,7 +313,8 @@ class SubjectStatisticsController  extends CommonController
      */
     public function standardGradeList(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         //获取考试列表信息
-        $examList = $subjectStatisticsRepositories->GetExamList();
+        //$examList = $subjectStatisticsRepositories->GetExamList();
+        $examList = $subjectStatisticsRepositories->GetExamListNoStandardGrade();
         $examInfo = '';
         if(count($examList)>0){
             foreach($examList as $k=>$v){
