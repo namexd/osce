@@ -40,23 +40,7 @@ class CaseModel extends CommonModel
         return $builder;
     }
 
-    /**
-     *ajax 获取列表
-     * $formData内有
-     * @param $formData
-     * @return mixed
-     */
-    public function getCasesList($caseName){
 
-        //查询出数据
-        $builder = $this->select([
-            'id',
-            'name',
-            'description'
-        ])->get();
-        return $builder;
-        
-    }
     
 
     /**
@@ -119,5 +103,23 @@ class CaseModel extends CommonModel
             $connection->rollBack();
             throw $ex;
         }
+    }
+
+    /**
+     *ajax 获取列表
+     * $formData内有
+     * @param $formData
+     * @return mixed
+     */
+    public function getCasesList($caseName){
+
+        //查询出数据
+        $builder = $this->select([
+            'id',
+            'name',
+            'description'
+        ])->get();
+        return $builder;
+
     }
 }
