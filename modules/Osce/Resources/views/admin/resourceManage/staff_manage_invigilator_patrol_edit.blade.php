@@ -111,7 +111,7 @@
                                 <button class="btn btn-primary" type="submit" id="save">保存</button>
 
                                 <a class="btn btn-white" href="{{route("osce.admin.invigilator.")}}">取消</a>
-                                
+
 {{--								<a class="btn btn-white" href="{{route('osce.admin.invigilator.getSpInvigilatorList')}}">取消</a>--}}
                                 <a class="btn btn-white" href="{{route("osce.admin.invigilator.getInvigilatorList",['type'=>3])}}">取消</a>
                             </div>
