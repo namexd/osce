@@ -74,7 +74,8 @@ class RoomMode implements ModeInterface
                     'student.mobile as student_mobile',
                     'student.code as student_code',
                     'student.avator as student_avator',
-                    'student.description as student_description'
+                    'student.description as student_description',
+                    'exam_queue.blocking as blocking'
                 )
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->groupBy('student.id')
