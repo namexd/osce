@@ -46,6 +46,16 @@
                 openEffect: 'none',
                 closeEffect: 'none'
             });
+            //阻止F5刷新
+            document.onkeydown = function (e) {
+                var ev = window.event || e;
+                var code = ev.keyCode || ev.which;
+                if (code == 116) {
+                    ev.keyCode ? ev.keyCode = 0 : ev.which = 0;
+                    cancelBubble = true;
+                    return false;
+                }
+            };
             $(".check_label").change(function(){
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
