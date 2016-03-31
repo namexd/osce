@@ -13,6 +13,7 @@ use DB;
 use Illuminate\Http\Request;
 use League\Flysystem\Exception;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\SubjectItem;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -444,4 +445,38 @@ class TopicController extends CommonController
             return json_encode(['valid' => true]);
         }
     }
+    // 考试项目获取病例数据
+   public  function getSubjectCases(Request $request){
+       $this->validate($request,[
+           'cases_name'=>'sometimes',
+
+       ]);
+       $caseName = $request->get('cases_name');
+       $paginate = $request->get('paginate');
+       try{
+          
+           $caseModel = new CaseModel();
+          
+           if(empty($caseName)){
+               //查询出所有的病例
+               $casesList = $caseModel->getList($paginate);
+               
+           }else{
+               $casesList = $caseModel->getList($caseName);
+           }
+
+           return response()->json(
+               $this->success_data($casesList, 1, '病例获取成功')
+           );
+       }catch (\Exception $ex){
+           return response()->json($this->fail($ex));
+
+       }
+       
+}
+
+
+
+
+
 }

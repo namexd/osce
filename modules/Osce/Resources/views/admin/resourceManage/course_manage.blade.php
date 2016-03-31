@@ -49,6 +49,7 @@
             <table class="table table-striped" id="table-striped">
                 <thead>
                 <tr>
+                    <th>序号</th>
                     <th>项目名称</th>
                     <th>描述</th>
                     <th>操作</th>
@@ -58,6 +59,7 @@
                 @forelse($list as $key => $item)
 
                     <tr>
+                        <td>{{$key+1}}</td>
                         <td>{{$item->title}}</td>
                         <td>{{$item->description}}</td>
                         <td value="{{$item->id}}">
