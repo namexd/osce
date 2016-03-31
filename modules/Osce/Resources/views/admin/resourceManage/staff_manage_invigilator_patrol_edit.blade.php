@@ -49,7 +49,7 @@
                             <label class="col-sm-2 control-label">姓名</label>
                             <div class="col-sm-10">
                                 <input type="text" required class="form-control" id="name" name="name" value="{{$item->name}}">
-                                <input type="hidden" required class="form-control" id="name" name="name" value="{{$item->id}}">
+                                <input type="hidden" required class="form-control" id="id" name="id" value="{{$item->id}}">
                                 <input type="hidden" required class="form-control" id="type" name="type" value="3">
                             </div>
                         </div>
