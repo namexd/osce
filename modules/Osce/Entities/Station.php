@@ -127,22 +127,25 @@ class Station extends CommonModel
             if (!$result) {
                 throw new \Exception('将数据写入考站失败！');
             }
-            //将考场摄像头的关联数据写入关联表中
-            $stationVcrData = [
-                'vcr_id'=>$vcrId,
-                'station_id' => $station_id
-            ];
-            $result = StationVcr::create($stationVcrData);
-            if ($result === false) {
-                throw new \Exception('将数据写入考场摄像头失败！');
-            }
 
-            //更改摄像机表中摄像机的绑定状态
-            $vcr = Vcr::findOrFail($vcrId);
-            $vcr->used = 1;  //变更状态,但是不一定是0
-            $result = $vcr->save();
-            if ($result === false) {
-                throw new \Exception('摄像机绑定失败！');
+            if ($vcrId != 0) {
+                //将考场摄像头的关联数据写入关联表中
+                $stationVcrData = [
+                    'vcr_id'=>$vcrId,
+                    'station_id' => $station_id
+                ];
+                $result = StationVcr::create($stationVcrData);
+                if ($result === false) {
+                    throw new \Exception('将数据写入考场摄像头失败！');
+                }
+
+                //更改摄像机表中摄像机的绑定状态
+                $vcr = Vcr::findOrFail($vcrId);
+                $vcr->used = 1;  //变更状态,但是不一定是0
+                $result = $vcr->save();
+                if ($result === false) {
+                    throw new \Exception('摄像机绑定失败！');
+                }
             }
 
             //添加考站病历表的状态
@@ -241,19 +244,56 @@ class Station extends CommonModel
             //将原来的摄像机的状态回位
             //通过传入的考站的id找到原来的摄像机
             $originalVcrObj = StationVcr::where('station_id', '=', $id)->select('vcr_id')->first();
-            if (empty($originalVcrObj)) {
-                throw new \Exception('没有找到原来设定的摄像机');
+            if (is_null($originalVcrObj)) {
+                if ($vcrId != 0) {
+                    //在stationVcr里新增一条数据
+                    if (!StationVcr::create([
+                        'station_id' => $id,
+                        'vcr_id' => $vcrId
+                    ])) {
+                        throw new \Exception('创建摄像机关联失败！');
+                    };
+
+                    //更改摄像机表中摄像机的状态
+                    $vcr = Vcr::findOrFail($vcrId);  //找到选择的摄像机
+                    $vcr ->used = 1;  //变更状态,但是不一定是0
+                    if (!$result = $vcr->save()) {
+                        $connection->rollBack();
+                        throw new \Exception('更改摄像机状态失败');
+                    }
+                }
+            } else {
+                $result = Vcr::findOrFail($originalVcrObj->vcr_id);
+                //修改其状态,将其状态重置
+                $result->used = 0; //可能是1，也可能是其他值
+                //保存
+                $result = $result->save();
+                if (!$result) {
+                    $connection->rollBack();
+                    throw new \Exception('更改摄像机状态失败');
+                }
+
+                if ($vcrId != 0) {
+                    //更改与本站相关的考站_摄像头关联
+                    $obj = StationVcr::where('station_id', '=', $id)->first();
+                    //修改其状态
+                    $obj->vcr_id = $vcrId;
+                    if (!($obj->save())) {
+                        $connection->rollBack();
+                        throw new \Exception('更改考站摄像头关联失败');
+                    }
+
+                    //更改摄像机表中摄像机的状态
+                    $vcr = Vcr::findOrFail($vcrId);  //找到选择的摄像机
+                    $vcr ->used = 1;  //变更状态,但是不一定是0
+                    if (!$result = $vcr->save()) {
+                        $connection->rollBack();
+                        throw new \Exception('更改摄像机状态失败');
+                    }
+                }
             }
 
-            $result = Vcr::findOrFail($originalVcrObj->vcr_id);
-            //修改其状态,将其状态重置
-            $result->used = 0; //可能是1，也可能是其他值
-            //保存
-            $result = $result->save();
-            if (!$result) {
-                $connection->rollBack();
-                throw new \Exception('更改摄像机状态失败');
-            }
+
 
             //修改station表
             $result = $this->where($this->table . '.id', '=', $id)->update($stationData);
@@ -264,22 +304,7 @@ class Station extends CommonModel
                 throw new \Exception('更改考站信息失败');
             }
 
-            //更改与本站相关的考站_摄像头关联
-            $obj = StationVcr::where('station_id', '=', $id)->first();
-            //修改其状态
-            $obj->vcr_id = $vcrId;
-            if (!($obj->save())) {
-                $connection->rollBack();
-                throw new \Exception('更改考站摄像头关联失败');
-            }
 
-            //更改摄像机表中摄像机的状态
-            $vcr = Vcr::findOrFail($vcrId);  //找到选择的摄像机
-            $vcr ->used = 1;  //变更状态,但是不一定是0
-            if (!$result = $vcr->save()) {
-                $connection->rollBack();
-                throw new \Exception('更改摄像机状态失败');
-            }
 
             //改变考站病历表的状态
             $stationCaseData = [
