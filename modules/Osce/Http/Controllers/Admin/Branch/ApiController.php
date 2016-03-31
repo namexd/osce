@@ -35,6 +35,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Http\Controllers\Api\InvigilatePadController;
 use Modules\Osce\Http\Controllers\Admin\Branch\AnswerController;
+use Modules\Osce\Entities\StationTeacher;
 class ApiController extends CommonController
 {
     private $name;
@@ -536,27 +537,45 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentExamIndex(){
-//        $user = Auth::user();
-//        //查找当前正在进行的考试--之后会改
-//        $examing = Exam::where('status','=',1)->first();
-//
-//        $studentModel = new Student();
-//        $userInfo = $studentModel->getStudentExamInfo($user->id,$examing->id);
-//
-//        $ExamScreeningStudent = new ExamScreeningStudent();
-//        $examing = $ExamScreeningStudent->getExamings($userInfo->id);
+        $user = Auth::user();
+        //查找当前正在进行的考试--之后会改
+        $examingDO = Exam::where('status','=',1)->first();
 
-//        if(count($examing) > 0){
-//            $examing = $examing->toArray();
-//        }
-//
-//        foreach($examing as $key=>$val){
-//            foreach($val['screening']['exam_queue'] as $v){
-//
-//            }
-//        }
-        //dd($examing->toArray());
-        return view('osce::admin.theoryCheck.theory_check_student_volidate');
+        $studentModel = new Student();
+        $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
+        //dd($userInfo);
+        $ExamScreeningStudent = new ExamScreeningStudent();
+        $examing = $ExamScreeningStudent->getExamings($userInfo->id);
+
+        if(count($examing) > 0){
+            $examing = $examing->toArray();
+        }
+
+        //整理考试数据
+        $examData = array();
+        $StationTeacher = new StationTeacher();
+        $ExamPaperExamStation = new ExamPaperExamStation();
+
+        foreach($examing as $key=>$val){
+            foreach($val['screening']['exam_queue'] as $k=>$v){
+                $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
+                //dd($v['examstation']['exam'][0]['id']);
+                $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['examstation']['exam'][0]['id'])->first();
+                $examData['station_id'] = $v['station_id'];
+                $examData['teacher_id'] = $stationTeacher->user_id;
+                $examData['student_id'] = $userInfo->id;
+                $examData['paper_id'] = $examPaper->exam_paper_id;
+                $examData['exam_id'] = $v['examstation']['exam'][0]['id'];
+                $examData['exam_name'] = $v['examstation']['exam'][0]['name'];
+                $examData['status'] = $v['examstation']['exam'][0]['status'];
+
+            }
+        }
+        //dd($examData);
+        return view('osce::admin.theoryCheck.theory_check_student_volidate', [
+            'userInfo'   => $userInfo,
+            'examData' => $examData
+        ]);
     }
 /**
      *  获取当前考站所在流程考试是否已经结束

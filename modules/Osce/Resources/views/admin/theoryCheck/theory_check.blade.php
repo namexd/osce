@@ -57,7 +57,7 @@
                 }
             };
             window.onbeforeunload=function(){
-                window.event.returnValue='刷新页面或者跳转页面会丢失当前数据！'   
+                window.event.returnValue='刷新页面或者跳转页面会丢失当前数据！'
             };
             $(".check_label").change(function(){
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
