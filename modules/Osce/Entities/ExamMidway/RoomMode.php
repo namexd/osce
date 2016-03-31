@@ -65,6 +65,7 @@ class RoomMode implements ModeInterface
         try {
             //获取首位固定
             $sticks = ExamQueue::where('exam_id', $this->exam->id)->where('stick', $this->room->room_id)->get();
+            dd($sticks);
             if (count($sticks) < $this->_T_Count) {
                 $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
 
@@ -153,8 +154,7 @@ class RoomMode implements ModeInterface
                         'student.code as student_code',
                         'student.avator as student_avator',
                         'student.description as student_description'
-                    )
-                    ->get();
+                    )->get();
             }
 
 
