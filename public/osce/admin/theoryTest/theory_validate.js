@@ -19,7 +19,7 @@ function theory_validate(){
         var examId = $(".allData").attr("examId");
         var timer = setInterval(function(){
             $.ajax({
-                url:'/osce/api/exam-paper-status?stationId='+stationId+'&examId='+examId,
+                url:'/osce/admin/api/exam-paper-status?station_id='+stationId+'&exam_id='+examId,
                 type:'get',
                 cache:false,
                 dateType:'json',
