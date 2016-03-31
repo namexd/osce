@@ -275,12 +275,12 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('course/subject',['uses'=>'CourseController@getSubject','as'=>'osce.admin.course.getSubject']);
 
 		//用物
-		Route::get('supplies/list',['uses'=>'SuppliesController@getList','as'=>'osce.admin.supplies.getList']);
-		Route::get('supplies/add-supplies',['uses'=>'SuppliesController@getAddSupplies','as'=>'osce.admin.supplies.getAddSupplies']);
-		Route::post('supplies/add-supplies',['uses'=>'SuppliesController@postAddSupplies','as'=>'osce.admin.supplies.postAddSupplies']);
-		Route::get('supplies/edit-supplies',['uses'=>'SuppliesController@getEditSupplies','as'=>'osce.admin.supplies.getEditSupplies']);
-		Route::post('supplies/edit-supplies',['uses'=>'SuppliesController@postEditSupplies','as'=>'osce.admin.supplies.postEditSupplies']);
-		Route::get('supplies/del-supplies',['uses'=>'SuppliesController@getDelSupplies','as'=>'osce.admin.supplies.getDelSupplies']);
+		Route::get('supply/list',['uses'=>'SupplyController@getList','as'=>'osce.admin.supply.getList']);
+		Route::get('supply/add-supply',['uses'=>'SupplyController@getAddSupply','as'=>'osce.admin.supply.getAddSupply']);
+		Route::post('supply/add-supply',['uses'=>'SupplyController@postAddSupply','as'=>'osce.admin.supply.postAddSupply']);
+		Route::get('supply/edit-supply',['uses'=>'SupplyController@getEditSupply','as'=>'osce.admin.supply.getEditSupply']);
+		Route::post('supply/edit-supply',['uses'=>'SupplyController@postEditSupply','as'=>'osce.admin.supply.postEditSupply']);
+		Route::get('supply/del-supply',['uses'=>'SupplyController@getDelSupply','as'=>'osce.admin.supply.getDelSupply']);
 
 		
 	});

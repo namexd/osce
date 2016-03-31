@@ -9,24 +9,24 @@
 namespace Modules\Osce\Entities;
 
 
-class SubjectSupplies extends CommonModel
+class SubjectSupply extends CommonModel
 {
     protected $connection   = 'osce_mis';
-    protected $table        = 'subject_supplies';
+    protected $table        = 'subject_supply';
     public    $timestamps   = true;
     protected $primaryKey   = 'id';
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['subject_id', 'supplies_id', 'num', 'created_user_id'];
+    protected $fillable     = ['subject_id', 'supply_id', 'num', 'created_user_id'];
 
 
     public function subject(){
         return $this->hasOne('\Modules\Osce\Entities\Subject', 'id', 'subject_id');
     }
 
-   public function supplies(){
-       return $this->hasOne('\Modules\Osce\Entities\supplies', 'id', 'supplies_id');
+   public function supply(){
+       return $this->hasOne('\Modules\Osce\Entities\supply', 'id', 'supply_id');
    }
 
 }

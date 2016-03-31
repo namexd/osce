@@ -279,10 +279,10 @@ class Subject extends CommonModel
             }
 
         //删除和用物关联
-            $SubjectSupplies =   SubjectSupplies::where('subject_id','=',$subject->id)->get();
-            if($SubjectSupplies){
-                foreach ($SubjectSupplies as $supplies){
-                    if(!$supplies->delete()){
+            $SubjectSupply =   SubjectSupply::where('subject_id','=',$subject->id)->get();
+            if($SubjectSupply){
+                foreach ($SubjectSupply as $supply){
+                    if(!$supply->delete()){
                         throw new \Exception('删除用物失败');
                     }
                 }
@@ -413,31 +413,31 @@ class Subject extends CommonModel
     public function addSubjectGoods($subject_id, $goods, $user_id){
         foreach ($goods as $good) {
             //查询是否有对应的用物
-            $supplies = Supplies::where('name','=',$good['name'])->first();
-            if($supplies){
-                $supplies_id = $supplies->id;
+            $supply = Supply::where('name','=',$good['name'])->first();
+            if($supply){
+                $supply_id = $supply->id;
 
             }else{
 
                 //未查询到对应的用物，则创建
-                $suppliesData = [
+                $supplyData = [
                     'name'           => $good['name'],
                     'create_user_id' => $user_id
                 ];
-                if(!$supplies = Supplies::create($suppliesData)){
+                if(!$supply = Supply::create($supplyData)){
                     return false;
                 }
-                $supplies_id = $supplies->id;
+                $supply_id = $supply->id;
             }
 
             //添加考试项目——用物关系
             $data = [
                 'subject_id'        => $subject_id,
-                'supplies_id'       => $supplies_id,
+                'supply_id'         => $supply_id,
                 'num'               => $good['number'],
                 'created_user_id'   => $user_id,
             ];
-            if(!SubjectSupplies::create($data)){
+            if(!SubjectSupply::create($data)){
                 return false;
             }
         }
@@ -455,7 +455,7 @@ class Subject extends CommonModel
      * @return bool
      */
     public function editSubjectGoods($subject_id, $goods, $user_id){
-        $result = SubjectSupplies::where('subject_id','=',$subject_id)->get();
+        $result = SubjectSupply::where('subject_id','=',$subject_id)->get();
 
         //删除原有的
         if(count($result)>0){
