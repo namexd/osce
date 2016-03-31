@@ -98,10 +98,10 @@ class TopicController extends CommonController
     {
         $this->validate($request, [
             'title'     => 'required|unique:osce_mis.subject,title',    //名称
-//            'case_id'   => 'required',    //病例
+            'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
             'desc'      => 'required',    //描述
-            'goods'     => 'required',    //所需物品
+            'goods'     => 'required',    //所需用物
 //            'stem'      => 'required',    //题干
 //            'equipments'=> 'required',    //所需设备
             'content'   => 'required',    //评分标准
@@ -110,7 +110,7 @@ class TopicController extends CommonController
         ], [
             'title.required'    => '名称必填',
             'title.unique'      => '该科目已存在',
-//            'case_id.required'  => '请选择病例',
+            'cases.required'    => '请选择病例',
             'total.required'    => '总分必填',
             'desc.required'     => '必须填写描述',
             'content.required'  => '必须新增评分点',
@@ -134,30 +134,26 @@ class TopicController extends CommonController
                 }
             }
 
-            $goods= $request->input('goods');          //所需物品
-            $goodDesc = '';
-            if(!empty($goods)){
-                $goodDesc .= '所需物品：';
-                foreach ($goods as $good) {
-                    $goodDesc .= $good['name'].',数量:'.$good['num'].'；';
-                }
-            }
+
+            $cases= $request->input('cases');           //病例
+            $goods= $request->input('goods');           //所需物品
 
             $data = [
                 'title'      => e($request->get('title')),
                 'score'      => intval($request->get('total')),     //总分
                 'description'=> e($request->get('desc')),           //描述
                 'stem'       => e($request->input('stem')),         //题干
-                'goods'      => $goodDesc,                          //所需物品
+                'goods'      => '',                                 //所需物品
                 'equipments' => e($request->input('equipments')),   //所需设备
             ];
+
             //判断总分与考核项分数是否正确
             if($totalData != $data['score']){
                 throw new \Exception('考核项分数和 没有对应总分！');
             }
 
             $subjectModel = new Subject();
-            if ($subjectModel->addSubject($data, $formData)) {
+            if ($subjectModel->addSubject($data, $formData, $cases, $goods)) {
 
                 return redirect()->route('osce.admin.topic.getList');
 

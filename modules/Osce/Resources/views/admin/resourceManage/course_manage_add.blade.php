@@ -176,7 +176,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例</label>
                             <div class="col-sm-10">
-                                <select id="select-clinical" class="form-control" name="case_id" multiple="multiple" />
+                                <select id="select-clinical" class="form-control" name="cases[]" multiple="multiple" />
                                 </select>
                             </div>
                         </div>

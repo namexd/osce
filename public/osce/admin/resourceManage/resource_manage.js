@@ -2240,7 +2240,7 @@ function course_module(){
                     '</tr>';
 
             $('#things-use').find('tbody').append(html);
-
+            $('#things-use').find('tbody').attr('index',index);
             //启动select2
             $('#things-use .js-example-basic-single').select2({
                 tags:true

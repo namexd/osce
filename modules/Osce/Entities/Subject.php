@@ -82,14 +82,29 @@ class Subject extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addSubject($data, $points)
+    public function addSubject($data, $points, $cases, $goods)
     {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
 
         try {
-            if ($subject = $this->create($data)) {
-                $this->addPoint($subject, $points);
+            $user = \Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+
+            if ($subject = $this->create($data)) {          //创建考试项目
+                $this->addPoint($subject, $points);         //添加考试项目对应的考核内容
+
+                //添加考试项目——病例关系
+                if(!$this->addSubjectCases($subject->id, $cases, $user->id)){
+                    throw new \Exception('创建考试项目——病例关系失败');
+                }
+                //添加考试项目——用物关系
+                if(!$this->addSubjectGoods($subject->id, $goods, $user->id)){
+                    throw new \Exception('创建考试项目——用物关系失败');
+                }
+
             } else {
                 throw new \Exception('新增考核标准失败');
             }
@@ -265,6 +280,72 @@ class Subject extends CommonModel
             )->get();
         return $SubjectData;
 
+    }
+
+    /**
+     * 添加考试项目——病例关系
+     * @param $subject_id
+     * @param $cases
+     * @param $user_id
+     * @author Zhoufuxiang 2016-3-31
+     * @return bool
+     */
+    public function addSubjectCases($subject_id, $cases, $user_id){
+        foreach ($cases as $case_id) {
+            $data = [
+                'subject_id'        => $subject_id,
+                'cases_id'          => $case_id,
+                'created_user_id'   => $user_id,
+            ];
+            if(!SubjectCases::create($data)){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 添加考试项目——用物关系
+     * @param $subject_id
+     * @param $goods
+     * @param $user_id
+     * @author Zhoufuxiang 2016-3-31
+     * @return bool
+     */
+    public function addSubjectGoods($subject_id, $goods, $user_id){
+        foreach ($goods as $good) {
+            //查询是否有对应的用物
+            $supplies = Supplies::where('name','=',$good['name'])->first();
+            if($supplies){
+                $supplies_id = $supplies->id;
+
+            }else{
+
+                //未查询到对应的用物，则创建
+                $suppliesData = [
+                    'name'           => $good['name'],
+                    'create_user_id' => $user_id
+                ];
+                if(!$supplies = Supplies::create($suppliesData)){
+                    return false;
+                }
+                $supplies_id = $supplies->id;
+            }
+
+            //添加考试项目——用物关系
+            $data = [
+                'subject_id'        => $subject_id,
+                'supplies_id'       => $supplies_id,
+                'num'               => $good['number'],
+                'created_user_id'   => $user_id,
+            ];
+            if(!SubjectSupplies::create($data)){
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
