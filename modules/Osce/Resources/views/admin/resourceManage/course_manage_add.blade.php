@@ -27,8 +27,6 @@
         margin-bottom: 0;
         text-align: center;
     }
-    .select2-container--default .select2-selection--single{border:1px solid #e5e6e7;height:34px;line-height:34px;}
-    .select2-container--default .select2-selection--single .select2-selection__rendered{line-height:34px;}
     .display-none{display: none;}
 </style>
 @stop
@@ -78,6 +76,13 @@
                     validators: {
                         notEmpty: {/*非空提示*/
                             message: '描述不能为空'
+                        }
+                    }
+                },
+                case_id: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '病例不能为空！'
                         }
                     }
                 },

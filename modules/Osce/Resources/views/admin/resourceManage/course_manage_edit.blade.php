@@ -1,6 +1,7 @@
 @extends('osce::admin.layouts.admin_index')
 @section('only_css')
 <link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
+<link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
 <style>
     table tr td .form-group {
         margin-bottom: 0;
@@ -26,22 +27,17 @@
         margin-bottom: 0;
         text-align: center;
     }
+    .display-none{display: none;}
 </style>
 @stop
 
 @section('only_js')
 <script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script> 
 <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
+<script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 <script> 
-    $(function(){
-        /**
-         * 编辑和新增共用了一段代码，这里必须将验证单独拿出
-         * @author mao
-         * @version 1.0
-         * @date    2016-02-19
-         */
-        $('#sourceForm').bootstrapValidator({
+    $('#sourceForm').bootstrapValidator({
             message: 'This value is not valid',
             feedbackIcons: {/*输入框不同状态，显示图片的样式*/
                 valid: 'glyphicon glyphicon-ok',
@@ -60,8 +56,7 @@
                             /*自定义提交数据，默认值提交当前input value*/
                             data: function(validator) {
                                 return {
-                                    name: $('#title').val(),
-                                    id:$('#id').val()
+                                    name: $('#title').val()
                                 }
                             }
                         },
@@ -70,42 +65,49 @@
                         }
                     }
                 },
-                note: {
+                desc: {
                     validators: {
                         notEmpty: {/*非空提示*/
                             message: '描述不能为空'
                         }
                     }
                 },
-                goods: {
+                case_id: {
                     validators: {
                         notEmpty: {/*非空提示*/
-                            message: '所需物品不能为空'
+                            message: '病例不能为空！'
                         }
                     }
                 },
-                stem: {
+                time: {
                     validators: {
                         notEmpty: {/*非空提示*/
-                            message: '题干不能为空'
+                            message: '时间间隔不能为空'
+                        },
+                        regexp: {
+                            regexp: /^([0-9]+)$/,
+                            message: '请输入正确的时间间隔'
                         }
                     }
                 },
-                equipments: {
+                total: {
                     validators: {
                         notEmpty: {/*非空提示*/
-                            message: '所需设备不能为空'
+                            message: '总分不能为空'
+                        },
+                        regexp: {
+                            regexp: /^([0-9]+)$/,
+                            message: '请输入正确的总分'
                         }
                     }
                 }
             }
         });
-    })
 </script> 
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'course_module','excel':'{{route('osce.admin.topic.postImportExcel')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'course_module','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinicalList':'{{route('osce.admin.topic.getSubjectCases')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -120,7 +122,6 @@
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
-
                             <div class="col-sm-10">
                                 <input type="hidden" class="form-control" id="id" name="id" value="{{$item->id}}">
                                 <input type="text" required class="form-control" id="title" name="title" value="{{$item->title}}">
@@ -128,26 +129,56 @@
                         </div>
                         <div class="hr-line-dashed"></div>
 
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">题干</label>
+                        <div class="form-group display-none">
+                            <label class="col-sm-2 control-label">类别</label>
                             <div class="col-sm-10">
-                                <input id="select_Category"  class="form-control" name="stem" value="{{$item->stem}}"/>
+                                <select id="select_Category" class="form-control" name="category"/>
+                                    <option value="1">问诊</option>
+                                    <option value="2">查询</option>
+                                    <option value="3">操作</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed display-none"></div>
+
+                        <div class="form-group display-none">
+                            <label class="col-sm-2 control-label">操作</label>
+                            <div class="col-sm-5">
+                                <select id="select_Category" class="form-control" name="category"/>
+                                    <option value="1">内科</option>
+                                    <option value="2">外科</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-5">
+                                <select id="select_Category" class="form-control" name="category"/>
+                                    <option value="1">胸穿</option>
+                                    <option value="2">腹穿</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed display-none"></div>
+
+                        <div class="form-group display-none">
+                            <label class="col-sm-2 control-label">时间间隔</label>
+                            <div class="col-sm-10">
+                                <input id="time" class="form-control" name="time"/>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed display-none"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">病例</label>
+                            <div class="col-sm-10">
+                                <select id="select-clinical" class="form-control" name="case_id" multiple="multiple" />
+                                </select>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">所需设备</label>
+                            <label class="col-sm-2 control-label">总分</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="equipments" value="{{$item->equipments}}"/>
-                            </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">所需物品</label>
-                            <div class="col-sm-10">
-                                <input id="select_Category" class="form-control" name="goods" value="{{$item->goods}}"/>
+                                <input id="total" class="form-control" name="total"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -158,8 +189,37 @@
                                 <input id="select_Category" required  class="form-control" name="note" value="{{$item->description}}"/>
                             </div>
                         </div>
-
                         <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">物品准备</label>
+                            <div class="col-sm-10">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5></h5>
+                                        <div class="ibox-tools">
+                                            <button type="button" class="btn btn-outline btn-default" id="add-things">新增物品</button>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <table class="table table-bordered" id="things-use">
+                                            <thead>
+                                                <tr>
+                                                    <th width="481">用物</th>
+                                                    <th>数量</th>
+                                                    <th width="160">操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody index="0">
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">评分标准</label>
                             <div class="col-sm-10">

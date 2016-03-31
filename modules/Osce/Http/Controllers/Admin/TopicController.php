@@ -480,13 +480,16 @@ class TopicController extends CommonController
            $caseModel = new CaseModel();
           
            if(empty($caseName)){
-               //查询出所有的病例
-               $casesList = $caseModel->getList($paginate);
-               
-           }else{
-               $casesList = $caseModel->getList($caseName);
-           }
 
+               //查询出所有的病例
+               $casesList = $caseModel->getCasesList($caseName);
+           }else{
+               $casesList = $caseModel->getCasesList($caseName);
+           }
+           
+//           return response()->json(
+//               $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$pagination->currentPage(),$data)
+//           );
            return response()->json(
                $this->success_data($casesList, 1, '病例获取成功')
            );
@@ -494,7 +497,6 @@ class TopicController extends CommonController
            return response()->json($this->fail($ex));
 
        }
-       
 }
 
 

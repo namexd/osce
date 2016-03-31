@@ -11,6 +11,7 @@
         width: 197px;
         height: 251px;
     }
+    .select2-container--default{width:100% !important;}
      .select2-container--default .select2-selection--multiple{border:1px solid #e5e6e7;}
 </style>
 @stop
@@ -98,7 +99,6 @@
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
-
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">支持考试项目</label>
                                 <div class="col-sm-10">
