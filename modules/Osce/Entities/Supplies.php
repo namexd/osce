@@ -46,8 +46,11 @@ class Supplies extends CommonModel
 
 //        $SubjectItemModel = new SubjectItem();
         try {
-            //判断该用物是否关联考试项目
-
+//            //判断该用物是否关联考试项目
+//            $SubjectSupplies = SubjectSupplies::where('supplies_id','=',$subject->id)->get();
+//            if(!$SubjectSupplies->isEmpty()){
+//                throw new \Exception('该用物已被考试项目关联使用');
+//            }
 //            $SubjectItemModel->delItemBySubject($subject);
             if ($subject->delete()) {
                 $connection->commit();
@@ -58,7 +61,7 @@ class Supplies extends CommonModel
         } catch (\Exception $ex) {
             $connection->rollBack();
             if ($ex->getCode() == 23000) {
-                throw new \Exception('该科目已经被使用了,不能删除');
+                throw new \Exception('该用物已经被使用了,不能删除');
             } else {
                 throw $ex;
             }
