@@ -485,7 +485,6 @@ class TopicController extends CommonController
            return response()->json($this->fail($ex));
 
        }
-       
 }
 
 
