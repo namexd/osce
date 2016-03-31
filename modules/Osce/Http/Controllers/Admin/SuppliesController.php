@@ -38,7 +38,6 @@ class SuppliesController extends CommonController
         $this->validate($request,[
             'name'=>'required'
         ]);
-
         $name = $request->get('name');
         //添加进数据库
         $data=[
@@ -55,6 +54,9 @@ class SuppliesController extends CommonController
         $id = $request->get('id');
 
         $data = Supplies::find($id);
+        if(!$data){
+            throw new \Exception('没有找到相关用物');
+        }
 
         return view('osce::admin.resourceManage.res_manage_add',['data'=>$data]);
 
@@ -95,6 +97,9 @@ class SuppliesController extends CommonController
         }
 
     }
+    //ajax 获取用物列表
+
+//    public function get
 
 
 
