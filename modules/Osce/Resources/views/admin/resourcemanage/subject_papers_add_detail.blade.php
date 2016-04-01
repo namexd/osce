@@ -11,8 +11,6 @@
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script>
-
-
         $(function(){
             $(".tag").select2({});
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
@@ -29,9 +27,7 @@
             }
             var flag = false;
             $('.form-horizontal').submit(function(){
-
                 if(!Validator()) return false;
-
                 var questionNumber = $(".questionNumber").val();
                 var questionScore = $(".questionScore").val();
                 if(questionNumber >= 1 && questionNumber <= 100 && questionScore >= 1 && questionScore <= 20){
@@ -99,7 +95,7 @@
             $('#closeIframe').click(function(){
                 parent.layer.close(index);
             });
-
+//            标签选择判断
             function labelValidator(){
                 var $tagVal = $(".tag option:selected");
                 if($tagVal&&$tagVal.length>0){
@@ -109,6 +105,7 @@
                     return false;
                 }
             }
+//            题目数量判断
             function numValidator(){
                 var data = {
                     question:$('select[name=question-type]').val(),
@@ -129,16 +126,28 @@
                         console.log(res);
                         mark =  res.valid;
                     }
-                })
+                });
                 return mark;
             }
-
             function Validator(){
+                var num = numValidator();
                 if(!labelValidator()){
                     layer.alert("至少选择一个标签!");
                     return false;
-                }else if(!numValidator()){
-                    layer.alert("题目数量超出所选标签包含的题目数量!");
+                }else if(num < $("#questionNumber").val()){
+                    layer.alert("符合条件的试题数量为："+num);
+                    return false;
+                }else if($("#questionNumber").val() == ""){
+                    layer.alert("题目数量不能为空!");
+                    return false;
+                }else if($("#questionNumber").val() <= 0){
+                    layer.alert("题目数量必须为正整数!");
+                    return false;
+                }else if($(".questionScore").val() == ""){
+                    layer.alert("每题分数不能为空!");
+                    return false;
+                }else if($(".questionScore").val() <= 0){
+                    layer.alert("每题分数必须为正整数!");
                     return false;
                 }
                 return true;
