@@ -18,7 +18,6 @@ function theory_validate(){
     function queryAjax(){
         var stationId = $(".allData").attr("data");
         var examId = $(".allData").attr("examId");
-            console.log(stationId,111111);
         var timer = setInterval(function(){
             $.ajax({
                 url:'/osce/admin/api/exam-paper-status?station_id='+stationId+'&exam_id='+examId,
@@ -26,10 +25,10 @@ function theory_validate(){
                 cache:false,
                 dateType:'json',
                 success:function(res){
-                    if (res.code == 2) {
-                        $('#examinfo').html('理论考试已结束');
-                        clearInterval(timer);
-                    } else {
+                    // if (res.code == 2) {
+                    //     $('#examinfo').html('理论考试已结束');
+                    //     clearInterval(timer);
+                    // } else {
                         $.ajax({
                             url:'/osce/api/invigilatepad/authentication?station_id='+stationId,
                             type:'get',
@@ -50,7 +49,7 @@ function theory_validate(){
                             }
                         })
                     }
-                }
+                // }
             })
         },5000);
     }
