@@ -48,9 +48,9 @@
                     <td>2016-03-31 01:00 ~ 2016-03-31 04:00</td>
                     <td>1技能站</td>
                     <td>6</td>
-                    <td><span>是</span></td>
+                    <td><span class="co">是</span></td>
                     <td>
-                        <a href="{{route('osce.admin.exam.getEditExam',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
+                        <a href=""><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                         <button class="btn btn-primary" disabled type="button">发布成绩</button>
                     </td>
@@ -60,13 +60,13 @@
                     <td>578</td>
                     <td>2016.04.01第5次若队列优化测试</td>
                     <td>2016-04-01 01:00 ~ 2016-04-01 04:00</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>1技能站</td>
+                    <td>6</td>
+                    <td>否</td>
                     <td>
-                        <a href="{{route('osce.admin.exam.getEditExam',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
+                        <a href=""><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                        <button class="btn btn-primary" disabled type="button">发布成绩</button>
+                        <button class="btn btn-primary" type="button">发布成绩</button>
                     </td>
                 </tr>
                 @foreach($data as $key=>$item)
