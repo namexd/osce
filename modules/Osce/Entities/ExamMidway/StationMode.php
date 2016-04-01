@@ -73,10 +73,12 @@ class StationMode implements ModeInterface
     {
         // TODO: Implement getExaminee() method.
         //获取首位固定的考生
-        echo 1;
         $sticks = ExamQueue::where('exam_id', $this->exam->id)->whereIn('station_id',$this->stationIds)->whereIn('stick', $this->stationIds)->get();
         if ($sticks->isEmpty()) {
             //获取应该在此处考试的考生
+            $a=\DB::connection('osce_sys');
+            $a->enableQueryLog();
+
             $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->whereIn('exam_queue.station_id', $this->stationIds)
                 ->where('exam_queue.status', '<', 3)
@@ -97,7 +99,7 @@ class StationMode implements ModeInterface
                 ->groupBy('student.id')
                 ->take(1)
                 ->get();
-            echo 2;
+            dd($a->getQueryLog());
             if ($collection->isEmpty()) {
                 //可以在此处考试的考生
                 $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
