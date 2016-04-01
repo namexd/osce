@@ -72,6 +72,7 @@ class StationMode implements ModeInterface
     function getExaminee(array $serialnumber)
     {
         // TODO: Implement getExaminee() method.
+        dd($this->stationIds);
         $sticks = ExamQueue::where('exam_id', $this->exam->id)->whereIn('stick', $this->stationIds)->get();
 
         if ($sticks->isEmpty()) {
