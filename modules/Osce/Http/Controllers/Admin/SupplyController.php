@@ -10,9 +10,9 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use Illuminate\Http\Request;
-use Modules\Osce\Entities\Supplies;
+use Modules\Osce\Entities\Supply;
 use Modules\Osce\Http\Controllers\CommonController;
-class SuppliesController extends CommonController
+class SupplyController extends CommonController
 {
     
     
@@ -20,7 +20,7 @@ class SuppliesController extends CommonController
     /**
      * 获取用物列表
      * @method GET
-     * @url osce/admin/supplies/list
+     * @url osce/admin/supply/list
      * @access public
      * @param Request $request get请求<br><br>
      * <b>post请求字段：</b>
@@ -39,9 +39,9 @@ class SuppliesController extends CommonController
 
         $name = e($request->get('name'));
 
-        $suppliesModel = new Supplies();
+        $supplyModel = new Supply();
 
-        $list = $suppliesModel->getList($name);
+        $list = $supplyModel->getList($name);
 
         return view('osce::admin.resourceManage.res_manage', ['list' => $list, 'name' => $name]);
     }
@@ -50,7 +50,7 @@ class SuppliesController extends CommonController
     /**
      * 新增用物着陆页面
      * @method GET
-     * @url osce/admin/supplies/add-supplies
+     * @url osce/admin/supply/add-supply
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -62,7 +62,7 @@ class SuppliesController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function getAddSupplies(){
+    public function getAddSupply(){
         return view('osce::admin.resourceManage.res_manage_add');
     }
 
@@ -71,7 +71,7 @@ class SuppliesController extends CommonController
     /**
      * 提交新增用物
      * @method GET
-     * @url osce/admin/supplies/add-supplies
+     * @url osce/admin/supply/add-supply
      * @access public
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
@@ -84,7 +84,7 @@ class SuppliesController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function postAddSupplies(Request $request){
+    public function postAddSupply(Request $request){
         $this->validate($request,[
             'name'=>'required'
         ]);
@@ -94,10 +94,10 @@ class SuppliesController extends CommonController
             'name'=>$name,
         ];
 
-        if(!Supplies::create($data)){
+        if(!Supply::create($data)){
             throw new \Exception('添加用物失败');
         }else{
-            return redirect()->route('osce.admin.supplies.getList');
+            return redirect()->route('osce.admin.supply.getList');
         }
     }
 
@@ -107,7 +107,7 @@ class SuppliesController extends CommonController
     /**
      * 编辑用物着陆页面
      * @method GET
-     * @url osce/admin/supplies/edit-supplies
+     * @url osce/admin/supply/edit-supply
      * @access public
      * @param Request $request post请求<br><br>
      * <b>get请求字段：</b>
@@ -119,10 +119,10 @@ class SuppliesController extends CommonController
      * @date 2016-3-31
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getEditSupplies(Request $request){
+    public function getEditSupply(Request $request){
         $id = $request->get('id');
 
-        $data = Supplies::find($id);
+        $data = Supply::find($id);
         if(!$data){
             throw new \Exception('没有找到相关用物');
         }
@@ -134,7 +134,7 @@ class SuppliesController extends CommonController
     /**
      * 提交编辑用物表单
      * @method GET
-     * @url osce/admin/supplies/edit-supplies
+     * @url osce/admin/supply/edit-supply
      * @access public
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
@@ -145,19 +145,19 @@ class SuppliesController extends CommonController
      * @date 2016-3-31
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public  function postEditSupplies(Request $request){
+    public  function postEditSupply(Request $request){
         $this->validate($request,[
             'id'=>'required',
             'name'=>'required'
         ]);
         $id = $request->get('id');
         $name = $request->get('name');
-        $Supplies =Supplies::find($id);
-        $Supplies->name =  $name;
-        if(!$Supplies->save()){
+        $Supply =Supply::find($id);
+        $Supply->name =  $name;
+        if(!$Supply->save()){
             throw new \Exception('修改用物失败');
         }else{
-            return redirect()->route('osce.admin.supplies.getList');
+            return redirect()->route('osce.admin.supply.getList');
         }
     }
 
@@ -166,7 +166,7 @@ class SuppliesController extends CommonController
     /**
      * 删除用物
      * @method GET
-     * @url osce/admin/supplies/del-supplies
+     * @url osce/admin/supply/del-supply
      * @access public
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
@@ -177,16 +177,17 @@ class SuppliesController extends CommonController
      * @date 2016-3-31
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public  function getDelSupplies(Request $request){
+    public  function getDelSupply(Request $request){
 
         $this->validate($request, [
             'id' => 'required'
         ]);
         $id = $request->get('id');
-        $SuppliesModel = new Supplies();
-        $subject = $SuppliesModel->find($id);
+        $SupplyModel = new Supply();
+        $subject = $SupplyModel->find($id);
         try {
-            $SuppliesModel->delSubject($subject);
+
+            $SupplyModel->delSubject($subject);
             return \Response::json(array('code' => 1));
         } catch (\Exception $ex) {
             return response()->json(
@@ -200,7 +201,6 @@ class SuppliesController extends CommonController
     //ajax 获取用物列表
 
 //    public function get
-
 
 
 }

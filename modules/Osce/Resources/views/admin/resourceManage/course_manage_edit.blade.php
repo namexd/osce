@@ -78,7 +78,7 @@
                         }
                     }
                 },
-                case_id: {
+                cases: {
                     validators: {
                         notEmpty: {/*非空提示*/
                             message: '病例不能为空！'
@@ -175,7 +175,11 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例</label>
                             <div class="col-sm-10">
-                                <select id="select-clinical" class="form-control" name="case_id" multiple="multiple" />
+                                <select id="select-clinical" class="form-control" name="cases[]" multiple="multiple">
+                                @forelse($subjectCases as $subjectCase)
+                                    <option value="{{$subjectCase->cases_id}}" selected="selected">{{$subjectCase->cases->name}}</option>
+                                @empty
+                                @endforelse
                                 </select>
                             </div>
                         </div>
@@ -184,7 +188,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">总分</label>
                             <div class="col-sm-10">
-                                <input id="total" class="form-control" name="total"/>
+                                <input id="total" class="form-control" name="total" value="{{$item->score}}"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -192,7 +196,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10">
-                                <input id="select_Category" required  class="form-control" name="note" value="{{$item->description}}"/>
+                                <input id="select_Category" required  class="form-control" name="desc" value="{{$item->description}}"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -216,7 +220,21 @@
                                                     <th width="160">操作</th>
                                                 </tr>
                                             </thead>
-                                            <tbody index="0">
+                                            <tbody index="{{count($subjectSupplys)}}">
+                                            @forelse($subjectSupplys as $key => $subjectSupply)
+                                                <tr>
+                                                    <td>
+                                                        <select class="form-control js-example-basic-single" name="goods[{{$key+1}}][name]" style="width: 481px;">
+                                                            <option>{{$subjectSupply->supply->name}}</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" value="{{$subjectSupply->num}}" name="goods[{{$key+1}}][number]">
+                                                    </td>
+                                                    <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
+                                                </tr>
+                                            @empty
+                                            @endforelse
                                             </tbody>
                                         </table>
 

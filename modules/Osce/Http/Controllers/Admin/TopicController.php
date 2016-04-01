@@ -14,8 +14,13 @@ use Illuminate\Http\Request;
 use League\Flysystem\Exception;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Osce\Entities\CaseModel;
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Subject;
+use Modules\Osce\Entities\SubjectCases;
 use Modules\Osce\Entities\SubjectItem;
+use Modules\Osce\Entities\SubjectSupply;
+use Modules\Osce\Entities\Supply;
+use Modules\Osce\Entities\TeacherSubject;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common as OsceCommon;
 
@@ -101,7 +106,7 @@ class TopicController extends CommonController
             'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
             'desc'      => 'required',    //描述
-            'goods'     => 'required',    //所需用物
+            'goods'     => 'sometimes',    //所需用物
 //            'stem'      => 'required',    //题干
 //            'equipments'=> 'required',    //所需设备
             'content'   => 'required',    //评分标准
@@ -134,9 +139,13 @@ class TopicController extends CommonController
                 }
             }
 
-
+            $user = \Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+            
             $cases= $request->input('cases');           //病例
-            $goods= $request->input('goods');           //所需物品
+            $goods= $request->input('goods');           //用物
 
             $data = [
                 'title'      => e($request->get('title')),
@@ -145,6 +154,7 @@ class TopicController extends CommonController
                 'stem'       => e($request->input('stem')),         //题干
                 'goods'      => '',                                 //所需物品
                 'equipments' => e($request->input('equipments')),   //所需设备
+                'created_user_id' => $user->id
             ];
 
             //判断总分与考核项分数是否正确
@@ -153,7 +163,7 @@ class TopicController extends CommonController
             }
 
             $subjectModel = new Subject();
-            if ($subjectModel->addSubject($data, $formData, $cases, $goods)) {
+            if ($subjectModel->addSubject($data, $formData, $cases, $goods, $user->id)) {
 
                 return redirect()->route('osce.admin.topic.getList');
 
@@ -194,39 +204,68 @@ class TopicController extends CommonController
     {
         $this->validate($request, [
             'id' => 'required',
-            'title' => 'required',
-            'desc' => 'sometimes',
-            'content' => 'required',
-            'score' => 'required',
-            'stem' => 'required',
-            'equipments' => 'required',
-            'goods' => 'required'
+            'title'     => 'required',    //名称
+            'cases'     => 'required',    //病例
+            'total'     => 'required',    //总分
+            'desc'      => 'required',    //描述
+            'goods'     => 'sometimes',   //所需用物
+//            'stem'      => 'required',    //题干
+//            'equipments'=> 'required',    //所需设备
+            'content'   => 'required',    //评分标准
+            'score'     => 'required',    //考核点、考核项分数
+            'description'=>'required',    //考核项下的评分标准
         ], [
             'id.required' => '课题ID必须填写',
-            'title.required' => '课题名称必须填写',
-            'content.required' => '评分标准必须填写',
-            'score.required' => '评分必须填写',
+            'title.required'    => '名称必填',
+            'cases.required'    => '请选择病例',
+            'total.required'    => '总分必填',
+            'desc.required'     => '必须填写描述',
+            'content.required'  => '必须新增评分点',
+            'score.required'    => '分数必填',
+            'description.required'   => '请添加考核项',
         ]);
 
+        //考试项目基础数据
         $data = [
-            'title' => e($request->get('title')),
-            'description' => $request->get('note'),
-            'stem' => $request->input('stem'),
-            'equipments' => $request->input('equipments'),
-            'goods' => $request->input('goods')
+            'title'       => e($request->get('title')),
+            'description' => $request->get('desc'),
+            'stem'        => $request->input('stem'),
+            'equipments'  => $request->input('equipments'),
+            'goods'       => '',
+            'score'       => $request->input('total')
         ];
-        $id = intval($request->get('id'));
+        $id      = intval($request->get('id'));
+        $content = $request->get('content');        //评分标准（所有内容）
+        $score   = $request->get('score');          //考核点、考核项对应的分数
+        $answer  = $request->get('description');    //考核项下面的评分标准
+        $cases   = $request->input('cases');        //病例
+        $goods   = $request->input('goods');        //用物
 
         $subjectModel = new Subject();
         try {
-            $formData = SubjectItem::builderItemData($request->get('content'), $request->get('score'),
-                $request->get('description'));
+            $formData = SubjectItem::builderItemData($content, $score, $answer);
+            $totalData = 0;
+            foreach ($score as $index => $socrdata) {
+                foreach ($socrdata as $key => $socre) {
+                    if ($key == 'total') {
+                        continue;
+                    }
+                    $totalData += $socre;
+                }
+            }
+            //判断总分与考核项分数是否正确
+            if($totalData != $data['score']){
+                throw new \Exception('考核项分数之和与总分不相等！');
+            }
 
-            if ($subjectModel->editTopic($id, $data, $formData)) {
+            if ($subjectModel->editTopic($id, $data, $formData, $cases, $goods)) {
+
                 return redirect()->route('osce.admin.topic.getList');
             } else {
+
                 throw new \Exception('编辑失败');
             }
+
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
@@ -265,9 +304,8 @@ class TopicController extends CommonController
         $items = $subject->items;
         $items = SubjectItem::builderItemTable($items);
         $prointNum = 1;
-        $optionNum = [
-            0 => 0
-        ];
+        $optionNum = [0 => 0];
+
         foreach ($items as $item) {
             if ($item->pid == 0) {
                 $prointNum++;
@@ -279,8 +317,16 @@ class TopicController extends CommonController
                 }
             }
         }
+
+        //获取考试项目——病例关系数据
+        $subjectCases = SubjectCases::where('subject_id','=',$id)->get();
+        //获取考试项目——用物关系数据
+        $subjectSupplys = SubjectSupply::where('subject_id','=',$id)->get();
+
         return view('osce::admin.resourceManage.course_manage_edit',
-            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum]);
+            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,
+             'subjectCases' => $subjectCases, 'subjectSupplys' => $subjectSupplys,
+            ]);
     }
 
     /**
@@ -463,6 +509,10 @@ class TopicController extends CommonController
             return json_encode(['valid' => true]);
         }
     }
+
+
+
+
     // 考试项目获取病例数据
    public  function getSubjectCases(Request $request){
        $this->validate($request,[
@@ -496,6 +546,25 @@ class TopicController extends CommonController
 }
 
 
+
+    //获取用物接口
+    public  function getSubjectSupply(){
+        try{
+
+            $caseModel = new Supply();
+            
+                //查询出所有的病例
+                $supplyList = $caseModel->getSupplyList();
+
+            return response()->json(
+                $this->success_data($supplyList, 1, '病例获取成功')
+            );
+        }catch (\Exception $ex){
+            return response()->json($this->fail($ex));
+
+        }
+
+    }
 
 
 
