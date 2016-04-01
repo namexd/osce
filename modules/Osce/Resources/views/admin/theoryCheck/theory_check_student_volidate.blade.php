@@ -41,7 +41,7 @@
                         <div class="p-md cBorder mart_10 overflow goCenter">
                             <div class="col-sm-6">
                                 <div style="padding: 40px 60px;">
-                                    <img src="" alt="" class="imgBorder myImg" style="height: 250px;width: 196px;">
+                                    <img src="{{@$userInfo->avator}}" alt="" class="imgBorder myImg" style="height: 250px;width: 196px;">
                                 </div>
                             </div>
                             <div class="col-sm-6">

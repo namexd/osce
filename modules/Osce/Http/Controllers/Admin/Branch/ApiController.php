@@ -671,24 +671,5 @@ class ApiController extends CommonController
             );
         }
     }
-    /**调接口进入考试
-
-     * @method
-     * @url api/wait-examing
-     * @access public
-     * @param Request $request
-     * @author xumin <weihuiguo@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getWaitExaming(request $request,QuestionBankRepositories $questionBankRepositories){
-        $request['examId']     = $request->examId;     //考试id
-        $request['id']         = $request->id;         //试卷id
-        $request['stationId']  = $request->stationId;  //考站id
-        $request['userId']     = $request->userId;     //老师id
-        $request['studentId']  = $request->studentId;  //学生id
-
-        $Answer = new AnswerController();
-        $examQuestions = $Answer->formalPaperList($request,$questionBankRepositories);
-    }
+   
 }
