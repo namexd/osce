@@ -340,6 +340,8 @@ class ExamQueue extends CommonModel
             }
 //            修改队列状态
             $examQueue->status=2;
+            $examQueue->stick=null;
+
             if ( $examQueue->save()) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
