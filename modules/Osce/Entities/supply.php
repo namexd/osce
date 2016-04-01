@@ -16,29 +16,31 @@ use Modules\Osce\Entities\CommonModel;
 
 class Supply extends CommonModel
 {
-    protected $connection   = 'osce_mis';
-    protected $table        = 'supply';
-    public    $timestamps   = true;
-    protected $primaryKey   = 'id';
-    public    $incrementing = true;
-    protected $guarded      = [];
-    protected $hidden       = [];
-    protected $fillable     = ['name', 'create_user_id', 'archived'];
-    
+    protected $connection = 'osce_mis';
+    protected $table = 'supply';
+    public $timestamps = true;
+    protected $primaryKey = 'id';
+    public $incrementing = true;
+    protected $guarded = [];
+    protected $hidden = [];
+    protected $fillable = ['name', 'create_user_id', 'archived'];
+
 
     public $search = [];
-    
-    
+
+
     //获取用物列表
-    public  function getList($name){
+    public function getList($name)
+    {
         if (!is_null($name)) {
             return $this->where('name', 'like', '%' . $name . '%')->paginate(config('osce.page_size'));
         } else {
             return $this->paginate(config('osce.page_size'));
         }
-        
-        
+
+
     }
+
     public function delSubject($subject)
     {
         $connection = DB::connection($this->connection);
@@ -68,9 +70,16 @@ class Supply extends CommonModel
         }
     }
 
-    
-    
-    public function getSupplyList(){
+
+    public function getSupplyList($name)
+    {
+        if (!is_null($name)) {
+            return $this->where('name', 'like', '%' . $name . '%')
+                ->select([
+                    'id',
+                    'name',
+                ])->get();
+        }
         //查询出数据
         $builder = $this->select([
             'id',
@@ -80,5 +89,9 @@ class Supply extends CommonModel
 
 
     }
+    
+    
+    
+    
 
 }
