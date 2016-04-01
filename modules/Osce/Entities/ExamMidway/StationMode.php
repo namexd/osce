@@ -176,16 +176,30 @@ class StationMode implements ModeInterface
                 return $collection;
             }
         } else {
-            return Student::where('id', $sticks->first()->student_id)->select(
-                'student.id as student_id',
-                'student.name as student_name',
-                'student.user_id as student_user_id',
-                'student.idcard as student_idcard',
-                'student.mobile as student_mobile',
-                'student.code as student_code',
-                'student.avator as student_avator',
-                'student.description as student_description'
-            )->get();
+            return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                        ->where('exam_queue.id', $sticks->first()->id)
+                        ->where('student.id', $sticks->first()->student_id)
+                        ->select(
+                            'exam_queue.id as id',
+                            'student.id as student_id',
+                            'student.name as student_name',
+                            'student.user_id as student_user_id',
+                            'student.idcard as student_idcard',
+                            'student.mobile as student_mobile',
+                            'student.code as student_code',
+                            'student.avator as student_avator',
+                            'student.description as student_description'
+                        )->get();
+//            return Student::where('id', $sticks->first()->student_id)->select(
+//                'student.id as student_id',
+//                'student.name as student_name',
+//                'student.user_id as student_user_id',
+//                'student.idcard as student_idcard',
+//                'student.mobile as student_mobile',
+//                'student.code as student_code',
+//                'student.avator as student_avator',
+//                'student.description as student_description'
+//            )->get();
         }
     }
 
