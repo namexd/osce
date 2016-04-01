@@ -1524,6 +1524,29 @@ function course_module(){
             return false;
         }
 
+        //验证物品输入
+        var goods = null;
+        $('#things-use tbody').find('tr').each(function(key,elem){console.log($(elem).find('select').val())
+            goods = true;
+
+            if($(elem).find('input').val()==''){
+                goods = false;
+                return false;
+            }
+            if($(elem).find('select').val()==''){
+                goods = false;
+                return false;
+            }
+        });
+        if(goods==false){
+            layer.alert('用品/数量不能为空！');
+            return false;
+        }
+        if(goods==null){
+            layer.alert('请新增物品！');
+            return false;
+        }
+
     });
 
 
@@ -2243,7 +2266,8 @@ function course_module(){
             $('#things-use').find('tbody').attr('index',index);
             //启动select2
             $('#things-use .js-example-basic-single').select2({
-                tags:true
+                tags:true,
+                ajax: {}
             })
             
 
