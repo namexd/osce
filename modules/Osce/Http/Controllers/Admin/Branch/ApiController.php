@@ -598,8 +598,8 @@ class ApiController extends CommonController
     public function getExamPaperStatus(Request $request)
     {
         $this->validate($request, [
-            'examId' => 'sometimes|integer',//考试ID
-            'stationId' => 'sometimes|integer',//考站ID
+            'exam_id' => 'sometimes|integer',//考试ID
+            'station_id' => 'sometimes|integer',//考站ID
         ]);
 
         $examId = $request->get('examId');
@@ -611,7 +611,10 @@ class ApiController extends CommonController
             $examScreening = $examScreeningModel->getExamingScreening($examId);
             if (is_null($examScreening)) {
                 //获取最近一场考试
-                $examScreening = $examScreeningModel->getNearestScreening($examId);
+                //$examScreening = $examScreeningModel->getNearestScreening($examId);
+                return response()->json(
+                    $this->success_data('', 2, '已考完')
+                );
             }
 
             $exam = $examScreening->ExamInfo;
@@ -654,12 +657,18 @@ class ApiController extends CommonController
 
             //如果  场次人数 <= 当前流程已考人数+缺考人数 为 未考完；反之  已考完
             if ($screeningTotal <= $count + $absentTotal) {
-                $this->success_data(true, 1);
+                return response()->json(
+                    $this->success_data('', 1, '未考完')
+                );
             } else {
-                $this->success_data(false, 2);
+                return response()->json(
+                    $this->success_data('', 2, '已考完')
+                );
             }
         } catch (\Exception $ex) {
-            $this->success_data('', 0, $ex->getMessage());
+            return response()->json(
+                $this->fail(new \Exception('查询是否考完失败', -2))
+            );
         }
     }
     /**调接口进入考试
