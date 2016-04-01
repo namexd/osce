@@ -330,28 +330,27 @@ function subject_manage_add(){
                                 max:1
                             }
                         }
-                    },
-                    'tag[]': {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            callback: {
-                                message: '至少选择一个标签',
-                                callback:function(){
-                                    var $tagVal = $(".tag option:selected");
-                                    if($tagVal&&$tagVal.length>0){
-                                        return true;
-                                    }
-                                    else{
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
                     }
+                    //'tag[]': {/*键名username和input name值对应*/
+                    //    message: 'The username is not valid',
+                    //    validators: {
+                    //        callback: {
+                    //            message: '至少选择一个标签',
+                    //            callback:function(){
+                    //                var $tagVal = $(".tag option:selected");
+                    //                if($tagVal&&$tagVal.length>0){
+                    //                    return true;
+                    //                }
+                    //                else{
+                    //                    return false;
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
             })
         }
-        oneValidator();
         //不定项验证
         function noSureValidator(){
             $("#sourceForm").bootstrapValidator({
@@ -383,24 +382,24 @@ function subject_manage_add(){
                                 message: '正确答案不能为空'
                             }
                         }
-                    },
-                    'tag[]': {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            callback: {
-                                message: '至少选择一个标签',
-                                callback:function(){
-                                    var $tagVal = $(".tag option:selected");
-                                    if($tagVal&&$tagVal.length>0){
-                                        return true;
-                                    }
-                                    else{
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
                     }
+                    //'tag[]': {/*键名username和input name值对应*/
+                    //    message: 'The username is not valid',
+                    //    validators: {
+                    //        callback: {
+                    //            message: '至少选择一个标签',
+                    //            callback:function(){
+                    //                var $tagVal = $(".tag option:selected");
+                    //                if($tagVal&&$tagVal.length>0){
+                    //                    return true;
+                    //                }
+                    //                else{
+                    //                    return false;
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
             });
         }
@@ -439,24 +438,24 @@ function subject_manage_add(){
                                 min:2
                             }
                         }
-                    },
-                    'tag[]': {/*键名username和input name值对应*/
-                        message: 'The username is not valid',
-                        validators: {
-                            callback: {
-                                message: '至少选择一个标签',
-                                callback:function(){
-                                    var $tagVal = $(".tag option:selected");
-                                    if($tagVal&&$tagVal.length>0){
-                                        return true;
-                                    }
-                                    else{
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
                     }
+                    //'tag[]': {/*键名username和input name值对应*/
+                    //    message: 'The username is not valid',
+                    //    validators: {
+                    //        callback: {
+                    //            message: '至少选择一个标签',
+                    //            callback:function(){
+                    //                var $tagVal = $(".tag option:selected");
+                    //                if($tagVal&&$tagVal.length>0){
+                    //                    return true;
+                    //                }
+                    //                else{
+                    //                    return false;
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
             })
         }
@@ -484,26 +483,26 @@ function subject_manage_add(){
                                 message: '正确答案不能为空'
                             }
                         }
-                    },
-                    'tag[]': {/*键名username和input name值对应*/
-                        validators: {
-                            //notEmpty: {/*非空提示*/
-                            //    message: '至少选择一个标签'
-                            //}
-                            callback: {
-                                message: '至少选择一个标签',
-                                callback:function(){
-                                    var $tagVal = $(".tag option:selected");
-                                    if($tagVal&&$tagVal.length>0){
-                                        return true;
-                                    }
-                                    else{
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
                     }
+                    //'tag[]': {/*键名username和input name值对应*/
+                    //    validators: {
+                    //        //notEmpty: {/*非空提示*/
+                    //        //    message: '至少选择一个标签'
+                    //        //}
+                    //        callback: {
+                    //            message: '至少选择一个标签',
+                    //            callback:function(){
+                    //                var $tagVal = $(".tag option:selected");
+                    //                if($tagVal&&$tagVal.length>0){
+                    //                    return true;
+                    //                }
+                    //                else{
+                    //                    return false;
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
             });
         }
@@ -579,6 +578,17 @@ function subject_manage_add(){
         //删除图片选项
         $(".picBox").on("click",".fa-remove",function(){
             $(this).parent().remove();
+        });
+        //验证标签至少选择一个
+        $("#sure").click(function(){
+            var $tagVal = $(".tag option:selected");
+            if($tagVal&&$tagVal.length>0){
+                    return true;
+                }
+                else{
+                    layer.alert("至少选择一个标签！");
+                    return false;
+                }
         });
     });
 }

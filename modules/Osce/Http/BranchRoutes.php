@@ -165,6 +165,19 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //学生等待进入考试页面
         Route::get('api/wait-examing',['uses'=>'ApiController@getWaitExaming','as'=>'osce.admin.ApiController.getWaitExaming']);
         /************理论考试end*************/
+
+        /*****************考试监控begin*******************/
+        //正在考试
+        Route::get('exam-monitor/normal',['uses'=>'ExamMonitorController@getExamMonitorNormalList','as'=>'osce.admin.ExamMonitorController.getExamMonitorNormalList']);
+        //迟到
+        Route::get('exam-monitor/late',['uses'=>'ExamMonitorController@getExamMonitorLateList','as'=>'osce.admin.ExamMonitorController.getExamMonitorLateList']);
+        //替考
+        Route::get('exam-monitor/replace',['uses'=>'ExamMonitorController@getExamMonitorReplaceList','as'=>'osce.admin.ExamMonitorController.getExamMonitorReplaceList']);
+        //弃考
+        Route::get('exam-monitor/quit',['uses'=>'ExamMonitorController@getExamMonitorQuitList','as'=>'osce.admin.ExamMonitorController.getExamMonitorQuitList']);
+        //已完成
+        Route::get('exam-monitor/finish',['uses'=>'ExamMonitorController@getExamMonitorFinishList','as'=>'osce.admin.ExamMonitorController.getExamMonitorFinishList']);
+        /*****************考试监控end*******************/
     });
 
 });
