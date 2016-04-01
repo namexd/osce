@@ -246,12 +246,11 @@ class AutomaticPlanArrangement
                     foreach ($students as &$student) {
                         //拼装数据
                         $data = $this->dataBuilder($examId, $screen, $student, $station, $i);
-//                        dump($i);
-//                        echo 'here',$station->id;
                         $result = ExamPlanRecord::create($data);
                         if (!$result) {
                             throw new \Exception('关门失败！', -11);
                         } else {
+                            $station->timer = 0;
                             $this->doorStatus--;
                         }
 
