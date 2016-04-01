@@ -25,10 +25,10 @@ function theory_validate(){
                 cache:false,
                 dateType:'json',
                 success:function(res){
-                    // if (res.code == 2) {
-                    //     $('#examinfo').html('理论考试已结束');
-                    //     clearInterval(timer);
-                    // } else {
+                    if (res.code == 2) {
+                        $('#examinfo').html('理论考试已结束');
+                        clearInterval(timer);
+                    } else {
                         $.ajax({
                             url:'/osce/api/invigilatepad/authentication?station_id='+stationId,
                             type:'get',
@@ -49,7 +49,7 @@ function theory_validate(){
                             }
                         })
                     }
-                // }
+                }
             })
         },5000);
     }
