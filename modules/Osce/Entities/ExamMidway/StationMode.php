@@ -73,11 +73,8 @@ class StationMode implements ModeInterface
     {
         // TODO: Implement getExaminee() method.
         //获取首位固定的考生
-        $sticks = ExamQueue::where('exam_id', $this->exam->id)->whereIn('stick', $this->stationIds)->get();
-        echo '====';
-        dd($sticks);
+        $sticks = ExamQueue::where('exam_id', $this->exam->id)->whereIn('station_id',$this->stationIds)->whereIn('stick', $this->stationIds)->get();
         if ($sticks->isEmpty()) {
-            echo 3;
             //获取应该在此处考试的考生
             $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->whereIn('exam_queue.station_id', $this->stationIds)
@@ -101,7 +98,6 @@ class StationMode implements ModeInterface
                 ->get();
 
             if ($collection->isEmpty()) {
-                echo 1;
                 //可以在此处考试的考生
                 $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
@@ -138,7 +134,6 @@ class StationMode implements ModeInterface
                 if ($query->isEmpty()) {
                     return collect([]);
                 } else {
-                    echo 5;
                     $a = ExamQueue::where('student_id', $query->first()->student_id)
                         ->where('status', 0)->where('blocking', 1)
                         ->orderBy('begin_dt', 'asc')->first();
@@ -149,7 +144,6 @@ class StationMode implements ModeInterface
                 }
 
             } else {
-                echo 4;
                 foreach ($collection as $student) {
                     $stick = ExamQueue::where('exam_id', $this->exam->id)
                         ->where('student_id', $student->student_id)
