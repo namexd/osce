@@ -74,7 +74,8 @@ class StationMode implements ModeInterface
         // TODO: Implement getExaminee() method.
         //获取首位固定的考生
         $sticks = ExamQueue::where('exam_id', $this->exam->id)->whereIn('stick', $this->stationIds)->get();
-
+        echo '====';
+        dd($sticks);
         if ($sticks->isEmpty()) {
             echo 3;
             //获取应该在此处考试的考生
