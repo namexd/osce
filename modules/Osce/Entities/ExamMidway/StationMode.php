@@ -85,7 +85,7 @@ class StationMode implements ModeInterface
                 ->where('student.exam_id', $this->exam->id)
                 ->whereNull('exam_queue.stick')
                 ->select(
-                    //'exam_queue.id as id',
+                    'exam_queue.id as id',
                     'student.id as student_id',
                     'student.name as student_name',
                     'student.user_id as student_user_id',
@@ -111,7 +111,7 @@ class StationMode implements ModeInterface
                     ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
-                        //'exam_queue.id as id',
+                        'exam_queue.id as id',
                         'student.id as student_id',
                         'student.name as student_name',
                         'student.user_id as student_user_id',
@@ -138,6 +138,7 @@ class StationMode implements ModeInterface
 //                    }
 //                }
                 $stick  =   $query->first();
+                dd($stick);
                 $stick->stick = $this->stationIds[0];
                 if (!$stick->save()) {
                     throw new \Exception('系统异常，请重试', -5);
