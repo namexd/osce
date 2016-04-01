@@ -388,14 +388,7 @@ class ExamQuestion extends Model
             $structureArr['score'] = 0;
             $structureArr['total_score'] = 0;
             $structureInfo = $questionBankRepositories->StructureExamQuestionArr([0=>$structureArr]);
-
-            if(count($structureInfo[0]['child']) >= $data['questionNumber']){
-                return true;
-            }else{
-                return count($structureInfo[0]['child']);
-            }
-        }else{
-            return false;
+            return count($structureInfo[0]['child']);
         }
     }
 }
