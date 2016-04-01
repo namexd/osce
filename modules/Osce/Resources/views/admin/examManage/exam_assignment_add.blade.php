@@ -163,7 +163,8 @@ input.laydate-icon{
                         <div class="form-group">
                             <label class="col-sm-2 control-label">考试时间</label>
                             <div class="col-sm-10">
-                                    <a  href="javascript:void(0)"  class="btn btn-primary" id="add-new" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                                    <a  href="javascript:void(0)"  class="btn btn-primary" id="quick-add" style="float: right;">快速新增时间</a>
+                                    <a  href="javascript:void(0)"  class="btn btn-primary" id="add-new" style="float: right;">新增</a>
                                     <table class="table table-bordered" id="exam_add">
                                         <thead>
                                         <tr>
@@ -202,3 +203,5 @@ input.laydate-icon{
 
 </div>
 @stop{{-- 内容主体区域 --}}
+
+
