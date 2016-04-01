@@ -61,7 +61,7 @@ input.laydate-icon{
                         <div class="form-group">
                             <label class="col-sm-2 control-label">考试顺序</label>
                             <div class="col-sm-10">
-                                <select class="form-control" style="width:200px;" name="sequence_cate" >
+                                <select class="form-control" name="sequence_cate" >
                                     <option value="1">随机</option>
                                     <option value="3">轮循</option>
                                     <option value="2">顺序</option>
@@ -73,7 +73,7 @@ input.laydate-icon{
                         <div class="form-group">
                             <label class="col-sm-2 control-label">排考方式</label>
                             <div class="col-sm-10">
-                                <select class="form-control" style="width:200px;" name="sequence_mode" >
+                                <select class="form-control" name="sequence_mode" >
                                     <option value="1">以考场分组</option>
                                     <option value="2">以考站分组</option>
                                 </select>
@@ -84,7 +84,7 @@ input.laydate-icon{
                         <div class="form-group">
                             <label class="col-sm-2 control-label">教官配置</label>
                             <div class="col-sm-10">
-                                 <select class="form-control" style="width:200px;" name="" >
+                                 <select class="form-control" name="" >
                                        <option value="1">按考站配置考官</option>
                                        <option value="2">按考场配置考官</option>
                                  </select>
@@ -97,10 +97,10 @@ input.laydate-icon{
                             	<div class="col-md-12">
                             		<div class="clearfix form-group" style="margin-bottom: 0;">
                             		     <div class="col-sm-12" id="checkbox_div">
-                            		          <label class="check_label checkbox_input col-sm-2 control-label" style="height: 34px;line-height: 28px;">
-                            			          <div class="check_icon check" style="display: inline-block"></div>
-                            			          <input type="checkbox" checked="checked" name="" value="1">
-                            			          <span class="check_name">每场考试采用相同时间</span>
+                            		          <label class="check_label checkbox_input col-sm-2 control-label checkbox_one" style="height: 34px;line-height: 28px;">
+                            			          <div class="check_icon" style="display: inline-block;float:right;margin:5px 0 0 5px;"></div>
+                            			          <input type="checkbox" name="" value="1">
+                            			          <span class="check_name" style="display: inline-block;float:right;">每场考试采用相同时间</span>
                             			      </label>
                                               <div class="col-sm-10">
                                                    <input type="text" required class="form-control" id="address" name="">
@@ -115,7 +115,7 @@ input.laydate-icon{
                         <div class="form-group">
                              <label class="col-sm-2 control-label">考试内容</label>
                              <div class="col-sm-10">
-                                 <select class="form-control" style="width:200px;" name="" >
+                                 <select class="form-control" name="" >
                                       <option value="1">按考站配置考官</option>
                                       <option value="2">按考场配置考官</option>
                                  </select>
@@ -128,10 +128,10 @@ input.laydate-icon{
                                  <div class="col-md-12">
                                       <div class="clearfix form-group" style="margin-bottom: 0;">
                                            <div class="col-sm-12" id="checkbox_div">
-                                                <label class="check_label checkbox_input col-sm-2 control-label" style="height: 34px;line-height: 28px;">
-                                                    <div class="check_icon" style="display: inline-block"></div>
-                                                    <input type="checkbox" checked="checked" name="" value="1">
-                                                    <span class="check_name">考生分阶段考试</span>
+                                                <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
+                                                    <div class="check_icon" style="display: inline-block;float:right;margin:5px 0 0 5px;"></div>
+                                                    <input type="checkbox" name="" value="1">
+                                                    <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
                                                 </label>
                                                 <div class="col-sm-10">
                                                      <input type="text" required class="form-control" id="address" name="">
@@ -144,18 +144,12 @@ input.laydate-icon{
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                             <div class="row">
-                                  <div class="col-md-12">
-                                       <div class="clearfix form-group" style="margin-bottom: 0;">
-                                            <div class="col-sm-12" id="checkbox_div">
-                                                 <label class="check_label checkbox_input col-sm-2 control-label" style="height: 34px;line-height: 28px;">
-                                                       <div class="check_icon" style="display: inline-block"></div>
-                                                       <input type="checkbox" checked="checked" name="" value="1">
-                                                       <span class="check_name">实时发布成绩</span>
-                                                 </label>
-                                            </div>
-                                       </div>
-                                  </div>
+                             <label class="col-sm-2 control-label">实时发布成绩</label>
+                             <div class="col-sm-10">
+                                 <select class="form-control" name="" >
+                                      <option value="1">是</option>
+                                      <option value="2">否</option>
+                                 </select>
                              </div>
                         </div>
                         <div class="hr-line-dashed"></div>
