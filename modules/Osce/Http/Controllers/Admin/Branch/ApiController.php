@@ -647,14 +647,14 @@ class ApiController extends CommonController
                 ->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreening->id)
                 ->count();
-
+    
             $screeningTotal = ExamPlan::where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreening->id)
                 ->groupBy('student_id')->count();
             $absentTotal = ExamAbsent::where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreening->id)
                 ->count();
-                \Log::alert(['考完人数'.$count,'计划人数'.$screeningTotal,'迟到人数'.$absentTotal]);
+
             //如果  场次人数 <= 当前流程已考人数+缺考人数 为 未考完；反之  已考完
             if ($screeningTotal <= $count + $absentTotal) {
                 return response()->json(
