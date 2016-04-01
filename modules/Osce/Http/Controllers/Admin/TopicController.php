@@ -139,6 +139,11 @@ class TopicController extends CommonController
                 }
             }
 
+            $user = \Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+            
             $cases= $request->input('cases');           //病例
             $goods= $request->input('goods');           //用物
 
@@ -149,6 +154,7 @@ class TopicController extends CommonController
                 'stem'       => e($request->input('stem')),         //题干
                 'goods'      => '',                                 //所需物品
                 'equipments' => e($request->input('equipments')),   //所需设备
+                'created_user_id' => $user->id
             ];
 
             //判断总分与考核项分数是否正确
@@ -157,7 +163,7 @@ class TopicController extends CommonController
             }
 
             $subjectModel = new Subject();
-            if ($subjectModel->addSubject($data, $formData, $cases, $goods)) {
+            if ($subjectModel->addSubject($data, $formData, $cases, $goods, $user->id)) {
 
                 return redirect()->route('osce.admin.topic.getList');
 
