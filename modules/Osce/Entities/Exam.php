@@ -781,13 +781,13 @@ class Exam extends CommonModel
 					   }
 				   }
 			*/
-            //修改考试考场学生表 考试场次终止为0
+            //修改考试考场学生表 (删除)
             foreach ($examScreeningObj as $item) {
                 $examScreeningStudent = ExamScreeningStudent::where('exam_screening_id', '=', $item->id)->get();       //TODO 更改考试场次终止为0
                 foreach ($examScreeningStudent as $value) {
-                    $value->is_end = 0;
-                    if(!$value->save()){
-                        throw new \Exception('修改考试考场终止失败！');
+
+                    if(!$value->delete()){
+                        throw new \Exception('s删除考试考场学生失败！');
                     }
                 }
             }
