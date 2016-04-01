@@ -1525,15 +1525,20 @@ function course_module(){
         }
 
         //验证物品输入
-        var goods = null;
-        $('#things-use tbody').find('tr').each(function(key,elem){console.log($(elem).find('select').val())
+        var goods = null,
+            number = true;
+        $('#things-use tbody').find('tr').each(function(key,elem){
             goods = true;
 
             if($(elem).find('input').val()==''){
                 goods = false;
                 return false;
             }
-            if($(elem).find('select').val()==''){
+            if($(elem).find('input').val() < 1){
+                number = false;
+                return false;
+            }
+            if($(elem).find('select').val()==''||$(elem).find('select').val()==null){
                 goods = false;
                 return false;
             }
@@ -1544,6 +1549,12 @@ function course_module(){
         }
         if(goods==null){
             layer.alert('请新增物品！');
+            return false;
+        }
+
+        //检查物品数
+        if(number == false) {
+            layer.alert('物品数必须大于0');
             return false;
         }
 
@@ -2267,7 +2278,25 @@ function course_module(){
             //启动select2
             $('#things-use .js-example-basic-single').select2({
                 tags:true,
-                ajax: {}
+                ajax: {
+                    url: pars.goodList,
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (res) {
+                        if(res.code == 1){
+                            var data = res.data,
+                                str = [];
+
+                            for(var i in data) {
+                                str.push({id:data[i].id,text:data[i].name});
+                            }
+
+                            return{
+                                results:str
+                            }
+                        }
+                    }
+                }
             })
             
 
