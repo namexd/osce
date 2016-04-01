@@ -121,6 +121,10 @@
                 var examId = $(".allData").attr("examId");
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                         {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
+                            console.log(obj);return false;
+
+
+
                     if(obj.status=='1'){
                         $.ajax({
                             url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
@@ -269,7 +273,7 @@
                                                 @endif
                                                 @if(@$val["examQuestionTypeId"]==4)
                                                     @foreach($val["content"] as $k=> $val2 )
-                                                        <div class="answerBox" examCategoryFormalId="{{@$val["exam_question_type_id"]}}">
+                                                        <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
                                                             <label class="radio_label mart_20 check_top">
                                                                 <div class="radio_icon left" ></div>
                                                                 <input type="radio" name="{{@$val["serialNumber"]}}" value="{{@$k}}">
