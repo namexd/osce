@@ -8,7 +8,7 @@
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'res_manage_edit'}" />
+<input type="hidden" id="parameter" value="{'pagename':'res_manage_edit','name': '{{route("osce.admin.supply.postSupplyNameUnique")}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
