@@ -18,6 +18,7 @@ function theory_validate(){
     function queryAjax(){
         var stationId = $(".allData").attr("data");
         var examId = $(".allData").attr("examId");
+            console.log(stationId,111111);
         var timer = setInterval(function(){
             $.ajax({
                 url:'/osce/admin/api/exam-paper-status?station_id='+stationId+'&exam_id='+examId,
@@ -25,9 +26,7 @@ function theory_validate(){
                 cache:false,
                 dateType:'json',
                 success:function(res){
-                    console.log(1111);
                     if (res.code == 2) {
-                        console.log(22222);
                         $('#examinfo').html('理论考试已结束');
                         clearInterval(timer);
                     } else {
