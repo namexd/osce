@@ -294,14 +294,17 @@ class Teacher extends CommonModel
                 }
 
                 $user       =   $this   ->  registerUser($userData, $password);
-                DB::table('sys_user_role')->insert(
-                    [
-                        'role_id'   =>$role_id,
-                        'user_id'   =>$user->id,
-                        'created_at'=>time(),
-                        'updated_at'=>time(),
-                    ]
-                );
+                $role = SysUserRole::where('role_id','=',$role_id)->where('user_id','=',$user->id)->first();
+                if(empty($role)){
+                    DB::table('sys_user_role')->insert(
+                        [
+                            'role_id'   =>$role_id,
+                            'user_id'   =>$user->id,
+                            'created_at'=>time(),
+                            'updated_at'=>time(),
+                        ]
+                    );
+                }
                 $this -> sendRegisterEms($mobile, $password);
 
             }else{
@@ -310,6 +313,18 @@ class Teacher extends CommonModel
                 }
                 if(!$result = $user -> save()) {
                     throw new \Exception('用户修改失败，请重试！');
+                }
+                //查询对应角色
+                $role = SysUserRole::where('role_id','=',$role_id)->where('user_id','=',$user->id)->first();
+                if (empty($role)){
+                    DB::table('sys_user_role')->insert(
+                        [
+                            'role_id'   =>$role_id,
+                            'user_id'   =>$user->id,
+                            'created_at'=>time(),
+                            'updated_at'=>time(),
+                        ]
+                    );
                 }
             }
 
@@ -700,11 +715,21 @@ class Teacher extends CommonModel
                 }
 
                 //根据条件：查找用户是否有账号和密码
-                $user = User::where(['username' => $teacherData['mobile']])->select(['id'])->first();
+                $user = User::where(['username' => $teacherData['mobile']])->select(['id','idcard'])->first();
                 if ($user) {
+                    if($user->idcard != $teacherData['idcard']){
+                        $result = User::where('idcard','=',$teacherData['idcard'])->first();
+                        if($result){
+                            throw new \Exception('第' . ($key + 2) . '行身份证号已经存在，请修改后重试！');
+                        }
+                    }
                     //根据用户ID查找老师 是否已经存在
                     $teacher = $this->where('id', $user->id)->first();
                 } else {
+                    $result = User::where('idcard','=',$teacherData['idcard'])->first();
+                    if($result){
+                        throw new \Exception('第' . ($key + 2) . '行身份证号已经存在，请修改后重试！');
+                    }
                     $teacher = false;
                 }
 
