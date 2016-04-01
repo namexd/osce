@@ -220,15 +220,16 @@ function teach_detail(){
     //跳详情页面
     $(".fa-search").click(function(){
         var examid = $(this).attr("examid");
-        var resultid = $(this).attr("resultid");
+        var classid = $(this).attr("resultid");
         var subid = $(this).attr("subid");
+
         parent.layer.open({
             type: 2,
             title: '班级成绩明细',
             shadeClose: true,
             shade: 0.8,
             area: ['90%', '90%'],
-            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid+'&subid='+subid//iframe的url
+            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&classid='+classid+'&subid='+subid//iframe的url
         });
 
     })

@@ -611,10 +611,7 @@ class ApiController extends CommonController
             $examScreening = $examScreeningModel->getExamingScreening($examId);
             if (is_null($examScreening)) {
                 //获取最近一场考试
-                //$examScreening = $examScreeningModel->getNearestScreening($examId);
-                return response()->json(
-                    $this->success_data('', 2, '已考完')
-                );
+                $examScreening = $examScreeningModel->getNearestScreening($examId);
             }
 
             $exam = $examScreening->ExamInfo;
@@ -671,24 +668,5 @@ class ApiController extends CommonController
             );
         }
     }
-    /**调接口进入考试
 
-     * @method
-     * @url api/wait-examing
-     * @access public
-     * @param Request $request
-     * @author xumin <weihuiguo@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getWaitExaming(request $request,QuestionBankRepositories $questionBankRepositories){
-        $request['examId']     = $request->examId;     //考试id
-        $request['id']         = $request->id;         //试卷id
-        $request['stationId']  = $request->stationId;  //考站id
-        $request['userId']     = $request->userId;     //老师id
-        $request['studentId']  = $request->studentId;  //学生id
-
-        $Answer = new AnswerController();
-        $examQuestions = $Answer->formalPaperList($request,$questionBankRepositories);
-    }
 }

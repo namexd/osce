@@ -81,7 +81,7 @@
                                         选择图片
                                         <input type="file" id="picFile" name="file">
                                     </a>
-                                    <span class="file-msg">(文件大小不得超过2M!)</span>
+                                    <span class="file-msg">(图片大小不得超过2M，仅支持JPG、PNG、JPEG格式！)</span>
                                     <div class="picBox upload_list">
 
                                     </div>
@@ -237,7 +237,7 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-sm btn-primary" id="sure" type="submit" disabled>确定</button>
+                                    <button class="btn btn-sm btn-primary" id="sure" type="submit">确定</button>
                                     <a href="{{ route('osce.admin.ExamQuestionController.showExamQuestionList') }}" class="btn btn-white btn-sm" id="cancel">取消</a>
                                 </div>
                             </div>
