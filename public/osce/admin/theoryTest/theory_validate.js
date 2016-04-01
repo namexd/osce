@@ -25,6 +25,7 @@ function theory_validate(){
                 cache:false,
                 dateType:'json',
                 success:function(res){
+                    console.log(res.code);
                     if (res.code == 2) {
                         $('#examinfo').html('理论考试已结束');
                         clearInterval(timer);
