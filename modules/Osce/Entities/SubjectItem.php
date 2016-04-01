@@ -15,15 +15,15 @@ use Illuminate\Database\Eloquent\Collection;
 
 class SubjectItem extends CommonModel
 {
-    protected $connection = 'osce_mis';
-    protected $table = 'standard';
-    public $timestamps = true;
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $guarded = [];
-    protected $hidden = [];
-    protected $fillable = ['subject_id', 'content', 'sort', 'score', 'pid', 'level', 'created_user_id', 'answer'];
-    public $search = [];
+    protected $connection   = 'osce_mis';
+    protected $table        = 'standard';
+    public    $timestamps   = true;
+    protected $primaryKey   = 'id';
+    public    $incrementing = true;
+    protected $guarded      = [];
+    protected $hidden       = [];
+    protected $fillable     = ['subject_id', 'content', 'sort', 'score', 'pid', 'level', 'created_user_id', 'answer'];
+    public    $search       = [];
 
     //创建人用户关联
     public function user(){
@@ -58,9 +58,8 @@ class SubjectItem extends CommonModel
             $data   =   [
                 'subject_id'        =>  $subject->id,
                 'content'           =>  $point['content'],
-                'sort'             =>  $point['sort'],
+                'sort'              =>  $point['sort'],
                 'score'             =>  $point['score'],
-               // 'answer'             =>  $point['answer'],
                 'created_user_id'   =>  $user->id,
                 'pid'               =>  0,
                 'level'             =>  1,
@@ -81,14 +80,14 @@ class SubjectItem extends CommonModel
             $data   =   [
                 'subject_id'        =>  $subject->id,
                 'content'           =>  $point['content'],
-                'sort'             =>  $point['sort'],
+                'sort'              =>  $point['sort'],
                 'score'             =>  $point['score'],
-                'answer'             =>  $point['answer'],
+                'answer'            =>  $point['answer'],
                 'created_user_id'   =>  $user->id,
                 'pid'               =>  $parent->id,
                 'level'             =>  $level,
             ];
-            $item    =   $this   ->  create($data);
+            $item   =   $this   ->  create($data);
             if(!$item)
             {
                 throw new \Exception('新增考核项失败');
