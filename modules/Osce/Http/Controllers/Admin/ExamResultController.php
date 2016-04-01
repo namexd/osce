@@ -21,6 +21,7 @@ use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Http\Controllers\CommonController;
+use Modules\Osce\Repositories\Common;
 
 class ExamResultController extends CommonController{
 
@@ -123,9 +124,10 @@ class ExamResultController extends CommonController{
         $examResult = new ExamResult();
         $examResults= $examResult->getResultList($examId,$stationId,$name);
         foreach($examResults as $item){
-            date_default_timezone_set("UTC");
-            $item->time = date('H:i:s',$item->time);
-            date_default_timezone_set("PRC");
+//            date_default_timezone_set("UTC");
+//            $item->time = date('H:i:s',$item->time);
+//            date_default_timezone_set("PRC");
+            $item->time = Common::handleTime($item->time);
         }
         return view('osce::admin.examManage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams,'exam_id'=>$examId,'station_id'=>$stationId,'name'=>$name]);
     }
@@ -176,9 +178,10 @@ class ExamResultController extends CommonController{
                 'subject_id' =>$item->subject_id,
             ];
         }
-        date_default_timezone_set("UTC");
-        $result['time'] = date('H:i:s',$result['time']);
-        date_default_timezone_set("PRC");
+//        date_default_timezone_set("UTC");
+//        $result['time'] = date('H:i:s',$result['time']);
+//        date_default_timezone_set("PRC");
+        $result['time'] = Common::handleTime($result['time']);
         $score = ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->get();
 
 //        $image=[];
