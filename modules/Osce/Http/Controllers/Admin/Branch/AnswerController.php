@@ -152,6 +152,7 @@ class AnswerController extends CommonController
             'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
         );
 
+
  /*       //提交过来的数据格式
         $case = array(
             'examPaperFormalId'=>'1',//试卷id
@@ -218,7 +219,6 @@ class AnswerController extends CommonController
         if($result){
             date_default_timezone_set("UTC");
             $time = strtotime(date('H:i:s', $data['actualLength']*60));
-            date_default_timezone_set("PRC");
             $arr=array(
                 'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
                 'studentId' =>$request->input('studentId'),//学生Id

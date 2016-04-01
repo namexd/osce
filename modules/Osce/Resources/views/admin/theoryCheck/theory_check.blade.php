@@ -269,7 +269,7 @@
                                                 @endif
                                                 @if(@$val["examQuestionTypeId"]==4)
                                                     @foreach($val["content"] as $k=> $val2 )
-                                                        <div class="answerBox" examCategoryFormalId="{{@$val["exam_question_type_id"]}}">
+                                                        <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
                                                             <label class="radio_label mart_20 check_top">
                                                                 <div class="radio_icon left" ></div>
                                                                 <input type="radio" name="{{@$val["serialNumber"]}}" value="{{@$k}}">

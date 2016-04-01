@@ -43,7 +43,7 @@ class ExamAnswerController extends CommonController
      */
     public function  getStudentAnswer($student_id)
     {
-        
+
         $id = intval($student_id);//学生id
 
         $studentMsg=Student::where('id',$id)->first();
@@ -100,8 +100,12 @@ class ExamAnswerController extends CommonController
                             $child[$key]['studentAnswerAarry'] = $studentAnswerAarry;
 
                         }elseif (intval($item['answer']) === 1 || $item['answer'] === 0){  //当为判断题时，进行答案中，0,1与错误、正确之间的转换
-                            //dd($item);
-                            $studentAnswer =empty($item['student_answer'])?'未作答':$answerArr[$item['student_answer']];
+
+                                if(strlen($item['student_answer'])&&$item['student_answer']==0){
+                                    $studentAnswer =$answerArr[$item['student_answer']];
+                                }else {
+                                    $studentAnswer = empty($item['student_answer']) ? '未作答' : $answerArr[$item['student_answer']];
+                                }
                                 $child[$key]['student_answer'] = $studentAnswer;
                                 $child[$key]['studentAnswerAarry'] = null;
                             }else {

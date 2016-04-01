@@ -12,6 +12,7 @@ namespace Modules\Osce\Entities\ExamMidway;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\RoomStation;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Teacher;
 
 class RoomMode implements ModeInterface
@@ -62,42 +63,14 @@ class RoomMode implements ModeInterface
     {
         // TODO: Implement getExaminee() method.
         try {
-            $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
-                ->whereIn('exam_queue.room_id', $this->room->id)
-                ->where('exam_queue.status', '<', 3)
-                ->where('student.exam_id', $this->exam->id)
-                ->select(
-                    'student.id as student_id',
-                    'student.name as student_name',
-                    'student.user_id as student_user_id',
-                    'student.idcard as student_idcard',
-                    'student.mobile as student_mobile',
-                    'student.code as student_code',
-                    'student.avator as student_avator',
-                    'student.description as student_description',
-                    'exam_queue.blocking as blocking'
-                )
-                ->orderBy('exam_queue.begin_dt', 'asc')
-                ->groupBy('student.id')
-                ->take($this->_T_Count)
-                ->get();
+            //获取首位固定
+            $sticks = ExamQueue::where('exam_id', $this->exam->id)->where('stick', $this->room->room_id)->get();
+            
+            if (count($sticks) < $this->_T_Count) {
+                $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
 
-            $array = [];
-            foreach ($collection as $item) {
-                if ($item->blocking != 1) {
-                    continue;
-                }
-                $array[] = $item;
-            }
-            $array = collect($array);
-            if (count($array) != $this->_T_Count) {
-                $difference = $this->_T_Count - count($array);
-                $temp = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
-                    ->whereIn('exam_queue.serialnumber', $serialnumber)
+                    ->whereIn('exam_queue.room_id', $this->room->id)
                     ->where('exam_queue.status', '<', 3)
-                    ->where('exam_queue.blocking', 1)
-                    ->where('stick', 0)
-                    ->whereNotIn('student.id', $array->pluck('student_id'))
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
                         'student.id as student_id',
@@ -107,20 +80,84 @@ class RoomMode implements ModeInterface
                         'student.mobile as student_mobile',
                         'student.code as student_code',
                         'student.avator as student_avator',
-                        'student.description as student_description'
+                        'student.description as student_description',
+                        'exam_queue.blocking as blocking'
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
-                    ->take($difference)
+                    ->take($this->_T_Count)
                     ->get();
-                if (!$temp->isEmpty()) {
-                    foreach ($temp as $item) {
-                        $array->push($item);
+
+                $array = [];
+                foreach ($collection as $item) {
+                    if ($item->blocking != 1) {
+                        continue;
+                    }
+                    $array[] = $item;
+                }
+                $array = collect($array);
+                if (count($array) < $this->_T_Count) {
+                    $difference = $this->_T_Count - count($array);
+                    $temp = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                        ->whereIn('exam_queue.serialnumber', $serialnumber)
+                        ->where('exam_queue.status', '<', 3)
+                        ->where('exam_queue.blocking', 1)
+                        ->where('stick', null)
+                        ->whereNotIn('student.id', $array->pluck('student_id'))
+                        ->where('student.exam_id', $this->exam->id)
+                        ->select(
+                            'student.id as student_id',
+                            'student.name as student_name',
+                            'student.user_id as student_user_id',
+                            'student.idcard as student_idcard',
+                            'student.mobile as student_mobile',
+                            'student.code as student_code',
+                            'student.avator as student_avator',
+                            'student.description as student_description'
+                        )
+                        ->orderBy('exam_queue.begin_dt', 'asc')
+                        ->groupBy('student.id')
+                        ->take($difference)
+                        ->get();
+                    if (!$temp->isEmpty()) {
+                        foreach ($temp as $item) {
+                            //将item的考场信息修改
+                            $item->room_id = $this->room->id;
+                            $array->push($item);
+                        }
                     }
                 }
+
+                //实现首位固定
+                foreach ($array as $student) {
+                    $stick = ExamQueue::where('exam_id', $this->exam->id)
+                        ->where('student_id', $student->student_id)
+                        ->orderBy('begin_dt', 'asc')
+                        ->first();
+                    $stick->stick = $this->room->id;
+                    \Log::alert('stick', $stick->toArray());
+                    if (!$stick->save()) {
+                        throw new \Exception('系统异常，请重试', -5);
+                    }
+                }
+
+                return $array;
+            } else {
+                $studentIds = $sticks->pluck('student_id')->toArray();
+                return Student::whereIn('id', $studentIds)
+                    ->select(
+                        'student.id as student_id',
+                        'student.name as student_name',
+                        'student.user_id as student_user_id',
+                        'student.idcard as student_idcard',
+                        'student.mobile as student_mobile',
+                        'student.code as student_code',
+                        'student.avator as student_avator',
+                        'student.description as student_description'
+                    )->get();
             }
 
-            return $array;
+
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -142,7 +179,8 @@ class RoomMode implements ModeInterface
                     'student.mobile as student_mobile',
                     'student.code as student_code',
                     'student.avator as student_avator',
-                    'student.description as student_description'
+                    'student.description as student_description',
+                    'exam_queue.blocking as blocking'
                 )
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->groupBy('student.id')

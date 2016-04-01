@@ -419,12 +419,13 @@ class ApiController extends CommonController
             */
 
             //获取当前登录账户的角色名称
-            $user = new User();
-            $userInfo = $user->getUserRoleName($username);
+            //获取当前登录账户的角色名称
+            $questionBankRepositories = new QuestionBankRepositories();
+            $roleType = $questionBankRepositories->getExamLoginUserRoleType();
 
-            if($userInfo->name == '监考老师'){
+            if($roleType == 1){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
-            }else if($userInfo->name == '考生'){
+            }else if($roleType == 2){
                 return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
             }else{
                 return redirect()->back()->withErrors('你没有权限！');
@@ -644,7 +645,7 @@ class ApiController extends CommonController
                 ->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreening->id)
                 ->count();
-
+    
             $screeningTotal = ExamPlan::where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreening->id)
                 ->groupBy('student_id')->count();
