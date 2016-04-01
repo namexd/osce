@@ -72,14 +72,16 @@ class StationMode implements ModeInterface
     function getExaminee(array $serialnumber)
     {
         // TODO: Implement getExaminee() method.
-        dd($this->stationIds);
+        //获取首位固定的考生
         $sticks = ExamQueue::where('exam_id', $this->exam->id)->whereIn('stick', $this->stationIds)->get();
 
         if ($sticks->isEmpty()) {
+            //获取应该在此处考试的考生
             $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->whereIn('exam_queue.station_id', $this->stationIds)
                 ->where('exam_queue.status', '<', 3)
                 ->where('student.exam_id', $this->exam->id)
+                ->whereIsNull('exam_queue.stick')
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -97,10 +99,12 @@ class StationMode implements ModeInterface
                 ->get();
 
             if ($collection->isEmpty()) {
+                //可以在此处考试的考生
                 $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
-                    ->where('exam_queue.stick', null)
+                    //->where('exam_queue.stick', null)
                     ->where('exam_queue.status', '<', 3)
+                    ->whereIsNull('exam_queue.stick')
                     ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
