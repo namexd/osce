@@ -26,7 +26,6 @@ class ExamAnswerController extends CommonController
 
          date_default_timezone_set("UTC");
          $exam_result_time = date('H:i:s', $time);
-         date_default_timezone_set("PRC");
          return $exam_result_time;
 
      }
