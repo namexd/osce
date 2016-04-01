@@ -13,7 +13,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamCategoryFormal;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Student;
-
+use Modules\Osce\Entities\ExamResult;
 
 
 
@@ -97,17 +97,17 @@ class ExamAnswerController extends CommonController
                         //对多选题的学生答案进行拆分
                         if(strstr($item['student_answer'],'@')){
 
-                            $studentAnswer=str_replace('@', '、', $item['student_answer']);//将$item['student_answer']中的 @替换成顿号、 达到展示效果
+                            $studentAnswer=empty($item['student_answer'])?'未作答':str_replace('@', '、', $item['student_answer']);//将$item['student_answer']中的 @替换成顿号、 达到展示效果
                             $child[$key]['student_answer'] = $studentAnswer;
                             $studentAnswerAarry=explode('@',$item['student_answer']);//将$item['student_answer']利用@符号拆成数组传到前端
                             $child[$key]['studentAnswerAarry'] = $studentAnswerAarry;
 
                         }elseif (intval($item['answer']) === 1 || $item['answer'] === 0){  //当为判断题时，进行答案中，0,1与错误、正确之间的转换
-                                $studentAnswer =empty($item['student_answer'])?'未填':$answerArr[$item['student_answer']];
+                                $studentAnswer =empty($item['student_answer'])?'未作答':$answerArr[$item['student_answer']];
                                 $child[$key]['student_answer'] = $studentAnswer;
                                 $child[$key]['studentAnswerAarry'] = null;
                             }else {
-                                  $studentAnswer=$item['student_answer'];//试题答案（a/abc/0,1）
+                                  $studentAnswer=empty($item['student_answer'])?'未作答':$item['student_answer'];//试题答案（a/abc/0,1）
                                   $child[$key]['student_answer'] = $studentAnswer;
                                   $child[$key]['studentAnswerAarry'] =[$studentAnswer];  // 把单选题的答案也变成数组，方便前端回显选择过的答案
                             }
@@ -120,18 +120,19 @@ class ExamAnswerController extends CommonController
                             $answerExplode = explode('@', $item['answer']);
 
                           $c=array_diff($answerExplode,$studentAnswerExplode); //注意array_diff的使用方式：这里必须是正确答案 $answerExplode 的数组在前
-                           if (empty($c)) {
+                           /*if (empty($c)) {
                                $stuScore += $v['score'];
-                            }
+                            }*/
                     }
                 }
                 $arr = ['0' => '一', '1' => '二', '2' => '三', '3' => '四', '4' => '五', '5' => '六', '6' => '七', '7' => '八', '8' => '九', '9' => '十'];
                 $data[$k]['Title'] = $arr[$k] . '、' . $v['name'] . ' ' . '共' . $v['number'] . '题，' . '每题' . $v['score'] . '分' . ' ';
                 $data[$k]['questionType']=$v['exam_question_type_id'];
-                $examItems['stuScore'] = $stuScore;//考试最终成绩
+                //$examItems['stuScore'] = $stuScore;//考试最终成绩
                 $data[$k]['child'] = $child;
             }
         }
+        $examItems['stuScore'] =ExamResult::where('student_id',$studentMsg->id)->pluck('score');
         //dd($data);
          return view('osce::admin.statisticalanalysis.statistics_student_query',
              [
