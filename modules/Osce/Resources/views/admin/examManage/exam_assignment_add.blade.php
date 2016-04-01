@@ -17,6 +17,7 @@ input.laydate-icon{
 }
 	.checkbox_input{font-weight:100;cursor:pointer;}
 	.check_name{padding:0;height:16px;position: relative;top:-3px;font-weight: 700;}
+	.check_icon.check {background-position: -32px 0;}
 </style>
 @stop
 
@@ -97,7 +98,7 @@ input.laydate-icon{
                             		<div class="clearfix form-group" style="margin-bottom: 0;">
                             		     <div class="col-sm-12" id="checkbox_div">
                             		          <label class="check_label checkbox_input col-sm-2 control-label" style="height: 34px;line-height: 28px;">
-                            			          <div class="check_icon" style="display: inline-block"></div>
+                            			          <div class="check_icon check" style="display: inline-block"></div>
                             			          <input type="checkbox" checked="checked" name="" value="1">
                             			          <span class="check_name">每场考试采用相同时间</span>
                             			      </label>
