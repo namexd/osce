@@ -13,6 +13,10 @@
     }
     .select2-container--default{width:100% !important;}
         .select2-container--default .select2-selection--multiple{border:1px solid #e5e6e7;}
+        .select2-container--default.select2-container--focus .select2-selection--multiple {
+            border:1px solid  #1ab394 !important;
+            outline: 0;
+        }
     </style>
 @stop
 
