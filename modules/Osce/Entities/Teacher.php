@@ -275,7 +275,7 @@ class Teacher extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addInvigilator($role_id, $userData , $teacherData, $subjects)
+    public function addInvigilator($role_id, $userData , $teacherData, $subjects = [])
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -617,13 +617,26 @@ class Teacher extends CommonModel
     /**
      * 判断老师模板表头及列数 TODO: zhoufuxiang 2016-03-21
      */
-    public function judgeTemplet($data, $nameToEn)
+    public function judgeTemplet($data, $type)
     {
+        switch ($type){
+            case 3: $name = 'osce.importForCnToEn.patrolTeacher';
+                    $nameToEn = config($name);                      //巡考老师
+                    break;
+            case 2:                                                 //SP
+            case 1: $name = 'osce.importForCnToEn.teacher';
+                    $nameToEn = config($name);                      //监考老师
+                    break;
+            default:
+                    throw new \Exception('老师类型不对');
+        }
+
         try {
+            //获取中英文对照表头
             foreach ($nameToEn as $index => $item) {
                 $config[] = $index;
             }
-//            $config = ['姓名','性别','学号','身份证号','联系电话','电子邮箱','头像','备注'];
+
             foreach ($data as $value) {
                 $key = 0;
                 //模板列数
@@ -638,6 +651,8 @@ class Teacher extends CommonModel
                 }
             }
 
+            return $name;
+
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -646,7 +661,7 @@ class Teacher extends CommonModel
     /**
      * 导入考生
      */
-    public function importTeacher($teacherDatas, $operator)
+    public function importTeacher($teacherDatas, $operator, $type)
     {
         $backArr = [];
 
@@ -658,12 +673,16 @@ class Teacher extends CommonModel
             {
                 //性别处理
                 $teacherData['gender'] = $this->handleSex($teacherData['gender']);
-                $teacherData['type']   = $this->handleType($teacherData['type']);       //老师类别处理
-                if($teacherData['type'] == 1){
-                    $role_id = config('osce.invigilatorRoleId',1);
+                //老师类别处理
+                if($type ==3){
+                    $teacherData['type'] = $type;
                 }else{
-                    $role_id = config('osce.patrolRoleId',6);
+                    $teacherData['type'] = $this->handleType($teacherData['type']);
                 }
+
+                //根据老师类型获取对应的角色ID
+                $role_id = Common::getRoleIdByTeacherType($teacherData['type']);
+
                 //姓名不能为空
                 if (empty(trim($teacherData['name']))) {
                     if (!empty($teacherData['idcard']) && !empty($teacherData['mobile'])) {
@@ -708,22 +727,24 @@ class Teacher extends CommonModel
                     'name'      => $teacherData['name'],
                     'type'      => $teacherData['type'],
                     'code'      => $teacherData['code'],
-                    'case_id'   => 0,
+                    'case_id'   => null,
                     'status'    => 0,
                     'create_user_id' => $operator->id,
                     'description'    => $teacherData['description']
                 ];
+
                 //添加老师
-                if (!$this->addInvigilator($role_id, $userData , $teacherData)) {
+                if (!$this->addInvigilator($role_id, $userData, $teacherData,[])) {
                     throw new \Exception('老师导入数据失败，请修改后重试');
                 } else {
                     $sucNum++;      //添加成功的老师个数
                 }
+
             } /*循环结束*/
 
             $message = "成功导入{$sucNum}个老师";
             if ($exiNum) {
-                $message .= "，有{$exiNum}个老师已存在";
+                $message .= "，有{$exiNum}个老师已存在( 可能为其他类型)";
             }
             //返回信息数组不为空
             if (!empty($backArr)) {

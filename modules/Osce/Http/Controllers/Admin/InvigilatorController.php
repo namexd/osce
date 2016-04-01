@@ -851,10 +851,11 @@ class InvigilatorController extends CommonController
             //去掉sheet
             $teacherList = array_shift($data);
             //判断模板 列数、表头是否有误
-            $teacher->judgeTemplet($teacherList, config('osce.importForCnToEn.teacher'));
+            $nameToEn = $teacher->judgeTemplet($teacherList, $type);
             //将中文表头转为英文
-            $teacherData = Common::arrayChTOEn($teacherList, 'osce.importForCnToEn.teacher');
-            $result = $teacher->importTeacher($teacherData, $user);
+            $teacherData = Common::arrayChTOEn($teacherList, $nameToEn);
+            //导入
+            $result = $teacher->importTeacher($teacherData, $user, $type);
             if(!$result){
                 throw new \Exception('老师导入数据失败，请参考模板修改后重试');
             }
