@@ -188,7 +188,9 @@ class StationMode implements ModeInterface
                             'student.mobile as student_mobile',
                             'student.code as student_code',
                             'student.avator as student_avator',
-                            'student.description as student_description'
+                            'student.description as student_description',
+                            'exam_queue.stick as stick',
+                            'exam_queue.updated_at as updated_at'
                         )->get();
 //            return Student::where('id', $sticks->first()->student_id)->select(
 //                'student.id as student_id',
