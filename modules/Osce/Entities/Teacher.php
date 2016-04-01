@@ -700,11 +700,21 @@ class Teacher extends CommonModel
                 }
 
                 //根据条件：查找用户是否有账号和密码
-                $user = User::where(['username' => $teacherData['mobile']])->select(['id'])->first();
+                $user = User::where(['username' => $teacherData['mobile']])->select(['id','idcard'])->first();
                 if ($user) {
+                    if($user->idcard != $teacherData['idcard']){
+                        $result = User::where('idcard','=',$teacherData['idcard'])->first();
+                        if($result){
+                            throw new \Exception('第' . ($key + 2) . '行身份证号已经存在，请修改后重试！');
+                        }
+                    }
                     //根据用户ID查找老师 是否已经存在
                     $teacher = $this->where('id', $user->id)->first();
                 } else {
+                    $result = User::where('idcard','=',$teacherData['idcard'])->first();
+                    if($result){
+                        throw new \Exception('第' . ($key + 2) . '行身份证号已经存在，请修改后重试！');
+                    }
                     $teacher = false;
                 }
 
