@@ -258,4 +258,19 @@ class Common
         ];
         return  $relation[$type];
     }
+
+
+    static public function handleTime($time){
+        $h = floor($time / 3600);
+        $m = floor(($time%3600)/60);
+        $s = $time % 60;
+
+        $h = ($h>10)? "$h" : "0$h";
+        $m = ($m>10)? "$m" : "0$m";
+        $s = ($s>10)? "$s" : "0$s";
+
+        $time = $h.':'.$m.':'.$s;
+
+        return $time;
+    }
 }

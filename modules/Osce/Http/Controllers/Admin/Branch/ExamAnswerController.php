@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\ExamResult;
-
-
+use Modules\Osce\Repositories\Common;
 
 
 class ExamAnswerController extends CommonController
@@ -24,9 +23,10 @@ class ExamAnswerController extends CommonController
      //将为秒的时间转化为  XX分XX秒
      public function timeTransformation($time){
 
-         date_default_timezone_set("UTC");
-         $exam_result_time = date('H:i:s', $time);
-         date_default_timezone_set("PRC");
+//         date_default_timezone_set("UTC");
+//         $exam_result_time = date('H:i:s', $time);
+//         date_default_timezone_set("PRC");
+         $exam_result_time = Common::handleTime($time);
          return $exam_result_time;
 
      }
