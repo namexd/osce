@@ -968,6 +968,9 @@ class IndexController extends CommonController
         $result=$this->changeSkip($studentId,$exam_id,$screen_id);
 //        $examScreening=new ExamScreening();
 //        $examScreening->closeExam($request->get('exam_id'));
+        //TODO:zhouqiang 2016-04-01 14:27     检查考试是否可以结束
+        $examScreening  =  new ExamScreening();
+        $examScreening  -> getExamCheck();
         return $result;
     }
 
