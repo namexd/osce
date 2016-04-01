@@ -138,7 +138,6 @@ class StationMode implements ModeInterface
 //                    }
 //                }
                 $stick  =   $query->first();
-                dd($stick);
                 $stick->stick = $this->stationIds[0];
                 if (!$stick->save()) {
                     throw new \Exception('系统异常，请重试', -5);
