@@ -137,7 +137,7 @@ class StationMode implements ModeInterface
 //                        throw new \Exception('系统异常，请重试', -5);
 //                    }
 //                }
-                $stick  =   $query->frist();
+                $stick  =   $query->first();
                 $stick->stick = $this->stationIds[0];
                 if (!$stick->save()) {
                     throw new \Exception('系统异常，请重试', -5);
@@ -166,7 +166,7 @@ class StationMode implements ModeInterface
 //                        throw new \Exception('系统异常，请重试', -5);
 //                    }
 //                }
-                $stick  =   $collection->frist();
+                $stick  =   $collection->first();
                 $stick->stick = $this->stationIds[0];
                 if (!$stick->save()) {
                     throw new \Exception('系统异常，请重试', -5);
