@@ -142,13 +142,12 @@ class AnswerController extends CommonController
      */
     public function postSaveAnswer(Request $request)
     {
-
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
         $systemTimeEnd  =time();//考试结束时间
-        $actualLength = ($systemTimeEnd-$systemTimeStart)/60;//考试用时
+        $actualLength = $systemTimeEnd-$systemTimeStart;//考试用时
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-            'actualLength' =>sprintf("%.2f",$actualLength), //考试用时
+            'actualLength' =>$actualLength, //考试用时
             'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
         );
 
@@ -217,13 +216,11 @@ class AnswerController extends CommonController
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
         if($result){
-            date_default_timezone_set("UTC");
-            $time = strtotime(date('H:i:s', $data['actualLength']*60));
             $arr=array(
                 'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
                 'studentId' =>$request->input('studentId'),//学生Id
                 'stationId' => $request->input('stationId'),//考站id
-                'time'=>$time,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
+                'time'=>$actualLength,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
                 'teacherId'=>$request->input('teacherId'),//评分人编号
                 'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
                 'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
@@ -254,14 +251,14 @@ class AnswerController extends CommonController
     public function selectGrade(Request $request)
     {
         $this->validate($request, [
-             'examPaperFormalId'=>'required|integer',//正式的试卷id
+            'examPaperFormalId'=>'required|integer',//正式的试卷id
         ]);
         $examPaperFormalId =$request->input('examPaperFormalId'); //正式的试卷表id
         $answerModel = new Answer();
         //保存成功，调用查询该考生成绩的方法
         $examPaperFormalData = $answerModel->selectGrade($examPaperFormalId);
-        $time = $examPaperFormalData['actual_length']*60;
-        $minute = 0;$second=0;
+        $time = $examPaperFormalData['actual_length'];
+        $minute = 0;
         if($time>=60){
             $minute = intval($time/60);
             $second = $time - $minute*60;
