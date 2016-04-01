@@ -142,13 +142,13 @@ class AnswerController extends CommonController
      */
     public function postSaveAnswer(Request $request)
     {
-
+        date_default_timezone_set("UTC");
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
         $systemTimeEnd  =time();//考试结束时间
-        $actualLength = ($systemTimeEnd-$systemTimeStart)/60;//考试用时
+        $actualLength = strtotime(date('H:i:s', ($systemTimeEnd-$systemTimeStart)));//考试用时
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-            'actualLength' =>sprintf("%.2f",$actualLength), //考试用时
+            'actualLength' =>$actualLength, //考试用时
             'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
         );
 
@@ -217,7 +217,7 @@ class AnswerController extends CommonController
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
         if($result){
-            date_default_timezone_set("UTC");
+
             $time = strtotime(date('H:i:s', $data['actualLength']*60));
             $arr=array(
                 'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
