@@ -12,6 +12,7 @@ namespace Modules\Osce\Entities\ExamMidway;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Teacher;
 
 class StationMode implements ModeInterface
@@ -117,6 +118,7 @@ class StationMode implements ModeInterface
                     ->where('status', 0)->where('blocking', 1)
                     ->orderBy('begin_dt', 'asc')->first();
                 $a->station_id = $this->stationIds[0];
+                $a->room_id = RoomStation::where('station_id', $a->station_id)->first()->room_id;
                 $a->save();
                 return $query;
             }

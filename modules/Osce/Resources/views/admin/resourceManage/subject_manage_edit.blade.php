@@ -82,7 +82,7 @@
                                         选择图片
                                         <input type="file" id="picFile" name="file">
                                     </a>
-                                    <span class="file-msg">(文件大小不得超过2M!)</span>
+                                    <span class="file-msg">(图片大小不得超过2M，仅支持JPG、PNG、JPEG格式！)</span>
                                     <div class="picBox upload_list" style="width: 200px">
                                         @if(!empty($imageInfo))
                                             @foreach($imageInfo as $val)

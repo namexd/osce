@@ -6,8 +6,9 @@ var pars;
 $(function(){
     pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
     switch(pars.pagename){
-        case "theory_validate":theory_validate();break;//理论考试进入验证页面
+        case "theory_validate":theory_validate();break;//理论考试老师登录进入验证页面
         case "theory_complete":theory_complete();break;//理论考试完成页面
+        case "theory_student_validate":theory_student_validate();break;//理论考试学生登录验证页面
     }
 });
 
@@ -19,7 +20,7 @@ function theory_validate(){
         var examId = $(".allData").attr("examId");
         var timer = setInterval(function(){
             $.ajax({
-                url:'/osce/api/exam-paper-status?stationId='+stationId+'&examId='+examId,
+                url:'/osce/admin/api/exam-paper-status?station_id='+stationId+'&exam_id='+examId,
                 type:'get',
                 cache:false,
                 dateType:'json',
@@ -89,14 +90,35 @@ function theory_validate(){
         })
     });
 }
-//理论考试完成页面
+//理论考试老师登录进入验证页面
 function theory_complete(){
     $("#sure").click(function(){
         var url = pars.goUrl;
         location.href=url;
     })
 }
-
+//理论考试学生登录验证页面
+function theory_student_validate(){
+    $('.examing').click(function(){
+        var station_id = $(this).attr('station');
+        var teacher_id = $(this).attr('teacher');
+        var paper_id = $(this).attr('paper');
+        var exam_id = $(this).attr('exam');
+        var student_id = $(this).attr('student');
+        $.ajax({
+            type: "GET",
+            url: "/osce/api/invigilatepad/start-exam",
+            data: {station_id:station_id,teacher_id:teacher_id,student_id:student_id},
+            success: function(msg){
+                if(msg.code){
+                    window.location.href="/osce/admin/answer/formalpaper-list?stationId="+station_id+"&userId="+teacher_id+"&studentId="+student_id+"&id="+paper_id+"&examId="+exam_id;
+                }else{
+                    alert(msg.message);
+                }
+            }
+        });
+    });
+}
 
 
 
