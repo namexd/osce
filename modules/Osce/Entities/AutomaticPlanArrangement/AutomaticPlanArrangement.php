@@ -142,9 +142,13 @@ class AutomaticPlanArrangement
              * 依靠场次清单来遍历
              */
             foreach ($this->screen as $item) {
+//                dump($this->_S);
+//                dump($this->_S_ING);
+//                dump('===================');
                 $this->screenPlan($examId, $item);
                 //判断是否还有必要进行下场排考
                 $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id', $examId)->first();  //通过查询数据表中是否有没有写入end_dt的数据
+
                 if (count($this->_S_ING) == 0 && count($this->_S) == 0 && is_null($examPlanNull)) {
                     return $this->output($examId);
                 }
@@ -242,12 +246,11 @@ class AutomaticPlanArrangement
                     foreach ($students as &$student) {
                         //拼装数据
                         $data = $this->dataBuilder($examId, $screen, $student, $station, $i);
-//                        dump($i);
-//                        echo 'here',$station->id;
                         $result = ExamPlanRecord::create($data);
                         if (!$result) {
                             throw new \Exception('关门失败！', -11);
                         } else {
+                            $station->timer = 0;
                             $this->doorStatus--;
                         }
 
@@ -300,32 +303,31 @@ class AutomaticPlanArrangement
                 $k = 2;
             }
 
-
-            if (count($this->_S_ING) == 0 && count($this->_S) == 0 ){
-//                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id', $examId)->first();  //通过查询数据表中是否有没有写入end_dt的数据
-//                if(is_null($examPlanNull))
+//            if (count($this->_S_ING) == 0 && count($this->_S) == 0 ){
+////                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id', $examId)->first();  //通过查询数据表中是否有没有写入end_dt的数据
+////                if(is_null($examPlanNull))
+////                {
+////                    break;
+////                }
+//                $total  =   ExamPlanRecord::  where('exam_id', '=', $examId)
+//                ->whereNotNull('end_dt')
+//                ->groupBy('student_id')
+//                ->select(\DB::raw(
+//                    implode(',',
+//                        [
+//                            'count(`id`) as flowsNum',
+//                            'id',
+//                            'student_id',
+//                        ]
+//                    )
+//                ))
+//                ->Having('flowsNum', '=', $flowsNum)->get();
+//
+//                if($studentTotalNum == count($total))
 //                {
 //                    break;
 //                }
-                $total  =   ExamPlanRecord::  where('exam_id', '=', $examId)
-                ->whereNotNull('end_dt')
-                ->groupBy('student_id')
-                ->select(\DB::raw(
-                    implode(',',
-                        [
-                            'count(`id`) as flowsNum',
-                            'id',
-                            'student_id',
-                        ]
-                    )
-                ))
-                ->Having('flowsNum', '=', $flowsNum)->get();
-
-                if($studentTotalNum==count($total))
-                {
-                    break;
-                }
-            }
+//            }
 //            sleep(1);
         }
 
@@ -377,7 +379,6 @@ class AutomaticPlanArrangement
                 throw new \Exception('删除未考完考生记录失败！', -2101);
             }
         }
-
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_ING);
         $this->_S = $this->_S->merge(array_unique($undoneStudents));
@@ -854,6 +855,7 @@ class AutomaticPlanArrangement
         $testStudents = $this->randomTestStudents($station, $screen);
         //申明数组
         $result = [];
+
         /*
          * 获取当前实体需要几个考生 $station->needNum
          * 从正在考的学生里找到对应个数的考生

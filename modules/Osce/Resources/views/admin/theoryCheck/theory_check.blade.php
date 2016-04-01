@@ -121,10 +121,6 @@
                 var examId = $(".allData").attr("examId");
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                         {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
-                            console.log(obj);return false;
-
-
-
                     if(obj.status=='1'){
                         $.ajax({
                             url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
