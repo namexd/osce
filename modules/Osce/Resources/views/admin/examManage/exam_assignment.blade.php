@@ -33,10 +33,11 @@
                 <th>序号</th>
                 <th>考试编号</th>
                 <th>考试名称</th>
-                <th>时间</th>
+                <th>考试时间</th>
                 <th>考试组成</th>
                 <th>考试人数</th>
-                <th>操作</th>
+                <th>排考状态</th>
+                <th style="width:12%;">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -48,13 +49,11 @@
                     <td>{{date('Y-m-d H:i',strtotime($item->begin_dt))}} ~ {{date('Y-m-d H:i',strtotime($item->end_dt))}}</td>
                     <td>{{$item->constitute}}</td>
                     <td>{{$item->total}}</td>
+                    <td>是</td>
                     <td value="{{$item->id}}">
                         <a href="{{route('osce.admin.exam.getEditExam',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
-                        @if($item->status==0)
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                        @else
-                        
-                        @endif
+                        <button class="btn btn-primary" disabled type="button">发布成绩</button>
                     </td>
                 </tr>
                 @endforeach
