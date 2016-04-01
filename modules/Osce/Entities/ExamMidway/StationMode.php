@@ -85,7 +85,7 @@ class StationMode implements ModeInterface
                 ->where('student.exam_id', $this->exam->id)
                 ->whereNull('exam_queue.stick')
                 ->select(
-                    'exam_queue.id as id',
+                    //'exam_queue.id as id',
                     'student.id as student_id',
                     'student.name as student_name',
                     'student.user_id as student_user_id',
@@ -111,7 +111,7 @@ class StationMode implements ModeInterface
                     ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
-                        'exam_queue.id as id',
+                        //'exam_queue.id as id',
                         'student.id as student_id',
                         'student.name as student_name',
                         'student.user_id as student_user_id',
@@ -126,16 +126,21 @@ class StationMode implements ModeInterface
                     ->take(1)
                     ->get();
                 //实现首位固定
-                foreach ($query as $student) {
-                    $stick = ExamQueue::where('exam_id', $this->exam->id)
-                        ->where('student_id', $student->student_id)
-                        ->where('id', $student->id)
-                        ->orderBy('begin_dt', 'asc')
-                        ->first();
-                    $stick->stick = $this->stationIds[0];
-                    if (!$stick->save()) {
-                        throw new \Exception('系统异常，请重试', -5);
-                    }
+//                foreach ($query as $student) {
+//                    $stick = ExamQueue::where('exam_id', $this->exam->id)
+//                        ->where('student_id', $student->student_id)
+//                        ->where('id', $student->id)
+//                        ->orderBy('begin_dt', 'asc')
+//                        ->first();
+//                    $stick->stick = $this->stationIds[0];
+//                    if (!$stick->save()) {
+//                        throw new \Exception('系统异常，请重试', -5);
+//                    }
+//                }
+                $stick  =   $query->frist();
+                $stick->stick = $this->stationIds[0];
+                if (!$stick->save()) {
+                    throw new \Exception('系统异常，请重试', -5);
                 }
                 if ($query->isEmpty()) {
                     return collect([]);
@@ -150,17 +155,23 @@ class StationMode implements ModeInterface
                 }
 
             } else {
-                foreach ($collection as $student) {
-                    $stick = ExamQueue::where('exam_id', $this->exam->id)
-                        ->where('student_id', $student->student_id)
-                        ->where('id', $student->id)
-                        ->orderBy('begin_dt', 'asc')
-                        ->first();
-                    $stick->stick = $this->stationIds[0];
-                    if (!$stick->save()) {
-                        throw new \Exception('系统异常，请重试', -5);
-                    }
+//                foreach ($collection as $student) {
+//                    $stick = ExamQueue::where('exam_id', $this->exam->id)
+//                        ->where('student_id', $student->student_id)
+//                        ->where('id', $student->id)
+//                        ->orderBy('begin_dt', 'asc')
+//                        ->first();
+//                    $stick->stick = $this->stationIds[0];
+//                    if (!$stick->save()) {
+//                        throw new \Exception('系统异常，请重试', -5);
+//                    }
+//                }
+                $stick  =   $collection->frist();
+                $stick->stick = $this->stationIds[0];
+                if (!$stick->save()) {
+                    throw new \Exception('系统异常，请重试', -5);
                 }
+
                 return $collection;
             }
         } else {
