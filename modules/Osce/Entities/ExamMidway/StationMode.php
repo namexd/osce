@@ -81,7 +81,7 @@ class StationMode implements ModeInterface
                 ->whereIn('exam_queue.station_id', $this->stationIds)
                 ->where('exam_queue.status', '<', 3)
                 ->where('student.exam_id', $this->exam->id)
-                ->whereIsNull('exam_queue.stick')
+                ->whereNull('exam_queue.stick')
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -104,7 +104,7 @@ class StationMode implements ModeInterface
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
                     //->where('exam_queue.stick', null)
                     ->where('exam_queue.status', '<', 3)
-                    ->whereIsNull('exam_queue.stick')
+                    ->whereNull('exam_queue.stick')
                     ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
