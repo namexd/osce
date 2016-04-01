@@ -139,6 +139,11 @@ class TopicController extends CommonController
                 }
             }
 
+            $user = \Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+            
             $cases= $request->input('cases');           //病例
             $goods= $request->input('goods');           //用物
 
@@ -149,6 +154,7 @@ class TopicController extends CommonController
                 'stem'       => e($request->input('stem')),         //题干
                 'goods'      => '',                                 //所需物品
                 'equipments' => e($request->input('equipments')),   //所需设备
+                'created_user_id' => $user->id
             ];
 
             //判断总分与考核项分数是否正确
@@ -157,7 +163,7 @@ class TopicController extends CommonController
             }
 
             $subjectModel = new Subject();
-            if ($subjectModel->addSubject($data, $formData, $cases, $goods)) {
+            if ($subjectModel->addSubject($data, $formData, $cases, $goods, $user->id)) {
 
                 return redirect()->route('osce.admin.topic.getList');
 
@@ -514,7 +520,7 @@ class TopicController extends CommonController
 
        ]);
        $caseName = $request->get('cases_name');
-       $paginate = $request->get('paginate');
+//       $paginate = $request->get('paginate');
        try{
           
            $caseModel = new CaseModel();
@@ -542,13 +548,18 @@ class TopicController extends CommonController
 
 
     //获取用物接口
-    public  function getSubjectSupply(){
-        try{
+    public  function getSubjectSupply(Request $request){
+            $this->validate($request,[
+               'name'=>'sometimes'
+            ]);
 
+        $name = e($request->get('name'));
+
+        try{
             $caseModel = new Supply();
             
                 //查询出所有的病例
-                $supplyList = $caseModel->getSupplyList();
+                $supplyList = $caseModel->getSupplyList($name);
 
             return response()->json(
                 $this->success_data($supplyList, 1, '病例获取成功')

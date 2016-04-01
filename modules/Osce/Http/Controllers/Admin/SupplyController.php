@@ -12,11 +12,11 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Supply;
 use Modules\Osce\Http\Controllers\CommonController;
+
 class SupplyController extends CommonController
 {
-    
-    
-   
+
+
     /**
      * 获取用物列表
      * @method GET
@@ -33,7 +33,7 @@ class SupplyController extends CommonController
      * @date 2016-3-31
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public  function getList(Request $request)
+    public function getList(Request $request)
     {
 
 
@@ -62,10 +62,10 @@ class SupplyController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function getAddSupply(){
+    public function getAddSupply()
+    {
         return view('osce::admin.resourceManage.res_manage_add');
     }
-
 
 
     /**
@@ -77,31 +77,29 @@ class SupplyController extends CommonController
      * <b>post请求字段：</b>
      * string        name  用物名
      * @return ${response}
-
      * @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date 2016-3-31
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function postAddSupply(Request $request){
-        $this->validate($request,[
-            'name'=>'required'
+    public function postAddSupply(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required'
         ]);
         $name = $request->get('name');
         //添加进数据库
-        $data=[
-            'name'=>$name,
+        $data = [
+            'name' => $name,
         ];
 
-        if(!Supply::create($data)){
+        if (!Supply::create($data)) {
             throw new \Exception('添加用物失败');
-        }else{
+        } else {
             return redirect()->route('osce.admin.supply.getList');
         }
     }
-
-
 
 
     /**
@@ -113,24 +111,24 @@ class SupplyController extends CommonController
      * <b>get请求字段：</b>
      * int        id  用物编号
      * @return ${response}
-
      * @version 1.0
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @date 2016-3-31
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getEditSupply(Request $request){
+    public function getEditSupply(Request $request)
+    {
         $id = $request->get('id');
 
         $data = Supply::find($id);
-        if(!$data){
+        if (!$data) {
             throw new \Exception('没有找到相关用物');
         }
 
-        return view('osce::admin.resourceManage.res_manage_edit',['data'=>$data]);
+        return view('osce::admin.resourceManage.res_manage_edit', ['data' => $data]);
 
     }
-    
+
     /**
      * 提交编辑用物表单
      * @method GET
@@ -145,22 +143,22 @@ class SupplyController extends CommonController
      * @date 2016-3-31
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public  function postEditSupply(Request $request){
-        $this->validate($request,[
-            'id'=>'required',
-            'name'=>'required'
+    public function postEditSupply(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required',
+            'name' => 'required'
         ]);
         $id = $request->get('id');
         $name = $request->get('name');
-        $Supply =Supply::find($id);
-        $Supply->name =  $name;
-        if(!$Supply->save()){
+        $Supply = Supply::find($id);
+        $Supply->name = $name;
+        if (!$Supply->save()) {
             throw new \Exception('修改用物失败');
-        }else{
+        } else {
             return redirect()->route('osce.admin.supply.getList');
         }
     }
-
 
 
     /**
@@ -177,7 +175,8 @@ class SupplyController extends CommonController
      * @date 2016-3-31
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public  function getDelSupply(Request $request){
+    public function getDelSupply(Request $request)
+    {
 
         $this->validate($request, [
             'id' => 'required'
@@ -198,9 +197,33 @@ class SupplyController extends CommonController
 
     }
 
-    //ajax 获取用物列表
+    //ajax 判断用物名是否存在
 
-//    public function get
+    public function postSupplyNameUnique(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+        ]);
+
+        $id = $request->get('id');
+        $name = $request->get('name');
+
+        //实例化模型
+        $model = new Supply();
+        //查询 该名字 是否存在
+        if (empty($id)) {
+            $result = $model->where('name', $name)->first();
+        } else {
+            $result = $model->where('name', $name)->where('id', '<>', $id)->first();
+        }
+        if ($result) {
+            return json_encode(['valid' => false]);
+        } else {
+            return json_encode(['valid' => true]);
+        }
+
+
+    }
 
 
 }

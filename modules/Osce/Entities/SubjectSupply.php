@@ -18,7 +18,7 @@ class SubjectSupply extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['subject_id', 'supply_id', 'num', 'created_user_id'];
+    protected $fillable     = ['subject_id', 'supply_id', 'num', 'unit', 'created_user_id'];
 
 
     public function subject(){
