@@ -76,7 +76,7 @@ class StationMode implements ModeInterface
         $sticks = ExamQueue::where('exam_id', $this->exam->id)->whereIn('station_id',$this->stationIds)->whereIn('stick', $this->stationIds)->get();
         if ($sticks->isEmpty()) {
             //获取应该在此处考试的考生
-            $a=\DB::connection('osce_sys');
+            $a=\DB::connection('osce_mis');
             $a->enableQueryLog();
 
             $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
