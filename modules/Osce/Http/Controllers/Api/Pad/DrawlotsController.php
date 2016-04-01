@@ -158,6 +158,7 @@ class DrawlotsController extends CommonController
             $examId = $request->input('exam_id', null);
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
+        
             if (is_null($exam)) {
                 throw new \Exception('当前没有正在进行的考试', 3000);
             }

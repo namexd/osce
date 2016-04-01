@@ -210,6 +210,7 @@ class CourseController extends CommonController
         //转化时间（耗时）
         date_default_timezone_set('UTC');
         foreach ($studentList as $key => &$item) {
+            
             $item->time = date('H:i:s', $item->time);
         }
         date_default_timezone_set('PRC');
