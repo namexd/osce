@@ -1035,6 +1035,19 @@ function exam_assignment_add(){
         
 
     });
+
+
+
+    $('#quick-add').click(function() {
+        layer.open({
+          type: 2,
+          title: '快速新增时间',
+          shadeClose: true,
+          shade: 0.8,
+          area: ['60%', '90%'],
+          content: '/osce/admin/station/test' //iframe的url
+        }); 
+    })
 }
 
 /**
