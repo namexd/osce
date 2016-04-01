@@ -25,8 +25,9 @@ function theory_validate(){
                 cache:false,
                 dateType:'json',
                 success:function(res){
-                    console.log(res.code);
+                    console.log(1111);
                     if (res.code == 2) {
+                        console.log(22222);
                         $('#examinfo').html('理论考试已结束');
                         clearInterval(timer);
                     } else {
