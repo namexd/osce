@@ -520,7 +520,7 @@ class TopicController extends CommonController
 
        ]);
        $caseName = $request->get('cases_name');
-       $paginate = $request->get('paginate');
+//       $paginate = $request->get('paginate');
        try{
           
            $caseModel = new CaseModel();
@@ -548,13 +548,18 @@ class TopicController extends CommonController
 
 
     //获取用物接口
-    public  function getSubjectSupply(){
-        try{
+    public  function getSubjectSupply(Request $request){
+            $this->validate($request,[
+               'name'=>'sometimes'
+            ]);
 
+        $name = e($request->get('name'));
+
+        try{
             $caseModel = new Supply();
             
                 //查询出所有的病例
-                $supplyList = $caseModel->getSupplyList();
+                $supplyList = $caseModel->getSupplyList($name);
 
             return response()->json(
                 $this->success_data($supplyList, 1, '病例获取成功')

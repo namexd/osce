@@ -124,6 +124,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('topic/del-topic', 	['uses'=>'TopicController@getDelTopic','as'=>'osce.admin.topic.getDelTopic']);
 		Route::post('topic/name-unique',['uses'=>'TopicController@postNameUnique','as'=>'osce.admin.topic.postNameUnique']);	//判断名称是否存在
 		Route::get('topic/subject-cases',['uses'=>'TopicController@getSubjectCases','as'=>'osce.admin.topic.getSubjectCases']);	//获取病例
+		Route::get('topic/subject-supply',['uses'=>'TopicController@getSubjectSupply','as'=>'osce.admin.topic.getSubjectSupply']);	//获取用物
 
 		//病例
 		Route::post('case/delete', 	['uses'=>'CaseController@postDelete','as'=>'osce.admin.case.postDelete']);
@@ -281,6 +282,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('supply/edit-supply',['uses'=>'SupplyController@getEditSupply','as'=>'osce.admin.supply.getEditSupply']);
 		Route::post('supply/edit-supply',['uses'=>'SupplyController@postEditSupply','as'=>'osce.admin.supply.postEditSupply']);
 		Route::get('supply/del-supply',['uses'=>'SupplyController@getDelSupply','as'=>'osce.admin.supply.getDelSupply']);
+		Route::post('supply/supply-name-unique',['uses'=>'SupplyController@postSupplyNameUnique','as'=>'osce.admin.supply.postSupplyNameUnique']);
 
 		
 	});
