@@ -7,6 +7,8 @@
         font-weight: bolder;
     }
     #start,#end{width: 160px;}
+    .coloru79 {color: #66CC00;}
+    .coloru80 {color: #FF0000;}
     </style>
 @stop
 
@@ -48,7 +50,7 @@
                     <td>2016-03-31 01:00 ~ 2016-03-31 04:00</td>
                     <td>1技能站</td>
                     <td>6</td>
-                    <td><span class="co">是</span></td>
+                    <td><span class="coloru79">是</span></td>
                     <td>
                         <a href=""><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
@@ -62,7 +64,7 @@
                     <td>2016-04-01 01:00 ~ 2016-04-01 04:00</td>
                     <td>1技能站</td>
                     <td>6</td>
-                    <td>否</td>
+                    <td><span class="coloru80">否</span></td>
                     <td>
                         <a href=""><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
@@ -77,7 +79,7 @@
                     <td>{{date('Y-m-d H:i',strtotime($item->begin_dt))}} ~ {{date('Y-m-d H:i',strtotime($item->end_dt))}}</td>
                     <td>{{$item->constitute}}</td>
                     <td>{{$item->total}}</td>
-                    <td>是</td>
+                    <td><span class="coloru79">是</span></td>
                     <td value="{{$item->id}}">
                         <a href="{{route('osce.admin.exam.getEditExam',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
                         <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
