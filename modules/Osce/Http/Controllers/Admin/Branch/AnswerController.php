@@ -35,6 +35,7 @@ class AnswerController extends CommonController
      */
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
+        //?id=132&stationId=20&userId=347&studentId=6404&examId=421
         $examId = $request->input('examId');//考试id  421
         $ExamPaperId = $request->input('id');//试卷id  132
         $stationId = $request->input('stationId');//考站id 20
