@@ -611,10 +611,7 @@ class ApiController extends CommonController
             $examScreening = $examScreeningModel->getExamingScreening($examId);
             if (is_null($examScreening)) {
                 //获取最近一场考试
-                //$examScreening = $examScreeningModel->getNearestScreening($examId);
-                return response()->json(
-                    $this->success_data('', 2, '已考完')
-                );
+                $examScreening = $examScreeningModel->getNearestScreening($examId);
             }
 
             $exam = $examScreening->ExamInfo;
