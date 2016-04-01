@@ -35,6 +35,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Http\Controllers\Api\InvigilatePadController;
 use Modules\Osce\Http\Controllers\Admin\Branch\AnswerController;
+use Modules\Osce\Entities\StationTeacher;
 class ApiController extends CommonController
 {
     private $name;
@@ -536,27 +537,45 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStudentExamIndex(){
-//        $user = Auth::user();
-//        //查找当前正在进行的考试--之后会改
-//        $examing = Exam::where('status','=',1)->first();
-//
-//        $studentModel = new Student();
-//        $userInfo = $studentModel->getStudentExamInfo($user->id,$examing->id);
-//
-//        $ExamScreeningStudent = new ExamScreeningStudent();
-//        $examing = $ExamScreeningStudent->getExamings($userInfo->id);
+        $user = Auth::user();
+        //查找当前正在进行的考试--之后会改
+        $examingDO = Exam::where('status','=',1)->first();
 
-//        if(count($examing) > 0){
-//            $examing = $examing->toArray();
-//        }
-//
-//        foreach($examing as $key=>$val){
-//            foreach($val['screening']['exam_queue'] as $v){
-//
-//            }
-//        }
-        //dd($examing->toArray());
-        return view('osce::admin.theoryCheck.theory_check_student_volidate');
+        $studentModel = new Student();
+        $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
+        //dd($userInfo);
+        $ExamScreeningStudent = new ExamScreeningStudent();
+        $examing = $ExamScreeningStudent->getExamings($userInfo->id);
+
+        if(count($examing) > 0){
+            $examing = $examing->toArray();
+        }
+
+        //整理考试数据
+        $examData = array();
+        $StationTeacher = new StationTeacher();
+        $ExamPaperExamStation = new ExamPaperExamStation();
+
+        foreach($examing as $key=>$val){
+            foreach($val['screening']['exam_queue'] as $k=>$v){
+                $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
+                //dd($v['examstation']['exam'][0]['id']);
+                $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['examstation']['exam'][0]['id'])->first();
+                $examData['station_id'] = $v['station_id'];
+                $examData['teacher_id'] = $stationTeacher->user_id;
+                $examData['student_id'] = $userInfo->id;
+                $examData['paper_id'] = $examPaper->exam_paper_id;
+                $examData['exam_id'] = $v['examstation']['exam'][0]['id'];
+                $examData['exam_name'] = $v['examstation']['exam'][0]['name'];
+                $examData['status'] = $v['examstation']['exam'][0]['status'];
+
+            }
+        }
+        //dd($examData);
+        return view('osce::admin.theoryCheck.theory_check_student_volidate', [
+            'userInfo'   => $userInfo,
+            'examData' => $examData
+        ]);
     }
 /**
      *  获取当前考站所在流程考试是否已经结束
@@ -579,8 +598,8 @@ class ApiController extends CommonController
     public function getExamPaperStatus(Request $request)
     {
         $this->validate($request, [
-            'examId' => 'sometimes|integer',//考试ID
-            'stationId' => 'sometimes|integer',//考站ID
+            'exam_id' => 'sometimes|integer',//考试ID
+            'station_id' => 'sometimes|integer',//考站ID
         ]);
 
         $examId = $request->get('examId');
@@ -592,7 +611,10 @@ class ApiController extends CommonController
             $examScreening = $examScreeningModel->getExamingScreening($examId);
             if (is_null($examScreening)) {
                 //获取最近一场考试
-                $examScreening = $examScreeningModel->getNearestScreening($examId);
+                //$examScreening = $examScreeningModel->getNearestScreening($examId);
+                return response()->json(
+                    $this->success_data('', 2, '已考完')
+                );
             }
 
             $exam = $examScreening->ExamInfo;
@@ -635,12 +657,18 @@ class ApiController extends CommonController
 
             //如果  场次人数 <= 当前流程已考人数+缺考人数 为 未考完；反之  已考完
             if ($screeningTotal <= $count + $absentTotal) {
-                $this->success_data(true, 1);
+                return response()->json(
+                    $this->success_data('', 1, '未考完')
+                );
             } else {
-                $this->success_data(false, 2);
+                return response()->json(
+                    $this->success_data('', 2, '已考完')
+                );
             }
         } catch (\Exception $ex) {
-            $this->success_data('', 0, $ex->getMessage());
+            return response()->json(
+                $this->fail(new \Exception('查询是否考完失败', -2))
+            );
         }
     }
     /**调接口进入考试
