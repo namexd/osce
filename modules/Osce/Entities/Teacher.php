@@ -294,14 +294,17 @@ class Teacher extends CommonModel
                 }
 
                 $user       =   $this   ->  registerUser($userData, $password);
-                DB::table('sys_user_role')->insert(
-                    [
-                        'role_id'   =>$role_id,
-                        'user_id'   =>$user->id,
-                        'created_at'=>time(),
-                        'updated_at'=>time(),
-                    ]
-                );
+                $role = SysUserRole::where('role_id','=',$role_id)->where('user_id','=',$user->id)->first();
+                if(empty($role)){
+                    DB::table('sys_user_role')->insert(
+                        [
+                            'role_id'   =>$role_id,
+                            'user_id'   =>$user->id,
+                            'created_at'=>time(),
+                            'updated_at'=>time(),
+                        ]
+                    );
+                }
                 $this -> sendRegisterEms($mobile, $password);
 
             }else{
@@ -310,6 +313,18 @@ class Teacher extends CommonModel
                 }
                 if(!$result = $user -> save()) {
                     throw new \Exception('用户修改失败，请重试！');
+                }
+                //查询对应角色
+                $role = SysUserRole::where('role_id','=',$role_id)->where('user_id','=',$user->id)->first();
+                if (empty($role)){
+                    DB::table('sys_user_role')->insert(
+                        [
+                            'role_id'   =>$role_id,
+                            'user_id'   =>$user->id,
+                            'created_at'=>time(),
+                            'updated_at'=>time(),
+                        ]
+                    );
                 }
             }
 
