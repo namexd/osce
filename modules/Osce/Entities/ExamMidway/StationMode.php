@@ -76,8 +76,8 @@ class StationMode implements ModeInterface
         $sticks = ExamQueue::where('exam_id', $this->exam->id)->whereIn('station_id',$this->stationIds)->whereIn('stick', $this->stationIds)->get();
         if ($sticks->isEmpty()) {
             //获取应该在此处考试的考生
-            $a=\DB::connection('osce_mis');
-            $a->enableQueryLog();
+//            $a=\DB::connection('osce_mis');
+//            $a->enableQueryLog();
 
             $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->whereIn('exam_queue.station_id', $this->stationIds)
@@ -85,6 +85,7 @@ class StationMode implements ModeInterface
                 ->where('student.exam_id', $this->exam->id)
                 ->whereNull('exam_queue.stick')
                 ->select(
+                    'exam_queue.id as id',
                     'student.id as student_id',
                     'student.name as student_name',
                     'student.user_id as student_user_id',
@@ -99,7 +100,7 @@ class StationMode implements ModeInterface
                 ->groupBy('student.id')
                 ->take(1)
                 ->get();
-            dd($a->getQueryLog());
+//            dd($a->getQueryLog());
             if ($collection->isEmpty()) {
                 //可以在此处考试的考生
                 $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
@@ -110,6 +111,7 @@ class StationMode implements ModeInterface
                     ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
+                        'exam_queue.id as id',
                         'student.id as student_id',
                         'student.name as student_name',
                         'student.user_id as student_user_id',
@@ -123,11 +125,11 @@ class StationMode implements ModeInterface
                     ->groupBy('student.id')
                     ->take(1)
                     ->get();
-                echo 3;
                 //实现首位固定
                 foreach ($query as $student) {
                     $stick = ExamQueue::where('exam_id', $this->exam->id)
                         ->where('student_id', $student->student_id)
+                        ->where('id', $student->id)
                         ->orderBy('begin_dt', 'asc')
                         ->first();
                     $stick->stick = $this->stationIds[0];
@@ -151,6 +153,7 @@ class StationMode implements ModeInterface
                 foreach ($collection as $student) {
                     $stick = ExamQueue::where('exam_id', $this->exam->id)
                         ->where('student_id', $student->student_id)
+                        ->where('id', $student->id)
                         ->orderBy('begin_dt', 'asc')
                         ->first();
                     $stick->stick = $this->stationIds[0];
