@@ -23,15 +23,12 @@ class ExamAnswerController extends CommonController
 
      //将为秒的时间转化为  XX分XX秒
      public function timeTransformation($time){
-         $time = $time*60;
-         $minute = 0;$second=0;
-         if($time>=60){
-             $minute = intval($time/60);
-             $second = $time - $minute*60;
-         }else{
-             $second = $time;
-         }
-         return $minute.'分'.$second.'秒';
+
+         date_default_timezone_set("UTC");
+         $exam_result_time = date('H:i:s', $time);
+         date_default_timezone_set("PRC");
+         return $exam_result_time;
+
      }
 
     /**
@@ -46,7 +43,7 @@ class ExamAnswerController extends CommonController
      */
     public function  getStudentAnswer($student_id)
     {
-
+        
         $id = intval($student_id);//学生id
 
         $studentMsg=Student::where('id',$id)->first();

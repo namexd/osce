@@ -152,6 +152,7 @@ class AnswerController extends CommonController
             'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
         );
 
+
  /*       //提交过来的数据格式
         $case = array(
             'examPaperFormalId'=>'1',//试卷id
@@ -216,11 +217,13 @@ class AnswerController extends CommonController
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
         if($result){
+            date_default_timezone_set("UTC");
+            $time = strtotime(date('H:i:s', $data['actualLength']*60));
             $arr=array(
                 'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
                 'studentId' =>$request->input('studentId'),//学生Id
                 'stationId' => $request->input('stationId'),//考站id
-                'time'=>intval($data['actualLength']*60),//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
+                'time'=>$time,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
                 'teacherId'=>$request->input('teacherId'),//评分人编号
                 'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
                 'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
