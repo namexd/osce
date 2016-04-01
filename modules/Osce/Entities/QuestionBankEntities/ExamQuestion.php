@@ -392,7 +392,7 @@ class ExamQuestion extends Model
             if(count($structureInfo[0]['child']) >= $data['questionNumber']){
                 return true;
             }else{
-                return false;
+                return count($structureInfo[0]['child']);
             }
         }else{
             return false;
