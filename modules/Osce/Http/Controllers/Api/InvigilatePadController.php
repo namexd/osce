@@ -37,6 +37,7 @@ use DB;
 use Storage;
 use Auth;
 use Symfony\Component\HttpKernel\Tests\DataCollector\DumpDataCollectorTest;
+use Illuminate\Support\Facades\Redis;
 
 class InvigilatePadController extends CommonController
 {
@@ -167,6 +168,10 @@ class InvigilatePadController extends CommonController
         ], [
             'station_id.required' => '考站编号必须'
         ]);
+
+        $redis = Redis::connection('message');
+        $infos = md5($_SERVER['HTTP_HOST']);
+
         $stationId = (int)$request->input('station_id');
          $exam = Exam::doingExam();
         $studentModel = new  Student();
@@ -174,13 +179,16 @@ class InvigilatePadController extends CommonController
         if ($studentData['nextTester']) {
 //            dd($studentData['nextTester']);
             $studentData['nextTester']->avator =asset($studentData['nextTester']->avator);
-            return response()->json(
-                $this->success_data($studentData['nextTester'], 1, '验证完成')
-            );
+            $redis->publish($infos, json_encode(['message' => '验证完成','code'=>3100,'data'=>$studentData['nextTester']]));
+            //return response()->json(
+
+                //$this->success_data($studentData['nextTester'], 1, '验证完成')
+           // );
         } else {
-            return response()->json(
-                $this->fail(new \Exception('学生信息查询失败', -2))
-            );
+            $redis->publish($infos, json_encode(['message' => '学生信息查询失败','code'=>-2]));
+            //return response()->json(
+//                $this->fail(new \Exception('学生信息查询失败', -2))
+//            );
         }
     }
 
@@ -670,6 +678,10 @@ class InvigilatePadController extends CommonController
                 'student_id.required' => '考生编号信息必须',
                 'station_id.required' => '考站编号信息必须'
             ]);
+
+            $redis = Redis::connection('message');
+            $infos = md5($_SERVER['HTTP_HOST']);
+
             $nowTime = time();
             $date = date('Y-m-d H:i:s', $nowTime);
             $studentId = $request->get('student_id');
@@ -700,16 +712,20 @@ class InvigilatePadController extends CommonController
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
-                return response()->json(
-                    $this->success_data([$date], 1, '开始考试成功')
-                );
+
+                $redis->publish($infos, json_encode(['message' => '开始考试成功','code'=>1,'data'=>[$date]]));
+//                return response()->json(
+//                    $this->success_data([$date], 1, '开始考试成功')
+//                );
             }
 //            return response()->json(
 //                $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
 //            );
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage() . '');
-            return response()->json($this->fail($ex));
+
+            $redis->publish($infos, json_encode(['message' => $ex]));
+            //return response()->json($this->fail($ex));
         }
     }
 
