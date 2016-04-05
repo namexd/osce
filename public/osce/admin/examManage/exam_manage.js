@@ -26,6 +26,8 @@ $(function(){
         //成绩查询
         case "score_query": score_query();break;
         case "score_query_detail": score_query_detail();break;
+        //考官安排
+        case "examiner_manage":examiner_manage();break;
     }
 });
 
@@ -3850,6 +3852,161 @@ function station_assignment(){
     }
 
 }
+
+
+/**
+ * 考官安排多选下拉框
+ * @author chenxia
+ * @version 3.3
+ * @date    2016-03-30
+ */
+function examiner_manage() {
+
+    /*$("#add-basic .custom-teacher").select2({
+        placeholder:'请选择',
+        ajax: {
+            type:'get',
+            url: pars.get_subject,
+            dataType: 'json',
+            data:function() {
+                var ids = [];
+                $('#add-basic tbody').find('tr').each(function() {
+                    var temp = $(this).find('td').eq(3).find('select').val();
+                    for(var i in temp) {
+                        ids.push(temp[i]);
+                    }
+                })
+
+                return {
+                    teahcer_id:ids
+                };
+            },
+            delay: 250,
+            processResults: function (res) {
+
+                //数据格式化
+                var str = [];
+                var data = res.data;
+                for(var i in data){
+                    str.push({id:data[i].id,text:data[i].title});
+                }
+
+                //加载入数据
+                return {
+                    results: str
+                };
+            }
+        }
+    });
+    $("#add-basic .custom-sp").select2({
+        placeholder:'请选择',
+        ajax: {
+            type:'get',
+            url: pars.get_subject,
+            dataType: 'json',
+            data:function() {
+                var ids = [];
+                $('#add-basic tbody').find('tr').each(function() {
+                    var temp = $(this).find('td').eq(4).find('select').val();
+                    for(var i in temp) {
+                        ids.push(temp[i]);
+                    }
+                })
+
+                return {
+                    teahcer_id:ids
+                };
+            },
+            delay: 250,
+            processResults: function (res) {
+
+                //数据格式化
+                var str = [];
+                var data = res.data;
+                for(var i in data){
+                    str.push({id:data[i].id,text:data[i].title});
+                }
+
+                //加载入数据
+                return {
+                    results: str
+                };
+            }
+        }
+    });*/
+
+
+    var data = [
+        {
+            exam_item:{id:12,name:'胸腔1'},
+            station:{id:212,name:'考站1'},
+            station_type:{id:323,name:'技能站1'},
+            teacher:[{id:5,name:'zhang1',status:1},{id:34,name:'张老师1',status:1}],
+            sp_teacher:[{id:45,name:'成张老师1',status:1},{id:344,name:'杨老师1',status:2}]
+        },
+        {
+            exam_item:{id:12,name:'胸腔2'},
+            station:{id:212,name:'考站2'},
+            station_type:{id:323,name:'技能站2'},
+            teacher:[{id:5,name:'zhang2',status:1},{id:34,name:'张老师2',status:1}],
+            sp_teacher:[{id:45,name:'成张老师2',status:1},{id:344,name:'杨老师2',status:2}]
+        },
+        {
+            exam_item:{id:12,name:'胸腔3'},
+            station:{id:212,name:'考站3'},
+            station_type:{id:323,name:'技能站3'},
+            teacher:[{id:5,name:'zhang3',status:1},{id:34,name:'张老师3',status:1}],
+            sp_teacher:[{id:45,name:'成张老师3',status:1},{id:344,name:'杨老师3',status:2}]
+        }
+    ];
+
+    function initTable(data) {
+        var html="<tr>";
+        for(var i in data){
+            var str_teacher = '',
+                str_sp = '';
+
+            for(var j in data[i].teacher) {
+                str_teacher += '<option value="'+data[i].teacher[j].id+'" selected="selected">'+data[i].teacher[j].name+'</option>';
+            }
+
+            for(var j in data[i].sp_teacher) {
+                str_sp += '<option value="'+data[i].sp_teacher[j].id+'" selected="selected">'+data[i].sp_teacher[j].name+'</option>';
+            }
+
+
+            html += '<tr>'+
+                '<td>'+data[i].exam_item.name+'</td>'+
+                '<td>'+data[i].station.name+'</td>'+
+                '<td>'+data[i].station_type.name+'</td>'+
+                '<td>'+
+                '<div class="col-sm-10">'+
+                '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+str_teacher+
+                '</select>'+
+                '</div>'+
+                '</td>'+
+                '<td>'+
+                '<div class="col-sm-10">'+
+                '<select class="form-control custom-sp"  name=""  multiple="multiple">'+str_sp+
+                '</select>'+
+                '</div>'+
+                '</td>'+
+                '<td>'+
+                '<a href="javascript:void(0)" class="invitaion-teacher">发送邀请</a>'+
+                '</td>'+
+                '</tr>';
+        }
+
+        $('#add-basic tbody').html(html);
+    }
+
+
+    initTable(data);
+
+    $("#add-basic .custom-teacher").select2();
+    $("#add-basic .custom-sp").select2();
+}
+
 
 
 
