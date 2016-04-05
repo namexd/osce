@@ -64,11 +64,10 @@ class RoomMode implements ModeInterface
         // TODO: Implement getExaminee() method.
         try {
             //获取首位固定
-            $sticks = ExamQueue::where('exam_id', $this->exam->id)->where('stick', $this->room->room_id)->get();
+            $sticks = ExamQueue::where('exam_id', $this->exam->id)->where('room_id', $this->room->room_id)->where('stick', $this->room->room_id)->get();
             
             if (count($sticks) < $this->_T_Count) {
                 $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
-
                     ->whereIn('exam_queue.room_id', $this->room->id)
                     ->where('exam_queue.status', '<', 3)
                     ->where('student.exam_id', $this->exam->id)
@@ -167,8 +166,6 @@ class RoomMode implements ModeInterface
                         'exam_queue.updated_at as updated_at'
                     )->get();
             }
-
-
         } catch (\Exception $ex) {
             throw $ex;
         }
