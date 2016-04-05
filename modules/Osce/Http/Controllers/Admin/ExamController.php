@@ -18,6 +18,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
+use Modules\Osce\Entities\Examinee;
 use Modules\Osce\Entities\ExamPlanForRoom;
 use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\ExamRoom;
@@ -228,7 +229,7 @@ class ExamController extends CommonController
                 'real_push'      => intval($request  ->  get('real_push')),
             ];
             //阶段
-            $gradation = intval($request->get('gradation'));
+            $gradation = intval($request->get('gradation_order', 1));
 
             if($exam = $model -> addExam($examData, $examScreeningData, $gradation))
             {
@@ -352,13 +353,17 @@ class ExamController extends CommonController
                 'name'          => e($request  ->  get('name')),
                 'begin_dt'      => $begin_dt,
                 'end_dt'        => $end_dt,
-                'total'         => count(Student::where('exam_id', $exam_id)->get()),
+                'total'         => count(Examinee::where('exam_id', $exam_id)->get()),
                 'sequence_cate' => $request  ->  get('sequence_cate'),
                 'sequence_mode' => $request  ->  get('sequence_mode'),
                 'address'       => e($request  ->  get('address')),
+                'same_time'     => intval($request  ->  get('same_time')),
+                'real_push'     => intval($request  ->  get('real_push')),
             ];
+            //阶段
+            $gradation = intval($request->input('gradation_order',1));
 
-            if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData))
+            if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData, $gradation))
             {
                 return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
             } else {

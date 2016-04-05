@@ -22,7 +22,7 @@ class ExamGradation extends CommonModel
 
 
     public function exam(){
-        return $this->hasOne('\Modules\Osce\Entities\exam', 'id', 'exam_id');
+        return $this->hasOne('\Modules\Osce\Entities\Exam', 'id', 'exam_id');
     }
 
 

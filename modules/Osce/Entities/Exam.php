@@ -79,6 +79,23 @@ class Exam extends CommonModel
     public function flows(){
         return $this    ->  hasMany('\Modules\Osce\Entities\ExamFlow','exam_id','id');
     }
+
+    /**
+     * 考试阶段关联
+     * @access public
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     *
+     * @version 3.3
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2016-04-05 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function gradation(){
+        return $this    ->  hasMany('\Modules\Osce\Entities\ExamGradation','exam_id','id');
+    }
+
     /**
      * 展示考试列表的方法
      * @return mixed
@@ -339,7 +356,7 @@ class Exam extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editExam($exam_id, array $examData, array $examScreeningData)
+    public function editExam($exam_id, array $examData, array $examScreeningData, $gradation)
     {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
@@ -406,6 +423,47 @@ class Exam extends CommonModel
             if(!$exam->save())
             {
                 throw new \Exception('修改考试信息失败!');
+            }
+            //更新 考试阶段关系 数据
+            if($gradation){
+                //查询原有的 考试阶段
+                $num = ExamGradation::where('exam_id','=',$exam_id)->count();
+                if($num){
+                    //比较 阶段个数 (不相等，则添加 或者 删除)
+                    if($num != $gradation){
+                        $examGradation = ExamGradation::where('exam_id','=',$exam_id)->get();
+                        foreach ($examGradation as $item) {
+                            //1、更新共同 拥有的
+                            $item->gradation_number = $gradation;   //更新 当前考试阶段总数量
+                            if(!$item->save()){
+                                throw new \Exception('更新考试阶段关系失败!');
+                            }
+                            //2、多余的删除
+                            if($item->order > $gradation){
+                                if(!$item->delete()){
+                                    throw new \Exception('删除多余的考试阶段关系失败!');
+                                }
+                            }
+                        }
+                        //3、少了，则添加
+                        if($num<$gradation){
+                            for ($i=$num+1;$i<=$gradation;$i++){
+                                $gradationData = [
+                                    'exam_id'           => $exam_id,
+                                    'order'             => $i,
+                                    'gradation_number'  => $gradation,
+                                    'created_user_id'   => Auth::user()->id
+                                ];
+                                if(!ExamGradation::create($gradationData)){
+                                    throw new \Exception('创建考试阶段关系失败！');
+                                }
+                            }
+                        }
+                    }
+
+                    //一样多，则无需处理
+
+                }
             }
 
             $examScreening_ids = [];
