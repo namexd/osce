@@ -3761,11 +3761,11 @@ function station_assignment(){
                             '</thead>'+
                             '<tbody>'+
                                 '<tr class="">'+
-                                    '<td>3</td>'+
-                                    '<td>4</td>'+
-                                    '<td>5</td>'+
-                                    '<td>6</td>'+
-                                    '<td>8</td>'+
+                                    '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                                    '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
+                                    '<td><select class="form-control station-type"><option value="请选择">请选择</option></select></td>'+
+                                    '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
+                                    '<td><select class="form-control station-chioce"><option value="请选择">请选择</option></select></td>'+
                                     '<td>'+
                                         '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                         '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -3778,12 +3778,12 @@ function station_assignment(){
 
         //插入dom
         $('.station-container').append(html);
-
+        //初始化select2
+        select2Init($('.station-container'));
 
     });
 
 
-    $
 
     /**
      * 删除考站
@@ -3806,11 +3806,11 @@ function station_assignment(){
         var html = '';
 
         html += '<tr>'+
-                    '<td>3</td>'+
-                    '<td>4</td>'+
-                    '<td>5</td>'+
-                    '<td>6</td>'+
-                    '<td>8</td>'+
+                    '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                    '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
+                    '<td><select class="form-control station-type"><option value="请选择">请选择</option></select></td>'+
+                    '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
+                    '<td><select class="form-control station-chioce"><option value="请选择">请选择</option></select></td>'+
                     '<td>'+
                         '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                         '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -3820,6 +3820,7 @@ function station_assignment(){
         //插入dom
         $(this).parent().parent().parent().parent().parent().parent().append(html);
 
+        select2Init($(this).parent().parent().parent().parent().parent())
     });
 
     /**
@@ -3832,6 +3833,21 @@ function station_assignment(){
         //删除dom
         $(this).parent().parent().parent().parent().remove();
     });
+
+    /**
+     * 初始化select2
+     * @author mao
+     * @version 3.3
+     * @date    2016-04-05
+     */
+    function select2Init($elem) {
+
+        $elem.find('.exam-item').select2();
+        $elem.find('.exam-station').select2();
+        $elem.find('.station-type').select2();
+        $elem.find('.station-belong').select2();
+        $elem.find('.station-chioce').select2();
+    }
 
 }
 
