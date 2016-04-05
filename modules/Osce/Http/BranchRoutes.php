@@ -178,6 +178,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //已完成
         Route::get('exam-monitor/finish',['uses'=>'ExamMonitorController@getExamMonitorFinishList','as'=>'osce.admin.ExamMonitorController.getExamMonitorFinishList']);
         /*****************考试监控end*******************/
+
+
+        //获取正在考试列表
+        Route::get('exam-control/getExamlist',['uses'=>'ExamControlController@getExamlist','as'=>'osce.admin.ExamControlController.getExamlist']);
+
+
+
     });
 
 });
