@@ -69,9 +69,7 @@ class ExamAnswerController extends CommonController
         if (count($examPaperFormalInfo->ExamCategoryFormal) > 0) {
             foreach ($examPaperFormalInfo->ExamCategoryFormal as $k => $v) {
                 if (count($v->ExamQuestionFormal) > 0) {
-                    //dd($v->ExamQuestionFormal);
                     foreach ($v->ExamQuestionFormal as $key => $item) {
-//dump($item);
                         $child[$key]['exam_question_name'] = $key + 1 . '.' . '' . $item['name'] .'?'; // 拼接试题名称
                         $child[$key]['exam_question_image'] = unserialize($item['image']); //试题图片
                         $child[$key]['contentItem'] = explode('|%|', $item['content']); //试题内容（A.内容，B.内容，C.内容）用,拼接试题内容
@@ -126,15 +124,13 @@ class ExamAnswerController extends CommonController
                             }*/
                     }
                 }
-                $arr = ['0' => '一', '1' => '二', '2' => '三', '3' => '四', '4' => '五', '5' => '六', '6' => '七', '7' => '八', '8' => '九', '9' => '十'];
-                $data[$k]['Title'] = $arr[$k] . '、' . $v['name'] . ' ' . '共' . $v['number'] . '题，' . '每题' . $v['score'] . '分' . ' ';
+                $data[$k]['Title'] = $this->numToWord($k+1) . '、' . $v['name'] . ' ' . '共' . $v['number'] . '题，' . '每题' . $v['score'] . '分' . ' ';
                 $data[$k]['questionType']=$v['exam_question_type_id'];
                 //$examItems['stuScore'] = $stuScore;//考试最终成绩
                 $data[$k]['child'] = $child;
             }
         }
         $examItems['stuScore'] =ExamResult::where('student_id',$studentMsg->id)->pluck('score');
-        //dd($data);
          return view('osce::admin.statisticalanalysis.statistics_student_query',
              [
                  'examItems'=>$examItems,
@@ -142,5 +138,55 @@ class ExamAnswerController extends CommonController
              ]);
 
     }
+
+    /**
+     * 题目数字话
+     * @method  GET
+     * @url   /osce/admin/answer/student-answer
+     * @access public
+     * @param
+     * @author wt <wangtao@misrobot.com>
+     * @date    2016年4月5日15:09:43
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    protected function numToWord($num)
+    {
+        $chiNum = array('零', '一', '二', '三', '四', '五', '六', '七', '八', '九');
+        $chiUni = array('','十', '百', '千', '万', '亿', '十', '百', '千');
+        $chiStr = '';
+        $num_str = (string)$num;
+        $count = strlen($num_str);
+        $last_flag = true; //上一个 是否为0
+        $zero_flag = true; //是否第一个
+        $temp_num = null; //临时数字
+        $chiStr = '';//拼接结果
+        if ($count == 2) {//两位数
+            $temp_num = $num_str[0];
+            $chiStr = $temp_num == 1 ? $chiUni[1] : $chiNum[$temp_num].$chiUni[1];
+            $temp_num = $num_str[1];
+            $chiStr .= $temp_num == 0 ? '' : $chiNum[$temp_num];
+        }else if($count > 2){
+            $index = 0;
+            for ($i=$count-1; $i >= 0 ; $i--) {
+                $temp_num = $num_str[$i];
+                if ($temp_num == 0) {
+                    if (!$zero_flag && !$last_flag ) {
+                        $chiStr = $chiNum[$temp_num]. $chiStr;
+                        $last_flag = true;
+                    }
+                }else{
+                    $chiStr = $chiNum[$temp_num].$chiUni[$index%9] .$chiStr;
+                    $zero_flag = false;
+                    $last_flag = false;
+                }
+                $index ++;
+            }
+        }else{
+            $chiStr = $chiNum[$num_str[0]];
+        }
+        return $chiStr;
+    }
+
+
 
 }
