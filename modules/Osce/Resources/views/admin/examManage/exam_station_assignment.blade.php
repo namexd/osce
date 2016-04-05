@@ -3,81 +3,12 @@
 @section('only_css')
     <link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
     <style>
-    .table-head-style1{border-bottom: 1px solid #e7eaec;}
-    button.btn.btn-white.dropdown-toggle {
-        border: none;
-        font-weight: bolder;
-    }
-    .blank-panel .panel-heading {margin-left: -20px;}
-    span.laydate-icon{
-        border: 0;
-        background-position: right;
-        background-image: none;
-        padding-right: 27px;
-        display: inline-block;
-        width: 151px;
-        line-height: 30px;
-    }
-    .form-group {
-        margin: 15px;
-        height: 30px;
-        line-height: 30px;
-    }
-    table tr td input[type="checkbox"]{margin-top: 0}
-    .select2-container--default .select2-selection--multiple {
-        border: 1px solid #e5e6e7;
-        border-radius: 0;
-    }
-    .select2-container--default .select2-selection--multiple:focus{
-        border-color: #1ab394!important;
-        width: 100%;
-    }
-    .control-label{text-align: right;}
-
-
-    /*sp老师选择*/
-    .teacher{
-        padding: 1px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        cursor: pointer;
-        margin: 5px;
-    }
-    .teacher-list{
-        height: 34px!important;
-        width: 120px!important;
-    }
-    .teacher>div{
-        margin-right: 1px;
-
-    }
-    .ibox-content{
-       border: none;
-    }
-    .sp-teacher select{
-        height: 31px;
-        margin: 5px;
-    }
-    .pull-right>select{width: 120px;}
-    .teacher-box{
-        width: 75%;
-    }
-    .sp-teacher .pull-right{width:20%;}
-    .teacher-warn{background-color: #ebccd1;}
-    .teacher-primary{background-color: #dff0d8;}
-    .input-group.teacher.pull-left>.pull-left{line-height: 20px!important;}
-    .input-group.teacher.pull-left>.pull-left{line-height: 20px!important;}
-    button.btn.btn-default.dropdown-toggle {
-        height: 34px;
-        width: 48px;
-        display: inline-block;
-        padding: 0;
-        margin: 0;
-    }
-    #exam-place tbody tr td:last-child>a{color: #1ab394;}
-    .panel-options .nav.nav-tabs{
-        margin-left: 20px!important;
-    }
+    /*选择定宽*/
+    .exam-item,
+    .exam-station,
+    .station-type,
+    .station-belong,
+    .station-chioce {width: 181px!important;}
     </style>
 @stop
 
@@ -112,139 +43,64 @@
                     <div class="col-md-12 ">
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postStationAssignment')}}">
                             <input type="hidden" name="id" value="{{$id}}">
-                            <!-- <div class="form-group">
-                                <label class="col-sm-2 control-label">考试顺序</label>
 
-                                <div class="col-sm-10">
-                                    <select class="form-control" style="width:200px;">
-                                        <option value="随机">随机</option>
-                                        <option value="顺序">顺序</option>
-                                    </select>
-                                </div>
-                            </div> -->
+                            <div class="station-container">
+                            
+                                <!-- 一个考站dom -->
+                                <!-- <div class="form-group">
+                                    <label class="col-sm-2 control-label">&nbsp;</label>
+                                    <div class="col-sm-10">
+                                        <div class="row">
+                                            <div class="col-sm-4"><label class="control-label">考站1</label></div>
+                                            <div class="col-sm-6">
+                                                    <label class="control-label col-sm-2">阶段：</label>
+                                                    <select class="form-control col-sm-10" style="width: 381px;"></select>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <a class="btn btn-primary" href="javascript:void(0)">必考</a>
+                                                <a  href="javascript:void(0)" class="btn btn-primary" id="del-station" style="float: right;">删除</a>
+                                            </div>
+                                        </div>
+                                        <table class="table table-bordered" id="examroom">
+                                            <thead>
+                                                <tr>
+                                                    <td>考试项目</td>
+                                                    <td>考站</td>
+                                                    <td>类型</td>
+                                                    <td>考官</td>
+                                                    <td>sp</td>
+                                                    <td>操作</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>4</td>
+                                                    <td>5</td>
+                                                    <td>6</td>
+                                                    <td>8</td>
+                                                    <td>
 
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">考场安排</label>
-                                <div class="col-sm-10">
-                                    <a  href="javascript:void(0)"  class="btn btn-primary" id="add-new" style="float: right;{{$status==0?'':'display:none;'}}">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
-                                    <table class="table table-bordered" id="examroom">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>考站列表</th>
-                                            <th>必考&选考</th>
-                                            <th>操作</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody index="{{count($roomData)}}">
-                                        <?php $key = 1; $k1 = 1; $k2 = 1;  ?>
-
-                                        @forelse($roomData as $item)
-                                            <tr class="pid-{{$k1++}}">
-                                                <td>{{$key++}}</td>
-                                                <td width="498">
-                                                    <select class="form-control js-example-basic-multiple room-station" {{$status==0?'':'disabled'}} name="room[{{$k2++}}][]" multiple="multiple">
-                                                        @foreach($item as $k => $value)
-                                                            <option value="{{$value->station_id}}" selected="selected">{{$value->station_name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                <td class="necessary">{{$getSelect[$k+1]}}</td>
-                                                <td>
-                                                    <a href="javascript:void(0)" {{$status==0?'':'style=display:none;'}}><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                    <a href="javascript:void(0)" {{$status==0?'':'style=display:none;'}}><span class="read state1 detail"><i class="fa fa-arrow-up fa-2x"></i></span></a>
-                                                    <a href="javascript:void(0)" {{$status==0?'':'style=display:none;'}}><span class="read state1 detail"><i class="fa fa-arrow-down fa-2x"></i></span></a>
-                                                </td>
-                                            </tr>
-                                        @empty
-                                        @endforelse
-                                        </tbody>
-                                    </table>
-
-                                    <div class="btn-group pull-right">
-                                       
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 
+                            <!-- 新增考站 -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">监考老师</label>
-                                <div class="col-sm-10">
-                                    <br/>
-                                    <table class="table table-bordered" id="exam-place">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>考站</th>
-                                            <th>类型</th>
-                                            <th width="180">老师</th>
-                                            <th width="300">SP老师</th>
-                                            <th>邀请SP老师</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody index="{{count($stationData)}}">
-                                        <?php $key = 1; $k1 = 1; $k2 = 1;$k3 = 1;$k4 =1; $index=1?>
-                                        @forelse($stationData as $tempKey => $item)
-                                            <tr class="parent-id-{{$item[0]->station_id}}">
-                                                <td>{{$key++}}<input type="hidden" name="form_data[{{$k1++}}][station_id]" value="{{$item[0]->station_id}}"/></td>
-                                                <input type="hidden" class="station_id" value="{{$item[0]->station_id}}">
-                                                <td>{{$item[0]->station_name}}</td>
-                                                <td>{{($item[0]->station_type==1)?'技能操作站':(($item[0]->station_type==2)?'sp站':'理论操作站')}}</td>
-                                                <td>
-                                                    <select class="form-control teacher-teach js-example-basic-multiple" {{$status==0?'':'disabled'}} name="form_data[{{$index}}][teacher_id]">
-                                                        @foreach($item as $value)
-                                                            @if($value->teacher_type == 1)
-                                                                <option value="{{$value->teacher_id}}" selected="selected">{{$value->teacher_name}}</option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                <td class="sp-teacher">
-                                                    <div class="teacher-box pull-left">
-                                                        @foreach($item as $value)
-                                                            @if($value->teacher_type == 2)
-                                                            @if($value->invite_status == 2)
-                                                            <div class="input-group teacher pull-left teacher-warn" value="{{$value->teacher_id}}">
-                                                            @elseif($value->invite_status == 1)
-                                                            <div class="input-group teacher pull-left teacher-primary" value="{{$value->teacher_id}}">
-                                                            @else
-                                                            <div class="input-group teacher pull-left" value="{{$value->teacher_id}}">
-                                                            @endif
-                                                                <input type="hidden" name="form_data[{{$index}}][spteacher_id][]" value="{{$value->teacher_id}}">
-                                                                <div class="pull-left">{{$value->teacher_name}}</div>
-                                                                <div class="pull-left"><i class="fa fa-times"></i></div>
-                                                            </div>
-                                                            @endif
-                                                        @endforeach
-                                                    </div>
-                                                    <div class="pull-right" value="{{$k4++}}">
-                                                        <div class="btn-group">
-                                                          <button type="button" class="btn dropdown-toggle {{$item[0]->station_type==2?'btn-default':''}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                          <span class="caret"></span>
-                                                          </button>
-                                                          <ul class="dropdown-menu">
-                                                          </ul>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td><a href="javascript:void(0)" class="invitaion-teacher" value="{{$item[0]->station_id}}" {{$status==0?'':'style=display:none;'}}>发起邀请</a></td>
-                                            </tr>
-                                            <?php $index++?>
-                                        @empty
-                                        @endforelse
-                                        </tbody>
-                                    </table>
-
-                                    <div class="btn-group pull-right">
-                                       
-                                    </div>
+                                <div class="col-sm-2 col-sm-offset-4">
+                                    <button id="save" class="btn btn-primary" type="submit">保存考场安排</button>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-4 col-sm-offset-2">
-                                    <button id="save" class="btn btn-primary" type="submit" {{$status==0?'':'style=display:none;'}}>保存</button>
+                                <div class="col-sm-2">
                                     <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
-
+                                </div>
+                                <div class="col-sm-2">
+                                    <a class="btn btn-primary" href="javascript:void(0)" id="station-add">新增考站</a>
                                 </div>
                             </div>
 

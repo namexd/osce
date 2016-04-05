@@ -10,16 +10,19 @@ namespace Modules\Osce\Entities;
 
 use DB;
 use Auth;
+
 class Exam extends CommonModel
 {
-    protected $connection = 'osce_mis';
-    protected $table = 'exam';
-    public $timestamps = true;
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $guarded = [];
-    protected $hidden = [];
-    protected $fillable = ['code', 'name', 'begin_dt', 'end_dt', 'status', 'total', 'create_user_id', 'description', 'sequence_cate', 'sequence_mode', 'rules', 'address'];
+    protected $connection   = 'osce_mis';
+    protected $table        = 'exam';
+    public    $timestamps   = true;
+    protected $primaryKey   = 'id';
+    public    $incrementing = true;
+    protected $guarded      = [];
+    protected $hidden       = [];
+    protected $fillable     = ['code', 'name', 'begin_dt', 'end_dt', 'status', 'total', 'create_user_id',
+                               'description', 'sequence_cate', 'sequence_mode', 'rules', 'address',
+                               'teacher_arrange', 'arrangement','same_time','stage','real_push','archived'];
 
 
     protected $statuValues  =   [
@@ -275,7 +278,7 @@ class Exam extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addExam(array $examData,array $examScreeningData)
+    public function addExam(array $examData,array $examScreeningData, $gradation = 1)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -285,12 +288,26 @@ class Exam extends CommonModel
             {
                 throw new \Exception('创建考试基本信息失败');
             }
+            //添加 考试阶段关系 数据
+            if($gradation){
+                for ($i=1;$i<=$gradation;$i++){
+                    $gradationData = [
+                        'exam_id'           => $result->id,
+                        'order'             => $i,
+                        'gradation_number'  => $gradation,
+                        'created_user_id'   => Auth::user()->id
+                    ];
+                    if(!ExamGradation::create($gradationData)){
+                        throw new \Exception('创建考试阶段关系失败！');
+                    }
+                }
+            }
 
             //将考试对应的考次关联数据写入考试场次表中
             foreach($examScreeningData as $key => $value){
-                $value['exam_id']   =   $result->id;
-                $value['status']    =   0;
-                if(!$examScreening = ExamScreening::create($value))
+                $value['exam_id']   = $result->id;
+                $value['status']    = 0;
+                if(!$examScreening  = ExamScreening::create($value))
                 {
                     throw new \Exception('创建考试场次信息失败');
                 }

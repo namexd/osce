@@ -14,15 +14,16 @@ use Modules\Osce\Entities\ExamScreeningStudent;
 
 class ExamScreening extends CommonModel
 {
-    protected $connection = 'osce_mis';
-    protected $table = 'exam_screening';
-    public $timestamps = true;
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $guarded = [];
-    protected $hidden = [];
-    protected $fillable = ['id', 'exam_id', 'room_id', 'begin_dt', 'end_dt', 'create_user_id', 'status', 'sort', 'total', 'nfc_tag', 'real_start_dt'];
-    protected $statuValues = [
+    protected $connection   = 'osce_mis';
+    protected $table        = 'exam_screening';
+    public    $timestamps   = true;
+    protected $primaryKey   = 'id';
+    public    $incrementing = true;
+    protected $guarded      = [];
+    protected $hidden       = [];
+    protected $fillable     = ['id', 'exam_id', 'room_id', 'begin_dt', 'end_dt', 'create_user_id', 'status',
+                               'sort', 'total', 'nfc_tag', 'real_start_dt', 'gradation_order'];
+    protected $statuValues  = [
         1 => '等候考试',
         2 => '正在考试',
         3 => '考试结束',
