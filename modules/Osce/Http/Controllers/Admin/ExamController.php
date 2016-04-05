@@ -274,7 +274,10 @@ class ExamController extends CommonController
             $examData = Exam::findOrFail($id);
             $examScreeningData = ExamScreening::where(['exam_id' => $id])->get();
 
-            return view('osce::admin.examManage.exam_basic_info',['id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData]);
+            return view('osce::admin.examManage.exam_basic_info',[
+                'id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData
+            ]);
+
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

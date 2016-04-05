@@ -20,16 +20,40 @@ class Exam extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['code', 'name', 'begin_dt', 'end_dt', 'status', 'total', 'create_user_id',
-                               'description', 'sequence_cate', 'sequence_mode', 'rules', 'address',
-                               'teacher_arrange', 'arrangement','same_time','stage','real_push','archived'];
+    protected $fillable     = [
+        'code', 'name', 'begin_dt', 'end_dt', 'status', 'total', 'create_user_id', 'description', 'sequence_cate',
+        'sequence_mode', 'rules', 'address', 'teacher_arrange', 'arrangement','same_time','stage','real_push','archived'
+    ];
 
-
-    protected $statuValues  =   [
+    protected $statuValues  = [
         0   =>  '未开考',
         1   =>  '正在考试',
         2   =>  '考试结束',
     ];
+    public $gradationVals   = [
+        1   =>  '一',
+        2   =>  '二',
+        3   =>  '三',
+        4   =>  '四',
+        5   =>  '五',
+        6   =>  '六',
+        7   =>  '七',
+        8   =>  '八',
+        9   =>  '九',
+        10  =>  '十',
+        11  =>  '十一',
+        12  =>  '十二',
+        13  =>  '十三',
+        14  =>  '十四',
+        15  =>  '十五',
+        16  =>  '十六',
+        17  =>  '十七',
+        18  =>  '十八',
+        19  =>  '十九',
+        20  =>  '二十',
+    ];
+
+
     /**
      * 考试与考站的关联
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

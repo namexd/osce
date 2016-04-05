@@ -31,6 +31,7 @@
     .msg-success{
         background-color: #ddd;
     }
+    .check_icon.check {background-position: -32px 0;}
     </style>
 @stop
 
@@ -86,9 +87,9 @@
                                 <label class="col-sm-2 control-label">考试顺序</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;"  {{$examData['status']==0?'':'disabled'}} name="sequence_cate" >
-                                        <option value="1" {{($examData['sequence_cate']==1)?'selected=selected':''}}>随机</option>
-                                        <option value="3" {{($examData['sequence_cate']==3)?'selected=selected':''}}>轮循</option>
                                         <option value="2" {{($examData['sequence_cate']==2)?'selected=selected':''}}>顺序</option>
+                                        <option value="3" {{($examData['sequence_cate']==3)?'selected=selected':''}}>轮循</option>
+                                        <option value="1" {{($examData['sequence_cate']==1)?'selected=selected':''}}>随机</option>
                                     </select>
                                 </div>
                             </div>
@@ -121,8 +122,8 @@
                                         <div class="clearfix form-group" style="margin-bottom: 0;">
                                              <div class="col-sm-12" id="checkbox_div">
                                                  <label class="check_label checkbox_input checkbox_one" style="height: 34px;line-height: 23px;margin-left: 12.1%;">
-                                                      <div class="check_icon" style="display: inline-block;margin:5px 0 0 5px;float:left;"  {{$examData['status']==0?'':'disabled'}}></div>
-                                                      <input type="checkbox" name="same_time" value="1"  {{$examData['status']==0?'':'disabled'}}>
+                                                      <div class="check_icon check" style="display: inline-block;margin:5px 0 0 5px;float:left;"  {{$examData['status']==0?'':'disabled'}}></div>
+                                                      <input type="checkbox" name="same_time" value="{{$examData['same_time']}}"  {{$examData['status']==0?'':'disabled'}}>
                                                       <span class="check_name" style="display: inline-block;float:left;">要求考生同时进出考站（考站的时间采用最长考站时间）</span>
                                                  </label>
                                              </div>
@@ -149,7 +150,7 @@
                                          <div class="clearfix form-group" style="margin-bottom: 0;">
                                               <div class="col-sm-12" id="checkbox_div">
                                                    <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
-                                                        <div class="check_icon" style="display: inline-block;float:right;margin:5px 0 0 5px;"></div>
+                                                        <div class="check_icon check" style="display: inline-block;float:right;margin:5px 0 0 5px;"></div>
                                                         <input type="checkbox" name="gradation_order" value="1">
                                                     <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
                                                    </label>
@@ -168,8 +169,8 @@
                                  <label class="col-sm-2 control-label">实时发布成绩</label>
                                  <div class="col-sm-10">
                                       <select class="form-control" style="width:200px;" name="real_push"  {{$examData['status']==0?'':'disabled'}}>
-                                            <option value="1">是</option>
-                                            <option value="2">否</option>
+                                            <option value="1" {{$examData['real_push']==1?'selected':''}}>是</option>
+                                            <option value="0" {{$examData['real_push']==0?'selected':''}}>否</option>
                                       </select>
                                  </div>
                             </div>
@@ -213,14 +214,16 @@
                                                 ?>
                                                 <td>{{$d}} 天 {{$h}}小时 {{$m}}分</td>
                                                 <td>
-                                                     <select class="form-control" name="time[{{$key+1}}][gradation_order]">
-                                                         @forelse($examData->gradation as $gradation)
-                                                          <option value="{{$gradation->order}}" {{($gradation->order ==$item->gradation_order)?'selected':''}}>阶段{{$gradation->order}}</option>
-                                                         @empty
-                                                         @endforelse
-                                                          {{--<option value="2">阶段二</option>--}}
-                                                          {{--<option value="3">阶段三</option>--}}
-                                                     </select>
+                                                    <select class="form-control" name="time[{{$key+1}}][gradation_order]">
+                                                        @forelse($examData->gradation as $gradation)
+                                                            <option value="{{$gradation->order}}" {{($gradation->order ==$item->gradation_order)?'selected':''}}>
+                                                                阶段{{$examData->gradationVals[$gradation->order]}}
+                                                            </option>
+                                                        @empty
+                                                        @endforelse
+                                                        {{--<option value="2">阶段二</option>--}}
+                                                        {{--<option value="3">阶段三</option>--}}
+                                                    </select>
                                                 </td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
