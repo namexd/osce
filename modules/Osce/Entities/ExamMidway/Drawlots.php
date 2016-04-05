@@ -192,6 +192,7 @@ class DrawStationMode implements DrawModeInterface
             } else { //如果本来去的考站被占用了,就给一个同流程的考站
                 $model = ExamQueue::where('serialnumber', $tempObj->serialnumber)
                     ->where('blocking', 1)
+                    ->where('status', 0)
                     ->where('exam_id', $exam->id)
                     ->first();
 
