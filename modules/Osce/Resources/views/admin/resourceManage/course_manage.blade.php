@@ -23,7 +23,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">科目管理</h5>
+                <h5 class="title-label">考试项目管理</h5>
             </div>
             <div class="col-xs-6 col-md-2" style="float: right;">
                 <a  href="{{route('osce.admin.topic.getAddTopic')}}" class="btn btn-primary" style="float: right;">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>

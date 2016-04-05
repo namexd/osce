@@ -214,14 +214,16 @@
                                                 ?>
                                                 <td>{{$d}} 天 {{$h}}小时 {{$m}}分</td>
                                                 <td>
-                                                     <select class="form-control" name="time[{{$key+1}}][gradation_order]">
-                                                         @forelse($examData->gradation as $gradation)
-                                                          <option value="{{$gradation->order}}" {{($gradation->order ==$item->gradation_order)?'selected':''}}>阶段{{$gradation->order}}</option>
-                                                         @empty
-                                                         @endforelse
-                                                          {{--<option value="2">阶段二</option>--}}
-                                                          {{--<option value="3">阶段三</option>--}}
-                                                     </select>
+                                                    <select class="form-control" name="time[{{$key+1}}][gradation_order]">
+                                                        @forelse($examData->gradation as $gradation)
+                                                            <option value="{{$gradation->order}}" {{($gradation->order ==$item->gradation_order)?'selected':''}}>
+                                                                阶段{{$examData->gradationVals[$gradation->order]}}
+                                                            </option>
+                                                        @empty
+                                                        @endforelse
+                                                        {{--<option value="2">阶段二</option>--}}
+                                                        {{--<option value="3">阶段三</option>--}}
+                                                    </select>
                                                 </td>
                                                 <td>
                                                     <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
