@@ -263,6 +263,7 @@ class DrawRoomMode implements DrawModeInterface
         } else { //获取同一流程下面的其他考场下的考站，看有没有空
             $emptyRoomId = ExamQueue::where('serialnumber', $object->serialnumber)
                 ->where('exam_id', $exam->id)
+                ->where('status', 0)
                 ->where('blocking', 1)
                 ->get()
                 ->pluck('room_id');
