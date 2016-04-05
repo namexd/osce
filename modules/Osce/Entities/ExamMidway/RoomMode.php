@@ -130,7 +130,7 @@ class RoomMode implements ModeInterface
                         }
                     }
                 }
-
+                dd($array);
                 //实现首位固定
                 foreach ($array as $student) {
 //                    $stick = ExamQueue::where('exam_id', $this->exam->id)
