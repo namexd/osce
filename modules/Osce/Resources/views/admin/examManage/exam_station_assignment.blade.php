@@ -3,81 +3,12 @@
 @section('only_css')
     <link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
     <style>
-    .table-head-style1{border-bottom: 1px solid #e7eaec;}
-    button.btn.btn-white.dropdown-toggle {
-        border: none;
-        font-weight: bolder;
-    }
-    .blank-panel .panel-heading {margin-left: -20px;}
-    span.laydate-icon{
-        border: 0;
-        background-position: right;
-        background-image: none;
-        padding-right: 27px;
-        display: inline-block;
-        width: 151px;
-        line-height: 30px;
-    }
-    .form-group {
-        margin: 15px;
-        height: 30px;
-        line-height: 30px;
-    }
-    table tr td input[type="checkbox"]{margin-top: 0}
-    .select2-container--default .select2-selection--multiple {
-        border: 1px solid #e5e6e7;
-        border-radius: 0;
-    }
-    .select2-container--default .select2-selection--multiple:focus{
-        border-color: #1ab394!important;
-        width: 100%;
-    }
-    .control-label{text-align: right;}
-
-
-    /*sp老师选择*/
-    .teacher{
-        padding: 1px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        cursor: pointer;
-        margin: 5px;
-    }
-    .teacher-list{
-        height: 34px!important;
-        width: 120px!important;
-    }
-    .teacher>div{
-        margin-right: 1px;
-
-    }
-    .ibox-content{
-       border: none;
-    }
-    .sp-teacher select{
-        height: 31px;
-        margin: 5px;
-    }
-    .pull-right>select{width: 120px;}
-    .teacher-box{
-        width: 75%;
-    }
-    .sp-teacher .pull-right{width:20%;}
-    .teacher-warn{background-color: #ebccd1;}
-    .teacher-primary{background-color: #dff0d8;}
-    .input-group.teacher.pull-left>.pull-left{line-height: 20px!important;}
-    .input-group.teacher.pull-left>.pull-left{line-height: 20px!important;}
-    button.btn.btn-default.dropdown-toggle {
-        height: 34px;
-        width: 48px;
-        display: inline-block;
-        padding: 0;
-        margin: 0;
-    }
-    #exam-place tbody tr td:last-child>a{color: #1ab394;}
-    .panel-options .nav.nav-tabs{
-        margin-left: 20px!important;
-    }
+    /*选择定宽*/
+    .exam-item,
+    .exam-station,
+    .station-type,
+    .station-belong,
+    .station-chioce {width: 181px!important;}
     </style>
 @stop
 
@@ -114,7 +45,9 @@
                             <input type="hidden" name="id" value="{{$id}}">
 
                             <div class="station-container">
-                                <div class="form-group">
+                            
+                                <!-- 一个考站dom -->
+                                <!-- <div class="form-group">
                                     <label class="col-sm-2 control-label">&nbsp;</label>
                                     <div class="col-sm-10">
                                         <div class="row">
@@ -155,7 +88,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 
                             <!-- 新增考站 -->
