@@ -95,8 +95,10 @@ class RoomMode implements ModeInterface
                     }
                     $array[] = $item;
                 }
+                dump($array);
                 $array = collect($array);
 
+                dd($array);
                 if (count($array) < $this->_T_Count) {
                     $difference = $this->_T_Count - count($array);
                     $temp = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
@@ -126,7 +128,7 @@ class RoomMode implements ModeInterface
                             //将item的考场信息修改
                             $item->room_id = $this->room->room_id;
                             $item->save();
-                            dd($array);
+
                             $array->push($item);
                         }
                     }
