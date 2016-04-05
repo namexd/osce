@@ -151,6 +151,7 @@ class RoomMode implements ModeInterface
 
                 return $array;
             } else {
+                dd($sticks->pluck('student_id')->toArray());
                  return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.id', $sticks->pluck('id')->toArray())
                     ->whereIn('student.id', array_unique($sticks->pluck('student_id')->toArray()))
