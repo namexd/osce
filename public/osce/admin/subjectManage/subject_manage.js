@@ -543,10 +543,16 @@ function subject_manage_add(){
         //图片上传
         $("#file").change(function(){
             var url = pars.imgUrl;
+            //获取图片对象
             var files=document.getElementById("picFile").files;
-            // var point = path.lastIndexOf(".");
-            //var type = path.substr(point);//图片类型
+            //图片大小
             var kb=Math.floor(files[0].size/1024);
+            //图片类型
+            var type = files[0].name.split(".")[1];
+            if(type != "jpg" && type != "png" && type != "jpeg"){
+                layer.alert('图片格式不正确!');
+                return false;
+            }
             if(kb>2048){
                 layer.alert('图片大小不得超过2M!');
                 $("#picFile").val('');
