@@ -87,7 +87,7 @@ class RoomMode implements ModeInterface
                     ->groupBy('student.id')
                     ->take($this->_T_Count)
                     ->get();
-
+                dd($collection);
                 $array = [];
                 foreach ($collection as $item) {
                     if ($item->blocking != 1) {
@@ -95,10 +95,8 @@ class RoomMode implements ModeInterface
                     }
                     $array[] = $item;
                 }
-                dump($array);
                 $array = collect($array);
 
-                dd($array);
                 if (count($array) < $this->_T_Count) {
                     $difference = $this->_T_Count - count($array);
                     $temp = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
