@@ -57,7 +57,10 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorLateList () {
+        return view('osce::admin.testMonitor.monitor_late', [
+            // 'data'      =>$data,//
 
+        ]);
     }
 
     /**
@@ -78,7 +81,10 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorReplaceList () {
+        return view('osce::admin.testMonitor.monitor_replace', [
+            // 'data'      =>$data,//
 
+        ]);
     }
 
     /**
@@ -99,7 +105,10 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorQuitList () {
+        return view('osce::admin.testMonitor.monitor_abandom', [
+            // 'data'      =>$data,//
 
+        ]);
     }
 
     /**
@@ -120,6 +129,10 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorFinishList () {
+        /*return view('osce::admin.testMonitor.monitor_ ', [
+            // 'data'      =>$data,//
+
+        ]);*/
 
     }
 
