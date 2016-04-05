@@ -127,11 +127,11 @@ input.laydate-icon{
                                            <div class="col-sm-12" id="checkbox_div">
                                                 <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
                                                     <div class="check_icon" style="display: inline-block;float:right;margin:5px 0 0 5px;"></div>
-                                                    <input type="checkbox" name="gradation" value="1">
+                                                    <input type="checkbox" name="gradation_order" value="1">
                                                     <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
                                                 </label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" required class="form-control" id="gradation" name="gradation" style="float:left;width:200px;">
+                                                    <input type="text" required class="form-control" id="gradation_order" name="gradation_order" style="float:left;width:200px;">
                                                     <span style="float:left;margin-left:5px;margin-top: 5px;">阶段</span>
                                                 </div>
                                            </div>

@@ -106,7 +106,7 @@
                             <div class="form-group">
                                  <label class="col-sm-2 control-label">教官配置</label>
                                  <div class="col-sm-10">
-                                      <select class="form-control" style="width:200px;" name="" disabled>
+                                      <select class="form-control" style="width:200px;" name=""  {{$examData['status']==0?'':'disabled'}}>
                                            <option value="1">按考站配置考官</option>
                                            <option value="2">按考场配置考官</option>
                                       </select>
@@ -120,8 +120,8 @@
                                         <div class="clearfix form-group" style="margin-bottom: 0;">
                                              <div class="col-sm-12" id="checkbox_div">
                                                  <label class="check_label checkbox_input checkbox_one" style="height: 34px;line-height: 23px;margin-left: 12.1%;">
-                                                      <div class="check_icon" style="display: inline-block;margin:5px 0 0 5px;float:left;" disabled></div>
-                                                      <input type="checkbox" name="" value="1"disabled>
+                                                      <div class="check_icon" style="display: inline-block;margin:5px 0 0 5px;float:left;"  {{$examData['status']==0?'':'disabled'}}></div>
+                                                      <input type="checkbox" name="same_time" value="1"  {{$examData['status']==0?'':'disabled'}}>
                                                       <span class="check_name" style="display: inline-block;float:left;">要求考生同时进出考站（考站的时间采用最长考站时间）</span>
                                                  </label>
                                              </div>
@@ -134,7 +134,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">考试内容</label>
                                 <div class="col-sm-10">
-                                     <select class="form-control" style="width:200px;" name="" disabled>
+                                     <select class="form-control" style="width:200px;" name=""  {{$examData['status']==0?'':'disabled'}}>
                                           <option value="1">由考官指定</option>
                                           <option value="2">由系统指定</option>
                                      </select>
@@ -149,11 +149,12 @@
                                               <div class="col-sm-12" id="checkbox_div">
                                                    <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
                                                         <div class="check_icon" style="display: inline-block;float:right;margin:5px 0 0 5px;"></div>
-                                                        <input type="checkbox" name="" value="1">
-                                                        <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
+                                                        <input type="checkbox" name="gradation_order" value="1">
+                                                    <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
                                                    </label>
                                                    <div class="col-sm-10">
-                                                        <input type="text" required class="form-control" id="address" name="" style="float:left;width:200px;" disabled><span style="float:left;margin-left:5px;">阶段</span>
+                                                        <input type="text" required class="form-control" id="address" name="gradation_order" value="{{$examData->gradation->count()}}" style="float:left;width:200px;"  {{$examData['status']==0?'':'disabled'}}>
+                                                        <span style="float:left;margin-left:5px;">阶段</span>
                                                    </div>
                                               </div>
                                          </div>
@@ -165,7 +166,7 @@
                             <div class="form-group">
                                  <label class="col-sm-2 control-label">实时发布成绩</label>
                                  <div class="col-sm-10">
-                                      <select class="form-control" style="width:200px;" name="" disabled>
+                                      <select class="form-control" style="width:200px;" name="real_push"  {{$examData['status']==0?'':'disabled'}}>
                                             <option value="1">是</option>
                                             <option value="2">否</option>
                                       </select>
@@ -211,10 +212,13 @@
                                                 ?>
                                                 <td>{{$d}} 天 {{$h}}小时 {{$m}}分</td>
                                                 <td>
-                                                     <select class="form-control" name="">
-                                                          <option value="1">阶段一</option>
-                                                          <option value="2">阶段二</option>
-                                                          <option value="2">阶段三</option>
+                                                     <select class="form-control" name="gradation_order">
+                                                         @forelse($examData->gradation as $gradation)
+                                                          <option value="{{$gradation->order}}" {{($gradation->order ==$item->gradation_order)?'selected':''}}>阶段{{$gradation->order}}</option>
+                                                         @empty
+                                                         @endforelse
+                                                          {{--<option value="2">阶段二</option>--}}
+                                                          {{--<option value="3">阶段三</option>--}}
                                                      </select>
                                                 </td>
                                                 <td>
