@@ -366,6 +366,7 @@ class PadController extends  CommonController{
 
     /**
      * 考试在后修改状态
+     * url \osce\pad\change-status
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @author Jiangzhiheng

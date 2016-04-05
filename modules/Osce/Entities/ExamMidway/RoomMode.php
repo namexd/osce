@@ -142,7 +142,7 @@ class RoomMode implements ModeInterface
 //                    if (!$stick->save()) {
 //                        throw new \Exception('系统异常，请重试', -5);
 //                    }
-                    $student->stick = $this->room->id;
+                    $student->stick = $this->room->room_id;
                     if (!$student->save()) {
                         throw new \Exception('系统错误，请重试', -1);
                     }

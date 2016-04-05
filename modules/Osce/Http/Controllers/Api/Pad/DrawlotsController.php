@@ -102,6 +102,8 @@ class DrawlotsController extends CommonController
 
             if (is_null($exam)) {
                 throw new \Exception('今天没有正在进行的考试', -50);
+            } elseif ($exam->status != 1) {
+                throw new \Exception('当前考试没有进行', -777);
             }
 
             $examinee = new Examinee($exam, ['id' => $id]);
@@ -162,7 +164,6 @@ class DrawlotsController extends CommonController
             if (is_null($exam)) {
                 throw new \Exception('当前没有正在进行的考试', 3000);
             }
-            $examId = $exam->id;
 
             $examinee = new Examinee($exam, ['id' => $id]);
             switch ($exam->sequence_mode) {
@@ -227,13 +228,14 @@ class DrawlotsController extends CommonController
     {
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
+        //验证
+        $this->validate($request, [
+            'uid' => 'required|string',
+            'room_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
+        ]);
         try {
-            //验证
-            $this->validate($request, [
-                'uid' => 'required|string',
-                'room_id' => 'required|integer',
-                'teacher_id' => 'required|integer'
-            ]);
+            $examId = $request->input('exam_id', null);
             //获取uid和room_id
             $uid = $request->input('uid');
             $roomId = $request->input('room_id');
@@ -258,7 +260,7 @@ class DrawlotsController extends CommonController
             }
 
 //            //判断当前学生是否在当前小组中
-            $exam = Exam::where('status', 1)->first();
+            $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
                 throw new \Exception('当前没有正在进行的考试', 3000);
             }
@@ -349,9 +351,6 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             Common::valueIsNull($exam, -333);
-            if ($exam->status != 1) {
-                throw new \Exception('当前选择的这场考试没有进行', -10);
-            }
 
 //            //根据id获取考站信息
 //            $stationTeacher = StationTeacher::where('user_id', $id)->where('exam_id', $exam->id)->first();
