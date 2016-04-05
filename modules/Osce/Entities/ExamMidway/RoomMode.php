@@ -65,8 +65,9 @@ class RoomMode implements ModeInterface
         try {
             //获取首位固定
             $sticks = ExamQueue::where('exam_id', $this->exam->id)->where('room_id', $this->room->room_id)->where('stick', $this->room->room_id)->get();
-
+            echo 1;
             if (count($sticks) < $this->_T_Count) {
+                echo 2;
                 $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.room_id', $this->room->id)
                     ->where('exam_queue.status', '<', 3)
@@ -87,9 +88,11 @@ class RoomMode implements ModeInterface
                     ->groupBy('student.id')
                     ->take($this->_T_Count)
                     ->get();
-                dd($collection);
+
                 $array = [];
+                echo 3;
                 foreach ($collection as $item) {
+                    echo 4;
                     if ($item->blocking != 1) {
                         continue;
                     }
@@ -151,6 +154,7 @@ class RoomMode implements ModeInterface
 
                 return $array;
             } else {
+                echo 51123;
                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.id', $sticks->pluck('id')->toArray())
                     ->whereIn('student.id', $sticks->pluck('student_id')->unique()->toArray())
