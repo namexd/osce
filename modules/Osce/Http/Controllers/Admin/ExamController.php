@@ -223,10 +223,14 @@ class ExamController extends CommonController
                 'create_user_id' => $user -> id,
                 'sequence_cate'  => e($request  ->  get('sequence_cate')),
                 'sequence_mode'  => e($request  ->  get('sequence_mode')),
-                'address'        => e($request  ->  get('address'))
+                'address'        => e($request  ->  get('address')),
+                'same_time'      => intval($request  ->  get('same_time')),
+                'real_push'      => intval($request  ->  get('real_push')),
             ];
+            //阶段
+            $gradation = intval($request->get('gradation'));
 
-            if($exam = $model -> addExam($examData, $examScreeningData))
+            if($exam = $model -> addExam($examData, $examScreeningData, $gradation))
             {
                 //TODO：罗海华2016-01-18 13:55将 成功后的重定向 改为编辑页面
                 return redirect()->route('osce.admin.exam.getEditExam',['id'=>$exam->id]);

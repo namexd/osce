@@ -62,9 +62,9 @@ input.laydate-icon{
                             <label class="col-sm-2 control-label">考试顺序</label>
                             <div class="col-sm-10">
                                 <select class="form-control" style="width:200px;" name="sequence_cate" >
-                                    <option value="1">随机</option>
-                                    <option value="3">轮循</option>
                                     <option value="2">顺序</option>
+                                    <option value="3">轮循</option>
+                                    <option value="1">随机</option>
                                 </select>
                             </div>
                         </div>
@@ -82,7 +82,7 @@ input.laydate-icon{
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">教官配置</label>
+                            <label class="col-sm-2 control-label">考官配置</label>
                             <div class="col-sm-10">
                                  <select class="form-control" style="width:200px;" name="" >
                                        <option value="1">按考站配置考官</option>
@@ -99,7 +99,7 @@ input.laydate-icon{
                                         <div class="col-sm-12" id="checkbox_div">
                                             <label class="check_label checkbox_input checkbox_one" style="height: 34px;line-height: 28px;margin-left: 12.1%;">
                                                  <div class="check_icon" style="display: inline-block;margin:5px 0 0 5px;float:left;" disabled></div>
-                                                 <input type="checkbox" name="" value="1"disabled>
+                                                 <input type="checkbox" name="same_time" value="1" disabled>
                                                  <span class="check_name" style="display: inline-block;float:left;">要求考生同时进出考站（考站的时间采用最长考站时间）</span>
                                             </label>
                                         </div>
@@ -127,11 +127,12 @@ input.laydate-icon{
                                            <div class="col-sm-12" id="checkbox_div">
                                                 <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
                                                     <div class="check_icon" style="display: inline-block;float:right;margin:5px 0 0 5px;"></div>
-                                                    <input type="checkbox" name="" value="1">
+                                                    <input type="checkbox" name="gradation" value="1">
                                                     <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
                                                 </label>
                                                 <div class="col-sm-10">
-                                                     <input type="text" required class="form-control" id="address" name="" style="float:left;width:200px;"><span style="float:left;margin-left:5px;margin-top: 5px;">阶段</span>
+                                                    <input type="text" required class="form-control" id="gradation" name="gradation" style="float:left;width:200px;">
+                                                    <span style="float:left;margin-left:5px;margin-top: 5px;">阶段</span>
                                                 </div>
                                            </div>
                                       </div>
@@ -143,9 +144,9 @@ input.laydate-icon{
                         <div class="form-group">
                              <label class="col-sm-2 control-label">实时发布成绩</label>
                              <div class="col-sm-10">
-                                 <select class="form-control" style="width:200px;" name="" >
+                                 <select class="form-control" style="width:200px;" name="real_push" >
                                       <option value="1">是</option>
-                                      <option value="2">否</option>
+                                      <option value="0">否</option>
                                  </select>
                              </div>
                         </div>
