@@ -18,8 +18,8 @@ use Modules\Osce\Entities\Teacher;
 class RoomMode implements ModeInterface
 {
     /*
-         * 老师所在的room
-         */
+     * 老师所在的room
+     */
     private $room;
 
     /*
