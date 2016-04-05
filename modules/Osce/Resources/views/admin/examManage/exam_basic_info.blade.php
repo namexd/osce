@@ -154,7 +154,7 @@
                                                     <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
                                                    </label>
                                                    <div class="col-sm-10">
-                                                        <input type="text" required class="form-control" id="address" name="gradation_order" value="{{$examData->gradation->count()}}" style="float:left;width:200px;"  {{$examData['status']==0?'':'disabled'}}>
+                                                        <input type="text" class="form-control" id="gradation_order" name="gradation_order" value="{{$examData->gradation->count()}}" style="float:left;width:200px;"  {{$examData['status']==0?'':'disabled'}}>
                                                         <span style="float:left;margin-left:5px;">阶段</span>
                                                    </div>
                                               </div>
@@ -213,7 +213,7 @@
                                                 ?>
                                                 <td>{{$d}} 天 {{$h}}小时 {{$m}}分</td>
                                                 <td>
-                                                     <select class="form-control" name="gradation_order">
+                                                     <select class="form-control" name="time[{{$key+1}}][gradation_order]">
                                                          @forelse($examData->gradation as $gradation)
                                                           <option value="{{$gradation->order}}" {{($gradation->order ==$item->gradation_order)?'selected':''}}>阶段{{$gradation->order}}</option>
                                                          @empty
