@@ -73,7 +73,10 @@ class StationMode implements ModeInterface
     {
         // TODO: Implement getExaminee() method.
         //获取首位固定的考生
-        $sticks = ExamQueue::where('exam_id', $this->exam->id)->whereIn('station_id',$this->stationIds)->whereIn('stick', $this->stationIds)->get();
+        $sticks = ExamQueue::where('exam_id', $this->exam->id)
+            ->whereIn('station_id',$this->stationIds)
+            ->whereIn('stick', $this->stationIds)
+            ->get();
         if ($sticks->isEmpty()) {
             //获取应该在此处考试的考生
 //            $a=\DB::connection('osce_mis');
@@ -105,7 +108,6 @@ class StationMode implements ModeInterface
                 //可以在此处考试的考生
                 $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
-                    //->where('exam_queue.stick', null)
                     ->where('exam_queue.status', '<', 3)
                     ->whereNull('exam_queue.stick')
                     ->where('blocking', 1)
@@ -137,20 +139,26 @@ class StationMode implements ModeInterface
 //                        throw new \Exception('系统异常，请重试', -5);
 //                    }
 //                }
-                $stick  =   $query->first();
-                $stick->stick = $this->stationIds[0];
-                if (!$stick->save()) {
-                    throw new \Exception('系统异常，请重试', -5);
-                }
+
                 if ($query->isEmpty()) {
                     return collect([]);
                 } else {
+                    $stick  =   $query->first();
+                    $stick->stick = $this->stationIds[0];
+                    if (!$stick->save()) {
+                        throw new \Exception('系统异常，请重试', -5);
+                    }
+
+                    //更改流程表中的考站id和考场id
                     $a = ExamQueue::where('student_id', $query->first()->student_id)
                         ->where('status', 0)->where('blocking', 1)
                         ->orderBy('begin_dt', 'asc')->first();
                     $a->station_id = $this->stationIds[0];
                     $a->room_id = RoomStation::where('station_id', $a->station_id)->first()->room_id;
-                    $a->save();
+                    if (!$a->save()) {
+                        throw new \Exception('系统异常，请重试', -6);
+                    }
+
                     return $query;
                 }
 
