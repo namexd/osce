@@ -967,6 +967,28 @@ function exam_assignment_add(){
             return false;
         }
     });
+    /**
+     * 新增考试 考生同时进出/考生分阶段考试
+     * @author chenxia
+     * @version 303
+     * @date    2016-04-05
+     */
+    $(".checkbox_one").click(function(){
+        if ($(this).find("input").is(':checked')) {
+            $(this).find(".check_icon ").addClass("check");
+        } else {
+            $(this).find(".check_icon").removeClass("check");
+        }
+    })
+    $(".checkbox_two").click(function(){
+        if ($(this).find("input").is(':checked')) {
+            $(this).find(".check_icon ").addClass("check");
+            $(this).parent().find(".check_div").css("display","inline-block")
+        } else {
+            $(this).find(".check_icon").removeClass("check");
+            $(this).parent().find(".check_div").css("display","none")
+        }
+    })
 
     /**
      * 新增一条
@@ -978,7 +1000,15 @@ function exam_assignment_add(){
         //计数器标志
         var index = $('#exam_add').find('tbody').attr('index');
         index = parseInt(index) + 1;
-
+        //获取考生分阶段考试的值
+        var checkbox_num=$(".checkbox_num").val();
+        /**
+         * 这里是生成阶段
+         */
+        var checkbox_number;
+        for(var i=1;i<=checkbox_num;i++) {
+            checkbox_number += '<option value="">'+'阶段'+i+'</option>';
+        }
         //时长默认值
         var timeLength = (Time.getTime('YYYY-MM-DD hh:mm')).split(' ')[1];
         var hours = timeLength.split(':')[0];
@@ -994,7 +1024,7 @@ function exam_assignment_add(){
             '</td>'+
             '<td>0天0小时0分</td>'+
             '<td>' +
-            '<select class="form-control" name=""><option value="1">阶段一</option><option value="2">阶段二</option><option value="2">阶段三</option></select>' +
+            '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]">'+checkbox_number+'</select>'+
             '</td>'+
             '<td>'+
             '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -1004,7 +1034,11 @@ function exam_assignment_add(){
         $('#exam_add').find('tbody').attr('index',index);
         $('#exam_add').find('tbody').append(html);
     });
+    $(".checkbox_num").blur(function(){
+        $('table tr td select').each(function(){
 
+        });
+    })
 
     /**
      * 删除一条记录
@@ -1053,6 +1087,7 @@ function exam_assignment_add(){
           content: '/osce/admin/station/test' //iframe的url
         }); 
     })
+
 }
 
 /**
@@ -3855,10 +3890,11 @@ function station_assignment(){
 
 
 /**
- * 考官安排多选下拉框
+ * 考官安排
  * @author chenxia
  * @version 3.3
- * @date    2016-03-30
+ * @date    2016-04-05
+ * @param   {object} 传入数据
  */
 function examiner_manage() {
 
@@ -3965,11 +4001,15 @@ function examiner_manage() {
         for(var i in data){
             var str_teacher = '',
                 str_sp = '';
-
+            /**
+             * 这里是生成考官
+             */
             for(var j in data[i].teacher) {
                 str_teacher += '<option value="'+data[i].teacher[j].id+'" selected="selected">'+data[i].teacher[j].name+'</option>';
             }
-
+            /**
+             * 这里是生成ＳＰ
+             */
             for(var j in data[i].sp_teacher) {
                 str_sp += '<option value="'+data[i].sp_teacher[j].id+'" selected="selected">'+data[i].sp_teacher[j].name+'</option>';
             }
