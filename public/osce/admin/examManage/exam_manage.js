@@ -991,6 +991,9 @@ function exam_assignment_add(){
             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
             '</td>'+
             '<td>0天0小时0分</td>'+
+            '<td>' +
+            '<select class="form-control" name=""><option value="1">阶段一</option><option value="2">阶段二</option><option value="2">阶段三</option></select>' +
+            '</td>'+
             '<td>'+
             '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
             '</td>'+
@@ -1168,6 +1171,9 @@ function exam_basic_info(){
             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm">'+
             '</td>'+
             '<td>0天0小时0分</td>'+
+            '<td>' +
+            '<select class="form-control" name=""><option value="1">阶段一</option><option value="2">阶段二</option><option value="2">阶段三</option></select>' +
+            '</td>'+
             '<td>'+
             '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
             '</td>'+

@@ -93,7 +93,7 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">排序方式</label>
+                                <label class="col-sm-2 control-label">排考方式</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;" {{$examData['status']==0?'':'disabled'}} name="sequence_mode" v>
                                         <option value="1" {{($examData['sequence_mode']==1)?'selected=selected':''}}>以考场分组</option>
@@ -104,16 +104,88 @@
                             <div class="hr-line-dashed"></div>
 
                             <div class="form-group">
+                                 <label class="col-sm-2 control-label">教官配置</label>
+                                 <div class="col-sm-10">
+                                      <select class="form-control" style="width:200px;" name="" disabled>
+                                           <option value="1">按考站配置考官</option>
+                                           <option value="2">按考场配置考官</option>
+                                      </select>
+                                 </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="clearfix form-group" style="margin-bottom: 0;">
+                                             <div class="col-sm-12" id="checkbox_div">
+                                                 <label class="check_label checkbox_input checkbox_one" style="height: 34px;line-height: 23px;margin-left: 12.1%;">
+                                                      <div class="check_icon" style="display: inline-block;margin:5px 0 0 5px;float:left;" disabled></div>
+                                                      <input type="checkbox" name="" value="1"disabled>
+                                                      <span class="check_name" style="display: inline-block;float:left;">要求考生同时进出考站（考站的时间采用最长考站时间）</span>
+                                                 </label>
+                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">考试内容</label>
+                                <div class="col-sm-10">
+                                     <select class="form-control" style="width:200px;" name="" disabled>
+                                          <option value="1">由考官指定</option>
+                                          <option value="2">由系统指定</option>
+                                     </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                 <div class="row">
+                                     <div class="col-md-12">
+                                         <div class="clearfix form-group" style="margin-bottom: 0;">
+                                              <div class="col-sm-12" id="checkbox_div">
+                                                   <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
+                                                        <div class="check_icon" style="display: inline-block;float:right;margin:5px 0 0 5px;"></div>
+                                                        <input type="checkbox" name="" value="1">
+                                                        <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
+                                                   </label>
+                                                   <div class="col-sm-10">
+                                                        <input type="text" required class="form-control" id="address" name="" style="float:left;width:200px;" disabled><span style="float:left;margin-left:5px;">阶段</span>
+                                                   </div>
+                                              </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                 <label class="col-sm-2 control-label">实时发布成绩</label>
+                                 <div class="col-sm-10">
+                                      <select class="form-control" style="width:200px;" name="" disabled>
+                                            <option value="1">是</option>
+                                            <option value="2">否</option>
+                                      </select>
+                                 </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">考试时间</label>
                                 <div class="col-sm-10">
-                                    <a  href="javascript:void(0)"  class="btn btn-primary" id="add-new" style="float: right; {{$examData['status']==0?'':'display:none'}}">&nbsp;&nbsp;新增&nbsp;&nbsp;</a>
+                                <a  href="javascript:void(0)"  class="btn btn-primary" id="quick-add" style="float: right;display:none;">快速新增时间</a>
+                                    <a  href="javascript:void(0)"  class="btn btn-primary" id="add-new" style="float: right;">新增时间</a>
                                     <table class="table table-bordered" id="add-basic">
                                         <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th>序号</th>
                                             <th>开始时间</th>
                                             <th>结束时间</th>
                                             <th>时长</th>
+                                            <th>阶段</th>
                                             <th>操作</th>
                                         </tr>
                                         </thead>
@@ -139,7 +211,14 @@
                                                 ?>
                                                 <td>{{$d}} 天 {{$h}}小时 {{$m}}分</td>
                                                 <td>
-                                                    <a href="javascript:void(0)"><span class="read  state2" {{$examData['status']==0?'':'style=display:none;'}}><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                     <select class="form-control" name="">
+                                                          <option value="1">阶段一</option>
+                                                          <option value="2">阶段二</option>
+                                                          <option value="2">阶段三</option>
+                                                     </select>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                 </td>
                                             </tr>
                                         @empty
@@ -154,7 +233,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2 time-modify">
-                                    <button id="save" class="btn btn-primary" type="submit" {{$examData['status']==0?'':'style=display:none;'}}>保存</button>
+                                    <button id="save" class="btn btn-primary" type="submit">保存</button>
                                     <a class="btn btn-white" href="javascript:history.back(-1)" {{--href="{{route("osce.admin.exam.getExamList")}}"--}}>取消</a>
                                 </div>
                             </div>

@@ -33,7 +33,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.examManage.quick_add');
+        return view('osce::admin.resourceManage.chenxiatest');
     }
 
     /**
