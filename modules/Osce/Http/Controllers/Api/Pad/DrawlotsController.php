@@ -71,7 +71,7 @@ class DrawlotsController extends CommonController
     /**
      * 根据考场ID获取当前时间段的考生列表(接口)
      * @method GET
-     * @url api/1.0/osce/drawlots/examinee
+     * @url osce/pad/examinee
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse ${response}
@@ -132,7 +132,7 @@ class DrawlotsController extends CommonController
     /**
      * 根据考场ID获取当前时间段的考生列表(接口)
      * @method GET
-     * @url api/1.0  /osce/drawlots/next-examinee
+     * @url osce/pad/next-examinee
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse ${response}
@@ -208,7 +208,7 @@ class DrawlotsController extends CommonController
     /**
      * 根据传入的腕表编号和房间id分配应该要去考站(接口)
      * @method POST
-     * @url api/1.0  /osce/pad/station
+     * @url /osce/pad/station
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse ${response}
@@ -349,6 +349,9 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             Common::valueIsNull($exam, -333);
+            if ($exam->status != 1) {
+                throw new \Exception('当前选择的这场考试没有进行', -10);
+            }
 
 //            //根据id获取考站信息
 //            $stationTeacher = StationTeacher::where('user_id', $id)->where('exam_id', $exam->id)->first();

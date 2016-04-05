@@ -124,7 +124,7 @@ class RoomMode implements ModeInterface
                     if (!$temp->isEmpty()) {
                         foreach ($temp as $item) {
                             //将item的考场信息修改
-                            $item->room_id = $this->room->id;
+                            $item->room_id = $this->room->room_id;
                             $item->save();
                             $array->push($item);
                         }
