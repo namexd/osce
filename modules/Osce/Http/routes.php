@@ -286,7 +286,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//考试安排接口路由
 //		Route::get('exam-arrange/exam-content',['uses'=>'ExamArrangeController@getExamContent','as'=>'osce.admin.ExamContent.getExamContent']);
-		Route::get('exam-arrange/station-data',['uses'=>'ExamArrangeController@getStationData','as'=>'osce.admin.ExamArrange.getStationData']);
+		Route::get('exam-arrange/station-list',['uses'=>'ExamArrangeController@getStationList','as'=>'osce.admin.ExamArrange.getStationList']);
+		Route::get('exam-arrange/room-list',['uses'=>'ExamArrangeController@getRoomList','as'=>'osce.admin.ExamArrange.getRoomList']);
+		Route::get('exam-arrange/add-exam-flow',['uses'=>'ExamArrangeController@postAddExamFlow','as'=>'osce.admin.ExamArrange.postAddExamFlow']);
 
 
 
