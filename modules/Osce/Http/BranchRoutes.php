@@ -95,7 +95,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //试卷管理-修改试卷
         Route::post('exampaper/edit-exam-paper',['uses'=>'ExamPaperController@getEditExamPaper','as'=>'osce.admin.ExamPaperController.getEditExamPaper']);
         //题库管理列表
-        Route::get('examQuestion/examQuestion-list',['uses'=>'ExamQuestionController@showExamQuestionList','as'=>'osce.admin.ExamQuestionController.showExamQuestionList']);
+        Route::get('examquestion/examquestion-list',['uses'=>'ExamQuestionController@showExamQuestionList','as'=>'osce.admin.ExamQuestionController.showExamQuestionList']);
         //试卷管理-验证试卷
         Route::post('exampaper/check-name-only',['uses'=>'ExamPaperController@postCheckNameOnly','as'=>'osce.admin.ExamPaperController.postCheckNameOnly']);
 
@@ -187,7 +187,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 
         //获取正在考试列表
-        Route::get('exam-control/getExamlist',['uses'=>'ExamControlController@getExamlist','as'=>'osce.admin.ExamControlController.getExamlist']);
+        Route::get('exam-control/getexamlist',['uses'=>'ExamControlController@getExamlist','as'=>'osce.admin.ExamControlController.getExamlist']);
+        //终止考试数据交互
+        Route::get('exam-control/poststopexam',['uses'=>'ExamControlController@postStopExam','as'=>'osce.admin.ExamControlController.postStopExam']);
 
 
 
