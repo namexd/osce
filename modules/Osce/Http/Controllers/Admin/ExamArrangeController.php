@@ -21,9 +21,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 
 class ExamArrangeController extends CommonController
 {
-    //考试安排着陆页
     //新增考试安排的站
-
     public function postAddExamFlow(Request $request){
         try{
             $this->validate($request,[
@@ -36,6 +34,11 @@ class ExamArrangeController extends CommonController
             $name = $request->get('name');
             $order = $request->get('order');
             $examGradationId = $request->get('exam_gradation_id');
+            //获取当前操作信息
+            $user = Auth::user();
+            if (empty($user)) {
+                throw new \Exception('未找到当前操作人信息');
+            }
             $data =[
                 'exam_id'=>$examId,
                 'name'=>$name,
@@ -43,19 +46,32 @@ class ExamArrangeController extends CommonController
                 'exam_gradation_id'=>$examGradationId,
 //                'exam_screening_id'=>'',
             ];
-//            dd($data);
             //先保存到临时表
             $result = ExamDraftFlowTemp::create($data);
-            if(!$result){
-                throw new \Exception('保存临时考站失败');
+            if($result){
+                //新增一条空的考站的子站数据
+                $DraftData=[
+                    'exam_id'=>$examId,
+                    'old_draft_flow_id'=>$result->id,
+                    'ctrl_type'=>0,
+                    'used'=>1,
+                    'user_id'=>$user->id,
+                ];
+                $DraftResult = ExamDraftTemp::create($DraftData);
+
+                if($DraftResult){
+                    return response()->json(
+                        $this->success_data(['id'=>$result->id,'draft_id'=>$DraftResult->id], 1, 'success')
+                    );
+                }else{
+                    throw new \Exception('保存临时考站失败');
+                }
+
             }else{
-                return response()->json(
-                    $this->success_data($result->id, 1, 'success')
-                );
+                throw new \Exception('保存临时考站失败');
+
             }
-
         }catch (\Exception $ex){
-
             return response()->json(
                 $this->fail($ex)
             );
@@ -85,7 +101,7 @@ class ExamArrangeController extends CommonController
                 'old_draft_flow_id'=>$request->get('old_draft_flow_id'),
                 'user_id'=>$user->id,
                 'used'=>0,
-                'ctrl_type'=>$request->get('type'),
+                'ctrl_type'=>1,
             ];
             $result = ExamDraftTemp::create($data);
             if(!$result){
