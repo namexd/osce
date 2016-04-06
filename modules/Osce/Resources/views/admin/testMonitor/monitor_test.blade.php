@@ -30,9 +30,9 @@
                 <li class="success-element titleBackground">
                     <p class="font20 fontb">{{@$examName['name']}}</p>
                     <div class="font16 messageColor">
-                        <span class="marr_25">考站数量：{{@$data['examName']['name']}}</span>
-                        <span class="marr_25">考生人数：{{@$data['stationCount']}}</span>
-                        <span class="marr_25">正在考试：{{@$data['studentCount']}}</span>
+                        <span class="marr_25">考站数量：{{@$data['stationCount']}}</span>
+                        <span class="marr_25">考生人数：{{@$data['studentCount']}}</span>
+                        <span class="marr_25">正在考试：{{@$data['doExamCount']}}</span>
                         <span>已完成：{{@$data['endExamCount']}}</span>
                     </div>
                 </li>
