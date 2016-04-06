@@ -96,10 +96,8 @@ class DrawlotsController extends CommonController
             //首先得到登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
-
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
-
             if (is_null($exam)) {
                 throw new \Exception('今天没有正在进行的考试', -50);
             } elseif ($exam->status != 1) {
@@ -120,11 +118,10 @@ class DrawlotsController extends CommonController
                     throw new \Exception('当前没有这种考试模式！');
                     break;
             }
-
             foreach ($students as $student) {
                 unset($student['blocking']);
             }
-
+            
             return response()->json($this->success_data($students));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));

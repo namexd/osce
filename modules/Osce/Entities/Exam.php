@@ -27,6 +27,16 @@ class Exam extends CommonModel
         1   =>  '正在考试',
         2   =>  '考试结束',
     ];
+
+
+    /**
+     * 考试自能排考关联
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function examPlan(){
+        return $this->hasMany('\Modules\Osce\Entities\ExamPlan','exam_id','id');
+    }
+
     /**
      * 考试与考站的关联
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -539,11 +549,12 @@ class Exam extends CommonModel
         }
         $today = strtotime(date('Y-m-d', $time));    //当天凌晨
 
-        $result = $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
+        $result= $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
                                 or unix_timestamp(date_format(end_dt, "%Y-%m-%d")) = ?
                                 or (unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) < ?
                                     and unix_timestamp(date_format(end_dt, "%Y-%m-%d")) > ?)', [$today, $today, $today, $today])
-            ->get();
+                ->with('examPlan')
+                ->get();
 
         return $result;
     }

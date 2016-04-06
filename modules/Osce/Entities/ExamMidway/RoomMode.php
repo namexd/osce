@@ -65,7 +65,7 @@ class RoomMode implements ModeInterface
         try {
             //获取首位固定
             $sticks = ExamQueue::where('exam_id', $this->exam->id)->where('room_id', $this->room->room_id)->where('stick', $this->room->room_id)->get();
-            
+
             if (count($sticks) < $this->_T_Count) {
                 $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->where('exam_queue.room_id', $this->room->room_id)
@@ -126,6 +126,7 @@ class RoomMode implements ModeInterface
                             //将item的考场信息修改
                             $item->room_id = $this->room->room_id;
                             $item->save();
+
                             $array->push($item);
                         }
                     }
@@ -150,9 +151,9 @@ class RoomMode implements ModeInterface
 
                 return $array;
             } else {
-                return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.id', $sticks->pluck('id')->toArray())
-                    ->whereIn('student.id', $sticks->pluck('student_id')->unique()->toArray())
+                    ->whereIn('student.id', array_unique($sticks->pluck('student_id')->toArray()))
                     ->select(
                         'exam_queue.id as id',
                         'student.id as student_id',
