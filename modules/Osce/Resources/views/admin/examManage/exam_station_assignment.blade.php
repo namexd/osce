@@ -14,7 +14,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'station_assignment','spteacher_invitition':'{{route('osce.wechat.invitation.getInvitationList')}}','spteacher_list':'{{route('osce.admin.spteacher.getShow')}}','teacher_list':'{{route('osce.admin.exam.getTeacherListData')}}','url':'{{route('osce.admin.exam.getAjaxStationRow')}}','list':'{{route('osce.admin.exam.getAjaxStation')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'station_assignment','stationAdd':'{{route('osce.admin.ExamArrange.postAddExamFlow')}}','exam_item':'{{route('osce.admin.exam-arrange.getAllSubjects')}}','station_stage':'{{route('osce.admin.exam-arrange.getAllGradations')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
@@ -31,6 +31,7 @@
                     <ul class="nav nav-tabs">
                         <li class=""><a href="{{route('osce.admin.exam.getEditExam',['id'=>$id])}}">基础信息</a></li>
                         <li class="active"><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$id])}}">考场安排</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam-arrange.getInvigilateArrange',['id'=>$id])}}">考官安排</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$id])}}">待考区说明</a></li>
@@ -44,7 +45,7 @@
                         <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postStationAssignment')}}">
                             <input type="hidden" name="id" value="{{$id}}">
 
-                            <div class="station-container">
+                            <div class="station-container" index="0">
                             
                                 <!-- 一个考站dom -->
                                 <!-- <div class="form-group">

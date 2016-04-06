@@ -1,21 +1,20 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
- * Date: 2016/1/22 0022
- * Time: 15:41
+ * User: Administrator
+ * Date: 2016/4/6 0006
+ * Time: 15:30
  */
 namespace Modules\Osce\Entities;
 
-class ExamAbsent extends  CommonModel{
+class ExamDraftFlowTemp extends CommonModel{
     protected $connection = 'osce_mis';
-    protected $table = 'exam_absent';
+    protected $table = 'exam_draft_flow_temp';
     public $timestamps = true;
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['exam_id', 'exam_screening_id', 'student_id',  'begin_dt',  'status', 'created_user_id'];
+    protected $fillable = ['id','exam_id', 'exam_screening_id', 'exam_gradation_id',  'name',  'order', 'created_at'];
     public $search = [];
-
 }
