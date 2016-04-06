@@ -171,6 +171,7 @@ class ExamArrangeController extends CommonController
 
     /**
      * 获取考试项目（异步）
+     * @url GET /osce/admin/exam-arrange/all-subjects
      * @param Request $request
      * @author Zhoufuxiang 2016-04-06
      * @return string
@@ -220,7 +221,10 @@ class ExamArrangeController extends CommonController
 
     /**
      * 根据考试项目 获取对应下的考官、SP（接口）
+     * @url GET /osce/admin/exam-arrange/invigilates-by-subject
      * @param Request $request
+     * @author Zhoufuxiang 2016-04-06
+     * @return json
      */
     public function getInvigilatesBySubject(Request $request){
         try{
