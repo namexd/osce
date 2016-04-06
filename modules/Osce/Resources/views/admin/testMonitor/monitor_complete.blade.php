@@ -38,8 +38,8 @@
                         <li><a href="{{route("osce.admin.ExamControlController.getExamlist")}}">正在考试</a></li>
                         <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorLateList")}}">迟到</a></li>
                         <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorReplaceList")}}">替考</a></li>
-                        <li class="active"><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorQuitList")}}">弃考</a></li>
-                        <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorFinishList")}}">已完成</a></li>
+                        <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorQuitList")}}">弃考</a></li>
+                        <li class="active"><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorFinishList")}}">已完成</a></li>
                     </ul>
                 </div>
             </div>
@@ -56,8 +56,7 @@
                             <th>准考证号</th>
                             <th>身份证号</th>
                             <th>联系电话</th>
-                            <th>班级</th>
-                            <th>班主任姓名</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
@@ -67,9 +66,14 @@
                                 <td>SF1986</td>
                                 <td>SF1986</td>
                                 <td>510821199008300065</td>
-                                <td>131246579</td>
-                                <td>3班</td>
-                                <td>王五</td>
+                                <td>123456789123</td>
+                                <td>
+                                    <a href="javascript:void(0)">
+                                        <span class="state1 abandon">
+                                            <i class="fa fa-cog fa-2x"></i>
+                                        </span>
+                                    </a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -78,3 +82,7 @@
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}
+
+@section('layer_content')
+
+@stop
