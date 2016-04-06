@@ -131,6 +131,8 @@ class ExamArrangeController extends CommonController
         $this->validate($request,[
             'station_name'=>'sometimes',
             'id'=>'required',
+//            'type'=>'required',
+//            'draft_id'=>'required'
         ]);
         $name = $request->get('station_name');
         $id = $request->get('id');
@@ -147,16 +149,19 @@ class ExamArrangeController extends CommonController
     }
 
 
-
     //获取考站接口
     public function getStationList(Request $request){
         $this->validate($request,[
             'station_name'=>'sometimes',
             'id'=>'required',
+//            'type'=>'required',
+//            'draft_id'=>'required'
         ]);
 
         $name = $request->get('station_name');
         $id = $request->get('id');
+
+
         //查询出已用过的考站
         $stationIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('station_id');
         $stationModel = new Station();
@@ -185,7 +190,6 @@ class ExamArrangeController extends CommonController
             ]);
             $exam_id = intval($request->get('exam_id'));
             $data    = ExamGradation::where('exam_id','=',$exam_id)->get();
-
             return response()->json(
                 $this->success_data($data, 1, 'success')
             );
