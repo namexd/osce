@@ -69,9 +69,9 @@ class ExamArrangeController extends CommonController
     public function postExamDraft(Request $request){
         $this->validate($request,[
             'exam_id'=>'required',
-            'ctrl_type'=>'required',
+//            'ctrl_type'=>'required',
             'old_draft_flow_id'=>'required',
-            'old_draft_id'=>'required',
+//            'old_draft_id'=>'required',
         ]);
         try{
             //获取当前操作信息
@@ -85,7 +85,7 @@ class ExamArrangeController extends CommonController
                 'old_draft_flow_id'=>$request->get('old_draft_flow_id'),
                 'user_id'=>$user->id,
                 'used'=>0,
-                'ctrl_type'=>1,
+                'ctrl_type'=>$request->get('type'),
             ];
             $result = ExamDraftTemp::create($data);
             if(!$result){
