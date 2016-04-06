@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\ExamDraftFlowTemp;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Subject;
@@ -40,9 +41,14 @@ class ExamArrangeController extends CommonController
                 'exam_screening_id'=>'',
             ];
             //先保存到临时表
-//            if(){
-//
-//            }
+            $result = ExamDraftFlowTemp::create($data);
+            if(!$result){
+                throw new \Exception('保存临时考站失败');
+            }else{
+                return response()->json(
+                    $this->success_data($result->id, 1, 'success')
+                );
+            }
 
         }catch (\Exception $ex){
 
@@ -55,6 +61,21 @@ class ExamArrangeController extends CommonController
 
 }
 
+//新增考站里面的子对象
+    public function postExamDraft(Request $request){
+        $this->validate($request,[
+            'exam_id'=>'required',
+            'station_id'=>'required',
+            'room_id'=>'required',
+            'subject_id'=>'required',
+            'ctrl_type'=>'required',
+            'old_draft_flow_id'=>'required',
+            'old_draft_id'=>'required',
+            'used'=>'required',
+            'user_id'=>'required',
+        ]);
+
+    }
 
 
 
