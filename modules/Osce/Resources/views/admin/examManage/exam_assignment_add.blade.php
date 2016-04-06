@@ -18,6 +18,7 @@ input.laydate-icon{
 	.checkbox_input{font-weight:100;cursor:pointer;}
 	.check_name{padding:0;height:16px;position: relative;top:-3px;font-weight: 700;}
 	.check_icon.check {background-position: -32px 0;}
+	.check_margin{display: inline-block;float:right;margin:5px 0 0 5px;}
 </style>
 @stop
 
@@ -39,7 +40,6 @@ input.laydate-icon{
         </div>
         <div class="ibox-content">
             <div class="row">
-
                 <div class="col-md-12 ">
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postAddExam')}}">
                         <div class="form-group">
@@ -126,12 +126,12 @@ input.laydate-icon{
                                       <div class="clearfix form-group" style="margin-bottom: 0;">
                                            <div class="col-sm-12" id="checkbox_div">
                                                 <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
-                                                    <div class="check_icon" style="display: inline-block;float:right;margin:5px 0 0 5px;"></div>
+                                                    <div class="check_icon check_margin" checkbox=0></div>
                                                     <input type="checkbox" name="gradation_order" value="1">
                                                     <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
                                                 </label>
-                                                <div class="col-sm-10 check_div" style="display:none;">
-                                                    <input type="text" class="form-control checkbox_num" id="gradation" name="gradation_order" style="float:left;width:200px;" value="1">
+                                                <div class="col-sm-10 check_div">
+                                                    <input type="text" class="form-control checkbox_num" id="gradation" name="gradation_order" style="float:left;width:200px;" value="1" readonly="readonly">
                                                     <span style="float:left;margin-left:5px;margin-top: 5px;">阶段</span>
                                                 </div>
                                            </div>
