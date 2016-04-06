@@ -83,7 +83,7 @@ class ExamArrangeController extends CommonController
 }
 
 //新增考站里面的子对象到临时表
-    public function postExamDraft(Request $request){
+    public function postAddExamDraft(Request $request){
         $this->validate($request,[
             'exam_id'=>'required',
 //            'ctrl_type'=>'required',
@@ -130,14 +130,15 @@ class ExamArrangeController extends CommonController
     public function getRoomList(Request $request){
         $this->validate($request,[
             'station_name'=>'sometimes',
-//            'id'=>'required',
+            'id'=>'required',
         ]);
         $name = $request->get('station_name');
-
         $id = $request->get('id');
-        $roomModel = new Room();
-        $roomData = $roomModel -> showRoomList($keyword = '', $type = '0', $id = '');
 
+        $roomIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('room_id');
+        $roomModel = new Room();
+
+        $roomData = $roomModel -> getRoomList($roomIdArray,$name);
         return response()->json(
             $this->success_data($roomData, 1, 'success')
         );
@@ -166,7 +167,6 @@ class ExamArrangeController extends CommonController
         return response()->json(
             $this->success_data($stationData, 1, 'success')
         );
-
         
     }
 
