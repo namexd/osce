@@ -178,6 +178,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //已完成
         Route::get('exam-monitor/finish',['uses'=>'ExamMonitorController@getExamMonitorFinishList','as'=>'osce.admin.ExamMonitorController.getExamMonitorFinishList']);
         /*****************考试监控end*******************/
+
+        /****************android c++接口*****************/
+        // android端替考警告
+        Route::post('api/replace-exam-alert',['uses'=>'ApiController@postAlertExamReplace','as'=>'osce.admin.ApiController.postAlertExamReplace']);
     });
 
 });
