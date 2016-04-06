@@ -451,7 +451,7 @@ class QuestionBankRepositories  extends BaseRepository
     }
 
     /**
-     * 检验用户是否是监考老师
+     * 检验用户是否是理论站的监考老师
      * @method
      * @url /osce/
      * @access public
@@ -462,6 +462,7 @@ class QuestionBankRepositories  extends BaseRepository
      */
     public function LoginAuth(){
         $user = Auth::user();
+
         if(count($user->roles)>0){
             $roles = $user
                 ->roles
@@ -470,19 +471,11 @@ class QuestionBankRepositories  extends BaseRepository
         } else {
             $roles = [];
         }
-        //监考老师 目前的角色id为1
+
         if(in_array(config('osce.invigilatorRoleId'), $roles)){
-            return  $user->id;
-        }else{
-            $teacher    =   Teacher::find($user->id);
-            if(!is_null($teacher))
-            {
-                if($teacher->type==1)
-                {
-                    return  $user->id;
-                }
-            }
-            return  false;
+            return  true;
+        } else {
+            return false;
         }
     }
 
