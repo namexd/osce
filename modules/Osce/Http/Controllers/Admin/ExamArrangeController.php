@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\ExamDraftFlowTemp;
 use Modules\Osce\Entities\ExamDraftTemp;
+use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Subject;
@@ -154,7 +155,32 @@ class ExamArrangeController extends CommonController
     }
 
     /**
-     * 获取考试项目（异步）
+     * 获取考试所有的阶段（异步接口）
+     * @url GET /osce/admin/exam-arrange/all-gradations
+     * @param Request $request
+     * @author Zhoufuxiang 2016-04-06
+     * @return string
+     */
+    public function getAllGradations(Request $request){
+        try{
+            //验证
+            $this->validate($request, [
+                'exam_id' => 'required|integer',
+            ]);
+            $exam_id = intval($request->get('exam_id'));
+            $data    = ExamGradation::where('exam_id','=',$exam_id)->get();
+
+            return response()->json(
+                $this->success_data($data, 1, 'success')
+            );
+
+        }catch (\Exception $ex){
+            return $this->fail($ex);
+        }
+    }
+
+    /**
+     * 获取考试项目（异步接口）
      * @url GET /osce/admin/exam-arrange/all-subjects
      * @param Request $request
      * @author Zhoufuxiang 2016-04-06
