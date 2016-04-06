@@ -6,6 +6,7 @@
  * Time: 15:41
  */
 namespace Modules\Osce\Entities;
+
 class ExamAbsent extends  CommonModel{
     protected $connection = 'osce_mis';
     protected $table = 'exam_absent';
