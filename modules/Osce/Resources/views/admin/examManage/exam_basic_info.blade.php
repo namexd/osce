@@ -241,7 +241,9 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2 time-modify">
+                                    @if($examData->status==0)
                                     <button id="save" class="btn btn-primary" type="submit">保存</button>
+                                    @endif
                                     <a class="btn btn-white" href="javascript:history.back(-1)" {{--href="{{route("osce.admin.exam.getExamList")}}"--}}>取消</a>
                                 </div>
                             </div>

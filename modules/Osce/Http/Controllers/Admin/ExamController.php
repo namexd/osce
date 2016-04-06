@@ -91,10 +91,10 @@ class ExamController extends CommonController
 
         //从模型得到数据
         $data = $exam->showExamList($formData);
-
-        //得到考试组成
+        //得到考试组成，是否排考
         foreach ($data as &$item) {
             $item->constitute = $this->getExamConstitute($item['id']);
+            $item->arranged   = count($item->examPlan);
         }
 
         return view('osce::admin.examManage.exam_assignment', ['data' => $data]);

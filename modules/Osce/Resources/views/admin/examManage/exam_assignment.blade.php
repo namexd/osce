@@ -79,11 +79,16 @@
                     <td>{{date('Y-m-d H:i',strtotime($item->begin_dt))}} ~ {{date('Y-m-d H:i',strtotime($item->end_dt))}}</td>
                     <td>{{$item->constitute}}</td>
                     <td>{{$item->total}}</td>
-                    <td><span class="coloru79">是</span></td>
+                    <td><span class="coloru{{($item->arranged)?'79':'80'}}">{{($item->arranged)?'是':'否'}}</span></td>
                     <td value="{{$item->id}}">
-                        <a href="{{route('osce.admin.exam.getEditExam',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa  fa-cog fa-2x"></i></span></a>
-                        <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                        <button class="btn btn-primary" disabled type="button">发布成绩</button>
+                        <a href="{{route('osce.admin.exam.getEditExam',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-cog fa-2x"></i></span></a>
+
+                        @if($item->status==0)
+                            <a href="javascript:void(0)"><span class="read state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                        @else
+                            <a href="javascript:void(0)" style="text-decoration:none;cursor: default;"><span>&nbsp;&nbsp;&nbsp;</span></a>
+                        @endif
+                        <button class="btn btn-primary" {{($item->status==2 && $item->real_push==0)?'':'disabled'}} type="button">发布成绩</button>
                     </td>
                 </tr>
                 @endforeach
