@@ -112,7 +112,6 @@ class DrawlotsController extends CommonController
             }
 
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
-            dd($station, $examId);
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations);
             } elseif ($exam->sequence_mode == 2) {
