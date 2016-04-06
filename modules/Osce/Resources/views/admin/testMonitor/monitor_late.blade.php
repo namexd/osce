@@ -51,15 +51,15 @@
                 <div class="list_all">
                     <table class="table table-striped" id="table-striped" style="background:#fff">
                         <thead>
-                        <tr>
-                            <th>序号</th>
-                            <th>考生姓名</th>
-                            <th>学号</th>
-                            <th>准考证号</th>
-                            <th>身份证号</th>
-                            <th>联系电话</th>
-                            <th>操作</th>
-                        </tr>
+                            <tr>
+                                <th>序号</th>
+                                <th>考生姓名</th>
+                                <th>学号</th>
+                                <th>准考证号</th>
+                                <th>身份证号</th>
+                                <th>联系电话</th>
+                                <th>操作</th>
+                            </tr>
                         </thead>
                         <tbody class="subjectBody">
                             @if(!empty($data)&& count($data)>0)
