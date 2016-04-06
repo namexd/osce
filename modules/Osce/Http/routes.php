@@ -400,6 +400,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/end-exam', 	['uses'=>'InvigilatePadController@getEndExam','as'=>'osce.api.invigilatepad.getEndExam']);
 		Route::get('invigilatepad/test-index', 	['uses'=>'InvigilatePadController@getTestIndex','as'=>'osce.api.invigilatepad.getTestIndex']);
 
+		//显示所有已绑定但未解绑人员的接口
+		Route::get('invigilatepad/bound-watch-members', 	['uses'=>'InvigilatePadController@getBoundWatchMembers','as'=>'osce.api.invigilatepad.getBoundWatchMembers']);
+		//获取考生详细信息的接口
+		Route::get('invigilatepad/examinee-details', 	['uses'=>'InvigilatePadController@getExamineeDetails','as'=>'osce.api.invigilatepad.getExamineeDetails']);
+
 		//pad的上传
 		Route::post('upload-image',['uses'=>'InvigilatePadController@postTestAttachImage','as'=>'osce.pad.InvigilatePad.postTestAttachImage']);
 		Route::post('upload-radio',['uses'=>'InvigilatePadController@postTestAttachRadio','as'=>'osce.pad.InvigilatePad.postTestAttachRadio']);

@@ -103,4 +103,25 @@ class WatchLog extends CommonModel{
            ])->paginate(config('osce.page_size'));
        return $builder;
    }
+
+
+    //显示所有已绑定但未解绑人员的
+    public function getBoundWatchInfos(){
+        $builder = $this->where('action','=','绑定')->leftjoin('watch',function($watch){
+            $watch->on('watch.id','=','watch_log.watch_id');
+        })->leftjoin('student',function($student){
+            $student->on('student.id','=','watch_log.student_id');
+        })->leftjoin('exam_screening_student',function($screeningStudent){
+            $screeningStudent->on('exam_screening_student.watch_id','=','watch_log.watch_id');
+        })->leftjoin('exam_screening',function($examScreening){
+            $examScreening->on('exam_screening.id','=','exam_screening_student.exam_screening_id');
+        })->leftjoin('exam_queue',function($examQueue){
+            $examQueue->on('exam_queue.exam_screening_id','=','exam_screening.id');
+        })->leftjoin('exam_station',function($examQueue){
+            $examQueue->on('exam_station.station_id','=','exam_queue.station_id');
+        })->leftjoin('exam',function($examScreening){
+            $examScreening->on('exam.id','=','exam_station.exam_id');
+        })->groupby('watch_log.student_id')->select('watch.id','watch.nfc_code','student.name','exam.status')->get();
+        return $builder;
+    }
 }

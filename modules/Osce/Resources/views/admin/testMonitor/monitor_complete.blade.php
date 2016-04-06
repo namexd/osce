@@ -27,12 +27,12 @@
         <div class="container-fluid ibox-content">
             <ul class="sortable-list connectList agile-list ui-sortable" style="background-color: #fff;">
                 <li class="success-element titleBackground">
-                    <p class="font20 fontb">考试2016.1.12（二选一）</p>
+                    <p class="font20 fontb">{{@$data['examName']['name']}}</p>
                     <div class="font16 messageColor">
-                        <span class="marr_25">考站数量：1</span>
-                        <span class="marr_25">考生人数：1</span>
-                        <span class="marr_25">正在考试：1</span>
-                        <span>已完成：1</span>
+                        <span class="marr_25">考站数量：{{@$data['stationCount']}}</span>
+                        <span class="marr_25">考生人数：{{@$data['studentCount']}}</span>
+                        <span class="marr_25">正在考试：{{@$data['doExamCount']}}</span>
+                        <span>已完成：{{@$data['endExamCount']}}</span>
                     </div>
                 </li>
             </ul>
@@ -71,10 +71,10 @@
                                 <td>SF1986</td>
                                 <td>510821199008300065</td>
                                 <td>123456789123</td>
-                                <td>
+                                <td>{{--{{route('osce.admin.course.getResultVideo')}}?exam_id={{$val['exam_id']}}&student_id={{$val['student_id']}}&station_id={{$val['station_id']}}--}}
                                     <a href="javascript:void(0)">
                                         <span class="state1 abandon">
-                                            <i class="fa fa-cog fa-2x"></i>
+                                            <i class="fa fa-video-camera fa-2x"></i>
                                         </span>
                                     </a>
                                 </td>
