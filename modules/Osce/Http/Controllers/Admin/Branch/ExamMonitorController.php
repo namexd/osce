@@ -206,17 +206,19 @@ class ExamMonitorController  extends CommonController
                         $replaceList=ExamScreeningStudent::where('student_id',$v['student_id'])->get()->toArray();
                         $station_name=[];
                             foreach($replaceList as $val){
-                                $station_name[]=ExamScreeningStudent::leftJoin('exam_screening', function ($join) {
-                                    $join->on('exam_screening_student.exam_screening_id', '=', 'exam_screening.id');
-                                })->leftJoin('station_teacher', function ($join) {
-                                    $join->on('exam_screening_student.exam_screening_id', '=', 'station_teacher.exam_screening_id');
-                                })->leftJoin('station', function ($join) {
-                                    $join->on('station.id', '=', 'station_teacher.station_id');
-                                })->where('exam_screening_student.exam_screening_id',$val['exam_screening_id'])
-                                  ->where('station_teacher.exam_id',$v['exam_id'])->select('station.name')
-                                  ->first()->toArray()['name'];
+                                $station_names=ExamScreeningStudent::leftJoin('exam_screening', function ($join) {
+                                                $join->on('exam_screening_student.exam_screening_id', '=', 'exam_screening.id');
+                                            })->leftJoin('station_teacher', function ($join) {
+                                                $join->on('exam_screening_student.exam_screening_id', '=', 'station_teacher.exam_screening_id');
+                                            })->leftJoin('station', function ($join) {
+                                                $join->on('station.id', '=', 'station_teacher.station_id');
+                                            })->where('exam_screening_student.exam_screening_id',$val['exam_screening_id'])
+                                              ->where('station_teacher.exam_id',$v['exam_id'])->select('station.name')
+                                              ->first();
+                                if(!empty($station_names)) $station_name[]=$station_names->toArray()['name'];
                             }
-                        $list[$key]['station_name']=implode(',',$station_name);
+
+                        $list[$key]['station_name']=count($station_name)?implode(',',$station_name):'';
                         //\DB::connection('osce_mis')->enableQueryLog();
                      //  $queries = \DB::connection('osce_mis')->getQueryLog();
                     }
