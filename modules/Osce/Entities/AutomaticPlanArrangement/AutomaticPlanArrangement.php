@@ -967,17 +967,22 @@ class AutomaticPlanArrangement
                 ->toArray();
 
             $resultArray = array_diff($studentIds, $usedStudentIds);
+            for ($i = 0; $i < $station->needNum; $i++) {
+                $studentId = array_shift($resultArray);
+                $student = Student::where('id', $studentId)->first();
+                if (is_null($student)) {
+                    continue;
+                }
+                $result[] = $student;
 
-            $result = Student::whereIn('id', $resultArray)->get()->all();
-
-            if (count($this->_S) > 0) {
-                if (is_array($this->_S)) {
-                    $this->_S_ING[] = array_shift($this->_S);
-                } else {
-                    $this->_S_ING[] = $this->_S->shift();
+                if (count($this->_S) > 0) {
+                    if (is_array($this->_S)) {
+                        $this->_S_ING[] = array_shift($this->_S);
+                    } else {
+                        $this->_S_ING[] = $this->_S->shift();
+                    }
                 }
             }
-
             return $result;
         }
     }
