@@ -670,4 +670,27 @@ class ApiController extends CommonController
         }
     }
 
+    /**
+     * Android端替考警告接口
+     * @method POST
+     * @url /osce/admin/api/replace-exam-alert
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return json
+     *
+     * @version 3.4a
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2016-04-05 17:54
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postAlertExamReplace (Request $request) {
+        $this->validate($request, [
+            'mode' => 'required|in:1,2',
+            'exam_screening_id' => 'required|integer',
+        ]);
+    }
 }
