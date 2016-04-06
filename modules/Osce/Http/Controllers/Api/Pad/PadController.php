@@ -387,7 +387,6 @@ class PadController extends  CommonController{
             $stationId = $request->input('station_id', null);
             $teacherId = $request->input('user_id');
 
-            /** @var 学生id $studentId */
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
 
             //将该条信息的首位置零
