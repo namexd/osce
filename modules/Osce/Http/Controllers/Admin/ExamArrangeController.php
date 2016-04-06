@@ -150,15 +150,16 @@ class ExamArrangeController extends CommonController
     public function getStationList(Request $request){
         $this->validate($request,[
             'station_name'=>'sometimes',
-//            'id'=>'required',
+            'id'=>'required',
         ]);
+
         $name = $request->get('station_name');
-        
         $id = $request->get('id');
         //查询出已用过的考站
+        $stationIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('station_id');
         
         $stationModel = new Station();
-        $stationData = $stationModel -> showList($stationIdArray = [],$ajax = true,$name);
+        $stationData = $stationModel -> showList($stationIdArray,$ajax = true,$name);
 
 //        dd($stationData);
 
