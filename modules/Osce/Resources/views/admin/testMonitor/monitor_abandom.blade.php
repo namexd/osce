@@ -13,6 +13,9 @@
 @stop
 
 @section('only_js')
+@stop
+
+@section('content')
     <input type="hidden" id="parameter" value="{'pagename':'monitor_test'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">

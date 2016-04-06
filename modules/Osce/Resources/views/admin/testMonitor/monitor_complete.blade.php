@@ -13,7 +13,11 @@
 @stop
 
 @section('only_js')
-    <input type="hidden" id="parameter" value="{'pagename':'monitor_test'}" />
+
+@stop
+
+@section('content')
+<input type="hidden" id="parameter" value="{'pagename':'monitor_test'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
