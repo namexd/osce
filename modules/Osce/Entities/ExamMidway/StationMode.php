@@ -150,12 +150,14 @@ class StationMode implements ModeInterface
                     }
 
                     //更改流程表中的考站id和考场id
-                    $a = ExamQueue::where('student_id', $query->first()->student_id)
-                        ->where('status', 0)->where('blocking', 1)
-                        ->orderBy('begin_dt', 'asc')->first();
-                    $a->station_id = $this->stationIds[0];
-                    $a->room_id = RoomStation::where('station_id', $a->station_id)->first()->room_id;
-                    if (!$a->save()) {
+//                    $a = ExamQueue::where('student_id', $query->first()->student_id)
+//                        ->where('status', 0)->where('blocking', 1)
+//                        ->orderBy('begin_dt', 'asc')->first();
+//                    dd($stick);
+                    $stick  =   ExamQueue::find($stick->id);
+                    $stick->station_id = $this->stationIds[0];
+                    $stick->room_id = RoomStation::where('station_id', $stick->station_id)->first()->room_id;
+                    if (!$stick->save()) {
                         throw new \Exception('系统异常，请重试', -6);
                     }
 
