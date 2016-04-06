@@ -938,6 +938,17 @@ function exam_assignment_add(){
                         message:'考试顺序不能为空'
                     }
                 }
+            },
+            gradation_order: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '阶段不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]*[1-9][0-9]*$/,
+                        message: '请输入整数'
+                    }
+                }
             }
         }
     });
@@ -1078,25 +1089,34 @@ function exam_assignment_add(){
          $('#exam_add').find('tbody').append(html);
 
     });
-
     $(".checkbox_num").blur(function(){
-        $('table tr td select').each(function(){
-            //计数器标志
-            var index = $('#exam_add').find('tbody').attr('index');
-            index = parseInt(index) + 1;
-            //获取考生分阶段考试的值
-            var checkbox_num=$(".checkbox_num").val(),
-                number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
-            var checkbox_number='';
-            for(var i=0;i<checkbox_num;i++) {
-                checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
-            }
-            var html =  '<td class="check_select">'+
-                        '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                        '</td>';
-            //记录计数
-            $('#exam_add').find('.check_select').replaceWith(html);
-        });
+        //获取阶段输入框的值
+        var checkbox_num=$(".checkbox_num").val();
+        //这里是判断输入的值是否大于20
+        if(checkbox_num>20){
+            layer.alert('请输入小于20的整数！');
+            $(".layui-layer-btn0").click(function(){
+                $(".checkbox_num").val("1").focus();
+            })
+            return false;
+        }else{
+            $('table tr td select').each(function(){
+                //计数器标志
+                var index = $('#exam_add').find('tbody').attr('index');
+                index = parseInt(index) + 1;
+                //获取考生分阶段考试的值
+                var number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                    var checkbox_number='';
+                    for(var i=0;i<checkbox_num;i++) {
+                        checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                    }
+                    var html =  '<td class="check_select">'+
+                                '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
+                                '</td>';
+                    //记录计数
+                    $('#exam_add').find('.check_select').replaceWith(html);
+                });
+        }
     })
 
     /**
@@ -1191,6 +1211,17 @@ function exam_basic_info(){
                         message: '考试顺序不能为空'
                     }
                 }
+            },
+            gradation_order: {
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '阶段不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]*[1-9][0-9]*$/ ,
+                        message: '请输入整数'
+                    }
+                }
             }
         }
     });
@@ -1264,15 +1295,15 @@ function exam_basic_info(){
                 var checkbox_num=$(".checkbox_num").val(),
                     number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
-                var checkbox_number='';
-                for(var i=0;i<checkbox_num;i++) {
-                    checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
-                }
-                var html =  '<td class="check_select">'+
-                    '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                    '</td>';
-                //记录计数
-                $('#add-basic').find('.check_select').replaceWith(html);
+                    var checkbox_number='';
+                    for(var i=0;i<checkbox_num;i++) {
+                        checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                    }
+                    var html =  '<td class="check_select">'+
+                        '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
+                        '</td>';
+                    //记录计数
+                    $('#add-basic').find('.check_select').replaceWith(html);
             });
         } else {
             $(this).find(".check_icon").removeClass("check");
@@ -1283,12 +1314,12 @@ function exam_basic_info(){
                 //计数器标志
                 var index = $('#add-basic').find('tbody').attr('index');
                 index = parseInt(index) + 1;
-
                 var html =  '<td class="check_select">'+
-                    '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+'<option value="1">'+'阶段一'+'</option>'+'</select>'+
-                    '</td>';
+                            '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+'<option value="1">'+'阶段一'+'</option>'+'</select>'+
+                            '</td>';
                 //记录计数
                 $('#add-basic').find('.check_select').replaceWith(html);
+
             });
         }
     })
@@ -1309,39 +1340,38 @@ function exam_basic_info(){
         var checkbox_num=$(".checkbox_num").val(),
             number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
-        /**
-         * 这里是生成<阶段>
-         */
-        var checkbox_number = '';
-        for(var i=0;i<checkbox_num;i++) {
-            checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
-        }
 
         //时长默认值
         var timeLength = (Time.getTime('YYYY-MM-DD hh:mm')).split(' ')[1];
         var hours = timeLength.split(':')[0];
         var minutes = timeLength.split(':')[1];
 
-        var html = '<tr>'+
-            '<td>'+parseInt(index)+'</td>'+
-            '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
-            '</td>'+
-            '<td class="laydate">'+
-            '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
-            '</td>'+
-            '<td>0天0小时0分</td>'+
-            '<td class="check_select">' +
-            '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-            '</td>'+
-            '<td>'+
-            '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-            '</td>'+
-            '</tr>';
-        //记录计数
-        $('#add-basic').find('tbody').attr('index',index);
-        $('#add-basic').find('tbody').append(html);
-
+            /**
+             * 这里是生成<阶段>
+             */
+            var checkbox_number = '';
+            for(var i=0;i<checkbox_num;i++) {
+                checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+            }
+            var html = '<tr>'+
+                '<td>'+parseInt(index)+'</td>'+
+                '<td class="laydate">'+
+                '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+                '</td>'+
+                '<td class="laydate">'+
+                '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
+                '</td>'+
+                '<td>0天0小时0分</td>'+
+                '<td class="check_select">' +
+                '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
+                '</td>'+
+                '<td>'+
+                '<a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                '</td>'+
+                '</tr>';
+            //记录计数
+            $('#add-basic').find('tbody').attr('index',index);
+            $('#add-basic').find('tbody').append(html);
     });
 
     $(".checkbox_num").blur(function(){
@@ -1352,19 +1382,28 @@ function exam_basic_info(){
             //获取考生分阶段考试的值
             var checkbox_num=$(".checkbox_num").val(),
                 number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+            //这里是判断输入的值是否大于20
+            if(checkbox_num>20){
+                layer.alert('请输入小于20的整数！');
+                $(".layui-layer-btn0").click(function(){
+                    $(".checkbox_num").val("1").focus();
+                })
+                return false;
+            }else{
 
-            /**
-             * 这里是生成<阶段>
-             */
-            var checkbox_number = '';
-            for(var i=0;i<checkbox_num;i++) {
-                checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                /**
+                 * 这里是生成<阶段>
+                 */
+                var checkbox_number = '';
+                for(var i=0;i<checkbox_num;i++) {
+                    checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                }
+                var html =  '<td class="check_select">'+
+                    '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
+                    '</td>';
+                //记录计数
+                $('#add-basic').find('.check_select').replaceWith(html);
             }
-            var html =  '<td class="check_select">'+
-                '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                '</td>';
-            //记录计数
-            $('#add-basic').find('.check_select').replaceWith(html);
         });
     })
 
@@ -3921,6 +3960,50 @@ function station_assignment(){
      */
     $('#station-add').click(function() {
 
+        var html = '';
+
+        html += '<div class="form-group">'+
+                    '<label class="col-sm-2 control-label">&nbsp;</label>'+
+                    '<div class="col-sm-10">'+
+                        '<div class="row">'+
+                            '<div class="col-sm-4"><label class="control-label">考站1</label></div>'+
+                            '<div class="col-sm-6">'+
+                                    '<label class="control-label col-sm-2">阶段：</label>'+
+                                    '<select class="form-control col-sm-10" style="width: 381px;"></select>'+
+                            '</div>'+
+                            '<div class="col-sm-2">'+
+                                '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
+                                '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
+                            '</div>'+
+                        '</div>'+
+                        '<table class="table table-bordered" id="examroom">'+
+                            '<thead>'+
+                                '<tr>'+
+                                    '<td>考试项目</td>'+
+                                    '<td>考站</td>'+
+                                    '<td>类型</td>'+
+                                    '<td>所属考场</td>'+
+                                    '<td>必考&选考</td>'+
+                                    '<td>操作</td>'+
+                                '</tr>'+
+                            '</thead>'+
+                            '<tbody>'+
+                                '<tr class="">'+
+                                    '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                                    '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
+                                    '<td><select class="form-control station-type"><option value="请选择">请选择</option></select></td>'+
+                                    '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
+                                    '<td><select class="form-control station-chioce"><option value="请选择">请选择</option></select></td>'+
+                                    '<td>'+
+                                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                                        '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                    '</td>'+
+                                '</tr>'+
+                            '</tbody>'+
+                        '</table>'+
+                    '</div>'+
+                '</div>';
+
         var req = {},
             html = '',
             index = parseInt($('.station-container').attr('index'));
@@ -3930,6 +4013,25 @@ function station_assignment(){
         req['name'] = '第'+stationName[index]+'站';
         req['order'] = index;
         req['exam_gradation_id'] = 1;
+
+        //阶段列表
+        var exam_stage_str = '';
+        $.ajax({
+            type: 'get',
+            async: false,
+            data: req,
+            dataType: 'jsonp',
+            jsonp: 'callback',
+            url: pars.exam_stage,
+            success: function(res) {
+                var data = res.data;
+
+                for(var i in data) {
+                    var str = data[i].order - 1;
+                    exam_stage_str += '<option value="'+data[i].order+'">阶段'+stationName[str]+'</option>';
+                }
+            }
+        });
 
         /**
          * 新增考站 获取考站id
@@ -3955,14 +4057,14 @@ function station_assignment(){
                                         '<div class="col-sm-4"><label class="control-label">第'+stationName[index]+'站</label></div>'+
                                         '<div class="col-sm-6">'+
                                                 '<label class="control-label col-sm-2">阶段：</label>'+
-                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;"><option value="1">阶段一</option></select>'+
+                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;">'+exam_stage_str+'</select>'+
                                         '</div>'+
                                         '<div class="col-sm-2">'+
                                             '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<table class="table table-bordered" stationId="'+res.data.stationId+'">'+
+                                    '<table class="table table-bordered table-id-'+index+'" stationId="'+res.data.stationId+'">'+
                                         '<thead>'+
                                             '<tr>'+
                                                 '<td>考试项目</td>'+
@@ -3973,7 +4075,7 @@ function station_assignment(){
                                                 '<td>操作</td>'+
                                             '</tr>'+
                                         '</thead>'+
-                                        '<tbody>'+
+                                        '<tbody index="'+index+'">'+
                                             '<tr class="item-id-'+index+'" itemId="'+res.data.itemId+'">'+
                                                 '<td type="1"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
                                                 '<td type="1"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
@@ -3993,6 +4095,7 @@ function station_assignment(){
                     //插入dom
                     $('.station-container').append(html);
                     $('.station-container').attr('index',index + 1);
+                    $('.station-container').find('.item-id-'+index).attr('index',index + 1);
                     //初始化select2
                     select2Init($('.station-container').find('.item-id-'+index));
                 }
@@ -4023,15 +4126,16 @@ function station_assignment(){
      * @date    2016-04-05
      */
     $('.station-container').on('click', '.fa-plus', function() {
-        var html = '';
+        var html = '',
+            index = parseInt($('.station-container').find('.table-id-'+index).attr('index')) + 1;
 
-        html += '<tr>'+
-                    '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                    '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                    '<td></td>'+
-                    '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                    '<td><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
-                    '<td>'+
+        html += '<tr class="item-id-'+index+'">'+
+                    '<td type="1"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                    '<td type="1"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
+                    '<td type="1"></td>'+
+                    '<td type="1"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
+                    '<td type="1"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                    '<td type="1">'+
                         '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                         '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
                     '</td>'+
@@ -4039,6 +4143,7 @@ function station_assignment(){
 
         //插入dom
         $(this).parent().parent().parent().parent().parent().parent().append(html);
+        $(this).parent().parent().parent().parent().parent().parent().parent().attr('index',index);
         //select2初始化
         select2Init($(this).parent().parent().parent().parent().parent())
     });
@@ -4062,7 +4167,53 @@ function station_assignment(){
      */
     function select2Init($elem) {
 
-        $elem.find('.exam-item').select2();
+        $elem.find('.exam-item').select2({
+            placeholder:'请选择',
+            tags: true,
+            ajax: {
+                type:'get',
+                url: pars.exam_item,
+                delay: 250,
+                processResults: function (res) {
+
+                    //数据格式化
+                    var str = [];
+                    var data = res.data;
+                    for(var i in data){
+                        str.push({id:data[i].id,text:data[i].title});
+                    }
+
+                    //加载入数据
+                    return {
+                        results: str
+                    };
+                }
+            }
+
+        //数据更新，交互数据
+        }).on('select2:select', function(e) {
+            //请求数据
+            var req = {
+                type:$elem.find('.exam-item').parent().attr('type'),
+                id:$elem.attr('itemId'),
+                station_id:$elem.parent().parent().attr('stationId'),
+                data:e.params.data.id
+            };
+
+            $.ajax({
+                type:'get',
+                url: 'http://127.0.0.1:3000/stationList',
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                data:req,
+                success: function(res) {
+                    //更改type值
+                    if($elem.find('.exam-item').parent().attr('type')==1) {
+                        $elem.find('.exam-item').parent().attr('type',3);
+                    }   
+                }
+            })
+        });
 
         //考站列表获取
         $elem.find('.exam-station').select2({
@@ -4073,7 +4224,7 @@ function station_assignment(){
                 dataType: 'jsonp',
                 jsonp: 'callback',
                 url: 'http://127.0.0.1:3000/stationList',
-                data:function(param) {console.log($elem.attr('type'))
+                data:function(param) {
                     return {
                         type:$elem.find('.exam-station').parent().attr('type'),
                         id:$elem.attr('itemId'),
@@ -4090,18 +4241,39 @@ function station_assignment(){
                         str.push({id:data[i].id,text:data[i].name});
                     }
 
-                    //更改type值
-                    $elem.find('.exam-station').parent().attr('type',3);
-
                     //加载入数据
                     return {
                         results: str
                     };
                 }
             }
+
+        //数据更新，交互数据
+        }).on('select2:select', function(e) {
+            //请求数据
+            var req = {
+                type:$elem.find('.exam-station').parent().attr('type'),
+                id:$elem.attr('itemId'),
+                station_id:$elem.parent().parent().attr('stationId'),
+                data:e.params.data.id
+            };
+
+            $.ajax({
+                type:'get',
+                url: 'http://127.0.0.1:3000/stationList',
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                data:req,
+                success: function(res) {
+                    //更改type值
+                    if($elem.find('.exam-station').parent().attr('type')==1) {
+                        $elem.find('.exam-station').parent().attr('type',3);
+                    }   
+                }
+            })
         });
 
-        $elem.find('.station-type').select2();
+        //$elem.find('.station-type').select2();
 
         //所属考场
         $elem.find('.station-belong').select2({
@@ -4129,29 +4301,62 @@ function station_assignment(){
                         str.push({id:data[i].id,text:data[i].name});
                     }
 
-                    //更改type值
-                    $elem.find('.station-belong').parent().attr('type',3);
-
                     //加载入数据
                     return {
                         results: str
                     };
                 }
             }
+
+        //数据更新，交互数据
+        }).on('select2:select', function(e) {
+            //请求数据
+            var req = {
+                type:$elem.find('.station-belong').parent().attr('type'),
+                id:$elem.attr('itemId'),
+                station_id:$elem.parent().parent().attr('stationId'),
+                data:e.params.data.id
+            };
+
+            $.ajax({
+                type:'get',
+                url: 'http://127.0.0.1:3000/stationList',
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                data:req,
+                success: function(res) {
+                    //更改type值
+                    if($elem.find('.station-belong').parent().attr('type')==1) {
+                        $elem.find('.station-belong').parent().attr('type',3);
+                    }   
+                }
+            })
         });
 
         //选考必考
         $elem.find('.station-chioce').select2({data:[{id:1,text:'必考'},{id:2,text:'选考'}]}).on("change", function (e) {
+            //请求数据
+            var req = {
+                type:$elem.find('.station-chioce').parent().attr('type'),
+                id:$elem.attr('itemId'),
+                station_id:$elem.parent().parent().attr('stationId'),
+                data: $elem.find('.station-chioce').val()
+            };
+
             $.ajax({
                 type:'get',
                 url: 'http://127.0.0.1:3000/stationList',
-                data:{type:$elem.find('.station-chioce').parent().attr('type'),id:$elem.attr('itemId'),station_id:$elem.parent().parent().attr('stationId')},
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                data:req,
                 success: function(res) {
                     //更改type值
-                    $elem.find('.station-chioce').parent().attr('type',3);
+                    if($elem.find('.station-chioce').parent().attr('type')==1) {
+                        $elem.find('.station-chioce').parent().attr('type',3);
+                    }
                 }
             })
-         });;
+         });
 
     }
 
