@@ -3941,59 +3941,65 @@ function station_assignment(){
             type: 'get',
             async: true,
             data: req,
-            url: pars.stationAdd,
+            dataType: 'jsonp',
+            jsonp: 'callback',
+            url: 'http://127.0.0.1:3000/getdata',//pars.stationAdd,
             success: function(res) {
-                console.log(res);
+                if(res.code !=1) {
+                    layer.msg('新增考站失败！',{skin:'msg-error',icon:1});
+                } else {
+                    html += '<div class="form-group">'+
+                                '<label class="col-sm-2 control-label">&nbsp;</label>'+
+                                '<div class="col-sm-10">'+
+                                    '<div class="row">'+
+                                        '<div class="col-sm-4"><label class="control-label">第'+stationName[index]+'站</label></div>'+
+                                        '<div class="col-sm-6">'+
+                                                '<label class="control-label col-sm-2">阶段：</label>'+
+                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;"><option value="1">阶段一</option></select>'+
+                                        '</div>'+
+                                        '<div class="col-sm-2">'+
+                                            '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
+                                            '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<table class="table table-bordered" stationId="'+res.data.stationId+'">'+
+                                        '<thead>'+
+                                            '<tr>'+
+                                                '<td>考试项目</td>'+
+                                                '<td>考站</td>'+
+                                                '<td>考站类型</td>'+
+                                                '<td>所属考场</td>'+
+                                                '<td>必考&选考</td>'+
+                                                '<td>操作</td>'+
+                                            '</tr>'+
+                                        '</thead>'+
+                                        '<tbody>'+
+                                            '<tr class="item-id-'+index+'" itemId="'+res.data.itemId+'">'+
+                                                '<td type="1"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                                                '<td type="1"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
+                                                '<td type="1"></td>'+
+                                                '<td type="1"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
+                                                '<td type="1"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                                                '<td type="1">'+
+                                                    '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                                                    '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                                '</td>'+
+                                            '</tr>'+
+                                        '</tbody>'+
+                                    '</table>'+
+                                '</div>'+
+                            '</div>';
+
+                    //插入dom
+                    $('.station-container').append(html);
+                    $('.station-container').attr('index',index + 1);
+                    //初始化select2
+                    select2Init($('.station-container').find('.item-id-'+index));
+                }
             }
         });
 
-        html += '<div class="form-group">'+
-                    '<label class="col-sm-2 control-label">&nbsp;</label>'+
-                    '<div class="col-sm-10">'+
-                        '<div class="row">'+
-                            '<div class="col-sm-4"><label class="control-label">第'+stationName[index]+'站</label></div>'+
-                            '<div class="col-sm-6">'+
-                                    '<label class="control-label col-sm-2">阶段：</label>'+
-                                    '<select class="form-control col-sm-10" style="width: 381px;"></select>'+
-                            '</div>'+
-                            '<div class="col-sm-2">'+
-                                '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
-                                '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
-                            '</div>'+
-                        '</div>'+
-                        '<table class="table table-bordered" id="examroom">'+
-                            '<thead>'+
-                                '<tr>'+
-                                    '<td>考试项目</td>'+
-                                    '<td>考站</td>'+
-                                    '<td>考站类型</td>'+
-                                    '<td>所属考场</td>'+
-                                    '<td>必考&选考</td>'+
-                                    '<td>操作</td>'+
-                                '</tr>'+
-                            '</thead>'+
-                            '<tbody>'+
-                                '<tr class="">'+
-                                    '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                                    '<td></td>'+
-                                    '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
-                                    '<td>'+
-                                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                                        '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                    '</td>'+
-                                '</tr>'+
-                            '</tbody>'+
-                        '</table>'+
-                    '</div>'+
-                '</div>';
-
-        //插入dom
-        $('.station-container').append(html);
-        $('.station-container').attr('index',index + 1);
-        //初始化select2
-        select2Init($('.station-container'));
+        
 
     });
 
@@ -4057,10 +4063,96 @@ function station_assignment(){
     function select2Init($elem) {
 
         $elem.find('.exam-item').select2();
-        $elem.find('.exam-station').select2();
+
+        //考站列表获取
+        $elem.find('.exam-station').select2({
+            placeholder:'请选择',
+            tags: true,
+            ajax: {
+                type:'get',
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                url: 'http://127.0.0.1:3000/stationList',
+                data:function(param) {console.log($elem.attr('type'))
+                    return {
+                        type:$elem.find('.exam-station').parent().attr('type'),
+                        id:$elem.attr('itemId'),
+                        station_id:$elem.parent().parent().attr('stationId')
+                    };
+                },
+                delay: 250,
+                processResults: function (res) {
+
+                    //数据格式化
+                    var str = [];
+                    var data = res.data.rows;
+                    for(var i in data){
+                        str.push({id:data[i].id,text:data[i].name});
+                    }
+
+                    //更改type值
+                    $elem.find('.exam-station').parent().attr('type',3);
+
+                    //加载入数据
+                    return {
+                        results: str
+                    };
+                }
+            }
+        });
+
         $elem.find('.station-type').select2();
-        $elem.find('.station-belong').select2();
-        $elem.find('.station-chioce').select2();
+
+        //所属考场
+        $elem.find('.station-belong').select2({
+            placeholder:'请选择',
+            tags: true,
+            ajax: {
+                type:'get',
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                url: 'http://127.0.0.1:3000/stationList',
+                data:function(param) {console.log($elem.attr('type'))
+                    return {
+                        type:$elem.find('.station-belong').parent().attr('type'),
+                        id:$elem.attr('itemId'),
+                        station_id:$elem.parent().parent().attr('stationId')
+                    };
+                },
+                delay: 250,
+                processResults: function (res) {
+
+                    //数据格式化
+                    var str = [];
+                    var data = res.data.rows;
+                    for(var i in data){
+                        str.push({id:data[i].id,text:data[i].name});
+                    }
+
+                    //更改type值
+                    $elem.find('.station-belong').parent().attr('type',3);
+
+                    //加载入数据
+                    return {
+                        results: str
+                    };
+                }
+            }
+        });
+
+        //选考必考
+        $elem.find('.station-chioce').select2({data:[{id:1,text:'必考'},{id:2,text:'选考'}]}).on("change", function (e) {
+            $.ajax({
+                type:'get',
+                url: 'http://127.0.0.1:3000/stationList',
+                data:{type:$elem.find('.station-chioce').parent().attr('type'),id:$elem.attr('itemId'),station_id:$elem.parent().parent().attr('stationId')},
+                success: function(res) {
+                    //更改type值
+                    $elem.find('.station-chioce').parent().attr('type',3);
+                }
+            })
+         });;
+
     }
 
 }
