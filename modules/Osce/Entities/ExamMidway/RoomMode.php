@@ -85,7 +85,7 @@ class RoomMode implements ModeInterface
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
-                    ->take($this->_T_Count)
+                    ->take($this->_T_Count - count($sticks))
                     ->get();
 
                 $array = [];
