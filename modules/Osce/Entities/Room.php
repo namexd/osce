@@ -281,4 +281,37 @@ class Room extends CommonModel
             throw $ex;
         }
     }
+
+
+     public function  getRoomList(array $roomIdArray = [],$name){
+
+         try {
+             $builder = $this;
+
+             //如果传入了stationArray，就排除里面的内容
+             if ($roomIdArray != []) {
+                 $builder = $builder->whereNotIn($this->table.'.id',$roomIdArray);
+             }
+             if($name != ''){
+                 $builder = $builder->where($this->table.'.name', 'like', '%\\' . $name.'%');
+             }
+
+             //开始查询
+             $builder = $builder->select([
+                 $this->table.'.id',
+                 $this->table.'.name',
+                 $this->table.'.code',
+                 $this->table.'.type',
+//                 $this->table.'.description',
+//                 $this->table.'.subject_id',
+//                 $this->table.'.mins',
+//                 'subject.title'
+             ])
+                 ->orderBy($this->table.'.created_at', 'desc');
+                 return $builder->get();
+         } catch (\Exception $ex) {
+             throw $ex;
+         }
+         
+     }
 }

@@ -83,7 +83,7 @@ class ExamArrangeController extends CommonController
 }
 
 //新增考站里面的子对象到临时表
-    public function postExamDraft(Request $request){
+    public function postAddExamDraft(Request $request){
         $this->validate($request,[
             'exam_id'=>'required',
 //            'ctrl_type'=>'required',
@@ -130,21 +130,24 @@ class ExamArrangeController extends CommonController
     public function getRoomList(Request $request){
         $this->validate($request,[
             'station_name'=>'sometimes',
-//            'id'=>'required',
+            'id'=>'required',
+//            'type'=>'required',
+//            'draft_id'=>'required'
         ]);
         $name = $request->get('station_name');
-
         $id = $request->get('id');
+
+        $roomIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('room_id');
         $roomModel = new Room();
-        $roomData = $roomModel -> showRoomList($keyword = '', $type = '0', $id = '');
-        
+//        $roomData = $roomModel -> showRoomList($keyword = '', $type = '0', $id = '');
+
+        $roomData = $roomModel -> getRoomList($roomIdArray,$name);
         return response()->json(
-            $this->success_data($roomData->items(), 1, 'success')
+            $this->success_data($roomData, 1, 'success')
         );
         
 
     }
-
 
 
     //获取考站接口
@@ -152,10 +155,14 @@ class ExamArrangeController extends CommonController
         $this->validate($request,[
             'station_name'=>'sometimes',
             'id'=>'required',
+//            'type'=>'required',
+//            'draft_id'=>'required'
         ]);
 
         $name = $request->get('station_name');
         $id = $request->get('id');
+
+
         //查询出已用过的考站
         $stationIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('station_id')->toArray();
         $stationModel = new Station();
@@ -164,7 +171,6 @@ class ExamArrangeController extends CommonController
         return response()->json(
             $this->success_data($stationData, 1, 'success')
         );
-
         
     }
 
@@ -183,7 +189,6 @@ class ExamArrangeController extends CommonController
             ]);
             $exam_id = intval($request->get('exam_id'));
             $data    = ExamGradation::where('exam_id','=',$exam_id)->get();
-
             return response()->json(
                 $this->success_data($data, 1, 'success')
             );
