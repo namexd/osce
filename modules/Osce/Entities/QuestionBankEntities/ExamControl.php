@@ -9,6 +9,8 @@ namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamPlanRecord;
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScreeningStudent;
 
@@ -46,6 +48,7 @@ class ExamControl extends Model
         })->select(
             $DB->raw('count(station_teacher.station_id) as stationCount')
         )->where('status','=',1)->get();*/
+        //统计考站数量
         $stationCount = count($examModel->leftJoin('station_teacher', function($join){
             $join -> on('exam.id', '=', 'station_teacher.exam_id');
         })->select('station_teacher.station_id')->where('exam.status','=',1)->get());
@@ -80,6 +83,8 @@ class ExamControl extends Model
                 $join -> on('exam_order.student_id', '=', 'student.id');
             })->leftJoin('station', function($join){//考站
                 $join -> on('exam_queue.station_id', '=', 'station.id');
+            })->leftJoin('station_teacher', function($join){//考站-老师关系表
+            $join -> on('station.id', '=', 'station_teacher.station_id');
             })->groupBy('student.id')->select(
             'exam.id as examId',//考试id
             'student.id as studentId',//考生id
@@ -90,15 +95,29 @@ class ExamControl extends Model
             'exam_screening_student.status',//考试状态
             'station.id as stationId',//考站id
             'station.name as stationName',//考站名称
+            'station.type as stationType',//考站类型
+            'station_teacher.user_id as userId',//老师id
             'exam_screening_student.id as examScreeningStudentId',//考试场次-学生关系id
             'exam_screening_student.is_end',//考试场次终止
             'exam_screening_student.is_replace',//上报替考
             'exam_screening_student.is_give',//上报弃考
-            'exam_order.status as examOrderStatus',
-            $DB->raw('count(exam_queue.station_id)-1 as stationCount')//剩余考站数量
+            'exam_screening_student.description',//考试终止原因
+            'exam_screening_student.exam_screening_id',//考试场次编号
+            'exam_order.status as examOrderStatus'//考试学生排序状态
+            //$DB->raw('count(exam_queue.station_id)-1 as stationCount')//剩余考站数量
         )->where('exam.status','=',1)
             ->where('exam_queue.status','<>',3)
         ->get();
+
+        //查询该考生剩余考站数量
+        if(!empty($examInfo)&&count($examInfo)>0){
+
+            foreach($examInfo as $key=>$val){
+                $remainCount = $this->getStationNumber($val['examId'],$val['studentId'])-1;
+                $examInfo[$key]['stationCount']=$remainCount;
+            }
+        }
+        //dd($examInfo);
         return array(
             'examName'      =>$examName,     //考试名称
             'examInfo'      => $examInfo,    //正在考试列表
@@ -107,6 +126,26 @@ class ExamControl extends Model
             'doExamCount'  =>$doExamCount,  //统计正在考试数量
             'endExamCount' =>$endExamCount, //统计已完成考试数量
         );
+    }
+
+    /**获取该考生该场考试对应的考站数量
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $examId 考试id
+     * @param $studentId 学生id
+     * @return int
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStationNumber($examId,$studentId){
+        $examPlanRecordModel = new ExamPlanRecord();
+        $stationCount = count($examPlanRecordModel->select('station_id')
+            ->where('student_id','=',$studentId)
+            ->where('exam_id','=',$examId)
+            ->get());
+        return $stationCount;
     }
 
     /**终止考试数据交互
@@ -121,14 +160,63 @@ class ExamControl extends Model
     public function stopExam($data){
         $DB = DB::connection('osce_mis');
         $DB->beginTransaction();
-        $datainfo = array(
-            'description' => $data['description']
-        );
         try{
+
+            //① 更新考试场次-学生关系表
+            $examScreeningStudentData = array(
+                'is_end' => 2,
+                'description' => $data['description']
+            );
+            //保存考试场次-学生关系表（exam_screening_student）
             $examScreeningStudentModel = new ExamScreeningStudent();
-            $result = $examScreeningStudentModel->where('id','=',$data['examScreeningStudentId'])->update($datainfo);
+            $result = $examScreeningStudentModel->where('id','=',$data['examScreeningStudentId'])->update($examScreeningStudentData);
+
             if (!$result) {
-                throw new \Exception('考试终止失败！');
+                throw new \Exception('更新考试场次-学生关系表事变！');
+            }
+
+
+            //② 更新考试队列表（exam_queue）
+            $examPlanRecordModel = new ExamPlanRecord();
+            //获取该考生的所有考站信息
+            $examPlanRecordInfo =$examPlanRecordModel->select('station_id','exam_screening_id')
+                ->where('exam_id','=',$data['examId'])
+                ->where('student_id','=',$data['studentId'])->get();
+
+            foreach($examPlanRecordInfo as $k=>$v){
+                $examQueueModel = new ExamQueue();
+                $examQueueResult = $examQueueModel->where('exam_id','=',$data['examId'])
+                    ->where('student_id','=',$data['studentId'])
+                    ->where('exam_screening_id','=',$v['exam_screening_id'])
+                    ->where('station_id','=',$v['station_id'])
+                    ->update(['status'=>3]);
+                if(!$examQueueResult){
+                    throw new \Exception(' 更新考试队列失败！');
+                }
+            }
+            //③ 向考试结果记录表插入数据
+            //获取该考生剩余的考站信息
+            $remainStationInfo =$examPlanRecordModel->select('station_id','exam_screening_id')
+                ->where('student_id','=',$data['studentId'])
+                    ->where('exam_id','=',$data['examId'])
+                    ->where('station_id','<>',$data['stationId'])
+                    ->get();
+           //如若有该考生还有其他考站，则将其他考站的分数记录为0
+            if(!empty($remainStationInfo)&&count($remainStationInfo)>0){
+                foreach($remainStationInfo as $key=>$val){
+                    //向考试结果记录表插入数据
+                    $examResultData=array(
+                        'student_id'=>$data['studentId'],
+                        'exam_screening_id'=>$val['exam_screening_id'],
+                        'station_id'=>$val['station_id'],
+                        'time'=>0,
+                        'score'=>0,
+                        'teacher_id'=>$data['userId'],
+                    );
+                    if(!ExamResult::create($examResultData)){
+                        throw new \Exception(' 插入考试结果记录表失败！');
+                    }
+                }
             }
             $DB->commit();
             return true;
