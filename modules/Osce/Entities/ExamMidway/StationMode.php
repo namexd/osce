@@ -77,7 +77,6 @@ class StationMode implements ModeInterface
             ->whereIn('station_id',$this->stationIds)
             ->whereIn('stick', $this->stationIds)
             ->get();
-        dd($sticks);
         if ($sticks->isEmpty()) {
             //获取应该在此处考试的考生
 //            $a=\DB::connection('osce_mis');
