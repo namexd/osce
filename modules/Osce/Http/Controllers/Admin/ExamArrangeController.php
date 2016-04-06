@@ -16,6 +16,7 @@ use Modules\Osce\Entities\ExamDraftTemp;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Subject;
+use Modules\Osce\Entities\TeacherSubject;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class ExamArrangeController extends CommonController
@@ -201,5 +202,30 @@ class ExamArrangeController extends CommonController
         return view('osce::admin.examManage.examiner_manage', ['id'=>$id, 'data' => $data]);
     }
 
+    /**
+     * 根据考试项目 获取对应下的考官、SP（接口）
+     * @param Request $request
+     */
+    public function getInvigilatesBySubject(Request $request){
+        try{
+            //验证
+            $this->validate($request, [
+                'subject_id' => 'required|integer',
+                'type'       => 'required|integer'
+            ]);
+            $subject_id = intval($request->get('subject_id'));
+            $type       = intval($request->get('type'));
+            $teacherSubject = new TeacherSubject();
+            //根据考试项目 获取对应的考官
+            $invigilates= $teacherSubject->getTeachers($subject_id, $type);
+
+            return response()->json(
+                $this->success_data($invigilates, 1, 'success')
+            );
+
+        } catch (\Exception $ex){
+            return response()->json($this->fail($ex));
+        }
+    }
 
 }
