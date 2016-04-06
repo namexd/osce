@@ -544,7 +544,7 @@ class ApiController extends CommonController
 
         $studentModel = new Student();
         $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-        //dd($userInfo);
+        dd($userInfo);
         $ExamScreeningStudent = new ExamScreeningStudent();
         $examing = $ExamScreeningStudent->getExamings($userInfo->id);
 
