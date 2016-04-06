@@ -16,6 +16,7 @@ use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Repositories\TestScoreRepositories;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
+use Modules\Osce\Entities\QuestionBankEntities\ExamControl;
 use Modules\Osce\Entities\ExamScreeningStudent;
 
 class ExamMonitorController  extends CommonController
@@ -60,9 +61,10 @@ class ExamMonitorController  extends CommonController
      */
     public function getExamMonitorLateList () {
         $data=$this->getExamMonitorListByStatus(1)->toArray();
-
+        $examControlModel = new ExamControl();
+        $topMsg = $examControlModel->getDoingExamList();
         return view('osce::admin.testMonitor.monitor_late', [
-             'data'      =>$data['data']
+             'list'      =>$data['data'],'data'=>$topMsg
         ]);
     }
 
@@ -84,10 +86,11 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorReplaceList () {
+        $examControlModel = new ExamControl();
+        $topMsg = $examControlModel->getDoingExamList();
         $data=$this->getExamMonitorListByStatus(2);
-        
         return view('osce::admin.testMonitor.monitor_replace', [
-             'data'      =>$data
+             'list'      =>$data,'data'=>$topMsg
         ]);
     }
 
@@ -110,8 +113,10 @@ class ExamMonitorController  extends CommonController
      */
     public function getExamMonitorQuitList () {
         $data=$this->getExamMonitorListByStatus(3)->toArray();
+        $examControlModel = new ExamControl();
+        $topMsg = $examControlModel->getDoingExamList();
         return view('osce::admin.testMonitor.monitor_abandom', [
-            'data'      =>$data['data']
+            'list'      =>$data['data'],'data'=>$topMsg
 
         ]);
     }

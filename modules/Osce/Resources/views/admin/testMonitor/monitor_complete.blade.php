@@ -27,12 +27,12 @@
         <div class="container-fluid ibox-content">
             <ul class="sortable-list connectList agile-list ui-sortable" style="background-color: #fff;">
                 <li class="success-element titleBackground">
-                    <p class="font20 fontb">考试2016.1.12（二选一）</p>
+                    <p class="font20 fontb">{{@$data['examName']['name']}}</p>
                     <div class="font16 messageColor">
-                        <span class="marr_25">考站数量：1</span>
-                        <span class="marr_25">考生人数：1</span>
-                        <span class="marr_25">正在考试：1</span>
-                        <span>已完成：1</span>
+                        <span class="marr_25">考站数量：{{@$data['stationCount']}}</span>
+                        <span class="marr_25">考生人数：{{@$data['studentCount']}}</span>
+                        <span class="marr_25">正在考试：{{@$data['doExamCount']}}</span>
+                        <span>已完成：{{@$data['endExamCount']}}</span>
                     </div>
                 </li>
             </ul>

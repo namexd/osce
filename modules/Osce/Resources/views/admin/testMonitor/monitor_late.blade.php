@@ -62,8 +62,8 @@
                             </tr>
                         </thead>
                         <tbody class="subjectBody">
-                            @if(!empty($data)&& count($data)>0)
-                                @foreach(@$data as $key=>$val )
+                            @if(!empty($list)&& count($list)>0)
+                                @foreach(@$list as $key=>$val )
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td class="student">{{$val['name']}}</td>
