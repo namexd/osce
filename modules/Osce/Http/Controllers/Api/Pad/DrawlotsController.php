@@ -206,9 +206,9 @@ class DrawlotsController extends CommonController
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
 
             if ($exam->sequence_mode == 1) {
-                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId, $stations);
+                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $exam->id, $stations);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $examId);
+                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $exam->id);
             } else {
                 throw new \Exception('考试模式不存在！', -703);
             }
