@@ -25,10 +25,11 @@
                 <h5 class="title-label">考试监控</h5>
             </div>
         </div>
+        @if(!empty($data['examName']['name']))
         <div class="container-fluid ibox-content">
             <ul class="sortable-list connectList agile-list ui-sortable" style="background-color: #fff;">
                 <li class="success-element titleBackground">
-                    <p class="font20 fontb">{{@$examName['name']}}</p>
+                    <p class="font20 fontb">{{@$data['examName']['name']}}</p>
                     <div class="font16 messageColor">
                         <span class="marr_25">考站数量：{{@$data['stationCount']}}</span>
                         <span class="marr_25">考生人数：{{@$data['studentCount']}}</span>
@@ -87,24 +88,24 @@
                                     </td>
                                     <td>
                                         <a href="javascript:void(0)">
-                                        <span class="state1 look">
-                                            <i class="fa fa-video-camera fa-2x"></i>
-                                        </span>
+                                            <span class="state1 look">
+                                                <i class="fa fa-video-camera fa-2x"></i>
+                                            </span>
                                         </a>
                                         <a href="javascript:void(0)">
-                                        <span class="state1 stop" data-toggle="modal" data-target="#myModal">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
+                                            <span class="state1 stop" data-toggle="modal" data-target="#myModal">
+                                                <i class="fa fa-cog fa-2x"></i>
+                                            </span>
                                         </a>
                                         <a href="javascript:void(0)">
-                                        <span class="state1 abandon">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
+                                            <span class="state1 abandon">
+                                                <i class="fa fa-cog fa-2x"></i>
+                                            </span>
                                         </a>
                                         <a href="javascript:void(0)">
-                                        <span class="state1 replace">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
+                                            <span class="state1 replace">
+                                                <i class="fa fa-cog fa-2x"></i>
+                                            </span>
                                         </a>
                                     </td>
                                 </tr>
@@ -116,6 +117,15 @@
                 </div>
             </div>
         </div>
+        @else
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="alert alert-warning">
+                        当前没有正在进行的考试！
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @stop
 
