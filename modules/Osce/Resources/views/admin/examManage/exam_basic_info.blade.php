@@ -125,7 +125,7 @@
                                         <div class="clearfix form-group" style="margin-bottom: 0;">
                                              <div class="col-sm-12" id="checkbox_div">
                                                  <label class="check_label checkbox_input checkbox_one" style="height: 34px;line-height: 23px;margin-left: 12.1%;">
-                                                      <div class="check_icon" style="display: inline-block;margin:5px 0 0 5px;float:left;"  {{$examData['status']==0?'':'disabled'}}></div>
+                                                      <div class="check_icon {{($examData['same_time'])?'check':''}}" style="display: inline-block;margin:5px 0 0 5px;float:left;"  {{$examData['status']==0?'':'disabled'}}></div>
                                                       <input type="checkbox" name="same_time" value="{{$examData['same_time']}}"  {{$examData['status']==0?'':'disabled'}}>
                                                       <span class="check_name" style="display: inline-block;float:left;">要求考生同时进出考站（考站的时间采用最长考站时间）</span>
                                                  </label>
@@ -153,12 +153,12 @@
                                          <div class="clearfix form-group" style="margin-bottom: 0;">
                                               <div class="col-sm-12" id="checkbox_div">
                                                    <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
-                                                        <div class="check_icon check_margin" checkbox=0></div>
+                                                        <div class="check_icon check_margin {{($examData->gradation->count()>1)?'check':''}}" checkbox={{($examData->gradation->count()>1)?1:0}}></div>
                                                         <input type="checkbox" name="gradation_order" value="1">
                                                         <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
                                                    </label>
                                                    <div class="col-sm-10 check_div">
-                                                        <input type="text" class="form-control checkbox_num" id="gradation_order" name="gradation_order" value="{{$examData->gradation->count()}}" style="float:left;width:200px;"  {{$examData['status']==0?'':'disabled'}} readonly="readonly">
+                                                        <input type="text" class="form-control checkbox_num" id="gradation_order" name="gradation_order" value="{{$examData->gradation->count()}}" style="float:left;width:200px;"  {{$examData['status']==0?'':'disabled'}} {{($examData->gradation->count()>1)?'':'readonly="readonly"'}}>
                                                         <span style="float:left;margin-left:5px;margin-top: 5px;">阶段</span>
                                                    </div>
                                               </div>
