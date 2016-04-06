@@ -85,8 +85,9 @@ class ExamMonitorController  extends CommonController
      */
     public function getExamMonitorReplaceList () {
         $data=$this->getExamMonitorListByStatus(2);
+        
         return view('osce::admin.testMonitor.monitor_replace', [
-             'data'      =>$data['data']
+             'data'      =>$data
         ]);
     }
 
