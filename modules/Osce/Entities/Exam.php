@@ -643,11 +643,12 @@ class Exam extends CommonModel
         }
         $today = strtotime(date('Y-m-d', $time));    //当天凌晨
 
-        $result = $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
+        $result= $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
                                 or unix_timestamp(date_format(end_dt, "%Y-%m-%d")) = ?
                                 or (unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) < ?
                                     and unix_timestamp(date_format(end_dt, "%Y-%m-%d")) > ?)', [$today, $today, $today, $today])
-            ->get();
+                ->with('examPlan')
+                ->get();
 
         return $result;
     }
