@@ -284,12 +284,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('supply/del-supply',['uses'=>'SupplyController@getDelSupply','as'=>'osce.admin.supply.getDelSupply']);
 		Route::post('supply/supply-name-unique',['uses'=>'SupplyController@postSupplyNameUnique','as'=>'osce.admin.supply.postSupplyNameUnique']);
 
-		//考试安排接口路由
-//		Route::get('exam-arrange/exam-content',['uses'=>'ExamArrangeController@getExamContent','as'=>'osce.admin.ExamContent.getExamContent']);
-		Route::get('exam-arrange/station-data',['uses'=>'ExamArrangeController@getStationData','as'=>'osce.admin.ExamArrange.getStationData']);
-
-
-
+		
 	});
 
 	 //Pad端
