@@ -38,6 +38,8 @@ class ExamControl extends Model
     public function getDoingExamList(){
         $DB = \DB::connection('osce_mis');
         $examModel = new Exam();
+        //考试名称
+        $examName = $examModel->select('name')->where('status','=',1)->first();
   /*      //统计考站数量
         $stationCount = $examModel->leftJoin('station_teacher', function($join){
             $join -> on('exam.id', '=', 'station_teacher.exam_id');
@@ -46,11 +48,11 @@ class ExamControl extends Model
         )->where('status','=',1)->get();*/
         $stationCount = count($examModel->leftJoin('station_teacher', function($join){
             $join -> on('exam.id', '=', 'station_teacher.exam_id');
-        })->select('station_teacher.station_id')->where('status','=',1)->get());
+        })->select('station_teacher.station_id')->where('exam.status','=',1)->get());
         //统计学生数量
         $studentCount = count($examModel->leftJoin('student', function($join){
             $join -> on('exam.id', '=', 'student.exam_id');
-        })->select('student.id')->where('status','=',1)->get());
+        })->select('student.id')->where('exam.status','=',1)->get());
         //统计正在考试数量
         $doExamCount = count($examModel->leftJoin('exam_queue', function($join){
             $join -> on('exam.id', '=', 'exam_queue.exam_id');
@@ -96,6 +98,7 @@ class ExamControl extends Model
             ->where('exam_queue.status','<>',3)
         ->get();
         return array(
+            'examName'      =>$examName,     //考试名称
             'examInfo'      => $examInfo,    //正在考试列表
             'stationCount' =>$stationCount, //统计考站数量
             'studentCount' =>$studentCount, //统计学生数量
