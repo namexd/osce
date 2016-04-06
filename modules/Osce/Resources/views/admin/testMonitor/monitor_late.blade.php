@@ -2,9 +2,6 @@
 
 @section('only_css')
     <style>
-        #myModalLabel{color: #16BEB0;}
-        /*强调颜色*/
-        .state{color: #ed5565;}
         /*标题展示区域*/
         .success-element:hover {cursor: default!important;}
         .titleBackground{background-color: #E9EDEF!important;}
@@ -13,7 +10,12 @@
 @stop
 
 @section('only_js')
-    <input type="hidden" id="parameter" value="{'pagename':'monitor_test'}" />
+    <script src="{{asset('osce/admin/testMonitor/test_monitor.js')}}"></script>
+@stop
+
+{{-- 内容主体区域 --}}
+@section('content')
+    <input type="hidden" id="parameter" value="{'pagename':'monitor_late'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -60,29 +62,26 @@
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
-                            <tr>
-                                <td>1</td>
-                                <td>张三</td>
-                                <td>SF1986</td>
-                                <td>SF1986</td>
-                                <td>510821199008300065</td>
-                                <td>123456789123</td>
-                                <td>
-                                    <a href="javascript:void(0)">
+                        <tr>
+                            <td>1</td>
+                            <td>张三</td>
+                            <td>SF1986</td>
+                            <td>SF1986</td>
+                            <td>510821199008300065</td>
+                            <td>123456789123</td>
+                            <td>
+                                <a href="javascript:void(0)">
                                         <span class="state1 abandon">
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
-                                    </a>
-                                </td>
-                            </tr>
+                                </a>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-@stop{{-- 内容主体区域 --}}
-
-@section('layer_content')
-
 @stop
+
