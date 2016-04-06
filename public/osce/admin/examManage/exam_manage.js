@@ -3910,6 +3910,9 @@ function examinee_manage_edit() {
 
 function station_assignment(){
 
+    //考站名称
+    var stationName = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+
     /**
      * 新建一个考站
      * @author mao
@@ -3918,13 +3921,37 @@ function station_assignment(){
      */
     $('#station-add').click(function() {
 
-        var html = '';
+        var req = {},
+            html = '',
+            index = parseInt($('.station-container').attr('index'));
+
+        //请求数据
+        req['exam_id'] = (location.href).split('=')[1];
+        req['name'] = '第'+stationName[index]+'站';
+        req['order'] = index;
+        req['exam_gradation_id'] = 1;
+
+        /**
+         * 新增考站 获取考站id
+         * @author mao
+         * @version 3.4
+         * @date    2016-04-06
+         */
+        $.ajax({
+            type: 'get',
+            async: true,
+            data: req,
+            url: pars.stationAdd,
+            success: function(res) {
+                console.log(res);
+            }
+        });
 
         html += '<div class="form-group">'+
                     '<label class="col-sm-2 control-label">&nbsp;</label>'+
                     '<div class="col-sm-10">'+
                         '<div class="row">'+
-                            '<div class="col-sm-4"><label class="control-label">考站1</label></div>'+
+                            '<div class="col-sm-4"><label class="control-label">第'+stationName[index]+'站</label></div>'+
                             '<div class="col-sm-6">'+
                                     '<label class="control-label col-sm-2">阶段：</label>'+
                                     '<select class="form-control col-sm-10" style="width: 381px;"></select>'+
@@ -3939,9 +3966,9 @@ function station_assignment(){
                                 '<tr>'+
                                     '<td>考试项目</td>'+
                                     '<td>考站</td>'+
-                                    '<td>类型</td>'+
-                                    '<td>考官</td>'+
-                                    '<td>sp</td>'+
+                                    '<td>考站类型</td>'+
+                                    '<td>所属考场</td>'+
+                                    '<td>必考&选考</td>'+
                                     '<td>操作</td>'+
                                 '</tr>'+
                             '</thead>'+
@@ -3949,9 +3976,9 @@ function station_assignment(){
                                 '<tr class="">'+
                                     '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
                                     '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-type"><option value="请选择">请选择</option></select></td>'+
+                                    '<td></td>'+
                                     '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-chioce"><option value="请选择">请选择</option></select></td>'+
+                                    '<td><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
                                     '<td>'+
                                         '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                         '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -3964,6 +3991,7 @@ function station_assignment(){
 
         //插入dom
         $('.station-container').append(html);
+        $('.station-container').attr('index',index + 1);
         //初始化select2
         select2Init($('.station-container'));
 
@@ -3994,9 +4022,9 @@ function station_assignment(){
         html += '<tr>'+
                     '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
                     '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                    '<td><select class="form-control station-type"><option value="请选择">请选择</option></select></td>'+
+                    '<td></td>'+
                     '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                    '<td><select class="form-control station-chioce"><option value="请选择">请选择</option></select></td>'+
+                    '<td><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
                     '<td>'+
                         '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                         '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
