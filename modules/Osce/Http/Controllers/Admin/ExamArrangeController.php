@@ -137,9 +137,9 @@ class ExamArrangeController extends CommonController
         $id = $request->get('id');
         $roomModel = new Room();
         $roomData = $roomModel -> showRoomList($keyword = '', $type = '0', $id = '');
-
+        
         return response()->json(
-            $this->success_data($roomData, 1, 'success')
+            $this->success_data($roomData->items(), 1, 'success')
         );
         
 
@@ -157,11 +157,9 @@ class ExamArrangeController extends CommonController
         $name = $request->get('station_name');
         $id = $request->get('id');
         //查询出已用过的考站
-        $stationIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('station_id');
+        $stationIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('station_id')->toArray();
         $stationModel = new Station();
         $stationData = $stationModel -> showList($stationIdArray,$ajax = true,$name);
-
-//        dd($stationData);
 
         return response()->json(
             $this->success_data($stationData, 1, 'success')

@@ -3937,8 +3937,6 @@ function station_assignment(){
             type: 'get',
             async: false,
             data: req,
-            dataType: 'jsonp',
-            jsonp: 'callback',
             url: pars.exam_stage,
             success: function(res) {
                 var data = res.data;
@@ -3957,12 +3955,10 @@ function station_assignment(){
          * @date    2016-04-06
          */
         $.ajax({
-            type: 'get',
+            type: 'post',
             async: true,
             data: req,
-            dataType: 'jsonp',
-            jsonp: 'callback',
-            url: 'http://127.0.0.1:3000/getdata',//pars.stationAdd,
+            url: pars.stationAdd,
             success: function(res) {
                 if(res.code !=1) {
                     layer.msg('新增考站失败！',{skin:'msg-error',icon:1});
@@ -4119,9 +4115,7 @@ function station_assignment(){
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: '', //'http://127.0.0.1:3000/stationList',
                 data:req,
                 success: function(res) {
                     //更改type值
@@ -4138,9 +4132,7 @@ function station_assignment(){
             tags: true,
             ajax: {
                 type:'get',
-                dataType: 'jsonp',
-                jsonp: 'callback',
-                url: 'http://127.0.0.1:3000/stationList',
+                url: pars.station_list, //'http://127.0.0.1:3000/stationList',
                 data:function(param) {
                     return {
                         type:$elem.find('.exam-station').parent().attr('type'),
@@ -4153,7 +4145,7 @@ function station_assignment(){
 
                     //数据格式化
                     var str = [];
-                    var data = res.data.rows;
+                    var data = res.data;
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
@@ -4177,9 +4169,7 @@ function station_assignment(){
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: '', //'http://127.0.0.1:3000/stationList',
                 data:req,
                 success: function(res) {
                     //更改type值
@@ -4198,10 +4188,8 @@ function station_assignment(){
             tags: true,
             ajax: {
                 type:'get',
-                dataType: 'jsonp',
-                jsonp: 'callback',
-                url: 'http://127.0.0.1:3000/stationList',
-                data:function(param) {console.log($elem.attr('type'))
+                url: pars.room_list, //'http://127.0.0.1:3000/stationList',
+                data:function(param) {
                     return {
                         type:$elem.find('.station-belong').parent().attr('type'),
                         id:$elem.attr('itemId'),
@@ -4213,8 +4201,10 @@ function station_assignment(){
 
                     //数据格式化
                     var str = [];
-                    var data = res.data.rows;
+                    var data = res.data;
+                    console.log(data);
                     for(var i in data){
+                        console.log(data[i]);
                         str.push({id:data[i].id,text:data[i].name});
                     }
 
@@ -4237,9 +4227,7 @@ function station_assignment(){
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: '', //'http://127.0.0.1:3000/stationList',
                 data:req,
                 success: function(res) {
                     //更改type值
@@ -4262,9 +4250,7 @@ function station_assignment(){
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: '', //'http://127.0.0.1:3000/stationList',
                 data:req,
                 success: function(res) {
                     //更改type值
