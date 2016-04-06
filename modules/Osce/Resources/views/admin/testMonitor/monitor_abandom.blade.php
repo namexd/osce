@@ -35,10 +35,10 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="{{route("osce.admin.ExamControlController.getExamlist")}}">正在考试</a></li>
+                        <li><a href="{{route("osce.admin.ExamControlController.getExamlist")}}">正在考试</a></li>
                         <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorLateList")}}">迟到</a></li>
                         <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorReplaceList")}}">替考</a></li>
-                        <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorQuitList")}}">弃考</a></li>
+                        <li class="active"><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorQuitList")}}">弃考</a></li>
                         <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorFinishList")}}">已完成</a></li>
                     </ul>
                 </div>

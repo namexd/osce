@@ -35,8 +35,8 @@
             <div class="panel-heading">
                 <div class="panel-options">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="{{route("osce.admin.ExamControlController.getExamlist")}}">正在考试</a></li>
-                        <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorLateList")}}">迟到</a></li>
+                        <li><a href="{{route("osce.admin.ExamControlController.getExamlist")}}">正在考试</a></li>
+                        <li class="active"><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorLateList")}}">迟到</a></li>
                         <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorReplaceList")}}">替考</a></li>
                         <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorQuitList")}}">弃考</a></li>
                         <li><a href="{{route("osce.admin.ExamMonitorController.getExamMonitorFinishList")}}">已完成</a></li>
@@ -55,9 +55,7 @@
                             <th>学号</th>
                             <th>准考证号</th>
                             <th>身份证号</th>
-                            <th>当前考站</th>
-                            <th>剩余考站数</th>
-                            <th>状态</th>
+                            <th>联系电话</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -68,27 +66,10 @@
                                 <td>SF1986</td>
                                 <td>SF1986</td>
                                 <td>510821199008300065</td>
-                                <td>操作技能A</td>
-                                <td>1</td>
-                                <td>考试中</td>
+                                <td>123456789123</td>
                                 <td>
                                     <a href="javascript:void(0)">
-                                        <span class="state1 look">
-                                            <i class="fa fa-video-camera fa-2x"></i>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0)">
-                                        <span class="state1 stop" data-toggle="modal" data-target="#myModal">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0)">
                                         <span class="state1 abandon">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0)">
-                                        <span class="state1 replace">
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
                                     </a>
@@ -103,31 +84,5 @@
 @stop{{-- 内容主体区域 --}}
 
 @section('layer_content')
-    {{--终止考试弹出框--}}
-    <form class="form-horizontal" id="stopForm" novalidate="novalidate" method="post" action="">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">终止考试</h4>
-        </div>
-        <div class="modal-body">
-            <div class="form-group text-center font20">
-                当前考生<span class="stuName state">张三</span>正在<span class="stationName state">XXX</span>考站考试中
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">请选择终止原因：</label>
-                <div class="col-sm-9">
-                    <select name="reason" id="reason" class="form-control">
-                        <option value="1">放弃考试</option>
-                        <option value="2">作弊</option>
-                        <option value="3">替考</option>
-                        <option value="4">其他原因</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id='stopSure'>确定</button>
-            <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
-        </div>
-    </form>
+
 @stop
