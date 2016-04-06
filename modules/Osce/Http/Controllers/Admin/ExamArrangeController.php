@@ -38,8 +38,9 @@ class ExamArrangeController extends CommonController
                 'name'=>$name,
                 'order'=>$order,
                 'exam_gradation_id'=>$examGradationId,
-                'exam_screening_id'=>'',
+//                'exam_screening_id'=>'',
             ];
+//            dd($data);
             //先保存到临时表
             $result = ExamDraftFlowTemp::create($data);
             if(!$result){
