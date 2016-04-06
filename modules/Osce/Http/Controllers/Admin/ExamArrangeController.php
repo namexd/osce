@@ -124,7 +124,67 @@ class ExamArrangeController extends CommonController
 
     }
 
-    //
+
+
+
+    //删除站接口
+    public function getDelExamFlow(Request $request){
+        $this->validate($request,[
+//            'exam_id'=>'required',
+            'id'=>'required',
+
+        ]);
+        $id = $request->get('id');
+        //项临时加入删除数据
+//        $data =[
+//            'exam_id'=>$request->get('exam_id'),
+//            'old_draft_flow_id'=>$request->get('id'),
+//        ];
+
+        $result = ExamDraftFlowTemp::find($id);
+        $result->old_draft_flow_id = $id;
+        if($result->save()){
+            return response()->json(
+                $this->success_data($result->id, 1, '删除成功')
+            );
+        }else{
+            return response()->json(
+                $this->success_data('', -1, '删除失败')
+            );
+        }
+    }
+
+
+
+    //删除子站
+    public function getDelExamDraft(Request $request){
+        $this->validate($request,[
+//            'exam_id'=>'required',
+            'id'=>'required',
+        ]);
+        $id = $request->get('id');
+//        $data =[
+//            'exam_id'=>$request->get('exam_id'),
+//            'old_draft_id'=>$request->get('id'),
+//        ];
+
+        $DraftResult = ExamDraftTemp::find($id);
+        $DraftResult->old_draft_id =  $id;
+        if($DraftResult->save()){
+            return response()->json(
+                $this->success_data($DraftResult->id, 1, '删除成功')
+            );
+        }else{
+            return response()->json(
+                $this->success_data('', -1, '删除失败')
+            );
+        }
+
+    }
+
+
+
+
 
 
 
