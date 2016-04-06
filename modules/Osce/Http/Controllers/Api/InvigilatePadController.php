@@ -167,19 +167,24 @@ class InvigilatePadController extends CommonController
         ], [
             'station_id.required' => '考站编号必须'
         ]);
-        $stationId = (int)$request->input('station_id');
-         $exam = Exam::doingExam();
-        $studentModel = new  Student();
-        $studentData =$studentModel->studentList($stationId ,$exam);
-        if ($studentData['nextTester']) {
+
+        try {
+            $stationId = (int)$request->input('station_id');
+            $exam = Exam::doingExam();
+            $studentModel = new  Student();
+            $studentData = $studentModel->studentList($stationId, $exam);
+            if ($studentData['nextTester']) {
 //            dd($studentData['nextTester']);
-            $studentData['nextTester']->avator =asset($studentData['nextTester']->avator);
+                $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+                return response()->json(
+                    $this->success_data($studentData['nextTester'], 1, '验证完成')
+                );
+            } else {
+                throw new \Exception('学生信息查询失败', -2);
+            }
+        } catch (\Exception $ex) {
             return response()->json(
-                $this->success_data($studentData['nextTester'], 1, '验证完成')
-            );
-        } else {
-            return response()->json(
-                $this->fail(new \Exception('学生信息查询失败', -2))
+                $this->fail($ex)
             );
         }
     }
