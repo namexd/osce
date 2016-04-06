@@ -13,6 +13,11 @@
 @stop
 
 @section('only_js')
+    <script src="{{asset('osce/admin/testMonitor/test_monitor.js')}}"></script>
+@stop
+
+{{-- 内容主体区域 --}}
+@section('content')
     <input type="hidden" id="parameter" value="{'pagename':'monitor_test'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
@@ -62,45 +67,45 @@
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
-                            <tr>
-                                <td>1</td>
-                                <td>张三</td>
-                                <td>SF1986</td>
-                                <td>SF1986</td>
-                                <td>510821199008300065</td>
-                                <td>操作技能A</td>
-                                <td>1</td>
-                                <td>考试中</td>
-                                <td>
-                                    <a href="javascript:void(0)">
+                        <tr>
+                            <td>1</td>
+                            <td>张三</td>
+                            <td>SF1986</td>
+                            <td>SF1986</td>
+                            <td>510821199008300065</td>
+                            <td>操作技能A</td>
+                            <td>1</td>
+                            <td>考试中</td>
+                            <td>
+                                <a href="javascript:void(0)">
                                         <span class="state1 look">
                                             <i class="fa fa-video-camera fa-2x"></i>
                                         </span>
-                                    </a>
-                                    <a href="javascript:void(0)">
+                                </a>
+                                <a href="javascript:void(0)">
                                         <span class="state1 stop" data-toggle="modal" data-target="#myModal">
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
-                                    </a>
-                                    <a href="javascript:void(0)">
+                                </a>
+                                <a href="javascript:void(0)">
                                         <span class="state1 abandon">
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
-                                    </a>
-                                    <a href="javascript:void(0)">
+                                </a>
+                                <a href="javascript:void(0)">
                                         <span class="state1 replace">
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
-                                    </a>
-                                </td>
-                            </tr>
+                                </a>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-@stop{{-- 内容主体区域 --}}
+@stop
 
 @section('layer_content')
     {{--终止考试弹出框--}}
