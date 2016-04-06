@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
 
+use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 
 use Modules\Osce\Entities\ExamAbsent;
@@ -419,7 +420,6 @@ class ApiController extends CommonController
             */
 
             //获取当前登录账户的角色名称
-            //获取当前登录账户的角色名称
             $questionBankRepositories = new QuestionBankRepositories();
             $roleType = $questionBankRepositories->getExamLoginUserRoleType();
 
@@ -468,9 +468,18 @@ class ApiController extends CommonController
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('你不是监考老师', 1001);
             }
+
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
             if (is_array($ExamInfo)) {
+                // 还要判断监考老师的类型是不是理论站的监考老师-station_teacher
+                $stationModel = new Station();
+                $station = $stationModel->where('id', '=', $ExamInfo['StationId'])->first();
+
+                if($station->type != 3) {
+                    throw new \Exception('你不是理论考试的监考老师', 1002);
+                }
+
                 $data = array(
                     'status'=>1,
                     'name'      => $ExamInfo['ExamName'],
@@ -493,7 +502,7 @@ class ApiController extends CommonController
             if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
             }
-            if($ex->getCode() === 1001)
+            if($ex->getCode() === 1001 || $ex->getCode() === 1002)
             {
                 return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
             }
@@ -542,40 +551,43 @@ class ApiController extends CommonController
         //查找当前正在进行的考试--之后会改
         $examingDO = Exam::where('status','=',1)->first();
 
-        $studentModel = new Student();
-        $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-        //dd($userInfo);
-        $ExamScreeningStudent = new ExamScreeningStudent();
-        $examing = $ExamScreeningStudent->getExamings($userInfo->id);
+        if(count($examingDO) > 0){
+            $studentModel = new Student();
+            $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
+            //dd($userInfo);
+            $ExamScreeningStudent = new ExamScreeningStudent();
+            $examing = $ExamScreeningStudent->getExamings($userInfo->id);
 
-        if(count($examing) > 0){
-            $examing = $examing->toArray();
-        }
+            if(count($examing) > 0){
+                $examing = $examing->toArray();
+            }
 
-        //整理考试数据
-        $examData = array();
-        $StationTeacher = new StationTeacher();
-        $ExamPaperExamStation = new ExamPaperExamStation();
+            //整理考试数据
+            $examData = array();
+            $StationTeacher = new StationTeacher();
+            $ExamPaperExamStation = new ExamPaperExamStation();
 
-        foreach($examing as $key=>$val){
-            foreach($val['screening']['exam_queue'] as $k=>$v){
-                $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
-                //dd($v['examstation']['exam'][0]['id']);
-                $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['examstation']['exam'][0]['id'])->first();
-                $examData['station_id'] = $v['station_id'];
-                $examData['teacher_id'] = $stationTeacher->user_id;
-                $examData['student_id'] = $userInfo->id;
-                $examData['paper_id'] = $examPaper->exam_paper_id;
-                $examData['exam_id'] = $v['examstation']['exam'][0]['id'];
-                $examData['exam_name'] = $v['examstation']['exam'][0]['name'];
-                $examData['status'] = $v['examstation']['exam'][0]['status'];
+            foreach($examing as $key=>$val){
+                foreach($val['screening']['exam_queue'] as $k=>$v){
+                    $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
+                    //dd($v['examstation']['exam'][0]['id']);
+                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['examstation']['exam'][0]['id'])->first();
+                    $examData['station_id'] = $v['station_id'];
+                    $examData['teacher_id'] = $stationTeacher->user_id;
+                    $examData['student_id'] = $userInfo->id;
+                    $examData['paper_id'] = $examPaper->exam_paper_id;
+                    $examData['exam_id'] = $v['examstation']['exam'][0]['id'];
+                    $examData['exam_name'] = $v['examstation']['exam'][0]['name'];
+                    $examData['status'] = $v['examstation']['exam'][0]['status'];
 
+                }
             }
         }
+
         //dd($examData);
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
-            'userInfo'   => $userInfo,
-            'examData' => $examData
+            'userInfo'   => @$userInfo,
+            'examData' => @$examData
         ]);
     }
 /**
@@ -670,4 +682,27 @@ class ApiController extends CommonController
         }
     }
 
+    /**
+     * Android端替考警告接口
+     * @method POST
+     * @url /osce/admin/api/replace-exam-alert
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return json
+     *
+     * @version 3.4a
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2016-04-05 17:54
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postAlertExamReplace (Request $request) {
+        $this->validate($request, [
+            'mode' => 'required|in:1,2',
+            'exam_screening_id' => 'required|integer',
+        ]);
+    }
 }
