@@ -62,21 +62,27 @@
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
+                        @if(!empty($data)&& count($data)>0)
+                            @foreach(@$data as $key=>$val )
                         <tr>
-                            <td>1</td>
-                            <td>张三</td>
-                            <td>SF1986</td>
-                            <td>SF1986</td>
-                            <td>510821199008300065</td>
-                            <td>123456789123</td>
+                            <td>{{$key+1}}</td>
+                            <td>{{$val['name']}}</td>
+                            <td>{{$val['code']}}</td>
+                            <td>{{$val['exam_sequence']}}</td>
+                            <td>{{$val['idcard']}}</td>
+                            <td>{{$val['mobile']}}</td>
                             <td>
+                                @if($val['status']==-1)
                                 <a href="javascript:void(0)">
-                                        <span class="state1 abandon">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
+                                        确认弃考
                                 </a>
+                                @else
+                                    已确认弃考
+                                @endif
                             </td>
                         </tr>
+                        @endforeach
+                        @endif
                         </tbody>
                     </table>
                 </div>
