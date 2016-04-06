@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
+use Modules\Osce\Entities\QuestionBankEntities\ExamControl;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 
@@ -30,14 +31,13 @@ class ExamControlController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function getExamlist(Request $request)
+    public function getExamlist()
     {
-
-
-
+        $examControlModel = new ExamControl();
+        $data = $examControlModel->getDoingExamList();
+        //dd($data);
         return view('osce::admin.testMonitor.monitor_test', [
-           // 'data'      =>$data,//
-
+            'data'      =>$data,
         ]);
     }
 

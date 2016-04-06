@@ -50,38 +50,51 @@
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
-                            <tr>
-                                <td>1</td>
-                                <td>张三</td>
-                                <td>SF1986</td>
-                                <td>SF1986</td>
-                                <td>510821199008300065</td>
-                                <td>操作技能A</td>
-                                <td>1</td>
-                                <td>考试中</td>
-                                <td>
-                                    <a href="">
+                        @if(!empty($data['examInfo'])&& count($data['examInfo'])>0)
+                            @foreach(@$data['examInfo'] as $key=>$val )
+                                <tr>
+                                    <td>{{ @$key+1}}</td>
+                                    <td>{{ @$val["name"]}}</td>
+                                    <td>{{ @$val["code"]}}</td>
+                                    <td>{{ @$val["exam_sequence"]}}</td>
+                                    <td>{{ @$val["idcard"]}}</td>
+                                    <td>{{ @$val["stationName"]}}</td>
+                                    <td>{{ @$val["stationCount"]}}</td>
+                                    <td>
+                                        @if(@$val["examOrderStatus"]==4)迟到
+                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==1)弃考
+                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)替考
+                                        @elseif(@$val["is_replace"]==-1&&@$val["is_give"]==1)弃考
+                                        @elseif(@$val["is_replace"]==-1&&@$val["is_give"]==-1&&@$val["examOrderStatus"]!=4)考试中
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="">
                                         <span class="state1 look" data-toggle="modal" data-target="#myModal">
                                             <i class="fa fa-video-camera fa-2x"></i>
                                         </span>
-                                    </a>
-                                    <a href="" >
+                                        </a>
+                                        <a href="" >
                                         <span class="state2 stop">
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
-                                    </a>
-                                    <a href="">
+                                        </a>
+                                        <a href="">
                                         <span class="state2 abandon">
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
-                                    </a>
-                                    <a href="">
+                                        </a>
+                                        <a href="">
                                         <span class="state2 replace">
                                             <i class="fa fa-cog fa-2x"></i>
                                         </span>
-                                    </a>
-                                </td>
-                            </tr>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                            @endforeach
+                        @endif
+
                         </tbody>
                     </table>
                 </div>
