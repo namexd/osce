@@ -379,7 +379,7 @@ class ExamController extends CommonController
 
     /**
      * 考生管理
-     * @url   GET /osce/admin/exam/student-manage
+     * @url   GET /osce/admin/exam/examinee-manage
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -1655,6 +1655,7 @@ class ExamController extends CommonController
     }
 
     /**
+     * @url  GET /osce/admin/exam/exam-waiting-area
      * 代考区说明
      */
     public function getExamRemind(Request $request){

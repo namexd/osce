@@ -10,16 +10,19 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\ExamDraftFlowTemp;
+use Modules\Osce\Entities\ExamDraftTemp;
+use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Subject;
+use Modules\Osce\Entities\TeacherSubject;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class ExamArrangeController extends CommonController
 {
-    //考试安排着陆页
     //新增考试安排的站
-
     public function postAddExamFlow(Request $request){
         try{
             $this->validate($request,[
@@ -32,20 +35,44 @@ class ExamArrangeController extends CommonController
             $name = $request->get('name');
             $order = $request->get('order');
             $examGradationId = $request->get('exam_gradation_id');
+            //获取当前操作信息
+            $user = Auth::user();
+            if (empty($user)) {
+                throw new \Exception('未找到当前操作人信息');
+            }
             $data =[
                 'exam_id'=>$examId,
                 'name'=>$name,
                 'order'=>$order,
                 'exam_gradation_id'=>$examGradationId,
-                'exam_screening_id'=>'',
+//                'exam_screening_id'=>'',
             ];
             //先保存到临时表
-//            if(){
-//
-//            }
+            $result = ExamDraftFlowTemp::create($data);
+            if($result){
+                //新增一条空的考站的子站数据
+                $DraftData=[
+                    'exam_id'=>$examId,
+                    'old_draft_flow_id'=>$result->id,
+                    'ctrl_type'=>0,
+                    'used'=>1,
+                    'user_id'=>$user->id,
+                ];
+                $DraftResult = ExamDraftTemp::create($DraftData);
 
+                if($DraftResult){
+                    return response()->json(
+                        $this->success_data(['id'=>$result->id,'draft_id'=>$DraftResult->id], 1, 'success')
+                    );
+                }else{
+                    throw new \Exception('保存临时考站失败');
+                }
+
+            }else{
+                throw new \Exception('保存临时考站失败');
+
+            }
         }catch (\Exception $ex){
-
             return response()->json(
                 $this->fail($ex)
             );
@@ -55,6 +82,47 @@ class ExamArrangeController extends CommonController
 
 }
 
+//新增考站里面的子对象到临时表
+    public function postExamDraft(Request $request){
+        $this->validate($request,[
+            'exam_id'=>'required',
+//            'ctrl_type'=>'required',
+            'old_draft_flow_id'=>'required',
+//            'old_draft_id'=>'required',
+        ]);
+        try{
+            //获取当前操作信息
+            $user = Auth::user();
+            if (empty($user)) {
+                throw new \Exception('未找到当前操作人信息');
+            }
+
+            $data=[
+                'exam_id'=>$request->get('exam_id'),
+                'old_draft_flow_id'=>$request->get('old_draft_flow_id'),
+                'user_id'=>$user->id,
+                'used'=>0,
+                'ctrl_type'=>1,
+            ];
+            $result = ExamDraftTemp::create($data);
+            if(!$result){
+                throw new \Exception('保存临时考站数据失败');
+            }else{
+
+                return response()->json(
+                    $this->success_data($result->id, 1, 'success')
+                );
+            }
+            
+        }catch (\Exception $ex){
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
+
+
+
+    }
 
 
 
@@ -83,15 +151,16 @@ class ExamArrangeController extends CommonController
     public function getStationList(Request $request){
         $this->validate($request,[
             'station_name'=>'sometimes',
-//            'id'=>'required',
+            'id'=>'required',
         ]);
+
         $name = $request->get('station_name');
-        
         $id = $request->get('id');
         //查询出已用过的考站
+        $stationIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('station_id');
         
         $stationModel = new Station();
-        $stationData = $stationModel -> showList($stationIdArray = [],$ajax = true,$name);
+        $stationData = $stationModel -> showList($stationIdArray,$ajax = true,$name);
 
 //        dd($stationData);
 
@@ -103,7 +172,33 @@ class ExamArrangeController extends CommonController
     }
 
     /**
-     * 获取考试项目（异步）
+     * 获取考试所有的阶段（异步接口）
+     * @url GET /osce/admin/exam-arrange/all-gradations
+     * @param Request $request
+     * @author Zhoufuxiang 2016-04-06
+     * @return string
+     */
+    public function getAllGradations(Request $request){
+        try{
+            //验证
+            $this->validate($request, [
+                'exam_id' => 'required|integer',
+            ]);
+            $exam_id = intval($request->get('exam_id'));
+            $data    = ExamGradation::where('exam_id','=',$exam_id)->get();
+
+            return response()->json(
+                $this->success_data($data, 1, 'success')
+            );
+
+        }catch (\Exception $ex){
+            return $this->fail($ex);
+        }
+    }
+
+    /**
+     * 获取考试项目（异步接口）
+     * @url GET /osce/admin/exam-arrange/all-subjects
      * @param Request $request
      * @author Zhoufuxiang 2016-04-06
      * @return string
@@ -151,5 +246,33 @@ class ExamArrangeController extends CommonController
         return view('osce::admin.examManage.examiner_manage', ['id'=>$id, 'data' => $data]);
     }
 
+    /**
+     * 根据考试项目 获取对应下的考官、SP（接口）
+     * @url GET /osce/admin/exam-arrange/invigilates-by-subject
+     * @param Request $request
+     * @author Zhoufuxiang 2016-04-06
+     * @return json
+     */
+    public function getInvigilatesBySubject(Request $request){
+        try{
+            //验证
+            $this->validate($request, [
+                'subject_id' => 'required|integer',
+                'type'       => 'required|integer'
+            ]);
+            $subject_id = intval($request->get('subject_id'));
+            $type       = intval($request->get('type'));
+            $teacherSubject = new TeacherSubject();
+            //根据考试项目 获取对应的考官
+            $invigilates= $teacherSubject->getTeachers($subject_id, $type);
+
+            return response()->json(
+                $this->success_data($invigilates, 1, 'success')
+            );
+
+        } catch (\Exception $ex){
+            return response()->json($this->fail($ex));
+        }
+    }
 
 }

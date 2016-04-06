@@ -187,6 +187,7 @@
                         <ul class="nav nav-tabs">
                             <li class=""><a href="{{route('osce.admin.exam.getEditExam')}}?id={{$_GET['id']}}">基础信息</a></li>
                             <li class=""><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$_GET['id']])}}">考场安排</a></li>
+                            <li class=""><a href="{{route('osce.admin.exam-arrange.getInvigilateArrange',['id'=>$_GET['id']])}}">考官安排</a></li>
                             <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$_GET['id']])}}">考生管理</a></li>
                             <li class="active"><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$_GET['id']])}}">智能排考</a></li>
                             <li class=""><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$_GET['id']])}}">待考区说明</a></li>
