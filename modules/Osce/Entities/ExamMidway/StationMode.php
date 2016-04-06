@@ -77,6 +77,7 @@ class StationMode implements ModeInterface
             ->whereIn('station_id',$this->stationIds)
             ->whereIn('stick', $this->stationIds)
             ->get();
+        dd($sticks);
         if ($sticks->isEmpty()) {
             //获取应该在此处考试的考生
 //            $a=\DB::connection('osce_mis');
@@ -128,7 +129,6 @@ class StationMode implements ModeInterface
                     ->groupBy('student.id')
                     ->take(1)
                     ->get();
-                dd($query);
                 //实现首位固定
 //                foreach ($query as $student) {
 //                    $stick = ExamQueue::where('exam_id', $this->exam->id)
