@@ -3784,6 +3784,7 @@ function station_assignment(){
      * @date    2016-04-05
      */
     $('#station-add').click(function() {
+
         var html = '';
 
         html += '<div class="form-group">'+
@@ -3871,7 +3872,7 @@ function station_assignment(){
 
         //插入dom
         $(this).parent().parent().parent().parent().parent().parent().append(html);
-
+        //select2初始化
         select2Init($(this).parent().parent().parent().parent().parent())
     });
 
@@ -3929,6 +3930,7 @@ function examiner_manage() {
                 })
 
                 return {
+                    status:1
                     teahcer_id:ids
                 };
             },
