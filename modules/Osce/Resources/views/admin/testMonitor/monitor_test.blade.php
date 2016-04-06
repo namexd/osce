@@ -72,11 +72,11 @@
                             @foreach(@$data['examInfo'] as $key=>$val )
                                 <tr>
                                     <td>{{ @$key+1}}</td>
-                                    <td>{{ @$val["name"]}}</td>
+                                    <td class="student">{{ @$val["name"]}}</td>
                                     <td>{{ @$val["code"]}}</td>
                                     <td>{{ @$val["exam_sequence"]}}</td>
-                                    <td>{{ @$val["idcard"]}}</td>
-                                    <td>{{ @$val["stationName"]}}</td>
+                                    <td class="idCard">{{ @$val["idcard"]}}</td>
+                                    <td class="station">{{ @$val["stationName"]}}</td>
                                     <td>{{ @$val["stationCount"]}}</td>
                                     <td>
                                         @if((@$val["is_replace"]==-1&&@$val["is_give"]==1) || (@$val["is_replace"]==1&&@$val["is_give"]==1))上报弃考
@@ -139,7 +139,11 @@
         </div>
         <div class="modal-body">
             <div class="form-group text-center font20">
-                当前考生<span class="stuName state">张三</span>正在<span class="stationName state">XXX</span>考站考试中
+                当前考生
+                <span class="stuName state"></span>
+                正在
+                <span class="stationName state"></span>
+                考站考试中
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">请选择终止原因：</label>
