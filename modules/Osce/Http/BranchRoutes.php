@@ -181,6 +181,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 
         /****************android c++接口begin*****************/
+        // android端教师点击 准备完成
+        Route::get('api/ready-exam',['uses'=>'ApiController@getReadyExam','as'=>'osce.admin.ApiController.getReadyExam']);
         // android端替考警告
         Route::post('api/replace-exam-alert',['uses'=>'ApiController@postAlertExamReplace','as'=>'osce.admin.ApiController.postAlertExamReplace']);
         /****************android c++接口end*****************/

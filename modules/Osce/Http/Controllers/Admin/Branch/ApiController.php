@@ -504,7 +504,9 @@ class ApiController extends CommonController
             }
             if($ex->getCode() === 1001 || $ex->getCode() === 1002)
             {
-                return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
+                //return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
+                Auth::logout();
+                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
             }
         }
     }
@@ -680,6 +682,27 @@ class ApiController extends CommonController
                 $this->fail(new \Exception('查询是否考完失败', -2))
             );
         }
+    }
+
+    /**
+     * 监考老师点击准备完成
+     * @method GET
+     * @url /osce/admin/api/ready-exam
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2016-04-06 15:43
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getReadyExam (Request $request) {
+
     }
 
     /**
