@@ -72,13 +72,11 @@
                                         <td class="idCard">{{$val['idcard']}}</td>
                                         <td>{{$val['mobile']}}</td>
                                         <td>
-                                            @if($val['status']==-1)
                                             <a href="javascript:void(0)">
-                                                    确认弃考
+                                                <span class="state1 abandon">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
                                             </a>
-                                            @else
-                                                已确认弃考
-                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
