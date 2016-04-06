@@ -391,7 +391,7 @@ class PadController extends  CommonController{
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
 
             //将该条信息的首位置零
-            $queue->stick = null;
+            $queue->stick = 0;
             if (!$queue->save()) {
                 throw new \Exception('结束考试失败', -10);
             }

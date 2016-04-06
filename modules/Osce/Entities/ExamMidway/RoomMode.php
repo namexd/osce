@@ -106,7 +106,7 @@ class RoomMode implements ModeInterface
                         ->whereIn('exam_queue.serialnumber', $serialnumber)
                         ->where('exam_queue.status', '<', 3)
                         ->where('exam_queue.blocking', 1)
-                        ->whereNull('stick')
+                        ->where('exam_queue.stick', '<>', 0)
                         ->whereNotIn('student.id', $array->pluck('student_id'))
                         ->where('student.exam_id', $this->exam->id)
                         ->select(
