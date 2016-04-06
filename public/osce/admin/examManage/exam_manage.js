@@ -3962,7 +3962,7 @@ function station_assignment(){
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<table class="table table-bordered" stationId="'+res.data.stationId+'">'+
+                                    '<table class="table table-bordered table-id-'+index+'" stationId="'+res.data.stationId+'">'+
                                         '<thead>'+
                                             '<tr>'+
                                                 '<td>考试项目</td>'+
@@ -3973,7 +3973,7 @@ function station_assignment(){
                                                 '<td>操作</td>'+
                                             '</tr>'+
                                         '</thead>'+
-                                        '<tbody>'+
+                                        '<tbody index="'+index+'">'+
                                             '<tr class="item-id-'+index+'" itemId="'+res.data.itemId+'">'+
                                                 '<td type="1"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
                                                 '<td type="1"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
@@ -3993,6 +3993,7 @@ function station_assignment(){
                     //插入dom
                     $('.station-container').append(html);
                     $('.station-container').attr('index',index + 1);
+                    $('.station-container').find('.item-id-'+index).attr('index',index + 1);
                     //初始化select2
                     select2Init($('.station-container').find('.item-id-'+index));
                 }
@@ -4023,15 +4024,16 @@ function station_assignment(){
      * @date    2016-04-05
      */
     $('.station-container').on('click', '.fa-plus', function() {
-        var html = '';
+        var html = '',
+            index = parseInt($('.station-container').find('.table-id-'+index).attr('index')) + 1;
 
-        html += '<tr>'+
-                    '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                    '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                    '<td></td>'+
-                    '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                    '<td><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
-                    '<td>'+
+        html += '<tr class="item-id-'+index+'">'+
+                    '<td type="1"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                    '<td type="1"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
+                    '<td type="1"></td>'+
+                    '<td type="1"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
+                    '<td type="1"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                    '<td type="1">'+
                         '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                         '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
                     '</td>'+
@@ -4039,6 +4041,7 @@ function station_assignment(){
 
         //插入dom
         $(this).parent().parent().parent().parent().parent().parent().append(html);
+        $(this).parent().parent().parent().parent().parent().parent().parent().attr('index',index);
         //select2初始化
         select2Init($(this).parent().parent().parent().parent().parent())
     });
@@ -4062,7 +4065,62 @@ function station_assignment(){
      */
     function select2Init($elem) {
 
-        $elem.find('.exam-item').select2();
+        $elem.find('.exam-item').select2({
+            placeholder:'请选择',
+            tags: true,
+            ajax: {
+                type:'get',
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                url: 'http://127.0.0.1:3000/stationList',
+                data:function(param) {
+                    return {
+                        type:$elem.find('.exam-item').parent().attr('type'),
+                        id:$elem.attr('itemId'),
+                        station_id:$elem.parent().parent().attr('stationId')
+                    };
+                },
+                delay: 250,
+                processResults: function (res) {
+
+                    //数据格式化
+                    var str = [];
+                    var data = res.data.rows;
+                    for(var i in data){
+                        str.push({id:data[i].id,text:data[i].name});
+                    }
+
+                    //加载入数据
+                    return {
+                        results: str
+                    };
+                }
+            }
+
+        //数据更新，交互数据
+        }).on('select2:select', function(e) {
+            //请求数据
+            var req = {
+                type:$elem.find('.exam-item').parent().attr('type'),
+                id:$elem.attr('itemId'),
+                station_id:$elem.parent().parent().attr('stationId'),
+                data:e.params.data.id
+            };
+
+            $.ajax({
+                type:'get',
+                url: 'http://127.0.0.1:3000/stationList',
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                data:req,
+                success: function(res) {
+                    //更改type值
+                    if($elem.find('.exam-item').parent().attr('type')==1) {
+                        $elem.find('.exam-item').parent().attr('type',3);
+                    }   
+                }
+            })
+        });
 
         //考站列表获取
         $elem.find('.exam-station').select2({
@@ -4073,7 +4131,7 @@ function station_assignment(){
                 dataType: 'jsonp',
                 jsonp: 'callback',
                 url: 'http://127.0.0.1:3000/stationList',
-                data:function(param) {console.log($elem.attr('type'))
+                data:function(param) {
                     return {
                         type:$elem.find('.exam-station').parent().attr('type'),
                         id:$elem.attr('itemId'),
@@ -4090,18 +4148,39 @@ function station_assignment(){
                         str.push({id:data[i].id,text:data[i].name});
                     }
 
-                    //更改type值
-                    $elem.find('.exam-station').parent().attr('type',3);
-
                     //加载入数据
                     return {
                         results: str
                     };
                 }
             }
+
+        //数据更新，交互数据
+        }).on('select2:select', function(e) {
+            //请求数据
+            var req = {
+                type:$elem.find('.exam-station').parent().attr('type'),
+                id:$elem.attr('itemId'),
+                station_id:$elem.parent().parent().attr('stationId'),
+                data:e.params.data.id
+            };
+
+            $.ajax({
+                type:'get',
+                url: 'http://127.0.0.1:3000/stationList',
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                data:req,
+                success: function(res) {
+                    //更改type值
+                    if($elem.find('.exam-station').parent().attr('type')==1) {
+                        $elem.find('.exam-station').parent().attr('type',3);
+                    }   
+                }
+            })
         });
 
-        $elem.find('.station-type').select2();
+        //$elem.find('.station-type').select2();
 
         //所属考场
         $elem.find('.station-belong').select2({
@@ -4129,29 +4208,62 @@ function station_assignment(){
                         str.push({id:data[i].id,text:data[i].name});
                     }
 
-                    //更改type值
-                    $elem.find('.station-belong').parent().attr('type',3);
-
                     //加载入数据
                     return {
                         results: str
                     };
                 }
             }
+
+        //数据更新，交互数据
+        }).on('select2:select', function(e) {
+            //请求数据
+            var req = {
+                type:$elem.find('.station-belong').parent().attr('type'),
+                id:$elem.attr('itemId'),
+                station_id:$elem.parent().parent().attr('stationId'),
+                data:e.params.data.id
+            };
+
+            $.ajax({
+                type:'get',
+                url: 'http://127.0.0.1:3000/stationList',
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                data:req,
+                success: function(res) {
+                    //更改type值
+                    if($elem.find('.station-belong').parent().attr('type')==1) {
+                        $elem.find('.station-belong').parent().attr('type',3);
+                    }   
+                }
+            })
         });
 
         //选考必考
         $elem.find('.station-chioce').select2({data:[{id:1,text:'必考'},{id:2,text:'选考'}]}).on("change", function (e) {
+            //请求数据
+            var req = {
+                type:$elem.find('.station-chioce').parent().attr('type'),
+                id:$elem.attr('itemId'),
+                station_id:$elem.parent().parent().attr('stationId'),
+                data: $elem.find('.station-chioce').val()
+            };
+
             $.ajax({
                 type:'get',
                 url: 'http://127.0.0.1:3000/stationList',
-                data:{type:$elem.find('.station-chioce').parent().attr('type'),id:$elem.attr('itemId'),station_id:$elem.parent().parent().attr('stationId')},
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                data:req,
                 success: function(res) {
                     //更改type值
-                    $elem.find('.station-chioce').parent().attr('type',3);
+                    if($elem.find('.station-chioce').parent().attr('type')==1) {
+                        $elem.find('.station-chioce').parent().attr('type',3);
+                    }
                 }
             })
-         });;
+         });
 
     }
 
