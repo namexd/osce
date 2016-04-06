@@ -137,7 +137,7 @@ class ExamArrangeController extends CommonController
         $name = $request->get('station_name');
         $id = $request->get('id');
 
-        $roomIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('room_id');
+        $roomIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('room_id')->toArray();
         $roomModel = new Room();
 //        $roomData = $roomModel -> showRoomList($keyword = '', $type = '0', $id = '');
 

@@ -301,7 +301,7 @@ class Room extends CommonModel
                  $this->table.'.id',
                  $this->table.'.name',
                  $this->table.'.code',
-                 $this->table.'.type',
+//                 $this->table.'.type',
 //                 $this->table.'.description',
 //                 $this->table.'.subject_id',
 //                 $this->table.'.mins',
