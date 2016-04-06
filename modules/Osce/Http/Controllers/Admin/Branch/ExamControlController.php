@@ -41,6 +41,47 @@ class ExamControlController extends CommonController
         ]);
     }
 
+    /**终止考试数据交互
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postStopExam2(Request $request)
+    {
+        $data=array(
+            'examScreeningStudentId' =>$request->input('170'), //考试场次-学生关系id
+            'description' =>$request->input('2'), //终止考试原图
+
+        );
+        dd($data);
+
+        $examControlModel = new ExamControl();
+        $result = $examControlModel->stopExam($data);
+        dd($result);
+
+        return response()->json(['status'=>'1','info'=>'保存成功']);
+    }
+    public function postStopExam()
+    {
+        $data=array(
+            'examScreeningStudentId' =>170, //考试场次-学生关系id
+            'description' =>2, //终止考试原图
+
+        );
+
+        $examControlModel = new ExamControl();
+        $result = $examControlModel->stopExam($data);
+        dd($result);
+
+    }
+
+
+
 
 
 

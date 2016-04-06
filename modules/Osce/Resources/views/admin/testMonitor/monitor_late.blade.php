@@ -25,12 +25,12 @@
         <div class="container-fluid ibox-content">
             <ul class="sortable-list connectList agile-list ui-sortable" style="background-color: #fff;">
                 <li class="success-element titleBackground">
-                    <p class="font20 fontb">考试2016.1.12（二选一）</p>
+                    <p class="font20 fontb">{{@$data['examName']['name']}}</p>
                     <div class="font16 messageColor">
-                        <span class="marr_25">考站数量：1</span>
-                        <span class="marr_25">考生人数：1</span>
-                        <span class="marr_25">正在考试：1</span>
-                        <span>已完成：1</span>
+                        <span class="marr_25">考站数量：{{@$data['stationCount']}}</span>
+                        <span class="marr_25">考生人数：{{@$data['studentCount']}}</span>
+                        <span class="marr_25">正在考试：{{@$data['doExamCount']}}</span>
+                        <span>已完成：{{@$data['endExamCount']}}</span>
                     </div>
                 </li>
             </ul>
@@ -51,32 +51,36 @@
                 <div class="list_all">
                     <table class="table table-striped" id="table-striped" style="background:#fff">
                         <thead>
-                        <tr>
-                            <th>序号</th>
-                            <th>考生姓名</th>
-                            <th>学号</th>
-                            <th>准考证号</th>
-                            <th>身份证号</th>
-                            <th>联系电话</th>
-                            <th>操作</th>
-                        </tr>
+                            <tr>
+                                <th>序号</th>
+                                <th>考生姓名</th>
+                                <th>学号</th>
+                                <th>准考证号</th>
+                                <th>身份证号</th>
+                                <th>联系电话</th>
+                                <th>操作</th>
+                            </tr>
                         </thead>
                         <tbody class="subjectBody">
-                        <tr>
-                            <td>1</td>
-                            <td>张三</td>
-                            <td>SF1986</td>
-                            <td>SF1986</td>
-                            <td>510821199008300065</td>
-                            <td>123456789123</td>
-                            <td>
-                                <a href="javascript:void(0)">
-                                        <span class="state1 abandon">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
-                                </a>
-                            </td>
-                        </tr>
+                            @if(!empty($data)&& count($data)>0)
+                                @foreach(@$data as $key=>$val )
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td class="student">{{$val['name']}}</td>
+                                        <td>{{$val['code']}}</td>
+                                        <td>{{$val['exam_sequence']}}</td>
+                                        <td class="idCard">{{$val['idcard']}}</td>
+                                        <td>{{$val['mobile']}}</td>
+                                        <td>
+                                            <a href="javascript:void(0)">
+                                                <span class="state1 abandon">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

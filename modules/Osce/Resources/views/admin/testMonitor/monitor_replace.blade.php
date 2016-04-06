@@ -62,6 +62,8 @@
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
+                        @if(!empty($data)&& count($data)>0)
+                            @foreach(@$data as $key=>$val )
                         <tr>
                             <td>1</td>
                             <td>张三</td>
@@ -70,14 +72,16 @@
                             <td>510821199008300065</td>
                             <td>123456789123</td>
                             <td>已结束</td>
-                            <td>
-                                <a href="javascript:void(0)">
+                            <td>{{--{{route('osce.admin.course.getResultVideo')}}?exam_id={{$val['exam_id']}}&student_id={{$val['student_id']}}&station_id={{$val['station_id']}}--}}
+                                <a href="">
                                         <span class="state1 look">
                                             <i class="fa fa-video-camera fa-2x"></i>
                                         </span>
                                 </a>
                             </td>
                         </tr>
+                        @endforeach
+                        @endif
                         </tbody>
                     </table>
                 </div>

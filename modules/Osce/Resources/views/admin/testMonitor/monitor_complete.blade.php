@@ -71,10 +71,10 @@
                                 <td>SF1986</td>
                                 <td>510821199008300065</td>
                                 <td>123456789123</td>
-                                <td>
+                                <td>{{--{{route('osce.admin.course.getResultVideo')}}?exam_id={{$val['exam_id']}}&student_id={{$val['student_id']}}&station_id={{$val['station_id']}}--}}
                                     <a href="javascript:void(0)">
                                         <span class="state1 abandon">
-                                            <i class="fa fa-cog fa-2x"></i>
+                                            <i class="fa fa-video-camera fa-2x"></i>
                                         </span>
                                     </a>
                                 </td>

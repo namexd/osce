@@ -25,14 +25,15 @@
                 <h5 class="title-label">考试监控</h5>
             </div>
         </div>
+        @if(!empty($data['examName']['name']))
         <div class="container-fluid ibox-content">
             <ul class="sortable-list connectList agile-list ui-sortable" style="background-color: #fff;">
                 <li class="success-element titleBackground">
-                    <p class="font20 fontb">{{@$examName['name']}}</p>
+                    <p class="font20 fontb">{{@$data['examName']['name']}}</p>
                     <div class="font16 messageColor">
-                        <span class="marr_25">考站数量：{{@$data['examName']['name']}}</span>
-                        <span class="marr_25">考生人数：{{@$data['stationCount']}}</span>
-                        <span class="marr_25">正在考试：{{@$data['studentCount']}}</span>
+                        <span class="marr_25">考站数量：{{@$data['stationCount']}}</span>
+                        <span class="marr_25">考生人数：{{@$data['studentCount']}}</span>
+                        <span class="marr_25">正在考试：{{@$data['doExamCount']}}</span>
                         <span>已完成：{{@$data['endExamCount']}}</span>
                     </div>
                 </li>
@@ -71,44 +72,45 @@
                             @foreach(@$data['examInfo'] as $key=>$val )
                                 <tr>
                                     <td>{{ @$key+1}}</td>
-                                    <td>{{ @$val["name"]}}</td>
+                                    <td class="student">{{ @$val["name"]}}</td>
                                     <td>{{ @$val["code"]}}</td>
                                     <td>{{ @$val["exam_sequence"]}}</td>
-                                    <td>{{ @$val["idcard"]}}</td>
-                                    <td>{{ @$val["stationName"]}}</td>
+                                    <td class="idCard">{{ @$val["idcard"]}}</td>
+                                    <td class="station">{{ @$val["stationName"]}}</td>
                                     <td>{{ @$val["stationCount"]}}</td>
                                     <td>
-                                        @if(@$val["examOrderStatus"]==4)迟到
-                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==1)弃考
-                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)替考
-                                        @elseif(@$val["is_replace"]==-1&&@$val["is_give"]==1)弃考
+                                        @if((@$val["is_replace"]==-1&&@$val["is_give"]==1) || (@$val["is_replace"]==1&&@$val["is_give"]==1))上报弃考
+                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)上报替考
                                         @elseif(@$val["is_replace"]==-1&&@$val["is_give"]==-1&&@$val["examOrderStatus"]!=4)考试中
                                         @endif
                                     </td>
                                     <td>
                                         <a href="javascript:void(0)">
-                                        <span class="state1 look">
-                                            <i class="fa fa-video-camera fa-2x"></i>
-                                        </span>
+                                            <span class="state1 look">
+                                                <i class="fa fa-video-camera fa-2x"></i>
+                                            </span>
                                         </a>
-                                        <a href="javascript:void(0)">
-                                        <span class="state1 stop" data-toggle="modal" data-target="#myModal">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
-                                        </a>
-                                        <a href="javascript:void(0)">
-                                        <span class="state1 abandon">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
-                                        </a>
-                                        <a href="javascript:void(0)">
-                                        <span class="state1 replace">
-                                            <i class="fa fa-cog fa-2x"></i>
-                                        </span>
-                                        </a>
+                                        @if(@$val["is_replace"]==-1&&@$val["is_give"]==-1&&@$val["examOrderStatus"]!=4)
+                                            <a href="javascript:void(0)">
+                                                <span class="state1 stop" data-toggle="modal" data-target="#myModal">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
+                                            </a>
+                                        @elseif((@$val["is_replace"]==-1&&@$val["is_give"]==1) || (@$val["is_replace"]==1&&@$val["is_give"]==1))
+                                            <a href="javascript:void(0)">
+                                                <span class="state1 abandon">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
+                                            </a>
+                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)
+                                            <a href="javascript:void(0)">
+                                                <span class="state1 replace">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
-
                             @endforeach
                         @endif
                         </tbody>
@@ -116,6 +118,15 @@
                 </div>
             </div>
         </div>
+        @else
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="alert alert-warning">
+                        当前没有正在进行的考试！
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @stop
 
@@ -128,7 +139,11 @@
         </div>
         <div class="modal-body">
             <div class="form-group text-center font20">
-                当前考生<span class="stuName state">张三</span>正在<span class="stationName state">XXX</span>考站考试中
+                当前考生
+                <span class="stuName state"></span>
+                正在
+                <span class="stationName state"></span>
+                考站考试中
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">请选择终止原因：</label>

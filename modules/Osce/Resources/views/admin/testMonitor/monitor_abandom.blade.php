@@ -64,16 +64,20 @@
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
+                        @if(!empty($data)&& count($data)>0)
+                            @foreach(@$data as $key=>$val )
                             <tr>
-                                <td>1</td>
-                                <td>张三</td>
-                                <td>SF1986</td>
-                                <td>SF1986</td>
-                                <td>510821199008300065</td>
-                                <td>131246579</td>
-                                <td>3班</td>
-                                <td>王五</td>
+                                <td>{{$key+1}}</td>
+                                <td>{{$val['name']}}</td>
+                                <td>{{$val['code']}}</td>
+                                <td>{{$val['exam_sequence']}}</td>
+                                <td>{{$val['idcard']}}</td>
+                                <td>{{$val['mobile']}}</td>
+                                <td>{{$val['grade_class']}}</td>
+                                <td>{{$val['teacher_name']}}</td>
                             </tr>
+                            @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

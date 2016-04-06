@@ -9,9 +9,10 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use Illuminate\Http\Request;
-use Modules\Msc\Entities\Student;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Repositories\TestScoreRepositories;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
 use Modules\Osce\Entities\ExamScreeningStudent;
@@ -57,9 +58,10 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorLateList () {
-        return view('osce::admin.testMonitor.monitor_late', [
-            // 'data'      =>$data,//
+        $data=$this->getExamMonitorListByStatus(1)->toArray();
 
+        return view('osce::admin.testMonitor.monitor_late', [
+             'data'      =>$data['data']
         ]);
     }
 
@@ -81,9 +83,9 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorReplaceList () {
+        $data=$this->getExamMonitorListByStatus(2)->toArray();
         return view('osce::admin.testMonitor.monitor_replace', [
-            // 'data'      =>$data,//
-
+             'data'      =>$data['data']
         ]);
     }
 
@@ -105,8 +107,9 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorQuitList () {
+        $data=$this->getExamMonitorListByStatus(3)->toArray();
         return view('osce::admin.testMonitor.monitor_abandom', [
-            // 'data'      =>$data,//
+            'data'      =>$data['data']
 
         ]);
     }
@@ -129,10 +132,11 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorFinishList () {
-        /*return view('osce::admin.testMonitor.monitor_ ', [
-            // 'data'      =>$data,//
+        $data=$this->getExamMonitorListByStatus(4)->toArray();
+        return view('osce::admin.testMonitor.monitor_complete ', [
+            'data'      =>$data['data']
 
-        ]);*/
+        ]);
 
     }
 
@@ -175,25 +179,33 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     protected function getExamMonitorListByStatus($status){
-        /*$builder=ExamScreeningStudent:: leftJoin('student', function($join){
-            $join -> on('standard.id', '=', 'exam_score.standard_id');
-        })-> leftJoin('station', function($join){
-            $join -> on('station.subject_id', '=', 'exam_score.subject_id');
-        })-> leftJoin('exam_result', function($join){
-            $join -> on('station.id', '=', 'exam_result.station_id');
-        });*/
+        $exam_id=Exam::where('status',1)->pluck('id');//正在考试id
+        if(empty($exam_id)) return [];
+        $builder=ExamScreeningStudent:: leftJoin('student', function($join){
+            $join -> on('exam_screening_student.student_id', '=', 'student.id');
+        })->leftJoin('exam_station', function($join){
+            $join -> on('exam_station.exam_id', '=', 'student.exam_id');
+        })->leftJoin('station', function($join){
+            $join -> on('exam_station.station_id', '=', 'station.id');
+        })->select('student.name','student.exam_id','station.id as station_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','station.name as station_name');
+
             switch ($status){
                 case 1://迟到
-                   // ExamScreeningStudent::
+                   return Student::leftJoin('exam_order', function($join){
+                        $join -> on('exam_order.student_id', '=', 'student.id');
+                    })-> leftJoin('exam_screening_student', function($join){
+                        $join -> on('exam_screening_student.student_id', '=', 'student.id');
+                    })->select('student.name', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status')
+                        ->where('exam_order.status',4)->where('student.exam_id',$exam_id)->where('exam_order.exam_id',$exam_id)->paginate(config('osce.page_size'));
                     break;
                 case 2://替考
-
+                    return $builder->where('exam_screening_student.status',2)->paginate(config('osce.page_size'));
                     break;
                 case 3://弃考
-
+                    return $builder->where('exam_screening_student.status',1)->paginate(config('osce.page_size'));
                     break;
                 case 4://已完成
-
+                    return $builder->where('exam_screening_student.is_end',2)->paginate(config('osce.page_size'));
                     break;
                 default:
                     return [];
