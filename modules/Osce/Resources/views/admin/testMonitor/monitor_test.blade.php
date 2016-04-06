@@ -79,10 +79,8 @@
                                     <td>{{ @$val["stationName"]}}</td>
                                     <td>{{ @$val["stationCount"]}}</td>
                                     <td>
-                                        @if(@$val["examOrderStatus"]==4)迟到
-                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==1)弃考
-                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)替考
-                                        @elseif(@$val["is_replace"]==-1&&@$val["is_give"]==1)弃考
+                                        @if((@$val["is_replace"]==-1&&@$val["is_give"]==1) || (@$val["is_replace"]==1&&@$val["is_give"]==1))上报弃考
+                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)上报替考
                                         @elseif(@$val["is_replace"]==-1&&@$val["is_give"]==-1&&@$val["examOrderStatus"]!=4)考试中
                                         @endif
                                     </td>
@@ -92,24 +90,27 @@
                                                 <i class="fa fa-video-camera fa-2x"></i>
                                             </span>
                                         </a>
-                                        <a href="javascript:void(0)">
-                                            <span class="state1 stop" data-toggle="modal" data-target="#myModal">
-                                                <i class="fa fa-cog fa-2x"></i>
-                                            </span>
-                                        </a>
-                                        <a href="javascript:void(0)">
-                                            <span class="state1 abandon">
-                                                <i class="fa fa-cog fa-2x"></i>
-                                            </span>
-                                        </a>
-                                        <a href="javascript:void(0)">
-                                            <span class="state1 replace">
-                                                <i class="fa fa-cog fa-2x"></i>
-                                            </span>
-                                        </a>
+                                        @if(@$val["is_replace"]==-1&&@$val["is_give"]==-1&&@$val["examOrderStatus"]!=4)
+                                            <a href="javascript:void(0)">
+                                                <span class="state1 stop" data-toggle="modal" data-target="#myModal">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
+                                            </a>
+                                        @elseif((@$val["is_replace"]==-1&&@$val["is_give"]==1) || (@$val["is_replace"]==1&&@$val["is_give"]==1))
+                                            <a href="javascript:void(0)">
+                                                <span class="state1 abandon">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
+                                            </a>
+                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)
+                                            <a href="javascript:void(0)">
+                                                <span class="state1 replace">
+                                                    <i class="fa fa-cog fa-2x"></i>
+                                                </span>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
-
                             @endforeach
                         @endif
                         </tbody>
