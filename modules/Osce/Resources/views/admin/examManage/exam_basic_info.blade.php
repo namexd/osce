@@ -32,7 +32,7 @@
         background-color: #ddd;
     }
     .checkbox_input{font-weight:100;cursor:pointer;}
-    .check_name{padding:0;height:16px;position: relative;top:-3px;font-weight: 700;}
+    .check_name{padding:0;height:16px;position: relative;top:0;font-weight: 700;}
     .check_icon.check {background-position: -32px 0;}
     .check_margin{display: inline-block;float:right;margin:5px 0 0 5px;}
     </style>
@@ -125,7 +125,7 @@
                                         <div class="clearfix form-group" style="margin-bottom: 0;">
                                              <div class="col-sm-12" id="checkbox_div">
                                                  <label class="check_label checkbox_input checkbox_one" style="height: 34px;line-height: 23px;margin-left: 12.1%;">
-                                                      <div class="check_icon check" style="display: inline-block;margin:5px 0 0 5px;float:left;"  {{$examData['status']==0?'':'disabled'}}></div>
+                                                      <div class="check_icon" style="display: inline-block;margin:5px 0 0 5px;float:left;"  {{$examData['status']==0?'':'disabled'}}></div>
                                                       <input type="checkbox" name="same_time" value="{{$examData['same_time']}}"  {{$examData['status']==0?'':'disabled'}}>
                                                       <span class="check_name" style="display: inline-block;float:left;">要求考生同时进出考站（考站的时间采用最长考站时间）</span>
                                                  </label>
@@ -155,11 +155,11 @@
                                                    <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
                                                         <div class="check_icon check_margin" checkbox=0></div>
                                                         <input type="checkbox" name="gradation_order" value="1">
-                                                    <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
+                                                        <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
                                                    </label>
-                                                   <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="gradation_order" name="gradation_order" value="{{$examData->gradation->count()}}" style="float:left;width:200px;"  {{$examData['status']==0?'':'disabled'}}>
-                                                        <span style="float:left;margin-left:5px;">阶段</span>
+                                                   <div class="col-sm-10 check_div">
+                                                        <input type="text" class="form-control checkbox_num" id="gradation_order" name="gradation_order" value="{{$examData->gradation->count()}}" style="float:left;width:200px;"  {{$examData['status']==0?'':'disabled'}} readonly="readonly">
+                                                        <span style="float:left;margin-left:5px;margin-top: 5px;">阶段</span>
                                                    </div>
                                               </div>
                                          </div>
@@ -216,7 +216,7 @@
                                                     $m = floor(($cle%(3600*24))%3600/60);
                                                 ?>
                                                 <td>{{$d}} 天 {{$h}}小时 {{$m}}分</td>
-                                                <td>
+                                                <td class="check_select">
                                                     <select class="form-control" name="time[{{$key+1}}][gradation_order]">
                                                         @forelse($examData->gradation as $gradation)
                                                             <option value="{{$gradation->order}}" {{($gradation->order ==$item->gradation_order)?'selected':''}}>
