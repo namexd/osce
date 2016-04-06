@@ -225,6 +225,7 @@ class StationMode implements ModeInterface
      */
     function getNextExaminee(array $serialnumber)
     {
+        dd($this->stationIds);
         // TODO: Implement getNextExaminee() method.
         $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
             ->whereIn('exam_queue.station_id', $this->stationIds)
