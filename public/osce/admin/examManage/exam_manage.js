@@ -3931,6 +3931,25 @@ function station_assignment(){
         req['order'] = index;
         req['exam_gradation_id'] = 1;
 
+        //阶段列表
+        var exam_stage_str = '';
+        $.ajax({
+            type: 'get',
+            async: false,
+            data: req,
+            dataType: 'jsonp',
+            jsonp: 'callback',
+            url: pars.exam_stage,
+            success: function(res) {
+                var data = res.data;
+
+                for(var i in data) {
+                    var str = data[i].order - 1;
+                    exam_stage_str += '<option value="'+data[i].order+'">阶段'+stationName[str]+'</option>';
+                }
+            }
+        });
+
         /**
          * 新增考站 获取考站id
          * @author mao
@@ -3955,7 +3974,7 @@ function station_assignment(){
                                         '<div class="col-sm-4"><label class="control-label">第'+stationName[index]+'站</label></div>'+
                                         '<div class="col-sm-6">'+
                                                 '<label class="control-label col-sm-2">阶段：</label>'+
-                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;"><option value="1">阶段一</option></select>'+
+                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;">'+exam_stage_str+'</select>'+
                                         '</div>'+
                                         '<div class="col-sm-2">'+
                                             '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
@@ -4070,24 +4089,15 @@ function station_assignment(){
             tags: true,
             ajax: {
                 type:'get',
-                dataType: 'jsonp',
-                jsonp: 'callback',
-                url: 'http://127.0.0.1:3000/stationList',
-                data:function(param) {
-                    return {
-                        type:$elem.find('.exam-item').parent().attr('type'),
-                        id:$elem.attr('itemId'),
-                        station_id:$elem.parent().parent().attr('stationId')
-                    };
-                },
+                url: pars.exam_item,
                 delay: 250,
                 processResults: function (res) {
 
                     //数据格式化
                     var str = [];
-                    var data = res.data.rows;
+                    var data = res.data;
                     for(var i in data){
-                        str.push({id:data[i].id,text:data[i].name});
+                        str.push({id:data[i].id,text:data[i].title});
                     }
 
                     //加载入数据
