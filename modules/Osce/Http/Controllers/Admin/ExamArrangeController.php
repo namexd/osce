@@ -10,7 +10,9 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\ExamDraftFlowTemp;
+use Modules\Osce\Entities\ExamDraftTemp;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Subject;
@@ -62,19 +64,45 @@ class ExamArrangeController extends CommonController
 
 }
 
-//新增考站里面的子对象
+//新增考站里面的子对象到临时表
     public function postExamDraft(Request $request){
         $this->validate($request,[
             'exam_id'=>'required',
-            'station_id'=>'required',
-            'room_id'=>'required',
-            'subject_id'=>'required',
             'ctrl_type'=>'required',
             'old_draft_flow_id'=>'required',
             'old_draft_id'=>'required',
-            'used'=>'required',
-            'user_id'=>'required',
         ]);
+        try{
+            //获取当前操作信息
+            $user = Auth::user();
+            if (empty($user)) {
+                throw new \Exception('未找到当前操作人信息');
+            }
+
+            $data=[
+                'exam_id'=>$request->get('exam_id'),
+                'old_draft_flow_id'=>$request->get('old_draft_flow_id'),
+                'user_id'=>$user->id,
+                'used'=>0,
+                'ctrl_type'=>1,
+            ];
+            $result = ExamDraftTemp::create($data);
+            if(!$result){
+                throw new \Exception('保存临时考站数据失败');
+            }else{
+
+                return response()->json(
+                    $this->success_data($result->id, 1, 'success')
+                );
+            }
+            
+        }catch (\Exception $ex){
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
+
+
 
     }
 
