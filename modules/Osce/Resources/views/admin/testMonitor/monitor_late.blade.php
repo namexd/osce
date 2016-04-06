@@ -25,12 +25,12 @@
         <div class="container-fluid ibox-content">
             <ul class="sortable-list connectList agile-list ui-sortable" style="background-color: #fff;">
                 <li class="success-element titleBackground">
-                    <p class="font20 fontb">考试2016.1.12（二选一）</p>
+                    <p class="font20 fontb">{{@$data['examName']['name']}}</p>
                     <div class="font16 messageColor">
-                        <span class="marr_25">考站数量：1</span>
-                        <span class="marr_25">考生人数：1</span>
-                        <span class="marr_25">正在考试：1</span>
-                        <span>已完成：1</span>
+                        <span class="marr_25">考站数量：{{@$data['stationCount']}}</span>
+                        <span class="marr_25">考生人数：{{@$data['studentCount']}}</span>
+                        <span class="marr_25">正在考试：{{@$data['doExamCount']}}</span>
+                        <span>已完成：{{@$data['endExamCount']}}</span>
                     </div>
                 </li>
             </ul>
@@ -62,27 +62,27 @@
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
-                        @if(!empty($data)&& count($data)>0)
-                            @foreach(@$data as $key=>$val )
-                        <tr>
-                            <td>{{$key+1}}</td>
-                            <td>{{$val['name']}}</td>
-                            <td>{{$val['code']}}</td>
-                            <td>{{$val['exam_sequence']}}</td>
-                            <td>{{$val['idcard']}}</td>
-                            <td>{{$val['mobile']}}</td>
-                            <td>
-                                @if($val['status']==-1)
-                                <a href="javascript:void(0)">
-                                        确认弃考
-                                </a>
-                                @else
-                                    已确认弃考
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                        @endif
+                            @if(!empty($data)&& count($data)>0)
+                                @foreach(@$data as $key=>$val )
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td class="student">{{$val['name']}}</td>
+                                        <td>{{$val['code']}}</td>
+                                        <td>{{$val['exam_sequence']}}</td>
+                                        <td class="idCard">{{$val['idcard']}}</td>
+                                        <td>{{$val['mobile']}}</td>
+                                        <td>
+                                            @if($val['status']==-1)
+                                            <a href="javascript:void(0)">
+                                                    确认弃考
+                                            </a>
+                                            @else
+                                                已确认弃考
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
