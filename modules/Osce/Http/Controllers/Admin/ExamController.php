@@ -356,7 +356,7 @@ class ExamController extends CommonController
                 'name'          => e($request  ->  get('name')),
                 'begin_dt'      => $begin_dt,
                 'end_dt'        => $end_dt,
-                'total'         => count(Examinee::where('exam_id', $exam_id)->get()),
+                'total'         => count(Student::where('exam_id', $exam_id)->get()),
                 'sequence_cate' => $request  ->  get('sequence_cate'),
                 'sequence_mode' => $request  ->  get('sequence_mode'),
                 'address'       => e($request  ->  get('address')),
