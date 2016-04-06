@@ -54,6 +54,9 @@ class Exam extends CommonModel
     ];
 
 
+    public function examPlan(){
+        return $this->hasMany('\Modules\Osce\Entities\ExamPlan','exam_id','id');
+    }
     /**
      * 考试与考站的关联
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -145,6 +148,8 @@ class Exam extends CommonModel
                 'total',
                 'status'
             ])->orderBy('begin_dt', 'desc');
+
+            $builder->with('examPlan');
 
             return $builder->paginate(10);
         } catch (\Exception $ex) {
