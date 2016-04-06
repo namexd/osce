@@ -158,7 +158,6 @@ class ExamArrangeController extends CommonController
         $id = $request->get('id');
         //查询出已用过的考站
         $stationIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('station_id');
-        
         $stationModel = new Station();
         $stationData = $stationModel -> showList($stationIdArray,$ajax = true,$name);
 
