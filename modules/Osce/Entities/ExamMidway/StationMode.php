@@ -85,8 +85,8 @@ class StationMode implements ModeInterface
             $collection = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->whereIn('exam_queue.station_id', $this->stationIds)
                 ->where('exam_queue.status', '<', 3)
+                ->where('exam_queue.stick', '=', 0)
                 ->where('student.exam_id', $this->exam->id)
-
                 ->select(
                     'exam_queue.id as id',
                     'student.id as student_id',
@@ -109,7 +109,7 @@ class StationMode implements ModeInterface
                 $query = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->whereIn('exam_queue.serialnumber', $serialnumber)
                     ->where('exam_queue.status', '<', 3)
-                    ->where('exam_queue.stick', '<>', 0)
+                    ->where('exam_queue.stick', '=', 0)
                     ->where('blocking', 1)
                     ->where('student.exam_id', $this->exam->id)
                     ->select(
@@ -121,7 +121,8 @@ class StationMode implements ModeInterface
                         'student.mobile as student_mobile',
                         'student.code as student_code',
                         'student.avator as student_avator',
-                        'student.description as student_description'
+                        'student.description as student_description',
+                        'exam_queue.blocking as blocking'
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
@@ -252,7 +253,8 @@ class StationMode implements ModeInterface
                     ->select(
                         'student.id as student_id',
                         'student.name as student_name',
-                        'student.code as student_code'
+                        'student.code as student_code',
+                        'exam_queue.blocking as blocking'
                     )
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
