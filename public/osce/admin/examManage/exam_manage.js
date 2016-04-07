@@ -4407,7 +4407,7 @@ function station_assignment(){
             };
 
             $.ajax({
-                type:'get',
+                type:'post',
                 url: pars.update_data,
                 data:req,
                 success: function(res) {console.log(res)
@@ -4452,7 +4452,7 @@ function station_assignment(){
             };
 
             $.ajax({
-                type:'get',
+                type:'post',
                 url: pars.update_data,
                 data:req,
                 success: function(res) {
@@ -4499,7 +4499,7 @@ function station_assignment(){
             };
 
             $.ajax({
-                type:'get',
+                type:'post',
                 url: pars.update_data,
                 data:req,
                 success: function(res) {
@@ -4520,7 +4520,7 @@ function station_assignment(){
             };
 
             $.ajax({
-                type:'get',
+                type:'post',
                 url: pars.update_data,
                 data:req,
                 success: function(res) {
