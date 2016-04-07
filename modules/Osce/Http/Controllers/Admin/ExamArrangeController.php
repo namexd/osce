@@ -134,9 +134,9 @@ class ExamArrangeController extends CommonController
                 'old_draft_flow_id' => $request->get('flow_id'),
 //                'old_draft_id'=>$request->get('draft_id'),
                 'user_id' => $user->id,
-                'subject_id' => '',
-                'station_id' => '',
-                'room_id' => '',
+                'subject_id' => null,
+                'station_id' => null,
+                'room_id' => null,
                 'used' => 0,
                 'ctrl_type' => '',
             ];
