@@ -4280,13 +4280,11 @@ function station_assignment(){
 
         $.ajax({
             type:'get',
-            url: 'http://127.0.0.1:3000/getdata',
-            dataType: 'jsonp',
-            jsonp: 'callback',
-            data: {station_id:$that.find('table').attr('station-id'),type:5},
+            url: pars.del_flow,
+            data: {exam_id:(location.href).split('=')[1],flow_id:$that.find('table').attr('station-id'),type:5},
             success: function(res) {
                 if(res.code != 1) {
-                    layer.msg('新增失败！',{skin:'msg-error',icon:1});
+                    layer.msg('删除失败！',{skin:'msg-error',icon:1});
                 } else {
                     $that.remove();
                     $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
@@ -4351,13 +4349,11 @@ function station_assignment(){
 
         $.ajax({
             type:'get',
-            url: 'http://127.0.0.1:3000/getdata',
-            dataType: 'jsonp',
-            jsonp: 'callback',
-            data: {station_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:5},
+            url: pars.del_draft,
+            data: {exam_id:(location.href).split('=')[1],flow_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:5},
             success: function(res) {
                 if(res.code != 1) {
-                    layer.msg('新增失败！',{skin:'msg-error',icon:1});
+                    layer.msg('删除失败！',{skin:'msg-error',icon:1});
                 } else {
                     $that.remove();
                 }
