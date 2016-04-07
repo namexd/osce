@@ -570,12 +570,12 @@ class ApiController extends CommonController
             $examData = array();
             $StationTeacher = new StationTeacher();
             $ExamPaperExamStation = new ExamPaperExamStation();
-            dd($examing);
+
             foreach($examing as $key=>$v){
                     $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
                     $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
                     $examData[$key]['station_id'] = $v['station_id'];
-                    $examData[$key]['teacher_id'] = $stationTeacher->user_id;
+                    $examData[$key]['teacher_id'] = @$stationTeacher->user_id;
                     $examData[$key]['student_id'] = $userInfo->id;
                     $examData[$key]['paper_id'] = @$examPaper->exam_paper_id;
                     $examData[$key]['exam_id'] = $v['id'];
@@ -585,7 +585,7 @@ class ApiController extends CommonController
             }
         }
 
-dd($examData);
+
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData
