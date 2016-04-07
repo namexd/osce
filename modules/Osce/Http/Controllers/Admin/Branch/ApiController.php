@@ -557,10 +557,10 @@ class ApiController extends CommonController
         if(count($examingDO) > 0){
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-            var_dump($userInfo);
+            var_dump($userInfo->id);
             $ExamScreeningStudent = new ExamScreeningStudent();
             $examing = $ExamScreeningStudent->getExamings($userInfo->id);
-            //var_dump()
+
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
