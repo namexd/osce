@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
 
+use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
@@ -695,7 +696,7 @@ class ApiController extends CommonController
      *
      * @return json
      *
-     * @version 1.0
+     * @version 3.4a
      * @author wangjiang <wangjiang@misrobot.com>
      * @date 2016-04-06 15:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
@@ -739,7 +740,10 @@ class ApiController extends CommonController
      *
      * @param Request $request post请求<br><br>
      * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        $mode               处理模式（1-否 2-是）
+     * * int        $exam_id            考试id
+     * * int        $student_id         学生id
+     * * int        $exam_screening_id  考试场次id
      *
      * @return json
      *
@@ -750,8 +754,87 @@ class ApiController extends CommonController
      */
     public function postAlertExamReplace (Request $request) {
         $this->validate($request, [
-            'mode' => 'required|in:1,2',
+            'mode'              => 'required|in:1,2',
+            'exam_id'           => 'required|integer',
+            'student_id'        => 'required|integer',
             'exam_screening_id' => 'required|integer',
         ]);
+
+        $mode            = $request->input('mode');
+        $examId          = $request->input('exam_id');
+        $studentId       = $request->input('student_id');
+        $examScreeningId = $request->input('exam_screening_id');
+
+        $examScreeningStudentModel = new ExamScreeningStudent();
+        $examScreeningStudent = $examScreeningStudentModel->where('exam_screening_id', '=', $examScreeningId)
+                                                     ->where('student_id', '=', $studentId)
+                                                     ->first();
+
+        if (is_null($examScreeningStudent)) {
+            $retval['title'] = '找不到该考试场次的学生信息';
+            return response()->json(
+                $this->success_data($retval, -1, 'error')
+            );
+        }
+
+        if ($mode == 1) {
+            $examScreeningStudent->is_replace = 1;
+            $examScreeningStudent->save();
+
+            $retval['title'] = '标记替考成功';
+            return response()->json(
+                $this->success_data($retval)
+            );
+        } else {
+            $data = [
+                'is_end' => 1,
+                'status' => 2,
+            ];
+
+            $examScreeningStudentModel->where('id', '=', $examScreeningStudent->id)->update($data);
+
+            $examQueueModel = new ExamQueue();
+
+            $unExamStationIds = $examQueueModel->where('student_id', '=', $studentId)
+                ->where('exam_screening_id', '=', $examScreeningId)
+                ->where('status', '=', 0)->get()->pluck('station_id');
+
+            if (!empty($unExamStationIds)) {
+                $examQueueModel->where('student_id', '=', $studentId)
+                    ->where('exam_screening_id', '=', $examScreeningId)
+                    ->where('status', '=', 0)->update(['status'=>3]);
+
+                $examResultModel = new ExamResult();
+                $stationTeacherModel = new StationTeacher();
+                foreach ($unExamStationIds as $unExamStationId) {
+                    $teacher = $stationTeacherModel->leftJoin('teacher', function($join){
+                        $join -> on('teacher.id', '=', 'station_teacher.user_id');
+                    })->where('station_teacher.station_id', '=', $unExamStationId)
+                        ->where('station_teacher.exam_id', '=', $examId)
+                        ->select([
+                            'teacher.id as teacherId',
+                        ])->first();
+
+                    $data = [
+                        'student_id'        => $studentId,
+                        'exam_screening_id' => $examScreeningId,
+                        'station_id'        => $unExamStationId,
+                        'begin_dt'          => date('Y-m-d H:i:s', time()),
+                        'end_dt'            => date('Y-m-d H:i:s', time()),
+                        'score'             => 0,
+                        'score_dt'          => date('Y-m-d H:i:s', time()),
+                        'create_user_id'    => Auth::user()->id,
+                        'teacher_id'        => $teacher['teacherId'],
+                    ];
+
+                    $examResultModel->create($data);
+                }
+            }
+
+
+
+
+
+        }
     }
 }
