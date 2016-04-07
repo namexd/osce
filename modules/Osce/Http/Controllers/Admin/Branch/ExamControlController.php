@@ -35,7 +35,7 @@ class ExamControlController extends CommonController
     {
         $examControlModel = new ExamControl();
         $data = $examControlModel->getDoingExamList();
-       // dd($data);
+        dd($data);
         return view('osce::admin.testMonitor.monitor_test', [
             'data'      =>$data,
         ]);
@@ -92,6 +92,32 @@ class ExamControlController extends CommonController
             return response()->json(false);
         }
 
+    }
+
+    /**替考终止数据交互
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postStopReplaceExam(Request $request)
+    {
+
+        $data=array(
+            'examId' =>$request->input('examId'), //考试编号
+            'studentId' =>$request->input('studentId'), //考生编号
+            'examScreeningId' =>$request->input('examScreeningId'), //场次编号
+            'stationId' =>$request->input('stationId'), //考站编号
+            'userId' =>$request->input('userId'), //老师id
+            'examScreeningStudentId' =>$request->input('examScreeningStudentId'), //考试场次-学生关系id
+            'description' =>'-1', //终止考试原图
+
+        );
+        $examControlModel = new ExamControl();
+        $result = $examControlModel->stopExam($data);
     }
 
 

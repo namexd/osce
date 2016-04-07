@@ -78,8 +78,10 @@ class ExamControl extends Model
             })->leftJoin('station', function($join){//考站
                 $join -> on('exam_queue.station_id', '=', 'station.id');
             })->leftJoin('station_teacher', function($join){//考站-老师关系表
-            $join -> on('station.id', '=', 'station_teacher.station_id');
-            })->groupBy('student.id')->select(
+                $join -> on('station.id', '=', 'station_teacher.station_id');
+            })/*->leftJoin('exam_monitor', function($join){//考站-老师关系表
+                $join -> on('station.id', '=', 'exam_monitor.student_id');
+            })*/->groupBy('student.id')->select(
             'exam.id as examId',//考试id
             'student.id as studentId',//考生id
             'student.name',//考生姓名
@@ -93,22 +95,38 @@ class ExamControl extends Model
             'station_teacher.user_id as userId',//老师id
             'exam_screening_student.id as examScreeningStudentId',//考试场次-学生关系id
             'exam_screening_student.is_end',//考试场次终止
-            'exam_screening_student.is_replace',//上报替考
+    /*        'exam_screening_student.is_replace',//上报替考
             'exam_screening_student.is_give',//上报弃考
-            'exam_screening_student.description',//考试终止原因
+            'exam_screening_student.description',//考试终止原因*/
             'exam_screening_student.exam_screening_id',//考试场次编号
             'exam_order.status as examOrderStatus'//考试学生排序状态
         )->where('exam.status','=',1)
             ->where('exam_queue.status','<>',3)
         ->get();
 
-        //查询该考生剩余考站数量
+
+
+        //查询该考生剩余考站数量和该考生是否有标记
         if(!empty($examInfo)&&count($examInfo)>0){
             foreach($examInfo as $key=>$val){
                 $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['stationId']);
                 $examInfo[$key]['remainStationCount']=$remainExamQueueData['remainStationCount'];
+                $examMonitorModel = new ExamMonitor();
+                $examMonitorInfo= $examMonitorModel->where('station_id','=',$val['stationId'])
+                                                    ->where('exam_id','=',$val['examId'])
+                                                    ->where('student_id','=',$val['studentId'])
+                                                    ->orderBy('id','desc')
+                                                    ->first();
+                if(!empty($examMonitorInfo)){
+                    $examInfo[$key]['type'] = $examMonitorInfo['type'];
+                    $examInfo[$key]['description'] = $examMonitorInfo['description'];
+                }else{
+                    $examInfo[$key]['type'] = -1;
+                    $examInfo[$key]['description'] = -1;
+                }
             }
         }
+
         return array(
             'examName'      =>$examName,     //考试名称
             'examInfo'      => $examInfo,    //正在考试列表
@@ -184,7 +202,7 @@ class ExamControl extends Model
 
             //① 更新考试场次-学生关系表(exam_screening_student)
             $examScreeningStudentData = array(
-                'is_end' => 2,
+                'is_end' => 1,
                 'description' => $data['description']
             );
             //保存考试场次-学生关系表（exam_screening_student）
@@ -192,7 +210,7 @@ class ExamControl extends Model
             $result = $examScreeningStudentModel->where('id','=',$data['examScreeningStudentId'])->update($examScreeningStudentData);
 
             if (!$result) {
-                throw new \Exception('更新考试场次-学生关系表事变！');
+                throw new \Exception('更新考试场次-学生关系表失败！');
             }
 
             //② 更新考试队列表（exam_queue）
@@ -238,6 +256,8 @@ class ExamControl extends Model
             throw $ex;
         }
     }
+
+
 
 
 
