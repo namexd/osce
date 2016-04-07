@@ -210,9 +210,15 @@ class Exam extends CommonModel
                         throw new \Exception('删除考试考场关系表失败，请重试！');
                     }
                 }
-
             }
-
+            $examGradations = ExamGradation::where('exam_id','=',$id)->get();
+            if (!$examGradations->isEmpty()) {
+                foreach ($examGradations as $examGradation) {
+                    if (!$examGradation->delete()) {
+                        throw new \Exception('删除考试阶段关系表失败，请重试！');
+                    }
+                }
+            }
             //删除考试考场关联
             if (!ExamRoom::where('exam_id',$id)->get()->isEmpty()) {
                 if (!ExamRoom::where('exam_id',$id)->delete()) {
