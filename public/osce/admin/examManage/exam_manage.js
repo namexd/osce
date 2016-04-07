@@ -4646,8 +4646,7 @@ function examiner_manage() {
         }
     });
 
-
-    var data = [
+   /* var data = [
         {
             exam_item:{id:12,name:'胸腔1'},
             station:{id:212,name:'考站1'},
@@ -4670,7 +4669,7 @@ function examiner_manage() {
             sp_teacher:[{id:45,name:'成张老师3',status:1},{id:344,name:'杨老师3',status:2}]
         }
     ];
-
+*/
     function initTable(data) {
         var html="<tr>";
         for(var i in data){
