@@ -938,12 +938,6 @@ function exam_assignment_add(){
                         message:'考试顺序不能为空'
                     }
                 }
-            },
-            gradation_order: {
-                    regexp: {
-                        regexp: /^[0-9]*[1-9][0-9]*$/,
-                        message: '请输入1-20的整数'
-                    }
             }
         }
     });
@@ -991,11 +985,11 @@ function exam_assignment_add(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
             $(this).find("input").attr("checked","checked");
-            $(this).find("input").val(1)
+            $(this).find("input").val("1")
         } else {
             $(this).find(".check_icon").removeClass("check");
             $(this).find("input").removeAttr("checked","checked")
-            $(this).find("input").val(0)
+            $(this).find("input").val("0")
         }
     })
     /**
@@ -1011,7 +1005,8 @@ function exam_assignment_add(){
             $(this).find("input").attr("checked","checked")
             $(this).parent().find(".check_div input").removeAttr('readonly');
             $(this).find(".check_icon ").attr("checkbox","1");
-            $(this).find("input").val(1)
+            $(this).find("input").val("1");
+            $(".checkbox_num").val("1")
             //当选中后在取消后在选中，替换掉以前的
             $('table tr td select').each(function(){
                 //移除所有的option
@@ -1033,7 +1028,7 @@ function exam_assignment_add(){
             $(this).parent().find(".check_div input").attr('readonly','readonly');
             $(this).find(".check_icon ").attr("checkbox","0");
             $(this).find("input").removeAttr("checked","checked");
-            $(this).find("input").val(0)
+            $(this).find("input").val("0")
             //当选中后在取消后，替换掉以前的
             $('table tr td select').each(function(){
                 //移除所有的option
@@ -1102,6 +1097,16 @@ function exam_assignment_add(){
     $(".checkbox_num").blur(function(){
         //获取阶段输入框的值
         var checkbox_num=$(".checkbox_num").val();
+        //这里是判断《阶段》后面的输入框是不是输入的1-20的整数
+        var pattern = /^(\d|1\d|20)$/gm;
+
+        if(!pattern.test(checkbox_num)){
+            layer.alert('请输入1-20的整数！');
+            $(".layui-layer-btn0").click(function(){
+                $(".checkbox_num").val("1").focus();
+            })
+            return false;
+        }
         //这里是判断输入的值是否大于20
         if(checkbox_num>20||checkbox_num==0){
             layer.alert('请输入1-20的整数！');
@@ -1220,14 +1225,6 @@ function exam_basic_info(){
                         message: '考试顺序不能为空'
                     }
                 }
-            },
-            gradation_order: {
-                validators: {
-                    regexp: {
-                        regexp: /^[0-9]*[1-9][0-9]*$/ ,
-                        message: '请输入1-20的整数'
-                    }
-                }
             }
         }
     });
@@ -1282,11 +1279,11 @@ function exam_basic_info(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
             $(this).find("input").attr("checked","checked");
-            $(this).find("input").val(1)
+            $(this).find("input").val("1")
         } else {
             $(this).find(".check_icon").removeClass("check");
             $(this).find("input").removeAttr("checked","checked");
-            $(this).find("input").val(0)
+            $(this).find("input").val("0")
         }
     })
     /**
@@ -1302,7 +1299,8 @@ function exam_basic_info(){
             $(this).find(".check_icon ").attr("checkbox","1")
             $(this).parent().find(".check_div input").removeAttr('readonly');
             $(this).find("input").attr("checked","checked");
-            $(this).find("input").val(1)
+            $(this).find("input").val("1");
+            $(".checkbox_num").val("1")
             //当选中后在取消后在选中，替换掉以前的
             $('#add-basic tr td select').each(function(){
                 //移除所有的option
@@ -1324,7 +1322,7 @@ function exam_basic_info(){
             $(this).find(".check_icon ").attr("checkbox","0");
             $(this).parent().find(".check_div input").attr('readonly','readonly');
             $(this).find("input").removeAttr("checked","checked");
-            $(this).find("input").val(0)
+            $(this).find("input").val("0")
             //移除所有的option
             $('table tr td select option').remove();
             //当选中后在取消后，替换掉以前的
@@ -1403,9 +1401,19 @@ function exam_basic_info(){
             //获取考生分阶段考试的值
             var checkbox_num=$(".checkbox_num").val(),
                 number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+            //这里是判断《阶段》后面的输入框是不是输入的1-20的整数
+            var pattern = /^(\d|1\d|20)$/gm;
+
+            if(!pattern.test(checkbox_num)){
+                layer.alert('请输入1-20的整数！');
+                $(".layui-layer-btn0").click(function(){
+                    $(".checkbox_num").val("1").focus();
+                })
+                return false;
+            }
             //这里是判断输入的值是否大于20
             if(checkbox_num>20||checkbox_num==0){
-                layer.alert('请输入小于1-20的整数！');
+                layer.alert('请输入1-20的整数！');
                 $(".layui-layer-btn0").click(function(){
                     $(".checkbox_num").val("1").focus();
                 })
@@ -1425,7 +1433,6 @@ function exam_basic_info(){
             }
         });
     })
-
 
     /**
      * 删除一条记录
