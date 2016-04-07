@@ -122,7 +122,6 @@ class ExamQuestionController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-
     public function postQuestionUpload(Request $request){
         $data   =   [
             'path'  =>  '',
@@ -132,10 +131,8 @@ class ExamQuestionController extends CommonController
         {
             $status = 1;
             $file   =   $request->file('file');
-            $oldfileName           =   $file->getClientOriginalName();//获取上传图片的名称
+            $oldfileName = $file->getClientOriginalName();//获取上传图片的名称
             $type = substr($oldfileName, strrpos($oldfileName,'.'));//图片格式
-            $imageName = rand(1000,9999);//图片名字
-            $newfileName=$imageName.$type;
             $arr = array('.jpg','.jpeg',".png");
             if(!in_array($type,$arr)){
                 $status = 0;
@@ -144,8 +141,8 @@ class ExamQuestionController extends CommonController
                 //$path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
                 $path   =   'osce/question/'.date('Y-m-d').'/';
                 $destinationPath    =   public_path($path);
-                $file->move($destinationPath,$newfileName);
-                $pathReturn    =   '/'.$path.$newfileName;
+                $file->move($destinationPath,iconv('utf-8','gb2312',$oldfileName));
+                $pathReturn    =   '/'.$path.$oldfileName;
             }
             $data   =   [
                 'path'=>$pathReturn,
