@@ -559,6 +559,8 @@ class ApiController extends CommonController
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
 
+            
+            dd($userInfo);
             $Student = new Student();
             $examing = $Student->getExamings($userInfo->id);
 
