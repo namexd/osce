@@ -21,5 +21,4 @@ class ExamDraftFlow extends CommonModel
     protected $fillable     = ['name',  'order',  'exam_id', 'exam_screening_id', 'exam_gradation_id'];
 
 
-
 }
