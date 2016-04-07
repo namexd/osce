@@ -77,7 +77,7 @@
                                     <td>{{ @$val["exam_sequence"]}}</td>
                                     <td class="idCard">{{ @$val["idcard"]}}</td>
                                     <td class="station">{{ @$val["stationName"]}}</td>
-                                    <td>{{ @$val["stationCount"]}}</td>
+                                    <td>{{ @$val["remainStationCount"]}}</td>
                                     <td>
                                         @if((@$val["is_replace"]==-1&&@$val["is_give"]==1) || (@$val["is_replace"]==1&&@$val["is_give"]==1))上报弃考
                                         @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)上报替考
