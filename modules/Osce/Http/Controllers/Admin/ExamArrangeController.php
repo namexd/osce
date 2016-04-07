@@ -282,12 +282,14 @@ class ExamArrangeController extends CommonController
         $id = $request->get('id');
         $exam_id = $request->get('exam_id');
         $type = $request->get('type');
+        $flowId = $request->get('flow_id');
         try {
 
             $data = [
                 'exam_id' => $exam_id,
                 'ctrl_type' => $type,
                 'old_draft_id' => $id,
+                'old_draft_flow_id' => $flowId,
             ];
             if ($type == 2) {
                 //是删除真实表数据就在临时表中记录下该操作
