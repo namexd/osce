@@ -41,7 +41,7 @@ class ExamArrangeController extends CommonController
                 'exam_id'=>'required',
                 'name'=>'required',
                 'order'=>'required',
-                'exam_gradation_id'=>'required',
+                'exam_gradation_id'=>'sometime'  //阶段
             ]);
             $examId = $request->get('exam_id');
             $name = $request->get('name');
@@ -108,24 +108,60 @@ class ExamArrangeController extends CommonController
     public function postAddExamDraft(Request $request){
         $this->validate($request,[
             'exam_id'=>'required',
-//            'ctrl_type'=>'required',
-            'old_draft_flow_id'=>'required',
-//            'old_draft_id'=>'required',
+            'type'=>'required',
+
+            'subject'   => 'sometime',      //考试项目
+            'station'   => 'sometime',      //考站
+            'room'      => 'sometime',      //考场
+            'chioce'    => 'sometime',      //选考
         ]);
+
+        $type = $request->get('type');
+        $examId = $request->get('exam_id');
+        $subjectId =$request->get('subject');
+        $stationId =$request->get('station');
+        $roomId =$request->get('room');
+
         try{
             //获取当前操作信息
             $user = Auth::user();
             if (empty($user)) {
                 throw new \Exception('未找到当前操作人信息');
             }
-
             $data=[
-                'exam_id'=>$request->get('exam_id'),
+                'exam_id'=>$examId,
                 'old_draft_flow_id'=>$request->get('old_draft_flow_id'),
-                'user_id'=>$user->id,
+                'old_draft_id'=>$request->get('old_draft_id'),
+                'user_id'=>'',
+                'subject_id'=>'',
+                'station_id'=>'',
+                'room_id'=>'',
                 'used'=>0,
-                'ctrl_type'=>1,
+                'ctrl_type'=>'',
             ];
+            if(!is_null($subjectId)){
+                $data['subject_id'] = $subjectId;
+            }
+
+            if(!is_null($stationId)){
+                $data['station'] = $subjectId;
+            }
+
+            if(!is_null($roomId)){
+                $data['room'] = $roomId;
+            }
+
+            if($type==2){
+                $data['ctrl_type'] = $type;
+            }
+
+            if($type==3){
+                $data['ctrl_type'] = $type;
+            }
+            if($type==4){
+                $data['ctrl_type'] = $type;
+            }
+
             $result = ExamDraftTemp::create($data);
             if(!$result){
                 throw new \Exception('保存临时考站数据失败');
@@ -145,6 +181,9 @@ class ExamArrangeController extends CommonController
 
 
     }
+
+
+
 
 
 
@@ -530,4 +569,9 @@ class ExamArrangeController extends CommonController
 
 
     }
+
+
+
+
+
 }
