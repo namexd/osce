@@ -4303,10 +4303,8 @@ function station_assignment(){
 
         $.ajax({
             type:'get',
-            url: 'http://127.0.0.1:3000/getdata',
-            dataType: 'jsonp',
-            jsonp: 'callback',
-            data: {station_id:$that.parent().attr('station-id'),type:4},
+            url: pars.update_data,
+            data: {flow_id:$that.parent().attr('station-id'),type:4},
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('新增失败！',{skin:'msg-error',icon:1});
@@ -4401,19 +4399,18 @@ function station_assignment(){
 
             //请求数据
             var req = {
+                exam_id:(location.href).split('=')[1],
                 type:$elem.find('.exam-item').parent().attr('type'),
                 draft_id:$elem.attr('item-id'),
-                station_id:$elem.parent().parent().attr('station-id'),
-                data:e.params.data.id
+                flow_id:$elem.parent().parent().attr('station-id'),
+                subject:e.params.data.id
             };
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
+                url: pars.update_data,
                 data:req,
-                dataType: 'jsonp',
-                jsonp: 'callback',
-                success: function(res) {
+                success: function(res) {console.log(res)
                     return true;   
                 }
             })
@@ -4426,13 +4423,6 @@ function station_assignment(){
             ajax: {
                 type:'get',
                 url: pars.station_list,
-                data:function(param) {
-                    return {
-                        type:$elem.find('.exam-station').parent().attr('type'),
-                        id:$elem.attr('itemId'),
-                        station_id:$elem.parent().parent().attr('stationId')
-                    };
-                },
                 delay: 250,
                 processResults: function (res) {
 
@@ -4454,17 +4444,16 @@ function station_assignment(){
         }).on('select2:select', function(e) {
             //请求数据
             var req = {
+                exam_id:(location.href).split('=')[1],
                 type:$elem.find('.exam-station').parent().attr('type'),
                 draft_id:$elem.attr('item-id'),
-                station_id:$elem.parent().parent().attr('station-id'),
-                data:e.params.data.id
+                flow_id:$elem.parent().parent().attr('station-id'),
+                station:e.params.data.id
             };
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: pars.update_data,
                 data:req,
                 success: function(res) {
                     return true;
@@ -4480,14 +4469,7 @@ function station_assignment(){
             tags: true,
             ajax: {
                 type:'get',
-                url: pars.room_list, //'http://127.0.0.1:3000/stationList',
-                data:function(param) {
-                    return {
-                        type:$elem.find('.station-belong').parent().attr('type'),
-                        draft_id:$elem.attr('item-id'),
-                        station_id:$elem.parent().parent().attr('station-id')
-                    };
-                },
+                url: pars.room_list,
                 delay: 250,
                 processResults: function (res) {
 
@@ -4509,17 +4491,16 @@ function station_assignment(){
         }).on('select2:select', function(e) {
             //请求数据
             var req = {
+                exam_id:(location.href).split('=')[1],
                 type:$elem.find('.station-belong').parent().attr('type'),
                 draft_id:$elem.attr('item-id'),
                 station_id:$elem.parent().parent().attr('station-id'),
-                data:e.params.data.id
+                room:e.params.data.id
             };
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: pars.update_data,
                 data:req,
                 success: function(res) {
                     return true;  
@@ -4531,23 +4512,19 @@ function station_assignment(){
         $elem.find('.station-chioce').select2({data:[{id:1,text:'必考'},{id:2,text:'选考'}]}).on("change", function (e) {
             //请求数据
             var req = {
+                exam_id:(location.href).split('=')[1],
                 type:$elem.find('.station-chioce').parent().attr('type'),
                 draft_id:$elem.attr('item-id'),
                 station_id:$elem.parent().parent().attr('station-id'),
-                data: $elem.find('.station-chioce').val()
+                chioce: $elem.find('.station-chioce').val()
             };
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: pars.update_data,
                 data:req,
                 success: function(res) {
-                    //更改type值
-                    if($elem.find('.station-chioce').parent().attr('type')==1) {
-                        $elem.find('.station-chioce').parent().attr('type',3);
-                    }
+                    return true;
                 }
             })
          });
