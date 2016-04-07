@@ -122,6 +122,8 @@ class WatchLog extends CommonModel{
         })->leftjoin('exam',function($examScreening){
             $examScreening->on('exam.id','=','exam_station.exam_id');
         })->groupby('watch_log.student_id')->select('watch.id','watch.nfc_code','student.name','exam.status')->get();
+
+
         return $builder;
     }
 }

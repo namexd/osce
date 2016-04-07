@@ -791,6 +791,16 @@ class InvigilatePadController extends CommonController
 
         if(count($boundWatchInfo) > 0){
             $boundWatchInfo = $boundWatchInfo->toArray();
+            foreach($boundWatchInfo as $k=>$v){
+                if($v['status'] == 1){
+                    $boundWatchInfo[$k]['status'] = '考试中';
+                }elseif($v['status'] == 2){
+                    $boundWatchInfo[$k]['status'] = '已完成';
+                }else{
+                    $boundWatchInfo[$k]['status'] = '等待中';
+                }
+            }
+            
             return response()->json(
                 $this->success_data($boundWatchInfo, 1)
             );
