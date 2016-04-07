@@ -126,7 +126,7 @@
                                              <div class="col-sm-12" id="checkbox_div">
                                                  <label class="check_label checkbox_input checkbox_one" style="height: 34px;line-height: 23px;margin-left: 12.1%;">
                                                       <div class="check_icon {{($examData['same_time'])?'check':''}}" style="display: inline-block;margin:5px 0 0 5px;float:left;"  {{$examData['status']==0?'':'disabled'}}></div>
-                                                      <input type="checkbox" name="same_time" value="{{$examData['same_time']}}"  {{$examData['status']==0?'':'disabled'}}>
+                                                      <input type="checkbox" name="same_time" value="{{$examData['same_time']}}"  {{$examData['status']==0?'':'disabled'}} {{$examData['same_time']==1?'':'checked'}}>
                                                       <span class="check_name" style="display: inline-block;float:left;">要求考生同时进出考站（考站的时间采用最长考站时间）</span>
                                                  </label>
                                              </div>
@@ -136,7 +136,7 @@
                             </div>
                             <div class="hr-line-dashed"></div>
 
-                            <div class="form-group"" style="display:none">
+                            <div class="form-group" style="display:none">
                                 <label class="col-sm-2 control-label">考试内容</label>
                                 <div class="col-sm-10">
                                      <select class="form-control" style="width:200px;" name=""  {{$examData['status']==0?'':'disabled'}}>

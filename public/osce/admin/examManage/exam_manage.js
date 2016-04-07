@@ -990,8 +990,12 @@ function exam_assignment_add(){
     $(".checkbox_one").click(function(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
+            $(this).find("input").attr("checked","checked");
+            $(this).find("input").val(1)
         } else {
             $(this).find(".check_icon").removeClass("check");
+            $(this).find("input").removeAttr("checked","checked")
+            $(this).find("input").val(0)
         }
     })
     /**
@@ -1004,18 +1008,20 @@ function exam_assignment_add(){
     $(".checkbox_two").click(function(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
+            $(this).find("input").attr("checked","checked")
             $(this).parent().find(".check_div input").removeAttr('readonly');
-            $(this).find(".check_icon ").attr("checkbox","1")
+            $(this).find(".check_icon ").attr("checkbox","1");
+            $(this).find("input").val(1)
             //当选中后在取消后在选中，替换掉以前的
             $('table tr td select').each(function(){
                 //移除所有的option
                 $('table tr td select option').remove();
                 //获取考生分阶段考试的值
                 var checkbox_num=$(".checkbox_num").val(),
-                    number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                    number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
                 var checkbox_number='';
-                for(var i=0;i<checkbox_num;i++) {
+                for(var i=1;i<=checkbox_num;i++) {
                     checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                 }
                 var html =  checkbox_number;
@@ -1026,12 +1032,14 @@ function exam_assignment_add(){
             $(this).find(".check_icon").removeClass("check");
             $(this).parent().find(".check_div input").attr('readonly','readonly');
             $(this).find(".check_icon ").attr("checkbox","0");
+            $(this).find("input").removeAttr("checked","checked");
+            $(this).find("input").val(0)
             //当选中后在取消后，替换掉以前的
             $('table tr td select').each(function(){
                 //移除所有的option
                 $('table tr td select option').remove();
 
-                var html = '<option value="0">'+'阶段一'+'</option>';
+                var html = '<option value="1">'+'阶段一'+'</option>';
                 //记录计数
                 $('#exam_add').find('select').append(html);
             });
@@ -1051,12 +1059,12 @@ function exam_assignment_add(){
 
         //获取考生分阶段考试的值
         var checkbox_num=$(".checkbox_num").val(),
-            number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+            number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
         /**
          * 这里是生成<阶段>
          */
         var checkbox_number = '';
-        for(var i=0;i<checkbox_num;i++) {
+        for(var i=1;i<=checkbox_num;i++) {
             checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
         }
         //时长默认值
@@ -1095,7 +1103,7 @@ function exam_assignment_add(){
         //获取阶段输入框的值
         var checkbox_num=$(".checkbox_num").val();
         //这里是判断输入的值是否大于20
-        if(checkbox_num>20){
+        if(checkbox_num>20||checkbox_num==0){
             layer.alert('请输入1-20的整数！');
             $(".layui-layer-btn0").click(function(){
                 $(".checkbox_num").val("1").focus();
@@ -1106,10 +1114,10 @@ function exam_assignment_add(){
                 //移除所有的option
                 $('table tr td select option').remove();
                 //获取考生分阶段考试的值;
-                var number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                var number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
                     var checkbox_number='';
-                    for(var i=0;i<checkbox_num;i++) {
+                    for(var i=1;i<=checkbox_num;i++) {
                         checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                     }
 
@@ -1273,8 +1281,12 @@ function exam_basic_info(){
     $(".checkbox_one").click(function(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
+            $(this).find("input").attr("checked","checked");
+            $(this).find("input").val(1)
         } else {
             $(this).find(".check_icon").removeClass("check");
+            $(this).find("input").removeAttr("checked","checked");
+            $(this).find("input").val(0)
         }
     })
     /**
@@ -1289,16 +1301,18 @@ function exam_basic_info(){
             $(this).find(".check_icon ").addClass("check");
             $(this).find(".check_icon ").attr("checkbox","1")
             $(this).parent().find(".check_div input").removeAttr('readonly');
+            $(this).find("input").attr("checked","checked");
+            $(this).find("input").val(1)
             //当选中后在取消后在选中，替换掉以前的
             $('#add-basic tr td select').each(function(){
                 //移除所有的option
                 $('table tr td select option').remove();
                 //获取考生分阶段考试的值
                 var checkbox_num=$(".checkbox_num").val(),
-                    number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                    number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
                     var checkbox_number='';
-                    for(var i=0;i<checkbox_num;i++) {
+                    for(var i=1;i<=checkbox_num;i++) {
                         checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                     }
                     var html =  checkbox_number;
@@ -1309,6 +1323,8 @@ function exam_basic_info(){
             $(this).find(".check_icon").removeClass("check");
             $(this).find(".check_icon ").attr("checkbox","0");
             $(this).parent().find(".check_div input").attr('readonly','readonly');
+            $(this).find("input").removeAttr("checked","checked");
+            $(this).find("input").val(0)
             //移除所有的option
             $('table tr td select option').remove();
             //当选中后在取消后，替换掉以前的
@@ -1316,7 +1332,7 @@ function exam_basic_info(){
                 //移除所有的option
                 $('table tr td select option').remove();
 
-                var html = '<option value="0">'+'阶段一'+'</option>';
+                var html = '<option value="1">'+'阶段一'+'</option>';
                 //记录计数
                 $('#add-basic').find('select').append(html);
 
@@ -1338,7 +1354,7 @@ function exam_basic_info(){
 
         //获取考生分阶段考试的值
         var checkbox_num=$(".checkbox_num").val(),
-            number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+            number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
 
         //时长默认值
@@ -1350,7 +1366,7 @@ function exam_basic_info(){
              * 这里是生成<阶段>
              */
             var checkbox_number = '';
-            for(var i=0;i<checkbox_num;i++) {
+            for(var i=1;i<=checkbox_num;i++) {
                 checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
             }
             var html = '<tr>'+
@@ -1386,9 +1402,9 @@ function exam_basic_info(){
 
             //获取考生分阶段考试的值
             var checkbox_num=$(".checkbox_num").val(),
-                number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
             //这里是判断输入的值是否大于20
-            if(checkbox_num>20){
+            if(checkbox_num>20||checkbox_num==0){
                 layer.alert('请输入小于1-20的整数！');
                 $(".layui-layer-btn0").click(function(){
                     $(".checkbox_num").val("1").focus();
@@ -1400,7 +1416,7 @@ function exam_basic_info(){
                  * 这里是生成<阶段>
                  */
                 var checkbox_number = '';
-                for(var i=0;i<checkbox_num;i++) {
+                for(var i=1;i<=checkbox_num;i++) {
                     checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                 }
                 var html = checkbox_number;
