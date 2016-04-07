@@ -4312,9 +4312,9 @@ function station_assignment(){
 
 
         $.ajax({
-            type:'get',
+            type:'post',
             url: pars.update_data,
-            data: {flow_id:$that.parent().attr('station-id'),type:4},
+            data: {exam_id:(location.href).split('=')[1],flow_id:$that.parent().attr('station-id'),type:4},
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('新增失败！',{skin:'msg-error',icon:1});

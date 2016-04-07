@@ -519,92 +519,58 @@ class ExamArrangeController extends CommonController
     }
 
 
-    public function postHandleExamDraft(Request $request)
-    {
-        $this->validate($request, [
-            'id' => 'required',
+    /**
+     * 考场安排，提交保存
+     * @param Request $request
+     * @author Zhoufuxiang 2016-4-7
+     * @throws \Exception
+     */
+    public function postSubmit(Request $request){
+        $this->validate($request,[
+            'id'    => 'required',
         ]);
 
-        $exam_id = $request->get('id');
-        $draftFlows = ExamDraftFlowTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
-        $drafts = ExamDraftTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
+        $exam_id    = $request->get('id');
+        //获取所有临时数据
+        $draftFlows = ExamDraftFlowTemp::where('exam_id','=',$exam_id)->orderBy('created_at')->get();
+        $drafts     = ExamDraftTemp::where('exam_id','=',$exam_id)->orderBy('created_at')->get();
 
+
+        //所有临时数据 组合
         $datas = [];
         foreach ($draftFlows as $draftFlow) {
-            $datas[strtotime($draftFlow->created_dt)] = [
-                'ctrl_type' => $draftFlow->ctrl_type,
-                'order' => $draftFlow->order,
-                'name' => $draftFlow->name,
-                'exam_screening_id' => $draftFlow->exam_screening_id,
-                'exam_gradation_id' => $draftFlow->exam_gradation_id,
-                'exam_id' => $draftFlow->exam_id,
-                'is_draft_flow' => 1
+            $datas[strtotime($draftFlow->created_dt)] = $draftFlow;
+            $datas[strtotime($draftFlow->created_dt)]['is_draft_flow'] = 1;
+        }
+
+        foreach ($drafts as  $draft) {
+//            $datas[strtotime($draft->created_dt)] = $draft;
+//            $datas[strtotime($draft->created_dt)] = [
+//                'is_draft_flow'     => 0
+//            ];
+            $datas[strtotime($draft->created_dt)]   =   [
+                'item'=>$draft,
+                'is_draft_flow'=>0,
+
             ];
         }
 
-        foreach ($drafts as $draft) {
-            $datas[strtotime($draft->created_dt)] = [
-                'ctrl_type' => $draft->ctrl_type,
-                'station_id' => $draft->station_id,
-                'room_id' => $draft->room_id,
-                'exam_draft_flow_id' => $draft->exam_draft_flow_id,
-                'subject_id' => $draft->subject_id,
-                'effected' => $draft->effected,
-                'is_draft_flow' => 0
-            ];
-        }
-
-        $datas = ksort($datas);     //数组按时间（键）进行排序
+        ksort($datas);     //数组按时间（键）进行排序
 
         foreach ($datas as $data) {
             //操作大表
-            if ($data['is_draft_flow'] == 1) {
-                switch ($data['ctrl_type']) {
-                    case 1 :
-                        if (!ExamDraftFlow::create($data)) {                     //增
-                            throw new \Exception('添加失败！');
-                        }
-                        break;
-                    case 2 :
-                        if (!ExamDraftFlow::create($data)) {                     //删
-                            throw new \Exception('添加失败！');
-                        }
-                        break;
-                    case 3 :                                                        //删
-                        break;
-                    case 4 :
-                        break;
-                    case 5 :
-                        break;
-                    default:
-                        throw new \Exception('操作有误！');
-                }
+            if($data['is_draft_flow'] ==1){
+                $model  = new ExamDraftFlow();
+                $result = $model->handleBigData($data);
+                
 
-                //操作小表
-            } else {
-                switch ($data['ctrl_type']) {
-                    case 1 :
-                        if (!ExamDraft::create($data)) {                     //增
-                            throw new \Exception('添加失败！');
-                        }
-                        break;
-                    case 2 :
-                        break;
-                    case 3 :
-                        break;
-                    case 4 :
-                        break;
-                    case 5 :
-                        break;
-                    default:
-                        throw new \Exception('操作有误！');
-                }
+            //操作小表
+            }else{
+                $model  = new ExamDraft();
+                $result = $model->handleSmallData($data);
             }
         }
-
-
     }
-
 
     /**
      *考试安排数据的回显
