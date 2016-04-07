@@ -18,8 +18,19 @@ function monitor_test(){
         //终止考试弹出层标题赋值
         var $student = $(this).parent().parent().siblings(".student").text();
         var $station = $(this).parent().parent().siblings(".station").text();
+        var $stationType = $(this).parent().attr("stationType");
         $(".stuName").text($student);
         $(".stationName").text($station);
+        $("#stationType").val($stationType);
+    });
+    //终止考试提交
+    $("#stopSure").click(function(){
+        var $stationType = $("#stationType").val();
+        if($stationType == 3){
+
+        }else{
+
+        }
     });
     //确认弃考
     $(".abandon").click(function(){
