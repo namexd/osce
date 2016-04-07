@@ -3960,50 +3960,6 @@ function station_assignment(){
      */
     $('#station-add').click(function() {
 
-        var html = '';
-
-        html += '<div class="form-group">'+
-                    '<label class="col-sm-2 control-label">&nbsp;</label>'+
-                    '<div class="col-sm-10">'+
-                        '<div class="row">'+
-                            '<div class="col-sm-4"><label class="control-label">考站1</label></div>'+
-                            '<div class="col-sm-6">'+
-                                    '<label class="control-label col-sm-2">阶段：</label>'+
-                                    '<select class="form-control col-sm-10" style="width: 381px;"></select>'+
-                            '</div>'+
-                            '<div class="col-sm-2">'+
-                                '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
-                                '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
-                            '</div>'+
-                        '</div>'+
-                        '<table class="table table-bordered" id="examroom">'+
-                            '<thead>'+
-                                '<tr>'+
-                                    '<td>考试项目</td>'+
-                                    '<td>考站</td>'+
-                                    '<td>类型</td>'+
-                                    '<td>所属考场</td>'+
-                                    '<td>必考&选考</td>'+
-                                    '<td>操作</td>'+
-                                '</tr>'+
-                            '</thead>'+
-                            '<tbody>'+
-                                '<tr class="">'+
-                                    '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-type"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-chioce"><option value="请选择">请选择</option></select></td>'+
-                                    '<td>'+
-                                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                                        '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                    '</td>'+
-                                '</tr>'+
-                            '</tbody>'+
-                        '</table>'+
-                    '</div>'+
-                '</div>';
-
         var req = {},
             html = '',
             index = parseInt($('.station-container').attr('index'));
