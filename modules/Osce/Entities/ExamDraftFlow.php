@@ -33,18 +33,23 @@ class ExamDraftFlow extends CommonModel
 
 
     public function handleBigData($data){
-        switch ($data['ctrl_type']){
-            case 1 : $this->bigOne($data);
-                break;
-            case 2 : $this->bigTwo($data);
-                break;
-            case 3 : $this->bigTwo($data);                //删
-                break;
-            case 4 :
-                break;
-            case 5 :
-                break;
-            default: throw new \Exception('操作有误！');
+        try{
+            switch ($data['ctrl_type']){
+                case 1 : $this->bigOne($data);
+                    break;
+                case 2 : $this->bigTwo($data);
+                    break;
+                case 3 : $this->bigTwo($data);                //删
+                    break;
+                case 4 :
+                    break;
+                case 5 :
+                    break;
+                default: throw new \Exception('操作有误！');
+            }
+
+        } catch (\Exception $ex){
+            return $ex;
         }
     }
 
@@ -60,14 +65,15 @@ class ExamDraftFlow extends CommonModel
             ];
 
             $result = ExamDraftFlow::create($draftFlowData);
-            $item->adasdad = $result->id;
+            $item->exam_draft_flow_id = $result->id;
             if(!$item->save())
             {
-                throw new \Exception('');
+                throw new \Exception('添加对应站ID失败，请重试！');
             }
+            return 1;
 
         } catch (\Exception $ex){
-
+            return $ex;
         }
 
     }
