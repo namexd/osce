@@ -18,7 +18,7 @@
 
 {{-- 内容主体区域 --}}
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'monitor_test'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'monitor_test','videoUrl':'{{ route('osce.admin.ExamControlController.getVcrsList') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -86,7 +86,7 @@
                                     </td>
                                     <td>
                                         <a href="javascript:void(0)">
-                                            <span class="state1 look">
+                                            <span class="state1 look" examId="{{@$val['examId']}}" stationId="{{ @$val['stationId'] }}">
                                                 <i class="fa fa-video-camera fa-2x"></i>
                                             </span>
                                         </a>

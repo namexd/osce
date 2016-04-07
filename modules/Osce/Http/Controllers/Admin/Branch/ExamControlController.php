@@ -138,11 +138,12 @@ class ExamControlController extends CommonController
         $stationId = $request->input('stationId');
         $examControlModel = new ExamControl();
         $vcrInfo    = $examControlModel->getVcrInfo($examId, $stationId);
-        if(!empty($vcrInfo)){
-            return response()->json($vcrInfo);
-        }else{
-            return response()->json(false);
-        }
+        //dd($vcrInfo);
+
+        return view('osce::admin.testMonitor.monitor_test_video', [
+            'data'      =>$vcrInfo,
+        ]);
+
     }
 
 
