@@ -539,19 +539,16 @@ class ExamArrangeController extends CommonController
         //所有临时数据 组合
         $datas = [];
         foreach ($draftFlows as $draftFlow) {
-            $datas[strtotime($draftFlow->created_dt)] = $draftFlow;
-            $datas[strtotime($draftFlow->created_dt)]['is_draft_flow'] = 1;
+            $datas[strtotime($draftFlow->created_dt)] = [
+                'item'          => $draftFlow,
+                'is_draft_flow' => 1
+            ];
         }
 
         foreach ($drafts as  $draft) {
-//            $datas[strtotime($draft->created_dt)] = $draft;
-//            $datas[strtotime($draft->created_dt)] = [
-//                'is_draft_flow'     => 0
-//            ];
             $datas[strtotime($draft->created_dt)]   =   [
-                'item'=>$draft,
-                'is_draft_flow'=>0,
-
+                'item'          => $draft,
+                'is_draft_flow' => 0
             ];
         }
 

@@ -39,34 +39,40 @@ class ExamDraftFlow extends CommonModel
     }
 
     public function bigOne($data){
-        $item   =$data['item'];
-        $draftFlowData = [
-            'order'             => $item['order'],
-            'name'              => $item['name'],
-            'exam_screening_id' => $item['exam_screening_id'],
-            'exam_gradation_id' => $item['exam_gradation_id'],
-            'exam_id'           => $item['exam_id'],
-        ];
+        try{
+            $item   = $data['item'];
+            $draftFlowData = [
+                'order'             => $item->order,
+                'name'              => $item->name,
+                'exam_screening_id' => $item->exam_screening_id,
+                'exam_gradation_id' => $item->exam_gradation_id,
+                'exam_id'           => $item->exam_id,
+            ];
 
-        $result = ExamDraftFlow::create($draftFlowData);
-        $item->adasdad=$result->id;
-        if(!$item->save())
-        {
-            throw new \Exception('');
+            $result = ExamDraftFlow::create($draftFlowData);
+            $item->adasdad = $result->id;
+            if(!$item->save())
+            {
+                throw new \Exception('');
+            }
+
+        } catch (\Exception $ex){
+
         }
 
     }
 
     public function bigTwo($data){
+        $item   = $data['item'];
         $draftFlowData = [
-            'order'             => $data['order'],
-            'name'              => $data['name'],
-            'exam_screening_id' => $data['exam_screening_id'],
-            'exam_gradation_id' => $data['exam_gradation_id'],
-            'exam_id'           => $data['exam_id'],
+            'order'             => $item->order,
+            'name'              => $item->name,
+            'exam_screening_id' => $item->exam_screening_id,
+            'exam_gradation_id' => $item->exam_gradation_id,
+            'exam_id'           => $item->exam_id,
         ];
 
-        $result = ExamDraftFlow::create($draftFlowData);
+        $result = ExamDraftFlow::update($draftFlowData);
 
 
     }
