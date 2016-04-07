@@ -222,20 +222,22 @@ class ExamArrangeController extends CommonController
     {
         $this->validate($request, [
             'exam_id' => 'required',
-            'id' => 'required',
+            'flow_id' => 'required',
             'type' => 'required',
         ]);
         $id = $request->get('id');
         $exam_id = $request->get('exam_id');
         $type = $request->get('type');
         try {
+
+            $data = [
+                'exam_id' => $exam_id,
+                'ctrl_type' => $type,
+                'old_draft_flow_id' => $id,
+            ];
+
             if ($type == 2) {
                 //是删除真实表数据就在临时表中记录下该操作
-                $data = [
-                    'exam_id' => $exam_id,
-                    'type' => $type,
-                    'old_draft_flow_id' => $id,
-                ];
                 $result = ExamDraftFlowTemp::create($data);
                 if ($result) {
                     return response()->json(
@@ -244,11 +246,12 @@ class ExamArrangeController extends CommonController
                 }
 
             } else {
-                $result = ExamDraftFlowTemp::find($id);
-                $result->old_draft_flow_id = $id;
-                $result->ctrl_type = $type;
+                $result = ExamDraftFlowTemp::create($data);
+//                $result = ExamDraftFlowTemp::find($id);
+//                $result->old_draft_flow_id = $id;
+//                $result->ctrl_type = $type;
 
-                if ($result->save()) {
+                if ($result) {
                     return response()->json(
                         $this->success_data($result->id, 1, '删除成功')
                     );
@@ -272,21 +275,22 @@ class ExamArrangeController extends CommonController
     {
         $this->validate($request, [
             'exam_id' => 'required',
-            'id' => 'required',
+            'draft_id' => 'required',
+            'flow_id' => 'required',
             'type' => 'required',
         ]);
         $id = $request->get('id');
         $exam_id = $request->get('exam_id');
         $type = $request->get('type');
         try {
+
+            $data = [
+                'exam_id' => $exam_id,
+                'ctrl_type' => $type,
+                'old_draft_id' => $id,
+            ];
             if ($type == 2) {
                 //是删除真实表数据就在临时表中记录下该操作
-                $data = [
-                    'exam_id' => $exam_id,
-                    'type' => $type,
-                    'old_draft_id' => $id,
-                ];
-
                 $DraftResult = ExamDraftTemp::create($data);
                 if ($DraftResult) {
 
@@ -296,11 +300,12 @@ class ExamArrangeController extends CommonController
                 }
 
             } else {
-                $DraftResult = ExamDraftTemp::find($id);
-
-                $DraftResult->old_draft_id = $id;
-
-                $DraftResult->ctrl_type = $type;
+                $DraftResult = ExamDraftTemp::create($data);
+//                $DraftResult = ExamDraftTemp::find($id);
+//
+//                $DraftResult->old_draft_id = $id;
+//
+//                $DraftResult->ctrl_type = $type;
                 if ($DraftResult->save()) {
                     return response()->json(
                         $this->success_data($DraftResult->id, 1, '删除成功')
