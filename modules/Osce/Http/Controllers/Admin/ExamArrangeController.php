@@ -111,10 +111,10 @@ class ExamArrangeController extends CommonController
             'exam_id' => 'required',
             'type' => 'required',
 
-            'subject' => 'sometime',      //考试项目
-            'station' => 'sometime',      //考站
-            'room' => 'sometime',      //考场
-            'chioce' => 'sometime',      //选考
+            'subject' => 'sometimes',      //考试项目
+            'station' => 'sometimes',      //考站
+            'room' => 'sometimes',      //考场
+            'chioce' => 'sometimes',      //选考
         ]);
 
         $type = $request->get('type');
@@ -590,7 +590,7 @@ class ExamArrangeController extends CommonController
 
 
 
-            
+
 
             $ExamDraftModel = new ExamDraft();
 
