@@ -4099,6 +4099,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].title});
                     }
+                    str.push({id:-999,text:'新增考试项目'});
 
                     //加载入数据
                     return {
@@ -4109,6 +4110,9 @@ function station_assignment(){
 
         //数据更新，交互数据
         }).on('select2:select', function(e) {
+            //新增页面
+            //layer.open();
+
             //请求数据
             var req = {
                 type:$elem.find('.exam-item').parent().attr('type'),
@@ -4138,9 +4142,7 @@ function station_assignment(){
             tags: true,
             ajax: {
                 type:'get',
-                dataType: 'jsonp',
-                jsonp: 'callback',
-                url: 'http://127.0.0.1:3000/stationList',
+                url: pars.station_list,
                 data:function(param) {
                     return {
                         type:$elem.find('.exam-station').parent().attr('type'),
@@ -4149,7 +4151,7 @@ function station_assignment(){
                     };
                 },
                 delay: 250,
-                processResults: function (res) {
+                processResults: function (res) {console.log(res)
 
                     //数据格式化
                     var str = [];
