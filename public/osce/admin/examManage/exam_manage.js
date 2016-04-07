@@ -940,15 +940,10 @@ function exam_assignment_add(){
                 }
             },
             gradation_order: {
-                validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '阶段不能为空'
-                    },
                     regexp: {
                         regexp: /^[0-9]*[1-9][0-9]*$/,
-                        message: '请输入整数'
+                        message: '请输入1-20的整数'
                     }
-                }
             }
         }
     });
@@ -999,6 +994,12 @@ function exam_assignment_add(){
             $(this).find(".check_icon").removeClass("check");
         }
     })
+    /**
+     * 日期选择
+     * @author chenxia
+     * @version 3.4
+     * @date    2016-04-06
+     */
     //考生分阶段考试
     $(".checkbox_two").click(function(){
         if ($(this).find("input").is(':checked')) {
@@ -1007,9 +1008,8 @@ function exam_assignment_add(){
             $(this).find(".check_icon ").attr("checkbox","1")
             //当选中后在取消后在选中，替换掉以前的
             $('table tr td select').each(function(){
-                //计数器标志
-                var index = $('#exam_add').find('tbody').attr('index');
-                index = parseInt(index) + 1;
+                //移除所有的option
+                $('table tr td select option').remove();
                 //获取考生分阶段考试的值
                 var checkbox_num=$(".checkbox_num").val(),
                     number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
@@ -1018,11 +1018,9 @@ function exam_assignment_add(){
                 for(var i=0;i<checkbox_num;i++) {
                     checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                 }
-                var html =  '<td class="check_select">'+
-                    '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                    '</td>';
+                var html =  checkbox_number;
                 //记录计数
-                $('#exam_add').find('.check_select').replaceWith(html);
+                $('#exam_add').find('select').append(html);
             });
         } else {
             $(this).find(".check_icon").removeClass("check");
@@ -1030,15 +1028,12 @@ function exam_assignment_add(){
             $(this).find(".check_icon ").attr("checkbox","0");
             //当选中后在取消后，替换掉以前的
             $('table tr td select').each(function(){
-                //计数器标志
-                var index = $('#exam_add').find('tbody').attr('index');
-                index = parseInt(index) + 1;
+                //移除所有的option
+                $('table tr td select option').remove();
 
-                var html =  '<td class="check_select">'+
-                    '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+'<option value="1">'+'阶段一'+'</option>'+'</select>'+
-                    '</td>';
+                var html = '<option value="0">'+'阶段一'+'</option>';
                 //记录计数
-                $('#exam_add').find('.check_select').replaceWith(html);
+                $('#exam_add').find('select').append(html);
             });
         }
     })
@@ -1053,6 +1048,7 @@ function exam_assignment_add(){
         //计数器标志
         var index = $('#exam_add').find('tbody').attr('index');
         index = parseInt(index) + 1;
+
         //获取考生分阶段考试的值
         var checkbox_num=$(".checkbox_num").val(),
             number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
@@ -1068,7 +1064,7 @@ function exam_assignment_add(){
         var hours = timeLength.split(':')[0];
         var minutes = timeLength.split(':')[1];
 
-         var html = '<tr>'+
+         var html = '<tr index= '+parseInt(index)+'>'+
              '<td>'+parseInt(index)+'</td>'+
              '<td class="laydate">'+
              '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
@@ -1089,32 +1085,37 @@ function exam_assignment_add(){
          $('#exam_add').find('tbody').append(html);
 
     });
+    /**
+     * 日期选择
+     * @author chenxia
+     * @version 3.4
+     * @date    2016-04-06
+     */
     $(".checkbox_num").blur(function(){
         //获取阶段输入框的值
         var checkbox_num=$(".checkbox_num").val();
         //这里是判断输入的值是否大于20
         if(checkbox_num>20){
-            layer.alert('请输入小于20的整数！');
+            layer.alert('请输入1-20的整数！');
             $(".layui-layer-btn0").click(function(){
                 $(".checkbox_num").val("1").focus();
             })
             return false;
         }else{
             $('table tr td select').each(function(){
-                //计数器标志
-                var index = $('#exam_add').find('tbody').attr('index');
-                index = parseInt(index) + 1;
-                //获取考生分阶段考试的值
+                //移除所有的option
+                $('table tr td select option').remove();
+                //获取考生分阶段考试的值;
                 var number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+
                     var checkbox_number='';
                     for(var i=0;i<checkbox_num;i++) {
                         checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                     }
-                    var html =  '<td class="check_select">'+
-                                '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                                '</td>';
+
+                var html = checkbox_number;
                     //记录计数
-                    $('#exam_add').find('.check_select').replaceWith(html);
+                    $('#exam_add').find('select').append(html);
                 });
         }
     })
@@ -1214,12 +1215,9 @@ function exam_basic_info(){
             },
             gradation_order: {
                 validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '阶段不能为空'
-                    },
                     regexp: {
                         regexp: /^[0-9]*[1-9][0-9]*$/ ,
-                        message: '请输入整数'
+                        message: '请输入1-20的整数'
                     }
                 }
             }
@@ -1279,18 +1277,22 @@ function exam_basic_info(){
             $(this).find(".check_icon").removeClass("check");
         }
     })
-
+    /**
+     * 日期选择
+     * @author chenxia
+     * @version 3.4
+     * @date    2016-04-06
+     */
     //考生分阶段考试
     $(".checkbox_two").click(function(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
-            $(this).parent().find(".check_div input").removeAttr('readonly');
             $(this).find(".check_icon ").attr("checkbox","1")
+            $(this).parent().find(".check_div input").removeAttr('readonly');
             //当选中后在取消后在选中，替换掉以前的
             $('#add-basic tr td select').each(function(){
-                //计数器标志
-                var index = $('#add-basic').find('tbody').attr('index');
-                index = parseInt(index) + 1;
+                //移除所有的option
+                $('table tr td select option').remove();
                 //获取考生分阶段考试的值
                 var checkbox_num=$(".checkbox_num").val(),
                     number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
@@ -1299,26 +1301,24 @@ function exam_basic_info(){
                     for(var i=0;i<checkbox_num;i++) {
                         checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                     }
-                    var html =  '<td class="check_select">'+
-                        '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                        '</td>';
+                    var html =  checkbox_number;
                     //记录计数
-                    $('#add-basic').find('.check_select').replaceWith(html);
+                    $('#add-basic').find('select').append(html);
             });
         } else {
             $(this).find(".check_icon").removeClass("check");
-            $(this).parent().find(".check_div input").attr('readonly','readonly');
             $(this).find(".check_icon ").attr("checkbox","0");
+            $(this).parent().find(".check_div input").attr('readonly','readonly');
+            //移除所有的option
+            $('table tr td select option').remove();
             //当选中后在取消后，替换掉以前的
             $('#add-basic tr td select').each(function(){
-                //计数器标志
-                var index = $('#add-basic').find('tbody').attr('index');
-                index = parseInt(index) + 1;
-                var html =  '<td class="check_select">'+
-                            '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+'<option value="1">'+'阶段一'+'</option>'+'</select>'+
-                            '</td>';
+                //移除所有的option
+                $('table tr td select option').remove();
+
+                var html = '<option value="0">'+'阶段一'+'</option>';
                 //记录计数
-                $('#add-basic').find('.check_select').replaceWith(html);
+                $('#add-basic').find('select').append(html);
 
             });
         }
@@ -1373,18 +1373,23 @@ function exam_basic_info(){
             $('#add-basic').find('tbody').attr('index',index);
             $('#add-basic').find('tbody').append(html);
     });
-
+    /**
+     * 日期选择
+     * @author chenxia
+     * @version 3.4
+     * @date    2016-04-06
+     */
     $(".checkbox_num").blur(function(){
         $('#add-basic tr td select').each(function(){
-            //计数器标志
-            var index = $('#add-basic').find('tbody').attr('index');
-            index = parseInt(index) + 1;
+            //移除所有的option
+            $('table tr td select option').remove();
+
             //获取考生分阶段考试的值
             var checkbox_num=$(".checkbox_num").val(),
                 number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
             //这里是判断输入的值是否大于20
             if(checkbox_num>20){
-                layer.alert('请输入小于20的整数！');
+                layer.alert('请输入小于1-20的整数！');
                 $(".layui-layer-btn0").click(function(){
                     $(".checkbox_num").val("1").focus();
                 })
@@ -1398,11 +1403,9 @@ function exam_basic_info(){
                 for(var i=0;i<checkbox_num;i++) {
                     checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                 }
-                var html =  '<td class="check_select">'+
-                    '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                    '</td>';
+                var html = checkbox_number;
                 //记录计数
-                $('#add-basic').find('.check_select').replaceWith(html);
+                $('#add-basic').find('select').append(html);
             }
         });
     })
@@ -3960,50 +3963,6 @@ function station_assignment(){
      */
     $('#station-add').click(function() {
 
-        var html = '';
-
-        html += '<div class="form-group">'+
-                    '<label class="col-sm-2 control-label">&nbsp;</label>'+
-                    '<div class="col-sm-10">'+
-                        '<div class="row">'+
-                            '<div class="col-sm-4"><label class="control-label">考站1</label></div>'+
-                            '<div class="col-sm-6">'+
-                                    '<label class="control-label col-sm-2">阶段：</label>'+
-                                    '<select class="form-control col-sm-10" style="width: 381px;"></select>'+
-                            '</div>'+
-                            '<div class="col-sm-2">'+
-                                '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
-                                '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
-                            '</div>'+
-                        '</div>'+
-                        '<table class="table table-bordered" id="examroom">'+
-                            '<thead>'+
-                                '<tr>'+
-                                    '<td>考试项目</td>'+
-                                    '<td>考站</td>'+
-                                    '<td>类型</td>'+
-                                    '<td>所属考场</td>'+
-                                    '<td>必考&选考</td>'+
-                                    '<td>操作</td>'+
-                                '</tr>'+
-                            '</thead>'+
-                            '<tbody>'+
-                                '<tr class="">'+
-                                    '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-type"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-chioce"><option value="请选择">请选择</option></select></td>'+
-                                    '<td>'+
-                                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                                        '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                    '</td>'+
-                                '</tr>'+
-                            '</tbody>'+
-                        '</table>'+
-                    '</div>'+
-                '</div>';
-
         var req = {},
             html = '',
             index = parseInt($('.station-container').attr('index'));
@@ -4178,6 +4137,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].title});
                     }
+                    str.push({id:-999,text:'新增考试项目'});
 
                     //加载入数据
                     return {
@@ -4188,6 +4148,9 @@ function station_assignment(){
 
         //数据更新，交互数据
         }).on('select2:select', function(e) {
+            //新增页面
+            //layer.open();
+
             //请求数据
             var req = {
                 type:$elem.find('.exam-item').parent().attr('type'),
@@ -4215,7 +4178,7 @@ function station_assignment(){
             tags: true,
             ajax: {
                 type:'get',
-                url: pars.station_list, //'http://127.0.0.1:3000/stationList',
+                url: pars.station_list,
                 data:function(param) {
                     return {
                         type:$elem.find('.exam-station').parent().attr('type'),
@@ -4224,7 +4187,7 @@ function station_assignment(){
                     };
                 },
                 delay: 250,
-                processResults: function (res) {
+                processResults: function (res) {console.log(res)
 
                     //数据格式化
                     var str = [];
@@ -4285,9 +4248,7 @@ function station_assignment(){
                     //数据格式化
                     var str = [];
                     var data = res.data;
-                    console.log(data);
                     for(var i in data){
-                        console.log(data[i]);
                         str.push({id:data[i].id,text:data[i].name});
                     }
 
