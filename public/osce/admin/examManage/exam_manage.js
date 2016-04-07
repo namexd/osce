@@ -4342,7 +4342,7 @@ function station_assignment(){
  */
 function examiner_manage() {
 
-    /*$("#add-basic .custom-teacher").select2({
+    $("#add-basic .custom-teacher").select2({
         placeholder:'请选择',
         ajax: {
             type:'get',
@@ -4358,7 +4358,7 @@ function examiner_manage() {
                 })
 
                 return {
-                    status:1
+                    status:1,
                     teahcer_id:ids
                 };
             },
@@ -4414,7 +4414,7 @@ function examiner_manage() {
                 };
             }
         }
-    });*/
+    });
 
 
     var data = [
