@@ -140,8 +140,10 @@ class ExamMonitorController  extends CommonController
      */
     public function getExamMonitorFinishList () {
         $data=$this->getExamMonitorListByStatus(4)->toArray();
+        $examControlModel = new ExamControl();
+        $topMsg = $examControlModel->getDoingExamList();
         return view('osce::admin.testMonitor.monitor_complete ', [
-            'data'      =>$data['data']
+            'data'      =>$topMsg,'list'=>$data['data']
 
         ]);
 
@@ -233,16 +235,36 @@ class ExamMonitorController  extends CommonController
                 case 3://Æú¿¼
                     $builder=ExamScreeningStudent::leftJoin('student', function($join){
                         $join -> on('exam_screening_student.student_id', '=', 'student.id');
-                    })->leftJoin('exam_station', function($join){
-                        $join -> on('exam_station.exam_id', '=', 'student.exam_id');
+                    })->leftJoin('exam_screening', function($join){
+                        $join -> on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
+                    })->leftJoin('station_teacher', function($join){
+                        $join -> on('station_teacher.exam_screening_id', '=', 'exam_screening.id');
                     })->leftJoin('station', function($join){
-                        $join -> on('exam_station.station_id', '=', 'station.id');
+                        $join -> on('station_teacher.station_id', '=', 'station.id');
                     })->select('student.name','student.exam_id','station.id as station_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','station.name as station_name');
 
-                    return $builder->where('exam_screening_student.status',1)->paginate(config('osce.page_size'));
+                    return $builder->where('exam_screening_student.status',1)
+                                   ->where('student.exam_id',$exam_id)
+                                   ->where('station_teacher.exam_id',$exam_id)
+                                   ->where('exam_screening.exam_id',$exam_id)
+                                   ->paginate(config('osce.page_size'));
                     break;
                 case 4://ÒÑÍê³É
-                    //return $builder->where('exam_screening_student.is_end',2)->paginate(config('osce.page_size'));
+                    $builder=ExamScreeningStudent::leftJoin('student', function($join){
+                        $join -> on('exam_screening_student.student_id', '=', 'student.id');
+                    })->leftJoin('exam_screening', function($join){
+                        $join -> on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
+                    })->leftJoin('station_teacher', function($join){
+                        $join -> on('station_teacher.exam_screening_id', '=', 'exam_screening.id');
+                    })->leftJoin('station', function($join){
+                        $join -> on('station_teacher.station_id', '=', 'station.id');
+                    })->select('student.name','student.exam_id','station.id as station_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','station.name as station_name');
+
+                    return $builder->where('exam_screening_student.is_end',2)
+                        ->where('student.exam_id',$exam_id)
+                        ->where('station_teacher.exam_id',$exam_id)
+                        ->where('exam_screening.exam_id',$exam_id)
+                        ->paginate(config('osce.page_size'));
                     break;
                 default:
                     return [];

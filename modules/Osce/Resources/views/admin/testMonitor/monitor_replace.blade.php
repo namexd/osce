@@ -70,7 +70,7 @@
                             <td>{{$val['code']}}</td>
                             <td>{{$val['exam_sequence']}}</td>
                             <td>{{$val['idcard']}}</td>
-                            <td>{{$val['mobile']}}</td>
+                            <td>{{$val['station_name']}}</td>
                             <td>已结束</td>
                             <td>{{--{{route('osce.admin.course.getResultVideo')}}?exam_id={{$val['exam_id']}}&student_id={{$val['student_id']}}&station_id={{$val['station_id']}}--}}
                                 <a href="">
