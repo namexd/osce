@@ -13,7 +13,6 @@
 @stop
 
 @section('only_js')
-    <script src="{{asset('osce/admin/js/webVideoCtrl.js')}}"></script>
     <script src="{{asset('osce/admin/testMonitor/test_monitor.js')}}"></script>
 @stop
 
