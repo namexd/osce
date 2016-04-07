@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
 
+use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 
@@ -556,37 +557,36 @@ class ApiController extends CommonController
         if(count($examingDO) > 0){
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-            //dd($userInfo);
+
             $ExamScreeningStudent = new ExamScreeningStudent();
             $examing = $ExamScreeningStudent->getExamings($userInfo->id);
 
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
-
+            //dd($examing);
             //整理考试数据
             $examData = array();
             $StationTeacher = new StationTeacher();
             $ExamPaperExamStation = new ExamPaperExamStation();
 
-            foreach($examing as $key=>$val){
-                foreach($val['screening']['exam_queue'] as $k=>$v){
+            foreach($examing as $key=>$v){
                     $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
-                    //dd($v['examstation']['exam'][0]['id']);
-                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['examstation']['exam'][0]['id'])->first();
-                    $examData['station_id'] = $v['station_id'];
-                    $examData['teacher_id'] = $stationTeacher->user_id;
-                    $examData['student_id'] = $userInfo->id;
-                    $examData['paper_id'] = $examPaper->exam_paper_id;
-                    $examData['exam_id'] = $v['examstation']['exam'][0]['id'];
-                    $examData['exam_name'] = $v['examstation']['exam'][0]['name'];
-                    $examData['status'] = $v['examstation']['exam'][0]['status'];
+                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
+                //dd($v['id']);
+                //echo $v['id'];
+                    $examData[$key]['station_id'] = $v['station_id'];
+                    $examData[$key]['teacher_id'] = $stationTeacher->user_id;
+                    $examData[$key]['student_id'] = $userInfo->id;
+                    $examData[$key]['paper_id'] = @$examPaper->exam_paper_id;
+                    $examData[$key]['exam_id'] = $v['id'];
+                    $examData[$key]['exam_name'] = $v['name'];
+                    $examData[$key]['status'] = $v['status'];
 
-                }
             }
         }
 
-        //dd($examData);
+
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData
@@ -692,7 +692,8 @@ class ApiController extends CommonController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        $exam_id        考试id
+     * * int        $station_id     考站id
      *
      * @return json
      *
@@ -702,7 +703,34 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getReadyExam (Request $request) {
+        $this->validate($request, [
+            'exam_id'    => 'required|integer',
+            'station_id' => 'required|integer',
+        ]);
 
+        $examId    = $request->input('exam_id');
+        $stationId = $request->input('station_id');
+
+        $examStationStatusModel = new ExamStationStatus();
+        $instance = $examStationStatusModel->where('exam_id', '=', $examId)->where('station_id', '=', $stationId)->first();
+        if (is_null($instance)) {
+            $retval = [
+                'title' => '未查到到考试中当前考站信息'
+            ];
+            return response()->json(
+                $this->success_data($retval, -1, 'error')
+            );
+        }
+
+        $instance->status = 1;
+        $instance->save();
+
+        $retval = [
+            'title' => '当前考站准备完成'
+        ];
+        return response()->json(
+            $this->success_data($retval, 1)
+        );
     }
 
     /**

@@ -252,6 +252,11 @@ class IndexController extends CommonController
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
 
+            //获取学生的考试状态
+            $student = new Student();
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
+            $status = $this->checkType($exameeStatus->status);
+
             $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
             if(!$screen_id){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
@@ -272,7 +277,8 @@ class IndexController extends CommonController
                         'data' => [
                             'name'  => $studentInfo->name,
                             'idnum' => $studentInfo->idnum,
-                            'idcard'=> $studentInfo->idcard
+                            'idcard'=> $studentInfo->idcard,
+                            'status'=> $status
                         ]
                     ]);   //解绑成功
                 }else{
@@ -310,7 +316,8 @@ class IndexController extends CommonController
                         'data' => [
                             'name'  => $studentInfo->name,
                             'idnum' => $studentInfo->idnum,
-                            'idcard'=> $studentInfo->idcard
+                            'idcard'=> $studentInfo->idcard,
+                            'status'=> $status
                         ]
                     ]);
                 }else{
@@ -346,7 +353,8 @@ class IndexController extends CommonController
                     'data' => [
                         'name'  => $studentInfo->name,
                         'idnum' => $studentInfo->idnum,
-                        'idcard'=> $studentInfo->idcard
+                        'idcard'=> $studentInfo->idcard,
+                        'status'=> $status
                     ]
                 ]);
             }else{
