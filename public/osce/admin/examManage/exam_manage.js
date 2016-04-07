@@ -4200,7 +4200,7 @@ function station_assignment(){
             async: true,
             data: req,
             url: pars.stationAdd,
-            success: function(res) {
+            success: function(res) {console.log(res)
                 if(res.code !=1) {
                     layer.msg('新增考站失败！',{skin:'msg-error',icon:1});
                 } else {
@@ -4303,10 +4303,8 @@ function station_assignment(){
 
         $.ajax({
             type:'get',
-            url: 'http://127.0.0.1:3000/getdata',
-            dataType: 'jsonp',
-            jsonp: 'callback',
-            data: {station_id:$that.parent().attr('station-id'),type:4},
+            url: pars.update_data,
+            data: {flow_id:$that.parent().attr('station-id'),type:4},
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('新增失败！',{skin:'msg-error',icon:1});
@@ -4401,19 +4399,18 @@ function station_assignment(){
 
             //请求数据
             var req = {
+                exam_id:(location.href).split('=')[1],
                 type:$elem.find('.exam-item').parent().attr('type'),
                 draft_id:$elem.attr('item-id'),
-                station_id:$elem.parent().parent().attr('station-id'),
-                data:e.params.data.id
+                flow_id:$elem.parent().parent().attr('station-id'),
+                subject:e.params.data.id
             };
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
+                url: pars.update_data,
                 data:req,
-                dataType: 'jsonp',
-                jsonp: 'callback',
-                success: function(res) {
+                success: function(res) {console.log(res)
                     return true;   
                 }
             })
