@@ -429,14 +429,12 @@ class ApiController extends CommonController
             }else if($roleType == 2){
                 return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
             }else{
-                dd(1111);
                 return redirect()->back()->withErrors('你没有权限！');
             }
 
         }
         else
         {
-            dd(222222222);
             return redirect()->back()->withErrors('账号密码错误');
         }
     }
@@ -559,14 +557,14 @@ class ApiController extends CommonController
         if(count($examingDO) > 0){
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-
+            var_dump($userInfo->id);
             $ExamScreeningStudent = new ExamScreeningStudent();
             $examing = $ExamScreeningStudent->getExamings($userInfo->id);
 
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
-            //dd($examing);
+            dd($examing);
             //整理考试数据
             $examData = array();
             $StationTeacher = new StationTeacher();

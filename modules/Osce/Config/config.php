@@ -69,7 +69,7 @@ return [
 	'spRoleId'			=>	4,
 
 	'invigilatorRoleId'	=>	env('invigilatorRoleId',77),
-	'studentRoleId'		=>	env('studentRoleId',2),
+	'studentRoleId'		=>	env('studentRoleId',78),
 
 
 //	'invigilatorRoleId'	=>	1,

@@ -87,7 +87,7 @@ class ExamScreeningStudent extends CommonModel
 
     //查找学生所报考试
     public function getExamings($student){
-        $builder = $this->where('exam_screening_student.student_id','=',$student)->where('exam_screening_student.is_signin','=',1)->where('exam_screening_student.is_end','=',1)->leftjoin('exam_screening',function($examScreening){
+        $builder = $this->where('exam_screening_student.is_signin','=',1)->where('exam_screening_student.is_end','=',1)->leftjoin('exam_screening',function($examScreening){
             $examScreening->on('exam_screening.id','=','exam_screening_student.exam_screening_id');
         })->leftjoin('exam_queue',function($examQueue){
             $examQueue->on('exam_queue.exam_screening_id','=','exam_screening.id');
