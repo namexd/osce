@@ -558,7 +558,7 @@ class ApiController extends CommonController
         if(count($examingDO) > 0){
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-           
+
             $Student = new Student();
             $examing = $Student->getExamings($userInfo->id);
 
@@ -570,6 +570,7 @@ class ApiController extends CommonController
             $examData = array();
             $StationTeacher = new StationTeacher();
             $ExamPaperExamStation = new ExamPaperExamStation();
+
 
             foreach($examing as $key=>$v){
                     $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
