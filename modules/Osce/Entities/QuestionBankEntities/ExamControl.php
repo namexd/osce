@@ -42,12 +42,6 @@ class ExamControl extends Model
         $examModel = new Exam();
         //考试名称
         $examName = $examModel->select('name')->where('status','=',1)->first();
-  /*      //统计考站数量
-        $stationCount = $examModel->leftJoin('station_teacher', function($join){
-            $join -> on('exam.id', '=', 'station_teacher.exam_id');
-        })->select(
-            $DB->raw('count(station_teacher.station_id) as stationCount')
-        )->where('status','=',1)->get();*/
         //统计考站数量
         $stationCount = count($examModel->leftJoin('station_teacher', function($join){
             $join -> on('exam.id', '=', 'station_teacher.exam_id');
@@ -104,7 +98,6 @@ class ExamControl extends Model
             'exam_screening_student.description',//考试终止原因
             'exam_screening_student.exam_screening_id',//考试场次编号
             'exam_order.status as examOrderStatus'//考试学生排序状态
-            //$DB->raw('count(exam_queue.station_id)-1 as stationCount')//剩余考站数量
         )->where('exam.status','=',1)
             ->where('exam_queue.status','<>',3)
         ->get();
