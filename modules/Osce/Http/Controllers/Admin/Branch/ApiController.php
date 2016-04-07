@@ -564,7 +564,7 @@ class ApiController extends CommonController
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
-            //dd($examing);
+            dd($examing);
             //整理考试数据
             $examData = array();
             $StationTeacher = new StationTeacher();
