@@ -681,4 +681,19 @@ class Student extends CommonModel
 
         return $builder;
     }
+
+
+
+    //查找学生所报考试
+    public function getExamings($student){
+        $builder = $this->where('student.id','=',$student)->leftjoin('exam_queue',function($examQueue){
+            $examQueue->on('exam_queue.student_id','=','student.id');
+        })->leftjoin('exam_station',function($exam_station){
+            $exam_station->on('exam_station.station_id','=','exam_queue.station_id');
+        })->leftjoin('exam',function($exam){
+            $exam->on('exam.id','=','exam_station.exam_id');
+        })->select('exam.id','exam.name','exam_station.station_id','exam.status')->get();
+
+        return $builder;
+    }
 }

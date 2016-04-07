@@ -18,8 +18,19 @@ function monitor_test(){
         //终止考试弹出层标题赋值
         var $student = $(this).parent().parent().siblings(".student").text();
         var $station = $(this).parent().parent().siblings(".station").text();
+        var $stationType = $(this).parent().attr("stationType");
         $(".stuName").text($student);
         $(".stationName").text($station);
+        $("#stationType").val($stationType);
+    });
+    //终止考试提交
+    $("#stopSure").click(function(){
+        var $stationType = $("#stationType").val();
+        if($stationType == 3){
+
+        }else{
+
+        }
     });
     //确认弃考
     $(".abandon").click(function(){
@@ -36,7 +47,18 @@ function monitor_test(){
         layer.confirm("确认当前考生"+$student+"（"+$idCard+"）替考？",function(){
 
         });
-    })
+    });
+    //查看视频
+    $(".look").click(function(){
+        layer.open({
+            type: 2,
+            title: '视频查看',
+            area: ['800px', '500px'],
+            fix: false, //不固定
+            maxmin: true,
+            content: ''
+        })
+    });
 }
 
 //考试监控迟到页面

@@ -800,7 +800,7 @@ class InvigilatePadController extends CommonController
                     $boundWatchInfo[$k]['status'] = '等待中';
                 }
             }
-            
+
             return response()->json(
                 $this->success_data($boundWatchInfo, 1)
             );
