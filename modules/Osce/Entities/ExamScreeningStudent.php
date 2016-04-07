@@ -87,13 +87,15 @@ class ExamScreeningStudent extends CommonModel
 
     //查找学生所报考试
     public function getExamings($student){
-        $builder = $this->where('student_id','=',$student)->where('exam_screening_student.is_signin','=',1)->where('exam_screening_student.is_end','=',1)->with(['screening'=>function($screening){
-            $screening->with(['examQueue'=>function($examQueue){
-                    $examQueue->where('exam_queue.status','!=',3)->with(['examstation'=>function($examstation){
-                        $examstation->with('exam');
-                    }]);
-                }]);
-        }])->get();
+        $builder = $this->where('exam_screening_student.student_id','=',$student)->where('exam_screening_student.is_signin','=',1)->where('exam_screening_student.is_end','=',1)->leftjoin('exam_screening',function($examScreening){
+            $examScreening->on('exam_screening.id','=','exam_screening_student.exam_screening_id');
+        })->leftjoin('exam_queue',function($examQueue){
+            $examQueue->on('exam_queue.exam_screening_id','=','exam_screening.id');
+        })->leftjoin('exam_station',function($exam_station){
+            $exam_station->on('exam_station.station_id','=','exam_queue.station_id');
+        })->leftjoin('exam',function($exam){
+            $exam->on('exam.id','=','exam_station.exam_id');
+        })->select('exam.id','exam.name','exam_station.station_id','exam.status')->get();
 
         return $builder;
     }
