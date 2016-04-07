@@ -585,7 +585,7 @@ class ApiController extends CommonController
             }
         }
 
-//dd($examData);
+dd($examData);
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData
