@@ -4134,17 +4134,23 @@ function station_assignment(){
     //阶段选择
     $('.station-container').on('change', '.select-stage', function() {
         //考站dom
-        var $that = $(this).parent().parent().parent().parent();
+        var $that = $(this).parent().parent().parent().parent(),
+            req = {};
+
+        req['exam_id'] = (location.href).split('=')[1];
+        req['name'] = $(this).parent().siblings('.col-sm-4').find('label').text();
+        req['order'] = $(this).parent().siblings('.col-sm-4').find('label').attr('order')
+        req['exam_gradation_id'] = $(this).val();
+        req['type'] = $(this).attr('type');
+        req['flow_id'] = $that.find('table').attr('station-id');
 
         $.ajax({
-            type:'get',
-            url: 'http://127.0.0.1:3000/getdata',
-            dataType: 'jsonp',
-            jsonp: 'callback',
-            data: {station_id:$that.find('table').attr('station-id'),type:$(this).attr('type'),data: $(this).val()},
+            type:'post',
+            url: pars.stationAdd,
+            data: req,
             success: function(res) {
                 if(res.code != 1) {
-                    layer.msg('新增失败！',{skin:'msg-error',icon:1});
+                    layer.msg('数据更新失败！',{skin:'msg-error',icon:1});
                 } else {
                     return true;
                 }
@@ -4208,7 +4214,7 @@ function station_assignment(){
                                 '<label class="col-sm-2 control-label">&nbsp;</label>'+
                                 '<div class="col-sm-10">'+
                                     '<div class="row">'+
-                                        '<div class="col-sm-4"><label class="control-label">第'+stationName[index]+'站</label></div>'+
+                                        '<div class="col-sm-4"><label class="control-label" order="'+index+'">第'+stationName[index]+'站</label></div>'+
                                         '<div class="col-sm-6">'+
                                                 '<label class="control-label col-sm-2">阶段：</label>'+
                                                 '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+exam_stage_str+'</select>'+
