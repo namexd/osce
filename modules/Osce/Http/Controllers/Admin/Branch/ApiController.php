@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
 
+use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 
@@ -428,12 +429,14 @@ class ApiController extends CommonController
             }else if($roleType == 2){
                 return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
             }else{
+                dd(1111);
                 return redirect()->back()->withErrors('你没有权限！');
             }
 
         }
         else
         {
+            dd(222222222);
             return redirect()->back()->withErrors('账号密码错误');
         }
     }
@@ -691,7 +694,8 @@ class ApiController extends CommonController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
+     * * int        $exam_id        考试id
+     * * int        $station_id     考站id
      *
      * @return json
      *
@@ -701,7 +705,34 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getReadyExam (Request $request) {
+        $this->validate($request, [
+            'exam_id'    => 'required|integer',
+            'station_id' => 'required|integer',
+        ]);
 
+        $examId    = $request->input('exam_id');
+        $stationId = $request->input('station_id');
+
+        $examStationStatusModel = new ExamStationStatus();
+        $instance = $examStationStatusModel->where('exam_id', '=', $examId)->where('station_id', '=', $stationId)->first();
+        if (is_null($instance)) {
+            $retval = [
+                'title' => '未查到到考试中当前考站信息'
+            ];
+            return response()->json(
+                $this->success_data($retval, -1, 'error')
+            );
+        }
+
+        $instance->status = 1;
+        $instance->save();
+
+        $retval = [
+            'title' => '当前考站准备完成'
+        ];
+        return response()->json(
+            $this->success_data($retval, 1)
+        );
     }
 
     /**

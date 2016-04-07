@@ -31,6 +31,7 @@ use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
 use Storage;
+use Modules\Osce\Entities\ExamStationStatus;
 
 class StudentWatchController extends CommonController
 {
@@ -120,6 +121,7 @@ class StudentWatchController extends CommonController
             );
 
         }
+
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect);
         return response()->json(
@@ -142,6 +144,7 @@ class StudentWatchController extends CommonController
     {
         $status         =   $examQueueCollect->pluck('status');
         $statusArray    =   $status->toArray();
+
         if(in_array(1,$statusArray))
         {
             return $this->getStatusOneExam($examQueueCollect);
@@ -156,6 +159,7 @@ class StudentWatchController extends CommonController
         }
         return $this->getStatusWaitExam($examQueueCollect);
     }
+
     //判断腕表提醒状态为1时
     private function getStatusOneExam($examQueueCollect){
         $items   =   array_where($examQueueCollect,function($key,$value){
@@ -335,6 +339,18 @@ class StudentWatchController extends CommonController
             }
         });
         $item   =   array_shift($items);
+
+        /**********判断考站是否准备完成begin*************/ // added by wangjiang at 2016-04-07 09:46 for 判断考站是否准备完成
+        $examStationStatusModel = new ExamStationStatus();
+        $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)->where('station_id', '=', $item->station_id)->first();
+        if ($instance->status == 0) {
+            return [
+                'code' => 4,
+                'title'=> '等待老师准备中',
+
+            ];
+        }
+        /**********判断考站是否准备完成end*************/
 
         //判断前面是否有人考试
         if(empty($item->station_id)){
