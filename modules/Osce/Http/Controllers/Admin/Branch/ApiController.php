@@ -428,12 +428,14 @@ class ApiController extends CommonController
             }else if($roleType == 2){
                 return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
             }else{
+                dd(1111);
                 return redirect()->back()->withErrors('你没有权限！');
             }
 
         }
         else
         {
+            dd(222222222);
             return redirect()->back()->withErrors('账号密码错误');
         }
     }
