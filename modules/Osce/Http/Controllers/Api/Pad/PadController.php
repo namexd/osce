@@ -366,6 +366,7 @@ class PadController extends  CommonController{
 
     /**
      * 考试在后修改状态
+     * url \osce\pad\change-status
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @author Jiangzhiheng
@@ -386,14 +387,13 @@ class PadController extends  CommonController{
             $stationId = $request->input('station_id', null);
             $teacherId = $request->input('user_id');
 
-            /** @var 学生id $studentId */
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
 
             //将该条信息的首位置零
-            $queue->stick = null;
-            if (!$queue->save()) {
-                throw new \Exception('结束考试失败', -10);
-            }
+//            $queue->stick = 0;
+//            if (!$queue->save()) {
+//                throw new \Exception('结束考试失败', -10);
+//            }
 
 
             return response()->json($this->success_data([$date,$queue->exam_screening_id]));

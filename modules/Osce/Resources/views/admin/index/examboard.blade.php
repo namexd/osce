@@ -8,7 +8,7 @@
     }
     #start,#end{width: 160px;}
     /*TODO: Zhoufuxiang，2016-2-26, 只用于本页面*/
-    .btn.btn-primary {
+    .btn.btn-primary{
         padding: 4px 8px; !important;
     }
     </style>
@@ -50,9 +50,15 @@
                     <td>{{$item->total}}</td>
                     <td value="{{$item->id}}">
                         @if($item->status ==0)
-                            <a href="{{route('osce.admin.index.getSetExam',['id'=>$item->id])}}">
-                                <input class="btn btn-primary" type="button" value="开始考试"/>
-                            </a>
+                            @if(count($item->examPlan) > 0)
+                                <a href="{{route('osce.admin.index.getSetExam',['id'=>$item->id])}}">
+                                    <input class="btn btn-primary" type="button" value="开始考试"/>
+                                </a>
+                            @else
+                                <a href="javascript:void(0)">
+                                    <input class="btn btn-primary" type="button" disabled value="开始考试"/>
+                                </a>
+                            @endif
                         @elseif($item->status==1)
                             正在考试
                         @else

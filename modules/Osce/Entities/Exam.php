@@ -27,6 +27,16 @@ class Exam extends CommonModel
         1   =>  '正在考试',
         2   =>  '考试结束',
     ];
+
+
+    /**
+     * 考试自能排考关联
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function examPlan(){
+        return $this->hasMany('\Modules\Osce\Entities\ExamPlan','exam_id','id');
+    }
+
     /**
      * 考试与考站的关联
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -539,11 +549,12 @@ class Exam extends CommonModel
         }
         $today = strtotime(date('Y-m-d', $time));    //当天凌晨
 
-        $result = $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
+        $result= $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
                                 or unix_timestamp(date_format(end_dt, "%Y-%m-%d")) = ?
                                 or (unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) < ?
                                     and unix_timestamp(date_format(end_dt, "%Y-%m-%d")) > ?)', [$today, $today, $today, $today])
-            ->get();
+                ->with('examPlan')
+                ->get();
 
         return $result;
     }
@@ -781,13 +792,13 @@ class Exam extends CommonModel
 					   }
 				   }
 			*/
-            //修改考试考场学生表 考试场次终止为0
+            //修改考试考场学生表 (删除)
             foreach ($examScreeningObj as $item) {
                 $examScreeningStudent = ExamScreeningStudent::where('exam_screening_id', '=', $item->id)->get();       //TODO 更改考试场次终止为0
                 foreach ($examScreeningStudent as $value) {
-                    $value->is_end = 0;
-                    if(!$value->save()){
-                        throw new \Exception('修改考试考场终止失败！');
+
+                    if(!$value->delete()){
+                        throw new \Exception('s删除考试考场学生失败！');
                     }
                 }
             }
