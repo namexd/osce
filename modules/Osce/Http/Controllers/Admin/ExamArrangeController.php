@@ -339,4 +339,21 @@ class ExamArrangeController extends CommonController
         }
     }
 
+
+    public function postHandleExamDraft(Request $request){
+        $this->validate($request,[
+            'id'        => 'sometime',
+            'stage'     => 'sometime',      //阶段
+            'subject'   => 'sometime',      //考试项目
+            'station'   => 'sometime',      //考站
+            'room'      => 'sometime',      //考场
+            'chioce'    => 'sometime',      //选考
+        ]);
+
+        $param = $request->only(['id','stage','subject','station','room','chioce']);
+
+
+
+    }
+
 }

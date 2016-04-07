@@ -4285,9 +4285,7 @@ function station_assignment(){
                     //数据格式化
                     var str = [];
                     var data = res.data;
-                    console.log(data);
                     for(var i in data){
-                        console.log(data[i]);
                         str.push({id:data[i].id,text:data[i].name});
                     }
 
