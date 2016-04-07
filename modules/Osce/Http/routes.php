@@ -203,6 +203,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//考试安排
 		Route::get('exam-arrange/invigilate-arrange', ['uses'=>'ExamArrangeController@getInvigilateArrange','as'=>'osce.admin.exam-arrange.getInvigilateArrange']);	//考官安排
+		Route::post('exam-arrange/invigilate-arrange',['uses'=>'ExamArrangeController@postInvigilateArrange','as'=>'osce.admin.exam-arrange.postInvigilateArrange']);	//考官安排
 		//（异步接口）
 		Route::get('exam-arrange/all-gradations', ['uses'=>'ExamArrangeController@getAllGradations','as'=>'osce.admin.exam-arrange.getAllGradations']);	//获取考试的所有阶段（根据条件）
 		Route::get('exam-arrange/all-subjects', ['uses'=>'ExamArrangeController@getAllSubjects','as'=>'osce.admin.exam-arrange.getAllSubjects']);		//获取所有考试项目（根据条件）
