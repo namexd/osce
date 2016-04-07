@@ -679,14 +679,14 @@ class InvigilatePadController extends CommonController
                 'station_id.required' => '考站编号信息必须'
             ]);
 
-            $redis = Redis::connection('message');
-            $infos = md5($_SERVER['HTTP_HOST']);
+            //$redis = Redis::connection('message');
+            //$infos = md5($_SERVER['HTTP_HOST']);
 
             $nowTime = time();
             $date = date('Y-m-d H:i:s', $nowTime);
             $studentId = $request->get('student_id');
             $stationId = $request->get('station_id');
-            $teacherId =$request->get('user_id');
+            $teacherId = $request->get('user_id');
             //开始考试时创建成绩
 //            $ExamResultData=[
 //                'student_id'=>$studentId,
@@ -709,7 +709,7 @@ class InvigilatePadController extends CommonController
 //               throw new \Exception('成绩创建失败',-106);
 //           }
             $ExamQueueModel = new ExamQueue();
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime, $teacherId);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
 
@@ -724,8 +724,8 @@ class InvigilatePadController extends CommonController
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage() . '');
 
-            $redis->publish($infos, json_encode(['message' => $ex]));
-            //return response()->json($this->fail($ex));
+            //$redis->publish($infos, json_encode(['message' => $ex]));
+            return response()->json($this->fail($ex));
         }
     }
 
