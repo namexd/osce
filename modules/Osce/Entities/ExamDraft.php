@@ -21,5 +21,12 @@ class ExamDraft extends CommonModel
     protected $fillable     = ['station_id', 'room_id', 'subject_id',  'exam_draft_flow_id', 'effected'];
 
 
+    public function getExamDraftData($ExamDraftFlowId){
+        $examDraftList=$this->whereIn('exam_draft_flow_id',$ExamDraftFlowId)->get();
+        return $examDraftList;
+
+    }
+
+
 
 }

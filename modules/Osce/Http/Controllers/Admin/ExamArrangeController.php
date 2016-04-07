@@ -613,8 +613,9 @@ class ExamArrangeController extends CommonController
      * @author zhouqiang 2016-04-06
      * @return string
      */
-    public function getChooseExamArrange(Request $request)
+    public function getExamArrange(Request $request)
     {
+      
         $this->validate($request, [
             'exam_id' => 'required|integer',
         ]);
@@ -626,16 +627,11 @@ class ExamArrangeController extends CommonController
             $ExamDraftFlowModel = new ExamDraftFlow();
 
            $ExamDraftFlowRequest = $ExamDraftFlowModel->getExamDraftFlowData($id);
-
-
-
-
-
-
-
+            $ExamDraftFlowId = $ExamDraftFlowRequest->pluck('id');
             $ExamDraftModel = new ExamDraft();
 
-            $ExamDraftRequest = $ExamDraftModel->getExamDraftData();
+            $ExamDraftRequest = $ExamDraftModel->getExamDraftData($ExamDraftFlowId);
+            dd($ExamDraftRequest);
 
 
         } catch (\Exception $ex) {

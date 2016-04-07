@@ -21,4 +21,10 @@ class ExamDraftFlow extends CommonModel
     protected $fillable     = ['name',  'order',  'exam_id', 'exam_screening_id', 'exam_gradation_id'];
 
 
+
+      public function getExamDraftFlowData($id){
+          $examDraftFlowList=$this->where('exam_id','=',$id)->get();
+          return $examDraftFlowList;
+
+        }
 }
