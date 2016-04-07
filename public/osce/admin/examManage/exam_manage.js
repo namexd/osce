@@ -4533,6 +4533,22 @@ function station_assignment(){
 
     }
 
+
+    $('#save').click(function() {
+        $.ajax({
+            type:'post',
+            url: '',
+            data:{exam_id:(location.href).split('=')[0]},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
+                } else {
+                    layer.msg('数据保存成功！',{skin:'msg-success',icon:1});
+                }
+            }
+        })
+    });
+
 }
 
 

@@ -42,7 +42,7 @@
             <div class="ibox float-e-margins">
                 <div class="row">
                     <div class="col-md-12 ">
-                        <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postStationAssignment')}}">
+                        <form method="post" class="form-horizontal">
                             <input type="hidden" name="id" value="{{$id}}">
 
                             <div class="station-container" index="0">
@@ -94,7 +94,7 @@
                             <!-- 新增考站 -->
                             <div class="form-group">
                                 <div class="col-sm-2 col-sm-offset-4">
-                                    <button id="save" class="btn btn-primary" type="submit">保存考场安排</button>
+                                    <a id="save" class="btn btn-primary" href="javascript:void(0)">保存考场安排</a>
                                 </div>
                                 <div class="col-sm-2">
                                     <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>
