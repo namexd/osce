@@ -570,7 +570,7 @@ class ApiController extends CommonController
             $examData = array();
             $StationTeacher = new StationTeacher();
             $ExamPaperExamStation = new ExamPaperExamStation();
-            //dd($examing);
+            dd($examing);
             foreach($examing as $key=>$v){
                     $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
                     $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
