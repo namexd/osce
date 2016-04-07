@@ -69,17 +69,15 @@
                     <div class="ibox-content mart_20 text-left">
                         <div class="font20 padt_20 goCenter">待考考试</div>
                         <div class="goCenter mart_15">
-                            {{--@if(!empty(@$examing))--}}
-                                {{--@foreach($examing as $k=>$v)--}}
-                                    {{--@foreach($v['screening']['exam_queue'] as $k=>$v)--}}
-                                        @if(@$examData['status'] == 1)
-                                            <a href="javascript:void(0)" class="btn btn-primary btn-rounded examing" student="{{@$examData['student_id']}}" station="{{@$examData['station_id']}}" teacher="{{@$examData['teacher_id']}}" paper="{{@$examData['paper_id']}}" exam="{{@$examData['exam_id']}}">{{@$examData['exam_name']}}</a>
+                            @if(!empty(@$examData))
+                                @foreach($examData as $k=>$v)
+                                        @if(@$v['status'] == 1)
+                                            <a href="javascript:void(0)" class="btn btn-primary btn-rounded examing" student="{{@$v['student_id']}}" station="{{@$v['station_id']}}" teacher="{{@$v['teacher_id']}}" paper="{{@$v['paper_id']}}" exam="{{@$v['exam_id']}}">{{@$v['exam_name']}}</a>
                                         @else
-                                            <a href="/osce/admin/examanswer/student-answer/{{@$examData['student_id']}}" class="btn btn-primary btn-rounded">{{@$examData['exam_name']}}</a>
+                                            <a href="/osce/admin/examanswer/student-answer/{{@$v['student_id']}}" class="btn btn-primary btn-rounded">{{@$v['exam_name']}}</a>
                                         @endif
-                                    {{--@endforeach--}}
-                                {{--@endforeach--}}
-                            {{--@endif--}}
+                                    @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>

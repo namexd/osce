@@ -149,7 +149,7 @@ class ExamQuestionController extends CommonController
             }
             $data   =   [
                 'path'=>$pathReturn,
-                'name'=>$newfileName,
+                'name'=>$oldfileName,
                 'status'=>$status
             ];
         }

@@ -557,37 +557,36 @@ class ApiController extends CommonController
         if(count($examingDO) > 0){
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-            //dd($userInfo);
+
             $ExamScreeningStudent = new ExamScreeningStudent();
             $examing = $ExamScreeningStudent->getExamings($userInfo->id);
 
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
-
+            //dd($examing);
             //整理考试数据
             $examData = array();
             $StationTeacher = new StationTeacher();
             $ExamPaperExamStation = new ExamPaperExamStation();
 
-            foreach($examing as $key=>$val){
-                foreach($val['screening']['exam_queue'] as $k=>$v){
+            foreach($examing as $key=>$v){
                     $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
-                    //dd($v['examstation']['exam'][0]['id']);
-                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['examstation']['exam'][0]['id'])->first();
-                    $examData['station_id'] = $v['station_id'];
-                    $examData['teacher_id'] = $stationTeacher->user_id;
-                    $examData['student_id'] = $userInfo->id;
-                    $examData['paper_id'] = $examPaper->exam_paper_id;
-                    $examData['exam_id'] = $v['examstation']['exam'][0]['id'];
-                    $examData['exam_name'] = $v['examstation']['exam'][0]['name'];
-                    $examData['status'] = $v['examstation']['exam'][0]['status'];
+                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
+                //dd($v['id']);
+                //echo $v['id'];
+                    $examData[$key]['station_id'] = $v['station_id'];
+                    $examData[$key]['teacher_id'] = $stationTeacher->user_id;
+                    $examData[$key]['student_id'] = $userInfo->id;
+                    $examData[$key]['paper_id'] = @$examPaper->exam_paper_id;
+                    $examData[$key]['exam_id'] = $v['id'];
+                    $examData[$key]['exam_name'] = $v['name'];
+                    $examData[$key]['status'] = $v['status'];
 
-                }
             }
         }
 
-        //dd($examData);
+
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData

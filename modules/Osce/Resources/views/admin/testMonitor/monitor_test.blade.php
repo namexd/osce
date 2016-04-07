@@ -77,7 +77,7 @@
                                     <td>{{ @$val["exam_sequence"]}}</td>
                                     <td class="idCard">{{ @$val["idcard"]}}</td>
                                     <td class="station">{{ @$val["stationName"]}}</td>
-                                    <td>{{ @$val["stationCount"]}}</td>
+                                    <td>{{ @$val["remainStationCount"]}}</td>
                                     <td>
                                         @if((@$val["is_replace"]==-1&&@$val["is_give"]==1) || (@$val["is_replace"]==1&&@$val["is_give"]==1))上报弃考
                                         @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)上报替考
@@ -91,7 +91,7 @@
                                             </span>
                                         </a>
                                         @if(@$val["is_replace"]==-1&&@$val["is_give"]==-1&&@$val["examOrderStatus"]!=4)
-                                            <a href="javascript:void(0)">
+                                            <a href="javascript:void(0)" stationType="{{ @$val['stationType'] }}">
                                                 <span class="state1 stop" data-toggle="modal" data-target="#myModal">
                                                     <i class="fa fa-cog fa-2x"></i>
                                                 </span>
@@ -132,7 +132,8 @@
 
 @section('layer_content')
     {{--终止考试弹出框--}}
-    <form class="form-horizontal" id="stopForm" novalidate="novalidate" method="post" action="">
+    <form class="form-horizontal" id="stopForm" novalidate="novalidate" method="post" action="{{ route('osce.admin.ExamControlController.postStopExam') }}">
+        <input type="hidden" value="" id="stationType">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">终止考试</h4>

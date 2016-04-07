@@ -35,7 +35,7 @@ class ExamControlController extends CommonController
     {
         $examControlModel = new ExamControl();
         $data = $examControlModel->getDoingExamList();
-        //dd($data);
+       // dd($data);
         return view('osce::admin.testMonitor.monitor_test', [
             'data'      =>$data,
         ]);
@@ -53,30 +53,44 @@ class ExamControlController extends CommonController
      */
     public function postStopExam2(Request $request)
     {
+
         $data=array(
-            'examScreeningStudentId' =>$request->input('170'), //考试场次-学生关系id
-            'description' =>$request->input('2'), //终止考试原图
+            'examId' =>$request->input('examId'), //考试编号
+            'studentId' =>$request->input('studentId'), //考生编号
+            'examScreeningId' =>$request->input('examScreeningId'), //场次编号
+            'stationId' =>$request->input('stationId'), //考站编号
+            'userId' =>$request->input('userId'), //老师id
+            'examScreeningStudentId' =>$request->input('examScreeningStudentId'), //考试场次-学生关系id
+            'description' =>$request->input('description'), //终止考试原图
 
         );
-        dd($data);
-
         $examControlModel = new ExamControl();
         $result = $examControlModel->stopExam($data);
-        dd($result);
-
-        return response()->json(['status'=>'1','info'=>'保存成功']);
+        if($result==true){
+            return response()->json(true);
+        }else{
+            return response()->json(false);
+        }
     }
     public function postStopExam()
     {
         $data=array(
+            'examId' =>541,
+            'studentId' =>7263, //考生编号
+            'examScreeningId' =>550, //场次编号
+            'stationId' =>80, //考站编号
+            'userId' =>970, //老师id
             'examScreeningStudentId' =>170, //考试场次-学生关系id
             'description' =>2, //终止考试原图
-
         );
-
         $examControlModel = new ExamControl();
         $result = $examControlModel->stopExam($data);
-        dd($result);
+
+        if($result==true){
+            return response()->json(true);
+        }else{
+            return response()->json(false);
+        }
 
     }
 

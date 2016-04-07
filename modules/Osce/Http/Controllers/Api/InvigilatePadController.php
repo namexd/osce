@@ -771,4 +771,115 @@ class InvigilatePadController extends CommonController
     }
 
 
+    /**
+     *  显示所有已绑定但未解绑人员的接口
+     * @method GET
+     * @url
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getBoundWatchMembers(Request $request){
+        $WatchLog = new WatchLog();
+        $boundWatchInfo = $WatchLog->getBoundWatchInfos();
+
+        if(count($boundWatchInfo) > 0){
+            $boundWatchInfo = $boundWatchInfo->toArray();
+            foreach($boundWatchInfo as $k=>$v){
+                if($v['status'] == 1){
+                    $boundWatchInfo[$k]['status'] = '考试中';
+                }elseif($v['status'] == 2){
+                    $boundWatchInfo[$k]['status'] = '已完成';
+                }else{
+                    $boundWatchInfo[$k]['status'] = '等待中';
+                }
+            }
+            
+            return response()->json(
+                $this->success_data($boundWatchInfo, 1)
+            );
+        }
+
+        return response()->json(
+            $this->success_data('',0,'没有数据')
+        );
+    }
+
+    /**
+     *  考生详细信息的接口
+     * @method GET
+     * @url
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     student_id   exam_id    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamineeDetails(Request $request){
+        $this->validate($request, [
+            'student_id' => 'required|integer',
+            'exam_id' => 'required|integer'
+        ]);
+
+        try {
+            //考生基本信息
+            $studentId = $request->get('student_id');
+            $examId = $request->get('exam_id');
+
+            $student = Student::find($studentId);
+            if (!$student) {
+                throw new \Exception('没有找到该学生相关信息', -1);
+            }
+
+            //查找与考生相关的设备信息
+            $watchInfo = WatchLog::where('action','=','绑定')->where('student_id','=',$studentId)->leftjoin('watch',function($watch){
+                $watch->on('watch.id','=','watch_log.watch_id');
+            })->select('watch.id','watch.name','watch.factory','watch.sp')->first();
+
+            if (!$watchInfo) {
+                throw new \Exception('没有找到该学生相关设备信息', -2);
+            }
+
+            //查找当前考生的考试状态
+            $student = new Student();
+            $exameeStatus = $student->getExameeStatus($studentId,$examId);
+            $status = $this->checkType($exameeStatus->status);
+
+            if (!$status) {
+                throw new \Exception('没有找到该学生当前考试状态', -3 );
+            }
+            //统计考试剩余考站数量
+            $exameeStatus = $student->getExameeStationsCount($studentId,$examId);
+
+            $data = [
+                'username'      => $student->name,
+                'idcard'        => $student->idcard,
+                'exam_sequence' => $student->exam_sequence,
+                'exam_status'   => $status,
+                'station_num'   => $exameeStatus->num,
+                'device_name'   => $watchInfo->name,
+                'device_id'     => $watchInfo->id,
+                'factory'       => $watchInfo->factory,
+                'sp'            => $watchInfo->sp
+            ];
+
+            return response()->json(
+                $this->success_data($data,1,'数据正常')
+            );
+
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
+        }
+    }
 }
