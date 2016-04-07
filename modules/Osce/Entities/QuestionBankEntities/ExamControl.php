@@ -203,6 +203,7 @@ class ExamControl extends Model
             //① 更新考试场次-学生关系表(exam_screening_student)
             $examScreeningStudentData = array(
                 'is_end' => 1,
+                'status' => $data['status'],
                 'description' => $data['description']
             );
             //保存考试场次-学生关系表（exam_screening_student）
