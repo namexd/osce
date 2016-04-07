@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Entities;
 
+use App\Entities\SysUserRole;
 use Modules\Osce\Repositories\Common;
 use App\Entities\User;
 use Auth;
@@ -300,6 +301,7 @@ class Student extends CommonModel
 
             //根据条件：查找用户是否有账号和密码
             $user = User::where(['username' => $examineeData['mobile']])->first();
+            $role_id = config('osce.studentRoleId');
 
             //如果查找到了，对用户信息 进行编辑处理
             if (count($user) != 0) {
@@ -310,6 +312,17 @@ class Student extends CommonModel
 
                 if (!($user->save())) {      //跟新用户
                     throw new \Exception('新增考生失败！');
+                }
+                $sysUserRole = SysUserRole::where('user_id','=',$user->is)->where('role_id','=',$role_id)->first();
+                if(!$sysUserRole){
+                    DB::table('sys_user_role')->insert(
+                        [
+                            'role_id'   => $role_id,
+                            'user_id'   => $user->id,
+                            'created_at'=> time(),
+                            'updated_at'=> time(),
+                        ]
+                    );
                 }
 
             } else {      //如果没找到，新增处理,   如果新增成功，发短信通知用户
@@ -322,6 +335,14 @@ class Student extends CommonModel
                 $password = '123456';
                 $user = $this->registerUser($userData, $password);
                 $this->sendRegisterEms($userData['mobile'], $password);
+                DB::table('sys_user_role')->insert(
+                    [
+                        'role_id'   => $role_id,
+                        'user_id'   => $user->id,
+                        'created_at'=> time(),
+                        'updated_at'=> time(),
+                    ]
+                );
             }
             //查询学号是否存在
             $code = $this->where('code', $examineeData['code'])->where('user_id', '<>', $user->id)->first();
