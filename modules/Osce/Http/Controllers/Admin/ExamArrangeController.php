@@ -132,7 +132,7 @@ class ExamArrangeController extends CommonController
                 'exam_id'=>$examId,
                 'old_draft_flow_id'=>$request->get('old_draft_flow_id'),
                 'old_draft_id'=>$request->get('old_draft_id'),
-                'user_id'=>'',
+                'user_id'=>$user->id,
                 'subject_id'=>'',
                 'station_id'=>'',
                 'room_id'=>'',
@@ -216,7 +216,7 @@ class ExamArrangeController extends CommonController
             }else{
                 $result = ExamDraftFlowTemp::find($id);
                 $result->old_draft_flow_id = $id;
-                $result->type =$type;
+                $result->ctrl_type =$type;
 
                 if($result->save()){
                     return response()->json(
@@ -270,7 +270,7 @@ class ExamArrangeController extends CommonController
 
                 $DraftResult->old_draft_id =  $id;
 
-                $DraftResult->type = $type;
+                $DraftResult->ctrl_type = $type;
                 if($DraftResult->save()){
                     return response()->json(
                         $this->success_data($DraftResult->id, 1, '删除成功')
@@ -564,7 +564,34 @@ class ExamArrangeController extends CommonController
     }
 
 
+    /**
+     *考试安排数据的回显
+     * url:
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
+    public function getChooseExamArrange(Request $request){
+        $this->validate($request ,[
+            'exam_id' => 'required|integer',
+        ]);
+        $id = $request->get('exam_id');
+        try{
+            //拿到大的考站的数据
+
+            
 
 
+            $ExamDraftModel = new ExamDraft();
+
+            $request  = $ExamDraftModel ->getExamDraftData();
+
+
+
+        }catch (\Exception $ex){
+
+        }
+
+    }
 
 }
