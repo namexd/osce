@@ -554,7 +554,7 @@ class ApiController extends CommonController
         $user = Auth::user();
         //查找当前正在进行的考试--之后会改
         $examingDO = Exam::where('status','=',1)->first();
-        dd($examingDO);
+        //dd($examingDO);
         if(count($examingDO) > 0){
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
