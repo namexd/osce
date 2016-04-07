@@ -3963,50 +3963,6 @@ function station_assignment(){
      */
     $('#station-add').click(function() {
 
-        var html = '';
-
-        html += '<div class="form-group">'+
-                    '<label class="col-sm-2 control-label">&nbsp;</label>'+
-                    '<div class="col-sm-10">'+
-                        '<div class="row">'+
-                            '<div class="col-sm-4"><label class="control-label">考站1</label></div>'+
-                            '<div class="col-sm-6">'+
-                                    '<label class="control-label col-sm-2">阶段：</label>'+
-                                    '<select class="form-control col-sm-10" style="width: 381px;"></select>'+
-                            '</div>'+
-                            '<div class="col-sm-2">'+
-                                '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
-                                '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
-                            '</div>'+
-                        '</div>'+
-                        '<table class="table table-bordered" id="examroom">'+
-                            '<thead>'+
-                                '<tr>'+
-                                    '<td>考试项目</td>'+
-                                    '<td>考站</td>'+
-                                    '<td>类型</td>'+
-                                    '<td>所属考场</td>'+
-                                    '<td>必考&选考</td>'+
-                                    '<td>操作</td>'+
-                                '</tr>'+
-                            '</thead>'+
-                            '<tbody>'+
-                                '<tr class="">'+
-                                    '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-type"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-chioce"><option value="请选择">请选择</option></select></td>'+
-                                    '<td>'+
-                                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                                        '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                    '</td>'+
-                                '</tr>'+
-                            '</tbody>'+
-                        '</table>'+
-                    '</div>'+
-                '</div>';
-
         var req = {},
             html = '',
             index = parseInt($('.station-container').attr('index'));
@@ -4023,8 +3979,6 @@ function station_assignment(){
             type: 'get',
             async: false,
             data: req,
-            dataType: 'jsonp',
-            jsonp: 'callback',
             url: pars.exam_stage,
             success: function(res) {
                 var data = res.data;
@@ -4043,12 +3997,10 @@ function station_assignment(){
          * @date    2016-04-06
          */
         $.ajax({
-            type: 'get',
+            type: 'post',
             async: true,
             data: req,
-            dataType: 'jsonp',
-            jsonp: 'callback',
-            url: 'http://127.0.0.1:3000/getdata',//pars.stationAdd,
+            url: pars.stationAdd,
             success: function(res) {
                 if(res.code !=1) {
                     layer.msg('新增考站失败！',{skin:'msg-error',icon:1});
@@ -4185,6 +4137,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].title});
                     }
+                    str.push({id:-999,text:'新增考试项目'});
 
                     //加载入数据
                     return {
@@ -4195,6 +4148,9 @@ function station_assignment(){
 
         //数据更新，交互数据
         }).on('select2:select', function(e) {
+            //新增页面
+            //layer.open();
+
             //请求数据
             var req = {
                 type:$elem.find('.exam-item').parent().attr('type'),
@@ -4205,9 +4161,7 @@ function station_assignment(){
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: '', //'http://127.0.0.1:3000/stationList',
                 data:req,
                 success: function(res) {
                     //更改type值
@@ -4224,9 +4178,7 @@ function station_assignment(){
             tags: true,
             ajax: {
                 type:'get',
-                dataType: 'jsonp',
-                jsonp: 'callback',
-                url: 'http://127.0.0.1:3000/stationList',
+                url: pars.station_list,
                 data:function(param) {
                     return {
                         type:$elem.find('.exam-station').parent().attr('type'),
@@ -4235,11 +4187,11 @@ function station_assignment(){
                     };
                 },
                 delay: 250,
-                processResults: function (res) {
+                processResults: function (res) {console.log(res)
 
                     //数据格式化
                     var str = [];
-                    var data = res.data.rows;
+                    var data = res.data;
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
@@ -4263,9 +4215,7 @@ function station_assignment(){
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: '', //'http://127.0.0.1:3000/stationList',
                 data:req,
                 success: function(res) {
                     //更改type值
@@ -4284,10 +4234,8 @@ function station_assignment(){
             tags: true,
             ajax: {
                 type:'get',
-                dataType: 'jsonp',
-                jsonp: 'callback',
-                url: 'http://127.0.0.1:3000/stationList',
-                data:function(param) {console.log($elem.attr('type'))
+                url: pars.room_list, //'http://127.0.0.1:3000/stationList',
+                data:function(param) {
                     return {
                         type:$elem.find('.station-belong').parent().attr('type'),
                         id:$elem.attr('itemId'),
@@ -4299,7 +4247,7 @@ function station_assignment(){
 
                     //数据格式化
                     var str = [];
-                    var data = res.data.rows;
+                    var data = res.data;
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
@@ -4323,9 +4271,7 @@ function station_assignment(){
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: '', //'http://127.0.0.1:3000/stationList',
                 data:req,
                 success: function(res) {
                     //更改type值
@@ -4348,9 +4294,7 @@ function station_assignment(){
 
             $.ajax({
                 type:'get',
-                url: 'http://127.0.0.1:3000/stationList',
-                dataType: 'jsonp',
-                jsonp: 'callback',
+                url: '', //'http://127.0.0.1:3000/stationList',
                 data:req,
                 success: function(res) {
                     //更改type值

@@ -83,7 +83,7 @@ class ExamArrangeController extends CommonController
 }
 
 //新增考站里面的子对象到临时表
-    public function postExamDraft(Request $request){
+    public function postAddExamDraft(Request $request){
         $this->validate($request,[
             'exam_id'=>'required',
 //            'ctrl_type'=>'required',
@@ -126,18 +126,84 @@ class ExamArrangeController extends CommonController
 
 
 
+
+    //删除站接口
+    public function getDelExamFlow(Request $request){
+        $this->validate($request,[
+//            'exam_id'=>'required',
+            'id'=>'required',
+
+        ]);
+        $id = $request->get('id');
+        //项临时加入删除数据
+//        $data =[
+//            'exam_id'=>$request->get('exam_id'),
+//            'old_draft_flow_id'=>$request->get('id'),
+//        ];
+
+        $result = ExamDraftFlowTemp::find($id);
+        $result->old_draft_flow_id = $id;
+        if($result->save()){
+            return response()->json(
+                $this->success_data($result->id, 1, '删除成功')
+            );
+        }else{
+            return response()->json(
+                $this->success_data('', -1, '删除失败')
+            );
+        }
+    }
+
+
+
+    //删除子站
+    public function getDelExamDraft(Request $request){
+        $this->validate($request,[
+//            'exam_id'=>'required',
+            'id'=>'required',
+        ]);
+        $id = $request->get('id');
+//        $data =[
+//            'exam_id'=>$request->get('exam_id'),
+//            'old_draft_id'=>$request->get('id'),
+//        ];
+
+        $DraftResult = ExamDraftTemp::find($id);
+        $DraftResult->old_draft_id =  $id;
+        if($DraftResult->save()){
+            return response()->json(
+                $this->success_data($DraftResult->id, 1, '删除成功')
+            );
+        }else{
+            return response()->json(
+                $this->success_data('', -1, '删除失败')
+            );
+        }
+
+    }
+
+
+
+
+
+
+
     //获取考场接口
     public function getRoomList(Request $request){
         $this->validate($request,[
             'station_name'=>'sometimes',
-//            'id'=>'required',
+            'id'=>'required',
+//            'type'=>'required',
+//            'draft_id'=>'required'
         ]);
         $name = $request->get('station_name');
-
         $id = $request->get('id');
-        $roomModel = new Room();
-        $roomData = $roomModel -> showRoomList($keyword = '', $type = '0', $id = '');
 
+        $roomIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('room_id')->toArray();
+        $roomModel = new Room();
+//        $roomData = $roomModel -> showRoomList($keyword = '', $type = '0', $id = '');
+
+        $roomData = $roomModel -> getRoomList($roomIdArray,$name);
         return response()->json(
             $this->success_data($roomData, 1, 'success')
         );
@@ -146,27 +212,27 @@ class ExamArrangeController extends CommonController
     }
 
 
-
     //获取考站接口
     public function getStationList(Request $request){
         $this->validate($request,[
             'station_name'=>'sometimes',
             'id'=>'required',
+//            'type'=>'required',
+//            'draft_id'=>'required'
         ]);
 
         $name = $request->get('station_name');
         $id = $request->get('id');
+
+
         //查询出已用过的考站
-        $stationIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('station_id');
+        $stationIdArray = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get()->pluck('station_id')->toArray();
         $stationModel = new Station();
         $stationData = $stationModel -> showList($stationIdArray,$ajax = true,$name);
-
-//        dd($stationData);
 
         return response()->json(
             $this->success_data($stationData, 1, 'success')
         );
-
         
     }
 
@@ -185,7 +251,6 @@ class ExamArrangeController extends CommonController
             ]);
             $exam_id = intval($request->get('exam_id'));
             $data    = ExamGradation::where('exam_id','=',$exam_id)->get();
-
             return response()->json(
                 $this->success_data($data, 1, 'success')
             );
@@ -272,6 +337,23 @@ class ExamArrangeController extends CommonController
         } catch (\Exception $ex){
             return response()->json($this->fail($ex));
         }
+    }
+
+
+    public function postHandleExamDraft(Request $request){
+        $this->validate($request,[
+            'id'        => 'sometime',
+            'stage'     => 'sometime',      //阶段
+            'subject'   => 'sometime',      //考试项目
+            'station'   => 'sometime',      //考站
+            'room'      => 'sometime',      //考场
+            'chioce'    => 'sometime',      //选考
+        ]);
+
+        $param = $request->only(['id','stage','subject','station','room','chioce']);
+
+
+
     }
 
 }

@@ -790,7 +790,10 @@ class ExamController extends CommonController
         ]);
 
         try {
+
             $id = $request->get('id');
+            // todo  清空考试安排临时表
+            
             //通过id找到对应的模式
             $examMode = Exam::findOrFail($id)->sequence_mode;
             switch ($examMode) {
