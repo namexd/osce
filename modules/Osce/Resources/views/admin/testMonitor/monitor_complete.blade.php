@@ -64,21 +64,26 @@
                         </tr>
                         </thead>
                         <tbody class="subjectBody">
+                        @if(!empty($list)&& count($list)>0)
+                            @foreach($list as $key=>$val )
                             <tr>
-                                <td>1</td>
-                                <td>张三</td>
-                                <td>SF1986</td>
-                                <td>SF1986</td>
-                                <td>510821199008300065</td>
-                                <td>123456789123</td>
-                                <td>{{--{{route('osce.admin.course.getResultVideo')}}?exam_id={{$val['exam_id']}}&student_id={{$val['student_id']}}&station_id={{$val['station_id']}}--}}
-                                    <a href="javascript:void(0)">
+                                <td>{{$key+1}}</td>
+                                <td>{{$val['name']}}</td>
+                                <td>{{$val['code']}}</td>
+                                <td>{{$val['exam_sequence']}}</td>
+                                <td>{{$val['idcard']}}</td>
+                                <td>{{$val['mobile']}}</td>
+                                <td>{{----}}
+                                    <a href="{{route('osce.admin.course.getResultVideo')}}?exam_id={{$val['exam_id']}}&student_id={{$val['student_id']}}&station_id={{$val['station_id']}}">
                                         <span class="state1 abandon">
                                             <i class="fa fa-video-camera fa-2x"></i>
                                         </span>
                                     </a>
                                 </td>
                             </tr>
+                            @endforeach
+                         @endif
+
                         </tbody>
                     </table>
                 </div>
