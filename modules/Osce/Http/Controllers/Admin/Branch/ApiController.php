@@ -558,8 +558,8 @@ class ApiController extends CommonController
         if(count($examingDO) > 0){
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-
-            
+            echo $user->id;
+            echo $examingDO->id;
             dd($userInfo);
             $Student = new Student();
             $examing = $Student->getExamings($userInfo->id);
