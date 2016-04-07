@@ -14,7 +14,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'station_assignment','stationAdd':'{{route('osce.admin.ExamArrange.postAddExamFlow')}}','exam_item':'{{route('osce.admin.exam-arrange.getAllSubjects')}}','station_stage':'{{route('osce.admin.exam-arrange.getAllGradations')}}','station_list':'{{route('osce.admin.ExamArrange.getStationList')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'station_assignment','stationAdd':'{{route('osce.admin.ExamArrange.postAddExamFlow')}}','exam_item':'{{route('osce.admin.exam-arrange.getAllSubjects')}}','exam_stage':'{{route('osce.admin.exam-arrange.getAllGradations',['exam_id'=>$id])}}','station_list':'{{route('osce.admin.ExamArrange.getStationList',['id'=>$id])}}','room_list':'{{route('osce.admin.ExamArrange.getRoomList',['id'=>$id])}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
