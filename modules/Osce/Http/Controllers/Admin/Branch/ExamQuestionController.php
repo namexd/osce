@@ -132,11 +132,11 @@ class ExamQuestionController extends CommonController
             $status = 1;
             $file   =   $request->file('file');
             $oldfileName = $file->getClientOriginalName();//获取上传图片的名称
-            $type = substr($oldfileName, strrpos($oldfileName,'.'));//图片格式
+           /* $type = substr($oldfileName, strrpos($oldfileName,'.'));//图片格式
             $arr = array('.jpg','.jpeg',".png");
             if(!in_array($type,$arr)){
                 $status = 0;
-            }
+            }*/
             if($status){
                 //$path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
                 $path   =   'osce/question/'.date('Y-m-d').'/';
