@@ -130,8 +130,8 @@ class ExamArrangeController extends CommonController
             }
             $data=[
                 'exam_id'=>$examId,
-                'old_draft_flow_id'=>$request->get('old_draft_flow_id'),
-                'old_draft_id'=>$request->get('old_draft_id'),
+                'old_draft_flow_id'=>$request->get('flow_id'),
+//                'old_draft_id'=>$request->get('draft_id'),
                 'user_id'=>$user->id,
                 'subject_id'=>'',
                 'station_id'=>'',
