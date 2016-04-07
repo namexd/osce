@@ -33,7 +33,6 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 use DB;
 use Modules\Osce\Repositories\Common;
-use Illuminate\Support\Facades\Redis;
 
 class DrawlotsController extends CommonController
 {
@@ -93,9 +92,6 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-        $redis = Redis::connection('message');
-        $infos = md5($_SERVER['HTTP_HOST']);
-
         try {
             //首先得到登陆者id
             $id = $request->input('id');
@@ -105,8 +101,7 @@ class DrawlotsController extends CommonController
             $exam = Exam::doingExam($examId);
 
             if (is_null($exam)) {
-                //throw new \Exception('今天没有正在进行的考试', -50);
-                $redis->publish($infos, json_encode(['message' => '今天没有正在进行的考试','code'=>-50]));
+                throw new \Exception('今天没有正在进行的考试', -50);
             }
 
             $examinee = new Examinee($exam, ['id' => $id]);
@@ -120,8 +115,7 @@ class DrawlotsController extends CommonController
                     $students = $examinee->examinee();
                     break;
                 default:
-                    $redis->publish($infos, json_encode(['message' => '当前没有这种考试模式']));
-                    //throw new \Exception('当前没有这种考试模式！');
+                    throw new \Exception('当前没有这种考试模式！');
                     break;
             }
 
@@ -129,12 +123,9 @@ class DrawlotsController extends CommonController
                 unset($student['blocking']);
             }
 
-
-            $redis->publish($infos, json_encode(['data' => $students]));
-            //return response()->json($this->success_data($students));
+            return response()->json($this->success_data($students));
         } catch (\Exception $ex) {
-            //return response()->json($this->fail($ex));
-            $redis->publish($infos, json_encode(['message' => $ex]));
+            return response()->json($this->fail($ex));
         }
     }
 
@@ -162,17 +153,13 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-        $redis = Redis::connection('message');
-        $infos = md5($_SERVER['HTTP_HOST']);
-
         try {
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
-                $redis->publish($infos, json_encode(['message' => '当前没有正在进行的考试','code'=>3000]));
-                //throw new \Exception('当前没有正在进行的考试', 3000);
+                throw new \Exception('当前没有正在进行的考试', 3000);
             }
             $examId = $exam->id;
 
@@ -187,8 +174,7 @@ class DrawlotsController extends CommonController
                     $students = $examinee->nextExaminee();
                     break;
                 default:
-                    $redis->publish($infos, json_encode(['message' => '当前没有这种考试模式!']));
-                    //throw new \Exception('当前没有这种考试模式！');
+                    throw new \Exception('当前没有这种考试模式！');
                     break;
             }
 
@@ -212,10 +198,9 @@ class DrawlotsController extends CommonController
 
             //从集合中移除blocking
             $students->forget('blocking');
-            //return response()->json($this->success_data($students));
-            $redis->publish($infos, json_encode(['data' => $students]));
+            return response()->json($this->success_data($students));
         } catch (\Exception $ex) {
-            $redis->publish($infos, json_encode(['message' => $ex]));
+            return response()->json($this->fail($ex));
         }
     }
 
@@ -241,10 +226,6 @@ class DrawlotsController extends CommonController
     {
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
-
-        $redis = Redis::connection('message');
-        $infos = md5($_SERVER['HTTP_HOST']);
-
         try {
             //验证
             $this->validate($request, [
@@ -260,29 +241,25 @@ class DrawlotsController extends CommonController
             //根据uid查到对应的腕表编号
             $watch = Watch::where('code', $uid)->first();
             if (is_null($watch)) {
-                $redis->publish($infos, json_encode(['message' => '没有找到对应的腕表信息','code'=>3100]));
-                //throw new \Exception('没有找到对应的腕表信息！', 3100);
+                throw new \Exception('没有找到对应的腕表信息！', 3100);
             }
 
             //获取腕表记录实例
             $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
             if (!$watchLog) {
-                $redis->publish($infos, json_encode(['message' => '没有找到学生对应的腕表信息','code'=>3200]));
-                //throw new \Exception('没有找到学生对应的腕表信息！', 3200);
+                throw new \Exception('没有找到学生对应的腕表信息！', 3200);
             }
 
             //获取腕表对应的学生实例
             if (!$student = $watchLog->student) {
-                $redis->publish($infos, json_encode(['message' => '没有找到对应的学生信息','code'=>3300]));
-                //throw new \Exception('没有找到对应的学生信息！', 3300);
+                throw new \Exception('没有找到对应的学生信息！', 3300);
             }
 
 //            //判断当前学生是否在当前小组中
             $exam = Exam::where('status', 1)->first();
             if (is_null($exam)) {
-                $redis->publish($infos, json_encode(['message' => '当前没有正在进行的考试','code'=>3000]));
-                //throw new \Exception('当前没有正在进行的考试', 3000);
+                throw new \Exception('当前没有正在进行的考试', 3000);
             }
 //            $examId = $exam->id;
 //            list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
@@ -334,22 +311,19 @@ class DrawlotsController extends CommonController
                     $result = $model->drawlots();
                     break;
                 default:
-                    $redis->publish($infos, json_encode(['message' => '当前没有这种考试模式']));
-                    //throw new \Exception('当前没有这种考试模式');
+                    throw new \Exception('当前没有这种考试模式');
                     break;
             }
 
             //判断时间
             $this->judgeTime($watchLog->student_id);
             $connection->commit();
-            //return response()->json($this->success_data($result));
-            $redis->publish($infos, json_encode(['data' => $result]));
+            return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
             $connection->rollBack();
-
-            $redis->publish($infos, json_encode(['message' => $ex]));
-            //return response()->json($this->fail($ex));
+            
+            return response()->json($this->fail($ex));
         }
     }
 

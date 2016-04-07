@@ -378,9 +378,6 @@ class PadController extends  CommonController{
             'user_id' => 'required|integer'
         ]);
 
-        $redis = Redis::connection('message');
-        $infos = md5($_SERVER['HTTP_HOST']);
-
         try {
             //获取当前的服务器时间
             $date = date('Y-m-d H:i:s');
@@ -395,16 +392,14 @@ class PadController extends  CommonController{
             //将该条信息的首位置零
             $queue->stick = null;
             if (!$queue->save()) {
-                $redis->publish($infos, json_encode(['message' => '结束考试失败','code'=>-10]));
-                //throw new \Exception('结束考试失败', -10);
+                throw new \Exception('结束考试失败', -10);
             }
 
-            $redis->publish($infos, json_encode(['data'=>[$date,$queue->exam_screening_id]]));
-            //return response()->json($this->success_data([$date,$queue->exam_screening_id]));
+
+            return response()->json($this->success_data([$date,$queue->exam_screening_id]));
         } catch (\Exception $ex) {
             \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
-            //return response()->json($this->fail($ex));
-            $redis->publish($infos, json_encode(['message' => $ex]));
+            return response()->json($this->fail($ex));
         }
     }
 
