@@ -41,12 +41,16 @@ class ExamArrangeController extends CommonController
                 'exam_id' => 'required',
                 'name' => 'required',
                 'order' => 'required',
-//                'exam_gradation_id'=>'sometime'  //阶段
+                'exam_gradation_id'=>'sometimes' , //阶段
+                'type'=>'sometimes',
             ]);
             $examId = $request->get('exam_id');
             $name = $request->get('name');
             $order = $request->get('order');
             $examGradationId = $request->get('exam_gradation_id');
+            $type = $request->get('type');
+
+
             //判断操作人是否一致
 
             //获取当前操作信息
@@ -58,18 +62,46 @@ class ExamArrangeController extends CommonController
                 'exam_id' => $examId,
                 'name' => $name,
                 'order' => $order,
-                'exam_gradation_id' => $examGradationId,
-                'ctrl_type' => 1,
+                'exam_gradation_id' => null,
+                'old_draft_flow_id' =>null,
+                'user_id' => $user->id,
+                'ctrl_type' =>$type ,
             ];
+            if(!is_null($examGradationId)){
+            $data['exam_gradation_id']=$examGradationId;
+            }
+            if($request->get('flow_id')){
+                $data['old_draft_flow_id']=$request->get('flow_id');
+            }
+
+
+            
             //先保存到临时表
             $result = ExamDraftFlowTemp::create($data);
+
+
             if ($result) {
                 //新增一条空的考站的子站数据
+
+                if($type==2){
+                    return response()->json(
+                        $this->success_data($result->id, 1, 'success')
+                    );
+                }
+
+                if($type==3){
+                    return response()->json(
+                        $this->success_data($result->id, 1, 'success')
+                    );
+                }
+
+
+
                 $DraftData = [
                     'exam_id' => $examId,
                     'old_draft_flow_id' => $result->id,
-                    'ctrl_type' => 1,
-                    'used' => 1,
+                    'ctrl_type' => 4,
+                    'used' => 0,
                     'user_id' => $user->id,
                 ];
                 $DraftResult = ExamDraftTemp::create($DraftData);
