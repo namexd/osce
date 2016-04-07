@@ -553,7 +553,7 @@ class ApiController extends CommonController
         $user = Auth::user();
         //查找当前正在进行的考试--之后会改
         $examingDO = Exam::where('status','=',1)->first();
-
+        //dd($user);
         if(count($examingDO) > 0){
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
@@ -569,12 +569,10 @@ class ApiController extends CommonController
             $examData = array();
             $StationTeacher = new StationTeacher();
             $ExamPaperExamStation = new ExamPaperExamStation();
-
+            //dd($examing);
             foreach($examing as $key=>$v){
                     $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
                     $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
-                //dd($v['id']);
-                //echo $v['id'];
                     $examData[$key]['station_id'] = $v['station_id'];
                     $examData[$key]['teacher_id'] = $stationTeacher->user_id;
                     $examData[$key]['student_id'] = $userInfo->id;
@@ -586,7 +584,7 @@ class ApiController extends CommonController
             }
         }
 
-
+//dd($examData);
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData
