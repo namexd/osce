@@ -559,13 +559,13 @@ class ApiController extends CommonController
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
 
-            $ExamScreeningStudent = new ExamScreeningStudent();
-            $examing = $ExamScreeningStudent->getExamings($userInfo->id);
+            $Student = new Student();
+            $examing = $Student->getExamings($userInfo->id);
 
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
-            //dd($examing);
+
             //整理考试数据
             $examData = array();
             $StationTeacher = new StationTeacher();
