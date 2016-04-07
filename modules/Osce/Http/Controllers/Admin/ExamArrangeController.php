@@ -11,6 +11,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\ExamDraft;
+use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamDraftFlowTemp;
 use Modules\Osce\Entities\ExamDraftTemp;
 use Modules\Osce\Entities\ExamGradation;
@@ -39,7 +41,7 @@ class ExamArrangeController extends CommonController
                 'exam_id'=>'required',
                 'name'=>'required',
                 'order'=>'required',
-//                'exam_gradation_id'=>''  //阶段
+//                'exam_gradation_id'=>'sometime'  //阶段
             ]);
             $examId = $request->get('exam_id');
             $name = $request->get('name');
@@ -384,7 +386,7 @@ class ExamArrangeController extends CommonController
 
 
     /**
-     * 保存编辑考试基本信息
+     * 考官安排着陆页
      * @url GET /osce/admin/exam-arrange/invigilate-arrange
      * @access public
      *
@@ -407,9 +409,31 @@ class ExamArrangeController extends CommonController
         ]);
 
         //获得exam_id
-        $id = $request->input('id');
-        $data = [];
-        return view('osce::admin.examManage.examiner_manage', ['id'=>$id, 'data' => $data]);
+        $exam_id = $request->input('id');
+        $data    = [];
+        return view('osce::admin.examManage.examiner_manage', ['id'=>$exam_id, 'data' => $data]);
+    }
+
+    /**
+     * 保存考官安排数据
+     * @param Request $request
+     * @return mixed
+     */
+    public function postInvigilateArrange(Request $request){
+        try{
+            //验证
+            $this->validate($request, [
+                'id' => 'required|integer'
+            ]);
+
+            //获得exam_id
+            $exam_id = $request->input('id');
+
+            return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange',['id'=>$exam_id]);
+
+        } catch (\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
@@ -457,15 +481,83 @@ class ExamArrangeController extends CommonController
 
     public function postHandleExamDraft(Request $request){
         $this->validate($request,[
-            'id'        => 'sometime',
-            'stage'     => 'sometime',      //阶段
-            'subject'   => 'sometime',      //考试项目
-            'station'   => 'sometime',      //考站
-            'room'      => 'sometime',      //考场
-            'chioce'    => 'sometime',      //选考
+            'id'        => 'required',
         ]);
 
-        $param = $request->only(['id','stage','subject','station','room','chioce']);
+        $exam_id    = $request->get('id');
+        $draftFlows = ExamDraftFlowTemp::where('exam_id','=',$exam_id)->orderBy('created_at')->get();
+        $drafts     = ExamDraftTemp::where('exam_id','=',$exam_id)->orderBy('created_at')->get();
+
+        $datas = [];
+        foreach ($draftFlows as $draftFlow) {
+            $datas[strtotime($draftFlow->created_dt)] = [
+                'ctrl_type'         => $draftFlow->ctrl_type,
+                'order'             => $draftFlow->order,
+                'name'              => $draftFlow->name,
+                'exam_screening_id' => $draftFlow->exam_screening_id,
+                'exam_gradation_id' => $draftFlow->exam_gradation_id,
+                'exam_id'           => $draftFlow->exam_id,
+                'is_draft_flow'     => 1
+            ];
+        }
+
+        foreach ($drafts as  $draft) {
+            $datas[strtotime($draft->created_dt)] = [
+                'ctrl_type'         => $draft->ctrl_type,
+                'station_id'        => $draft->station_id,
+                'room_id'           => $draft->room_id,
+                'exam_draft_flow_id'=> $draft->exam_draft_flow_id,
+                'subject_id'        => $draft->subject_id,
+                'effected'          => $draft->effected,
+                'is_draft_flow'     => 0
+            ];
+        }
+
+        $datas = ksort($datas);     //数组按时间（键）进行排序
+
+        foreach ($datas as $data) {
+            //操作大表
+            if($data['is_draft_flow'] ==1){
+                switch ($data['ctrl_type']){
+                    case 1 : if(!ExamDraftFlow::create($data)){                     //增
+                                 throw new \Exception('添加失败！');
+                             }
+                        break;
+                    case 2 : if(!ExamDraftFlow::create($data)){                     //删
+                                 throw new \Exception('添加失败！');
+                             }
+                        break;
+                    case 3 :                                                        //删
+                        break;
+                    case 4 :
+                        break;
+                    case 5 :
+                        break;
+                    default: throw new \Exception('操作有误！');
+                }
+
+            //操作小表
+            }else{
+                switch ($data['ctrl_type']){
+                    case 1 : if(!ExamDraft::create($data)){                     //增
+                                throw new \Exception('添加失败！');
+                             }
+                        break;
+                    case 2 :
+                        break;
+                    case 3 :
+                        break;
+                    case 4 :
+                        break;
+                    case 5 :
+                        break;
+                    default: throw new \Exception('操作有误！');
+                }
+            }
+        }
+
+
+
 
 
 

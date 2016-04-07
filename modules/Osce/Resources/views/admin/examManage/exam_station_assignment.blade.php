@@ -48,21 +48,21 @@
                             <div class="station-container" index="0">
                             
                                 <!-- 一个考站dom -->
-                                <!-- <div class="form-group">
+                                <div class="form-group">
                                     <label class="col-sm-2 control-label">&nbsp;</label>
                                     <div class="col-sm-10">
                                         <div class="row">
                                             <div class="col-sm-4"><label class="control-label">考站1</label></div>
                                             <div class="col-sm-6">
                                                     <label class="control-label col-sm-2">阶段：</label>
-                                                    <select class="form-control col-sm-10" style="width: 381px;"></select>
+                                                    <select class="form-control col-sm-10 select-stage" style="width: 381px;" type="2"></select>
                                             </div>
                                             <div class="col-sm-2">
                                                 <a class="btn btn-primary" href="javascript:void(0)">必考</a>
                                                 <a  href="javascript:void(0)" class="btn btn-primary" id="del-station" style="float: right;">删除</a>
                                             </div>
                                         </div>
-                                        <table class="table table-bordered" id="examroom">
+                                        <table class="table table-bordered" station-id="23">
                                             <thead>
                                                 <tr>
                                                     <td>考试项目</td>
@@ -73,23 +73,22 @@
                                                     <td>操作</td>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td>4</td>
-                                                    <td>5</td>
-                                                    <td>6</td>
-                                                    <td>8</td>
+                                            <tbody index="1">
+                                                <tr class="item-id-test" item-id="233">
+                                                    <td type="2"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>
+                                                    <td type="2"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>
+                                                    <td type="2"></td>
+                                                    <td type="2"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>
+                                                    <td type="2"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>
                                                     <td>
-
                                                         <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>
                                                         <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
                                                     </td>
-                                                </tr>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
 
                             <!-- 新增考站 -->

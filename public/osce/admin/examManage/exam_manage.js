@@ -1313,6 +1313,7 @@ function exam_basic_info(){
                     for(var i=1;i<=checkbox_num;i++) {
                         checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                     }
+
                     var html =  checkbox_number;
                     //记录计数
                     $('#add-basic').find('select').append(html);
@@ -3979,6 +3980,181 @@ function station_assignment(){
     var stationName = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
     /**
+     * 初始化
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-07
+     */
+    var data = [
+    {
+        station_id:12,
+        station_name:'第四考站',
+        item: [
+        {
+            draft_id:1,
+            exam_id:9,
+            exam_name:'罚款',
+            station_item_id:70,
+            station_item_name:'fjdksajf',
+            teacher_id:8,
+            teacher_name:'款手机阿',
+            choice_id:1,
+            choice_name:'必考'
+        },
+        {
+            draft_id:2,
+            exam_id:9,
+            exam_name:'罚款',
+            station_item_id:70,
+            station_item_name:'fjdksajf',
+            teacher_id:8,
+            teacher_name:'款手机阿',
+            choice_id:2,
+            choice_name:'选考'
+        }
+        ]
+    },
+    {
+        station_id:12,
+        station_name:'第四考站',
+        item: [
+        {
+            draft_id:1,
+            exam_id:9,
+            exam_name:'罚款',
+            station_item_id:70,
+            station_item_name:'fjdksajf',
+            teacher_id:8,
+            teacher_name:'款手机阿',
+            choice_id:1,
+            choice_name:'必考'
+        },
+        {
+            draft_id:2,
+            exam_id:9,
+            exam_name:'罚款',
+            station_item_id:70,
+            station_item_name:'fjdksajf',
+            teacher_id:8,
+            teacher_name:'款手机阿',
+            choice_id:2,
+            choice_name:'选考'
+        }
+        ]
+    }
+    ]
+
+    function InitData(data) {
+
+        var html = '';
+        var arr = [];
+
+        for(var i in data) {
+            //记录dom结构
+            var str = '';
+            for(var j in data[i].item) {
+                str += '<tr class="item-id-'+j+'" item-id="'+data[i].item[j].draft_id+'">'+
+                                '<td type="2"><select class="form-control exam-item"><option selected="selected" value="'+data[i].item[j].exam_id+'">'+data[i].item[j].exam_name+'</option></select></td>'+
+                                '<td type="2"><select class="form-control exam-station"><option selected="selected" value="'+data[i].item[j].station_item_id+'">'+data[i].item[j].station_item_name+'</option></select></td>'+
+                                '<td type="2"></td>'+
+                                '<td type="2"><select class="form-control station-belong"><option selected="selected" value="'+data[i].item[j].teacher_id+'">'+data[i].item[j].teacher_name+'</option></select></td>'+
+                                '<td type="2"><select class="form-control station-chioce"><option selected="selected" value="'+data[i].item[j].choice_id+'">'+data[i].item[j].choice_name+'</option></select></td>'+
+                                '<td>'+
+                                    '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                                    '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                '</td>'+
+                            '</tr>';
+                
+                //存储select2 class
+                arr.push({table:'.table-id-'+i, tr:'.item-id-'+j});
+            }
+
+
+            //一个站的dom结构
+            html += '<div class="form-group">'+
+                        '<label class="col-sm-2 control-label">&nbsp;</label>'+
+                        '<div class="col-sm-10">'+
+                            '<div class="row">'+
+                                '<div class="col-sm-4"><label class="control-label">'+data[i].station_name+'</label></div>'+
+                                '<div class="col-sm-6">'+
+                                        '<label class="control-label col-sm-2">阶段：</label>'+
+                                        '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="2">'+exam_stage_str+'</select>'+
+                                '</div>'+
+                                '<div class="col-sm-2">'+
+                                    '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
+                                    '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
+                                '</div>'+
+                            '</div>'+
+                            '<table class="table table-bordered table-id-'+i+'" station-id="'+data[i].station_id+'">'+
+                                '<thead>'+
+                                    '<tr>'+
+                                        '<td>考试项目</td>'+
+                                        '<td>考站</td>'+
+                                        '<td>考站类型</td>'+
+                                        '<td>所属考场</td>'+
+                                        '<td>必考&选考</td>'+
+                                        '<td>操作</td>'+
+                                    '</tr>'+
+                                '</thead>'+
+                                '<tbody index="'+j+'">'+str+'</tbody>'+
+                            '</table>'+
+                        '</div>'+
+                    '</div>';
+        }
+        $('.station-container').html(html);
+        $('.station-container').attr('index',data.length);
+
+        //触发select2
+        for(var i in arr) {
+            select2Init($(arr[i].table).find(arr[i].tr));
+        }
+    }
+
+    InitData(data);
+
+    
+    //阶段列表
+    var exam_stage_str = '';
+    $.ajax({
+        type: 'get',
+        async: false,
+        url: pars.exam_stage,
+        success: function(res) {
+            var data = res.data;
+
+            for(var i in data) {
+                var str = data[i].order - 1;
+                exam_stage_str += '<option value="'+data[i].order+'">阶段'+stationName[str]+'</option>';
+            }
+        }
+    });
+    //插入dom
+    $('.select-stage').html(exam_stage_str);
+
+    //阶段选择
+    $('.station-container').on('change', '.select-stage', function() {
+        //考站dom
+        var $that = $(this).parent().parent().parent().parent();
+
+        $.ajax({
+            type:'get',
+            url: 'http://127.0.0.1:3000/getdata',
+            dataType: 'jsonp',
+            jsonp: 'callback',
+            data: {station_id:$that.find('table').attr('station-id'),type:$(this).attr('type'),data: $(this).val()},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('新增失败！',{skin:'msg-error',icon:1});
+                } else {
+                    return true;
+                }
+            }
+        });
+    });
+
+    select2Init($('.item-id-test'));
+
+    /**
      * 新建一个考站
      * @author mao
      * @version 3.3
@@ -4035,14 +4211,14 @@ function station_assignment(){
                                         '<div class="col-sm-4"><label class="control-label">第'+stationName[index]+'站</label></div>'+
                                         '<div class="col-sm-6">'+
                                                 '<label class="control-label col-sm-2">阶段：</label>'+
-                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;">'+exam_stage_str+'</select>'+
+                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+exam_stage_str+'</select>'+
                                         '</div>'+
                                         '<div class="col-sm-2">'+
                                             '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<table class="table table-bordered table-id-'+index+'" stationId="'+res.data.stationId+'">'+
+                                    '<table class="table table-bordered table-id-'+index+'" station-id="'+res.data.id+'">'+
                                         '<thead>'+
                                             '<tr>'+
                                                 '<td>考试项目</td>'+
@@ -4054,13 +4230,13 @@ function station_assignment(){
                                             '</tr>'+
                                         '</thead>'+
                                         '<tbody index="'+index+'">'+
-                                            '<tr class="item-id-'+index+'" itemId="'+res.data.itemId+'">'+
-                                                '<td type="1"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                                                '<td type="1"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                                                '<td type="1"></td>'+
-                                                '<td type="1"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                                '<td type="1"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
-                                                '<td type="1">'+
+                                            '<tr class="item-id-'+index+'" item-id="'+res.data.draft_id+'">'+
+                                                '<td type="3"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                                                '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
+                                                '<td type="3"></td>'+
+                                                '<td type="3"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
+                                                '<td type="3"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                                                '<td>'+
                                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
                                                 '</td>'+
@@ -4075,7 +4251,7 @@ function station_assignment(){
                     $('.station-container').attr('index',index + 1);
                     $('.station-container').find('.item-id-'+index).attr('index',index + 1);
                     //初始化select2
-                    select2Init($('.station-container').find('.item-id-'+index));
+                    select2Init($('.station-container').find('.table-id-'+index).find('.item-id-'+index));
                 }
             }
         });
@@ -4094,7 +4270,23 @@ function station_assignment(){
      */
     $('.station-container').on('click', '.del-station', function() {
         //删除dom
-        $(this).parent().parent().parent().parent().remove();
+        var $that = $(this).parent().parent().parent().parent();
+
+        $.ajax({
+            type:'get',
+            url: 'http://127.0.0.1:3000/getdata',
+            dataType: 'jsonp',
+            jsonp: 'callback',
+            data: {station_id:$that.find('table').attr('station-id'),type:5},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('新增失败！',{skin:'msg-error',icon:1});
+                } else {
+                    $that.remove();
+                    $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
+                }
+            }
+        });
     });
 
     /**
@@ -4105,25 +4297,42 @@ function station_assignment(){
      */
     $('.station-container').on('click', '.fa-plus', function() {
         var html = '',
-            index = parseInt($('.station-container').find('.table-id-'+index).attr('index')) + 1;
+            $that = $(this).parent().parent().parent().parent().parent(),
+            index = parseInt($that.attr('index')) + 1;
 
-        html += '<tr class="item-id-'+index+'">'+
-                    '<td type="1"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                    '<td type="1"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                    '<td type="1"></td>'+
-                    '<td type="1"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                    '<td type="1"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
-                    '<td type="1">'+
-                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                        '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                    '</td>'+
-                '</tr>';
 
-        //插入dom
-        $(this).parent().parent().parent().parent().parent().parent().append(html);
-        $(this).parent().parent().parent().parent().parent().parent().parent().attr('index',index);
-        //select2初始化
-        select2Init($(this).parent().parent().parent().parent().parent())
+        $.ajax({
+            type:'get',
+            url: 'http://127.0.0.1:3000/getdata',
+            dataType: 'jsonp',
+            jsonp: 'callback',
+            data: {station_id:$that.parent().attr('station-id'),type:4},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('新增失败！',{skin:'msg-error',icon:1});
+                } else {
+                    html += '<tr class="item-id-'+index+'" item-id="'+res.data.id+'">'+
+                                '<td type="3"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                                '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
+                                '<td type="3"></td>'+
+                                '<td type="3"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
+                                '<td type="3"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                                '<td>'+
+                                    '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                                    '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                '</td>'+
+                            '</tr>';
+
+                    //插入dom
+                    $that.append(html);
+                    $that.attr('index',index);
+                    //select2初始化
+                    select2Init($that.find('.item-id-'+index));
+                }
+            }
+        });
+
+        
     });
 
     /**
@@ -4134,7 +4343,23 @@ function station_assignment(){
      */
     $('.station-container').on('click', '.fa-trash-o', function() {
         //删除dom
-        $(this).parent().parent().parent().parent().remove();
+        var $that = $(this).parent().parent().parent().parent();
+
+        $.ajax({
+            type:'get',
+            url: 'http://127.0.0.1:3000/getdata',
+            dataType: 'jsonp',
+            jsonp: 'callback',
+            data: {station_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:5},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('新增失败！',{skin:'msg-error',icon:1});
+                } else {
+                    $that.remove();
+                }
+            }
+        });
+
     });
 
     /**
@@ -4172,25 +4397,24 @@ function station_assignment(){
         //数据更新，交互数据
         }).on('select2:select', function(e) {
             //新增页面
-            //layer.open();
+            //layer.open(); 
 
             //请求数据
             var req = {
                 type:$elem.find('.exam-item').parent().attr('type'),
-                id:$elem.attr('itemId'),
-                station_id:$elem.parent().parent().attr('stationId'),
+                draft_id:$elem.attr('item-id'),
+                station_id:$elem.parent().parent().attr('station-id'),
                 data:e.params.data.id
             };
 
             $.ajax({
                 type:'get',
-                url: '', //'http://127.0.0.1:3000/stationList',
+                url: 'http://127.0.0.1:3000/stationList',
                 data:req,
+                dataType: 'jsonp',
+                jsonp: 'callback',
                 success: function(res) {
-                    //更改type值
-                    if($elem.find('.exam-item').parent().attr('type')==1) {
-                        $elem.find('.exam-item').parent().attr('type',3);
-                    }   
+                    return true;   
                 }
             })
         });
@@ -4205,62 +4429,6 @@ function station_assignment(){
                 data:function(param) {
                     return {
                         type:$elem.find('.exam-station').parent().attr('type'),
-                        id:$elem.attr('itemId'),
-                        station_id:$elem.parent().parent().attr('stationId')
-                    };
-                },
-                delay: 250,
-                processResults: function (res) {console.log(res)
-
-                    //数据格式化
-                    var str = [];
-                    var data = res.data;
-                    for(var i in data){
-                        str.push({id:data[i].id,text:data[i].name});
-                    }
-
-                    //加载入数据
-                    return {
-                        results: str
-                    };
-                }
-            }
-
-        //数据更新，交互数据
-        }).on('select2:select', function(e) {
-            //请求数据
-            var req = {
-                type:$elem.find('.exam-station').parent().attr('type'),
-                id:$elem.attr('itemId'),
-                station_id:$elem.parent().parent().attr('stationId'),
-                data:e.params.data.id
-            };
-
-            $.ajax({
-                type:'get',
-                url: '', //'http://127.0.0.1:3000/stationList',
-                data:req,
-                success: function(res) {
-                    //更改type值
-                    if($elem.find('.exam-station').parent().attr('type')==1) {
-                        $elem.find('.exam-station').parent().attr('type',3);
-                    }   
-                }
-            })
-        });
-
-        //$elem.find('.station-type').select2();
-
-        //所属考场
-        $elem.find('.station-belong').select2({
-            placeholder:'请选择',
-            tags: true,
-            ajax: {
-                type:'get',
-                url: pars.room_list, //'http://127.0.0.1:3000/stationList',
-                data:function(param) {
-                    return {
-                        type:$elem.find('.station-belong').parent().attr('type'),
                         id:$elem.attr('itemId'),
                         station_id:$elem.parent().parent().attr('stationId')
                     };
@@ -4286,21 +4454,75 @@ function station_assignment(){
         }).on('select2:select', function(e) {
             //请求数据
             var req = {
-                type:$elem.find('.station-belong').parent().attr('type'),
-                id:$elem.attr('itemId'),
-                station_id:$elem.parent().parent().attr('stationId'),
+                type:$elem.find('.exam-station').parent().attr('type'),
+                draft_id:$elem.attr('item-id'),
+                station_id:$elem.parent().parent().attr('station-id'),
                 data:e.params.data.id
             };
 
             $.ajax({
                 type:'get',
-                url: '', //'http://127.0.0.1:3000/stationList',
+                url: 'http://127.0.0.1:3000/stationList',
+                dataType: 'jsonp',
+                jsonp: 'callback',
                 data:req,
                 success: function(res) {
-                    //更改type值
-                    if($elem.find('.station-belong').parent().attr('type')==1) {
-                        $elem.find('.station-belong').parent().attr('type',3);
-                    }   
+                    return true;
+                }
+            })
+        });
+
+        //$elem.find('.station-type').select2();
+
+        //所属考场
+        $elem.find('.station-belong').select2({
+            placeholder:'请选择',
+            tags: true,
+            ajax: {
+                type:'get',
+                url: pars.room_list, //'http://127.0.0.1:3000/stationList',
+                data:function(param) {
+                    return {
+                        type:$elem.find('.station-belong').parent().attr('type'),
+                        draft_id:$elem.attr('item-id'),
+                        station_id:$elem.parent().parent().attr('station-id')
+                    };
+                },
+                delay: 250,
+                processResults: function (res) {
+
+                    //数据格式化
+                    var str = [];
+                    var data = res.data;
+                    for(var i in data){
+                        str.push({id:data[i].id,text:data[i].name});
+                    }
+
+                    //加载入数据
+                    return {
+                        results: str
+                    };
+                }
+            }
+
+        //数据更新，交互数据
+        }).on('select2:select', function(e) {
+            //请求数据
+            var req = {
+                type:$elem.find('.station-belong').parent().attr('type'),
+                draft_id:$elem.attr('item-id'),
+                station_id:$elem.parent().parent().attr('station-id'),
+                data:e.params.data.id
+            };
+
+            $.ajax({
+                type:'get',
+                url: 'http://127.0.0.1:3000/stationList',
+                dataType: 'jsonp',
+                jsonp: 'callback',
+                data:req,
+                success: function(res) {
+                    return true;  
                 }
             })
         });
@@ -4310,14 +4532,16 @@ function station_assignment(){
             //请求数据
             var req = {
                 type:$elem.find('.station-chioce').parent().attr('type'),
-                id:$elem.attr('itemId'),
-                station_id:$elem.parent().parent().attr('stationId'),
+                draft_id:$elem.attr('item-id'),
+                station_id:$elem.parent().parent().attr('station-id'),
                 data: $elem.find('.station-chioce').val()
             };
 
             $.ajax({
                 type:'get',
-                url: '', //'http://127.0.0.1:3000/stationList',
+                url: 'http://127.0.0.1:3000/stationList',
+                dataType: 'jsonp',
+                jsonp: 'callback',
                 data:req,
                 success: function(res) {
                     //更改type值
