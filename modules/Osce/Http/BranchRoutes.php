@@ -193,6 +193,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //终止考试数据交互
         Route::get('exam-control/poststopexam',['uses'=>'ExamControlController@postStopExam','as'=>'osce.admin.ExamControlController.postStopExam']);
 
+        //获取正在考试的视频
+        Route::get('exam-control/getvcrslist',['uses'=>'ExamControlController@getVcrsList','as'=>'osce.admin.ExamControlController.getVcrsList']);
+
 
 
 

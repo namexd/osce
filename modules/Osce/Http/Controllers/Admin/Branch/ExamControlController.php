@@ -127,6 +127,31 @@ class ExamControlController extends CommonController
 
 
 
+    public function getVcrsList(Request $request)
+    {
+        $this->validate($request,[
+            'examId'       => 'required|integer',
+            'stationId'    => 'required|integer',
+        ]);
+        //获取参数
+        $examId    = $request->input('examId');
+        $stationId = $request->input('stationId');
+        $examControlModel = new ExamControl();
+        $vcrInfo    = $examControlModel->getVcrInfo($examId, $stationId);
+        //dd($vcrInfo);
+
+        return view('osce::admin.testMonitor.monitor_test_video', [
+            'data'      =>$vcrInfo,
+        ]);
+
+    }
+
+
+
+
+
+
+
 
 
 

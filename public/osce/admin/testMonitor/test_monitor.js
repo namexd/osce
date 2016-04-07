@@ -50,13 +50,16 @@ function monitor_test(){
     });
     //查看视频
     $(".look").click(function(){
+        var videoUrl = pars.videoUrl;
+        var examId = $(this).attr("examId");
+        var stationId = $(this).attr("stationId");
         layer.open({
             type: 2,
             title: '视频查看',
             area: ['800px', '500px'],
             fix: false, //不固定
             maxmin: true,
-            content: ''
+            content: videoUrl+"?examId="+examId+"&stationId="+stationId
         })
     });
 }
