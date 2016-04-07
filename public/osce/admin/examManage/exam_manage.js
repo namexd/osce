@@ -4044,6 +4044,12 @@ function station_assignment(){
     }
     ]
 
+    /**
+     * 数据渲染
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-07
+     */
     function InitData(data) {
 
         var html = '';
@@ -4109,7 +4115,7 @@ function station_assignment(){
             select2Init($(arr[i].table).find(arr[i].tr));
         }
     }
-
+    //模拟数据触发
     InitData(data);
 
     
@@ -4306,9 +4312,9 @@ function station_assignment(){
 
 
         $.ajax({
-            type:'get',
+            type:'post',
             url: pars.update_data,
-            data: {flow_id:$that.parent().attr('station-id'),type:4},
+            data: {exam_id:(location.href).split('=')[1],flow_id:$that.parent().attr('station-id'),type:4},
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('新增失败！',{skin:'msg-error',icon:1});
@@ -4533,7 +4539,12 @@ function station_assignment(){
 
     }
 
-
+    /**
+     * 保存数据
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-07
+     */
     $('#save').click(function() {
         $.ajax({
             type:'post',

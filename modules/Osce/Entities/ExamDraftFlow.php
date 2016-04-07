@@ -22,9 +22,68 @@ class ExamDraftFlow extends CommonModel
 
 
 
-      public function getExamDraftFlowData($id){
+
+    public function getExamDraftFlowData($id){
+
           $examDraftFlowList=$this->where('exam_id','=',$id)->get();
           return $examDraftFlowList;
 
         }
+
+
+
+    public function handleBigData($data){
+        switch ($data['ctrl_type']){
+            case 1 : $this->bigOne($data);
+                break;
+            case 2 : $this->bigTwo($data);
+                break;
+            case 3 : $this->bigTwo($data);                //删
+                break;
+            case 4 :
+                break;
+            case 5 :
+                break;
+            default: throw new \Exception('操作有误！');
+        }
+    }
+
+    public function bigOne($data){
+        try{
+            $item   = $data['item'];
+            $draftFlowData = [
+                'order'             => $item->order,
+                'name'              => $item->name,
+                'exam_screening_id' => $item->exam_screening_id,
+                'exam_gradation_id' => $item->exam_gradation_id,
+                'exam_id'           => $item->exam_id,
+            ];
+
+            $result = ExamDraftFlow::create($draftFlowData);
+            $item->adasdad = $result->id;
+            if(!$item->save())
+            {
+                throw new \Exception('');
+            }
+
+        } catch (\Exception $ex){
+
+        }
+
+    }
+
+    public function bigTwo($data){
+        $item   = $data['item'];
+        $draftFlowData = [
+            'order'             => $item->order,
+            'name'              => $item->name,
+            'exam_screening_id' => $item->exam_screening_id,
+            'exam_gradation_id' => $item->exam_gradation_id,
+            'exam_id'           => $item->exam_id,
+        ];
+
+        $result = ExamDraftFlow::update($draftFlowData);
+
+
+    }
 }

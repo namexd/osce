@@ -29,4 +29,21 @@ class ExamDraft extends CommonModel
 
 
 
+    public function handleSmallData($data){
+
+        switch ($data['ctrl_type']){
+//            case 1 : $this->smallOne($data);
+//                break;
+//            case 2 : $this->smallTwo($data);
+//                break;
+//            case 3 : $this->smallThree($data);
+//                break;
+//            case 4 : $this->smallOne($data);
+//                break;
+//            case 5 : $this->smallOne($data);
+//                break;
+//            default: throw new \Exception('操作有误！');
+        }
+    }
+
 }
