@@ -21,6 +21,7 @@ use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\TeacherSubject;
 use Modules\Osce\Http\Controllers\CommonController;
+use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
 
 class ExamArrangeController extends CommonController
 {
@@ -41,8 +42,8 @@ class ExamArrangeController extends CommonController
                 'exam_id' => 'required',
                 'name' => 'required',
                 'order' => 'required',
-                'exam_gradation_id'=>'sometimes' , //阶段
-                'type'=>'sometimes',
+                'exam_gradation_id' => 'sometimes', //阶段
+                'type' => 'sometimes',
             ]);
             $examId = $request->get('exam_id');
             $name = $request->get('name');
@@ -63,19 +64,16 @@ class ExamArrangeController extends CommonController
                 'name' => $name,
                 'order' => $order,
                 'exam_gradation_id' => null,
-                'old_draft_flow_id' =>null,
+                'old_draft_flow_id' => null,
                 'user_id' => $user->id,
-                'ctrl_type' =>$type ,
+                'ctrl_type' => $type,
             ];
-            if(!is_null($examGradationId)){
-            $data['exam_gradation_id']=$examGradationId;
+            if (!is_null($examGradationId)) {
+                $data['exam_gradation_id'] = $examGradationId;
             }
-            if($request->get('flow_id')){
-                $data['old_draft_flow_id']=$request->get('flow_id');
+            if ($request->get('flow_id')) {
+                $data['old_draft_flow_id'] = $request->get('flow_id');
             }
-
-
-
 
 
             //先保存到临时表
@@ -85,18 +83,17 @@ class ExamArrangeController extends CommonController
             if ($result) {
                 //新增一条空的考站的子站数据
 
-                if($type==2){
+                if ($type == 2) {
                     return response()->json(
                         $this->success_data($result->id, 1, 'success')
                     );
                 }
 
-                if($type==3){
+                if ($type == 3) {
                     return response()->json(
                         $this->success_data($result->id, 1, 'success')
                     );
                 }
-
 
 
                 $DraftData = [
@@ -525,29 +522,30 @@ class ExamArrangeController extends CommonController
      * @author Zhoufuxiang 2016-4-7
      * @throws \Exception
      */
-    public function postSubmit(Request $request){
-        $this->validate($request,[
-            'id'    => 'required',
+    public function postSubmit(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required',
         ]);
 
-        $exam_id    = $request->get('id');
+        $exam_id = $request->get('id');
         //获取所有临时数据
-        $draftFlows = ExamDraftFlowTemp::where('exam_id','=',$exam_id)->orderBy('created_at')->get();
-        $drafts     = ExamDraftTemp::where('exam_id','=',$exam_id)->orderBy('created_at')->get();
+        $draftFlows = ExamDraftFlowTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
+        $drafts = ExamDraftTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
 
 
         //所有临时数据 组合
         $datas = [];
         foreach ($draftFlows as $draftFlow) {
             $datas[strtotime($draftFlow->created_dt)] = [
-                'item'          => $draftFlow,
+                'item' => $draftFlow,
                 'is_draft_flow' => 1
             ];
         }
 
-        foreach ($drafts as  $draft) {
-            $datas[strtotime($draft->created_dt)]   =   [
-                'item'          => $draft,
+        foreach ($drafts as $draft) {
+            $datas[strtotime($draft->created_dt)] = [
+                'item' => $draft,
                 'is_draft_flow' => 0
             ];
         }
@@ -556,14 +554,14 @@ class ExamArrangeController extends CommonController
 
         foreach ($datas as $data) {
             //操作大表
-            if($data['is_draft_flow'] ==1){
-                $model  = new ExamDraftFlow();
+            if ($data['is_draft_flow'] == 1) {
+                $model = new ExamDraftFlow();
                 $result = $model->handleBigData($data);
-                
 
-            //操作小表
-            }else{
-                $model  = new ExamDraft();
+
+                //操作小表
+            } else {
+                $model = new ExamDraft();
                 $result = $model->handleSmallData($data);
             }
         }
@@ -578,24 +576,41 @@ class ExamArrangeController extends CommonController
      */
     public function getExamArrange(Request $request)
     {
-      
+
         $this->validate($request, [
             'exam_id' => 'required|integer',
         ]);
         $id = $request->get('exam_id');
         try {
+
             //拿到大的考站的数据
 
 
             $ExamDraftFlowModel = new ExamDraftFlow();
 
-           $ExamDraftFlowRequest = $ExamDraftFlowModel->getExamDraftFlowData($id);
+            $ExamDraftFlowRequest = $ExamDraftFlowModel->getExamDraftFlowData($id);
+
             $ExamDraftFlowId = $ExamDraftFlowRequest->pluck('id');
+            //拿到小站数据
             $ExamDraftModel = new ExamDraft();
-
             $ExamDraftRequest = $ExamDraftModel->getExamDraftData($ExamDraftFlowId);
-            dd($ExamDraftRequest);
 
+            foreach ($ExamDraftFlowRequest as &$item){
+
+                foreach ($ExamDraftRequest as $value){
+
+                    if($item->id == $value->exam_draft_flow_id){
+
+                        $item->item = $value;
+
+                    }
+                }
+
+            }
+//            dd($ExamDraftFlowRequest);
+            return response()->json(
+                $this->success_data($ExamDraftFlowRequest, 1, 'success')
+            );
 
         } catch (\Exception $ex) {
 
