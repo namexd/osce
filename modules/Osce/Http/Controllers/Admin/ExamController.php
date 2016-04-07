@@ -365,8 +365,9 @@ class ExamController extends CommonController
             ];
             //阶段
             $gradation = intval($request->input('gradation_order',1));
+            $examModel = new Exam();
 
-            if($exam = $exam -> editExam($exam_id, $examData, $examScreeningData, $gradation))
+            if($result = $examModel -> editExam($exam_id, $examData, $examScreeningData, $gradation))
             {
                 return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
             } else {
