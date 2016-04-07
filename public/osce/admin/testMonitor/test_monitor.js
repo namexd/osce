@@ -47,7 +47,18 @@ function monitor_test(){
         layer.confirm("确认当前考生"+$student+"（"+$idCard+"）替考？",function(){
 
         });
-    })
+    });
+    //查看视频
+    $(".look").click(function(){
+        layer.open({
+            type: 2,
+            title: '视频查看',
+            area: ['800px', '500px'],
+            fix: false, //不固定
+            maxmin: true,
+            content: ''
+        })
+    });
 }
 
 //考试监控迟到页面
