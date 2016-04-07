@@ -127,6 +127,30 @@ class ExamControlController extends CommonController
 
 
 
+    public function getVcrsList(Request $request)
+    {
+        $this->validate($request,[
+            'examId'       => 'required|integer',
+            'stationId'    => 'required|integer',
+        ]);
+        //获取参数
+        $examId    = $request->input('examId');
+        $stationId = $request->input('stationId');
+        $examControlModel = new ExamControl();
+        $vcrInfo    = $examControlModel->getVcrInfo($examId, $stationId);
+        if(!empty($vcrInfo)){
+            return response()->json($vcrInfo);
+        }else{
+            return response()->json(false);
+        }
+    }
+
+
+
+
+
+
+
 
 
 
