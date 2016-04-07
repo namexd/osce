@@ -11,6 +11,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\ExamDraft;
+use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamDraftFlowTemp;
 use Modules\Osce\Entities\ExamDraftTemp;
 use Modules\Osce\Entities\ExamGradation;
@@ -22,19 +24,31 @@ use Modules\Osce\Http\Controllers\CommonController;
 
 class ExamArrangeController extends CommonController
 {
-    //新增考试安排的站
+
+    /**
+     * 新增考试安排的站
+     * @url GET /osce/admin/exam-arrange/add-exam-flow
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
+    
+    
+    
     public function postAddExamFlow(Request $request){
         try{
             $this->validate($request,[
                 'exam_id'=>'required',
                 'name'=>'required',
                 'order'=>'required',
-                'exam_gradation_id'=>'required',
+//                'exam_gradation_id'=>'sometime'  //阶段
             ]);
             $examId = $request->get('exam_id');
             $name = $request->get('name');
             $order = $request->get('order');
             $examGradationId = $request->get('exam_gradation_id');
+            //判断操作人是否一致
+
             //获取当前操作信息
             $user = Auth::user();
             if (empty($user)) {
@@ -45,7 +59,7 @@ class ExamArrangeController extends CommonController
                 'name'=>$name,
                 'order'=>$order,
                 'exam_gradation_id'=>$examGradationId,
-//                'exam_screening_id'=>'',
+                'ctrl_type'=>1,
             ];
             //先保存到临时表
             $result = ExamDraftFlowTemp::create($data);
@@ -54,7 +68,7 @@ class ExamArrangeController extends CommonController
                 $DraftData=[
                     'exam_id'=>$examId,
                     'old_draft_flow_id'=>$result->id,
-                    'ctrl_type'=>0,
+                    'ctrl_type'=>1,
                     'used'=>1,
                     'user_id'=>$user->id,
                 ];
@@ -78,32 +92,76 @@ class ExamArrangeController extends CommonController
             );
 
         }
-
-
+        
 }
+    
+    
+    /**
+     * 新增考站里面的子对象到临时表
+     * @url GET /osce/admin/exam-arrange/add-exam-draft
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
 
-//新增考站里面的子对象到临时表
+
     public function postAddExamDraft(Request $request){
         $this->validate($request,[
             'exam_id'=>'required',
-//            'ctrl_type'=>'required',
-            'old_draft_flow_id'=>'required',
-//            'old_draft_id'=>'required',
+            'type'=>'required',
+
+            'subject'   => 'sometime',      //考试项目
+            'station'   => 'sometime',      //考站
+            'room'      => 'sometime',      //考场
+            'chioce'    => 'sometime',      //选考
         ]);
+
+        $type = $request->get('type');
+        $examId = $request->get('exam_id');
+        $subjectId =$request->get('subject');
+        $stationId =$request->get('station');
+        $roomId =$request->get('room');
+
         try{
             //获取当前操作信息
             $user = Auth::user();
             if (empty($user)) {
                 throw new \Exception('未找到当前操作人信息');
             }
-
             $data=[
-                'exam_id'=>$request->get('exam_id'),
+                'exam_id'=>$examId,
                 'old_draft_flow_id'=>$request->get('old_draft_flow_id'),
-                'user_id'=>$user->id,
+                'old_draft_id'=>$request->get('old_draft_id'),
+                'user_id'=>'',
+                'subject_id'=>'',
+                'station_id'=>'',
+                'room_id'=>'',
                 'used'=>0,
-                'ctrl_type'=>1,
+                'ctrl_type'=>'',
             ];
+            if(!is_null($subjectId)){
+                $data['subject_id'] = $subjectId;
+            }
+
+            if(!is_null($stationId)){
+                $data['station'] = $subjectId;
+            }
+
+            if(!is_null($roomId)){
+                $data['room'] = $roomId;
+            }
+
+            if($type==2){
+                $data['ctrl_type'] = $type;
+            }
+
+            if($type==3){
+                $data['ctrl_type'] = $type;
+            }
+            if($type==4){
+                $data['ctrl_type'] = $type;
+            }
+
             $result = ExamDraftTemp::create($data);
             if(!$result){
                 throw new \Exception('保存临时考站数据失败');
@@ -127,31 +185,55 @@ class ExamArrangeController extends CommonController
 
 
 
+
+
+
     //删除站接口
     public function getDelExamFlow(Request $request){
         $this->validate($request,[
-//            'exam_id'=>'required',
+            'exam_id'=>'required',
             'id'=>'required',
-
+            'type'=>'required',
         ]);
         $id = $request->get('id');
-        //项临时加入删除数据
-//        $data =[
-//            'exam_id'=>$request->get('exam_id'),
-//            'old_draft_flow_id'=>$request->get('id'),
-//        ];
+        $exam_id = $request->get('exam_id');
+        $type = $request->get('type');
+        try{
+            if($type==2){
+                //是删除真实表数据就在临时表中记录下该操作
+                $data =[
+                    'exam_id'=>$exam_id,
+                    'type'=>$type,
+                    'old_draft_flow_id'=>$id,
+                ];
+                $result = ExamDraftFlowTemp::create($data);
+                if($result){
+                    return response()->json(
+                        $this->success_data($result->id, 1, '删除成功')
+                    );
+                }
 
-        $result = ExamDraftFlowTemp::find($id);
-        $result->old_draft_flow_id = $id;
-        if($result->save()){
+            }else{
+                $result = ExamDraftFlowTemp::find($id);
+                $result->old_draft_flow_id = $id;
+                $result->type =$type;
+
+                if($result->save()){
+                    return response()->json(
+                        $this->success_data($result->id, 1, '删除成功')
+                    );
+                }
+            }
+
+        }catch (\Exception $ex){
+
             return response()->json(
-                $this->success_data($result->id, 1, '删除成功')
+                $this->fail($ex)
             );
-        }else{
-            return response()->json(
-                $this->success_data('', -1, '删除失败')
-            );
+
         }
+
+
     }
 
 
@@ -159,24 +241,46 @@ class ExamArrangeController extends CommonController
     //删除子站
     public function getDelExamDraft(Request $request){
         $this->validate($request,[
-//            'exam_id'=>'required',
+            'exam_id'=>'required',
             'id'=>'required',
+            'type'=>'required',
         ]);
         $id = $request->get('id');
-//        $data =[
-//            'exam_id'=>$request->get('exam_id'),
-//            'old_draft_id'=>$request->get('id'),
-//        ];
+        $exam_id = $request->get('exam_id');
+        $type = $request->get('type');
+        try{
+            if($type==2){
+                //是删除真实表数据就在临时表中记录下该操作
+                $data =[
+                    'exam_id'=>$exam_id,
+                    'type'=>$type,
+                    'old_draft_id'=>$id,
+                ];
+                
+                $DraftResult = ExamDraftTemp::create($data);
+                if($DraftResult){
 
-        $DraftResult = ExamDraftTemp::find($id);
-        $DraftResult->old_draft_id =  $id;
-        if($DraftResult->save()){
+                    return response()->json(
+                        $this->success_data($DraftResult->id, 1, '删除成功')
+                    );
+                }
+
+            }else{
+                $DraftResult = ExamDraftTemp::find($id);
+
+                $DraftResult->old_draft_id =  $id;
+
+                $DraftResult->type = $type;
+                if($DraftResult->save()){
+                    return response()->json(
+                        $this->success_data($DraftResult->id, 1, '删除成功')
+                    );
+                }
+            }
+
+        }catch (\Exception $ex){
             return response()->json(
-                $this->success_data($DraftResult->id, 1, '删除成功')
-            );
-        }else{
-            return response()->json(
-                $this->success_data('', -1, '删除失败')
+                $this->fail($ex)
             );
         }
 
@@ -282,7 +386,7 @@ class ExamArrangeController extends CommonController
 
 
     /**
-     * 保存编辑考试基本信息
+     * 考官安排着陆页
      * @url GET /osce/admin/exam-arrange/invigilate-arrange
      * @access public
      *
@@ -305,9 +409,31 @@ class ExamArrangeController extends CommonController
         ]);
 
         //获得exam_id
-        $id = $request->input('id');
-        $data = [];
-        return view('osce::admin.examManage.examiner_manage', ['id'=>$id, 'data' => $data]);
+        $exam_id = $request->input('id');
+        $data    = [];
+        return view('osce::admin.examManage.examiner_manage', ['id'=>$exam_id, 'data' => $data]);
+    }
+
+    /**
+     * 保存考官安排数据
+     * @param Request $request
+     * @return mixed
+     */
+    public function postInvigilateArrange(Request $request){
+        try{
+            //验证
+            $this->validate($request, [
+                'id' => 'required|integer'
+            ]);
+
+            //获得exam_id
+            $exam_id = $request->input('id');
+
+            return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange',['id'=>$exam_id]);
+
+        } catch (\Exception $ex){
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
@@ -340,20 +466,105 @@ class ExamArrangeController extends CommonController
     }
 
 
+    /**
+     * 判定是否是同一个用户
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
+    private  function getUserProve($exam,$user){
+        //根据考试编号id去查找计划表是否有操作人信息
+//        $userId =
+
+    }
+
+
     public function postHandleExamDraft(Request $request){
         $this->validate($request,[
-            'id'        => 'sometime',
-            'stage'     => 'sometime',      //阶段
-            'subject'   => 'sometime',      //考试项目
-            'station'   => 'sometime',      //考站
-            'room'      => 'sometime',      //考场
-            'chioce'    => 'sometime',      //选考
+            'id'        => 'required',
         ]);
 
-        $param = $request->only(['id','stage','subject','station','room','chioce']);
+        $exam_id    = $request->get('id');
+        $draftFlows = ExamDraftFlowTemp::where('exam_id','=',$exam_id)->orderBy('created_at')->get();
+        $drafts     = ExamDraftTemp::where('exam_id','=',$exam_id)->orderBy('created_at')->get();
+
+        $datas = [];
+        foreach ($draftFlows as $draftFlow) {
+            $datas[strtotime($draftFlow->created_dt)] = [
+                'ctrl_type'         => $draftFlow->ctrl_type,
+                'order'             => $draftFlow->order,
+                'name'              => $draftFlow->name,
+                'exam_screening_id' => $draftFlow->exam_screening_id,
+                'exam_gradation_id' => $draftFlow->exam_gradation_id,
+                'exam_id'           => $draftFlow->exam_id,
+                'is_draft_flow'     => 1
+            ];
+        }
+
+        foreach ($drafts as  $draft) {
+            $datas[strtotime($draft->created_dt)] = [
+                'ctrl_type'         => $draft->ctrl_type,
+                'station_id'        => $draft->station_id,
+                'room_id'           => $draft->room_id,
+                'exam_draft_flow_id'=> $draft->exam_draft_flow_id,
+                'subject_id'        => $draft->subject_id,
+                'effected'          => $draft->effected,
+                'is_draft_flow'     => 0
+            ];
+        }
+
+        $datas = ksort($datas);     //数组按时间（键）进行排序
+
+        foreach ($datas as $data) {
+            //操作大表
+            if($data['is_draft_flow'] ==1){
+                switch ($data['ctrl_type']){
+                    case 1 : if(!ExamDraftFlow::create($data)){                     //增
+                                 throw new \Exception('添加失败！');
+                             }
+                        break;
+                    case 2 : if(!ExamDraftFlow::create($data)){                     //删
+                                 throw new \Exception('添加失败！');
+                             }
+                        break;
+                    case 3 :                                                        //删
+                        break;
+                    case 4 :
+                        break;
+                    case 5 :
+                        break;
+                    default: throw new \Exception('操作有误！');
+                }
+
+            //操作小表
+            }else{
+                switch ($data['ctrl_type']){
+                    case 1 : if(!ExamDraft::create($data)){                     //增
+                                throw new \Exception('添加失败！');
+                             }
+                        break;
+                    case 2 :
+                        break;
+                    case 3 :
+                        break;
+                    case 4 :
+                        break;
+                    case 5 :
+                        break;
+                    default: throw new \Exception('操作有误！');
+                }
+            }
+        }
+
+
+
 
 
 
     }
+
+
+
+
 
 }
