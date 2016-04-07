@@ -41,7 +41,7 @@ class ExamArrangeController extends CommonController
                 'exam_id'=>'required',
                 'name'=>'required',
                 'order'=>'required',
-                'exam_gradation_id'=>'sometime'  //阶段
+//                'exam_gradation_id'=>'sometime'  //阶段
             ]);
             $examId = $request->get('exam_id');
             $name = $request->get('name');
@@ -482,16 +482,9 @@ class ExamArrangeController extends CommonController
     public function postHandleExamDraft(Request $request){
         $this->validate($request,[
             'id'        => 'required',
-//            'stage'     => 'sometime',      //阶段
-//            'subject'   => 'sometime',      //考试项目
-//            'station'   => 'sometime',      //考站
-//            'room'      => 'sometime',      //考场
-//            'chioce'    => 'sometime',      //选考
         ]);
-//
-//        $param = $request->only(['id','stage','subject','station','room','chioce']);
 
-        $exam_id = $request->get('id');
+        $exam_id    = $request->get('id');
         $draftFlows = ExamDraftFlowTemp::where('exam_id','=',$exam_id)->orderBy('created_at')->get();
         $drafts     = ExamDraftTemp::where('exam_id','=',$exam_id)->orderBy('created_at')->get();
 
