@@ -713,10 +713,10 @@ class InvigilatePadController extends CommonController
             if ($AlterResult) {
                 \Log::alert($AlterResult);
 
-                $redis->publish($infos, json_encode(['message' => '开始考试成功','code'=>1,'data'=>[$date]]));
-//                return response()->json(
-//                    $this->success_data([$date], 1, '开始考试成功')
-//                );
+                //$redis->publish($infos, json_encode(['message' => '开始考试成功','code'=>1,'data'=>[$date]]));
+                return response()->json(
+                    $this->success_data([$date], 1, '开始考试成功')
+                );
             }
 //            return response()->json(
 //                $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
