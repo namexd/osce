@@ -586,12 +586,10 @@ class ExamArrangeController extends CommonController
         try {
 
             //拿到大的考站的数据
-
-
             $ExamDraftFlowModel = new ExamDraftFlow();
 
             $ExamDraftFlowRequest = $ExamDraftFlowModel->getExamDraftFlowData($id);
-            
+            //拿到大站的id
             $ExamDraftFlowId = $ExamDraftFlowRequest->pluck('id');
             
             $ExamDraftFlowRequest= $ExamDraftFlowRequest->toArray();
@@ -600,7 +598,6 @@ class ExamArrangeController extends CommonController
             $ExamDraftModel = new ExamDraft();
             $ExamDraftRequest = $ExamDraftModel->getExamDraftData($ExamDraftFlowId);
             //将小站数据放到大站下
-            
             foreach ($ExamDraftFlowRequest as &$item){
 
                 foreach ($ExamDraftRequest as $value){
@@ -611,7 +608,6 @@ class ExamArrangeController extends CommonController
                     }
                 }
             }
-
             return response()->json(
                 $this->success_data($ExamDraftFlowRequest, 1, 'success')
             );
