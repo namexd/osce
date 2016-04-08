@@ -55,6 +55,15 @@ class ExamControlController extends CommonController
      */
     public function postStopExam2(Request $request)
     {
+        $this->validate($request,[
+            'examId'       => 'required|integer',//考试编号
+            'studentId'    => 'required|integer',//考生编号
+            'examScreeningId'    => 'required|integer',//场次编号
+            'stationId'    => 'required|integer',//考站编号
+            'userId'    => 'required|integer',//老师id
+            'examScreeningStudentId'    => 'required|integer',//考试场次-学生关系id
+            'status'    => 'required|integer', //1确认弃考 2确认替考 3终止考试
+        ]);
 
         $data=array(
             'examId' =>$request->input('examId'), //考试编号
