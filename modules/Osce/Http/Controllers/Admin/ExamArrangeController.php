@@ -591,24 +591,23 @@ class ExamArrangeController extends CommonController
             $ExamDraftFlowModel = new ExamDraftFlow();
 
             $ExamDraftFlowRequest = $ExamDraftFlowModel->getExamDraftFlowData($id);
-
+            
             $ExamDraftFlowId = $ExamDraftFlowRequest->pluck('id');
+            
+            $ExamDraftFlowRequest= $ExamDraftFlowRequest->toArray();
+
             //拿到小站数据
             $ExamDraftModel = new ExamDraft();
             $ExamDraftRequest = $ExamDraftModel->getExamDraftData($ExamDraftFlowId);
-
-            $ExamDraftFlowRequest = $ExamDraftFlowRequest->toArray();
-            $ExamDraftRequest = $ExamDraftRequest->toArray();
+            //将小站数据放到大站下
+            
             foreach ($ExamDraftFlowRequest as &$item){
 
                 foreach ($ExamDraftRequest as $value){
 
-
-
                     if($item['id'] == $value['exam_draft_flow_id']){
 
                         $item['item'][] = $value;
-
                     }
                 }
             }

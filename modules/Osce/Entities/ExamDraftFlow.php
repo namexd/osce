@@ -18,7 +18,7 @@ class ExamDraftFlow extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['name',  'order',  'exam_id', 'exam_screening_id', 'exam_gradation_id'];
+    protected $fillable     = ['id','name','order','exam_id','exam_screening_id', 'exam_gradation_id'];
 
 
 
@@ -26,6 +26,7 @@ class ExamDraftFlow extends CommonModel
     public function getExamDraftFlowData($id){
 
           $examDraftFlowList=$this->where('exam_id','=',$id)->get();
+        
           return $examDraftFlowList;
 
         }
