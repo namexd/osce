@@ -29,22 +29,36 @@
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">视频回看</h5>
             </div>
-            <a href="javascript:void(0)" class="btn btn-primary right" role="btn">返回</a>
+            <a href="javascript:history.go(-1)" class="btn btn-primary right" role="btn">返回</a>
         </div>
         <div class="container-fluid ibox-content">
-                    <p class="font20 fontb">2016.3.18第2场考试-<span>张三</span>(123456798)</p>
+                    <p class="font20 fontb">{{$data->exam_name}}-<span>{{$data->name}}</span>({{$data->exam_sequence}})</p>
         </div>
         <div class="panel blank-panel">
             <div class="container-fluid ibox-content" style="border: none;">
                 <div class="list_all">
+                    @if(!empty($list)&& count($list)>0)
+                        @foreach($list as $key=>$val )
                     <div class="list_box">
-                        <a href="javascript:void(0)">
+                        @if($val->time==0)
+                            <a href="javascript:void(0)">
+                        @else
+                            <a href="{{route('osce.admin.course.getResultVideo')}}?exam_id={{$data->exam_id}}&student_id={{$data->student_id}}&station_id={{$val->station_id}}">
+                        @endif
+
                             <div class="list_con">
-                                <span class="list_con_info">操作考站1(正常)</span>
+                                <span class="list_con_info">{{$val->name}}({{$val->type}})</span>
                             </div>
-                            <p class="list_timers">00:05:00</p>
+                            @if($val->time==0)
+                                <p class="list_timers">00:00:00</p>
+                            @else
+                            <p class="list_timers">{{$val->time}}</p>
+                            @endif
                         </a>
                     </div>
+                        @endforeach
+                    @endif
+
                 </div>
             </div>
         </div>
