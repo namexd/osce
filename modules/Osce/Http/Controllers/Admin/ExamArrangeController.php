@@ -150,6 +150,7 @@ class ExamArrangeController extends CommonController
         $subjectId = $request->get('subject');
         $stationId = $request->get('station');
         $roomId = $request->get('room');
+        $DraftId = $request->get('draft_id');
 
         try {
             //获取当前操作信息
@@ -162,34 +163,43 @@ class ExamArrangeController extends CommonController
                 'old_draft_flow_id' => $request->get('flow_id'),
                 'old_draft_id'=>null,
                 'user_id' => $user->id,
-                'subject_id' => null,
-                'station_id' => null,
-                'room_id' => null,
+                'subject_id' => $subjectId,
+                'station_id' => $stationId,
+                'room_id' => $roomId,
                 'used' => 0,
                 'ctrl_type' => $request->get('type'),
             ];
-            if (!is_null($subjectId)) {
-                $data['subject_id'] = $subjectId;
-            }
-
-            if (!is_null($stationId)) {
-                $data['station'] = $subjectId;
-            }
-
-            if (!is_null($roomId)) {
-                $data['room'] = $roomId;
-            }
-
 
             if ($type == 2) {
-                $data['old_draft_id'] =$request->get('draft_id') ;
+                $data['old_draft_id'] =$DraftId ;
             }
 
             if ($type == 3) {
-                $data['ctrl_type'] = 6;
-                //根据临时表id判断是否是该之前的数据
 
+                $ExamDraftTempType  = ExamDraftTemp::find($DraftId);
+                //根据临时表id判断是否是该之前的数据
+                if($ExamDraftTempType->ctrl_type ==4 ||$ExamDraftTempType->ctrl_type ==6){
+                    $ExamDraftTempType->ctrl_type =6;
+                    if(!is_null($subjectId)){
+                        $ExamDraftTempType->subject_id =$data['subject_id'];
+                    }
+                    if(!is_null($stationId)){
+                        $ExamDraftTempType->station_id =$data['station_id'];
+                    }
+                    if(!is_null($roomId)){
+                        $ExamDraftTempType->room_id =$data['room_id'];
+                    }
+
+                    if($ExamDraftTempType->save()){
+
+                        return response()->json(
+                            $this->success_data(['id'=>$ExamDraftTempType->id], 1, 'success')
+                        );
+
+                    }
+                }
             }
+
             if ($type == 4) {
                 $data['ctrl_type'] = $type;
             }
