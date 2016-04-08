@@ -780,7 +780,7 @@ class ExamQueue extends CommonModel
 
     //查找学生队列中的考试
     public function getExamingData($examId,$studentId){
-        $builder = $this->whereIn('exam_queue.exam_id',$examId)->whereIn('exam_queue.student_id',$studentId)->leftjoin('exam',function($exam){
+        $builder = $this->whereIn('exam_queue.exam_id',$examId)->where('exam_queue.student_id',$studentId)->leftjoin('exam',function($exam){
             $exam->on('exam.id','=','exam_queue.exam_id');
         })->select('exam.id','exam.name','exam_queue.station_id','exam.status')->get();
 
