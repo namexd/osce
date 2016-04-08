@@ -87,6 +87,7 @@ class ExamControlController extends CommonController
 
         $examControlModel = new ExamControl();
         $result = $examControlModel->stopExam($data);
+
         if($result==true){
             return response()->json(true);
         }else{

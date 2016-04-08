@@ -13,8 +13,8 @@
         .list_box a{color:#666;}
         .list_box a:link:hover {text-decoration: none;}
         .list_con{height:100%;border-radius: 5px;background-color: #16beb0;position: relative;}
-        .list_con_info{position: absolute;right: 50%;bottom:50%;margin-right:-60px;margin-bottom:-9px;font-weight:bold;color:#fff;font-size: 1.5rem}
-        .list_timers{text-align: center;}
+        .list_con_info{padding-top:12%;margin-left:auto;margin-right:auto;font-weight:bold;color:#fff;font-size: 1.5rem}
+        .list_timers{padding-top:.5em;text-align: center;}
     </style>
 @stop
 
@@ -29,7 +29,7 @@
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">视频回看</h5>
             </div>
-            <a href="javascript:history.go(-1)" class="btn btn-primary right" role="btn">返回</a>
+            <a href="javascript:history.go(-1)" class="btn btn-primary right" role="button">返回</a>
         </div>
         <div class="container-fluid ibox-content">
                     <p class="font20 fontb">{{$data->exam_name}}-<span>{{$data->name}}</span>({{$data->exam_sequence}})</p>
@@ -46,15 +46,15 @@
                             <a href="{{route('osce.admin.course.getResultVideo')}}?exam_id={{$data->exam_id}}&student_id={{$data->student_id}}&station_id={{$val->station_id}}">
                         @endif
 
-                            <div class="list_con">
-                                <span class="list_con_info">{{$val->name}}({{$val->type}})</span>
-                            </div>
-                            @if($val->time==0)
-                                <p class="list_timers">00:00:00</p>
-                            @else
-                            <p class="list_timers">{{$val->time}}</p>
-                            @endif
-                        </a>
+                                <div class="list_con">
+                                    <p class="list_con_info center">{{$val->name}}({{$val->type}})</p>
+                                </div>
+                                @if($val->time==0)
+                                    <p class="list_timers">00:00:00</p>
+                                @else
+                                <p class="list_timers">{{$val->time}}</p>
+                                @endif
+                            </a>
                     </div>
                         @endforeach
                     @endif
