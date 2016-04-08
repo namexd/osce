@@ -505,6 +505,7 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	$redis = Redis::connection('message');
 //    $redis->publish(1, 'test');
 //
+	dd(\Modules\Osce\Entities\Exam::join('exam_screening', 'exam.id', '=', 'exam_screening.exam_id')->lists('exam_screening.exam_id')->toArray());
 //	return '失败';
 });
 //TODO:清空考试数据使用 	Zhoufuxiang

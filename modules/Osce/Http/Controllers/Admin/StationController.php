@@ -22,6 +22,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
+use Modules\Osce\Repositories\Common;
 
 class StationController extends CommonController
 {
@@ -109,6 +110,7 @@ class StationController extends CommonController
      */
     public function postAddStation(Request $request, Station $model)
     {
+
         //验证略
         $this->validate($request, [
             'name'          => 'required|unique:osce_mis.station,name',
@@ -168,15 +170,19 @@ class StationController extends CommonController
                 throw new \Exception('未能将时间保存！');
             }
 
-            if (!($model->addStation($formData))) {
+            if (!$result=$model->addStation($formData)) {
                 throw new \Exception('未能将考站保存！');
             };
 
             DB::connection('osce_mis')->commit();
+            
+          $Redirect=  Common::handleRedirect($request,$result);
+            if($Redirect==false){
+        
+                return redirect()->route('osce.admin.Station.getStationList')  ; //返回考场列表
+            }
 
-
-            return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
-
+            
         } catch (\Exception $ex) {
             DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withErrors($ex->getMessage())->withInput();
