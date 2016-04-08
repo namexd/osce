@@ -537,7 +537,6 @@ class ExamArrangeController extends CommonController
             $draftFlows = ExamDraftFlowTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
             $drafts     = ExamDraftTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
 
-
             //所有临时数据 组合
             $datas = [];
             foreach ($draftFlows as $draftFlow) {

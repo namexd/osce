@@ -52,9 +52,10 @@ class ExamDraftFlow extends CommonModel
                     break;
                 default: throw new \Exception('操作有误！');
             }
+            return true;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -78,7 +79,7 @@ class ExamDraftFlow extends CommonModel
             return 1;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -103,7 +104,7 @@ class ExamDraftFlow extends CommonModel
             return 1;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -135,7 +136,7 @@ class ExamDraftFlow extends CommonModel
             return 1;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -145,7 +146,35 @@ class ExamDraftFlow extends CommonModel
      * @param $data
      * @return \Exception|int
      */
-    public function bigFive(){
+    public function bigFive($data){
+        try{
+            $item      = $data['item'];
+            //重新查找对应的这条数据（再赋给$item）
+            $newItem   = ExamDraftTemp::where('id','=',$item->id)->first();
+            //再获取对应的正式表的id
+            $draft_flow_id = $newItem->exam_draft_flow_id;
+            //通过大表ID，获取小表所有对应数据
+            $examDrafts    = ExamDraft::where('exam_draft_flow_id','=',$draft_flow_id)->get();
+            if (count($examDrafts)>0){
+                //循环删除小表对应数据
+                foreach ($examDrafts as $examDraft) {
+                    if (!$examDraft->delete()){
+                        throw new \Exception('删除失败，请重试！');
+                    }
+                }
+            }
+            $result = $this->where('id','=',$draft_flow_id)->first();
+            if (is_null($result)){
+                throw new \Exception('未找到对应的站的数据，请重试！');
+            }
+            //再删除正式表（大表）中对应ID的那条数据
+            if(!$result->delete()){
+                throw new \Exception('删除失败，请重试！');
+            }
 
+
+        } catch (\Exception $ex){
+            throw $ex;
+        }
     }
 }

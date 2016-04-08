@@ -77,9 +77,10 @@ class ExamDraft extends CommonModel
                     break;
                 default: throw new \Exception('操作有误！');
             }
+            return true;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -114,7 +115,7 @@ class ExamDraft extends CommonModel
             return 1;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -144,7 +145,7 @@ class ExamDraft extends CommonModel
             return 1;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -178,7 +179,7 @@ class ExamDraft extends CommonModel
             return 1;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -214,7 +215,7 @@ class ExamDraft extends CommonModel
             return 1;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -223,11 +224,24 @@ class ExamDraft extends CommonModel
      * @param $data
      * @return \Exception|int
      */
-    public function smallFive(){
+    public function smallFive($data){
         try{
+            $item      = $data['item'];
+            //重新查找对应的这条数据（再赋给$item）
+            $newItem   = ExamDraftTemp::where('id','=',$item->id)->first();
+            //再获取对应的正式表的id
+            $draft_id  = $newItem->old_draft_id;
+            $examDraft = ExamDraft::where('id','=',$draft_id)->first();
+            if (is_null($examDraft)){
+                throw new \Exception('数据有误，请重试！');
+            }
+            //再删除正式表中对应ID的那条数据
+            if(!$examDraft->delete()){
+                throw new \Exception('删除失败，请重试！');
+            }
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
