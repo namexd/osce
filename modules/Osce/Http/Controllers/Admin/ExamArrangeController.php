@@ -169,18 +169,6 @@ class ExamArrangeController extends CommonController
                 'used' => 0,
                 'ctrl_type' => $request->get('type'),
             ];
-//            if (!is_null($subjectId)) {
-//                $data['subject_id'] = $subjectId;
-//            }
-//
-//            if (!is_null($stationId)) {
-//                $data['station_id'] = $stationId;
-//            }
-//
-//            if (!is_null($roomId)) {
-//                $data['room_id'] = $roomId;
-//            }
-
 
             if ($type == 2) {
                 $data['old_draft_id'] =$DraftId ;
