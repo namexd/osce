@@ -88,7 +88,7 @@ class ExamPaperFormal extends CommonModel
                                 //dd(count($ExamQuestionInfo->examQuestionItem));
                                 //拼凑试题内容
                                 $content = '';
-                                if($ExamQuestionInfo->examQuestionItem){
+                                if(!empty($ExamQuestionInfo) && count($ExamQuestionInfo->examQuestionItem)>0){
                                     foreach($ExamQuestionInfo->examQuestionItem as $value){
                                         if($content){
                                             $content .= '|%|'.$value['name'].'.'.$value['content'];

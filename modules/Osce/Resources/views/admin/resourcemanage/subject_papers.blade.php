@@ -65,7 +65,7 @@
                                         <td>{{@$val['name']}}</td>
                                         <td>{{@$val['num']}}</td>
                                         <td>{{@$val['total_score']}}</td>
-                                        @if($val['type']===1)
+                                        @if($val['type'] == 1)
                                             <td>随机试卷</td>
                                         @else
                                             <td>统一试卷</td>
