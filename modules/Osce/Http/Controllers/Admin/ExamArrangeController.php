@@ -576,7 +576,7 @@ class ExamArrangeController extends CommonController
      * @author zhouqiang 2016-04-06
      * @return string
      */
-    public function getExamArrange(Request $request)
+    public function getExamArrangeData(Request $request)
     {
 
         $this->validate($request, [
@@ -597,25 +597,30 @@ class ExamArrangeController extends CommonController
             $ExamDraftModel = new ExamDraft();
             $ExamDraftRequest = $ExamDraftModel->getExamDraftData($ExamDraftFlowId);
 
+            $ExamDraftFlowRequest = $ExamDraftFlowRequest->toArray();
+            $ExamDraftRequest = $ExamDraftRequest->toArray();
             foreach ($ExamDraftFlowRequest as &$item){
 
                 foreach ($ExamDraftRequest as $value){
 
-                    if($item->id == $value->exam_draft_flow_id){
 
-                        $item->item = $value;
+
+                    if($item['id'] == $value['exam_draft_flow_id']){
+
+                        $item['item'][] = $value;
 
                     }
                 }
-
             }
-//            dd($ExamDraftFlowRequest);
+
             return response()->json(
                 $this->success_data($ExamDraftFlowRequest, 1, 'success')
             );
 
         } catch (\Exception $ex) {
-
+            return response()->json(
+                $this->fail($ex)
+            );
         }
 
     }
