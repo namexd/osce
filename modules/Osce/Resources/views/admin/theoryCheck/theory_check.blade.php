@@ -145,6 +145,7 @@
         });
         $(function(){
             countDown("{{$systemTimeEnd}}","#colockbox1");
+            //被终止考试状态改变请求
             var statusTimer = setInterval(function(){
                 var examPaperFormalId=$('#examPaperFormalId').val();
                 var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
