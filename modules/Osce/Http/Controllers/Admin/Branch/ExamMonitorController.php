@@ -242,7 +242,11 @@ class ExamMonitorController  extends CommonController
                 })-> leftJoin('exam_screening_student', function($join){
                     $join -> on('exam_screening_student.student_id', '=', 'student.id');
                 })->select('student.name', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status')
-                    ->where('exam_order.status',4)->where('student.exam_id',$exam_id)->where('exam_order.exam_id',$exam_id)->paginate(config('osce.page_size'));
+                    ->where('exam_order.status',4)
+                    ->where('student.exam_id',$exam_id)
+                    ->where('exam_order.exam_id',$exam_id)
+                    ->where('exam_screening_student.is_end',0)
+                    ->paginate(config('osce.page_size'));
                 break;
             case 2://替考
                 $list=ExamMonitor::leftJoin('student', function($join){
