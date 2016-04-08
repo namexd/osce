@@ -527,48 +527,59 @@ class ExamArrangeController extends CommonController
      */
     public function postSubmit(Request $request)
     {
-        $this->validate($request, [
-            'id' => 'required',
-        ]);
+        try{
+            $this->validate($request, [
+                'id' => 'required',
+            ]);
 
-        $exam_id = $request->get('id');
-        //获取所有临时数据
-        $draftFlows = ExamDraftFlowTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
-        $drafts = ExamDraftTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
+            $exam_id       = $request->get('id');
+            $ExamDraftFlow = new ExamDraftFlow();
+            $ExamDraft     = new ExamDraft();
+            //获取所有临时数据
+            $draftFlows = ExamDraftFlowTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
+            $drafts     = ExamDraftTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
 
 
-        //所有临时数据 组合
-        $datas = [];
-        foreach ($draftFlows as $draftFlow) {
-            $datas[strtotime($draftFlow->created_dt)] = [
-                'item' => $draftFlow,
-                'is_draft_flow' => 1
-            ];
-        }
+            //所有临时数据 组合
+            $datas = [];
+            foreach ($draftFlows as $draftFlow) {
+                $datas[strtotime($draftFlow->created_dt)] = [
+                    'item' => $draftFlow,
+                    'is_draft_flow' => 1
+                ];
+            }
 
-        foreach ($drafts as $draft) {
-            $datas[strtotime($draft->created_dt)] = [
-                'item' => $draft,
-                'is_draft_flow' => 0
-            ];
+            foreach ($drafts as $draft) {
+                $datas[strtotime($draft->created_dt)] = [
+                    'item' => $draft,
+                    'is_draft_flow' => 0
+                ];
+            }
 
-            
-        }
+            ksort($datas);     //数组按时间（键）进行排序
 
-        ksort($datas);     //数组按时间（键）进行排序
-
-        foreach ($datas as $data) {
-            //操作大表
-            if ($data['is_draft_flow'] == 1) {
-                $model = new ExamDraftFlow();
-                $result = $model->handleBigData($data);
-
+            foreach ($datas as $data) {
+                //操作大表
+                if ($data['is_draft_flow'] == 1) {
+                    if(!$ExamDraftFlow->handleBigData($data)){
+                        throw new \Exception('保存失败，请重试！');
+                    }
 
                 //操作小表
-            } else {
-                $model = new ExamDraft();
-                $result = $model->handleSmallData($data);
+                } else {
+                    if(!$ExamDraft->handleSmallData($data)){
+                        throw new \Exception('保存失败，请重试！');
+                    }
+                }
             }
+            //返回结果
+            return response()->json(
+                $this->success_data([], 1, '保存成功！')
+            );
+
+        } catch (\Exception $ex){
+
+            return response()->json($this->fail($ex));
         }
     }
 
