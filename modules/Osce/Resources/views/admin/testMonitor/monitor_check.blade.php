@@ -55,7 +55,6 @@
                                 <p class="list_timers">{{$val->time}}</p>
                                 @endif
                             </a>
-                            </a>
                     </div>
                         @endforeach
                     @endif
