@@ -65,7 +65,7 @@ class ExamArrangeController extends CommonController
                 'name' => $name,
                 'order' => $order,
                 'exam_gradation_id' => $examGradationId,
-                'old_draft_flow_id' => $request->get('flow_id'),
+                'exam_draft_flow_id' => $request->get('flow_id'),
                 'user_id' => $user->id,
                 'ctrl_type' => $type,
             ];
@@ -245,7 +245,7 @@ class ExamArrangeController extends CommonController
             $data = [
                 'exam_id' => $exam_id,
                 'ctrl_type' => $type,
-                'old_draft_flow_id' => $id,
+                'exam_draft_flow_id' => $id,
             ];
 
 
