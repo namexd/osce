@@ -291,4 +291,15 @@
     </div>
 
 </div>
+
+<a href="javasript:void(0)" id="ok">test</a>
+<script>
+$(function() {
+    $('#ok').click(function() {
+        window.location.href = 'http://www.mis.hx/osce/admin/station/test';
+        console.log('kkk')
+    })
+    
+})
+</script>
 @stop{{-- 内容主体区域 --}}

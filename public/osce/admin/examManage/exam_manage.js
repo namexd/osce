@@ -4391,7 +4391,7 @@ function station_assignment(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: pars.add_subject
+                  content: pars.add_subject+'?status=1'
                 });
             } else {
                 $.ajax({
@@ -4419,7 +4419,7 @@ function station_assignment(){
                     var str = [];
                     var data = res.data;
                     for(var i in data){
-                        str.push({id:data[i].id,text:data[i].name});
+                        str.push({id:data[i].id,text:data[i].name,type:data[i].type});
                     }
                     str.push({id:-999,text:'新增考站'});
 
@@ -4431,7 +4431,7 @@ function station_assignment(){
             }
 
         //数据更新，交互数据
-        }).on('select2:select', function(e) {
+        }).on('select2:select', function(e) {console.log(e.params.data)
             //请求数据
             var req = {
                 exam_id:examId,
@@ -4457,7 +4457,8 @@ function station_assignment(){
                     url: pars.update_data,
                     data:req,
                     success: function(res) {
-                        return true;
+                        //更新考站类型
+                        $elem.find('.exam-station').parent().next().text(typeToName[e.params.data.type])
                     }
                 }) 
             }
