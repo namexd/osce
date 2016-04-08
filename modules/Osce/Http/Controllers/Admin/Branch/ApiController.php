@@ -585,7 +585,7 @@ class ApiController extends CommonController
 
 
             foreach($examing as $key=>$v){
-                    if(!$examing['station_id']){
+                    if(!$v['station_id']){
                         $examing[$key]['station_id'] = RoomStation::where('room_id','=',$v['room_id'])->first()->station_id;
                     }
                     $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
