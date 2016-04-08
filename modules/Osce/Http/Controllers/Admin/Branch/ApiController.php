@@ -570,7 +570,7 @@ class ApiController extends CommonController
             //在队列表中查找与考试相关的数据
             $examquen = new ExamQueue();
             $examing = $examquen->getExamingData($examId);
-
+            dd($examing);
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
