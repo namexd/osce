@@ -58,7 +58,7 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'examiner_manage'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'examiner_manage','teacher_list':'{{route('osce.admin.exam-arrange.getInvigilatesBySubject')}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -96,10 +96,10 @@
                 </table>
             </div>
             <div class="form-group">
-                <div class="col-sm-4 col-sm-offset-2 time-modify">
-                     <button id="save" class="btn btn-primary" type="submit">&nbsp;&nbsp;保存&nbsp;&nbsp;</button>
+                <div class="col-sm-4 col-sm-offset-4 time-modify">
+                     <a id="save" class="btn btn-primary" href="javascript:void(0)">保存</a>
                      <a class="btn btn-white" href="javascript:history.back(-1)" {{--href="{{route("osce.admin.exam.getExamList")}}"--}}>&nbsp;&nbsp;取消&nbsp;&nbsp;</a>
-                     <a class="btn btn-white" href="">全部邀请</a>
+                     <a class="btn btn-white" href="javascript:void(0)" id="invation-all">全部邀请</a>
                 </div>
             </div>
         </div>

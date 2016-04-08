@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamDraftFlowTemp;
@@ -460,8 +461,18 @@ class ExamArrangeController extends CommonController
 
         //获得exam_id
         $exam_id = $request->input('id');
-        $data = [];
-        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $data]);
+        $exam    = Exam::where('id','=',$exam_id)->first();
+        if (is_null($exam)){
+            return redirect()->back()->withErrors('没有找到对应的考试！');
+        }
+        $ExamDraft     = new ExamDraft();
+
+        $datas = $ExamDraft->getDraftFlowData($exam_id);
+//        foreach ($datas as $key => $data) {
+//            $datas[$key][] = $ExamDraft->getExamDraftData($data->id);
+//        }
+
+        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $datas]);
     }
 
     /**
