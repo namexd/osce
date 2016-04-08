@@ -22,7 +22,15 @@ class ExamDraft extends CommonModel
 
 
     public function getExamDraftData($ExamDraftFlowId){
-        $examDraftList=$this->whereIn('exam_draft_flow_id',$ExamDraftFlowId)->get();
+
+
+        $examDraftList=$this->
+        
+        
+        whereIn('exam_draft_flow_id',$ExamDraftFlowId)->get()->toArray();
+
+
+
         return $examDraftList;
 
     }

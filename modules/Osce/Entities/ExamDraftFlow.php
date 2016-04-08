@@ -25,7 +25,7 @@ class ExamDraftFlow extends CommonModel
 
     public function getExamDraftFlowData($id){
 
-          $examDraftFlowList=$this->where('exam_id','=',$id)->get();
+          $examDraftFlowList=$this->where('exam_id','=',$id)->get()->toArray();
           return $examDraftFlowList;
 
         }
