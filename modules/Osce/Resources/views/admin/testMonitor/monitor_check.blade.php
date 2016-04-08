@@ -12,8 +12,8 @@
         .list_box{width:25%;height:150px;padding:15px;float:left}
         .list_box a{color:#666;}
         .list_box a:link:hover {text-decoration: none;}
-        .list_con{height:100%;border-radius: 5px;background-color: #1ab394;position: relative;}
-        .list_con_info{position: absolute;right: 50%;bottom:50%;margin-right:-60px;margin-bottom:-9px;font-weight:bold;color:#fff;}
+        .list_con{height:100%;border-radius: 5px;background-color: #16beb0;position: relative;}
+        .list_con_info{position: absolute;right: 50%;bottom:50%;margin-right:-60px;margin-bottom:-9px;font-weight:bold;color:#fff;font-size: 1.5rem}
         .list_timers{text-align: center;}
     </style>
 @stop
@@ -40,7 +40,7 @@
                     <div class="list_box">
                         <a href="javascript:void(0)">
                             <div class="list_con">
-                                <span class="list_con_info font16">操作考站1(正常)</span>
+                                <span class="list_con_info">操作考站1(正常)</span>
                             </div>
                             <p class="list_timers">00:05:00</p>
                         </a>
