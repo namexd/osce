@@ -235,6 +235,9 @@ class ExamMonitorController  extends CommonController
     protected function getExamMonitorListByStatus($status){
         $exam_id=Exam::where('status',1)->pluck('id');//正在考试id
         if(empty($exam_id)) return [];
+        $builder=ExamScreeningStudent::leftJoin('student', function($join){//弃考 已完成页面数据对象
+            $join -> on('exam_screening_student.student_id', '=', 'student.id');
+        })->select('student.name','student.exam_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status');
         switch ($status){
             case 1://迟到
                 return Student::leftJoin('exam_order', function($join){
@@ -271,38 +274,14 @@ class ExamMonitorController  extends CommonController
                 return $list;
                 break;
             case 3://弃考
-                $builder=ExamScreeningStudent::leftJoin('student', function($join){
-                    $join -> on('exam_screening_student.student_id', '=', 'student.id');
-                })->leftJoin('exam_screening', function($join){
-                    $join -> on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
-                })->leftJoin('station_teacher', function($join){
-                    $join -> on('station_teacher.exam_screening_id', '=', 'exam_screening.id');
-                })->leftJoin('station', function($join){
-                    $join -> on('station_teacher.station_id', '=', 'station.id');
-                })->select('student.name','student.exam_id','station.id as station_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','station.name as station_name');
-
                 return $builder->where('exam_screening_student.status',1)
-                    ->where('student.exam_id',$exam_id)
-                    ->where('station_teacher.exam_id',$exam_id)
-                    ->where('exam_screening.exam_id',$exam_id)
-                    ->paginate(config('osce.page_size'));
+                               ->where('student.exam_id',$exam_id)
+                               ->paginate(config('osce.page_size'));
                 break;
             case 4://已完成
-                $builder=ExamScreeningStudent::leftJoin('student', function($join){
-                    $join -> on('exam_screening_student.student_id', '=', 'student.id');
-                })->leftJoin('exam_screening', function($join){
-                    $join -> on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
-                })->leftJoin('station_teacher', function($join){
-                    $join -> on('station_teacher.exam_screening_id', '=', 'exam_screening.id');
-                })->leftJoin('station', function($join){
-                    $join -> on('station_teacher.station_id', '=', 'station.id');
-                })->select('student.name','student.exam_id','station.id as station_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','station.name as station_name');
-
                 return $builder->where('exam_screening_student.is_end',1)
-                    ->where('student.exam_id',$exam_id)
-                    ->where('station_teacher.exam_id',$exam_id)
-                    ->where('exam_screening.exam_id',$exam_id)
-                    ->paginate(config('osce.page_size'));
+                               ->where('student.exam_id',$exam_id)
+                               ->paginate(config('osce.page_size'));
                 break;
             default:
                 return [];
