@@ -10,7 +10,7 @@ $(function(){
     switch(pars.pagename){
         //资讯&通知
         case "exam_notice":exam_notice();break;
-        case "sp_invitation_detail":sp_invitation();break;
+        case "sp_invitation_detail":sp_invitation_detail();break;
     }
 });
 

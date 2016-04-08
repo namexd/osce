@@ -18,57 +18,79 @@ class ExamDraftFlow extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['name',  'order',  'exam_id', 'exam_screening_id', 'exam_gradation_id'];
+    protected $fillable     = ['id','name','order','exam_id','exam_screening_id', 'exam_gradation_id'];
+
+
+
+
+    public function getExamDraftFlowData($id){
+
+          $examDraftFlowList=$this->where('exam_id','=',$id)->get();
+        
+          return $examDraftFlowList;
+
+        }
 
 
 
     public function handleBigData($data){
-        switch ($data['ctrl_type']){
-            case 1 : $this->bigOne($data);
-                break;
-            case 2 : $this->bigTwo($data);
-                break;
-            case 3 : $this->bigTwo($data);                //删
-                break;
-            case 4 :
-                break;
-            case 5 :
-                break;
-            default: throw new \Exception('操作有误！');
+        try{
+            switch ($data['ctrl_type']){
+                case 1 : $this->bigOne($data);
+                    break;
+                case 2 : $this->bigTwo($data);
+                    break;
+                case 3 : $this->bigTwo($data);                //删
+                    break;
+                case 4 :
+                    break;
+                case 5 :
+                    break;
+                default: throw new \Exception('操作有误！');
+            }
+
+        } catch (\Exception $ex){
+            return $ex;
         }
     }
 
     public function bigOne($data){
-        $item   =$data['item'];
-        $draftFlowData = [
-            'order'             => $item['order'],
-            'name'              => $item['name'],
-            'exam_screening_id' => $item['exam_screening_id'],
-            'exam_gradation_id' => $item['exam_gradation_id'],
-            'exam_id'           => $item['exam_id'],
-        ];
+        try{
+            $item   = $data['item'];
+            $draftFlowData = [
+                'order'             => $item->order,
+                'name'              => $item->name,
+                'exam_screening_id' => $item->exam_screening_id,
+                'exam_gradation_id' => $item->exam_gradation_id,
+                'exam_id'           => $item->exam_id,
+            ];
 
-        $result = ExamDraftFlow::create($draftFlowData);
-        $item->adasdad=$result->id;
-        if(!$item->save())
-        {
-            throw new \Exception('');
+            $result = ExamDraftFlow::create($draftFlowData);
+            $item->exam_draft_flow_id = $result->id;
+            if(!$item->save())
+            {
+                throw new \Exception('添加对应站ID失败，请重试！');
+            }
+            return 1;
+
+        } catch (\Exception $ex){
+            return $ex;
         }
 
     }
 
     public function bigTwo($data){
+        $item   = $data['item'];
         $draftFlowData = [
-            'order'             => $data['order'],
-            'name'              => $data['name'],
-            'exam_screening_id' => $data['exam_screening_id'],
-            'exam_gradation_id' => $data['exam_gradation_id'],
-            'exam_id'           => $data['exam_id'],
+            'order'             => $item->order,
+            'name'              => $item->name,
+            'exam_screening_id' => $item->exam_screening_id,
+            'exam_gradation_id' => $item->exam_gradation_id,
+            'exam_id'           => $item->exam_id,
         ];
 
-        $result = ExamDraftFlow::create($draftFlowData);
+        $result = ExamDraftFlow::update($draftFlowData);
 
 
     }
-
 }
