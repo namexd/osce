@@ -4075,11 +4075,11 @@ function station_assignment(){
             //记录dom结构
             var str = '';
             for(var j in data[i].item) {
-                str += '<tr class="item-id-'+j+'" item-id="'+data[i].item[j].draft_id+'">'+
-                                '<td type="2"><select class="form-control exam-item"><option selected="selected" value="'+data[i].item[j].exam_id+'">'+data[i].item[j].exam_name+'</option></select></td>'+
-                                '<td type="2"><select class="form-control exam-station"><option selected="selected" value="'+data[i].item[j].station_item_id+'">'+data[i].item[j].station_item_name+'</option></select></td>'+
+                str += '<tr class="item-id-'+j+'" item-id="'+data[i].item[j].id+'">'+
+                                '<td type="2"><select class="form-control exam-item"><option selected="selected" value="'+data[i].item[j].subject_id+'">'+data[i].item[j].exam_name+'</option></select></td>'+
+                                '<td type="2"><select class="form-control exam-station"><option selected="selected" value="'+data[i].item[j].station_id+'">'+data[i].item[j].station_item_name+'</option></select></td>'+
                                 '<td type="2"></td>'+
-                                '<td type="2"><select class="form-control station-belong"><option selected="selected" value="'+data[i].item[j].teacher_id+'">'+data[i].item[j].teacher_name+'</option></select></td>'+
+                                '<td type="2"><select class="form-control station-belong"><option selected="selected" value="'+data[i].item[j].room_id+'">'+data[i].item[j].teacher_name+'</option></select></td>'+
                                 '<td type="2"><select class="form-control station-chioce"><option selected="selected" value="'+data[i].item[j].choice_id+'">'+data[i].item[j].choice_name+'</option></select></td>'+
                                 '<td>'+
                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
@@ -4107,7 +4107,7 @@ function station_assignment(){
                                     '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                 '</div>'+
                             '</div>'+
-                            '<table class="table table-bordered table-id-'+i+'" station-id="'+data[i].station_id+'">'+
+                            '<table class="table table-bordered table-id-'+i+'" station-id="'+data[i].id+'">'+
                                 '<thead>'+
                                     '<tr>'+
                                         '<td>考试项目</td>'+
@@ -4417,17 +4417,6 @@ function station_assignment(){
 
         //数据更新，交互数据
         }).on('select2:select', function(e) {
-            //新增页面
-            if(e.params.data.id == -999) {
-                layer.open({
-                  type: 2,
-                  title: '新增考试项目',
-                  shadeClose: true,
-                  shade: 0.8,
-                  area: ['90%', '90%'],
-                  content: 'http://layer.layui.com/mobile/' //iframe的url
-                });
-            }
 
             //请求数据
             var req = {
@@ -4438,14 +4427,26 @@ function station_assignment(){
                 subject:e.params.data.id
             };
 
-            $.ajax({
-                type:'post',
-                url: pars.update_data,
-                data:req,
-                success: function(res) {console.log(res)
-                    return true;   
-                }
-            })
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考试项目',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  content: 'http://layer.layui.com/mobile/' //iframe的url
+                });
+            } else {
+                $.ajax({
+                    type:'post',
+                    url: pars.update_data,
+                    data:req,
+                    success: function(res) {console.log(res)
+                        return true;   
+                    }
+                })
+            }
         });
 
         //考站列表获取
