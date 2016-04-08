@@ -537,21 +537,34 @@ class ExamArrangeController extends CommonController
 
     }
 
+    private function timeIndex($data,$time){
 
+        if(array_key_exists(strtotime($time),$data))
+        {
+            $time   =   strtotime($time)+1;
+            return $this->timeIndex($data,date('Y-m-d H:i:s',$time));
+        }
+        else
+        {
+            return  $time;
+        }
+    }
     /**
      * 考场安排，提交保存
      * @param Request $request
      * @author Zhoufuxiang 2016-4-7
      * @throws \Exception
      */
-    public function postSubmit(Request $request)
+    public function postArrangeSave(Request $request)
     {
+        $connection = \DB::connection('osce_mis');
+        $connection->beginTransaction();
         try{
             $this->validate($request, [
-                'id' => 'required',
+                'exam_id' => 'required',
             ]);
 
-            $exam_id       = $request->get('id');
+            $exam_id       = $request->get('exam_id');
             $ExamDraftFlow = new ExamDraftFlow();
             $ExamDraft     = new ExamDraft();
             //获取所有临时数据
@@ -561,14 +574,15 @@ class ExamArrangeController extends CommonController
             //所有临时数据 组合
             $datas = [];
             foreach ($draftFlows as $draftFlow) {
-                $datas[strtotime($draftFlow->created_dt)] = [
+                $datas[strtotime($draftFlow->created_at->format('Y-m-d H:i:s'))] = [
                     'item' => $draftFlow,
                     'is_draft_flow' => 1
                 ];
             }
 
             foreach ($drafts as $draft) {
-                $datas[strtotime($draft->created_dt)] = [
+                $time   =   $this->timeIndex($datas,$draft->created_at->format('Y-m-d H:i:s'));
+                $datas[$time] = [
                     'item' => $draft,
                     'is_draft_flow' => 0
                 ];
@@ -590,13 +604,14 @@ class ExamArrangeController extends CommonController
                     }
                 }
             }
+            $connection->commit();
             //返回结果
             return response()->json(
                 $this->success_data([], 1, '保存成功！')
             );
 
         } catch (\Exception $ex){
-
+            $connection->rollBack();
             return response()->json($this->fail($ex));
         }
     }

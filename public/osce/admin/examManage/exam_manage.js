@@ -4614,7 +4614,7 @@ function station_assignment(){
     $('#save').click(function() {
         $.ajax({
             type:'post',
-            url: '',
+            url: pars.save,
             data:{exam_id:examId},
             success: function(res) {
                 if(res.code != 1) {
