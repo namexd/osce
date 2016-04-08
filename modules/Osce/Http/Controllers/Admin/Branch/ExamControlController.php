@@ -41,6 +41,8 @@ class ExamControlController extends CommonController
         ]);
     }
 
+
+
     /**终止考试数据交互
      * @method
      * @url /osce/
@@ -65,39 +67,24 @@ class ExamControlController extends CommonController
         );
         if($request->input('status')==3){
             $data['description'] = $request->input('description');
-        }else{
+            $data['type'] = -1;//终止考试
+        }elseif($request->input('status')==2){
             $data['description'] = -1;
+            $data['type'] = 1;//上报替考
+        }elseif($request->input('status')==1){
+            $data['description'] = -1;
+            $data['type'] = 2;//上报弃考
         }
+
         $examControlModel = new ExamControl();
         $result = $examControlModel->stopExam($data);
         if($result==true){
             return response()->json(true);
         }else{
-            return response()->json(false);
+            return response()->json($result);
         }
     }
-    public function postStopExam()
-    {
-        $data=array(
-            'examId' =>541,
-            'studentId' =>7263, //考生编号
-            'examScreeningId' =>550, //场次编号
-            'stationId' =>80, //考站编号
-            'userId' =>970, //老师id
-            'examScreeningStudentId' =>170, //考试场次-学生关系id
-            'description' =>2, //终止考试原图
-            'status' =>3, //1确认弃考 2确认替考 3终止考试
-        );
-        $examControlModel = new ExamControl();
-        $result = $examControlModel->stopExam($data);
 
-        if($result==true){
-            return response()->json(true);
-        }else{
-            return response()->json(false);
-        }
-
-    }
 
     /**替考终止数据交互
      * @method

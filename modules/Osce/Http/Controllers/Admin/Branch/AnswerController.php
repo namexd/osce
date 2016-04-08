@@ -36,8 +36,8 @@ class AnswerController extends CommonController
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
         //?id=132&stationId=20&userId=347&studentId=6404&examId=421
-        $examId = $request->input('examId');//考试id  421
         $ExamPaperId = $request->input('id');//试卷id  132
+        $examId = $request->input('examId');//考试id  421
         $stationId = $request->input('stationId');//考站id 20
         $userId = $request->input('userId');//老师id
         $studentId = $request->input('studentId');//学生id
@@ -270,6 +270,39 @@ class AnswerController extends CommonController
             'minute'=>$minute,
             'second'=>$second
         ]);
+    }
+
+    /**获取考试队列中的考试监控标记
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getControlMark(Request $request)
+    {
+        $this->validate($request,[
+            'examId'       => 'required|integer',
+            'studentId'    => 'required|integer',
+            'stationId'    => 'required|integer',
+        ]);
+        $examId = $request->input('examId');
+        $studentId = $request->input('studentId');
+        $stationId = $request->input('stationId');
+        $examQueueModel = new ExamQueue();
+        $data = $examQueueModel->select('controlMark')
+                                ->where('exam_id','=',$examId)
+                                ->where('student_id','=',$studentId)
+                                ->where('station_id','=',$stationId)->first();
+        if(!empty($data)){
+            $controlMark = $data['controlMark'];
+        }else{
+            $controlMark = 0;
+        }
+        return response()->json($controlMark);
+
     }
 
 
