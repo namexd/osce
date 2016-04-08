@@ -570,10 +570,13 @@ class ApiController extends CommonController
             //在队列表中查找与考试相关的数据
             $examquen = new ExamQueue();
             $examing = $examquen->getExamingData($examId,@$userInfo->id);
-            //dd($examing);
+
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
+
+
+
 
             //整理考试数据
             $examData = array();
@@ -582,6 +585,9 @@ class ApiController extends CommonController
 
 
             foreach($examing as $key=>$v){
+                    if(!$v['station_id']){
+                        $examing[$key]['station_id'] = RoomStation::where('room_id','=',$v['room_id'])->first()->station_id;
+                    }
                     $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();
                     $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
                     $examData[$key]['station_id'] = $v['station_id'];

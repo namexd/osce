@@ -782,7 +782,7 @@ class ExamQueue extends CommonModel
     public function getExamingData($examId,$studentId){
         $builder = $this->whereIn('exam_queue.exam_id',$examId)->where('exam_queue.student_id',$studentId)->leftjoin('exam',function($exam){
             $exam->on('exam.id','=','exam_queue.exam_id');
-        })->select('exam.id','exam.name','exam_queue.station_id','exam.status')->get();
+        })->select('exam.id','exam.name','exam_queue.station_id','exam.status','exam_queue.room_id')->get();
 
         return $builder;
     }
