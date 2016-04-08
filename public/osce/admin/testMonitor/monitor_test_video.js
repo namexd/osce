@@ -300,7 +300,7 @@ var videoPlay = (function(mod){
             console.log(szIP + " " + szInfo);   
         }
 
-    }
+    };
 
 
     mod.openVoice = function(){
@@ -315,9 +315,7 @@ var videoPlay = (function(mod){
             }
             console.log(szInfo);
         },2000);
-    }
-
-
+    };
     return mod;
 
 })(videoPlay||{});
@@ -327,175 +325,39 @@ $(function(){
     var pars = JSON.parse(($("#parameter").val()).split("'").join('"'));
 
     //初始化
-    videoPlay.initVideo(700,300,1,"divPlugin",pars.download);
+    videoPlay.initVideo(700,300,pars.channel,"divPlugin",pars.download);
     //登录
     videoPlay.Login({ip:pars.ip,ports:pars.port,user:pars.username,passwd:pars.password});
-
-    //开始回放
-    var i = 0;
-    setTimeout(function(){
-    	videoPlay.StartPlayback(0,pars.ip,pars.starttime,pars.endtime,pars.channel);
-    	
-    	//开始进度条计数
-    	timer = setInterval(function(){
-    		progressMove();
-    	},1000);
-
-    },1000);
-
+    //实时视频
+    videoPlay.StartRealPlay(pars.channel);
     //打开声音
     videoPlay.openVoice();
-    
-
-
-    //暂停播放
-    $(".resume").click(function(){
-        $(".pause").show();
-        $(".resume").hide();
-        //清除进度条
-        clearInterval(timer);
-        videoPlay.pausePlay(0);
-    });
-
-    //继续播放
-    $(".pause").click(function(){
-	    $(".pause").hide();
-	    $(".resume").show();
-
-	    //获取相对位置
-        var left = ($(".progress-bar").css('width')).split('p')[0];
-        var i = left/6;
-        
-	    //进度条
-	    timer = setInterval(function(){
-    		progressMove();
-    	},1000);
-
-        videoPlay.resumePlay(0);
-	});
 
 
 
-    /**
-     * 进度条
-     * @author mao
-     * @version 1.0
-     * @date    2016-03-14
-     */
-	function progressMove(){
-
-		//i = Math.round(i);
-		if(i>=100){
-	  		$(".progress-bar").css("width","0%");
-	  		//循环回放
-	  		videoPlay.StartPlayback(0,pars.ip,pars.starttime,pars.endtime,pars.channel);
-	  		i = 0;
-			return i;
-		}else{
-			i = i + step;
-	  		$(".progress-bar").css("width",i+"%");
-	  		return i;
-		}
-    }
-
-    /**
-     * 大于10与不大于10
-     * @author mao
-     * @version 1.0
-     * @date    2016-03-14
-     * @param   {[string]}   res [数据]
-     */
-    function toTime(res){
-        res<10?res='0'+res:res=res;
-        return res;
-    }
-
-
-    //获取点击相对位置
-    $("#progress").click(function(e){
-    	//获取相对位置
-        var left = e.clientX-($("#progress").offset().left);
-        //var percent = Math.floor(left/6);
-        var percent = left/6;
-        $(".progress-bar").css({"width":percent+"%"});
-
-        //字符串转化为时间格式
-        dateTime = (pars.starttime).replace(/-/g,"/");
-		var dateTime = new Date(dateTime);
-        var seconds = Date.parse(dateTime);
-
-        //加上进度条换算成时间值
-        seconds = seconds + percent/step*1000;
-        var dat = new Date(seconds);
-        var year = dat.getFullYear();
-        var month = dat.getMonth()+1;
-        month = toTime(month);
-        var days = dat.getDate();
-        days = toTime(days);
-        var hour = dat.getHours();
-        hour = toTime(hour);
-        var min = dat.getMinutes();
-        min = toTime(min);
-        var s = dat.getSeconds();
-        s = toTime(s);
-        var newstart = year+"-"+month+"-"+days+" "+hour+":"+min+":"+s;
-
-        //清除进度条
-        clearInterval(timer);
-
-        //开始进度条计数
-        i = percent;  //计数器重置
-    	timer = setInterval(function(){
-    		progressMove();
-    	},1000);
-        //启动回放
-        videoPlay.StartPlayback(0,pars.ip,newstart,pars.endtime,pars.channel);
-        videoPlay.openVoice();
-        //检测是否为暂停
-        testPause(timer);
-    });
-
-    //选择标记点跳转视频
-    $(".points li").click(function(){
-
-        //拿到标记点初始时间  字符串转化为时间格式
-        var point=$(this).find("span").text();
-        dateTime = (point).replace(/-/g,"/");
-		var pointTime = new Date(dateTime);
-        var pointTime = Date.parse(dateTime);
-        //传入计算出的进度条长度
-        i = (pointTime/1000-start)*step;    //计数器重置
-        $(".progress-bar").css("width",i+"%");
-        //清除进度条
-        clearInterval(timer);
-        timer = setInterval(function(){
-    		progressMove();
-    	},1000);
-        //启动回放
-        videoPlay.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
-        videoPlay.openVoice();
-
-        //检测是否为暂停
-        testPause(timer);
-
-        
-    });
-
-
-    /**
-     * 判断暂停
-     * @author mao
-     * @version 1.0
-     * @date    2016-03-11
-     * @param   {number}   _param 0
-     */
-    function testPause(param){
-       if($('.pause').css('display')!='none'){
-       		$(".progress-bar").css("width",i+"%");
-            videoPlay.pausePlay(0);
-            clearInterval(param);
-        }
-    }
-    
-
-})
+    ////选择标记点跳转视频
+    //$(".points li").click(function(){
+    //
+    //    //拿到标记点初始时间  字符串转化为时间格式
+    //    var point=$(this).find("span").text();
+    //    dateTime = (point).replace(/-/g,"/");
+		//var pointTime = new Date(dateTime);
+    //    var pointTime = Date.parse(dateTime);
+    //    //传入计算出的进度条长度
+    //    i = (pointTime/1000-start)*step;    //计数器重置
+    //    $(".progress-bar").css("width",i+"%");
+    //    //清除进度条
+    //    clearInterval(timer);
+    //    timer = setInterval(function(){
+    //		progressMove();
+    //	},1000);
+    //    //启动回放
+    //    videoPlay.StartPlayback(0,pars.ip,point,pars.endtime,pars.channel);
+    //    videoPlay.openVoice();
+    //
+    //    //检测是否为暂停
+    //    testPause(timer);
+    //
+    //
+    //});
+});

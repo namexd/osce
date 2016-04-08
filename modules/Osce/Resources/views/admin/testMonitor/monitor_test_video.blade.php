@@ -15,13 +15,9 @@
             background-color: #eee;
         }
         .video{
-            padding-left: 50px;
             position: relative;
         }
-        .progress{
-            cursor: pointer;
-            margin-bottom: 50px;
-        }
+
     </style>
 @stop
 @section('only_js')
@@ -30,10 +26,10 @@
 @stop
 
 @section('content')
-    @if($data->count() != 0)
-    <input type="hidden" id="parameter" value="{'ip':'{{$data[0]['ip']}}',
-    'port':'{{$data[0]['port']}}','username':'{{$data[0]['username']}}',
-    'password':'{{$data[0]['password']}}','channel':'{{$data[0]['channel']}}','download':'{{route('osce.admin.course.getDownloadComponents')}}'}" />
+    @if(!empty($data))
+    <input type="hidden" id="parameter" value="{'ip':'{{@$data['ip']}}',
+    'port':'{{@$data['port']}}','username':'{{@$data['username']}}',
+    'password':'{{@$data['password']}}','channel':'{{@$data['channel']}}','download':'{{route('osce.admin.course.getDownloadComponents')}}'}" />
     @else
    <input type="hidden" id="parameter" value="{'ip':'',
     'port':'','username':'','password':'','channel':''}" />
