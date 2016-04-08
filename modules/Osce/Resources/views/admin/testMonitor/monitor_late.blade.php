@@ -15,7 +15,7 @@
 
 {{-- 内容主体区域 --}}
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'monitor_late'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'monitor_late','lateUrl':'{{ route('osce.admin.ExamMonitorController.postStopExam') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -70,9 +70,11 @@
                                         <td>{{$val['code']}}</td>
                                         <td>{{$val['exam_sequence']}}</td>
                                         <td class="idCard">{{$val['idcard']}}</td>
-                                        <td>{{$val['mobile']}}</td>
+                                        <td>{{$val['mobile']}}</td>i
                                         <td>
-                                            <a href="javascript:void(0)">
+                                            <a href="javascript:void(0)"
+                                               examId="{{ @$val['examId'] }}" studentId="{{ @$val['student_id'] }}"
+                                                examScreeningStudentId="{{ @$val['examScreeningStudentId'] }}">
                                                 <span class="state1 abandon">
                                                     <i class="fa fa-cog fa-2x"></i>
                                                 </span>

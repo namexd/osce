@@ -159,8 +159,26 @@ function monitor_late(){
     $(".abandon").click(function(){
         var $student = $(this).parent().parent().siblings(".student").text();
         var $idCard = $(this).parent().parent().siblings(".idCard").text();
+        var $examId = $(this).parent().attr("examId");
+        var $studentId = $(this).parent().attr("studentId");
+        var $examScreeningStudentId = $(this).parent().attr("examScreeningStudentId");
+        var lateUrl = pars.lateUrl;
         layer.confirm("确认当前考生"+$student+"（"+$idCard+"）放弃考试？",function(){
-
+            $.ajax({
+                url:lateUrl,
+                type:"get",
+                data:{examId:$examId,studentId:$studentId,examScreeningStudentId:$examScreeningStudentId},
+                cache:false,
+                success:function(res){
+                    console.log(res);
+                    if(res == true){
+                        window.location.href = window.location.href;
+                        layer.msg("提交成功！",{skin:'msg-success',icon:1});
+                    }else{
+                        layer.msg(res,{skin:'msg-error',icon:1});
+                    }
+                }
+            })
         });
     });
 }
