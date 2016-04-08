@@ -42,7 +42,7 @@
                                     @if(!empty($val2["image"])&&count(unserialize($val2["image"]))>0)
                                         @foreach(unserialize($val2["image"]) as $item)
                                             <a href="{{$item}}" class="fancybox">
-                                                <img src="{{$item}}" alt="image" class="pic" style="height: 150px;width: 150px;">{{$item}}
+                                                <img src="{{$item}}" alt="image" class="pic" style="height: 150px;width: 150px;">
                                             </a>
                                         @endforeach
                                     @endif
