@@ -141,7 +141,7 @@ class Answer extends Model
             $exam_screening_id = ExamScreeningStudent::where('student_id','=',$data['studentId'])->first();
             $examResultData=array(
                 'student_id'=>$data['studentId'],
-                'exam_screening_id'=>$exam_screening_id->exam_screening_id,
+                'exam_screening_id'=>$exam_screening_id['exam_screening_id'],
                 'station_id'=>$data['stationId'],
                 'time'=>$data['time'],
                 'score'=>$score,
@@ -150,6 +150,7 @@ class Answer extends Model
                 'end_dt'=>$data['end_dt'],//考试结束时间
                 
             );
+
             if(!ExamResult::create($examResultData)){
                 throw new \Exception(' 插入考试结果记录表失败！');
             }

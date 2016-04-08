@@ -43,12 +43,14 @@ class AnswerController extends CommonController
             'studentId'    => 'required|integer',
 
         ]);
-        //?id=132&stationId=20&userId=347&studentId=6404&examId=421
+
+        //admin/answer/formalpaper-list?stationId=21&userId=347&studentId=6504&id=142&examId=431
         $ExamPaperId = $request->input('id');//试卷id  132
         $examId = $request->input('examId');//考试id  421
         $stationId = $request->input('stationId');//考站id 20
         $userId = $request->input('userId');//老师id
         $studentId = $request->input('studentId');//学生id
+
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
 
@@ -113,6 +115,7 @@ class AnswerController extends CommonController
                 }
             }
         }
+
         if(count($examCategoryFormalData)>0&&!empty($examCategoryFormalData)){
             foreach($examCategoryFormalData as $key=>$val){
                 if($val['examQuestionTypeId']==1){//单选
@@ -128,7 +131,6 @@ class AnswerController extends CommonController
             }
         }
        //dd(date('Y/m/d H:i:s',$systemTimeStart).'和'.date('Y/m/d H:i:s',$systemTimeEnd));
-
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -151,6 +153,8 @@ class AnswerController extends CommonController
      */
     public function postSaveAnswer(Request $request)
     {
+
+
         $this->validate($request,[
             'examPaperFormalId'       => 'required|integer',
             'studentId'    => 'required|integer',
@@ -228,9 +232,12 @@ class AnswerController extends CommonController
                 $data['examQuestionFormalInfo'][$k]['answer']=$newStudentAnswer;
             }
         }
+
+
         //保存考生答案
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
+
         if($result){
             $arr=array(
                 'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
@@ -241,6 +248,7 @@ class AnswerController extends CommonController
                 'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
                 'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
             );
+
             //将向考试结果记录表增加一条数据
             $result = $answerModel->createExamResult($arr);
             if($result){
@@ -312,6 +320,8 @@ class AnswerController extends CommonController
                                 ->where('exam_id','=',$examId)
                                 ->where('student_id','=',$studentId)
                                 ->where('station_id','=',$stationId)->first();
+        //dd(data);
+
         if(!empty($data)){
             $controlMark = $data['controlMark'];
         }else{

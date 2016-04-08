@@ -145,6 +145,45 @@
         });
         $(function(){
             countDown("{{$systemTimeEnd}}","#colockbox1");
+            var statusTimer = setInterval(function(){
+                var examPaperFormalId=$('#examPaperFormalId').val();
+                var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
+                var stationId = $(".allData").attr("stationId");
+                var userId = $(".allData").attr("userId");
+                var studentId = $(".allData").attr("studentId");
+                var examId = $(".allData").attr("examId");
+                $.ajax({
+                    url:"{{route('osce.admin.AnswerController.getControlMark')}}",
+                    type:"get",
+                    dataType:"json",
+                    cache:false,
+                    data:{examId:examId,studentId:studentId,stationId:stationId},
+                    success:function(res){
+                        if(res == 1){
+                            clearInterval(statusTimer);
+                            $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
+                                    {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
+                                        if(obj.status=='1'){
+                                            $.ajax({
+                                                url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
+                                                cache:false,
+                                                dataType:"json",
+                                                type:"get",
+                                                success:function(res){
+                                                    if(res.code == 1){
+                                                        location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        if(obj.status=='2'){
+                                            layer.confirm('保存失败！');
+                                        }
+                                    });
+                        }
+                    }
+                })
+            },3000);
         });
         function countDown(time,id){
             var day_elem = $(id).find('.day');
