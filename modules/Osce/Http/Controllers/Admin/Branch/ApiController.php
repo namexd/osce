@@ -563,6 +563,7 @@ class ApiController extends CommonController
             $Student = new Student();
             $examing = $Student->getExamings($userInfo->id);
 
+//dd($examing);
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
