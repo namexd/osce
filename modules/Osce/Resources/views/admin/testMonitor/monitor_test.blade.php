@@ -18,7 +18,7 @@
 
 {{-- 内容主体区域 --}}
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'monitor_test','videoUrl':'{{ route('osce.admin.ExamControlController.getVcrsList') }}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'monitor_test','videoUrl':'{{ route('osce.admin.ExamControlController.getVcrsList') }}','stopUrl':'{{ route('osce.admin.ExamControlController.postStopExam') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -91,19 +91,25 @@
                                             </span>
                                         </a>
                                         @if(@$val["type"]==-1&&@$val["examOrderStatus"]!=4)
-                                            <a href="javascript:void(0)" stationType="{{ @$val['stationType'] }}">
+                                            <a href="javascript:void(0)"
+                                               examId="{{ @$val['examId'] }}" studentId="{{ @$val['studentId'] }}" examScreeningId="{{ @$val['exam_screening_id'] }}"
+                                               stationId="{{ @$val['stationId'] }}" userId="{{ @$val['userId'] }}" examScreeningStudentId="{{ @$val['examScreeningStudentId'] }}">
                                                 <span class="state1 stop" data-toggle="modal" data-target="#myModal">
                                                     <i class="fa fa-cog fa-2x"></i>
                                                 </span>
                                             </a>
                                         @elseif((@$val["type"]==2))
-                                            <a href="javascript:void(0)">
+                                            <a href="javascript:void(0)"
+                                               examId="{{ @$val['examId'] }}" studentId="{{ @$val['studentId'] }}" examScreeningId="{{ @$val['exam_screening_id'] }}"
+                                               stationId="{{ @$val['stationId'] }}" userId="{{ @$val['userId'] }}" examScreeningStudentId="{{ @$val['examScreeningStudentId'] }}">
                                                 <span class="state1 abandon">
                                                     <i class="fa fa-cog fa-2x"></i>
                                                 </span>
                                             </a>
                                         @elseif(@$val["type"]==1)
-                                            <a href="javascript:void(0)">
+                                            <a href="javascript:void(0)"
+                                               examId="{{ @$val['examId'] }}" studentId="{{ @$val['studentId'] }}" examScreeningId="{{ @$val['exam_screening_id'] }}"
+                                               stationId="{{ @$val['stationId'] }}" userId="{{ @$val['userId'] }}" examScreeningStudentId="{{ @$val['examScreeningStudentId'] }}">
                                                 <span class="state1 replace">
                                                     <i class="fa fa-cog fa-2x"></i>
                                                 </span>
@@ -132,8 +138,8 @@
 
 @section('layer_content')
     {{--终止考试弹出框--}}
-    <form class="form-horizontal" id="stopForm" novalidate="novalidate" method="post" action="{{ route('osce.admin.ExamControlController.postStopExam') }}">
-        <input type="hidden" value="" id="stationType">
+    <form class="form-horizontal" id="stopForm" novalidate="novalidate" method="post" action="">
+        <input type="hidden" value="" id="data" examId="" studentId="" examScreeningId="" stationId="" userId="" examScreeningStudentId="">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">终止考试</h4>
@@ -159,7 +165,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" id='stopSure'>确定</button>
+            <button type="button" class="btn btn-primary" id='stopSure'>确定</button>
             <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
         </div>
     </form>
