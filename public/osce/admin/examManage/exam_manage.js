@@ -3977,7 +3977,8 @@ function examinee_manage_edit() {
 function station_assignment(){
 
     //考站名称
-    var stationName = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+    var stationName = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'],
+        examId = (location.href).split('=')[1];
 
     /**
      * 初始化
@@ -4042,7 +4043,22 @@ function station_assignment(){
         }
         ]
     }
-    ]
+    ];
+
+    $.ajax({
+        type:'get',
+        url: pars.data_list,
+        async: false,
+        data: {exam_id: examId},
+        success: function(res) {
+            if(res.code != 1) {
+                layer.msg('数据加载失败！',{skin:'msg-error',icon:1});
+            } else {console.log(res)
+                InitData(res.data);
+            }
+        }
+    });
+
 
     /**
      * 数据渲染
@@ -4116,7 +4132,7 @@ function station_assignment(){
         }
     }
     //模拟数据触发
-    InitData(data);
+    //InitData(data);
 
     
     //阶段列表
@@ -4143,7 +4159,7 @@ function station_assignment(){
         var $that = $(this).parent().parent().parent().parent(),
             req = {};
 
-        req['exam_id'] = (location.href).split('=')[1];
+        req['exam_id'] = examId;
         req['name'] = $(this).parent().siblings('.col-sm-4').find('label').text();
         req['order'] = $(this).parent().siblings('.col-sm-4').find('label').attr('order')
         req['exam_gradation_id'] = $(this).val();
@@ -4164,7 +4180,6 @@ function station_assignment(){
         });
     });
 
-    select2Init($('.item-id-test'));
 
     /**
      * 新建一个考站
@@ -4179,7 +4194,7 @@ function station_assignment(){
             index = parseInt($('.station-container').attr('index'));
 
         //请求数据
-        req['exam_id'] = (location.href).split('=')[1];
+        req['exam_id'] = examId;
         req['name'] = '第'+stationName[index]+'站';
         req['order'] = index;
         req['exam_gradation_id'] = 1;
@@ -4287,7 +4302,7 @@ function station_assignment(){
         $.ajax({
             type:'get',
             url: pars.del_flow,
-            data: {exam_id:(location.href).split('=')[1],flow_id:$that.find('table').attr('station-id'),type:5},
+            data: {exam_id:examId,flow_id:$that.find('table').attr('station-id'),type:5},
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('删除失败！',{skin:'msg-error',icon:1});
@@ -4314,7 +4329,7 @@ function station_assignment(){
         $.ajax({
             type:'post',
             url: pars.update_data,
-            data: {exam_id:(location.href).split('=')[1],flow_id:$that.parent().attr('station-id'),type:4},
+            data: {exam_id:examId,flow_id:$that.parent().attr('station-id'),type:4},
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('新增失败！',{skin:'msg-error',icon:1});
@@ -4356,7 +4371,7 @@ function station_assignment(){
         $.ajax({
             type:'get',
             url: pars.del_draft,
-            data: {exam_id:(location.href).split('=')[1],flow_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:5},
+            data: {exam_id:examId,flow_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:5},
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('删除失败！',{skin:'msg-error',icon:1});
@@ -4403,11 +4418,20 @@ function station_assignment(){
         //数据更新，交互数据
         }).on('select2:select', function(e) {
             //新增页面
-            //layer.open(); 
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考试项目',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  content: 'http://layer.layui.com/mobile/' //iframe的url
+                });
+            }
 
             //请求数据
             var req = {
-                exam_id:(location.href).split('=')[1],
+                exam_id:examId,
                 type:$elem.find('.exam-item').parent().attr('type'),
                 draft_id:$elem.attr('item-id'),
                 flow_id:$elem.parent().parent().attr('station-id'),
@@ -4452,7 +4476,7 @@ function station_assignment(){
         }).on('select2:select', function(e) {
             //请求数据
             var req = {
-                exam_id:(location.href).split('=')[1],
+                exam_id:examId,
                 type:$elem.find('.exam-station').parent().attr('type'),
                 draft_id:$elem.attr('item-id'),
                 flow_id:$elem.parent().parent().attr('station-id'),
@@ -4499,7 +4523,7 @@ function station_assignment(){
         }).on('select2:select', function(e) {
             //请求数据
             var req = {
-                exam_id:(location.href).split('=')[1],
+                exam_id:examId,
                 type:$elem.find('.station-belong').parent().attr('type'),
                 draft_id:$elem.attr('item-id'),
                 station_id:$elem.parent().parent().attr('station-id'),
@@ -4520,7 +4544,7 @@ function station_assignment(){
         $elem.find('.station-chioce').select2({data:[{id:1,text:'必考'},{id:2,text:'选考'}]}).on("change", function (e) {
             //请求数据
             var req = {
-                exam_id:(location.href).split('=')[1],
+                exam_id:examId,
                 type:$elem.find('.station-chioce').parent().attr('type'),
                 draft_id:$elem.attr('item-id'),
                 station_id:$elem.parent().parent().attr('station-id'),
@@ -4549,7 +4573,7 @@ function station_assignment(){
         $.ajax({
             type:'post',
             url: '',
-            data:{exam_id:(location.href).split('=')[0]},
+            data:{exam_id:examId},
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
