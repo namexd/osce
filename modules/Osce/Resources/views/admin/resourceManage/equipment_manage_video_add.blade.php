@@ -97,7 +97,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">端口</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="port" name="port">
+                                    <input type="text"  class="form-control" id="port" name="port" value="80">
                                 </div>
                             </div>
 
@@ -105,7 +105,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">实时端口</label>
                                 <div class="col-sm-10">
-                                    <input type="text"  class="form-control" id="realport" name="realport">
+                                    <input type="text"  class="form-control" id="realport" name="realport" value="8000">
                                 </div>
                             </div>
 

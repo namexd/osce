@@ -18,7 +18,7 @@
 
 {{-- 内容主体区域 --}}
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'monitor_test'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'monitor_test','videoUrl':'{{ route('osce.admin.ExamControlController.getVcrsList') }}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -79,30 +79,30 @@
                                     <td class="station">{{ @$val["stationName"]}}</td>
                                     <td>{{ @$val["remainStationCount"]}}</td>
                                     <td>
-                                        @if((@$val["is_replace"]==-1&&@$val["is_give"]==1) || (@$val["is_replace"]==1&&@$val["is_give"]==1))上报弃考
-                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)上报替考
-                                        @elseif(@$val["is_replace"]==-1&&@$val["is_give"]==-1&&@$val["examOrderStatus"]!=4)考试中
+                                        @if((@$val["type"]==1))上报替考
+                                        @elseif(@$val["type"]==2)上报弃考
+                                        @elseif(@$val["type"]==-1&&@$val["examOrderStatus"]!=4)考试中
                                         @endif
                                     </td>
                                     <td>
                                         <a href="javascript:void(0)">
-                                            <span class="state1 look">
+                                            <span class="state1 look" examId="{{@$val['examId']}}" stationId="{{ @$val['stationId'] }}">
                                                 <i class="fa fa-video-camera fa-2x"></i>
                                             </span>
                                         </a>
-                                        @if(@$val["is_replace"]==-1&&@$val["is_give"]==-1&&@$val["examOrderStatus"]!=4)
+                                        @if(@$val["type"]==-1&&@$val["examOrderStatus"]!=4)
                                             <a href="javascript:void(0)" stationType="{{ @$val['stationType'] }}">
                                                 <span class="state1 stop" data-toggle="modal" data-target="#myModal">
                                                     <i class="fa fa-cog fa-2x"></i>
                                                 </span>
                                             </a>
-                                        @elseif((@$val["is_replace"]==-1&&@$val["is_give"]==1) || (@$val["is_replace"]==1&&@$val["is_give"]==1))
+                                        @elseif((@$val["type"]==2))
                                             <a href="javascript:void(0)">
                                                 <span class="state1 abandon">
                                                     <i class="fa fa-cog fa-2x"></i>
                                                 </span>
                                             </a>
-                                        @elseif(@$val["is_replace"]==1&&@$val["is_give"]==-1)
+                                        @elseif(@$val["type"]==1)
                                             <a href="javascript:void(0)">
                                                 <span class="state1 replace">
                                                     <i class="fa fa-cog fa-2x"></i>

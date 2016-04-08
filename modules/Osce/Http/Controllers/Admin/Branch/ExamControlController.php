@@ -35,7 +35,7 @@ class ExamControlController extends CommonController
     {
         $examControlModel = new ExamControl();
         $data = $examControlModel->getDoingExamList();
-        dd($data);
+        //dd($data);
         return view('osce::admin.testMonitor.monitor_test', [
             'data'      =>$data,
         ]);
@@ -61,9 +61,13 @@ class ExamControlController extends CommonController
             'stationId' =>$request->input('stationId'), //考站编号
             'userId' =>$request->input('userId'), //老师id
             'examScreeningStudentId' =>$request->input('examScreeningStudentId'), //考试场次-学生关系id
-            'description' =>$request->input('description'), //终止考试原图
-
+            'status' =>$request->input('status'), //1确认弃考 2确认替考 3终止考试
         );
+        if($request->input('status')==3){
+            $data['description'] = $request->input('description');
+        }else{
+            $data['description'] = -1;
+        }
         $examControlModel = new ExamControl();
         $result = $examControlModel->stopExam($data);
         if($result==true){
@@ -82,6 +86,7 @@ class ExamControlController extends CommonController
             'userId' =>970, //老师id
             'examScreeningStudentId' =>170, //考试场次-学生关系id
             'description' =>2, //终止考试原图
+            'status' =>3, //1确认弃考 2确认替考 3终止考试
         );
         $examControlModel = new ExamControl();
         $result = $examControlModel->stopExam($data);
@@ -119,6 +124,31 @@ class ExamControlController extends CommonController
         $examControlModel = new ExamControl();
         $result = $examControlModel->stopExam($data);
     }
+
+
+
+    public function getVcrsList(Request $request)
+    {
+        $this->validate($request,[
+            'examId'       => 'required|integer',
+            'stationId'    => 'required|integer',
+        ]);
+        //获取参数
+        $examId    = $request->input('examId');
+        $stationId = $request->input('stationId');
+        $examControlModel = new ExamControl();
+        $vcrInfo    = $examControlModel->getVcrInfo($examId, $stationId);
+        //dd($vcrInfo);
+
+        return view('osce::admin.testMonitor.monitor_test_video', [
+            'data'      =>$vcrInfo,
+        ]);
+
+    }
+
+
+
+
 
 
 

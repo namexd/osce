@@ -424,7 +424,7 @@ class ApiController extends CommonController
             //获取当前登录账户的角色名称
             $questionBankRepositories = new QuestionBankRepositories();
             $roleType = $questionBankRepositories->getExamLoginUserRoleType();
-
+           // dd($roleType);
             if($roleType == 1){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($roleType == 2){
@@ -554,11 +554,11 @@ class ApiController extends CommonController
         $user = Auth::user();
         //查找当前正在进行的考试--之后会改
         $examingDO = Exam::where('status','=',1)->first();
-        //dd($user);
+        //dd($examingDO);
         if(count($examingDO) > 0){
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-           
+            //dd($userInfo);
             $Student = new Student();
             $examing = $Student->getExamings($userInfo->id);
 
@@ -570,6 +570,7 @@ class ApiController extends CommonController
             $examData = array();
             $StationTeacher = new StationTeacher();
             $ExamPaperExamStation = new ExamPaperExamStation();
+
 
             foreach($examing as $key=>$v){
                     $stationTeacher = $StationTeacher->where('station_id','=',$v['station_id'])->first();

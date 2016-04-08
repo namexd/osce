@@ -18,6 +18,7 @@ use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Http\Controllers\CommonController;
 use Cache;
+use Modules\Osce\Repositories\Common;
 
 class CourseController extends CommonController
 {
@@ -71,9 +72,11 @@ class CourseController extends CommonController
                         if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
                             $item->avg_score = number_format($avg->pluck('score')->sum() / $avg->pluck('score')->count(),
                                 2);
-                            date_default_timezone_set("UTC");
-                            $item->avg_time = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
-                            date_default_timezone_set("PRC");
+//                            date_default_timezone_set("UTC");
+//                            $item->avg_time = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
+//                            date_default_timezone_set("PRC");
+                            $item->avg_time = Common::handleTime($avg->pluck('time')->sum() / $avg->pluck('time')->count());
+
                             $item->avg_total = $avg->count();
                         } else {
                             $item->avg_score = 0.00;
@@ -123,12 +126,13 @@ class CourseController extends CommonController
         //dd($examId.'='.$subjectId);
         $data = Student::getStudentByExamAndSubject($examId, $subjectId);
         //将排名的数组循环插入表中
-        date_default_timezone_set("UTC");
+//        date_default_timezone_set("UTC");
         foreach ($data as $key => &$item) {
-            $item->exam_result_time = date('H:i:s', $item->exam_result_time);
+//            $item->exam_result_time = date('H:i:s', $item->exam_result_time);
+            $item->exam_result_time = Common::handleTime($item->exam_result_time);
             $item->ranking = $key + 1;
         }
-        date_default_timezone_set("PRC");
+//        date_default_timezone_set("PRC");
 
         return view('osce::admin.statisticalAnalysis.subject_student_list', [
             'data' => $data,
@@ -208,11 +212,13 @@ class CourseController extends CommonController
             throw new \Exception('数据查询失败');
         }
         //转化时间（耗时）
-        date_default_timezone_set('UTC');
+//        date_default_timezone_set('UTC');
         foreach ($studentList as $key => &$item) {
-            $item->time = date('H:i:s', $item->time);
+            
+//            $item->time = date('H:i:s', $item->time);
+            $item->time = Common::handleTime($item->time);
         }
-        date_default_timezone_set('PRC');
+//        date_default_timezone_set('PRC');
 
         return view('osce::admin.statisticalAnalysis.student_subject_list', ['studentList' => $studentList]);
 

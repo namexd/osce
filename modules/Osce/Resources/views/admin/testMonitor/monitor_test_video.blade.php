@@ -42,11 +42,6 @@
         <div class="container-fluid ibox-content">
             <div class="video">
                 <div id="divPlugin" class="plugin"></div>
-                <div id="progress" class="progress" style="width: 600px;">
-                    <div class="progress-bar" id="bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
-
-                    </div>
-                </div>
             </div>
         </div>
     </div>

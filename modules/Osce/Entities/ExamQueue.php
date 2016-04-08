@@ -340,6 +340,8 @@ class ExamQueue extends CommonModel
             }
 //            修改队列状态
             $examQueue->status=2;
+            $examQueue->stick=null;
+
             if ( $examQueue->save()) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
@@ -684,12 +686,12 @@ class ExamQueue extends CommonModel
                         $teacherId, [strtotime($date)]);
 
                     //将该学生的阻塞状态变成1
-                    if (!ExamQueue::where('exam_id', $queue->exam_id)
-                        ->where('student_id', $studentId)
-                        ->update(['blocking' => 1])
-                    ) {
-                        throw new \Exception('抽签失败！请重试', -2);
-                    }
+//                    if (!ExamQueue::where('exam_id', $queue->exam_id)
+//                        ->where('student_id', $studentId)
+//                        ->update(['blocking' => 1])
+//                    ) {
+//                        throw new \Exception('抽签失败！请重试', -2);
+//                    }
                 }
                 $connection->commit();
                 return $queue;

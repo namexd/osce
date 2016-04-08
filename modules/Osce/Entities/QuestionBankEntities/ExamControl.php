@@ -13,6 +13,7 @@ use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\StationVcr;
 
 /**考生答题时，正式试卷模型
  * Class Answer
@@ -203,6 +204,7 @@ class ExamControl extends Model
             //① 更新考试场次-学生关系表(exam_screening_student)
             $examScreeningStudentData = array(
                 'is_end' => 1,
+                'status' => $data['status'],
                 'description' => $data['description']
             );
             //保存考试场次-学生关系表（exam_screening_student）
@@ -255,6 +257,30 @@ class ExamControl extends Model
             $DB->rollback();
             throw $ex;
         }
+    }
+
+    /**获取摄像头信息
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $examId 考试id
+     * @param $stationId 考站id
+     * @return mixed
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getVcrInfo($examId, $stationId)
+    {
+        $DB = DB::connection('osce_mis');
+        $stationVcrModel = new StationVcr();
+        $data = $stationVcrModel->leftJoin('vcr', function($join){
+            $join -> on('station_vcr.vcr_id', '=', 'vcr.id');
+        })->select(['vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port','vcr.realport','vcr.channel','vcr.username','vcr.password'])
+            ->where('station_vcr.exam_id', $examId)
+            ->where('station_vcr.station_id', $stationId)
+            ->first();
+        return $data;
     }
 
 

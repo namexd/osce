@@ -33,7 +33,6 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 use DB;
 use Modules\Osce\Repositories\Common;
-use Illuminate\Support\Facades\Redis;
 
 class DrawlotsController extends CommonController
 {
@@ -72,7 +71,7 @@ class DrawlotsController extends CommonController
     /**
      * 根据考场ID获取当前时间段的考生列表(接口)
      * @method GET
-     * @url api/1.0/osce/drawlots/examinee
+     * @url osce/pad/examinee
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse ${response}
@@ -93,55 +92,64 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-        $redis = Redis::connection('message');
-        $infos = md5($_SERVER['HTTP_HOST']);
-
         try {
             //首先得到登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
-
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
-
             if (is_null($exam)) {
-                //throw new \Exception('今天没有正在进行的考试', -50);
-                $redis->publish($infos, json_encode(['message' => '今天没有正在进行的考试','code'=>-50]));
+                throw new \Exception('今天没有正在进行的考试', -50);
+            } elseif ($exam->status != 1) {
+                throw new \Exception('当前考试没有进行', -777);
             }
 
-            $examinee = new Examinee($exam, ['id' => $id]);
-            switch ($exam->sequence_mode) {
-                case 1:
-                    $examinee->setMode(new RoomMode($id, $exam));
-                    $students = $examinee->examinee();
-                    break;
-                case 2:
-                    $examinee->setMode(new StationMode($id, $exam));
-                    $students = $examinee->examinee();
-                    break;
-                default:
-                    $redis->publish($infos, json_encode(['message' => '当前没有这种考试模式']));
-                    //throw new \Exception('当前没有这种考试模式！');
-                    break;
+            $station = StationTeacher::where('exam_id', '=', $exam->id)
+                ->where('user_id', '=', $id)
+                ->first();
+            if (is_null($station)) {
+                throw new \Exception('你没有参加此次考试');
             }
 
-            foreach ($students as $student) {
-                unset($student['blocking']);
+            list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
+            if ($exam->sequence_mode == 1) {
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations);
+            } elseif ($exam->sequence_mode == 2) {
+                $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id);
+            } else {
+                throw new \Exception('考试模式不存在！', -703);
             }
 
 
-            $redis->publish($infos, json_encode(['data' => $students]));
-            //return response()->json($this->success_data($students));
+//            $examinee = new Examinee($exam, ['id' => $id]);
+//            switch ($exam->sequence_mode) {
+//                case 1:
+//                    $examinee->setMode(new RoomMode($id, $exam));
+//                    $students = $examinee->examinee();
+//                    break;
+//                case 2:
+//                    $examinee->setMode(new StationMode($id, $exam));
+//                    $students = $examinee->examinee();
+//                    break;
+//                default:
+//                    throw new \Exception('当前没有这种考试模式！');
+//                    break;
+//            }
+//            foreach ($students as $student) {
+//                unset($student['blocking']);
+//            }
+
+            
+            return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
-            //return response()->json($this->fail($ex));
-            $redis->publish($infos, json_encode(['message' => $ex]));
+            return response()->json($this->fail($ex));
         }
     }
 
     /**
      * 根据考场ID获取当前时间段的考生列表(接口)
      * @method GET
-     * @url api/1.0  /osce/drawlots/next-examinee
+     * @url osce/pad/next-examinee
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse ${response}
@@ -162,67 +170,61 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-        $redis = Redis::connection('message');
-        $infos = md5($_SERVER['HTTP_HOST']);
-
         try {
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
+        
             if (is_null($exam)) {
-                $redis->publish($infos, json_encode(['message' => '当前没有正在进行的考试','code'=>3000]));
-                //throw new \Exception('当前没有正在进行的考试', 3000);
+                throw new \Exception('当前没有正在进行的考试', 3000);
             }
-            $examId = $exam->id;
 
-            $examinee = new Examinee($exam, ['id' => $id]);
-            switch ($exam->sequence_mode) {
-                case 1:
-                    $examinee->setMode(new RoomMode($id, $exam));
-                    $students = $examinee->nextExaminee();
-                    break;
-                case 2:
-                    $examinee->setMode(new StationMode($id, $exam));
-                    $students = $examinee->nextExaminee();
-                    break;
-                default:
-                    $redis->publish($infos, json_encode(['message' => '当前没有这种考试模式!']));
-                    //throw new \Exception('当前没有这种考试模式！');
-                    break;
-            }
+//            $examinee = new Examinee($exam, ['id' => $id]);
+//            switch ($exam->sequence_mode) {
+//                case 1:
+//                    $examinee->setMode(new RoomMode($id, $exam));
+//                    $students = $examinee->nextExaminee();
+//                    break;
+//                case 2:
+//                    $examinee->setMode(new StationMode($id, $exam));
+//                    $students = $examinee->nextExaminee();
+//                    break;
+//                default:
+//                    throw new \Exception('当前没有这种考试模式！');
+//                    break;
+//            }
 
 //            //获取当前老师对应的考站id
-//            $station = StationTeacher::where('exam_id', '=', $exam->id)
-//                ->where('user_id', '=', $id)
-//                ->first();
-//            if (is_null($station)) {
-//                throw new \Exception('你没有参加此次考试');
-//            }
-//
-//            list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
-//
-//            if ($exam->sequence_mode == 1) {
-//                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $examId, $stations);
-//            } elseif ($exam->sequence_mode == 2) {
-//                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $examId);
-//            } else {
-//                throw new \Exception('考试模式不存在！', -703);
-//            }
+            $station = StationTeacher::where('exam_id', '=', $exam->id)
+                ->where('user_id', '=', $id)
+                ->first();
+            if (is_null($station)) {
+                throw new \Exception('你没有参加此次考试');
+            }
+
+            list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
+
+            if ($exam->sequence_mode == 1) {
+                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $exam->id, $stations);
+            } elseif ($exam->sequence_mode == 2) {
+                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $exam->id);
+            } else {
+                throw new \Exception('考试模式不存在！', -703);
+            }
 
             //从集合中移除blocking
-            $students->forget('blocking');
-            //return response()->json($this->success_data($students));
-            $redis->publish($infos, json_encode(['data' => $students]));
+//            $students->forget('blocking');
+            return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
-            $redis->publish($infos, json_encode(['message' => $ex]));
+            return response()->json($this->fail($ex));
         }
     }
 
     /**
      * 根据传入的腕表编号和房间id分配应该要去考站(接口)
      * @method POST
-     * @url api/1.0  /osce/pad/station
+     * @url /osce/pad/station
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse ${response}
@@ -241,17 +243,14 @@ class DrawlotsController extends CommonController
     {
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
-
-        $redis = Redis::connection('message');
-        $infos = md5($_SERVER['HTTP_HOST']);
-
+        //验证
+        $this->validate($request, [
+            'uid' => 'required|string',
+            'room_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
+        ]);
         try {
-            //验证
-            $this->validate($request, [
-                'uid' => 'required|string',
-                'room_id' => 'required|integer',
-                'teacher_id' => 'required|integer'
-            ]);
+            $examId = $request->input('exam_id', null);
             //获取uid和room_id
             $uid = $request->input('uid');
             $roomId = $request->input('room_id');
@@ -260,96 +259,89 @@ class DrawlotsController extends CommonController
             //根据uid查到对应的腕表编号
             $watch = Watch::where('code', $uid)->first();
             if (is_null($watch)) {
-                $redis->publish($infos, json_encode(['message' => '没有找到对应的腕表信息','code'=>3100]));
-                //throw new \Exception('没有找到对应的腕表信息！', 3100);
+                throw new \Exception('没有找到对应的腕表信息！', 3100);
             }
 
             //获取腕表记录实例
             $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
             if (!$watchLog) {
-                $redis->publish($infos, json_encode(['message' => '没有找到学生对应的腕表信息','code'=>3200]));
-                //throw new \Exception('没有找到学生对应的腕表信息！', 3200);
+                throw new \Exception('没有找到学生对应的腕表信息！', 3200);
             }
 
             //获取腕表对应的学生实例
             if (!$student = $watchLog->student) {
-                $redis->publish($infos, json_encode(['message' => '没有找到对应的学生信息','code'=>3300]));
-                //throw new \Exception('没有找到对应的学生信息！', 3300);
+                throw new \Exception('没有找到对应的学生信息！', 3300);
             }
 
 //            //判断当前学生是否在当前小组中
-            $exam = Exam::where('status', 1)->first();
+            $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
-                $redis->publish($infos, json_encode(['message' => '当前没有正在进行的考试','code'=>3000]));
-                //throw new \Exception('当前没有正在进行的考试', 3000);
+                throw new \Exception('当前没有正在进行的考试', 3000);
             }
-//            $examId = $exam->id;
-//            list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
-//
-//            //获取当前老师对应的考站id
-//            $station = StationTeacher::where('exam_id', '=', $exam->id)
-//                ->where('user_id', '=', $teacherId)
-//                ->first();
-//            if (is_null($station)) {
-//                throw new \Exception('你没有参加此次考试', 7100);
-//            }
-//            /*
-//             * 判断当前考生是否是在当前的学生组中
-//             */
-//            if ($exam->sequence_mode == 1) {
-//                //从队列表中通过考场ID得到对应的当前组的考生信息
-//                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
-//                if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
-//                    throw new \Exception('该考生不在当前考生小组中', 7200);
-//                }
-//            } elseif ($exam->sequence_mode == 2) {
-//                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
-//                if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
-//                    throw new \Exception('该考生不在当前考生小组中', 7201);
-//                }
-//            } else {
-//                throw new \Exception('没有这种考试模式！', -705);
-//            }
-//
-//            //如果考生走错了房间
-//            if (ExamQueue::where('room_id', '=', $roomId)
-//                ->where('student_id', '=', $watchLog->student_id)
-//                ->where('exam_id', '=', $examId)->get()
-//                ->isEmpty()
-//            ) {
-//                throw new \Exception('当前考生走错了考场！', 3400);
-//            }
+            $examId = $exam->id;
+            list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
+
+            //获取当前老师对应的考站id
+            $station = StationTeacher::where('exam_id', '=', $exam->id)
+                ->where('user_id', '=', $teacherId)
+                ->first();
+            if (is_null($station)) {
+                throw new \Exception('你没有参加此次考试', 7100);
+            }
+            /*
+             * 判断当前考生是否是在当前的学生组中
+             */
+            if ($exam->sequence_mode == 1) {
+                //从队列表中通过考场ID得到对应的当前组的考生信息
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
+                if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
+                    throw new \Exception('该考生不在当前考生小组中', 7200);
+                }
+            } elseif ($exam->sequence_mode == 2) {
+                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
+                if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
+                    throw new \Exception('该考生不在当前考生小组中', 7201);
+                }
+            } else {
+                throw new \Exception('没有这种考试模式！', -705);
+            }
+
+            //如果考生走错了房间
+            if (ExamQueue::where('room_id', '=', $roomId)
+                ->where('student_id', '=', $watchLog->student_id)
+                ->where('exam_id', '=', $examId)->get()
+                ->isEmpty()
+            ) {
+                throw new \Exception('当前考生走错了考场！', 3400);
+            }
 
             //使用抽签的方法进行抽签操作
-//            $result = $this->drawlots($student, $roomId, $teacherId, $exam);
-            $model = new Drawlots($student, $teacherId, $exam, $roomId);
-            switch ($exam->sequence_mode) {
-                case 1:
-                    $model->mode(new DrawRoomMode());
-                    $result = $model->drawlots();
-                    break;
-                case 2:
-                    $model->mode(new DrawStationMode());
-                    $result = $model->drawlots();
-                    break;
-                default:
-                    $redis->publish($infos, json_encode(['message' => '当前没有这种考试模式']));
-                    //throw new \Exception('当前没有这种考试模式');
-                    break;
-            }
+            $result = $this->drawlots($student, $roomId, $teacherId, $exam);
+//            $model = new Drawlots($student, $teacherId, $exam, $roomId);
+//            switch ($exam->sequence_mode) {
+//                case 1:
+//                    $model->mode(new DrawRoomMode());
+//                    $result = $model->drawlots();
+//                    break;
+//                case 2:
+//                    $model->mode(new DrawStationMode());
+//                    $result = $model->drawlots();
+//                    break;
+//                default:
+//                    throw new \Exception('当前没有这种考试模式');
+//                    break;
+//            }
 
             //判断时间
             $this->judgeTime($watchLog->student_id);
             $connection->commit();
-            //return response()->json($this->success_data($result));
-            $redis->publish($infos, json_encode(['data' => $result]));
+            return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
             $connection->rollBack();
-
-            $redis->publish($infos, json_encode(['message' => $ex]));
-            //return response()->json($this->fail($ex));
+            
+            return response()->json($this->fail($ex));
         }
     }
 
@@ -375,34 +367,35 @@ class DrawlotsController extends CommonController
             $exam = Exam::doingExam($examId);
             Common::valueIsNull($exam, -333);
 
-//            //根据id获取考站信息
-//            $stationTeacher = StationTeacher::where('user_id', $id)->where('exam_id', $exam->id)->first();
-//
-//            if (is_null($stationTeacher)) {
-//                throw new \Exception('当前老师没有考试！', 4000);
-//            }
-//
-//            $station = $stationTeacher->station;
-//
-//            //拿到房间
-//            $room = $this->getRoomId($id, $exam->id);
-//
-//            //判断其考站或考场是否在该次考试中使用
-//            $this->checkEffected($exam, $room, $station);
-//
-//            //将考场名字和考站名字封装起来
-//            $station->name = $room->name . '-' . $station->name;
-//
-//            //将考场的id封装进去
-//            $station->room_id = $room->id;
-//
-//            //将考试的id封装进去
-//            $station->exam_id = $exam->id;
-//
-//            //将当前的服务器时间返回
-//            $station->service_time = time() * 1000;
-            $examinee = new Examinee($exam, ['id' => $id]);
-            $station = $examinee->getStation();
+            //根据id获取考站信息
+            $stationTeacher = StationTeacher::where('user_id', $id)->where('exam_id', $exam->id)->first();
+
+            if (is_null($stationTeacher)) {
+                throw new \Exception('当前老师没有考试！', 4000);
+            }
+
+            $station = $stationTeacher->station;
+
+            //拿到房间
+            $room = $this->getRoomId($id, $exam->id);
+
+            //判断其考站或考场是否在该次考试中使用
+            $this->checkEffected($exam, $room, $station);
+
+            //将考场名字和考站名字封装起来
+            $station->name = $room->name . '-' . $station->name;
+
+            //将考场的id封装进去
+            $station->room_id = $room->id;
+
+            //将考试的id封装进去
+            $station->exam_id = $exam->id;
+
+            //将当前的服务器时间返回
+            $station->service_time = time() * 1000;
+
+//            $examinee = new Examinee($exam, ['id' => $id]);
+//            $station = $examinee->getStation();
 
             $station->station_type = $station->type;
 
