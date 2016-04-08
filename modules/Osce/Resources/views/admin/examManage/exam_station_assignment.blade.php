@@ -48,7 +48,7 @@
                             <div class="station-container" index="0">
                             
                                 <!-- 一个考站dom -->
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="col-sm-2 control-label">&nbsp;</label>
                                     <div class="col-sm-10">
                                         <div class="row">
@@ -78,7 +78,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 
                             <!-- 新增考站 -->

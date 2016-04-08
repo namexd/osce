@@ -42,7 +42,7 @@ $(function() {
     layer.load(3)
     setTimeout(function() {
         //新增的数据传过去
-        //parent.$('#select-clinical').val('2').trigger("change");
+        parent.$('.table-id-1').find('.item-id-0').find('.exam-item').val(8).trigger("change");
         parent.layer.close(index);
     }, 2000);  
 })
