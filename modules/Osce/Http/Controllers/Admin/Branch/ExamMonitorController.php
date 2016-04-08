@@ -9,6 +9,8 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\Exam;
@@ -23,19 +25,20 @@ use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\ExamStation;
+use Modules\Osce\Repositories\Common;
 
 
 class ExamMonitorController  extends CommonController
 {
     /**
-     * »ñµÃÕıÔÚ¿¼ÊÔµÄ¿¼ÊÔ¼à¿ØÁĞ±í
+     * è·å¾—æ­£åœ¨è€ƒè¯•çš„è€ƒè¯•ç›‘æ§åˆ—è¡¨
      * @method GET
      * @url /osce/admin/exam-monitor/normal
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>getÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>getè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return view
      *
@@ -49,14 +52,14 @@ class ExamMonitorController  extends CommonController
     }
 
     /**
-     * »ñµÃ³Ùµ½µÄ¿¼ÊÔ¼à¿ØÁĞ±í
+     * è·å¾—è¿Ÿåˆ°çš„è€ƒè¯•ç›‘æ§åˆ—è¡¨
      * @method GET
      * @url /osce/admin/exam-monitor/late
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>getÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>getè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return view
      *
@@ -70,19 +73,19 @@ class ExamMonitorController  extends CommonController
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
         return view('osce::admin.testMonitor.monitor_late', [
-             'list'      =>$data['data'],'data'=>$topMsg
+            'list'      =>$data['data'],'data'=>$topMsg
         ]);
     }
 
     /**
-     * »ñµÃÌæ¿¼µÄ¿¼ÊÔ¼à¿ØÁĞ±í
+     * è·å¾—æ›¿è€ƒçš„è€ƒè¯•ç›‘æ§åˆ—è¡¨
      * @method GET
      * @url /osce/admin/exam-monitor/replace
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>getÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>getè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return view
      *
@@ -96,19 +99,19 @@ class ExamMonitorController  extends CommonController
         $topMsg = $examControlModel->getDoingExamList();
         $data=$this->getExamMonitorListByStatus(2);
         return view('osce::admin.testMonitor.monitor_replace', [
-             'list'      =>$data,'data'=>$topMsg
+            'list'      =>$data,'data'=>$topMsg
         ]);
     }
 
     /**
-     * »ñµÃÆú¿¼µÄ¿¼ÊÔ¼à¿ØÁĞ±í
+     * è·å¾—å¼ƒè€ƒçš„è€ƒè¯•ç›‘æ§åˆ—è¡¨
      * @method GET
      * @url /osce/admin/exam-monitor/quit
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>getÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>getè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return view
      *
@@ -128,14 +131,14 @@ class ExamMonitorController  extends CommonController
     }
 
     /**
-     * »ñµÃÒÑÍê³ÉµÄ¿¼ÊÔ¼à¿ØÁĞ±í
+     * è·å¾—å·²å®Œæˆçš„è€ƒè¯•ç›‘æ§åˆ—è¡¨
      * @method GET
      * @url /osce/admin/exam-monitor/finish
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>getÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>getè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return view
      *
@@ -156,14 +159,14 @@ class ExamMonitorController  extends CommonController
     }
 
     /**
-     * »ñµÃ¿¼ÊÔ¼à¿Ø±íÍ·ĞÅÏ¢
+     * è·å¾—è€ƒè¯•ç›‘æ§è¡¨å¤´ä¿¡æ¯
      * @method GET
      * @url /osce/admin/
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>getÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>getè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return array
      *
@@ -173,35 +176,49 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     protected function getExamMonitorHeadInfo (Request $request) {
-        try {
-            $this->validate($request,[
-                'exam_id' => 'required|integer',
-                'student_id' => 'required|integer',
-            ]);
+         try {
+        $this->validate($request,[
+            'exam_id' => 'required|integer',
+            'student_id' => 'required|integer',
+        ]);
+        //è·å–æ•°æ®
+        $examId = $request->input('exam_id');
+        $studentId = $request->input('student_id');
+        $stationId=ExamStation::where('exam_id',$examId)->select('station_id')->get();//ä¸€ä¸ªå­¦ç”Ÿçš„æ‰€æœ‰è€ƒç«™
+        if(count($stationId)) {
+            foreach($stationId as $key=>$val){
+                $stationId[$key]['name']=Station::where('id',$val->station_id)->pluck('name');
+                $type=ExamMonitor::where('station_id',$val->station_id)->where('exam_id',$examId)->select('type')->first();
+                $stationId[$key]['type']=empty($type)?'æ­£å¸¸':($type->type==1?'æ›¿è€ƒ':'å¼ƒè€ƒ');
+                $queueMsg=ExamQueue::where('station_id',$val->station_id)->where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->first();
+                if(!empty($queueMsg)){
+                    $time=strtotime($queueMsg->end_dt)-strtotime($queueMsg->begin_dt);
+                    $stationId[$key]['time']=$time>0?Common::handleTime($time):0;
+                }
+            }
+        }else{
+            throw new \Exception('æ²¡æœ‰æ•°æ®');
+        }
+        $topMsg=Student::leftJoin('exam', function($join){
+            $join -> on('exam.id', '=', 'student.exam_id');
+        })->select('student.id as student_id','student.name','exam.name as exam_name','student.exam_sequence','exam.id as exam_id')
+         ->where('student.id',$studentId)->where('exam.id',$examId)->first();
 
-            //»ñÈ¡Êı¾İ
-            $examId = $request->input('exam_id');
-            $studentId = $request->input('student_id');
-
-            $stationId=ExamStation::where('exam_id',$examId)->select('station_id')->get();//Ò»¸öÑ§ÉúµÄËùÓĞ¿¼Õ¾
-            if(!empty($stationId)) $stationId=$stationId->toArray();
-
-            $data=[];
-            return view('osce::admin.testMonitor.monitor_check',['data'=>$data,]);
+        return view('osce::admin.testMonitor.monitor_check',['data'=>$topMsg,'list'=>$stationId]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
     /**
-     * ¸ù¾İ×´Ì¬»ñµÃ¿¼ÊÔ¼à¿ØÁĞ±í
+     * æ ¹æ®çŠ¶æ€è·å¾—è€ƒè¯•ç›‘æ§åˆ—è¡¨
      * @method GET
      * @url /osce/admin/
      * @access public
-     * @param $status 1³Ùµ½ 2Ìæ¿¼ 3Æú¿¼ 4ÒÑÍê³É
-     * @param Request $request getÇëÇó<br><br>
-     * <b>getÇëÇó×Ö¶Î£º</b>
-     * * string        ²ÎÊıÓ¢ÎÄÃû        ²ÎÊıÖĞÎÄÃû(±ØĞëµÄ)
+     * @param $status 1è¿Ÿåˆ° 2æ›¿è€ƒ 3å¼ƒè€ƒ 4å·²å®Œæˆ
+     * @param Request $request getè¯·æ±‚<br><br>
+     * <b>getè¯·æ±‚å­—æ®µï¼š</b>
+     * * string        å‚æ•°è‹±æ–‡å        å‚æ•°ä¸­æ–‡å(å¿…é¡»çš„)
      *
      * @return array
      *
@@ -211,78 +228,78 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     protected function getExamMonitorListByStatus($status){
-        $exam_id=Exam::where('status',1)->pluck('id');//ÕıÔÚ¿¼ÊÔid
+        $exam_id=Exam::where('status',1)->pluck('id');//æ­£åœ¨è€ƒè¯•id
         if(empty($exam_id)) return [];
 
-            switch ($status){
-                case 1://³Ùµ½
-                   return Student::leftJoin('exam_order', function($join){
-                        $join -> on('exam_order.student_id', '=', 'student.id');
-                    })-> leftJoin('exam_screening_student', function($join){
-                        $join -> on('exam_screening_student.student_id', '=', 'student.id');
-                    })->select('student.name', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status')
-                        ->where('exam_order.status',4)->where('student.exam_id',$exam_id)->where('exam_order.exam_id',$exam_id)->paginate(config('osce.page_size'));
-                    break;
-                case 2://Ìæ¿¼
-                    $list=ExamMonitor::leftJoin('student', function($join){
-                        $join -> on('exam_monitor.student_id', '=', 'student.id');
-                        })->select('student.name','student.exam_id','student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence')
-                          ->where('exam_monitor.exam_id',$exam_id)
-                          ->where('exam_monitor.type',1)
-                          ->where('exam_monitor.description',1)//ÒÑ¾­È·ÈÏÌæ¿¼µÄ
-                          ->groupBy('exam_monitor.student_id')
-                          ->paginate(config('osce.page_size'));
+        switch ($status){
+            case 1://è¿Ÿåˆ°
+                return Student::leftJoin('exam_order', function($join){
+                    $join -> on('exam_order.student_id', '=', 'student.id');
+                })-> leftJoin('exam_screening_student', function($join){
+                    $join -> on('exam_screening_student.student_id', '=', 'student.id');
+                })->select('student.name', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status')
+                    ->where('exam_order.status',4)->where('student.exam_id',$exam_id)->where('exam_order.exam_id',$exam_id)->paginate(config('osce.page_size'));
+                break;
+            case 2://æ›¿è€ƒ
+                $list=ExamMonitor::leftJoin('student', function($join){
+                    $join -> on('exam_monitor.student_id', '=', 'student.id');
+                })->select('student.name','student.exam_id','student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence')
+                    ->where('exam_monitor.exam_id',$exam_id)
+                    ->where('exam_monitor.type',1)
+                    ->where('exam_monitor.description',1)//å·²ç»ç¡®è®¤æ›¿è€ƒçš„
+                    ->groupBy('exam_monitor.student_id')
+                    ->paginate(config('osce.page_size'));
 
-                    if(empty($list->toArray()['data'])){return [];}
-                    $list=$list->toArray()['data'];
-                    foreach($list as $key=>$v) { //Ìæ¿¼Ñ§Éú
-                        $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('type',1)->get()->toArray();//ÉÏ±¨Í£¿¼ĞÅÏ¢
-                        foreach($replaceList as $val){
-                            $station_names=Station::where('id',$val['station_id'])->pluck('name');
-                            if(!empty($station_names)) $station_name[]=$station_names;
-                        }
-                        $list[$key]['station_name']=count($station_name)?implode(',',$station_name):'';
+                if(empty($list->toArray()['data'])){return [];}
+                $list=$list->toArray()['data'];
+                foreach($list as $key=>$v) { //æ›¿è€ƒå­¦ç”Ÿ
+                    $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('type',1)->get()->toArray();//ä¸ŠæŠ¥åœè€ƒä¿¡æ¯
+                    foreach($replaceList as $val){
+                        $station_names=Station::where('id',$val['station_id'])->pluck('name');
+                        if(!empty($station_names)) $station_name[]=$station_names;
                     }
-                    return $list;
-                    break;
-                case 3://Æú¿¼
-                    $builder=ExamScreeningStudent::leftJoin('student', function($join){
-                        $join -> on('exam_screening_student.student_id', '=', 'student.id');
-                    })->leftJoin('exam_screening', function($join){
-                        $join -> on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
-                    })->leftJoin('station_teacher', function($join){
-                        $join -> on('station_teacher.exam_screening_id', '=', 'exam_screening.id');
-                    })->leftJoin('station', function($join){
-                        $join -> on('station_teacher.station_id', '=', 'station.id');
-                    })->select('student.name','student.exam_id','station.id as station_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','station.name as station_name');
+                    $list[$key]['station_name']=count($station_name)?implode(',',$station_name):'';
+                }
+                return $list;
+                break;
+            case 3://å¼ƒè€ƒ
+                $builder=ExamScreeningStudent::leftJoin('student', function($join){
+                    $join -> on('exam_screening_student.student_id', '=', 'student.id');
+                })->leftJoin('exam_screening', function($join){
+                    $join -> on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
+                })->leftJoin('station_teacher', function($join){
+                    $join -> on('station_teacher.exam_screening_id', '=', 'exam_screening.id');
+                })->leftJoin('station', function($join){
+                    $join -> on('station_teacher.station_id', '=', 'station.id');
+                })->select('student.name','student.exam_id','station.id as station_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','station.name as station_name');
 
-                    return $builder->where('exam_screening_student.status',1)
-                                   ->where('student.exam_id',$exam_id)
-                                   ->where('station_teacher.exam_id',$exam_id)
-                                   ->where('exam_screening.exam_id',$exam_id)
-                                   ->paginate(config('osce.page_size'));
-                    break;
-                case 4://ÒÑÍê³É
-                    $builder=ExamScreeningStudent::leftJoin('student', function($join){
-                        $join -> on('exam_screening_student.student_id', '=', 'student.id');
-                    })->leftJoin('exam_screening', function($join){
-                        $join -> on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
-                    })->leftJoin('station_teacher', function($join){
-                        $join -> on('station_teacher.exam_screening_id', '=', 'exam_screening.id');
-                    })->leftJoin('station', function($join){
-                        $join -> on('station_teacher.station_id', '=', 'station.id');
-                    })->select('student.name','student.exam_id','station.id as station_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','station.name as station_name');
+                return $builder->where('exam_screening_student.status',1)
+                    ->where('student.exam_id',$exam_id)
+                    ->where('station_teacher.exam_id',$exam_id)
+                    ->where('exam_screening.exam_id',$exam_id)
+                    ->paginate(config('osce.page_size'));
+                break;
+            case 4://å·²å®Œæˆ
+                $builder=ExamScreeningStudent::leftJoin('student', function($join){
+                    $join -> on('exam_screening_student.student_id', '=', 'student.id');
+                })->leftJoin('exam_screening', function($join){
+                    $join -> on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
+                })->leftJoin('station_teacher', function($join){
+                    $join -> on('station_teacher.exam_screening_id', '=', 'exam_screening.id');
+                })->leftJoin('station', function($join){
+                    $join -> on('station_teacher.station_id', '=', 'station.id');
+                })->select('student.name','student.exam_id','station.id as station_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','station.name as station_name');
 
-                    return $builder->where('exam_screening_student.is_end',1)
-                        ->where('student.exam_id',$exam_id)
-                        ->where('station_teacher.exam_id',$exam_id)
-                        ->where('exam_screening.exam_id',$exam_id)
-                        ->paginate(config('osce.page_size'));
-                    break;
-                default:
-                    return [];
-                    break;
-            }
+                return $builder->where('exam_screening_student.is_end',1)
+                    ->where('student.exam_id',$exam_id)
+                    ->where('station_teacher.exam_id',$exam_id)
+                    ->where('exam_screening.exam_id',$exam_id)
+                    ->paginate(config('osce.page_size'));
+                break;
+            default:
+                return [];
+                break;
+        }
     }
 }
 
