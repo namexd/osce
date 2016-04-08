@@ -291,15 +291,4 @@
     </div>
 
 </div>
-
-<span href="javasript:void(0)" id="ok">test</span>
-<script>
-$(function() {
-    $('#ok').click(function() {console.log(location.href)
-        location.href = '/osce/admin/station/test';
-        console.log('kkk')
-    })
-    
-})
-</script>
 @stop{{-- 内容主体区域 --}}
