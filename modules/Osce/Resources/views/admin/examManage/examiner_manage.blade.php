@@ -97,9 +97,9 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-4 time-modify">
-                     <button id="save" class="btn btn-primary" type="submit">&nbsp;&nbsp;保存&nbsp;&nbsp;</button>
+                     <a id="save" class="btn btn-primary" href="javascript:void(0)">保存</a>
                      <a class="btn btn-white" href="javascript:history.back(-1)" {{--href="{{route("osce.admin.exam.getExamList")}}"--}}>&nbsp;&nbsp;取消&nbsp;&nbsp;</a>
-                     <a class="btn btn-white" href="">全部邀请</a>
+                     <a class="btn btn-white" href="javascript:void(0)" id="invation-all">全部邀请</a>
                 </div>
             </div>
         </div>

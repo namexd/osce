@@ -4663,7 +4663,15 @@ function examiner_manage() {
             sp_teacher:[{id:45,name:'成张老师3',status:1},{id:344,name:'杨老师3',status:2}]
         }
     ];
+    var teacherArr = [];
 
+    /**
+     * 初始化数据
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     * @param   {object}   data 传入数据
+     */
     function initTable(data) {
         var html="";
         for(var i in data){
@@ -4682,7 +4690,7 @@ function examiner_manage() {
                 str_sp += '<option value="'+data[i].sp_teacher[j].id+'" selected="selected">'+data[i].sp_teacher[j].name+'</option>';
             }
 
-
+            //dom准备
             html += '<tr value="'+data[i].subject_id+'">'+
                         '<td>'+data[i].exam_item.name+'</td>'+
                         '<td>'+data[i].station.name+'</td>'+
@@ -4708,21 +4716,96 @@ function examiner_manage() {
         //插入dom
         $('#add-basic tbody').html(html);
 
-        //初始化select2
-        $('#add-basic tbody').find('tr').each(function() {
+        //初始化select2 老师邀请
+        $('#add-basic tbody').find('tr').each(function(key) {
             var $that = $(this);
 
             teacherInit($that);
             teacher_spInit($that);
+            //老师邀请
+            sp_invation($that);
 
-            
+            //老师列表数组
+            teacherArr.push({subject_id:$that.attr('value'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+
         });
-
-
     }
 
+    /**
+     * 保存成功
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     */
+    $('#save').click(function() {
+        $.ajax({
+            type:'get',
+            url: '',
+            data:{data:teacherArr},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('保存成功失败！',{skin:'msg-error',icon:1});
+                } else {
+                    layer.msg('保存成功成功！',{skin:'msg-success',icon:1});
+                }
+            }
+        })
+    });
 
+    /**
+     * 全部发送邀请
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     */
+    $('#invation-all').click(function() {
+        $.ajax({
+            type:'get',
+            url: '',
+            data:{data:teacherArr},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                } else {
+                    layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                }
+            }
+        })
+    });
+
+
+
+    //模拟数据
     initTable(data);
+    /**
+     * sp_invation 邀请
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     * @param   {[object]}   $elem [选择器]
+     */
+    function sp_invation($elem) {
+        var req = {
+            teacher:$elem.find('.custom-teacher').val(),
+            sp_teacher:$elem.find('.custom-sp').val(),
+            subject_id:$elem.attr('value')
+        };
+
+        $elem.find('.invitaion-teacher').click(function() {
+            $.ajax({
+                type:'get',
+                url: '',
+                data:req,
+                success: function(res) {
+                    if(res.code != 1) {
+                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    } else {
+                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                    }
+                }
+            })
+        });
+    }
 
     /**
      * 老师选择
