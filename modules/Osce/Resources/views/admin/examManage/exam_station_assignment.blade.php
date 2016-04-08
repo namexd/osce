@@ -14,7 +14,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'station_assignment','stationAdd':'{{route('osce.admin.ExamArrange.postAddExamFlow')}}','exam_item':'{{route('osce.admin.exam-arrange.getAllSubjects')}}','exam_stage':'{{route('osce.admin.exam-arrange.getAllGradations',['exam_id'=>$id])}}','station_list':'{{route('osce.admin.ExamArrange.getStationList',['id'=>$id])}}','room_list':'{{route('osce.admin.ExamArrange.getRoomList',['id'=>$id])}}','update_data':'{{route('osce.admin.ExamArrange.postAddExamDraft')}}','del_flow':'{{route('osce.admin.ExamArrange.getDelExamFlow')}}','del_draft':'{{route('osce.admin.ExamArrange.getDelExamDraft')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'station_assignment','stationAdd':'{{route('osce.admin.ExamArrange.postAddExamFlow')}}','exam_item':'{{route('osce.admin.exam-arrange.getAllSubjects')}}','exam_stage':'{{route('osce.admin.exam-arrange.getAllGradations',['exam_id'=>$id])}}','station_list':'{{route('osce.admin.ExamArrange.getStationList',['id'=>$id])}}','room_list':'{{route('osce.admin.ExamArrange.getRoomList',['id'=>$id])}}','update_data':'{{route('osce.admin.ExamArrange.postAddExamDraft')}}','del_flow':'{{route('osce.admin.ExamArrange.getDelExamFlow')}}','del_draft':'{{route('osce.admin.ExamArrange.getDelExamDraft')}}','data_list':'{{route('osce.admin.ExamArrange.getExamArrangeData')}}','add_subject':'{{route('osce.admin.topic.getAddTopic')}}','add_station':'{{route('osce.admin.Station.getAddStation')}}','add_room':'{{route('osce.admin.room.getAddRoom')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
@@ -73,18 +73,8 @@
                                                     <td>操作</td>
                                                 </tr>
                                             </thead>
-                                            <tbody index="1">
-                                                <tr class="item-id-test" item-id="233">
-                                                    <td type="2"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>
-                                                    <td type="2"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>
-                                                    <td type="2"></td>
-                                                    <td type="2"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>
-                                                    <td type="2"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>
-                                                    <td>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                    </td>
-                                            </tr>
+                                            <tbody>
+                                                
                                             </tbody>
                                         </table>
                                     </div>

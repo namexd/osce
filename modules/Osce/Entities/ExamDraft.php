@@ -30,7 +30,29 @@ class ExamDraft extends CommonModel
     ];
 
     public function getExamDraftData($ExamDraftFlowId){
-        $examDraftList = $this->whereIn('exam_draft_flow_id',$ExamDraftFlowId)->get();
+        $examDraftList=$this->leftJoin('station', function($join){
+            $join -> on('exam_draft.station_id', '=', 'station.id');
+        })->leftJoin('room', function($join){
+            $join -> on('exam_draft.room_id', '=', 'room.id');
+        })->leftJoin('subject', function($join){
+            $join -> on('exam_draft.subject_id', '=', 'subject.id');
+        })
+            ->whereIn('exam_draft_flow_id',$ExamDraftFlowId)
+            ->select([
+                'exam_draft.id as id',
+                'exam_draft.station_id as station_id',
+                'station.type as station_type',
+                'station.name as station_name',
+                'exam_draft.room_id as room_id',
+                'room.name as room_name',
+                'exam_draft.subject_id as subject_id',
+                'subject.title as subject_name',
+                'exam_draft.exam_draft_flow_id as exam_draft_flow_id',
+                'exam_draft.effected as effected',
+            ])
+            ->get()
+            ->toArray();
+
         return $examDraftList;
     }
 

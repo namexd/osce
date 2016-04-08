@@ -75,12 +75,9 @@ class ExamArrangeController extends CommonController
                 $data['old_draft_flow_id'] = $request->get('flow_id');
             }
 
-
             //先保存到临时表
-            $result = ExamDraftFlowTemp::create($data);
 
-
-            if ($result) {
+            if ($result = ExamDraftFlowTemp::create($data)) {
                 //新增一条空的考站的子站数据
 
                 if ($type == 2) {
@@ -163,7 +160,7 @@ class ExamArrangeController extends CommonController
             $data = [
                 'exam_id' => $examId,
                 'old_draft_flow_id' => $request->get('flow_id'),
-//                'old_draft_id'=>$request->get('draft_id'),
+                'old_draft_id'=>null,
                 'user_id' => $user->id,
                 'subject_id' => null,
                 'station_id' => null,
@@ -185,13 +182,19 @@ class ExamArrangeController extends CommonController
 
             if ($type == 2) {
                 $data['ctrl_type'] = $type;
+                $data['old_draft_id'] =$request->get('draft_id') ;
             }
 
             if ($type == 3) {
-                $data['ctrl_type'] = $type;
+                $data['ctrl_type'] = 6;
+                //修改当前这条数据
+
+
             }
             if ($type == 4) {
                 $data['ctrl_type'] = $type;
+
+
             }
 
             $result = ExamDraftTemp::create($data);
@@ -200,7 +203,7 @@ class ExamArrangeController extends CommonController
             } else {
 
                 return response()->json(
-                    $this->success_data($result->id, 1, 'success')
+                    $this->success_data(['id'=>$result->id], 1, 'success')
                 );
             }
 
@@ -587,7 +590,7 @@ class ExamArrangeController extends CommonController
      * @author zhouqiang 2016-04-06
      * @return string
      */
-    public function getExamArrange(Request $request)
+    public function getExamArrangeData(Request $request)
     {
 
         $this->validate($request, [
@@ -595,38 +598,45 @@ class ExamArrangeController extends CommonController
         ]);
         $id = $request->get('exam_id');
         try {
-
+            // 清空临时表数据
+            $ExamDraftTempModel= new ExamDraftTemp();
+            
+            $tempData = $ExamDraftTempModel -> getTempData($id);
+            if(!$tempData){
+                throw new \Exception('清空数据失败');
+            }
+           
             //拿到大的考站的数据
-
-
             $ExamDraftFlowModel = new ExamDraftFlow();
 
             $ExamDraftFlowRequest = $ExamDraftFlowModel->getExamDraftFlowData($id);
-
+            //拿到大站的id
             $ExamDraftFlowId = $ExamDraftFlowRequest->pluck('id');
+            
+            $ExamDraftFlowRequest= $ExamDraftFlowRequest->toArray();
+
             //拿到小站数据
             $ExamDraftModel = new ExamDraft();
             $ExamDraftRequest = $ExamDraftModel->getExamDraftData($ExamDraftFlowId);
-
+            //将小站数据放到大站下
             foreach ($ExamDraftFlowRequest as &$item){
 
                 foreach ($ExamDraftRequest as $value){
 
-                    if($item->id == $value->exam_draft_flow_id){
+                    if($item['id'] == $value['exam_draft_flow_id']){
 
-                        $item->item = $value;
-
+                        $item['item'][] = $value;
                     }
                 }
-
             }
-//            dd($ExamDraftFlowRequest);
             return response()->json(
                 $this->success_data($ExamDraftFlowRequest, 1, 'success')
             );
 
         } catch (\Exception $ex) {
-
+            return response()->json(
+                $this->fail($ex)
+            );
         }
 
     }

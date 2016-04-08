@@ -18,7 +18,7 @@ class ExamDraftFlow extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['name',  'order',  'exam_id', 'exam_screening_id', 'exam_gradation_id'];
+    protected $fillable     = ['id','name','order','exam_id','exam_screening_id', 'exam_gradation_id'];
 
     protected $ctrl_type    = [
         1   => '简单新增',
