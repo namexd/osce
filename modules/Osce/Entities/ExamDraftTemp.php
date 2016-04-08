@@ -16,4 +16,18 @@ class ExamDraftTemp extends CommonModel{
     protected $hidden = [];
     protected $fillable = ['id','exam_id', 'room_id', 'subject_id',  'ctrl_type',  'old_draft_flow_id', 'station_id','old_draft_id','used','user_id'];
     public $search = [];
+
+
+
+    public function getTempData($id){
+        $delExamDraftTemp = $this->where('exam_id','=',$id)->delete();
+        if($delExamDraftTemp || $delExamDraftTemp == 0){
+
+            $ExamDraftFlow = ExamDraftFlowTemp::where('exam_id','=',$id)->delete();
+
+            if($ExamDraftFlow || $ExamDraftFlow==0){
+                 return true;
+            }
+        }
+    }
 }

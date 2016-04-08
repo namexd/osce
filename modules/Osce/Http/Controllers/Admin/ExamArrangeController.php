@@ -581,7 +581,14 @@ class ExamArrangeController extends CommonController
         ]);
         $id = $request->get('exam_id');
         try {
-
+            // 清空临时表数据
+            $ExamDraftTempModel= new ExamDraftTemp();
+            
+            $tempData = $ExamDraftTempModel -> getTempData($id);
+            if(!$tempData){
+                throw new \Exception('清空数据失败');
+            }
+           
             //拿到大的考站的数据
             $ExamDraftFlowModel = new ExamDraftFlow();
 
