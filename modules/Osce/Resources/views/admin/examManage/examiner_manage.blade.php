@@ -58,7 +58,7 @@
 
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'examiner_manage'},'code':'{{route('osce.admin.exam-arrange.getInvigilatesBySubject')}}'" />
+    <input type="hidden" id="parameter" value="{'pagename':'examiner_manage'},'teacher_list':'{{route('osce.admin.exam-arrange.getInvigilatesBySubject')}}'" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -96,7 +96,7 @@
                                           <th>操作</th>
                                       </tr>
                                  </thead>
-                                 <tbody>
+                                 <tbody index="0">
 
                                  </tbody>
                             </table>

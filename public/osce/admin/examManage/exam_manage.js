@@ -4576,7 +4576,8 @@ function examiner_manage() {
         placeholder:'请选择',
         ajax: {
             type:'get',
-            url: pars.get_subject,
+            url: pars.teacher_list,
+            delay:0,
             dataType: 'json',
             data:function() {
                 var ids = [];
@@ -4613,7 +4614,8 @@ function examiner_manage() {
         placeholder:'请选择',
         ajax: {
             type:'get',
-            url: pars.get_subject,
+            url: pars.teacher_list,
+            delay:0,
             dataType: 'json',
             data:function() {
                 var ids = [];
@@ -4646,8 +4648,8 @@ function examiner_manage() {
         }
     });
 
-   /* var data = [
-        {
+    var data = [
+        /*{
             exam_item:{id:12,name:'胸腔1'},
             station:{id:212,name:'考站1'},
             station_type:{id:323,name:'技能站1'},
@@ -4667,9 +4669,8 @@ function examiner_manage() {
             station_type:{id:323,name:'技能站3'},
             teacher:[{id:5,name:'zhang3',status:1},{id:34,name:'张老师3',status:1}],
             sp_teacher:[{id:45,name:'成张老师3',status:1},{id:344,name:'杨老师3',status:2}]
-        }
+        }*/
     ];
-*/
     function initTable(data) {
         var html="<tr>";
         for(var i in data){
