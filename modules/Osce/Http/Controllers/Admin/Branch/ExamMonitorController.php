@@ -16,14 +16,10 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\ExamOrder;
-use Modules\Osce\Repositories\TestScoreRepositories;
-use Modules\Osce\Repositories\SubjectStatisticsRepositories;
 use Modules\Osce\Entities\QuestionBankEntities\ExamControl;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
 use Modules\Osce\Entities\ExamScreening;
-use Modules\Osce\Entities\StationVcr;
-use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Repositories\Common;
 
@@ -69,7 +65,12 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorLateList () {
-        $data=$this->getExamMonitorListByStatus(1)->toArray();
+        $data=$this->getExamMonitorListByStatus(1);
+        if(count($data)){
+            $data=$data->toArray();
+        }else{
+            $data['data']=[];
+        }
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
         return view('osce::admin.testMonitor.monitor_late', [
@@ -98,6 +99,7 @@ class ExamMonitorController  extends CommonController
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
         $data=$this->getExamMonitorListByStatus(2);
+        $data=count($data)?$data:[];
         return view('osce::admin.testMonitor.monitor_replace', [
             'list'      =>$data,'data'=>$topMsg
         ]);
@@ -125,9 +127,7 @@ class ExamMonitorController  extends CommonController
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
         return view('osce::admin.testMonitor.monitor_abandom', [
-            'list'      =>$data['data'],'data'=>$topMsg
-
-        ]);
+            'list'      =>$data['data'],'data'=>$topMsg]);
     }
 
     /**
@@ -148,7 +148,12 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorFinishList () {
-        $data=$this->getExamMonitorListByStatus(4)->toArray();
+        $data=$this->getExamMonitorListByStatus(4);
+        if(count($data)){
+            $data=$data->toArray();
+        }else{
+            $data['data']=[];
+        }
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
         return view('osce::admin.testMonitor.monitor_complete ', [
@@ -186,11 +191,11 @@ class ExamMonitorController  extends CommonController
         $studentId = $request->input('student_id');
         $stationId=ExamStation::where('exam_id',$examId)->select('station_id')->get();//一个学生的所有考站
         if(count($stationId)) {
-            foreach($stationId as $key=>$val){
+            foreach($stationId as $key=>$val){//获取对应考站的视频信息
                 $stationId[$key]['name']=Station::where('id',$val->station_id)->pluck('name');
-                $type=ExamMonitor::where('station_id',$val->station_id)->where('exam_id',$examId)->select('type')->first();
+                $type=ExamMonitor::where('station_id',$val->station_id)->where('exam_id',$examId)->where('student_id',$studentId)->select('type')->first();//对应考站弃考替考类型
                 $stationId[$key]['type']=empty($type)?'正常':($type->type==1?'替考':'弃考');
-                $queueMsg=ExamQueue::where('station_id',$val->station_id)->where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->first();
+                $queueMsg=ExamQueue::where('station_id',$val->station_id)->where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->first();//考站考试时间
                 if(!empty($queueMsg)){
                     $time=strtotime($queueMsg->end_dt)-strtotime($queueMsg->begin_dt);
                     $stationId[$key]['time']=$time>0?Common::handleTime($time):0;
@@ -202,7 +207,7 @@ class ExamMonitorController  extends CommonController
         $topMsg=Student::leftJoin('exam', function($join){
             $join -> on('exam.id', '=', 'student.exam_id');
         })->select('student.id as student_id','student.name','exam.name as exam_name','student.exam_sequence','exam.id as exam_id')
-         ->where('student.id',$studentId)->where('exam.id',$examId)->first();
+         ->where('student.id',$studentId)->where('exam.id',$examId)->first();//页面顶部信息
 
         return view('osce::admin.testMonitor.monitor_check',['data'=>$topMsg,'list'=>$stationId]);
         } catch (\Exception $ex) {
@@ -230,7 +235,6 @@ class ExamMonitorController  extends CommonController
     protected function getExamMonitorListByStatus($status){
         $exam_id=Exam::where('status',1)->pluck('id');//正在考试id
         if(empty($exam_id)) return [];
-
         switch ($status){
             case 1://迟到
                 return Student::leftJoin('exam_order', function($join){
