@@ -102,6 +102,7 @@ class ExamArrangeController extends CommonController
                     'old_draft_flow_id' => $result->id,
                     'ctrl_type' => 4,
                     'used' => 0,
+                    'add_time' => date('Y-m-d H:i:s',time()+1),
                     'user_id' => $user->id,
                 ];
                 $DraftResult = ExamDraftTemp::create($DraftData);
@@ -170,6 +171,7 @@ class ExamArrangeController extends CommonController
                 'subject_id' => $subjectId,
                 'station_id' => $stationId,
                 'room_id' => $roomId,
+                'add_time'  =>  date('Y-m-d H:i:s'),
                 'used' => 0,
                 'ctrl_type' => $request->get('type'),
             ];
@@ -544,7 +546,6 @@ class ExamArrangeController extends CommonController
     }
 
     private function timeIndex($data,$time){
-
         if(array_key_exists(strtotime($time),$data))
         {
             $time   =   strtotime($time)+1;
@@ -565,7 +566,7 @@ class ExamArrangeController extends CommonController
     {
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
-        try{
+//        try{
             $this->validate($request, [
                 'exam_id' => 'required',
             ]);
@@ -587,7 +588,8 @@ class ExamArrangeController extends CommonController
             }
 
             foreach ($drafts as $draft) {
-                $time   =   $this->timeIndex($datas,$draft->created_at->format('Y-m-d H:i:s'));
+
+                $time   =   strtotime($this->timeIndex($datas,$draft->add_time));
                 $datas[$time] = [
                     'item' => $draft,
                     'is_draft_flow' => 0
@@ -616,10 +618,10 @@ class ExamArrangeController extends CommonController
                 $this->success_data([], 1, '保存成功！')
             );
 
-        } catch (\Exception $ex){
-            $connection->rollBack();
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex){
+//            $connection->rollBack();
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**

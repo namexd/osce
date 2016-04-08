@@ -40,8 +40,10 @@ class ExamDraftFlow extends CommonModel
      * @return \Exception
      */
     public function handleBigData($data){
+
+        $value = $data['item']->ctrl_type;
         try{
-            switch ($data['ctrl_type']){
+            switch ($value){
                 case 1 : $this->bigOne($data);              //简单新增
                     break;
                 case 2 : $this->bigTwo($data);              //简单更新
@@ -72,11 +74,12 @@ class ExamDraftFlow extends CommonModel
 
             $result = ExamDraftFlow::create($draftFlowData);
             $item->exam_draft_flow_id = $result->id;
+
             if(!$item->save())
             {
                 throw new \Exception('添加对应站ID失败，请重试！');
             }
-            return 1;
+            return $item;
 
         } catch (\Exception $ex){
             throw $ex;
@@ -101,7 +104,7 @@ class ExamDraftFlow extends CommonModel
             {
                 throw new \Exception('更新站失败，请重试！');
             }
-            return 1;
+            return $examDraftFlow;
 
         } catch (\Exception $ex){
             throw $ex;
@@ -133,7 +136,7 @@ class ExamDraftFlow extends CommonModel
             {
                 throw new \Exception('添加对应站ID失败，请重试！');
             }
-            return 1;
+            return $item;
 
         } catch (\Exception $ex){
             throw $ex;
