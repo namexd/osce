@@ -181,26 +181,27 @@ class ExamArrangeController extends CommonController
             if ($type == 3) {
 
                 $ExamDraftTempType  = ExamDraftTemp::find($DraftId);
+                if(!is_null($subjectId)){
+                    $ExamDraftTempType->subject_id =$data['subject_id'];
+                }
+                if(!is_null($stationId)){
+                    $ExamDraftTempType->station_id =$data['station_id'];
+                }
+                if(!is_null($roomId)){
+                    $ExamDraftTempType->room_id =$data['room_id'];
+                }
+
                 //根据临时表id判断是否是该之前的数据
                 if($ExamDraftTempType->ctrl_type ==4 ||$ExamDraftTempType->ctrl_type ==6){
                     $ExamDraftTempType->ctrl_type =6;
-                    if(!is_null($subjectId)){
-                        $ExamDraftTempType->subject_id =$data['subject_id'];
-                    }
-                    if(!is_null($stationId)){
-                        $ExamDraftTempType->station_id =$data['station_id'];
-                    }
-                    if(!is_null($roomId)){
-                        $ExamDraftTempType->room_id =$data['room_id'];
-                    }
+                }else{
+                    $ExamDraftTempType->ctrl_type =1;
+                }
+                if($ExamDraftTempType->save()){
+                    return response()->json(
+                        $this->success_data(['id'=>$ExamDraftTempType->id], 1, 'success')
+                    );
 
-                    if($ExamDraftTempType->save()){
-
-                        return response()->json(
-                            $this->success_data(['id'=>$ExamDraftTempType->id], 1, 'success')
-                        );
-
-                    }
                 }
             }
 
