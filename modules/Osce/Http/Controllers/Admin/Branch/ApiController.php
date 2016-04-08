@@ -330,6 +330,7 @@ class ApiController extends CommonController
                 }
             }
         }
+       // dd($PaperPreviewArr);
 
         //-------------------------------------
         return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
