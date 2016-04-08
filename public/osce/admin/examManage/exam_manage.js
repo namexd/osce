@@ -4435,7 +4435,7 @@ function station_assignment(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: 'http://layer.layui.com/mobile/' //iframe的url
+                  content: pars.add_subject
                 });
             } else {
                 $.ajax({
@@ -4443,7 +4443,7 @@ function station_assignment(){
                     url: pars.update_data,
                     data:req,
                     success: function(res) {console.log(res)
-                        return true;   
+                        return true;
                     }
                 })
             }
@@ -4465,6 +4465,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'新增考站'});
 
                     //加载入数据
                     return {
@@ -4484,14 +4485,28 @@ function station_assignment(){
                 station:e.params.data.id
             };
 
-            $.ajax({
-                type:'post',
-                url: pars.update_data,
-                data:req,
-                success: function(res) {
-                    return true;
-                }
-            })
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考站',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  content: pars.add_station
+                });
+            } else {
+               $.ajax({
+                    type:'post',
+                    url: pars.update_data,
+                    data:req,
+                    success: function(res) {
+                        return true;
+                    }
+                }) 
+            }
+
+            
         });
 
         //$elem.find('.station-type').select2();
@@ -4512,6 +4527,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'新增考场'});
 
                     //加载入数据
                     return {
@@ -4531,14 +4547,27 @@ function station_assignment(){
                 room:e.params.data.id
             };
 
-            $.ajax({
-                type:'post',
-                url: pars.update_data,
-                data:req,
-                success: function(res) {
-                    return true;  
-                }
-            })
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考场',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  content: pars.add_room
+                });
+            } else {
+                $.ajax({
+                    type:'post',
+                    url: pars.update_data,
+                    data:req,
+                    success: function(res) {
+                        return true;  
+                    }
+                })
+            }
+
         });
 
         //选考必考
