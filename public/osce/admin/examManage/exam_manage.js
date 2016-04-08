@@ -4212,7 +4212,7 @@ function station_assignment(){
                                                 '<td>操作</td>'+
                                             '</tr>'+
                                         '</thead>'+
-                                        '<tbody index="'+index+'">'+
+                                        '<tbody index="0">'+
                                             '<tr class="item-id-'+index+'" item-id="'+res.data.draft_id+'">'+
                                                 '<td type="3"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
                                                 '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
@@ -4253,12 +4253,13 @@ function station_assignment(){
      */
     $('.station-container').on('click', '.del-station', function() {
         //删除dom
-        var $that = $(this).parent().parent().parent().parent();
+        var $that = $(this).parent().parent().parent().parent(),
+            judgeType = $that.find('.select-stage').attr('type') == 2 ? 2 :5;
 
         $.ajax({
             type:'get',
             url: pars.del_flow,
-            data: {exam_id:examId,flow_id:$that.find('table').attr('station-id'),type:5},
+            data: {exam_id:examId,flow_id:$that.find('table').attr('station-id'),type:judgeType},
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('删除失败！',{skin:'msg-error',icon:1});
@@ -4322,12 +4323,46 @@ function station_assignment(){
      */
     $('.station-container').on('click', '.fa-trash-o', function() {
         //删除dom
-        var $that = $(this).parent().parent().parent().parent();
+        var $that = $(this).parent().parent().parent().parent(),
+            judgeType = $(this).parent().parent().parent().prev().attr('type') == 2 ? 2 :5;
+
+        //删除整个站 在记录只有一条的情况下
+        if($that.parent().attr('index') == 0){
+            layer.confirm('确认要删除整个站吗？',{
+                title:'删除',
+                btn: ['确定','取消'] 
+            }, function(index){
+
+                //删除大站，在一条的情况
+                var judgeType = $that.parent().parent().parent().parent().find('.select-stage').attr('type') == 2 ? 2 :5;
+
+                $.ajax({
+                    type:'get',
+                    url: pars.del_flow,
+                    data: {exam_id:examId,flow_id:$that.parent().parent().parent().parent().find('table').attr('station-id'),type:judgeType},
+                    success: function(res) {
+                        if(res.code != 1) {
+                            layer.msg('删除失败！',{skin:'msg-error',icon:1});
+                        } else {
+                            $that.parent().parent().parent().parent().remove();
+                            $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
+                        }
+                    }
+                });
+
+                //$that.parent().parent().parent().parent().remove();
+                layer.close(index);
+
+            });
+
+            return;
+        }
+
 
         $.ajax({
             type:'get',
             url: pars.del_draft,
-            data: {exam_id:examId,flow_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:5},
+            data: {exam_id:examId,flow_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:judgeType},
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('删除失败！',{skin:'msg-error',icon:1});
