@@ -14,7 +14,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'station_assignment','stationAdd':'{{route('osce.admin.ExamArrange.postAddExamFlow')}}','exam_item':'{{route('osce.admin.exam-arrange.getAllSubjects')}}','exam_stage':'{{route('osce.admin.exam-arrange.getAllGradations',['exam_id'=>$id])}}','station_list':'{{route('osce.admin.ExamArrange.getStationList',['id'=>$id])}}','room_list':'{{route('osce.admin.ExamArrange.getRoomList',['id'=>$id])}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'station_assignment','stationAdd':'{{route('osce.admin.ExamArrange.postAddExamFlow')}}','exam_item':'{{route('osce.admin.exam-arrange.getAllSubjects')}}','exam_stage':'{{route('osce.admin.exam-arrange.getAllGradations',['exam_id'=>$id])}}','station_list':'{{route('osce.admin.ExamArrange.getStationList',['id'=>$id])}}','room_list':'{{route('osce.admin.ExamArrange.getRoomList',['id'=>$id])}}','update_data':'{{route('osce.admin.ExamArrange.postAddExamDraft')}}','del_flow':'{{route('osce.admin.ExamArrange.getDelExamFlow')}}','del_draft':'{{route('osce.admin.ExamArrange.getDelExamDraft')}}','data_list':'{{route('osce.admin.ExamArrange.getExamArrangeData')}}','add_subject':'{{route('osce.admin.topic.getAddTopic')}}','add_station':'{{route('osce.admin.Station.getAddStation')}}','add_room':'{{route('osce.admin.room.getAddRoom')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1">
             <div class="col-xs-6 col-md-2">
@@ -42,27 +42,27 @@
             <div class="ibox float-e-margins">
                 <div class="row">
                     <div class="col-md-12 ">
-                        <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postStationAssignment')}}">
+                        <form method="post" class="form-horizontal">
                             <input type="hidden" name="id" value="{{$id}}">
 
                             <div class="station-container" index="0">
                             
                                 <!-- 一个考站dom -->
-                                <!-- <div class="form-group">
+                                <div class="form-group">
                                     <label class="col-sm-2 control-label">&nbsp;</label>
                                     <div class="col-sm-10">
                                         <div class="row">
                                             <div class="col-sm-4"><label class="control-label">考站1</label></div>
                                             <div class="col-sm-6">
                                                     <label class="control-label col-sm-2">阶段：</label>
-                                                    <select class="form-control col-sm-10" style="width: 381px;"></select>
+                                                    <select class="form-control col-sm-10 select-stage" style="width: 381px;" type="2"></select>
                                             </div>
                                             <div class="col-sm-2">
                                                 <a class="btn btn-primary" href="javascript:void(0)">必考</a>
                                                 <a  href="javascript:void(0)" class="btn btn-primary" id="del-station" style="float: right;">删除</a>
                                             </div>
                                         </div>
-                                        <table class="table table-bordered" id="examroom">
+                                        <table class="table table-bordered" station-id="23">
                                             <thead>
                                                 <tr>
                                                     <td>考试项目</td>
@@ -74,28 +74,17 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td>4</td>
-                                                    <td>5</td>
-                                                    <td>6</td>
-                                                    <td>8</td>
-                                                    <td>
-
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                    </td>
-                                                </tr>
+                                                
                                             </tbody>
                                         </table>
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
 
                             <!-- 新增考站 -->
                             <div class="form-group">
                                 <div class="col-sm-2 col-sm-offset-4">
-                                    <button id="save" class="btn btn-primary" type="submit">保存考场安排</button>
+                                    <a id="save" class="btn btn-primary" href="javascript:void(0)">保存考场安排</a>
                                 </div>
                                 <div class="col-sm-2">
                                     <a class="btn btn-white" href="javascript:history.back(-1)">取消</a>

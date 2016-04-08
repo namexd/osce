@@ -938,17 +938,6 @@ function exam_assignment_add(){
                         message:'考试顺序不能为空'
                     }
                 }
-            },
-            gradation_order: {
-                validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '阶段不能为空'
-                    },
-                    regexp: {
-                        regexp: /^[0-9]*[1-9][0-9]*$/,
-                        message: '请输入整数'
-                    }
-                }
             }
         }
     });
@@ -995,50 +984,59 @@ function exam_assignment_add(){
     $(".checkbox_one").click(function(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
+            $(this).find("input").attr("checked","checked");
+            $(this).find("input").val("1")
         } else {
             $(this).find(".check_icon").removeClass("check");
+            $(this).find("input").removeAttr("checked","checked")
+            $(this).find("input").val("0")
         }
     })
+    /**
+     * 日期选择
+     * @author chenxia
+     * @version 3.4
+     * @date    2016-04-06
+     */
     //考生分阶段考试
     $(".checkbox_two").click(function(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
+            $(this).find("input").attr("checked","checked")
             $(this).parent().find(".check_div input").removeAttr('readonly');
-            $(this).find(".check_icon ").attr("checkbox","1")
+            $(this).find(".check_icon ").attr("checkbox","1");
+            $(this).find("input").val("1");
+            $(".checkbox_num").val("1")
             //当选中后在取消后在选中，替换掉以前的
             $('table tr td select').each(function(){
-                //计数器标志
-                var index = $('#exam_add').find('tbody').attr('index');
-                index = parseInt(index) + 1;
+                //移除所有的option
+                $('table tr td select option').remove();
                 //获取考生分阶段考试的值
                 var checkbox_num=$(".checkbox_num").val(),
-                    number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                    number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
                 var checkbox_number='';
-                for(var i=0;i<checkbox_num;i++) {
+                for(var i=1;i<=checkbox_num;i++) {
                     checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                 }
-                var html =  '<td class="check_select">'+
-                    '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                    '</td>';
+                var html =  checkbox_number;
                 //记录计数
-                $('#exam_add').find('.check_select').replaceWith(html);
+                $('#exam_add').find('select').append(html);
             });
         } else {
             $(this).find(".check_icon").removeClass("check");
             $(this).parent().find(".check_div input").attr('readonly','readonly');
             $(this).find(".check_icon ").attr("checkbox","0");
+            $(this).find("input").removeAttr("checked","checked");
+            $(this).find("input").val("0")
             //当选中后在取消后，替换掉以前的
             $('table tr td select').each(function(){
-                //计数器标志
-                var index = $('#exam_add').find('tbody').attr('index');
-                index = parseInt(index) + 1;
+                //移除所有的option
+                $('table tr td select option').remove();
 
-                var html =  '<td class="check_select">'+
-                    '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+'<option value="1">'+'阶段一'+'</option>'+'</select>'+
-                    '</td>';
+                var html = '<option value="1">'+'阶段一'+'</option>';
                 //记录计数
-                $('#exam_add').find('.check_select').replaceWith(html);
+                $('#exam_add').find('select').append(html);
             });
         }
     })
@@ -1053,14 +1051,15 @@ function exam_assignment_add(){
         //计数器标志
         var index = $('#exam_add').find('tbody').attr('index');
         index = parseInt(index) + 1;
+
         //获取考生分阶段考试的值
         var checkbox_num=$(".checkbox_num").val(),
-            number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+            number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
         /**
          * 这里是生成<阶段>
          */
         var checkbox_number = '';
-        for(var i=0;i<checkbox_num;i++) {
+        for(var i=1;i<=checkbox_num;i++) {
             checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
         }
         //时长默认值
@@ -1068,7 +1067,7 @@ function exam_assignment_add(){
         var hours = timeLength.split(':')[0];
         var minutes = timeLength.split(':')[1];
 
-         var html = '<tr>'+
+         var html = '<tr index= '+parseInt(index)+'>'+
              '<td>'+parseInt(index)+'</td>'+
              '<td class="laydate">'+
              '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
@@ -1089,32 +1088,47 @@ function exam_assignment_add(){
          $('#exam_add').find('tbody').append(html);
 
     });
+    /**
+     * 日期选择
+     * @author chenxia
+     * @version 3.4
+     * @date    2016-04-06
+     */
     $(".checkbox_num").blur(function(){
         //获取阶段输入框的值
         var checkbox_num=$(".checkbox_num").val();
+        //这里是判断《阶段》后面的输入框是不是输入的1-20的整数
+        var pattern = /^(\d|1\d|20)$/gm;
+
+        if(!pattern.test(checkbox_num)){
+            layer.alert('请输入1-20的整数！');
+            $(".layui-layer-btn0").click(function(){
+                $(".checkbox_num").val("1").focus();
+            })
+            return false;
+        }
         //这里是判断输入的值是否大于20
-        if(checkbox_num>20){
-            layer.alert('请输入小于20的整数！');
+        if(checkbox_num>20||checkbox_num==0){
+            layer.alert('请输入1-20的整数！');
             $(".layui-layer-btn0").click(function(){
                 $(".checkbox_num").val("1").focus();
             })
             return false;
         }else{
             $('table tr td select').each(function(){
-                //计数器标志
-                var index = $('#exam_add').find('tbody').attr('index');
-                index = parseInt(index) + 1;
-                //获取考生分阶段考试的值
-                var number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                //移除所有的option
+                $('table tr td select option').remove();
+                //获取考生分阶段考试的值;
+                var number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+
                     var checkbox_number='';
-                    for(var i=0;i<checkbox_num;i++) {
+                    for(var i=1;i<=checkbox_num;i++) {
                         checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                     }
-                    var html =  '<td class="check_select">'+
-                                '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                                '</td>';
+
+                var html = checkbox_number;
                     //记录计数
-                    $('#exam_add').find('.check_select').replaceWith(html);
+                    $('#exam_add').find('select').append(html);
                 });
         }
     })
@@ -1211,17 +1225,6 @@ function exam_basic_info(){
                         message: '考试顺序不能为空'
                     }
                 }
-            },
-            gradation_order: {
-                validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '阶段不能为空'
-                    },
-                    regexp: {
-                        regexp: /^[0-9]*[1-9][0-9]*$/ ,
-                        message: '请输入整数'
-                    }
-                }
             }
         }
     });
@@ -1275,50 +1278,62 @@ function exam_basic_info(){
     $(".checkbox_one").click(function(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
+            $(this).find("input").attr("checked","checked");
+            $(this).find("input").val("1")
         } else {
             $(this).find(".check_icon").removeClass("check");
+            $(this).find("input").removeAttr("checked","checked");
+            $(this).find("input").val("0")
         }
     })
-
+    /**
+     * 日期选择
+     * @author chenxia
+     * @version 3.4
+     * @date    2016-04-06
+     */
     //考生分阶段考试
     $(".checkbox_two").click(function(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
-            $(this).parent().find(".check_div input").removeAttr('readonly');
             $(this).find(".check_icon ").attr("checkbox","1")
+            $(this).parent().find(".check_div input").removeAttr('readonly');
+            $(this).find("input").attr("checked","checked");
+            $(this).find("input").val("1");
+            $(".checkbox_num").val("1")
             //当选中后在取消后在选中，替换掉以前的
             $('#add-basic tr td select').each(function(){
-                //计数器标志
-                var index = $('#add-basic').find('tbody').attr('index');
-                index = parseInt(index) + 1;
+                //移除所有的option
+                $('table tr td select option').remove();
                 //获取考生分阶段考试的值
                 var checkbox_num=$(".checkbox_num").val(),
-                    number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                    number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
                     var checkbox_number='';
-                    for(var i=0;i<checkbox_num;i++) {
+                    for(var i=1;i<=checkbox_num;i++) {
                         checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                     }
-                    var html =  '<td class="check_select">'+
-                        '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                        '</td>';
+
+                    var html =  checkbox_number;
                     //记录计数
-                    $('#add-basic').find('.check_select').replaceWith(html);
+                    $('#add-basic').find('select').append(html);
             });
         } else {
             $(this).find(".check_icon").removeClass("check");
-            $(this).parent().find(".check_div input").attr('readonly','readonly');
             $(this).find(".check_icon ").attr("checkbox","0");
+            $(this).parent().find(".check_div input").attr('readonly','readonly');
+            $(this).find("input").removeAttr("checked","checked");
+            $(this).find("input").val("0")
+            //移除所有的option
+            $('table tr td select option').remove();
             //当选中后在取消后，替换掉以前的
             $('#add-basic tr td select').each(function(){
-                //计数器标志
-                var index = $('#add-basic').find('tbody').attr('index');
-                index = parseInt(index) + 1;
-                var html =  '<td class="check_select">'+
-                            '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+'<option value="1">'+'阶段一'+'</option>'+'</select>'+
-                            '</td>';
+                //移除所有的option
+                $('table tr td select option').remove();
+
+                var html = '<option value="1">'+'阶段一'+'</option>';
                 //记录计数
-                $('#add-basic').find('.check_select').replaceWith(html);
+                $('#add-basic').find('select').append(html);
 
             });
         }
@@ -1338,7 +1353,7 @@ function exam_basic_info(){
 
         //获取考生分阶段考试的值
         var checkbox_num=$(".checkbox_num").val(),
-            number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+            number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
 
         //时长默认值
@@ -1350,7 +1365,7 @@ function exam_basic_info(){
              * 这里是生成<阶段>
              */
             var checkbox_number = '';
-            for(var i=0;i<checkbox_num;i++) {
+            for(var i=1;i<=checkbox_num;i++) {
                 checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
             }
             var html = '<tr>'+
@@ -1373,18 +1388,33 @@ function exam_basic_info(){
             $('#add-basic').find('tbody').attr('index',index);
             $('#add-basic').find('tbody').append(html);
     });
-
+    /**
+     * 日期选择
+     * @author chenxia
+     * @version 3.4
+     * @date    2016-04-06
+     */
     $(".checkbox_num").blur(function(){
         $('#add-basic tr td select').each(function(){
-            //计数器标志
-            var index = $('#add-basic').find('tbody').attr('index');
-            index = parseInt(index) + 1;
+            //移除所有的option
+            $('table tr td select option').remove();
+
             //获取考生分阶段考试的值
             var checkbox_num=$(".checkbox_num").val(),
-                number = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+            //这里是判断《阶段》后面的输入框是不是输入的1-20的整数
+            var pattern = /^(\d|1\d|20)$/gm;
+
+            if(!pattern.test(checkbox_num)){
+                layer.alert('请输入1-20的整数！');
+                $(".layui-layer-btn0").click(function(){
+                    $(".checkbox_num").val("1").focus();
+                })
+                return false;
+            }
             //这里是判断输入的值是否大于20
-            if(checkbox_num>20){
-                layer.alert('请输入小于20的整数！');
+            if(checkbox_num>20||checkbox_num==0){
+                layer.alert('请输入1-20的整数！');
                 $(".layui-layer-btn0").click(function(){
                     $(".checkbox_num").val("1").focus();
                 })
@@ -1395,18 +1425,15 @@ function exam_basic_info(){
                  * 这里是生成<阶段>
                  */
                 var checkbox_number = '';
-                for(var i=0;i<checkbox_num;i++) {
+                for(var i=1;i<=checkbox_num;i++) {
                     checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                 }
-                var html =  '<td class="check_select">'+
-                    '<select class="form-control" name="time['+parseInt(index)+'][gradation_order]" >'+checkbox_number+'</select>'+
-                    '</td>';
+                var html = checkbox_number;
                 //记录计数
-                $('#add-basic').find('.check_select').replaceWith(html);
+                $('#add-basic').find('select').append(html);
             }
         });
     })
-
 
     /**
      * 删除一条记录
@@ -3950,7 +3977,165 @@ function examinee_manage_edit() {
 function station_assignment(){
 
     //考站名称
-    var stationName = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+    var stationName = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'],
+        examId = (location.href).split('=')[1],
+        typeToName = ['','技能考站','sp考站','理论考站'],
+        chioceToName = ['','必考','选考'];
+
+    /**
+     * 初始化
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-07
+     */
+    $.ajax({
+        type:'get',
+        url: pars.data_list,
+        async: false,
+        data: {exam_id: examId},
+        success: function(res) {
+            if(res.code != 1) {
+                layer.msg('数据加载失败！',{skin:'msg-error',icon:1});
+            } else {
+                InitData(res.data);
+            }
+        }
+    });
+
+
+    /**
+     * 数据渲染
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-07
+     */
+    function InitData(data) {
+
+        var html = '';
+        var arr = [];
+
+        for(var i in data) {
+            //记录dom结构
+            var str = '';
+            for(var j in data[i].item) {
+                str += '<tr class="item-id-'+j+'" item-id="'+data[i].item[j].id+'">'+
+                                '<td type="2"><select class="form-control exam-item"><option selected="selected" value="'+data[i].item[j].subject_id+'">'+data[i].item[j].subject_name+'</option></select></td>'+
+                                '<td type="2"><select class="form-control exam-station"><option selected="selected" value="'+data[i].item[j].station_id+'">'+data[i].item[j].station_name+'</option></select></td>'+
+                                '<td type="2">'+typeToName[data[i].item[j].station_type]+'</td>'+
+                                '<td type="2"><select class="form-control station-belong"><option selected="selected" value="'+data[i].item[j].room_id+'">'+data[i].item[j].room_name+'</option></select></td>'+
+                                '<td type="2"><select class="form-control station-chioce"><option selected="selected" value="'+data[i].item[j].effected+'">'+chioceToName[data[i].item[j].effected]+'</option></select></td>'+
+                                '<td>'+
+                                    '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                                    '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                '</td>'+
+                            '</tr>';
+                
+                //存储select2 class
+                arr.push({table:'.table-id-'+i, tr:'.item-id-'+j});
+            }
+
+
+            //一个站的dom结构
+            html += '<div class="form-group">'+
+                        '<label class="col-sm-2 control-label">&nbsp;</label>'+
+                        '<div class="col-sm-10">'+
+                            '<div class="row">'+
+                                '<div class="col-sm-4"><label class="control-label" order="'+data[i].order+'">'+data[i].name+'</label></div>'+
+                                '<div class="col-sm-6">'+
+                                        '<label class="control-label col-sm-2">阶段：</label>'+
+                                        '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="2">'+stageRender(data[i].exam_gradation_id)+'</select>'+
+                                '</div>'+
+                                '<div class="col-sm-2">'+
+                                    '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
+                                    '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
+                                '</div>'+
+                            '</div>'+
+                            '<table class="table table-bordered table-id-'+i+'" table-order="'+i+'" station-id="'+data[i].id+'">'+
+                                '<thead>'+
+                                    '<tr>'+
+                                        '<td>考试项目</td>'+
+                                        '<td>考站</td>'+
+                                        '<td>考站类型</td>'+
+                                        '<td>所属考场</td>'+
+                                        '<td>必考&选考</td>'+
+                                        '<td>操作</td>'+
+                                    '</tr>'+
+                                '</thead>'+
+                                '<tbody index="'+j+'">'+str+'</tbody>'+
+                            '</table>'+
+                        '</div>'+
+                    '</div>';
+        }
+        $('.station-container').html(html);
+        $('.station-container').attr('index',data.length);
+
+        //触发select2
+        for(var i in arr) {
+            select2Init($(arr[i].table).find(arr[i].tr));
+        }
+    }
+    //模拟数据触发
+    //InitData(data);
+
+    
+    /**
+     * 阶段列表
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     * @param   {[number]}   count [第几个阶段]
+     * @return  {[string]}         [option dom]
+     */
+    function stageRender(count) {
+       var exam_stage_str = '';
+        $.ajax({
+            type: 'get',
+            async: false,
+            url: pars.exam_stage,
+            success: function(res) {
+                var data = res.data;
+
+                for(var i in data) {
+                    var str = data[i].order - 1;
+                    if(data[i].order == count) {
+                        exam_stage_str += '<option value="'+data[i].order+'" selected="selected">阶段'+stationName[str]+'</option>';
+                    } else {
+                        exam_stage_str += '<option value="'+data[i].order+'">阶段'+stationName[str]+'</option>';
+                    }
+                }
+            }
+        });
+        
+        return exam_stage_str; 
+    }
+
+    //阶段选择
+    $('.station-container').on('change', '.select-stage', function() {
+        //考站dom
+        var $that = $(this).parent().parent().parent().parent(),
+            req = {};
+
+        req['exam_id'] = examId;
+        req['name'] = $(this).parent().siblings('.col-sm-4').find('label').text();
+        req['order'] = $(this).parent().siblings('.col-sm-4').find('label').attr('order')
+        req['exam_gradation_id'] = $(this).val();
+        req['type'] = $(this).attr('type');
+        req['flow_id'] = $that.find('table').attr('station-id');
+
+        $.ajax({
+            type:'post',
+            url: pars.stationAdd,
+            data: req,
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('数据更新失败！',{skin:'msg-error',icon:1});
+                } else {
+                    return true;
+                }
+            }
+        });
+    });
+
 
     /**
      * 新建一个考站
@@ -3960,56 +4145,12 @@ function station_assignment(){
      */
     $('#station-add').click(function() {
 
-        var html = '';
-
-        html += '<div class="form-group">'+
-                    '<label class="col-sm-2 control-label">&nbsp;</label>'+
-                    '<div class="col-sm-10">'+
-                        '<div class="row">'+
-                            '<div class="col-sm-4"><label class="control-label">考站1</label></div>'+
-                            '<div class="col-sm-6">'+
-                                    '<label class="control-label col-sm-2">阶段：</label>'+
-                                    '<select class="form-control col-sm-10" style="width: 381px;"></select>'+
-                            '</div>'+
-                            '<div class="col-sm-2">'+
-                                '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
-                                '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
-                            '</div>'+
-                        '</div>'+
-                        '<table class="table table-bordered" id="examroom">'+
-                            '<thead>'+
-                                '<tr>'+
-                                    '<td>考试项目</td>'+
-                                    '<td>考站</td>'+
-                                    '<td>类型</td>'+
-                                    '<td>所属考场</td>'+
-                                    '<td>必考&选考</td>'+
-                                    '<td>操作</td>'+
-                                '</tr>'+
-                            '</thead>'+
-                            '<tbody>'+
-                                '<tr class="">'+
-                                    '<td><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-type"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                    '<td><select class="form-control station-chioce"><option value="请选择">请选择</option></select></td>'+
-                                    '<td>'+
-                                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                                        '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                    '</td>'+
-                                '</tr>'+
-                            '</tbody>'+
-                        '</table>'+
-                    '</div>'+
-                '</div>';
-
         var req = {},
             html = '',
             index = parseInt($('.station-container').attr('index'));
 
         //请求数据
-        req['exam_id'] = (location.href).split('=')[1];
+        req['exam_id'] = examId;
         req['name'] = '第'+stationName[index]+'站';
         req['order'] = index;
         req['exam_gradation_id'] = 1;
@@ -4050,17 +4191,17 @@ function station_assignment(){
                                 '<label class="col-sm-2 control-label">&nbsp;</label>'+
                                 '<div class="col-sm-10">'+
                                     '<div class="row">'+
-                                        '<div class="col-sm-4"><label class="control-label">第'+stationName[index]+'站</label></div>'+
+                                        '<div class="col-sm-4"><label class="control-label" order="'+index+'">第'+stationName[index]+'站</label></div>'+
                                         '<div class="col-sm-6">'+
                                                 '<label class="control-label col-sm-2">阶段：</label>'+
-                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;">'+exam_stage_str+'</select>'+
+                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+stageRender(1)+'</select>'+
                                         '</div>'+
                                         '<div class="col-sm-2">'+
                                             '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
-                                    '<table class="table table-bordered table-id-'+index+'" stationId="'+res.data.stationId+'">'+
+                                    '<table class="table table-bordered table-id-'+index+'" table-order="'+index+'" station-id="'+res.data.id+'">'+
                                         '<thead>'+
                                             '<tr>'+
                                                 '<td>考试项目</td>'+
@@ -4071,14 +4212,14 @@ function station_assignment(){
                                                 '<td>操作</td>'+
                                             '</tr>'+
                                         '</thead>'+
-                                        '<tbody index="'+index+'">'+
-                                            '<tr class="item-id-'+index+'" itemId="'+res.data.itemId+'">'+
-                                                '<td type="1"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                                                '<td type="1"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                                                '<td type="1"></td>'+
-                                                '<td type="1"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                                '<td type="1"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
-                                                '<td type="1">'+
+                                        '<tbody index="0">'+
+                                            '<tr class="item-id-'+index+'" item-id="'+res.data.draft_id+'">'+
+                                                '<td type="3"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                                                '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
+                                                '<td type="3"></td>'+
+                                                '<td type="3"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
+                                                '<td type="3"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                                                '<td>'+
                                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
                                                 '</td>'+
@@ -4093,7 +4234,7 @@ function station_assignment(){
                     $('.station-container').attr('index',index + 1);
                     $('.station-container').find('.item-id-'+index).attr('index',index + 1);
                     //初始化select2
-                    select2Init($('.station-container').find('.item-id-'+index));
+                    select2Init($('.station-container').find('.table-id-'+index).find('.item-id-'+index));
                 }
             }
         });
@@ -4112,7 +4253,22 @@ function station_assignment(){
      */
     $('.station-container').on('click', '.del-station', function() {
         //删除dom
-        $(this).parent().parent().parent().parent().remove();
+        var $that = $(this).parent().parent().parent().parent(),
+            judgeType = $that.find('.select-stage').attr('type') == 2 ? 2 :5;
+
+        $.ajax({
+            type:'get',
+            url: pars.del_flow,
+            data: {exam_id:examId,flow_id:$that.find('table').attr('station-id'),type:judgeType},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('删除失败！',{skin:'msg-error',icon:1});
+                } else {
+                    $that.remove();
+                    $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
+                }
+            }
+        });
     });
 
     /**
@@ -4123,25 +4279,40 @@ function station_assignment(){
      */
     $('.station-container').on('click', '.fa-plus', function() {
         var html = '',
-            index = parseInt($('.station-container').find('.table-id-'+index).attr('index')) + 1;
+            $that = $(this).parent().parent().parent().parent().parent(),
+            judgeType = $that.parent().parent().find('.select-stage').attr('type') == 2 ? 1 :4,
+            index = parseInt($that.attr('index')) + 1;
 
-        html += '<tr class="item-id-'+index+'">'+
-                    '<td type="1"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
-                    '<td type="1"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
-                    '<td type="1"></td>'+
-                    '<td type="1"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                    '<td type="1"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
-                    '<td type="1">'+
-                        '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                        '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                    '</td>'+
-                '</tr>';
+        $.ajax({
+            type:'post',
+            url: pars.update_data,
+            data: {exam_id:examId,flow_id:$that.parent().attr('station-id'),type:judgeType},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('新增失败！',{skin:'msg-error',icon:1});
+                } else {
+                    html += '<tr class="item-id-'+index+'" item-id="'+res.data.id+'">'+
+                                '<td type="3"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                                '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
+                                '<td type="3"></td>'+
+                                '<td type="3"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
+                                '<td type="3"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                                '<td>'+
+                                    '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                                    '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                                '</td>'+
+                            '</tr>';
 
-        //插入dom
-        $(this).parent().parent().parent().parent().parent().parent().append(html);
-        $(this).parent().parent().parent().parent().parent().parent().parent().attr('index',index);
-        //select2初始化
-        select2Init($(this).parent().parent().parent().parent().parent())
+                    //插入dom
+                    $that.append(html);
+                    $that.attr('index',index);
+                    //select2初始化
+                    select2Init($that.find('.item-id-'+index));
+                }
+            }
+        });
+
+        
     });
 
     /**
@@ -4152,8 +4323,75 @@ function station_assignment(){
      */
     $('.station-container').on('click', '.fa-trash-o', function() {
         //删除dom
-        $(this).parent().parent().parent().parent().remove();
+        var $that = $(this).parent().parent().parent().parent(),
+            judgeType = $(this).parent().parent().parent().prev().attr('type') == 2 ? 2 :5;
+
+        //删除整个站 在记录只有一条的情况下
+        if($that.parent().attr('index') == 0){
+            layer.confirm('确认要删除整个站吗？',{
+                title:'删除',
+                btn: ['确定','取消'] 
+            }, function(index){
+
+                //删除大站，在一条的情况
+                var judgeType = $that.parent().parent().parent().parent().find('.select-stage').attr('type') == 2 ? 2 :5;
+
+                $.ajax({
+                    type:'get',
+                    url: pars.del_flow,
+                    data: {exam_id:examId,flow_id:$that.parent().parent().parent().parent().find('table').attr('station-id'),type:judgeType},
+                    success: function(res) {
+                        if(res.code != 1) {
+                            layer.msg('删除失败！',{skin:'msg-error',icon:1});
+                        } else {
+                            $that.parent().parent().parent().parent().remove();
+                            $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
+                        }
+                    }
+                });
+
+                //$that.parent().parent().parent().parent().remove();
+                layer.close(index);
+
+            });
+
+            return;
+        }
+
+
+        $.ajax({
+            type:'get',
+            url: pars.del_draft,
+            data: {exam_id:examId,flow_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:judgeType},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('删除失败！',{skin:'msg-error',icon:1});
+                } else {
+                    $that.remove();
+                }
+            }
+        });
+
     });
+
+    /**
+     * 更新数据
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     * @param   {object}   req 请求数据
+     * @param   {string}   url 请求地址
+     */
+    function ajaxUpdate(req,url) {
+        $.ajax({
+            type:'post',
+            url: url,
+            data:req,
+            success: function(res) {
+                return true;
+            }
+        })
+    }
 
     /**
      * 初始化select2
@@ -4178,6 +4416,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].title});
                     }
+                    str.push({id:-999,text:'新增考试项目'});
 
                     //加载入数据
                     return {
@@ -4188,25 +4427,36 @@ function station_assignment(){
 
         //数据更新，交互数据
         }).on('select2:select', function(e) {
+
             //请求数据
             var req = {
+                exam_id:examId,
                 type:$elem.find('.exam-item').parent().attr('type'),
-                id:$elem.attr('itemId'),
-                station_id:$elem.parent().parent().attr('stationId'),
-                data:e.params.data.id
+                draft_id:$elem.attr('item-id'),
+                flow_id:$elem.parent().parent().attr('station-id'),
+                subject:e.params.data.id
             };
 
-            $.ajax({
-                type:'get',
-                url: '', //'http://127.0.0.1:3000/stationList',
-                data:req,
-                success: function(res) {
-                    //更改type值
-                    if($elem.find('.exam-item').parent().attr('type')==1) {
-                        $elem.find('.exam-item').parent().attr('type',3);
-                    }   
-                }
-            })
+            //新增页面
+            if(e.params.data.id == -999) {
+
+                layer.open({
+                  type: 2,
+                  title: '新增考试项目',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  end: function() {
+                    //更改请求数据
+                    req.subject = $elem.find('.exam-item').val();
+
+                    ajaxUpdate(req, pars.update_data);
+                  },
+                  content: pars.add_subject+'?status=1&table='+$elem.find('.exam-item').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-item').parent().parent().attr('class')
+                });
+            } else {
+                ajaxUpdate(req, pars.update_data);
+            }
         });
 
         //考站列表获取
@@ -4215,14 +4465,7 @@ function station_assignment(){
             tags: true,
             ajax: {
                 type:'get',
-                url: pars.station_list, //'http://127.0.0.1:3000/stationList',
-                data:function(param) {
-                    return {
-                        type:$elem.find('.exam-station').parent().attr('type'),
-                        id:$elem.attr('itemId'),
-                        station_id:$elem.parent().parent().attr('stationId')
-                    };
-                },
+                url: pars.station_list,
                 delay: 250,
                 processResults: function (res) {
 
@@ -4230,8 +4473,9 @@ function station_assignment(){
                     var str = [];
                     var data = res.data;
                     for(var i in data){
-                        str.push({id:data[i].id,text:data[i].name});
+                        str.push({id:data[i].id,text:data[i].name,type:data[i].type});
                     }
+                    str.push({id:-999,text:'新增考站'});
 
                     //加载入数据
                     return {
@@ -4241,26 +4485,39 @@ function station_assignment(){
             }
 
         //数据更新，交互数据
-        }).on('select2:select', function(e) {
+        }).on('select2:select', function(e) {console.log(e.params.data)
             //请求数据
             var req = {
+                exam_id:examId,
                 type:$elem.find('.exam-station').parent().attr('type'),
-                id:$elem.attr('itemId'),
-                station_id:$elem.parent().parent().attr('stationId'),
-                data:e.params.data.id
+                draft_id:$elem.attr('item-id'),
+                flow_id:$elem.parent().parent().attr('station-id'),
+                station:e.params.data.id
             };
 
-            $.ajax({
-                type:'get',
-                url: '', //'http://127.0.0.1:3000/stationList',
-                data:req,
-                success: function(res) {
-                    //更改type值
-                    if($elem.find('.exam-station').parent().attr('type')==1) {
-                        $elem.find('.exam-station').parent().attr('type',3);
-                    }   
-                }
-            })
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考站',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  content: pars.add_station+'?status=1&table='+$elem.find('.exam-station').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-station').parent().parent().attr('class')
+                });
+            } else {
+               $.ajax({
+                    type:'post',
+                    url: pars.update_data,
+                    data:req,
+                    success: function(res) {
+                        //更新考站类型
+                        $elem.find('.exam-station').parent().next().text(typeToName[e.params.data.type])
+                    }
+                }) 
+            }
+
+            
         });
 
         //$elem.find('.station-type').select2();
@@ -4271,25 +4528,17 @@ function station_assignment(){
             tags: true,
             ajax: {
                 type:'get',
-                url: pars.room_list, //'http://127.0.0.1:3000/stationList',
-                data:function(param) {
-                    return {
-                        type:$elem.find('.station-belong').parent().attr('type'),
-                        id:$elem.attr('itemId'),
-                        station_id:$elem.parent().parent().attr('stationId')
-                    };
-                },
+                url: pars.room_list,
                 delay: 250,
                 processResults: function (res) {
 
                     //数据格式化
                     var str = [];
                     var data = res.data;
-                    console.log(data);
                     for(var i in data){
-                        console.log(data[i]);
                         str.push({id:data[i].id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'新增考场'});
 
                     //加载入数据
                     return {
@@ -4302,49 +4551,78 @@ function station_assignment(){
         }).on('select2:select', function(e) {
             //请求数据
             var req = {
+                exam_id:examId,
                 type:$elem.find('.station-belong').parent().attr('type'),
-                id:$elem.attr('itemId'),
-                station_id:$elem.parent().parent().attr('stationId'),
-                data:e.params.data.id
+                draft_id:$elem.attr('item-id'),
+                station_id:$elem.parent().parent().attr('station-id'),
+                room:e.params.data.id
             };
 
-            $.ajax({
-                type:'get',
-                url: '', //'http://127.0.0.1:3000/stationList',
-                data:req,
-                success: function(res) {
-                    //更改type值
-                    if($elem.find('.station-belong').parent().attr('type')==1) {
-                        $elem.find('.station-belong').parent().attr('type',3);
-                    }   
-                }
-            })
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考场',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  end: function(){
+                    //更改请求数据
+                    req.room = $elem.find('.station-belong').val();
+
+                    ajaxUpdate(req, pars.update_data);
+                  },
+                  content: pars.add_room+'?status=1&table='+$elem.find('.station-belong').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.station-belong').parent().parent().attr('class')
+                });
+            } else {
+                ajaxUpdate(req, pars.update_data);
+            }
+
         });
 
         //选考必考
         $elem.find('.station-chioce').select2({data:[{id:1,text:'必考'},{id:2,text:'选考'}]}).on("change", function (e) {
             //请求数据
             var req = {
+                exam_id:examId,
                 type:$elem.find('.station-chioce').parent().attr('type'),
-                id:$elem.attr('itemId'),
-                station_id:$elem.parent().parent().attr('stationId'),
-                data: $elem.find('.station-chioce').val()
+                draft_id:$elem.attr('item-id'),
+                station_id:$elem.parent().parent().attr('station-id'),
+                chioce: $elem.find('.station-chioce').val()
             };
 
             $.ajax({
-                type:'get',
-                url: '', //'http://127.0.0.1:3000/stationList',
+                type:'post',
+                url: pars.update_data,
                 data:req,
                 success: function(res) {
-                    //更改type值
-                    if($elem.find('.station-chioce').parent().attr('type')==1) {
-                        $elem.find('.station-chioce').parent().attr('type',3);
-                    }
+                    return true;
                 }
             })
          });
 
     }
+
+    /**
+     * 保存数据
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-07
+     */
+    $('#save').click(function() {
+        $.ajax({
+            type:'post',
+            url: '',
+            data:{exam_id:examId},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
+                } else {
+                    layer.msg('数据保存成功！',{skin:'msg-success',icon:1});
+                }
+            }
+        })
+    });
 
 }
 

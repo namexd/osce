@@ -203,6 +203,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//考试安排
 		Route::get('exam-arrange/invigilate-arrange', ['uses'=>'ExamArrangeController@getInvigilateArrange','as'=>'osce.admin.exam-arrange.getInvigilateArrange']);	//考官安排
+		Route::post('exam-arrange/invigilate-arrange',['uses'=>'ExamArrangeController@postInvigilateArrange','as'=>'osce.admin.exam-arrange.postInvigilateArrange']);	//考官安排
 		//（异步接口）
 		Route::get('exam-arrange/all-gradations', ['uses'=>'ExamArrangeController@getAllGradations','as'=>'osce.admin.exam-arrange.getAllGradations']);	//获取考试的所有阶段（根据条件）
 		Route::get('exam-arrange/all-subjects', ['uses'=>'ExamArrangeController@getAllSubjects','as'=>'osce.admin.exam-arrange.getAllSubjects']);		//获取所有考试项目（根据条件）
@@ -286,6 +287,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 //		Route::get('exam-arrange/exam-content',['uses'=>'ExamArrangeController@getExamContent','as'=>'osce.admin.ExamContent.getExamContent']);
 		Route::get('exam-arrange/station-list',['uses'=>'ExamArrangeController@getStationList','as'=>'osce.admin.ExamArrange.getStationList']);
 		Route::get('exam-arrange/room-list',['uses'=>'ExamArrangeController@getRoomList','as'=>'osce.admin.ExamArrange.getRoomList']);
+		Route::get('exam-arrange/del-exam-flow',['uses'=>'ExamArrangeController@getDelExamFlow','as'=>'osce.admin.ExamArrange.getDelExamFlow']);
+		Route::get('exam-arrange/del-exam-draft',['uses'=>'ExamArrangeController@getDelExamDraft','as'=>'osce.admin.ExamArrange.getDelExamDraft']);
+		Route::get('exam-arrange/exam-arrange-data',['uses'=>'ExamArrangeController@getExamArrangeData','as'=>'osce.admin.ExamArrange.getExamArrangeData']);
 		Route::post('exam-arrange/add-exam-flow',['uses'=>'ExamArrangeController@postAddExamFlow','as'=>'osce.admin.ExamArrange.postAddExamFlow']);
 		Route::post('exam-arrange/add-exam-draft',['uses'=>'ExamArrangeController@postAddExamDraft','as'=>'osce.admin.ExamArrange.postAddExamDraft']);
 	});

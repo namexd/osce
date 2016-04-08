@@ -33,7 +33,7 @@ class StationController extends CommonController
     {
 
         //dd();
-        return view('osce::admin.examManage.examiner_manage');
+        return view('osce::admin.index.layer_success');
     }
 
     /**
@@ -132,6 +132,7 @@ class StationController extends CommonController
         ]);
 
         DB::connection('osce_mis')->beginTransaction();
+
         try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $stationData = $request->only('name', 'type', 'mins');
@@ -172,6 +173,8 @@ class StationController extends CommonController
             };
 
             DB::connection('osce_mis')->commit();
+
+
             return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
 
         } catch (\Exception $ex) {
