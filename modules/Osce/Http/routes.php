@@ -497,8 +497,8 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	if($exam->emptyData($exam_id)){
 //		return '成功';
 //	}
-	$redis = Redis::connection('message');
-    $redis->publish(1, 'test');
+//	$redis = Redis::connection('message');
+//    $redis->publish(1, 'test');
 //
 //	return '失败';
 });
