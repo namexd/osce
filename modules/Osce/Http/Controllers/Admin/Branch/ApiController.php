@@ -832,6 +832,10 @@ class ApiController extends CommonController
                 }
             }
 
+            $retval['title'] = '确定替考成功';
+            return response()->json(
+                $this->success_data($retval)
+            );
 
 
 
