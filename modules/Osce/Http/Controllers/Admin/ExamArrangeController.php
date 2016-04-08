@@ -63,16 +63,19 @@ class ExamArrangeController extends CommonController
                 'exam_id' => $examId,
                 'name' => $name,
                 'order' => $order,
-                'exam_gradation_id' => null,
-                'old_draft_flow_id' => null,
+                'exam_gradation_id' => $examGradationId,
+                'old_draft_flow_id' => $request->get('flow_id'),
                 'user_id' => $user->id,
                 'ctrl_type' => $type,
             ];
-            if (!is_null($examGradationId)) {
-                $data['exam_gradation_id'] = $examGradationId;
-            }
-            if ($request->get('flow_id')) {
-                $data['old_draft_flow_id'] = $request->get('flow_id');
+//            if (!is_null($examGradationId)) {
+//                $data['exam_gradation_id'] = $examGradationId;
+//            }
+//            if ($request->get('flow_id')) {
+//                $data['old_draft_flow_id'] = $request->get('flow_id');
+//            }
+            if(is_null($type)){
+                $data['ctrl_type'] = 1;
             }
 
             //先保存到临时表
@@ -233,7 +236,7 @@ class ExamArrangeController extends CommonController
             'flow_id' => 'required',
             'type' => 'required',
         ]);
-        $id = $request->get('id');
+        $id = $request->get('flow_id');
         $exam_id = $request->get('exam_id');
         $type = $request->get('type');
         try {
@@ -244,7 +247,9 @@ class ExamArrangeController extends CommonController
                 'old_draft_flow_id' => $id,
             ];
 
+
             if ($type == 2) {
+                $data['ctrl_type']=7;
                 //是删除真实表数据就在临时表中记录下该操作
                 $result = ExamDraftFlowTemp::create($data);
                 if ($result) {

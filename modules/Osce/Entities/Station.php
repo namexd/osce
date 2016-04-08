@@ -169,7 +169,7 @@ class Station extends CommonModel
             }
 
             $connection->commit();
-            return true;
+            return $result;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
