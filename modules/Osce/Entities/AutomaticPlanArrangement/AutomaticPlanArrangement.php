@@ -631,7 +631,6 @@ class AutomaticPlanArrangement
         $arrays = [];
         foreach ($result as $record) {
             //$arrays = $screen->groupBy('station_id');
-            $screeningId = $record->exam_screening_id;
             $station_id = $record->station_id;
             //$station        =   $record->station;
             $screeningId = $record->exam_screening_id;

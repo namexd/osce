@@ -18,7 +18,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Auth;
 
-class AutomaticPlanArrangementController extends CommonController
+class AutomaticPlanArrangementController extends CommonController implements SmartArrangeInterface
 {
     /**
      * 智能排考的着陆页
