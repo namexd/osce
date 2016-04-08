@@ -141,7 +141,7 @@ class ExamQuestionController extends CommonController
                 //$path   =   'osce/question/'.date('Y-m-d').'/'.rand(1000,9999).'/';
                 $path   =   'osce/question/'.date('Y-m-d').'/';
                 $destinationPath    =   public_path($path);
-                $file->move($destinationPath,iconv('utf-8','gb2312',$oldfileName));
+                $file->move($destinationPath,iconv('gb2312','utf-8',$oldfileName));
                 $pathReturn    =   '/'.$path.$oldfileName;
             }
             $data   =   [
