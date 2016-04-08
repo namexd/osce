@@ -63,18 +63,74 @@ function monitor_test(){
     });
     //确认弃考
     $(".abandon").click(function(){
+        var stopUrl = pars.stopUrl;
         var $student = $(this).parent().parent().siblings(".student").text();
         var $idCard = $(this).parent().parent().siblings(".idCard").text();
+        //弃考需要的当前数据
+        var $examId = $(this).parent().attr("examId");
+        var $studentId = $(this).parent().attr("studentId");
+        var $examScreeningId = $(this).parent().attr("examScreeningId");
+        var $stationId = $(this).parent().attr("stationId");
+        var $userId = $(this).parent().attr("userId");
+        var $examScreeningStudentId = $(this).parent().attr("examScreeningStudentId");
         layer.confirm("确认当前考生"+$student+"（"+$idCard+"）放弃考试？",function(){
-
+            $.ajax({
+                url:stopUrl,
+                cache:false,
+                data:{examId:$examId,
+                    studentId:$studentId,
+                    examScreeningId:$examScreeningId,
+                    stationId:$stationId,
+                    userId:$userId,
+                    examScreeningStudentId:$examScreeningStudentId,
+                    status:1
+                },
+                dataType:"json",
+                success:function(res){
+                    if(res == true){
+                        window.location.href=window.location.href;
+                        layer.msg("提交成功！",{skin:'msg-success',icon:1});
+                    }else{
+                        layer.msg(res,{skin:'msg-error',icon:1});
+                    }
+                }
+            })
         });
     });
     //确认替考
     $(".replace").click(function(){
+        var stopUrl = pars.stopUrl;
         var $student = $(this).parent().parent().siblings(".student").text();
         var $idCard = $(this).parent().parent().siblings(".idCard").text();
+        //替考需要的当前数据
+        var $examId = $(this).parent().attr("examId");
+        var $studentId = $(this).parent().attr("studentId");
+        var $examScreeningId = $(this).parent().attr("examScreeningId");
+        var $stationId = $(this).parent().attr("stationId");
+        var $userId = $(this).parent().attr("userId");
+        var $examScreeningStudentId = $(this).parent().attr("examScreeningStudentId");
         layer.confirm("确认当前考生"+$student+"（"+$idCard+"）替考？",function(){
-
+            $.ajax({
+                url:stopUrl,
+                cache:false,
+                data:{examId:$examId,
+                    studentId:$studentId,
+                    examScreeningId:$examScreeningId,
+                    stationId:$stationId,
+                    userId:$userId,
+                    examScreeningStudentId:$examScreeningStudentId,
+                    status:2
+                },
+                dataType:"json",
+                success:function(res){
+                    if(res == true){
+                        window.location.href=window.location.href;
+                        layer.msg("提交成功！",{skin:'msg-success',icon:1});
+                    }else{
+                        layer.msg(res,{skin:'msg-error',icon:1});
+                    }
+                }
+            })
         });
     });
     //查看视频
