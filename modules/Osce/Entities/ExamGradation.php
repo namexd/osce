@@ -25,5 +25,12 @@ class ExamGradation extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Exam', 'id', 'exam_id');
     }
 
+    static public function gradations($examId)
+    {
+        return ExamGradation::where('exam_id', $examId)
+            ->get()
+            ->keyBy('order');
+    }
+
 
 }

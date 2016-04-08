@@ -4367,6 +4367,8 @@ function station_assignment(){
                 if(res.code != 1) {
                     layer.msg('删除失败！',{skin:'msg-error',icon:1});
                 } else {
+                    //序数更新
+                    $that.parent().attr('index', parseInt($that.parent().attr('index'))-1);
                     $that.remove();
                 }
             }
