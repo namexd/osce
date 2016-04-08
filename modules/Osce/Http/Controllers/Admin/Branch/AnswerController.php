@@ -35,6 +35,14 @@ class AnswerController extends CommonController
      */
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
+        $this->validate($request,[
+            'id'       => 'required|integer',
+            'examId'    => 'required|integer',
+            'stationId'    => 'required|integer',
+            'userId'    => 'required|integer',
+            'studentId'    => 'required|integer',
+
+        ]);
         //?id=132&stationId=20&userId=347&studentId=6404&examId=421
         $ExamPaperId = $request->input('id');//试卷id  132
         $examId = $request->input('examId');//考试id  421
@@ -120,6 +128,7 @@ class AnswerController extends CommonController
             }
         }
        //dd(date('Y/m/d H:i:s',$systemTimeStart).'和'.date('Y/m/d H:i:s',$systemTimeEnd));
+
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -142,6 +151,14 @@ class AnswerController extends CommonController
      */
     public function postSaveAnswer(Request $request)
     {
+        $this->validate($request,[
+            'examPaperFormalId'       => 'required|integer',
+            'studentId'    => 'required|integer',
+            'stationId'    => 'required|integer',
+            'teacherId'    => 'required|integer',
+
+        ]);
+
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
         $systemTimeEnd  =time();//考试结束时间
         $actualLength = $systemTimeEnd-$systemTimeStart;//考试用时
@@ -150,7 +167,6 @@ class AnswerController extends CommonController
             'actualLength' =>$actualLength, //考试用时
             'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
         );
-
 
  /*       //提交过来的数据格式
         $case = array(
