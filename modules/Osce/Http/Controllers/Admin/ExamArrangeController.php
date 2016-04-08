@@ -166,7 +166,7 @@ class ExamArrangeController extends CommonController
                 'station_id' => null,
                 'room_id' => null,
                 'used' => 0,
-                'ctrl_type' => '',
+                'ctrl_type' => $request->get('type'),
             ];
             if (!is_null($subjectId)) {
                 $data['subject_id'] = $subjectId;
@@ -180,24 +180,22 @@ class ExamArrangeController extends CommonController
                 $data['room'] = $roomId;
             }
 
+
             if ($type == 2) {
-                $data['ctrl_type'] = $type;
                 $data['old_draft_id'] =$request->get('draft_id') ;
             }
 
             if ($type == 3) {
                 $data['ctrl_type'] = 6;
-                //修改当前这条数据
-
+                //根据临时表id判断是否是该之前的数据
 
             }
             if ($type == 4) {
                 $data['ctrl_type'] = $type;
-
-
             }
 
             $result = ExamDraftTemp::create($data);
+
             if (!$result) {
                 throw new \Exception('保存临时考站数据失败');
             } else {
