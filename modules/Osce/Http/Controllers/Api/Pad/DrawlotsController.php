@@ -33,6 +33,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 use DB;
 use Modules\Osce\Repositories\Common;
+use Illuminate\Support\Facades\Redis;
 
 class DrawlotsController extends CommonController
 {
@@ -399,7 +400,12 @@ class DrawlotsController extends CommonController
 
             $station->station_type = $station->type;
 
-            return response()->json($this->success_data($station));
+            $redis = Redis::connection('message');
+            $redis->publish('watch_message', json_encode($this->success_data($station)));
+
+
+
+            //return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
