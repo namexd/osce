@@ -75,12 +75,9 @@ class ExamArrangeController extends CommonController
                 $data['old_draft_flow_id'] = $request->get('flow_id');
             }
 
-
             //先保存到临时表
-            $result = ExamDraftFlowTemp::create($data);
 
-
-            if ($result) {
+            if ($result = ExamDraftFlowTemp::create($data)) {
                 //新增一条空的考站的子站数据
 
                 if ($type == 2) {
