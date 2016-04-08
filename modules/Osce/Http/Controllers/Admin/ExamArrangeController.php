@@ -75,12 +75,9 @@ class ExamArrangeController extends CommonController
                 $data['old_draft_flow_id'] = $request->get('flow_id');
             }
 
-
             //先保存到临时表
-            $result = ExamDraftFlowTemp::create($data);
 
-
-            if ($result) {
+            if ($result = ExamDraftFlowTemp::create($data)) {
                 //新增一条空的考站的子站数据
 
                 if ($type == 2) {
@@ -584,7 +581,14 @@ class ExamArrangeController extends CommonController
         ]);
         $id = $request->get('exam_id');
         try {
-
+            // 清空临时表数据
+            $ExamDraftTempModel= new ExamDraftTemp();
+            
+            $tempData = $ExamDraftTempModel -> getTempData($id);
+            if(!$tempData){
+                throw new \Exception('清空数据失败');
+            }
+           
             //拿到大的考站的数据
             $ExamDraftFlowModel = new ExamDraftFlow();
 
