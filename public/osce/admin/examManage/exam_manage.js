@@ -4398,7 +4398,7 @@ function station_assignment(){
                     type:'post',
                     url: pars.update_data,
                     data:req,
-                    success: function(res) {console.log(res)
+                    success: function(res) {
                         return true;
                     }
                 })
@@ -4449,7 +4449,7 @@ function station_assignment(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: pars.add_station
+                  content: pars.add_station+'?status=1'
                 });
             } else {
                $.ajax({
@@ -4512,7 +4512,7 @@ function station_assignment(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: pars.add_room
+                  content: pars.add_room+'?status=1'
                 });
             } else {
                 $.ajax({
