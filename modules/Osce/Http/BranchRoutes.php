@@ -177,6 +177,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('exam-monitor/quit',['uses'=>'ExamMonitorController@getExamMonitorQuitList','as'=>'osce.admin.ExamMonitorController.getExamMonitorQuitList']);
         //已完成
         Route::get('exam-monitor/finish',['uses'=>'ExamMonitorController@getExamMonitorFinishList','as'=>'osce.admin.ExamMonitorController.getExamMonitorFinishList']);
+        //视频指向
+        Route::get('exam-monitor/video',['uses'=>'ExamMonitorController@getExamMonitorHeadInfo','as'=>'osce.admin.ExamMonitorController.getExamMonitorHeadInfo']);
         /*****************考试监控end*******************/
 
 
