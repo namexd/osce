@@ -53,7 +53,7 @@ class ExamControlController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postStopExam2(Request $request)
+    public function postStopExam(Request $request)
     {
         $this->validate($request,[
             'examId'       => 'required|integer',//考试编号
