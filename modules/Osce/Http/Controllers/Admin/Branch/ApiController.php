@@ -560,9 +560,16 @@ class ApiController extends CommonController
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
             //dd($userInfo);
             $Student = new Student();
-            $examing = $Student->getExamings($userInfo->id);
+            $examid = $Student->getExamings($user->id);
+            $examId = array();
+            foreach($examid as $exam){
+                $examId[] = $exam->exam_id;
+            }
 
-//dd($examing);
+            //在队列表中查找与考试相关的数据
+            $examquen = new ExamQueue();
+            $examing = $examquen->getExamingData($examId);
+
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
@@ -587,7 +594,7 @@ class ApiController extends CommonController
             }
         }
 
-
+        //dd($examData);
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData
