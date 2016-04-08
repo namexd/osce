@@ -73,18 +73,8 @@
                                                     <td>操作</td>
                                                 </tr>
                                             </thead>
-                                            <tbody index="1">
-                                                <tr class="item-id-test" item-id="233">
-                                                    <td type="2"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>
-                                                    <td type="2"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>
-                                                    <td type="2"></td>
-                                                    <td type="2"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>
-                                                    <td type="2"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>
-                                                    <td>
-                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>
-                                                        <a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
-                                                    </td>
-                                            </tr>
+                                            <tbody>
+                                                
                                             </tbody>
                                         </table>
                                     </div>
