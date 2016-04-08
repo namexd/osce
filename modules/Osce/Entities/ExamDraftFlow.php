@@ -172,7 +172,6 @@ class ExamDraftFlow extends CommonModel
                 throw new \Exception('删除失败，请重试！');
             }
 
-
         } catch (\Exception $ex){
             throw $ex;
         }

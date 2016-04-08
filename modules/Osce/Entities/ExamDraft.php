@@ -246,4 +246,22 @@ class ExamDraft extends CommonModel
     }
 
 
+    /**
+     * 查询考场安排数据
+     * @param $exam_id
+     * @return mixed
+     */
+    public function getDraftFlowData($exam_id){
+        $data = $this->leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', $this->table.'.exam_draft_flow_id')
+                ->leftJoin('station', 'station.id', '=', $this->table.'.station_id')
+                ->leftJoin('subject', 'subject.id', '=', $this->table.'.subject_id')
+                ->where('exam_draft_flow.exam_id','=',$exam_id)
+                ->select([
+                    'exam_draft.id','exam_draft.subject_id','subject.title as subject_title',
+                    'station.id as station_id','station.name as station_name','station.type as station_type'
+                ])
+                ->groupBy('station_id')->get();
+
+        return $data;
+    }
 }
