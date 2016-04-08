@@ -183,31 +183,11 @@ class ExamMonitorController  extends CommonController
             $examId = $request->input('exam_id');
             $studentId = $request->input('student_id');
 
-            $stationId=ExamStation::where('exam_id',$examId)->select('station_id')->get();
+            $stationId=ExamStation::where('exam_id',$examId)->select('station_id')->get();//一个学生的所有考站
             if(!empty($stationId)) $stationId=$stationId->toArray();
 
-            foreach($stationId as $val) {
-                //根据考试id拿到场次id临时修改
-                $examScreeningId = ExamScreening::where('exam_id', '=', $examId)->select('id')->get()->pluck('id');
-                //更据考站id查询到
-                $stationVcrId = StationVcr::where('station_id', '=', $val['station_id'])->first()->id;
-                if (is_null($stationVcrId)) {
-                    throw new \Exception('没有找到相关联的摄像机');
-                }
-                //查询到页面需要的数据
-                $data[] = StationVideo::label($examId, $studentId, $val['station_id'], $examScreeningId);
-
-                //查询出时间锚点追加到数组中
-                $anchor[] = StationVideo:: getTationVideo($examId, $studentId, $stationVcrId)->toArray();
-            }
-            dd($anchor);
-            foreach ($data as $v){
-                if(count($v)) {
-                    dump($v->anchor);
-                }
-            }
-            dd(1);
-            return view('osce::admin.statisticalAnalysis.exam_video',['data'=>$data,'anchor'=>$anchor]);
+            $data=[];
+            return view('osce::admin.testMonitor.monitor_check',['data'=>$data,]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

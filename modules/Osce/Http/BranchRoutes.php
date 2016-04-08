@@ -120,6 +120,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
         //理论考试，答题时，试卷信息
         Route::get('answer/formalpaper-list',['uses'=>'AnswerController@formalPaperList','as'=>'osce.admin.AnswerController.formalPaperList']);
+
+        //获取考试队列中的考试监控标记
+        Route::get('answer/getcontrolmark',['uses'=>'AnswerController@getControlMark','as'=>'osce.admin.AnswerController.getControlMark']);
+
+
         //保存考生答案
         Route::post('answer/postsaveanswer',['uses'=>'AnswerController@postSaveAnswer','as'=>'osce.admin.AnswerController.postSaveAnswer']);
 
@@ -197,6 +202,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
         //获取正在考试的视频
         Route::get('exam-control/getvcrslist',['uses'=>'ExamControlController@getVcrsList','as'=>'osce.admin.ExamControlController.getVcrsList']);
+
+
 
 
 
