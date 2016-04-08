@@ -160,7 +160,7 @@ class ExamArrangeController extends CommonController
             $data = [
                 'exam_id' => $examId,
                 'old_draft_flow_id' => $request->get('flow_id'),
-//                'old_draft_id'=>$request->get('draft_id'),
+                'old_draft_id'=>null,
                 'user_id' => $user->id,
                 'subject_id' => null,
                 'station_id' => null,
@@ -182,13 +182,19 @@ class ExamArrangeController extends CommonController
 
             if ($type == 2) {
                 $data['ctrl_type'] = $type;
+                $data['old_draft_id'] =$request->get('draft_id') ;
             }
 
             if ($type == 3) {
-                $data['ctrl_type'] = $type;
+                $data['ctrl_type'] = 6;
+                //修改当前这条数据
+
+
             }
             if ($type == 4) {
                 $data['ctrl_type'] = $type;
+
+
             }
 
             $result = ExamDraftTemp::create($data);
@@ -197,7 +203,7 @@ class ExamArrangeController extends CommonController
             } else {
 
                 return response()->json(
-                    $this->success_data($result->id, 1, 'success')
+                    $this->success_data(['id'=>$result->id], 1, 'success')
                 );
             }
 
