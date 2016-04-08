@@ -74,7 +74,7 @@
                                 <td>{{$val['idcard']}}</td>
                                 <td>{{$val['mobile']}}</td>
                                 <td>{{----}}
-                                    <a href="{{route('osce.admin.course.getResultVideo')}}?exam_id={{$val['exam_id']}}&student_id={{$val['student_id']}}&station_id={{$val['station_id']}}">
+                                    <a href="{{route('osce.admin.ExamMonitorController.getExamMonitorHeadInfo')}}?exam_id={{$val['exam_id']}}&student_id={{$val['student_id']}}">
                                         <span class="state1 abandon">
                                             <i class="fa fa-video-camera fa-2x"></i>
                                         </span>
