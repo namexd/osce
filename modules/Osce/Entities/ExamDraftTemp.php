@@ -14,7 +14,7 @@ class ExamDraftTemp extends CommonModel{
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id','exam_id', 'room_id', 'subject_id',  'ctrl_type',  'old_draft_flow_id', 'station_id','old_draft_id','used','user_id'];
+    protected $fillable = ['id','exam_id', 'room_id', 'subject_id',  'ctrl_type', 'add_time', 'old_draft_flow_id', 'station_id','old_draft_id','used','user_id'];
     public $search = [];
 
 
