@@ -554,11 +554,11 @@ class ApiController extends CommonController
         $user = Auth::user();
         //查找当前正在进行的考试--之后会改
         $examingDO = Exam::where('status','=',1)->first();
-        //dd($user);
+        //dd($examingDO);
         if(count($examingDO) > 0){
             $studentModel = new Student();
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-
+            //dd($userInfo);
             $Student = new Student();
             $examing = $Student->getExamings($userInfo->id);
 
@@ -832,6 +832,10 @@ class ApiController extends CommonController
                 }
             }
 
+            $retval['title'] = '确定替考成功';
+            return response()->json(
+                $this->success_data($retval)
+            );
 
 
 

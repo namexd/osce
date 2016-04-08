@@ -25,6 +25,7 @@ use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
+use Modules\Osce\Repositories\Common;
 
 class StudentExamQueryController extends CommonController
 {
@@ -154,6 +155,7 @@ class StudentExamQueryController extends CommonController
 //                date_default_timezone_set("UTC");
 //                $stationType->time = date('H:i:s', $stationType->time);
 //                date_default_timezone_set("PRC");
+//                $stationType->time = Common::handleTime($stationType->time);
 
                 $stationData[] = [
                     'exam_result_id' => $stationType->exam_result_id,
@@ -377,9 +379,11 @@ class StudentExamQueryController extends CommonController
 
                 if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
                     $item['avg_score'] = number_format($avg->pluck('score')->sum() / $avg->pluck('score')->count(), 2);
-                    date_default_timezone_set("UTC");
-                    $item['avg_time'] = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
-                    date_default_timezone_set("PRC");
+//                    date_default_timezone_set("UTC");
+//                    $item['avg_time'] = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
+//                    date_default_timezone_set("PRC");
+
+                    $item['avg_time'] = Common::handleTime($avg->pluck('time')->sum() / $avg->pluck('time')->count());
                     $item['avg_total'] = $avg->count();
                 } else {
                     $item['avg_score'] = 0;

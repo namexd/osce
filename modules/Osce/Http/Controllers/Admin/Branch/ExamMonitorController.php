@@ -18,6 +18,12 @@ use Modules\Osce\Repositories\TestScoreRepositories;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
 use Modules\Osce\Entities\QuestionBankEntities\ExamControl;
 use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
+use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\StationVcr;
+use Modules\Osce\Entities\StationVideo;
+use Modules\Osce\Entities\ExamStation;
+
 
 class ExamMonitorController  extends CommonController
 {
@@ -166,8 +172,25 @@ class ExamMonitorController  extends CommonController
      * @date 2016-04-01 11:41
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    protected function getExamMonitorHeadInfo () {
+    protected function getExamMonitorHeadInfo (Request $request) {
+        try {
+            $this->validate($request,[
+                'exam_id' => 'required|integer',
+                'student_id' => 'required|integer',
+            ]);
 
+            //获取数据
+            $examId = $request->input('exam_id');
+            $studentId = $request->input('student_id');
+
+            $stationId=ExamStation::where('exam_id',$examId)->select('station_id')->get();//一个学生的所有考站
+            if(!empty($stationId)) $stationId=$stationId->toArray();
+
+            $data=[];
+            return view('osce::admin.testMonitor.monitor_check',['data'=>$data,]);
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
@@ -201,36 +224,26 @@ class ExamMonitorController  extends CommonController
                         ->where('exam_order.status',4)->where('student.exam_id',$exam_id)->where('exam_order.exam_id',$exam_id)->paginate(config('osce.page_size'));
                     break;
                 case 2://替考
-                    $list=ExamScreeningStudent::leftJoin('student', function($join){
-                        $join -> on('exam_screening_student.student_id', '=', 'student.id');
-                    })->select('student.name','student.exam_id','student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status')
-                      ->where('student.exam_id',$exam_id)
-                      ->where('exam_screening_student.is_replace',1)
-                      ->groupBy('exam_screening_student.student_id')
-                      ->paginate(config('osce.page_size'));
+                    $list=ExamMonitor::leftJoin('student', function($join){
+                        $join -> on('exam_monitor.student_id', '=', 'student.id');
+                        })->select('student.name','student.exam_id','student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence')
+                          ->where('exam_monitor.exam_id',$exam_id)
+                          ->where('exam_monitor.type',1)
+                          ->where('exam_monitor.description',1)//已经确认替考的
+                          ->groupBy('exam_monitor.student_id')
+                          ->paginate(config('osce.page_size'));
+
                     if(empty($list->toArray()['data'])){return [];}
                     $list=$list->toArray()['data'];
-                    foreach($list as $key=>$v){ //替考学生
-                        $replaceList=ExamScreeningStudent::where('student_id',$v['student_id'])->get()->toArray();
-                        $station_name=[];
-                            foreach($replaceList as $val){
-                                $station_names=ExamScreeningStudent::leftJoin('exam_screening', function ($join) {
-                                                $join->on('exam_screening_student.exam_screening_id', '=', 'exam_screening.id');
-                                            })->leftJoin('station_teacher', function ($join) {
-                                                $join->on('exam_screening_student.exam_screening_id', '=', 'station_teacher.exam_screening_id');
-                                            })->leftJoin('station', function ($join) {
-                                                $join->on('station.id', '=', 'station_teacher.station_id');
-                                            })->where('exam_screening_student.exam_screening_id',$val['exam_screening_id'])
-                                              ->where('station_teacher.exam_id',$v['exam_id'])->select('station.name')
-                                              ->first();
-                                if(!empty($station_names)) $station_name[]=$station_names->toArray()['name'];
-                            }
-
+                    foreach($list as $key=>$v) { //替考学生
+                        $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('type',1)->get()->toArray();//上报停考信息
+                        foreach($replaceList as $val){
+                            $station_names=Station::where('id',$val['station_id'])->pluck('name');
+                            if(!empty($station_names)) $station_name[]=$station_names;
+                        }
                         $list[$key]['station_name']=count($station_name)?implode(',',$station_name):'';
-                        //\DB::connection('osce_mis')->enableQueryLog();
-                     //  $queries = \DB::connection('osce_mis')->getQueryLog();
                     }
-                        return $list;
+                    return $list;
                     break;
                 case 3://弃考
                     $builder=ExamScreeningStudent::leftJoin('student', function($join){
@@ -260,7 +273,7 @@ class ExamMonitorController  extends CommonController
                         $join -> on('station_teacher.station_id', '=', 'station.id');
                     })->select('student.name','student.exam_id','station.id as station_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','station.name as station_name');
 
-                    return $builder->where('exam_screening_student.is_end',2)
+                    return $builder->where('exam_screening_student.is_end',1)
                         ->where('student.exam_id',$exam_id)
                         ->where('station_teacher.exam_id',$exam_id)
                         ->where('exam_screening.exam_id',$exam_id)
