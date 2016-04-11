@@ -110,8 +110,7 @@ function theory_student_validate(){
             url: "/osce/api/invigilatepad/start-exam",
             data: {station_id:station_id,user_id:teacher_id,student_id:student_id,type:2},
             success: function(msg){
-                alert(msg.code);
-                if(msg.code){
+                if(msg.code == 1){
                     window.location.href="/osce/admin/answer/formalpaper-list?stationId="+station_id+"&userId="+teacher_id+"&studentId="+student_id+"&id="+paper_id+"&examId="+exam_id;
                 }else{
                     alert(msg.message);
