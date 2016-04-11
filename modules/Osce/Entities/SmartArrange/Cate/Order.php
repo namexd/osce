@@ -16,39 +16,39 @@ use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
 class Order extends AbstractCate implements CateInterface
 {
     use SQLTraits, SundryTraits;
-    function needStudents($entity, $screen, $exam, $params)
+    function needStudents($entity, $screen, $exam)
     {
         // TODO: Implement needStudents() method.
         $result = [];
 
         if ($entity->serialnumber == 1) {
             for ($i = 0; $i < $entity->needNum; $i++) {
-                if (count($params['wait']) > 0) {
-                    $thisStudent = array_shift(count($params['wait']));
+                if (count($this->_S_W) > 0) {
+                    $thisStudent = array_shift(count($this->_S_W));
                     if (!is_null($thisStudent)) {
                         $result[] = $thisStudent;
                     }
 
-                    if ($params['total'] > 0) {
-                        if (is_array($params['total'])) {
-                            $params['wait'] = array_shift($params['total']);
+                    if ($this->_S > 0) {
+                        if (is_array($this->_S)) {
+                            $this->_S_W = array_shift($this->_S);
                         } else {
-                            $params['wait'] = $params['total']->shift();
+                            $this->_S_W = $this->_S->shift();
                         }
                     }
                 }
             }
-            return [$result, $params];
+            return $result;
         } else {
             $testStudent = $this->orderTestStudent($entity, $screen);
             if (count($testStudent) <= $entity->needNum) {
                 $result = $testStudent;
-                return [$result, $params];
+                return $result;
             } else {
                 for ($i = 0; $i < $entity->needNum; $i++) {
                     $result[] = $testStudent->shift();
                 }
-                return [$result, $params];
+                return $result;
             }
         }
     }
