@@ -340,14 +340,13 @@ class StudentWatchController extends CommonController
         });
         $item   =   array_shift($items);
 
-        /**********判断考站是否准备完成begin*************/ // added by wangjiang at 2016-04-07 09:46 for 判断考站是否准备完成
+        /**********判断考站是否准备完成begin*************/ // added by wangjiang at 2016-04-07 09:46 for 判断考站是否准备完成来改变腕表显示信息
         $examStationStatusModel = new ExamStationStatus();
         $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)->where('station_id', '=', $item->station_id)->first();
         if ($instance->status == 0) {
             return [
                 'code' => 4,
                 'title'=> '等待老师准备中',
-
             ];
         }
         /**********判断考站是否准备完成end*************/
