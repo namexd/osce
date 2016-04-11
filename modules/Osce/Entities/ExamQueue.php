@@ -323,7 +323,7 @@ class ExamQueue extends CommonModel
         //开启事务
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
-        try {
+       // try {
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
 
@@ -422,12 +422,12 @@ class ExamQueue extends CommonModel
             }
             // 调用锚点方法
             CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
-            $connection->commit();
+            //$connection->commit();
             return true;
-        } catch (\Exception $ex) {
-            $connection->rollBack();
-            throw $ex;
-        }
+//        } catch (\Exception $ex) {
+//            $connection->rollBack();
+//            throw $ex;
+//        }
 
     }
 
