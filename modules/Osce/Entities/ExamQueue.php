@@ -318,7 +318,7 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$type = 1)
     {
         //开启事务
         $connection = DB::connection($this->connection);
@@ -327,15 +327,19 @@ class ExamQueue extends CommonModel
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
 
-//                查询学生是否已开始考试
-            $examQueue = ExamQueue::where('student_id', '=', $studentId)
-                ->where('station_id', '=', $stationId)
-                ->whereIn('status',[1,2])
-                ->first();
-            if(is_null($examQueue)){
-                throw new \Exception('该学生还没有抽签', -105);
+            //学生进入考试时-不需要抽签
+            if($type != 2){
+                // 查询学生是否已开始考试
+                $examQueue = ExamQueue::where('student_id', '=', $studentId)
+                    ->where('station_id', '=', $stationId)
+                    ->whereIn('status',[1,2])
+                    ->first();
+                if(is_null($examQueue)){
+                    throw new \Exception('该学生还没有抽签', -105);
+                }
             }
-            if ($examQueue->status == 2) {
+
+            if (@$examQueue->status == 2) {
                 return true;
             }
 //            修改队列状态

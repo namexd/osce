@@ -681,6 +681,7 @@ class InvigilatePadController extends CommonController
             $studentId = $request->get('student_id');
             $stationId = $request->get('station_id');
             $teacherId =$request->get('user_id');
+            $type =$request->get('type');
             //开始考试时创建成绩
 //            $ExamResultData=[
 //                'student_id'=>$studentId,
@@ -703,7 +704,7 @@ class InvigilatePadController extends CommonController
 //               throw new \Exception('成绩创建失败',-106);
 //           }
             $ExamQueueModel = new ExamQueue();
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$type);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
                 return response()->json(
@@ -784,15 +785,15 @@ class InvigilatePadController extends CommonController
 
             foreach($boundWatchInfo as $k=>$v){
                 if($v['status'] < 2){
-                    $boundWatchInfo[$k]['status'] = '考试中';
+                    $boundWatchInfo[$k]['status'] = '等待中';
                 }elseif($v['status'] == 2){
-                    $boundWatchInfo[$k]['status'] = '已完成';
+                    $boundWatchInfo[$k]['status'] = '考试中';
                 }else{
-                    $boundWatchInfo[$k]['status'] = '已完成';
+                    $boundWatchInfo[$k]['status'] = '已结束';
                 }
             }
             return response()->json(
-                $this->success_data($boundWatchInfo, 1)
+                $this->success_data($boundWatchInfo,200)
             );
         }
 
@@ -826,8 +827,8 @@ class InvigilatePadController extends CommonController
             $studentId = $request->get('student_id');
             $examId = $request->get('exam_id');
 
-            $student = Student::find($studentId);
-            if (!$student) {
+            $studentInfo = Student::find($studentId);
+            if (!$studentInfo) {
                 throw new \Exception('没有找到该学生相关信息', -1);
             }
 
@@ -841,20 +842,32 @@ class InvigilatePadController extends CommonController
             }
 
             //查找当前考生的考试状态
-            $student = new Student();
-            $exameeStatus = $student->getExameeStatus($studentId,$examId);
-            $status = $this->checkType($exameeStatus->status);
-
-            if (!$status) {
-                throw new \Exception('没有找到该学生当前考试状态', -3 );
+            $Student = new Student();
+            $examid = $Student->where('id','=',$studentId)->select('exam_id')->get();
+            $examId = array();
+            foreach($examid as $exam){
+                $examId[] = $exam->exam_id;
             }
+
+            //在队列表中查找与考试相关的数据
+            $examquen = new ExamQueue();
+            $examing = $examquen->getExamingData($examId,@$studentId);
+
+            foreach($examing as $exam_status){
+                $status = $this->checkType($exam_status->status);
+                if (!$status) {
+                    throw new \Exception('没有找到该学生当前考试状态', -3 );
+                }
+            }
+
+
             //统计考试剩余考站数量
-            $exameeStatus = $student->getExameeStationsCount($studentId,$examId);
+            $exameeStatus = $Student->getExameeStationsCount($studentId,$examId);
 
             $data = [
-                'username'      => $student->name,
-                'idcard'        => $student->idcard,
-                'exam_sequence' => $student->exam_sequence,
+                'username'      => $studentInfo->name,
+                'idcard'        => $studentInfo->idcard,
+                'exam_sequence' => $studentInfo->exam_sequence,
                 'exam_status'   => $status,
                 'station_num'   => $exameeStatus->num,
                 'device_name'   => $watchInfo->name,
@@ -864,7 +877,7 @@ class InvigilatePadController extends CommonController
             ];
 
             return response()->json(
-                $this->success_data($data,1,'数据正常')
+                $this->success_data($data,200,'success')
             );
 
         } catch (\Exception $ex) {
@@ -873,4 +886,21 @@ class InvigilatePadController extends CommonController
         }
     }
 
+    /**
+     *  查询使用中的腕表数据
+     * @method GET
+     * @url
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     status   type    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getUseingWatchData(){
+
+    }
 }
