@@ -4614,7 +4614,7 @@ function station_assignment(){
     $('#save').click(function() {
         $.ajax({
             type:'post',
-            url: '',
+            url: pars.save,
             data:{exam_id:examId},
             success: function(res) {
                 if(res.code != 1) {
@@ -4637,6 +4637,7 @@ function station_assignment(){
  * @param   {object} 传入数据
  */
 function examiner_manage() {
+
 
     $("#add-basic .custom-teacher").select2({
         placeholder:'请选择',
@@ -4715,13 +4716,16 @@ function examiner_manage() {
 
     var data = [
         /*{
+    var data = [
+        {   subject_id:1,
             exam_item:{id:12,name:'胸腔1'},
             station:{id:212,name:'考站1'},
             station_type:{id:323,name:'技能站1'},
             teacher:[{id:5,name:'zhang1',status:1},{id:34,name:'张老师1',status:1}],
             sp_teacher:[{id:45,name:'成张老师1',status:1},{id:344,name:'杨老师1',status:2}]
         },
-        {
+        {   
+            subject_id:12,
             exam_item:{id:12,name:'胸腔2'},
             station:{id:212,name:'考站2'},
             station_type:{id:323,name:'技能站2'},
@@ -4729,6 +4733,7 @@ function examiner_manage() {
             sp_teacher:[{id:45,name:'成张老师2',status:1},{id:344,name:'杨老师2',status:2}]
         },
         {
+            subject_id:11,
             exam_item:{id:12,name:'胸腔3'},
             station:{id:212,name:'考站3'},
             station_type:{id:323,name:'技能站3'},
@@ -4736,8 +4741,19 @@ function examiner_manage() {
             sp_teacher:[{id:45,name:'成张老师3',status:1},{id:344,name:'杨老师3',status:2}]
         }*/
     ];
+
+    var teacherArr = [];
+
+    /**
+     * 初始化数据
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     * @param   {object}   data 传入数据
+     */
+
     function initTable(data) {
-        var html="<tr>";
+        var html="";
         for(var i in data){
             var str_teacher = '',
                 str_sp = '';
@@ -4754,37 +4770,207 @@ function examiner_manage() {
                 str_sp += '<option value="'+data[i].sp_teacher[j].id+'" selected="selected">'+data[i].sp_teacher[j].name+'</option>';
             }
 
-
-            html += '<tr>'+
-                '<td>'+data[i].exam_item.name+'</td>'+
-                '<td>'+data[i].station.name+'</td>'+
-                '<td>'+data[i].station_type.name+'</td>'+
-                '<td>'+
-                '<div class="col-sm-10">'+
-                '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+str_teacher+
-                '</select>'+
-                '</div>'+
-                '</td>'+
-                '<td>'+
-                '<div class="col-sm-10">'+
-                '<select class="form-control custom-sp"  name=""  multiple="multiple">'+str_sp+
-                '</select>'+
-                '</div>'+
-                '</td>'+
-                '<td>'+
-                '<a href="javascript:void(0)" class="invitaion-teacher">发送邀请</a>'+
-                '</td>'+
-                '</tr>';
+            //dom准备
+            html += '<tr value="'+data[i].subject_id+'">'+
+                        '<td>'+data[i].exam_item.name+'</td>'+
+                        '<td>'+data[i].station.name+'</td>'+
+                        '<td>'+data[i].station_type.name+'</td>'+
+                        '<td style="width:481px;">'+
+                            '<div class="col-sm-10">'+
+                            '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+str_teacher+
+                            '</select>'+
+                            '</div>'+
+                        '</td>'+
+                        '<td style="width:481px;">'+
+                            '<div class="col-sm-10">'+
+                            '<select class="form-control custom-sp"  name=""  multiple="multiple">'+str_sp+
+                            '</select>'+
+                            '</div>'+
+                        '</td>'+
+                        '<td>'+
+                            '<a href="javascript:void(0)" class="invitaion-teacher">发送邀请</a>'+
+                        '</td>'+
+                    '</tr>';
         }
 
+        //插入dom
         $('#add-basic tbody').html(html);
+
+        //初始化select2 老师邀请
+        $('#add-basic tbody').find('tr').each(function(key) {
+            var $that = $(this);
+
+            teacherInit($that);
+            teacher_spInit($that);
+            //老师邀请
+            sp_invation($that);
+
+            //老师列表数组
+            teacherArr.push({subject_id:$that.attr('value'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+
+        });
     }
 
+    /**
+     * 保存成功
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     */
+    $('#save').click(function() {
+        $.ajax({
+            type:'get',
+            url: '',
+            data:{data:teacherArr},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('保存成功失败！',{skin:'msg-error',icon:1});
+                } else {
+                    layer.msg('保存成功成功！',{skin:'msg-success',icon:1});
+                }
+            }
+        })
+    });
 
+    /**
+     * 全部发送邀请
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     */
+    $('#invation-all').click(function() {
+        $.ajax({
+            type:'get',
+            url: '',
+            data:{data:teacherArr},
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                } else {
+                    layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                }
+            }
+        })
+    });
+
+
+
+    //模拟数据
     initTable(data);
+    /**
+     * sp_invation 邀请
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     * @param   {[object]}   $elem [选择器]
+     */
+    function sp_invation($elem) {
+        var req = {
+            teacher:$elem.find('.custom-teacher').val(),
+            sp_teacher:$elem.find('.custom-sp').val(),
+            subject_id:$elem.attr('value')
+        };
 
-    $("#add-basic .custom-teacher").select2();
-    $("#add-basic .custom-sp").select2();
+        $elem.find('.invitaion-teacher').click(function() {
+            $.ajax({
+                type:'get',
+                url: '',
+                data:req,
+                success: function(res) {
+                    if(res.code != 1) {
+                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    } else {
+                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                    }
+                }
+            })
+        });
+    }
+
+    /**
+     * 老师选择
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     * @param   {object} dom选择器
+     */
+    function teacherInit($elem) {
+        $elem.find('.custom-teacher').select2({
+            placeholder:'请选择',
+            ajax: {
+                type:'get',
+                dataType: 'json',
+                url: pars.teacher_list,
+                data:function() {
+
+                    return {
+                        subject_id:$elem.attr('value'),
+                        type:1
+                    };
+                },
+                delay: 250,
+                processResults: function (res) {
+
+                    //数据格式化
+                    var str = [];
+                    var data = res.data;
+                    for(var i in data){
+                        str.push({id:data[i].teacher_id,text:data[i].name});
+                    }
+
+                    //加载入数据
+                    return {
+                        results: str
+                    };
+                }
+            }
+        });
+    }
+    
+
+    /**
+     * sp老师选择
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-08
+     * @param   {object} dom选择器
+     */
+    function teacher_spInit($elem) {
+        $elem.find('.custom-sp').select2({
+            placeholder:'请选择',
+            ajax: {
+                type:'get',
+                dataType: 'json',
+                url: pars.teacher_list,
+                data:function() {
+
+                    return {
+                        subject_id:$elem.attr('value'),
+                        type:2
+                    };
+                },
+                delay: 250,
+                processResults: function (res) {
+
+                    //数据格式化
+                    var str = [];
+                    var data = res.data;
+                    for(var i in data){
+                        str.push({id:data[i].teacher_id,text:data[i].name});
+                    }
+
+                    //加载入数据
+                    return {
+                        results: str
+                    };
+                }
+            }
+        });
+    }
+    
+
+    //$("#add-basic .custom-teacher").select2();
+    //$("#add-basic .custom-sp").select2();
 }
 
 

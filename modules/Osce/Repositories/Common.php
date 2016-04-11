@@ -290,4 +290,23 @@ class Common
 
         return $time;
     }
+
+
+    static  public function handleRedirect($request,$result){
+            $data= $request->headers->all()['referer'][0];
+            $fileNameArray =     explode('?',$data);
+            $fileArray =     explode('&',$fileNameArray[1]);
+            foreach ($fileArray as $value)
+                if($value=='status=1'){
+                    return view('osce::admin.index.layer_success',[
+                        'data'=>$result,
+                        'table'=>1,
+                        'tr'=>'item-id-0',
+
+                    ]);
+
+                }else{
+                    return false;
+                }
+    }
 }

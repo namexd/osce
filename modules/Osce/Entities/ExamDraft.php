@@ -63,7 +63,8 @@ class ExamDraft extends CommonModel
      */
     public function handleSmallData($data){
         try{
-            switch ($data['ctrl_type']){
+            $value = $data['item']->ctrl_type;
+            switch ($value){
                 case 1 : $this->smallOne($data);            //简单新增
                     break;
                 case 2 : $this->smallTwo($data);            //简单更新
@@ -77,9 +78,10 @@ class ExamDraft extends CommonModel
                     break;
                 default: throw new \Exception('操作有误！');
             }
+            return true;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -111,10 +113,10 @@ class ExamDraft extends CommonModel
                 throw new \Exception('添加对应站ID失败，请重试！');
             }
 
-            return 1;
+            return $item;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -131,20 +133,37 @@ class ExamDraft extends CommonModel
             if (is_null($examDraft)){
                 throw new \Exception('数据有误，请重试！');
             }
-            $examDraft -> station_id         = $item->station_id;
-            $examDraft -> room_id            = $item->room_id;
+
+            if(!is_null($item->station_id))
+            {
+                $examDraft -> station_id         = $item->station_id;
+            }
+            if(!is_null($item->room_id))
+            {
+                $examDraft -> room_id         = $item->room_id;
+            }
+            if(!is_null($item->subject_id))
+            {
+                $examDraft -> subject_id         = $item->subject_id;
+            }
+            if(!is_null($item->effected))
+            {
+                $examDraft -> effected         = $item->effected;
+            }
+
+//            $examDraft -> room_id            = $item->room_id;
 //            $examDraft -> exam_draft_flow_id = $item->exam_draft_flow_id;     //可以省略
-            $examDraft -> subject_id         = $item->subject_id;
-            $examDraft -> effected           = $item->effected;
+//            $examDraft -> subject_id         = $item->subject_id;
+//            $examDraft -> effected           = $item->effected;
 
             if(!$examDraft->save())
             {
                 throw new \Exception('更新站下的考项失败，请重试！');
             }
-            return 1;
+            return $examDraft;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -161,6 +180,7 @@ class ExamDraft extends CommonModel
                 throw new \Exception('数据有误，请重试！');
             }
             $draft_id  = $draftTemp->old_draft_id;
+            dd();
             $examDraft = ExamDraft::where('id','=',$draft_id)->first();
             if (is_null($examDraft)){
                 throw new \Exception('数据有误，请重试！');
@@ -175,10 +195,10 @@ class ExamDraft extends CommonModel
             {
                 throw new \Exception('更新站下的考项失败，请重试！');
             }
-            return 1;
+            return $examDraft;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -191,7 +211,8 @@ class ExamDraft extends CommonModel
         try{
             $item   = $data['item'];
             $draft_flow_temp_id = $item->old_draft_flow_id;
-            $exam_draft_flow_id = ExamDraftFlowTemp::where('exam_draft_flow_id','=',$draft_flow_temp_id)->first();
+            $exam_draft_flow_id = ExamDraftFlowTemp::where('id','=',$draft_flow_temp_id)->first();
+//            dd($item);
             if (is_null($exam_draft_flow_id)){
                 throw new \Exception('数据有误，请重试！');
             }
@@ -211,10 +232,10 @@ class ExamDraft extends CommonModel
             {
                 throw new \Exception('添加站下的考项失败，请重试！');
             }
-            return 1;
+            return $result;
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
@@ -223,13 +244,44 @@ class ExamDraft extends CommonModel
      * @param $data
      * @return \Exception|int
      */
-    public function smallFive(){
+    public function smallFive($data){
         try{
+            $item      = $data['item'];
+            //重新查找对应的这条数据（再赋给$item）
+            $newItem   = ExamDraftTemp::where('id','=',$item->id)->first();
+            //再获取对应的正式表的id
+            $draft_id  = $newItem->old_draft_id;
+            $examDraft = ExamDraft::where('id','=',$draft_id)->first();
+            if (is_null($examDraft)){
+                throw new \Exception('数据有误，请重试！');
+            }
+            //再删除正式表中对应ID的那条数据
+            if(!$examDraft->delete()){
+                throw new \Exception('删除失败，请重试！');
+            }
 
         } catch (\Exception $ex){
-            return $ex;
+            throw $ex;
         }
     }
 
 
+    /**
+     * 查询考场安排数据
+     * @param $exam_id
+     * @return mixed
+     */
+    public function getDraftFlowData($exam_id){
+        $data = $this->leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', $this->table.'.exam_draft_flow_id')
+                ->leftJoin('station', 'station.id', '=', $this->table.'.station_id')
+                ->leftJoin('subject', 'subject.id', '=', $this->table.'.subject_id')
+                ->where('exam_draft_flow.exam_id','=',$exam_id)
+                ->select([
+                    'exam_draft.id','exam_draft.subject_id','subject.title as subject_title',
+                    'station.id as station_id','station.name as station_name','station.type as station_type'
+                ])
+                ->groupBy('station_id')->get();
+
+        return $data;
+    }
 }

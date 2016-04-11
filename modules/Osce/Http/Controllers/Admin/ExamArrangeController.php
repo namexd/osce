@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamDraftFlowTemp;
@@ -63,16 +64,19 @@ class ExamArrangeController extends CommonController
                 'exam_id' => $examId,
                 'name' => $name,
                 'order' => $order,
-                'exam_gradation_id' => null,
-                'old_draft_flow_id' => null,
+                'exam_gradation_id' => $examGradationId,
+                'exam_draft_flow_id' => $request->get('flow_id'),
                 'user_id' => $user->id,
                 'ctrl_type' => $type,
             ];
-            if (!is_null($examGradationId)) {
-                $data['exam_gradation_id'] = $examGradationId;
-            }
-            if ($request->get('flow_id')) {
-                $data['old_draft_flow_id'] = $request->get('flow_id');
+//            if (!is_null($examGradationId)) {
+//                $data['exam_gradation_id'] = $examGradationId;
+//            }
+//            if ($request->get('flow_id')) {
+//                $data['old_draft_flow_id'] = $request->get('flow_id');
+//            }
+            if(is_null($type)){
+                $data['ctrl_type'] = 1;
             }
 
             //先保存到临时表
@@ -98,6 +102,7 @@ class ExamArrangeController extends CommonController
                     'old_draft_flow_id' => $result->id,
                     'ctrl_type' => 4,
                     'used' => 0,
+                    'add_time' => date('Y-m-d H:i:s',time()+1),
                     'user_id' => $user->id,
                 ];
                 $DraftResult = ExamDraftTemp::create($DraftData);
@@ -150,6 +155,7 @@ class ExamArrangeController extends CommonController
         $subjectId = $request->get('subject');
         $stationId = $request->get('station');
         $roomId = $request->get('room');
+        $DraftId = $request->get('draft_id');
 
         try {
             //获取当前操作信息
@@ -162,34 +168,45 @@ class ExamArrangeController extends CommonController
                 'old_draft_flow_id' => $request->get('flow_id'),
                 'old_draft_id'=>null,
                 'user_id' => $user->id,
-                'subject_id' => null,
-                'station_id' => null,
-                'room_id' => null,
+                'subject_id' => $subjectId,
+                'station_id' => $stationId,
+                'room_id' => $roomId,
+                'add_time'  =>  date('Y-m-d H:i:s'),
                 'used' => 0,
                 'ctrl_type' => $request->get('type'),
             ];
-            if (!is_null($subjectId)) {
-                $data['subject_id'] = $subjectId;
-            }
-
-            if (!is_null($stationId)) {
-                $data['station'] = $subjectId;
-            }
-
-            if (!is_null($roomId)) {
-                $data['room'] = $roomId;
-            }
-
 
             if ($type == 2) {
-                $data['old_draft_id'] =$request->get('draft_id') ;
+                $data['old_draft_id'] =$DraftId ;
             }
 
             if ($type == 3) {
-                $data['ctrl_type'] = 6;
-                //根据临时表id判断是否是该之前的数据
 
+                $ExamDraftTempType  = ExamDraftTemp::find($DraftId);
+                if(!is_null($subjectId)){
+                    $ExamDraftTempType->subject_id =$data['subject_id'];
+                }
+                if(!is_null($stationId)){
+                    $ExamDraftTempType->station_id =$data['station_id'];
+                }
+                if(!is_null($roomId)){
+                    $ExamDraftTempType->room_id =$data['room_id'];
+                }
+
+                //根据临时表id判断是否是该之前的数据
+                if($ExamDraftTempType->ctrl_type ==4 ||$ExamDraftTempType->ctrl_type ==6){
+                    $ExamDraftTempType->ctrl_type =6;
+                }else{
+                    $ExamDraftTempType->ctrl_type =1;
+                }
+                if($ExamDraftTempType->save()){
+                    return response()->json(
+                        $this->success_data(['id'=>$ExamDraftTempType->id], 1, 'success')
+                    );
+
+                }
             }
+
             if ($type == 4) {
                 $data['ctrl_type'] = $type;
             }
@@ -223,7 +240,7 @@ class ExamArrangeController extends CommonController
             'flow_id' => 'required',
             'type' => 'required',
         ]);
-        $id = $request->get('id');
+        $id = $request->get('flow_id');
         $exam_id = $request->get('exam_id');
         $type = $request->get('type');
         try {
@@ -231,10 +248,12 @@ class ExamArrangeController extends CommonController
             $data = [
                 'exam_id' => $exam_id,
                 'ctrl_type' => $type,
-                'old_draft_flow_id' => $id,
+                'exam_draft_flow_id' => $id,
             ];
 
+
             if ($type == 2) {
+                $data['ctrl_type']=7;
                 //是删除真实表数据就在临时表中记录下该操作
                 $result = ExamDraftFlowTemp::create($data);
                 if ($result) {
@@ -445,8 +464,18 @@ class ExamArrangeController extends CommonController
 
         //获得exam_id
         $exam_id = $request->input('id');
-        $data = [];
-        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $data]);
+        $exam    = Exam::where('id','=',$exam_id)->first();
+        if (is_null($exam)){
+            return redirect()->back()->withErrors('没有找到对应的考试！');
+        }
+        $ExamDraft     = new ExamDraft();
+
+        $datas = $ExamDraft->getDraftFlowData($exam_id);
+//        foreach ($datas as $key => $data) {
+//            $datas[$key][] = $ExamDraft->getExamDraftData($data->id);
+//        }
+
+        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $datas]);
     }
 
     /**
@@ -516,39 +545,52 @@ class ExamArrangeController extends CommonController
 
     }
 
-
+    private function timeIndex($data,$time){
+        if(array_key_exists(strtotime($time),$data))
+        {
+            $time   =   strtotime($time)+1;
+            return $this->timeIndex($data,date('Y-m-d H:i:s',$time));
+        }
+        else
+        {
+            return  $time;
+        }
+    }
     /**
      * 考场安排，提交保存
      * @param Request $request
      * @author Zhoufuxiang 2016-4-7
      * @throws \Exception
      */
-    public function postSubmit(Request $request)
+    public function postArrangeSave(Request $request)
     {
-        try{
+        $connection = \DB::connection('osce_mis');
+        $connection->beginTransaction();
+//        try{
             $this->validate($request, [
-                'id' => 'required',
+                'exam_id' => 'required',
             ]);
 
-            $exam_id       = $request->get('id');
+            $exam_id       = $request->get('exam_id');
             $ExamDraftFlow = new ExamDraftFlow();
             $ExamDraft     = new ExamDraft();
             //获取所有临时数据
             $draftFlows = ExamDraftFlowTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
             $drafts     = ExamDraftTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
 
-
             //所有临时数据 组合
             $datas = [];
             foreach ($draftFlows as $draftFlow) {
-                $datas[strtotime($draftFlow->created_dt)] = [
+                $datas[strtotime($draftFlow->created_at->format('Y-m-d H:i:s'))] = [
                     'item' => $draftFlow,
                     'is_draft_flow' => 1
                 ];
             }
 
             foreach ($drafts as $draft) {
-                $datas[strtotime($draft->created_dt)] = [
+
+                $time   =   strtotime($this->timeIndex($datas,$draft->add_time));
+                $datas[$time] = [
                     'item' => $draft,
                     'is_draft_flow' => 0
                 ];
@@ -570,15 +612,16 @@ class ExamArrangeController extends CommonController
                     }
                 }
             }
+            $connection->commit();
             //返回结果
             return response()->json(
                 $this->success_data([], 1, '保存成功！')
             );
 
-        } catch (\Exception $ex){
-
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex){
+//            $connection->rollBack();
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
