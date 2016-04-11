@@ -119,6 +119,7 @@ class ExamPaperFormal extends CommonModel
                     }
                 }
             }
+
             $DB->commit();
             return  $NewExamPaperInfo->id;
 

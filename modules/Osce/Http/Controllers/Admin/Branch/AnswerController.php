@@ -53,10 +53,10 @@ class AnswerController extends CommonController
 
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
-
         $ExamPaperFormal = new ExamPaperFormal;
         //生成正式的试卷并且 返回id
         $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo,$studentId);
+
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
             $systemTimeStart =\Session::get('systemTimeStart');
@@ -64,6 +64,7 @@ class AnswerController extends CommonController
             $systemTimeStart=time();
             \Session::put('systemTimeStart',$systemTimeStart);
         }
+
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
@@ -78,63 +79,49 @@ class AnswerController extends CommonController
             );
           $systemTimeEnd =$systemTimeStart+$examPaperFormalData['length']*60; //结束时间
         }
-        $examCategoryFormalData='';//正式试题信息(根据试题类型进行分类)
-
+        $examCategoryFormalData=[];//正式试题信息(根据试题类型进行分类)
+        $categoryData=[];
+        $num = 0;
         if($examPaperFormalList){
             $examCategoryFormalList = $examPaperFormalList->examCategoryFormal;//获取正式试题分类信息
             if($examCategoryFormalList){
                 foreach($examCategoryFormalList as $key=>$val){
-                    if($val->ExamQuestionFormal){
+                    if(count($val->ExamQuestionFormal)>0){
                         $examCategoryFormalList[$key]['exam_question_formal'] = $val->ExamQuestionFormal;//获取正式试题信息
-                    }
-                }
-                
-                //转换为数组格式
-                foreach($examCategoryFormalList as $k1=>$v1){
-                    if(count($v1['exam_question_formal'])>0){
-                        foreach($v1['exam_question_formal'] as $k2=>$v2){
-                            $examCategoryFormalData[]=array(
-                                'id' =>$v2->id,//正式试题信息
-                                'name' =>($k2+1).'、'.$v2->name,
-                                'image' =>unserialize($v2->image),
-                                'exam_question_id' =>$v2->exam_question_id,
-                                'content' =>explode('|%|',$v2->content),
-                                'answer' =>$v2->answer,
-                                'parsing' =>$v2->parsing,
-                                'exam_category_formal_id' =>$v2->exam_category_formal_id,
-                                'student_answer' =>$v2->student_answer,
-                                'serialNumber' =>($k1+1).'.'.($k2+1),
-
-                                'examCategoryFormalId'=>$v1->id,//正式试题分类信息
-                                'examCategoryFormalName'=>$v1->name,
-                                'examCategoryFormalNumber'=>$v1->number,
-                                'examCategoryFormalScore'=>$v1->score,
-                                'examQuestionTypeId'=>$v1->exam_question_type_id,
-                                'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
-                               'examCategoryFormalName'=>$this->numToWord($k1+1). '、' . $v1->name,
-                                );
-                        }
+                        $categoryData[$num]=$val;
+                        $categoryData[$num]['exam_question_formal']=$val->ExamQuestionFormal;
+                        $num++;
                     }
                 }
             }
         }
-/*
-       if(count($examCategoryFormalData)>0&&!empty($examCategoryFormalData)){
-            foreach($examCategoryFormalData as $key=>$val){
-                if($val['examQuestionTypeId']==1){//单选
-                    $examCategoryFormalData[$key]['examCategoryFormalName']='一、'.$val['examCategoryFormalName'];
-                }elseif($val['examQuestionTypeId']==2){//多选
-                    $examCategoryFormalData[$key]['examCategoryFormalName']='二、'.$val['examCategoryFormalName'];
-                }elseif($val['examQuestionTypeId']==3){//不定向
-                    $examCategoryFormalData[$key]['examCategoryFormalName']='三、'.$val['examCategoryFormalName'];
-                }elseif($val['examQuestionTypeId']==4){//判断
-                    $examCategoryFormalData[$key]['examCategoryFormalName']='四、'.$val['examCategoryFormalName'];
-                    $examCategoryFormalData[$key]['content']=array('0'=>0,'1'=>1);
+        //转换为数组格式
+        foreach($categoryData as $k1=>$v1){
+            if(count($v1['exam_question_formal'])>0){
+                foreach($v1['exam_question_formal'] as $k2=>$v2){
+                    $examCategoryFormalData[]=array(
+                        'id' =>$v2->id,//正式试题信息
+                        'name' =>($k2+1).'、'.$v2->name,
+                        'image' =>unserialize($v2->image),
+                        'exam_question_id' =>$v2->exam_question_id,
+                        'content' =>explode('|%|',$v2->content),
+                        'answer' =>$v2->answer,
+                        'parsing' =>$v2->parsing,
+                        'exam_category_formal_id' =>$v2->exam_category_formal_id,
+                        'student_answer' =>$v2->student_answer,
+                        'serialNumber' =>($k1+1).'.'.($k2+1),
+
+                        'examCategoryFormalId'=>$v1->id,//正式试题分类信息
+                        'examCategoryFormalName'=>$v1->name,
+                        'examCategoryFormalNumber'=>$v1->number,
+                        'examCategoryFormalScore'=>$v1->score,
+                        'examQuestionTypeId'=>$v1->exam_question_type_id,
+                        'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
+                        'examCategoryFormalName'=>$this->numToWord($k1+1). '、' . $v1->name,
+                    );
                 }
             }
-        }*/
-       //dd(date('Y/m/d H:i:s',$systemTimeStart).'和'.date('Y/m/d H:i:s',$systemTimeEnd));
-        //dd($examCategoryFormalData);
+        }
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -157,8 +144,6 @@ class AnswerController extends CommonController
      */
     public function postSaveAnswer(Request $request)
     {
-
-
         $this->validate($request,[
             'examPaperFormalId'       => 'required|integer',
             'studentId'    => 'required|integer',
@@ -237,31 +222,22 @@ class AnswerController extends CommonController
             }
         }
 
-
-        //保存考生答案
+        $resultData = array(
+            'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
+            'studentId' =>$request->input('studentId'),//学生Id
+            'stationId' => $request->input('stationId'),//考站id
+            'time'=>$actualLength,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
+            'teacherId'=>$request->input('teacherId'),//评分人编号
+            'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
+            'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
+        );
+        //保存考生答案和记录该考生成绩
         $answerModel = new Answer();
-        $result = $answerModel->saveAnswer($data);
-
+        $result = $answerModel->saveAnswer($data,$resultData);
         if($result){
-            $arr=array(
-                'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-                'studentId' =>$request->input('studentId'),//学生Id
-                'stationId' => $request->input('stationId'),//考站id
-                'time'=>$actualLength,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
-                'teacherId'=>$request->input('teacherId'),//评分人编号
-                'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
-                'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
-            );
-
-            //将向考试结果记录表增加一条数据
-            $result = $answerModel->createExamResult($arr);
-            if($result){
-                //删除session
-                \Session::forget('systemTimeStart');
-                return response()->json(['status'=>'1','info'=>'保存成功']);
-            }else{
-                return response()->json(['status'=>'2','info'=>'保存失败']);
-            }
+            //删除session
+            \Session::forget('systemTimeStart');
+            return response()->json(['status'=>'1','info'=>'保存成功']);
         }else{
             return response()->json(['status'=>'2','info'=>'保存失败']);
         }

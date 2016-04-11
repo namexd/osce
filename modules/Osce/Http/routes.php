@@ -410,7 +410,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//显示所有已绑定但未解绑人员的接口
 		Route::get('invigilatepad/bound-watch-members', 	['uses'=>'InvigilatePadController@getBoundWatchMembers','as'=>'osce.api.invigilatepad.getBoundWatchMembers']);
 		//获取考生详细信息的接口
-		Route::get('invigilatepad/examinee-details', 	['uses'=>'InvigilatePadController@getExamineeDetails','as'=>'osce.api.invigilatepad.getExamineeDetails']);
+		Route::get('invigilatepad/examinee-bound-watch-detail', 	['uses'=>'InvigilatePadController@getExamineeBoundWatchDetail','as'=>'osce.api.invigilatepad.getExamineeBoundWatchDetail']);
+		//查询使用中的腕表数据
+		Route::get('invigilatepad/useing-watch-data', 	['uses'=>'InvigilatePadController@getUseingWatchData','as'=>'osce.api.invigilatepad.getUseingWatchData']);
+		//查询某个腕表的考试状态
+		Route::get('invigilatepad/single-watch-data', 	['uses'=>'InvigilatePadController@getSingleWatchData','as'=>'osce.api.invigilatepad.getSingleWatchData']);
+		//查询学生考试状态
+		Route::get('invigilatepad/examinee-status', 	['uses'=>'InvigilatePadController@getExamineeStatus','as'=>'osce.api.invigilatepad.getExamineeStatus']);
 	});
 });
 

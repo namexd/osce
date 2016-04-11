@@ -222,4 +222,34 @@ class Watch extends CommonModel implements MachineInterface
 
         return $builder->get();
     }
+
+    //查询使用中的腕表数据
+    public function getWatchAboutData($status,$type){
+        if($type == 0){
+            $builder = $this->whereIn('exam_queue.status',[0,1]);
+        }elseif($type == 1){
+            $builder = $this->where('exam_queue.status','=',2);
+        }else{
+            $builder = $this->where('exam_queue.status','=',3);
+        }
+
+        $builder = $builder->where('watch.status','=',$status)->leftjoin('watch_log',function($watchLog){
+            $watchLog->on('watch_log.watch_id','=','watch.id');
+        })->leftjoin('exam_queue',function($examQueue){
+            $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
+        })->select('watch.id','watch.code','watch.name','watch.status','watch.factory','watch.sp','watch.purchase_dt','watch_log.action','watch_log.context','watch_log.student_id')->get();
+
+        return $builder;
+    }
+
+    //查询某个腕表的考试状态
+    public function getWatchExamStatus($ncfCode){
+        $builder = $this->where('watch.nfc_code','=',$ncfCode)->leftjoin('watch_log',function($watchLog){
+            $watchLog->on('watch_log.watch_id','=','watch.id');
+        })->leftjoin('exam_queue',function($examQueue){
+            $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
+        })->select('exam_queue.status')->first();
+
+        return $builder;
+    }
 }
