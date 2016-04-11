@@ -328,8 +328,9 @@ class ExamQueue extends CommonModel
             $exam = Exam::where('status', '=', 1)->first();
 
             //学生进入考试时-不需要抽签
-            dd($type);
-            if($type != 2){
+            //dd($type);
+            if(intval($type) != 2){
+                dd(111111111);
                 // 查询学生是否已开始考试
                 $examQueue = ExamQueue::where('student_id', '=', $studentId)
                     ->where('station_id', '=', $stationId)
