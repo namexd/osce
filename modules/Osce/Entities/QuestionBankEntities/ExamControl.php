@@ -13,6 +13,7 @@ use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\StationVcr;
 
 /**考生答题时，正式试卷模型
@@ -255,6 +256,85 @@ class ExamControl extends Model
             throw $ex;
         }
     }
+
+
+
+    /*迟到确认弃考*/
+
+    public function stopExamLate($data){
+
+        $DB = DB::connection('osce_mis');
+        $DB->beginTransaction();
+        try{
+            $examQueueModel = new ExamQueue();
+            //② 更新该考生考试队列表中该考生剩余考站的状态（exam_queue）
+            //获取该考生所有的考站信息
+            $examQueueData = $this->getExamQueueData($data['examId'],$data['studentId']);
+            if(!empty($examQueueData['examQueueInfo'])&&count($examQueueData['examQueueInfo'])>0){
+                foreach($examQueueData['examQueueInfo'] as $k=>$v){
+                    $examQueueResult = $examQueueModel->where('exam_id','=',$v['exam_id'])
+                        ->where('student_id','=',$v['student_id'])
+                        ->where('exam_screening_id','=',$v['exam_screening_id'])
+                        ->where('station_id','=',$v['station_id'])
+                        ->update(['status'=>3]);
+                    if(!$examQueueResult){
+                        throw new \Exception(' 更新考试队列状态失败！');
+                    }
+                }
+            }
+            //③ 更新考试场次-学生关系表(exam_screening_student)
+            $examScreeningStudentData = array(
+                'is_end' => 1,
+                'status' => $data['status'],
+                'description' => $data['description']
+            );
+            //保存考试场次-学生关系表（exam_screening_student）
+            $examScreeningStudentModel = new ExamScreeningStudent();
+            $result = $examScreeningStudentModel->where('id','=',$data['examScreeningStudentId'])->update($examScreeningStudentData);
+
+            if (!$result) {
+                throw new \Exception('更新考试场次-学生关系表失败！');
+            }
+
+            //④ 向考试结果记录表(exam_result) 和 监控标记学生替考记录表（exam_monitor）插入数据
+            //若该考生还有其他考站，则将其他考站的分数记录为0
+            if(!empty($examQueueData['remainExamQueueInfo'])&&count($examQueueData['remainExamQueueInfo'])>0){
+                foreach($examQueueData['remainExamQueueInfo'] as $key=>$val){
+                    //向考试结果记录表插入数据
+
+                    $data['userId']=StationTeacher::where('station_id',$val['station_id'])->pluck('id');
+                    $examResultData=array(
+                        'student_id'=>$data['studentId'],
+                        'exam_screening_id'=>$val['exam_screening_id'],
+                        'station_id'=>$val['station_id'],
+                        'time'=>0,
+                        'score'=>0,
+                        'teacher_id'=>$data['userId'],
+                    );
+                    if(!ExamResult::create($examResultData)){
+                        throw new \Exception(' 插入考试结果记录表失败！');
+                    }
+                    //向监控标记学生替考记录表插入数据
+                    $examMonitorData=array(
+                        'station_id'=>$val['station_id'],
+                        'exam_id'=>$val['examId'],
+                        'student_id'=>$val['studentId'],
+                        'type'=>$data['type'],
+                        'description'=>$data['description'],
+                    );
+                    if(!ExamMonitor::create($examMonitorData)){
+                        throw new \Exception(' 插入监控标记学生替考记录表失败！');
+                    }
+                }
+            }
+            $DB->commit();
+            return true;
+        }catch (\Exception $ex){
+            $DB->rollback();
+            throw $ex;
+        }
+    }
+
 
     /**获取该考生该场考试剩余的考站数量和考试队列信息
      * @method

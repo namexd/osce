@@ -24,6 +24,7 @@ use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Repositories\Common;
 
 
+
 class ExamMonitorController  extends CommonController
 {
     /**
@@ -73,9 +74,40 @@ class ExamMonitorController  extends CommonController
         }
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
+        //dd($data['data']);
         return view('osce::admin.testMonitor.monitor_late', [
             'list'      =>$data['data'],'data'=>$topMsg
         ]);
+    }
+
+    public function postStopExam(Request $request)
+    {
+        $this->validate($request,[
+            'examId'       => 'required|integer',//考试编号
+            'studentId'    => 'required|integer',//考生编号
+            'examScreeningStudentId'    => 'required|integer',//考试场次-学生关系id
+
+        ]);
+
+        $data=array(
+            'examId' =>$request->input('examId'), //考试编号
+            'studentId' =>$request->input('studentId'), //考生编号
+            'examScreeningStudentId' =>$request->input('examScreeningStudentId'), //考试场次-学生关系id
+            'status' =>1, //1确认弃考 2确认替考 3终止考试
+            'description' => -1,
+            'type'=>2//上报弃考
+
+        );
+
+        $examControlModel = new ExamControl();
+        $result = $examControlModel->stopExamLate($data);
+
+        if($result==true){
+            return response()->json(true);
+        }else{
+            return response()->json($result);
+        }
+
     }
 
     /**
@@ -244,7 +276,7 @@ class ExamMonitorController  extends CommonController
                     $join -> on('exam_order.student_id', '=', 'student.id');
                 })-> leftJoin('exam_screening_student', function($join){
                     $join -> on('exam_screening_student.student_id', '=', 'student.id');
-                })->select('student.name', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status')
+                })->select('student.name','student.exam_id as examId','exam_screening_student.id as examScreeningStudentId', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status')
                     ->where('exam_order.status',4)
                     ->where('student.exam_id',$exam_id)
                     ->where('exam_order.exam_id',$exam_id)
