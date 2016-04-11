@@ -480,18 +480,6 @@ class ExamArrangeController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
-     *[{    subject_id:1,
-            station_id:12,
-            exam_item:{id:12,name:'胸腔1'},
-            station:{id:212,name:'考站1'},
-            station_type:{id:323,name:'技能站1'},
-            teacher:[{id:5,name:'zhang1',status:1},{id:34,name:'张老师1',status:1}],
-            sp_teacher:[{id:45,name:'成张老师1',status:1},{id:344,name:'杨老师1',status:2}]
-        },
-     * ]
-     *
-     *
-     *
      *
      *
      */
@@ -512,52 +500,62 @@ class ExamArrangeController extends CommonController
 //        if(){
 //
 //        }
-        $return  =   [];
         $ExamDraft     = new ExamDraft();
         $datas = $ExamDraft->getDraftFlowData($exam_id);
         
-        foreach ($datas as &$teacherData){
-            //查询出考站下对应的老师
-            $stationteaxherModel = new StationTeacher();
-            $teacherData= $stationteaxherModel->getTeacherData($teacherData,$exam_id);
-            foreach ($teacherData as $value){
-                if($value ->teacher_typen = 2){
-                    $teacherData ->sp_teacher = $value;
-                }else{
-                    $teacherData ->teacher = $value;
-                }
-            }
-        }
-
-//        foreach ($datas as $data)
-//        {
-//            $teatherList    =   $this->getTeacherList();
-//            $item       =   [
-//                'subject_id'    =>  1,
-//                'station_id'    =>  12,
-//                'exam_item'     =>  [
-//                    'id'        =>  12,
-//                    'name'      =>  '胸腔1',
-//                ],
-//                'station'       =>  [
-//                    'id'        =>  212,
-//                    'name'      =>  '考站1',
-//                ],
-//                'station_type'  =>  [
-//                    'id'        =>  212,
-//                    'name'      =>  '技能站1',
-//                ],
-//                'teacher'       =>  $this->groupTeacherList($teatherList),//[{id:5,name:'zhang1',status:1},{id:34,name:'张老师1',status:1}]
-//                'sp_teacher'    =>  $this->groupSpTeacherList($teatherList)   //[{id:45,name:'成张老师1',status:1},{id:344,name:'杨老师1',status:2}]
-//            ];
-//            $return[]   =   $item;
-//        }
-//        foreach ($datas as $key => $data) {
-//            $datas[$key][] = $ExamDraft->getExamDraftData($data->id);
+//        foreach ($datas as &$teacherData){
+//            //查询出考站下对应的老师
+//            $stationteaxherModel = new StationTeacher();
+//            $teacherData= $stationteaxherModel->getTeacherData($teacherData,$exam_id);
+//            foreach ($teacherData as $value){
+//                if($value ->teacher_typen = 2){
+//                    $teacherData ->sp_teacher = $value;
+//                }else{
+//                    $teacherData ->teacher = $value;
+//                }
+//            }
 //        }
 
         return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $datas]);
     }
+
+
+    //回显数据ajax请求
+     public function getExamTeacherArrange(Request $request){
+         $this->validate($request, [
+             'exam_id' => 'required|integer'
+         ]);
+         //获得exam_id
+         $exam_id = $request->input('exam_id');
+         $exam    = Exam::where('id','=',$exam_id)->first();
+         if (is_null($exam)){
+             return redirect()->back()->withErrors('没有找到对应的考试！');
+         }
+         //判断考官安排是考场还是考站安排
+//        if(){
+//
+//        }
+         $ExamDraft     = new ExamDraft();
+         $datas = $ExamDraft->getDraftFlowData($exam_id);
+         foreach ($datas as &$teacherData){
+             //查询出考站下对应的老师
+             $stationteaxherModel = new StationTeacher();
+             $teacherData= $stationteaxherModel->getTeacherData($teacherData,$exam_id);
+             foreach ($teacherData as $value){
+                 if($value ->teacher_typen = 2){
+                     $teacherData ->sp_teacher = $value;
+                 }else{
+                     $teacherData ->teacher = $value;
+                 }
+             }
+         }
+         return response()->json(
+             $this->success_data($datas, 1, 'success')
+         );
+     }
+
+
+
 
 //    private function getTeacherList(){
 //
@@ -585,9 +583,8 @@ class ExamArrangeController extends CommonController
                 'exam_id' => 'required|integer'
             ]);
             //获得exam_id
-            $exam_id = $request->input('id');
+            $exam_id = $request->input('exam_id');
             $teacherData = $request->input('data');
-
             //保存老师的数据
             $stationteaxherModel = new StationTeacher();
 
@@ -646,6 +643,7 @@ class ExamArrangeController extends CommonController
 //        $userId =
 
     }
+
 
     private function timeIndex($data,$time){
         if(array_key_exists(strtotime($time),$data))
