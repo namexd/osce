@@ -63,7 +63,7 @@ class StationTeacher extends CommonModel
 
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
-        try {
+//        try {
             //判断是新增还是编辑
             $examTeacherData = $this->where('exam_id','=',$exam_id)->get();
             if(count($examTeacherData) !=0){
@@ -79,8 +79,10 @@ class StationTeacher extends CommonModel
                 throw new \Exception('未找到当前操作人信息！');
             }
             if ($teacherData) {
+              
                 $teacherIDs =[];
                 foreach ($teacherData as $key => $item) {
+                  
 
                     foreach ($item['teacher'] as $value){
                         $teacherIDs[] = $value;
@@ -117,11 +119,11 @@ class StationTeacher extends CommonModel
                 $connection->commit();
                 return true;
             }
-        } catch (\Exception $ex) {
-            $connection->rollBack();
-            throw $ex;
-
-        }
+//        } catch (\Exception $ex) {
+//            $connection->rollBack();
+//            throw $ex;
+//
+//        }
 
 
     }

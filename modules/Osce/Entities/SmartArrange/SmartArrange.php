@@ -175,9 +175,11 @@ class SmartArrange
                 if (!$tempBool) {
                     //将总考池和侯考区考生打包进数组
                     $params = ['total' => $this->_S, 'wait' => $this->_S_W, 'serialnumber' => $serialnumber];
-                    list($students, $params) = $this->cate->needStudents($entity, $screen, $this->exam, $params);
-                    $this->_S = $params['total'];
-                    $this->_S_W = $params['wait'];
+                    //将排序模式注入
+                    $this->setCate(CateFactory::getCate($this->exam, $params));
+                    $students = $this->cate->needStudents($entity, $screen, $this->exam);
+                    $this->_S = $this->cate->getTotalStudent();
+                    $this->_S_W = $this->cate->getWaitStudent();
 
                     if (count($students) == 0) {
                         continue;

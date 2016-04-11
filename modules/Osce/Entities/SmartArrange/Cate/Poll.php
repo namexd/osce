@@ -15,10 +15,10 @@ use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
 class Poll extends AbstractCate implements CateInterface
 {
     use SQLTraits, SundryTraits;
-    function needStudents($entity, $screen, $exam, $params)
+    function needStudents($entity, $screen, $exam)
     {
         // TODO: Implement needStudents() method.
-        $testStudnts = $this->pollTestStudents($entity, $screen, $params);
+        $testStudnts = $this->pollTestStudents($entity, $screen);
 
         //申明数组
         $result = [];
@@ -33,22 +33,22 @@ class Poll extends AbstractCate implements CateInterface
         if (count($result) < $entity->needNum) {
             $hasStudent = $entity->needNum - count($result);
             for ($i = 0; $i <= $hasStudent; $i) {
-                if (count($params['wait']) > 0) {
-                    $thisStudent = array_shift($params['wait']);
+                if (count($this->_S_W) > 0) {
+                    $thisStudent = array_shift($this->_S_W);
                     if (!is_null($thisStudent)) {
                         $result[] = $thisStudent;
                     }
-                    if (count($params['total']) > 0) {
-                        if (is_array($params['total'])) {
-                            $params['wait'][] = array_shift($params['total']);
+                    if (count($this->_S) > 0) {
+                        if (is_array($this->_S)) {
+                            $this->_S_W[] = array_shift($this->_S);
                         } else {
-                            $params['wait'][] = $params['total']->shift();
+                            $this->_S_W[] = $this->_S->shift();
                         }
                     }
                 }
             }
-            return [$result, $params];
+            return $result;
         }
-        return [$result, $params];
+        return $result;
     }
 }

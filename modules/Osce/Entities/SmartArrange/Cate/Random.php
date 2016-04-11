@@ -27,10 +27,10 @@ class Random extends AbstractCate implements CateInterface
      * @author Jiangzhiheng
      * @time 2016-04-11 10:18
      */
-    function needStudents($entity, $screen, $exam, $params)
+    function needStudents($entity, $screen, $exam)
     {
         // TODO: Implement needStudents() method.
-        $testStudents = $this->randomTestStudent($entity, $screen, $params);
+        $testStudents = $this->randomTestStudent($entity, $screen);
         //申明数组
         $result = [];
         /*
@@ -38,7 +38,7 @@ class Random extends AbstractCate implements CateInterface
          * 从正在考的学生里找到对应个数的考生
          * 如果该考生已经考过了这个流程，就忽略掉
          */
-        list($result, $params) = $this->studentNum($entity, $testStudents, $result);
+        $result = $this->studentNum($entity, $testStudents, $result);
 
         /*
          * 如果$result中保存的人数少于考站需要的人数，就从侯考区里面补上，并将这些人从侯考区踢掉
@@ -47,23 +47,23 @@ class Random extends AbstractCate implements CateInterface
          */
         if (count($result) < $entity->needNum) {
             for ($i = 0; $i <= $entity->needNum - count($result); $i++) {
-                if (count($params['wait']) > 0) {
-                    $thisStudent = array_shift($params['wait']);
+                if (count($this->_S_W) > 0) {
+                    $thisStudent = array_shift($this->_S_W);
                     if (!is_null($thisStudent)) {
                         $result[] = $thisStudent;
                     }
-                    if (count($params['total']) > 0) {
-                        if (is_array($params['total'])) {
-                            $params['wait'][] = array_shift($params['total']);
+                    if (count($this->_S) > 0) {
+                        if (is_array($this->_S)) {
+                            $this->_S_W[] = array_shift($this->_S);
                         } else {
-                            $params['wait'][] = $params['total']->shift();
+                            $this->_S_W[] = $this->_S->shift();
                         }
 
                     }
                 }
             }
         }
-        return [$result, $params];
+        return $result;
     }
 
     
