@@ -9,12 +9,30 @@
 namespace Modules\Osce\Entities\SmartArrange\Entity;
 
 
+use Modules\Osce\Entities\SmartArrange\Traits\SQLTraits;
+
 class StationMode implements EntityInterface
 {
-    function entity($exam)
+    use SQLTraits;
+
+    /**
+     * 返回该场次所对应的实体
+     * @param $screen
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-08 17：40
+     */
+    function entity($screen)
     {
         // TODO: Implement entity() method.
+        //获得该考试下的所有考站
+        $entities = $this->getStation($screen);
+        
+        foreach ($entities as &$entity) {
+            $entity->needNum = 1;
+        }
 
+        return $entities;
     }
     
     function dataBuilder($exam, $screen, $student, $entity, $i)

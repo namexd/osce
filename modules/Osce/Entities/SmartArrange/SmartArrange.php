@@ -67,6 +67,17 @@ class SmartArrange
     }
 
     /**
+     * 打乱学生顺序
+     * @param $students
+     * @author Jiangzhiheng
+     * @time 2016-04-08 16:40
+     */
+    public function upset($students)
+    {
+        return $students->shuffle();
+    }
+
+    /**
      * 获得考生
      * @return mixed
      * @author Jiangzhiheng
@@ -100,10 +111,10 @@ class SmartArrange
      * @author Jiangzhiheng
      * @time
      */
-    public function setEntity($exam)
+    public function setEntity($exam, $screen)
     {
         $this->mode = ModeFactory::getMode($exam);
-        $this->_E = $this->mode->entity($this->exam);
+        $this->_E = $this->mode->entity($this->exam, $screen);
     }
 
 
@@ -117,6 +128,9 @@ class SmartArrange
          */
         $beginDt = strtotime($screen->begin_dt);
         $endDt = strtotime($screen->end_dt);
+
+        //本次场次的流程
+        $serialnumber = array_unique($this->_E->pluck('serialnumber')->toArray());
 
         /*
          * 得到完整流程所需的时间
@@ -136,7 +150,7 @@ class SmartArrange
 
         //获得考试实体的最大公约数
         $mixCommonDivisors = [];
-        foreach ($this->_T as $item) {
+        foreach ($this->_E as $item) {
             $mixCommonDivisors[] = $item->mins + config('osce.begin_dt_buffer');
         }
 
@@ -159,7 +173,12 @@ class SmartArrange
 
 
                 if (!$tempBool) {
-                    $students = $this->cate->needStudents();
+                    //将总考池和侯考区考生打包进数组
+                    $params = ['total' => $this->_S, 'wait' => $this->_S_W, 'serialnumber' => $serialnumber];
+                    list($students, $params) = $this->cate->needStudents($entity, $screen, $this->exam, $params);
+                    $this->_S = $params['total'];
+                    $this->_S_W = $params['wait'];
+
                     if (count($students) == 0) {
                         continue;
                     }

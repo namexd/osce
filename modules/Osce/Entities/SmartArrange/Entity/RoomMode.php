@@ -9,12 +9,30 @@
 namespace Modules\Osce\Entities\SmartArrange\Entity;
 
 
+use Modules\Osce\Entities\SmartArrange\Traits\SQLTraits;
+use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
+
 class RoomMode implements EntityInterface
 {
-    function entity($exam)
+    use SQLTraits, SundryTraits;
+    function entity($screen)
     {
         // TODO: Implement entity() method.
+        $entities = $this->getRoom($screen);
 
+
+        //为每个考场写入多少个考站和用时多少
+        foreach ($entities as &$entity) {
+            $roomStation = $this->roomStation($screen, $entity->room_id);
+            $entity->needNum = count($roomStation);
+            //获取考站时间的数组
+            $mins = $this->stationMins($roomStation);
+            //获得应该使用的时间
+            $mins = $this->mins($mins);
+            $entity->mins = $mins;
+        }
+
+        return $entities;
     }
 
     function dataBuilder($exam, $screen, $student, $entity, $i)

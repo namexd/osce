@@ -14,9 +14,12 @@ use Modules\Osce\Entities\AutomaticPlanArrangement\ExamPlaceEntity;
 use Modules\Osce\Entities\AutomaticPlanArrangement\Exam;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamPlanRecord;
+use Modules\Osce\Entities\SmartArrange\SmartArrange;
+use Modules\Osce\Entities\SmartArrange\SmartArrangeRepository;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Auth;
+use Modules\Osce\Repositories\Common;
 
 class AutomaticPlanArrangementController extends CommonController implements SmartArrangeInterface
 {
@@ -34,10 +37,18 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
         ]);
 
         $examId = $request->input('exam_id');
+//        try {
+//            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
+//            
+//            return response()->json($this->success_data($automaticPlanArrangement->output($examId)));
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
         try {
-            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
-            /** @var 考试id $examId */
-            return response()->json($this->success_data($automaticPlanArrangement->output($examId)));
+            $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
+            $smartArrange = new SmartArrangeRepository();
+
+            return response()->json($this->success_data($smartArrange->output($exam)));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
@@ -59,9 +70,20 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
 
         $examId = $request->input('exam_id');
 
+//        try {
+//            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
+//            return response()->json($this->success_data($automaticPlanArrangement->plan($examId)));
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
+
         try {
-            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
-            return response()->json($this->success_data($automaticPlanArrangement->plan($examId)));
+            $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
+            $smartArrangeRepository = new SmartArrangeRepository();
+            $smartArrange = new SmartArrange();
+            
+
+            return response()->json($this->success_data($smartArrangeRepository->plan($exam, $smartArrange)));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }

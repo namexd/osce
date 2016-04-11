@@ -17,12 +17,15 @@ class SmartArrangeRepository
 {
     use CheckTraits, SQLTraits;
 
-    function plan($exam, SmartArrange $smartArrange)
+    function plan($exam, $smartArrange)
     {
         try {
-            //将考试实体初始化进去
+            //将考试初始化进去
             $smartArrange->exam = $exam;
 
+            //初始化学生
+            $smartArrange->setStudents(new StudentFromDatabase());
+            //将排序模式注入
             $smartArrange->setCate(CateFactory::getCate($exam));
 
             /*
@@ -30,7 +33,7 @@ class SmartArrangeRepository
              * 检查各项数据是否存在
              */
             $this->checkStudentIsZero($smartArrange->getStudents()); //检查当前考试是否有学生
-            $this->checkEntityIsZero($smartArrange->getEntity()); //检查当前考试是否安排了考试实体
+
             $this->checkDataBase($smartArrange->exam); //检查临时表中是否有数据，如果有，就删除之
 
             /*
@@ -38,12 +41,14 @@ class SmartArrangeRepository
              */
             $gradations = $this->getGradations($exam);
             foreach ($gradations as $key => $gradation) {
-                //初始化学生
-                $smartArrange->setStudents(new StudentFromDatabase());
+
                 //$key就是order的值
                 $screens = $this->getScreenByOrder($key, $exam);
                 //循环遍历$screen，对每个时段进行排考
                 foreach ($screens as $screen) {
+                    //将考试实体初始化进去
+                    $smartArrange->setEntity($exam, $screen);
+                    $this->checkEntityIsZero($smartArrange->getEntity()); //检查当前考试是否安排了考试实体
                     $screen = $this->setFlowsnumToScreen($screen); //将该场次有多少流程写入场次对象
                     $smartArrange->screenPlan($screen);
 
@@ -87,8 +92,7 @@ class SmartArrangeRepository
             if ($exam->sequence_mode == 1) //考场模式
             {
                 $arrays[$screeningId][$record->room_id][strtotime($record->begin_dt)][] = $record;
-            } else //考站模式
-            {
+            } else { //考站模式
                 $arrays[$screeningId][$record->room_id . '-' . $record->station_id][strtotime($record->begin_dt)][] = $record;
             }
         }
