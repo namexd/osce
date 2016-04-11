@@ -18,7 +18,7 @@ class ExamDraft extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['station_id', 'room_id', 'subject_id',  'exam_draft_flow_id', 'effected'];
+    protected $fillable     = ['station_id', 'room_id', 'subject_id',  'exam_draft_flow_id', 'status', 'effected'];
 
     protected $ctrl_type    = [
         1   => '简单新增',
@@ -256,7 +256,8 @@ class ExamDraft extends CommonModel
                 throw new \Exception('数据有误，请重试！');
             }
             //再删除正式表中对应ID的那条数据
-            if(!$examDraft->delete()){
+            $examDraft->status = 1;         //软删除
+            if(!$examDraft->save()){
                 throw new \Exception('删除失败，请重试！');
             }
 

@@ -252,10 +252,13 @@ class ExamArrangeController extends CommonController
             ];
 
 
+
+
             if ($type == 2) {
-                $data['ctrl_type']=7;
+                $data['ctrl_type']=5;
                 //是删除真实表数据就在临时表中记录下该操作
                 $result = ExamDraftFlowTemp::create($data);
+                
                 if ($result) {
                     return response()->json(
                         $this->success_data($result->id, 1, '删除成功')
@@ -296,7 +299,7 @@ class ExamArrangeController extends CommonController
             'flow_id' => 'required',
             'type' => 'required',
         ]);
-        $id = $request->get('id');
+        $id = $request->get('draft_id');
         $exam_id = $request->get('exam_id');
         $type = $request->get('type');
         $flowId = $request->get('flow_id');
@@ -305,10 +308,13 @@ class ExamArrangeController extends CommonController
             $data = [
                 'exam_id' => $exam_id,
                 'ctrl_type' => $type,
-                'old_draft_id' => $id,
+                'old_draft_id' => null,
                 'old_draft_flow_id' => $flowId,
+                'add_time' => date('Y-m-d H:i:s'),
             ];
             if ($type == 2) {
+                $data['ctrl_type']=5;
+                $data['old_draft_id']=$id;
                 //是删除真实表数据就在临时表中记录下该操作
                 $DraftResult = ExamDraftTemp::create($data);
                 if ($DraftResult) {
@@ -468,9 +474,18 @@ class ExamArrangeController extends CommonController
         if (is_null($exam)){
             return redirect()->back()->withErrors('没有找到对应的考试！');
         }
-        $ExamDraft     = new ExamDraft();
 
+
+        //判断考官安排是考场还是考站安排
+//        if(){
+//
+//        }
+
+
+
+        $ExamDraft     = new ExamDraft();
         $datas = $ExamDraft->getDraftFlowData($exam_id);
+
 //        foreach ($datas as $key => $data) {
 //            $datas[$key][] = $ExamDraft->getExamDraftData($data->id);
 //        }
@@ -485,6 +500,10 @@ class ExamArrangeController extends CommonController
      */
     public function postInvigilateArrange(Request $request)
     {
+
+
+
+
         try {
             //验证
             $this->validate($request, [
@@ -493,6 +512,10 @@ class ExamArrangeController extends CommonController
 
             //获得exam_id
             $exam_id = $request->input('id');
+
+
+
+
 
             return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
 
@@ -566,7 +589,7 @@ class ExamArrangeController extends CommonController
     {
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
-//        try{
+        try{
             $this->validate($request, [
                 'exam_id' => 'required',
             ]);
@@ -612,16 +635,23 @@ class ExamArrangeController extends CommonController
                     }
                 }
             }
+
+            //处理 待删除 数据（如：清空临时表数据，删除正式表待删除数据）
+            $ExamDraftTempModel= new ExamDraftTemp();
+            if (!$ExamDraftTempModel->handleDelDatas($exam_id)){
+                throw new \Exception('处理待删除数据失败');
+            }
+
             $connection->commit();
             //返回结果
             return response()->json(
                 $this->success_data([], 1, '保存成功！')
             );
 
-//        } catch (\Exception $ex){
-//            $connection->rollBack();
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex){
+            $connection->rollBack();
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
