@@ -4098,9 +4098,9 @@ function station_assignment(){
                 for(var i in data) {
                     var str = data[i].order - 1;
                     if(data[i].order == count) {
-                        exam_stage_str += '<option value="'+data[i].order+'" selected="selected">阶段'+stationName[str]+'</option>';
+                        exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+stationName[str]+'</option>';
                     } else {
-                        exam_stage_str += '<option value="'+data[i].order+'">阶段'+stationName[str]+'</option>';
+                        exam_stage_str += '<option value="'+data[i].id+'">阶段'+stationName[str]+'</option>';
                     }
                 }
             }
@@ -4213,7 +4213,7 @@ function station_assignment(){
                                             '</tr>'+
                                         '</thead>'+
                                         '<tbody index="0">'+
-                                            '<tr class="item-id-'+index+'" item-id="'+res.data.draft_id+'">'+
+                                            '<tr class="item-id-0" item-id="'+res.data.draft_id+'">'+
                                                 '<td type="3"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
                                                 '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
                                                 '<td type="3"></td>'+
@@ -4234,7 +4234,7 @@ function station_assignment(){
                     $('.station-container').attr('index',index + 1);
                     $('.station-container').find('.item-id-'+index).attr('index',index + 1);
                     //初始化select2
-                    select2Init($('.station-container').find('.table-id-'+index).find('.item-id-'+index));
+                    select2Init($('.station-container').find('.table-id-'+index).find('.item-id-0'));
                 }
             }
         });
