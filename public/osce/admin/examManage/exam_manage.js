@@ -4776,7 +4776,7 @@ function examiner_manage() {
 
         req['data'] = teacherArr;
         req['exam_id'] = exam_id;
-        
+
         $.ajax({
             type:'get',
             url: '',
@@ -4870,6 +4870,7 @@ function examiner_manage() {
 
                     return {
                         subject_id:$elem.attr('value'),
+                        exam_id: exam_id,
                         type:1
                     };
                 },
@@ -4911,6 +4912,7 @@ function examiner_manage() {
 
                     return {
                         subject_id:$elem.attr('value'),
+                        exam_id: exam_id,
                         type:2
                     };
                 },
