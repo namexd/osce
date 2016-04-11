@@ -558,15 +558,17 @@ class ExamArrangeController extends CommonController
              foreach ($teacherDatas as $value){
 
                  if($value ->teacher_type ==2){
-                     $teacherData ->sp_teacher = $value;
-                     $teacherData ->teacher = null;
+
+                     $teacherData ->sp_teacher = [$value];
+                     $teacherData ->teacher = [];
                      
                  }else{
-                     $teacherData ->teacher = $value;
-                     $teacherData ->sp_teacher = null;
+                     $teacherData ->teacher = [$value];
+                     $teacherData ->sp_teacher = [];
                  }
              }
          }
+
 
          return response()->json(
              $this->success_data($datas, 1, 'success')
@@ -604,6 +606,7 @@ class ExamArrangeController extends CommonController
             //获得exam_id
             $exam_id = $request->input('exam_id');
             $teacherData = $request->input('data');
+          
   
             //保存老师的数据
             $stationteaxherModel = new StationTeacher();

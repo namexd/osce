@@ -4694,7 +4694,7 @@ function examiner_manage() {
              * 这里是生成ＳＰ
              */
             for(var j in data[i].sp_teacher) {
-                str_sp += '<option value="'+data[i].sp_teacher[j].teacher_name+'" selected="selected">'+data[i].sp_teacher[j].teacher_name+'</option>';
+                str_sp += '<option value="'+data[i].sp_teacher[j].teacher_id+'" selected="selected">'+data[i].sp_teacher[j].teacher_name+'</option>';
             }
 
             //dom准备
@@ -4704,13 +4704,13 @@ function examiner_manage() {
                         '<td>'+typeToName[data[i].station_type]+'</td>'+
                         '<td style="width:481px;">'+
                             '<div class="col-sm-10">'+
-                            '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+str_teacher
+                            '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+str_teacher+
                             '</select>'+
                             '</div>'+
                         '</td>'+
                         '<td style="width:481px;">'+
                             '<div class="col-sm-10">'+
-                            '<select class="form-control custom-sp"  name=""  multiple="multiple">'+str_sp
+                            '<select class="form-control custom-sp"  name=""  multiple="multiple">'+str_sp+
                             '</select>'+
                             '</div>'+
                         '</td>'+
@@ -4807,7 +4807,7 @@ function examiner_manage() {
         type:'get',
         url: pars.data_list,
         data:{exam_id:(location.href).split('=')[1]},
-        success: function(res) {console.log(res)
+        success: function(res) {
             if(res.code != 1) {
                 layer.msg('数据加载失败！',{skin:'msg-error',icon:1});
             } else {

@@ -63,9 +63,10 @@ class StationTeacher extends CommonModel
 
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
-//        try {
+        try {
             //判断是新增还是编辑
             $examTeacherData = $this->where('exam_id','=',$exam_id)->get();
+
             if(count($examTeacherData) !=0){
                 //这里是编辑先删除以前的数据
                 foreach ($examTeacherData as $item){
@@ -74,23 +75,44 @@ class StationTeacher extends CommonModel
                     }
                 }
             }
+
+
+
             $user = Auth::user();
             if (empty($user)) {
                 throw new \Exception('未找到当前操作人信息！');
             }
             if ($teacherData) {
-              
-                $teacherIDs =[];
+
                 foreach ($teacherData as $key => $item) {
-                  
-
-                    foreach ($item['teacher'] as $value){
-                        $teacherIDs[] = $value;
+                    if($item['teacher'] == "" && $item['sp_teacher'] == ""){
+                        continue;
                     }
-
-                    foreach ($item['sp_teacher'] as $value){
-                        $teacherIDs[] = $value;
+                    if($item['teacher'] == null && $item['sp_teacher'] == null){
+                        continue;
                     }
+                    $teacherIDs =[];
+
+
+                  if($item['teacher'] == ""){
+                      $teacherIDs[] = Null;
+                  }else{
+                      foreach ($item['teacher'] as $value){
+                          $teacherIDs[] = $value;
+                      }
+                  }
+
+                  if($item['sp_teacher'] == ""){
+
+                      $teacherIDs []= Null;
+                  }else{
+                      foreach ($item['sp_teacher'] as $value){
+
+                          $teacherIDs[] = $value;
+
+                      }
+                  }
+
 
                     //根据考站id，获取对应的病例id
 //                    $stationCase = StationCase::where('station_id', $item['station_id'])->first();
@@ -108,7 +130,6 @@ class StationTeacher extends CommonModel
                             'created_user_id'   =>  $user ->id,
 //                            'type'              =>  empty($item['teacher_id']) ? 2 : 1
                         ];
-                      
                         if(!$StationTeachers = StationTeacher::create($stationTeacher)) {
                             throw new \Exception('考站-老师关系添加失败！');
                         }
@@ -119,11 +140,11 @@ class StationTeacher extends CommonModel
                 $connection->commit();
                 return true;
             }
-//        } catch (\Exception $ex) {
-//            $connection->rollBack();
-//            throw $ex;
-//
-//        }
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+
+        }
 
 
     }
