@@ -86,7 +86,7 @@ class Answer extends Model
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function saveAnswer($data)
+    public function saveAnswer($data,$resultData)
     {
         $DB = \DB::connection('osce_mis');
         $DB->beginTransaction();
@@ -108,11 +108,34 @@ class Answer extends Model
                         $examQuestionFormalData = array(
                             'student_answer'=>$v['answer']
                         );
-                        $result = $examQuestionFormalModel->where('id','=',$v['exam_question_id'])->update($examQuestionFormalData);
-                        if(!$result){
-                            throw new \Exception(' 保存考生答案失败！');
+
+                        $questionData = $examQuestionFormalModel->where('id','=',$v['exam_question_id'])->first();
+                        if(!empty($questionData)){
+                            $result = $examQuestionFormalModel->where('id','=',$v['exam_question_id'])->update($examQuestionFormalData);
+                            if(!$result){
+                                throw new \Exception(' 保存考生答案失败！');
+                            }
                         }
+
                     }
+                }
+            }
+            if($resultData){
+                //将向考试结果记录表增加一条数据
+                $score = $this->selectGrade($resultData['examPaperFormalId'])['totalScore'];//获取该考生成绩
+                $exam_screening_id = ExamScreeningStudent::where('student_id','=',$resultData['studentId'])->first();
+                $examResultData=array(
+                    'student_id'=>$resultData['studentId'],
+                    'exam_screening_id'=>$exam_screening_id['exam_screening_id'],
+                    'station_id'=>$resultData['stationId'],
+                    'time'=>$resultData['time'],
+                    'score'=>$score,
+                    'teacher_id'=>$resultData['teacherId'],
+                    'begin_dt'=>$resultData['begin_dt'],//考试开始时间
+                    'end_dt'=>$resultData['end_dt'],//考试结束时间
+                );
+                if(!ExamResult::create($examResultData)){
+                    throw new \Exception(' 插入考试结果记录表失败！');
                 }
             }
             $DB->commit();
@@ -122,46 +145,6 @@ class Answer extends Model
             throw $ex;
         }
     }
-    /**向考试结果记录表新增一条数据
-     * @method
-     * @url /osce/
-     * @access public
-     * @param $data
-     * @return bool
-     * @author xumin <xumin@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function createExamResult($data)
-    {
-        $DB = \DB::connection('osce_mis');
-        $DB->beginTransaction();
-        try{
-            $score = $this->selectGrade($data['examPaperFormalId'])['totalScore'];//获取该考生成绩
-            $exam_screening_id = ExamScreeningStudent::where('student_id','=',$data['studentId'])->first();
-            $examResultData=array(
-                'student_id'=>$data['studentId'],
-                'exam_screening_id'=>$exam_screening_id['exam_screening_id'],
-                'station_id'=>$data['stationId'],
-                'time'=>$data['time'],
-                'score'=>$score,
-                'teacher_id'=>$data['teacherId'],
-                'begin_dt'=>$data['begin_dt'],//考试开始时间
-                'end_dt'=>$data['end_dt'],//考试结束时间
-                
-            );
-
-            if(!ExamResult::create($examResultData)){
-                throw new \Exception(' 插入考试结果记录表失败！');
-            }
-            $DB->commit();
-            return true;
-        }catch (\Exception $ex){
-            $DB->rollback();
-            throw $ex;
-        }
-    }
-
     /**查询该考生理论考试成绩及该场考试相关信息
      * @method
      * @url /osce/

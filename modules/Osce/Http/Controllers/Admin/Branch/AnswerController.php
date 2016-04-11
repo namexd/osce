@@ -222,31 +222,22 @@ class AnswerController extends CommonController
             }
         }
 
-
-        //保存考生答案
+        $resultData = array(
+            'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
+            'studentId' =>$request->input('studentId'),//学生Id
+            'stationId' => $request->input('stationId'),//考站id
+            'time'=>$actualLength,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
+            'teacherId'=>$request->input('teacherId'),//评分人编号
+            'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
+            'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
+        );
+        //保存考生答案和记录该考生成绩
         $answerModel = new Answer();
-        $result = $answerModel->saveAnswer($data);
-
+        $result = $answerModel->saveAnswer($data,$resultData);
         if($result){
-            $arr=array(
-                'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-                'studentId' =>$request->input('studentId'),//学生Id
-                'stationId' => $request->input('stationId'),//考站id
-                'time'=>$actualLength,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
-                'teacherId'=>$request->input('teacherId'),//评分人编号
-                'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
-                'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
-            );
-
-            //将向考试结果记录表增加一条数据
-            $result = $answerModel->createExamResult($arr);
-            if($result){
-                //删除session
-                \Session::forget('systemTimeStart');
-                return response()->json(['status'=>'1','info'=>'保存成功']);
-            }else{
-                return response()->json(['status'=>'2','info'=>'保存失败']);
-            }
+            //删除session
+            \Session::forget('systemTimeStart');
+            return response()->json(['status'=>'1','info'=>'保存成功']);
         }else{
             return response()->json(['status'=>'2','info'=>'保存失败']);
         }
