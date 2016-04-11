@@ -252,10 +252,13 @@ class ExamArrangeController extends CommonController
             ];
 
 
+
+
             if ($type == 2) {
-                $data['ctrl_type']=7;
+                $data['ctrl_type']=5;
                 //是删除真实表数据就在临时表中记录下该操作
                 $result = ExamDraftFlowTemp::create($data);
+                
                 if ($result) {
                     return response()->json(
                         $this->success_data($result->id, 1, '删除成功')
@@ -296,7 +299,7 @@ class ExamArrangeController extends CommonController
             'flow_id' => 'required',
             'type' => 'required',
         ]);
-        $id = $request->get('id');
+        $id = $request->get('draft_id');
         $exam_id = $request->get('exam_id');
         $type = $request->get('type');
         $flowId = $request->get('flow_id');
@@ -468,9 +471,18 @@ class ExamArrangeController extends CommonController
         if (is_null($exam)){
             return redirect()->back()->withErrors('没有找到对应的考试！');
         }
-        $ExamDraft     = new ExamDraft();
 
+
+        //判断考官安排是考场还是考站安排
+//        if(){
+//
+//        }
+
+
+
+        $ExamDraft     = new ExamDraft();
         $datas = $ExamDraft->getDraftFlowData($exam_id);
+
 //        foreach ($datas as $key => $data) {
 //            $datas[$key][] = $ExamDraft->getExamDraftData($data->id);
 //        }
@@ -493,6 +505,10 @@ class ExamArrangeController extends CommonController
 
             //获得exam_id
             $exam_id = $request->input('id');
+            
+            
+            
+            
 
             return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
 
