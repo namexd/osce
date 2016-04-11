@@ -53,10 +53,10 @@ class AnswerController extends CommonController
 
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
-
         $ExamPaperFormal = new ExamPaperFormal;
         //生成正式的试卷并且 返回id
         $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo,$studentId);
+
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
             $systemTimeStart =\Session::get('systemTimeStart');
@@ -64,6 +64,7 @@ class AnswerController extends CommonController
             $systemTimeStart=time();
             \Session::put('systemTimeStart',$systemTimeStart);
         }
+
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
@@ -85,7 +86,7 @@ class AnswerController extends CommonController
             $examCategoryFormalList = $examPaperFormalList->examCategoryFormal;//获取正式试题分类信息
             if($examCategoryFormalList){
                 foreach($examCategoryFormalList as $key=>$val){
-                    if(!empty($val->ExamQuestionFormal)){
+                    if(count($val->ExamQuestionFormal)>0){
                         $examCategoryFormalList[$key]['exam_question_formal'] = $val->ExamQuestionFormal;//获取正式试题信息
                         $categoryData[$num]=$val;
                         $categoryData[$num]['exam_question_formal']=$val->ExamQuestionFormal;
@@ -94,7 +95,6 @@ class AnswerController extends CommonController
                 }
             }
         }
-
         //转换为数组格式
         foreach($categoryData as $k1=>$v1){
             if(count($v1['exam_question_formal'])>0){
