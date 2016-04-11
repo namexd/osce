@@ -4742,7 +4742,7 @@ function examiner_manage() {
      */
     $('#save').click(function() {
         $.ajax({
-            type:'get',
+            type:'post',
             url: '',
             data:{data:teacherArr},
             success: function(res) {

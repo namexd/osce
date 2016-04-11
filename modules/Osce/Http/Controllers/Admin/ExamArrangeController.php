@@ -19,6 +19,7 @@ use Modules\Osce\Entities\ExamDraftTemp;
 use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\TeacherSubject;
 use Modules\Osce\Http\Controllers\CommonController;
@@ -69,28 +70,33 @@ class ExamArrangeController extends CommonController
                 'user_id' => $user->id,
                 'ctrl_type' => $type,
             ];
-//            if (!is_null($examGradationId)) {
-//                $data['exam_gradation_id'] = $examGradationId;
-//            }
-//            if ($request->get('flow_id')) {
-//                $data['old_draft_flow_id'] = $request->get('flow_id');
-//            }
+
             if(is_null($type)){
                 $data['ctrl_type'] = 1;
             }
 
             //先保存到临时表
+            if ($type == 3) {
+
+                $examDraftFlow = ExamDraftFlowTemp::find($data['exam_draft_flow_id']);
+
+                $examDraftFlow->ctrl_type =1 ;
+
+                $examDraftFlow->exam_gradation_id = $examGradationId ;
+
+                if($examDraftFlow->save()){
+
+                    return response()->json(
+                        $this->success_data([], 1, 'success')
+                    );
+                }
+
+            }
 
             if ($result = ExamDraftFlowTemp::create($data)) {
                 //新增一条空的考站的子站数据
 
                 if ($type == 2) {
-                    return response()->json(
-                        $this->success_data($result->id, 1, 'success')
-                    );
-                }
-
-                if ($type == 3) {
                     return response()->json(
                         $this->success_data($result->id, 1, 'success')
                     );
@@ -500,9 +506,6 @@ class ExamArrangeController extends CommonController
     public function postInvigilateArrange(Request $request)
     {
 
-
-
-
         try {
             //验证
             $this->validate($request, [
@@ -511,11 +514,16 @@ class ExamArrangeController extends CommonController
 
             //获得exam_id
             $exam_id = $request->input('id');
+            $teacherData = $request->input('data');
 
+            //保存老师的数据
+            $stationteaxherModel = new StationTeacher();
 
+            if(!$stationteaxherModel->getsaveteacher($teacherData,$exam_id)){
 
-
-
+                        throw new \Exception('保存老师数据失败，请重试！！');
+                    
+                }
             return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
 
         } catch (\Exception $ex) {
@@ -655,7 +663,6 @@ class ExamArrangeController extends CommonController
      */
     public function getExamArrangeData(Request $request)
     {
-
         $this->validate($request, [
             'exam_id' => 'required|integer',
         ]);
