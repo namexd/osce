@@ -39,6 +39,8 @@ use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Http\Controllers\Api\InvigilatePadController;
 use Modules\Osce\Http\Controllers\Admin\Branch\AnswerController;
 use Modules\Osce\Entities\StationTeacher;
+use Illuminate\Support\Facades\Redis;
+
 class ApiController extends CommonController
 {
     private $name;
@@ -726,26 +728,21 @@ class ApiController extends CommonController
         $examId    = $request->input('exam_id');
         $stationId = $request->input('station_id');
 
+        $redis = Redis::connection('message');
+
         $examStationStatusModel = new ExamStationStatus();
-        $instance = $examStationStatusModel->where('exam_id', '=', $examId)->where('station_id', '=', $stationId)->first();
-        if (is_null($instance)) {
-            $retval = [
-                'title' => '未查到到考试中当前考站信息'
-            ];
-            return response()->json(
-                $this->success_data($retval, -1, 'error')
-            );
+        $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)->where('station_id', '=', $stationId)->first();
+        if (is_null($examStationStatus)) {
+            $retval = ['title' => '未查到到考试中当前考站状态信息'];
+            $redis->publish('pad_message', json_encode($this->success_data($retval, -1, 'error')));
         }
 
-        $instance->status = 1;
-        $instance->save();
+        $examStationStatus->status = 1;
+        $examStationStatus->save();
 
-        $retval = [
-            'title' => '当前考站准备完成'
-        ];
-        return response()->json(
-            $this->success_data($retval, 1)
-        );
+        // TODO 是否给腕表推送考站准备完成信息
+        $retval = ['title' => '当前考站准备完成'];
+        $redis->publish('pad_message', json_encode($this->success_data($retval, 1)));
     }
 
     /**

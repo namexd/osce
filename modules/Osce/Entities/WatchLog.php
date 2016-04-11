@@ -111,14 +111,32 @@ class WatchLog extends CommonModel{
             $watch->on('watch.id','=','watch_log.watch_id');
         })->leftjoin('student',function($student){
             $student->on('student.id','=','watch_log.student_id');
-        })->leftjoin('exam_screening_student',function($screeningStudent){
-            $screeningStudent->on('exam_screening_student.watch_id','=','watch_log.watch_id');
-        })->leftjoin('exam_screening',function($examScreening){
-            $examScreening->on('exam_screening.id','=','exam_screening_student.exam_screening_id');
         })->leftjoin('exam_queue',function($examQueue){
             $examQueue->on('exam_queue.exam_screening_id','=','exam_screening.id');
         })->groupby('watch_log.student_id')->select('watch.id','watch.nfc_code','student.name','exam_queue.status')->get();
 
+
+        return $builder;
+    }
+
+    //查看考生及与其绑定的腕表的详细信息
+    public function getExamineeBoundWatchDetails($studentId){
+        $builder = $this->where('watch_log.student_id','=',$studentId)->where('watch_log.action','=','绑定')->leftjoin('watch',function($watch){
+            $watch->on('watch.id','=','watch_log.watch_id');
+        })->leftjoin('student',function($student){
+            $student->on('watch_log.student_id','=','student.id');
+        })->leftjoin('exam_queue',function($examQueue){
+            $examQueue->on('exam_queue.student_id','=','student.id');
+        })->select(
+            'student.name',
+            'student.idcard',
+            'student.exam_sequence',
+            'exam_queue.status',
+            'watch.id as equipment_id',
+            'watch.name as equipment_name',
+            'watch.factory',
+            'watch.sp'
+        )->first();
 
         return $builder;
     }

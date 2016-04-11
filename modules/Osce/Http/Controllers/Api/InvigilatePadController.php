@@ -805,9 +805,9 @@ class InvigilatePadController extends CommonController
     }
 
     /**
-     *  考生详细信息的接口
+     *  查看考生及与其绑定的腕表的详细信息
      * @method GET
-     * @url
+     * @url invigilatepad/examinee-bound-watch-detail
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -818,69 +818,35 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExamineeDetails(Request $request){
+    public function getExamineeBoundWatchDetail(Request $request){
         $this->validate($request, [
             'student_id' => 'required|integer',
-            'exam_id' => 'required|integer'
         ]);
 
         try {
             //考生基本信息
             $studentId = $request->get('student_id');
-            $examId = $request->get('exam_id');
 
-            $studentInfo = Student::find($studentId);
-            if (!$studentInfo) {
-                throw new \Exception('没有找到该学生相关信息', -1);
+            //查找考生及与其绑定的腕表的详细信息
+            $watchModel = new WatchLog();
+            $studentWatchData = $watchModel->getExamineeBoundWatchDetails($studentId);
+
+            if(count($studentWatchData) > 0){
+                $studentWatchData = $studentWatchData->toArray();
+            }
+            //查找考生的剩余考站数量
+            $examQueue = new ExamQueue();
+            $station_num = $examQueue->getStationNum($studentId);
+            $studentWatchData['station_num'] = $station_num->station_num;
+
+            if(count($studentWatchData) > 0){
+                return response()->json(
+                    $this->success_data($studentWatchData,200,'success')
+                );
+            }else{
+                throw new \Exception('没有找到相关信息', -2);
             }
 
-            //查找与考生相关的设备信息
-            $watchInfo = WatchLog::where('action','=','绑定')->where('student_id','=',$studentId)->leftjoin('watch',function($watch){
-                $watch->on('watch.id','=','watch_log.watch_id');
-            })->select('watch.id','watch.name','watch.factory','watch.sp')->first();
-
-            if (!$watchInfo) {
-                throw new \Exception('没有找到该学生相关设备信息', -2);
-            }
-
-            //查找当前考生的考试状态
-            $Student = new Student();
-            $examid = $Student->where('id','=',$studentId)->select('exam_id')->get();
-            $examId = array();
-            foreach($examid as $exam){
-                $examId[] = $exam->exam_id;
-            }
-
-            //在队列表中查找与考试相关的数据
-            $examquen = new ExamQueue();
-            $examing = $examquen->getExamingData($examId,@$studentId);
-
-            foreach($examing as $exam_status){
-                $status = $this->checkType($exam_status->status);
-                if (!$status) {
-                    throw new \Exception('没有找到该学生当前考试状态', -3 );
-                }
-            }
-
-
-            //统计考试剩余考站数量
-            $exameeStatus = $Student->getExameeStationsCount($studentId,$examId);
-
-            $data = [
-                'username'      => $studentInfo->name,
-                'idcard'        => $studentInfo->idcard,
-                'exam_sequence' => $studentInfo->exam_sequence,
-                'exam_status'   => $status,
-                'station_num'   => $exameeStatus->num,
-                'device_name'   => $watchInfo->name,
-                'device_id'     => $watchInfo->id,
-                'factory'       => $watchInfo->factory,
-                'sp'            => $watchInfo->sp
-            ];
-
-            return response()->json(
-                $this->success_data($data,200,'success')
-            );
 
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -891,7 +857,7 @@ class InvigilatePadController extends CommonController
     /**
      *  查询使用中的腕表数据
      * @method GET
-     * @url
+     * @url api/invigilatepad/useing-watch-data
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -903,16 +869,126 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getUseingWatchData(Request $request){
-        $this->validate($request, [
-            'student_id' => 'required|integer',
-            'exam_id' => 'required|integer'
-        ]);
+        try{
+            $this->validate($request, [
+                'status' => 'required|integer',
+                'type' => 'required|integer'
+            ]);
 
-        $status = $request->get('status')?$request->get('status'):1;  //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
-        $type = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
+            $status = $request->get('status')?$request->get('status'):1;  //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
+            $type = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
 
-        //查询使用中的腕表数据
-        $watchModel = new Watch();
-        $watchData = $watchModel->getWatchAboutData($status,$type);
+            //查询使用中的腕表数据
+            $watchModel = new Watch();
+            $watchData = $watchModel->getWatchAboutData($status,$type);
+
+            if(count($watchData) > 0){
+                return response()->json(
+                    $this->success_data($watchData,200,'success')
+                );
+            }else{
+                throw new \Exception('没有找到相关设备信息', -2);
+            }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
+        }
+
+
+    }
+    /**
+     *  查询某个腕表的考试状态
+     * @method GET
+     * @url api/invigilatepad/useing-watch-data
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     status   type    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getSingleWatchData(Request $request){
+
+        try{
+            $this->validate($request, [
+                'nfc_code' => 'required|string',
+            ]);
+
+            $ncfCode = $request->get('nfc_code');//腕表NCF编码
+
+            //查询某个腕表的考试状态
+            $watchModel = new Watch();
+            $watchData = $watchModel->getWatchExamStatus($ncfCode);
+
+            if(count($watchData) > 0){
+                if($watchData->status < 2){
+                    $status = 0;
+                }elseif($watchData->status == 2){
+                    $status = 1;
+                }else{
+                    $status = 2;
+                }
+                return response()->json(
+                    $this->success_data($status,200,'success')
+                );
+            }else{
+                throw new \Exception('没有找到相关设备信息', -2);
+            }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
+        }
+    }
+
+
+    /**
+     *  查看考生当前状态
+     * @method GET
+     * @url api/invigilatepad/useing-watch-data
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     status   type    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamineeStatus(Request $request){
+        try{
+            $this->validate($request, [
+                'student_id' => 'required|integer',
+            ]);
+
+            //查找当前正在进行的考试
+            $examing = Exam::where('status','=',1)->first();
+            $studentId = $request->get('student_id');//学生ID
+
+            //查询某个腕表的考试状态
+            $examQueue = new ExamQueue();
+            $studentStatus = $examQueue->getExamineeStatus($examing->id,$studentId);
+
+            if(count($studentStatus) > 0){
+                if($studentStatus->status < 2){
+                    $status = 0;
+                }elseif($studentStatus->status == 2){
+                    $status = 1;
+                }else{
+                    $status = 2;
+                }
+                return response()->json(
+                    $this->success_data($status,200,'success')
+                );
+            }else{
+                throw new \Exception('没有找到相关信息', -2);
+            }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
+        }
     }
 }
