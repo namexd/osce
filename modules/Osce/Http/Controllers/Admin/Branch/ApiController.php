@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamStationStatus;
+use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
 
@@ -790,37 +791,51 @@ class ApiController extends CommonController
             );
         }
 
+        $examQueueModel = new ExamQueue();
+
+        $unExamStationIds = $examQueueModel->where('student_id', '=', $studentId)
+            ->where('exam_screening_id', '=', $examScreeningId)
+            ->where('status', '=', 0)->get()->pluck('station_id');
+
         if ($mode == 1) {
-            $examScreeningStudent->is_replace = 1;
-            $examScreeningStudent->save();
+
+            //如果选择否，只是做标记
+            //标记替考
+            $examMonitorModel = new ExamMonitor();
+            if (!empty($unExamStationIds)) {
+                foreach ($unExamStationIds as $unExamStationId) {
+                    $examMonitorData = array(
+                        'station_id'  =>$unExamStationId,
+                        'exam_id'      =>$examId,
+                        'student_id'  =>$studentId,
+                        'type'         =>1,
+                    );
+                    $examMonitorModel->create($examMonitorData);
+                }
+            }
 
             $retval['title'] = '标记替考成功';
             return response()->json(
                 $this->success_data($retval)
             );
+
         } else {
+            //如果选择是，终止这场考试
             $data = [
                 'is_end' => 1,
                 'status' => 2,
             ];
 
             $examScreeningStudentModel->where('id', '=', $examScreeningStudent->id)->update($data);
-
-            $examQueueModel = new ExamQueue();
-
-            $unExamStationIds = $examQueueModel->where('student_id', '=', $studentId)
-                ->where('exam_screening_id', '=', $examScreeningId)
-                ->where('status', '=', 0)->get()->pluck('station_id');
-
             if (!empty($unExamStationIds)) {
                 $examQueueModel->where('student_id', '=', $studentId)
                     ->where('exam_screening_id', '=', $examScreeningId)
-                    ->where('status', '=', 0)->update(['status'=>3]);
+                    ->where('status', '=', 0)->update(['status'=>3]);//status=0,已经绑定腕表
 
                 $examResultModel = new ExamResult();
                 $stationTeacherModel = new StationTeacher();
                 foreach ($unExamStationIds as $unExamStationId) {
-                    $teacher = $stationTeacherModel->leftJoin('teacher', function($join){
+                                     $teacher = $stationTeacherModel->leftJoin('teacher', function($join){
                         $join -> on('teacher.id', '=', 'station_teacher.user_id');
                     })->where('station_teacher.station_id', '=', $unExamStationId)
                         ->where('station_teacher.exam_id', '=', $examId)
@@ -848,10 +863,6 @@ class ApiController extends CommonController
             return response()->json(
                 $this->success_data($retval)
             );
-
-
-
-
         }
     }
 }
