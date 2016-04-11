@@ -163,20 +163,26 @@ trait SQLTraits
      */
     function getStation($screen)
     {
-        return ExamDraftFlow::join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+        $stations = ExamDraftFlow::join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
             ->join('station', 'station.id', '=', 'exam_draft.station_id')
             ->join('exam_gradation', 'exam_gradation.id', '=', 'exam_draft_flow.exam_gradation_id')
+            ->join('subject', 'subject.id', '=', 'exam_draft.subject_id')
             ->where('exam_screening_id', $screen->id)
             ->select(
                 'station.name as name',
-                'station.mins as mins',
-                'station.type as type',
+                'subject.mins as mins',
                 'exam_draft.station_id as station_id',
                 'exam_draft.room_id as room_id',
                 'exam_draft_flow.order as serialnumber',
                 'exam_draft_flow.exam_screening_id as exam_screening_id',
                 'exam_gradation.order as gradation_order'
             )->get();
+
+        foreach ($stations as &$station) {
+            $station->type = 2;
+        }
+
+        return $stations;
     }
 
     /**
@@ -188,20 +194,26 @@ trait SQLTraits
      */
     function getRoom($screen)
     {
-        return ExamDraftFlow::join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+        $rooms = ExamDraftFlow::join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
             ->join('room', 'room.id', '=', 'exam_draft.room_id')
             ->join('exam_gradation', 'exam_gradation.id', '=', 'exam_draft_flow.exam_gradation_id')
+            ->join('subject', 'subject.id', '=', 'exam_draft.subject_id')
             ->where('exam_screening_id', $screen->id)
             ->select(
                 'room.name as name',
-                'room.mins as mins',
-                'room.type as type',
+                'subject.mins as mins',
                 'exam_draft.room_id as room_id',
                 'exam_draft_flow.order as serialnumber',
                 'exam_draft_flow.exam_screening_id as exam_screening_id',
                 'exam_gradation.order as gradation_order'
             )->distinct()
             ->get();
+
+        foreach ($rooms as &$room) {
+            $room->type = 1;
+        }
+
+        return $rooms;
     }
 
 
@@ -284,7 +296,6 @@ trait SQLTraits
         return ExamPlanRecord::where('exam_screening_id', $screen->id)
             ->whereNotNull('end_dt')
             ->where('serialnumber', '=', $serialnumber - 1)
-//                ->groupBy('student_id')
             ->orderBy('end_dt', 'asc')
             ->get()
             ->pluck('student_id');

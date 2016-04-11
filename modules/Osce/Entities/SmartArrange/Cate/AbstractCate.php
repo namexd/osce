@@ -16,7 +16,21 @@ use Modules\Osce\Entities\Student;
 abstract class AbstractCate
 {
     use SQLTraits, SundryTraits;
-    protected function randomTestStudent($entity, $screen, $params)
+
+    protected $_S;
+
+    protected $_S_W;
+
+    protected $serialnumber;
+
+    function __construct($params)
+    {
+        $this->_S = $params['total'];
+        $this->_S_W = $params['wait'];
+        $this->serialnumber = $params['serialnumber'];
+    }
+
+    protected function randomTestStudent($entity, $screen)
     {
         $testingStudents = $this->randomBeginStudent($screen);
 
@@ -28,13 +42,13 @@ abstract class AbstractCate
         }
 
         if (count($testingStudents) == 0) {
-            list($arrays, $params) = $this->beginStudents($entity, $params);
+            $arrays = $this->beginStudents($entity);
         }
 
-        return $this->testingStudents($arrays, $params);
+        return $this->testingStudents($arrays);
     }
 
-    protected function beginStudents($entity, $params) {
+    protected function beginStudents($entity) {
         /*
          * 将考站所需的考生直接返回
          * 将返回的考生从侯考区里干掉
@@ -42,19 +56,19 @@ abstract class AbstractCate
         $students = [];
         for ($i = 0; $i < $entity->needNum; $i++) {
             //将学生弹出
-            $students[] = array_shift($params['wait']);
-            $a = $params['total']->shift();
+            $students[] = array_shift($this->_S_W);
+            $a = $this->_S->shift();
             //将考生从考生池弹进侯考区
             if (is_null($a)) {
                 continue;
             }
-            $params['wait'][] = $a;
+            $this->_S_W[] = $a;
         }
 
-        return [$students, $params];
+        return $students;
     }
 
-    protected function testingStudents($testStudents, $params = []) {
+    protected function testingStudents($testStudents) {
         $tempTestStudent = [];
 
         foreach ($testStudents as $key => $student) {
@@ -75,11 +89,11 @@ abstract class AbstractCate
                 continue;
             }
 
-            if (count($params['serialnumber']) != count($studentSerialnumber)) {
+            if (count($this->serialnumber) != count($studentSerialnumber)) {
                 $tempTestStudent[] = $tempStudent;
             }
         }
-        return [$tempTestStudent, $params];
+        return $tempTestStudent;
     }
 
     protected function studentNum($entity, $testStudents, $result)
@@ -137,13 +151,12 @@ abstract class AbstractCate
      * 返回轮询所需要的学生
      * @param $entity
      * @param $screen
-     * @param $params
      * @return array
      * @throws \Exception
      * @author Jiangzhiheng
      * @time 2016-04-11 15:33
      */
-    protected function pollTestStudents($entity, $screen, $params)
+    protected function pollTestStudents($entity, $screen)
     {
         $tempArrays = $this->pollBeginStudent($entity, $screen);
 
@@ -155,10 +168,10 @@ abstract class AbstractCate
         }
 
         if (count($tempArrays) == 0) {
-            list($arrays, $params) = $this->beginStudents($screen, $params);
+            $arrays = $this->beginStudents($screen);
         }
 
-        return $this->testingStudents($arrays, $params);
+        return $this->testingStudents($arrays);
     }
     
 }

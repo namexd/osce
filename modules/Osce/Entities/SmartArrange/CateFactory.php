@@ -20,14 +20,14 @@ class CateFactory
         throw new \Exception('为什么会想到实例化一个静态工厂类？把写代码的人拖出来打死！');
     }
 
-    static function getCate($exam) {
+    static function getCate($exam, $params) {
         switch ($exam->sequence_cate) {
             case 1:
-                return new Random();
+                return new Random($params);
             case 2:
-                return new Order();
+                return new Order($params);
             case 3:
-                return new Poll();
+                return new Poll($params);
             default:
                 throw new \Exception('Sequence Cate error!');
                 break;

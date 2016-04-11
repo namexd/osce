@@ -33,8 +33,7 @@ class SmartArrangeRepository
 
             //初始化学生
             $smartArrange->setStudents(new StudentFromDatabase());
-            //将排序模式注入
-            $smartArrange->setCate(CateFactory::getCate($exam));
+            
 
             /*
              * 做排考的前期准备

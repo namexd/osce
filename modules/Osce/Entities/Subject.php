@@ -375,13 +375,13 @@ class Subject extends CommonModel
         }else{
             // 存在$id 为编辑
             $result = SubjectCases::where('subject_id','=',$id)->get();
-            $original = $result->pluck('cases_id')->toArray();
+            $original = $result->pluck('case_id')->toArray();
 
             $caseDels  = array_diff($original, $cases);     //多余的，删除
             $caseAdds  = array_diff($cases, $original);     //新添的，增加
             if(!empty($caseDels)){
                 foreach ($caseDels as $caseDel) {
-                    if(!SubjectCases::where('cases_id','=',$caseDel)->where('subject_id','=',$id)->delete()){
+                    if(!SubjectCases::where('case_id','=',$caseDel)->where('subject_id','=',$id)->delete()){
                         return false;
                     }
                 }
@@ -390,10 +390,10 @@ class Subject extends CommonModel
                 foreach ($caseAdds as $caseAdd) {
                     $data = [
                         'subject_id'        => $subject_id,
-                        'cases_id'          => $caseAdd,
-                        'created_user_id'   => $user_id,
+                        'case_id'          => $caseAdd,
                     ];
-                    if(!SubjectCases::create($data)){
+                    $result = SubjectCases::insert($data);
+                    if(!$result){
                         return false;
                     }
                 }
