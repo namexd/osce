@@ -298,7 +298,7 @@ class TopicController extends CommonController
         ]);
 
         $id = $request->get('id');
-        $subject = Subject::find($id);
+        $subject = Subject::with('cases')->with('items')->with('supplys')->where('id','=',$id)->first();
         OsceCommon::valueIsNull($subject, -1000, '没有找到对应的科目');
 
         $items = $subject->items;
@@ -318,15 +318,8 @@ class TopicController extends CommonController
             }
         }
 
-        //获取考试项目——病例关系数据
-        $subjectCases = SubjectCases::where('subject_id','=',$id)->get();
-        //获取考试项目——用物关系数据
-        $subjectSupplys = SubjectSupply::where('subject_id','=',$id)->get();
-
         return view('osce::admin.resourceManage.course_manage_edit',
-            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,
-             'subjectCases' => $subjectCases, 'subjectSupplys' => $subjectSupplys,
-            ]);
+            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,]);
     }
 
     /**

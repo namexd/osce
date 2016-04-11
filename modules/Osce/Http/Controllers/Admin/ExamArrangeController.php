@@ -236,9 +236,15 @@ class ExamArrangeController extends CommonController
 
 
     }
+    /**
+     * 删除站接口
+     * @url GET /osce/admin/exam-arrange/del-exam-flow
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
 
 
-    //删除站接口
     public function getDelExamFlow(Request $request)
     {
         $this->validate($request, [
@@ -257,9 +263,6 @@ class ExamArrangeController extends CommonController
                 'exam_draft_flow_id' => $id,
             ];
 
-
-
-
             if ($type == 2) {
                 $data['ctrl_type']=5;
                 //是删除真实表数据就在临时表中记录下该操作
@@ -272,16 +275,32 @@ class ExamArrangeController extends CommonController
                 }
 
             } else {
-                $result = ExamDraftFlowTemp::create($data);
-//                $result = ExamDraftFlowTemp::find($id);
-//                $result->old_draft_flow_id = $id;
-//                $result->ctrl_type = $type;
-
-                if ($result) {
+                //是删除临时表数据 则直接删除临时表中 对应记录
+                //1、先删除对应小站数据
+                $draftTemps = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get();
+                if(count($draftTemps)>0){
+                    foreach ($draftTemps as $draftTemp) {
+                        if(!$draftTemp->delete()){
+                            throw new \Exception('对应小站数据删除失败！');
+                        }
+                    }
+                }
+                //1、再删除对应站的数据
+                if (ExamDraftFlowTemp::where('id','=',$id)->delete()){
                     return response()->json(
-                        $this->success_data($result->id, 1, '删除成功')
+                        $this->success_data(['id'=>$id], 1, '删除成功')
                     );
                 }
+
+//                $result = ExamDraftFlowTemp::create($data);
+////                $result = ExamDraftFlowTemp::find($id);
+////                $result->old_draft_flow_id = $id;
+////                $result->ctrl_type = $type;
+//                if ($result) {
+//                    return response()->json(
+//                        $this->success_data($result->id, 1, '删除成功')
+//                    );
+//                }
             }
 
         } catch (\Exception $ex) {
@@ -331,17 +350,29 @@ class ExamArrangeController extends CommonController
                 }
 
             } else {
-                $DraftResult = ExamDraftTemp::create($data);
-//                $DraftResult = ExamDraftTemp::find($id);
+//                $DraftResult = ExamDraftTemp::create($data);
 //
-//                $DraftResult->old_draft_id = $id;
-//
-//                $DraftResult->ctrl_type = $type;
-                if ($DraftResult->save()) {
+//                if ($DraftResult->save()) {
+
+                //是删除临时表数据 则直接删除临时表中 对应记录
+                if (ExamDraftTemp::where('id','=',$id)->delete()){
+
                     return response()->json(
-                        $this->success_data($DraftResult->id, 1, '删除成功')
+                        $this->success_data(['id'=>$id], 1, '删除成功')
                     );
                 }
+
+//                $DraftResult = ExamDraftTemp::create($data);
+////                $DraftResult = ExamDraftTemp::find($id);
+////
+////                $DraftResult->old_draft_id = $id;
+////
+////                $DraftResult->ctrl_type = $type;
+//                if ($DraftResult->save()) {
+//                    return response()->json(
+//                        $this->success_data($DraftResult->id, 1, '删除成功')
+//                    );
+//                }
             }
 
         } catch (\Exception $ex) {
@@ -466,6 +497,8 @@ class ExamArrangeController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
+     *
+     *
      */
     public function getInvigilateArrange(Request $request)
     {
@@ -480,24 +513,93 @@ class ExamArrangeController extends CommonController
         if (is_null($exam)){
             return redirect()->back()->withErrors('没有找到对应的考试！');
         }
-
-
         //判断考官安排是考场还是考站安排
 //        if(){
 //
 //        }
-
-
-
         $ExamDraft     = new ExamDraft();
         $datas = $ExamDraft->getDraftFlowData($exam_id);
-
-//        foreach ($datas as $key => $data) {
-//            $datas[$key][] = $ExamDraft->getExamDraftData($data->id);
+        
+//        foreach ($datas as &$teacherData){
+//            //查询出考站下对应的老师
+//            $stationteaxherModel = new StationTeacher();
+//            $teacherData= $stationteaxherModel->getTeacherData($teacherData,$exam_id);
+//            foreach ($teacherData as $value){
+//                if($value ->teacher_typen = 2){
+//                    $teacherData ->sp_teacher = $value;
+//                }else{
+//                    $teacherData ->teacher = $value;
+//                }
+//            }
 //        }
 
         return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $datas]);
     }
+
+    
+    
+    
+
+    //回显数据ajax请求
+     public function getExamTeacherArrange(Request $request){
+         $this->validate($request, [
+             'exam_id' => 'required|integer'
+         ]);
+         //获得exam_id
+         $exam_id = $request->input('exam_id');
+         $exam    = Exam::where('id','=',$exam_id)->first();
+         if (is_null($exam)){
+             return redirect()->back()->withErrors('没有找到对应的考试！');
+         }
+         //判断考官安排是考场还是考站安排
+//        if(){
+//
+//        }
+         $ExamDraft     = new ExamDraft();
+         $datas = $ExamDraft->getDraftFlowData($exam_id);
+
+
+         
+         foreach ($datas as &$teacherData){
+
+
+             //查询出考站下对应的老师
+             $stationteaxherModel = new StationTeacher();
+             
+             $teacherDatas= $stationteaxherModel->getTeacherData($teacherData,$exam_id);
+
+             foreach ($teacherDatas as $value){
+
+                 if($value ->teacher_type ==2){
+                     $teacherData ->sp_teacher = $value;
+                     $teacherData ->teacher = null;
+                     
+                 }else{
+                     $teacherData ->teacher = $value;
+                     $teacherData ->sp_teacher = null;
+                 }
+             }
+         }
+
+         return response()->json(
+             $this->success_data($datas, 1, 'success')
+         );
+     }
+
+
+
+
+//    private function getTeacherList(){
+//
+//    }
+//
+//    private function groupTeacherList($teatherList){
+//        return  [];
+//    }
+//
+//    private function groupSpTeacherList($teatherList){
+//        return  [];
+//    }
 
     /**
      * 保存考官安排数据
@@ -510,13 +612,11 @@ class ExamArrangeController extends CommonController
         try {
             //验证
             $this->validate($request, [
-                'id' => 'required|integer'
+                'exam_id' => 'required|integer'
             ]);
-
             //获得exam_id
-            $exam_id = $request->input('id');
+            $exam_id = $request->input('exam_id');
             $teacherData = $request->input('data');
-
             //保存老师的数据
             $stationteaxherModel = new StationTeacher();
 
@@ -575,6 +675,7 @@ class ExamArrangeController extends CommonController
 //        $userId =
 
     }
+
 
     private function timeIndex($data,$time){
         if(array_key_exists(strtotime($time),$data))
