@@ -8,6 +8,8 @@
 
 namespace Modules\Osce\Entities;
 
+use Auth;
+use DB;
 
 class StationTeacher extends CommonModel
 {
@@ -53,5 +55,88 @@ class StationTeacher extends CommonModel
             return $ex;
         }
     }
+
+    //保存考官安排
+    
+    public function getsaveteacher($teacherData,$exam_id)
+    {
+
+        $connection = DB::connection($this->connection);
+        $connection->beginTransaction();
+        try {
+            //判断是新增还是编辑
+            $examTeacherData = $this->where('exam_id','=',$exam_id)->get();
+            if(count($examTeacherData) !=0){
+                //这里是编辑先删除以前的数据
+                foreach ($examTeacherData as $item){
+                    if(!$item->delete()){
+                        throw new \Exception('删除旧数据失败！');
+                    }
+                }
+            }
+            $user = Auth::user();
+            if (empty($user)) {
+                throw new \Exception('未找到当前操作人信息！');
+            }
+
+
+            if ($teacherData) {
+                $teacherIDs =[];
+                foreach ($teacherData as $key => $item) {
+
+                    foreach ($item['teacher'] as $value){
+                        $teacherIDs[] = $value;
+                    }
+
+                    foreach ($item['sp_teacher'] as $value){
+                        $teacherIDs[] = $value;
+                    }
+
+                    //根据考站id，获取对应的病例id
+                    $stationCase = StationCase::where('station_id', $item['station_id'])->first();
+                    if(empty($stationCase)){
+                        throw new \Exception('找不到考站对应的病例对象');
+                    }
+                    $case_id = $stationCase->case_id;
+                    foreach ($teacherIDs as $teacherID) {
+                        //考站-老师关系表 数据
+                        $stationTeacher = [
+                            'station_id'        =>  $item['station_id'],
+                            'user_id'           =>  $teacherID,
+//                            'case_id'           =>  $case_id,
+                            'exam_id'           =>  $exam_id,
+                            'created_user_id'   =>  $user ->id,
+//                            'type'              =>  empty($item['teacher_id']) ? 2 : 1
+                        ];
+                        if(!$StationTeachers = StationTeacher::create($stationTeacher)) {
+                            throw new \Exception('考站-老师关系添加失败！');
+                        }
+                    }
+
+                }
+                
+                $connection->commit();
+                return true;
+            }
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+
+        }
+
+
+    }
+
+    
+    
+    public function geteditteacher($teacherData,$exam_id){
+        
+        
+        
+        
+        
+    }
+
+
 
 }
