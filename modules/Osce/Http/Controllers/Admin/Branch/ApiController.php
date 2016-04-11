@@ -39,7 +39,7 @@ use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Http\Controllers\Api\InvigilatePadController;
 use Modules\Osce\Http\Controllers\Admin\Branch\AnswerController;
 use Modules\Osce\Entities\StationTeacher;
-use Illuminate\Contracts\Redis;
+use Illuminate\Support\Facades\Redis;
 
 class ApiController extends CommonController
 {
