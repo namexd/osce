@@ -330,7 +330,7 @@ class ExamQueue extends CommonModel
             //学生进入考试时-不需要抽签
             //dd($type);
             if(intval($type) != 2){
-                dd(111111111);
+
                 // 查询学生是否已开始考试
                 $examQueue = ExamQueue::where('student_id', '=', $studentId)
                     ->where('station_id', '=', $stationId)
@@ -347,7 +347,7 @@ class ExamQueue extends CommonModel
 //            修改队列状态
             $examQueue->status=2;
             $examQueue->stick=null;
-
+            dd($examQueue->save());
             if ( $examQueue->save()) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
