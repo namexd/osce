@@ -782,10 +782,27 @@ class ExamQueue extends CommonModel
 
     //查找学生队列中的考试
     public function getExamingData($examId,$studentId){
-        $builder = $this->whereIn('exam_queue.exam_id',$examId)->where('exam_queue.student_id',$studentId)->leftjoin('exam',function($exam){
+        $builder = $this->whereIn('exam_queue.exam_id',$examId)->where('exam_queue.student_id',$studentId)->where('station.type','=',3)->leftjoin('exam',function($exam){
             $exam->on('exam.id','=','exam_queue.exam_id');
+        })->leftjoin('station',function($exam){
+            $exam->on('station.id','=','exam_queue.station_id');
         })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id')->get();
 
+        return $builder;
+    }
+
+    //获取考生的考站数量
+    public function getStationNum($studentId){
+        $DB = \DB::connection('osce_mis');
+        $builder = $this->where('student_id','=',$studentId)->where('status','!=',3)->select(
+            $DB->raw('count(station_id) as station_num')
+        )->first();
+        return $builder;
+    }
+
+    //查看学生当前状态
+    public function getExamineeStatus($examing,$studentId){
+        $builder = $this->where('exam_id','=',$examing)->where('student_id','=',$studentId)->first();
         return $builder;
     }
 }
