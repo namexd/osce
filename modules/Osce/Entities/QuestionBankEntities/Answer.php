@@ -108,10 +108,15 @@ class Answer extends Model
                         $examQuestionFormalData = array(
                             'student_answer'=>$v['answer']
                         );
-                        $result = $examQuestionFormalModel->where('id','=',$v['exam_question_id'])->update($examQuestionFormalData);
-                        if(!$result){
-                            throw new \Exception(' 保存考生答案失败！');
+
+                        $questionData = $examQuestionFormalModel->where('id','=',$v['exam_question_id'])->first();
+                        if(!empty($questionData)){
+                            $result = $examQuestionFormalModel->where('id','=',$v['exam_question_id'])->update($examQuestionFormalData);
+                            if(!$result){
+                                throw new \Exception(' 保存考生答案失败！');
+                            }
                         }
+
                     }
                 }
             }

@@ -223,6 +223,7 @@ class AnswerController extends CommonController
         }
 
 
+
         //保存考生答案
         $answerModel = new Answer();
         $result = $answerModel->saveAnswer($data);
