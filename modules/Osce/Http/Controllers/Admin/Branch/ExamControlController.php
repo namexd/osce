@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
+use Illuminate\Support\Facades\Redis;
 use Modules\Osce\Entities\QuestionBankEntities\ExamControl;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
@@ -87,10 +88,14 @@ class ExamControlController extends CommonController
 
         $examControlModel = new ExamControl();
         $result = $examControlModel->stopExam($data);
-
+        $redis = Redis::connection('message');
         if($result==true){
+            $redis->publish('watch_message', json_encode($this->success_data([],1,'考试终止成功')));
+            $redis->publish('pad_message', json_encode($this->success_data([],1,'考试终止成功')));
             return response()->json(true);
         }else{
+            $redis->publish('watch_message', json_encode($this->success_data([],0,'考试终止失败')));
+            $redis->publish('pad_message', json_encode($this->success_data([],0,'考试终止失败')));
             return response()->json($result);
         }
     }

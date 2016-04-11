@@ -108,7 +108,7 @@ function theory_student_validate(){
         $.ajax({
             type: "GET",
             url: "/osce/api/invigilatepad/start-exam",
-            data: {station_id:station_id,user_id:teacher_id,student_id:student_id},
+            data: {station_id:station_id,user_id:teacher_id,student_id:student_id,type:2},
             success: function(msg){
                 if(msg.code){
                     window.location.href="/osce/admin/answer/formalpaper-list?stationId="+station_id+"&userId="+teacher_id+"&studentId="+student_id+"&id="+paper_id+"&examId="+exam_id;
