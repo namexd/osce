@@ -4668,7 +4668,8 @@ function examiner_manage() {
             sp_teacher:[{id:45,name:'成张老师3',status:1},{id:344,name:'杨老师3',status:2}]
         }
     ];
-    var teacherArr = [];
+    var teacherArr = [],
+        exam_id = (location.href).split('=')[1];
 
     /**
      * 初始化数据
@@ -4742,11 +4743,17 @@ function examiner_manage() {
      * @version 3.4
      * @date    2016-04-08
      */
-    $('#save').click(function() {
+    $('#save-data').click(function() {
+        //请求数据
+        var req = {};
+
+        req['data'] = teacherArr;
+        req['exam_id'] = exam_id;
+
         $.ajax({
             type:'post',
-            url: '',
-            data:{data:teacherArr},
+            url: pars.save_data,
+            data:req,
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('保存成功失败！',{skin:'msg-error',icon:1});
@@ -4763,7 +4770,7 @@ function examiner_manage() {
      * @version 3.4
      * @date    2016-04-08
      */
-    $('#invation-all').click(function() {
+    $('#invation-all').click(function() {console.log(teacherArr)
         $.ajax({
             type:'get',
             url: '',
@@ -4811,17 +4818,22 @@ function examiner_manage() {
      * @param   {[object]}   $elem [选择器]
      */
     function sp_invation($elem) {
-        var req = {
-            teacher:$elem.find('.custom-teacher').val(),
-            sp_teacher:$elem.find('.custom-sp').val(),
-            subject_id:$elem.attr('value'),
-            station_id: $elem.attr('data-id')
-        };
 
         $elem.find('.invitaion-teacher').click(function() {
+            //所有老师id
+            var teacher_id = $elem.find('.custom-teacher').val();
+            teacher_id = teacher_id.concat($elem.find('.custom-sp').val());
+
+            var req = {
+                teacher_id: teacher_id,
+                subject_id:$elem.attr('value'),
+                exam_id: exam_id,
+                station_id: $elem.attr('data-id')
+            };
+
             $.ajax({
                 type:'get',
-                url: '',
+                url: pars.invation_sp,
                 data:req,
                 success: function(res) {
                     if(res.code != 1) {
