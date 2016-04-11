@@ -78,63 +78,50 @@ class AnswerController extends CommonController
             );
           $systemTimeEnd =$systemTimeStart+$examPaperFormalData['length']*60; //结束时间
         }
-        $examCategoryFormalData='';//正式试题信息(根据试题类型进行分类)
-
+        $examCategoryFormalData=[];//正式试题信息(根据试题类型进行分类)
+        $categoryData=[];
+        $num = 0;
         if($examPaperFormalList){
             $examCategoryFormalList = $examPaperFormalList->examCategoryFormal;//获取正式试题分类信息
             if($examCategoryFormalList){
                 foreach($examCategoryFormalList as $key=>$val){
-                    if($val->ExamQuestionFormal){
+                    if(!empty($val->ExamQuestionFormal)){
                         $examCategoryFormalList[$key]['exam_question_formal'] = $val->ExamQuestionFormal;//获取正式试题信息
-                    }
-                }
-                
-                //转换为数组格式
-                foreach($examCategoryFormalList as $k1=>$v1){
-                    if(count($v1['exam_question_formal'])>0){
-                        foreach($v1['exam_question_formal'] as $k2=>$v2){
-                            $examCategoryFormalData[]=array(
-                                'id' =>$v2->id,//正式试题信息
-                                'name' =>($k2+1).'、'.$v2->name,
-                                'image' =>unserialize($v2->image),
-                                'exam_question_id' =>$v2->exam_question_id,
-                                'content' =>explode('|%|',$v2->content),
-                                'answer' =>$v2->answer,
-                                'parsing' =>$v2->parsing,
-                                'exam_category_formal_id' =>$v2->exam_category_formal_id,
-                                'student_answer' =>$v2->student_answer,
-                                'serialNumber' =>($k1+1).'.'.($k2+1),
-
-                                'examCategoryFormalId'=>$v1->id,//正式试题分类信息
-                                'examCategoryFormalName'=>$v1->name,
-                                'examCategoryFormalNumber'=>$v1->number,
-                                'examCategoryFormalScore'=>$v1->score,
-                                'examQuestionTypeId'=>$v1->exam_question_type_id,
-                                'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
-                               'examCategoryFormalName'=>$this->numToWord($k1+1). '、' . $v1->name,
-                                );
-                        }
+                        $categoryData[$num]=$val;
+                        $categoryData[$num]['exam_question_formal']=$val->ExamQuestionFormal;
+                        $num++;
                     }
                 }
             }
         }
-/*
-       if(count($examCategoryFormalData)>0&&!empty($examCategoryFormalData)){
-            foreach($examCategoryFormalData as $key=>$val){
-                if($val['examQuestionTypeId']==1){//单选
-                    $examCategoryFormalData[$key]['examCategoryFormalName']='一、'.$val['examCategoryFormalName'];
-                }elseif($val['examQuestionTypeId']==2){//多选
-                    $examCategoryFormalData[$key]['examCategoryFormalName']='二、'.$val['examCategoryFormalName'];
-                }elseif($val['examQuestionTypeId']==3){//不定向
-                    $examCategoryFormalData[$key]['examCategoryFormalName']='三、'.$val['examCategoryFormalName'];
-                }elseif($val['examQuestionTypeId']==4){//判断
-                    $examCategoryFormalData[$key]['examCategoryFormalName']='四、'.$val['examCategoryFormalName'];
-                    $examCategoryFormalData[$key]['content']=array('0'=>0,'1'=>1);
+
+        //转换为数组格式
+        foreach($categoryData as $k1=>$v1){
+            if(count($v1['exam_question_formal'])>0){
+                foreach($v1['exam_question_formal'] as $k2=>$v2){
+                    $examCategoryFormalData[]=array(
+                        'id' =>$v2->id,//正式试题信息
+                        'name' =>($k2+1).'、'.$v2->name,
+                        'image' =>unserialize($v2->image),
+                        'exam_question_id' =>$v2->exam_question_id,
+                        'content' =>explode('|%|',$v2->content),
+                        'answer' =>$v2->answer,
+                        'parsing' =>$v2->parsing,
+                        'exam_category_formal_id' =>$v2->exam_category_formal_id,
+                        'student_answer' =>$v2->student_answer,
+                        'serialNumber' =>($k1+1).'.'.($k2+1),
+
+                        'examCategoryFormalId'=>$v1->id,//正式试题分类信息
+                        'examCategoryFormalName'=>$v1->name,
+                        'examCategoryFormalNumber'=>$v1->number,
+                        'examCategoryFormalScore'=>$v1->score,
+                        'examQuestionTypeId'=>$v1->exam_question_type_id,
+                        'exam_paper_formal_id'=>$v1->exam_paper_formal_id,
+                        'examCategoryFormalName'=>$this->numToWord($k1+1). '、' . $v1->name,
+                    );
                 }
             }
-        }*/
-       //dd(date('Y/m/d H:i:s',$systemTimeStart).'和'.date('Y/m/d H:i:s',$systemTimeEnd));
-        //dd($examCategoryFormalData);
+        }
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -157,8 +144,6 @@ class AnswerController extends CommonController
      */
     public function postSaveAnswer(Request $request)
     {
-
-
         $this->validate($request,[
             'examPaperFormalId'       => 'required|integer',
             'studentId'    => 'required|integer',
