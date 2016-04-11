@@ -203,7 +203,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //获取正在考试的视频
         Route::get('exam-control/getvcrslist',['uses'=>'ExamControlController@getVcrsList','as'=>'osce.admin.ExamControlController.getVcrsList']);
         //迟到弃考
-        Route::get('exam-control/poststopexam',['uses'=>'ExamMonitorController@postStopExam','as'=>'osce.admin.ExamMonitorController.postStopExam']);
+        Route::get('exam-control/poststopexamlate',['uses'=>'ExamMonitorController@postStopExam','as'=>'osce.admin.ExamMonitorController.postStopExam']);
 
 
 
