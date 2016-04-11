@@ -502,19 +502,6 @@ class ExamArrangeController extends CommonController
 //        }
         $ExamDraft     = new ExamDraft();
         $datas = $ExamDraft->getDraftFlowData($exam_id);
-        
-//        foreach ($datas as &$teacherData){
-//            //查询出考站下对应的老师
-//            $stationteaxherModel = new StationTeacher();
-//            $teacherData= $stationteaxherModel->getTeacherData($teacherData,$exam_id);
-//            foreach ($teacherData as $value){
-//                if($value ->teacher_typen = 2){
-//                    $teacherData ->sp_teacher = $value;
-//                }else{
-//                    $teacherData ->teacher = $value;
-//                }
-//            }
-//        }
 
         return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $datas]);
     }
@@ -592,7 +579,7 @@ class ExamArrangeController extends CommonController
     public function postInvigilateArrange(Request $request)
     {
 
-        try {
+//        try {
             //验证
             $this->validate($request, [
                 'exam_id' => 'required|integer'
@@ -600,6 +587,7 @@ class ExamArrangeController extends CommonController
             //获得exam_id
             $exam_id = $request->input('exam_id');
             $teacherData = $request->input('data');
+  
             //保存老师的数据
             $stationteaxherModel = new StationTeacher();
 
@@ -607,12 +595,18 @@ class ExamArrangeController extends CommonController
 
                         throw new \Exception('保存老师数据失败，请重试！！');
                     
-                }
-            return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
+                }else{
+                return response()->json(
+                    $this->success_data([], 1, 'success')
+                );
 
-        } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+            }
+            
+//            return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
+
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**
