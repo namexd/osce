@@ -318,7 +318,7 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$type = 1)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId, $type= 1)
     {
         //开启事务
         $connection = DB::connection($this->connection);
@@ -328,6 +328,7 @@ class ExamQueue extends CommonModel
             $exam = Exam::where('status', '=', 1)->first();
 
             //学生进入考试时-不需要抽签
+            dd($type);
             if($type != 2){
                 // 查询学生是否已开始考试
                 $examQueue = ExamQueue::where('student_id', '=', $studentId)
