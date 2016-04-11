@@ -308,11 +308,12 @@ class ExamArrangeController extends CommonController
             $data = [
                 'exam_id' => $exam_id,
                 'ctrl_type' => $type,
-                'old_draft_id' => $id,
+                'old_draft_id' => null,
                 'old_draft_flow_id' => $flowId,
             ];
             if ($type == 2) {
                 $data['ctrl_type']=5;
+                $data['old_draft_id']=$id;
                 //是删除真实表数据就在临时表中记录下该操作
                 $DraftResult = ExamDraftTemp::create($data);
                 if ($DraftResult) {
