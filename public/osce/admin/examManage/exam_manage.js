@@ -4023,7 +4023,7 @@ function station_assignment(){
                                 '<td type="2"><select class="form-control exam-station"><option selected="selected" value="'+data[i].item[j].station_id+'">'+data[i].item[j].station_name+'</option></select></td>'+
                                 '<td type="2">'+typeToName[data[i].item[j].station_type]+'</td>'+
                                 '<td type="2"><select class="form-control station-belong"><option selected="selected" value="'+data[i].item[j].room_id+'">'+data[i].item[j].room_name+'</option></select></td>'+
-                                '<td type="2"><select class="form-control station-chioce"><option selected="selected" value="'+data[i].item[j].effected+'">'+chioceToName[data[i].item[j].effected]+'</option></select></td>'+
+                                '<td type="2"><select class="form-control station-chioce"><option selected="selected" value="'+data[i].item[j].optional+'">'+chioceToName[data[i].item[j].optional]+'</option></select></td>'+
                                 '<td>'+
                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
