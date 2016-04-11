@@ -519,6 +519,9 @@ class ExamArrangeController extends CommonController
         return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $datas]);
     }
 
+    
+    
+    
 
     //回显数据ajax请求
      public function getExamTeacherArrange(Request $request){
@@ -537,18 +540,30 @@ class ExamArrangeController extends CommonController
 //        }
          $ExamDraft     = new ExamDraft();
          $datas = $ExamDraft->getDraftFlowData($exam_id);
+
+
+         
          foreach ($datas as &$teacherData){
+
+
              //查询出考站下对应的老师
              $stationteaxherModel = new StationTeacher();
-             $teacherData= $stationteaxherModel->getTeacherData($teacherData,$exam_id);
-             foreach ($teacherData as $value){
-                 if($value ->teacher_typen = 2){
+             
+             $teacherDatas= $stationteaxherModel->getTeacherData($teacherData,$exam_id);
+
+             foreach ($teacherDatas as $value){
+
+                 if($value ->teacher_type ==2){
                      $teacherData ->sp_teacher = $value;
+                     $teacherData ->teacher = null;
+                     
                  }else{
                      $teacherData ->teacher = $value;
+                     $teacherData ->sp_teacher = null;
                  }
              }
          }
+
          return response()->json(
              $this->success_data($datas, 1, 'success')
          );
