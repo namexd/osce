@@ -183,9 +183,13 @@ class StationController extends CommonController
 
                 return redirect()->route('osce.admin.Station.getStationList')  ; //返回考场列表
             }else{
+
+
+           
                return view('osce::admin.index.layer_success',[
                    'result'=>$result,
                    'fileArray'=>$Redirect,
+
 
                ]);
            }
