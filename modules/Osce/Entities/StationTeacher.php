@@ -106,6 +106,7 @@ class StationTeacher extends CommonModel
                             'created_user_id'   =>  $user ->id,
 //                            'type'              =>  empty($item['teacher_id']) ? 2 : 1
                         ];
+                      
                         if(!$StationTeachers = StationTeacher::create($stationTeacher)) {
                             throw new \Exception('考站-老师关系添加失败！');
                         }
