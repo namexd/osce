@@ -318,17 +318,19 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$type = 1)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId, $type= 1)
     {
         //开启事务
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
-        try {
+       // try {
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
 
             //学生进入考试时-不需要抽签
-            if($type != 2){
+            //dd($type);
+            if(intval($type) != 2){
+
                 // 查询学生是否已开始考试
                 $examQueue = ExamQueue::where('student_id', '=', $studentId)
                     ->where('station_id', '=', $stationId)
@@ -345,7 +347,7 @@ class ExamQueue extends CommonModel
 //            修改队列状态
             $examQueue->status=2;
             $examQueue->stick=null;
-
+            dd($examQueue->save());
             if ( $examQueue->save()) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
@@ -419,13 +421,13 @@ class ExamQueue extends CommonModel
 
             }
             // 调用锚点方法
-            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
-            $connection->commit();
+//            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
+            //$connection->commit();
             return true;
-        } catch (\Exception $ex) {
-            $connection->rollBack();
-            throw $ex;
-        }
+//        } catch (\Exception $ex) {
+//            $connection->rollBack();
+//            throw $ex;
+//        }
 
     }
 

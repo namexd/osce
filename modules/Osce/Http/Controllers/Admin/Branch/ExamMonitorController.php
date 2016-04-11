@@ -23,7 +23,7 @@ use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Repositories\Common;
 
-
+use Redis;
 
 class ExamMonitorController  extends CommonController
 {
@@ -119,6 +119,9 @@ class ExamMonitorController  extends CommonController
         $result = $examControlModel->stopExamLate($data);
 
         if($result==true){
+            $redis = Redis::connection('message');
+            $redis->publish('watch_message', json_encode($this->success_data([],1,'迟到确认弃考成功')));
+            $redis->publish('pad_message', json_encode($this->success_data([],1,'迟到确认弃考成功')));
             return response()->json(true);
         }else{
             return response()->json($result);

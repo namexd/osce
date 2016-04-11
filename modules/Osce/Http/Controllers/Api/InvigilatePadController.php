@@ -900,7 +900,13 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getUseingWatchData(){
+    public function getUseingWatchData(Request $request){
+        $this->validate($request, [
+            'student_id' => 'required|integer',
+            'exam_id' => 'required|integer'
+        ]);
+        $status = $request->get('status');  //腕表的使用状态
+        $type = $request->get('type');      //考试状态
 
     }
 }
