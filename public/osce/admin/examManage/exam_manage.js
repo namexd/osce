@@ -4770,11 +4770,17 @@ function examiner_manage() {
      * @version 3.4
      * @date    2016-04-08
      */
-    $('#invation-all').click(function() {console.log(teacherArr)
+    $('#invation-all').click(function() {
+        //请求数据
+        var req = {};
+
+        req['data'] = teacherArr;
+        req['exam_id'] = exam_id;
+
         $.ajax({
             type:'get',
             url: '',
-            data:{data:teacherArr},
+            data:req,
             success: function(res) {
                 if(res.code != 1) {
                     layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
@@ -4864,6 +4870,7 @@ function examiner_manage() {
 
                     return {
                         subject_id:$elem.attr('value'),
+                        exam_id: exam_id,
                         type:1
                     };
                 },
@@ -4905,6 +4912,7 @@ function examiner_manage() {
 
                     return {
                         subject_id:$elem.attr('value'),
+                        exam_id: exam_id,
                         type:2
                     };
                 },
