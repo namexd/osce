@@ -4669,6 +4669,7 @@ function examiner_manage() {
         }
     ];
     var teacherArr = [],
+        typeToName = ['','技能考站','sp考站','理论考站'],
         exam_id = (location.href).split('=')[1];
 
     /**
@@ -4686,30 +4687,30 @@ function examiner_manage() {
             /**
              * 这里是生成考官
              */
-            for(var j in data[i].teacher) {
+            /*for(var j in data[i].teacher) {
                 str_teacher += '<option value="'+data[i].teacher[j].id+'" selected="selected">'+data[i].teacher[j].name+'</option>';
-            }
+            }*/
             /**
              * 这里是生成ＳＰ
              */
-            for(var j in data[i].sp_teacher) {
+            /*for(var j in data[i].sp_teacher) {
                 str_sp += '<option value="'+data[i].sp_teacher[j].id+'" selected="selected">'+data[i].sp_teacher[j].name+'</option>';
-            }
+            }*/
 
             //dom准备
             html += '<tr value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'">'+
-                        '<td>'+data[i].exam_item.name+'</td>'+
-                        '<td>'+data[i].station.name+'</td>'+
-                        '<td>'+data[i].station_type.name+'</td>'+
+                        '<td>'+data[i].subject_title+'</td>'+
+                        '<td>'+data[i].station_name+'</td>'+
+                        '<td>'+typeToName[data[i].station_type]+'</td>'+
                         '<td style="width:481px;">'+
                             '<div class="col-sm-10">'+
-                            '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+str_teacher+
+                            '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+
                             '</select>'+
                             '</div>'+
                         '</td>'+
                         '<td style="width:481px;">'+
                             '<div class="col-sm-10">'+
-                            '<select class="form-control custom-sp"  name=""  multiple="multiple">'+str_sp+
+                            '<select class="form-control custom-sp"  name=""  multiple="multiple">'+
                             '</select>'+
                             '</div>'+
                         '</td>'+
@@ -4792,7 +4793,7 @@ function examiner_manage() {
     });
 
     //模拟数据
-    initTable(data);
+    //initTable(data);
 
 
     /**
@@ -4804,9 +4805,9 @@ function examiner_manage() {
      */
     $.ajax({
         type:'get',
-        url: '',
+        url: pars.data_list,
         data:{exam_id:(location.href).split('=')[1]},
-        success: function(res) {
+        success: function(res) {console.log(res)
             if(res.code != 1) {
                 layer.msg('数据加载失败！',{skin:'msg-error',icon:1});
             } else {
