@@ -499,6 +499,10 @@ class ExamArrangeController extends CommonController
      */
     public function postInvigilateArrange(Request $request)
     {
+
+
+
+
         try {
             //验证
             $this->validate($request, [
@@ -507,10 +511,10 @@ class ExamArrangeController extends CommonController
 
             //获得exam_id
             $exam_id = $request->input('id');
-            
-            
-            
-            
+
+
+
+
 
             return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
 

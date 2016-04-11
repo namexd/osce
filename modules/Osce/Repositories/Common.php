@@ -296,20 +296,19 @@ class Common
             $data= $request->headers->all()['referer'][0];
             $fileNameArray =     explode('?',$data);
             $fileArray =     explode('&',$fileNameArray[1]);
+            foreach ($fileArray as $value)
+                    if($value=='status=1'){
+                        return $fileArray;
+                        
+//                    return view('osce::admin.index.layer_success',[
+//                        'data'=>$result,
+////                        'table'=>,
+//                        'tr'=>'item-id-0',
+//
+//                    ]);
 
-        return view('osce::admin.index.layer_success');
-//        return redirect()->route('osce::admin.index.layer_success');
-//            foreach ($fileArray as $value)
-//                if($value=='status=1'){
-//                    return view('osce::admin.index.layer_success');
-////                        'data'=>$result,
-//////                        'table'=>,
-////                        'tr'=>'item-id-0',
-//
-////                    ]);
-//
-//                }else{
-//                    return false;
-//                }
+                }else{
+                    return false;
+                }
     }
 }
