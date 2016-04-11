@@ -78,8 +78,6 @@ class StationTeacher extends CommonModel
             if (empty($user)) {
                 throw new \Exception('未找到当前操作人信息！');
             }
-
-
             if ($teacherData) {
                 $teacherIDs =[];
                 foreach ($teacherData as $key => $item) {
@@ -93,11 +91,11 @@ class StationTeacher extends CommonModel
                     }
 
                     //根据考站id，获取对应的病例id
-                    $stationCase = StationCase::where('station_id', $item['station_id'])->first();
-                    if(empty($stationCase)){
-                        throw new \Exception('找不到考站对应的病例对象');
-                    }
-                    $case_id = $stationCase->case_id;
+//                    $stationCase = StationCase::where('station_id', $item['station_id'])->first();
+//                    if(empty($stationCase)){
+//                        throw new \Exception('找不到考站对应的病例对象');
+//                    }
+//                    $case_id = $stationCase->case_id;
                     foreach ($teacherIDs as $teacherID) {
                         //考站-老师关系表 数据
                         $stationTeacher = [
@@ -108,6 +106,7 @@ class StationTeacher extends CommonModel
                             'created_user_id'   =>  $user ->id,
 //                            'type'              =>  empty($item['teacher_id']) ? 2 : 1
                         ];
+                      
                         if(!$StationTeachers = StationTeacher::create($stationTeacher)) {
                             throw new \Exception('考站-老师关系添加失败！');
                         }
@@ -127,16 +126,27 @@ class StationTeacher extends CommonModel
 
     }
 
-    
-    
-    public function geteditteacher($teacherData,$exam_id){
+
+
+
+    public function getTeacherData($teacherData,$exam_id){
+
+        $data = $this->leftJoin('teacher', 'teacher.id', '=', $this->table.'.user_id')
+                     ->where('station_id','=',$teacherData->station_id)
+                     ->where('exam_id','=',$exam_id)
+                    ->select([
+                        'teacher.id as teacher_id',
+                        'teacher.name as teacher_name',
+                        'teacher.type as teacher_type',
+                        $this->table.'.station_id',
+                    ])
+                     ->get();
+  
         
-        
-        
-        
-        
+        return $data;
+
+
+
+
     }
-
-
-
 }
