@@ -214,13 +214,18 @@ abstract class CommonController extends Controller
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function checkType($status){
-        if($status == 1){
-            $name = '考试中';
-        }elseif($status == 2){
-            $name = '已结束';
+        if(!is_null($status)){
+            if($status < 2){
+                $name = '等待中';
+            }elseif($status == 2){
+                $name = '考试中';
+            }else{
+                $name = '已结束';
+            }
         }else{
-            $name = '等待中';
+            $name = '没有考试';
         }
+
 
         return $name;
     }

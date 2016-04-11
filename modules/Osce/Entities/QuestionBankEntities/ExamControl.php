@@ -302,7 +302,7 @@ class ExamControl extends Model
                 foreach($examQueueData['remainExamQueueInfo'] as $key=>$val){
                     //向考试结果记录表插入数据
 
-                    $data['userId']=StationTeacher::where('station_id',$val['station_id'])->pluck('id');
+                    $data['userId']=StationTeacher::where('station_id',$val['station_id'])->where('exam_id',$val['exam_id'])->where('exam_screening_id',$val['exam_screening_id'])->pluck('id');
                     $examResultData=array(
                         'student_id'=>$data['studentId'],
                         'exam_screening_id'=>$val['exam_screening_id'],

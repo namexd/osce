@@ -408,7 +408,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('store-anchor',['uses'=>'InvigilatePadController@postStoreAnchor','as'=>'osce.pad.InvigilatePad.StoreAnchor']);
 
 		//显示所有已绑定但未解绑人员的接口
-		Route::post('invigilatepad/bound-watch-members', 	['uses'=>'InvigilatePadController@getBoundWatchMembers','as'=>'osce.api.invigilatepad.getBoundWatchMembers']);
+		Route::get('invigilatepad/bound-watch-members', 	['uses'=>'InvigilatePadController@getBoundWatchMembers','as'=>'osce.api.invigilatepad.getBoundWatchMembers']);
 		//获取考生详细信息的接口
 		Route::get('invigilatepad/examinee-details', 	['uses'=>'InvigilatePadController@getExamineeDetails','as'=>'osce.api.invigilatepad.getExamineeDetails']);
 	});

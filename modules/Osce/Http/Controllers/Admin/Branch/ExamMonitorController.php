@@ -79,7 +79,23 @@ class ExamMonitorController  extends CommonController
             'list'      =>$data['data'],'data'=>$topMsg
         ]);
     }
-
+    /**
+     * 迟到执行确认弃考
+     * @method GET
+     * @url /osce/admin/exam-monitor/replace
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return view
+     *
+     * @version 3.3a
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2016-04-11 11:39
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function postStopExam(Request $request)
     {
         $this->validate($request,[

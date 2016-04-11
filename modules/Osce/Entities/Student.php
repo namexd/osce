@@ -673,18 +673,14 @@ class Student extends CommonModel
     }
 
     //获取考生的详细信息
-    public function getExameeStatus($studentId,$examId){
-        $builder = $this->where('student.id','=',$studentId)->where('student.exam_id','=',$examId)->leftjoin('exam_screening_student',function($join){
+    public function getExameeStatus($studentId){
+        $builder = $this->where('student.id','=',$studentId)->leftjoin('exam_screening_student',function($join){
             $join->on('exam_screening_student.student_id','=','student.id');
         })->leftjoin('exam_screening',function($examScreening){
             $examScreening->on('exam_screening.id','=','exam_screening_student.exam_screening_id');
         })->leftjoin('exam_queue',function($examQueue){
             $examQueue->on('exam_queue.exam_screening_id','=','exam_screening.id');
-        })->leftjoin('exam_station',function($examQueue){
-            $examQueue->on('exam_station.station_id','=','exam_queue.station_id');
-        })->leftjoin('exam',function($examScreening){
-            $examScreening->on('exam.id','=','exam_station.exam_id');
-        })->select('exam.status')->first();
+        })->select('exam_queue.status')->first();
 
         return $builder;
     }
