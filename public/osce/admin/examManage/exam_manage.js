@@ -4687,15 +4687,15 @@ function examiner_manage() {
             /**
              * 这里是生成考官
              */
-            /*for(var j in data[i].teacher) {
-                str_teacher += '<option value="'+data[i].teacher[j].id+'" selected="selected">'+data[i].teacher[j].name+'</option>';
-            }*/
+            for(var j in data[i].teacher) {
+                str_teacher += '<option value="'+data[i].teacher[j].teacher_id+'" selected="selected">'+data[i].teacher[j].teacher_name+'</option>';
+            }
             /**
              * 这里是生成ＳＰ
              */
-            /*for(var j in data[i].sp_teacher) {
-                str_sp += '<option value="'+data[i].sp_teacher[j].id+'" selected="selected">'+data[i].sp_teacher[j].name+'</option>';
-            }*/
+            for(var j in data[i].sp_teacher) {
+                str_sp += '<option value="'+data[i].sp_teacher[j].teacher_name+'" selected="selected">'+data[i].sp_teacher[j].teacher_name+'</option>';
+            }
 
             //dom准备
             html += '<tr value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'">'+
@@ -4704,13 +4704,13 @@ function examiner_manage() {
                         '<td>'+typeToName[data[i].station_type]+'</td>'+
                         '<td style="width:481px;">'+
                             '<div class="col-sm-10">'+
-                            '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+
+                            '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+str_teacher
                             '</select>'+
                             '</div>'+
                         '</td>'+
                         '<td style="width:481px;">'+
                             '<div class="col-sm-10">'+
-                            '<select class="form-control custom-sp"  name=""  multiple="multiple">'+
+                            '<select class="form-control custom-sp"  name=""  multiple="multiple">'+str_sp
                             '</select>'+
                             '</div>'+
                         '</td>'+

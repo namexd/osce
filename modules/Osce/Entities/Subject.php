@@ -43,6 +43,12 @@ class Subject extends CommonModel
         return $this->hasMany('Modules\Osce\Entities\SubjectItem', 'subject_id', 'id');
     }
 
+    public function cases(){
+        return $this->belongsToMany('Modules\Osce\Entities\CaseModel','subject_cases','subject_id','case_id','id');
+    }
+    public function supplys(){
+        return $this->belongsToMany('Modules\Osce\Entities\Supply','subject_supply','subject_id','supply_id','id');
+    }
     /**
      * 获取课题列表（考核点的盒子的列表）
      * @access public
@@ -359,10 +365,10 @@ class Subject extends CommonModel
             foreach ($cases as $case_id) {
                 $data = [
                     'subject_id'        => $subject_id,
-                    'cases_id'          => $case_id,
-                    'created_user_id'   => $user_id,
+                    'case_id'          => $case_id,
                 ];
-                if(!SubjectCases::create($data)){
+                $result = SubjectCases::insert($data);
+                if(!$result){
                     return false;
                 }
             }

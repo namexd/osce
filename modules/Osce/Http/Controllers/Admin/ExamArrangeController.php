@@ -263,9 +263,6 @@ class ExamArrangeController extends CommonController
                 'exam_draft_flow_id' => $id,
             ];
 
-
-
-
             if ($type == 2) {
                 $data['ctrl_type']=5;
                 //是删除真实表数据就在临时表中记录下该操作
@@ -278,12 +275,32 @@ class ExamArrangeController extends CommonController
                 }
 
             } else {
-                $result = ExamDraftFlowTemp::create($data);
-                if ($result) {
+                //是删除临时表数据 则直接删除临时表中 对应记录
+                //1、先删除对应小站数据
+                $draftTemps = ExamDraftTemp::where('old_draft_flow_id','=',$id)->get();
+                if(count($draftTemps)>0){
+                    foreach ($draftTemps as $draftTemp) {
+                        if(!$draftTemp->delete()){
+                            throw new \Exception('对应小站数据删除失败！');
+                        }
+                    }
+                }
+                //1、再删除对应站的数据
+                if (ExamDraftFlowTemp::where('id','=',$id)->delete()){
                     return response()->json(
-                        $this->success_data($result->id, 1, '删除成功')
+                        $this->success_data(['id'=>$id], 1, '删除成功')
                     );
                 }
+
+//                $result = ExamDraftFlowTemp::create($data);
+////                $result = ExamDraftFlowTemp::find($id);
+////                $result->old_draft_flow_id = $id;
+////                $result->ctrl_type = $type;
+//                if ($result) {
+//                    return response()->json(
+//                        $this->success_data($result->id, 1, '删除成功')
+//                    );
+//                }
             }
 
         } catch (\Exception $ex) {
@@ -343,8 +360,8 @@ class ExamArrangeController extends CommonController
                     return response()->json(
                         $this->success_data(['id'=>$id], 1, '删除成功')
                     );
-
                 }
+
 //                $DraftResult = ExamDraftTemp::create($data);
 ////                $DraftResult = ExamDraftTemp::find($id);
 ////
