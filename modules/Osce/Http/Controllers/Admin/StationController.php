@@ -135,7 +135,7 @@ class StationController extends CommonController
 
         DB::connection('osce_mis')->beginTransaction();
 
-        try {
+//        try {
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $stationData = $request->only('name', 'type', 'mins');
             $vcrId  = $request->input('vcr_id', null);
@@ -177,16 +177,16 @@ class StationController extends CommonController
             DB::connection('osce_mis')->commit();
             
           $Redirect=  Common::handleRedirect($request,$result);
-            if($Redirect==false){
-        
-                return redirect()->route('osce.admin.Station.getStationList')  ; //返回考场列表
-            }
-
-            
-        } catch (\Exception $ex) {
-            DB::connection('osce_mis')->rollBack();
-            return redirect()->back()->withErrors($ex->getMessage())->withInput();
-        }
+//           if($Redirect==false){
+//
+//                return redirect()->route('osce.admin.Station.getStationList')  ; //返回考场列表
+//            }
+//
+//
+//        } catch (\Exception $ex) {
+//            DB::connection('osce_mis')->rollBack();
+//            return redirect()->back()->withErrors($ex->getMessage())->withInput();
+//        }
 
     }
 
