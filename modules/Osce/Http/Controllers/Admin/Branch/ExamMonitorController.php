@@ -40,7 +40,7 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wt <wangtao@misrobot.com>
      * @date 2016-04-01 11:28
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
@@ -61,7 +61,7 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wt <wangtao@misrobot.com>
      * @date 2016-04-01 11:38
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
@@ -92,7 +92,7 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wt <wangtao@misrobot.com>
      * @date 2016-04-11 11:39
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
@@ -142,7 +142,7 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wt <wangtao@misrobot.com>
      * @date 2016-04-01 11:39
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
@@ -169,7 +169,7 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wt <wangtao@misrobot.com>
      * @date 2016-04-01 11:40
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
@@ -194,7 +194,7 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wt <wangtao@misrobot.com>
      * @date 2016-04-01 11:40
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
@@ -227,7 +227,7 @@ class ExamMonitorController  extends CommonController
      * @return array
      *
      * @version 3.3a
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wt <wangtao@misrobot.com>
      * @date 2016-04-01 11:41
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
