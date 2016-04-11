@@ -4640,6 +4640,7 @@ function examiner_manage() {
 
     var data = [
         {   subject_id:1,
+            station_id:12,
             exam_item:{id:12,name:'胸腔1'},
             station:{id:212,name:'考站1'},
             station_type:{id:323,name:'技能站1'},
@@ -4648,6 +4649,7 @@ function examiner_manage() {
         },
         {   
             subject_id:12,
+            station_id:12,
             exam_item:{id:12,name:'胸腔2'},
             station:{id:212,name:'考站2'},
             station_type:{id:323,name:'技能站2'},
@@ -4656,6 +4658,7 @@ function examiner_manage() {
         },
         {
             subject_id:11,
+            station_id:12,
             exam_item:{id:12,name:'胸腔3'},
             station:{id:212,name:'考站3'},
             station_type:{id:323,name:'技能站3'},
@@ -4691,7 +4694,7 @@ function examiner_manage() {
             }
 
             //dom准备
-            html += '<tr value="'+data[i].subject_id+'">'+
+            html += '<tr value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'">'+
                         '<td>'+data[i].exam_item.name+'</td>'+
                         '<td>'+data[i].station.name+'</td>'+
                         '<td>'+data[i].station_type.name+'</td>'+
@@ -4726,7 +4729,7 @@ function examiner_manage() {
             sp_invation($that);
 
             //老师列表数组
-            teacherArr.push({subject_id:$that.attr('value'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            teacherArr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
 
         });
     }
@@ -4809,7 +4812,8 @@ function examiner_manage() {
         var req = {
             teacher:$elem.find('.custom-teacher').val(),
             sp_teacher:$elem.find('.custom-sp').val(),
-            subject_id:$elem.attr('value')
+            subject_id:$elem.attr('value'),
+            station_id: $elem.attr('data-id')
         };
 
         $elem.find('.invitaion-teacher').click(function() {
