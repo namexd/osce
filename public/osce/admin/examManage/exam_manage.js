@@ -4804,12 +4804,12 @@ function examiner_manage() {
      */
     $.ajax({
         type:'get',
-        url: '',
+        url: pars.data_list,
         data:{exam_id:(location.href).split('=')[1]},
         success: function(res) {
             if(res.code != 1) {
                 layer.msg('数据加载失败！',{skin:'msg-error',icon:1});
-            } else {
+            } else {console.log(res)
                 initTable(res.data);
             }
         }
