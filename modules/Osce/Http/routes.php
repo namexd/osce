@@ -417,6 +417,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/single-watch-data', 	['uses'=>'InvigilatePadController@getSingleWatchData','as'=>'osce.api.invigilatepad.getSingleWatchData']);
 		//查询学生考试状态
 		Route::get('invigilatepad/examinee-status', 	['uses'=>'InvigilatePadController@getExamineeStatus','as'=>'osce.api.invigilatepad.getExamineeStatus']);
+		//解绑腕表
+		Route::get('invigilatepad/watch-unbundling', 	['uses'=>'InvigilatePadController@getWatchUnbundling','as'=>'osce.api.invigilatepad.getWatchUnbundling']);
+		//解绑腕表
+		Route::get('invigilatepad/watch-unbundling-report', 	['uses'=>'InvigilatePadController@getWatchUnbundlingReport','as'=>'osce.api.invigilatepad.getWatchUnbundlingReport']);
 	});
 });
 
