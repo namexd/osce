@@ -17,6 +17,14 @@ class SmartArrangeRepository
 {
     use CheckTraits, SQLTraits;
 
+    /**
+     * 开始排考
+     * @param $exam
+     * @param $smartArrange
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-11 16:17
+     */
     function plan($exam, $smartArrange)
     {
         try {
@@ -73,10 +81,11 @@ class SmartArrangeRepository
     }
 
     /**
+     * 将数据输出
      * @param $exam
      * @return array
      * @author Jiangzhiheng
-     * @time
+     * @time 2016-04-11 16:10
      */
     function output($exam)
     {

@@ -333,14 +333,29 @@ class ExamArrangeController extends CommonController
                 }
 
             } else {
+//                $DraftResult = ExamDraftTemp::create($data);
+//
+//                if ($DraftResult->save()) {
 
-                $DraftResult = ExamDraftTemp::create($data);
+                //是删除临时表数据 则直接删除临时表中 对应记录
+                if (ExamDraftTemp::where('id','=',$id)->delete()){
 
-                if ($DraftResult->save()) {
                     return response()->json(
-                        $this->success_data($DraftResult->id, 1, '删除成功')
+                        $this->success_data(['id'=>$id], 1, '删除成功')
                     );
+
                 }
+//                $DraftResult = ExamDraftTemp::create($data);
+////                $DraftResult = ExamDraftTemp::find($id);
+////
+////                $DraftResult->old_draft_id = $id;
+////
+////                $DraftResult->ctrl_type = $type;
+//                if ($DraftResult->save()) {
+//                    return response()->json(
+//                        $this->success_data($DraftResult->id, 1, '删除成功')
+//                    );
+//                }
             }
 
         } catch (\Exception $ex) {
