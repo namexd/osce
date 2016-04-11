@@ -924,18 +924,13 @@ class AutomaticPlanArrangement
          * 直接使用array_shift函数
          */
 //
-//        dump(count($result));
         if (count($result) < $station->needNum) {
-//            dump(count($this->_S_ING));
-//            dump($station->needNum);
-//            dump($station->needNum - count($result));
             $hasStudentNum  =   $station->needNum - count($result);
             for ($i = 0; $i <= $hasStudentNum; $i++) {
-//                echo count($this->_S_ING);
-//                echo '+';
+//                
                 if (count($this->_S_ING) > 0) {
                     $thisStudent = array_shift($this->_S_ING);
-                    //dump($thisStudent);
+                    
                     if (!is_null($thisStudent)) {
                         $result[] = $thisStudent;
                     }

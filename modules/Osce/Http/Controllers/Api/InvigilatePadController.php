@@ -350,7 +350,7 @@ class InvigilatePadController extends CommonController
     /**
      * 照片附件的上传
      * @method POST
-     * @url /osce/api/invigilatepad/save-exam-result
+     * @url /osce/api/upload-image
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -439,7 +439,7 @@ class InvigilatePadController extends CommonController
     /**
      * 音频附件的上传
      * @method POST
-     * @url /osce/api/invigilatepad/save-exam-result
+     * @url /osce/api/upload-radio
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
@@ -514,6 +514,7 @@ class InvigilatePadController extends CommonController
 
     /**
      * 将视频锚点插进数据库
+     * @url \osce\api\store-anchor
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception

@@ -928,6 +928,7 @@ class ExamPlan extends CommonModel
                     'flow_id'         => $item->flow_id,
                     'serialnumber'    => $item->serialnumber,
                     'created_user_id' => $user->id,
+                    'gradation_order' => $item->gradation_order
                 ];
                 $a = ExamPlan::create($array);
                 if (!$a) {

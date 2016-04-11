@@ -4620,7 +4620,9 @@ function station_assignment(){
                 if(res.code != 1) {
                     layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
                 } else {
-                    layer.msg('数据保存成功！',{skin:'msg-success',icon:1});
+                    layer.msg('数据保存成功！',{skin:'msg-success',icon:1},function () {
+                        location.reload();
+                    });
                 }
             }
         })
@@ -4776,10 +4778,10 @@ function examiner_manage() {
         })
     });
 
-
-
     //模拟数据
     initTable(data);
+
+
     /**
      * 初始化数据请求
      * @author mao

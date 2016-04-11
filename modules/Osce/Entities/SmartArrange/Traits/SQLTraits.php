@@ -8,10 +8,12 @@
 
 namespace Modules\Osce\Entities\SmartArrange\Traits;
 
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamDraftFlow;
+use Modules\Osce\Entities\Station;
 
 trait SQLTraits
 {
@@ -22,7 +24,8 @@ trait SQLTraits
      * @author Jiangzhiheng
      * @time
      */
-    function getGradations($exam) {
+    function getGradations($exam)
+    {
         return ExamGradation::where('exam_id', $exam->id)
             ->get()
             ->keyBy('order');
@@ -149,5 +152,164 @@ trait SQLTraits
                     )
                 ))->Having('flowsNum', '<', $flowsNum)
             ->get();
+    }
+
+    /**
+     * 返回考站实体
+     * @param $screen
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-08 17:07
+     */
+    function getStation($screen)
+    {
+        return ExamDraftFlow::join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+            ->join('station', 'station.id', '=', 'exam_draft.station_id')
+            ->join('exam_gradation', 'exam_gradation.id', '=', 'exam_draft_flow.exam_gradation_id')
+            ->where('exam_screening_id', $screen->id)
+            ->select(
+                'station.name as name',
+                'station.mins as mins',
+                'station.type as type',
+                'exam_draft.station_id as station_id',
+                'exam_draft.room_id as room_id',
+                'exam_draft_flow.order as serialnumber',
+                'exam_draft_flow.exam_screening_id as exam_screening_id',
+                'exam_gradation.order as gradation_order'
+            )->get();
+    }
+
+    /**
+     * 返回考场实体
+     * @param $screen
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-08 17:07
+     */
+    function getRoom($screen)
+    {
+        return ExamDraftFlow::join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+            ->join('room', 'room.id', '=', 'exam_draft.room_id')
+            ->join('exam_gradation', 'exam_gradation.id', '=', 'exam_draft_flow.exam_gradation_id')
+            ->where('exam_screening_id', $screen->id)
+            ->select(
+                'room.name as name',
+                'room.mins as mins',
+                'room.type as type',
+                'exam_draft.room_id as room_id',
+                'exam_draft_flow.order as serialnumber',
+                'exam_draft_flow.exam_screening_id as exam_screening_id',
+                'exam_gradation.order as gradation_order'
+            )->distinct()
+            ->get();
+    }
+
+
+    /**
+     * 获取当前考场所对应的考站
+     * @param $screen
+     * @param $roomId
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-08 17:53
+     */
+    function roomStation($screen, $roomId)
+    {
+        return ExamDraft::left('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft_flow.exam_screening_id', '=', $screen->id)
+            ->where('exam_draft.room_id', $roomId)
+            ->select(
+                'exam_draft.id as exam_draft_id',
+                'exam_draft.station_id as station_id',
+                'exam_draft.room_id as room_id'
+            )
+            ->get();
+    }
+
+    /**
+     * 返回考场对应的考站的考试时间数组
+     * @param $roomStation
+     * @return array
+     * @author Jiangzhiheng
+     * @time 2016-04-08 18:01
+     */
+    function stationMins($roomStation)
+    {
+        $stationIds = $roomStation->pluck('station_id');
+        return Station::whereIn('station_id', $stationIds)->lists('mins')->toArray();
+    }
+
+    /**
+     * 获取学生考过的序号
+     * @param $testingStudent
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-08 18:55
+     */
+    function getStudentSerialnumber($testingStudent)
+    {
+        return ExamPlanRecord::where('student_id', $testingStudent->id)
+            ->where('exam_id', $this->exam_id)->get()
+            ->pluck('serialnumber');
+    }
+
+    /**
+     * 获取上一个流程的学生
+     * @param $screen
+     * @param $serialnumber
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-11 11:26
+     */
+    function prevSerial($screen, $serialnumber)
+    {
+        return ExamPlanRecord::where('exam_screening_id', '=', $screen->id)
+            ->where('serialnumber', '=', $serialnumber)
+            ->whereNotNull('end_dt')
+            ->orderBy('end_dt', 'asc')
+            ->get()
+            ->pluck('student_id');
+    }
+
+    /**
+     * 获取本流程的学生
+     * @param $screen
+     * @param $serialnumber
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-11 11:27
+     */
+    function thisSerial($screen, $serialnumber)
+    {
+        return ExamPlanRecord::where('exam_screening_id', $screen->id)
+            ->whereNotNull('end_dt')
+            ->where('serialnumber', '=', $serialnumber - 1)
+//                ->groupBy('student_id')
+            ->orderBy('end_dt', 'asc')
+            ->get()
+            ->pluck('student_id');
+    }
+
+    function pollBeginStudent($entity, $screen)
+    {
+        try {
+            if ($entity->type == 1) {
+                return ExamPlanRecord::where('exam_screening_id', $screen->id)
+                    ->whereNotNull('end_dt')
+                    ->where('room_id', '=', $entity->id)
+                    ->groupBy('student_id')
+                    ->get();
+            } elseif ($entity->type == 2) {
+                return ExamPlanRecord::where('exam_screening_id', $screen->id)
+                    ->whereNotNull('end_dt')
+                    ->where('station_id', '=', $entity->id)
+                    ->groupBy('student_id')
+                    ->get();
+            } else {
+                throw new \Exception('未定义的考试模式！', -15);
+            }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 }

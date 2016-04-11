@@ -316,6 +316,7 @@ class ExamArrangeController extends CommonController
                 'ctrl_type' => $type,
                 'old_draft_id' => null,
                 'old_draft_flow_id' => $flowId,
+                'add_time' => date('Y-m-d H:i:s'),
             ];
             if ($type == 2) {
                 $data['ctrl_type']=5;
@@ -596,7 +597,7 @@ class ExamArrangeController extends CommonController
     {
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
-//        try{
+        try{
             $this->validate($request, [
                 'exam_id' => 'required',
             ]);
@@ -642,16 +643,23 @@ class ExamArrangeController extends CommonController
                     }
                 }
             }
+
+            //处理 待删除 数据（如：清空临时表数据，删除正式表待删除数据）
+            $ExamDraftTempModel= new ExamDraftTemp();
+            if (!$ExamDraftTempModel->handleDelDatas($exam_id)){
+                throw new \Exception('处理待删除数据失败');
+            }
+
             $connection->commit();
             //返回结果
             return response()->json(
                 $this->success_data([], 1, '保存成功！')
             );
 
-//        } catch (\Exception $ex){
-//            $connection->rollBack();
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex){
+            $connection->rollBack();
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**

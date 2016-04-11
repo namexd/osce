@@ -18,7 +18,7 @@ class ExamDraftFlow extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['id','name','order','exam_id','exam_screening_id', 'exam_gradation_id'];
+    protected $fillable     = ['name', 'order', 'exam_id', 'exam_screening_id', 'exam_gradation_id', 'optional', 'number', 'status'];
 
     protected $ctrl_type    = [
         1   => '简单新增',
@@ -37,6 +37,7 @@ class ExamDraftFlow extends CommonModel
     /**
      * 处理大表（站）数据
      * @param $data
+     * @author Zhoufuxiang 2016-4-11
      * @return \Exception
      */
     public function handleBigData($data){
@@ -50,6 +51,7 @@ class ExamDraftFlow extends CommonModel
                     break;
                 case 3 : $this->bigThree($data);            //新增后更新
                     break;
+                case 7 :
                 case 5 : $this->bigFive($data);             //删除
                     break;
                 default: throw new \Exception('操作有误！');
@@ -61,6 +63,12 @@ class ExamDraftFlow extends CommonModel
         }
     }
 
+    /**
+     * 简单新增
+     * @param $data
+     * @author Zhoufuxiang 2016-4-11
+     * @return \Exception|int
+     */
     public function bigOne($data){
         try{
             $item   = $data['item'];
@@ -86,6 +94,12 @@ class ExamDraftFlow extends CommonModel
         }
     }
 
+    /**
+     * 简单更新
+     * @param $data
+     * @author Zhoufuxiang 2016-4-11
+     * @return \Exception|int
+     */
     public function bigTwo($data){
         try{
             $item          = $data['item'];
@@ -114,6 +128,7 @@ class ExamDraftFlow extends CommonModel
     /**
      * 新增后更新(已经保存过后了的)
      * @param $data
+     * @author Zhoufuxiang 2016-4-11
      * @return \Exception|int
      */
     public function bigThree($data){
@@ -147,13 +162,14 @@ class ExamDraftFlow extends CommonModel
     /**
      * 删除
      * @param $data
+     * @author Zhoufuxiang 2016-4-11
      * @return \Exception|int
      */
     public function bigFive($data){
         try{
             $item      = $data['item'];
             //重新查找对应的这条数据（再赋给$item）
-            $newItem   = ExamDraftTemp::where('id','=',$item->id)->first();
+            $newItem   = ExamDraftFlowTemp::where('id','=',$item->id)->first();
             //再获取对应的正式表的id
             $draft_flow_id = $newItem->exam_draft_flow_id;
             //通过大表ID，获取小表所有对应数据
@@ -161,7 +177,8 @@ class ExamDraftFlow extends CommonModel
             if (count($examDrafts)>0){
                 //循环删除小表对应数据
                 foreach ($examDrafts as $examDraft) {
-                    if (!$examDraft->delete()){
+                    $examDraft->status = 1;             //软删除
+                    if (!$examDraft->save()){
                         throw new \Exception('删除失败，请重试！');
                     }
                 }
@@ -171,7 +188,8 @@ class ExamDraftFlow extends CommonModel
                 throw new \Exception('未找到对应的站的数据，请重试！');
             }
             //再删除正式表（大表）中对应ID的那条数据
-            if(!$result->delete()){
+            $result->status = 1;             //软删除
+            if(!$result->save()){
                 throw new \Exception('删除失败，请重试！');
             }
 
