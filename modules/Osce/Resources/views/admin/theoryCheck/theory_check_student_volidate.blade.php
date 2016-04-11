@@ -71,7 +71,7 @@
                         <div class="goCenter mart_15">
                             @if(!empty(@$examData))
                                 @foreach($examData as $k=>$v)
-                                        @if(@$v['status'] == 1)
+                                        @if(@$v['status'] != 3)
                                             <a href="javascript:void(0)" class="btn btn-primary btn-rounded examing" student="{{@$v['student_id']}}" station="{{@$v['station_id']}}" teacher="{{@$v['teacher_id']}}" paper="{{@$v['paper_id']}}" exam="{{@$v['exam_id']}}">{{@$v['exam_name']}}</a>
                                         @else
                                             <a href="/osce/admin/examanswer/student-answer/{{@$v['student_id']}}" class="btn btn-primary btn-rounded">{{@$v['exam_name']}}</a>

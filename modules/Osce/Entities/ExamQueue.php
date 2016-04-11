@@ -318,36 +318,32 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId, $type= 1)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId)
     {
         //开启事务
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
-       // try {
+        try {
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
 
-            //学生进入考试时-不需要抽签
-            //dd($type);
-            if(intval($type) != 2){
-
-                // 查询学生是否已开始考试
-                $examQueue = ExamQueue::where('student_id', '=', $studentId)
-                    ->where('station_id', '=', $stationId)
-                    ->whereIn('status',[1,2])
-                    ->first();
-                if(is_null($examQueue)){
-                    throw new \Exception('该学生还没有抽签', -105);
-                }
+//                查询学生是否已开始考试
+            //dd($studentId);
+            $examQueue = ExamQueue::where('student_id', '=', $studentId)
+                ->where('station_id', '=', $stationId)
+                ->whereIn('status',[0,2])
+                ->first();
+            //dd($examQueue);
+            if(is_null($examQueue)){
+                throw new \Exception('该学生还没有抽签', -105);
             }
-
-            if (@$examQueue->status == 2) {
+            if ($examQueue->status == 2) {
                 return true;
             }
 //            修改队列状态
             $examQueue->status=2;
             $examQueue->stick=null;
-            dd($examQueue->save());
+
             if ( $examQueue->save()) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
@@ -421,13 +417,13 @@ class ExamQueue extends CommonModel
 
             }
             // 调用锚点方法
-//            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
-            //$connection->commit();
+            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
+            $connection->commit();
             return true;
-//        } catch (\Exception $ex) {
-//            $connection->rollBack();
-//            throw $ex;
-//        }
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
 
     }
 
@@ -788,7 +784,7 @@ class ExamQueue extends CommonModel
     public function getExamingData($examId,$studentId){
         $builder = $this->whereIn('exam_queue.exam_id',$examId)->where('exam_queue.student_id',$studentId)->leftjoin('exam',function($exam){
             $exam->on('exam.id','=','exam_queue.exam_id');
-        })->select('exam.id','exam.name','exam_queue.station_id','exam.status','exam_queue.room_id')->get();
+        })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id')->get();
 
         return $builder;
     }
