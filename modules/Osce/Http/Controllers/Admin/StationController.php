@@ -175,8 +175,14 @@ class StationController extends CommonController
             };
 
             DB::connection('osce_mis')->commit();
-            
-          $Redirect=  Common::handleRedirect($request,$result);
+
+
+
+        return view('osce::admin.index.layer_success');
+        
+        
+//          $Redirect=  Common::handleRedirect($request,$result);
+        
 //           if($Redirect==false){
 //
 //                return redirect()->route('osce.admin.Station.getStationList')  ; //返回考场列表

@@ -296,7 +296,9 @@ class Common
             $data= $request->headers->all()['referer'][0];
             $fileNameArray =     explode('?',$data);
             $fileArray =     explode('&',$fileNameArray[1]);
+
         return view('osce::admin.index.layer_success');
+//        return redirect()->route('osce::admin.index.layer_success');
 //            foreach ($fileArray as $value)
 //                if($value=='status=1'){
 //                    return view('osce::admin.index.layer_success');
