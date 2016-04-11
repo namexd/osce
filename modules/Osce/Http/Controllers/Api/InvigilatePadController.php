@@ -31,6 +31,7 @@ use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\TestResult;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
@@ -906,8 +907,12 @@ class InvigilatePadController extends CommonController
             'student_id' => 'required|integer',
             'exam_id' => 'required|integer'
         ]);
-        $status = $request->get('status');  //腕表的使用状态
-        $type = $request->get('type');      //考试状态
 
+        $status = $request->get('status')?$request->get('status'):1;  //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
+        $type = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
+
+        //查询使用中的腕表数据
+        $watchModel = new Watch();
+        $watchData = $watchModel->getWatchAboutData($status,$type);
     }
 }
