@@ -4778,6 +4778,27 @@ function examiner_manage() {
     //模拟数据
     initTable(data);
     /**
+     * 初始化数据请求
+     * @author mao
+     * @version 1.0
+     * @date    2016-04-11
+     * @param   {[object]}   res.data  请求数据
+     */
+    $.ajax({
+        type:'get',
+        url: '',
+        data:{exam_id:(location.href).split('=')[1]},
+        success: function(res) {
+            if(res.code != 1) {
+                layer.msg('数据加载失败！',{skin:'msg-error',icon:1});
+            } else {
+                initTable(res.data);
+            }
+        }
+    })
+
+
+    /**
      * sp_invation 邀请
      * @author mao
      * @version 3.4
