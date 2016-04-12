@@ -69,7 +69,6 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
         ]);
 
         $examId = $request->input('exam_id');
-
 //        try {
 //            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
 //            return response()->json($this->success_data($automaticPlanArrangement->plan($examId)));
@@ -77,16 +76,15 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
 //            return response()->json($this->fail($ex));
 //        }
 
-        try {
+//        try {
             $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
-            $smartArrangeRepository = new SmartArrangeRepository();
             $smartArrange = new SmartArrange();
-            
+            $smartArrangeRepository = new SmartArrangeRepository($smartArrange);
 
-            return response()->json($this->success_data($smartArrangeRepository->plan($exam, $smartArrange)));
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+            return response()->json($this->success_data($smartArrangeRepository->plan($exam)));
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**

@@ -30,6 +30,7 @@ class Random extends AbstractCate implements CateInterface
     function needStudents($entity, $screen, $exam)
     {
         // TODO: Implement needStudents() method.
+        //拿到已经考过了的考生和正在考的考生
         $testStudents = $this->randomTestStudent($entity, $screen);
         //申明数组
         $result = [];
@@ -39,6 +40,7 @@ class Random extends AbstractCate implements CateInterface
          * 如果该考生已经考过了这个流程，就忽略掉
          */
         $result = $this->studentNum($entity, $testStudents, $result);
+
 
         /*
          * 如果$result中保存的人数少于考站需要的人数，就从侯考区里面补上，并将这些人从侯考区踢掉

@@ -71,6 +71,7 @@ class ExamArrangeController extends CommonController
                 'ctrl_type' => $type,
             ];
 
+
             if(is_null($type)){
                 $data['ctrl_type'] = 1;
             }
@@ -443,6 +444,7 @@ class ExamArrangeController extends CommonController
             ]);
             $exam_id = intval($request->get('exam_id'));
             $data = ExamGradation::where('exam_id', '=', $exam_id)->get();
+
             return response()->json(
                 $this->success_data($data, 1, 'success')
             );
