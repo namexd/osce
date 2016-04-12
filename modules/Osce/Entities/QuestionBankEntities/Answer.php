@@ -96,9 +96,12 @@ class Answer extends Model
             $examPaperFormalData = array(
                 'actual_length'=>$data['actualLength']
             );
+            if(empty($examPaperFormalData['actual_length'])){
+                $examPaperFormalData['actual_length'] = 0;
+            }
             $datas = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->first();
-            if(!empty($datas)){
-                throw new \Exception('您已提交过试卷，请不要重复提交！');
+            if($datas){
+                throw new \Exception('您已提交过试卷，请不要重复提交！',-100);
             }
             $result = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->update($examPaperFormalData);
             if(!$result){
@@ -116,7 +119,7 @@ class Answer extends Model
                     if(!empty($questionData)){
                         $result = $examQuestionFormalModel->where('id','=',$v['exam_question_id'])->update($examQuestionFormalData);
                         if(!$result){
-                            throw new \Exception(' 保存考生答案失败！');
+                            throw new \Exception(' 保存考生答案失败！',-101);
                         }
                     }
 
@@ -136,7 +139,7 @@ class Answer extends Model
                 'end_dt'=>$resultData['end_dt'],//考试结束时间
             );
             if(!ExamResult::create($examResultData)){
-                throw new \Exception(' 插入考试结果记录表失败！');
+                throw new \Exception(' 插入考试结果记录表失败！',-102);
             }
 
             $DB->commit();
