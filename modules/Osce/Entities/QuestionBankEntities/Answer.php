@@ -86,7 +86,7 @@ class Answer extends Model
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function saveAnswer($data,$resultData)
+ /*   public function saveAnswer($data,$resultData)
     {
         $DB = \DB::connection('osce_mis');
         $DB->beginTransaction();
@@ -148,7 +148,7 @@ class Answer extends Model
             $DB->rollback();
             throw $ex;
         }
-    }
+    }*/
     /**查询该考生理论考试成绩及该场考试相关信息
      * @method
      * @url /osce/

@@ -236,7 +236,9 @@ class AnswerController extends CommonController
         );
         //保存考生答案和记录该考生成绩
         $answerModel = new Answer();
-        $result = $answerModel->saveAnswer($data,$resultData);
+       // $result = $answerModel->saveAnswer($data,$resultData);
+
+        $result = true;
         if($result==true){
             //删除session
             \Session::forget('systemTimeStart');
