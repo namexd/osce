@@ -2288,7 +2288,7 @@ function course_module(){
                                 str = [];
 
                             for(var i in data) {
-                                str.push({id:data[i].id,text:data[i].name});
+                                str.push({id:data[i].name,text:data[i].name});
                             }
 
                             return{
@@ -2317,7 +2317,7 @@ function course_module(){
                             str = [];
 
                         for(var i in data) {
-                            str.push({id:data[i].id,text:data[i].name});
+                            str.push({id:data[i].name,text:data[i].name});
                         }
 
                         return{
