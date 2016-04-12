@@ -37,6 +37,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use DB;
 use Storage;
 use Auth;
+use Redis;
 use Symfony\Component\HttpKernel\Tests\DataCollector\DumpDataCollectorTest;
 use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
 class InvigilatePadController extends CommonController
@@ -170,6 +171,7 @@ class InvigilatePadController extends CommonController
         ]);
 
         try {
+            $redis = Redis::connection('message');
             $stationId = (int)$request->input('station_id');
             $exam = Exam::doingExam();
             $studentModel = new  Student();
@@ -177,10 +179,13 @@ class InvigilatePadController extends CommonController
             if ($studentData['nextTester']) {
 //            dd($studentData['nextTester']);
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+
+                $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return response()->json(
                     $this->success_data($studentData['nextTester'], 1, '验证完成')
                 );
             } else {
+                $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
                 throw new \Exception('学生信息查询失败', -2);
             }
         } catch (\Exception $ex) {
