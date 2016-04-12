@@ -10,6 +10,7 @@
 namespace Modules\Osce\Entities;
 
 use DB;
+use Auth;
 
 class Subject extends CommonModel
 {
@@ -129,9 +130,16 @@ class Subject extends CommonModel
     }
 
     /**
-     * @param $subject
-     * @param $points
-     * @throws \Exception
+     * 添加评分标准
+     * @access public
+     *
+     * @param array $subject
+     * @param array $points
+     * @return object
+     * @throws \Exception @version 3.4
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2016-04-12 18:43
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function addStandard($subject, $points){
 
@@ -140,6 +148,28 @@ class Subject extends CommonModel
         $standard = $subjectStandard->getStandard($subject, $subject->title);
         //添加考试项目对应的考核内容
         $this->addPoint($standard, $points);
+        return $standard;
+    }
+
+    /**
+     * 修改评分标准
+     * @access public
+     *
+     * @param array $subject
+     * @param array $points
+     * @return object
+     * @throws \Exception @version 3.4
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2016-04-12 19:43
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function editStandard($subject, $points){
+
+        $subjectStandard = new SubjectStandard();
+        //获取对应的 评分标准
+        $standard = $subjectStandard->getStandard($subject, $subject->title);
+        //修改考试项目对应的考核内容
+        $this->editPoint($standard, $points);
         return $standard;
     }
     /**
@@ -165,17 +195,20 @@ class Subject extends CommonModel
         $connection->beginTransaction();
 
         try {
-            $user = \Auth::user();
+            $user = Auth::user();
             if(empty($user)){
                 throw new \Exception('未找到当前操作人信息');
             }
-
+            //修改考试项目对应的基本信息
             foreach ($data as $field => $value) {
                 $subject->$field = $value;
             }
             if ($subject->save()) {
 
-                $this->editPoint($subject, $points);
+                //TODO:Zhoufuxiang 2016-4-12
+                if (!$this->editStandard($subject, $points)){
+                    throw new \Exception('保存评分标准失败');
+                }
 
                 //添加考试项目——病例关系
                 if(!$this->addSubjectCases($subject->id, $cases, $user->id, $id)){
@@ -190,10 +223,13 @@ class Subject extends CommonModel
             } else {
                 throw new \Exception('更新考核点信息失败');
             }
-//            $connection->commit();
-
-            dd($subject);
+            $connection->commit();
+//            $a=$this->where('id','=',$subject->id)->with('cases')->with('supplys')->with(['standards'=>function($q){
+//                $q->with('standardItem');
+//            }])->first();
+//            dd($a);
             return $subject;
+
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -251,17 +287,12 @@ class Subject extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    protected function editPoint($subject, array $points)
+    protected function editPoint($standard, array $points)
     {
-        $SubjectItemModel = new SubjectItem();
+        $standardItem = new StandardItem();
         try {
-            $subjectStandard = new SubjectStandard();
-            //获取对应的 评分标准
-            $standard_name = '考官评分标准';
-            $standard = $subjectStandard->getStandard($subject, $standard_name);
 
-            $SubjectItemModel->delItemBySubject($standard);
-            $standardItem = new StandardItem();
+            $standardItem->delItemBySubject($standard);
 
             foreach ($points as $point) {
                 $standardItem->addItem($standard, $point);

@@ -206,6 +206,77 @@ class StandardItem extends CommonModel
         return $data;
     }
 
+    /**
+     * 删除对应的以前的评分标准
+     * @param $standard
+     * @throws \Exception
+     */
+    public function delItemBySubject($standard){
+        $list   =   $this   ->  where('standard_id','=',$standard->id)->get();
+        try{
+            //删除对应的以前的评分标准
+            foreach($list as $item)
+            {
+                if(!$item->delete())
+                {
+                    throw new \Exception('清空旧的考核标准记录失败');
+                }
+            }
+
+        } catch(\Exception $ex){
+            if(empty($item)){
+                throw $ex;
+            }
+
+            //处理报外键错误
+            if($ex->getCode()==23000){
+                $usedList   =   ExamScore::where('subject_id','=',$item->id)->get();
+                $examList   =   [];
+                foreach($usedList as $used)
+                {
+                    $exam   =   $this->getSubjectUsedInfoByExamScore($used);
+                    if(empty($exam))
+                    {
+                        continue;
+                    }
+                    $examList[] =   $exam->name;
+                }
+                throw new \Exception(implode(',',$examList).'已经使用了此标准，不能修改');
+            }
+        }
+    }
+
+    /**
+     * 根据考试标准获取其被调用的考试集合
+     * @access public
+     *
+     * @param object $used 考核标准数据实例
+     *
+     * @return mixed
+     *
+     * @version 1.0
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    public function getSubjectUsedInfoByExamScore($used){
+        $examResult =   $used->examResult;
+        if(is_null($examResult))
+        {
+            return '';
+        }
+        else
+        {
+            $examScreening  =   $examResult->examScreening;
+            if(is_null($examScreening))
+            {
+                throw new \Exception('没有找到成绩对应的考试场次，请联系管理员');
+            }
+            $exam   =   $examScreening  ->  ExamInfo;
+            return $exam;
+        }
+    }
 
 //
 //    /**
