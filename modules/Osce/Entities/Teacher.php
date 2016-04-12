@@ -110,15 +110,18 @@ class Teacher extends CommonModel
     public  function invitationContent($teacher_id){
         $builder=$this;
         try{
-            if ($teacher_id !== null) {
-                $this->excludeId = $teacher_id;
-            }
-            $excludeId = $this->excludeId;
-            $excludeIds = (explode(",",$teacher_id));
-            if (count($excludeId) !== 0) {
+//            if ($teacher_id !== null) {
+//                $this->excludeId = $teacher_id;
+//            }
+//            $excludeId = $this->excludeId;
+//            $excludeIds = (explode(",",$teacher_id));
+
+            if (is_array($teacher_id)) {
                 $builder = $builder->leftJoin('cases',function($join){
                     $join    ->  on('cases.id','=', 'teacher.case_id');
-                })->whereIn($this->table.'.id', $excludeIds);
+                })->whereIn($this->table.'.id', $teacher_id);
+            }else{
+                $builder = $builder->where($this->table.'.id' , '=',$teacher_id);
             }
             $data=$builder->select('teacher.name','teacher.id','cases.name as cname','cases.id as caseId')->get()->toArray();
             $list=[];
