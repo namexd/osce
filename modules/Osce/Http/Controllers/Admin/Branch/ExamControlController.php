@@ -35,7 +35,12 @@ class ExamControlController extends CommonController
 
     public function getExamlist()
     {
+
         $examControlModel = new ExamControl();
+
+        $data=$examControlModel->getReplaceExam(6631);
+
+
         $data = $examControlModel->getDoingExamList();
         //dd($data);
         return view('osce::admin.testMonitor.monitor_test', [
@@ -91,12 +96,12 @@ class ExamControlController extends CommonController
         $result = $examControlModel->stopExam($data);
         $redis = Redis::connection('message');
         if($result==true){
-            $redis->publish('watch_message', json_encode($this->success_data([],1,'考试终止成功')));
-            $redis->publish('pad_message', json_encode($this->success_data([],1,'考试终止成功')));
+            //$redis->publish('watch_message', json_encode($this->success_data([],1,'考试终止成功')));
+           // $redis->publish('pad_message', json_encode($this->success_data([],1,'考试终止成功')));
             return response()->json(true);
         }else{
-            $redis->publish('watch_message', json_encode($this->success_data([],-1,'考试终止失败')));
-            $redis->publish('pad_message', json_encode($this->success_data([],-1,'考试终止失败')));
+           // $redis->publish('watch_message', json_encode($this->success_data([],-1,'考试终止失败')));
+           // $redis->publish('pad_message', json_encode($this->success_data([],-1,'考试终止失败')));
             return response()->json($result);
         }
     }

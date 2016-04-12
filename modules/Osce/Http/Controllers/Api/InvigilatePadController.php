@@ -792,11 +792,11 @@ class InvigilatePadController extends CommonController
 
             foreach($boundWatchInfo as $k=>$v){
                 if($v['status'] < 2){
-                    $boundWatchInfo[$k]['status'] = '等待中';
+                    $boundWatchInfo[$k]['status'] = '0';
                 }elseif($v['status'] == 2){
-                    $boundWatchInfo[$k]['status'] = '考试中';
+                    $boundWatchInfo[$k]['status'] = '1';
                 }else{
-                    $boundWatchInfo[$k]['status'] = '已结束';
+                    $boundWatchInfo[$k]['status'] = '2';
                 }
             }
             return response()->json(
@@ -1049,11 +1049,6 @@ class InvigilatePadController extends CommonController
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
 
-            //获取学生的考试状态
-            $student = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
-            $status = $this->checkType($exameeStatus->status);
-
             $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
             if(!$screen_id){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
@@ -1165,7 +1160,18 @@ class InvigilatePadController extends CommonController
      */
     public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description){
         $ExamMonitor = new ExamMonitor();
+        $data = array();
+        $user = Auth::user();
+        $data = [
+            'station_id'        => $station_id,
+            'exam_id'           => $exam_id,
+            'student_id'        => $student_id,
+            'created_user_id'   => $user->id,
+            'type'              => $type,
+            'description'       => $description
+        ];
 
+        $ExamMonitor->create($data);
     }
     /**
      *  解除腕表绑定并上报
@@ -1210,11 +1216,7 @@ class InvigilatePadController extends CommonController
             $student_id=$student_id->student_id;
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
-
-            //获取学生的考试状态
-            $student = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
-            $status = $this->checkType($exameeStatus->status);
+            
             $station_id = ExamQueue::where('exam_id','=',$exam_id)->first();
             $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
             if(!$screen_id){
