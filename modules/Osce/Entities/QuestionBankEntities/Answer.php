@@ -86,7 +86,7 @@ class Answer extends Model
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
- /*   public function saveAnswer($data,$resultData)
+    public function saveAnswer($data,$resultData)
     {
         $DB = \DB::connection('osce_mis');
         $DB->beginTransaction();
@@ -98,10 +98,6 @@ class Answer extends Model
             );
             if(empty($examPaperFormalData['actual_length'])){
                 $examPaperFormalData['actual_length'] = 0;
-            }
-            $datas = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->first();
-            if($datas){
-                throw new \Exception('您已提交过试卷，请不要重复提交！',-100);
             }
             $result = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->update($examPaperFormalData);
             if(!$result){
@@ -148,7 +144,7 @@ class Answer extends Model
             $DB->rollback();
             throw $ex;
         }
-    }*/
+    }
     /**查询该考生理论考试成绩及该场考试相关信息
      * @method
      * @url /osce/
