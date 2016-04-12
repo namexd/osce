@@ -196,9 +196,9 @@
                 if (sys_second > 1) {
                     sys_second -= 1;
                     var day = Math.floor((sys_second / 3600) / 24);
-                    console.log(day);
                     var hour = Math.floor((sys_second / 3600) % 24);
                     var minute = Math.floor((sys_second / 60) % 60);
+                    console.log(minute);
                     var second = Math.floor(sys_second % 60);
                     day_elem && $(day_elem).text(day);//计算天
                     $(hour_elem).text(hour<10?"0"+hour:hour);//计算小时
