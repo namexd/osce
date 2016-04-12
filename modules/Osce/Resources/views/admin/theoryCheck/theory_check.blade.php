@@ -141,10 +141,10 @@
                                 }
                             }
                         });
-                    }
-                    if(obj.status=='2'){
-                        layer.confirm('保存失败！');
-
+                    }else{
+                        console.log("111");
+                        layer.confirm(obj.info);
+                        return false;
                     }
                 })
             })
@@ -207,7 +207,6 @@
                     $("#minute").text(minute<10?"0"+minute:minute);//计算分钟
                     $("#second").text(second<10?"0"+second:second);//计算秒杀
                 } else {
-                    //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                     var examPaperFormalId=$('#examPaperFormalId').val();
                     var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
                     var stationId = $(".allData").attr("stationId");
@@ -228,8 +227,7 @@
                                     }
                                 }
                             });
-                        }
-                        if(obj.status=='2'){
+                        }else{
                             layer.confirm('保存失败！');
                         }
                     })
