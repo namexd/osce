@@ -85,7 +85,6 @@ class ExamArrangeController extends CommonController
                 $examDraftFlow->exam_gradation_id = $examGradationId ;
 
                 if($examDraftFlow->save()){
-
                     return response()->json(
                         $this->success_data([], 1, 'success')
                     );
@@ -93,38 +92,32 @@ class ExamArrangeController extends CommonController
 
             }
 
-            if ($result = ExamDraftFlowTemp::create($data)) {
-                //新增一条空的考站的子站数据
+            $result = ExamDraftFlowTemp::create($data);
 
-                if ($type == 2) {
-                    return response()->json(
-                        $this->success_data($result->id, 1, 'success')
-                    );
-                }
+                if ($result&&$type != 2) {
 
+                    //新增一条空的考站的子站数据
+                    $DraftData = [
+                        'exam_id' => $examId,
+                        'old_draft_flow_id' => $result->id,
+                        'ctrl_type' => 4,
+                        'used' => 0,
+                        'add_time' => date('Y-m-d H:i:s',time()+1),
+                        'user_id' => $user->id,
+                    ];
+                    $DraftResult = ExamDraftTemp::create($DraftData);
 
-                $DraftData = [
-                    'exam_id' => $examId,
-                    'old_draft_flow_id' => $result->id,
-                    'ctrl_type' => 4,
-                    'used' => 0,
-                    'add_time' => date('Y-m-d H:i:s',time()+1),
-                    'user_id' => $user->id,
-                ];
-                $DraftResult = ExamDraftTemp::create($DraftData);
+                    if (!$DraftResult) {
+                        throw new \Exception('保存临时考站失败');
+                    }
 
-                if ($DraftResult) {
-                    return response()->json(
-                        $this->success_data(['id' => $result->id, 'draft_id' => $DraftResult->id], 1, 'success')
-                    );
                 } else {
                     throw new \Exception('保存临时考站失败');
+
                 }
-
-            } else {
-                throw new \Exception('保存临时考站失败');
-
-            }
+            return response()->json(
+                $this->success_data(['id' => $result->id, 'draft_id' => $DraftResult->id], 1, 'success')
+            );
         } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)

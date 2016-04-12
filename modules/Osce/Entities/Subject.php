@@ -437,7 +437,6 @@ class Subject extends CommonModel
                 'subject_id'        => $subject_id,
                 'supply_id'         => $supply_id,
                 'num'               => $good['number'],
-                'created_user_id'   => $user_id,
             ];
             if(!SubjectSupply::create($data)){
                 return false;
