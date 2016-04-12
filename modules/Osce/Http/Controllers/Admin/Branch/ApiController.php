@@ -703,7 +703,7 @@ class ApiController extends CommonController
     }
 
     /**
-     * 监考老师点击准备完成
+     * 监考老师pad端点击准备完成并给腕表推送消息
      * @method GET
      * @url /osce/admin/api/ready-exam
      * @access public
@@ -739,6 +739,7 @@ class ApiController extends CommonController
         if (is_null($examStationStatus)) {
             $retval = ['title' => '未查到到考试中当前考站状态信息'];
             $redis->publish('pad_message', json_encode($this->success_data($retval, -1, 'error')));
+            exit;
         }
 
         $examStationStatus->status = 1;
@@ -747,7 +748,7 @@ class ApiController extends CommonController
         $retval = ['title' => '当前考站准备完成'];
         $redis->publish('pad_message', json_encode($this->success_data($retval, 1)));
 
-        // TODO 给腕表推送考站准备完成信息
+        // 给腕表推送考站准备完成信息
         $examQenenModel = new ExamQueue();
         $examQenen = $examQenenModel->where('exam_id', '=', $examId)
                                     ->where('exam_screening_id', '=', $examScreeningId)
@@ -756,7 +757,8 @@ class ApiController extends CommonController
                                     ->first();
         if (is_null($examQenen)) {
             $retval = ['title' => '未查到相应考试队列信息'];
-            $redis->publish('pad_message', json_encode($this->success_data($retval, -2, 'error')));
+            $redis->publish('watch_message', json_encode($this->success_data($retval, -2, 'error')));
+            exit;
         }
 
         $watchLogModel = new WatchLog();
@@ -769,7 +771,8 @@ class ApiController extends CommonController
             ])->first();
         if (is_null($watch)) {
             $retval = ['title' => '未查到相应腕表信息'];
-            $redis->publish('pad_message', json_encode($this->success_data($retval, -3, 'error')));
+            $redis->publish('watch_message', json_encode($this->success_data($retval, -3, 'error')));
+            exit;
         }
 
         $studentWatchController = new StudentWatchController();
@@ -792,7 +795,7 @@ class ApiController extends CommonController
      * @return json
      *
      * @version 3.4a
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author xumin <xumin@misrobot.com>
      * @date 2016-04-05 17:54
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
