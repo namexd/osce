@@ -98,14 +98,14 @@ class DrawlotsController extends CommonController
             //首先得到登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
-            $redis = Redis::connection('message');
+            //$redis = Redis::connection('message');
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
-                $redis->publish('pad_message', json_encode($this->success_data([], -50, '今天没有正在进行的考试')));
+                //$redis->publish('pad_message', json_encode($this->success_data([], -50, '今天没有正在进行的考试')));
                 throw new \Exception('今天没有正在进行的考试', -50);
             } elseif ($exam->status != 1) {
-                $redis->publish('pad_message', json_encode($this->success_data([], -777, '当前考试没有进行')));
+               // $redis->publish('pad_message', json_encode($this->success_data([], -777, '当前考试没有进行')));
                 throw new \Exception('当前考试没有进行', -777);
             }
 
@@ -113,7 +113,7 @@ class DrawlotsController extends CommonController
                 ->where('user_id', '=', $id)
                 ->first();
             if (is_null($station)) {
-                $redis->publish('pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试')));
+               // $redis->publish('pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试')));
                 throw new \Exception('你没有参加此次考试');
             }
 
@@ -123,7 +123,7 @@ class DrawlotsController extends CommonController
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id);
             } else {
-                $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
+                //$redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
             }
 
@@ -146,7 +146,7 @@ class DrawlotsController extends CommonController
 //                unset($student['blocking']);
 //            }
 
-            $redis->publish('pad_message', json_encode($this->success_data($examQueue)));//信息推送
+           // $redis->publish('pad_message', json_encode($this->success_data($examQueue)));//信息推送
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));

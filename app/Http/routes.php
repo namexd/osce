@@ -26,6 +26,8 @@ Route::group(['prefix' => "api/1.0/public",'middleware' => ['cors']], function()
     Route::post('oauth/access_token', function(){
         try{
             $userEnter=Authorizer::issueAccessToken();
+            $redis = Redis::connection('message');
+            $redis->publish('pad_message', json_encode(\Modules\Osce\Http\Controllers\CommonController::success_data($userEnter, 1, '登陆成功')));
              return $userEnter;
         }catch (\Exception $ex) {
             if( $ex->getMessage()=='The user credentials were incorrect.'){
