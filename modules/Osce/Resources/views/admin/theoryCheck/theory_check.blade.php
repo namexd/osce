@@ -304,7 +304,7 @@
                                                     @endforeach
                                                 @endif
                                                 @if(@$val["examQuestionTypeId"]==4)
-                                                    @foreach($val["content"] as $k=> $val2 )
+                                                    {{--@foreach($val["content"] as $k=> $val2 )--}}
                                                         <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
                                                             <label class="radio_label mart_20 check_top">
                                                                 <div class="radio_icon left" ></div>
@@ -317,15 +317,16 @@
                                                                     {{--@endif--}}
                                                                     错误
                                                                 </span>
-
                                                             </label>
+                                                        </div>
+                                                        <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
                                                             <label for="" class="radio_label mart_20 check_top">
                                                                 <div class="radio_icon left" ></div>
                                                                 <input type="radio" name="{{@$val["serialNumber"]}}" value="1">
                                                                 <span class="marl_10 answer">正确</span>
                                                             </label>
                                                         </div>
-                                                    @endforeach
+                                                    {{--@endforeach--}}
                                                 @endif
                                             </div>
                                         </div>
