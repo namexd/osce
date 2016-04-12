@@ -166,7 +166,6 @@
                 success:function(res){
                     if(res == 1){
                         clearInterval(statusTimer);
-                        console.log("545456461");
                         $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                                 {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
                                     if(obj.status=='1'){
@@ -196,6 +195,7 @@
                     sys_second = (end_time-new Date().getTime())/1000;
             var timer = setInterval(function(){
                 if (sys_second > 1) {
+                    console.log("1111");
                     sys_second -= 1;
                     var day = Math.floor((sys_second / 3600) / 24);
                     var hour = Math.floor((sys_second / 3600) % 24);
@@ -212,6 +212,7 @@
                     var userId = $(".allData").attr("userId");
                     var studentId = $(".allData").attr("studentId");
                     var examId = $(".allData").attr("examId");
+                    console.log("22222");
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                             {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
                         if(obj.status=='1'){
