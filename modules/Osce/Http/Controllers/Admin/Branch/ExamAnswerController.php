@@ -71,7 +71,7 @@ class ExamAnswerController extends CommonController
                         $child[$key]['exam_question_name'] = $key + 1 . '.' . '' . $item['name'] .'?'; // 拼接试题名称
                         $child[$key]['exam_question_image'] = unserialize($item['image']); //试题图片
                         $child[$key]['contentItem'] = explode('|%|', $item['content']); //试题内容（A.内容，B.内容，C.内容）用,拼接试题内容
-
+                        $child[$key]['exam_question_id'] =  $item['id']; // 拼接试题名称
                         foreach($child[$key]['contentItem'] as $kkk => $vvv){ //将$child[$key]['contentItem']中的 . 替换成冒号：
 
                             $child[$key]['contentItem'][$kkk] = str_replace('.', ':', $vvv);
