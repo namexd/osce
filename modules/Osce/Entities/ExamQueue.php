@@ -327,7 +327,7 @@ class ExamQueue extends CommonModel
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
 
-//                查询学生是否已开始考试
+            //查询学生是否已开始考试
             //dd($studentId);
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
                 ->where('station_id', '=', $stationId)
@@ -340,10 +340,9 @@ class ExamQueue extends CommonModel
             if ($examQueue->status == 2) {
                 return true;
             }
-//            修改队列状态
+            //修改队列状态
             $examQueue->status=2;
-            $examQueue->stick=null;
-
+            //$examQueue->stick=null;
             if ( $examQueue->save()) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
