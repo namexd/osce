@@ -10,22 +10,21 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
-
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\Student;
-
 use Modules\Osce\Entities\ExamAbsent;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
-
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Entities\RoomStation;
+use Modules\Osce\Entities\Watch;
+use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
@@ -41,6 +40,7 @@ use Modules\Osce\Http\Controllers\Api\InvigilatePadController;
 use Modules\Osce\Http\Controllers\Admin\Branch\AnswerController;
 use Modules\Osce\Entities\StationTeacher;
 use Illuminate\Support\Facades\Redis;
+use Modules\Osce\Http\Controllers\Api\StudentWatchController;
 
 class ApiController extends CommonController
 {
@@ -747,7 +747,7 @@ class ApiController extends CommonController
         $retval = ['title' => '当前考站准备完成'];
         $redis->publish('pad_message', json_encode($this->success_data($retval, 1)));
 
-        // TODO 是否给腕表推送考站准备完成信息
+        // TODO 给腕表推送考站准备完成信息
         $examQenenModel = new ExamQueue();
         $examQenen = $examQenenModel->where('exam_id', '=', $examId)
                                     ->where('exam_screening_id', '=', $examScreeningId)
@@ -759,7 +759,21 @@ class ApiController extends CommonController
             $redis->publish('pad_message', json_encode($this->success_data($retval, -2, 'error')));
         }
 
+        $watchLogModel = new WatchLog();
+        $watch = $watchLogModel->leftJoin('watch', function($join){
+            $join -> on('watch_log.watch_id', '=', 'watch.id');
+        })->where('watch_log.student_id', '=', $examQenen->student_id)
+            ->where('watch.status', '=', 1)
+            ->select([
+                'watch.nfc_code as nfc_code',
+            ])->first();
+        if (is_null($watch)) {
+            $retval = ['title' => '未查到相应腕表信息'];
+            $redis->publish('pad_message', json_encode($this->success_data($retval, -3, 'error')));
+        }
 
+        $studentWatchController = new StudentWatchController();
+        $studentWatchController->getStudentExamReminder($watch['nfc_code']);
     }
 
     /**

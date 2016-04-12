@@ -53,11 +53,13 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder(Request $request)
+    public function getStudentExamReminder($nfc_code)
     {
+        /*
         $this->validate($request, [
             'nfc_code' => 'required'
         ]);
+        */
 
         $data = [
             'title' => '',
@@ -71,7 +73,8 @@ class StudentWatchController extends CommonController
         ];
 
         $code = 0;
-        $watchNfcCode = $request->input('nfc_code');
+        //$watchNfcCode = $request->input('nfc_code');
+        $watchNfcCode = $nfc_code;
 
         //根据设备编号找到设备id
         $watchId = Watch::where('code', '=', $watchNfcCode)->select('id')->first();
@@ -333,7 +336,7 @@ class StudentWatchController extends CommonController
         });
         $item   =   array_shift($items);
 
-        /**********判断考站是否准备完成begin*************/ // added by wangjiang at 2016-04-07 09:46 for 判断考站是否准备完成来改变腕表显示信息
+        /*
         $examStationStatusModel = new ExamStationStatus();
         $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)->where('station_id', '=', $item->station_id)->first();
         if ($instance->status == 0) {
@@ -342,7 +345,7 @@ class StudentWatchController extends CommonController
                 'title'=> '等待老师准备中',
             ];
         }
-        /**********判断考站是否准备完成end*************/
+        */
 
         //判断前面是否有人考试
         if(empty($item->station_id)){
