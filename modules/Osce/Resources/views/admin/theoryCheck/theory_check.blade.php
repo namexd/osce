@@ -80,7 +80,7 @@
                 Set_answer(examCategoryFormalId,exam_question_id,answer);//保存成绩
             });
 
-            $(".radio_label").change(function(){//单选按钮
+            $(".radio_label").click(function(){//单选按钮
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
                 var answer = $(this).children("input").val();
