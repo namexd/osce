@@ -198,12 +198,11 @@
                     var day = Math.floor((sys_second / 3600) / 24);
                     var hour = Math.floor((sys_second / 3600) % 24);
                     var minute = Math.floor((sys_second / 60) % 60);
-                    console.log(minute);
                     var second = Math.floor(sys_second % 60);
                     day_elem && $(day_elem).text(day);//计算天
-                    $(hour_elem).text(hour<10?"0"+hour:hour);//计算小时
-                    $(minute_elem).text(minute<10?"0"+minute:minute);//计算分钟
-                    $(second_elem).text(second<10?"0"+second:second);//计算秒杀
+                    hour_elem.text(hour<10?"0"+hour:hour);//计算小时
+                    minute_elem.text(minute<10?"0"+minute:minute);//计算分钟
+                    second_elem.text(second<10?"0"+second:second);//计算秒杀
                 } else {
                     //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                     var examPaperFormalId=$('#examPaperFormalId').val();
@@ -334,7 +333,11 @@
 
                         <div class="btnBox" style="margin:0 auto; padding:70px 0; text-align: center; width: 400px;">
                             <span class="marl_10 left" style="height: 29px; line-height: 29px;">剩余时间：</span>
-                            <div class="colockbox" id="colockbox1"><span class="hour">00</span><span class="left">:</span> <span class="minute">00</span> <span class="left">:</span> <span class="second">00</span> </div>
+                            <div class="colockbox" id="colockbox1">
+                                <span class="hour">00</span><span class="left">:</span>
+                                <span class="minute">00</span><span class="left">:</span>
+                                <span class="second">00</span>
+                            </div>
                         </div>
                     </div>
 
