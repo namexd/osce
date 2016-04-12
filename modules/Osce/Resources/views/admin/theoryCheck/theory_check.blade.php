@@ -142,9 +142,7 @@
                             }
                         });
                     }else{
-                        console.log("111");
                         layer.confirm(obj.info);
-                        return false;
                     }
                 })
             })
@@ -171,6 +169,7 @@
                         $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                                 {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
                                     if(obj.status=='1'){
+                                        console.log("1111");
                                         $.ajax({
                                             url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
                                             cache:false,
@@ -213,6 +212,7 @@
                     var userId = $(".allData").attr("userId");
                     var studentId = $(".allData").attr("studentId");
                     var examId = $(".allData").attr("examId");
+                    console.log("22222");
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                             {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
                         if(obj.status=='1'){
