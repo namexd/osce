@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamMidway\Drawlots;
@@ -97,11 +98,14 @@ class DrawlotsController extends CommonController
             //首先得到登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
+            //$redis = Redis::connection('message');
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
+                //$redis->publish('pad_message', json_encode($this->success_data([], -50, '今天没有正在进行的考试')));
                 throw new \Exception('今天没有正在进行的考试', -50);
             } elseif ($exam->status != 1) {
+               // $redis->publish('pad_message', json_encode($this->success_data([], -777, '当前考试没有进行')));
                 throw new \Exception('当前考试没有进行', -777);
             }
 
@@ -109,6 +113,7 @@ class DrawlotsController extends CommonController
                 ->where('user_id', '=', $id)
                 ->first();
             if (is_null($station)) {
+               // $redis->publish('pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试')));
                 throw new \Exception('你没有参加此次考试');
             }
 
@@ -118,6 +123,7 @@ class DrawlotsController extends CommonController
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id);
             } else {
+                //$redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
             }
 
@@ -140,7 +146,7 @@ class DrawlotsController extends CommonController
 //                unset($student['blocking']);
 //            }
 
-            
+           // $redis->publish('pad_message', json_encode($this->success_data($examQueue)));//信息推送
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -225,6 +231,59 @@ class DrawlotsController extends CommonController
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
+    }
+
+    /**
+     * 获取下个考生信息
+     * @method GET
+     * @url osce/pad/next-student
+     * @access public
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse ${response}
+     *
+     * @internal param Request $request
+     * @internal param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     *
+     * @version 1.0
+     * @author wt <wangtao@misrobot.com>
+     * @date 2016-04-12 12:06
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function nextStudent(Request $request){
+        $this->validate($request, [
+            'exam_queue_id' => 'required|integer',
+            'station_id' => 'required|integer'
+
+        ], [
+            'exam_queue_id.required' => '考生队列编号信息必须',
+            'station_id.required' => '考站编号信息必须'
+        ]);
+        try {
+            $redis = Redis::connection('message');
+            $stationId = (int)$request->input('station_id');
+            $examQueueId = (int)$request->input('exam_queue_id');//队列id
+            ExamQueue::where('id',$examQueueId)->increment('next_num', 1);//下一次次数增加
+            $exam = Exam::doingExam();
+            $studentModel = new  Student();
+            $studentData = $studentModel->nextStudentList($stationId, $exam);
+            if ($studentData['nextTester']) {
+                $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+                $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
+                return response()->json(
+                    $this->success_data($studentData['nextTester'], 1, '验证完成')
+                );
+            } else {
+                $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
+                throw new \Exception('学生信息查询失败', -2);
+            }
+        } catch (\Exception $ex) {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
+
+
     }
 
     /**
