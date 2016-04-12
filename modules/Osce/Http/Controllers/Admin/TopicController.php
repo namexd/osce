@@ -258,7 +258,6 @@ class TopicController extends CommonController
             if($totalData != $data['score']){
                 throw new \Exception('考核项分数之和与总分不相等！');
             }
-            dd($formData);
 
             if ($subjectModel->editTopic($id, $data, $formData, $cases, $goods)) {
 

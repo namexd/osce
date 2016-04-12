@@ -131,7 +131,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新增科目</h5>
+            <h5>新增考试项目</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
