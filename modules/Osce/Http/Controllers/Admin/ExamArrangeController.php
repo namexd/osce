@@ -598,7 +598,7 @@ class ExamArrangeController extends CommonController
     public function postInvigilateArrange(Request $request)
     {
 
-//        try {
+        try {
             //验证
             $this->validate($request, [
                 'exam_id' => 'required|integer'
@@ -624,9 +624,9 @@ class ExamArrangeController extends CommonController
             
 //            return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
 
-//        } catch (\Exception $ex) {
-//            return redirect()->back()->withErrors($ex->getMessage());
-//        }
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
