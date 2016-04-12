@@ -375,6 +375,7 @@ class ExamQueue extends CommonModel
                            throw new \Exception('当前队列开始时间不正确',-104);
                        }
                     }
+                    //考试排序模式
                     if ($exam->sequence_mode == 2) {
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
                     } else {
