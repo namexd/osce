@@ -13,23 +13,16 @@ use DB;
 
 class Subject extends CommonModel
 {
-    protected $connection = 'osce_mis';
-    protected $table = 'subject';
-    public $timestamps = true;
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $guarded = [];
-    protected $hidden = [];
-    protected $fillable = [
-        'title',
-        'score',
-        'sort',
-        'status',
-        'created_user_id',
-        'description',
-        'goods',
-        'stem',
-        'equipments'
+    protected $connection   = 'osce_mis';
+    protected $table        = 'subject';
+    public    $timestamps   = true;
+    protected $primaryKey   = 'id';
+    public    $incrementing = true;
+    protected $guarded      = [];
+    protected $hidden       = [];
+    protected $fillable     = [
+        'title', 'score', 'sort', 'status', 'description',
+        'goods', 'stem', 'equipments', 'created_user_id', 'archived'
     ];
     public $search = [];
 
@@ -37,16 +30,23 @@ class Subject extends CommonModel
     {
         return $this->hasOne('App\Entities\User', 'created_user_id', 'id');
     }
+//
+//    public function items()
+//    {
+//        return $this->hasMany('Modules\Osce\Entities\SubjectItem', 'subject_id', 'id');
+//    }
 
-    public function items()
+    public function standards()
     {
-        return $this->hasMany('Modules\Osce\Entities\SubjectItem', 'subject_id', 'id');
+        return $this->belongsToMany('Modules\Osce\Entities\Standard', 'subject_standard', 'subject_id', 'standard_id', 'id');
     }
 
-    public function cases(){
+    public function cases()
+    {
         return $this->belongsToMany('Modules\Osce\Entities\CaseModel','subject_cases','subject_id','case_id','id');
     }
-    public function supplys(){
+    public function supplys()
+    {
         return $this->belongsToMany('Modules\Osce\Entities\Supply','subject_supply','subject_id','supply_id','id');
     }
     /**
@@ -94,9 +94,12 @@ class Subject extends CommonModel
         $connection->beginTransaction();
 
         try {
-
             if ($subject = $this->create($data)) {          //创建考试项目
-                $this->addPoint($subject, $points);         //添加考试项目对应的考核内容
+
+                //TODO:Zhoufuxiang 2016-4-12
+                if (!$this->addStandard($subject, $points)){
+                    throw new \Exception('保存评分标准失败');
+                }
 
                 //添加考试项目——病例关系
                 if(!$this->addSubjectCases($subject->id, $cases, $user_id)){
@@ -113,13 +116,32 @@ class Subject extends CommonModel
                 throw new \Exception('新增考核标准失败');
             }
             $connection->commit();
+//            $a=$this->where('id','=',$subject->id)->with('cases')->with('supplys')->with(['standards'=>function($q){
+//                $q->with('standardItem');
+//            }])->first();
+//            dd($a);
             return $subject;
+
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
     }
 
+    /**
+     * @param $subject
+     * @param $points
+     * @throws \Exception
+     */
+    public function addStandard($subject, $points){
+
+        $subjectStandard = new SubjectStandard();
+        //1、创建评分标准；2、创建考试项目与评分标准间的关系  （3、返回对应的考核标准信息）
+        $standard = $subjectStandard->getStandard($subject, $subject->title);
+        //添加考试项目对应的考核内容
+        $this->addPoint($standard, $points);
+        return $standard;
+    }
     /**
      * 编辑课题
      * @access public
@@ -152,6 +174,7 @@ class Subject extends CommonModel
                 $subject->$field = $value;
             }
             if ($subject->save()) {
+
                 $this->editPoint($subject, $points);
 
                 //添加考试项目——病例关系
@@ -167,7 +190,9 @@ class Subject extends CommonModel
             } else {
                 throw new \Exception('更新考核点信息失败');
             }
-            $connection->commit();
+//            $connection->commit();
+
+            dd($subject);
             return $subject;
         } catch (\Exception $ex) {
             $connection->rollBack();
@@ -197,13 +222,15 @@ class Subject extends CommonModel
      * @date 2016-01-03
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    protected function addPoint($subject, array $points)
+    protected function addPoint($standard, array $points)
     {
-        $SubjectItemModel = new SubjectItem();
+        $SubjectItemModel = new StandardItem();
         try {
+            $rePoints =   [];
             foreach ($points as $point) {
-                $SubjectItemModel->addItem($subject, $point);
+                $rePoints[]   =   $SubjectItemModel->addItem($standard, $point);
             }
+            return collect($rePoints);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -228,10 +255,18 @@ class Subject extends CommonModel
     {
         $SubjectItemModel = new SubjectItem();
         try {
-            $SubjectItemModel->delItemBySubject($subject);
+            $subjectStandard = new SubjectStandard();
+            //获取对应的 评分标准
+            $standard_name = '考官评分标准';
+            $standard = $subjectStandard->getStandard($subject, $standard_name);
+
+            $SubjectItemModel->delItemBySubject($standard);
+            $standardItem = new StandardItem();
+
             foreach ($points as $point) {
-                $SubjectItemModel->addItem($subject, $point);
+                $standardItem->addItem($standard, $point);
             }
+
         } catch (\Exception $ex) {
             throw $ex;
         }

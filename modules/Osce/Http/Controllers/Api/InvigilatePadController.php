@@ -24,6 +24,7 @@ use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Standard;
+use Modules\Osce\Entities\StandardItem;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
@@ -227,7 +228,7 @@ class InvigilatePadController extends CommonController
             //考试标准时间
             $mins = $station->mins;
             $exam = Exam::find($examId);
-            $StandardModel = new Standard();
+            $StandardModel = new StandardItem();
             $standardList = $StandardModel->ItmeList($station->subject_id);
 
             if (count($standardList) != 0) {
