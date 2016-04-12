@@ -80,13 +80,19 @@
                 Set_answer(examCategoryFormalId,exam_question_id,answer);//保存成绩
             });
 
-            $(".radio_label").change(function(){//单选按钮
+            $(".radio_label").click(function(){//单选按钮
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
                 var answer = $(this).children("input").val();
                 Set_answer(examCategoryFormalId,exam_question_id,answer);//保存成绩
-                if($(this).children("input").checked=="true"){
-                    $(this).children(".radio_icon").removeClass("check");
+//                if($(this).children("input").checked=="true"){
+//                    $(this).children(".radio_icon").removeClass("check");
+//                }else{
+//                    $(this).parent().siblings(".answerBox").find(".radio_icon").removeClass("check");
+//                    $(this).children(".radio_icon").addClass("check");
+//                }
+                if($(this).children(".radio_icon").hasClass("check")){
+//                    $(this).children(".radio_icon").removeClass("check");
                 }else{
                     $(this).parent().siblings(".answerBox").find(".radio_icon").removeClass("check");
                     $(this).children(".radio_icon").addClass("check");
@@ -135,10 +141,8 @@
                                 }
                             }
                         });
-                    }
-                    if(obj.status=='2'){
+                    }else{
                         layer.confirm('保存失败！');
-
                     }
                 })
             })
@@ -165,6 +169,7 @@
                         $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                                 {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
                                     if(obj.status=='1'){
+                                        console.log("1111");
                                         $.ajax({
                                             url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
                                             cache:false,
@@ -201,13 +206,13 @@
                     $("#minute").text(minute<10?"0"+minute:minute);//计算分钟
                     $("#second").text(second<10?"0"+second:second);//计算秒杀
                 } else {
-                    //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                     var examPaperFormalId=$('#examPaperFormalId').val();
                     var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
                     var stationId = $(".allData").attr("stationId");
                     var userId = $(".allData").attr("userId");
                     var studentId = $(".allData").attr("studentId");
                     var examId = $(".allData").attr("examId");
+                    console.log("22222");
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                             {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
                         if(obj.status=='1'){
@@ -222,8 +227,7 @@
                                     }
                                 }
                             });
-                        }
-                        if(obj.status=='2'){
+                        }else{
                             layer.confirm('保存失败！');
                         }
                     })

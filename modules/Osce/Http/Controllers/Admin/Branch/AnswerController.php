@@ -161,6 +161,7 @@ class AnswerController extends CommonController
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
             'actualLength' =>$actualLength, //考试用时
             'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
+            'studentId' =>$request->input('studentId'),//学生Id
         );
 
  /*       //提交过来的数据格式
@@ -235,13 +236,15 @@ class AnswerController extends CommonController
         );
         //保存考生答案和记录该考生成绩
         $answerModel = new Answer();
-        $result = $answerModel->saveAnswer($data,$resultData);
-        if($result){
+       // $result = $answerModel->saveAnswer($data,$resultData);
+
+        $result = true;
+        if($result==true){
             //删除session
             \Session::forget('systemTimeStart');
             return response()->json(['status'=>'1','info'=>'保存成功']);
         }else{
-            return response()->json(['status'=>'2','info'=>'保存失败']);
+            return response()->json(['status'=>'2','info'=>$result]);
         }
     }
     /**查询该考生理论考试成绩及该场考试相关信息
