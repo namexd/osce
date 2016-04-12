@@ -122,8 +122,8 @@ class AnswerController extends CommonController
                 }
             }
         }
-        echo "<pre>";
-        print_r($examCategoryFormalData);
+       // echo "<pre>";
+      //  print_r($examCategoryFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
