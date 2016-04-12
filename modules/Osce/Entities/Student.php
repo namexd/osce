@@ -432,7 +432,7 @@ class Student extends CommonModel
                 'student.avator as avator',
                 'exam_queue.status as status',
                 'student.id as student_id',
-                'student.exam_sequence as exam_sequence',
+                'student.exam_sequence as exam_sequence','station_teacher.user_id as teacher_id'
             ])->first();
 
         // 查询考试是否结束 // edit by wangjiang 2016-03-29 for 查询考试是否结束
