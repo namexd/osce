@@ -187,9 +187,9 @@
         },3000);
         function countDown(time,id){
             var day_elem = $(id).find('.day');
-            var hour_elem = $(id).find('.hour');
-            var minute_elem = $(id).find('.minute');
-            var second_elem = $(id).find('.second');
+            var hour_elem = $('.hour');
+            var minute_elem = $('.minute');
+            var second_elem = $('.second');
             var end_time = new Date(time).getTime(),//月份是实际月份-1
                     sys_second = (end_time-new Date().getTime())/1000;
             var timer = setInterval(function(){
