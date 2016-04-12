@@ -15,6 +15,7 @@ use League\Flysystem\Exception;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\StandardItem;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\SubjectCases;
 use Modules\Osce\Entities\SubjectItem;
@@ -257,6 +258,7 @@ class TopicController extends CommonController
             if($totalData != $data['score']){
                 throw new \Exception('考核项分数之和与总分不相等！');
             }
+            dd($formData);
 
             if ($subjectModel->editTopic($id, $data, $formData, $cases, $goods)) {
 
@@ -298,11 +300,18 @@ class TopicController extends CommonController
         ]);
 
         $id = $request->get('id');
-        $subject = Subject::with('cases')->with('items')->with('supplys')->where('id','=',$id)->first();
+        $subject = Subject::where('id','=',$id)->with('cases')->with('supplys')->with(['standards'=>function($q){
+                $q->with('standardItem');
+            }])->first();
         OsceCommon::valueIsNull($subject, -1000, '没有找到对应的科目');
 
-        $items = $subject->items;
-        $items = SubjectItem::builderItemTable($items);
+        $standards = $subject->standards->first()->standardItem;
+        if (is_null($standards)){
+            $items = [];
+        }else{
+
+            $items = StandardItem::builderItemTable($standards);
+        }
         $prointNum = 1;
         $optionNum = [0 => 0];
 
@@ -318,8 +327,14 @@ class TopicController extends CommonController
             }
         }
 
+        //获取考试项目——用物关系数据
+        $subjectSupplys = SubjectSupply::where('subject_id','=',$id)->with('supply')->get();
+
         return view('osce::admin.resourceManage.course_manage_edit',
-            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,]);
+            [
+                'item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,
+                'subjectSupplys' => $subjectSupplys
+            ]);
     }
 
     /**
