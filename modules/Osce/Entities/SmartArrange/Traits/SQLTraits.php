@@ -64,11 +64,11 @@ trait SQLTraits
     function waitingStudentSql($screen)
     {
         return ExamPlanRecord::where('exam_screening_id', $screen->id)
-            ->groupBy('student_id')
             ->select(\DB::raw('(count(end_dt) = count(begin_dt)) as num,student_id,count(`station_id`) as flows_num'))
             ->where('exam_screening_id', $screen->id)
             ->havingRaw('num > ?', [0])
             ->havingRaw('flows_num < ?', [$screen->flowNum])
+            ->groupBy('student_id')
             ->get();
     }
 
@@ -79,9 +79,12 @@ trait SQLTraits
      * @author Jiangzhiheng
      * @time 2016-04-07 17:30
      */
-    function setFlowsnumToScreen($screen)
+    function setFlowsnumToScreen($exam, $screen)
     {
-        $num = ExamDraftFlow::where('exam_screening_id', $screen->id)
+        $num = ExamScreening::join('exam_gradation', 'exam_gradation.order', '=', 'exam_screening.gradation_order')
+            ->join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
+            ->where('exam_gradation.exam_id', '=', $exam->id)
+            ->where('exam_screening.id', '=', $screen->id)
             ->count();
         $screen->flowNum = $num;
         return $screen;
@@ -99,12 +102,12 @@ trait SQLTraits
     function examPlanRecordIsOpenDoor($entity, $screen)
     {
         if ($entity->type == 2) {
-            return ExamPlanRecord::where('station_id', '=', $entity->id)
+            return ExamPlanRecord::where('station_id', '=', $entity->station_id)
                 ->where('exam_screening_id', '=', $screen->id)
                 ->whereNull('end_dt')
                 ->get();
         } elseif ($entity->type == 1) {
-            return ExamPlanRecord::where('room_id', '=', $entity->id)
+            return ExamPlanRecord::where('room_id', '=', $entity->room_id)
                 ->where('exam_screening_id', '=', $screen->id)
                 ->whereNull('end_dt')
                 ->get();
@@ -141,7 +144,7 @@ trait SQLTraits
         return ExamPlanRecord::where('exam_id', $exam->id)
             ->whereNotNull('end_dt')
             ->groupBy('student_id')
-            ->selecet(
+            ->select(
                 \DB::raw(
                     implode(',',
                         [
@@ -155,19 +158,20 @@ trait SQLTraits
     }
 
     /**
+     * TODO 这个方法现在无法实现，等后续版本
      * 返回考站实体
      * @param $screen
      * @return mixed
      * @author Jiangzhiheng
      * @time 2016-04-08 17:07
      */
-    function getStation($screen)
+    function getStationFuture($screen)
     {
         $stations = ExamDraftFlow::join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
             ->join('station', 'station.id', '=', 'exam_draft.station_id')
             ->join('exam_gradation', 'exam_gradation.id', '=', 'exam_draft_flow.exam_gradation_id')
             ->join('subject', 'subject.id', '=', 'exam_draft.subject_id')
-            ->where('exam_screening_id', $screen->id)
+            ->where('exam_draft_flow.exam_screening_id', $screen->id)
             ->select(
                 'station.name as name',
                 'subject.mins as mins',
@@ -186,19 +190,88 @@ trait SQLTraits
     }
 
     /**
+     * 现行的获取考站实体的方法
+     * @param $exam
+     * @param $screen
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-12 14：37
+     */
+    function getStation($exam, $screen)
+    {
+        $stations = ExamScreening::join('exam_gradation', 'exam_gradation.order', '=', 'exam_screening.gradation_order')
+            ->join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
+            ->join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+            ->join('subject', 'subject.id', '=', 'exam_draft.subject_id')
+            ->join('station', 'station.id', '=', 'exam_draft.station_id')
+            ->where('exam_screening.id', $screen->id)
+            ->where('exam_gradation.exam_id', $exam->id)
+            ->select(
+                'station.name as name',
+                'subject.mins as mins',
+                'exam_draft.station_id as station_id',
+                'exam_draft.room_id as room_id',
+                'exam_draft_flow.order as serialnumber',
+                'exam_screening.id as exam_screening_id',
+                'exam_gradation.order as gradation_order'
+            )->get();
+
+        foreach ($stations as &$station) {
+            $station->type = 2;
+        }
+
+        return $stations;
+    }
+
+    /**
+     * TODO 这个方法现在无法实现，等后续版本
      * 返回考场实体
      * @param $screen
      * @return mixed
      * @author Jiangzhiheng
      * @time 2016-04-08 17:07
      */
-    function getRoom($screen)
+    function getRoomFuture($screen)
     {
         $rooms = ExamDraftFlow::join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
             ->join('room', 'room.id', '=', 'exam_draft.room_id')
             ->join('exam_gradation', 'exam_gradation.id', '=', 'exam_draft_flow.exam_gradation_id')
             ->join('subject', 'subject.id', '=', 'exam_draft.subject_id')
             ->where('exam_screening_id', $screen->id)
+            ->select(
+                'room.name as name',
+                'subject.mins as mins',
+                'exam_draft.room_id as room_id',
+                'exam_draft_flow.order as serialnumber',
+                'exam_screening.id as exam_screening_id',
+                'exam_gradation.order as gradation_order'
+            )->distinct()
+            ->get();
+
+        foreach ($rooms as &$room) {
+            $room->type = 1;
+        }
+
+        return $rooms;
+    }
+
+    /**
+     * 现行的获取考场实体的方法
+     * @param $exam
+     * @param $screen
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-12 14:36
+     */
+    function getRoom($exam, $screen)
+    {
+        $rooms = ExamScreening::join('exam_gradation', 'exam_gradation.order', '=', 'exam_screening.gradation_order')
+            ->join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
+            ->join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+            ->join('subject', 'subject.id', '=', 'exam_draft.subject_id')
+            ->join('station', 'station.id', '=', 'exam_draft.station_id')
+            ->where('exam_screening.id', $screen->id)
+            ->where('exam_gradation.exam_id', $exam->id)
             ->select(
                 'room.name as name',
                 'subject.mins as mins',
@@ -258,10 +331,10 @@ trait SQLTraits
      * @author Jiangzhiheng
      * @time 2016-04-08 18:55
      */
-    function getStudentSerialnumber($testingStudent)
+    function getStudentSerialnumber($exam, $testingStudent)
     {
         return ExamPlanRecord::where('student_id', $testingStudent->id)
-            ->where('exam_id', $this->exam_id)->get()
+            ->where('exam_id', $exam->id)->get()
             ->pluck('serialnumber');
     }
 
@@ -301,19 +374,29 @@ trait SQLTraits
             ->pluck('student_id');
     }
 
+    /**
+     * 轮询模式下看是否有人考试
+     * @param $entity
+     * @param $screen
+     * @param $sequenceMode
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-12 18:08
+     */
     function pollBeginStudent($entity, $screen)
     {
         try {
             if ($entity->type == 1) {
                 return ExamPlanRecord::where('exam_screening_id', $screen->id)
                     ->whereNotNull('end_dt')
-                    ->where('room_id', '=', $entity->id)
+                    ->where('room_id', '=', $entity->room_id)
                     ->groupBy('student_id')
                     ->get();
             } elseif ($entity->type == 2) {
                 return ExamPlanRecord::where('exam_screening_id', $screen->id)
                     ->whereNotNull('end_dt')
-                    ->where('station_id', '=', $entity->id)
+                    ->where('station_id', '=', $entity->station_id)
                     ->groupBy('student_id')
                     ->get();
             } else {

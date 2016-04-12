@@ -13,7 +13,6 @@ namespace Modules\Osce\Entities\SmartArrange\Traits;
 
 trait SundryTraits
 {
-    use SQLTraits;
     /**
      * 重置考站时间
      * @return mixed
@@ -36,7 +35,7 @@ trait SundryTraits
     public function flowTime()
     {
         $flowTime = 0;
-        foreach ($this->_E_F as $v) {
+        foreach ($this->_E as $v) {
             //如果是数组，先将时间字符串变成时间戳，然后排序，并取最后（最大的数）;
             if (is_array($v->all())) {
                 $flowTime += $v->pluck('mins')->sort()->pop();

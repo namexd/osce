@@ -24,16 +24,16 @@ class Order extends AbstractCate implements CateInterface
         if ($entity->serialnumber == 1) {
             for ($i = 0; $i < $entity->needNum; $i++) {
                 if (count($this->_S_W) > 0) {
-                    $thisStudent = array_shift(count($this->_S_W));
+                    $thisStudent = array_shift($this->_S_W);
                     if (!is_null($thisStudent)) {
                         $result[] = $thisStudent;
                     }
 
-                    if ($this->_S > 0) {
+                    if (count($this->_S) > 0) {
                         if (is_array($this->_S)) {
-                            $this->_S_W = array_shift($this->_S);
+                            $this->_S_W[] = array_shift($this->_S);
                         } else {
-                            $this->_S_W = $this->_S->shift();
+                            $this->_S_W[] = $this->_S->shift();
                         }
                     }
                 }

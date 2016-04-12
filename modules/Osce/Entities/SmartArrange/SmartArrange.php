@@ -52,7 +52,6 @@ class SmartArrange
     function setCate($cate)
     {
         $this->cate = $cate;
-        return $this;
     }
 
     /**
@@ -128,7 +127,6 @@ class SmartArrange
          */
         $beginDt = strtotime($screen->begin_dt);
         $endDt = strtotime($screen->end_dt);
-
         //本次场次的流程
         $serialnumber = array_unique($this->_E->pluck('serialnumber')->toArray());
 
@@ -161,10 +159,9 @@ class SmartArrange
         $i = $beginDt;
         $k = 3;
         $step = $mixCommonDivisor * 60; //为考试实体考试时间的秒数
-
         //开始计时器
         while ($i <= $endDt) {
-            foreach ($this->_E as $entity) {
+            foreach ($this->_E as &$entity) {
                 if ($this->doorStatus > 0) {
                     $tempBool = $this->checkStatus($entity, $screen);
                 } else {
@@ -174,20 +171,22 @@ class SmartArrange
 
                 if (!$tempBool) {
                     //将总考池和侯考区考生打包进数组
-                    $params = ['total' => $this->_S, 'wait' => $this->_S_W, 'serialnumber' => $serialnumber];
+                    $params = ['total' => $this->_S, 'wait' => $this->_S_W, 'serialnumber' => $serialnumber, 'exam' => $this->exam];
                     //将排序模式注入
                     $this->setCate(CateFactory::getCate($this->exam, $params));
+                    
                     $students = $this->cate->needStudents($entity, $screen, $this->exam);
+
                     $this->_S = $this->cate->getTotalStudent();
                     $this->_S_W = $this->cate->getWaitStudent();
 
                     if (count($students) == 0) {
                         continue;
                     }
-
                     //变更学生的状态(写记录)
-                    foreach ($students as $student) {
+                    foreach ($students as &$student) {
                         $data = $this->mode->dataBuilder($this->exam, $screen, $student, $entity, $i);
+
                         if (ExamPlanRecord::create($data)) {
                             $this->doorStatus--;
                         } else {
