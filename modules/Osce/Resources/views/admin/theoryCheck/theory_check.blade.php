@@ -203,7 +203,7 @@
                     hour_elem.text(hour<10?"0"+hour:hour);//计算小时
                     minute_elem.text(minute<10?"0"+minute:minute);//计算分钟
                     second_elem.text(second<10?"0"+second:second);//计算秒杀
-                    //console.log(minute+"        "+$("#minute").text()+"    "+$("#minute"));
+                    console.log(minute+"        "+minute_elem.text()+"    "+minute_elem);
                 } else {
                     //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                     var examPaperFormalId=$('#examPaperFormalId').val();
