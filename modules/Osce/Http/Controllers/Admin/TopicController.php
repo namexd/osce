@@ -318,8 +318,12 @@ class TopicController extends CommonController
             }
         }
 
+        //获取考试项目——用物关系数据
+        $subjectSupplys = SubjectSupply::where('subject_id','=',$id)->with('supply')->get();
+
         return view('osce::admin.resourceManage.course_manage_edit',
-            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,]);
+            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,
+             'subjectSupplys' => $subjectSupplys]);
     }
 
     /**
