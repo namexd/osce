@@ -97,7 +97,7 @@ class Answer extends Model
                 $examPaperFormalData = array(
                     'actual_length'=>$data['actualLength']
                 );
-                $result = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->update($examPaperFormalData);
+                $result = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->update($examPaperFormalData);
                 if(!$result){
                     throw new \Exception(' 保存考试用时失败！');
                 }

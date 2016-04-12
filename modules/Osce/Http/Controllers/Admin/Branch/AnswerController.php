@@ -161,6 +161,7 @@ class AnswerController extends CommonController
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
             'actualLength' =>$actualLength, //考试用时
             'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
+            'studentId' =>$request->input('studentId'),//学生Id
         );
 
  /*       //提交过来的数据格式
