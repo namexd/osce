@@ -196,6 +196,7 @@
                 if (sys_second > 1) {
                     sys_second -= 1;
                     var day = Math.floor((sys_second / 3600) / 24);
+                    console.log(day);
                     var hour = Math.floor((sys_second / 3600) % 24);
                     var minute = Math.floor((sys_second / 60) % 60);
                     var second = Math.floor(sys_second % 60);
