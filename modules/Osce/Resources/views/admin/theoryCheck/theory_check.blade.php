@@ -142,7 +142,7 @@
                             }
                         });
                     }else{
-                        layer.confirm(obj.info);
+                        layer.confirm('保存失败！');
                     }
                 })
             })
