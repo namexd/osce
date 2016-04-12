@@ -142,9 +142,7 @@
                             }
                         });
                     }else{
-                        console.log("111");
                         layer.confirm(obj.info);
-                        return false;
                     }
                 })
             })
@@ -168,6 +166,7 @@
                 success:function(res){
                     if(res == 1){
                         clearInterval(statusTimer);
+                        console.log("545456461");
                         $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                                 {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
                                     if(obj.status=='1'){
