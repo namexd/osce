@@ -3300,7 +3300,26 @@ function staff_manage_invigilator_sp_edit() {
             }
         }
     });
-
+    /**
+     * 保存数据
+     * @author chenxia
+     * @version 3.3
+     * @date    2016-04-12
+     *//*
+    $('#save').click(function() {
+        $.ajax({
+            type:'post',
+            url: "",
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
+                } else {
+                    layer.msg('数据保存成功！',{skin:'msg-success',icon:1});
+                }
+            }
+        })
+    });
+*/
 }
 
 //删除方法封装,其中id为当前dom的value值
@@ -3733,7 +3752,12 @@ function res_manage_add() {
                     },
                     notEmpty: {/*非空提示*/
                         message: '用物名称不能为空'
-                    }
+                    },
+                    stringLength: {/*长度提示*/
+                        min: 1,
+                        max: 20,
+                        message: '用物名称长度不超过20个'
+                    }/*最后一个没有逗号*/
                 }
             }
         }
@@ -3773,7 +3797,12 @@ function res_manage_edit() {
                     },
                     notEmpty: {/*非空提示*/
                         message: '用物名称不能为空'
-                    }
+                    },
+                    stringLength: {/*长度提示*/
+                        min: 1,
+                        max: 20,
+                        message: '用物名称长度不超过20个'
+                    }/*最后一个没有逗号*/
                 }
             }
         }

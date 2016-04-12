@@ -4746,6 +4746,7 @@ function examiner_manage() {
             sp_teacher:[{id:45,name:'成张老师3',status:1},{id:344,name:'杨老师3',status:2}]
         }*/
     ];
+
     var teacherArr = [],
         typeToName = ['','技能考站','sp考站','理论考站'],
         exam_id = (location.href).split('=')[1];
