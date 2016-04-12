@@ -94,8 +94,8 @@ class ExamControlController extends CommonController
             $redis->publish('pad_message', json_encode($this->success_data([],1,'考试终止成功')));
             return response()->json(true);
         }else{
-            $redis->publish('watch_message', json_encode($this->success_data([],0,'考试终止失败')));
-            $redis->publish('pad_message', json_encode($this->success_data([],0,'考试终止失败')));
+            $redis->publish('watch_message', json_encode($this->success_data([],-1,'考试终止失败')));
+            $redis->publish('pad_message', json_encode($this->success_data([],-1,'考试终止失败')));
             return response()->json($result);
         }
     }

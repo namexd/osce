@@ -131,6 +131,7 @@
             }
             function Validator(){
                 var num = numValidator();
+                var tests=/^[1-9]\d*$/;
                 if(!labelValidator()){
                     layer.alert("至少选择一个标签!");
                     return false;
@@ -146,7 +147,8 @@
                 }else if($(".questionScore").val() == ""){
                     layer.alert("每题分数不能为空!");
                     return false;
-                }else if($(".questionScore").val() <= 0){
+                }else if($(".questionScore").val() <= 0 || !(tests.test($(".questionScore").val()))){
+                    console.log("w")
                     layer.alert("每题分数必须为正整数!");
                     return false;
                 }
@@ -234,7 +236,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565">*</span>每题分数：</label>
                     <div class="col-sm-9">
-                        <input name="questionScore"  type="number"  class="form-control questionScore" value="{{@$questionInfo['score']}}" placeholder="仅支持大于0的正整数" />
+                        <input name="questionScore"  type="text"  class="form-control questionScore" value="{{@$questionInfo['score']}}" placeholder="仅支持大于0的正整数" />
                     </div>
                 </div>
             </div>
