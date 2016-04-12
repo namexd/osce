@@ -13,12 +13,12 @@ class SubjectCases extends CommonModel
 {
     protected $connection   = 'osce_mis';
     protected $table        = 'subject_cases';
-    public    $timestamps   = true;
-    protected $primaryKey   = 'id';
-    public    $incrementing = true;
+    public    $timestamps   = false;
+//    protected $primaryKey   = 'id';
+    public    $incrementing = false;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['subject_id', 'cases_id', 'created_user_id'];
+    protected $fillable     = ['subject_id', 'cases_id'];
 
 
     public function subject(){
@@ -26,7 +26,7 @@ class SubjectCases extends CommonModel
     }
 
     public function cases(){
-        return $this->hasOne('\Modules\Osce\Entities\CaseModel', 'id', 'cases_id');
+        return $this->hasOne('\Modules\Osce\Entities\CaseModel', 'id', 'case_id');
     }
 
 }

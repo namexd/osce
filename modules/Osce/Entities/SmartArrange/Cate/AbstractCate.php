@@ -17,6 +17,8 @@ abstract class AbstractCate
 {
     use SQLTraits, SundryTraits;
 
+    protected $exam;
+
     protected $_S;
 
     protected $_S_W;
@@ -28,8 +30,18 @@ abstract class AbstractCate
         $this->_S = $params['total'];
         $this->_S_W = $params['wait'];
         $this->serialnumber = $params['serialnumber'];
+        $this->exam = $params['exam'];
     }
 
+    /**
+     * 拿到已经考过了的考生和正在考的考生
+     * @param $entity
+     * @param $screen
+     * @return array 已经考过了的考生及其考试流程
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-12 15:26
+     */
     protected function randomTestStudent($entity, $screen)
     {
         $testingStudents = $this->randomBeginStudent($screen);
@@ -45,7 +57,7 @@ abstract class AbstractCate
             $arrays = $this->beginStudents($entity);
         }
 
-        return $this->testingStudents($arrays);
+        return $this->testingStudents($this->exam, $arrays);
     }
 
     protected function beginStudents($entity) {
@@ -68,16 +80,14 @@ abstract class AbstractCate
         return $students;
     }
 
-    protected function testingStudents($testStudents) {
+    protected function testingStudents($exam, $testStudents) {
         $tempTestStudent = [];
-
         foreach ($testStudents as $key => $student) {
             if (is_null($student)) {
                 continue;
             }
-
             //获取该考生已经考过的流程
-            $studentSerialnumber = $this->getStudentSerialnumber($student);
+            $studentSerialnumber = $this->getStudentSerialnumber($exam, $student);
 
             if (is_array($testStudents)) {
                 $tempStudent = array_pull($testStudents, $key);
@@ -98,15 +108,14 @@ abstract class AbstractCate
 
     protected function studentNum($entity, $testStudents, $result)
     {
+
         foreach ($testStudents as $testStudent) {
             if (is_object($testStudent)) {
-                $serialnumber = $this->getStudentSerialnumber($testStudent);
+                $serialnumber = $this->getStudentSerialnumber($this->exam, $testStudent);
 
                 if (in_array($entity->serialnumber, $serialnumber->toArray())) {
                     continue;
                 }
-
-
             }
 
             $result[] = $testStudent;
@@ -116,7 +125,7 @@ abstract class AbstractCate
                 break;
             }
         }
-        return [$result, $testStudents[1]];
+        return $result;
     }
 
     /**
@@ -168,10 +177,33 @@ abstract class AbstractCate
         }
 
         if (count($tempArrays) == 0) {
-            $arrays = $this->beginStudents($screen);
+            $arrays = $this->beginStudents($entity);
         }
+//        echo '====';
+//        dump($arrays);
+        return $this->testingStudents($this->exam, $arrays);
+    }
 
-        return $this->testingStudents($arrays);
+    /**
+     * 返回总的学生集合
+     * @return object
+     * @author Jiangzhiheng
+     * @time 2016-04-12 15:15
+     */
+    public function getTotalStudent()
+    {
+        return $this->_S;
+    }
+
+    /**
+     * 返回侯考区的学生集合
+     * @return object
+     * @author Jiangzhiheng
+     * @time 2016-04-12 15:15
+     */
+    public function getWaitStudent()
+    {
+        return $this->_S_W;
     }
     
 }

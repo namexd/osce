@@ -10,6 +10,7 @@
 namespace Modules\Osce\Entities;
 
 use DB;
+use Auth;
 
 class Subject extends CommonModel
 {
@@ -129,9 +130,16 @@ class Subject extends CommonModel
     }
 
     /**
-     * @param $subject
-     * @param $points
-     * @throws \Exception
+     * 添加评分标准
+     * @access public
+     *
+     * @param array $subject
+     * @param array $points
+     * @return object
+     * @throws \Exception @version 3.4
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2016-04-12 18:43
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function addStandard($subject, $points){
 
@@ -140,6 +148,28 @@ class Subject extends CommonModel
         $standard = $subjectStandard->getStandard($subject, $subject->title);
         //添加考试项目对应的考核内容
         $this->addPoint($standard, $points);
+        return $standard;
+    }
+
+    /**
+     * 修改评分标准
+     * @access public
+     *
+     * @param array $subject
+     * @param array $points
+     * @return object
+     * @throws \Exception @version 3.4
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2016-04-12 19:43
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function editStandard($subject, $points){
+
+        $subjectStandard = new SubjectStandard();
+        //获取对应的 评分标准
+        $standard = $subjectStandard->getStandard($subject, $subject->title);
+        //修改考试项目对应的考核内容
+        $this->editPoint($standard, $points);
         return $standard;
     }
     /**
@@ -165,17 +195,20 @@ class Subject extends CommonModel
         $connection->beginTransaction();
 
         try {
-            $user = \Auth::user();
+            $user = Auth::user();
             if(empty($user)){
                 throw new \Exception('未找到当前操作人信息');
             }
-
+            //修改考试项目对应的基本信息
             foreach ($data as $field => $value) {
                 $subject->$field = $value;
             }
             if ($subject->save()) {
 
-                $this->editPoint($subject, $points);
+                //TODO:Zhoufuxiang 2016-4-12
+                if (!$this->editStandard($subject, $points)){
+                    throw new \Exception('保存评分标准失败');
+                }
 
                 //添加考试项目——病例关系
                 if(!$this->addSubjectCases($subject->id, $cases, $user->id, $id)){
@@ -190,10 +223,13 @@ class Subject extends CommonModel
             } else {
                 throw new \Exception('更新考核点信息失败');
             }
-//            $connection->commit();
-
-            dd($subject);
+            $connection->commit();
+//            $a=$this->where('id','=',$subject->id)->with('cases')->with('supplys')->with(['standards'=>function($q){
+//                $q->with('standardItem');
+//            }])->first();
+//            dd($a);
             return $subject;
+
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -224,11 +260,11 @@ class Subject extends CommonModel
      */
     protected function addPoint($standard, array $points)
     {
-        $SubjectItemModel = new StandardItem();
+        $StandardItem = new StandardItem();
         try {
             $rePoints =   [];
             foreach ($points as $point) {
-                $rePoints[]   =   $SubjectItemModel->addItem($standard, $point);
+                $rePoints[]   =   $StandardItem->addItem($standard, $point);
             }
             return collect($rePoints);
         } catch (\Exception $ex) {
@@ -251,17 +287,12 @@ class Subject extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    protected function editPoint($subject, array $points)
+    protected function editPoint($standard, array $points)
     {
-        $SubjectItemModel = new SubjectItem();
+        $standardItem = new StandardItem();
         try {
-            $subjectStandard = new SubjectStandard();
-            //获取对应的 评分标准
-            $standard_name = '考官评分标准';
-            $standard = $subjectStandard->getStandard($subject, $standard_name);
 
-            $SubjectItemModel->delItemBySubject($standard);
-            $standardItem = new StandardItem();
+            $standardItem->delItemBySubject($standard);
 
             foreach ($points as $point) {
                 $standardItem->addItem($standard, $point);
@@ -277,7 +308,6 @@ class Subject extends CommonModel
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
 
-        $SubjectItemModel = new SubjectItem();
         try {
             //拿到当前开始
             $exam = Exam::doingExam();
@@ -305,29 +335,54 @@ class Subject extends CommonModel
                 }
             }
 
-        //删除和病例关联
-            $SubjectCases=SubjectCases::where('subject_id','=',$subject->id)->get();
-            if($SubjectCases){
-                foreach ($SubjectCases as $case){
-                    if(!$case->delete()){
-                        throw new \Exception('删除病例失败');
+            //删除和病例关联
+            foreach ($subject->cases as $case)
+            {
+                $pivot  =   $case->pivot;
+                if(!is_null($pivot))
+                {
+                    if(!$pivot->delete())
+                    {
+                        throw new \Exception('删除病例关联失败');
                     }
                 }
             }
 
-        //删除和用物关联
-            $SubjectSupply =   SubjectSupply::where('subject_id','=',$subject->id)->get();
-            if($SubjectSupply){
-                foreach ($SubjectSupply as $supply){
-                    if(!$supply->delete()){
+            //删除和用物关联
+            foreach ($subject->supplys as $supply)
+            {
+                $pivot  =   $supply->pivot;
+                if(!is_null($pivot))
+                {
+                    if(!$pivot->delete())
+                    {
                         throw new \Exception('删除用物失败');
                     }
                 }
             }
 
-            
-            
-            $SubjectItemModel->delItemBySubject($subject);
+            //获取对应的评分标准
+            $standards = $subject->standards;
+            if(!$standards->isEmpty())
+            {
+                foreach ($subject->standards as $standard)
+                {
+                    $pivot  =   $standard->pivot;
+                    if(!is_null($pivot))
+                    {
+                        if(!$pivot->delete())
+                        {
+                            throw new \Exception('删除用物失败');
+                        }
+                    }
+                };
+
+                $standardItem = new StandardItem();
+                foreach ($standards as $standard)
+                {
+                    $standardItem->delItemBySubject($standard);
+                }
+            }
             
             if ($subject->delete()) {
                 $connection->commit();
@@ -335,7 +390,9 @@ class Subject extends CommonModel
             } else {
                 throw new \Exception('删除失败');
             }
+
         } catch (\Exception $ex) {
+
             $connection->rollBack();
             if ($ex->getCode() == 23000) {
                 throw new \Exception('该科目已经被使用了,不能删除');

@@ -30,6 +30,8 @@ use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\RoomStation;
+use Modules\Osce\Entities\SmartArrange\SmartArrange;
+use Modules\Osce\Entities\SmartArrange\SmartArrangeRepository;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
@@ -1308,16 +1310,15 @@ class ExamController extends CommonController
         try {
             if (count($plan) == 0) {
                 if (ExamPlanRecord::where('exam_id', $id)->first()) {
-                    $automaticPlanArrangement = new AutomaticPlanArrangement($id, new ExamPlaceEntity(), new \Modules\Osce\Entities\AutomaticPlanArrangement\Exam());
-                    $plan = $automaticPlanArrangement->output($id);
+                    $smartArrange = new SmartArrange();
+                    $smartArrangeRepository = new SmartArrangeRepository($smartArrange);
+                    $plan = $smartArrangeRepository->output($exam);
                     return view('osce::admin.examManage.smart_assignment', ['exam' => $exam, 'plan' => $plan])->withErrors('当前排考计划没有保存！');
                 } else {
                     $plan = [];
                 }
             }
-        }
-        catch (\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
         }
         return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);

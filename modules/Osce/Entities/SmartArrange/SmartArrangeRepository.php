@@ -17,52 +17,60 @@ class SmartArrangeRepository
 {
     use CheckTraits, SQLTraits;
 
+    private $smartArrange;
+
+    function __construct($smartArrange)
+    {
+        $this->smartArrange = $smartArrange;
+    }
+
     /**
      * 开始排考
      * @param $exam
-     * @param $smartArrange
+     * @param $this ->smartArrange
      * @throws \Exception
      * @author Jiangzhiheng
      * @time 2016-04-11 16:17
      */
-    function plan($exam, $smartArrange)
+    function plan($exam)
     {
         try {
             //将考试初始化进去
-            $smartArrange->exam = $exam;
+            $this->smartArrange->exam = $exam;
 
             //初始化学生
-            $smartArrange->setStudents(new StudentFromDatabase());
-            
+            $this->smartArrange->setStudents(new StudentFromDatabase());
+
 
             /*
              * 做排考的前期准备
              * 检查各项数据是否存在
              */
-            $this->checkStudentIsZero($smartArrange->getStudents()); //检查当前考试是否有学生
+            $this->checkStudentIsZero($this->smartArrange->getStudents()); //检查当前考试是否有学生
 
-            $this->checkDataBase($smartArrange->exam); //检查临时表中是否有数据，如果有，就删除之
+            $this->checkDataBase($this->smartArrange->exam); //检查临时表中是否有数据，如果有，就删除之
 
             /*
              * 将阶段遍历，在每个阶段中进行排考
              */
             $gradations = $this->getGradations($exam);
             foreach ($gradations as $key => $gradation) {
-
                 //$key就是order的值
                 $screens = $this->getScreenByOrder($key, $exam);
                 //循环遍历$screen，对每个时段进行排考
                 foreach ($screens as $screen) {
                     //将考试实体初始化进去
-                    $smartArrange->setEntity($exam, $screen);
-                    $this->checkEntityIsZero($smartArrange->getEntity()); //检查当前考试是否安排了考试实体
-                    $screen = $this->setFlowsnumToScreen($screen); //将该场次有多少流程写入场次对象
-                    $smartArrange->screenPlan($screen);
+                    $this->smartArrange->setEntity($exam, $screen);
+                    $this->checkEntityIsZero($this->smartArrange->getEntity()); //检查当前考试是否安排了考试实体
+                    $screen = $this->setFlowsnumToScreen($exam, $screen); //将该场次有多少流程写入场次对象
+                    
+                    $this->smartArrange->screenPlan($screen);
 
                     //判断是否需要下场排考
                     $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id',
                         $exam->id)->first();  //通过查询数据表中是否有没有写入end_dt的数据
-                    if (count($smartArrange->getStudents()) == 0 && count($smartArrange->getWaitStudents()) == 0 && is_null($examPlanNull)) {
+
+                    if (count($this->smartArrange->getStudents()) == 0 && count($this->smartArrange->getWaitStudents()) == 0 && is_null($examPlanNull)) {
                         return $this->output($exam);
                     }
                 }

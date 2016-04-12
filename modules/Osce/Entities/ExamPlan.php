@@ -32,7 +32,9 @@ class ExamPlan extends CommonModel
         'created_user_id',
         'flow_id',
         'serialnumber',
-        'group'
+        'group',
+        'gradation_order',
+        'gradation_number'
     ];
 
     protected $stations = [];
