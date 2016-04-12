@@ -260,11 +260,11 @@ class Subject extends CommonModel
      */
     protected function addPoint($standard, array $points)
     {
-        $SubjectItemModel = new StandardItem();
+        $StandardItem = new StandardItem();
         try {
             $rePoints =   [];
             foreach ($points as $point) {
-                $rePoints[]   =   $SubjectItemModel->addItem($standard, $point);
+                $rePoints[]   =   $StandardItem->addItem($standard, $point);
             }
             return collect($rePoints);
         } catch (\Exception $ex) {
@@ -308,7 +308,6 @@ class Subject extends CommonModel
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
 
-        $SubjectItemModel = new SubjectItem();
         try {
             //拿到当前开始
             $exam = Exam::doingExam();
@@ -336,29 +335,54 @@ class Subject extends CommonModel
                 }
             }
 
-        //删除和病例关联
-            $SubjectCases=SubjectCases::where('subject_id','=',$subject->id)->get();
-            if($SubjectCases){
-                foreach ($SubjectCases as $case){
-                    if(!$case->delete()){
-                        throw new \Exception('删除病例失败');
+            //删除和病例关联
+            foreach ($subject->cases as $case)
+            {
+                $pivot  =   $case->pivot;
+                if(!is_null($pivot))
+                {
+                    if(!$pivot->delete())
+                    {
+                        throw new \Exception('删除病例关联失败');
                     }
                 }
             }
 
-        //删除和用物关联
-            $SubjectSupply =   SubjectSupply::where('subject_id','=',$subject->id)->get();
-            if($SubjectSupply){
-                foreach ($SubjectSupply as $supply){
-                    if(!$supply->delete()){
+            //删除和用物关联
+            foreach ($subject->supplys as $supply)
+            {
+                $pivot  =   $supply->pivot;
+                if(!is_null($pivot))
+                {
+                    if(!$pivot->delete())
+                    {
                         throw new \Exception('删除用物失败');
                     }
                 }
             }
 
-            
-            
-            $SubjectItemModel->delItemBySubject($subject);
+            //获取对应的评分标准
+            $standards = $subject->standards;
+            if(!$standards->isEmpty())
+            {
+                foreach ($subject->standards as $standard)
+                {
+                    $pivot  =   $standard->pivot;
+                    if(!is_null($pivot))
+                    {
+                        if(!$pivot->delete())
+                        {
+                            throw new \Exception('删除用物失败');
+                        }
+                    }
+                };
+
+                $standardItem = new StandardItem();
+                foreach ($standards as $standard)
+                {
+                    $standardItem->delItemBySubject($standard);
+                }
+            }
             
             if ($subject->delete()) {
                 $connection->commit();
@@ -366,7 +390,9 @@ class Subject extends CommonModel
             } else {
                 throw new \Exception('删除失败');
             }
+
         } catch (\Exception $ex) {
+
             $connection->rollBack();
             if ($ex->getCode() == 23000) {
                 throw new \Exception('该科目已经被使用了,不能删除');
