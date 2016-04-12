@@ -254,7 +254,7 @@ class ExamQueue extends CommonModel
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
-                    'student.code as student_code'
+                    'student.code as student_code','exam_queue.station_id as station_id'
                 )
                 ->groupBy('student.id')
                 ->get();
@@ -276,7 +276,7 @@ class ExamQueue extends CommonModel
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
-                    'student.code as student_code'
+                    'student.code as student_code','exam_queue.station_id as station_id'
                 )
                 ->groupBy('student.id')
                 ->get();

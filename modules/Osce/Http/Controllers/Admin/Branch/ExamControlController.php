@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use Illuminate\Support\Facades\Redis;
+use Modules\Osce\Entities\AutomaticPlanArrangement\Student;
 use Modules\Osce\Entities\QuestionBankEntities\ExamControl;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
@@ -34,7 +35,12 @@ class ExamControlController extends CommonController
 
     public function getExamlist()
     {
+
         $examControlModel = new ExamControl();
+
+        $data=$examControlModel->getReplaceExam(6631);
+
+
         $data = $examControlModel->getDoingExamList();
         //dd($data);
         return view('osce::admin.testMonitor.monitor_test', [
@@ -90,44 +96,15 @@ class ExamControlController extends CommonController
         $result = $examControlModel->stopExam($data);
         $redis = Redis::connection('message');
         if($result==true){
-            $redis->publish('watch_message', json_encode($this->success_data([],1,'考试终止成功')));
-            $redis->publish('pad_message', json_encode($this->success_data([],1,'考试终止成功')));
+            //$redis->publish('watch_message', json_encode($this->success_data([],1,'考试终止成功')));
+           // $redis->publish('pad_message', json_encode($this->success_data([],1,'考试终止成功')));
             return response()->json(true);
         }else{
-            $redis->publish('watch_message', json_encode($this->success_data([],-1,'考试终止失败')));
-            $redis->publish('pad_message', json_encode($this->success_data([],-1,'考试终止失败')));
+           // $redis->publish('watch_message', json_encode($this->success_data([],-1,'考试终止失败')));
+           // $redis->publish('pad_message', json_encode($this->success_data([],-1,'考试终止失败')));
             return response()->json($result);
         }
     }
-
-
-    /**替考终止数据交互
-     * @method
-     * @url /osce/
-     * @access public
-     * @param Request $request
-     * @author xumin <xumin@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function postStopReplaceExam(Request $request)
-    {
-
-        $data=array(
-            'examId' =>$request->input('examId'), //考试编号
-            'studentId' =>$request->input('studentId'), //考生编号
-            'examScreeningId' =>$request->input('examScreeningId'), //场次编号
-            'stationId' =>$request->input('stationId'), //考站编号
-            'userId' =>$request->input('userId'), //老师id
-            'examScreeningStudentId' =>$request->input('examScreeningStudentId'), //考试场次-学生关系id
-            'description' =>'-1', //终止考试原图
-
-        );
-        $examControlModel = new ExamControl();
-        $result = $examControlModel->stopExam($data);
-    }
-
-
 
     public function getVcrsList(Request $request)
     {
@@ -147,6 +124,12 @@ class ExamControlController extends CommonController
         ]);
 
     }
+
+
+
+
+
+
 
 
 

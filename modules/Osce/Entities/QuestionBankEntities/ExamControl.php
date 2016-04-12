@@ -9,12 +9,12 @@ namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Modules\Osce\Entities\Exam;
-use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\StationVcr;
+use Modules\Osce\Entities\Student;
 
 /**考生答题时，正式试卷模型
  * Class Answer
@@ -385,6 +385,42 @@ class ExamControl extends Model
             ->first();
         return $data;
     }
+
+    /**Pad端消息推送
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $studentId 学生编号
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getReplaceExam($studentId){
+        $DB = DB::connection('osce_mis');
+        $DB->beginTransaction();
+        if($studentId){
+            $student = new Student();
+            $data = $student->where('id','=',$studentId)->first();
+
+            try{
+                if(empty($data)){
+                    throw new \Exception(' 没有对应的学生信息！');
+                }
+                $DB->commit();
+                return $data;
+            }catch (\Exception $ex){
+                $DB->rollback();
+                throw $ex;
+            }
+        }
+    }
+
+
+
+
+
+
+
 
 
 
