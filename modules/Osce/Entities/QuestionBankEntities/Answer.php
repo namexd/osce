@@ -137,7 +137,6 @@ class Answer extends Model
             if(!ExamResult::create($examResultData)){
                 throw new \Exception(' 插入考试结果记录表失败！',-102);
             }
-            //throw new \Exception(' 插入考试结果记录表失败！',-102);
             $DB->commit();
             return true;
         }catch (\Exception $ex){
