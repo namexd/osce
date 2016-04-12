@@ -187,11 +187,12 @@ class UserController extends CommonController
         }
     }
 
-    public function getLogout()
+    public function getLogout(Request $request)
     {
-
+        //dd(111);
         if (Auth::check()) {
             $nowTime = time();
+            $type = $request->get('type');
             try {
                 Auth::logout();
                 //修改用户最后登录时间
@@ -203,8 +204,15 @@ class UserController extends CommonController
                     $connection->table('users')->where('id', $user->id)->update(['lastlogindate' => $nowTime]);
                 }
             } catch (\Exception $ex) {
+                if($type == 'student'){
+                    return redirect()->route('osce.admin.ApiController.LoginAuthView')->with('message', '你现在已经退出登录了!');
+                }
                 return redirect()->route('osce.admin.postIndex')->with('message', '你现在已经退出登录了!');
             }
+        }
+
+        if($type == 'student'){
+            return redirect()->route('osce.admin.ApiController.LoginAuthView')->with('message', '你现在已经退出登录了!');
         }
         return redirect()->route('osce.admin.postIndex')->with('message', '你现在已经退出登录了!');
     }
