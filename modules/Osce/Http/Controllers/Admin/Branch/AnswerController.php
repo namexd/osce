@@ -44,7 +44,7 @@ class AnswerController extends CommonController
 
         ]);
 
-        //admin/answer/formalpaper-list?stationId=21&userId=347&studentId=6504&id=142&examId=431
+      //admin/answer/formalpaper-list?stationId=91&userId=964&studentId=7319&id=24&examId=552
         $ExamPaperId = $request->input('id');//试卷id  132
         $examId = $request->input('examId');//考试id  421
         $stationId = $request->input('stationId');//考站id 20
@@ -236,9 +236,7 @@ class AnswerController extends CommonController
         );
         //保存考生答案和记录该考生成绩
         $answerModel = new Answer();
-       // $result = $answerModel->saveAnswer($data,$resultData);
-
-        $result = true;
+        $result = $answerModel->saveAnswer($data,$resultData);
         if($result==true){
             //删除session
             \Session::forget('systemTimeStart');
