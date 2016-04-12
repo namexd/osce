@@ -703,7 +703,7 @@ class ApiController extends CommonController
     }
 
     /**
-     * 监考老师点击准备完成并给腕表推送消息
+     * 监考老师pad端点击准备完成并给腕表推送消息
      * @method GET
      * @url /osce/admin/api/ready-exam
      * @access public
