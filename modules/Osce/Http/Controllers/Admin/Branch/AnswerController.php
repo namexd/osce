@@ -122,7 +122,8 @@ class AnswerController extends CommonController
                 }
             }
         }
-        print_r(date('Y/m/d H:i:s',$systemTimeStart).'和'.date('Y/m/d H:i:s',$systemTimeEnd));
+        echo "<pre>";
+        print_r($examCategoryFormalData);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
