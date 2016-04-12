@@ -200,9 +200,9 @@
                     var minute = Math.floor((sys_second / 60) % 60);
                     var second = Math.floor(sys_second % 60);
                     day_elem && $(day_elem).text(day);//计算天
-                    $("#hour").text(hour<10?"0"+hour:hour);//计算小时
-                    $("#minute").text(minute<10?"0"+minute:minute);//计算分钟
-                    $("#second").text(second<10?"0"+second:second);//计算秒杀
+                    hour_elem.text(hour<10?"0"+hour:hour);//计算小时
+                    minute_elem.text(minute<10?"0"+minute:minute);//计算分钟
+                    second_elem.text(second<10?"0"+second:second);//计算秒杀
                     console.log(minute+"        "+$("#second").text()+"    "+$("#minute"));
                 } else {
                     //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
