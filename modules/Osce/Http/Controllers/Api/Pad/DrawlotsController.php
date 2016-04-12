@@ -172,12 +172,13 @@ class DrawlotsController extends CommonController
         ]);
 
         try {
+            $redis = Redis::connection('message');
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
-        
             if (is_null($exam)) {
+                $redis->publish('pad_message', json_encode($this->success_data([], 3000, '当前没有正在进行的考试')));
                 throw new \Exception('当前没有正在进行的考试', 3000);
             }
 
@@ -200,7 +201,9 @@ class DrawlotsController extends CommonController
             $station = StationTeacher::where('exam_id', '=', $exam->id)
                 ->where('user_id', '=', $id)
                 ->first();
+
             if (is_null($station)) {
+                $redis->publish('pad_message', json_encode($this->success_data([], -999, '你没有参加此次考试')));
                 throw new \Exception('你没有参加此次考试');
             }
 
@@ -209,13 +212,15 @@ class DrawlotsController extends CommonController
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $exam->id, $stations);
             } elseif ($exam->sequence_mode == 2) {
+
                 $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $exam->id);
             } else {
+                $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
             }
-
             //从集合中移除blocking
 //            $students->forget('blocking');
+            $redis->publish('pad_message', json_encode($this->success_data($examQueue)));//信息推送
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
