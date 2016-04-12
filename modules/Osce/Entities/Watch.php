@@ -225,7 +225,7 @@ class Watch extends CommonModel implements MachineInterface
 
     //查询使用中的腕表数据
     public function getWatchAboutData($status,$type,$nfc_code){
-        if($type == 0){
+        if($type === 0){
             $builder = $this->whereIn('exam_queue.status',[0,1]);
         }elseif($type == 1){
             $builder = $this->where('exam_queue.status','=',2);
@@ -238,11 +238,15 @@ class Watch extends CommonModel implements MachineInterface
         if(!empty($nfc_code)){
             $builder = $builder->where('watch.nfc_code','=',$nfc_code);
         }
+
+
         $builder = $builder->where('watch.status','=',$status)->leftjoin('watch_log',function($watchLog){
             $watchLog->on('watch_log.watch_id','=','watch.id');
         })->leftjoin('exam_queue',function($examQueue){
             $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
-        })->select('watch.id','watch.code','watch.name','watch.status','watch.factory','watch.sp','watch.purchase_dt','watch_log.action','watch_log.context','watch_log.student_id')->get();
+        })->leftjoin('student',function($examQueue){
+            $examQueue->on('student.id','=','watch_log.student_id');
+        })->select('watch.id','watch.code','student.name','exam_queue.status')->get();
 
         return $builder;
     }

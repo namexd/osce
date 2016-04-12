@@ -872,8 +872,8 @@ class InvigilatePadController extends CommonController
         try{
             $this->validate($request, [
                 'status' => 'required|integer',
-                'type' => 'sometime|integer',
-                'nfc_code' => 'sometime|string'
+                'type' => 'sometimes|integer',
+                'nfc_code' => 'sometimes|string'
             ]);
 
             $status = $request->get('status')?$request->get('status'):1;  //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
@@ -884,6 +884,16 @@ class InvigilatePadController extends CommonController
             $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code);
 
             if(count($watchData) > 0){
+                $watchData = $watchData->toArray();
+                foreach($watchData as $k=>$v){
+                    if($v['status'] < 2){
+                        $watchData[$k]['status'] = '0';
+                    }elseif($v['status'] == 2){
+                        $watchData[$k]['status'] = '1';
+                    }else{
+                        $watchData[$k]['status'] = '2';
+                    }
+                }
                 return response()->json(
                     $this->success_data($watchData,200,'success')
                 );
