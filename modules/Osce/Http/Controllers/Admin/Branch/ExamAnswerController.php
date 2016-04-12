@@ -102,7 +102,7 @@ class ExamAnswerController extends CommonController
                                     $studentAnswer = empty($item['student_answer']) ? '未作答' : $answerArr[$item['student_answer']];
                                 }
                                 $child[$key]['student_answer'] = $studentAnswer;
-                                $child[$key]['studentAnswerAarry'] = null;
+                                $child[$key]['studentAnswerAarry'] = [];
                             }else {
                                   $studentAnswer=empty($item['student_answer'])?'未作答':$item['student_answer'];//试题答案（a/abc/0,1）
                                   $child[$key]['student_answer'] = $studentAnswer;
@@ -130,7 +130,6 @@ class ExamAnswerController extends CommonController
         }
 
         $examItems['stuScore'] =ExamResult::where('student_id',$studentMsg->id)->pluck('score');
-dd($data);
          return view('osce::admin.statisticalanalysis.statistics_student_query',
              [
                  'examItems'=>$examItems,
