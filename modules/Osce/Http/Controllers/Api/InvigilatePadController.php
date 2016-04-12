@@ -1214,7 +1214,7 @@ class InvigilatePadController extends CommonController
             $student_id=$student_id->student_id;
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
-            
+
             $station_id = ExamQueue::where('exam_id','=',$exam_id)->first();
             $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
             if(!$screen_id){
