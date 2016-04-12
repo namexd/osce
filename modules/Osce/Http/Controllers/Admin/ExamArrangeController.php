@@ -618,7 +618,7 @@ class ExamArrangeController extends CommonController
 //            return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
 
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
+            return response()->json($this->fail($ex));
         }
     }
 

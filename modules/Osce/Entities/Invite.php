@@ -31,6 +31,7 @@ class Invite extends CommonModel
     //保存并发送邀请
     public function addInvite(array $data)
     {
+
         //开启事务
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
@@ -40,15 +41,24 @@ class Invite extends CommonModel
                 $examScreening = Invite::where('exam_screening_id', '=', $list['exam_screening_id'])
                     ->where('user_id','=',$list['teacher_id'])
                     ->where('station_id','=',$list['station_id'])
-                    ->whereIn('status',[0, 1])
+//                    ->whereIn('status',[0, 1])
                     ->first();
-                //查询出老师名字
-//                $teacherName    = Teacher::where('id','=',$inviteDat['user_id'])->select('name')->first();
-                $teacherName = Teacher::find($list['teacher_id']);
-                if ($examScreening) {
-                    throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
-                    
+                if($examScreening->status == 3){
+                    $examScreening->status = 0;
+                    if(!$examScreening->save()){
+                        throw new \Exception('邀请失败，请重试！');
+                    }
+                } else{
+
+                    //查询出老师名字
+                    $teacherName = Teacher::find($list['teacher_id']);
+                    if ($examScreening) {
+                        throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
+
+                    }
                 }
+
+
                 $inviteDat = [
                     'user_id' => $list['teacher_id'],
                     'name' => $list['exam_name'],
@@ -66,7 +76,7 @@ class Invite extends CommonModel
 //                           'id'=>$data[$k]['teacher_id'],
                         'invite_id' => $notice->id,
                         'exam_screening_id' => $list['exam_screening_id'],
-                        'case_id' => $list['case_id'],
+//                        'case_id' => $list['case_id'],
                         'teacher_id' => $list['teacher_id'],
                     ];
                     //关联到考试邀请sp老师表
@@ -78,7 +88,7 @@ class Invite extends CommonModel
             }
             $connection->commit();
             $this->sendMsg($data);
-            return $notice;
+            return true;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -111,6 +121,7 @@ class Invite extends CommonModel
                             'url' => $url,
                         ],
                     ];
+
                 }
              
                 $openIdList[]   =   $userInfo;
@@ -172,7 +183,10 @@ class Invite extends CommonModel
         $invite= Invite::where('user_id','=',$teacher_id)
             ->where('exam_id','=',$exam_id)
             ->where('station_id','=',$stationId)
-            ->get();
+            ->first();
+        foreach ($teacherData as &$value){
+            $value['id']=$invite->id;
+        }
 
         if($invite->status== 2){
             //如果该老师已拒绝就删除这条邀请
@@ -187,6 +201,7 @@ class Invite extends CommonModel
             }
         }else{
             $invite->status =3;
+
             if(!$invite->save()){
                 throw new \Exception('改变老师邀请状态失败');
             }else{
