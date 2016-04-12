@@ -186,10 +186,10 @@
             })
         },3000);
         function countDown(time,id){
-            var day_elem = $(id).find('.day');
-            var hour_elem = $('.hour');
-            var minute_elem = $('.minute');
-            var second_elem = $('.second');
+            var day_elem = $(id).find('#day');
+            var hour_elem = $(id).$('#hour');
+            var minute_elem = $(id).$('#minute');
+            var second_elem = $(id).$('#second');
             var end_time = new Date(time).getTime(),//月份是实际月份-1
                     sys_second = (end_time-new Date().getTime())/1000;
             var timer = setInterval(function(){
@@ -203,7 +203,7 @@
                     hour_elem.text(hour<10?"0"+hour:hour);//计算小时
                     minute_elem.text(minute<10?"0"+minute:minute);//计算分钟
                     second_elem.text(second<10?"0"+second:second);//计算秒杀
-                    console.log(minute+"        "+$("#minute").text()+"    "+$("#minute"));
+                    //console.log(minute+"        "+$("#minute").text()+"    "+$("#minute"));
                 } else {
                     //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                     var examPaperFormalId=$('#examPaperFormalId').val();
@@ -335,9 +335,9 @@
                         <div class="btnBox" style="margin:0 auto; padding:70px 0; text-align: center; width: 400px;">
                             <span class="marl_10 left" style="height: 29px; line-height: 29px;">剩余时间：</span>
                             <div class="colockbox" id="colockbox1">
-                                <span class="hour">00</span><span class="left">:</span>
+                                <span class="hour" id="hour">00</span><span class="left">:</span>
                                 <span class="minute" id="minute">00</span><span class="left">:</span>
-                                <span class="second">00</span>
+                                <span class="second" id="second">00</span>
                             </div>
                         </div>
                     </div>
