@@ -24,6 +24,9 @@
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">理论考试</h5>
             </div>
+            <div class="col-xs-6 col-md-2 right">
+                <a href="/osce/admin/user/logout?type=student" class="btn btn-sm btn-primary right" id="out">退出登录</a>
+            </div>
         </div>
         {{--学生信息展示--}}
         <div class="row showImf">
