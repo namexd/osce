@@ -59,7 +59,7 @@
 
 @section('content')
 
-    <input type="hidden" id="parameter" value="{'pagename':'examiner_manage','teacher_list':'{{route('osce.admin.exam-arrange.getInvigilatesBySubject')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'examiner_manage','teacher_list':'{{route('osce.admin.exam-arrange.getInvigilatesBySubject')}}','invation_sp':'{{route('osce.wechat.invitation.getInvitationList')}}','save_data':'{{route('osce.admin.exam-arrange.postInvigilateArrange')}}','data_list':'{{route('osce.admin.exam-arrange.getExamTeacherArrange')}}'}" />
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
@@ -111,7 +111,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-4 time-modify">
-                     <a id="save" class="btn btn-primary" href="javascript:void(0)">保存</a>
+                     <a id="save-data" class="btn btn-primary" href="javascript:void(0)">保存</a>
                      <a class="btn btn-white" href="javascript:history.back(-1)" {{--href="{{route("osce.admin.exam.getExamList")}}"--}}>&nbsp;&nbsp;取消&nbsp;&nbsp;</a>
                      <a class="btn btn-white" href="javascript:void(0)" id="invation-all">全部邀请</a>
                 </div>

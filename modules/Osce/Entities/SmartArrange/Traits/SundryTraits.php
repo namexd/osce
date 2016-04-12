@@ -13,6 +13,7 @@ namespace Modules\Osce\Entities\SmartArrange\Traits;
 
 trait SundryTraits
 {
+    use SQLTraits;
     /**
      * 重置考站时间
      * @return mixed
@@ -78,4 +79,39 @@ trait SundryTraits
         }
     }
 
+    /**
+     * 为数组的最大值求取最大值
+     * @param array $mins
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 18:08
+     */
+    function mins(array $mins)
+    {
+        sort($mins);
+        return array_pop($mins);
+    }
+
+    /**
+     * 顺序模式下是否有符合要求的学生
+     * @param $screen
+     * @param $serialnumber
+     * @author Jiangzhiheng
+     * @time 2016-04-11 11:05
+     */
+    function orderBeginStudent($screen, $serialnumber)
+    {
+        try {
+            $prevSerial = $this->prevSerial($screen, $serialnumber);
+
+            $thisSerial = $this->thisSerial($screen, $serialnumber);
+
+            //求取差集
+            return array_diff($thisSerial->toArray(), $prevSerial->toArray());
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    
 }

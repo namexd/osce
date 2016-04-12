@@ -18,7 +18,7 @@ interface EntityInterface
      * @author Jiangzhiheng
      * @time 2016-04-07 11:15
      */
-    function entity($exam);
+    function entity($exam, $screen);
 
     /**
      * 拼装插入库的数据

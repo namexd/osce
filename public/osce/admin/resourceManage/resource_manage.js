@@ -2302,6 +2302,32 @@ function course_module(){
 
         });
 
+    /**
+     * 编辑初始化
+     */
+    $('#things-use .js-example-basic-single').select2({
+            tags:true,
+            ajax: {
+                url: pars.goodList,
+                dataType: 'json',
+                delay: 250,
+                processResults: function (res) {
+                    if(res.code == 1){
+                        var data = res.data,
+                            str = [];
+
+                        for(var i in data) {
+                            str.push({id:data[i].id,text:data[i].name});
+                        }
+
+                        return{
+                            results:str
+                        }
+                    }
+                }
+            }
+        })
+
         /**
          * 删除物品
          * @author mao

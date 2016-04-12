@@ -175,14 +175,23 @@ class StationController extends CommonController
             };
 
             DB::connection('osce_mis')->commit();
-            
-          $Redirect=  Common::handleRedirect($request,$result);
-            if($Redirect==false){
-        
-                return redirect()->route('osce.admin.Station.getStationList')  ; //返回考场列表
-            }
 
-            
+          $Redirect =  Common::handleRedirect($request,$result);
+
+        
+           if($Redirect==false){
+
+                return redirect()->route('osce.admin.Station.getStationList')  ; //返回考场列表
+            }else{
+               return view('osce::admin.index.layer_success',[
+                   'result'=>$result,
+                   'fileArray'=>$Redirect,
+
+
+               ]);
+           }
+
+
         } catch (\Exception $ex) {
             DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withErrors($ex->getMessage())->withInput();

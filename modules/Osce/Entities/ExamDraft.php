@@ -18,7 +18,7 @@ class ExamDraft extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['station_id', 'room_id', 'subject_id',  'exam_draft_flow_id', 'effected'];
+    protected $fillable     = ['station_id', 'room_id', 'subject_id',  'exam_draft_flow_id', 'status', 'effected'];
 
     protected $ctrl_type    = [
         1   => '简单新增',
@@ -36,6 +36,8 @@ class ExamDraft extends CommonModel
             $join -> on('exam_draft.room_id', '=', 'room.id');
         })->leftJoin('subject', function($join){
             $join -> on('exam_draft.subject_id', '=', 'subject.id');
+        })->leftJoin('exam_draft_flow', function($join){
+            $join -> on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
         })
             ->whereIn('exam_draft_flow_id',$ExamDraftFlowId)
             ->select([
@@ -49,6 +51,8 @@ class ExamDraft extends CommonModel
                 'subject.title as subject_name',
                 'exam_draft.exam_draft_flow_id as exam_draft_flow_id',
                 'exam_draft.effected as effected',
+                'exam_draft_flow.optional',
+                'exam_draft_flow.number',
             ])
             ->get()
             ->toArray();
@@ -212,7 +216,6 @@ class ExamDraft extends CommonModel
             $item   = $data['item'];
             $draft_flow_temp_id = $item->old_draft_flow_id;
             $exam_draft_flow_id = ExamDraftFlowTemp::where('id','=',$draft_flow_temp_id)->first();
-//            dd($item);
             if (is_null($exam_draft_flow_id)){
                 throw new \Exception('数据有误，请重试！');
             }
@@ -256,7 +259,8 @@ class ExamDraft extends CommonModel
                 throw new \Exception('数据有误，请重试！');
             }
             //再删除正式表中对应ID的那条数据
-            if(!$examDraft->delete()){
+            $examDraft->status = 1;         //软删除
+            if(!$examDraft->save()){
                 throw new \Exception('删除失败，请重试！');
             }
 

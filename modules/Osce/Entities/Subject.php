@@ -43,6 +43,12 @@ class Subject extends CommonModel
         return $this->hasMany('Modules\Osce\Entities\SubjectItem', 'subject_id', 'id');
     }
 
+    public function cases(){
+        return $this->belongsToMany('Modules\Osce\Entities\CaseModel','subject_cases','subject_id','case_id','id');
+    }
+    public function supplys(){
+        return $this->belongsToMany('Modules\Osce\Entities\Supply','subject_supply','subject_id','supply_id','id');
+    }
     /**
      * 获取课题列表（考核点的盒子的列表）
      * @access public
@@ -359,23 +365,23 @@ class Subject extends CommonModel
             foreach ($cases as $case_id) {
                 $data = [
                     'subject_id'        => $subject_id,
-                    'cases_id'          => $case_id,
-                    'created_user_id'   => $user_id,
+                    'case_id'          => $case_id,
                 ];
-                if(!SubjectCases::create($data)){
+                $result = SubjectCases::insert($data);
+                if(!$result){
                     return false;
                 }
             }
         }else{
             // 存在$id 为编辑
             $result = SubjectCases::where('subject_id','=',$id)->get();
-            $original = $result->pluck('cases_id')->toArray();
+            $original = $result->pluck('case_id')->toArray();
 
             $caseDels  = array_diff($original, $cases);     //多余的，删除
             $caseAdds  = array_diff($cases, $original);     //新添的，增加
             if(!empty($caseDels)){
                 foreach ($caseDels as $caseDel) {
-                    if(!SubjectCases::where('cases_id','=',$caseDel)->where('subject_id','=',$id)->delete()){
+                    if(!SubjectCases::where('case_id','=',$caseDel)->where('subject_id','=',$id)->delete()){
                         return false;
                     }
                 }
@@ -384,10 +390,10 @@ class Subject extends CommonModel
                 foreach ($caseAdds as $caseAdd) {
                     $data = [
                         'subject_id'        => $subject_id,
-                        'cases_id'          => $caseAdd,
-                        'created_user_id'   => $user_id,
+                        'case_id'          => $caseAdd,
                     ];
-                    if(!SubjectCases::create($data)){
+                    $result = SubjectCases::insert($data);
+                    if(!$result){
                         return false;
                     }
                 }
