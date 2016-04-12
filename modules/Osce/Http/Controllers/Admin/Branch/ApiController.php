@@ -709,8 +709,9 @@ class ApiController extends CommonController
      *
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * int        $exam_id        考试id
-     * * int        $station_id     考站id
+     * * int        $exam_id               考试id
+     * * int        $station_id            考站id
+     * * int        $exam_screening_id     考试场次id
      *
      * @return json
      *
@@ -721,12 +722,14 @@ class ApiController extends CommonController
      */
     public function getReadyExam (Request $request) {
         $this->validate($request, [
-            'exam_id'    => 'required|integer',
-            'station_id' => 'required|integer',
+            'exam_id'           => 'required|integer',
+            'station_id'        => 'required|integer',
+            'exam_screening_id' => 'required|integer',
         ]);
 
-        $examId    = $request->input('exam_id');
-        $stationId = $request->input('station_id');
+        $examId          = $request->input('exam_id');
+        $stationId       = $request->input('station_id');
+        $examScreeningId = $request->input('exam_screening_id');
 
         $redis = Redis::connection('message');
 
@@ -740,9 +743,22 @@ class ApiController extends CommonController
         $examStationStatus->status = 1;
         $examStationStatus->save();
 
-        // TODO 是否给腕表推送考站准备完成信息
         $retval = ['title' => '当前考站准备完成'];
         $redis->publish('pad_message', json_encode($this->success_data($retval, 1)));
+
+        // TODO 是否给腕表推送考站准备完成信息
+        $examQenenModel = new ExamQueue();
+        $examQenen = $examQenenModel->where('exam_id', '=', $examId)
+                                    ->where('exam_screening_id', '=', $examScreeningId)
+                                    ->where('station_id', '=', $stationId)
+                                    ->where('status', '=', 0)
+                                    ->first();
+        if (is_null($examQenen)) {
+            $retval = ['title' => '未查到相应考试队列信息'];
+            $redis->publish('pad_message', json_encode($this->success_data($retval, -2, 'error')));
+        }
+
+
     }
 
     /**

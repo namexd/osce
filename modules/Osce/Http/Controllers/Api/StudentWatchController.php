@@ -32,6 +32,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use DB;
 use Storage;
 use Modules\Osce\Entities\ExamStationStatus;
+use Illuminate\Support\Facades\Redis;
 
 class StudentWatchController extends CommonController
 {
@@ -52,12 +53,12 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-
-    public function   getStudentExamReminder(Request $request)
+    public function getStudentExamReminder(Request $request)
     {
         $this->validate($request, [
             'nfc_code' => 'required'
         ]);
+
         $data = [
             'title' => '',
             'willStudents' => '',
@@ -68,10 +69,9 @@ class StudentWatchController extends CommonController
             'surplus' => '',
             'score' => '',
         ];
+
         $code = 0;
         $watchNfcCode = $request->input('nfc_code');
-
-
 
         //根据设备编号找到设备id
         $watchId = Watch::where('code', '=', $watchNfcCode)->select('id')->first();
@@ -82,6 +82,7 @@ class StudentWatchController extends CommonController
                 $this->success_data($data, $code)
             );
         }
+
         //判定腕表是否解绑
         $watch =Watch::where('id',$watchId->id)->first();
         if($watch->status==0){
@@ -92,7 +93,6 @@ class StudentWatchController extends CommonController
             );
         }
 
-
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watchId->id)->where('is_end', '=', 0)->orderBy('signin_dt','desc')->first();
         if (!$watchStudent) {
@@ -102,9 +102,6 @@ class StudentWatchController extends CommonController
             );
         }
 
-
-        //得到场次id
-//        $examScreeningId= $watchStudent->exam_screening_id;
         //得到学生id
         $studentId = $watchStudent->student_id;
         // 根据考生id找到当前的考试
@@ -124,14 +121,10 @@ class StudentWatchController extends CommonController
 
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect);
-        return response()->json(
-            $this->success_data($data, $code=$data['code'])
-        );
 
+        $redis = Redis::connection('message');
+        $redis->publish('pad_message', json_encode($this->success_data($data, $code=$data['code'])));
     }
-
-
-
 
     /**
      * 学生腕表信息 考试信息判断
