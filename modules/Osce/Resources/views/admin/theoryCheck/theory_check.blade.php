@@ -203,7 +203,7 @@
                     hour_elem.text(hour<10?"0"+hour:hour);//计算小时
                     minute_elem.text(minute<10?"0"+minute:minute);//计算分钟
                     second_elem.text(second<10?"0"+second:second);//计算秒杀
-                    console.log(minute+"        "+minute_elem.html());
+                    console.log(minute+"        "+$("#minute").text()+"    "+$("#minute"));
                 } else {
                     //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                     var examPaperFormalId=$('#examPaperFormalId').val();
@@ -336,7 +336,7 @@
                             <span class="marl_10 left" style="height: 29px; line-height: 29px;">剩余时间：</span>
                             <div class="colockbox" id="colockbox1">
                                 <span class="hour">00</span><span class="left">:</span>
-                                <span class="minute">00</span><span class="left">:</span>
+                                <span class="minute" id="minute">00</span><span class="left">:</span>
                                 <span class="second">00</span>
                             </div>
                         </div>
