@@ -99,8 +99,8 @@ class Answer extends Model
             if(empty($examPaperFormalData['actual_length'])){
                 $examPaperFormalData['actual_length'] = 0;
             }
-            $datas = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->first();
-            if($datas){
+            $datas = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->get();
+            if(count($datas)>2){
                 throw new \Exception('您已提交过试卷，请不要重复提交！',-100);
             }
             $result = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->update($examPaperFormalData);
