@@ -121,7 +121,7 @@ class WatchLog extends CommonModel{
 
     //查看考生及与其绑定的腕表的详细信息
     public function getExamineeBoundWatchDetails($equipmentId){
-        $builder = $this->where('watch_log.watch_id','=',$equipmentId)->where('watch_log.action','=','绑定')->leftjoin('watch',function($watch){
+        $builder = $this->where('watch.nfc_code','=',$equipmentId)->where('watch_log.action','=','绑定')->leftjoin('watch',function($watch){
             $watch->on('watch.id','=','watch_log.watch_id');
         })->leftjoin('student',function($student){
             $student->on('watch_log.student_id','=','student.id');
@@ -132,7 +132,7 @@ class WatchLog extends CommonModel{
             'student.idcard',
             'student.exam_sequence',
             'exam_queue.status',
-            'watch.id as equipment_id',
+            'watch.code',
             'watch.name as equipment_name',
             'watch.factory',
             'watch.sp',
