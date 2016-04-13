@@ -813,12 +813,13 @@ class ApiController extends CommonController
         $examScreeningId = $request->input('exam_screening_id');
 
         try {
-
+            $redis = Redis::connection('message');
             $examScreeningStudentModel = new ExamScreeningStudent();
             $examScreeningStudent = $examScreeningStudentModel->where('exam_screening_id', '=', $examScreeningId)
                 ->where('student_id', '=', $studentId)
                 ->first();
             if (is_null($examScreeningStudent)) {
+                $redis->publish('pad_message', json_encode($this->success_data([], -101,'找不到该考试场次的学生信息')));
                 throw new \Exception(' 找不到该考试场次的学生信息！',-101);
             }
             $examQueueModel = new ExamQueue();
@@ -841,12 +842,14 @@ class ApiController extends CommonController
                         );
                         $result = $examMonitorModel->create($examMonitorData);
                         if(!$result){
+                            $redis->publish('pad_message', json_encode($this->success_data([], -102,'向监控标记学生替考记录表插入数据失败')));
                             throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-102);
                         }
                     }
                 }
 
                 $retval['title'] = '标记替考成功';
+                $redis->publish('pad_message', json_encode($this->success_data($retval, 500,'标记替考成功')));
                 return response()->json(
                     $this->success_data($retval,1,'success')
                 );
@@ -888,13 +891,15 @@ class ApiController extends CommonController
 
                         $result = $examResultModel->create($data);
                         if(!$result){
-                            throw new \Exception(' 向考试结果记录表插入数据事变！',-103);
+                            $redis->publish('pad_message', json_encode($this->success_data([], -103,'向考试结果记录表插入数据失败')));
+                            throw new \Exception(' 向考试结果记录表插入数据失败！',-103);
                         }
 
                     }
                 }
 
                 $retval['title'] = '确定替考成功';
+                $redis->publish('pad_message', json_encode($this->success_data($retval, 600,'确定替考成功')));
                 return response()->json(
                     $this->success_data($retval,1,'success')
                 );
