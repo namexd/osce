@@ -1219,7 +1219,7 @@ class InvigilatePadController extends CommonController
         //开启事务
         $connection = \DB::connection('osce_mis');
         $connection ->beginTransaction();
-        try{
+        //try{
             $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
             $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
             if(!$student_id){    //如果学生不存在
@@ -1329,11 +1329,11 @@ class InvigilatePadController extends CommonController
             }else{
                 throw new \Exception('解绑失败');
             }
-        }
-        catch(\Exception $ex)
-        {
+        //}
+        //catch(\Exception $ex)
+        //{
             $connection->rollBack();
             return \Response::json(array('code'=>0));
-        }
+       // }
     }
 }
