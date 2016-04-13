@@ -743,10 +743,41 @@ class ApiController extends CommonController
             );
         }
 
+        $examQenenModel = new ExamQueue();
+        $examQenen = $examQenenModel->where('exam_id', '=', $examId)
+            ->where('exam_screening_id', '=', $examScreeningId)
+            ->where('station_id', '=', $stationId)
+            ->where('status', '=', 0)
+            ->first();
+        if (is_null($examQenen)) {
+            $retval = ['title' => '未查到相应考试队列信息'];
+            return response()->json(
+                $this->success_data($retval, -1, 'error')
+            );
+        }
+
+        $watchLogModel = new WatchLog();
+        $watch = $watchLogModel->leftJoin('watch', function($join){
+            $join -> on('watch_log.watch_id', '=', 'watch.id');
+        })->where('watch_log.student_id', '=', $examQenen->student_id)
+            ->where('watch.status', '=', 1)
+            ->select([
+                'watch.nfc_code as nfc_code',
+            ])->first();
+        if (is_null($watch)) {
+            $retval = ['title' => '未查到相应腕表信息'];
+            return response()->json(
+                $this->success_data($retval, -1, 'error')
+            );
+        }
+
         $examStationStatus->status = 1;
         $examStationStatus->save();
 
-        $retval = ['title' => '当前考站准备完成成功'];
+        $retval = [
+            'title' => '当前考站准备完成成功',
+            'code'  => $watch['nfc_code'],
+        ];
         return response()->json(
             $this->success_data($retval)
         );
@@ -825,13 +856,13 @@ class ApiController extends CommonController
         $examScreeningId = $request->input('exam_screening_id');
 
         try {
-            $redis = Redis::connection('message');
+
             $examScreeningStudentModel = new ExamScreeningStudent();
             $examScreeningStudent = $examScreeningStudentModel->where('exam_screening_id', '=', $examScreeningId)
                 ->where('student_id', '=', $studentId)
                 ->first();
             if (is_null($examScreeningStudent)) {
-                $redis->publish('pad_message', json_encode($this->success_data([], -101,'找不到该考试场次的学生信息')));
+
                 throw new \Exception(' 找不到该考试场次的学生信息！',-101);
             }
             $examQueueModel = new ExamQueue();
@@ -854,14 +885,14 @@ class ApiController extends CommonController
                         );
                         $result = $examMonitorModel->create($examMonitorData);
                         if(!$result){
-                            $redis->publish('pad_message', json_encode($this->success_data([], -102,'向监控标记学生替考记录表插入数据失败')));
+
                             throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-102);
                         }
                     }
                 }
 
                 $retval['title'] = '标记替考成功';
-                $redis->publish('pad_message', json_encode($this->success_data($retval, 500,'标记替考成功')));
+
                 return response()->json(
                     $this->success_data($retval,1,'success')
                 );
@@ -903,7 +934,7 @@ class ApiController extends CommonController
 
                         $result = $examResultModel->create($data);
                         if(!$result){
-                            $redis->publish('pad_message', json_encode($this->success_data([], -103,'向考试结果记录表插入数据失败')));
+
                             throw new \Exception(' 向考试结果记录表插入数据失败！',-103);
                         }
 
@@ -911,7 +942,7 @@ class ApiController extends CommonController
                 }
 
                 $retval['title'] = '确定替考成功';
-                $redis->publish('pad_message', json_encode($this->success_data($retval, 600,'确定替考成功')));
+
                 return response()->json(
                     $this->success_data($retval,1,'success')
                 );

@@ -838,12 +838,12 @@ class InvigilatePadController extends CommonController
      */
     public function getExamineeBoundWatchDetail(Request $request){
         $this->validate($request, [
-            'equipment_id' => 'required|integer',
+            'nfc_code' => 'required|string',
         ]);
 
         try {
             //考生基本信息
-            $equipmentId = $request->get('equipment_id');
+            $equipmentId = $request->get('nfc_code');
 
             //查找考生及与其绑定的腕表的详细信息
             $watchModel = new WatchLog();

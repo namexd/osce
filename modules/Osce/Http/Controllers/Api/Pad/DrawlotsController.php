@@ -224,6 +224,7 @@ class DrawlotsController extends CommonController
                 $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
             }
+           // dd($examQueue);
             //从集合中移除blocking
 //            $students->forget('blocking');
             $redis->publish('pad_message', json_encode($this->success_data($examQueue,104,'获取成功')));//信息推送
@@ -325,10 +326,11 @@ class DrawlotsController extends CommonController
             $uid = $request->input('uid');
             $roomId = $request->input('room_id');
             $teacherId = $request->input('teacher_id');
-
+            $redis = Redis::connection('message');
             //根据uid查到对应的腕表编号
             $watch = Watch::where('code', $uid)->first();
             if (is_null($watch)) {
+                $redis->publish('pad_message', json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
                 throw new \Exception('没有找到对应的腕表信息！', 3100);
             }
 
@@ -336,17 +338,20 @@ class DrawlotsController extends CommonController
             $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
             if (!$watchLog) {
+                $redis->publish('pad_message', json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
                 throw new \Exception('没有找到学生对应的腕表信息！', 3200);
             }
 
             //获取腕表对应的学生实例
             if (!$student = $watchLog->student) {
+                $redis->publish('pad_message', json_encode($this->success_data([], 3300, '没有找到对应的学生信息!')));
                 throw new \Exception('没有找到对应的学生信息！', 3300);
             }
 
 //            //判断当前学生是否在当前小组中
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
+                $redis->publish('pad_message', json_encode($this->success_data([], 3000, '当前没有正在进行的考试!')));
                 throw new \Exception('当前没有正在进行的考试', 3000);
             }
             $examId = $exam->id;
@@ -357,6 +362,7 @@ class DrawlotsController extends CommonController
                 ->where('user_id', '=', $teacherId)
                 ->first();
             if (is_null($station)) {
+                $redis->publish('pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试!')));
                 throw new \Exception('你没有参加此次考试', 7100);
             }
             /*
@@ -366,14 +372,17 @@ class DrawlotsController extends CommonController
                 //从队列表中通过考场ID得到对应的当前组的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
+                    $redis->publish('pad_message', json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
                     throw new \Exception('该考生不在当前考生小组中', 7200);
                 }
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
+                    $redis->publish('pad_message', json_encode($this->success_data([], 7201, '该考生不在当前考生小组中!')));
                     throw new \Exception('该考生不在当前考生小组中', 7201);
                 }
             } else {
+                $redis->publish('pad_message', json_encode($this->success_data([], -705, '没有这种考试模式!')));
                 throw new \Exception('没有这种考试模式！', -705);
             }
 
@@ -383,6 +392,7 @@ class DrawlotsController extends CommonController
                 ->where('exam_id', '=', $examId)->get()
                 ->isEmpty()
             ) {
+                $redis->publish('pad_message', json_encode($this->success_data([], 3400, '当前考生走错了考场!')));
                 throw new \Exception('当前考生走错了考场！', 3400);
             }
 
@@ -406,6 +416,7 @@ class DrawlotsController extends CommonController
             //判断时间
             $this->judgeTime($watchLog->student_id);
             $connection->commit();
+            $redis->publish('pad_message', json_encode($this->success_data($result, 1, '抽签成功!')));
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
