@@ -179,6 +179,7 @@ class ExamArrangeController extends CommonController
 //                'add_time' => date('Y-m-d H:i:s',time()+1),
                 'user_id' => $user->id,
             ];
+
             if($type == 2){
                 //是回显的修改 ，就添加一条数据
                 if(!$result = ExamDraftFlowTemp::create($data)){
@@ -187,14 +188,16 @@ class ExamArrangeController extends CommonController
             }else{
                 //修改临时考站数据
                 $examDraftFlow = ExamDraftFlowTemp::find($ExamFlowId);
+
                 $examDraftFlow->optional = $optional;
 
                 if(!$result = $examDraftFlow->save()){
                     throw new \Exception('考试数据保存失败');
                 }
             }
+
             return response()->json(
-                $this->success_data(['id' => $result->id], 1, 'success')
+                $this->success_data([], 1, 'success')
             );
 
         }catch (\Exception $ex){
