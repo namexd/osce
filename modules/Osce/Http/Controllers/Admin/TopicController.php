@@ -24,7 +24,6 @@ use Modules\Osce\Entities\Supply;
 use Modules\Osce\Entities\TeacherSubject;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common as OsceCommon;
-
 class TopicController extends CommonController
 {
     /**
@@ -164,10 +163,15 @@ class TopicController extends CommonController
             }
 
             $subjectModel = new Subject();
-            if ($subjectModel->addSubject($data, $formData, $cases, $goods, $user->id)) {
-
-                return redirect()->route('osce.admin.topic.getList');
-
+            if ( $result=$subjectModel->addSubject($data, $formData, $cases, $goods, $user->id)) {
+                //todo 调用弹窗时新增的跳转 周强 2016-4-13
+                $Redirect = OsceCommon::handleRedirect($request,$result);
+                if($Redirect == false){
+                    return redirect()->route('osce.admin.topic.getList');
+                }else{
+                    return $Redirect;
+                }
+                
             } else {
 
                 throw new \Exception('新增失败！');

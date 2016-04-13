@@ -176,8 +176,9 @@ class StationController extends CommonController
 
             DB::connection('osce_mis')->commit();
 
-          $Redirect = Common::handleRedirect($request,$result);
-            
+            //todo 调用弹窗时新增的跳转 周强 2016-4-13
+            $Redirect = Common::handleRedirect($request,$result);
+
            if($Redirect==false){
                 return redirect()->route('osce.admin.Station.getStationList')  ; //返回考场列表
             }else{
