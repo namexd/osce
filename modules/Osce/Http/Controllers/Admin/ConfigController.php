@@ -14,10 +14,17 @@ use Modules\Osce\Entities\Area;
 use Modules\Osce\Entities\Config;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
+use Modules\Osce\Entities\ConfigRepository\ConfigRepository;
 
 
 class ConfigController extends CommonController
 {
+    private $request;
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+    
     /**
      * 配置的着陆页
      * @api GET /osce/admin/invigilator/index
@@ -46,6 +53,35 @@ class ConfigController extends CommonController
             $tempDB[0]['value'] = [];
         }
         return view('osce::admin.systemManage.system_settings_media', ['tempConfig' => $tempConfig, 'tempDB' => $tempDB, 'succ'=>$succ]);
+    }
+
+    /**
+     * 读出文件的配置
+     * @param ConfigRepository $configRepository
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-13 18:29
+     */
+    public function getSysparam(ConfigRepository $configRepository)
+    {
+        return view('osce::admin.systemManage.sys_param', ['data' => $configRepository->sysParam()]);
+    }
+
+    /**
+     * 改写文件的方法
+     * @param ConfigRepository $configRepository
+     * @author Jiangzhiheng
+     * @time 2016-04-13 20:12
+     */
+    public function postSysparam(ConfigRepository $configRepository)
+    {
+        $data = $this->request->all();
+//        try {
+            $configRepository->rewrite($data);
+            return redirect()->route('osce.admin.config.getSysparam');
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withError($ex->getMessage());
+//        }
     }
 
     /**

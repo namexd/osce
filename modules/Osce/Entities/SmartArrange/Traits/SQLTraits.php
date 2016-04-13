@@ -221,6 +221,7 @@ trait SQLTraits
             $station->type = 2;
         }
 
+        //为集合加上序号
         $stations = $this->setSerialnumber($stations);
 
         return $stations;
@@ -289,6 +290,7 @@ trait SQLTraits
             $room->type = 1;
         }
 
+        //为集合加上序号
         $rooms = $this->setSerialnumber($rooms);
 
         return $rooms;
@@ -417,19 +419,24 @@ trait SQLTraits
      * @param Collection $collection
      * @param string $groupBy
      * @param string $sortBy
+     * @param bool $desc
      * @return object
      * @author Jiangzhiheng
      * @time 2016-04-13 16:20
      */
-    function setSerialnumber(Collection $collection, $groupBy = 'gradation_order', $sortBy = 'order')
+    function setSerialnumber(Collection $collection, $groupBy = 'gradation_order', $sortBy = 'order', $desc = false)
     {
-        $collections = $collection->sortBy($sortBy)->groupBy($groupBy);
+        if ($desc === false) {
+            $collections = $collection->sortBy($sortBy)->groupBy($groupBy);
+        } else {
+            $collections = $collection->sortByDesc($sortBy)->groupBy($groupBy);
+        }
 
         $result = [];
 
         foreach ($collections as $items) {
             foreach ($items as $key => $item) {
-                $item->serialnumber = $key+1;
+                $item->serialnumber = $key + 1;
                 $result[] = $item;
             }
         }
