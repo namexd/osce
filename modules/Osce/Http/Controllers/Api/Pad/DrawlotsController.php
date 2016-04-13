@@ -224,6 +224,7 @@ class DrawlotsController extends CommonController
                 $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
             }
+           // dd($examQueue);
             //从集合中移除blocking
 //            $students->forget('blocking');
             $redis->publish('pad_message', json_encode($this->success_data($examQueue,104,'获取成功')));//信息推送

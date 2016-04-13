@@ -82,7 +82,9 @@ class StudentWatchController extends CommonController
             $code = -1;
             $data['title'] = '没有找到到腕表信息';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
-            exit;
+            return response()->json(
+                $this->success_data($data, $code)
+            );
         }
 
         //判定腕表是否解绑
@@ -91,7 +93,9 @@ class StudentWatchController extends CommonController
             $code = -1;
             $data['title'] = '该腕表还没有学生绑定';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
-            exit;
+            return response()->json(
+                $this->success_data($data, $code)
+            );
         }
 
         //  根据腕表id找到对应的考试场次和学生
@@ -99,7 +103,9 @@ class StudentWatchController extends CommonController
         if (!$watchStudent) {
             $data['title'] = '没有找到学生的腕表信息';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
-            exit;
+            return response()->json(
+                $this->success_data($data, $code)
+            );
         }
 
         //得到学生id
@@ -114,12 +120,17 @@ class StudentWatchController extends CommonController
             $code = -1;
             $data['title'] = '学生队列信息不正确';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
-            exit;
+            return response()->json(
+                $this->success_data($data, $code)
+            );
         }
 
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect);
         $redis->publish('watch_message', json_encode($this->success_data($data, $code=$data['code'])));
+        return response()->json(
+            $this->success_data($data, 1)
+        );
     }
 
     /**
