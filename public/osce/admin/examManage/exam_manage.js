@@ -4460,7 +4460,7 @@ function station_assignment(){
 
                     ajaxUpdate(req, pars.update_data);
                   },
-                  content: pars.add_subject+'?status=1&table='+$elem.find('.exam-item').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-item').parent().parent().attr('class')
+                  content: pars.add_subject+'?status=1&table='+$elem.find('.exam-item').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-item').parent().parent().attr('class')+'&selector=exam-item'
                 });
             } else {
                 ajaxUpdate(req, pars.update_data);
@@ -4511,7 +4511,7 @@ function station_assignment(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: pars.add_station+'?status=1&table='+$elem.find('.exam-station').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-station').parent().parent().attr('class')
+                  content: pars.add_station+'?status=1&table='+$elem.find('.exam-station').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-station').parent().parent().attr('class')+'&selector=exam-station'
                 });
             } else {
                $.ajax({
@@ -4580,7 +4580,7 @@ function station_assignment(){
 
                     ajaxUpdate(req, pars.update_data);
                   },
-                  content: pars.add_room+'?status=1&table='+$elem.find('.station-belong').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.station-belong').parent().parent().attr('class')
+                  content: pars.add_room+'?status=1&table='+$elem.find('.station-belong').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.station-belong').parent().parent().attr('class')+'&selector=station-belong'
                 });
             } else {
                 ajaxUpdate(req, pars.update_data);
@@ -4841,6 +4841,9 @@ function examiner_manage() {
                 } else {
                     layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
                 }
+            },
+            error: function(data) {
+                layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
             }
         })
     });

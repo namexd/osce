@@ -226,7 +226,7 @@ class RoomController extends CommonController
     {
         //验证
         $this->validate($request, [
-                'vcr_id'        => 'required',
+//                'vcr_id'        => 'required',
                 'name'          => 'required|unique:osce_mis.room,name',
                 'address'       => 'required',
                 'code'          => 'sometimes',
@@ -237,7 +237,7 @@ class RoomController extends CommonController
                 'proportion' => 'required|integer'
             ],[
                 'name.unique'   =>  '名称必须唯一',
-                'vcr_id.required'=> '摄像头不能为空'
+//                'vcr_id.required'=> '摄像头不能为空'
             ]
         );
         try {
