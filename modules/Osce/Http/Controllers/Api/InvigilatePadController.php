@@ -30,6 +30,7 @@ use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestAttach;
+use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Entities\Watch;
