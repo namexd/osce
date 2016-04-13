@@ -122,6 +122,7 @@ class StudentWatchController extends CommonController
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect);
         $redis->publish('watch_message', json_encode($this->success_data($data, $code=$data['code'])));
+
     }
 
     /**
