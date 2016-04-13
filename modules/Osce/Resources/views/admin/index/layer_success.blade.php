@@ -25,7 +25,7 @@
 
 <div class="box">
     <div style="display: none;">
-        <span id="result" value="{{$result->id}}"></span>
+        <span id="result-id" value="{{$result->id}}"></span>
         <span id="result-name" value="{{$result->name}}"></span>
         <span id="table-id" value="{{$fileArray['table']}}"></span>
         <span id="tr-id" value="{{$fileArray['tr']}}"></span>
@@ -50,11 +50,12 @@ $(function() {
         tr_id = $('#tr-id').attr('value');
 
     //等待三秒关闭
-    //layer.load(3)
+    layer.load(3)
     setTimeout(function() {
         //新增的数据传过去
-        parent.$('.'+table_id).find('.item-id-'+table_id).find('.exam-item').val(ID).trigger("change");
-        //parent.layer.close(index);
+        parent.$('.table-id-'+table_id).find('.'+tr_id).find('.exam-station').val(ID).trigger("change");
+        console.log(table_id,tr_id,ID)
+        parent.layer.close(index);
     }, 2000);  
 })
 </script>
