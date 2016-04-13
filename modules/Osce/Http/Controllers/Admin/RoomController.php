@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Room as Room;
 use DB;
 use Auth;
+use Modules\Osce\Repositories\Common;
 
 class RoomController extends CommonController
 {
@@ -252,13 +253,19 @@ class RoomController extends CommonController
             $formData['cate']            = $cate;
 
             if ($cate === '0') {
-                $room->createRoom($formData,$vcrId,$userId);
+                $result=$room->createRoom($formData,$vcrId,$userId);
             } else {
                 $area = new Area();
-                $area->createRoom($formData,$vcrId,$userId);
+                $result =$area->createRoom($formData,$vcrId,$userId);
             }
 
-            return redirect()->route('osce.admin.room.getRoomList',['type'=>$cate]);
+            $Redirect = Common::handleRedirect($request,$result);
+            if($Redirect == false){
+                return redirect()->route('osce.admin.room.getRoomList',['type'=>$cate]);
+            }else{
+               return $Redirect;
+            }
+
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage())->withInput();
         }

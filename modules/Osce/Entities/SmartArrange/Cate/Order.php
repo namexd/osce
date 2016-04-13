@@ -16,6 +16,7 @@ use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
 class Order extends AbstractCate implements CateInterface
 {
     use SQLTraits, SundryTraits;
+
     function needStudents($entity, $screen, $exam)
     {
         // TODO: Implement needStudents() method.
@@ -24,7 +25,6 @@ class Order extends AbstractCate implements CateInterface
         if ($entity->serialnumber == 1) {
             for ($i = 0; $i < $entity->needNum; $i++) {
                 if (count($this->_S_W) > 0) {
-                    dump($this->_S_W);
                     $thisStudent = array_shift($this->_S_W);
                     if (!is_null($thisStudent)) {
                         $result[] = $thisStudent;

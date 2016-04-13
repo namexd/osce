@@ -36,7 +36,7 @@ class StationMode extends AbstractEntity implements EntityInterface
 
         return $entities;
     }
-    
+
     function dataBuilder($exam, $screen, $student, $entity, $i)
     {
         $data = [

@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Entities\SmartArrange\Traits;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamPlanRecord;
@@ -211,14 +212,16 @@ trait SQLTraits
                 'subject.mins as mins',
                 'exam_draft.station_id as station_id',
                 'exam_draft.room_id as room_id',
-                'exam_draft_flow.order as serialnumber',
                 'exam_screening.id as exam_screening_id',
+                'exam_draft_flow.order as order',
                 'exam_gradation.order as gradation_order'
             )->get();
 
         foreach ($stations as &$station) {
             $station->type = 2;
         }
+
+        $stations = $this->setSerialnumber($stations);
 
         return $stations;
     }
@@ -242,9 +245,9 @@ trait SQLTraits
                 'room.name as name',
                 'subject.mins as mins',
                 'exam_draft.room_id as room_id',
-                'exam_draft_flow.order as serialnumber',
                 'exam_screening.id as exam_screening_id',
-                'exam_gradation.order as gradation_order'
+                'exam_gradation.order as gradation_order',
+                'exam_draft_flow.order as order'
             )->distinct()
             ->get();
 
@@ -276,15 +279,17 @@ trait SQLTraits
                 'room.name as name',
                 'subject.mins as mins',
                 'exam_draft.room_id as room_id',
-                'exam_draft_flow.order as serialnumber',
                 'exam_draft_flow.exam_screening_id as exam_screening_id',
-                'exam_gradation.order as gradation_order'
+                'exam_gradation.order as gradation_order',
+                'exam_draft_flow.order as order'
             )->distinct()
             ->get();
 
         foreach ($rooms as &$room) {
             $room->type = 1;
         }
+
+        $rooms = $this->setSerialnumber($rooms);
 
         return $rooms;
     }
@@ -405,5 +410,30 @@ trait SQLTraits
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    /**
+     * 将考试实体加上序号
+     * @param Collection $collection
+     * @param string $groupBy
+     * @param string $sortBy
+     * @return object
+     * @author Jiangzhiheng
+     * @time 2016-04-13 16:20
+     */
+    function setSerialnumber(Collection $collection, $groupBy = 'gradation_order', $sortBy = 'order')
+    {
+        $collections = $collection->sortBy($sortBy)->groupBy($groupBy);
+
+        $result = [];
+
+        foreach ($collections as $items) {
+            foreach ($items as $key => $item) {
+                $item->serialnumber = $key+1;
+                $result[] = $item;
+            }
+        }
+
+        return collect($result);
     }
 }

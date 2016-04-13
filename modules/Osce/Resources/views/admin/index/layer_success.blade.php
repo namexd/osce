@@ -27,6 +27,9 @@
     <div style="display: none;">
         <span id="result" value="{{$result->id}}"></span>
         <span id="result-name" value="{{$result->name}}"></span>
+        <span id="table-id" value="{{$fileArray['table']}}"></span>
+        <span id="tr-id" value="{{$fileArray['tr']}}"></span>
+
         
     </div>
     <i>数据新增成功</i>

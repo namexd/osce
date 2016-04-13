@@ -120,11 +120,11 @@ class Station extends CommonModel
         try {
             list($stationData, $vcrId, $roomId) = $formData;
             //将station表的数据插入station表
-            $result = $this->create($stationData);
+            $stationResult = $this->create($stationData);
 
             //获得插入后的id
-            $station_id = $result->id;
-            if (!$result) {
+            $station_id = $stationResult->id;
+            if (!$stationResult) {
                 throw new \Exception('将数据写入考站失败！');
             }
 
@@ -169,7 +169,7 @@ class Station extends CommonModel
             }
 
             $connection->commit();
-            return $result;
+            return $stationResult;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
