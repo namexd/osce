@@ -84,12 +84,12 @@ class Common
         ];
 
         return User::select('users.id', 'users.username', 'users.name', 'users.gender', 'users.mobile', 'users.lastlogindate')
-                ->leftJoin('sys_user_role', function ($join) {
-                    $join->on('users.id', '=', 'sys_user_role.user_id');
-                })
+            ->leftJoin('sys_user_role', function ($join) {
+                $join->on('users.id', '=', 'sys_user_role.user_id');
+            })
 //                -> where('sys_user_role.role_id','=',config('osce.adminRoleId',3))
-                ->whereNotIn('sys_user_role.role_id', $noAdminRole)
-                ->paginate(config('osce.page_size'));
+            ->whereNotIn('sys_user_role.role_id', $noAdminRole)
+            ->paginate(config('osce.page_size'));
     }
 
     public function createAdminUser($data)
@@ -247,16 +247,17 @@ class Common
         return $i;
     }
 
-    static  public function getRoleIdByTeacherType($type){
-        $relation  =   [
-            1=>config('osce.invigilatorRoleId'),
+    static public function getRoleIdByTeacherType($type)
+    {
+        $relation = [
+            1 => config('osce.invigilatorRoleId'),
 //            2=>config('osce.studentRoleId'),
 //            3=>config('osce.adminRoleId'),
-            2=>config('osce.spRoleId'),
+            2 => config('osce.spRoleId'),
 //            5=>config('osce.superRoleId'),
-            3=>config('osce.patrolRoleId'),
+            3 => config('osce.patrolRoleId'),
         ];
-        return  $relation[$type];
+        return $relation[$type];
     }
 
     /**
@@ -265,78 +266,80 @@ class Common
      * @author Zhoufuxiang 2016-3-30
      * @return int
      */
-    static  public function getTeacherTypeByRoleId($role_id){
+    static public function getTeacherTypeByRoleId($role_id)
+    {
 
-        switch ($role_id){
-            case config('osce.invigilatorRoleId') : return 1;
-                                                    break;
-            case config('osce.spRoleId')          : return 2;
-                                                    break;
-            case config('osce.patrolRoleId')      : return 3;
-                                                    break;
+        switch ($role_id) {
+            case config('osce.invigilatorRoleId') :
+                return 1;
+                break;
+            case config('osce.spRoleId')          :
+                return 2;
+                break;
+            case config('osce.patrolRoleId')      :
+                return 3;
+                break;
         }
     }
 
-    static public function handleTime($time){
+    static public function handleTime($time)
+    {
         $h = floor($time / 3600);
-        $m = floor(($time%3600)/60);
+        $m = floor(($time % 3600) / 60);
         $s = $time % 60;
 
-        $h = ($h>10)? "$h" : "0$h";
-        $m = ($m>10)? "$m" : "0$m";
-        $s = ($s>10)? "$s" : "0$s";
+        $h = ($h > 10) ? "$h" : "0$h";
+        $m = ($m > 10) ? "$m" : "0$m";
+        $s = ($s > 10) ? "$s" : "0$s";
 
-        $time = $h.':'.$m.':'.$s;
+        $time = $h . ':' . $m . ':' . $s;
 
         return $time;
     }
 
 
-    static  public function handleRedirect($request,$result){
-            $data= $request->headers->all()['referer'][0];
-            $fileNameArray =     explode('?',$data);
-
-            $fileArray =     explode('&',$fileNameArray[1]);
-        $fileData=[];
-        foreach ($fileArray as $item) {
-            $ensue= explode('=', $item);
-            $fileData[$ensue[0]] =  $ensue[1];
+    static public function handleRedirect($request, $result)
+    {
+        $data = $request->headers->all()['referer'][0];
+        if (!is_null($data)) {
+            return false;
         }
-            foreach ($fileArray as $value)
-                    if($value=='status=1'){
-                        return view('osce::admin.index.layer_success',[
-                            'result'=>$result,
-                            'fileArray'=>$fileData,
-                        ]);
-                }else{
-                    return false;
-                }
+        $fileNameArray = explode('?', $data);
+        $fileArray = explode('&', $fileNameArray[1]);
+        $fileData = [];
+        foreach ($fileArray as $item) {
+            $ensue = explode('=', $item);
+            $fileData[$ensue[0]] = $ensue[1];
+        }
+        foreach ($fileArray as $value)
+            if ($value == 'status=1') {
+                return view('osce::admin.index.layer_success', [
+                    'result' => $result,
+                    'fileArray' => $fileData,
+                ]);
+            }
     }
 
 
-    /**
-     * 删除关联关系，删除失败，报错
-     *
-     * @param $value
-     * @param string $message
-     * @param int $code
-     * @return bool
-     * @throws \Exception
-     * @author Zhoufuxiang
-     * @time 2016-04-13 09:55
-     */
-    static public function delRelation($subject, $values, $message = '系统错误', $code = -999)
+        /**
+         * 删除关联关系，删除失败，报错
+         *
+         * @param $value
+         * @param string $message
+         * @param int $code
+         * @return bool
+         * @throws \Exception
+         * @author Zhoufuxiang
+         * @time 2016-04-13 09:55
+         */
+        static public function delRelation($subject, $values, $message = '系统错误', $code = -999)
     {
-        if(!$subject->$values->isEmpty())
-        {
+        if (!$subject->$values->isEmpty()) {
             //删除对应关联关系
-            foreach ($subject->$values as $value)
-            {
-                $pivot  =   $value->pivot;
-                if(!is_null($pivot))
-                {
-                    if(!$pivot->delete())
-                    {
+            foreach ($subject->$values as $value) {
+                $pivot = $value->pivot;
+                if (!is_null($pivot)) {
+                    if (!$pivot->delete()) {
                         throw new \Exception($message, $code);
                     }
                 }
@@ -359,17 +362,16 @@ class Common
     public static function archived($model, $id, $message = '系统错误', $params = [])
     {
         $item = $model->where('id', '=', $id)->first();
-        if(!is_null($item))
-        {
+        if (!is_null($item)) {
             $item->archived = 1;
             //其他字段参数不为空
-            if (!empty($data)){
+            if (!empty($data)) {
                 foreach ($params as $key => $param) {
                     $item->$key = $param;
                 }
             }
 
-            if(!$item->save()){
+            if (!$item->save()) {
                 throw new \Exception($message);
             }
         }
@@ -390,18 +392,17 @@ class Common
     public static function resetArchived($model, $id, $message = '系统错误', $params = [])
     {
         $item = $model->where('id', '=', $id)->first();
-        if(!is_null($item))
-        {
+        if (!is_null($item)) {
             $item->archived = 0;    //重置归档
 
             //其他字段参数不为空
-            if (!empty($data)){
+            if (!empty($data)) {
                 foreach ($params as $key => $param) {
                     $item->$key = $param;
                 }
             }
 
-            if(!$item->save()){
+            if (!$item->save()) {
                 throw new \Exception($message);
             }
         }
