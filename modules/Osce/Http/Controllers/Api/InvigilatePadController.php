@@ -1252,7 +1252,7 @@ class InvigilatePadController extends CommonController
                     $watchModel->unwrapRecord($data);
 
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
+                    dd($this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description));
                     return \Response::json([
                         'code' => 200,
                     ]);   //解绑成功
@@ -1285,7 +1285,7 @@ class InvigilatePadController extends CommonController
                     $examScreening  =  new ExamScreening();
                     $examScreening  -> getExamCheck();
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
+                    dd($this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description));
                     $connection->commit();
 
                     return \Response::json([
@@ -1318,7 +1318,7 @@ class InvigilatePadController extends CommonController
                     $examScreening   =   new ExamScreening();
                     $examScreening  ->getExamCheck();
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
+                    dd($this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description));
                     //检查考试是否可以结束
                     $connection->commit();
                 }
