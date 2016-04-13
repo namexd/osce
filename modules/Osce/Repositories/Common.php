@@ -295,6 +295,7 @@ class Common
     static  public function handleRedirect($request,$result){
             $data= $request->headers->all()['referer'][0];
             $fileNameArray =     explode('?',$data);
+
             $fileArray =     explode('&',$fileNameArray[1]);
         $fileData=[];
         foreach ($fileArray as $item) {
