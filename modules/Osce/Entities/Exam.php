@@ -496,7 +496,6 @@ class Exam extends CommonModel
                 }
 
                 //一样多，则无需处理
-
             }
 
             $examScreening_ids = [];

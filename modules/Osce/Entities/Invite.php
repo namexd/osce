@@ -35,7 +35,7 @@ class Invite extends CommonModel
         //开启事务
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
-        try {
+//        try {
             foreach ($data as &$list) {
 
                 //查询出老师名字
@@ -71,7 +71,7 @@ class Invite extends CommonModel
                     'exam_screening_id' => $list['exam_screening_id'],
                     'station_id' => $list['station_id'],
                     'status' => 0,
-                    'exam_id'=>$list['exam_id'],
+//                    'exam_id'=>$list['exam_id'],
                 ];
                 $notice = $this->Create($inviteDat);
                 if ($notice) {
@@ -93,10 +93,10 @@ class Invite extends CommonModel
             $connection->commit();
             $this->sendMsg($data);
             return true;
-        } catch (\Exception $ex) {
-            $connection->rollBack();
-            throw $ex;
-        }
+//        } catch (\Exception $ex) {
+//            $connection->rollBack();
+//            throw $ex;
+//        }
 
     }
 

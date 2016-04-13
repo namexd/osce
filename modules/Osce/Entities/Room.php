@@ -258,23 +258,23 @@ class Room extends CommonModel
             if (!$room = $this->create($formData)) {
                 throw new \Exception('新建房间失败');
             }
+            if(!empty($vcrId)){
+                $data = [
+                    'room_id' => $room->id,
+                    'vcr_id' => $vcrId,
+                    'created_user_id' => $userId
+                ];
 
-            $data = [
-                'room_id' => $room->id,
-                'vcr_id' => $vcrId,
-                'created_user_id' => $userId
-            ];
+                if (!RoomVcr::create($data)) {
+                    throw new \Exception('摄像机与房间关联失败');
+                }
 
-            if (!RoomVcr::create($data)) {
-                throw new \Exception('摄像机与房间关联失败');
+                $vcr = Vcr::findOrFail($vcrId);
+                $vcr->used = 1;
+                if (!$vcr->save()) {
+                    throw new \Exception('修改摄像机状态失败');
+                }
             }
-
-            $vcr = Vcr::findOrFail($vcrId);
-            $vcr->used = 1;
-            if (!$vcr->save()) {
-                throw new \Exception('修改摄像机状态失败');
-            }
-
             $connection->commit();
             return $room;
         } catch (\Exception $ex) {

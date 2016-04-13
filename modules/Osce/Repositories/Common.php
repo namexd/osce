@@ -295,6 +295,7 @@ class Common
     static  public function handleRedirect($request,$result){
             $data= $request->headers->all()['referer'][0];
             $fileNameArray =     explode('?',$data);
+
             $fileArray =     explode('&',$fileNameArray[1]);
         $fileData=[];
         foreach ($fileArray as $item) {
@@ -303,7 +304,10 @@ class Common
         }
             foreach ($fileArray as $value)
                     if($value=='status=1'){
-                        return $fileData;
+                        return view('osce::admin.index.layer_success',[
+                            'result'=>$result,
+                            'fileArray'=>$fileData,
+                        ]);
                 }else{
                     return false;
                 }

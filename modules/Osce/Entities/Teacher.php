@@ -40,6 +40,10 @@ class Teacher extends CommonModel
         return $this    ->  hasOne('\App\Entities\User','id','id');
     }
 
+    public function subjects(){
+//        return $this    ->  hasMany('Modules\Osce\Entities\Subject','id',);
+        return $this->  belongsToMany('Modules\Osce\Entities\Subject','teacher_subject','teacher_id','subject_id','id');
+    }
     /**
      * 通过老师id去寻找对应的应该在的考站id
      * @param $id
@@ -226,16 +230,21 @@ class Teacher extends CommonModel
      */
     public function getSpInvigilatorList(){
         return  $this   ->  where('type','=',2)
-            ->  paginate(config('osce.page_size'));
+                        ->  where('archived','=',0)
+                        ->  paginate(config('osce.page_size'));
     }
 
     public function getSpInvigilatorInfo(){
-        return  $this   ->  where('type','=',2)
-            ->leftjoin('cases',function($join){
-                $join ->on('cases.id','=',$this->table.'.case_id');
-            })
-            ->select([$this->table.'.*', 'cases.name as case_name'])
-            ->  paginate(config('osce.page_size'));
+//        return  $this   ->  where('type','=',2)
+//            ->leftjoin('cases',function($join){
+//                $join ->on('cases.id','=',$this->table.'.case_id');
+//            })
+//            ->select([$this->table.'.*', 'cases.name as case_name'])
+//            ->  paginate(config('osce.page_size'));
+        return $this    ->  where('type','=',2)
+                        ->  where('archived','=',0)
+                        ->  with('subjects')
+                        ->  paginate(config('osce.page_size'));
     }
 
     /**
@@ -257,7 +266,7 @@ class Teacher extends CommonModel
      *
      */
     public function getInvigilatorList($type = 1){
-        return  $this->where('type','=',$type)->paginate(config('osce.page_size'));
+        return  $this->where('type','=',$type)->where('archived','=',0)->paginate(config('osce.page_size'));
     }
 
     /**
@@ -334,20 +343,29 @@ class Teacher extends CommonModel
                 }
             }
 
-            //查询教师编号是否已经被别人使用
-            $code = $this->where('code', $teacherData['code'])->where('id','<>',$user->id)->first();
-            if(!empty($code)){
-                throw new \Exception('该教师编号已经有别人使用！');
-            }
             //查询老师是否存在
-            $teacher = $this->where('id', $user->id)->first();
-            if($teacher){
-                throw new \Exception('该教职员工已经存在');
+            $teacher    =   $this   ->where('id','=',$user->id)->first();
+            //判断老师是否已归档
+            if(!is_null($teacher)&&$teacher->archived==1)
+            {
+                //开档（重新启用老师）
+                $this->openData($teacher);
+            }
+            else
+            {
+                //查询教师编号是否已经被别人使用
+                $code = $this->where('code', $teacherData['code'])->where('id','<>',$user->id)->first();
+                if(!empty($code)){
+                    throw new \Exception('该教师编号已经有别人使用！');
+                }
 
-            } else{
-                $teacherData['id'] = $user -> id;
-                if(!($teacher = $this -> create($teacherData))){
-                    throw new \Exception('教职员工创建失败');
+                if($teacher){
+                    throw new \Exception('该教职员工已经存在');
+                } else{
+                    $teacherData['id'] = $user -> id;
+                    if(!($teacher = $this -> create($teacherData))){
+                        throw new \Exception('教职员工创建失败');
+                    }
                 }
             }
 
@@ -827,5 +845,12 @@ class Teacher extends CommonModel
         return 1;
     }
 
-
+    public function openData($teacher){
+        $teacher->archived  =   0;
+        if(!$teacher->save())
+        {
+            throw new \Exception('重新启用老师失败');
+        }
+        return $teacher;
+    }
 }

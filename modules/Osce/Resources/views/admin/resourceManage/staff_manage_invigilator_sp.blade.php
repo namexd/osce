@@ -64,7 +64,7 @@
                 @forelse($list as $key => $item)
                     <tr>
                         <td>{{$item->name}}</td>
-                        <td>{{$item->case_name}}</td>
+                        <td>{{$item->subjects->implode('title',',')}}</td>
                         <td>{{$item->userInfo->mobile or '-'}}</td>
                         <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
                         <td value="{{$item->id}}">

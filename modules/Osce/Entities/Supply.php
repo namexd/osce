@@ -16,6 +16,7 @@ use Modules\Osce\Entities\CommonModel;
 
 class Supply extends CommonModel
 {
+
     protected $connection = 'osce_mis';
     protected $table = 'supply';
     public $timestamps = true;
@@ -29,6 +30,9 @@ class Supply extends CommonModel
     public $search = [];
 
 
+
+
+    
     //获取用物列表
     public function getList($name)
     {

@@ -110,7 +110,6 @@ class StationController extends CommonController
      */
     public function postAddStation(Request $request, Station $model)
     {
-
         //验证略
         $this->validate($request, [
             'name'          => 'required|unique:osce_mis.station,name',
@@ -120,7 +119,7 @@ class StationController extends CommonController
             'mins'          => 'required',
 //            'subject_id'    => 'required|integer',
 //            'case_id'       => 'required|integer',
-            'room_id'       => 'required|integer',
+//            'room_id'       => 'required|integer',
             'vcr_id'        => 'required|integer'
         ],[
             'name.required'       =>  '考站名称必填',
@@ -129,18 +128,23 @@ class StationController extends CommonController
             'mins.required'       =>  '时间限制必填',
 //            'subject_id.required' =>  '科目必选',
 //            'case_id.required'    =>  '病例必选',
-            'room_id.required'    =>  '考场必选',
+//            'room_id.required'    =>  '考场必选',
             'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
         DB::connection('osce_mis')->beginTransaction();
 
         try {
+            $user = Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
+//            $caseId = $request->input('case_id');
             $stationData = $request->only('name', 'type', 'mins');
             $vcrId  = $request->input('vcr_id', null);
-//            $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
+
             //TODO:考卷 Zhoufuxiang，2016-3-22
             $paperId= $request->input('paper_id');
             if($stationData['type'] == 3){
@@ -149,14 +153,10 @@ class StationController extends CommonController
                 }
                 $stationData['paper_id'] = $paperId;
             }
-            $user = Auth::user();
-            if(empty($user)){
-                throw new \Exception('未找到当前操作人信息');
-            }
             $stationData['create_user_id'] = $user->id;
 
             //如果该考场id已经在考试中注册，就不允许增添考站到该考场
-            if (!ExamRoom::where('room_id',$roomId)->get()->isEmpty()) {
+            if (!empty($roomId) && !ExamRoom::where('room_id',$roomId)->get()->isEmpty()) {
                 throw new \Exception('选择的考场已经被选择！请换一个考场！');
             }
 
@@ -176,21 +176,14 @@ class StationController extends CommonController
 
             DB::connection('osce_mis')->commit();
 
-          $Redirect =  Common::handleRedirect($request,$result);
+            //todo 调用弹窗时新增的跳转 周强 2016-4-13
+            $Redirect = Common::handleRedirect($request,$result);
 
-        
-           if($Redirect==false){
-
+            if($Redirect==false){
                 return redirect()->route('osce.admin.Station.getStationList')  ; //返回考场列表
             }else{
-               return view('osce::admin.index.layer_success',[
-                   'result'=>$result,
-                   'fileArray'=>$Redirect,
-
-
-               ]);
-           }
-
+                return $Redirect;
+            }
 
         } catch (\Exception $ex) {
             DB::connection('osce_mis')->rollBack();
@@ -258,7 +251,7 @@ class StationController extends CommonController
 //            'code'          => 'required',
             'vcr_id'        => 'required|integer',
 //            'case_id'       => 'required|integer',
-            'room_id'       => 'required|integer',
+//            'room_id'       => 'required|integer',
         ],[
             'name.required'       =>  '考站名称必填',
             'name.unique'         =>  '考站名称必须唯一',
@@ -266,17 +259,22 @@ class StationController extends CommonController
             'mins.required'       =>  '时间限制必填',
 //            'subject_id.required' =>  '科目必选',
 //            'case_id.required'    =>  '病例必选',
-            'room_id.required'    =>  '考场必选',
+//            'room_id.required'    =>  '考场必选',
             'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
         try {
+            $user = Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
+            //$caseId = $request->input('case_id');
             $placeData = $request->only('name', 'type', 'mins');
             $vcrId  = $request->input('vcr_id');
-//            $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
             $id     = $request->input('id');
+
             //TODO:考卷 Zhoufuxiang，2016-3-22
             $paperId= $request->input('paper_id');
             if($placeData['type'] == 3){
@@ -287,14 +285,11 @@ class StationController extends CommonController
             }else{
                 $placeData['paper_id'] = null;
             }
-            $user = Auth::user();
-            if(empty($user)){
-                throw new \Exception('未找到当前操作人信息');
-            }
             $placeData['create_user_id'] = $user->id;
 
             $formData = [$placeData, $vcrId, $roomId];
 
+            //更新考站信息
             $model->updateStation($formData, $id);
 
             return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
@@ -351,15 +346,20 @@ class StationController extends CommonController
                 ->get();     //关联摄像机
         } else {
             //根据station的id找到对应的vcr的id
-            $vcrId = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
-
-            $vcr  = Vcr::where('used', 0)
+            $vcrStation = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first();
+            if (!is_null($vcrStation)){
+                $vcrId = $vcrStation->id;
+                $vcr  = Vcr::where('used', 0)
                     ->whereNotIn('status',[2,3])
                     ->orWhere(function($query) use($vcrId){
                         $query->where('id','=',$vcrId);
                     })
                     ->select('id', 'name')
                     ->get();     //关联摄像机
+            }else{
+                $vcr = [];
+            }
+
         }
         $case   = CaseModel::all(['id', 'name']);
         $room   = Room::all(['id', 'name']);        //房间

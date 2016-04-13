@@ -76,7 +76,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">教师编号</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="code" id="code" value="{{$item->code}}">
+                                    <input type="text" class="form-control" name="code" id="code" value="{{$item->code}}" maxlength="20">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -118,7 +118,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">备注</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="description" id="note" value="{{$item->description}}">
+                                    <input type="text" class="form-control" name="description" id="note" value="{{$item->description}}" maxlength="100">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>

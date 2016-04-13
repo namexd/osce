@@ -12,10 +12,14 @@
 @stop
 
 @section('head_js')
+
+
+{{--D:\wamp\www\hx.mis_api.local\mis-msc\public\osce\common\js\language\zh_CN.js--}}
     <script src="{{asset('osce/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/jquery-ui-1.10.4.min.js')}}"></script>
     <script src="{{asset('osce/admin/plugins/js/bootstrap.min.js?v=3.4.0')}}"></script>
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
+    <script src="{{asset('osce/common/js/language/zh_CN.js')}}"></script>
     <script type="text/javascript" src="{{asset('osce/common/js/layer/layer.js')}}"> </script>
     <!-- 自定义js -->
     <script src="{{asset('osce/wechat/jquery-confirm/jquery-confirm.js')}}"></script>
