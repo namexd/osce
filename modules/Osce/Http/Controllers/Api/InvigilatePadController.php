@@ -1175,14 +1175,13 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description){
+    public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description,$userId){
         $data = array();
-        $user = Auth::user();
         $data = [
             'station_id'        => $station_id,
             'exam_id'           => $exam_id,
             'student_id'        => $student_id,
-            'created_user_id'   => $user->id,
+            'created_user_id'   => $userId,
             'type'              => $type,
             'description'       => $description
         ];
