@@ -4603,6 +4603,12 @@ function station_assignment(){
 
     }
 
+    /**
+     * 选考必考
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-13
+     */
     $('.station-container').on('click', '.chioce-btn', function() {
         var $that = $(this),
             textName = ['必考','选考'],
@@ -4619,7 +4625,7 @@ function station_assignment(){
         $.ajax({
             type:'get',
             url: pars.chioce_btn,
-            data:{exam_id:examId, optional:flag,flow_id:$that.parent().parent().parent().find('table').attr('station-id'),type:$that.attr('type')},
+            data:{exam_id:examId, optional:toValue[flag],flow_id:$that.parent().parent().parent().find('table').attr('station-id'),type:$that.attr('type')},
             success: function(res) {
                 if(res.code != 1) {
                     return true;

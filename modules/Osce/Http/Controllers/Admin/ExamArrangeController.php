@@ -172,7 +172,7 @@ class ExamArrangeController extends CommonController
 
             $data=[
                 'exam_id' => $examId,
-                'old_draft_flow_id' => $ExamFlowId,
+                'exam_draft_flow_id' => $ExamFlowId,
                 'number'=>1,
                 'ctrl_type' => $type,
                 'optional' => $optional,
