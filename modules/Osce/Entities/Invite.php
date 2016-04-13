@@ -71,7 +71,7 @@ class Invite extends CommonModel
                     'exam_screening_id' => $list['exam_screening_id'],
                     'station_id' => $list['station_id'],
                     'status' => 0,
-                    'exam_id'=>$list['exam_id'],
+//                    'exam_id'=>$list['exam_id'],
                 ];
                 $notice = $this->Create($inviteDat);
                 if ($notice) {
