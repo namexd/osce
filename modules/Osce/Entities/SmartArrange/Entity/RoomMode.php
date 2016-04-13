@@ -15,6 +15,7 @@ use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
 class RoomMode extends AbstractEntity implements EntityInterface
 {
     use SQLTraits, SundryTraits;
+
     function entity($exam, $screen)
     {
         // TODO: Implement entity() method.

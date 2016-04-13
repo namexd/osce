@@ -15,11 +15,11 @@ use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
 class Poll extends AbstractCate implements CateInterface
 {
     use SQLTraits, SundryTraits;
+
     function needStudents($entity, $screen, $exam)
     {
         // TODO: Implement needStudents() method.
         $testStudnts = $this->pollTestStudents($entity, $screen);
-        dump($testStudnts);
         //申明数组
         $result = [];
 
@@ -76,8 +76,6 @@ class Poll extends AbstractCate implements CateInterface
         if (count($tempArrays) == 0) {
             $arrays = $this->beginStudents($entity);
         }
-        echo '====';
-        dump($arrays);
         return $this->testingStudents($this->exam, $arrays);
     }
 }
