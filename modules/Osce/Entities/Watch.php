@@ -246,14 +246,14 @@ class Watch extends CommonModel implements MachineInterface
             $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
         })->leftjoin('student',function($examQueue){
             $examQueue->on('student.id','=','watch_log.student_id');
-        })->select('watch.id','watch.code','student.name','exam_queue.status')->get();
+        })->select('watch.code','watch.nfc_code','student.name','exam_queue.status')->get();
 
         return $builder;
     }
 
     //查询某个腕表的考试状态
     public function getWatchExamStatus($ncfCode){
-        $builder = $this->where('watch.nfc_code','=',$ncfCode)->leftjoin('watch_log',function($watchLog){
+        $builder = $this->where('watch.code','=',$ncfCode)->leftjoin('watch_log',function($watchLog){
             $watchLog->on('watch_log.watch_id','=','watch.id');
         })->leftjoin('exam_queue',function($examQueue){
             $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
