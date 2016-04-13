@@ -102,7 +102,6 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
             'exam_id' => 'required|integer'
         ]);
         $examId = $request->input('exam_id');
-
         //获取操作者
         $user = Auth::user();
         ExamPlan::where('exam_id', $examId)->delete();
