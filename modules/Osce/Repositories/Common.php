@@ -303,7 +303,10 @@ class Common
         }
             foreach ($fileArray as $value)
                     if($value=='status=1'){
-                        return $fileData;
+                        return view('osce::admin.index.layer_success',[
+                            'result'=>$result,
+                            'fileArray'=>$fileData,
+                        ]);
                 }else{
                     return false;
                 }
