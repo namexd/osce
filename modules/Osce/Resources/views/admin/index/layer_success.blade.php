@@ -27,6 +27,10 @@
     <div style="display: none;">
         <span id="result" value="{{$result->id}}"></span>
         <span id="result-name" value="{{$result->name}}"></span>
+        @foreach($fileArray as $selector)
+        <span id="table-id" value="{{$selector->table}}"></span>
+        <span id="tr-id" value="{{$selector->tr}}"></span>
+        @endforeach
         
     </div>
     <i>数据新增成功</i>
