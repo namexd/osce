@@ -180,7 +180,6 @@ class ExamArrangeController extends CommonController
                 'user_id' => $user->id,
             ];
             if($type == 2){
-
                 //是回显的修改 ，就添加一条数据
                 if(!$result = ExamDraftFlowTemp::create($data)){
                     throw new \Exception('修改考试数据失败');
