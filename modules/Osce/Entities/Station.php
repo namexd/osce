@@ -158,14 +158,17 @@ class Station extends CommonModel
 //                throw new \Exception('添加病历表失败');
 //            }
 
-            //将房间相关插入关联表
-            $StationRoomData = [
-                'room_id' => $roomId,
-                'station_id' => $station_id
-            ];
-            $result = RoomStation::create($StationRoomData);
-            if (!$result) {
-                throw new \Exception('关联房间时出错，请重试！');
+            if (!empty($roomId)){
+                //将房间相关插入关联表
+                $StationRoomData = [
+                    'room_id'    => $roomId,
+                    'station_id' => $station_id
+                ];
+                $result = RoomStation::create($StationRoomData);
+                if (!$result) {
+                    throw new \Exception('关联房间时出错，请重试！');
+                }
+
             }
 
             $connection->commit();
@@ -316,15 +319,8 @@ class Station extends CommonModel
 //                throw new \Exception('更改病例关联失败');
 //            }
 
-            //改变考站房间的状态
-            $stationRoomData = [
-                'room_id' => $roomId,
-            ];
-            $result = RoomStation::where('station_id','=',$id)->update($stationRoomData);
-            if (!$result) {
-                $connection->rollBack();
-                throw new \Exception('更改房间关联失败');
-            }
+            //修改 考站对应考场关系
+            $this->modifyRoomStation($roomId, $id);
 
             $connection->commit();
             return true;
@@ -332,6 +328,38 @@ class Station extends CommonModel
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    /**
+     * 修改 考站对应考场关系
+     * @param $roomId
+     * @param $id
+     *
+     * @author Zhoufuxiang 2016-04-13
+     * @return bool
+     * @throws \Exception
+     */
+    private function modifyRoomStation($roomId, $id)
+    {
+        if (empty($roomId)){
+            //删除考站 原来对应的考场关系
+            $roomStation = RoomStation::where('station_id','=',$id)->first();
+            if (!is_null($roomStation)) {
+                if(!$roomStation->delete()){
+                    throw new \Exception('更改房间关联失败');
+                }
+            }
+        }else{
+            //改变考站 考场的关系
+            $stationRoomData = [
+                'room_id' => $roomId,
+            ];
+            $result = RoomStation::where('station_id','=',$id)->update($stationRoomData);
+            if (!$result) {
+                throw new \Exception('更改房间关联失败');
+            }
+        }
+        return true;
     }
 
     /**
