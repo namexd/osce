@@ -1178,7 +1178,6 @@ class InvigilatePadController extends CommonController
     public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description){
         $data = array();
         $user = Auth::user();
-
         $data = [
             'station_id'        => $station_id,
             'exam_id'           => $exam_id,
@@ -1208,14 +1207,15 @@ class InvigilatePadController extends CommonController
             'code'      =>'required',//腕表设备编码
             'exam_id'   =>'required', //考试id
             'description'   =>'required', //解绑原因
-            'type'   =>'required' //上报类型
+            'type'   =>'required', //上报类型
+            'user_id'   =>'required' //上报类型
         ]);
-        $user = Auth::user();
-        return \Response::json(array('code'=>$user));
+
         $code=$request->get('code');
         $exam_id=$request->get('exam_id');
         $description=$request->get('description');
         $type=$request->get('type');
+        $userId=$request->get('user_id');
         //开启事务
         $connection = \DB::connection('osce_mis');
         $connection ->beginTransaction();
@@ -1252,7 +1252,7 @@ class InvigilatePadController extends CommonController
                     $watchModel->unwrapRecord($data);
 
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
                     return \Response::json([
                         'code' => 200,
                     ]);   //解绑成功
@@ -1285,7 +1285,7 @@ class InvigilatePadController extends CommonController
                     $examScreening  =  new ExamScreening();
                     $examScreening  -> getExamCheck();
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
                     $connection->commit();
 
                     return \Response::json([
@@ -1318,7 +1318,7 @@ class InvigilatePadController extends CommonController
                     $examScreening   =   new ExamScreening();
                     $examScreening  ->getExamCheck();
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
                     //检查考试是否可以结束
                     $connection->commit();
                 }
