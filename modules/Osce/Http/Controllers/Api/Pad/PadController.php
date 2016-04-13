@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamRoom;
+use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
@@ -22,7 +23,9 @@ use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Vcr;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
+use Modules\Osce\Http\Controllers\Api\StudentWatchController;
 
 class PadController extends  CommonController{
     /**
@@ -395,8 +398,19 @@ class PadController extends  CommonController{
 //                throw new \Exception('结束考试失败', -10);
 //            }
 
+            //考试结束后，调用向腕表推送消息的方法
+            $examScreeningStudentModel = new ExamScreeningStudent();
+            $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
+                ->where('student_id','=',$queue->student_id)->first();
+            $watchModel = new Watch();
+            $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+            $studentWatchController = new StudentWatchController();
+
+            $request->nfc_code = $watchData->nfc_code;
+            $studentWatchController->getStudentExamReminder($request);
 
             return response()->json($this->success_data([['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id]],106,'结束考试成功'));
+
         } catch (\Exception $ex) {
             \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
