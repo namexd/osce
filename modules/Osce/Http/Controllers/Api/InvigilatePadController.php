@@ -1187,8 +1187,8 @@ class InvigilatePadController extends CommonController
             'type'              => $type,
             'description'       => $description
         ];
-
-        $ExamMonitor->create($data);
+        var_dump($data);
+        dd($ExamMonitor->create($data));
     }
     /**
      *  解除腕表绑定并上报
