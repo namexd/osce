@@ -36,7 +36,8 @@ class CommonController extends  ApiBaseController
             $path=Common::saveImage($request,'images');
         }
         catch(\Exception $ex){
-            return response()->json($this->fail($ex));
+            //return response()->json($this->fail($ex));
+            return json_encode($this->fail($ex));
         }
         if($path)
         {

@@ -28,7 +28,7 @@
 
 @section('content')
 
-<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_patrol_add','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_patrol_add','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','email':'{{ route('osce.admin.invigilator.postEmailUnique')}}','url':'{{ url('commom/upload-image') }}'}" />
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">

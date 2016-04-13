@@ -71,6 +71,7 @@ class InvigilatorController extends CommonController
      */
     public function getInvigilatorList(Request $request){
         $type = $request->get('type');
+//        return view('osce::admin.index')->withErrors(['msg'=>'保存成功','code'=>[1]]);
         $Invigilator = new Teacher();
         $list        = $Invigilator -> getInvigilatorList((empty($type) || $type==1)?1:3);
 
@@ -828,6 +829,40 @@ class InvigilatorController extends CommonController
             return json_encode(['valid' =>true]);
         }
     }
+
+
+
+    public function  postEmailUnique(Request $request){
+
+        $this->validate($request, [
+            'email'      => 'required',
+        ]);
+
+        $id     = $request  -> get('id');
+        $email = $request  -> get('email');
+
+
+        //实例化模型
+        $model =  new User();
+        //查询 该身份证号 是否存在
+        if(empty($id)){
+            $result = $model->where('email', $email)->first();
+        }else{
+            $result = $model->where('email', $email)->where('id', '<>', $id)->first();
+
+        }
+        if($result){
+            return json_encode(['valid' =>false]);
+        }else{
+            return json_encode(['valid' =>true]);
+        }
+
+
+    }
+
+
+
+
 
     /**
      * Excel导入监、巡考老师
