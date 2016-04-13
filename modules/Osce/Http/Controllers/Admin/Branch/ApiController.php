@@ -732,24 +732,28 @@ class ApiController extends CommonController
         $stationId       = $request->input('station_id');
         $examScreeningId = $request->input('exam_screening_id');
 
-        $redis = Redis::connection('message');
+        //$redis = Redis::connection('message');
 
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)->where('station_id', '=', $stationId)->first();
         if (is_null($examStationStatus)) {
-            // http返回通知pad失败结果
-            $retval = ['title' => '未查到到考试中当前考站状态信息'];
+            $retval = ['title' => '当前考站准备完成失败'];
             return response()->json(
                 $this->success_data($retval, -1, 'error')
             );
         }
 
-        // http返回通知pad成功结果
         $examStationStatus->status = 1;
         $examStationStatus->save();
 
+        $retval = ['title' => '当前考站准备完成成功'];
+        return response()->json(
+            $this->success_data($retval)
+        );
+
 
         // 给腕表推送考站准备完成信息
+        /*
         $examQenenModel = new ExamQueue();
         $examQenen = $examQenenModel->where('exam_id', '=', $examId)
                                     ->where('exam_screening_id', '=', $examScreeningId)
@@ -784,11 +788,7 @@ class ApiController extends CommonController
 
         $studentWatchController = new StudentWatchController();
         $studentWatchController->getStudentExamReminder($request, $watch['nfc_code']);
-
-        $retval = ['title' => '当前考站准备完成成功'];
-        return response()->json(
-            $this->success_data($retval)
-        );
+        */
     }
 
     /**
