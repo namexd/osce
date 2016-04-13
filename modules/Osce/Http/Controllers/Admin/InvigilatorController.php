@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
+use App\Entities\SysUserRole;
 use App\Entities\User;
 use App\Repositories\Common;
 use Illuminate\Http\Request;
@@ -47,8 +48,8 @@ class InvigilatorController extends CommonController
      */
     public function getSpInvigilatorList(Request $request){
        $Invigilator    =   new Teacher();
-        $list       =   $Invigilator    ->getSpInvigilatorInfo();
-        $isSpValues =   $Invigilator    ->getIsSpValues();
+        $list       =   $Invigilator    ->  getSpInvigilatorInfo();
+        $isSpValues =   $Invigilator    ->  getIsSpValues();
         return view('osce::admin.resourceManage.staff_manage_invigilator_sp',['list'=>$list,'isSpValues'=>$isSpValues]);
     }
 
@@ -209,7 +210,12 @@ class InvigilatorController extends CommonController
         $Invigilator    =   new Teacher();
         try{
             if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
-                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type]);
+
+//                return redirect()->back('osce.admin.invigilator.getInvigilatorList')->withErrors(['这个号码已有过关联，不能修改']);
+
+
+                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type])->withErrors(['保存成功']);
+
             } else{
                 throw new \Exception('新增失败');
             }
@@ -282,7 +288,8 @@ class InvigilatorController extends CommonController
             $subjects = $request->get('subject');
             $Invigilator    =   new Teacher();
             if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData,$subjects)){
-                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
+
+                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList')->withErrors(['保存成功']);
             } else{
                 throw new \Exception('新增失败');
             }
@@ -437,7 +444,7 @@ class InvigilatorController extends CommonController
 
             if($result = $teacherModel ->  editInvigilator($id, $userData, $teacherData, $subjects))
             {
-                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=>$type]);
+                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=>$type])->withErrors(['保存成功']);
             } else{
                 throw new \Exception('编辑失败');
             }
@@ -502,7 +509,7 @@ class InvigilatorController extends CommonController
             if($TeahcerModel    ->  editSpInvigilator($id, $userData, $teacherData, $subjects))
                 
             {
-                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList');
+                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList')->withErrors(['保存成功']);
             } else{
                 throw new \Exception('编辑失败');
             }
@@ -620,6 +627,7 @@ class InvigilatorController extends CommonController
                 if(StationTeacher::where('user_id', $id)->first() || ExamSpTeacher::where('teacher_id',$id)->first()){
                     throw new \Exception('该老师已被关联，无法删除！');
                 }
+
                 //删除老师—考试项目关系（巡考老师没有关联考试项目）
                 if($type !=3){
                     $result = TeacherSubject::where('teacher_id','=',$id)->get();
@@ -635,10 +643,14 @@ class InvigilatorController extends CommonController
                 $role_id   = \Modules\Osce\Repositories\Common::getRoleIdByTeacherType($type);      //通过考试类型获取角色id
                 $connect   = \DB::connection('sys_mis');
                 $connect->beginTransaction();
-                $user_role = \DB::table('sys_user_role')->where('user_id','=',$id)->where('role_id','=',$role_id)->delete();
-                if(!$user_role){
-                    $connect->rollBack();
-                    throw new \Exception('删除用户对应老师角色关系失败，请重试！');
+                $user_role = \DB::table('sys_user_role')->where('user_id','=',$id)->where('role_id','=',$role_id)->first();
+                if(!is_null($user_role)){
+                    if(!SysUserRole::where('id','=',$user_role->id)->delete()){
+
+                        $connect->rollBack();
+
+                        throw new \Exception('删除用户对应老师角色关系失败，请重试！');
+                    }
                 }
 
                 //删除老师
@@ -649,7 +661,7 @@ class InvigilatorController extends CommonController
 
                 $connect->commit();
                 $connection->commit();
-                return $this->success_data('删除成功！');
+                return $this->success_data('删除成功！',1);
 
             } else {
                 $connection->rollBack();

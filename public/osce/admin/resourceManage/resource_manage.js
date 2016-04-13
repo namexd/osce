@@ -2418,6 +2418,10 @@ function staff_manage_invigilator_add() {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
                     },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
+                    },
                     stringLength: {
                         max:20,
                         message: '名称字数不超过20个'
@@ -2528,6 +2532,15 @@ function staff_manage_invigilator_add() {
                         message: '支持考试项目不能为空'
                     }
                 }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
+                    }
+                }
             }
         }
     });
@@ -2627,6 +2640,10 @@ function staff_manage_invigilator_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
+                    },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
                     },
                     stringLength: {
                         max:20,
@@ -2738,6 +2755,15 @@ function staff_manage_invigilator_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '支持考试项目不能为空'
+                    }
+                }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
                     }
                 }
             }
@@ -2900,6 +2926,10 @@ function staff_manage_invigilator_sp_add() {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
                     },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
+                    },
                     stringLength: {
                         max:20,
                         message: '名称字数不超过20个'
@@ -3005,6 +3035,15 @@ function staff_manage_invigilator_sp_add() {
                         message: '支持考试项目不能为空'
                     }
                 }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
+                    }
+                }
             }
         }
     });
@@ -3107,6 +3146,10 @@ function staff_manage_invigilator_sp_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
+                    },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
                     },
                     stringLength: {
                         max:20,
@@ -3222,6 +3265,15 @@ function staff_manage_invigilator_sp_edit() {
                         message: '支持考试项目不能为空'
                     }
                 }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
+                    }
+                }
             }
         }
     });
@@ -3300,7 +3352,26 @@ function staff_manage_invigilator_sp_edit() {
             }
         }
     });
-
+    /**
+     * 保存数据
+     * @author chenxia
+     * @version 3.3
+     * @date    2016-04-12
+     *//*
+    $('#save').click(function() {
+        $.ajax({
+            type:'post',
+            url: "",
+            success: function(res) {
+                if(res.code != 1) {
+                    layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
+                } else {
+                    layer.msg('数据保存成功！',{skin:'msg-success',icon:1});
+                }
+            }
+        })
+    });
+*/
 }
 
 //删除方法封装,其中id为当前dom的value值
@@ -3367,6 +3438,10 @@ function staff_manage_invigilator_patrol_add() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
+                    },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
                     },
                     stringLength: {
                         max:20,
@@ -3467,6 +3542,15 @@ function staff_manage_invigilator_patrol_add() {
                     regexp: {
                         regexp: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ,
                         message: '请输入正确的邮箱'
+                    }
+                }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
                     }
                 }
             }
@@ -3544,6 +3628,10 @@ function staff_manage_invigilator_patrol_edit() {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
                     },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
+                    },
                     stringLength: {
                         max:20,
                         message: '名称字数不超过20个'
@@ -3646,6 +3734,15 @@ function staff_manage_invigilator_patrol_edit() {
                     regexp: {
                         regexp: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ ,
                         message: '请输入正确的邮箱'
+                    }
+                }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
                     }
                 }
             }
@@ -3733,7 +3830,12 @@ function res_manage_add() {
                     },
                     notEmpty: {/*非空提示*/
                         message: '用物名称不能为空'
-                    }
+                    },
+                    stringLength: {/*长度提示*/
+                        min: 1,
+                        max: 32,
+                        message: '用物名称长度不超过32个'
+                    }/*最后一个没有逗号*/
                 }
             }
         }
@@ -3773,7 +3875,12 @@ function res_manage_edit() {
                     },
                     notEmpty: {/*非空提示*/
                         message: '用物名称不能为空'
-                    }
+                    },
+                    stringLength: {/*长度提示*/
+                        min: 1,
+                        max: 32,
+                        message: '用物名称长度不超过32个'
+                    }/*最后一个没有逗号*/
                 }
             }
         }

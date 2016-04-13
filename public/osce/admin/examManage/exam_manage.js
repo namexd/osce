@@ -3980,7 +3980,7 @@ function station_assignment(){
     var stationName = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'],
         examId = (location.href).split('=')[1],
         typeToName = ['','技能考站','sp考站','理论考站'],
-        chioceToName = ['','必考','选考'];
+        chioceToName = ['选考','必考'];
 
     /**
      * 初始化
@@ -4046,7 +4046,7 @@ function station_assignment(){
                                         '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="2">'+stageRender(data[i].exam_gradation_id)+'</select>'+
                                 '</div>'+
                                 '<div class="col-sm-2">'+
-                                    '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="0" type="2">必考</a>'+
+                                    '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="'+data[i].optional+'" type="2">'+chioceToName[data[i].optional]+'</a>'+
                                     '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                 '</div>'+
                             '</div>'+
@@ -4286,7 +4286,7 @@ function station_assignment(){
             $that = $(this).parent().parent().parent().parent().parent(),
             judgeType = $that.parent().parent().find('.select-stage').attr('type') == 2 ? 1 :4,
             index = parseInt($that.attr('index')) + 1,
-            textName = ['必考','选考'];
+            textName = ['选考','必考'];
             flag = $that.parent().parent().find('.chioce-btn').attr('value');
 
         $.ajax({
@@ -4605,7 +4605,7 @@ function station_assignment(){
 
     $('.station-container').on('click', '.chioce-btn', function() {
         var $that = $(this),
-            textName = ['选考','必考'],
+            textName = ['必考','选考'],
             flag = $that.attr('value'),
             toValue = [1,0];
 
@@ -4617,7 +4617,7 @@ function station_assignment(){
         $that.parent().parent().parent().find('.station-chioce').text(textName[flag]);
 
         $.ajax({
-            type:'post',
+            type:'get',
             url: pars.chioce_btn,
             data:{exam_id:examId, optional:flag,flow_id:$that.parent().parent().parent().find('table').attr('station-id'),type:$that.attr('type')},
             success: function(res) {
