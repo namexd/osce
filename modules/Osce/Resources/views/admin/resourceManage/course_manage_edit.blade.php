@@ -123,7 +123,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>编辑科目</h5>
+            <h5>编辑考试项目</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -225,16 +225,16 @@
                                                     <th width="160">操作</th>
                                                 </tr>
                                             </thead>
-                                            <tbody index="{{count($item->supplys)}}">
-                                            @forelse($item->supplys as $key => $subjectSupply)
+                                            <tbody index="{{count($subjectSupplys)}}">
+                                            @forelse($subjectSupplys as $key => $subjectSupply)
                                                 <tr>
                                                     <td>
                                                         <select class="form-control js-example-basic-single" name="goods[{{$key+1}}][name]" style="width: 481px;">
-                                                            <option value="{{$subjectSupply->id}}">{{$subjectSupply->name}}</option>
+                                                            <option value="{{$subjectSupply->supply->name}}">{{$subjectSupply->supply->name}}</option>
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" type="text" value="{{$subjectSupply->name}}" name="goods[{{$key+1}}][number]">
+                                                        <input class="form-control" type="text" value="{{$subjectSupply->num}}" name="goods[{{$key+1}}][number]">
                                                     </td>
                                                     <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
                                                 </tr>

@@ -30,6 +30,8 @@ use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\RoomStation;
+use Modules\Osce\Entities\SmartArrange\SmartArrange;
+use Modules\Osce\Entities\SmartArrange\SmartArrangeRepository;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
@@ -42,6 +44,8 @@ use App\Repositories\Common;
 use Auth;
 use Symfony\Component\Translation\Interval;
 use DB;
+use Illuminate\Container\Container as App;
+
 class ExamController extends CommonController
 {
     /**
@@ -803,6 +807,7 @@ class ExamController extends CommonController
                     break;
                 case '2' :
                     $result = $this->getStationAssignment($request);
+
                     break;
                 default:
                     $result =  $this->getExamroomAssignment($request);
@@ -1308,16 +1313,15 @@ class ExamController extends CommonController
         try {
             if (count($plan) == 0) {
                 if (ExamPlanRecord::where('exam_id', $id)->first()) {
-                    $automaticPlanArrangement = new AutomaticPlanArrangement($id, new ExamPlaceEntity(), new \Modules\Osce\Entities\AutomaticPlanArrangement\Exam());
-                    $plan = $automaticPlanArrangement->output($id);
+                    $app = new App();
+                    $smartArrangeRepository = new SmartArrangeRepository($app);
+                    $plan = $smartArrangeRepository->output($exam);
                     return view('osce::admin.examManage.smart_assignment', ['exam' => $exam, 'plan' => $plan])->withErrors('当前排考计划没有保存！');
                 } else {
                     $plan = [];
                 }
             }
-        }
-        catch (\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
         }
         return view('osce::admin.examManage.smart_assignment',['exam'=>$exam,'plan'=>$plan]);

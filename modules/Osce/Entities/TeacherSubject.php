@@ -32,4 +32,52 @@ class TeacherSubject extends CommonModel
             ->select(['teacher_subject.teacher_id', 'teacher.name'])->get();
     }
 
+    /**
+     * 获取当前正在考试的考试对应的所有老师考试项目关系数据
+     *
+     * @param $subject
+     *
+     * @author Zhoufuxiang  2016-04-13 10:55
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getTeacherSubjects(){
+        //拿到当前开始
+        $exam = Exam::doingExam();
+        //考试考试下面所有的老师
+        $TeacherArray= StationTeacher::where('exam_id','=',$exam->id)->get()->pluck('user_id');
+        if(!is_null($TeacherArray)){
+
+            //拿到考试项目关联的老师
+            $TeacherId = array_diff($TeacherArray->all(), [null]);
+            $teacherSubjects = TeacherSubject::whereIn('teacher_id',$TeacherId)->get();
+        }else{
+            $teacherSubjects = collect([]);
+        }
+
+        return $teacherSubjects;
+    }
+
+    /**
+     * 删除和老师关联
+     *
+     * @param $subject
+     *
+     * @author Zhoufuxiang  2016-04-13 10:55
+     * @return mixed
+     * @throws \Exception
+     */
+    public function delTeacherSubjects($subject)
+    {
+        //获取与当前考试项目相关联的老师
+        $TeacherSubjects = TeacherSubject::where('subject_id','=',$subject->id)->get();
+        if($TeacherSubjects){
+            foreach ($TeacherSubjects as $teacher){
+                if(!$teacher->delete()){
+                    throw new \Exception('删除关联老师失败');
+                }
+            }
+        }
+        return true;
+    }
 }

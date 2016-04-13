@@ -15,6 +15,7 @@ use League\Flysystem\Exception;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\StandardItem;
 use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\SubjectCases;
 use Modules\Osce\Entities\SubjectItem;
@@ -278,10 +279,7 @@ class TopicController extends CommonController
      *
      *
      * <b>get 请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        id        参数中文名(必须的)
      *
      * @return view
      *
@@ -298,11 +296,19 @@ class TopicController extends CommonController
         ]);
 
         $id = $request->get('id');
-        $subject = Subject::with('cases')->with('items')->with('supplys')->where('id','=',$id)->first();
+        $subject = Subject::where('id','=',$id)->with('cases')->with('supplys')
+                    ->with(['standards'=>function($q){
+                        $q->with('standardItem');
+                    }])->first();
         OsceCommon::valueIsNull($subject, -1000, '没有找到对应的科目');
 
-        $items = $subject->items;
-        $items = SubjectItem::builderItemTable($items);
+        $standards = $subject->standards->first();
+        if (is_null($standards) || is_null($standards->standardItem)){
+            $items = [];
+        }else{
+            //处理 评分标准 数据
+            $items = StandardItem::builderItemTable($standards->standardItem);
+        }
         $prointNum = 1;
         $optionNum = [0 => 0];
 
@@ -318,15 +324,20 @@ class TopicController extends CommonController
             }
         }
 
+        //获取考试项目——用物关系数据
+        $subjectSupplys = SubjectSupply::where('subject_id','=',$id)->with('supply')->get();
+
         return view('osce::admin.resourceManage.course_manage_edit',
-            ['item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,]);
+            [
+                'item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,
+                'subjectSupplys' => $subjectSupplys
+            ]);
     }
 
     /**
      *
-     * @url /osce/admin/topic/getDelTopic
+     * @url GET /osce/admin/topic/del-topic
      * @access public
-     *
      *
      * <b>get 请求字段：</b>
      * * string        id        考核标准ID(必须的)
@@ -348,13 +359,14 @@ class TopicController extends CommonController
         $SubjectModel = new Subject();
         $subject = $SubjectModel->find($id);
         try {
+            //删除考试项目
             $SubjectModel->delSubject($subject);
-            return \Response::json(array('code' => 1));
-        } catch (\Exception $ex) {
             return response()->json(
-                $this->fail($ex)
+                $this->success_data([],1,'删除成功！')
             );
-            //return redirect()->back()->withErrors($ex->getMessage());
+
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
         }
     }
 

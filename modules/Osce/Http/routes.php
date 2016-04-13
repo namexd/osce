@@ -348,7 +348,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invitation/invitation-respond',['uses'=>'InvitationController@getInvitationRespond','as'=>'osce.wechat.invitation.getInvitationRespond']);
 		Route::get('invitation/msg',['uses'=>'InvitationController@getMsg','as'=>'osce.wechat.invitation.getMsg']);
 		Route::get('invitation/list',['uses'=>'InvitationController@getList','as'=>'osce.wechat.invitation.getList']);
-
+		Route::get('invitation/del-teacher-invite',['uses'=>'InvitationController@getDelTeacherInvite','as'=>'osce.wechat.invitation.getDelTeacherInvite']);
+		Route::get('invitation/invite-all-teacher',['uses'=>'InvitationController@getInviteAllTeacher','as'=>'osce.wechat.invitation.getInviteAllTeacher']);
 		//讨论区
 		Route::get('discussion/question-list',['uses'=>'DiscussionController@getQuestionList','as'=>'osce.wechat.getQuestionList']);
 		Route::get('discussion/check-question',['uses'=>'DiscussionController@getCheckQuestion','as'=>'osce.wechat.getCheckQuestion']);

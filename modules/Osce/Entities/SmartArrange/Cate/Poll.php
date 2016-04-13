@@ -19,7 +19,7 @@ class Poll extends AbstractCate implements CateInterface
     {
         // TODO: Implement needStudents() method.
         $testStudnts = $this->pollTestStudents($entity, $screen);
-
+        dump($testStudnts);
         //申明数组
         $result = [];
 
@@ -32,7 +32,7 @@ class Poll extends AbstractCate implements CateInterface
 
         if (count($result) < $entity->needNum) {
             $hasStudent = $entity->needNum - count($result);
-            for ($i = 0; $i <= $hasStudent; $i) {
+            for ($i = 0; $i <= $hasStudent; $i++) {
                 if (count($this->_S_W) > 0) {
                     $thisStudent = array_shift($this->_S_W);
                     if (!is_null($thisStudent)) {
@@ -49,6 +49,35 @@ class Poll extends AbstractCate implements CateInterface
             }
             return $result;
         }
+
         return $result;
+    }
+
+    /**
+     * 返回轮询所需要的学生
+     * @param $entity
+     * @param $screen
+     * @return array
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-11 15:33
+     */
+    protected function pollTestStudents($entity, $screen)
+    {
+        $tempArrays = $this->pollBeginStudent($entity, $screen);
+
+        $num = $this->waitingStudentSql($screen);
+
+        $arrays = [];
+        foreach ($num as $item) {
+            $arrays[] = $item->student;
+        }
+
+        if (count($tempArrays) == 0) {
+            $arrays = $this->beginStudents($entity);
+        }
+        echo '====';
+        dump($arrays);
+        return $this->testingStudents($this->exam, $arrays);
     }
 }

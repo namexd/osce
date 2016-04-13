@@ -20,10 +20,12 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Auth;
 use Modules\Osce\Repositories\Common;
+use Illuminate\Container\Container as App;
 
 class AutomaticPlanArrangementController extends CommonController implements SmartArrangeInterface
 {
     /**
+     * TODO 此方法暂时未使用
      * 智能排考的着陆页
      * @param Request $request
      * @author Jiangzhiheng
@@ -35,11 +37,10 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
         $this->validate($request, [
             'exam_id' => 'required|integer'
         ]);
-
         $examId = $request->input('exam_id');
 //        try {
 //            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
-//            
+//
 //            return response()->json($this->success_data($automaticPlanArrangement->output($examId)));
 //        } catch (\Exception $ex) {
 //            return response()->json($this->fail($ex));
@@ -69,7 +70,6 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
         ]);
 
         $examId = $request->input('exam_id');
-
 //        try {
 //            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
 //            return response()->json($this->success_data($automaticPlanArrangement->plan($examId)));
@@ -77,16 +77,15 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
 //            return response()->json($this->fail($ex));
 //        }
 
-        try {
+//        try {
             $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
-            $smartArrangeRepository = new SmartArrangeRepository();
-            $smartArrange = new SmartArrange();
-            
+            $app = new App();
+            $smartArrangeRepository = new SmartArrangeRepository($app);
 
-            return response()->json($this->success_data($smartArrangeRepository->plan($exam, $smartArrange)));
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+            return response()->json($this->success_data($smartArrangeRepository->plan($exam)));
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**

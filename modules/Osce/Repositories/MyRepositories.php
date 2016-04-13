@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Repositories;
 use Modules\Osce\Entities\ExamScore;
+use Modules\Osce\Entities\StandardItem;
 use Modules\Osce\Repositories\BaseRepository;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
@@ -141,7 +142,7 @@ class MyRepositories  extends BaseRepository
 
         //获取考核点名称
         if(is_object($pid)){
-            $standardModel = new Standard();
+            $standardModel = new StandardItem();
             $content = $standardModel->whereIn('id', $pid)->select('id','content')->get();
             $contentTwo = $standardModel->whereIn('pid', $pid)->select($DB->raw('count(pid) as pidNum'))->groupBy('pid')->get();
 

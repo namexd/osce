@@ -71,6 +71,7 @@ class ExamArrangeController extends CommonController
                 'ctrl_type' => $type,
             ];
 
+
             if(is_null($type)){
                 $data['ctrl_type'] = 1;
             }
@@ -85,7 +86,6 @@ class ExamArrangeController extends CommonController
                 $examDraftFlow->exam_gradation_id = $examGradationId ;
 
                 if($examDraftFlow->save()){
-
                     return response()->json(
                         $this->success_data([], 1, 'success')
                     );
@@ -93,38 +93,32 @@ class ExamArrangeController extends CommonController
 
             }
 
-            if ($result = ExamDraftFlowTemp::create($data)) {
-                //新增一条空的考站的子站数据
+            $result = ExamDraftFlowTemp::create($data);
 
-                if ($type == 2) {
-                    return response()->json(
-                        $this->success_data($result->id, 1, 'success')
-                    );
-                }
+                if ($result&&$type != 2) {
 
+                    //新增一条空的考站的子站数据
+                    $DraftData = [
+                        'exam_id' => $examId,
+                        'old_draft_flow_id' => $result->id,
+                        'ctrl_type' => 4,
+                        'used' => 0,
+                        'add_time' => date('Y-m-d H:i:s',time()+1),
+                        'user_id' => $user->id,
+                    ];
+                    $DraftResult = ExamDraftTemp::create($DraftData);
 
-                $DraftData = [
-                    'exam_id' => $examId,
-                    'old_draft_flow_id' => $result->id,
-                    'ctrl_type' => 4,
-                    'used' => 0,
-                    'add_time' => date('Y-m-d H:i:s',time()+1),
-                    'user_id' => $user->id,
-                ];
-                $DraftResult = ExamDraftTemp::create($DraftData);
+                    if (!$DraftResult) {
+                        throw new \Exception('保存临时考站失败');
+                    }
 
-                if ($DraftResult) {
-                    return response()->json(
-                        $this->success_data(['id' => $result->id, 'draft_id' => $DraftResult->id], 1, 'success')
-                    );
                 } else {
                     throw new \Exception('保存临时考站失败');
+
                 }
-
-            } else {
-                throw new \Exception('保存临时考站失败');
-
-            }
+            return response()->json(
+                $this->success_data(['id' => $result->id, 'draft_id' => $DraftResult->id], 1, 'success')
+            );
         } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)
@@ -315,7 +309,13 @@ class ExamArrangeController extends CommonController
     }
 
 
-    //删除子站
+    /**
+     * 删除子站接口
+     * @url GET /osce/admin/exam-arrange/del-exam-draft
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
     public function getDelExamDraft(Request $request)
     {
         $this->validate($request, [
@@ -384,7 +384,15 @@ class ExamArrangeController extends CommonController
     }
 
 
-    //获取考场接口
+
+
+    /**
+     * 获取考场接口
+     * @url GET /osce/admin/exam-arrange/room-list
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
     public function getRoomList(Request $request)
     {
         $this->validate($request, [
@@ -408,8 +416,14 @@ class ExamArrangeController extends CommonController
 
     }
 
+    /**
+     *获取考站接口
+     * @url GET /osce/admin/exam-arrange/station-list
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
 
-    //获取考站接口
     public function getStationList(Request $request)
     {
         $this->validate($request, [
@@ -450,6 +464,7 @@ class ExamArrangeController extends CommonController
             ]);
             $exam_id = intval($request->get('exam_id'));
             $data = ExamGradation::where('exam_id', '=', $exam_id)->get();
+
             return response()->json(
                 $this->success_data($data, 1, 'success')
             );
@@ -514,13 +529,10 @@ class ExamArrangeController extends CommonController
             return redirect()->back()->withErrors('没有找到对应的考试！');
         }
         //判断考官安排是考场还是考站安排
-//        if(){
-//
-//        }
-        $ExamDraft     = new ExamDraft();
-        $datas = $ExamDraft->getDraftFlowData($exam_id);
+//        $ExamDraft     = new ExamDraft();
+//        $datas = $ExamDraft->getDraftFlowData($exam_id);
 
-        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $datas]);
+        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id]);
     }
 
     
@@ -539,14 +551,10 @@ class ExamArrangeController extends CommonController
              return redirect()->back()->withErrors('没有找到对应的考试！');
          }
          //判断考官安排是考场还是考站安排
-//        if(){
-//
-//        }
          $ExamDraft     = new ExamDraft();
          $datas = $ExamDraft->getDraftFlowData($exam_id);
 
 
-         
          foreach ($datas as &$teacherData){
 
 
@@ -560,15 +568,12 @@ class ExamArrangeController extends CommonController
                  if($value ->teacher_type ==2){
 
                      $teacherData ->sp_teacher = [$value];
-                     $teacherData ->teacher = [];
                      
                  }else{
                      $teacherData ->teacher = [$value];
-                     $teacherData ->sp_teacher = [];
                  }
              }
          }
-
 
          return response()->json(
              $this->success_data($datas, 1, 'success')
@@ -606,6 +611,7 @@ class ExamArrangeController extends CommonController
             //获得exam_id
             $exam_id = $request->input('exam_id');
             $teacherData = $request->input('data');
+
           
   
             //保存老师的数据
@@ -625,7 +631,7 @@ class ExamArrangeController extends CommonController
 //            return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
 
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
+            return response()->json($this->fail($ex));
         }
     }
 

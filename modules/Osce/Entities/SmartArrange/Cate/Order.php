@@ -24,16 +24,17 @@ class Order extends AbstractCate implements CateInterface
         if ($entity->serialnumber == 1) {
             for ($i = 0; $i < $entity->needNum; $i++) {
                 if (count($this->_S_W) > 0) {
-                    $thisStudent = array_shift(count($this->_S_W));
+                    dump($this->_S_W);
+                    $thisStudent = array_shift($this->_S_W);
                     if (!is_null($thisStudent)) {
                         $result[] = $thisStudent;
                     }
 
-                    if ($this->_S > 0) {
+                    if (count($this->_S) > 0) {
                         if (is_array($this->_S)) {
-                            $this->_S_W = array_shift($this->_S);
+                            $this->_S_W[] = array_shift($this->_S);
                         } else {
-                            $this->_S_W = $this->_S->shift();
+                            $this->_S_W[] = $this->_S->shift();
                         }
                     }
                 }
@@ -53,5 +54,31 @@ class Order extends AbstractCate implements CateInterface
         }
     }
 
-    
+    /**
+     * 寻找循序模式需要的考生
+     * @param $entity
+     * @param $screen
+     * @return array
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-11 11:30
+     */
+    protected function orderTestStudent($entity, $screen)
+    {
+        /**
+         * 需要查当前的实例是不是第一个
+         * 如果等于1，就说明是第一个，直接从侯考区取人
+         * 如果不是，就说明前面有流程了
+         */
+        if ($entity->serialnumber != 1) {
+            $tempArrays = $this->orderBeginStudent($screen, $entity->serialnumber);
+            if (count($tempArrays) != 0) {
+                return Student::whereIn('id', $tempArrays)->get();
+            } else {
+                return collect([]);
+            }
+        } else {
+            return collect([]);
+        }
+    }
 }

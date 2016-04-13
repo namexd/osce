@@ -16,6 +16,7 @@ use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Standard;
+use Modules\Osce\Entities\StandardItem;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
@@ -203,7 +204,7 @@ class ExamResultController extends CommonController{
 //                $standard[]=ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->where('standard_id',$standards['standard']->id)->select()->first()->score;
 //            }
 //        }
-//        $standardModel=new Standard();
+//        $standardModel=new StandardItem();
 //        $totalScore=$standardModel->getScore($result['station_id'],$result['subject_id']);
 //        if(is_null($totalScore)){
 //            $sort=$totalScore[0]->sort;
@@ -231,7 +232,7 @@ class ExamResultController extends CommonController{
 
         $standard = [];
         $avg = [];
-        $standardModel=new Standard();
+        $standardItem =new StandardItem();
         foreach ($scores as $index => $item) {
             //获取考核点信息
             $standardM = Standard::where('id', $index)->first();
@@ -242,7 +243,7 @@ class ExamResultController extends CommonController{
             $scores[$index]['image']    = TestAttach::where('test_result_id',$result['id'])->where('standard_id',$index)->get();
 
             $standard[$index] = $itemScore[$index]['totalScore'];
-            $avg[$index] = $standardModel->getCheckPointAvg($index, $result['subject_id']);
+            $avg[$index] = $standardItem->getCheckPointAvg($index, $result['subject_id']);
         }
 
         return view('osce::admin.examManage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);

@@ -44,7 +44,6 @@ class InvitationController extends CommonController
 
     public function getInvitationList(Request $request)
     {
-
         $this->validate($request, [
             'teacher_id' => 'required',
             'exam_id' => 'required|integer',
@@ -59,27 +58,13 @@ class InvitationController extends CommonController
         $stationId = $request->get('station_id');
         //根据老师id查询老师的信息和openid
         $teacher = new Teacher();
-        $data = $teacher->invitationContent($teacher_id);
+        $teacherData = $teacher->invitationContent($teacher_id);
 
-        //根据考试id查询出考试相关信息
-        $ExamModel = new Exam();
-//        $ExamList = $ExamModel->where('id', $exam_id)->select('name', 'begin_dt', 'end_dt')->first()->toArray();
-        $ExamList = $ExamModel->find($exam_id);
-        //根据考试id查询出场次id
-        //$examscreening = ExamScreening::where('exam_id','=',$exam_id)->select('id')->first();
-        $examscreening = $ExamList->examScreening->first();
-        foreach ($data as $key => $v) {
-            $data[$key]['exam_name'] = $ExamList['name'];
-            $data[$key]['begin_dt'] = $ExamList['begin_dt'];
-            $data[$key]['end_dt'] = $ExamList['end_dt'];
-            $data[$key]['exam_id'] = $exam_id;
-            $data[$key]['exam_screening_id'] = $examscreening->id;
-            $data[$key]['station_id'] = $stationId;
-        }
+        $inviteData = $this->getInviteData($exam_id, $teacherData, $stationId);
 
         $InviteModel = new Invite();
         try {
-            if ($InviteModel->addInvite($data)) {
+            if ($InviteModel->addInvite($inviteData)) {
                 return response()->json(
                     $this->success_data()
                 );
@@ -92,6 +77,145 @@ class InvitationController extends CommonController
             );
         }
     }
+
+
+    private function getInviteData($exam_id, $teacherData, $stationId)
+    {
+
+        //根据考试id查询出考试相关信息
+        $ExamModel = new Exam();
+
+        $ExamList = $ExamModel->find($exam_id);
+        //根据考试id查询出场次id
+
+        $examscreening = $ExamList->examScreening->first();
+        foreach ($teacherData as $key => $v) {
+            $teacherData[$key]['exam_name'] = $ExamList['name'];
+            $teacherData[$key]['begin_dt'] = $ExamList['begin_dt'];
+            $teacherData[$key]['end_dt'] = $ExamList['end_dt'];
+            $teacherData[$key]['exam_id'] = $exam_id;
+            $teacherData[$key]['exam_screening_id'] = $examscreening->id;
+            $teacherData[$key]['station_id'] = $stationId;
+        }
+        return $teacherData;
+
+    }
+
+    /**
+     * 删除邀请过的老师
+     * @api GET /osce/wechat/invitation/del-teacher-invite
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * @return view
+     ** @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date  2016-4-13
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+
+    public function getDelTeacherInvite(Request $request)
+    {
+
+
+        $this->validate($request, [
+            'teacher_id' => 'required',
+            'exam_id' => 'required',
+            'station_id' => 'required',
+        ]);
+
+        $teacher_id = $request->get('teacher_id');
+        $exam_id = $request->get('exam_id');
+        $stationId = $request->get('station_id');
+
+        try {
+            //根据老师id查询老师的信息和openid
+
+            $teacher = new Teacher();
+            $teacherData = $teacher->invitationContent($teacher_id);
+
+            $inviteData = $this->getInviteData($exam_id, $teacherData, $stationId);
+            //查询到该老师的邀请数据
+            $inviteModel = new Invite();
+            $alterInvite = $inviteModel->getInviteStatus($teacher_id, $exam_id, $stationId, $inviteData);
+            if (!$alterInvite) {
+                throw  new \Exception('删除老师邀请失败');
+            }
+            return response()->json(
+                $this->success_data()
+            );
+
+        } catch (\Exception $ex) {
+            return response()->json(
+                $this->fail($ex)
+            );
+
+        }
+
+
+    }
+
+    /**
+     *全部邀请
+     * @api GET /osce/wechat/invitation/invite-all-teacher
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * @return view
+     ** @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date  2016-4-13
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    
+    public function getInviteAllTeacher(Request $request)
+    {
+
+
+        $exam_id = $request->get('exam_id');
+
+        $teacherData = $request->get('data');
+
+
+        try {
+            foreach ($teacherData as $key => $item) {
+
+                $teacherId = [];
+                foreach ($item['teacher'] as $value) {
+                    $teacherId[] = $value;
+                }
+                foreach ($item['sp_teacher'] as $spTeacher) {
+                    $teacherId[] = $spTeacher;
+                }
+
+                //根据老师id查询老师的信息和openid
+                $teacher = new Teacher();
+                $teacherData = $teacher->invitationContent($teacherId);
+
+                $inviteData = $this->getInviteData($exam_id, $teacherData, $item['station_id']);
+                $InviteModel = new Invite();
+                if ($InviteModel->addInvite($inviteData)) {
+                    continue;
+                } else {
+                    throw new \Exception('邀请失败');
+                }
+            }
+            return response()->json(
+                $this->success_data()
+            );
+
+        } catch (\Exception $ex) {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
+    }
+
 
     /**
      * 已发布邀请列表
@@ -158,7 +282,7 @@ class InvitationController extends CommonController
             );
         } else {
             return response()->json(
-                $this->success_data([],0, '操作失败')
+                $this->success_data([], 0, '操作失败')
             );
         }
     }
@@ -188,10 +312,10 @@ class InvitationController extends CommonController
                 throw new \Exception('没有找到相关病例');
             } else {
                 $caseModel = CaseModel:: where('id', '=', $caseId->case_id)->select('name')->first()->name;
-                $teacher =Teacher:: find($inviteModel->user_id);
+                $teacher = Teacher:: find($inviteModel->user_id);
             }
         } else {
-            return  redirect()->back()->withErrors(['该考试信息已被删除或者取消']);
+            return redirect()->back()->withErrors(['该考试信息已被删除或者取消']);
         }
         $list = [
             'exam_name' => $inviteModel->name,
@@ -199,7 +323,7 @@ class InvitationController extends CommonController
             'end_dt' => $inviteModel->end_dt,
             'case_name' => $caseModel,
             'status' => $inviteModel->status,
-            'teacher_name' =>$teacher->name,
+            'teacher_name' => $teacher->name,
         ];
 //          dd($list);
         return view('osce::wechat.exammanage.sp_invitation_detail', [

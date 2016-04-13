@@ -18,7 +18,7 @@ class RoomMode extends AbstractEntity implements EntityInterface
     function entity($exam, $screen)
     {
         // TODO: Implement entity() method.
-        $entities = $this->getRoom($screen);
+        $entities = $this->getRoom($exam, $screen);
 
         //为每个考场写入多少个考站和用时多少
         foreach ($entities as &$entity) {
@@ -41,7 +41,7 @@ class RoomMode extends AbstractEntity implements EntityInterface
             'exam_id' => $exam->id,
             'exam_screening_id' => $screen->id,
             'begin_dt' => date('Y-m-d H:i:s', $i),
-            'serialnumber' => $entity->order,
+            'serialnumber' => $entity->gradation_order,
             'flow_id' => $entity->flow_id,
             'gradation_order' => $screen->gradation_order
         ];

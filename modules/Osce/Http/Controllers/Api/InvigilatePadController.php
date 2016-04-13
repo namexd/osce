@@ -24,6 +24,7 @@ use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Standard;
+use Modules\Osce\Entities\StandardItem;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
@@ -203,11 +204,8 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-
-
     public function getExamGrade(Request $request)
     {
-
         try {
 
             $this->validate($request, [
@@ -219,7 +217,7 @@ class InvigilatePadController extends CommonController
             ]);
 
             $stationId = $request->get('station_id');
-//      $stationId=49;
+
             $examId = $request->get('exam_id');
             //根据考站id查询出下面所有的考试项目
             $station = Station::find($stationId);
@@ -227,8 +225,8 @@ class InvigilatePadController extends CommonController
             //考试标准时间
             $mins = $station->mins;
             $exam = Exam::find($examId);
-            $StandardModel = new Standard();
-            $standardList = $StandardModel->ItmeList($station->subject_id);
+            $StandardItem = new StandardItem();
+            $standardList = $StandardItem->getSubjectStandards($station->subject_id);
 
             if (count($standardList) != 0) {
                 return response()->json(
@@ -240,6 +238,7 @@ class InvigilatePadController extends CommonController
                     $this->fail(new \Exception('数据查询失败'))
                 );
             }
+
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage());
         }

@@ -10,26 +10,21 @@
 namespace Modules\Osce\Entities;
 
 use DB;
+use Auth;
+use Modules\Osce\Repositories\Common;
 
 class Subject extends CommonModel
 {
-    protected $connection = 'osce_mis';
-    protected $table = 'subject';
-    public $timestamps = true;
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $guarded = [];
-    protected $hidden = [];
-    protected $fillable = [
-        'title',
-        'score',
-        'sort',
-        'status',
-        'created_user_id',
-        'description',
-        'goods',
-        'stem',
-        'equipments'
+    protected $connection   = 'osce_mis';
+    protected $table        = 'subject';
+    public    $timestamps   = true;
+    protected $primaryKey   = 'id';
+    public    $incrementing = true;
+    protected $guarded      = [];
+    protected $hidden       = [];
+    protected $fillable     = [
+        'title', 'score', 'sort', 'status', 'description',
+        'goods', 'stem', 'equipments', 'created_user_id', 'archived'
     ];
     public $search = [];
 
@@ -37,16 +32,23 @@ class Subject extends CommonModel
     {
         return $this->hasOne('App\Entities\User', 'created_user_id', 'id');
     }
+//
+//    public function items()
+//    {
+//        return $this->hasMany('Modules\Osce\Entities\SubjectItem', 'subject_id', 'id');
+//    }
 
-    public function items()
+    public function standards()
     {
-        return $this->hasMany('Modules\Osce\Entities\SubjectItem', 'subject_id', 'id');
+        return $this->belongsToMany('Modules\Osce\Entities\Standard', 'subject_standard', 'subject_id', 'standard_id', 'id');
     }
 
-    public function cases(){
+    public function cases()
+    {
         return $this->belongsToMany('Modules\Osce\Entities\CaseModel','subject_cases','subject_id','case_id','id');
     }
-    public function supplys(){
+    public function supplys()
+    {
         return $this->belongsToMany('Modules\Osce\Entities\Supply','subject_supply','subject_id','supply_id','id');
     }
     /**
@@ -94,9 +96,12 @@ class Subject extends CommonModel
         $connection->beginTransaction();
 
         try {
-
             if ($subject = $this->create($data)) {          //创建考试项目
-                $this->addPoint($subject, $points);         //添加考试项目对应的考核内容
+
+                //TODO:Zhoufuxiang 2016-4-12
+                if (!$this->addStandard($subject, $points)){
+                    throw new \Exception('保存评分标准失败');
+                }
 
                 //添加考试项目——病例关系
                 if(!$this->addSubjectCases($subject->id, $cases, $user_id)){
@@ -113,13 +118,61 @@ class Subject extends CommonModel
                 throw new \Exception('新增考核标准失败');
             }
             $connection->commit();
+//            $a=$this->where('id','=',$subject->id)->with('cases')->with('supplys')->with(['standards'=>function($q){
+//                $q->with('standardItem');
+//            }])->first();
+//            dd($a);
             return $subject;
+
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
     }
 
+    /**
+     * 添加评分标准
+     * @access public
+     *
+     * @param array $subject
+     * @param array $points
+     * @return object
+     * @throws \Exception @version 3.4
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2016-04-12 18:43
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function addStandard($subject, $points){
+
+        $subjectStandard = new SubjectStandard();
+        //1、创建评分标准；2、创建考试项目与评分标准间的关系  （3、返回对应的考核标准信息）
+        $standard = $subjectStandard->getStandard($subject, $subject->title);
+        //添加考试项目对应的考核内容
+        $this->addPoint($standard, $points);
+        return $standard;
+    }
+
+    /**
+     * 修改评分标准
+     * @access public
+     *
+     * @param array $subject
+     * @param array $points
+     * @return object
+     * @throws \Exception @version 3.4
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2016-04-12 19:43
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function editStandard($subject, $points){
+
+        $subjectStandard = new SubjectStandard();
+        //获取对应的 评分标准
+        $standard = $subjectStandard->getStandard($subject, $subject->title);
+        //修改考试项目对应的考核内容
+        $this->editPoint($standard, $points);
+        return $standard;
+    }
     /**
      * 编辑课题
      * @access public
@@ -143,16 +196,20 @@ class Subject extends CommonModel
         $connection->beginTransaction();
 
         try {
-            $user = \Auth::user();
+            $user = Auth::user();
             if(empty($user)){
                 throw new \Exception('未找到当前操作人信息');
             }
-
+            //修改考试项目对应的基本信息
             foreach ($data as $field => $value) {
                 $subject->$field = $value;
             }
             if ($subject->save()) {
-                $this->editPoint($subject, $points);
+
+                //修改评分标准     TODO:Zhoufuxiang 2016-4-12
+                if (!$this->editStandard($subject, $points)){
+                    throw new \Exception('保存评分标准失败');
+                }
 
                 //添加考试项目——病例关系
                 if(!$this->addSubjectCases($subject->id, $cases, $user->id, $id)){
@@ -163,12 +220,13 @@ class Subject extends CommonModel
                     throw new \Exception('编辑考试项目——用物关系失败');
                 }
 
-
             } else {
                 throw new \Exception('更新考核点信息失败');
             }
+
             $connection->commit();
             return $subject;
+
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -197,13 +255,15 @@ class Subject extends CommonModel
      * @date 2016-01-03
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    protected function addPoint($subject, array $points)
+    protected function addPoint($standard, array $points)
     {
-        $SubjectItemModel = new SubjectItem();
+        $StandardItem = new StandardItem();
         try {
+            $rePoints =   [];
             foreach ($points as $point) {
-                $SubjectItemModel->addItem($subject, $point);
+                $rePoints[]   =   $StandardItem->addItem($standard, $point);
             }
+            return collect($rePoints);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -224,83 +284,66 @@ class Subject extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    protected function editPoint($subject, array $points)
+    protected function editPoint($standard, array $points)
     {
-        $SubjectItemModel = new SubjectItem();
+        $standardItem = new StandardItem();
         try {
-            $SubjectItemModel->delItemBySubject($subject);
+
+            $standardItem->delItemBySubject($standard);
+
             foreach ($points as $point) {
-                $SubjectItemModel->addItem($subject, $point);
+                $standardItem->addItem($standard, $point);
             }
+
         } catch (\Exception $ex) {
             throw $ex;
         }
     }
 
+    /**
+     * 删除考试项目
+     *
+     * @param $subject
+     *
+     * @author Zhoufuxiang  2016-04-13 10:55
+     * @return bool
+     * @throws \Exception
+     */
     public function delSubject($subject)
     {
         $connection = DB::connection($this->connection);
-        $connection->beginTransaction();
+        $connection ->beginTransaction();
 
-        $SubjectItemModel = new SubjectItem();
         try {
-            //拿到当前开始
-            $exam = Exam::doingExam();
-            //考试考试下面所有的老师
-            $TeacherArray= StationTeacher::where('exam_id','=',$exam->id)->get()->pluck('user_id');
-            if(!is_null($TeacherArray)){
+            $TeacherSubject = new TeacherSubject();
+            //获取当前正在考试的考试对应的所有老师考试项目关系数据
+            if(!$TeacherSubject->getTeacherSubjects()->isEmpty()){
 
-                //拿到考试项目关联的老师
-                $TeacherId = array_diff($TeacherArray->all(), [null]);
-                $TeacherSubjects = TeacherSubject::whereIn('teacher_id',$TeacherId)->get();
+                throw new \Exception('支持该考试项目的老师已被安排考试');
 
-                if(!$TeacherSubjects->isEmpty()){
-                    throw new \Exception('支持该考试项目的老师已被安排考试');
-                }else{
-
-                    //删除和老师关联
-                    $TeacherSubjects = TeacherSubject::where('subject_id','=',$subject->id)->get();
-                    if($TeacherSubjects){
-                        foreach ($TeacherSubjects as $teacher){
-                            if(!$teacher->delete()){
-                                throw new \Exception('删除关联老师失败');
-                            }
-                        }
-                    }
-                }
+            }else{
+                //删除考试项目、老师的关联关系数据
+                $TeacherSubject->delTeacherSubjects($subject);
             }
 
-        //删除和病例关联
-            $SubjectCases=SubjectCases::where('subject_id','=',$subject->id)->get();
-            if($SubjectCases){
-                foreach ($SubjectCases as $case){
-                    if(!$case->delete()){
-                        throw new \Exception('删除病例失败');
-                    }
-                }
+            //删除与考试项目相关联的关系数据
+            Common::delRelation($subject, 'cases',     '删除与病例的关联失败', -600);
+            Common::delRelation($subject, 'supplys',   '删除与用物的关联失败', -601);
+            Common::delRelation($subject, 'standards', '删除与评分标准的关联失败', -602);
+            //删除考试项目对应的评分标准
+            $Standard = new Standard();
+            $Standard ->delStandard($subject);
+
+            //删除考试项目
+            if (!$subject->delete()) {
+                throw new \Exception('删除考试项目失败');
             }
 
-        //删除和用物关联
-            $SubjectSupply =   SubjectSupply::where('subject_id','=',$subject->id)->get();
-            if($SubjectSupply){
-                foreach ($SubjectSupply as $supply){
-                    if(!$supply->delete()){
-                        throw new \Exception('删除用物失败');
-                    }
-                }
-            }
+            $connection->commit();
+            return true;
 
-            
-            
-            $SubjectItemModel->delItemBySubject($subject);
-            
-            if ($subject->delete()) {
-                $connection->commit();
-                return true;
-            } else {
-                throw new \Exception('删除失败');
-            }
         } catch (\Exception $ex) {
+
             $connection->rollBack();
             if ($ex->getCode() == 23000) {
                 throw new \Exception('该科目已经被使用了,不能删除');
@@ -309,7 +352,6 @@ class Subject extends CommonModel
             }
         }
     }
-
 
     /**
      * @author Jiangzhiheng
@@ -437,7 +479,6 @@ class Subject extends CommonModel
                 'subject_id'        => $subject_id,
                 'supply_id'         => $supply_id,
                 'num'               => $good['number'],
-                'created_user_id'   => $user_id,
             ];
             if(!SubjectSupply::create($data)){
                 return false;

@@ -21,7 +21,7 @@ class Invite extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id', 'station_id', 'status', 'user_id'];
+    protected $fillable = ['id', 'name', 'begin_dt', 'end_dt', 'exam_screening_id', 'station_id', 'status', 'user_id','exam_id'];
 
 
     public function examSpTeacher(){
@@ -31,23 +31,38 @@ class Invite extends CommonModel
     //保存并发送邀请
     public function addInvite(array $data)
     {
+
         //开启事务
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
             foreach ($data as &$list) {
+
+                //查询出老师名字
+                $teacherName = Teacher::find($list['teacher_id']);
                 //查询出数据库是否有该老师在这场考试邀请过
+
                 $examScreening = Invite::where('exam_screening_id', '=', $list['exam_screening_id'])
                     ->where('user_id','=',$list['teacher_id'])
                     ->where('station_id','=',$list['station_id'])
-                    ->whereIn('status',[0, 1])
+//                    ->whereIn('status',[0, 1])
                     ->first();
-                //查询出老师名字
-//                $teacherName    = Teacher::where('id','=',$inviteDat['user_id'])->select('name')->first();
-                $teacherName = Teacher::find($list['teacher_id']);
-                if ($examScreening) {
-                    throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
+                if(!is_null($examScreening)){
+                    if($examScreening->status == 3 || $examScreening->status == 2){
+                        $examScreening->status = 0;
+                        if(!$examScreening->save()){
+                            throw new \Exception('邀请失败，请重试！');
+                        }else{
+                            continue;
+                        }
+                }else{
+                        if ($examScreening) {
+                            throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
+
+                        }
+                    }
                 }
+
                 $inviteDat = [
                     'user_id' => $list['teacher_id'],
                     'name' => $list['exam_name'],
@@ -56,6 +71,7 @@ class Invite extends CommonModel
                     'exam_screening_id' => $list['exam_screening_id'],
                     'station_id' => $list['station_id'],
                     'status' => 0,
+                    'exam_id'=>$list['exam_id'],
                 ];
                 $notice = $this->Create($inviteDat);
                 if ($notice) {
@@ -64,7 +80,7 @@ class Invite extends CommonModel
 //                           'id'=>$data[$k]['teacher_id'],
                         'invite_id' => $notice->id,
                         'exam_screening_id' => $list['exam_screening_id'],
-                        'case_id' => $list['case_id'],
+//                        'case_id' => $list['case_id'],
                         'teacher_id' => $list['teacher_id'],
                     ];
                     //关联到考试邀请sp老师表
@@ -74,10 +90,9 @@ class Invite extends CommonModel
                     throw new \Exception('邀请保存失败');
                 }
             }
-
-            $this->sendMsg($data);
             $connection->commit();
-            return $notice;
+            $this->sendMsg($data);
+            return true;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -87,19 +102,32 @@ class Invite extends CommonModel
 
     // 发送邀请
 
-    public function sendMsg($data)
+    public function sendMsg($data,$type ='')
     {
         $openIdList =   [];
         try {
             foreach ($data as $key => $userInfo) {
                 $url = route('osce.wechat.invitation.getMsg', ['id' => $userInfo['id']]);
-                $msgData = [
-                    [
-                        'title' => '邀请通知',
-                        'desc' => '邀请您参加'.$userInfo['exam_name'] . '考试',
-                        'url' => $url,
-                    ],
-                ];
+
+                if(is_null($type)){
+                    $msgData = [
+                        [
+                            'title' => '邀请通知',
+                            'desc' => '邀请您参加'.$userInfo['exam_name'] . '考试',
+                            'url' => $url,
+                        ],
+                    ];
+                }else{
+                    $msgData = [
+                        [
+                            'title' => '撤销邀请通知',
+                            'desc' => $userInfo['exam_name'] . '考试已被撤销',
+                            'url' => $url,
+                        ],
+                    ];
+
+                }
+             
                 $openIdList[]   =   $userInfo;
 //            $message    =   Common::CreateWeiXinMessage($msgData);
 //            Common::sendWeixinToMany($message,$data);
@@ -151,6 +179,44 @@ class Invite extends CommonModel
             'user_id as invite_user_id'
           )
          ->get();
+    }
+    
+    
+    public function getInviteStatus($teacher_id,$exam_id,$stationId,$teacherData){
+
+        $invite= Invite::where('user_id','=',$teacher_id)
+            ->where('exam_id','=',$exam_id)
+            ->where('station_id','=',$stationId)
+            ->first();
+        foreach ($teacherData as &$value){
+            $value['id']=$invite->id;
+        }
+//
+//        if($invite->status== 2){
+//            //如果该老师已拒绝就删除这条邀请
+//            $ExamSpTeacher = ExamSpTeacher::where('invite_id','=',$invite->id)->first();
+//            if($ExamSpTeacher){
+//                //删除
+//                if($ExamSpTeacher->delete()){
+//                    if(!$invite->delete()){
+//                        throw new \Exception('去除老师邀请失败');
+//                    }
+//                }
+//            }
+//        }else{
+            $invite->status =3;
+
+            if(!$invite->save()){
+                throw new \Exception('改变老师邀请状态失败');
+            }else{
+                $type = 3;
+                $this->sendMsg($teacherData,$type);
+//            }
+                
+        }
+        
+        return true;
+       
     }
 
 }

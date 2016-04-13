@@ -308,4 +308,37 @@ class Common
                     return false;
                 }
     }
+
+
+    /**
+     * 删除关联关系，删除失败，报错
+     *
+     * @param $value
+     * @param string $message
+     * @param int $code
+     * @return bool
+     * @throws \Exception
+     * @author Zhoufuxiang
+     * @time 2016-04-13 09:55
+     */
+    static public function delRelation($subject, $values, $message = '系统错误', $code = -999)
+    {
+        if(!$subject->$values->isEmpty())
+        {
+            //删除对应关联关系
+            foreach ($subject->$values as $value)
+            {
+                $pivot  =   $value->pivot;
+                if(!is_null($pivot))
+                {
+                    if(!$pivot->delete())
+                    {
+                        throw new \Exception($message, $code);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 }
