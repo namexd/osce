@@ -38,7 +38,7 @@ class ExamControlController extends CommonController
 
         $examControlModel = new ExamControl();
 
-        $data=$examControlModel->getReplaceExam(6631);
+        //$data=$examControlModel->getReplaceExam(6631);
 
 
         $data = $examControlModel->getDoingExamList();

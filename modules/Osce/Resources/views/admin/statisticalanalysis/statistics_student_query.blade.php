@@ -86,7 +86,7 @@
                                                 <span class="marr_15">
                                                     <label class="check_label" style="margin:10px">
                                                         <?php $Answer = explode(':',$val2)?>
-                                                        <div class="check_icon @if(in_array(@$Answer[0],$val1['studentAnswerAarry'])) check @endif left"></div>
+                                                        <div class="check_icon @if(in_array(@$Answer[0],@$val1['studentAnswerAarry'])) check @endif left"></div>
                                                         <span class="check_name left">{{ $val2 }}</span>
                                                     </label>
                                                 </span>

@@ -99,10 +99,6 @@ class Answer extends Model
             if(empty($examPaperFormalData['actual_length'])){
                 $examPaperFormalData['actual_length'] = 0;
             }
-            $datas = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->get();
-            if(count($datas)>2){
-                throw new \Exception('您已提交过试卷，请不要重复提交！',-100);
-            }
             $result = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->update($examPaperFormalData);
             if(!$result){
                 throw new \Exception(' 保存考试用时失败！');
@@ -141,7 +137,6 @@ class Answer extends Model
             if(!ExamResult::create($examResultData)){
                 throw new \Exception(' 插入考试结果记录表失败！',-102);
             }
-
             $DB->commit();
             return true;
         }catch (\Exception $ex){

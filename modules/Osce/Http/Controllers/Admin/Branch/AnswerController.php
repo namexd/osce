@@ -235,14 +235,16 @@ class AnswerController extends CommonController
             'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
         );
         //保存考生答案和记录该考生成绩
+
         $answerModel = new Answer();
-        $result = $answerModel->saveAnswer($data,$resultData);
-        if($result==true){
-            //删除session
-            \Session::forget('systemTimeStart');
-            return response()->json(['status'=>'1','info'=>'保存成功']);
-        }else{
-            return response()->json(['status'=>'2','info'=>$result]);
+        try{
+            $answerModel->saveAnswer($data,$resultData);
+            return response()->json(
+                $this->success_data([],1,'success')
+            );
+        }catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
         }
     }
     /**查询该考生理论考试成绩及该场考试相关信息

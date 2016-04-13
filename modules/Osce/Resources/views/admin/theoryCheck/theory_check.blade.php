@@ -128,7 +128,7 @@
                 var examId = $(".allData").attr("examId");
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                         {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
-                    if(obj.status=='1'){
+                    if(obj.code=='1'){
                         $.ajax({
                             url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
                             cache:false,
@@ -142,7 +142,7 @@
                             }
                         });
                     }else{
-                        layer.confirm('保存失败！');
+                        layer.confirm(obj.message);
                     }
                 })
             })
@@ -168,8 +168,7 @@
                         clearInterval(statusTimer);
                         $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                                 {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
-                                    if(obj.status=='1'){
-                                        console.log("1111");
+                                    if(obj.code=='1'){
                                         $.ajax({
                                             url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
                                             cache:false,
@@ -181,9 +180,8 @@
                                                 }
                                             }
                                         });
-                                    }
-                                    if(obj.status=='2'){
-                                        layer.confirm('保存失败！');
+                                    }else{
+                                        layer.confirm(obj.message);
                                     }
                                 });
                     }
@@ -215,7 +213,7 @@
                     console.log("22222");
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                             {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
-                        if(obj.status=='1'){
+                        if(obj.code=='1'){
                             $.ajax({
                                 url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
                                 cache:false,
@@ -228,7 +226,7 @@
                                 }
                             });
                         }else{
-                            layer.confirm('保存失败！');
+                            layer.confirm(obj.message);
                         }
                     })
                 }
