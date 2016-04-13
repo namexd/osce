@@ -269,7 +269,7 @@ class DrawlotsController extends CommonController
             $studentData = $studentModel->nextStudentList($stationId, $exam);
             if ($studentData['nextTester']) {
                 foreach($studentData['nextTester'] as $key=>$val){
-                    $studentData['nextTester'][$key]->avator = asset($val->avator);
+                    $studentData['nextTester'][$key]->student_avator = asset($val->student_avator);
                 }
 
                 //$studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
