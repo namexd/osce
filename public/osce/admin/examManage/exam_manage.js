@@ -4098,7 +4098,7 @@ function station_assignment(){
 
                 for(var i in data) {
                     var str = data[i].order - 1;
-                    if(data[i].order == count) {
+                    if(data[i].id == count) {
                         exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+stationName[str]+'</option>';
                     } else {
                         exam_stage_str += '<option value="'+data[i].id+'">阶段'+stationName[str]+'</option>';
@@ -4460,7 +4460,7 @@ function station_assignment(){
 
                     ajaxUpdate(req, pars.update_data);
                   },
-                  content: pars.add_subject+'?status=1&table='+$elem.find('.exam-item').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-item').parent().parent().attr('class')
+                  content: pars.add_subject+'?status=1&table='+$elem.find('.exam-item').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-item').parent().parent().attr('class')+'&selector=exam-item';
                 });
             } else {
                 ajaxUpdate(req, pars.update_data);
@@ -4511,7 +4511,7 @@ function station_assignment(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: pars.add_station+'?status=1&table='+$elem.find('.exam-station').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-station').parent().parent().attr('class')
+                  content: pars.add_station+'?status=1&table='+$elem.find('.exam-station').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-station').parent().parent().attr('class')+'&selector=exam-station';
                 });
             } else {
                $.ajax({
@@ -4580,7 +4580,7 @@ function station_assignment(){
 
                     ajaxUpdate(req, pars.update_data);
                   },
-                  content: pars.add_room+'?status=1&table='+$elem.find('.station-belong').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.station-belong').parent().parent().attr('class')
+                  content: pars.add_room+'?status=1&table='+$elem.find('.station-belong').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.station-belong').parent().parent().attr('class')+'&selector=station-belong';
                 });
             } else {
                 ajaxUpdate(req, pars.update_data);
