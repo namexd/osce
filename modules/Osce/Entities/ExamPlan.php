@@ -906,7 +906,7 @@ class ExamPlan extends CommonModel
             $exam = Exam::find($examId);
             if ($exam) {
                 //将考试对应的flows的effected都变成0
-//                $this->changeSerialnumberToZero($exam);
+                $this->changeSerialnumberToZero($exam);
             } else {
                 throw new \Exception('当前操作的考试不存在');
             }
@@ -918,17 +918,17 @@ class ExamPlan extends CommonModel
             $result = [];
             foreach ($data as $item) {
                 $array = [
-                    'exam_id'         => $examId,
+                    'exam_id' => $examId,
                     'exam_screening_id' => $item->exam_screening_id,
-                    'student_id'      => $item->student_id,
-                    'station_id'      => $item->station_id,
-                    'room_id'         => $item->room_id,
-                    'begin_dt'        => $item->begin_dt,
-                    'end_dt'          => $item->end_dt,
-                    'status'          => 0,
-                    'group'           => $item->group,
-                    'flow_id'         => $item->flow_id,
-                    'serialnumber'    => $item->serialnumber,
+                    'student_id' => $item->student_id,
+                    'station_id' => $item->station_id,
+                    'room_id' => $item->room_id,
+                    'begin_dt' => $item->begin_dt,
+                    'end_dt' => $item->end_dt,
+                    'status' => 0,
+                    'group' => $item->group,
+                    'flow_id' => $item->flow_id,
+                    'serialnumber' => $item->serialnumber,
                     'created_user_id' => $user->id,
                     'gradation_order' => $item->gradation_order
                 ];
@@ -941,7 +941,7 @@ class ExamPlan extends CommonModel
             }
 
             //将考试使用了的实体的effected都变成1
-//            $this->changeSerialnumberToOne($exam, $result);
+            $this->changeSerialnumberToOne($exam, $result);
 
             //将数据保存到examOrder
             $this->saveStudentOrder($examId);
@@ -962,25 +962,30 @@ class ExamPlan extends CommonModel
     private function changeSerialnumberToZero($exam)
     {
         try {
-            switch ($exam->sequence_mode) {
-                case 1:
-                    $examFlowRoom = ExamFlowRoom::where('exam_id', $exam->id)
-                        ->update(['effected' => 0]);
-                    if (!$examFlowRoom) {
-                        throw new \Exception ('更新流程表失败！请重试', -988);
-                    }
-                    break;
-                case 2:
-                    $examFlowStation = ExamFlowStation::where('exam_id', $exam->id)
-                        ->update(['effected' => 0]);
-                    if (!$examFlowStation) {
-                        throw new \Exception ('更新流程表失败！请重试', -988);
-                    }
-                    break;
-                default:
-                    throw new \Exception('没有这种考试模式！', -987);
-                    break;
+//            switch ($exam->sequence_mode) {
+//                case 1:
+            $result = ExamDraft::join('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+                ->where('exam_draft_flow.exam_id', $exam->id)->get();
+            foreach ($result as $item) {
+                $item->effected = 0;
+                if (!$item->save()) {
+                    throw new \Exception('数据更新失败！');
+                }
             }
+
+
+//                    break;
+//                case 2:
+//                    $examFlowStation = ExamFlowStation::where('exam_id', $exam->id)
+//                        ->update(['effected' => 0]);
+//                    if (!$examFlowStation) {
+//                        throw new \Exception ('更新流程表失败！请重试', -988);
+//                    }
+//                    break;
+//                default:
+//                    throw new \Exception('没有这种考试模式！', -987);
+//                    break;
+//            }
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -1000,28 +1005,55 @@ class ExamPlan extends CommonModel
             switch ($exam->sequence_mode) {
                 case 1:
                     $rooms = collect($result)->pluck('room_id')->unique()->toArray();
-                    $examFlowRoom = ExamFlowRoom::whereIn('room_id', $rooms)->get();
-                    foreach ($examFlowRoom as $item) {
-                        $item->effected = 1;
+//                    $examFlowRoom = ExamFlowRoom::whereIn('room_id', $rooms)->get();
+//                    foreach ($examFlowRoom as $item) {
+//                        $item->effected = 1;
+//                        if (!$item->save()) {
+//                            throw new \Exception ('更新流程表失败！请重试', -988);
+//                        }
+//                    }
+                    $a = ExamDraft::join('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+                        ->whereIn('exam_draft.room_id', $rooms)
+                        ->where('exam_draft_flow.exam_id', $exam->id)
+                        ->get();
+                    foreach ($a as $item) {
+                        $item->effected = 0;
                         if (!$item->save()) {
-                            throw new \Exception ('更新流程表失败！请重试', -988);
+                            throw new \Exception('数据更新失败！');
                         }
                     }
+
                     break;
                 case 2:
                     $stations = collect($result)->pluck('station_id')->unique()->toArray();
-                    $examFlowStation = ExamFlowStation::whereIn('station_id', $stations)->get();
-                    foreach ($examFlowStation as $index => $item) {
-                        $item->effected = 1;
-                        if(!$item->save()){
-                            throw new \Exception ('更新流程表失败！请重试', -988);
+//                    $examFlowStation = ExamFlowStation::whereIn('station_id', $stations)->get();
+//                    foreach ($examFlowStation as $index => $item) {
+//                        $item->effected = 1;
+//                        if(!$item->save()){
+//                            throw new \Exception ('更新流程表失败！请重试', -988);
+//                        }
+//                    }
+                    $a = ExamDraft::join('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+                        ->whereIn('exam_draft.station_id', $stations)
+                        ->where('exam_draft_flow.exam_id', $exam->id)
+                        ->get();
+                    foreach ($a as $item) {
+                        $item->effected = 0;
+                        if (!$item->save()) {
+                            throw new \Exception('数据更新失败！');
                         }
                     }
+
                     break;
                 default:
                     throw new \Exception('没有这种考试模式！', -987);
                     break;
             }
+//            $result = ExamDraftFlow::join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+//                ->where('exam_draft_flow.exam_id', $exam->id)->update(['effected' => null]);
+//            if (!$result) {
+//                throw new \Exception ('更新流程表失败！请重试', -988);
+//            }
         } catch (\Exception $ex) {
             throw $ex;
         }

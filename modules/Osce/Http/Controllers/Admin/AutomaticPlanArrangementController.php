@@ -105,12 +105,12 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
         //获取操作者
         $user = Auth::user();
         ExamPlan::where('exam_id', $examId)->delete();
-        try {
+//        try {
             $examPlan->storePlan($examId, $user);
 
             return redirect()->route('osce.admin.exam.getIntelligence', ['id' => $examId]);
-        } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 }
