@@ -226,7 +226,7 @@ class DrawlotsController extends CommonController
             }
             //从集合中移除blocking
 //            $students->forget('blocking');
-            $redis->publish('pad_message', json_encode($this->success_data($examQueue)));//信息推送
+            $redis->publish('pad_message', json_encode($this->success_data($examQueue,300)));//信息推送
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -260,7 +260,7 @@ class DrawlotsController extends CommonController
             'station_id.required' => '考站编号信息必须'
         ]);
         try {
-            $redis = Redis::connection('message');
+            //$redis = Redis::connection('message');
             $stationId = (int)$request->input('station_id');
             $examQueueId = (int)$request->input('exam_queue_id');//队列id
             ExamQueue::where('id',$examQueueId)->increment('next_num', 1);//下一次次数增加
@@ -268,13 +268,17 @@ class DrawlotsController extends CommonController
             $studentModel = new  Student();
             $studentData = $studentModel->nextStudentList($stationId, $exam);
             if ($studentData['nextTester']) {
-                $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
-                $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
+                foreach($studentData['nextTester'] as $key=>$val){
+                    $studentData['nextTester'][$key]->avator = asset($val->avator);
+                }
+
+                //$studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+                //$redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return response()->json(
                     $this->success_data($studentData['nextTester'], 1, '验证完成')
                 );
             } else {
-                $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
+                //$redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
                 throw new \Exception('学生信息查询失败', -2);
             }
         } catch (\Exception $ex) {

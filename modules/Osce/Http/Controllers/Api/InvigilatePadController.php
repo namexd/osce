@@ -180,7 +180,7 @@ class InvigilatePadController extends CommonController
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
                 $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return response()->json(
-                    $this->success_data($studentData['nextTester'], 1, '验证完成')
+                    $this->success_data($studentData['nextTester'], 200, '验证完成')
                 );
             } else {
                 $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
@@ -680,6 +680,7 @@ class InvigilatePadController extends CommonController
                 'student_id.required' => '考生编号信息必须',
                 'station_id.required' => '考站编号信息必须'
             ]);
+            $redis = Redis::connection('message');
             $nowTime = time();
             $date = date('Y-m-d H:i:s', $nowTime);
             $studentId = $request->get('student_id');
@@ -712,6 +713,7 @@ class InvigilatePadController extends CommonController
             //dd($AlterResult);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
+                $redis->publish('pad_message', json_encode($this->success_data([$date], 700, '开始考试成功')));
                 return response()->json(
                     $this->success_data([$date], 1, '开始考试成功')
                 );

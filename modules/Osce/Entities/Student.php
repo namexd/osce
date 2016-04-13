@@ -457,7 +457,7 @@ class Student extends CommonModel
      * */
     public function nextStudentList($stationId ,$exam)
 
-    {\DB::connection('osce_mis')->enableQueryLog();
+    {//\DB::connection('osce_mis')->enableQueryLog();
         // 查询下一个待考考生信息
         $nextTester =  Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
@@ -467,6 +467,7 @@ class Student extends CommonModel
             ->where('exam_queue.station_id', '=', $stationId)
             ->where('exam_queue.exam_id','=',$exam->id)
             ->where('exam_queue.status', 1)
+            ->where('station_teacher.exam_id', $exam->id)
             ->orderBy('exam_queue.next_num', 'asc')
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->orderBy('exam_queue.updated_at', 'asc')
@@ -478,8 +479,10 @@ class Student extends CommonModel
                 'student.avator as avator',
                 'exam_queue.status as status',
                 'student.id as student_id',
-                'student.exam_sequence as exam_sequence','station_teacher.user_id as teacher_id','exam_queue.id as exam_queue_id'
-            ])->first();
+                'student.exam_sequence as exam_sequence','station_teacher.user_id as teacher_id','exam_queue.id as exam_queue_id','student.description as student_description',
+            ])->get();
+       // $queries = \DB::connection('osce_mis')->getQueryLog();
+       //dd($queries);
         return [
             'nextTester'  => $nextTester
         ];
