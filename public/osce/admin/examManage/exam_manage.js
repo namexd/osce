@@ -4759,6 +4759,7 @@ function examiner_manage() {
             arr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
             
         });
+    
 
         req['data'] = arr;
         req['exam_id'] = exam_id;
