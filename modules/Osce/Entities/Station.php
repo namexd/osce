@@ -234,10 +234,10 @@ class Station extends CommonModel
      */
     public function updateStation($formData, $id)
     {
+        //开启事务
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
         try {
-            //开启事务
-            $connection = DB::connection($this->connection);
-            $connection->beginTransaction();
 
             $examFlowStation = ExamFlowStation::where('station_id',$id)->first();
             if(!empty($examFlowStation)){
@@ -261,10 +261,10 @@ class Station extends CommonModel
                     $vcr = Vcr::findOrFail($vcrId);  //找到选择的摄像机
                     $vcr ->used = 1;  //变更状态,但是不一定是0
                     if (!$result = $vcr->save()) {
-                        $connection->rollBack();
                         throw new \Exception('更改摄像机状态失败');
                     }
                 }
+
             } else {
                 $result = Vcr::findOrFail($originalVcrObj->vcr_id);
                 //修改其状态,将其状态重置
@@ -272,7 +272,6 @@ class Station extends CommonModel
                 //保存
                 $result = $result->save();
                 if (!$result) {
-                    $connection->rollBack();
                     throw new \Exception('更改摄像机状态失败');
                 }
 
@@ -282,7 +281,6 @@ class Station extends CommonModel
                     //修改其状态
                     $obj->vcr_id = $vcrId;
                     if (!($obj->save())) {
-                        $connection->rollBack();
                         throw new \Exception('更改考站摄像头关联失败');
                     }
 
@@ -290,24 +288,18 @@ class Station extends CommonModel
                     $vcr = Vcr::findOrFail($vcrId);  //找到选择的摄像机
                     $vcr ->used = 1;  //变更状态,但是不一定是0
                     if (!$result = $vcr->save()) {
-                        $connection->rollBack();
                         throw new \Exception('更改摄像机状态失败');
                     }
                 }
             }
-
-
 
             //修改station表
             $result = $this->where($this->table . '.id', '=', $id)->update($stationData);
             //获得修改后的id
 //            $station_id = $result;
             if (!$result) {
-                $connection->rollBack();
                 throw new \Exception('更改考站信息失败');
             }
-
-
 
             //改变考站病历表的状态
 //            $stationCaseData = [
@@ -326,6 +318,7 @@ class Station extends CommonModel
             return true;
 
         } catch (\Exception $ex) {
+            $connection->rollBack();
             throw $ex;
         }
     }

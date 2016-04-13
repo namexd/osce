@@ -264,12 +264,17 @@ class StationController extends CommonController
         ]);
 
         try {
+            $user = Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
+            //$caseId = $request->input('case_id');
             $placeData = $request->only('name', 'type', 'mins');
             $vcrId  = $request->input('vcr_id');
-//            $caseId = $request->input('case_id');
             $roomId = $request->input('room_id');
             $id     = $request->input('id');
+
             //TODO:考卷 Zhoufuxiang，2016-3-22
             $paperId= $request->input('paper_id');
             if($placeData['type'] == 3){
@@ -280,14 +285,11 @@ class StationController extends CommonController
             }else{
                 $placeData['paper_id'] = null;
             }
-            $user = Auth::user();
-            if(empty($user)){
-                throw new \Exception('未找到当前操作人信息');
-            }
             $placeData['create_user_id'] = $user->id;
 
             $formData = [$placeData, $vcrId, $roomId];
 
+            //更新考站信息
             $model->updateStation($formData, $id);
 
             return redirect()->route('osce.admin.Station.getStationList'); //返回考场列表
