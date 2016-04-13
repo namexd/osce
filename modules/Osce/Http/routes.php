@@ -73,6 +73,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('invigilator/idcard-unique',['uses'=>'InvigilatorController@postIdcardUnique','as'=>'osce.admin.invigilator.postIdcardUnique']);		//判断身份证号是否存在
 		Route::post('invigilator/import-teachers',['uses'=>'InvigilatorController@postImportTeachers','as'=>'osce.admin.invigilator.postImportTeachers']);	//导入老师
 		Route::get('invigilator/download-teacher-improt-tpl',['uses'=>'InvigilatorController@getdownloadTeacherImprotTpl','as'=>'osce.admin.invigilator.getdownloadTeacherImprotTpl']);	//下载老师模板
+		Route::post('invigilator/email-unique',['uses'=>'InvigilatorController@postEmailUnique','as'=>'osce.admin.invigilator.postEmailUnique']);	//下载老师模板
 
 		Route::get('invigilator/subjects', ['uses'=>'InvigilatorController@getSubjects', 'as'=>'osce.admin.invigilator.getSubjects']);		//异步获取 所有考试项目
 

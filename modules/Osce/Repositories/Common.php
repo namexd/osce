@@ -345,4 +345,67 @@ class Common
         return true;
     }
 
+    /**
+     * 归档
+     * @param $model
+     * @param $id
+     * @param string $message
+     * @param array $params
+     *
+     * @author Zhoufuxiang 2016-04-13
+     * @return bool
+     * @throws \Exception
+     */
+    public static function archived($model, $id, $message = '系统错误', $params = [])
+    {
+        $item = $model->where('id', '=', $id)->first();
+        if(!is_null($item))
+        {
+            $item->archived = 1;
+            //其他字段参数不为空
+            if (!empty($data)){
+                foreach ($params as $key => $param) {
+                    $item->$key = $param;
+                }
+            }
+
+            if(!$item->save()){
+                throw new \Exception($message);
+            }
+        }
+
+        return true;
+    }
+    /**
+     * 还原归档
+     * @param $model
+     * @param $id
+     * @param string $message
+     * @param array $params
+     *
+     * @author Zhoufuxiang 2016-04-13
+     * @return bool
+     * @throws \Exception
+     */
+    public static function resetArchived($model, $id, $message = '系统错误', $params = [])
+    {
+        $item = $model->where('id', '=', $id)->first();
+        if(!is_null($item))
+        {
+            $item->archived = 0;    //重置归档
+
+            //其他字段参数不为空
+            if (!empty($data)){
+                foreach ($params as $key => $param) {
+                    $item->$key = $param;
+                }
+            }
+
+            if(!$item->save()){
+                throw new \Exception($message);
+            }
+        }
+
+        return true;
+    }
 }

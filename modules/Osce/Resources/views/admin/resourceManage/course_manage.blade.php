@@ -10,6 +10,13 @@
     #start,#end{width: 160px;}
     .input-group input{height: 34px;}
     .ibox-content{padding: 20px;}
+     .description-this{
+            display: inline-block;
+            width: 293px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
     </style>
 @stop
 
@@ -60,8 +67,8 @@
 
                     <tr>
                         <td>{{$key+1}}</td>
-                        <td>{{$item->title}}</td>
-                        <td>{{$item->description}}</td>
+                        <td><span class="description-this">{{$item->title}}</span></td>
+                        <td><span class="description-this">{{$item->description}}</span></td>
                         <td value="{{$item->id}}">
                             <a href="{{route('osce.admin.topic.getEditTopic',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                             <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>

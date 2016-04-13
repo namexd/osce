@@ -79,7 +79,7 @@ class ExamLabelController extends CommonController
         foreach($datalist as $k=>$v){
             $datalist[$k]['LabelType']=empty($v->ExamQuestionLabelType->name)?'-':$v->ExamQuestionLabelType->name;
         }
-            return view('osce::admin.resourcemanage.subject_check_tag',
+            return view('osce::admin.resourceManage.subject_check_tag',
             [
                 'ExamQuestionLabelTypeList' => $ExamQuestionLabelTypeList,
                 'datalist' => $datalist,
@@ -104,7 +104,7 @@ class ExamLabelController extends CommonController
         //获取标签类型列表
         $ExamQuestionLabelType = new ExamQuestionLabelType();
         $ExamQuestionLabelTypeList = $ExamQuestionLabelType->examQuestionLabelTypeList();
-        return view('osce::admin.resourcemanage.subject_check_tag_add',
+        return view('osce::admin.resourceManage.subject_check_tag_add',
             [
                 'ExamQuestionLabelTypeList'=>$ExamQuestionLabelTypeList,
             ]);

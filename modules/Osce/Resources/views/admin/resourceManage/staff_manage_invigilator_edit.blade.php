@@ -29,7 +29,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_edit','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}','get_subject':'{{route('osce.admin.invigilator.getSubjects')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_edit','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}','email':'{{ route('osce.admin.invigilator.postEmailUnique')}}','get_subject':'{{route('osce.admin.invigilator.getSubjects')}}'}" />
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
 

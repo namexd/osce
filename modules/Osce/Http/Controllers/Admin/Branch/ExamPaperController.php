@@ -47,7 +47,7 @@ class ExamPaperController extends CommonController
         $examPaper= new ExamPaper();
         $examList = $examPaper->getExamPaperlist($keyword);
         //dd($examList->toArray());
-        return view('osce::admin.resourcemanage.subject_papers', ['data' => $examList,'keyword' => $keyword]);
+        return view('osce::admin.resourceManage.subject_papers', ['data' => $examList,'keyword' => $keyword]);
     }
 
     /**
@@ -269,7 +269,7 @@ class ExamPaperController extends CommonController
 
                     }
 
-                    return view('osce::admin.resourcemanage.subject_papers_add',[
+                    return view('osce::admin.resourceManage.subject_papers_add',[
                         'label'=>$label,
                         'ExamQuestionLabelTypeList'=>$question,
                         'paperDetail' => $paperDetail,
@@ -281,7 +281,7 @@ class ExamPaperController extends CommonController
 
 
         }else{
-            return view('osce::admin.resourcemanage.subject_papers_add',[
+            return view('osce::admin.resourceManage.subject_papers_add',[
                 'label'=>$label,
                 'ExamQuestionLabelTypeList'=>$question,
             ]);
@@ -1414,7 +1414,7 @@ class ExamPaperController extends CommonController
 
         }
         $label = $this->getExamLabelGet();//标签
-        return view('osce::admin.resourcemanage.subject_papers_add_detail2',[
+        return view('osce::admin.resourceManage.subject_papers_add_detail2',[
             'labelList'=>$label,
             'question_type'=>$questionIDstr[0],
             'sequence'=>$request->sequence,
