@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 
+use Illuminate\Support\Facades\Session;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
@@ -239,6 +240,7 @@ class AnswerController extends CommonController
         $answerModel = new Answer();
         try{
             $answerModel->saveAnswer($data,$resultData);
+            \Session::pull('systemTimeStart');//删除session
             return response()->json(
                 $this->success_data([],1,'success')
             );
