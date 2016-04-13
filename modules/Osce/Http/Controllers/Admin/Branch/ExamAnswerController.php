@@ -66,6 +66,7 @@ class ExamAnswerController extends CommonController
 
         if (count($examPaperFormalInfo->ExamCategoryFormal) > 0) {
             foreach ($examPaperFormalInfo->ExamCategoryFormal as $k => $v) {
+
                 if (count($v->ExamQuestionFormal) > 0) {
                     foreach ($v->ExamQuestionFormal as $key => $item) {
                         $child[$key]['exam_question_name'] = $key + 1 . '.' . '' . $item['name'] .'?'; // 拼接试题名称
@@ -120,15 +121,18 @@ class ExamAnswerController extends CommonController
                            /*if (empty($c)) {
                                $stuScore += $v['score'];
                             }*/
+                       // dump($item['name']);
                     }
+                 //   dump($child);
                 }
                 $data[$k]['Title'] = $this->numToWord($k+1) . '、' . $v['name'] . ' ' . '共' . $v['number'] . '题，' . '每题' . $v['score'] . '分' . ' ';
                 $data[$k]['questionType']=$v['exam_question_type_id'];
                 //$examItems['stuScore'] = $stuScore;//考试最终成绩
                 $data[$k]['child'] = $child;
+                unset($child);
             }
         }
-
+//dd($data);
         $examItems['stuScore'] =ExamResult::where('student_id',$studentMsg->id)->pluck('score');
          return view('osce::admin.statisticalanalysis.statistics_student_query',
              [
