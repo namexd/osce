@@ -936,10 +936,10 @@ class InvigilatePadController extends CommonController
 
         try{
             $this->validate($request, [
-                'nfc_code' => 'required|string',
+                'code' => 'required|string',
             ]);
 
-            $ncfCode = $request->get('nfc_code');//腕表NCF编码
+            $ncfCode = $request->get('code');//腕表NCF编码
 
             //查询某个腕表的考试状态
             $watchModel = new Watch();
