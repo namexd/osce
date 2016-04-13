@@ -24,35 +24,36 @@ use Modules\Osce\Repositories\Common;
 class AutomaticPlanArrangementController extends CommonController implements SmartArrangeInterface
 {
     /**
+     * TODO 此方法暂时未使用
      * 智能排考的着陆页
      * @param Request $request
      * @author Jiangzhiheng
      * @time 2016-02-22 18：01
      * @return \Illuminate\Http\JsonResponse
      */
-//    function getIndex(Request $request)
-//    {
-//        $this->validate($request, [
-//            'exam_id' => 'required|integer'
-//        ]);
-//        $examId = $request->input('exam_id');
-////        try {
-////            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
-////            
-////            return response()->json($this->success_data($automaticPlanArrangement->output($examId)));
-////        } catch (\Exception $ex) {
-////            return response()->json($this->fail($ex));
-////        }
+    function getIndex(Request $request)
+    {
+        $this->validate($request, [
+            'exam_id' => 'required|integer'
+        ]);
+        $examId = $request->input('exam_id');
 //        try {
-//            $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
-//            $smartArrange = new SmartArrangeRepository();
+//            $automaticPlanArrangement = new AutomaticPlanArrangement($examId, new ExamPlaceEntity(), new Exam());
 //
-//            return response()->json($this->success_data($smartArrange->output($exam)));
+//            return response()->json($this->success_data($automaticPlanArrangement->output($examId)));
 //        } catch (\Exception $ex) {
 //            return response()->json($this->fail($ex));
 //        }
-//
-//    }
+        try {
+            $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
+            $smartArrange = new SmartArrangeRepository();
+
+            return response()->json($this->success_data($smartArrange->output($exam)));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
+
+    }
 
     /**
      * 开始排考
