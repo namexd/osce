@@ -2418,6 +2418,10 @@ function staff_manage_invigilator_add() {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
                     },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
+                    },
                     stringLength: {
                         max:20,
                         message: '名称字数不超过20个'
@@ -2627,6 +2631,10 @@ function staff_manage_invigilator_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
+                    },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
                     },
                     stringLength: {
                         max:20,
@@ -3800,7 +3808,7 @@ function res_manage_edit() {
                     },
                     stringLength: {/*长度提示*/
                         min: 1,
-                        max: 20,
+                        max: 30,
                         message: '用物名称长度不超过20个'
                     }/*最后一个没有逗号*/
                 }
