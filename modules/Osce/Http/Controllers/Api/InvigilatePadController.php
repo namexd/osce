@@ -843,9 +843,10 @@ class InvigilatePadController extends CommonController
             //查找考生的剩余考站数量
             $examQueue = new ExamQueue();
             $station_num = $examQueue->getStationNum($studentWatchData['student_id']);
-            $studentWatchData['station_num'] = $station_num->station_num;
-            unset($studentWatchData['student_id']);
-            dd($studentWatchData);
+            if(!empty($studentWatchData)){
+                $studentWatchData['station_num'] = $station_num->station_num;
+                unset($studentWatchData['student_id']);
+            }
             if(count($studentWatchData) > 0){
                 return response()->json(
                     $this->success_data($studentWatchData,200,'success')
