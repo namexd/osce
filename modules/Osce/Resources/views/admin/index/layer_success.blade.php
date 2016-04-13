@@ -29,8 +29,7 @@
         <span id="result-name" value="{{$result->name}}"></span>
         <span id="table-id" value="{{$fileArray['table']}}"></span>
         <span id="tr-id" value="{{$fileArray['tr']}}"></span>
-
-        
+        <span id="selector" value="{{$fileArray['selector']}}"></span>
     </div>
     <i>数据新增成功</i>
 </div>
@@ -47,14 +46,14 @@ $(function() {
     var index = parent.layer.getFrameIndex(window.name),
         ID = $('#result-id').attr('value'),
         table_id = $('#table-id').attr('value'),
-        tr_id = $('#tr-id').attr('value');
+        tr_id = $('#tr-id').attr('value'),
+        selector = $('#selector').attr('value');
 
     //等待三秒关闭
     layer.load(3)
     setTimeout(function() {
         //新增的数据传过去
-        parent.$('.table-id-'+table_id).find('.'+tr_id).find('.exam-station').val(ID).trigger("change");
-        console.log(table_id,tr_id,ID)
+        parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).val(ID).trigger("change");
         parent.layer.close(index);
     }, 2000);  
 })
