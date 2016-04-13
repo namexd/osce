@@ -807,6 +807,7 @@ class ExamController extends CommonController
                     break;
                 case '2' :
                     $result = $this->getStationAssignment($request);
+
                     break;
                 default:
                     $result =  $this->getExamroomAssignment($request);
