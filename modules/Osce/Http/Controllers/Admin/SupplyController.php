@@ -17,6 +17,7 @@ class SupplyController extends CommonController
 {
 
 
+    
     /**
      * 获取用物列表
      * @method GET
