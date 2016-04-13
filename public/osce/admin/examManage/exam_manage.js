@@ -4489,7 +4489,7 @@ function station_assignment(){
             }
 
         //数据更新，交互数据
-        }).on('select2:select', function(e) {console.log(e.params.data)
+        }).on('select2:select', function(e) {
             //请求数据
             var req = {
                 exam_id:examId,
