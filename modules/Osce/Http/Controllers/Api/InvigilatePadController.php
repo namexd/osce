@@ -1176,7 +1176,6 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description){
-        $ExamMonitor = new ExamMonitor();
         $data = array();
         $user = Auth::user();
         $data = [
@@ -1187,8 +1186,7 @@ class InvigilatePadController extends CommonController
             'type'              => $type,
             'description'       => $description
         ];
-        var_dump($data);
-        dd($ExamMonitor->create($data));
+        ExamMonitor::create($data);
     }
     /**
      *  解除腕表绑定并上报
@@ -1219,7 +1217,7 @@ class InvigilatePadController extends CommonController
         //开启事务
         $connection = \DB::connection('osce_mis');
         $connection ->beginTransaction();
-        //try{
+        try{
             $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
             $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
             if(!$student_id){    //如果学生不存在
@@ -1252,7 +1250,7 @@ class InvigilatePadController extends CommonController
                     $watchModel->unwrapRecord($data);
 
                     //解绑上报
-                    dd($this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description));
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
                     return \Response::json([
                         'code' => 200,
                     ]);   //解绑成功
@@ -1285,7 +1283,7 @@ class InvigilatePadController extends CommonController
                     $examScreening  =  new ExamScreening();
                     $examScreening  -> getExamCheck();
                     //解绑上报
-                    dd($this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description));
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
                     $connection->commit();
 
                     return \Response::json([
@@ -1318,7 +1316,7 @@ class InvigilatePadController extends CommonController
                     $examScreening   =   new ExamScreening();
                     $examScreening  ->getExamCheck();
                     //解绑上报
-                    dd($this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description));
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
                     //检查考试是否可以结束
                     $connection->commit();
                 }
@@ -1329,11 +1327,11 @@ class InvigilatePadController extends CommonController
             }else{
                 throw new \Exception('解绑失败');
             }
-        //}
-        //catch(\Exception $ex)
-        //{
+        }
+        catch(\Exception $ex)
+        {
             $connection->rollBack();
             return \Response::json(array('code'=>0));
-       // }
+        }
     }
 }
