@@ -4802,7 +4802,7 @@ function examiner_manage() {
 
         $.ajax({
             type:'get',
-            url: '',
+            url: pars.allInvitation,
             data:req,
             success: function(res) {
                 if(res.code != 1) {
@@ -4913,6 +4913,22 @@ function examiner_manage() {
                     };
                 }
             }
+        }).on('select2:unselect', function(e) {
+
+            //删除
+            $.ajax({
+                type:'get',
+                url: pars.del_teacher,
+                data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
+                success: function(res) {
+                    if(res.code != 1) {
+                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    } else {
+                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                    }
+                }
+            })
+
         });
     }
     
@@ -4955,6 +4971,22 @@ function examiner_manage() {
                     };
                 }
             }
+        }).on('select2:unselect', function(e) {
+
+            //删除
+            $.ajax({
+                type:'get',
+                url: pars.del_teacher,
+                data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
+                success: function(res) {
+                    if(res.code != 1) {
+                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    } else {
+                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                    }
+                }
+            })
+
         });
     }
     
