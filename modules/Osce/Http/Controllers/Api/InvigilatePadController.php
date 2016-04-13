@@ -24,6 +24,7 @@ use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Standard;
+use Modules\Osce\Entities\StandardItem;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
@@ -215,19 +216,16 @@ class InvigilatePadController extends CommonController
 
     public function getExamGrade(Request $request)
     {
-
         try {
 
             $this->validate($request, [
                 'station_id' => 'required|integer',
-//            'exam_id'  => 'required|integer'
             ], [
                 'station_id.required' => '没有获取到当前考站',
-                'exam_id.required' => '没有获取到当前考试'
             ]);
 
             $stationId = $request->get('station_id');
-//      $stationId=49;
+
             $examId = $request->get('exam_id');
             //根据考站id查询出下面所有的考试项目
             $station = Station::find($stationId);
@@ -235,12 +233,11 @@ class InvigilatePadController extends CommonController
             //考试标准时间
             $mins = $station->mins;
             $exam = Exam::find($examId);
-            $StandardModel = new Standard();
-            $standardList = $StandardModel->ItmeList($station->subject_id);
-
-            if (count($standardList) != 0) {
+            $standardItemModel = new StandardItem();
+            $standardItemList = $standardItemModel->getSubjectStandards($station->subject_id);
+            if (count($standardItemList) != 0) {
                 return response()->json(
-                    $this->success_data($standardList, 1, '数据传送成功')
+                    $this->success_data($standardItemList, 1, '数据传送成功')
                 );
 
             } else {
@@ -251,7 +248,6 @@ class InvigilatePadController extends CommonController
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage());
         }
-
     }
 
     /**
@@ -301,9 +297,9 @@ class InvigilatePadController extends CommonController
             $useTime = strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt);
 //            getMinutes
             $data = [
-                'station_id' => $stationId,
-                'student_id' => $studentId,
-                'exam_screening_id' => $examScreeningId,
+                'station_id' => $stationId,//考站编号
+                'examinee_id' => $studentId,//考生编号
+                'exam_screening_id' => $examScreeningId,//场次编号
                 'begin_dt' => $studentExamTime->begin_dt,//考试开始时间
                 'end_dt' => $studentExamTime->end_dt,//考试实际结束时间
                 'time' => $useTime,//考试用时
