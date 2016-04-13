@@ -4302,7 +4302,7 @@ function station_assignment(){
                                 '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
                                 '<td type="3"></td>'+
                                 '<td type="3"><select class="station-belong"><option value="请选择">请选择</option></select></td>'+
-                                '<td type="3"><span class="station-chioce">"'+textName[flag]+'"</span></td>'+
+                                '<td type="3"><span class="station-chioce">'+textName[flag]+'</span></td>'+
                                 '<td>'+
                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
