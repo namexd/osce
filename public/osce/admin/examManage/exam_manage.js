@@ -4046,7 +4046,7 @@ function station_assignment(){
                                         '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="2">'+stageRender(data[i].exam_gradation_id)+'</select>'+
                                 '</div>'+
                                 '<div class="col-sm-2">'+
-                                    '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
+                                    '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="0" type="2">必考</a>'+
                                     '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                 '</div>'+
                             '</div>'+
@@ -4200,7 +4200,7 @@ function station_assignment(){
                                                 '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+stageRender(1)+'</select>'+
                                         '</div>'+
                                         '<div class="col-sm-2">'+
-                                            '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
+                                            '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="0" type="3">必考</a>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
@@ -4285,7 +4285,9 @@ function station_assignment(){
         var html = '',
             $that = $(this).parent().parent().parent().parent().parent(),
             judgeType = $that.parent().parent().find('.select-stage').attr('type') == 2 ? 1 :4,
-            index = parseInt($that.attr('index')) + 1;
+            index = parseInt($that.attr('index')) + 1,
+            textName = ['必考','选考'];
+            flag = $that.parent().parent().find('.chioce-btn').attr('value');
 
         $.ajax({
             type:'post',
@@ -4300,7 +4302,7 @@ function station_assignment(){
                                 '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
                                 '<td type="3"></td>'+
                                 '<td type="3"><select class="station-belong"><option value="请选择">请选择</option></select></td>'+
-                                '<td type="3"><span class="form-control station-chioce">必考</span></td>'+
+                                '<td type="3"><span class="station-chioce">"'+textName[flag]+'"</span></td>'+
                                 '<td>'+
                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -4587,27 +4589,47 @@ function station_assignment(){
         });
 
         //选考必考
-        /*$elem.find('.station-chioce').select2({data:[{id:1,text:'必考'},{id:2,text:'选考'}]}).on("change", function (e) {
-            //请求数据
-            var req = {
-                exam_id:examId,
-                type:$elem.find('.station-chioce').parent().attr('type'),
-                draft_id:$elem.attr('item-id'),
-                station_id:$elem.parent().parent().attr('station-id'),
-                chioce: $elem.find('.station-chioce').val()
-            };
+        /*$elem.parent().parent().parent().find('.chioce-btn').click(function() {console.log('op')
+            var $that = $(this),
+                textName = ['选考','必考'],
+                flag = $that.attr('value'),
+                toValue = [1,0];
 
-            $.ajax({
-                type:'post',
-                url: pars.update_data,
-                data:req,
-                success: function(res) {
-                    return true;
-                }
-            })
-         });*/
+            console.log(flag)
+            $that.text(textName[flag]);
+            $that.attr('value',toValue[flag]);
+
+        })*/
 
     }
+
+    $('.station-container').on('click', '.chioce-btn', function() {
+        var $that = $(this),
+            textName = ['选考','必考'],
+            flag = $that.attr('value'),
+            toValue = [1,0];
+
+        //状态更新
+        $that.text(textName[flag]);
+        $that.attr('value',toValue[flag]);
+
+        //本站所有选项更新
+        $that.parent().parent().parent().find('.station-chioce').text(textName[flag]);
+
+        $.ajax({
+            type:'post',
+            url: pars.chioce_btn,
+            data:{exam_id:examId, optional:flag,flow_id:$that.parent().parent().parent().find('table').attr('station-id'),type:$that.attr('type')},
+            success: function(res) {
+                if(res.code != 1) {
+                    return true;
+                } else {
+
+                }
+            }
+        })
+
+    })
 
     /**
      * 保存数据
