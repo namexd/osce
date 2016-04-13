@@ -108,11 +108,31 @@ class ExamDraftFlow extends CommonModel
             if (is_null($examDraftFlow)){
                 throw new \Exception('数据有误，请重试！');
             }
-            $examDraftFlow -> order             = $item->order;
-            $examDraftFlow -> name              = $item->name;
-            $examDraftFlow -> exam_screening_id = $item->exam_screening_id;
-            $examDraftFlow -> exam_gradation_id = $item->exam_gradation_id;
-            $examDraftFlow -> exam_id           = $item->exam_id;
+
+            if(!is_null($item->order)){
+                $examDraftFlow -> order             = $item->order;
+            }
+            if(!is_null($item->name)){
+                $examDraftFlow -> name              = $item->name;
+            }
+            if(!is_null($item->exam_screening_id)){
+                $examDraftFlow -> exam_screening_id = $item->exam_screening_id;
+            }
+            if(!is_null($item->exam_gradation_id)){
+                $examDraftFlow -> exam_gradation_id = $item->exam_gradation_id;
+            }
+            if(!is_null($item->exam_id)){
+                $examDraftFlow -> exam_id           = $item->exam_id;
+            }
+            if(!is_null($item->optional)){
+                $examDraftFlow -> optional          = $item->optional;
+            }
+            if(!is_null($item->number)){
+                $examDraftFlow -> number            = $item->number;
+            }
+            if(!is_null($item->number)){
+                $examDraftFlow -> number            = $item->number;
+            }
 
             if(!$examDraftFlow->save())
             {
