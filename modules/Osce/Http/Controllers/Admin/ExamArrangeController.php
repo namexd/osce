@@ -129,13 +129,12 @@ class ExamArrangeController extends CommonController
                     if (!$DraftResult) {
                         throw new \Exception('保存临时考站失败');
                     }
-
-                } else {
-                    throw new \Exception('保存临时考站失败');
-
+                    return response()->json(
+                        $this->success_data(['id' => $result->id, 'draft_id' => $DraftResult->id], 1, 'success')
+                    );
                 }
             return response()->json(
-                $this->success_data(['id' => $result->id, 'draft_id' => $DraftResult->id], 1, 'success')
+                $this->success_data(['id' => $result->id], 1, 'success')
             );
         } catch (\Exception $ex) {
             return response()->json(
