@@ -33,32 +33,7 @@ abstract class AbstractCate
         $this->exam = $params['exam'];
     }
 
-    /**
-     * 拿到已经考过了的考生和正在考的考生
-     * @param $entity
-     * @param $screen
-     * @return array 已经考过了的考生及其考试流程
-     * @throws \Exception
-     * @author Jiangzhiheng
-     * @time 2016-04-12 15:26
-     */
-    protected function randomTestStudent($entity, $screen)
-    {
-        $testingStudents = $this->randomBeginStudent($screen);
 
-        $waitingStudents = $this->waitingStudentSql($screen);
-
-        $arrays = [];
-        foreach ($waitingStudents as $waitingStudent) {
-            $arrays = $waitingStudent->student;
-        }
-
-        if (count($testingStudents) == 0) {
-            $arrays = $this->beginStudents($entity);
-        }
-
-        return $this->testingStudents($this->exam, $arrays);
-    }
 
     protected function beginStudents($entity) {
         /*
@@ -126,62 +101,6 @@ abstract class AbstractCate
             }
         }
         return $result;
-    }
-
-    /**
-     * 寻找循序模式需要的考生
-     * @param $entity
-     * @param $screen
-     * @return array
-     * @throws \Exception
-     * @author Jiangzhiheng
-     * @time 2016-04-11 11:30
-     */
-    protected function orderTestStudent($entity, $screen)
-    {
-        /**
-         * 需要查当前的实例是不是第一个
-         * 如果等于1，就说明是第一个，直接从侯考区取人
-         * 如果不是，就说明前面有流程了
-         */
-        if ($entity->serialnumber != 1) {
-            $tempArrays = $this->orderBeginStudent($screen, $entity->serialnumber);
-            if (count($tempArrays) != 0) {
-                return Student::whereIn('id', $tempArrays)->get();
-            } else {
-                return collect([]);
-            }
-        } else {
-            return collect([]);
-        }
-    }
-
-    /**
-     * 返回轮询所需要的学生
-     * @param $entity
-     * @param $screen
-     * @return array
-     * @throws \Exception
-     * @author Jiangzhiheng
-     * @time 2016-04-11 15:33
-     */
-    protected function pollTestStudents($entity, $screen)
-    {
-        $tempArrays = $this->pollBeginStudent($entity, $screen);
-
-        $num = $this->waitingStudentSql($screen);
-
-        $arrays = [];
-        foreach ($num as $item) {
-            $arrays[] = $item->student;
-        }
-
-        if (count($tempArrays) == 0) {
-            $arrays = $this->beginStudents($entity);
-        }
-//        echo '====';
-//        dump($arrays);
-        return $this->testingStudents($this->exam, $arrays);
     }
 
     /**

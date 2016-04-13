@@ -309,7 +309,13 @@ class ExamArrangeController extends CommonController
     }
 
 
-    //删除子站
+    /**
+     * 删除子站接口
+     * @url GET /osce/admin/exam-arrange/del-exam-draft
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
     public function getDelExamDraft(Request $request)
     {
         $this->validate($request, [
@@ -378,7 +384,15 @@ class ExamArrangeController extends CommonController
     }
 
 
-    //获取考场接口
+
+
+    /**
+     * 获取考场接口
+     * @url GET /osce/admin/exam-arrange/room-list
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
     public function getRoomList(Request $request)
     {
         $this->validate($request, [
@@ -402,8 +416,14 @@ class ExamArrangeController extends CommonController
 
     }
 
+    /**
+     *获取考站接口
+     * @url GET /osce/admin/exam-arrange/station-list
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
 
-    //获取考站接口
     public function getStationList(Request $request)
     {
         $this->validate($request, [
@@ -509,13 +529,10 @@ class ExamArrangeController extends CommonController
             return redirect()->back()->withErrors('没有找到对应的考试！');
         }
         //判断考官安排是考场还是考站安排
-//        if(){
-//
-//        }
-        $ExamDraft     = new ExamDraft();
-        $datas = $ExamDraft->getDraftFlowData($exam_id);
+//        $ExamDraft     = new ExamDraft();
+//        $datas = $ExamDraft->getDraftFlowData($exam_id);
 
-        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $datas]);
+        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id]);
     }
 
     
@@ -534,14 +551,10 @@ class ExamArrangeController extends CommonController
              return redirect()->back()->withErrors('没有找到对应的考试！');
          }
          //判断考官安排是考场还是考站安排
-//        if(){
-//
-//        }
          $ExamDraft     = new ExamDraft();
          $datas = $ExamDraft->getDraftFlowData($exam_id);
 
 
-         
          foreach ($datas as &$teacherData){
 
 
@@ -555,15 +568,12 @@ class ExamArrangeController extends CommonController
                  if($value ->teacher_type ==2){
 
                      $teacherData ->sp_teacher = [$value];
-                     $teacherData ->teacher = [];
                      
                  }else{
                      $teacherData ->teacher = [$value];
-                     $teacherData ->sp_teacher = [];
                  }
              }
          }
-
 
          return response()->json(
              $this->success_data($datas, 1, 'success')
@@ -601,6 +611,7 @@ class ExamArrangeController extends CommonController
             //获得exam_id
             $exam_id = $request->input('exam_id');
             $teacherData = $request->input('data');
+
           
   
             //保存老师的数据

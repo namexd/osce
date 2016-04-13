@@ -68,5 +68,30 @@ class Random extends AbstractCate implements CateInterface
         return $result;
     }
 
-    
+    /**
+     * 拿到已经考过了的考生和正在考的考生
+     * @param $entity
+     * @param $screen
+     * @return array 已经考过了的考生及其考试流程
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-12 15:26
+     */
+    protected function randomTestStudent($entity, $screen)
+    {
+        $testingStudents = $this->randomBeginStudent($screen);
+
+        $waitingStudents = $this->waitingStudentSql($screen);
+
+        $arrays = [];
+        foreach ($waitingStudents as $waitingStudent) {
+            $arrays = $waitingStudent->student;
+        }
+
+        if (count($testingStudents) == 0) {
+            $arrays = $this->beginStudents($entity);
+        }
+
+        return $this->testingStudents($this->exam, $arrays);
+    }
 }

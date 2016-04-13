@@ -44,6 +44,8 @@ use App\Repositories\Common;
 use Auth;
 use Symfony\Component\Translation\Interval;
 use DB;
+use Illuminate\Container\Container as App;
+
 class ExamController extends CommonController
 {
     /**
@@ -805,6 +807,7 @@ class ExamController extends CommonController
                     break;
                 case '2' :
                     $result = $this->getStationAssignment($request);
+
                     break;
                 default:
                     $result =  $this->getExamroomAssignment($request);
@@ -1310,8 +1313,8 @@ class ExamController extends CommonController
         try {
             if (count($plan) == 0) {
                 if (ExamPlanRecord::where('exam_id', $id)->first()) {
-                    $smartArrange = new SmartArrange();
-                    $smartArrangeRepository = new SmartArrangeRepository($smartArrange);
+                    $app = new App();
+                    $smartArrangeRepository = new SmartArrangeRepository($app);
                     $plan = $smartArrangeRepository->output($exam);
                     return view('osce::admin.examManage.smart_assignment', ['exam' => $exam, 'plan' => $plan])->withErrors('当前排考计划没有保存！');
                 } else {

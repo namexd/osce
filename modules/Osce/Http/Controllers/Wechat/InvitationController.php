@@ -101,8 +101,22 @@ class InvitationController extends CommonController
 
     }
 
+    /**
+     * 删除邀请过的老师
+     * @api GET /osce/wechat/invitation/del-teacher-invite
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * @return view
+     ** @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date  2016-4-13
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
 
-    //删除邀请过的老师
+
     public function getDelTeacherInvite(Request $request)
     {
 
@@ -144,9 +158,21 @@ class InvitationController extends CommonController
 
     }
 
-
-    //全部邀请
-
+    /**
+     *全部邀请
+     * @api GET /osce/wechat/invitation/invite-all-teacher
+     * @access public
+     *
+     * @param Request $request post请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     * @return view
+     ** @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date  2016-4-13
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    
     public function getInviteAllTeacher(Request $request)
     {
 

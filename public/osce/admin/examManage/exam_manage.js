@@ -4735,7 +4735,7 @@ function examiner_manage() {
             sp_invation($that);
 
             //老师列表数组
-            teacherArr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            //teacherArr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
 
         });
     }
@@ -4748,9 +4748,20 @@ function examiner_manage() {
      */
     $('#save-data').click(function() {
         //请求数据
-        var req = {};
+        var req = {},
+            arr = [];
 
-        req['data'] = teacherArr;
+        //老师数据
+        $('#add-basic tbody').find('tr').each(function(key) {
+            var $that = $(this);
+
+            //老师列表数组
+            arr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            
+        });
+    
+
+        req['data'] = arr;
         req['exam_id'] = exam_id;
 
         $.ajax({
@@ -4775,14 +4786,24 @@ function examiner_manage() {
      */
     $('#invation-all').click(function() {
         //请求数据
-        var req = {};
+        var req = {},
+            arr = [];
 
-        req['data'] = teacherArr;
+        //老师数据
+        $('#add-basic tbody').find('tr').each(function(key) {
+            var $that = $(this);
+
+            //老师列表数组
+            arr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            
+        });
+
+        req['data'] = arr;
         req['exam_id'] = exam_id;
 
         $.ajax({
             type:'get',
-            url: '',
+            url: pars.allInvitation,
             data:req,
             success: function(res) {
                 if(res.code != 1) {
@@ -4893,6 +4914,22 @@ function examiner_manage() {
                     };
                 }
             }
+        }).on('select2:unselect', function(e) {
+
+            //删除
+            $.ajax({
+                type:'get',
+                url: pars.del_teacher,
+                data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
+                success: function(res) {
+                    if(res.code != 1) {
+                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    } else {
+                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                    }
+                }
+            })
+
         });
     }
     
@@ -4935,6 +4972,22 @@ function examiner_manage() {
                     };
                 }
             }
+        }).on('select2:unselect', function(e) {
+
+            //删除
+            $.ajax({
+                type:'get',
+                url: pars.del_teacher,
+                data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
+                success: function(res) {
+                    if(res.code != 1) {
+                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    } else {
+                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                    }
+                }
+            })
+
         });
     }
     
