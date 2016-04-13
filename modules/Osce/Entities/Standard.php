@@ -56,5 +56,36 @@ class Standard extends CommonModel
         return $result;
     }
 
+    /**
+     * 删除考试项目 对应的 评分标准
+     *
+     * @param $subject
+     *
+     * @author Zhoufuxiang  2016-04-13 10:55
+     * @return bool
+     * @throws \Exception
+     */
+    public function delStandard($subject)
+    {
+        try{
+            if(!$subject->standards->isEmpty())
+            {
+                $standardItem = new StandardItem();
+                foreach ($subject->standards as $standard)
+                {
+                    $standardItem->delItemBySubject($standard);
+                }
+                //删除评分标准
+                if(!$standard->delete()){
+                    throw new \Exception('删除评分标准失败');
+                }
+            }
+            return true;
+
+        } catch (\Exception $ex){
+            throw $ex;
+        }
+    }
+
 
 }

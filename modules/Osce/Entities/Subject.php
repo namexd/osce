@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities;
 
 use DB;
 use Auth;
+use Modules\Osce\Repositories\Common;
 
 class Subject extends CommonModel
 {
@@ -205,7 +206,7 @@ class Subject extends CommonModel
             }
             if ($subject->save()) {
 
-                //TODO:Zhoufuxiang 2016-4-12
+                //修改评分标准     TODO:Zhoufuxiang 2016-4-12
                 if (!$this->editStandard($subject, $points)){
                     throw new \Exception('保存评分标准失败');
                 }
@@ -219,15 +220,11 @@ class Subject extends CommonModel
                     throw new \Exception('编辑考试项目——用物关系失败');
                 }
 
-
             } else {
                 throw new \Exception('更新考核点信息失败');
             }
+
             $connection->commit();
-//            $a=$this->where('id','=',$subject->id)->with('cases')->with('supplys')->with(['standards'=>function($q){
-//                $q->with('standardItem');
-//            }])->first();
-//            dd($a);
             return $subject;
 
         } catch (\Exception $ex) {
@@ -303,93 +300,47 @@ class Subject extends CommonModel
         }
     }
 
+    /**
+     * 删除考试项目
+     *
+     * @param $subject
+     *
+     * @author Zhoufuxiang  2016-04-13 10:55
+     * @return bool
+     * @throws \Exception
+     */
     public function delSubject($subject)
     {
         $connection = DB::connection($this->connection);
-        $connection->beginTransaction();
+        $connection ->beginTransaction();
 
         try {
-            //拿到当前开始
-            $exam = Exam::doingExam();
-            //考试考试下面所有的老师
-            $TeacherArray= StationTeacher::where('exam_id','=',$exam->id)->get()->pluck('user_id');
-            if(!is_null($TeacherArray)){
+            $TeacherSubject = new TeacherSubject();
+            //获取当前正在考试的考试对应的所有老师考试项目关系数据
+            if(!$TeacherSubject->getTeacherSubjects()->isEmpty()){
 
-                //拿到考试项目关联的老师
-                $TeacherId = array_diff($TeacherArray->all(), [null]);
-                $TeacherSubjects = TeacherSubject::whereIn('teacher_id',$TeacherId)->get();
+                throw new \Exception('支持该考试项目的老师已被安排考试');
 
-                if(!$TeacherSubjects->isEmpty()){
-                    throw new \Exception('支持该考试项目的老师已被安排考试');
-                }else{
-
-                    //删除和老师关联
-                    $TeacherSubjects = TeacherSubject::where('subject_id','=',$subject->id)->get();
-                    if($TeacherSubjects){
-                        foreach ($TeacherSubjects as $teacher){
-                            if(!$teacher->delete()){
-                                throw new \Exception('删除关联老师失败');
-                            }
-                        }
-                    }
-                }
+            }else{
+                //删除考试项目、老师的关联关系数据
+                $TeacherSubject->delTeacherSubjects($subject);
             }
 
-            //删除和病例关联
-            foreach ($subject->cases as $case)
-            {
-                $pivot  =   $case->pivot;
-                if(!is_null($pivot))
-                {
-                    if(!$pivot->delete())
-                    {
-                        throw new \Exception('删除病例关联失败');
-                    }
-                }
+            //删除与考试项目相关联的关系数据
+            Common::delRelation($subject, 'cases',     '删除与病例的关联失败', -600);
+            Common::delRelation($subject, 'supplys',   '删除与用物的关联失败', -601);
+            Common::delRelation($subject, 'standards', '删除与评分标准的关联失败', -602);
+            //删除考试项目对应的评分标准
+            $Standard = new Standard();
+            $Standard ->delStandard($subject);
+
+            //删除考试项目
+            if (!$subject->delete()) {
+                throw new \Exception('删除考试项目失败');
             }
 
-            //删除和用物关联
-            foreach ($subject->supplys as $supply)
-            {
-                $pivot  =   $supply->pivot;
-                if(!is_null($pivot))
-                {
-                    if(!$pivot->delete())
-                    {
-                        throw new \Exception('删除用物失败');
-                    }
-                }
-            }
-
-            //获取对应的评分标准
-            $standards = $subject->standards;
-            if(!$standards->isEmpty())
-            {
-                foreach ($subject->standards as $standard)
-                {
-                    $pivot  =   $standard->pivot;
-                    if(!is_null($pivot))
-                    {
-                        if(!$pivot->delete())
-                        {
-                            throw new \Exception('删除用物失败');
-                        }
-                    }
-                };
-
-                $standardItem = new StandardItem();
-                foreach ($standards as $standard)
-                {
-                    $standardItem->delItemBySubject($standard);
-                }
-            }
-            
-            if ($subject->delete()) {
-                $connection->commit();
-                return true;
-            } else {
-                throw new \Exception('删除失败');
-            }
+            $connection->commit();
+            return true;
 
         } catch (\Exception $ex) {
 
@@ -401,7 +352,6 @@ class Subject extends CommonModel
             }
         }
     }
-
 
     /**
      * @author Jiangzhiheng
