@@ -37,27 +37,31 @@ class Invite extends CommonModel
         $connection->beginTransaction();
         try {
             foreach ($data as &$list) {
+
+                //查询出老师名字
+                $teacherName = Teacher::find($list['teacher_id']);
                 //查询出数据库是否有该老师在这场考试邀请过
+
                 $examScreening = Invite::where('exam_screening_id', '=', $list['exam_screening_id'])
                     ->where('user_id','=',$list['teacher_id'])
                     ->where('station_id','=',$list['station_id'])
 //                    ->whereIn('status',[0, 1])
                     ->first();
-                if($examScreening->status == 3){
-                    $examScreening->status = 0;
-                    if(!$examScreening->save()){
-                        throw new \Exception('邀请失败，请重试！');
-                    }
-                } else{
+                if(!is_null($examScreening)){
+                    if($examScreening->status == 3 || $examScreening->status == 2){
+                        $examScreening->status = 0;
+                        if(!$examScreening->save()){
+                            throw new \Exception('邀请失败，请重试！');
+                        }else{
+                            continue;
+                        }
+                }else{
+                        if ($examScreening) {
+                            throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
 
-                    //查询出老师名字
-                    $teacherName = Teacher::find($list['teacher_id']);
-                    if ($examScreening) {
-                        throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
-
+                        }
                     }
                 }
-
 
                 $inviteDat = [
                     'user_id' => $list['teacher_id'],
@@ -187,19 +191,19 @@ class Invite extends CommonModel
         foreach ($teacherData as &$value){
             $value['id']=$invite->id;
         }
-
-        if($invite->status== 2){
-            //如果该老师已拒绝就删除这条邀请
-            $ExamSpTeacher = ExamSpTeacher::where('invite_id','=',$invite->id)->first();
-            if($ExamSpTeacher){
-                //删除
-                if($ExamSpTeacher->delete()){
-                    if(!$invite->delete()){
-                        throw new \Exception('去除老师邀请失败');
-                    }
-                }
-            }
-        }else{
+//
+//        if($invite->status== 2){
+//            //如果该老师已拒绝就删除这条邀请
+//            $ExamSpTeacher = ExamSpTeacher::where('invite_id','=',$invite->id)->first();
+//            if($ExamSpTeacher){
+//                //删除
+//                if($ExamSpTeacher->delete()){
+//                    if(!$invite->delete()){
+//                        throw new \Exception('去除老师邀请失败');
+//                    }
+//                }
+//            }
+//        }else{
             $invite->status =3;
 
             if(!$invite->save()){
@@ -207,9 +211,8 @@ class Invite extends CommonModel
             }else{
                 $type = 3;
                 $this->sendMsg($teacherData,$type);
-            }
-            
-            
+//            }
+                
         }
         
         return true;
