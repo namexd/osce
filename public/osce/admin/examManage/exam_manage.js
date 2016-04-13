@@ -4735,7 +4735,7 @@ function examiner_manage() {
             sp_invation($that);
 
             //老师列表数组
-            teacherArr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            //teacherArr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
 
         });
     }
@@ -4748,9 +4748,19 @@ function examiner_manage() {
      */
     $('#save-data').click(function() {
         //请求数据
-        var req = {};
+        var req = {},
+            arr = [];
 
-        req['data'] = teacherArr;
+        //老师数据
+        $('#add-basic tbody').find('tr').each(function(key) {
+            var $that = $(this);
+
+            //老师列表数组
+            arr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            
+        });
+
+        req['data'] = arr;
         req['exam_id'] = exam_id;
 
         $.ajax({
@@ -4775,9 +4785,19 @@ function examiner_manage() {
      */
     $('#invation-all').click(function() {
         //请求数据
-        var req = {};
+        var req = {},
+            arr = [];
 
-        req['data'] = teacherArr;
+        //老师数据
+        $('#add-basic tbody').find('tr').each(function(key) {
+            var $that = $(this);
+
+            //老师列表数组
+            arr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            
+        });
+
+        req['data'] = arr;
         req['exam_id'] = exam_id;
 
         $.ajax({
