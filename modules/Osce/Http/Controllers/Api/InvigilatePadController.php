@@ -1178,6 +1178,7 @@ class InvigilatePadController extends CommonController
     public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description){
         $data = array();
         $user = Auth::user();
+
         $data = [
             'station_id'        => $station_id,
             'exam_id'           => $exam_id,
@@ -1209,7 +1210,8 @@ class InvigilatePadController extends CommonController
             'description'   =>'required', //解绑原因
             'type'   =>'required' //上报类型
         ]);
-
+        $user = Auth::user();
+        return \Response::json(array('code'=>$user));
         $code=$request->get('code');
         $exam_id=$request->get('exam_id');
         $description=$request->get('description');
