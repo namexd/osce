@@ -79,11 +79,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//设置
 		Route::get('config/index',  ['uses'=>'ConfigController@getIndex','as'=>'osce.admin.config.getIndex']);
+		Route::get('config/sysparam',  ['uses'=>'ConfigController@getSysparam','as'=>'osce.admin.config.getSysparam']);
 		Route::post('config/store',  ['uses'=>'ConfigController@postStore','as'=>'osce.admin.config.postStore']);
 		Route::get('config/area',  ['uses'=>'ConfigController@getArea','as'=>'osce.admin.config.getArea']);
 		Route::get('config/area-store',  ['uses'=>'ConfigController@getAreaStore','as'=>'osce.admin.config.getAreaStore']);
 		Route::post('config/area-store', ['uses'=>'ConfigController@postAreaStore','as'=>'osce.admin.config.postAreaStore']);
 		Route::post('config/del-area',	 ['uses'=>'ConfigController@postDelArea','as'=>'osce.admin.config.postDelArea']);
+		Route::post('config/sysparam', ['uses'=>'ConfigController@postSysparam','as'=>'osce.admin.config.postSysparam']);
 		Route::post('config/name-unique', 	['uses'=>'ConfigController@postNameUnique','as'=>'osce.admin.config.postNameUnique']);	//判断名称是否存在
 		Route::get('config/weChat-help', 	['uses'=>'ConfigController@getWeChatHelp','as'=>'osce.admin.config.getWeChatHelp']);	//微信设置帮助
 
@@ -507,7 +509,9 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	$redis = Redis::connection('message');
 //    $redis->publish(1, 'test');
 //
-	dd(\Modules\Osce\Entities\Exam::join('exam_screening', 'exam.id', '=', 'exam_screening.exam_id')->lists('exam_screening.exam_id')->toArray());
+//	dd(\Modules\Osce\Entities\Exam::join('exam_screening', 'exam.id', '=', 'exam_screening.exam_id')->lists('exam_screening.exam_id')->toArray());
+	$data = config('osce.sys_param');
+	dd($data);
 //	return '失败';
 });
 //TODO:清空考试数据使用 	Zhoufuxiang
