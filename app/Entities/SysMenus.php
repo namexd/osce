@@ -82,7 +82,7 @@ class SysMenus extends Model
     public function getRoleMenus($roleId){
         if($roleId==config('config.superRoleId'))
         {
-            $list   =   SysPermissionMenu::leftJoin('sys_role_permission','sys_permission_menu.permission_id','=','sys_role_permission.permission_id')->  get();
+            $list   =   SysPermissionMenu::get();
         }
         else
         {
