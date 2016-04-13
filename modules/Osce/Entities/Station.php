@@ -168,11 +168,11 @@ class Station extends CommonModel
                 if (!$result) {
                     throw new \Exception('关联房间时出错，请重试！');
                 }
-
             }
 
             $connection->commit();
             return $stationResult;
+
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -312,12 +312,13 @@ class Station extends CommonModel
 //            }
 
             //修改 考站对应考场关系
-            $this->modifyRoomStation($roomId, $id);
+            $result = $this->modifyRoomStation($roomId, $id);
 
             $connection->commit();
             return true;
 
         } catch (\Exception $ex) {
+
             $connection->rollBack();
             throw $ex;
         }
@@ -339,17 +340,28 @@ class Station extends CommonModel
             $roomStation = RoomStation::where('station_id','=',$id)->first();
             if (!is_null($roomStation)) {
                 if(!$roomStation->delete()){
-                    throw new \Exception('更改房间关联失败');
+                    throw new \Exception('删除房间关联失败');
                 }
             }
         }else{
             //改变考站 考场的关系
-            $stationRoomData = [
-                'room_id' => $roomId,
-            ];
-            $result = RoomStation::where('station_id','=',$id)->update($stationRoomData);
-            if (!$result) {
-                throw new \Exception('更改房间关联失败');
+            $RoomStation = RoomStation::where('station_id','=',$id)->first();
+            if (is_null($RoomStation)){
+                //将房间相关插入关联表
+                $StationRoomData = [
+                    'room_id'    => $roomId,
+                    'station_id' => $id
+                ];
+                $result = RoomStation::create($StationRoomData);
+                if (!$result) {
+                    throw new \Exception('关联房间时出错，请重试！');
+                }
+
+            }else{
+                $RoomStation->room_id = $roomId;
+                if (!$result = $RoomStation->save()) {
+                    throw new \Exception('更改房间关联失败');
+                }
             }
         }
         return true;
