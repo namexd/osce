@@ -90,5 +90,6 @@ return [
 		1	=>	'中控室',
 		2	=>	'走廊',
 		3	=>	'侯考区'
-	]
+	],
+	'sys_param' => include 'sysparam.php'
 ];
