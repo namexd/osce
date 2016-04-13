@@ -279,10 +279,7 @@ class TopicController extends CommonController
      *
      *
      * <b>get 请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        id        参数中文名(必须的)
      *
      * @return view
      *
@@ -309,7 +306,7 @@ class TopicController extends CommonController
         if (is_null($standards) || is_null($standards->standardItem)){
             $items = [];
         }else{
-
+            //处理 评分标准 数据
             $items = StandardItem::builderItemTable($standards->standardItem);
         }
         $prointNum = 1;

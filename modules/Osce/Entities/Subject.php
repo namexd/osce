@@ -322,6 +322,7 @@ class Subject extends CommonModel
                 throw new \Exception('支持该考试项目的老师已被安排考试');
 
             }else{
+                //删除考试项目、老师的关联关系数据
                 $TeacherSubject->delTeacherSubjects($subject);
             }
 
