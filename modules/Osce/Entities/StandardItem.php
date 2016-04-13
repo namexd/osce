@@ -146,7 +146,7 @@ class StandardItem extends CommonModel
                 //获取评分标准下的所有考核点、考核项
                 foreach ($standardStandards as $standard) {
                     //
-                    $result    = $this->ItmeList($standard);
+                    $result    = $this->ItmeList($standard->standard_id);
                     $standards = array_merge($standards, $result);
                 }
             }
