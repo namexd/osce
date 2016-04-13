@@ -4023,7 +4023,7 @@ function station_assignment(){
                                 '<td type="2"><select class="form-control exam-station"><option selected="selected" value="'+data[i].item[j].station_id+'">'+data[i].item[j].station_name+'</option></select></td>'+
                                 '<td type="2">'+typeToName[data[i].item[j].station_type]+'</td>'+
                                 '<td type="2"><select class="form-control station-belong"><option selected="selected" value="'+data[i].item[j].room_id+'">'+data[i].item[j].room_name+'</option></select></td>'+
-                                '<td type="2"><select class="form-control station-chioce"><option selected="selected" value="'+data[i].item[j].optional+'">'+chioceToName[data[i].item[j].optional]+'</option></select></td>'+
+                                '<td type="2"><span class="station-chioce">'+chioceToName[data[i].item[j].optional]+'</span></td>'+
                                 '<td>'+
                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -4037,7 +4037,7 @@ function station_assignment(){
 
             //一个站的dom结构
             html += '<div class="form-group">'+
-                        '<label class="col-sm-2 control-label">&nbsp;</label>'+
+                        '<label class="col-sm-1 control-label">&nbsp;</label>'+
                         '<div class="col-sm-10">'+
                             '<div class="row">'+
                                 '<div class="col-sm-4"><label class="control-label" order="'+data[i].order+'">'+data[i].name+'</label></div>'+
@@ -4064,6 +4064,7 @@ function station_assignment(){
                                 '<tbody index="'+j+'">'+str+'</tbody>'+
                             '</table>'+
                         '</div>'+
+                        '<label class="col-sm-1 control-label">&nbsp;</label>'+
                     '</div>';
         }
         $('.station-container').html(html);
@@ -4190,7 +4191,7 @@ function station_assignment(){
                     layer.msg('新增考站失败！',{skin:'msg-error',icon:1});
                 } else {
                     html += '<div class="form-group">'+
-                                '<label class="col-sm-2 control-label">&nbsp;</label>'+
+                                '<label class="col-sm-1 control-label">&nbsp;</label>'+
                                 '<div class="col-sm-10">'+
                                     '<div class="row">'+
                                         '<div class="col-sm-4"><label class="control-label" order="'+index+'">第'+stationName[index]+'站</label></div>'+
@@ -4220,7 +4221,7 @@ function station_assignment(){
                                                 '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
                                                 '<td type="3"></td>'+
                                                 '<td type="3"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                                '<td type="3"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                                                '<td type="3"><span class="station-chioce">必考</span></td>'+
                                                 '<td>'+
                                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -4229,6 +4230,7 @@ function station_assignment(){
                                         '</tbody>'+
                                     '</table>'+
                                 '</div>'+
+                                '<label class="col-sm-1 control-label">&nbsp;</label>'+
                             '</div>';
 
                     //插入dom
@@ -4297,8 +4299,8 @@ function station_assignment(){
                                 '<td type="3"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
                                 '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
                                 '<td type="3"></td>'+
-                                '<td type="3"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                '<td type="3"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                                '<td type="3"><select class="station-belong"><option value="请选择">请选择</option></select></td>'+
+                                '<td type="3"><span class="form-control station-chioce">必考</span></td>'+
                                 '<td>'+
                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -4585,7 +4587,7 @@ function station_assignment(){
         });
 
         //选考必考
-        $elem.find('.station-chioce').select2({data:[{id:1,text:'必考'},{id:2,text:'选考'}]}).on("change", function (e) {
+        /*$elem.find('.station-chioce').select2({data:[{id:1,text:'必考'},{id:2,text:'选考'}]}).on("change", function (e) {
             //请求数据
             var req = {
                 exam_id:examId,
@@ -4603,7 +4605,7 @@ function station_assignment(){
                     return true;
                 }
             })
-         });
+         });*/
 
     }
 
