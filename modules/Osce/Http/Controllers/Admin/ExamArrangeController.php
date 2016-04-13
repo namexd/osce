@@ -309,7 +309,13 @@ class ExamArrangeController extends CommonController
     }
 
 
-    //删除子站
+    /**
+     * 删除子站接口
+     * @url GET /osce/admin/exam-arrange/del-exam-draft
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
     public function getDelExamDraft(Request $request)
     {
         $this->validate($request, [
@@ -378,7 +384,15 @@ class ExamArrangeController extends CommonController
     }
 
 
-    //获取考场接口
+
+
+    /**
+     * 获取考场接口
+     * @url GET /osce/admin/exam-arrange/room-list
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
     public function getRoomList(Request $request)
     {
         $this->validate($request, [
@@ -402,8 +416,14 @@ class ExamArrangeController extends CommonController
 
     }
 
+    /**
+     *获取考站接口
+     * @url GET /osce/admin/exam-arrange/station-list
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
 
-    //获取考站接口
     public function getStationList(Request $request)
     {
         $this->validate($request, [
