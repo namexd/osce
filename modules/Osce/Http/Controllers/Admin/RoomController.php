@@ -253,13 +253,13 @@ class RoomController extends CommonController
             $formData['cate']            = $cate;
 
             if ($cate === '0') {
-                $room->createRoom($formData,$vcrId,$userId);
+                $result=$room->createRoom($formData,$vcrId,$userId);
             } else {
                 $area = new Area();
-                $area->createRoom($formData,$vcrId,$userId);
+                $result =$area->createRoom($formData,$vcrId,$userId);
             }
 
-//            $Redirect = Common::handleRedirect($request,$result);
+            $Redirect = Common::handleRedirect($request,$result);
             if($Redirect == false){
                 return redirect()->route('osce.admin.room.getRoomList',['type'=>$cate]);
             }else{
