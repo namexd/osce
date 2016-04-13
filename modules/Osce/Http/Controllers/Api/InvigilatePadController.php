@@ -165,22 +165,25 @@ class InvigilatePadController extends CommonController
     public function getAuthentication(Request $request)
     {
         $this->validate($request, [
-            'station_id' => 'required|integer'
+            'station_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
         ], [
-            'station_id.required' => '考站编号必须'
+            'station_id.required' => '考站编号必须',
+            'teacher_id.required' => '老师编号必须'
         ]);
 
         try {
             $redis = Redis::connection('message');
             $stationId = (int)$request->input('station_id');
+            $teacher_id = (int)$request->input('teacher_id');
             $exam = Exam::doingExam();
             $studentModel = new  Student();
-            $studentData = $studentModel->studentList($stationId, $exam);
+            $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
                 $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return response()->json(
-                    $this->success_data($studentData['nextTester'], 200, '验证完成')
+                    $this->success_data($studentData['nextTester'], 102, '验证完成')
                 );
             } else {
                 $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
@@ -713,7 +716,7 @@ class InvigilatePadController extends CommonController
             //dd($AlterResult);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
-                $redis->publish('pad_message', json_encode($this->success_data([$date], 700, '开始考试成功')));
+                $redis->publish('pad_message', json_encode($this->success_data([$date], 105, '开始考试成功')));
                 return response()->json(
                     $this->success_data([$date], 1, '开始考试成功')
                 );

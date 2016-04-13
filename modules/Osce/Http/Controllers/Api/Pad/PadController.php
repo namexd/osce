@@ -396,7 +396,7 @@ class PadController extends  CommonController{
 //            }
 
 
-            return response()->json($this->success_data([$date,$queue->exam_screening_id]));
+            return response()->json($this->success_data([['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id]],106,'结束考试成功'));
         } catch (\Exception $ex) {
             \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
