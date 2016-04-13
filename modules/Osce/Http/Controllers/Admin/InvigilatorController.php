@@ -214,7 +214,7 @@ class InvigilatorController extends CommonController
 //                return redirect()->back('osce.admin.invigilator.getInvigilatorList')->withErrors(['这个号码已有过关联，不能修改']);
 
 
-                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type])->withErrors(['保存成功']);
+                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type])->withErrors(['msg'=>'保存成功','code'=>1]);
 
             } else{
                 throw new \Exception('新增失败');
@@ -289,7 +289,7 @@ class InvigilatorController extends CommonController
             $Invigilator    =   new Teacher();
             if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData,$subjects)){
 
-                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList')->withErrors(['保存成功']);
+                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList')->withErrors(['msg'=>'保存成功','code'=>1]);
             } else{
                 throw new \Exception('新增失败');
             }
@@ -444,7 +444,7 @@ class InvigilatorController extends CommonController
 
             if($result = $teacherModel ->  editInvigilator($id, $userData, $teacherData, $subjects))
             {
-                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=>$type])->withErrors(['保存成功']);
+                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=>$type])->withErrors(['msg'=>'保存成功','code'=>1]);
             } else{
                 throw new \Exception('编辑失败');
             }
@@ -509,7 +509,7 @@ class InvigilatorController extends CommonController
             if($TeahcerModel    ->  editSpInvigilator($id, $userData, $teacherData, $subjects))
                 
             {
-                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList')->withErrors(['保存成功']);
+                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList')->withErrors(['msg'=>'保存成功','code'=>1]);
             } else{
                 throw new \Exception('编辑失败');
             }
