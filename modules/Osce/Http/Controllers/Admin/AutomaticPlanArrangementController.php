@@ -20,6 +20,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Auth;
 use Modules\Osce\Repositories\Common;
+use Illuminate\Container\Container as App;
 
 class AutomaticPlanArrangementController extends CommonController implements SmartArrangeInterface
 {
@@ -78,8 +79,8 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
 
 //        try {
             $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
-            $smartArrange = new SmartArrange();
-            $smartArrangeRepository = new SmartArrangeRepository($smartArrange);
+            $app = new App();
+            $smartArrangeRepository = new SmartArrangeRepository($app);
 
             return response()->json($this->success_data($smartArrangeRepository->plan($exam)));
 //        } catch (\Exception $ex) {
