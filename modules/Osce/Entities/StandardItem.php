@@ -53,7 +53,7 @@ class StandardItem extends CommonModel
         try{
             $user   =   Auth::user();
 
-            if(array_key_exists('child',$point)){
+            if(array_key_exists('child', $point)){
                 $data   =   [
                     'standard_id'       =>  $standard->id,
                     'content'           =>  $point['content'],
@@ -76,7 +76,7 @@ class StandardItem extends CommonModel
             } else{
                 $level  =   $parent->level+1;
                 $data   =   [
-                    'standard_id'        =>  $standard->id,
+                    'standard_id'       =>  $standard->id,
                     'content'           =>  $point['content'],
                     'sort'              =>  $point['sort'],
                     'score'             =>  $point['score'],
