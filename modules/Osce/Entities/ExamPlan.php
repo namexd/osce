@@ -906,7 +906,7 @@ class ExamPlan extends CommonModel
             $exam = Exam::find($examId);
             if ($exam) {
                 //将考试对应的flows的effected都变成0
-                $this->changeSerialnumberToZero($exam);
+//                $this->changeSerialnumberToZero($exam);
             } else {
                 throw new \Exception('当前操作的考试不存在');
             }
@@ -941,7 +941,7 @@ class ExamPlan extends CommonModel
             }
 
             //将考试使用了的实体的effected都变成1
-            $this->changeSerialnumberToOne($exam, $result);
+//            $this->changeSerialnumberToOne($exam, $result);
 
             //将数据保存到examOrder
             $this->saveStudentOrder($examId);
