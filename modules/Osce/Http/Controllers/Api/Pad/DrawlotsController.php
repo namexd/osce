@@ -146,7 +146,7 @@ class DrawlotsController extends CommonController
 //                unset($student['blocking']);
 //            }
 
-            $redis->publish('pad_message', json_encode($this->success_data($examQueue)));//信息推送
+            $redis->publish('pad_message', json_encode($this->success_data($examQueue,103,'获取成功')));//信息推送
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -226,7 +226,7 @@ class DrawlotsController extends CommonController
             }
             //从集合中移除blocking
 //            $students->forget('blocking');
-            $redis->publish('pad_message', json_encode($this->success_data($examQueue,300)));//信息推送
+            $redis->publish('pad_message', json_encode($this->success_data($examQueue,104,'获取成功')));//信息推送
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
