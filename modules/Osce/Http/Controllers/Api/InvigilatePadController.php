@@ -828,25 +828,28 @@ class InvigilatePadController extends CommonController
      */
     public function getExamineeBoundWatchDetail(Request $request){
         $this->validate($request, [
-            'student_id' => 'required|integer',
+            'equipment_id' => 'required|integer',
         ]);
 
         try {
             //考生基本信息
-            $studentId = $request->get('student_id');
+            $equipmentId = $request->get('equipment_id');
 
             //查找考生及与其绑定的腕表的详细信息
             $watchModel = new WatchLog();
-            $studentWatchData = $watchModel->getExamineeBoundWatchDetails($studentId);
+            $studentWatchData = $watchModel->getExamineeBoundWatchDetails($equipmentId);
 
             if(count($studentWatchData) > 0){
                 $studentWatchData = $studentWatchData->toArray();
             }
+
             //查找考生的剩余考站数量
             $examQueue = new ExamQueue();
-            $station_num = $examQueue->getStationNum($studentId);
-            $studentWatchData['station_num'] = $station_num->station_num;
-
+            $station_num = $examQueue->getStationNum($studentWatchData['student_id']);
+            if(!empty($studentWatchData)){
+                $studentWatchData['station_num'] = $station_num->station_num;
+                unset($studentWatchData['student_id']);
+            }
             if(count($studentWatchData) > 0){
                 return response()->json(
                     $this->success_data($studentWatchData,200,'success')
