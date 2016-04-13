@@ -4098,7 +4098,7 @@ function station_assignment(){
 
                 for(var i in data) {
                     var str = data[i].order - 1;
-                    if(data[i].order == count) {
+                    if(data[i].id == count) {
                         exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+stationName[str]+'</option>';
                     } else {
                         exam_stage_str += '<option value="'+data[i].id+'">阶段'+stationName[str]+'</option>';
