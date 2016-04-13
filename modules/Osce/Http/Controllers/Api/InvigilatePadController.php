@@ -41,6 +41,8 @@ use Auth;
 use Redis;
 use Symfony\Component\HttpKernel\Tests\DataCollector\DumpDataCollectorTest;
 use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
+
+use Modules\Osce\Http\Controllers\Api\StudentWatchController;
 class InvigilatePadController extends CommonController
 {
 
@@ -713,6 +715,18 @@ class InvigilatePadController extends CommonController
             if ($AlterResult) {
                 \Log::alert($AlterResult);
                 $redis->publish('pad_message', json_encode($this->success_data([$date], 105, '开始考试成功')));
+
+                //调用向腕表推送消息的方法
+                $examQueue = ExamQueue::where('student_id', '=', $studentId)
+                    ->where('station_id', '=', $stationId)
+                    ->whereIn('status',[0,2])
+                    ->first();
+                $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$examQueue->exam_screening_id)
+                    ->where('student_id','=',$examQueue->student_id)->first();
+                $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
+                $studentWatchController = new StudentWatchController();
+                $request->nfc_code = $watchData->nfc_code;
+                $studentWatchController->getStudentExamReminder($request);
                 return response()->json(
                     $this->success_data([$date], 1, '开始考试成功')
                 );
