@@ -1069,15 +1069,15 @@ function exam_station_edit() {
                     }
                 }
             },
-            room_id: {
-                /*键名username和input name值对应*/
-                message: 'The username is not valid',
-                validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '请选择所属考场'
-                    }
-                }
-            },
+            // room_id: {
+            //     /*键名username和input name值对应*/
+            //     message: 'The username is not valid',
+            //     validators: {
+            //         notEmpty: {/*非空提示*/
+            //             message: '请选择所属考场'
+            //         }
+            //     }
+            // },
             vcr_id: {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
