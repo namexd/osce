@@ -294,6 +294,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam-arrange/exam-arrange-data',['uses'=>'ExamArrangeController@getExamArrangeData','as'=>'osce.admin.ExamArrange.getExamArrangeData']);
 		Route::post('exam-arrange/add-exam-flow',['uses'=>'ExamArrangeController@postAddExamFlow','as'=>'osce.admin.ExamArrange.postAddExamFlow']);
 		Route::post('exam-arrange/add-exam-draft',['uses'=>'ExamArrangeController@postAddExamDraft','as'=>'osce.admin.ExamArrange.postAddExamDraft']);
+		Route::get('exam-arrange/exam-select',['uses'=>'ExamArrangeController@getExamSelect','as'=>'osce.admin.ExamArrange.getExamSelect']);
 	});
 
 	 //Pad端
