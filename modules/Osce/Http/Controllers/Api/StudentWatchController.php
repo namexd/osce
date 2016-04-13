@@ -53,13 +53,16 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder($nfc_code)
+    public function getStudentExamReminder(Request $request, $_nfc_code = '')
     {
-        /*
-        $this->validate($request, [
-            'nfc_code' => 'required'
-        ]);
-        */
+        if ($_nfc_code == '') {
+            $this->validate($request, [
+                'nfc_code' => 'required'
+            ]);
+            $watchNfcCode = $request->input('nfc_code');
+        } else {
+            $watchNfcCode = $_nfc_code;
+        }
 
         $redis = Redis::connection('message');
 
@@ -75,8 +78,6 @@ class StudentWatchController extends CommonController
         ];
 
         $code = 0;
-        //$watchNfcCode = $request->input('nfc_code');
-        $watchNfcCode = $nfc_code;
 
         //根据设备编号找到设备id
         $watchId = Watch::where('code', '=', $watchNfcCode)->select('id')->first();
@@ -84,7 +85,14 @@ class StudentWatchController extends CommonController
             $code = -1;
             $data['title'] = '没有找到到腕表信息';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
-            exit;
+            if ($_nfc_code != '') {
+                $retval = ['title' => '当前考站准备完成失败'];
+                return response()->json(
+                    $this->success_data($retval, -1, 'error')
+                );
+            } else {
+                exit;
+            }
         }
 
         //判定腕表是否解绑
@@ -93,7 +101,14 @@ class StudentWatchController extends CommonController
             $code = -1;
             $data['title'] = '该腕表还没有学生绑定';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
-            exit;
+            if ($_nfc_code != '') {
+                $retval = ['title' => '当前考站准备完成失败'];
+                return response()->json(
+                    $this->success_data($retval, -1, 'error')
+                );
+            } else {
+                exit;
+            }
         }
 
         //  根据腕表id找到对应的考试场次和学生
@@ -101,7 +116,14 @@ class StudentWatchController extends CommonController
         if (!$watchStudent) {
             $data['title'] = '没有找到学生的腕表信息';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
-            exit;
+            if ($_nfc_code != '') {
+                $retval = ['title' => '当前考站准备完成失败'];
+                return response()->json(
+                    $this->success_data($retval, -1, 'error')
+                );
+            } else {
+                exit;
+            }
         }
 
         //得到学生id
@@ -116,7 +138,14 @@ class StudentWatchController extends CommonController
             $code = -1;
             $data['title'] = '学生队列信息不正确';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
-            exit;
+            if ($_nfc_code != '') {
+                $retval = ['title' => '当前考站准备完成失败'];
+                return response()->json(
+                    $this->success_data($retval, -1, 'error')
+                );
+            } else {
+                exit;
+            }
         }
 
         //判断考试的状态
@@ -324,7 +353,6 @@ class StudentWatchController extends CommonController
         });
         $item   =   array_shift($items);
 
-        /*
         $examStationStatusModel = new ExamStationStatus();
         $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)->where('station_id', '=', $item->station_id)->first();
         if ($instance->status == 0) {
@@ -333,7 +361,6 @@ class StudentWatchController extends CommonController
                 'title'=> '等待老师准备中',
             ];
         }
-        */
 
         //判断前面是否有人考试
         if(empty($item->station_id)){
