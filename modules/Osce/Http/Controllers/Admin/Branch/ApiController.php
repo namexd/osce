@@ -732,23 +732,28 @@ class ApiController extends CommonController
         $stationId       = $request->input('station_id');
         $examScreeningId = $request->input('exam_screening_id');
 
-        $redis = Redis::connection('message');
+        //$redis = Redis::connection('message');
 
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)->where('station_id', '=', $stationId)->first();
         if (is_null($examStationStatus)) {
-            $retval = ['title' => '未查到到考试中当前考站状态信息'];
-            $redis->publish('pad_message', json_encode($this->success_data($retval, -1, 'error')));
-            exit;
+            $retval = ['title' => '当前考站准备完成失败'];
+            return response()->json(
+                $this->success_data($retval, -1, 'error')
+            );
         }
 
         $examStationStatus->status = 1;
         $examStationStatus->save();
 
-        $retval = ['title' => '当前考站准备完成'];
-        $redis->publish('pad_message', json_encode($this->success_data($retval, 1)));
+        $retval = ['title' => '当前考站准备完成成功'];
+        return response()->json(
+            $this->success_data($retval)
+        );
+
 
         // 给腕表推送考站准备完成信息
+        /*
         $examQenenModel = new ExamQueue();
         $examQenen = $examQenenModel->where('exam_id', '=', $examId)
                                     ->where('exam_screening_id', '=', $examScreeningId)
@@ -758,7 +763,10 @@ class ApiController extends CommonController
         if (is_null($examQenen)) {
             $retval = ['title' => '未查到相应考试队列信息'];
             $redis->publish('watch_message', json_encode($this->success_data($retval, -2, 'error')));
-            exit;
+            $retval = ['title' => '当前考站准备完成失败'];
+            return response()->json(
+                $this->success_data($retval, -1, 'error')
+            );
         }
 
         $watchLogModel = new WatchLog();
@@ -772,11 +780,15 @@ class ApiController extends CommonController
         if (is_null($watch)) {
             $retval = ['title' => '未查到相应腕表信息'];
             $redis->publish('watch_message', json_encode($this->success_data($retval, -3, 'error')));
-            exit;
+            $retval = ['title' => '当前考站准备完成失败'];
+            return response()->json(
+                $this->success_data($retval, -1, 'error')
+            );
         }
 
         $studentWatchController = new StudentWatchController();
-        $studentWatchController->getStudentExamReminder($watch['nfc_code']);
+        $studentWatchController->getStudentExamReminder($request, $watch['nfc_code']);
+        */
     }
 
     /**

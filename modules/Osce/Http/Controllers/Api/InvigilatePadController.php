@@ -166,22 +166,25 @@ class InvigilatePadController extends CommonController
     public function getAuthentication(Request $request)
     {
         $this->validate($request, [
-            'station_id' => 'required|integer'
+            'station_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
         ], [
-            'station_id.required' => '考站编号必须'
+            'station_id.required' => '考站编号必须',
+            'teacher_id.required' => '老师编号必须'
         ]);
 
         try {
             $redis = Redis::connection('message');
             $stationId = (int)$request->input('station_id');
+            $teacher_id = (int)$request->input('teacher_id');
             $exam = Exam::doingExam();
             $studentModel = new  Student();
-            $studentData = $studentModel->studentList($stationId, $exam);
+            $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
                 $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return response()->json(
-                    $this->success_data($studentData['nextTester'], 200, '验证完成')
+                    $this->success_data($studentData['nextTester'], 102, '验证完成')
                 );
             } else {
                 $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
@@ -709,7 +712,7 @@ class InvigilatePadController extends CommonController
             //dd($AlterResult);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
-                $redis->publish('pad_message', json_encode($this->success_data([$date], 700, '开始考试成功')));
+                $redis->publish('pad_message', json_encode($this->success_data([$date], 105, '开始考试成功')));
                 return response()->json(
                     $this->success_data([$date], 1, '开始考试成功')
                 );
@@ -821,25 +824,28 @@ class InvigilatePadController extends CommonController
      */
     public function getExamineeBoundWatchDetail(Request $request){
         $this->validate($request, [
-            'student_id' => 'required|integer',
+            'equipment_id' => 'required|integer',
         ]);
 
         try {
             //考生基本信息
-            $studentId = $request->get('student_id');
+            $equipmentId = $request->get('equipment_id');
 
             //查找考生及与其绑定的腕表的详细信息
             $watchModel = new WatchLog();
-            $studentWatchData = $watchModel->getExamineeBoundWatchDetails($studentId);
+            $studentWatchData = $watchModel->getExamineeBoundWatchDetails($equipmentId);
 
             if(count($studentWatchData) > 0){
                 $studentWatchData = $studentWatchData->toArray();
             }
+
             //查找考生的剩余考站数量
             $examQueue = new ExamQueue();
-            $station_num = $examQueue->getStationNum($studentId);
-            $studentWatchData['station_num'] = $station_num->station_num;
-
+            $station_num = $examQueue->getStationNum($studentWatchData['student_id']);
+            if(!empty($studentWatchData)){
+                $studentWatchData['station_num'] = $station_num->station_num;
+                unset($studentWatchData['student_id']);
+            }
             if(count($studentWatchData) > 0){
                 return response()->json(
                     $this->success_data($studentWatchData,200,'success')

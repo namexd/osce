@@ -120,8 +120,8 @@ class WatchLog extends CommonModel{
     }
 
     //查看考生及与其绑定的腕表的详细信息
-    public function getExamineeBoundWatchDetails($studentId){
-        $builder = $this->where('watch_log.student_id','=',$studentId)->where('watch_log.action','=','绑定')->leftjoin('watch',function($watch){
+    public function getExamineeBoundWatchDetails($equipmentId){
+        $builder = $this->where('watch_log.watch_id','=',$equipmentId)->where('watch_log.action','=','绑定')->leftjoin('watch',function($watch){
             $watch->on('watch.id','=','watch_log.watch_id');
         })->leftjoin('student',function($student){
             $student->on('watch_log.student_id','=','student.id');
@@ -135,7 +135,8 @@ class WatchLog extends CommonModel{
             'watch.id as equipment_id',
             'watch.name as equipment_name',
             'watch.factory',
-            'watch.sp'
+            'watch.sp',
+            'watch_log.student_id'
         )->first();
 
         return $builder;

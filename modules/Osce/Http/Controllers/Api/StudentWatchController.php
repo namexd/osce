@@ -53,15 +53,13 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder($nfc_code)
+    public function getStudentExamReminder(Request $request)
     {
-        /*
         $this->validate($request, [
             'nfc_code' => 'required'
         ]);
-        */
 
-        $redis = Redis::connection('message');
+        $watchNfcCode = $request->input('nfc_code');
 
         $data = [
             'title'        => '',
@@ -75,8 +73,8 @@ class StudentWatchController extends CommonController
         ];
 
         $code = 0;
-        //$watchNfcCode = $request->input('nfc_code');
-        $watchNfcCode = $nfc_code;
+
+        $redis = Redis::connection('message');
 
         //根据设备编号找到设备id
         $watchId = Watch::where('code', '=', $watchNfcCode)->select('id')->first();
@@ -324,7 +322,7 @@ class StudentWatchController extends CommonController
         });
         $item   =   array_shift($items);
 
-        /*
+        // 判断老师是否准备完成
         $examStationStatusModel = new ExamStationStatus();
         $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)->where('station_id', '=', $item->station_id)->first();
         if ($instance->status == 0) {
@@ -333,7 +331,6 @@ class StudentWatchController extends CommonController
                 'title'=> '等待老师准备中',
             ];
         }
-        */
 
         //判断前面是否有人考试
         if(empty($item->station_id)){

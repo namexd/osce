@@ -192,6 +192,7 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.status', '<', 3)
                 ->where('student.exam_id', $examId)
+                ->where('exam_queue.blocking', 1)
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -200,9 +201,11 @@ class ExamQueue extends CommonModel
                     'student.mobile as student_mobile',
                     'student.code as student_code',
                     'student.avator as student_avator',
-                    'student.description as student_description'
+                    'student.description as student_description','exam_queue.id as exam_queue_id'
                 )
+                ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.updated_at', 'asc')
                 ->groupBy('student.id')
                 ->take(count($stations))
                 ->get();
@@ -217,6 +220,7 @@ class ExamQueue extends CommonModel
             ->where('exam_queue.station_id', $stationId)
             ->where('exam_queue.status', '<', 3)
             ->where('student.exam_id', $examId)
+            ->where('exam_queue.blocking', 1)
             ->select(
                 'student.id as student_id',
                 'student.name as student_name',
@@ -225,9 +229,11 @@ class ExamQueue extends CommonModel
                 'student.mobile as student_mobile',
                 'student.code as student_code',
                 'student.avator as student_avator',
-                'student.description as student_description'
+                'student.description as student_description','exam_queue.station_id as station_id','exam_queue.id as exam_queue_id'
             )
+            ->orderBy('exam_queue.next_num', 'asc')
             ->orderBy('exam_queue.begin_dt', 'asc')
+            ->orderBy('exam_queue.updated_at', 'asc')
             ->take(1)
             ->get();
     }
@@ -248,6 +254,7 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
+                ->where('exam_queue.blocking', 1)
                 ->skip(count($station))
                 ->take(count($station))
                 ->orderBy('exam_queue.begin_dt', 'asc')
@@ -270,6 +277,7 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.station_id', $stationId)
                 ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
+                ->where('exam_queue.blocking', 1)
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->skip(1)//TODO 可能要改
                 ->take(1)
@@ -344,6 +352,7 @@ class ExamQueue extends CommonModel
             $examQueue->status=2;
             //$examQueue->stick=null;
             if ( $examQueue->save()) {
+                ExamQueue::where('student_id', '=', $studentId)->where('exam_id',$exam->id)->update(['blocking'=>0]);//设置阻塞
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 2])
                     ->orderBy('begin_dt', 'asc')
@@ -688,12 +697,12 @@ class ExamQueue extends CommonModel
                         $teacherId, [strtotime($date)]);
 
                     //将该学生的阻塞状态变成1
-//                    if (!ExamQueue::where('exam_id', $queue->exam_id)
-//                        ->where('student_id', $studentId)
-//                        ->update(['blocking' => 1])
-//                    ) {
-//                        throw new \Exception('抽签失败！请重试', -2);
-//                    }
+                    if (!ExamQueue::where('exam_id', $queue->exam_id)
+                        ->where('student_id', $studentId)
+                        ->update(['blocking' => 1])
+                    ) {
+                        throw new \Exception('抽签失败！请重试', -2);
+                    }
                 }
                 $connection->commit();
                 return $queue;
