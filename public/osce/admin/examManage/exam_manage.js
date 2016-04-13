@@ -4841,6 +4841,9 @@ function examiner_manage() {
                 } else {
                     layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
                 }
+            },
+            error: function(data) {
+                layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
             }
         })
     });
