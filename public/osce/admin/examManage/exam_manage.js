@@ -5000,10 +5000,12 @@ function examiner_manage() {
                 url: pars.del_teacher,
                 data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
                 success: function(res) {
-                    if(res.code != 1) {
-                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    if(res.code == 1) {
+                        layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
+                    } else if(res.code == 2) {
+                        return true;
                     } else {
-                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                     }
                 }
             })
@@ -5058,10 +5060,12 @@ function examiner_manage() {
                 url: pars.del_teacher,
                 data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
                 success: function(res) {
-                    if(res.code != 1) {
-                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    if(res.code == 1) {
+                        layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
+                    } else if(res.code == 2) {
+                        return true;
                     } else {
-                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                     }
                 }
             })
