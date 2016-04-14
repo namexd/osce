@@ -481,7 +481,7 @@ class ExamArrangeController extends CommonController
     {
         $this->validate($request, [
             'station_name' => 'sometimes',
-            'id' => 'required',
+            'id'           => 'required',
 //            'type'=>'required',
 //            'draft_id'=>'required'
         ]);
@@ -518,8 +518,7 @@ class ExamArrangeController extends CommonController
         ]);
 
         $name = $request->get('station_name');
-        $id = $request->get('id');
-
+        $id   = $request->get('id');
 
         //查询出已用过的考站
         $stationIdArray = ExamDraftTemp::where('old_draft_flow_id', '=', $id)->get()->pluck('station_id')->toArray();
@@ -798,33 +797,15 @@ class ExamArrangeController extends CommonController
             ]);
 
             $exam_id       = $request->get('exam_id');
-            $ExamDraftFlow = new ExamDraftFlow();
-            $ExamDraft     = new ExamDraft();
-            //获取所有临时数据
-            $datas = $this->getAllTempDatas($exam_id);
 
-            foreach ($datas as $data) {
-                //操作大表
-                if ($data['is_draft_flow'] == 1) {
-                    if(!$ExamDraftFlow->handleBigData($data)){
-                        throw new \Exception('保存失败，请重试！');
-                    }
-
-                //操作小表
-                } else {
-                    if(!$ExamDraft->handleSmallData($data)){
-                        throw new \Exception('保存失败，请重试！');
-                    }
-                }
-            }
-
-            //处理 待删除 数据（如：清空临时表数据，删除正式表待删除数据）
-            $ExamDraftTempModel= new ExamDraftTemp();
-            if (!$ExamDraftTempModel->handleDelDatas($exam_id)){
-                throw new \Exception('处理待删除数据失败');
+            //保存考场安排所有数据
+            if(!$this->saveArrangeDatas($exam_id))
+            {
+                throw new \Exception('保存失败');
             }
 
             $connection->commit();
+
             //返回结果
             return response()->json(
                 $this->success_data([], 1, '保存成功！')
@@ -834,6 +815,44 @@ class ExamArrangeController extends CommonController
             $connection->rollBack();
             return response()->json($this->fail($ex));
         }
+    }
+
+    /**
+     * 保存考场安排所有数据
+     * @param $exam_id
+     *
+     * @author Zhoufuxiang 2016-04-14
+     * @return array
+     */
+    private function saveArrangeDatas($exam_id)
+    {
+        $ExamDraftFlow = new ExamDraftFlow();
+        $ExamDraft     = new ExamDraft();
+        //获取所有临时数据
+        $datas = $this->getAllTempDatas($exam_id);
+
+        foreach ($datas as $data) {
+            //操作大表
+            if ($data['is_draft_flow'] == 1) {
+                if(!$ExamDraftFlow->handleBigData($data)){
+                    throw new \Exception('保存失败，请重试！');
+                }
+
+                //操作小表
+            } else {
+                if(!$ExamDraft->handleSmallData($data)){
+                    throw new \Exception('保存失败，请重试！');
+                }
+            }
+        }
+
+        //处理 待删除 数据（如：清空临时表数据，删除正式表待删除数据）
+        $ExamDraftTempModel= new ExamDraftTemp();
+        if (!$ExamDraftTempModel->handleDelDatas($exam_id)){
+            throw new \Exception('处理待删除数据失败');
+        }
+
+        return true;
     }
 
     /**
@@ -866,8 +885,8 @@ class ExamArrangeController extends CommonController
                 'is_draft_flow' => 0
             ];
         }
-
         ksort($datas);     //数组按时间（键）进行排序
+
         return $datas;
     }
 
