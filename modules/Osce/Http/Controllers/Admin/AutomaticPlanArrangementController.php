@@ -22,7 +22,7 @@ use Auth;
 use Modules\Osce\Repositories\Common;
 use Illuminate\Container\Container as App;
 
-class AutomaticPlanArrangementController extends CommonController implements SmartArrangeInterface
+class AutomaticPlanArrangementController extends CommonController
 {
     /**
      * TODO 此方法暂时未使用
@@ -96,17 +96,24 @@ class AutomaticPlanArrangementController extends CommonController implements Sma
      * @author Jiangzhiheng
      * @time 2016-02-23 17:30
      */
-    function postStore(Request $request, ExamPlan $examPlan)
+    function postStore(Request $request, SmartArrangeRepository $smartArrangeRepository)
     {
         $this->validate($request, [
             'exam_id' => 'required|integer'
         ]);
         $examId = $request->input('exam_id');
-        //获取操作者
-        $user = Auth::user();
+        $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
+
         ExamPlan::where('exam_id', $examId)->delete();
+
+        $smartArrangeRepository->store($exam);
+        //获取操作者
+//        $user = Auth::user();
+
+
+
 //        try {
-            $examPlan->storePlan($examId, $user);
+//            $examPlan->storePlan($examId, $user);
 
             return redirect()->route('osce.admin.exam.getIntelligence', ['id' => $examId]);
 //        } catch (\Exception $ex) {
