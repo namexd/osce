@@ -1221,7 +1221,7 @@ class InvigilatePadController extends CommonController
         try{
             $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
             $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
-            dd($student_id);
+           // dd($student_id);
             if(!$student_id){    //如果学生不存在
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
