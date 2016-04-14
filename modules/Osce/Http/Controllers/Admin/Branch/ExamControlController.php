@@ -10,7 +10,10 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use Illuminate\Support\Facades\Redis;
 use Modules\Osce\Entities\AutomaticPlanArrangement\Student;
+use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\QuestionBankEntities\ExamControl;
+use Modules\Osce\Entities\Watch;
+use Modules\Osce\Http\Controllers\Api\StudentWatchController;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 
@@ -91,19 +94,29 @@ class ExamControlController extends CommonController
             $data['description'] = -1;
             $data['type'] = 2;//上报弃考
         }
+        try{
+            $examControlModel = new ExamControl();
+            $examControlModel->stopExam($data);
 
-        $examControlModel = new ExamControl();
-        $result = $examControlModel->stopExam($data);
-        $redis = Redis::connection('message');
-        if($result==true){
-            //$redis->publish('watch_message', json_encode($this->success_data([],1,'考试终止成功')));
-           // $redis->publish('pad_message', json_encode($this->success_data([],1,'考试终止成功')));
-            return response()->json(true);
-        }else{
-           // $redis->publish('watch_message', json_encode($this->success_data([],-1,'考试终止失败')));
-           // $redis->publish('pad_message', json_encode($this->success_data([],-1,'考试终止失败')));
-            return response()->json($result);
+            //向pad端推送消息
+            $redis = Redis::connection('message');
+            $redis->publish('pad_message', json_encode($this->success_data([],1,'考试终止成功')));
+
+            $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
+                ->where('student_id','=',$data['studentId'])->first();
+
+            $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
+            $request->nfc_code = $watchData->nfc_code;
+            $studentWatchController = new StudentWatchController();
+            $studentWatchController->getStudentExamReminder($request);
+            return response()->json(
+                $this->success_data([],1,'success')
+            );
+        }catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
         }
+
     }
 
     public function getVcrsList(Request $request)
