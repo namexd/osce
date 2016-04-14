@@ -94,24 +94,16 @@ class StationTeacher extends CommonModel
                     $teacherIDs =[];
 
 
-                  if($item['teacher'] == ""){
-                      $teacherIDs[] = Null;
-                  }else{
-                      foreach ($item['teacher'] as $value){
-                          $teacherIDs[] = $value;
-                      }
-                  }
-
-                  if($item['sp_teacher'] == ""){
-
-                      $teacherIDs []= Null;
-                  }else{
-                      foreach ($item['sp_teacher'] as $value){
-
-                          $teacherIDs[] = $value;
-
-                      }
-                  }
+                    if(!is_null($item['teacher'])){
+                        foreach ($item['teacher'] as $value){
+                            $teacherIDs[] = $value;
+                        }
+                    }
+                    if(!is_null($item['sp_teacher'])){
+                        foreach ($item['sp_teacher'] as $value){
+                            $teacherIDs[] = $value;
+                        }
+                    }
                  
 
                     //根据考站id，获取对应的病例id
