@@ -4877,7 +4877,7 @@ function examiner_manage() {
             data:req,
             success: function(res) {
                 if(res.code != 1) {
-                    layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                 } else {
                     layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
                 }
@@ -4941,7 +4941,7 @@ function examiner_manage() {
                 data:req,
                 success: function(res) {
                     if(res.code != 1) {
-                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                     } else {
                         layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
                     }
