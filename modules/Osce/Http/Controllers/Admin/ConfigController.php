@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Area;
 use Modules\Osce\Entities\Config;
+use Modules\Osce\Entities\ConfigRepository\SysparamRepository;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
 use Modules\Osce\Entities\ConfigRepository\ConfigRepository;
@@ -64,7 +65,7 @@ class ConfigController extends CommonController
      */
     public function getSysparam(ConfigRepository $configRepository)
     {
-        return view('osce::admin.systemManage.sys_param', ['data' => $configRepository->sysParam()]);
+        return view('osce::admin.systemManage.sys_param', ['data' => $configRepository->getData()]);
     }
 
     /**
@@ -76,12 +77,12 @@ class ConfigController extends CommonController
     public function postSysparam(ConfigRepository $configRepository)
     {
         $data = $this->request->all();
-//        try {
-            $configRepository->rewrite($data);
+        try {
+            $configRepository->setData($data);
             return redirect()->route('osce.admin.config.getSysparam');
-//        } catch (\Exception $ex) {
-//            return redirect()->back()->withError($ex->getMessage());
-//        }
+        } catch (\Exception $ex) {
+            return redirect()->back()->withError($ex->getMessage());
+        }
     }
 
     /**

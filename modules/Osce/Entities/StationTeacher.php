@@ -76,8 +76,6 @@ class StationTeacher extends CommonModel
                 }
             }
 
-
-
             $user = Auth::user();
             if (empty($user)) {
                 throw new \Exception('未找到当前操作人信息！');
@@ -94,17 +92,16 @@ class StationTeacher extends CommonModel
                     $teacherIDs =[];
 
 
-                    if(!is_null($item['teacher'])){
+                    if(!empty($item['teacher'])){
                         foreach ($item['teacher'] as $value){
                             $teacherIDs[] = $value;
                         }
                     }
-                    if(!is_null($item['sp_teacher'])){
+                    if(!empty($item['sp_teacher'])){
                         foreach ($item['sp_teacher'] as $value){
                             $teacherIDs[] = $value;
                         }
                     }
-                 
 
                     //根据考站id，获取对应的病例id
 //                    $stationCase = StationCase::where('station_id', $item['station_id'])->first();

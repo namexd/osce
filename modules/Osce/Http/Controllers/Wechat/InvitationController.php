@@ -132,22 +132,41 @@ class InvitationController extends CommonController
         $stationId = $request->get('station_id');
 
         try {
-            //根据老师id查询老师的信息和openid
-
-            $teacher = new Teacher();
-            $teacherData = $teacher->invitationContent($teacher_id);
-
-            $inviteData = $this->getInviteData($exam_id, $teacherData, $stationId);
             //查询到该老师的邀请数据
             $inviteModel = new Invite();
-            $alterInvite = $inviteModel->getInviteStatus($teacher_id, $exam_id, $stationId, $inviteData);
-            if (!$alterInvite) {
-                throw  new \Exception('删除老师邀请失败');
+            $TeacherInvite = $inviteModel->getTeacherInvite($teacher_id, $exam_id, $stationId);
+
+            if (is_null($TeacherInvite)) {
+                $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
+                if (!$teacherDel) {
+                    throw new \Exception('删除老师关联失败');
+                }else{
+                    $code =2;
+                }
+
+            } else {
+                //根据老师id查询老师的信息和openid
+                $teacher = new Teacher();
+                $teacherData = $teacher->invitationContent($teacher_id);
+
+                $inviteData = $this->getInviteData($exam_id, $teacherData, $stationId);
+                //查询到该老师的邀请数据
+                $inviteModel = new Invite();
+                $alterInvite = $inviteModel->getInviteStatus($TeacherInvite, $inviteData);
+                if (!$alterInvite) {
+                    throw  new \Exception('删除老师邀请失败');
+                } else {
+                    $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
+                    if (!$teacherDel) {
+                        throw new \Exception('删除老师关联失败');
+                    }else{
+                        $code =1;
+                    }
+                }
             }
             return response()->json(
-                $this->success_data()
+                $this->success_data('',$code)
             );
-
         } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)
@@ -172,7 +191,7 @@ class InvitationController extends CommonController
      * @date  2016-4-13
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    
+
     public function getInviteAllTeacher(Request $request)
     {
 
