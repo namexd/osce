@@ -33,10 +33,13 @@ class ExamArrangeRepository extends AbstractExamArrange
      */
     public function getModel()
     {
-        return '';
+        return 'Modules\Osce\Entities\ExamArrange\ExamArrange';
     }
 
 
-    
+
+
+
+
 
 }

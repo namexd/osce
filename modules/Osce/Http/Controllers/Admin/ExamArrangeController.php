@@ -649,7 +649,7 @@ class ExamArrangeController extends CommonController
          $teacherDatas= $stationteaxherModel->getTeacherData($stationId,$exam_id);
 
 
-         foreach($datas as $key => $teacherData){
+         foreach($datas as &$teacherData){
 
              foreach ($teacherDatas as $value) {
 

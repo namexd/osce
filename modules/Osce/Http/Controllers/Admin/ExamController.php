@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\AutomaticPlanArrangement\AutomaticPlanArrangement;
 use Modules\Osce\Entities\AutomaticPlanArrangement\ExamPlaceEntity;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamArrange\ExamArrangeRepository;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
@@ -307,7 +308,7 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postEditExam(Request $request, Exam $exam)
+    public function postEditExam(Request $request, ExamArrangeRepository $examArrangeRepository)
     {
         //验证,略过
         $this->validate($request, [
@@ -371,7 +372,7 @@ class ExamController extends CommonController
             $gradation = intval($request->input('gradation_order',1));
             $examModel = new Exam();
 
-            if($result = $examModel -> editExam($exam_id, $examData, $examScreeningData, $gradation))
+            if($result = $examModel -> editExam($exam_id, $examData, $examScreeningData, $gradation, $examArrangeRepository))
             {
                 return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
             } else {

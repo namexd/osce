@@ -16,11 +16,6 @@ use Modules\Osce\Entities\StationTeacher;
 
 class ExamArrange
 {
-
-
-
-
-
     //清空考试安排
     public function getEmptyExamArrange($examId){
         
