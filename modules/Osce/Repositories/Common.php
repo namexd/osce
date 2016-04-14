@@ -216,6 +216,22 @@ class Common
     }
 
     /**
+     * 获取 不为null的值
+     * @param $object
+     * @param $value
+     * @param $item
+     *
+     * @author Zhoufuxiang 2016-04-14
+     * @return object
+     */
+    public static function getNotNullValue($object, $value, $item){
+        if(!is_null($item->$value)){
+            $object -> $value = $item->$value;
+        }
+        return $object;
+    }
+
+    /**
      * 求一维数组的最大公约数
      * @param array $arrays
      * @param null $temp

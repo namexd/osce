@@ -9,6 +9,8 @@
 namespace Modules\Osce\Entities;
 
 
+use Modules\Osce\Repositories\Common;
+
 class ExamDraft extends CommonModel
 {
     protected $connection   = 'osce_mis';
@@ -28,6 +30,35 @@ class ExamDraft extends CommonModel
         5   => '删除',
         6   => '大表新增后，小表新增后更新',
     ];
+
+    /**
+     * 获取 不为null的值
+     * @param $object
+     * @param $value
+     * @param $item
+     *
+     * @author Zhoufuxiang 2016-04-14
+     * @return object
+     */
+    private function getNotNullValue($object, $value, $item){
+        return Common::getNotNullValue($object, $value, $item);
+    }
+
+    /**
+     * 判断 值 是否为空
+     * @param $value
+     * @param $code
+     * @param $message
+     *
+     * @author Zhoufuxiang 2016-04-14
+     * @return bool
+     * @throws \Exception
+     */
+    private function judgeValueIfNull($value, $code, $message){
+        return Common::valueIsNull($value, $code, $message);
+    }
+
+
 
     public function getExamDraftData($ExamDraftFlowId){
         $examDraftList=$this->leftJoin('station', function($join){
@@ -134,31 +165,13 @@ class ExamDraft extends CommonModel
             $item      = $data['item'];
             $draft_id  = $item->old_draft_id;
             $examDraft = ExamDraft::where('id','=',$draft_id)->first();
-            if (is_null($examDraft)){
-                throw new \Exception('数据有误，请重试！');
-            }
+            $this->judgeValueIfNull($examDraft, -201, '数据有误，请重试！');       //判断值是否为null
 
-            if(!is_null($item->station_id))
-            {
-                $examDraft -> station_id         = $item->station_id;
-            }
-            if(!is_null($item->room_id))
-            {
-                $examDraft -> room_id         = $item->room_id;
-            }
-            if(!is_null($item->subject_id))
-            {
-                $examDraft -> subject_id         = $item->subject_id;
-            }
-            if(!is_null($item->effected))
-            {
-                $examDraft -> effected         = $item->effected;
-            }
-
-//            $examDraft -> room_id            = $item->room_id;
-//            $examDraft -> exam_draft_flow_id = $item->exam_draft_flow_id;     //可以省略
-//            $examDraft -> subject_id         = $item->subject_id;
-//            $examDraft -> effected           = $item->effected;
+            //获取 不为null的值
+            $examDraft = $this->getNotNullValue($examDraft, 'station_id', $item);
+            $examDraft = $this->getNotNullValue($examDraft, 'room_id',    $item);
+            $examDraft = $this->getNotNullValue($examDraft, 'subject_id', $item);
+            $examDraft = $this->getNotNullValue($examDraft, 'effected',   $item);
 
             if(!$examDraft->save())
             {
@@ -180,20 +193,17 @@ class ExamDraft extends CommonModel
         try{
             $item      = $data['item'];
             $draftTemp = ExamDraftTemp::where('id','=',$item->id)->first();
-            if (is_null($draftTemp)){
-                throw new \Exception('数据有误，请重试！');
-            }
+            $this->judgeValueIfNull($draftTemp, -202, '数据有误，请重试！');       //判断值是否为null
+
             $draft_id  = $draftTemp->old_draft_id;
-            dd();
             $examDraft = ExamDraft::where('id','=',$draft_id)->first();
-            if (is_null($examDraft)){
-                throw new \Exception('数据有误，请重试！');
-            }
-            $examDraft -> station_id         = $item->station_id;
-            $examDraft -> room_id            = $item->room_id;
-//            $examDraft -> exam_draft_flow_id = $item->exam_draft_flow_id;
-            $examDraft -> subject_id         = $item->subject_id;
-            $examDraft -> effected           = $item->effected;
+            $this->judgeValueIfNull($examDraft, -203, '数据有误，请重试！');       //判断值是否为null
+
+            //获取 不为null的值
+            $examDraft = $this->getNotNullValue($examDraft, 'station_id', $item);
+            $examDraft = $this->getNotNullValue($examDraft, 'room_id',    $item);
+            $examDraft = $this->getNotNullValue($examDraft, 'subject_id', $item);
+            $examDraft = $this->getNotNullValue($examDraft, 'effected',   $item);
 
             if(!$examDraft->save())
             {
@@ -216,12 +226,9 @@ class ExamDraft extends CommonModel
             $item   = $data['item'];
             $draft_flow_temp_id = $item->old_draft_flow_id;
             $exam_draft_flow_id = ExamDraftFlowTemp::where('id','=',$draft_flow_temp_id)->first();
-            if (is_null($exam_draft_flow_id)){
-                throw new \Exception('数据有误，请重试！');
-            }
-            if(empty($exam_draft_flow_id->exam_draft_flow_id)){
-                throw new \Exception('排序有误，请重试！');
-            }
+            $this->judgeValueIfNull($exam_draft_flow_id, -204, '数据有误，请重试！');       //判断值是否为null
+            $this->judgeValueIfNull($exam_draft_flow_id->exam_draft_flow_id, -205, '排序有误，请重试！');       //判断值是否为null
+
             $draftData = [
                 'station_id'        => $item->station_id,
                 'room_id'           => $item->room_id,
@@ -255,9 +262,8 @@ class ExamDraft extends CommonModel
             //再获取对应的正式表的id
             $draft_id  = $newItem->old_draft_id;
             $examDraft = ExamDraft::where('id','=',$draft_id)->first();
-            if (is_null($examDraft)){
-                throw new \Exception('数据有误，请重试！');
-            }
+            $this->judgeValueIfNull($examDraft, -206, '数据有误，请重试！');       //判断值是否为null
+
             //再删除正式表中对应ID的那条数据
             $examDraft->status = 1;         //软删除
             if(!$examDraft->save()){

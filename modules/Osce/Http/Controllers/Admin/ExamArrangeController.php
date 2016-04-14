@@ -783,6 +783,7 @@ class ExamArrangeController extends CommonController
      * 考场安排，提交保存
      * @param Request $request
      * @author Zhoufuxiang 2016-4-7
+     * @return mixed
      * @throws \Exception
      */
     public function postArrangeSave(Request $request)
