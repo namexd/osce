@@ -4200,7 +4200,7 @@ function station_assignment(){
                                                 '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+stageRender(1)+'</select>'+
                                         '</div>'+
                                         '<div class="col-sm-2">'+
-                                            '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="0" type="3">必考</a>'+
+                                            '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="1" type="3">必考</a>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
@@ -4644,6 +4644,24 @@ function station_assignment(){
      * @date    2016-04-07
      */
     $('#save').click(function() {
+
+        //选择验证
+        var flag = null;
+        $('.station-container').find('td').each(function(key,elem){
+            flag = true;
+
+            if($(elem).find('select').val()=='请选择'){
+                flag = false;
+                return false;
+            }
+        });
+
+        if(flag==false){
+            layer.alert('请选择考试项目/考站/所属考场！');
+            return false;
+        }
+
+
         $.ajax({
             type:'post',
             url: pars.save,
@@ -5000,10 +5018,12 @@ function examiner_manage() {
                 url: pars.del_teacher,
                 data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
                 success: function(res) {
-                    if(res.code != 1) {
-                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    if(res.code == 1) {
+                        layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
+                    } else if(res.code == 2) {
+                        return true;
                     } else {
-                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                     }
                 }
             })
@@ -5058,10 +5078,12 @@ function examiner_manage() {
                 url: pars.del_teacher,
                 data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
                 success: function(res) {
-                    if(res.code != 1) {
-                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    if(res.code == 1) {
+                        layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
+                    } else if(res.code == 2) {
+                        return true;
                     } else {
-                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                     }
                 }
             })
