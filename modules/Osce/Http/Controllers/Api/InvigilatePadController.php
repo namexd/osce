@@ -964,9 +964,10 @@ class InvigilatePadController extends CommonController
 
             $ncfCode = $request->get('nfc_code');//腕表NCF编码
 
+            $examing = Exam::where('status','=',1)->first();
             //查询某个腕表的考试状态
             $watchModel = new Watch();
-            $watchData = $watchModel->getWatchExamStatus($ncfCode);
+            $watchData = $watchModel->getWatchExamStatus($ncfCode,$examing->id);
 
             if(count($watchData) > 0){
                 if($watchData->status < 2){
