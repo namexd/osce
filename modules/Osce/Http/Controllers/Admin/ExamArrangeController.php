@@ -643,6 +643,7 @@ class ExamArrangeController extends CommonController
          foreach ($datas as $item){
              $stationId []=$item->station_id;
          }
+
          //查询出考站下对应的老师
          $stationteaxherModel = new StationTeacher();
 
@@ -650,18 +651,18 @@ class ExamArrangeController extends CommonController
 
 
          foreach($datas as &$teacherData){
-             foreach ($teacherDatas as $value) {
-                 if ($value->teacher_type == 2 && $teacherData->station_id ==$value->station_id) {
 
+             foreach ($teacherDatas as $key=>$value) {
+
+                 if ($value->teacher_type == 2 && $teacherData->station_id == $value->station_id) {
                      $teacherData->sp_teacher = [$value];
 
                  } else if($value->teacher_type == 1 && $teacherData->station_id ==$value->station_id){
-                     $teacherData->teacher = [$value];
+                     $teacherData->teacher =[$value];
                  }
 
              }
          }
-
          return response()->json(
              $this->success_data($datas, 1, 'success')
          );
