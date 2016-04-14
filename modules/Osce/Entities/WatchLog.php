@@ -133,6 +133,7 @@ class WatchLog extends CommonModel{
             'student.exam_sequence',
             'exam_queue.status',
             'watch.code',
+            'watch.nfc_code',
             'watch.name as equipment_name',
             'watch.factory',
             'watch.sp',
