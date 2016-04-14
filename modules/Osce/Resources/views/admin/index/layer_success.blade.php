@@ -45,6 +45,7 @@ $(function() {
     //获取iframe索引
     var index = parent.layer.getFrameIndex(window.name),
         ID = $('#result-id').attr('value'),
+        name = $('#result-name').attr('value'),
         table_id = $('#table-id').attr('value'),
         tr_id = $('#tr-id').attr('value'),
         selector = $('#selector').attr('value');
@@ -53,7 +54,7 @@ $(function() {
     layer.load(3)
     setTimeout(function() {
         //新增的数据传过去
-        parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).val(ID).trigger("change");
+        parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).append('<option value="'+ID+'" selected="selected">'+name+'</option>').val(ID).trigger("change");
         parent.layer.close(index);
     }, 2000);  
 })
