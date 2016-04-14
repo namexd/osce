@@ -4200,7 +4200,7 @@ function station_assignment(){
                                                 '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+stageRender(1)+'</select>'+
                                         '</div>'+
                                         '<div class="col-sm-2">'+
-                                            '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="0" type="3">必考</a>'+
+                                            '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="1" type="3">必考</a>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
