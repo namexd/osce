@@ -955,7 +955,7 @@ class InvigilatePadController extends CommonController
             //查询某个腕表的考试状态
             $watchModel = new Watch();
             $watchData = $watchModel->getWatchExamStatus($ncfCode);
-
+            dd($watchData);
             if(count($watchData) > 0){
                 if($watchData->status < 2){
                     $status = 0;
