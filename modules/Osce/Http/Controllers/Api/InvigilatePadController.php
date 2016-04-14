@@ -726,8 +726,8 @@ class InvigilatePadController extends CommonController
                     ->where('student_id','=',$examQueue->student_id)->first();
                 $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
                 $studentWatchController = new StudentWatchController();
-                dd($watchData->nfc_code);
-                $request->nfc_code = $watchData->nfc_code;
+
+                $request['nfc_code'] = $watchData->nfc_code;
                 $studentWatchController->getStudentExamReminder($request);
                 return response()->json(
                     $this->success_data([$date], 1, '开始考试成功')
