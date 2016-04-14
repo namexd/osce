@@ -122,6 +122,21 @@
                             message: '请输入正确的总分'
                         }
                     }
+                },
+                mins: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '时间不能为空'
+                        },
+                        regexp: {
+                            regexp: /^([0-9]+)$/,
+                            message: '请输入正确的时间'
+                        },
+                        stringLength: {
+                            max:20,
+                            message: '长度不超过20个'
+                        }
+                    }
                 }
             }
         });
@@ -180,13 +195,13 @@
                         </div>
                         <div class="hr-line-dashed display-none"></div>
 
-                        <div class="form-group display-none">
-                            <label class="col-sm-2 control-label">时间间隔</label>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">时间限制(分钟)</label>
                             <div class="col-sm-10">
-                                <input id="time" class="form-control" name="time"/>
+                                <input id="time" class="form-control" name="mins" value="{{$time}}" placeholder="请输入分钟数" />
                             </div>
                         </div>
-                        <div class="hr-line-dashed display-none"></div>
+                        <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例</label>
@@ -204,14 +219,6 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
-
-                        <div class="form-group">
-                        <label class="col-sm-2 control-label">时间限制(分钟)</label>
-                        <div class="col-sm-10">
-                        <input type="text"   ng-model="num" id="code" class="form-control" name="mins" value="{{$time}}" placeholder="请输入分钟数">
-                        </div>
-                        </div>
-                        <div class="hr-line-dashed sub-id"></div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">描述</label>

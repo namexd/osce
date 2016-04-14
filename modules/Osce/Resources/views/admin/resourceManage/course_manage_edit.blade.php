@@ -48,7 +48,14 @@
 <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
 <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
 <script> 
-    $('#sourceForm').bootstrapValidator({
+    $(function(){
+        /**
+         * 编辑和新增共用了一段代码，这里必须将验证单独拿出
+         * @author mao
+         * @version 1.0
+         * @date    2016-02-19
+         */
+        $('#sourceForm').bootstrapValidator({
             message: 'This value is not valid',
             feedbackIcons: {/*输入框不同状态，显示图片的样式*/
                 valid: 'glyphicon glyphicon-ok',
@@ -67,6 +74,7 @@
                             /*自定义提交数据，默认值提交当前input value*/
                             data: function(validator) {
                                 return {
+                                    id:(location.href).split('=')[1],
                                     name: $('#title').val()
                                 }
                             }
@@ -87,7 +95,7 @@
                         }
                     }
                 },
-                cases: {
+                case_id: {
                     validators: {
                         notEmpty: {/*非空提示*/
                             message: '病例不能为空！'
@@ -115,9 +123,25 @@
                             message: '请输入正确的总分'
                         }
                     }
+                },
+                mins: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '时间不能为空'
+                        },
+                        regexp: {
+                            regexp: /^([0-9]+)$/,
+                            message: '请输入正确的时间'
+                        },
+                        stringLength: {
+                            max:20,
+                            message: '长度不超过20个'
+                        }
+                    }
                 }
             }
         });
+    })
 </script> 
 @stop
 
@@ -173,13 +197,13 @@
                         </div>
                         <div class="hr-line-dashed display-none"></div>
 
-                        <div class="form-group display-none">
-                            <label class="col-sm-2 control-label">时间间隔</label>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">时间限制(分钟)</label>
                             <div class="col-sm-10">
-                                <input id="time" class="form-control" name="time"/>
+                                <input id="time" class="form-control" name="mins" value="{{$item->mins}}"  placeholder="请输入分钟数" />
                             </div>
                         </div>
-                        <div class="hr-line-dashed display-none"></div>
+                        <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">病例</label>
