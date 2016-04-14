@@ -114,21 +114,11 @@ class StationController extends CommonController
         $this->validate($request, [
             'name'          => 'required|unique:osce_mis.station,name',
             'type'          => 'required|integer',
-//            'description'   => 'required',
-//            'code'          => 'required',
-            'mins'          => 'required',
-//            'subject_id'    => 'required|integer',
-//            'case_id'       => 'required|integer',
-//            'room_id'       => 'required|integer',
             'vcr_id'        => 'required|integer'
         ],[
             'name.required'       =>  '考站名称必填',
             'name.unique'         =>  '考站名称必须唯一',
             'type.required'       =>  '考站类型必选',
-            'mins.required'       =>  '时间限制必填',
-//            'subject_id.required' =>  '科目必选',
-//            'case_id.required'    =>  '病例必选',
-//            'room_id.required'    =>  '考场必选',
             'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
@@ -140,8 +130,7 @@ class StationController extends CommonController
                 throw new \Exception('未找到当前操作人信息');
             }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-//            $caseId = $request->input('case_id');
-            $stationData = $request->only('name', 'type', 'mins');
+            $stationData = $request->only('name', 'type');
             $vcrId  = $request->input('vcr_id', null);
             $roomId = $request->input('room_id');
 
@@ -164,11 +153,11 @@ class StationController extends CommonController
             $formData = [$stationData, $vcrId, $roomId];
 
             //将当前时间限定的值放入session
-            $time = $request->input('mins');
-            $request->session()->put('time', $time);
-            if (!$request->session()->has('time')) {
-                throw new \Exception('未能将时间保存！');
-            }
+//            $time = $request->input('mins');
+//            $request->session()->put('time', $time);
+//            if (!$request->session()->has('time')) {
+//                throw new \Exception('未能将时间保存！');
+//            }
 
             if (!$result=$model->addStation($formData)) {
                 throw new \Exception('未能将考站保存！');
@@ -245,21 +234,11 @@ class StationController extends CommonController
             'id'            => 'required|integer',
             'name'          => 'required',
             'type'          => 'required|integer',
-            'mins'          => 'required|integer',
-//            'subject_id'    => 'required|integer',
-//            'description'   => 'required',
-//            'code'          => 'required',
             'vcr_id'        => 'required|integer',
-//            'case_id'       => 'required|integer',
-//            'room_id'       => 'required|integer',
         ],[
             'name.required'       =>  '考站名称必填',
             'name.unique'         =>  '考站名称必须唯一',
             'type.required'       =>  '考站类型必选',
-            'mins.required'       =>  '时间限制必填',
-//            'subject_id.required' =>  '科目必选',
-//            'case_id.required'    =>  '病例必选',
-//            'room_id.required'    =>  '考场必选',
             'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
@@ -269,14 +248,13 @@ class StationController extends CommonController
                 throw new \Exception('未找到当前操作人信息');
             }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            //$caseId = $request->input('case_id');
-            $placeData = $request->only('name', 'type', 'mins');
-            $vcrId  = $request->input('vcr_id');
-            $roomId = $request->input('room_id');
-            $id     = $request->input('id');
+            $placeData = $request->only('name', 'type');
+            $vcrId     = $request->input('vcr_id');
+            $roomId    = $request->input('room_id');
+            $id        = $request->input('id');
 
             //TODO:考卷 Zhoufuxiang，2016-3-22
-            $paperId= $request->input('paper_id');
+            $paperId   = $request->input('paper_id');
             if($placeData['type'] == 3){
                 if(empty($paperId)){
                     throw new \Exception('考卷必选！');

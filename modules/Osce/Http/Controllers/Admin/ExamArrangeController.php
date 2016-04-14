@@ -643,6 +643,7 @@ class ExamArrangeController extends CommonController
          foreach ($datas as $item){
              $stationId []=$item->station_id;
          }
+
          //查询出考站下对应的老师
          $stationteaxherModel = new StationTeacher();
 
@@ -650,18 +651,18 @@ class ExamArrangeController extends CommonController
 
 
          foreach($datas as &$teacherData){
-             foreach ($teacherDatas as $value) {
-                 if ($value->teacher_type == 2 && $teacherData->station_id ==$value->station_id) {
 
+             foreach ($teacherDatas as $key=>$value) {
+
+                 if ($value->teacher_type == 2 && $teacherData->station_id == $value->station_id) {
                      $teacherData->sp_teacher = [$value];
 
                  } else if($value->teacher_type == 1 && $teacherData->station_id ==$value->station_id){
-                     $teacherData->teacher = [$value];
+                     $teacherData->teacher =[$value];
                  }
 
              }
          }
-
          return response()->json(
              $this->success_data($datas, 1, 'success')
          );
@@ -736,7 +737,8 @@ class ExamArrangeController extends CommonController
             //验证
             $this->validate($request, [
                 'subject_id' => 'required|integer',
-                'type' => 'required|integer'
+                'type' => 'required|integer',
+                'teacher_id' => 'sometimes'
             ]);
             $subject_id = intval($request->get('subject_id'));
             $type = intval($request->get('type'));
@@ -792,35 +794,14 @@ class ExamArrangeController extends CommonController
         $connection->beginTransaction();
         try{
             $this->validate($request, [
-                'exam_id' => 'required',
+                'exam_id'  => 'required',
             ]);
 
             $exam_id       = $request->get('exam_id');
             $ExamDraftFlow = new ExamDraftFlow();
             $ExamDraft     = new ExamDraft();
             //获取所有临时数据
-            $draftFlows = ExamDraftFlowTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
-            $drafts     = ExamDraftTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
-
-            //所有临时数据 组合
-            $datas = [];
-            foreach ($draftFlows as $draftFlow) {
-                $datas[strtotime($draftFlow->created_at->format('Y-m-d H:i:s'))] = [
-                    'item' => $draftFlow,
-                    'is_draft_flow' => 1
-                ];
-            }
-
-            foreach ($drafts as $draft) {
-
-                $time   =   strtotime($this->timeIndex($datas,$draft->add_time));
-                $datas[$time] = [
-                    'item' => $draft,
-                    'is_draft_flow' => 0
-                ];
-            }
-
-            ksort($datas);     //数组按时间（键）进行排序
+            $datas = $this->getAllTempDatas($exam_id);
 
             foreach ($datas as $data) {
                 //操作大表
@@ -853,6 +834,41 @@ class ExamArrangeController extends CommonController
             $connection->rollBack();
             return response()->json($this->fail($ex));
         }
+    }
+
+    /**
+     * 获取所有临时数据
+     * @param $exam_id
+     *
+     * @author Zhoufuxiang 2016-04-07
+     * @return array
+     */
+    private function getAllTempDatas($exam_id)
+    {
+        //获取所有临时数据
+        $draftFlows = ExamDraftFlowTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
+        $drafts     = ExamDraftTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
+
+        //所有临时数据 组合
+        $datas = [];
+        foreach ($draftFlows as $draftFlow) {
+            $datas[strtotime($draftFlow->created_at->format('Y-m-d H:i:s'))] = [
+                'item' => $draftFlow,
+                'is_draft_flow' => 1
+            ];
+        }
+
+        foreach ($drafts as $draft) {
+
+            $time   =   strtotime($this->timeIndex($datas,$draft->add_time));
+            $datas[$time] = [
+                'item' => $draft,
+                'is_draft_flow' => 0
+            ];
+        }
+
+        ksort($datas);     //数组按时间（键）进行排序
+        return $datas;
     }
 
     /**

@@ -9,6 +9,9 @@
     .station-type,
     .station-belong,
     .station-chioce {width: 181px!important;}
+
+    .station-container table thead tr td:nth-child(5) {display: none;}
+    .station-container table tbody tr td:nth-child(5) {display: none;}
     </style>
 @stop
 

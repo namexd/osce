@@ -127,7 +127,7 @@
 
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="submit">保存</button>
+                                <button class="btn btn-primary" type="submit" id="save">保存</button>
                                 <a class="btn btn-white" href="{{route("osce.admin.invigilator.getSpInvigilatorList")}}">取消</a>
                             </div>
                         </div>
@@ -139,5 +139,6 @@
     </div>
 
 </div>
+
 
 @stop{{-- 内容主体区域 --}}
