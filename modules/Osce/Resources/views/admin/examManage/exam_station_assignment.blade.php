@@ -9,6 +9,7 @@
     .station-type,
     .station-belong,
     .station-chioce {width: 181px!important;}
+    .ok {background-color: #00ffff!important;}
     </style>
 @stop
 
