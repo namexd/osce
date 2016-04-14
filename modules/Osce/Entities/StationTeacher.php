@@ -144,18 +144,21 @@ class StationTeacher extends CommonModel
 
 
 
-    public function getTeacherData($teacherData,$exam_id){
+    public function getTeacherData($stationId,$exam_id){
 
         $data = $this->leftJoin('teacher', 'teacher.id', '=', $this->table.'.user_id')
-                     ->where('station_id','=',$teacherData->station_id)
-                     ->where('exam_id','=',$exam_id)
-                    ->select([
-                        'teacher.id as teacher_id',
-                        'teacher.name as teacher_name',
-                        'teacher.type as teacher_type',
-                        $this->table.'.station_id',
-                    ])
-                     ->get();
+            ->leftJoin('invite', 'invite.user_id', '=',$this->table.'.user_id')
+            ->whereIn('station_teacher.station_id',$stationId)
+            ->where('station_teacher.exam_id','=',$exam_id)
+            ->select([
+                'teacher.id as teacher_id',
+                'teacher.name as teacher_name',
+                'teacher.type as teacher_type',
+                'invite.status as status',
+                $this->table.'.station_id',
+
+            ])
+            ->get();
   
         
         return $data;
