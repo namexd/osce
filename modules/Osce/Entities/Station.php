@@ -200,7 +200,9 @@ class Station extends CommonModel
         try {
             //判断当前考站是否已关联到考试流程中
             $examFlowStation = ExamFlowStation::where('station_id','=',$id)->first();
-            Common::valueIsNull($examFlowStation, -1, '此考站已关联到考试流程中，不能做修改、保存操作！请点取消键返回！');
+            if (!is_null($examFlowStation)){
+                throw new \Exception('此考站已关联到考试流程中，不能做修改、保存操作！请点取消键返回！');
+            }
 
             list($stationData, $vcrId, $roomId) = $formData;
 

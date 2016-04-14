@@ -76,7 +76,9 @@ class TopicController extends CommonController
      */
     public function getAddTopic()
     {
-        return view('osce::admin.resourceManage.course_manage_add');
+        //获得上次的时间限制
+        $time = session('time');
+        return view('osce::admin.resourceManage.course_manage_add', ['time'=>$time]);
     }
 
     /**
@@ -106,6 +108,7 @@ class TopicController extends CommonController
             'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
             'desc'      => 'required',    //描述
+            'mins'      => 'required',    //时间限制
             'goods'     => 'sometimes',    //所需用物
 //            'stem'      => 'required',    //题干
 //            'equipments'=> 'required',    //所需设备
@@ -118,6 +121,7 @@ class TopicController extends CommonController
             'cases.required'    => '请选择病例',
             'total.required'    => '总分必填',
             'desc.required'     => '必须填写描述',
+            'mins.required'     => '必须填写时间限制',
             'content.required'  => '必须新增评分点',
             'score.required'    => '分数必填',
             'description.required'   => '请添加考核项',
@@ -151,6 +155,7 @@ class TopicController extends CommonController
                 'title'      => e($request->get('title')),
                 'score'      => intval($request->get('total')),     //总分
                 'description'=> e($request->get('desc')),           //描述
+                'mins'       => e($request->get('mins')),           //时间限制
                 'stem'       => e($request->input('stem')),         //题干
                 'goods'      => '',                                 //所需物品
                 'equipments' => e($request->input('equipments')),   //所需设备
@@ -163,18 +168,18 @@ class TopicController extends CommonController
             }
 
             $subjectModel = new Subject();
-            if ( $result=$subjectModel->addSubject($data, $formData, $cases, $goods, $user->id)) {
-                //todo 调用弹窗时新增的跳转 周强 2016-4-13
-                $Redirect = OsceCommon::handleRedirect($request,$result);
-                if($Redirect == false){
-                    return redirect()->route('osce.admin.topic.getList');
-                }else{
-                    return $Redirect;
-                }
-                
-            } else {
-
+            //添加考试项目
+            $result = $subjectModel->addSubject($data, $formData, $cases, $goods, $user->id);
+            if (!$result) {
                 throw new \Exception('新增失败！');
+            }
+
+            //todo 调用弹窗时新增的跳转 周强 2016-4-13
+            $Redirect = OsceCommon::handleRedirect($request,$result);
+            if($Redirect == false){
+                return redirect()->route('osce.admin.topic.getList');
+            }else{
+                return $Redirect;
             }
 
         } catch (\Exception $ex) {
