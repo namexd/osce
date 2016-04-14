@@ -441,7 +441,7 @@ trait SQLTraits
                 if ($item->optional == 1) {
                     $item->serialnumber = $key + 1;
                 } else {
-                    $item->serialnumber = $tempKey + 1;
+                    $item->serialnumber = 1;
                 }
                 $result[] = $item;
             }
