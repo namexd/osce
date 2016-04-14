@@ -4483,6 +4483,7 @@ function station_assignment(){
                 data: function() {
                     return {
                        exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
+                       station_id:$elem.parent().parent().attr('station-id'),
                        exam_id: examId
                     } 
                 },
@@ -4552,7 +4553,9 @@ function station_assignment(){
                 data: function() {
                     return {
                        exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
-                       exam_id: examId
+                       station_id:$elem.parent().parent().attr('station-id'),
+                       exam_id: examId,
+
                     } 
                 },
                 processResults: function (res) {
