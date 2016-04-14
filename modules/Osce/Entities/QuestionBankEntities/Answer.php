@@ -100,6 +100,7 @@ class Answer extends Model
                 $examPaperFormalData['actual_length'] = 0;
             }
             $result = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->update($examPaperFormalData);
+            dd($data['examPaperFormalId']);
             if(!$result){
                 throw new \Exception(' 保存考试用时失败！');
             }
