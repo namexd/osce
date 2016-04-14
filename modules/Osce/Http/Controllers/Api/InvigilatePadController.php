@@ -903,6 +903,16 @@ class InvigilatePadController extends CommonController
 
             if(count($studentWatchData) > 0){
                 $studentWatchData = $studentWatchData->toArray();
+
+                foreach($studentWatchData as $k=>$v){
+                    if($v['status'] < 2){
+                        $studentWatchData[$k]['status'] = '0';
+                    }elseif($v['status'] == 2){
+                        $studentWatchData[$k]['status'] = '1';
+                    }else{
+                        $studentWatchData[$k]['status'] = '2';
+                    }
+                }
             }
 
             //查找考生的剩余考站数量
@@ -952,9 +962,10 @@ class InvigilatePadController extends CommonController
             $status = $request->get('status')?$request->get('status'):1;  //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
             $type = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
             $nfc_code = $request->get('nfc_code');
+            $examing = Exam::where('status','=',1)->first();
             //查询使用中的腕表数据
             $watchModel = new Watch();
-            $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code);
+            $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
 
             if(count($watchData) > 0){
                 $watchData = $watchData->toArray();

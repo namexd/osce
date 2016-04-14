@@ -98,7 +98,7 @@ class ExamControlController extends CommonController
             $examControlModel = new ExamControl();
             $examControlModel->stopExam($data);
 
-            //向pad端推送消息
+            //向pad端和watch端推送消息
             $redis = Redis::connection('message');
             $redis->publish('pad_message', json_encode($this->success_data([],1,'考试终止成功')));
 
