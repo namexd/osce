@@ -4644,6 +4644,24 @@ function station_assignment(){
      * @date    2016-04-07
      */
     $('#save').click(function() {
+
+        //选择验证
+        var flag = null;
+        $('.station-container').find('td').each(function(key,elem){
+            flag = true;
+
+            if($(elem).find('select').val()=='请选择'){
+                flag = false;
+                return false;
+            }
+        });
+
+        if(flag==false){
+            layer.alert('请选择考试项目/考站/所属考场！');
+            return false;
+        }
+
+
         $.ajax({
             type:'post',
             url: pars.save,
