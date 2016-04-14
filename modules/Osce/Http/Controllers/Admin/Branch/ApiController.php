@@ -740,7 +740,7 @@ class ApiController extends CommonController
                                                     ->where('station_id', '=', $stationId)
                                                     ->first();
         if (is_null($examStationStatus)) {
-            $retval = ['title' => '当前考站准备完成失败'];
+            $retval = ['title' => '未查询到当前考站是否准备完成信息'];
             return response()->json(
                 $this->success_data($retval, -1, 'error')
             );
@@ -748,29 +748,29 @@ class ApiController extends CommonController
 
         $examQenenModel = new ExamQueue();
         $examQenen = $examQenenModel->where('exam_id', '=', $examId)
-            ->where('exam_screening_id', '=', $examScreeningId)
-            ->where('station_id', '=', $stationId)
-            ->where('status', '=', 0)
-            ->first();
+                                    ->where('exam_screening_id', '=', $examScreeningId)
+                                    ->where('station_id', '=', $stationId)
+                                    ->where('status', '=', 0)
+                                    ->first();
         if (is_null($examQenen)) {
             $retval = ['title' => '未查到相应考试队列信息'];
             return response()->json(
-                $this->success_data($retval, -1, 'error')
+                $this->success_data($retval, -2, 'error')
             );
         }
 
         $watchLogModel = new WatchLog();
         $watch = $watchLogModel->leftJoin('watch', function($join){
-            $join -> on('watch_log.watch_id', '=', 'watch.id');
+            $join->on('watch_log.watch_id', '=', 'watch.id');
         })->where('watch_log.student_id', '=', $examQenen->student_id)
-            ->where('watch.status', '=', 1)
-            ->select([
-                'watch.nfc_code as nfc_code',
-            ])->first();
+                 ->where('watch.status', '=', 1)
+                 ->select([
+                    'watch.nfc_code as nfc_code',
+                 ])->first();
         if (is_null($watch)) {
             $retval = ['title' => '未查到相应腕表信息'];
             return response()->json(
-                $this->success_data($retval, -1, 'error')
+                $this->success_data($retval, -3, 'error')
             );
         }
 
