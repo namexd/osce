@@ -23,7 +23,7 @@ class Subject extends CommonModel
     protected $guarded      = [];
     protected $hidden       = [];
     protected $fillable     = [
-        'title', 'score', 'sort', 'status', 'description',
+        'title', 'mins', 'score', 'sort', 'status', 'description',
         'goods', 'stem', 'equipments', 'created_user_id', 'archived'
     ];
     public $search = [];

@@ -76,7 +76,9 @@ class TopicController extends CommonController
      */
     public function getAddTopic()
     {
-        return view('osce::admin.resourceManage.course_manage_add');
+        //获得上次的时间限制
+        $time = session('time');
+        return view('osce::admin.resourceManage.course_manage_add', ['time'=>$time]);
     }
 
     /**
@@ -103,6 +105,7 @@ class TopicController extends CommonController
     {
         $this->validate($request, [
             'title'     => 'required|unique:osce_mis.subject,title',    //名称
+            'mins'      => 'required',    //时间限制
             'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
             'desc'      => 'required',    //描述
@@ -118,6 +121,7 @@ class TopicController extends CommonController
             'cases.required'    => '请选择病例',
             'total.required'    => '总分必填',
             'desc.required'     => '必须填写描述',
+            'mins.required'     => '必须填写时间限制',
             'content.required'  => '必须新增评分点',
             'score.required'    => '分数必填',
             'description.required'   => '请添加考核项',
@@ -149,6 +153,7 @@ class TopicController extends CommonController
 
             $data = [
                 'title'      => e($request->get('title')),
+                'mins'       => $request->get('mins'),              //时间限制
                 'score'      => intval($request->get('total')),     //总分
                 'description'=> e($request->get('desc')),           //描述
                 'stem'       => e($request->input('stem')),         //题干
@@ -162,19 +167,26 @@ class TopicController extends CommonController
                 throw new \Exception('考核项分数和 没有对应总分！');
             }
 
-            $subjectModel = new Subject();
-            if ( $result=$subjectModel->addSubject($data, $formData, $cases, $goods, $user->id)) {
-                //todo 调用弹窗时新增的跳转 周强 2016-4-13
-                $Redirect = OsceCommon::handleRedirect($request,$result);
-                if($Redirect == false){
-                    return redirect()->route('osce.admin.topic.getList');
-                }else{
-                    return $Redirect;
-                }
-                
-            } else {
+            //将当前时间限定的值放入session
+            $time = $request->input('mins');
+            $request->session()->put('time', $time);
+            if (!$request->session()->has('time')) {
+                throw new \Exception('未能将时间保存！');
+            }
 
+            $subjectModel = new Subject();
+            //添加考试项目
+            $result = $subjectModel->addSubject($data, $formData, $cases, $goods, $user->id);
+            if (!$result) {
                 throw new \Exception('新增失败！');
+            }
+
+            //todo 调用弹窗时新增的跳转 周强 2016-4-13
+            $Redirect = OsceCommon::handleRedirect($request,$result);
+            if($Redirect == false){
+                return redirect()->route('osce.admin.topic.getList');
+            }else{
+                return $Redirect;
             }
 
         } catch (\Exception $ex) {
@@ -210,6 +222,7 @@ class TopicController extends CommonController
         $this->validate($request, [
             'id' => 'required',
             'title'     => 'required',    //名称
+            'mins'      => 'required',    //时间限制
             'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
             'desc'      => 'required',    //描述
@@ -222,6 +235,7 @@ class TopicController extends CommonController
         ], [
             'id.required' => '课题ID必须填写',
             'title.required'    => '名称必填',
+            'mins.required'     => '必须填写时间限制',
             'cases.required'    => '请选择病例',
             'total.required'    => '总分必填',
             'desc.required'     => '必须填写描述',
@@ -233,6 +247,7 @@ class TopicController extends CommonController
         //考试项目基础数据
         $data = [
             'title'       => e($request->get('title')),
+            'mins'        => $request->get('mins'),
             'description' => $request->get('desc'),
             'stem'        => $request->input('stem'),
             'equipments'  => $request->input('equipments'),
