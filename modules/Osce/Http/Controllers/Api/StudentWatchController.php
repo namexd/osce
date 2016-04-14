@@ -44,7 +44,7 @@ class StudentWatchController extends CommonController
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string     watch_id    腕表 id   (必须的)
+     * * string     nfc_code    腕表nfc_code
      *
      * @return json
      *
@@ -56,11 +56,10 @@ class StudentWatchController extends CommonController
     public function getStudentExamReminder(Request $request)
     {
         $this->validate($request, [
-            'nfc_code' => 'required'
+            'nfc_code' => 'required|string'
         ]);
 
         $watchNfcCode = $request->input('nfc_code');
-
         $data = [
             'title'        => '',
             'willStudents' => '',
@@ -71,14 +70,13 @@ class StudentWatchController extends CommonController
             'surplus'      => '',
             'score'        => '',
         ];
-
         $code = 0;
 
         $redis = Redis::connection('message');
 
-        //根据设备编号找到设备id
-        $watchId = Watch::where('code', '=', $watchNfcCode)->select('id')->first();
-        if (!$watchId) {
+        //根据腕表nfc_code找到腕表
+        $watch = Watch::where('nfc_code', '=', $watchNfcCode)->first();
+        if (is_null($watch)) {
             $code = -1;
             $data['title'] = '没有找到到腕表信息';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
@@ -88,8 +86,7 @@ class StudentWatchController extends CommonController
         }
 
         //判定腕表是否解绑
-        $watch =Watch::where('id',$watchId->id)->first();
-        if($watch->status==0){
+        if($watch->status == 0){
             $code = -1;
             $data['title'] = '该腕表还没有学生绑定';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
@@ -99,8 +96,8 @@ class StudentWatchController extends CommonController
         }
 
         //  根据腕表id找到对应的考试场次和学生
-        $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watchId->id)->where('is_end', '=', 0)->orderBy('signin_dt','desc')->first();
-        if (!$watchStudent) {
+        $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)->where('is_end', '=', 0)->orderBy('signin_dt','desc')->first();
+        if (is_null($watchStudent)) {
             $data['title'] = '没有找到学生的腕表信息';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code)));
             return response()->json(
@@ -113,6 +110,7 @@ class StudentWatchController extends CommonController
         // 根据考生id找到当前的考试
         $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
         $examId = $examInfo->exam_id;
+
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
@@ -359,6 +357,7 @@ class StudentWatchController extends CommonController
                 ->whereBetween('status', [1, 2])
                 ->count();
         }
+
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
           if($examStudent == 0){
@@ -367,13 +366,11 @@ class StudentWatchController extends CommonController
                 $willStudents = $studentnum+1;
           }
 
-
         //判断预计考试时间
         $examtimes = date('H:i', (strtotime($item->begin_dt)));
         //判断进入如的考场教室名字
         $examRoomName = $item->room->name;
         if($willStudents>0){
-
             $data =[
                 'code'=> 1,
                 'title'=> '考生等待信息',
@@ -393,7 +390,6 @@ class StudentWatchController extends CommonController
                     'estTime'=> '',
                     'willRoomName'=> '',
                     'roomName'=> $examRoomName,
-
                 ];
             }else{
                 $data =[
@@ -403,11 +399,11 @@ class StudentWatchController extends CommonController
                     'estTime'=> '',
                     'willRoomName'=> '',
                     'roomName'=> $examRoomName.'-'.$item->station->name,
-
                 ];
             }
 
         }
+
         return $data;
    }
 
