@@ -213,6 +213,7 @@ trait SQLTraits
                 'exam_draft.station_id as station_id',
                 'exam_draft.room_id as room_id',
                 'exam_screening.id as exam_screening_id',
+                'exam_draft_flow.optional',
                 'exam_draft_flow.order as order',
                 'exam_gradation.order as gradation_order'
             )->get();
@@ -282,7 +283,8 @@ trait SQLTraits
                 'exam_draft.room_id as room_id',
                 'exam_draft_flow.exam_screening_id as exam_screening_id',
                 'exam_gradation.order as gradation_order',
-                'exam_draft_flow.order as order'
+                'exam_draft_flow.order as order',
+                'exam_draft_flow.optional'
             )->distinct()
             ->get();
 
@@ -434,9 +436,13 @@ trait SQLTraits
 
         $result = [];
 
-        foreach ($collections as $items) {
+        foreach ($collections as $tempKey => $items) {
             foreach ($items as $key => $item) {
-                $item->serialnumber = $key + 1;
+                if ($item->optional == 1) {
+                    $item->serialnumber = $key + 1;
+                } else {
+                    $item->serialnumber = 1;
+                }
                 $result[] = $item;
             }
         }

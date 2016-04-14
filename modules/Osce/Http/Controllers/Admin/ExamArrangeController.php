@@ -649,9 +649,9 @@ class ExamArrangeController extends CommonController
          $teacherDatas= $stationteaxherModel->getTeacherData($stationId,$exam_id);
 
 
-         foreach($datas as &$teacherData){
+         foreach($datas as $key => $teacherData){
 
-             foreach ($teacherDatas as $key=>$value) {
+             foreach ($teacherDatas as $value) {
 
                  if ($value->teacher_type == 2 && $teacherData->station_id == $value->station_id) {
                      $teacherData->sp_teacher = [$value];

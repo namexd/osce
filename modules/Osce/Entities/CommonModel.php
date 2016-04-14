@@ -11,7 +11,7 @@ namespace Modules\Osce\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CommonModel extends Model
+abstract class CommonModel extends Model
 {
 
     public $timestamps = true;

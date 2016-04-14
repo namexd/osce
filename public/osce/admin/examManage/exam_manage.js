@@ -4270,6 +4270,11 @@ function station_assignment(){
                 } else {
                     $that.remove();
                     $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
+
+                    //更新考站显示
+                    $('.station-container').find('.col-sm-4').each(function(key,elem) {
+                        $(elem).find('.control-label').text('第'+stationName[key]+'站');
+                    });
                 }
             }
         });
@@ -4478,6 +4483,7 @@ function station_assignment(){
                 data: function() {
                     return {
                        exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
+                       station_id:$elem.parent().parent().attr('station-id'),
                        exam_id: examId
                     } 
                 },
@@ -4547,7 +4553,9 @@ function station_assignment(){
                 data: function() {
                     return {
                        exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
-                       exam_id: examId
+                       station_id:$elem.parent().parent().attr('station-id'),
+                       exam_id: examId,
+
                     } 
                 },
                 processResults: function (res) {
@@ -4662,7 +4670,7 @@ function station_assignment(){
         $('.station-container').find('td').each(function(key,elem){
             flag = true;
 
-            if($(elem).find('select').val()=='请选择'){
+            if($(elem).find('select').val()=='请选择'||$(elem).find('select').val()==-999||$(elem).find('select').val()==''){
                 flag = false;
                 return false;
             }
