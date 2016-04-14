@@ -735,7 +735,10 @@ class ApiController extends CommonController
         //$redis = Redis::connection('message');
 
         $examStationStatusModel = new ExamStationStatus();
-        $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)->where('station_id', '=', $stationId)->first();
+        $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
+                                                    ->where('exam_screening_id', '=', $examScreeningId)
+                                                    ->where('station_id', '=', $stationId)
+                                                    ->first();
         if (is_null($examStationStatus)) {
             $retval = ['title' => '当前考站准备完成失败'];
             return response()->json(
