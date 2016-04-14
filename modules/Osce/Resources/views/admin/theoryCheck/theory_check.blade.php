@@ -128,7 +128,7 @@
                 var examId = $(".allData").attr("examId");
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                         {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
-                    if(obj.code=='1'){
+                    if(obj.code==1){
                         $.ajax({
                             url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
                             cache:false,
@@ -210,10 +210,9 @@
                     var userId = $(".allData").attr("userId");
                     var studentId = $(".allData").attr("studentId");
                     var examId = $(".allData").attr("examId");
-                    console.log("22222");
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                             {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
-                        if(obj.code=='1'){
+                        if(obj.code==1){
                             $.ajax({
                                 url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
                                 cache:false,
