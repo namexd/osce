@@ -562,7 +562,7 @@ class DrawlotsController extends CommonController
             $this->getExaminee_arr($request);//当前组推送
 
             //调用向腕表推送消息的方法
-            $examQueue = ExamQueue::where('student_id', '=', $msg->student_id)
+            $examQueue = ExamQueue::where('student_id', '=', $msg['student_id'])
                 ->where('station_id', '=', $station->id)
                 ->whereIn('status',[0,2])
                 ->first();
