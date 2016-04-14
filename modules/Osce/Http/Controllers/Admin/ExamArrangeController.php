@@ -699,6 +699,7 @@ class ExamArrangeController extends CommonController
             $exam_id = $request->input('exam_id');
             $teacherData = $request->input('data');
 
+
           
   
             //保存老师的数据
