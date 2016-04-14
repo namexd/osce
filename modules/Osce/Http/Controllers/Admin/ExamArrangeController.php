@@ -638,24 +638,27 @@ class ExamArrangeController extends CommonController
          $ExamDraft     = new ExamDraft();
          $datas = $ExamDraft->getDraftFlowData($exam_id);
 
+         $stationId = [];
 
-         foreach ($datas as &$teacherData){
+         foreach ($datas as $item){
+             $stationId []=$item->station_id;
+         }
+         //查询出考站下对应的老师
+         $stationteaxherModel = new StationTeacher();
+
+         $teacherDatas= $stationteaxherModel->getTeacherData($stationId,$exam_id);
 
 
-             //查询出考站下对应的老师
-             $stationteaxherModel = new StationTeacher();
-             
-             $teacherDatas= $stationteaxherModel->getTeacherData($teacherData,$exam_id);
+         foreach($datas as &$teacherData){
+             foreach ($teacherDatas as $value) {
+                 if ($value->teacher_type == 2 && $teacherData->station_id ==$value->station_id) {
 
-             foreach ($teacherDatas as $value){
+                     $teacherData->sp_teacher = [$value];
 
-                 if($value ->teacher_type ==2){
-
-                     $teacherData ->sp_teacher = [$value];
-                     
-                 }else{
-                     $teacherData ->teacher = [$value];
+                 } else if($value->teacher_type == 1 && $teacherData->station_id ==$value->station_id){
+                     $teacherData->teacher = [$value];
                  }
+
              }
          }
 
