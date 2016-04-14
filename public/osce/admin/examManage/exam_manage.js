@@ -4523,6 +4523,18 @@ function station_assignment(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
+                  end: function() {
+                    req.station = $elem.find('.exam-station').val();
+                    $.ajax({
+                        type:'post',
+                        url: pars.update_data,
+                        data:req,
+                        success: function(res) {
+                            //更新考站类型
+                            //$elem.find('.exam-station').parent().next().text(typeToName[e.params.data.type])
+                        }
+                    })
+                  },
                   content: pars.add_station+'?status=1&table='+$elem.find('.exam-station').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-station').parent().parent().attr('class')+'&selector=exam-station'
                 });
             } else {
@@ -4670,7 +4682,7 @@ function station_assignment(){
         $('.station-container').find('td').each(function(key,elem){
             flag = true;
 
-            if($(elem).find('select').val()=='请选择'||$(elem).find('select').val()==-999||$(elem).find('select').val()==''){
+            if($(elem).find('select').val()=='请选择'||$(elem).find('select').val()==-999){
                 flag = false;
                 return false;
             }

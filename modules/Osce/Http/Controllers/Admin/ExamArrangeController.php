@@ -482,11 +482,18 @@ class ExamArrangeController extends CommonController
         $this->validate($request, [
             'station_name' => 'sometimes',
             'id'           => 'required',
+            'exam_id'      => 'sometimes',
 //            'type'=>'required',
 //            'draft_id'=>'required'
         ]);
-        $name = $request->get('station_name');
-        $id = $request->get('id');
+        $name   = $request->get('station_name');
+        $id     = $request->get('id');
+        $exam_id= $request->get('exam_id');
+
+        if(123 === 234){
+            //临时保存缓存表中的数据
+            $this->saveArrangeDatas($exam_id);
+        }
 
         $roomIdArray = ExamDraftTemp::where('old_draft_flow_id', '=', $id)->get()->pluck('room_id')->toArray();
         $roomModel = new Room();
@@ -831,6 +838,10 @@ class ExamArrangeController extends CommonController
         //获取所有临时数据
         $datas = $this->getAllTempDatas($exam_id);
 
+        if (empty($datas)){
+            throw new \Exception('数据为空');
+        }
+
         foreach ($datas as $data) {
             //操作大表
             if ($data['is_draft_flow'] == 1) {
@@ -838,7 +849,7 @@ class ExamArrangeController extends CommonController
                     throw new \Exception('保存失败，请重试！');
                 }
 
-                //操作小表
+            //操作小表
             } else {
                 if(!$ExamDraft->handleSmallData($data)){
                     throw new \Exception('保存失败，请重试！');
@@ -847,7 +858,7 @@ class ExamArrangeController extends CommonController
         }
 
         //处理 待删除 数据（如：清空临时表数据，删除正式表待删除数据）
-        $ExamDraftTempModel= new ExamDraftTemp();
+        $ExamDraftTempModel = new ExamDraftTemp();
         if (!$ExamDraftTempModel->handleDelDatas($exam_id)){
             throw new \Exception('处理待删除数据失败');
         }
