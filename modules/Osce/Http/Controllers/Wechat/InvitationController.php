@@ -202,9 +202,10 @@ class InvitationController extends CommonController
 
 
         try {
+            $teacherId = [];
             foreach ($teacherData as $key => $item) {
 
-                $teacherId = [];
+
                 foreach ($item['teacher'] as $value) {
                     $teacherId[] = $value;
                 }

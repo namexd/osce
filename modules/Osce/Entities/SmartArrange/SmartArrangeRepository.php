@@ -24,4 +24,6 @@ class SmartArrangeRepository extends AbstractSmartArrange
         // TODO: Implement model() method.
         return 'Modules\Osce\Entities\SmartArrange\SmartArrange';
     }
+
+    
 }
