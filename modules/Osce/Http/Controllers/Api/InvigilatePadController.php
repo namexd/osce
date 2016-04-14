@@ -200,6 +200,56 @@ class InvigilatePadController extends CommonController
         }
     }
 
+    /**
+     * 身份验证推送
+     * @method GET
+     * @url /osce/api/invigilatepad/authentication
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string    id      老师id(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author wangtao <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+    public function getAuthentication_arr(Request $request)
+    {
+        $this->validate($request, [
+            'station_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
+        ], [
+            'station_id.required' => '考站编号必须',
+            'teacher_id.required' => '老师编号必须'
+        ]);
+
+        try {
+            $redis = Redis::connection('message');
+            $stationId = (int)$request->input('station_id');
+            $teacher_id = (int)$request->input('teacher_id');
+            $exam = Exam::doingExam();
+            $studentModel = new  Student();
+            $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
+            if ($studentData['nextTester']) {
+                $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+                $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
+                return $studentData['nextTester'];
+
+            } else {
+                $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
+                throw new \Exception('学生信息查询失败', -2);
+            }
+        } catch (\Exception $ex) {
+            return $ex;
+
+        }
+    }
+
+
 
     /**
      * 根据考站ID和考试ID获取科目信息(考核点、考核项、评分参考)
@@ -853,6 +903,16 @@ class InvigilatePadController extends CommonController
 
             if(count($studentWatchData) > 0){
                 $studentWatchData = $studentWatchData->toArray();
+
+                foreach($studentWatchData as $k=>$v){
+                    if($v['status'] < 2){
+                        $studentWatchData[$k]['status'] = '0';
+                    }elseif($v['status'] == 2){
+                        $studentWatchData[$k]['status'] = '1';
+                    }else{
+                        $studentWatchData[$k]['status'] = '2';
+                    }
+                }
             }
 
             //查找考生的剩余考站数量
@@ -902,9 +962,10 @@ class InvigilatePadController extends CommonController
             $status = $request->get('status')?$request->get('status'):1;  //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
             $type = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
             $nfc_code = $request->get('nfc_code');
+            $examing = Exam::where('status','=',1)->first();
             //查询使用中的腕表数据
             $watchModel = new Watch();
-            $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code);
+            $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
 
             if(count($watchData) > 0){
                 $watchData = $watchData->toArray();
@@ -953,9 +1014,10 @@ class InvigilatePadController extends CommonController
 
             $ncfCode = $request->get('nfc_code');//腕表NCF编码
 
+            $examing = Exam::where('status','=',1)->first();
             //查询某个腕表的考试状态
             $watchModel = new Watch();
-            $watchData = $watchModel->getWatchExamStatus($ncfCode);
+            $watchData = $watchModel->getWatchExamStatus($ncfCode,$examing->id);
 
             if(count($watchData) > 0){
                 if($watchData->status < 2){

@@ -224,7 +224,7 @@ class Watch extends CommonModel implements MachineInterface
     }
 
     //查询使用中的腕表数据
-    public function getWatchAboutData($status,$type,$nfc_code){
+    public function getWatchAboutData($status,$type,$nfc_code,$examId){
         if($type === 0){
             $builder = $this->whereIn('exam_queue.status',[0,1]);
         }elseif($type == 1){
@@ -240,20 +240,20 @@ class Watch extends CommonModel implements MachineInterface
         }
 
 
-        $builder = $builder->where('watch.status','=',$status)->leftjoin('watch_log',function($watchLog){
+        $builder = $builder->where('watch.status','=',$status)->where('exam_queue.exam_id','=',$examId)->leftjoin('watch_log',function($watchLog){
             $watchLog->on('watch_log.watch_id','=','watch.id');
         })->leftjoin('exam_queue',function($examQueue){
             $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
         })->leftjoin('student',function($examQueue){
             $examQueue->on('student.id','=','watch_log.student_id');
-        })->select('watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')->get();
+        })->groupBy('name')->select('watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')->get();
 
         return $builder;
     }
 
     //查询某个腕表的考试状态
-    public function getWatchExamStatus($ncfCode){
-        $builder = $this->where('watch.code','=',$ncfCode)->leftjoin('watch_log',function($watchLog){
+    public function getWatchExamStatus($ncfCode,$examId){
+        $builder = $this->where('watch.code','=',$ncfCode)->where('exam_queue.exam_id','=',$examId)->leftjoin('watch_log',function($watchLog){
             $watchLog->on('watch_log.watch_id','=','watch.id');
         })->leftjoin('exam_queue',function($examQueue){
             $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
