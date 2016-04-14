@@ -4475,6 +4475,12 @@ function station_assignment(){
                 type:'get',
                 url: pars.station_list,
                 delay: 250,
+                data: function() {
+                    return {
+                       exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
+                       exam_id: examId
+                    } 
+                },
                 processResults: function (res) {
 
                     //数据格式化
@@ -4538,6 +4544,12 @@ function station_assignment(){
                 type:'get',
                 url: pars.room_list,
                 delay: 250,
+                data: function() {
+                    return {
+                       exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
+                       exam_id: examId
+                    } 
+                },
                 processResults: function (res) {
 
                     //数据格式化
