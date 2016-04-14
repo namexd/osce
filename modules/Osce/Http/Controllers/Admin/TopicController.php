@@ -105,10 +105,10 @@ class TopicController extends CommonController
     {
         $this->validate($request, [
             'title'     => 'required|unique:osce_mis.subject,title',    //名称
+            'mins'      => 'required',    //时间限制
             'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
             'desc'      => 'required',    //描述
-            'mins'      => 'required',    //时间限制
             'goods'     => 'sometimes',    //所需用物
 //            'stem'      => 'required',    //题干
 //            'equipments'=> 'required',    //所需设备
@@ -153,9 +153,9 @@ class TopicController extends CommonController
 
             $data = [
                 'title'      => e($request->get('title')),
+                'mins'       => $request->get('mins'),              //时间限制
                 'score'      => intval($request->get('total')),     //总分
                 'description'=> e($request->get('desc')),           //描述
-                'mins'       => e($request->get('mins')),           //时间限制
                 'stem'       => e($request->input('stem')),         //题干
                 'goods'      => '',                                 //所需物品
                 'equipments' => e($request->input('equipments')),   //所需设备
@@ -165,6 +165,13 @@ class TopicController extends CommonController
             //判断总分与考核项分数是否正确
             if($totalData != $data['score']){
                 throw new \Exception('考核项分数和 没有对应总分！');
+            }
+
+            //将当前时间限定的值放入session
+            $time = $request->input('mins');
+            $request->session()->put('time', $time);
+            if (!$request->session()->has('time')) {
+                throw new \Exception('未能将时间保存！');
             }
 
             $subjectModel = new Subject();
@@ -215,6 +222,7 @@ class TopicController extends CommonController
         $this->validate($request, [
             'id' => 'required',
             'title'     => 'required',    //名称
+            'mins'      => 'required',    //时间限制
             'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
             'desc'      => 'required',    //描述
@@ -227,6 +235,7 @@ class TopicController extends CommonController
         ], [
             'id.required' => '课题ID必须填写',
             'title.required'    => '名称必填',
+            'mins.required'     => '必须填写时间限制',
             'cases.required'    => '请选择病例',
             'total.required'    => '总分必填',
             'desc.required'     => '必须填写描述',
@@ -238,6 +247,7 @@ class TopicController extends CommonController
         //考试项目基础数据
         $data = [
             'title'       => e($request->get('title')),
+            'mins'        => $request->get('mins'),
             'description' => $request->get('desc'),
             'stem'        => $request->input('stem'),
             'equipments'  => $request->input('equipments'),
