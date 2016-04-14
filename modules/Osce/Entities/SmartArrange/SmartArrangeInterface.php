@@ -14,4 +14,6 @@ interface SmartArrangeInterface
     function plan($exam);
     
     function output($exam);
+
+    function store($exam);
 }

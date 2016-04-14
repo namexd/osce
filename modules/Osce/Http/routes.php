@@ -512,8 +512,7 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //    $redis->publish(1, 'test');
 //
 //	dd(\Modules\Osce\Entities\Exam::join('exam_screening', 'exam.id', '=', 'exam_screening.exam_id')->lists('exam_screening.exam_id')->toArray());
-	$data = config('osce.sys_param');
-	dd($data);
+	dd(\Auth::id());
 //	return '失败';
 });
 //TODO:清空考试数据使用 	Zhoufuxiang

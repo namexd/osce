@@ -8,9 +8,6 @@
 
 namespace Modules\Osce\Entities\SmartArrange\Traits;
 
-
-
-
 trait SundryTraits
 {
     /**
@@ -112,5 +109,4 @@ trait SundryTraits
         }
     }
 
-    
 }

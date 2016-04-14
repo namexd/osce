@@ -911,6 +911,7 @@ class ExamPlan extends CommonModel
                 throw new \Exception('当前操作的考试不存在');
             }
 
+
             //通过id找到对应的数据
             $data = ExamPlanRecord::where('exam_id', $examId)->get();
 
