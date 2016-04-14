@@ -5,8 +5,8 @@
     'inform' => [
         'wechat' => 1,
         'sms' => 1,
-        'mail' => 0,
-        'user_pm' => 0,
+        'mail' => 1,
+        'user_pm' => 1,
     ],
 
    /*
@@ -14,7 +14,7 @@
     */
     'invite' => [
         'wechat' => 1,
-        'sms' => 0,
+        'sms' => 1,
         'mail' => 1,
         'user_pm' => 0,
     ],

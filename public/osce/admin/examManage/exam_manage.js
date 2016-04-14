@@ -993,7 +993,7 @@ function exam_assignment_add(){
         }
     })
     /**
-     * 日期选择
+     * 阶段选择框
      * @author chenxia
      * @version 3.4
      * @date    2016-04-06
@@ -1089,7 +1089,7 @@ function exam_assignment_add(){
 
     });
     /**
-     * 日期选择
+     * 这是阶段输入框失去光标的时候的判断
      * @author chenxia
      * @version 3.4
      * @date    2016-04-06
@@ -1287,7 +1287,7 @@ function exam_basic_info(){
         }
     })
     /**
-     * 日期选择
+     * 阶段选择框
      * @author chenxia
      * @version 3.4
      * @date    2016-04-06
@@ -1389,7 +1389,7 @@ function exam_basic_info(){
             $('#add-basic').find('tbody').append(html);
     });
     /**
-     * 日期选择
+     * 阶段输入框
      * @author chenxia
      * @version 3.4
      * @date    2016-04-06
@@ -4677,6 +4677,7 @@ function examiner_manage() {
         typeToName = ['','技能考站','sp考站','理论考站'],
         exam_id = (location.href).split('=')[1];
 
+
     /**
      * 初始化数据
      * @author mao
@@ -4684,6 +4685,7 @@ function examiner_manage() {
      * @date    2016-04-08
      * @param   {object}   data 传入数据
      */
+
     function initTable(data) {
         var html="",
             statusArr = [];  //记录状态老师
