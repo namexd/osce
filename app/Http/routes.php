@@ -34,7 +34,7 @@ Route::group(['prefix' => "api/1.0/public",'middleware' => ['cors']], function()
                 return \Response::json( [ 'access_token' => 'defeat', 'token_type' =>'defeat','expires_in'=>0,'user_id'=>'defeat'] );
 
             }else{
-                $redis->publish('pad_message', json_encode(\Modules\Osce\Http\Controllers\CommonController::success_data(Authorizer::issueAccessToken(), 100, '登陆成功')));
+                //$redis->publish('pad_message', json_encode(\Modules\Osce\Http\Controllers\CommonController::success_data(Authorizer::issueAccessToken(), 100, '登陆成功')));
                 return Response::json(Authorizer::issueAccessToken());
             }
         }
