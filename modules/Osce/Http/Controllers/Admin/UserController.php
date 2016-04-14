@@ -162,17 +162,27 @@ class UserController extends CommonController
             'id' => 'required'
         ]);
         $id = intval($request->get('id'));
+        $role_id = config('osce.adminRoleId');
         try {
             $user = Auth::user();
             if ($user->id == $id) {
                 throw new \Exception('此为当前登录人的账号，无法删除自己！');
             }
-            $user = User::find($id);
-            if ($user->delete()) {
-                return $this->success_data('删除成功！');
-            } else {
-                throw new \Exception('删除失败！');
+            //删除对应的系统管理员角色 TODO: Zhoufuxiang 216-04-13
+            $sysUserRoles = SysUserRole::where('user_id','=',$id)->where('role_id','=',$role_id)->get();
+            foreach ($sysUserRoles as $sysUserRole) {
+                if(!$sysUserRole->delete()){
+                    throw new \Exception('删除该用户管理员角色失败！');
+                }
             }
+
+//            $user = User::find($id);
+//            if (!$user->delete()) {
+//                throw new \Exception('删除失败！');
+//            }
+
+            return $this->success_data('删除成功！');
+
         } catch (\Exception $ex) {
             return $this->fail($ex);
         }
@@ -285,80 +295,102 @@ class UserController extends CommonController
      */
     public function postEditUserRole(Request $request)
     {
-        $connection = \DB::connection('sys_mis');
-        $connection->beginTransaction();
+        $connection = DB::connection('sys_mis');
+        $connection ->beginTransaction();
 
-        $this->validate($request, [
-            'role_id' => 'required',
-            'user_id' => 'required'
-        ], [
-            'role_id' => '请选择角色',
-            'user_id' => '该用户不存在',
-        ]);
-        $user_id = $request->input('user_id');
-        $roleIds = $request->input('role_id');
+        try{
+            $this->validate($request, [
+                'role_id' => 'required',
+                'user_id' => 'required'
+            ], [
+                'role_id' => '请选择角色',
+                'user_id' => '该用户不存在',
+            ]);
+            $user_id = $request->input('user_id');
+            $roleIds = $request->input('role_id');
 
-        $original= SysUserRole::where('user_id','=',$user_id)->get()->pluck('role_id')->toArray();
-        $diff1s  = array_diff($original, $roleIds);
-        $diff2s  = array_diff($roleIds, $original);
+            //老师角色 集合
+            $teacherRoles = [
+                config('osce.invigilatorRoleId'),
+                config('osce.patrolRoleId'),
+                config('osce.spRoleId')
+            ];
 
-        //老师角色 集合
-        $roles   = [
-            config('osce.invigilatorRoleId'),
-            config('osce.patrolRoleId'),
-            config('osce.spRoleId')
-        ];
+            //获取用户原有的所有角色
+            $original = SysUserRole::where('user_id','=',$user_id)->get()->pluck('role_id')->toArray();
+            $delRoles = array_diff($original, $roleIds);     //原来有，现在不具有（需删除）
+            $addRoles = array_diff($roleIds, $original);     //现在有，原来不具有（需添加）
 
+            //处理用户 角色增删，归档问题
+            $this->handleUserRoles($user_id, $addRoles, $delRoles, $teacherRoles);
+
+            //TODO: 学生角色归档、还原归档问题   Zhoufuxiang 2016-04-13
+
+            $connection->commit();
+
+            return redirect()->route('osce.admin.user.getStaffList')->with('message', '修改成功!');
+
+        } catch (\Exception $ex){
+
+            $connection->rollBack();
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
+    /**
+     * 处理用户 角色增删，归档问题
+     * @param $user_id
+     * @param $addRoles
+     * @param $delRoles
+     * @param $roles
+     *
+     * @author Zhoufuxiang 2016-04-13
+     * @return bool
+     * @throws \Exception
+     */
+    public function handleUserRoles($user_id, $addRoles, $delRoles, $teacherRoles)
+    {
         //将其他不同的角色，加入数据库中
-        if(count($diff2s)>0){
-            foreach ($diff2s as $diff2) {
-                $data = ['role_id' => $diff2, 'user_id' => $user_id];
+        if(count($addRoles)>0){
+            foreach ($addRoles as $addRole)
+            {
+                $data = ['role_id' => $addRole, 'user_id' => $user_id];
                 if(!SysUserRole::create($data)){
 
-                    $connection->rollBack();
-                    return redirect()->back()->withErrors('修改权限失败!');
+                    throw new \Exception('修改权限失败!');
                 }
                 //如果该用户曾经 有老师的角色，则还原归档
-                if(in_array($diff2, $roles)){
-                    $teacher = Teacher::where('id','=',$user_id)->first();
-                    if($teacher){
-                        $teacher->archived = 0;
-                        $teacher->type     = Common::getTeacherTypeByRoleId($diff2);
-                        if(!$teacher->save()){
-                            $connection->rollBack();
-                            return redirect()->back()->withErrors('老师角色归档还原失败!');
-                        }
-                    }
+                if(in_array($addRole, $teacherRoles)){
+                    //其他 字段参数
+                    $params = ['type' => Common::getTeacherTypeByRoleId($addRole)];
+                    //老师 还原归档
+                    Common::resetArchived(new Teacher(), $user_id, '老师角色归档失败!', $params);
                 }
             }
         }
+
         //删除 已经不需要的 用户对应 角色关系
-        if(count($diff1s)>0){
-            foreach ($diff1s as $diff1) {
+        if(count($delRoles)>0){
+            foreach ($delRoles as $delRole) {
                 //如果删除的角色中，有老师角色，则将老师归档
-                if(in_array($diff1, $roles)){
-                    $teacher = Teacher::where('id','=',$user_id)->first();
-                    if($teacher){
-                        $teacher->archived = 1;
-                        if(!$teacher->save()){
-                            $connection->rollBack();
-                            return redirect()->back()->withErrors('老师角色归档失败!');
-                        }
-                    }
-                }
-                //删除用户对应 角色关系
-                if(!SysUserRole::where('user_id','=',$user_id)->where('role_id','=',$diff1)->delete()){
+                if(in_array($delRole, $teacherRoles)){
 
-                    $connection->rollBack();
-                    return redirect()->back()->withErrors('修改权限失败!');
+                    //老师归档
+                    Common::archived(new Teacher(), $user_id, '老师角色归档失败!');
+                }
+
+                //删除用户对应 角色关系
+                $sysUserRole = SysUserRole::where('user_id','=',$user_id)->where('role_id','=',$delRole)->first();
+                if (!is_null($sysUserRole)){
+
+                    if(!$sysUserRole->delete()){
+                        throw new \Exception('修改权限失败!');
+                    }
                 }
             }
         }
 
-        $connection->commit();
-
-        return redirect()->route('osce.admin.user.getStaffList')->with('message', '修改成功!');
-
+        return true;
     }
 
     /**
@@ -385,10 +417,10 @@ class UserController extends CommonController
             ];
 
             $original= SysUserRole::where('user_id','=',$user_id)->get()->pluck('role_id')->toArray();
-            $diff = array_diff($original, $roleIds);
-            if(!empty($diff)){
-                foreach ($diff as $item) {
-                    if(in_array($item, $roles)){
+            $delRoles = array_diff($original, $roleIds);     //原来有，现在不具有（需删除）
+            if(!empty($delRoles)){
+                foreach ($delRoles as $delRole) {
+                    if(in_array($delRole, $roles)){
                         return $this->success_data('',2,'警告：该用户原有的老师角色 确定要删除！');
                     }
                 }

@@ -3980,7 +3980,7 @@ function station_assignment(){
     var stationName = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'],
         examId = (location.href).split('=')[1],
         typeToName = ['','技能考站','sp考站','理论考站'],
-        chioceToName = ['','必考','选考'];
+        chioceToName = ['选考','必考'];
 
     /**
      * 初始化
@@ -4023,7 +4023,7 @@ function station_assignment(){
                                 '<td type="2"><select class="form-control exam-station"><option selected="selected" value="'+data[i].item[j].station_id+'">'+data[i].item[j].station_name+'</option></select></td>'+
                                 '<td type="2">'+typeToName[data[i].item[j].station_type]+'</td>'+
                                 '<td type="2"><select class="form-control station-belong"><option selected="selected" value="'+data[i].item[j].room_id+'">'+data[i].item[j].room_name+'</option></select></td>'+
-                                '<td type="2"><select class="form-control station-chioce"><option selected="selected" value="'+data[i].item[j].optional+'">'+chioceToName[data[i].item[j].optional]+'</option></select></td>'+
+                                '<td type="2"><span class="station-chioce">'+chioceToName[data[i].item[j].optional]+'</span></td>'+
                                 '<td>'+
                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -4037,7 +4037,7 @@ function station_assignment(){
 
             //一个站的dom结构
             html += '<div class="form-group">'+
-                        '<label class="col-sm-2 control-label">&nbsp;</label>'+
+                        '<label class="col-sm-1 control-label">&nbsp;</label>'+
                         '<div class="col-sm-10">'+
                             '<div class="row">'+
                                 '<div class="col-sm-4"><label class="control-label" order="'+data[i].order+'">'+data[i].name+'</label></div>'+
@@ -4046,7 +4046,7 @@ function station_assignment(){
                                         '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="2">'+stageRender(data[i].exam_gradation_id)+'</select>'+
                                 '</div>'+
                                 '<div class="col-sm-2">'+
-                                    '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
+                                    '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="'+data[i].optional+'" type="2">'+chioceToName[data[i].optional]+'</a>'+
                                     '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                 '</div>'+
                             '</div>'+
@@ -4064,6 +4064,7 @@ function station_assignment(){
                                 '<tbody index="'+j+'">'+str+'</tbody>'+
                             '</table>'+
                         '</div>'+
+                        '<label class="col-sm-1 control-label">&nbsp;</label>'+
                     '</div>';
         }
         $('.station-container').html(html);
@@ -4097,7 +4098,7 @@ function station_assignment(){
 
                 for(var i in data) {
                     var str = data[i].order - 1;
-                    if(data[i].order == count) {
+                    if(data[i].id == count) {
                         exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+stationName[str]+'</option>';
                     } else {
                         exam_stage_str += '<option value="'+data[i].id+'">阶段'+stationName[str]+'</option>';
@@ -4190,7 +4191,7 @@ function station_assignment(){
                     layer.msg('新增考站失败！',{skin:'msg-error',icon:1});
                 } else {
                     html += '<div class="form-group">'+
-                                '<label class="col-sm-2 control-label">&nbsp;</label>'+
+                                '<label class="col-sm-1 control-label">&nbsp;</label>'+
                                 '<div class="col-sm-10">'+
                                     '<div class="row">'+
                                         '<div class="col-sm-4"><label class="control-label" order="'+index+'">第'+stationName[index]+'站</label></div>'+
@@ -4199,7 +4200,7 @@ function station_assignment(){
                                                 '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+stageRender(1)+'</select>'+
                                         '</div>'+
                                         '<div class="col-sm-2">'+
-                                            '<a class="btn btn-primary" href="javascript:void(0)">必考</a>'+
+                                            '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="0" type="3">必考</a>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
@@ -4220,7 +4221,7 @@ function station_assignment(){
                                                 '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
                                                 '<td type="3"></td>'+
                                                 '<td type="3"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                                '<td type="3"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                                                '<td type="3"><span class="station-chioce">必考</span></td>'+
                                                 '<td>'+
                                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -4229,6 +4230,7 @@ function station_assignment(){
                                         '</tbody>'+
                                     '</table>'+
                                 '</div>'+
+                                '<label class="col-sm-1 control-label">&nbsp;</label>'+
                             '</div>';
 
                     //插入dom
@@ -4283,7 +4285,9 @@ function station_assignment(){
         var html = '',
             $that = $(this).parent().parent().parent().parent().parent(),
             judgeType = $that.parent().parent().find('.select-stage').attr('type') == 2 ? 1 :4,
-            index = parseInt($that.attr('index')) + 1;
+            index = parseInt($that.attr('index')) + 1,
+            textName = ['选考','必考'];
+            flag = $that.parent().parent().find('.chioce-btn').attr('value');
 
         $.ajax({
             type:'post',
@@ -4297,8 +4301,8 @@ function station_assignment(){
                                 '<td type="3"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
                                 '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
                                 '<td type="3"></td>'+
-                                '<td type="3"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
-                                '<td type="3"><select class="form-control station-chioce"><option value="1">必考</option><option value="2">选考</option></select></td>'+
+                                '<td type="3"><select class="station-belong"><option value="请选择">请选择</option></select></td>'+
+                                '<td type="3"><span class="station-chioce">'+textName[flag]+'</span></td>'+
                                 '<td>'+
                                     '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
                                     '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -4456,7 +4460,7 @@ function station_assignment(){
 
                     ajaxUpdate(req, pars.update_data);
                   },
-                  content: pars.add_subject+'?status=1&table='+$elem.find('.exam-item').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-item').parent().parent().attr('class')
+                  content: pars.add_subject+'?status=1&table='+$elem.find('.exam-item').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-item').parent().parent().attr('class')+'&selector=exam-item'
                 });
             } else {
                 ajaxUpdate(req, pars.update_data);
@@ -4489,7 +4493,7 @@ function station_assignment(){
             }
 
         //数据更新，交互数据
-        }).on('select2:select', function(e) {console.log(e.params.data)
+        }).on('select2:select', function(e) {
             //请求数据
             var req = {
                 exam_id:examId,
@@ -4507,7 +4511,7 @@ function station_assignment(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: pars.add_station+'?status=1&table='+$elem.find('.exam-station').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-station').parent().parent().attr('class')
+                  content: pars.add_station+'?status=1&table='+$elem.find('.exam-station').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.exam-station').parent().parent().attr('class')+'&selector=exam-station'
                 });
             } else {
                $.ajax({
@@ -4576,7 +4580,7 @@ function station_assignment(){
 
                     ajaxUpdate(req, pars.update_data);
                   },
-                  content: pars.add_room+'?status=1&table='+$elem.find('.station-belong').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.station-belong').parent().parent().attr('class')
+                  content: pars.add_room+'?status=1&table='+$elem.find('.station-belong').parent().parent().parent().parent().attr('table-order')+'&tr='+$elem.find('.station-belong').parent().parent().attr('class')+'&selector=station-belong'
                 });
             } else {
                 ajaxUpdate(req, pars.update_data);
@@ -4585,27 +4589,53 @@ function station_assignment(){
         });
 
         //选考必考
-        $elem.find('.station-chioce').select2({data:[{id:1,text:'必考'},{id:2,text:'选考'}]}).on("change", function (e) {
-            //请求数据
-            var req = {
-                exam_id:examId,
-                type:$elem.find('.station-chioce').parent().attr('type'),
-                draft_id:$elem.attr('item-id'),
-                station_id:$elem.parent().parent().attr('station-id'),
-                chioce: $elem.find('.station-chioce').val()
-            };
+        /*$elem.parent().parent().parent().find('.chioce-btn').click(function() {console.log('op')
+            var $that = $(this),
+                textName = ['选考','必考'],
+                flag = $that.attr('value'),
+                toValue = [1,0];
 
-            $.ajax({
-                type:'post',
-                url: pars.update_data,
-                data:req,
-                success: function(res) {
-                    return true;
-                }
-            })
-         });
+            console.log(flag)
+            $that.text(textName[flag]);
+            $that.attr('value',toValue[flag]);
+
+        })*/
 
     }
+
+    /**
+     * 选考必考
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-13
+     */
+    $('.station-container').on('click', '.chioce-btn', function() {
+        var $that = $(this),
+            textName = ['必考','选考'],
+            flag = $that.attr('value'),
+            toValue = [1,0];
+
+        //状态更新
+        $that.text(textName[flag]);
+        $that.attr('value',toValue[flag]);
+
+        //本站所有选项更新
+        $that.parent().parent().parent().find('.station-chioce').text(textName[flag]);
+
+        $.ajax({
+            type:'get',
+            url: pars.chioce_btn,
+            data:{exam_id:examId, optional:toValue[flag],flow_id:$that.parent().parent().parent().find('table').attr('station-id'),type:$that.attr('type')},
+            success: function(res) {
+                if(res.code != 1) {
+                    return true;
+                } else {
+
+                }
+            }
+        })
+
+    })
 
     /**
      * 保存数据
@@ -4816,7 +4846,7 @@ function examiner_manage() {
             sp_invation($that);
 
             //老师列表数组
-            teacherArr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            //teacherArr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
 
         });
     }
@@ -4829,9 +4859,20 @@ function examiner_manage() {
      */
     $('#save-data').click(function() {
         //请求数据
-        var req = {};
+        var req = {},
+            arr = [];
 
-        req['data'] = teacherArr;
+        //老师数据
+        $('#add-basic tbody').find('tr').each(function(key) {
+            var $that = $(this);
+
+            //老师列表数组
+            arr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            
+        });
+    
+
+        req['data'] = arr;
         req['exam_id'] = exam_id;
 
         $.ajax({
@@ -4856,14 +4897,24 @@ function examiner_manage() {
      */
     $('#invation-all').click(function() {
         //请求数据
-        var req = {};
+        var req = {},
+            arr = [];
 
-        req['data'] = teacherArr;
+        //老师数据
+        $('#add-basic tbody').find('tr').each(function(key) {
+            var $that = $(this);
+
+            //老师列表数组
+            arr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            
+        });
+
+        req['data'] = arr;
         req['exam_id'] = exam_id;
 
         $.ajax({
             type:'get',
-            url: '',
+            url: pars.allInvitation,
             data:req,
             success: function(res) {
                 if(res.code != 1) {
@@ -4871,6 +4922,9 @@ function examiner_manage() {
                 } else {
                     layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
                 }
+            },
+            error: function(data) {
+                layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
             }
         })
     });
@@ -4974,6 +5028,22 @@ function examiner_manage() {
                     };
                 }
             }
+        }).on('select2:unselect', function(e) {
+
+            //删除
+            $.ajax({
+                type:'get',
+                url: pars.del_teacher,
+                data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
+                success: function(res) {
+                    if(res.code != 1) {
+                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    } else {
+                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                    }
+                }
+            })
+
         });
     }
     
@@ -5016,6 +5086,22 @@ function examiner_manage() {
                     };
                 }
             }
+        }).on('select2:unselect', function(e) {
+
+            //删除
+            $.ajax({
+                type:'get',
+                url: pars.del_teacher,
+                data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
+                success: function(res) {
+                    if(res.code != 1) {
+                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    } else {
+                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                    }
+                }
+            })
+
         });
     }
     

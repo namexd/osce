@@ -27,7 +27,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_patrol_edit','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_patrol_edit','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','email':'{{ route('osce.admin.invigilator.postEmailUnique')}}','url':'{{ url('commom/upload-image') }}'}" />
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox float-e-margins">
@@ -107,7 +107,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="description" id="description" value="{{$item->description}}">
+                                <input type="text" class="form-control" name="description" id="description" value="{{$item->description}}" maxlength="100">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

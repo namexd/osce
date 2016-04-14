@@ -17,6 +17,7 @@ class SupplyController extends CommonController
 {
 
 
+    
     /**
      * 获取用物列表
      * @method GET
@@ -97,7 +98,7 @@ class SupplyController extends CommonController
         if (!Supply::create($data)) {
             throw new \Exception('添加用物失败');
         } else {
-            return redirect()->route('osce.admin.supply.getList');
+            return redirect()->route('osce.admin.supply.getList')->withErrors(['msg'=>'保存成功','code'=>[1]]);
         }
     }
 
@@ -156,7 +157,7 @@ class SupplyController extends CommonController
         if (!$Supply->save()) {
             throw new \Exception('修改用物失败');
         } else {
-            return redirect()->route('osce.admin.supply.getList');
+            return redirect()->route('osce.admin.supply.getList')->withErrors(['msg'=>'保存成功','code'=>[1]]);
         }
     }
 

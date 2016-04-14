@@ -80,6 +80,10 @@
                         },
                         notEmpty: {/*非空提示*/
                             message: '名称不能为空'
+                        },
+                        stringLength: {
+                            max:32,
+                            message: '名称字数不超过32个'
                         }
                     }
                 },
@@ -131,7 +135,7 @@
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>新增科目</h5>
+            <h5>新增考试项目</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -142,7 +146,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="title" name="title"/>
+                                <input type="text" required class="form-control" id="title" name="title" maxlength="32"/>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

@@ -21,6 +21,13 @@
             font-size: 100px;
         }
         .col-xs-6.col-md-3 a{float: right;}
+        .description-this{
+            display: inline-block;
+            width: 293px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
     </style>
 @stop
 @section('only_js')
@@ -64,7 +71,7 @@
                 @forelse($list as $key => $item)
                     <tr>
                         <td>{{$item->name}}</td>
-                        <td>{{$item->case_name}}</td>
+                        <td><span class="description-this" title="{{$item->subjects->implode('title',',')}}">{{$item->subjects->implode('title',',')}}</span></td>
                         <td>{{$item->userInfo->mobile or '-'}}</td>
                         <td>{{is_null($item->userInfo)? '-':$item->userInfo->lastlogindate}}</td>
                         <td value="{{$item->id}}">

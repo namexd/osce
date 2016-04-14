@@ -1069,15 +1069,15 @@ function exam_station_edit() {
                     }
                 }
             },
-            room_id: {
-                /*键名username和input name值对应*/
-                message: 'The username is not valid',
-                validators: {
-                    notEmpty: {/*非空提示*/
-                        message: '请选择所属考场'
-                    }
-                }
-            },
+            // room_id: {
+            //     /*键名username和input name值对应*/
+            //     message: 'The username is not valid',
+            //     validators: {
+            //         notEmpty: {/*非空提示*/
+            //             message: '请选择所属考场'
+            //         }
+            //     }
+            // },
             vcr_id: {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
@@ -1520,7 +1520,10 @@ function course_module(){
             }
         });
         if(total != parseInt($('#total').val())){
-            layer.alert('与总分不一致！');
+            var scores = parseInt($('#total').val()) - total,
+                str = scores < 0 ? ('比总分多'+Math.abs(scores)+'分！'):('比总分少'+Math.abs(scores)+'分！')
+
+            layer.alert(str);
             return false;
         }
 
@@ -2451,6 +2454,10 @@ function staff_manage_invigilator_add() {
                     regexp: {
                         regexp: /^\w+$/,
                         message: '教师编号应该由数字，英文或下划线组成'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '编号数字不超过20个'
                     }
                 }
             },
@@ -2515,6 +2522,20 @@ function staff_manage_invigilator_add() {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
+                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.email,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '邮箱已存在',//提示消息
+                        /*自定义提交数据，默认值提交当前input value*/
+                        data: function(validator) {
+
+                            return {
+                                email: $('[name="whateverNameAttributeInYourForm"]').val()
+                            }
+                        }
+                    },
                     notEmpty: {/*非空提示*/
                         message: '邮箱不能为空'
                     },
@@ -2532,10 +2553,29 @@ function staff_manage_invigilator_add() {
                         message: '支持考试项目不能为空'
                     }
                 }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
+                    }
+                }
             }
         }
     });
-    $("#images_upload").change(function(){
+    $("#images_upload").change(function(e){
+
+        var files=document.getElementById("file0").files,
+            kb=Math.floor(files[0].size/1024);
+        //console.log(kb);
+        if(kb>2048){
+            layer.alert('文件大小不得超过2M!');
+            $("#file0").val('');
+            return false;
+        }
+
         $.ajaxFileUpload
         ({
             url:pars.url,
@@ -2553,7 +2593,8 @@ function staff_manage_invigilator_add() {
             },
             error: function (data, status, e)
             {
-                layer.msg('通讯失败！',{skin:'msg-error',icon:1});
+                var res = (JSON.parse(data.responseText));
+                layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
             }
         });
     }) ;
@@ -2667,6 +2708,10 @@ function staff_manage_invigilator_edit() {
                     regexp: {
                         regexp: /^\w+$/,
                         message: '教师编号应该由数字，英文或下划线组成'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '编号数字不超过20个'
                     }
                 }
             },
@@ -2731,6 +2776,18 @@ function staff_manage_invigilator_edit() {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.email,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '邮箱已经存在',//提示消息
+                        data: function(validator) {
+                            return {
+                                id: (location.href).split('=')[1],
+                                mobile: $('#mobile').val()
+                            }
+                        }
+                    },
                     notEmpty: {/*非空提示*/
                         message: '邮箱不能为空'
                     },
@@ -2748,10 +2805,29 @@ function staff_manage_invigilator_edit() {
                         message: '支持考试项目不能为空'
                     }
                 }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
+                    }
+                }
             }
         }
     });
     $("#images_upload").change(function(){
+
+        var files=document.getElementById("file0").files,
+            kb=Math.floor(files[0].size/1024);
+        //console.log(kb);
+        if(kb>2048){
+            layer.alert('文件大小不得超过2M!');
+            $("#file0").val('');
+            return false;
+        }
+
         $.ajaxFileUpload
         ({
 
@@ -2769,7 +2845,8 @@ function staff_manage_invigilator_edit() {
             },
             error: function (data, status, e)
             {
-                layer.msg("通讯失败");
+                var res = (JSON.parse(data.responseText));
+                layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
             }
         });
     }) ;
@@ -2908,6 +2985,10 @@ function staff_manage_invigilator_sp_add() {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
                     },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
+                    },
                     stringLength: {
                         max:20,
                         message: '名称字数不超过20个'
@@ -2938,6 +3019,10 @@ function staff_manage_invigilator_sp_add() {
                     regexp: {
                         regexp: /^\w+$/,
                         message: '教师编号应该由数字，英文或下划线组成'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '编号数字不超过20个'
                     }
                 }
             },
@@ -2995,6 +3080,17 @@ function staff_manage_invigilator_sp_add() {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.email,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '邮箱已经存在',//提示消息
+                        data: function(validator) {
+                            return {
+                                mobile: $('#mobile').val()
+                            }
+                        }
+                    },
                     notEmpty: {/*非空提示*/
                         message: '邮箱不能为空'
                     },
@@ -3013,10 +3109,29 @@ function staff_manage_invigilator_sp_add() {
                         message: '支持考试项目不能为空'
                     }
                 }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
+                    }
+                }
             }
         }
     });
     $("#images_upload").change(function(){
+
+        var files=document.getElementById("file0").files,
+            kb=Math.floor(files[0].size/1024);
+        //console.log(kb);
+        if(kb>2048){
+            layer.alert('文件大小不得超过2M!');
+            $("#file0").val('');
+            return false;
+        }
+
         $.ajaxFileUpload
         ({
 
@@ -3035,7 +3150,8 @@ function staff_manage_invigilator_sp_add() {
             },
             error: function (data, status, e)
             {
-                layer.msg("通讯失败");
+                var res = (JSON.parse(data.responseText));
+                layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
             }
         });
     }) ;
@@ -3116,6 +3232,10 @@ function staff_manage_invigilator_sp_edit() {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
                     },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
+                    },
                     stringLength: {
                         max:20,
                         message: '名称字数不超过20个'
@@ -3147,6 +3267,10 @@ function staff_manage_invigilator_sp_edit() {
                     regexp: {
                         regexp: /^\w+$/,
                         message: '教师编号应该由数字，英文或下划线组成'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '编号数字不超过20个'
                     }
                 }
             },
@@ -3212,6 +3336,18 @@ function staff_manage_invigilator_sp_edit() {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.email,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '邮箱已经存在',//提示消息
+                        data: function(validator) {
+                            return {
+                                id: (location.href).split('=')[1],
+                                mobile: $('#mobile').val()
+                            }
+                        }
+                    },
                     notEmpty: {/*非空提示*/
                         message: '邮箱不能为空'
                     },
@@ -3230,11 +3366,30 @@ function staff_manage_invigilator_sp_edit() {
                         message: '支持考试项目不能为空'
                     }
                 }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
+                    }
+                }
             }
         }
     });
 
     $("#images_upload").change(function(){
+
+        var files=document.getElementById("file0").files,
+            kb=Math.floor(files[0].size/1024);
+        //console.log(kb);
+        if(kb>2048){
+            layer.alert('文件大小不得超过2M!');
+            $("#file0").val('');
+            return false;
+        }
+
         $.ajaxFileUpload
         ({
 
@@ -3252,7 +3407,8 @@ function staff_manage_invigilator_sp_edit() {
             },
             error: function (data, status, e)
             {
-                layer.msg("通讯失败");
+                var res = (JSON.parse(data.responseText));
+                layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
             }
         });
     }) ;
@@ -3395,6 +3551,10 @@ function staff_manage_invigilator_patrol_add() {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
                     },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
+                    },
                     stringLength: {
                         max:20,
                         message: '名称字数不超过20个'
@@ -3424,6 +3584,10 @@ function staff_manage_invigilator_patrol_add() {
                     regexp: {
                         regexp: /^\w+$/,
                         message: '教师编号应该由数字，英文或下划线组成'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '编号数字不超过20个'
                     }
                 }
             },
@@ -3488,6 +3652,17 @@ function staff_manage_invigilator_patrol_add() {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.email,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '邮箱已经存在',//提示消息
+                        data: function(validator) {
+                            return {
+                                mobile: $('#mobile').val()
+                            }
+                        }
+                    },
                     notEmpty: {/*非空提示*/
                         message: '邮箱不能为空'
                     },
@@ -3496,10 +3671,29 @@ function staff_manage_invigilator_patrol_add() {
                         message: '请输入正确的邮箱'
                     }
                 }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
+                    }
+                }
             }
         }
     });
     $("#images_upload").change(function(){
+
+        var files=document.getElementById("file0").files,
+            kb=Math.floor(files[0].size/1024);
+        //console.log(kb);
+        if(kb>2048){
+            layer.alert('文件大小不得超过2M!');
+            $("#file0").val('');
+            return false;
+        }
+
         $.ajaxFileUpload
             ({
                 url:pars.url,
@@ -3517,7 +3711,8 @@ function staff_manage_invigilator_patrol_add() {
                 },
                 error: function (data, status, e)
                 {
-                    layer.msg("通讯失败");
+                    var res = (JSON.parse(data.responseText));
+                    layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                 }
             });
     }) ;
@@ -3571,6 +3766,10 @@ function staff_manage_invigilator_patrol_edit() {
                     notEmpty: {/*非空提示*/
                         message: '名称不能为空'
                     },
+                    regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                        regexp:  /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                        message: '只能输入中文和字母'
+                    },
                     stringLength: {
                         max:20,
                         message: '名称字数不超过20个'
@@ -3601,6 +3800,10 @@ function staff_manage_invigilator_patrol_edit() {
                     regexp: {
                         regexp: /^\w+$/,
                         message: '教师编号应该由数字，英文或下划线组成'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '编号数字不超过20个'
                     }
                 }
             },
@@ -3667,6 +3870,18 @@ function staff_manage_invigilator_patrol_edit() {
                 /*键名username和input name值对应*/
                 message: 'The username is not valid',
                 validators: {
+                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                        url: pars.email,//验证地址
+                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                        type: 'POST',//请求方式
+                        message: '邮箱已经存在',//提示消息
+                        data: function(validator) {
+                            return {
+                                id: (location.href).split('=')[1],
+                                mobile: $('#mobile').val()
+                            }
+                        }
+                    },
                     notEmpty: {/*非空提示*/
                         message: '邮箱不能为空'
                     },
@@ -3675,10 +3890,29 @@ function staff_manage_invigilator_patrol_edit() {
                         message: '请输入正确的邮箱'
                     }
                 }
+            },
+            description:{
+                message: 'The username is not valid',
+                validators:{
+                    stringLength: {
+                        max: 100,
+                        message: '最多只能输入100个字符！'
+                    }
+                }
             }
         }
     });
     $("#images_upload").change(function(){
+
+        var files=document.getElementById("file0").files,
+            kb=Math.floor(files[0].size/1024);
+        //console.log(kb);
+        if(kb>2048){
+            layer.alert('文件大小不得超过2M!');
+            $("#file0").val('');
+            return false;
+        }
+        
         $.ajaxFileUpload
             ({
                 url:pars.url,
@@ -3696,7 +3930,8 @@ function staff_manage_invigilator_patrol_edit() {
                 },
                 error: function (data, status, e)
                 {
-                    layer.msg(data.message,{skin:'msg-error',icon:1});
+                    var res = (JSON.parse(data.responseText));
+                    layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                 }
             });
     }) ;
@@ -3763,13 +3998,33 @@ function res_manage_add() {
                     },
                     stringLength: {/*长度提示*/
                         min: 1,
-                        max: 20,
-                        message: '用物名称长度不超过20个'
+                        max: 32,
+                        message: '用物名称长度不超过32个'
                     }/*最后一个没有逗号*/
                 }
             }
         }
     });
+    /**
+     * 保存数据
+     * @author chenxia
+     * @version 3.3
+     * @date    2016-04-13
+     */
+     /*$('#save').click(function() {
+         $.ajax({
+             type:'post',
+             url: "",
+             dataType:"json",
+             success: function(res) {
+                 if(res.code != 1) {
+                    layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
+                 } else {
+                    layer.msg('数据保存成功！',{skin:'msg-success',icon:1});
+                 }
+             }
+         })
+     });*/
 }
 /**
  * 用物管理
@@ -3808,8 +4063,8 @@ function res_manage_edit() {
                     },
                     stringLength: {/*长度提示*/
                         min: 1,
-                        max: 30,
-                        message: '用物名称长度不超过20个'
+                        max: 32,
+                        message: '用物名称长度不超过32个'
                     }/*最后一个没有逗号*/
                 }
             }

@@ -17,6 +17,8 @@ abstract class AbstractCate
 {
     use SQLTraits, SundryTraits;
 
+    protected $exam;
+
     protected $_S;
 
     protected $_S_W;
@@ -28,25 +30,10 @@ abstract class AbstractCate
         $this->_S = $params['total'];
         $this->_S_W = $params['wait'];
         $this->serialnumber = $params['serialnumber'];
+        $this->exam = $params['exam'];
     }
 
-    protected function randomTestStudent($entity, $screen)
-    {
-        $testingStudents = $this->randomBeginStudent($screen);
 
-        $waitingStudents = $this->waitingStudentSql($screen);
-
-        $arrays = [];
-        foreach ($waitingStudents as $waitingStudent) {
-            $arrays = $waitingStudent->student;
-        }
-
-        if (count($testingStudents) == 0) {
-            $arrays = $this->beginStudents($entity);
-        }
-
-        return $this->testingStudents($arrays);
-    }
 
     protected function beginStudents($entity) {
         /*
@@ -68,16 +55,14 @@ abstract class AbstractCate
         return $students;
     }
 
-    protected function testingStudents($testStudents) {
+    protected function testingStudents($exam, $testStudents) {
         $tempTestStudent = [];
-
         foreach ($testStudents as $key => $student) {
             if (is_null($student)) {
                 continue;
             }
-
             //获取该考生已经考过的流程
-            $studentSerialnumber = $this->getStudentSerialnumber($student);
+            $studentSerialnumber = $this->getStudentSerialnumber($exam, $student);
 
             if (is_array($testStudents)) {
                 $tempStudent = array_pull($testStudents, $key);
@@ -98,15 +83,14 @@ abstract class AbstractCate
 
     protected function studentNum($entity, $testStudents, $result)
     {
+
         foreach ($testStudents as $testStudent) {
             if (is_object($testStudent)) {
-                $serialnumber = $this->getStudentSerialnumber($testStudent);
+                $serialnumber = $this->getStudentSerialnumber($this->exam, $testStudent);
 
                 if (in_array($entity->serialnumber, $serialnumber->toArray())) {
                     continue;
                 }
-
-
             }
 
             $result[] = $testStudent;
@@ -116,62 +100,29 @@ abstract class AbstractCate
                 break;
             }
         }
-        return [$result, $testStudents[1]];
+        return $result;
     }
 
     /**
-     * 寻找循序模式需要的考生
-     * @param $entity
-     * @param $screen
-     * @return array
-     * @throws \Exception
+     * 返回总的学生集合
+     * @return object
      * @author Jiangzhiheng
-     * @time 2016-04-11 11:30
+     * @time 2016-04-12 15:15
      */
-    protected function orderTestStudent($entity, $screen)
+    public function getTotalStudent()
     {
-        /**
-         * 需要查当前的实例是不是第一个
-         * 如果等于1，就说明是第一个，直接从侯考区取人
-         * 如果不是，就说明前面有流程了
-         */
-        if ($entity->serialnumber != 1) {
-            $tempArrays = $this->orderBeginStudent($screen, $entity->serialnumber);
-            if (count($tempArrays) != 0) {
-                return Student::whereIn('id', $tempArrays)->get();
-            } else {
-                return collect([]);
-            }
-        } else {
-            return collect([]);
-        }
+        return $this->_S;
     }
 
     /**
-     * 返回轮询所需要的学生
-     * @param $entity
-     * @param $screen
-     * @return array
-     * @throws \Exception
+     * 返回侯考区的学生集合
+     * @return object
      * @author Jiangzhiheng
-     * @time 2016-04-11 15:33
+     * @time 2016-04-12 15:15
      */
-    protected function pollTestStudents($entity, $screen)
+    public function getWaitStudent()
     {
-        $tempArrays = $this->pollBeginStudent($entity, $screen);
-
-        $num = $this->waitingStudentSql($screen);
-
-        $arrays = [];
-        foreach ($num as $item) {
-            $arrays[] = $item->student;
-        }
-
-        if (count($tempArrays) == 0) {
-            $arrays = $this->beginStudents($screen);
-        }
-
-        return $this->testingStudents($arrays);
+        return $this->_S_W;
     }
     
 }

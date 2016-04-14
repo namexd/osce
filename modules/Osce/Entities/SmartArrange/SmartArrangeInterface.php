@@ -9,11 +9,9 @@
 namespace Modules\Osce\Entities\SmartArrange;
 
 
-use Modules\Osce\Entities\Exam;
-
 interface SmartArrangeInterface
 {
-    function plan();
+    function plan($exam);
     
-    function output();
+    function output($exam);
 }

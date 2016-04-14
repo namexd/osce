@@ -27,6 +27,25 @@ use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
 
 class ExamArrangeController extends CommonController
 {
+    /**
+     * 配置考场安排里，考场、考站选项
+     */
+    private function getSelect(){
+        $config =   [
+            0   =>  '必考',
+            1   =>  '必考',
+            2   =>  '二选一',
+            3   =>  '三选一',
+            4   =>  '四选一',
+            5   =>  '五选一',
+            6   =>  '六选一',
+            7   =>  '七选一',
+            8   =>  '八选一',
+            9   =>  '九选一',
+            10  =>  '十选一'
+        ];
+        return  $config;
+    }
 
     /**
      * 新增考试安排的站
@@ -92,6 +111,7 @@ class ExamArrangeController extends CommonController
 
             }
 
+            
             $result = ExamDraftFlowTemp::create($data);
 
                 if ($result&&$type != 2) {
@@ -110,13 +130,12 @@ class ExamArrangeController extends CommonController
                     if (!$DraftResult) {
                         throw new \Exception('保存临时考站失败');
                     }
-
-                } else {
-                    throw new \Exception('保存临时考站失败');
-
+                    return response()->json(
+                        $this->success_data(['id' => $result->id, 'draft_id' => $DraftResult->id], 1, 'success')
+                    );
                 }
             return response()->json(
-                $this->success_data(['id' => $result->id, 'draft_id' => $DraftResult->id], 1, 'success')
+                $this->success_data(['id' => $result->id], 1, 'success')
             );
         } catch (\Exception $ex) {
             return response()->json(
@@ -127,6 +146,72 @@ class ExamArrangeController extends CommonController
 
     }
 
+
+
+
+    public function  getExamSelect(Request $request){
+        $this->validate($request, [
+            'exam_id' => 'required',
+            'optional' => 'required',
+            'flow_id' => 'required',
+            'type' => 'sometimes',
+        ]);
+        $ExamFlowId = $request->get('flow_id');
+        $examId = $request->get('exam_id');
+        $optional = $request->get('optional');
+        $type = $request->get('type');
+
+        try{
+            //判断操作人是否一致
+
+            //获取当前操作信息
+            $user = Auth::user();
+            if (empty($user)) {
+                throw new \Exception('未找到当前操作人信息');
+            }
+
+            $data=[
+                'exam_id' => $examId,
+                'exam_draft_flow_id' => $ExamFlowId,
+                'number'=>1,
+                'ctrl_type' => $type,
+                'optional' => $optional,
+//                'add_time' => date('Y-m-d H:i:s',time()+1),
+                'user_id' => $user->id,
+            ];
+
+            if($type == 2){
+                //是回显的修改 ，就添加一条数据
+                if(!$result = ExamDraftFlowTemp::create($data)){
+                    throw new \Exception('修改考试数据失败');
+                }
+            }else{
+                //修改临时考站数据
+                $examDraftFlow = ExamDraftFlowTemp::find($ExamFlowId);
+
+                $examDraftFlow->optional = $optional;
+
+                if(!$result = $examDraftFlow->save()){
+                    throw new \Exception('考试数据保存失败');
+                }
+            }
+
+            return response()->json(
+                $this->success_data([], 1, 'success')
+            );
+
+        }catch (\Exception $ex){
+
+            return response()->json(
+                $this->fail($ex)
+            );
+
+
+        }
+
+
+
+    }
 
     /**
      * 新增考站里面的子对象到临时表
@@ -308,7 +393,13 @@ class ExamArrangeController extends CommonController
     }
 
 
-    //删除子站
+    /**
+     * 删除子站接口
+     * @url GET /osce/admin/exam-arrange/del-exam-draft
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
     public function getDelExamDraft(Request $request)
     {
         $this->validate($request, [
@@ -377,7 +468,15 @@ class ExamArrangeController extends CommonController
     }
 
 
-    //获取考场接口
+
+
+    /**
+     * 获取考场接口
+     * @url GET /osce/admin/exam-arrange/room-list
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
     public function getRoomList(Request $request)
     {
         $this->validate($request, [
@@ -401,8 +500,14 @@ class ExamArrangeController extends CommonController
 
     }
 
+    /**
+     *获取考站接口
+     * @url GET /osce/admin/exam-arrange/station-list
+     * @param Request $request
+     * @author zhouqiang 2016-04-06
+     * @return string
+     */
 
-    //获取考站接口
     public function getStationList(Request $request)
     {
         $this->validate($request, [
@@ -443,6 +548,7 @@ class ExamArrangeController extends CommonController
             ]);
             $exam_id = intval($request->get('exam_id'));
             $data = ExamGradation::where('exam_id', '=', $exam_id)->get();
+
             return response()->json(
                 $this->success_data($data, 1, 'success')
             );
@@ -507,13 +613,10 @@ class ExamArrangeController extends CommonController
             return redirect()->back()->withErrors('没有找到对应的考试！');
         }
         //判断考官安排是考场还是考站安排
-//        if(){
-//
-//        }
-        $ExamDraft     = new ExamDraft();
-        $datas = $ExamDraft->getDraftFlowData($exam_id);
+//        $ExamDraft     = new ExamDraft();
+//        $datas = $ExamDraft->getDraftFlowData($exam_id);
 
-        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data' => $datas]);
+        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id]);
     }
 
     
@@ -532,14 +635,10 @@ class ExamArrangeController extends CommonController
              return redirect()->back()->withErrors('没有找到对应的考试！');
          }
          //判断考官安排是考场还是考站安排
-//        if(){
-//
-//        }
          $ExamDraft     = new ExamDraft();
          $datas = $ExamDraft->getDraftFlowData($exam_id);
 
 
-         
          foreach ($datas as &$teacherData){
 
 
@@ -553,15 +652,12 @@ class ExamArrangeController extends CommonController
                  if($value ->teacher_type ==2){
 
                      $teacherData ->sp_teacher = [$value];
-                     $teacherData ->teacher = [];
                      
                  }else{
                      $teacherData ->teacher = [$value];
-                     $teacherData ->sp_teacher = [];
                  }
              }
          }
-
 
          return response()->json(
              $this->success_data($datas, 1, 'success')
@@ -599,6 +695,7 @@ class ExamArrangeController extends CommonController
             //获得exam_id
             $exam_id = $request->input('exam_id');
             $teacherData = $request->input('data');
+
           
   
             //保存老师的数据
@@ -618,7 +715,7 @@ class ExamArrangeController extends CommonController
 //            return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
 
         } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
+            return response()->json($this->fail($ex));
         }
     }
 

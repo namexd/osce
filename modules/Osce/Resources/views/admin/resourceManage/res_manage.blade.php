@@ -54,7 +54,7 @@
                     <tbody>
                     @forelse($list as $key => $item)
                         <tr>
-                            <td>{{$item->name}}</td>
+                            <td><span title="{{$item->name}}">{{str_limit($item->name,40)}}</span></td>
                             <td value="{{$item->id}}">
                                 <a href="{{route('osce.admin.supply.getEditSupply',['id'=>$item->id])}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                                 <a href="javascript:void(0)"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>

@@ -29,7 +29,7 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_add','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}','get_subject':'{{route('osce.admin.invigilator.getSubjects')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'staff_manage_invigilator_add','code':'{{route('osce.admin.invigilator.postCodeUnique')}}','mobile':'{{route('osce.admin.invigilator.postSelectTeacher')}}','idcard':'{{route('osce.admin.invigilator.postIdcardUnique')}}','url':'{{ url('commom/upload-image') }}','email':'{{ route('osce.admin.invigilator.postEmailUnique')}}','get_subject':'{{route('osce.admin.invigilator.getSubjects')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -71,7 +71,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">教师编号</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="code" id="code">
+                                <input type="text" class="form-control" name="code" id="code" maxlength="20">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -113,7 +113,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="description" id="note">
+                                <input type="text" class="form-control" name="description" id="note" maxlength="100">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

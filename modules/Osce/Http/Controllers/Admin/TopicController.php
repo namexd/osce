@@ -24,7 +24,6 @@ use Modules\Osce\Entities\Supply;
 use Modules\Osce\Entities\TeacherSubject;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common as OsceCommon;
-
 class TopicController extends CommonController
 {
     /**
@@ -164,10 +163,15 @@ class TopicController extends CommonController
             }
 
             $subjectModel = new Subject();
-            if ($subjectModel->addSubject($data, $formData, $cases, $goods, $user->id)) {
-
-                return redirect()->route('osce.admin.topic.getList');
-
+            if ( $result=$subjectModel->addSubject($data, $formData, $cases, $goods, $user->id)) {
+                //todo 调用弹窗时新增的跳转 周强 2016-4-13
+                $Redirect = OsceCommon::handleRedirect($request,$result);
+                if($Redirect == false){
+                    return redirect()->route('osce.admin.topic.getList');
+                }else{
+                    return $Redirect;
+                }
+                
             } else {
 
                 throw new \Exception('新增失败！');
@@ -258,7 +262,6 @@ class TopicController extends CommonController
             if($totalData != $data['score']){
                 throw new \Exception('考核项分数之和与总分不相等！');
             }
-            dd($formData);
 
             if ($subjectModel->editTopic($id, $data, $formData, $cases, $goods)) {
 
@@ -280,10 +283,7 @@ class TopicController extends CommonController
      *
      *
      * <b>get 请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
-     * * string        参数英文名        参数中文名(必须的)
+     * * string        id        参数中文名(必须的)
      *
      * @return view
      *
@@ -300,17 +300,18 @@ class TopicController extends CommonController
         ]);
 
         $id = $request->get('id');
-        $subject = Subject::where('id','=',$id)->with('cases')->with('supplys')->with(['standards'=>function($q){
-                $q->with('standardItem');
-            }])->first();
+        $subject = Subject::where('id','=',$id)->with('cases')->with('supplys')
+                    ->with(['standards'=>function($q){
+                        $q->with('standardItem');
+                    }])->first();
         OsceCommon::valueIsNull($subject, -1000, '没有找到对应的科目');
 
-        $standards = $subject->standards->first()->standardItem;
-        if (is_null($standards)){
+        $standards = $subject->standards->first();
+        if (is_null($standards) || is_null($standards->standardItem)){
             $items = [];
         }else{
-
-            $items = StandardItem::builderItemTable($standards);
+            //处理 评分标准 数据
+            $items = StandardItem::builderItemTable($standards->standardItem);
         }
         $prointNum = 1;
         $optionNum = [0 => 0];
@@ -339,9 +340,8 @@ class TopicController extends CommonController
 
     /**
      *
-     * @url /osce/admin/topic/getDelTopic
+     * @url GET /osce/admin/topic/del-topic
      * @access public
-     *
      *
      * <b>get 请求字段：</b>
      * * string        id        考核标准ID(必须的)
@@ -363,13 +363,14 @@ class TopicController extends CommonController
         $SubjectModel = new Subject();
         $subject = $SubjectModel->find($id);
         try {
+            //删除考试项目
             $SubjectModel->delSubject($subject);
-            return \Response::json(array('code' => 1));
-        } catch (\Exception $ex) {
             return response()->json(
-                $this->fail($ex)
+                $this->success_data([],1,'删除成功！')
             );
-            //return redirect()->back()->withErrors($ex->getMessage());
+
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
         }
     }
 

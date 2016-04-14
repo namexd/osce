@@ -23,14 +23,14 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">用物名称</label>
                             <div class="col-sm-10">
-                                <input type="text" required class="form-control" id="name" name="name" value="">
+                                <input type="text" required class="form-control" id="name" name="name" value="" maxlength="32">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="submit">保存</button>
+                                <button class="btn btn-primary" type="submit" id="save">保存</button>
                                 <a class="btn btn-white" href="{{route("osce.admin.supply.getList")}}">取消</a>
                                 {{--<a href="{{route('osce.admin.case.getCaseList')}}" class="btn btn-white">取消</a>--}}
                             </div>

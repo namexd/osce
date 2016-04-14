@@ -73,17 +73,20 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('invigilator/idcard-unique',['uses'=>'InvigilatorController@postIdcardUnique','as'=>'osce.admin.invigilator.postIdcardUnique']);		//判断身份证号是否存在
 		Route::post('invigilator/import-teachers',['uses'=>'InvigilatorController@postImportTeachers','as'=>'osce.admin.invigilator.postImportTeachers']);	//导入老师
 		Route::get('invigilator/download-teacher-improt-tpl',['uses'=>'InvigilatorController@getdownloadTeacherImprotTpl','as'=>'osce.admin.invigilator.getdownloadTeacherImprotTpl']);	//下载老师模板
+		Route::post('invigilator/email-unique',['uses'=>'InvigilatorController@postEmailUnique','as'=>'osce.admin.invigilator.postEmailUnique']);	//下载老师模板
 
 		Route::get('invigilator/subjects', ['uses'=>'InvigilatorController@getSubjects', 'as'=>'osce.admin.invigilator.getSubjects']);		//异步获取 所有考试项目
 
 
 		//设置
 		Route::get('config/index',  ['uses'=>'ConfigController@getIndex','as'=>'osce.admin.config.getIndex']);
+		Route::get('config/sysparam',  ['uses'=>'ConfigController@getSysparam','as'=>'osce.admin.config.getSysparam']);
 		Route::post('config/store',  ['uses'=>'ConfigController@postStore','as'=>'osce.admin.config.postStore']);
 		Route::get('config/area',  ['uses'=>'ConfigController@getArea','as'=>'osce.admin.config.getArea']);
 		Route::get('config/area-store',  ['uses'=>'ConfigController@getAreaStore','as'=>'osce.admin.config.getAreaStore']);
 		Route::post('config/area-store', ['uses'=>'ConfigController@postAreaStore','as'=>'osce.admin.config.postAreaStore']);
 		Route::post('config/del-area',	 ['uses'=>'ConfigController@postDelArea','as'=>'osce.admin.config.postDelArea']);
+		Route::post('config/sysparam', ['uses'=>'ConfigController@postSysparam','as'=>'osce.admin.config.postSysparam']);
 		Route::post('config/name-unique', 	['uses'=>'ConfigController@postNameUnique','as'=>'osce.admin.config.postNameUnique']);	//判断名称是否存在
 		Route::get('config/weChat-help', 	['uses'=>'ConfigController@getWeChatHelp','as'=>'osce.admin.config.getWeChatHelp']);	//微信设置帮助
 
@@ -294,6 +297,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam-arrange/exam-arrange-data',['uses'=>'ExamArrangeController@getExamArrangeData','as'=>'osce.admin.ExamArrange.getExamArrangeData']);
 		Route::post('exam-arrange/add-exam-flow',['uses'=>'ExamArrangeController@postAddExamFlow','as'=>'osce.admin.ExamArrange.postAddExamFlow']);
 		Route::post('exam-arrange/add-exam-draft',['uses'=>'ExamArrangeController@postAddExamDraft','as'=>'osce.admin.ExamArrange.postAddExamDraft']);
+		Route::get('exam-arrange/exam-select',['uses'=>'ExamArrangeController@getExamSelect','as'=>'osce.admin.ExamArrange.getExamSelect']);
 	});
 
 	 //Pad端
@@ -348,7 +352,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invitation/invitation-respond',['uses'=>'InvitationController@getInvitationRespond','as'=>'osce.wechat.invitation.getInvitationRespond']);
 		Route::get('invitation/msg',['uses'=>'InvitationController@getMsg','as'=>'osce.wechat.invitation.getMsg']);
 		Route::get('invitation/list',['uses'=>'InvitationController@getList','as'=>'osce.wechat.invitation.getList']);
-
+		Route::get('invitation/del-teacher-invite',['uses'=>'InvitationController@getDelTeacherInvite','as'=>'osce.wechat.invitation.getDelTeacherInvite']);
+		Route::get('invitation/invite-all-teacher',['uses'=>'InvitationController@getInviteAllTeacher','as'=>'osce.wechat.invitation.getInviteAllTeacher']);
 		//讨论区
 		Route::get('discussion/question-list',['uses'=>'DiscussionController@getQuestionList','as'=>'osce.wechat.getQuestionList']);
 		Route::get('discussion/check-question',['uses'=>'DiscussionController@getCheckQuestion','as'=>'osce.wechat.getCheckQuestion']);
@@ -506,7 +511,9 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	$redis = Redis::connection('message');
 //    $redis->publish(1, 'test');
 //
-	dd(\Modules\Osce\Entities\Exam::join('exam_screening', 'exam.id', '=', 'exam_screening.exam_id')->lists('exam_screening.exam_id')->toArray());
+//	dd(\Modules\Osce\Entities\Exam::join('exam_screening', 'exam.id', '=', 'exam_screening.exam_id')->lists('exam_screening.exam_id')->toArray());
+	$data = config('osce.sys_param');
+	dd($data);
 //	return '失败';
 });
 //TODO:清空考试数据使用 	Zhoufuxiang

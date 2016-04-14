@@ -88,6 +88,7 @@
                                 <label class="col-sm-2 control-label">所属考场</label>
                                 <div class="col-sm-10">
                                     <select id=""  class="form-control" name="room_id">
+                                        <option value="">请选择</option>
                                         @foreach($room as $item)
                                             <option value="{{$item->id}}">{{$item->name}}</option>
                                         @endforeach

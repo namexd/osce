@@ -15,11 +15,11 @@ use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
 class Poll extends AbstractCate implements CateInterface
 {
     use SQLTraits, SundryTraits;
+
     function needStudents($entity, $screen, $exam)
     {
         // TODO: Implement needStudents() method.
         $testStudnts = $this->pollTestStudents($entity, $screen);
-
         //申明数组
         $result = [];
 
@@ -32,7 +32,7 @@ class Poll extends AbstractCate implements CateInterface
 
         if (count($result) < $entity->needNum) {
             $hasStudent = $entity->needNum - count($result);
-            for ($i = 0; $i <= $hasStudent; $i) {
+            for ($i = 0; $i <= $hasStudent; $i++) {
                 if (count($this->_S_W) > 0) {
                     $thisStudent = array_shift($this->_S_W);
                     if (!is_null($thisStudent)) {
@@ -49,6 +49,33 @@ class Poll extends AbstractCate implements CateInterface
             }
             return $result;
         }
+
         return $result;
+    }
+
+    /**
+     * 返回轮询所需要的学生
+     * @param $entity
+     * @param $screen
+     * @return array
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-11 15:33
+     */
+    protected function pollTestStudents($entity, $screen)
+    {
+        $tempArrays = $this->pollBeginStudent($entity, $screen);
+
+        $num = $this->waitingStudentSql($screen);
+
+        $arrays = [];
+        foreach ($num as $item) {
+            $arrays[] = $item->student;
+        }
+
+        if (count($tempArrays) == 0) {
+            $arrays = $this->beginStudents($entity);
+        }
+        return $this->testingStudents($this->exam, $arrays);
     }
 }

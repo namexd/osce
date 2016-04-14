@@ -2,54 +2,72 @@
 $errorsInfo =(array)$errors->getMessages();
 if(!empty($errorsInfo))
 {
-    $errorsInfo = array_shift($errorsInfo);
+    if(array_key_exists('code',$errorsInfo))
+    {
+        $code       =   array_shift($errorsInfo['code']);
+        $errorsInfo =   $errorsInfo['msg'];
+    }
+    else
+    {
+        $code   =   0;
+        $errorsInfo = array_shift($errorsInfo);
+    }
+}else{
+
+    $code   =   -123;
+
 }
+
+
 ?>
-@forelse($errorsInfo as $errorItem)
-<div class="pnotice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;display: none;">
-    <div class="" style="background-color: #f2dede;">
-        <div style="float: left;" style="color: #a94442;">{{$errorItem}}</div>
-        <div style="float:right;margin-right: 2px;cursor: pointer;" class="closeNotice">&nbsp;X&nbsp;</div>
-        <div style="clear: both;"></div>
-    </div>
-</div>
-@empty
-@endforelse
+{{--@if (session('success')===false||$code==0)--}}
+{{--@forelse($errorsInfo as $errorItem)--}}
+{{--<div class="pnotice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;display: none;">--}}
+{{--<div class="" style="background-color: #f2dede;">--}}
+{{--<div style="float: left;" style="color: #a94442;">{{$errorItem}}</div>--}}
+{{--<div style="float:right;margin-right: 2px;cursor: pointer;" class="closeNotice">&nbsp;X&nbsp;</div>--}}
+{{--<div style="clear: both;"></div>--}}
+{{--</div>--}}
+{{--</div>--}}
+{{--@empty--}}
+{{--@endforelse--}}
+{{--@endif--}}
 
 {{-- 添加成功提示 --}}
-@if (session('success'))
-    <div class="pnotice success-notice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;display: none;">
-        <div class="" style="background-color: #f2dede;">
-            <div style="float: left;" style="color: #a94442;">{{ session('success') }}</div>
-            <div style="float:right;margin-right: 2px;cursor: pointer;" class="closeNotice close-success-notice">&nbsp;X&nbsp;</div>
-            <div style="clear: both;"></div>
-        </div>
-    </div>
-@endif
+{{--@if (session('success')||$code==1)--}}
+{{--@forelse($errorsInfo as $errorItem)--}}
+{{--<div class="success-notice" style="border: #ad0051 2px solid;border:#ebccd1 1px solid;display: none;">--}}
+{{--<div class="" style="background-color: #f2dede;">--}}
+{{--<div style="float: left;" style="color: #a94442;">{{$errorItem}}</div>--}}
+{{--<div style="float:right;margin-right: 2px;cursor: pointer;" class="closeNotice close-success-notice">&nbsp;X&nbsp;</div>--}}
+{{--<div style="clear: both;"></div>--}}
+{{--</div>--}}
+{{--</div>--}}
+{{--@empty--}}
+{{--@endforelse--}}
+{{--@endif--}}
+
+
+
+<div class="msg" code="{{$code}}" style="display: none">
+    @forelse($errorsInfo as $errorItem)
+        <div class="msg-info">{{$errorItem}}</div>
+    @empty
+    @endforelse
+</div>
 
 <script>
     $(function(){
-        $('.closeNotice').click(function(){
-            $(this).parents('.pnotice').remove();
-        });
 
-        //错误提示
-        var msg = $('.pnotice').find('div').find('div').eq(0).text();
-        if(msg==''){
-            return;
-        }else{
-           layer.msg($('.pnotice').find('div').find('div').eq(0).text(),{skin:'msg-error',icon:1});
+        var msg = $('.msg-info').text();
+
+        if($('.msg').attr('code')==1){
+            layer.msg(msg,{skin:'msg-success',icon:1});
         }
-
-        // 成功提示
-        $('.close-success-notice').click(function(){
-            $(this).parents('.success-notice').remove();
-        });
-        var msg = $('.success-notice').find('div').find('div').eq(0).text();
-        if(msg==''){
+        else if($('.msg').attr('code')==0) {
+            layer.msg(msg,{skin:'msg-error',icon:1});
+        } else {
             return;
-        }else{
-            layer.msg($('.success-notice').find('div').find('div').eq(0).text(),{skin:'msg-success',icon:1});
         }
     })
 </script>

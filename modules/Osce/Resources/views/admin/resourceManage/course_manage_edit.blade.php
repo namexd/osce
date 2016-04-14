@@ -73,6 +73,10 @@
                         },
                         notEmpty: {/*非空提示*/
                             message: '名称不能为空'
+                        },
+                        stringLength: {
+                            max:32,
+                            message: '名称字数不超过32个'
                         }
                     }
                 },
@@ -118,12 +122,12 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'course_module','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinicalList':'{{route('osce.admin.topic.getSubjectCases')}}','goodList':'{{route('osce.admin.topic.getSubjectSupply')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'course_module','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinicalList':'{{route('osce.admin.topic.getSubjectCases')}}','goodList':'{{route('osce.admin.topic.getSubjectSupply')}}','clinical_add':'{{route('osce.admin.case.getCreateCase')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
         <div class="ibox-title">
-            <h5>编辑科目</h5>
+            <h5>编辑考试项目</h5>
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -135,7 +139,7 @@
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
                                 <input type="hidden" class="form-control" id="id" name="id" value="{{$item->id}}">
-                                <input type="text" required class="form-control" id="title" name="title" value="{{$item->title}}">
+                                <input type="text" required class="form-control" id="title" name="title" value="{{$item->title}}" maxlength="32">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -234,7 +238,7 @@
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" type="text" value="{{$subjectSupply->num}}" name="goods[{{$key+1}}][number]">
+                                                        <input class="form-control" type="text" value="{{round($subjectSupply->num)}}" name="goods[{{$key+1}}][number]">
                                                     </td>
                                                     <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
                                                 </tr>
@@ -292,7 +296,7 @@
                                                     </td>
                                                     <td>
                                                         <select {!! $data->pid==0? 'style="display:none;"':''!!} class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
-                                                            @for($i=1;$i<=config('osce.topticOptionMaxNumer',15);$i++)
+                                                            @for($i=1; $i<=$data->score; $i++)
                                                             <option value="{{$i}}" {{$data->score==$i? 'selected="selected"':''}}>{{$i}}</option>
                                                             @endfor
                                                         </select>

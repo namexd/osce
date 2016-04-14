@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Room as Room;
 use DB;
 use Auth;
+use Modules\Osce\Repositories\Common;
 
 class RoomController extends CommonController
 {
@@ -225,7 +226,7 @@ class RoomController extends CommonController
     {
         //验证
         $this->validate($request, [
-                'vcr_id'        => 'required',
+//                'vcr_id'        => 'required',
                 'name'          => 'required|unique:osce_mis.room,name',
                 'address'       => 'required',
                 'code'          => 'sometimes',
@@ -236,7 +237,7 @@ class RoomController extends CommonController
                 'proportion' => 'required|integer'
             ],[
                 'name.unique'   =>  '名称必须唯一',
-                'vcr_id.required'=> '摄像头不能为空'
+//                'vcr_id.required'=> '摄像头不能为空'
             ]
         );
         try {
@@ -252,13 +253,19 @@ class RoomController extends CommonController
             $formData['cate']            = $cate;
 
             if ($cate === '0') {
-                $room->createRoom($formData,$vcrId,$userId);
+                $result=$room->createRoom($formData,$vcrId,$userId);
             } else {
                 $area = new Area();
-                $area->createRoom($formData,$vcrId,$userId);
+                $result =$area->createRoom($formData,$vcrId,$userId);
+            }
+            //todo 调用弹窗时新增的跳转 周强 2016-4-13
+            $Redirect = Common::handleRedirect($request,$result);
+            if($Redirect == false){
+                return redirect()->route('osce.admin.room.getRoomList',['type'=>$cate]);
+            }else{
+               return $Redirect;
             }
 
-            return redirect()->route('osce.admin.room.getRoomList',['type'=>$cate]);
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage())->withInput();
         }

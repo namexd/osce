@@ -26,23 +26,27 @@ class StationMode extends AbstractEntity implements EntityInterface
     {
         // TODO: Implement entity() method.
         //获得该考试下的所有考站
-        $entities = $this->getStation($screen);
+        $entities = $this->getStation($exam, $screen);
         //为考站设定考试时间
         $entities = $this->entityMins($entities, $exam->same_time);
+        //为考站设定needNum
+        foreach ($entities as &$entity) {
+            $entity->needNum = 1;
+        }
 
         return $entities;
     }
-    
+
     function dataBuilder($exam, $screen, $student, $entity, $i)
     {
         $data = [
             'student_id' => is_null($student->id) ? $student->student_id : $student->id,
             'room_id' => $entity->room_id,
-            'station_id' => $entity->id,
+            'station_id' => $entity->station_id,
             'exam_id' => $exam->id,
             'exam_screening_id' => $screen->id,
             'begin_dt' => date('Y-m-d H:i:s', $i),
-            'serialnumber' => $entity->order,
+            'serialnumber' => $entity->gradation_order,
             'flow_id' => $entity->flow_id,
             'gradation_order' => $screen->gradation_order
         ];

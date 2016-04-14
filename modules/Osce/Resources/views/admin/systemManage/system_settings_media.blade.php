@@ -51,7 +51,7 @@
                 <div class="panel-options">
                     <ul class="nav nav-tabs" style="margin-left: 0">
 						<li class="active"><a href="{{route('osce.admin.config.getIndex')}}">媒体设置</a></li>
-                        {{--<li class=""><a href="{{route('osce.admin.config.getArea')}}">场所类型</a></li>--}}
+                        <li class=""><a href="{{route('osce.admin.config.getSysparam')}}">场所类型</a></li>
                     </ul>
                 </div>
                 <div class="ibox float-e-margins">
