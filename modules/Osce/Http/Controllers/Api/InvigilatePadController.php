@@ -30,6 +30,7 @@ use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestAttach;
+use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Entities\Watch;
@@ -1174,20 +1175,17 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description){
-        $ExamMonitor = new ExamMonitor();
+    public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description,$userId){
         $data = array();
-        $user = Auth::user();
         $data = [
             'station_id'        => $station_id,
             'exam_id'           => $exam_id,
             'student_id'        => $student_id,
-            'created_user_id'   => $user->id,
+            'created_user_id'   => $userId,
             'type'              => $type,
             'description'       => $description
         ];
-
-        $ExamMonitor->create($data);
+        ExamMonitor::create($data);
     }
     /**
      *  解除腕表绑定并上报
@@ -1208,19 +1206,22 @@ class InvigilatePadController extends CommonController
             'code'      =>'required',//腕表设备编码
             'exam_id'   =>'required', //考试id
             'description'   =>'required', //解绑原因
-            'type'   =>'required' //上报类型
+            'type'   =>'required', //上报类型
+            'user_id'   =>'required' //上报类型
         ]);
 
         $code=$request->get('code');
         $exam_id=$request->get('exam_id');
         $description=$request->get('description');
         $type=$request->get('type');
+        $userId=$request->get('user_id');
         //开启事务
         $connection = \DB::connection('osce_mis');
         $connection ->beginTransaction();
         try{
             $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
             $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
+           // dd($student_id);
             if(!$student_id){    //如果学生不存在
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
@@ -1251,7 +1252,7 @@ class InvigilatePadController extends CommonController
                     $watchModel->unwrapRecord($data);
 
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
                     return \Response::json([
                         'code' => 200,
                     ]);   //解绑成功
@@ -1284,7 +1285,7 @@ class InvigilatePadController extends CommonController
                     $examScreening  =  new ExamScreening();
                     $examScreening  -> getExamCheck();
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
                     $connection->commit();
 
                     return \Response::json([
@@ -1317,7 +1318,7 @@ class InvigilatePadController extends CommonController
                     $examScreening   =   new ExamScreening();
                     $examScreening  ->getExamCheck();
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description);
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
                     //检查考试是否可以结束
                     $connection->commit();
                 }

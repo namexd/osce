@@ -480,12 +480,12 @@ class DrawlotsController extends CommonController
 
             $station->station_type = $station->type;
 
-            $redis = Redis::connection('message');
-            $redis->publish('watch_message', json_encode($this->success_data($station)));
+            //$redis = Redis::connection('message');
+            //$redis->publish('watch_message', json_encode($this->success_data($station)));
 
 
 
-            //return response()->json($this->success_data($station));
+            return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
