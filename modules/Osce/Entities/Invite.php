@@ -191,19 +191,10 @@ class Invite extends CommonModel
         foreach ($teacherData as &$value){
             $value['id']=$invite->id;
         }
-//
-//        if($invite->status== 2){
-//            //如果该老师已拒绝就删除这条邀请
-//            $ExamSpTeacher = ExamSpTeacher::where('invite_id','=',$invite->id)->first();
-//            if($ExamSpTeacher){
-//                //删除
-//                if($ExamSpTeacher->delete()){
-//                    if(!$invite->delete()){
-//                        throw new \Exception('去除老师邀请失败');
-//                    }
-//                }
-//            }
-//        }else{
+
+        //同时删除老师安排表里的数据
+        
+
             $invite->status =3;
 
             if(!$invite->save()){
@@ -211,8 +202,6 @@ class Invite extends CommonModel
             }else{
                 $type = 3;
                 $this->sendMsg($teacherData,$type);
-//            }
-                
         }
         
         return true;

@@ -76,8 +76,6 @@ class StationTeacher extends CommonModel
                 }
             }
 
-
-
             $user = Auth::user();
             if (empty($user)) {
                 throw new \Exception('未找到当前操作人信息！');
@@ -94,25 +92,16 @@ class StationTeacher extends CommonModel
                     $teacherIDs =[];
 
 
-                  if($item['teacher'] == ""){
-                      $teacherIDs[] = Null;
-                  }else{
-                      foreach ($item['teacher'] as $value){
-                          $teacherIDs[] = $value;
-                      }
-                  }
-
-                  if($item['sp_teacher'] == ""){
-
-                      $teacherIDs []= Null;
-                  }else{
-                      foreach ($item['sp_teacher'] as $value){
-
-                          $teacherIDs[] = $value;
-
-                      }
-                  }
-                 
+                    if(!empty($item['teacher'])){
+                        foreach ($item['teacher'] as $value){
+                            $teacherIDs[] = $value;
+                        }
+                    }
+                    if(!empty($item['sp_teacher'])){
+                        foreach ($item['sp_teacher'] as $value){
+                            $teacherIDs[] = $value;
+                        }
+                    }
 
                     //根据考站id，获取对应的病例id
 //                    $stationCase = StationCase::where('station_id', $item['station_id'])->first();
@@ -152,18 +141,21 @@ class StationTeacher extends CommonModel
 
 
 
-    public function getTeacherData($teacherData,$exam_id){
+    public function getTeacherData($stationId,$exam_id){
 
         $data = $this->leftJoin('teacher', 'teacher.id', '=', $this->table.'.user_id')
-                     ->where('station_id','=',$teacherData->station_id)
-                     ->where('exam_id','=',$exam_id)
-                    ->select([
-                        'teacher.id as teacher_id',
-                        'teacher.name as teacher_name',
-                        'teacher.type as teacher_type',
-                        $this->table.'.station_id',
-                    ])
-                     ->get();
+            ->leftJoin('invite', 'invite.user_id', '=',$this->table.'.user_id')
+            ->whereIn('station_teacher.station_id',$stationId)
+            ->where('station_teacher.exam_id','=',$exam_id)
+            ->select([
+                'teacher.id as teacher_id',
+                'teacher.name as teacher_name',
+                'teacher.type as teacher_type',
+                'invite.status as status',
+                $this->table.'.station_id',
+
+            ])
+            ->get();
   
         
         return $data;
