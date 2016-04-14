@@ -993,7 +993,7 @@ function exam_assignment_add(){
         }
     })
     /**
-     * 日期选择
+     * 阶段选择框
      * @author chenxia
      * @version 3.4
      * @date    2016-04-06
@@ -1089,7 +1089,7 @@ function exam_assignment_add(){
 
     });
     /**
-     * 日期选择
+     * 这是阶段输入框失去光标的时候的判断
      * @author chenxia
      * @version 3.4
      * @date    2016-04-06
@@ -1287,7 +1287,7 @@ function exam_basic_info(){
         }
     })
     /**
-     * 日期选择
+     * 阶段选择框
      * @author chenxia
      * @version 3.4
      * @date    2016-04-06
@@ -1389,7 +1389,7 @@ function exam_basic_info(){
             $('#add-basic').find('tbody').append(html);
     });
     /**
-     * 日期选择
+     * 阶段输入框
      * @author chenxia
      * @version 3.4
      * @date    2016-04-06
@@ -4672,6 +4672,84 @@ function station_assignment(){
  */
 function examiner_manage() {
 
+
+    $("#add-basic .custom-teacher").select2({
+        placeholder:'请选择',
+        ajax: {
+            type:'get',
+            url: pars.teacher_list,
+            dataType: 'json',
+            data:function() {
+                var ids = [];
+                $('#add-basic tbody').find('tr').each(function() {
+                    var temp = $(this).find('td').eq(3).find('select').val();
+                    for(var i in temp) {
+                        ids.push(temp[i]);
+                    }
+                })
+
+                return {
+                    status:1,
+                    teahcer_id:ids
+                };
+            },
+            delay: 250,
+            processResults: function (res) {
+
+                //数据格式化
+                var str = [];
+                var data = res.data;
+                for(var i in data){
+                    str.push({id:data[i].id,text:data[i].title});
+                }
+
+                //加载入数据
+                return {
+                    results: str
+                };
+            }
+        }
+    });
+    $("#add-basic .custom-sp").select2({
+        placeholder:'请选择',
+        ajax: {
+            type:'get',
+            url: pars.teacher_list,
+            dataType: 'json',
+            data:function() {
+                var ids = [];
+                $('#add-basic tbody').find('tr').each(function() {
+                    var temp = $(this).find('td').eq(4).find('select').val();
+                    for(var i in temp) {
+                        ids.push(temp[i]);
+                    }
+                })
+
+                return {
+                    status:1,
+                    teahcer_id:ids
+                };
+            },
+            delay: 250,
+            processResults: function (res) {
+
+                //数据格式化
+                var str = [];
+                var data = res.data;
+                for(var i in data){
+                    str.push({id:data[i].id,text:data[i].title});
+                }
+
+                //加载入数据
+                return {
+                    results: str
+                };
+            }
+        }
+    });
+
+    var data = [
+        /*{
     var data = [
         {   subject_id:1,
             station_id:12,
@@ -4698,11 +4776,13 @@ function examiner_manage() {
             station_type:{id:323,name:'技能站3'},
             teacher:[{id:5,name:'zhang3',status:1},{id:34,name:'张老师3',status:1}],
             sp_teacher:[{id:45,name:'成张老师3',status:1},{id:344,name:'杨老师3',status:2}]
-        }
+        }*/
     ];
+
     var teacherArr = [],
         typeToName = ['','技能考站','sp考站','理论考站'],
         exam_id = (location.href).split('=')[1];
+
 
     /**
      * 初始化数据
@@ -4711,6 +4791,7 @@ function examiner_manage() {
      * @date    2016-04-08
      * @param   {object}   data 传入数据
      */
+
     function initTable(data) {
         var html="";
         for(var i in data){

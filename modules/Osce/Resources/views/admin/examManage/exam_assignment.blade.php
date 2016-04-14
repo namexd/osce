@@ -9,6 +9,13 @@
     #start,#end{width: 160px;}
     .coloru79 {color: #66CC00;}
     .coloru80 {color: #FF0000;}
+    .description-this{
+        display: inline-block;
+        width: 293px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
     </style>
 @stop
 
@@ -47,7 +54,7 @@
                 <tr>
                     <td>{{$key+1}}</td>
                     <td>{{$item->id}}</td>
-                    <td>{{$item->name}}</td>
+                    <td><span class="description-this">{{$item->name}}</span></td>
                     <td>{{date('Y-m-d H:i',strtotime($item->begin_dt))}} ~ {{date('Y-m-d H:i',strtotime($item->end_dt))}}</td>
                     <td>{{$item->constitute}}</td>
                     <td>{{$item->total}}</td>
