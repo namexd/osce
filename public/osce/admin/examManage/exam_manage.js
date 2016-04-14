@@ -4200,7 +4200,7 @@ function station_assignment(){
                                                 '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+stageRender(1)+'</select>'+
                                         '</div>'+
                                         '<div class="col-sm-2">'+
-                                            '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="0" type="3">必考</a>'+
+                                            '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="1" type="3">必考</a>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
@@ -4644,6 +4644,24 @@ function station_assignment(){
      * @date    2016-04-07
      */
     $('#save').click(function() {
+
+        //选择验证
+        var flag = null;
+        $('.station-container').find('td').each(function(key,elem){
+            flag = true;
+
+            if($(elem).find('select').val()=='请选择'){
+                flag = false;
+                return false;
+            }
+        });
+
+        if(flag==false){
+            layer.alert('请选择考试项目/考站/所属考场！');
+            return false;
+        }
+
+
         $.ajax({
             type:'post',
             url: pars.save,
@@ -4672,113 +4690,7 @@ function station_assignment(){
  */
 function examiner_manage() {
 
-
-    $("#add-basic .custom-teacher").select2({
-        placeholder:'请选择',
-        ajax: {
-            type:'get',
-            url: pars.teacher_list,
-            dataType: 'json',
-            data:function() {
-                var ids = [];
-                $('#add-basic tbody').find('tr').each(function() {
-                    var temp = $(this).find('td').eq(3).find('select').val();
-                    for(var i in temp) {
-                        ids.push(temp[i]);
-                    }
-                })
-
-                return {
-                    status:1,
-                    teahcer_id:ids
-                };
-            },
-            delay: 250,
-            processResults: function (res) {
-
-                //数据格式化
-                var str = [];
-                var data = res.data;
-                for(var i in data){
-                    str.push({id:data[i].id,text:data[i].title});
-                }
-
-                //加载入数据
-                return {
-                    results: str
-                };
-            }
-        }
-    });
-    $("#add-basic .custom-sp").select2({
-        placeholder:'请选择',
-        ajax: {
-            type:'get',
-            url: pars.teacher_list,
-            dataType: 'json',
-            data:function() {
-                var ids = [];
-                $('#add-basic tbody').find('tr').each(function() {
-                    var temp = $(this).find('td').eq(4).find('select').val();
-                    for(var i in temp) {
-                        ids.push(temp[i]);
-                    }
-                })
-
-                return {
-                    status:1,
-                    teahcer_id:ids
-                };
-            },
-            delay: 250,
-            processResults: function (res) {
-
-                //数据格式化
-                var str = [];
-                var data = res.data;
-                for(var i in data){
-                    str.push({id:data[i].id,text:data[i].title});
-                }
-
-                //加载入数据
-                return {
-                    results: str
-                };
-            }
-        }
-    });
-
-    var data = [
-        /*{
-    var data = [
-        {   subject_id:1,
-            station_id:12,
-            exam_item:{id:12,name:'胸腔1'},
-            station:{id:212,name:'考站1'},
-            station_type:{id:323,name:'技能站1'},
-            teacher:[{id:5,name:'zhang1',status:1},{id:34,name:'张老师1',status:1}],
-            sp_teacher:[{id:45,name:'成张老师1',status:1},{id:344,name:'杨老师1',status:2}]
-        },
-        {   
-            subject_id:12,
-            station_id:12,
-            exam_item:{id:12,name:'胸腔2'},
-            station:{id:212,name:'考站2'},
-            station_type:{id:323,name:'技能站2'},
-            teacher:[{id:5,name:'zhang2',status:1},{id:34,name:'张老师2',status:1}],
-            sp_teacher:[{id:45,name:'成张老师2',status:1},{id:344,name:'杨老师2',status:2}]
-        },
-        {
-            subject_id:11,
-            station_id:12,
-            exam_item:{id:12,name:'胸腔3'},
-            station:{id:212,name:'考站3'},
-            station_type:{id:323,name:'技能站3'},
-            teacher:[{id:5,name:'zhang3',status:1},{id:34,name:'张老师3',status:1}],
-            sp_teacher:[{id:45,name:'成张老师3',status:1},{id:344,name:'杨老师3',status:2}]
-        }*/
-    ];
-
+    //初始化数据
     var teacherArr = [],
         typeToName = ['','技能考站','sp考站','理论考站'],
         exam_id = (location.href).split('=')[1];
@@ -4793,25 +4705,62 @@ function examiner_manage() {
      */
 
     function initTable(data) {
-        var html="";
+        var html="",
+            statusArr = [];  //记录状态老师
+
         for(var i in data){
             var str_teacher = '',
                 str_sp = '';
+                _teacher = {},
+                _sp_teacher = {};
+
             /**
              * 这里是生成考官
              */
             for(var j in data[i].teacher) {
+
                 str_teacher += '<option value="'+data[i].teacher[j].teacher_id+'" selected="selected">'+data[i].teacher[j].teacher_name+'</option>';
+                
+                var _status_1 = [],
+                    _status_2 = [];
+
+                if(data[i].teacher[j].status == 1) {
+                    _status_1.push(data[i].teacher[j].teacher_name);
+                }
+                if(data[i].teacher[j].status == 2) {
+                    _status_2.push(data[i].teacher[j].teacher_name);
+                }
+
+                _teacher['_status_1'] = _status_1;
+                _teacher['_status_2'] = _status_2;
             }
+
+
             /**
              * 这里是生成ＳＰ
              */
+            
             for(var j in data[i].sp_teacher) {
                 str_sp += '<option value="'+data[i].sp_teacher[j].teacher_id+'" selected="selected">'+data[i].sp_teacher[j].teacher_name+'</option>';
+                
+                var _status_1 = [],
+                    _status_2 = [];
+
+                if(data[i].sp_teacher[j].status == 1) {
+                    _status_1.push(data[i].sp_teacher[j].teacher_name);
+                }
+                if(data[i].sp_teacher[j].status == 2) {
+                    _status_2.push(data[i].sp_teacher[j].teacher_name);
+                }
+
+                _sp_teacher['_status_1'] = _status_1;
+                _sp_teacher['_status_2'] = _status_2;
             }
 
+            statusArr.push({_teacher:_teacher,_sp_teacher:_sp_teacher});
+
             //dom准备
-            html += '<tr value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'">'+
+            html += '<tr class="tr-id-'+i+'" value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'">'+
                         '<td>'+data[i].subject_title+'</td>'+
                         '<td>'+data[i].station_name+'</td>'+
                         '<td>'+typeToName[data[i].station_type]+'</td>'+
@@ -4848,6 +4797,32 @@ function examiner_manage() {
             //老师列表数组
             //teacherArr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
 
+            
+            //sp老师状态1
+            for(var i in statusArr[key]._teacher._status_1) {
+                $that.find('td').eq(3).find('.select2-selection__rendered').find('li[title="'+statusArr[key]._teacher._status_1[i]+'"]').css({'background-color':'#548B54','color':'#fff'});
+                $that.find('td').eq(3).find('.select2-selection__rendered').find('li[title="'+statusArr[key]._teacher._status_1[i]+'"]').find('span').css({'background-color':'#548B54','color':'#fff'});
+            }
+
+            //sp老师状态2
+            for(var i in statusArr[key]._teacher._status_2) {
+                $that.find('td').eq(3).find('.select2-selection__rendered').find('li[title="'+statusArr[key]._teacher._status_2[i]+'"]').css({'background-color':'#ff0000','color':'#fff'});
+                $that.find('td').eq(3).find('.select2-selection__rendered').find('li[title="'+statusArr[key]._teacher._status_2[i]+'"]').find('span').css({'background-color':'#ff0000','color':'#fff'});
+            }
+
+            //sp老师状态1
+            for(var i in statusArr[key]._sp_teacher._status_1) {
+                $that.find('td').eq(4).find('.select2-selection__rendered').find('li[title="'+statusArr[key]._sp_teacher._status_1[i]+'"]').css({'background-color':'#548B54','color':'#fff'});
+                $that.find('td').eq(4).find('.select2-selection__rendered').find('li[title="'+statusArr[key]._sp_teacher._status_1[i]+'"]').find('span').css({'background-color':'#548B54','color':'#fff'});
+            }
+
+            //sp老师状态2
+            for(var i in statusArr[key]._sp_teacher._status_2) {
+                $that.find('td').eq(4).find('.select2-selection__rendered').find('li[title="'+statusArr[key]._sp_teacher._status_2[i]+'"]').css({'background-color':'#ff0000','color':'#fff'});
+                $that.find('td').eq(4).find('.select2-selection__rendered').find('li[title="'+statusArr[key]._sp_teacher._status_2[i]+'"]').find('span').css({'background-color':'#ff0000','color':'#fff'});
+            }
+
+
         });
     }
 
@@ -4883,7 +4858,9 @@ function examiner_manage() {
                 if(res.code != 1) {
                     layer.msg('保存成功失败！',{skin:'msg-error',icon:1});
                 } else {
-                    layer.msg('保存成功成功！',{skin:'msg-success',icon:1});
+                    layer.msg('保存成功成功！',{skin:'msg-success',icon:1}, function() {
+                        location.reload();
+                    });
                 }
             }
         })
@@ -4918,13 +4895,14 @@ function examiner_manage() {
             data:req,
             success: function(res) {
                 if(res.code != 1) {
-                    layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                 } else {
                     layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
                 }
             },
             error: function(data) {
-                layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                var res = (JSON.parse(data.responseText));
+                layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
             }
         })
     });
@@ -4981,10 +4959,14 @@ function examiner_manage() {
                 data:req,
                 success: function(res) {
                     if(res.code != 1) {
-                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                     } else {
                         layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
                     }
+                },
+                error: function(data) {
+                    var res = (JSON.parse(data.responseText));
+                    layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                 }
             })
         });
@@ -5036,10 +5018,12 @@ function examiner_manage() {
                 url: pars.del_teacher,
                 data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
                 success: function(res) {
-                    if(res.code != 1) {
-                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    if(res.code == 1) {
+                        layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
+                    } else if(res.code == 2) {
+                        return true;
                     } else {
-                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                     }
                 }
             })
@@ -5094,10 +5078,12 @@ function examiner_manage() {
                 url: pars.del_teacher,
                 data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
                 success: function(res) {
-                    if(res.code != 1) {
-                        layer.msg('发送邀请失败！',{skin:'msg-error',icon:1});
+                    if(res.code == 1) {
+                        layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
+                    } else if(res.code == 2) {
+                        return true;
                     } else {
-                        layer.msg('发送邀请成功！',{skin:'msg-success',icon:1});
+                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
                     }
                 }
             })
