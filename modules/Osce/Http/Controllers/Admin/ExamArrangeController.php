@@ -480,24 +480,27 @@ class ExamArrangeController extends CommonController
     public function getRoomList(Request $request)
     {
         $this->validate($request, [
-            'station_name' => 'sometimes',
-            'id'           => 'required',
-            'exam_id'      => 'sometimes',
-//            'type'=>'required',
-//            'draft_id'=>'required'
+            'room_name'     => 'sometimes',
+            'id'            => 'required',
+            'exam_id'       => 'sometimes',
+            'station_id'    => 'sometimes',
+            'order'         => 'sometimes',
         ]);
-        $name   = $request->get('station_name');
-        $id     = $request->get('id');
-        $exam_id= $request->get('exam_id');
+        $name       = $request->get('room_name');
+        $id         = $request->get('id');
+        $exam_id    = $request->get('exam_id');
+        $order      = $request->get('order');
+        $stage_id   = $request->get('exam_gradation_id');
 
-        if(123 === 234){
-            //临时保存缓存表中的数据
-            $this->saveArrangeDatas($exam_id);
+        $examDraftFlow = new ExamDraftFlow();
+        //临时保存缓存表中的数据
+        $roomIdArray = $examDraftFlow->saveArrangeDatas($exam_id, $stage_id, $room = 1, $station = null, $order);
+
+        if (empty($roomIdArray)){
+            $roomIdArray = ExamDraftTemp::where('old_draft_flow_id', '=', $id)->get()->pluck('room_id')->toArray();
         }
 
-        $roomIdArray = ExamDraftTemp::where('old_draft_flow_id', '=', $id)->get()->pluck('room_id')->toArray();
         $roomModel = new Room();
-//        $roomData = $roomModel -> showRoomList($keyword = '', $type = '0', $id = '');
 
         $roomData = $roomModel->getRoomList($roomIdArray, $name);
         return response()->json(
@@ -518,17 +521,26 @@ class ExamArrangeController extends CommonController
     public function getStationList(Request $request)
     {
         $this->validate($request, [
-            'station_name' => 'sometimes',
-            'id' => 'required',
-//            'type'=>'required',
-//            'draft_id'=>'required'
+            'station_name'  => 'sometimes',
+            'id'            => 'required',
+            'type'          => 'sometimes',
+            'draft_id'      => 'sometimes'
         ]);
 
-        $name = $request->get('station_name');
-        $id   = $request->get('id');
+        $name       = $request->get('station_name');
+        $id         = $request->get('id');
+        $exam_id    = $request->get('exam_id');
+        $stage_id   = $request->get('exam_gradation_id');
 
         //查询出已用过的考站
-        $stationIdArray = ExamDraftTemp::where('old_draft_flow_id', '=', $id)->get()->pluck('station_id')->toArray();
+        $examDraftFlow = new ExamDraftFlow();
+        //临时保存缓存表中的数据
+        $stationIdArray = $examDraftFlow->saveArrangeDatas($exam_id, $stage_id, $room = null, $station = 1);
+
+        if (empty($stationIdArray)){
+            $stationIdArray = ExamDraftTemp::where('old_draft_flow_id', '=', $id)->get()->pluck('station_id')->toArray();
+        }
+
         $stationModel = new Station();
         $stationData = $stationModel->showList($stationIdArray, $ajax = true, $name);
 
@@ -776,17 +788,6 @@ class ExamArrangeController extends CommonController
     }
 
 
-    private function timeIndex($data,$time){
-        if(array_key_exists(strtotime($time),$data))
-        {
-            $time   =   strtotime($time)+1;
-            return $this->timeIndex($data,date('Y-m-d H:i:s',$time));
-        }
-        else
-        {
-            return  $time;
-        }
-    }
     /**
      * 考场安排，提交保存
      * @param Request $request
@@ -796,8 +797,6 @@ class ExamArrangeController extends CommonController
      */
     public function postArrangeSave(Request $request)
     {
-        $connection = \DB::connection('osce_mis');
-        $connection->beginTransaction();
         try{
             $this->validate($request, [
                 'exam_id'  => 'required',
@@ -805,13 +804,12 @@ class ExamArrangeController extends CommonController
 
             $exam_id       = $request->get('exam_id');
 
+            $ExamDraftFlow = new ExamDraftFlow();
             //保存考场安排所有数据
-            if(!$this->saveArrangeDatas($exam_id))
+            if(!$ExamDraftFlow->saveArrangeDatas($exam_id))
             {
                 throw new \Exception('保存失败');
             }
-
-            $connection->commit();
 
             //返回结果
             return response()->json(
@@ -819,86 +817,8 @@ class ExamArrangeController extends CommonController
             );
 
         } catch (\Exception $ex){
-            $connection->rollBack();
             return response()->json($this->fail($ex));
         }
-    }
-
-    /**
-     * 保存考场安排所有数据
-     * @param $exam_id
-     *
-     * @author Zhoufuxiang 2016-04-14
-     * @return array
-     */
-    private function saveArrangeDatas($exam_id)
-    {
-        $ExamDraftFlow = new ExamDraftFlow();
-        $ExamDraft     = new ExamDraft();
-        //获取所有临时数据
-        $datas = $this->getAllTempDatas($exam_id);
-
-        if (empty($datas)){
-            throw new \Exception('数据为空');
-        }
-
-        foreach ($datas as $data) {
-            //操作大表
-            if ($data['is_draft_flow'] == 1) {
-                if(!$ExamDraftFlow->handleBigData($data)){
-                    throw new \Exception('保存失败，请重试！');
-                }
-
-            //操作小表
-            } else {
-                if(!$ExamDraft->handleSmallData($data)){
-                    throw new \Exception('保存失败，请重试！');
-                }
-            }
-        }
-
-        //处理 待删除 数据（如：清空临时表数据，删除正式表待删除数据）
-        $ExamDraftTempModel = new ExamDraftTemp();
-        if (!$ExamDraftTempModel->handleDelDatas($exam_id)){
-            throw new \Exception('处理待删除数据失败');
-        }
-
-        return true;
-    }
-
-    /**
-     * 获取所有临时数据
-     * @param $exam_id
-     *
-     * @author Zhoufuxiang 2016-04-07
-     * @return array
-     */
-    private function getAllTempDatas($exam_id)
-    {
-        //获取所有临时数据
-        $draftFlows = ExamDraftFlowTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
-        $drafts     = ExamDraftTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
-
-        //所有临时数据 组合
-        $datas = [];
-        foreach ($draftFlows as $draftFlow) {
-            $datas[strtotime($draftFlow->created_at->format('Y-m-d H:i:s'))] = [
-                'item' => $draftFlow,
-                'is_draft_flow' => 1
-            ];
-        }
-
-        foreach ($drafts as $draft) {
-
-            $time   =   strtotime($this->timeIndex($datas,$draft->add_time));
-            $datas[$time] = [
-                'item' => $draft,
-                'is_draft_flow' => 0
-            ];
-        }
-        ksort($datas);     //数组按时间（键）进行排序
-
-        return $datas;
     }
 
     /**
