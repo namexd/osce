@@ -94,13 +94,31 @@ class ExamControlController extends CommonController
             $data['description'] = -1;
             $data['type'] = 2;//上报弃考
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         try{
             $examControlModel = new ExamControl();
             $examControlModel->stopExam($data);
 
             //向pad端和watch端推送消息
             $redis = Redis::connection('message');
-            $redis->publish('pad_message', json_encode($this->success_data([],1,'考试终止成功')));
+            $redis->publish('pad_message', json_encode($this->success_data([],106,'考试终止成功')));
 
             $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
                 ->where('student_id','=',$data['studentId'])->first();
