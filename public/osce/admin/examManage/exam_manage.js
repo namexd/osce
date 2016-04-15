@@ -4019,17 +4019,17 @@ function station_assignment(){
             var str = '';
             for(var j in data[i].item) {
                 str += '<tr class="item-id-'+j+'" item-id="'+data[i].item[j].id+'">'+
-                                '<td type="2"><select class="form-control exam-item"><option selected="selected" value="'+data[i].item[j].subject_id+'">'+data[i].item[j].subject_name+'</option></select></td>'+
-                                '<td type="2"><select class="form-control exam-station"><option selected="selected" value="'+data[i].item[j].station_id+'">'+data[i].item[j].station_name+'</option></select></td>'+
-                                '<td type="2">'+typeToName[data[i].item[j].station_type]+'</td>'+
-                                '<td type="2"><select class="form-control station-belong"><option selected="selected" value="'+data[i].item[j].room_id+'">'+data[i].item[j].room_name+'</option></select></td>'+
-                                '<td type="2"><span class="station-chioce">'+chioceToName[data[i].item[j].optional]+'</span></td>'+
-                                '<td>'+
-                                    '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
-                                    '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
-                                '</td>'+
-                            '</tr>';
-                
+                            '<td type="2"><select class="form-control exam-item" exam-item-flag="0"><option selected="selected" value="'+data[i].item[j].subject_id+'">'+data[i].item[j].subject_name+'</option></select></td>'+
+                            '<td type="2"><select class="form-control exam-station"><option selected="selected" value="'+data[i].item[j].station_id+'">'+data[i].item[j].station_name+'</option></select></td>'+
+                            '<td type="2">'+typeToName[data[i].item[j].station_type]+'</td>'+
+                            '<td type="2"><select class="form-control station-belong"><option selected="selected" value="'+data[i].item[j].room_id+'">'+data[i].item[j].room_name+'</option></select></td>'+
+                            '<td type="2"><span class="station-chioce">'+chioceToName[data[i].item[j].optional]+'</span></td>'+
+                            '<td>'+
+                                '<a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>'+
+                                '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+                            '</td>'+
+                        '</tr>';
+            
                 //存储select2 class
                 arr.push({table:'.table-id-'+i, tr:'.item-id-'+j});
             }
@@ -4217,7 +4217,7 @@ function station_assignment(){
                                         '</thead>'+
                                         '<tbody index="0">'+
                                             '<tr class="item-id-0" item-id="'+res.data.draft_id+'">'+
-                                                '<td type="3"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                                                '<td type="3"><select class="form-control exam-item" exam-item-flag="0"><option value="请选择">请选择</option></select></td>'+
                                                 '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
                                                 '<td type="3"></td>'+
                                                 '<td type="3"><select class="form-control station-belong"><option value="请选择">请选择</option></select></td>'+
@@ -4303,7 +4303,7 @@ function station_assignment(){
                     layer.msg('新增失败！',{skin:'msg-error',icon:1});
                 } else {
                     html += '<tr class="item-id-'+index+'" item-id="'+res.data.id+'">'+
-                                '<td type="3"><select class="form-control exam-item"><option value="请选择">请选择</option></select></td>'+
+                                '<td type="3"><select class="form-control exam-item" exam-item-flag="0"><option value="请选择">请选择</option></select></td>'+
                                 '<td type="3"><select class="form-control exam-station"><option value="请选择">请选择</option></select></td>'+
                                 '<td type="3"></td>'+
                                 '<td type="3"><select class="station-belong"><option value="请选择">请选择</option></select></td>'+
@@ -4449,6 +4449,9 @@ function station_assignment(){
                 flow_id:$elem.parent().parent().attr('station-id'),
                 subject:e.params.data.id
             };
+
+            //改变状态
+            $elem.find('.exam-item').attr('exam-item-flag',1);
 
             //新增页面
             if(e.params.data.id == -999) {
@@ -4693,21 +4696,56 @@ function station_assignment(){
             return false;
         }
 
+        var warn = null;
+        $('.station-container').find('.exam-item').each(function(key,elem) {
+            warn = true;
 
-        $.ajax({
-            type:'post',
-            url: pars.save,
-            data:{exam_id:examId},
-            success: function(res) {
-                if(res.code != 1) {
-                    layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
-                } else {
-                    layer.msg('数据保存成功！',{skin:'msg-success',icon:1},function () {
-                        location.reload();
-                    });
-                }
+            if($(elem).attr('exam-item-flag') == 1) {
+                warn = false;
+                return false;
             }
-        })
+        });
+
+        if(warn==false){
+            layer.confirm('考试项目更改将导致智能排考重排？',{
+                title:'删除',
+                btn: ['确定','取消'],
+                cancel: function() {
+                    location.reload();
+                }
+            },function() {
+                $.ajax({
+                    type:'post',
+                    url: pars.save,
+                    data:{exam_id:examId,flag:1},
+                    success: function(res) {
+                        if(res.code != 1) {
+                            layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
+                        } else {
+                            layer.msg('数据保存成功！',{skin:'msg-success',icon:1},function () {
+                                location.reload();
+                            });
+                        }
+                    }
+                })
+            }); 
+        } else {
+            $.ajax({
+                type:'post',
+                url: pars.save,
+                data:{exam_id:examId},
+                success: function(res) {
+                    if(res.code != 1) {
+                        layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
+                    } else {
+                        layer.msg('数据保存成功！',{skin:'msg-success',icon:1},function () {
+                            location.reload();
+                        });
+                    }
+                }
+            })
+        }
+        
     });
 
 }
