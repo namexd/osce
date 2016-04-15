@@ -17,6 +17,9 @@ use Modules\Osce\Entities\ExamPlanRecord;
 class SmartArrangeRepository extends AbstractSmartArrange
 {
     use SundryTraits;
+
+    private $_S_Count;
+
     /**
      * 返回SmartArrange的类名
      * @return string
@@ -43,15 +46,6 @@ class SmartArrangeRepository extends AbstractSmartArrange
             //将考试初始化进去
             $this->model->exam = $exam;
 
-            //初始化学生
-            $this->model->setStudents(new StudentFromDatabase());
-
-
-            /*
-             * 做排考的前期准备
-             * 检查各项数据是否存在
-             */
-            $this->checkStudentIsZero($this->model->getStudents()); //检查当前考试是否有学生
 
             $this->checkDataBase($this->model->exam); //检查临时表中是否有数据，如果有，就删除之
 
@@ -60,29 +54,43 @@ class SmartArrangeRepository extends AbstractSmartArrange
              */
             $gradations = $this->getGradations($exam);
             foreach ($gradations as $key => $gradation) {
+                //初始化学生
+                $this->_S_Count = $this->model->setStudents(new StudentFromDatabase());
+                /*
+                 * 做排考的前期准备
+                 * 检查各项数据是否存在
+                 */
+                $this->checkStudentIsZero($this->model->getStudents()); //检查当前考试是否有学生
+
                 //$key就是order的值
                 $screens = $this->getScreenByOrder($key, $exam);
                 //循环遍历$screen，对每个时段进行排考
                 foreach ($screens as $screen) {
+                    $studentsCount = ExamPlanRecord::where('exam_screening_id', $screen->id)
+                        ->where('gradation_order', $key)
+                        ->whereNotNull('end_dt')
+                        ->groupBy('student_id')
+                        ->count();
+                    if ($this->_S_Count == $studentsCount) {
+                        break;
+                    }
+
                     //将考试实体初始化进去
                     $this->model->setEntity($exam, $screen);
                     $this->checkEntityIsZero($this->model->getEntity()); //检查当前考试是否安排了考试实体
                     $screen = $this->setFlowsnumToScreen($exam, $screen); //将该场次有多少流程写入场次对象
 
                     $this->model->screenPlan($screen);
-
-                    //判断是否需要下场排考
-//                    $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id',
-//                        $exam->id)->first();  //通过查询数据表中是否有没有写入end_dt的数据
-//
-//                    if (count($this->model->getStudents()) == 0 && count($this->model->getWaitStudents()) == 0 && is_null($examPlanNull)) {
-//                        return $this->output($exam);
-//                    }
                 }
-                throw new \Exception('人数太多，所设时间无法完成考试', -99);
+                //判断是否需要报错
+//                    $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id',
+//                    $exam->id)->first();  //通过查询数据表中是否有没有写入end_dt的数据
+
+                if (count($this->model->getStudents()) != 0 || count($this->model->getWaitStudents()) != 0) {
+                    throw new \Exception('人数太多，所设时间无法完成考试', -99);
+                }
             }
             return $this->output($exam);
-//            throw new \Exception('人数太多，所设阶段无法完成考试', -98);
         } catch (\Exception $ex) {
             if (ExamPlanRecord::where('exam_id', $exam->id)->count()) {
                 if (!ExamPlanRecord::where('exam_id', $exam->id)->delete()) {

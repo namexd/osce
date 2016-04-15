@@ -31,6 +31,9 @@ class SmartArrange
     //总学生，为对象集合
     protected $_S;
 
+    //总学生人数
+    protected $_S_Count;
+
     //总的考试实体，为对象集合
     protected $_E;
 
@@ -45,6 +48,9 @@ class SmartArrange
 
     //考站或考场的模式包
     protected $mode;
+
+    //当前考试场次的流程个数
+    private $flowNum;
 
     /**
      * @param $cate
@@ -66,6 +72,8 @@ class SmartArrange
     public function setStudents(StudentInterface $student)
     {
         $this->_S = $student->get($this->exam);
+        $this->_S_Count = count($this->_S);
+        return $this->_S_Count;
     }
 
     /**
@@ -125,6 +133,9 @@ class SmartArrange
         //重置考试实体计数器
         $this->resetStationTime();
 
+        //获取当前考试场次的流程个数
+        $this->flowNum = $this->flowNum($this->_E);
+        
         /*
          * 获得场次的开始和结束时间
          */
@@ -203,8 +214,6 @@ class SmartArrange
                     if ($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60) {
                         $entity->timer = 0;
                         //将结束时间写在表内
-
-
                         foreach ($tempValues as $tempValue) {
                             if (!empty($tempValue->end_dt)) {
                                 continue;
@@ -235,14 +244,14 @@ class SmartArrange
             if ($k === 1) {
                 $k = 2;
             }
+            //TODO 排完后终止循环的操作，待施工
+            if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum) {
+                break;
+            }
         }
-        //TODO 排玩后终止循环的操作，待施工
-
-        //获取当前考试场次的流程个数
-        $flowsNum = $this->flowNum($this->exam, $screen);
         
         //获取未走完流程的考生
-        $studentList = $this->testingStudentList($this->exam, $flowsNum);
+        $studentList = $this->testingStudentList($this->exam, $this->flowNum);
 
         //未考完的学生实例数组
         $undoneStudents = [];
