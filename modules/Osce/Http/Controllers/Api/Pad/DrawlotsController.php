@@ -556,25 +556,27 @@ class DrawlotsController extends CommonController
 
             $request['station_id']=$station->id;
             $request['teacher_id']=$id;
+            $this->getExaminee_arr($request);//当前组推送(可以获得)
+
             $inv=new InvigilatePadController();
-            $msg=$inv->getAuthentication_arr($request);//当前考生推送
+            $msg=$inv->getAuthentication_arr($request);//当前考生推送(如果有)
             $request['exam_id']=$station->exam_id;
-            $this->getExaminee_arr($request);//当前组推送
+            if($msg) {
+                //调用向腕表推送消息的方法
+                $examQueue = ExamQueue::where('student_id', '=', $msg->student_id)
+                    ->where('station_id', '=', $station->id)
+                    ->whereIn('status', [0, 2])
+                    ->first();
+                if ($examQueue) {
+                    $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id', '=', $examQueue->exam_screening_id)
+                        ->where('student_id', '=', $examQueue->student_id)->first();
+                    $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
+                    $studentWatchController = new StudentWatchController();
 
-            //调用向腕表推送消息的方法
-            $examQueue = ExamQueue::where('student_id', '=', $msg->student_id)
-                ->where('station_id', '=', $station->id)
-                ->whereIn('status',[0,2])
-                ->first();
-            $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$examQueue->exam_screening_id)
-                ->where('student_id','=',$examQueue->student_id)->first();
-            $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
-            $studentWatchController = new StudentWatchController();
-
-            $request['nfc_code'] = $watchData->nfc_code;
-            $studentWatchController->getStudentExamReminder($request);
-
-
+                    $request['nfc_code'] = $watchData->nfc_code;
+                    $studentWatchController->getStudentExamReminder($request);
+                }
+            }
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
