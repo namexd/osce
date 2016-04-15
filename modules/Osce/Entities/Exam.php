@@ -397,26 +397,19 @@ class Exam extends CommonModel
     {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
-//        try {
+        try {
             //更新考试信息
             $exam   =   $this->find($exam_id);
             if($exam->sequence_mode!=$examData['sequence_mode'])
             {
                 //如果排考模式变化 删除 已有 教师关联 和 排考计划
+                if(!$examArrangeRepository->getExamManner($exam_id)){
+                    throw new \Exception('重置作废数据失败');
+                }
                 if(StationTeacher::where('exam_id','=',$exam_id)->delete()===false)
                 {
-                    throw new \Exception('重置作废数据失败');
+                    throw new \Exception('重置作废老师数据失败');
                 }
-               //清除考试安排
-////                $app = new App();
-////                $ExamArrange = new ExamArrangeRepository($app);
-//                $examArrangeRepository->getEmptyExamArrange($exam_id);
-
-                if(ExamPlan::where('exam_id','=',$exam_id)->delete()===false)
-                {
-                    throw new \Exception('重置作废数据失败');
-                }
-              
                 if(ExamRoom::where('exam_id','=',$exam_id)->delete()===false)
                 {
                     throw new \Exception('重置作废数据失败');
@@ -426,6 +419,17 @@ class Exam extends CommonModel
                     throw new \Exception('重置作废数据失败');
                 }
 
+                //如果考试顺序变化清空智能排考
+                if($exam->sequence_mode!=$examData['sequence_cate']){
+                    //清空智能排考
+                }
+
+                //同时进出改变清空排考
+                if($exam->same_time!=$examData['same_time']){
+                    //清空智能排考
+                }
+
+
                 /**
                  * 清除排考记录
                  * @return bool
@@ -434,19 +438,16 @@ class Exam extends CommonModel
                 // 删除邀请表相关数据
                 $examScreeningList  =   $exam->examScreening;
 
-                if(!empty($examScreeningList))
-                {
-                    foreach($examScreeningList as $item){
-                        if(ExamSpTeacher::where('exam_screening_id','=',$item->id)->delete()===false){
-                            throw new \Exception('重置作废数据失败');
-                        }
-                        Invite::where('exam_screening_id','=',$item->id)->delete();
+            if(!empty($examScreeningList))
+            {
+                foreach($examScreeningList as $item){
+                    if(ExamSpTeacher::where('exam_screening_id','=',$item->id)->delete()===false){
+                        throw new \Exception('重置作废数据失败');
                     }
-                    //                        $item->invite()->examSpTeacher()->delete();
-//                        $item->invite()->delete();
-
+                    Invite::where('exam_screening_id','=',$item->id)->delete();
                 }
             }
+        }
             foreach($examData as $field=>$item)
             {
                 $exam->$field   =   $item;
@@ -526,10 +527,10 @@ class Exam extends CommonModel
 
             $connection->commit();
             return true;
-//        } catch (\Exception $ex) {
-//            $connection->rollBack();
-//            throw $ex;
-//        }
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
     }
 
     //考生查询

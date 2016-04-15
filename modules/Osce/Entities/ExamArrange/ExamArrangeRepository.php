@@ -31,14 +31,25 @@ class ExamArrangeRepository extends AbstractExamArrange
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getModel()
+        public function getModel()
     {
         return 'Modules\Osce\Entities\ExamArrange\ExamArrange';
     }
 
 
+    //清空考试安排
+    public function getExamManner($exam_id){
+        if($this->model->getEmptyExamArrange($exam_id)){
+            if($this->model->getTeacherArrange($exam_id)){
+                if($this->model->getTeacherInvite($exam_id)){
+                    //清除智能排考
+                }
+            }
+        }
+        return true;
 
-
+    }
+        
 
 
 

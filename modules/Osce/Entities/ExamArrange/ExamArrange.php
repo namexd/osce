@@ -21,11 +21,13 @@ class ExamArrange
         
         //清除大站
         $ExamDraftFlowData = ExamDraftFlow::where('exam_id','=',$examId)->get();
+
         $FlowId = $ExamDraftFlowData->pluck('id');
+
         //删除小站
-        if(ExamDraft::whereIn('exam_draft_flow_id',$FlowId)->get()){
+        if(ExamDraft::whereIn('exam_draft_flow_id',$FlowId)->delete()){
             foreach ($ExamDraftFlowData as $item){
-                if(!$item -> save()){
+                if(!$item -> delete()){
                     throw new \Exception('删除考试安排失败');
                 }
             }
@@ -39,7 +41,7 @@ class ExamArrange
         $TeacherData  = StationTeacher::where('exam_id','=',$examId)->get();
         if($TeacherData){
            foreach ($TeacherData as $value){
-               if(!$value -> save()){
+               if(!$value -> delete()){
                    throw new \Exception('删除老师安排失败');
                }
            }
