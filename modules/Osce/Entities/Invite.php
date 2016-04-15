@@ -191,7 +191,7 @@ class Invite extends CommonModel
         $teacherDel = StationTeacher::where('user_id', '=', $teacher_id)
             ->where('exam_id', '=', $exam_id)
             ->where('station_id', '=', $stationId)
-            ->get();
+            ->first();
 //        if($teacherDel){
 //            $teacherDel = $teacherDel ->delete();
 //        }

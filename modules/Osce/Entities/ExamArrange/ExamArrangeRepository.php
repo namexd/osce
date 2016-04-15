@@ -96,7 +96,10 @@ class ExamArrangeRepository extends AbstractExamArrange
 
     public  function resetSmartArrange($exam_id){
         try{
-            $this->model->resetSmartArrange($exam_id);
+            if($this->model->resetSmartArrange($exam_id)){
+                return true;
+            }
+           
         }catch (\Exception $ex){
             throw $ex;
         }
@@ -112,43 +115,48 @@ class ExamArrangeRepository extends AbstractExamArrange
 
         $ExamDraftFlowData = ExamDraftFlow::where('exam_id','=',$exam_id)->get();
         $FlowId = $ExamDraftFlowData->pluck('id');
-        $ExamDraft =  ExamDraft::whereIn('exam_draft_flow_id',$FlowId)->get();
+        $ExamDraftFlowData= $ExamDraftFlowData->toArray();
+        $ExamDraft =  ExamDraft::whereIn('exam_draft_flow_id',$FlowId)->get()->toArray();
         return [ 'FlowData'=>$ExamDraftFlowData ,'DraftData'=>$ExamDraft];
     }
 
     //考试安排数据的差异
     public  function getDataDifference($exam_id,$FrontArrangeData,$LaterArrangeData){
         $result = '';
-        if(is_null($FrontArrangeData)){
+
+        if(empty($FrontArrangeData['FlowData'])){
             //说明是刚新增就就不弹框直接保存
             $result = false;
-        }
-        
-        //比较小站数据条数是否一致
-        if(count($FrontArrangeData['DraftData'])!=count($LaterArrangeData['DraftData'])){
-            $result = true;
         }else{
-            //比较小站里的数据是否一致
 
-            
+            //比较小站数据条数是否一致
+            if(count($FrontArrangeData['DraftData'])!=count($LaterArrangeData['DraftData'])){
+                $result = true;
+            }else{
+                //比较小站里的数据是否一致
 
-        }
-       
-        if(count($FrontArrangeData['FlowData'])!=count($LaterArrangeData['FlowData'])){
 
-            $result = true;
-        }else{
-            //比较阶段是否一致
-            foreach ($FrontArrangeData['FlowData'] as $item){
-                foreach ($LaterArrangeData['FlowData'] as $value){
-                    if($item->exam_gradation_id != $value->exam_gradation_id){
-                        $result = true;
+
+
+
+                if(count($FrontArrangeData['FlowData'])!=count($LaterArrangeData['FlowData'])){
+
+                    $result = true;
+                }else{
+                    //比较阶段是否一致
+                    foreach ($FrontArrangeData['FlowData'] as $item){
+                        foreach ($LaterArrangeData['FlowData'] as $value){
+                            if($item['exam_gradation_id'] != $value['exam_gradation_id']){
+                                $result = true;
+                            }
+                        }
                     }
+
                 }
+
+
             }
-            
         }
-        
         return $result;
 
     }

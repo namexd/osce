@@ -115,28 +115,23 @@ class ExamDraftFlow extends CommonModel
             }
 
             if ($status == 1) {
-           
                 //清空数据
-                if ($examArrangeRepository->resetSmartArrange($exam_id)) {
-                    
+                $result = $examArrangeRepository->resetSmartArrange($exam_id);
+                if ($result||$result==null){
                     $connection->commit();
                     return true;
                 }
-
 
             }
             //判断挡前数据和之前数据是否有变化如果有就清除排考内容
             $LaterArrangeData = $examArrangeRepository->getInquireExamArrange($exam_id);
             $ArrangeData = $examArrangeRepository->getDataDifference($exam_id, $FrontArrangeData, $LaterArrangeData);
-            if ($ArrangeData) {
+            if ($ArrangeData){
                 //有改动还回code=-1用户确定
-             
-                return false;
+                return -100;
             }
-
-            $connection->commit();
-            return true;
-
+                $connection->commit();
+                return true;
         } catch (\Exception $ex) {
 
             //存在阶段ID，为临时获取数据，无需保存提交

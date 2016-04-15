@@ -826,25 +826,28 @@ class ExamArrangeController extends CommonController
 
             $exam_id       = $request->get('exam_id');
             $status        =  $request->get('flag');
-
+            $code ='';
             $ExamDraftFlow = new ExamDraftFlow();
                 //拿到之前的数据
             $FrontArrangeData = $examArrangeRepository->getInquireExamArrange($exam_id);
-
             //保存考场安排所有数据
             $result = $ExamDraftFlow->saveArrangeDatas($exam_id,[],$examArrangeRepository,$FrontArrangeData,$status);
-            if($result ==false){
-                return response()->json(
-                    $this->success_data([], -1)
-                );
-            }
             if(!$result)
             {
                 throw new \Exception('保存失败');
             }
 
+            if($result === -100){
+                $code = -1;
+            }else{
+                $code =1;
+            }
+
+         
+
+
             return response()->json(
-                $this->success_data([], 1, '保存成功！')
+                $this->success_data([], $code)
             );
         } catch (\Exception $ex){
             return response()->json($this->fail($ex));
