@@ -324,7 +324,6 @@ class Common
         if (is_null($fileArray)) {
             return false;
         }
-
         $fileData = [];
         foreach ($fileArray as $item) {
             $ensue = explode('=', $item);

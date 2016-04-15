@@ -18,6 +18,7 @@ use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamDraftFlowTemp;
 use Modules\Osce\Entities\ExamDraftTemp;
 use Modules\Osce\Entities\ExamGradation;
+use Modules\Osce\Entities\Invite;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
@@ -675,22 +676,42 @@ class ExamArrangeController extends CommonController
              $stationId []=$item->station_id;
          }
 
+
          //查询出考站下对应的老师
          $stationteaxherModel = new StationTeacher();
 
          $teacherDatas= $stationteaxherModel->getTeacherData($stationId,$exam_id);
 
+
+         $inviteData = Invite::status($exam_id);
+
+
+         //将邀请状态插入$stationData
+         $examRoomData=  [];
+//         foreach ($teacherDatas as $key=>&$items) {
+             foreach ($teacherDatas as &$item) {
+
+                 $item->status = 0;
+                 foreach ($inviteData as $value) {
+                     if ($item->id == $value->invite_user_id) {
+
+                         $item->status = $value->status;
+//
+                     }
+//                    else {
+//                        $item->invite_status = 0;
+//                    }
+                 }
+             }
+//         }
          $teacher = $datas->toArray();
          foreach($teacher as &$teacherData){
 
              foreach ($teacherDatas as $value) {
 
                  if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id) {
-//                     $teacherData->sp_teacher = [$value];
                      $teacherData['sp_teacher'][] =$value;
-
                  } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id){
-//                     $teacherData->teacher =[$value];
                      $teacherData['teacher'][] =$value;
                  }
 
@@ -835,7 +856,7 @@ class ExamArrangeController extends CommonController
             {
                 throw new \Exception('保存失败');
             }
-            
+
             return response()->json(
                 $this->success_data([], 1, '保存成功！')
             );
