@@ -346,6 +346,9 @@ class DrawlotsController extends CommonController
             } else {
                 throw new \Exception('考试模式不存在！', -703);
             }
+            $request['id']=$teacher_id;
+            $request['exam_id']=$exam->id;
+            $this->getNextExaminee($request);//推送下一组
             return response()->json(
                 $this->success_data($studentData['nextTester'], 1, '验证完成')
             );
