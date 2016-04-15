@@ -18,6 +18,7 @@ use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamDraftFlowTemp;
 use Modules\Osce\Entities\ExamDraftTemp;
 use Modules\Osce\Entities\ExamGradation;
+use Modules\Osce\Entities\Invite;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
@@ -479,7 +480,7 @@ class ExamArrangeController extends CommonController
      * @author zhouqiang 2016-04-06
      * @return string
      */
-    public function getRoomList(Request $request)
+    public function getRoomList(Request $request, ExamArrangeRepository $examArrangeRepository)
     {
         $this->validate($request, [
             'room_name'     => 'sometimes',
@@ -502,7 +503,7 @@ class ExamArrangeController extends CommonController
 
         $examDraftFlow = new ExamDraftFlow();
         //临时保存缓存表中的数据
-        $roomIdArray = $examDraftFlow->saveArrangeDatas($exam_id, $condition);
+        $roomIdArray = $examDraftFlow->saveArrangeDatas($exam_id, $condition, $examArrangeRepository, null, null);
 
         if (empty($roomIdArray)){
             $roomIdArray = ExamDraftTemp::where('old_draft_flow_id', '=', $id)->get()->pluck('room_id')->toArray();
@@ -526,7 +527,7 @@ class ExamArrangeController extends CommonController
      * @return string
      */
 
-    public function getStationList(Request $request)
+    public function getStationList(Request $request, ExamArrangeRepository $examArrangeRepository)
     {
         $this->validate($request, [
             'station_name'      => 'sometimes',
@@ -548,7 +549,7 @@ class ExamArrangeController extends CommonController
         //查询出已用过的考站
         $examDraftFlow = new ExamDraftFlow();
         //临时保存缓存表中的数据
-        $stationIdArray = $examDraftFlow->saveArrangeDatas($exam_id, $condition);
+        $stationIdArray = $examDraftFlow->saveArrangeDatas($exam_id, $condition, $examArrangeRepository, null, null);
 
         if (empty($stationIdArray)){
             $stationIdArray = ExamDraftTemp::where('old_draft_flow_id', '=', $id)->get()->pluck('station_id')->toArray();
@@ -675,22 +676,42 @@ class ExamArrangeController extends CommonController
              $stationId []=$item->station_id;
          }
 
+
          //查询出考站下对应的老师
          $stationteaxherModel = new StationTeacher();
 
          $teacherDatas= $stationteaxherModel->getTeacherData($stationId,$exam_id);
 
+
+         $inviteData = Invite::status($exam_id);
+
+
+         //将邀请状态插入$stationData
+         $examRoomData=  [];
+//         foreach ($teacherDatas as $key=>&$items) {
+             foreach ($teacherDatas as &$item) {
+
+                 $item->status = 0;
+                 foreach ($inviteData as $value) {
+                     if ($item->id == $value->invite_user_id) {
+
+                         $item->status = $value->status;
+//
+                     }
+//                    else {
+//                        $item->invite_status = 0;
+//                    }
+                 }
+             }
+//         }
          $teacher = $datas->toArray();
          foreach($teacher as &$teacherData){
 
              foreach ($teacherDatas as $value) {
 
                  if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id) {
-//                     $teacherData->sp_teacher = [$value];
                      $teacherData['sp_teacher'][] =$value;
-
                  } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id){
-//                     $teacherData->teacher =[$value];
                      $teacherData['teacher'][] =$value;
                  }
 
@@ -812,11 +833,7 @@ class ExamArrangeController extends CommonController
      */
     public function postArrangeSave(Request $request,ExamArrangeRepository $examArrangeRepository)
     {
-        $connection = \DB::connection('osce_mis');
-        $connection->beginTransaction();
         try{
-
-
             $this->validate($request, [
                 'exam_id'  => 'required',
             ]);
@@ -825,44 +842,25 @@ class ExamArrangeController extends CommonController
             $status        =  $request->get('flag');
 
             $ExamDraftFlow = new ExamDraftFlow();
-
+                //拿到之前的数据
             $FrontArrangeData = $examArrangeRepository->getInquireExamArrange($exam_id);
 
             //保存考场安排所有数据
-            if(!$ExamDraftFlow->saveArrangeDatas($exam_id))
+            $result = $ExamDraftFlow->saveArrangeDatas($exam_id,[],$examArrangeRepository,$FrontArrangeData,$status);
+            if($result ===false){
+                return response()->json(
+                    $this->success_data([], -1)
+                );
+            }
+            if(!$result)
             {
                 throw new \Exception('保存失败');
-            }else{
-                if($status = 1){
-                    //清除数据
-                    $connection->commit();
-                    return response()->json(
-                        $this->success_data([], 1, '数据改动是否保存！')
-                    );
-                }else{
-                    //判断挡前数据和之前数据是否有变化如果有就清除排考内容
-                    $LaterArrangeData = $examArrangeRepository->getInquireExamArrange($exam_id);
-                    $ArrangeData = $examArrangeRepository->getDataDifference($exam_id,$FrontArrangeData,$LaterArrangeData);
-                    if($ArrangeData){
-                        //有改动还回code=-1用户确定
-                        return response()->json(
-                            $this->success_data([], -1, '数据改动是否保存！')
-                        );
-
-                    }else{
-                        $connection->commit();
-                        return response()->json(
-                            $this->success_data([], 1, '数据改动是否保存！')
-                        );
-                    }
-                }
-
-
-
             }
 
+            return response()->json(
+                $this->success_data([], 1, '保存成功！')
+            );
         } catch (\Exception $ex){
-            $connection->rollBack();
             return response()->json($this->fail($ex));
         }
 

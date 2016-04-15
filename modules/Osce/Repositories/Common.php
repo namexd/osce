@@ -319,12 +319,14 @@ class Common
         $data = $request->headers->all()['referer'][0];
 
         $fileNameArray = explode('?', $data);
+        if (count($fileNameArray)<2){
+            return false;
+        }
 
         $fileArray = explode('&', $fileNameArray[1]);
         if (is_null($fileArray)) {
             return false;
         }
-
         $fileData = [];
         foreach ($fileArray as $item) {
             $ensue = explode('=', $item);
