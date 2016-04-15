@@ -27,9 +27,14 @@ trait SQLTraits
      */
     function getGradations($exam)
     {
-        return ExamGradation::where('exam_id', $exam->id)
+        return ExamGradation::join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
+            ->where('exam_draft_flow.exam_id', $exam->id)
+            ->select(
+                'exam_gradation.order as gradation_order',
+                'exam_gradation.id as exam_gradation_id'
+            )
             ->get()
-            ->keyBy('order');
+            ->keyBy('gradation_order');
     }
 
     /**
@@ -436,12 +441,14 @@ trait SQLTraits
 
         $result = [];
 
-        foreach ($collections as $tempKey => $items) {
-            foreach ($items as $key => $item) {
+        foreach ($collections as $items) {
+            $k = 1;
+            foreach ($items as  $item) {
                 if ($item->optional == 1) {
-                    $item->serialnumber = $key + 1;
+                    $k++;
+                    $item->serialnumber = $k;
                 } else {
-                    $item->serialnumber = 1;
+                    $item->serialnumber = $k;
                 }
                 $result[] = $item;
             }
