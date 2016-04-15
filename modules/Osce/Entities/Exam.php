@@ -404,6 +404,7 @@ class Exam extends CommonModel
             {
                 //如果排考模式变化 删除 已有 教师关联 和 排考计划
                 if(!$examArrangeRepository->getExamManner($exam_id)){
+             
                     throw new \Exception('重置作废数据失败');
                 }
                 if(StationTeacher::where('exam_id','=',$exam_id)->delete()===false)
@@ -468,14 +469,29 @@ class Exam extends CommonModel
                         $item->gradation_number = $gradation;   //更新 当前考试阶段总数量
                         if(!$item->save()){
                             throw new \Exception('更新考试阶段关系失败!');
+                        }else{
+
+                            //清空原考试安排数据
+                            if(!$examArrangeRepository->getExamManner($exam_id)){
+
+                                throw new \Exception('重置作废数据失败');
+                            }
                         }
                         //2、多余的删除
                         if($item->order > $gradation){
                             if(!$item->delete()){
                                 throw new \Exception('删除多余的考试阶段关系失败!');
+                            }else{
+
+                                //清空原考试安排数据
+                                if(!$examArrangeRepository->getExamManner($exam_id)){
+
+                                    throw new \Exception('重置作废数据失败');
+                                }
                             }
                         }
                     }
+
                     //3、少了，则添加
                     if($num<$gradation){
                         for ($i=$num+1;$i<=$gradation;$i++){
@@ -487,7 +503,12 @@ class Exam extends CommonModel
                             ];
                             if(!ExamGradation::create($gradationData)){
                                 throw new \Exception('创建考试阶段关系失败！');
-                            }
+                            }else{
+                                //清空原考试安排数据
+                                if(!$examArrangeRepository->getExamManner($exam_id)){
+
+                                    throw new \Exception('重置作废数据失败');
+                                }}
                         }
                     }
                 }
@@ -504,7 +525,10 @@ class Exam extends CommonModel
 
                     if (!$result = ExamScreening::create($value)) {
                         throw new \Exception('添加考试场次信息失败');
+                    }else{
+
                     }
+
                     array_push($examScreening_ids, $result->id);
                 } else {
                     array_push($examScreening_ids, $value['id']);
@@ -512,7 +536,15 @@ class Exam extends CommonModel
 
                     if (!$result = $examScreening->updateData($value['id'], $value)) {
                         throw new \Exception('更新考试场次信息失败');
+                    }else{
+                        //清空原考试安排数据
+                        if(!$examArrangeRepository->getExamManner($exam_id)){
+
+                            throw new \Exception('重置作废数据失败');
+                        }
                     }
+
+
                 }
             }
             //查询是否有要删除的考试场次
@@ -521,6 +553,12 @@ class Exam extends CommonModel
                 foreach ($result as $value) {
                     if (!$res = ExamScreening::where('id', '=', $value['id'])->delete()) {
                         throw new \Exception('删除考试场次信息失败');
+                    }else{
+                        //清空原考试安排数据
+                        if(!$examArrangeRepository->getExamManner($exam_id)){
+
+                            throw new \Exception('重置作废数据失败');
+                        }
                     }
                 }
             }

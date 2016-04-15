@@ -57,8 +57,9 @@ class ExamArrange
 
     //归档考试邀请
     public function getTeacherInvite($examId){
+
         
-        $TeacherInvite = Invite::where('exam_id'.'=',$examId)->get();
+        $TeacherInvite = Invite::where('exam_id','=',$examId)->get();
         foreach ($TeacherInvite as $item){
             $item->status =3;
             if(!$item -> save()){
