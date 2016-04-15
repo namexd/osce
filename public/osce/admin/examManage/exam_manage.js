@@ -4485,9 +4485,10 @@ function station_assignment(){
                 delay: 250,
                 data: function() {
                     return {
-                       exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
-                       station_id:$elem.parent().parent().attr('station-id'),
-                       exam_id: examId
+                        exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
+                        station_id:$elem.parent().parent().attr('station-id'),
+                        exam_id: examId,
+                        order: parseInt($elem.parent().parent().attr('table-order'))+1,
                     } 
                 },
                 processResults: function (res) {
@@ -4567,10 +4568,10 @@ function station_assignment(){
                 delay: 250,
                 data: function() {
                     return {
-                       exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
-                       station_id:$elem.parent().parent().attr('station-id'),
-                       exam_id: examId,
-
+                        exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
+                        station_id:$elem.parent().parent().attr('station-id'),
+                        exam_id: examId,
+                        order: parseInt($elem.parent().parent().attr('table-order'))+1,
                     } 
                 },
                 processResults: function (res) {

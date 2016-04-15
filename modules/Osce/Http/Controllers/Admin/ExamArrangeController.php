@@ -491,7 +491,7 @@ class ExamArrangeController extends CommonController
         $name       = $request->get('room_name');
         $id         = $request->get('id');
         $exam_id    = $request->get('exam_id');
-        $order      = $request->get('order');
+        $order      = $request->get('order');           //站序号（如第一站）
         $stage_id   = $request->get('exam_gradation_id');
 
         $examDraftFlow = new ExamDraftFlow();
@@ -523,10 +523,10 @@ class ExamArrangeController extends CommonController
     public function getStationList(Request $request)
     {
         $this->validate($request, [
-            'station_name'  => 'sometimes',
-            'id'            => 'required',
-            'type'          => 'sometimes',
-            'draft_id'      => 'sometimes'
+            'station_name'      => 'sometimes',
+            'id'                => 'required',
+            'exam_id'           => 'sometimes',
+            'exam_gradation_id' => 'sometimes'
         ]);
 
         $name       = $request->get('station_name');
