@@ -8,7 +8,8 @@
 
 namespace Modules\Osce\Entities\SmartArrange\Traits;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection as DBCollection;
+use Illuminate\Support\Collection as Collection;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamPlanRecord;
@@ -124,17 +125,20 @@ trait SQLTraits
 
     /**
      * 获取当前场次下的流程个数
-     * @param $exam
-     * @param $screen
+     * @param Collection $entities
      * @return mixed
      * @author Jiangzhiheng
      * @time 2016-04-08 14:40
      */
-    function flowNum($exam, $screen)
+    function flowNum(Collection $entities)
     {
-        return count(ExamDraftFlow::where('exam_id', $exam->id)
-            ->where('exam_screening_id', $screen->id)
-            ->get());
+//        return ExamScreening::join('exam_gradation', function ($query) use ($exam) {
+//            $query->on('exam_gradation.order', '=', 'exam_screening.gradation_order')
+//                ->where('exam_gradation.exam_id', '=', $exam->id);
+//        })->join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
+//            ->where('exam_screening.id', $screen->id)
+//            ->count();
+        return $entities->groupBy('serialnumber')->count();
     }
 
     /**
@@ -161,6 +165,20 @@ trait SQLTraits
                     )
                 ))->Having('flowsNum', '<', $flowsNum)
             ->get();
+    }
+
+    /**
+     * 获取当前场次排考已经写完的条数
+     * @param $screenId
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-15 15:44
+     */
+    public function overStudentCount($screenId)
+    {
+        return ExamPlanRecord::where('exam_screening_id', $screenId)
+            ->whereNotNull('end_dt')
+            ->count();
     }
 
     /**
@@ -431,7 +449,7 @@ trait SQLTraits
      * @author Jiangzhiheng
      * @time 2016-04-13 16:20
      */
-    function setSerialnumber(Collection $collection, $groupBy = 'gradation_order', $sortBy = 'order', $desc = false)
+    function setSerialnumber(DBCollection $collection, $groupBy = 'gradation_order', $sortBy = 'order', $desc = false)
     {
         if ($desc === false) {
             $collections = $collection->sortBy($sortBy)->groupBy($groupBy);
@@ -443,7 +461,7 @@ trait SQLTraits
 
         foreach ($collections as $items) {
             $k = 1;
-            foreach ($items as  $item) {
+            foreach ($items as $item) {
                 if ($item->optional == 1) {
                     $k++;
                     $item->serialnumber = $k;
