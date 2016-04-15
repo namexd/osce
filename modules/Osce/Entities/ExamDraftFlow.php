@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities;
 
 use Modules\Osce\Repositories\Common;
 use DB;
+use Modules\Osce\Entities\ExamArrange\ExamArrangeRepository;
 
 class ExamDraftFlow extends CommonModel
 {
@@ -71,7 +72,7 @@ class ExamDraftFlow extends CommonModel
      * @author Zhoufuxiang 2016-04-14
      * @return array
      */
-    public function saveArrangeDatas($exam_id, $condition = [])
+    public function saveArrangeDatas($exam_id, $condition = [], ExamArrangeRepository $examArrangeRepository,$FrontArrangeData,$status)
     {
         $connection = DB::connection('osce_mis');
         $connection ->beginTransaction();
@@ -110,17 +111,31 @@ class ExamDraftFlow extends CommonModel
                 $connection->rollBack();
                 return $reData;
             }
+            
+            if($status ==1){
+                $connection->commit();
+                return true;
+            }
+            //判断挡前数据和之前数据是否有变化如果有就清除排考内容
+            $LaterArrangeData = $examArrangeRepository->getInquireExamArrange($exam_id);
+            $ArrangeData = $examArrangeRepository->getDataDifference($exam_id,$FrontArrangeData,$LaterArrangeData);
+            if($ArrangeData){
+                //有改动还回code=-1用户确定
+                return false;
+            }
 
             $connection->commit();
             return true;
-
+            
         } catch (\Exception $ex){
+
             //存在阶段ID，为临时获取数据，无需保存提交
             if (!empty($condition)){
                 $reData = $this->getTempDatas($exam_id, $condition);
                 $connection->rollBack();
                 return $reData;
             }
+
             $connection->rollBack();
             throw $ex;
         }
