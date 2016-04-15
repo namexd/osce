@@ -560,7 +560,6 @@ class DrawlotsController extends CommonController
             $this->getExaminee_arr($request);//当前组推送(可以获得)
             $inv=new InvigilatePadController();
             $msg=$inv->getAuthentication_arr($request);//当前考生推送(如果有)
-            dd($msg);
             if($msg) {
                 //调用向腕表推送消息的方法
                 $examQueue = ExamQueue::where('student_id', '=', $msg->student_id)

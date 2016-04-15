@@ -229,7 +229,7 @@ class InvigilatePadController extends CommonController
         ]);
 
 
-        try {
+
             $redis = Redis::connection('message');
             $stationId = $request['station_id'];
             $teacher_id = $request['teacher_id'];
@@ -242,12 +242,8 @@ class InvigilatePadController extends CommonController
                 return $studentData['nextTester'];
             } else {
                 $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
-                throw new \Exception('学生信息查询失败', -2);
             }
-        } catch (\Exception $ex) {
-            return $ex;
 
-        }
     }
 
 
