@@ -667,22 +667,24 @@ class ExamArrangeController extends CommonController
 
          $teacherDatas= $stationteaxherModel->getTeacherData($stationId,$exam_id);
 
-
-         foreach($datas as &$teacherData){
+         $teacher = $datas->toArray();
+         foreach($teacher as &$teacherData){
 
              foreach ($teacherDatas as $value) {
 
-                 if ($value->teacher_type == 2 && $teacherData->station_id == $value->station_id) {
-                     $teacherData->sp_teacher = [$value];
+                 if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id) {
+//                     $teacherData->sp_teacher = [$value];
+                     $teacherData['sp_teacher'][] =$value;
 
-                 } else if($value->teacher_type == 1 && $teacherData->station_id ==$value->station_id){
-                     $teacherData->teacher =[$value];
+                 } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id){
+//                     $teacherData->teacher =[$value];
+                     $teacherData['teacher'][] =$value;
                  }
 
              }
          }
          return response()->json(
-             $this->success_data($datas, 1, 'success')
+             $this->success_data($teacher, 1, 'success')
          );
      }
 
