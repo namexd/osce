@@ -961,8 +961,8 @@ class InvigilatePadController extends CommonController
             $nfc_code = $request->get('nfc_code');
             $examing = Exam::where('status','=',1)->first();
             //查询使用中的腕表数据
-            $watchModel = new Watch();
-            $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
+            $watchLogModel = new Watch();
+            $watchData = $watchLogModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
 
             if(count($watchData) > 0){
                 $watchData = $watchData->toArray();
@@ -1034,7 +1034,7 @@ class InvigilatePadController extends CommonController
             return response()->json($this->fail($ex));
 
         }
-        
+
     }
 
 
