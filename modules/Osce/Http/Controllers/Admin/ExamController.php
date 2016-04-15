@@ -804,14 +804,14 @@ class ExamController extends CommonController
             $examMode = Exam::findOrFail($id)->sequence_mode;
             switch ($examMode) {
                 case '1' :
-                    $result =  $this->getExamroomAssignment($request);
+                    $result =  $this->getStationAssignment($request);
                     break;
                 case '2' :
                     $result = $this->getStationAssignment($request);
 
                     break;
                 default:
-                    $result =  $this->getExamroomAssignment($request);
+                    $result =  $this->getStationAssignment($request);
             }
             return $result;
         } catch (\Exception $ex) {
