@@ -96,4 +96,19 @@ class ExamArrangeRepository extends AbstractExamArrange
         
         $this->model->resetSmartArrange($exam_id);
     }
+
+
+
+
+    //判断考场安排数据是否修改
+
+    public function getInquireExamArrange($exam_id){
+
+
+           $ExamArrangeData=$this->model->getInquireExamArrange($exam_id);
+        dd($ExamArrangeData);
+    }
+
+
+
 }

@@ -422,9 +422,9 @@ class Exam extends CommonModel
             //如果考试顺序变化清空智能排考
             if ($exam->sequence_mode != $examData['sequence_cate']) {
                 //清空智能排考
-                if (!$examArrangeRepository->resetSmartArrange($exam_id)) {
-                    throw new \Exception('重置作废智能排考数据失败');
-                }
+//                if (!$examArrangeRepository->resetSmartArrange($exam_id)) {
+//                    throw new \Exception('重置作废智能排考数据失败');
+//                }
             }
 
 

@@ -800,7 +800,7 @@ class ExamArrangeController extends CommonController
     {
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
-        try{
+//        try{
             $this->validate($request, [
                 'exam_id'  => 'required',
             ]);
@@ -812,6 +812,12 @@ class ExamArrangeController extends CommonController
             {
                 throw new \Exception('保存失败');
             }
+            //判断挡前数据和之前数据是否有变化如果有就清除排考内容
+
+            
+
+
+      
 
             $connection->commit();
 
@@ -820,10 +826,10 @@ class ExamArrangeController extends CommonController
                 $this->success_data([], 1, '保存成功！')
             );
 
-        } catch (\Exception $ex){
-            $connection->rollBack();
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex){
+//            $connection->rollBack();
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
