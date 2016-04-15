@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamArrange\ExamArrangeRepository;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamDraftFlowTemp;
@@ -24,6 +25,7 @@ use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\TeacherSubject;
 use Modules\Osce\Http\Controllers\CommonController;
 use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
+use Modules\Osce\Entities\SmartArrange\SmartArrangeRepository;
 
 class ExamArrangeController extends CommonController
 {
@@ -797,34 +799,61 @@ class ExamArrangeController extends CommonController
      * @return mixed
      * @throws \Exception
      */
-    public function postArrangeSave(Request $request)
+    public function postArrangeSave(Request $request,ExamArrangeRepository $examArrangeRepository)
     {
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
         try{
+
+
             $this->validate($request, [
                 'exam_id'  => 'required',
             ]);
 
             $exam_id       = $request->get('exam_id');
+            $status        =  $request->get('flig');
 
             $ExamDraftFlow = new ExamDraftFlow();
+
+            $FrontArrangeData = $examArrangeRepository->getInquireExamArrange($exam_id);
+          
+
+
             //保存考场安排所有数据
             if(!$ExamDraftFlow->saveArrangeDatas($exam_id))
             {
                 throw new \Exception('保存失败');
+            }else{
+                if($status == 1){
+                    //清除数据
+                    $connection->commit();
+                }else{
+                    $connection->rollBack();
+                }
+
+                //判断挡前数据和之前数据是否有变化如果有就清除排考内容
+                $LaterArrangeData = $examArrangeRepository->getInquireExamArrange($exam_id);
+                $ArrangeData = $examArrangeRepository->getDataDifference($exam_id,$FrontArrangeData,$LaterArrangeData);
+                if($ArrangeData){
+                    //有改动还回code=-1用户确定
+                    return response()->json(
+                        $this->success_data([], -1, '数据改动是否保存！')
+                    );
+
+                }else{
+                    return response()->json(
+                        $this->success_data([], 1, '数据改动是否保存！')
+                    );
+                }
+
             }
-            //判断挡前数据和之前数据是否有变化如果有就清除排考内容
-
-            //返回结果
-            return response()->json(
-                $this->success_data([], 1, '保存成功！')
-            );
-
 
         } catch (\Exception $ex){
+            $connection->rollBack();
             return response()->json($this->fail($ex));
         }
+
+
 
     }
 

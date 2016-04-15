@@ -14,6 +14,8 @@ use Modules\Osce\Entities\ExamArrange\Traits\SqlTraits;
 use Modules\Osce\Entities\ExamArrange\Traits\SundryTraits;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\ExamDraft;
+use Modules\Osce\Entities\ExamDraftFlow;
 
 class ExamArrangeRepository extends AbstractExamArrange
 {
@@ -96,19 +98,53 @@ class ExamArrangeRepository extends AbstractExamArrange
         
         $this->model->resetSmartArrange($exam_id);
     }
-
-
-
+    
 
     //判断考场安排数据是否修改
 
     public function getInquireExamArrange($exam_id){
 
-
-           $ExamArrangeData=$this->model->getInquireExamArrange($exam_id);
-        dd($ExamArrangeData);
+        $ExamDraftFlowData = ExamDraftFlow::where('exam_id','=',$exam_id)->get();
+        $FlowId = $ExamDraftFlowData->pluck('id');
+        $ExamDraft =  ExamDraft::whereIn('exam_draft_flow_id',$FlowId)->get();
+        return [ 'FlowData'=>$ExamDraftFlowData ,'DraftData'=>$ExamDraft];
     }
 
+    //考试安排数据的差异
+    public  function getDataDifference($exam_id,$FrontArrangeData,$LaterArrangeData){
+        $result = '';
+        if(is_null($FrontArrangeData)){
+            //说明是刚新增就就不弹框直接保存
+            $result = true;
+        }
+        
+        //比较小站数据条数是否一致
+        if(count($FrontArrangeData['DraftData'])!=count($LaterArrangeData['DraftData'])){
+            $result = true;
+        }else{
+            //比较小站里的数据是否一致
+            
+
+        }
+       
+        if(count($FrontArrangeData['FlowData'])!=count($LaterArrangeData['FlowData'])){
+
+            $result = true;
+        }else{
+            //比较阶段是否一致
+            foreach ($FrontArrangeData['FlowData'] as $item){
+                foreach ($LaterArrangeData['FlowData'] as $value){
+                    if($item->exam_gradation_id != $value->exam_gradation_id){
+                        $result = true;
+                    }
+                }
+            }
+            
+        }
+        
+        return $result;
+
+    }
 
 
 }

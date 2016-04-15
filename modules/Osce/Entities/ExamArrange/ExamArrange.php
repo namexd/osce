@@ -89,17 +89,7 @@ class ExamArrange
     }
     
     
-    public function getInquireExamArrange($exam_id){
-
-        $ExamDraftFlowData = ExamDraftFlow::where('exam_id','=',$exam_id)->get();
-        $FlowId = $ExamDraftFlowData->pluck('id');
-       $ExamDraft =  ExamDraft::whereIn('exam_draft_flow_id',$FlowId)->get();
-        return [$ExamDraftFlowData ,$ExamDraft];
-        
-        
-
-
-    }
+  
     
     
     
