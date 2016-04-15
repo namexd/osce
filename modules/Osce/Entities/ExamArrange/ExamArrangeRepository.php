@@ -95,8 +95,14 @@ class ExamArrangeRepository extends AbstractExamArrange
 
 
     public  function resetSmartArrange($exam_id){
-        
-        $this->model->resetSmartArrange($exam_id);
+        try{
+            $this->model->resetSmartArrange($exam_id);
+        }catch (\Exception $ex){
+            throw $ex;
+        }
+
+
+
     }
     
 

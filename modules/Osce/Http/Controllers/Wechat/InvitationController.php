@@ -138,13 +138,18 @@ class InvitationController extends CommonController
 
             if (is_null($TeacherInvite)) {
                 $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
-                if (!$teacherDel) {
-                    throw new \Exception('删除老师关联失败');
-                }else{
-                    $code =2;
+                if(is_null($teacherDel)){
+
+                }else {
+                    if (!$teacherDel->delete()) {
+                        throw new \Exception('删除老师关联失败');
+                    } else {
+                        $code = 2;
+                    }
                 }
 
             } else {
+  
                 //根据老师id查询老师的信息和openid
                 $teacher = new Teacher();
                 $teacherData = $teacher->invitationContent($teacher_id);

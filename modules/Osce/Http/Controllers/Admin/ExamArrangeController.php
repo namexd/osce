@@ -723,20 +723,6 @@ class ExamArrangeController extends CommonController
      }
 
 
-
-
-//    private function getTeacherList(){
-//
-//    }
-//
-//    private function groupTeacherList($teatherList){
-//        return  [];
-//    }
-//
-//    private function groupSpTeacherList($teatherList){
-//        return  [];
-//    }
-
     /**
      * 保存考官安排数据
      * @param Request $request
@@ -847,7 +833,7 @@ class ExamArrangeController extends CommonController
 
             //保存考场安排所有数据
             $result = $ExamDraftFlow->saveArrangeDatas($exam_id,[],$examArrangeRepository,$FrontArrangeData,$status);
-            if($result ===false){
+            if($result ==false){
                 return response()->json(
                     $this->success_data([], -1)
                 );
