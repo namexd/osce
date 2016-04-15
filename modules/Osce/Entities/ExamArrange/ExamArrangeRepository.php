@@ -79,7 +79,7 @@ class ExamArrangeRepository extends AbstractExamArrange
             if ($this->model->getTeacherArrange($exam_id)) {
                 if ($this->model->getTeacherInvite($exam_id)) {
                     //清除智能排考
-                    $this->resetSmartArrange($exam_id);
+                    $this->model->resetSmartArrange($exam_id);
                 }
             }
         }
