@@ -4170,8 +4170,8 @@ function station_assignment(){
                     var str = data[i].order - 1;
                     exam_stage_str += '<option value="'+data[i].order+'">阶段'+stationName[str]+'</option>';
                 }
-                req['order'] = data[0].order;
-                req['exam_gradation_id'] = data[0].id
+                req['order'] = index + 1;
+                req['exam_gradation_id'] = data[0].id;
             }
         });
 
