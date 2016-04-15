@@ -392,7 +392,6 @@ class DrawlotsController extends CommonController
             'teacher_id' =>'required|integer'
 
         ], [
-            'exam_queue_id.required' => '考生队列编号信息必须',
             'station_id.required' => '考站编号信息必须',
             'teacher_id.required'=>'老师编号信息必须',
         ]);
@@ -400,29 +399,29 @@ class DrawlotsController extends CommonController
             $stationId = (int)$request->input('station_id');
             $examQueueId = (int)$request->input('exam_queue_id');//队列id
             $teacher_id =(int)$request->input('teacher_id');
-            dd(111);
+
             if($examQueueId) {
-                dd(222);
+
                 ExamQueue::where('id', $examQueueId)->increment('next_num', 1);//下一次次数增加
             }
             $exam = Exam::doingExam();
             //$studentModel = new  Student();
-dd(2);
+
             //$studentData = $studentModel->nextStudentList($stationId, $exam);
             list($room_id, $stations) = $this->getRoomIdAndStation($teacher_id, $exam);
             if ($exam->sequence_mode == 1) {
-                dd(5);
+
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations);
             } elseif ($exam->sequence_mode == 2) {
-                dd(6);
+
                 $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id);
             } else {
                 throw new \Exception('考试模式不存在！', -703);
             }
-            dd(3);
+
             $request['id']=$teacher_id;
             $request['exam_id']=$exam->id;
-            dd(1);
+            
             $this->getNextExaminee_arr($request);//推送下一组
             $this->getExaminee_arr($request);//推送当前小组
             return response()->json(
