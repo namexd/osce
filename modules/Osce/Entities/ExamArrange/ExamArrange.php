@@ -9,7 +9,7 @@
 namespace Modules\Osce\Entities\ExamArrange;
 
 
-use Modules\Osce\Entities\ExamArrange\Traits\SundryTraits;
+use Modules\Osce\Entities\ExamArrange\Traits\SqlTraits;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\Invite;
@@ -19,7 +19,7 @@ use Modules\Osce\Entities\Room;
 
 class ExamArrange
 {
-    use SundryTraits;
+    use SqlTraits;
     //清空考试安排
     public function getEmptyExamArrange($examId){
         
@@ -69,5 +69,21 @@ class ExamArrange
         return true;
     }
 
-    
+    /**
+     * 清除智能排考的数据
+     * @param $examId
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-15
+     */
+    public function resetSmartArrange($examId)
+    {
+        try {
+            $this->emptyingPlan($examId);
+            $this->emptyingPlanRecord($examId);
+            $this->emptyingOrder($examId);
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 }
