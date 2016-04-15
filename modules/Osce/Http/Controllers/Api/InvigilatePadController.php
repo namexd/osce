@@ -219,7 +219,7 @@ class InvigilatePadController extends CommonController
 
     public function getAuthentication_arr($request)
     {
-        /*
+
         $this->validate($request, [
             'station_id' => 'required|integer',
             'teacher_id' => 'required|integer'
@@ -227,7 +227,7 @@ class InvigilatePadController extends CommonController
             'station_id.required' => '考站编号必须',
             'teacher_id.required' => '老师编号必须'
         ]);
-        */
+
 
         try {
             $redis = Redis::connection('message');
