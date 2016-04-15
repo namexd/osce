@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities;
 
 
 use Modules\Osce\Repositories\Common;
+use DB;
 
 class ExamDraftFlow extends CommonModel
 {
@@ -64,6 +65,121 @@ class ExamDraftFlow extends CommonModel
     }
 
     /**
+     * 保存考场安排所有数据
+     * @param $exam_id
+     *
+     * @author Zhoufuxiang 2016-04-14
+     * @return array
+     */
+    public function saveArrangeDatas($exam_id, $stage_id = null, $room = null, $station = null, $order = null)
+    {
+        $connection = DB::connection('osce_mis');
+        $connection ->beginTransaction();
+        try{
+            $ExamDraft     = new ExamDraft();
+            //获取所有临时数据
+            $datas = $this->getAllTempDatas($exam_id);
+
+            if (empty($datas)){
+                throw new \Exception('数据为空');
+            }
+
+            foreach ($datas as $data) {
+                //操作大表
+                if ($data['is_draft_flow'] == 1) {
+                    if(!$this->handleBigData($data)){
+                        throw new \Exception('保存失败，请重试！');
+                    }
+
+                    //操作小表
+                } else {
+                    if(!$ExamDraft->handleSmallData($data)){
+                        throw new \Exception('保存失败，请重试！');
+                    }
+                }
+            }
+
+            //处理 待删除 数据（如：清空临时表数据，删除正式表待删除数据）
+            $ExamDraftTempModel = new ExamDraftTemp();
+            if (!$ExamDraftTempModel->handleDelDatas($exam_id)){
+                throw new \Exception('处理待删除数据失败');
+            }
+            //存在阶段ID，为临时获取数据，无需保存提交
+            if (!is_null($stage_id)){
+                $reData = $this->getTempDatas($exam_id, $stage_id, $room, $station, $order);
+                $connection->rollBack();
+                return $reData;
+            }
+
+            $connection->commit();
+            return true;
+
+        } catch (\Exception $ex){
+            //存在阶段ID，为临时获取数据，无需保存提交
+            if (!is_null($stage_id)){
+                $reData = $this->getTempDatas($exam_id, $stage_id, $room, $station, $order);
+                $connection->rollBack();
+                return $reData;
+            }
+            $connection->rollBack();
+            throw $ex;
+        }
+    }
+
+    /**
+     * 获取所有临时数据
+     * @param $exam_id
+     *
+     * @author Zhoufuxiang 2016-04-07
+     * @return array
+     */
+    private function getAllTempDatas($exam_id)
+    {
+        //获取所有临时数据
+        $draftFlows = ExamDraftFlowTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
+        $drafts     = ExamDraftTemp::where('exam_id', '=', $exam_id)->orderBy('created_at')->get();
+
+        //所有临时数据 组合
+        $datas = [];
+        foreach ($draftFlows as $draftFlow) {
+            $datas[strtotime($draftFlow->created_at->format('Y-m-d H:i:s'))] = [
+                'item' => $draftFlow,
+                'is_draft_flow' => 1
+            ];
+        }
+
+        foreach ($drafts as $draft) {
+
+            $time   =   strtotime($this->timeIndex($datas,$draft->add_time));
+            $datas[$time] = [
+                'item' => $draft,
+                'is_draft_flow' => 0
+            ];
+        }
+        ksort($datas);     //数组按时间（键）进行排序
+
+        return $datas;
+    }
+
+    /**
+     * 时间转换
+     * @param $data
+     * @param $time
+     * @return mixed
+     */
+    private function timeIndex($data,$time){
+        if(array_key_exists(strtotime($time),$data))
+        {
+            $time   =   strtotime($time)+1;
+            return $this->timeIndex($data,date('Y-m-d H:i:s',$time));
+        }
+        else
+        {
+            return  $time;
+        }
+    }
+
+    /**
      * 处理大表（站）数据
      * @param $data
      *
@@ -71,7 +187,7 @@ class ExamDraftFlow extends CommonModel
      * @return bool
      * @throws \Exception
      */
-    public function handleBigData($data)
+    private function handleBigData($data)
     {
         $value = $data['item']->ctrl_type;
         try{
@@ -237,4 +353,44 @@ class ExamDraftFlow extends CommonModel
             throw $ex;
         }
     }
+
+    /**
+     * 获取临时保存数据
+     * @param $exam_id
+     * @param $stage_id
+     * @param null $room
+     * @param null $station
+     *
+     * @author Zhoufuxiang 2016-4-15
+     * @return array
+     */
+    public function getTempDatas($exam_id, $stage_id, $room = null, $station = null, $order = null)
+    {
+        $examInfo = Exam::where('id','=',$exam_id)->first();
+
+        $datas = ExamDraft::select(['exam_draft.room_id', 'exam_draft.station_id'])
+                ->leftJoin('exam_draft_flow','exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                ->where('exam_draft_flow.exam_id', '=', $exam_id)
+                ->where('exam_draft_flow.exam_gradation_id', '=', $stage_id);
+
+        //考场分组模式
+        if($examInfo->sequence_mode ==1){
+            if ($room === 1){
+                $datas = $datas->where('exam_draft_flow.order', '<>', $order);
+            }
+        }
+
+        //取考场相关数据
+        if ($room === 1){
+            return $datas = $datas->groupBy('exam_draft.room_id')->get()
+                            ->pluck('room_id')->toArray();
+        }
+        //取考站相关数据
+        if ($station === 1){
+            return $datas = $datas->groupBy('exam_draft.station_id')->get()
+                            ->pluck('station_id')->toArray();
+        }
+    }
+
+
 }

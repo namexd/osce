@@ -90,4 +90,10 @@ class ExamArrangeRepository extends AbstractExamArrange
         }
         return true;
     }
+
+
+    public  function resetSmartArrange($exam_id){
+        
+        $this->model->resetSmartArrange($exam_id);
+    }
 }
