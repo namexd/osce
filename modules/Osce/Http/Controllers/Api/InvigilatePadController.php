@@ -289,6 +289,7 @@ class InvigilatePadController extends CommonController
             $exam = Exam::find($examId);
             $standardItemModel = new StandardItem();
             $standardItemList = $standardItemModel->getSubjectStandards($station->subject_id);
+            //dd($standardItemList);
             if (count($standardItemList) != 0) {
                 return response()->json(
                     $this->success_data($standardItemList, 1, '数据传送成功')
@@ -352,7 +353,7 @@ class InvigilatePadController extends CommonController
 //            getMinutes
             $data = [
                 'station_id' => $stationId,//考站编号
-                'examinee_id' => $studentId,//考生编号
+                'student_id' => $studentId,//考生编号
                 'exam_screening_id' => $examScreeningId,//场次编号
                 'begin_dt' => $studentExamTime->begin_dt,//考试开始时间
                 'end_dt' => $studentExamTime->end_dt,//考试实际结束时间
