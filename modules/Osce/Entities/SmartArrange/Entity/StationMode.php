@@ -46,7 +46,7 @@ class StationMode extends AbstractEntity implements EntityInterface
             'exam_id' => $exam->id,
             'exam_screening_id' => $screen->id,
             'begin_dt' => date('Y-m-d H:i:s', $i),
-            'serialnumber' => $entity->gradation_order,
+            'serialnumber' => $entity->serialnumber,
             'flow_id' => $entity->flow_id,
             'gradation_order' => $screen->gradation_order
         ];

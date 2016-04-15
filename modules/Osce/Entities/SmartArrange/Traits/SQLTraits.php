@@ -297,7 +297,7 @@ trait SQLTraits
             ->join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
             ->join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
             ->join('subject', 'subject.id', '=', 'exam_draft.subject_id')
-            ->join('station', 'station.id', '=', 'exam_draft.station_id')
+            ->join('room', 'room.id', '=', 'exam_draft.room_id')
             ->where('exam_screening.id', $screen->id)
             ->where('exam_gradation.exam_id', $exam->id)
             ->select(
@@ -330,10 +330,13 @@ trait SQLTraits
      * @author Jiangzhiheng
      * @time 2016-04-08 17:53
      */
-    function roomStation($screen, $roomId)
+    function roomStation($exam, $screen, $roomId)
     {
-        return ExamDraft::left('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-            ->where('exam_draft_flow.exam_screening_id', '=', $screen->id)
+        return ExamDraft::join('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->join('exam_gradation', 'exam_gradation_id', '=', 'exam_gradation.id')
+            ->join('exam_screening', 'exam_screening.gradation_order', '=', 'exam_gradation.order')
+            ->where('exam_screening.id', $screen->id)
+            ->where('exam_gradation.exam_id', $exam->id)
             ->where('exam_draft.room_id', $roomId)
             ->select(
                 'exam_draft.id as exam_draft_id',
@@ -363,9 +366,10 @@ trait SQLTraits
      * @author Jiangzhiheng
      * @time 2016-04-08 18:55
      */
-    function getStudentSerialnumber($exam, $testingStudent)
+    function getStudentSerialnumber($exam, $screen, $testingStudent)
     {
         return ExamPlanRecord::where('student_id', $testingStudent->id)
+            ->where('gradation_order', $screen->gradation_order)
             ->where('exam_id', $exam->id)->get()
             ->pluck('serialnumber');
     }
@@ -463,8 +467,8 @@ trait SQLTraits
             $k = 1;
             foreach ($items as $item) {
                 if ($item->optional == 1) {
-                    $k++;
                     $item->serialnumber = $k;
+                    $k++;
                 } else {
                     $item->serialnumber = $k;
                 }

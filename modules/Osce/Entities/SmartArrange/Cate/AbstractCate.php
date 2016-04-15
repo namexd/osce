@@ -55,14 +55,15 @@ abstract class AbstractCate
         return $students;
     }
 
-    protected function testingStudents($exam, $testStudents) {
+    protected function testingStudents($exam, $screen, $testStudents) {
         $tempTestStudent = [];
         foreach ($testStudents as $key => $student) {
             if (is_null($student)) {
                 continue;
             }
+
             //获取该考生已经考过的流程
-            $studentSerialnumber = $this->getStudentSerialnumber($exam, $student);
+            $studentSerialnumber = $this->getStudentSerialnumber($exam, $screen, $student);
 
             if (is_array($testStudents)) {
                 $tempStudent = array_pull($testStudents, $key);
@@ -81,12 +82,12 @@ abstract class AbstractCate
         return $tempTestStudent;
     }
 
-    protected function studentNum($entity, $testStudents, $result)
+    protected function studentNum($entity, $screen, $testStudents, $result)
     {
 
         foreach ($testStudents as $testStudent) {
             if (is_object($testStudent)) {
-                $serialnumber = $this->getStudentSerialnumber($this->exam, $testStudent);
+                $serialnumber = $this->getStudentSerialnumber($this->exam, $screen, $testStudent);
 
                 if (in_array($entity->serialnumber, $serialnumber->toArray())) {
                     continue;
