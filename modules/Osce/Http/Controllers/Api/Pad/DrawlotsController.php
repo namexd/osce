@@ -543,9 +543,9 @@ class DrawlotsController extends CommonController
             $roomMsg_two = $examScreen->getNearestScreening($exam->id);
 
             if($roomMsg){
-                $station->exam_screening_id=$roomMsg->exam_screening_id;
+                $station->exam_screening_id=$roomMsg->id;
             }elseif($roomMsg_two){
-                $station->exam_screening_id=$roomMsg->exam_screening_id;
+                $station->exam_screening_id=$roomMsg->id;
             }
 
             //将考场的id封装进去
