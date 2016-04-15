@@ -302,7 +302,7 @@ class DrawlotsController extends CommonController
     }
 
     /**
-     * 获取下个考生信息
+     * 获取下个考生信息返回当前组学生信息
      * @method GET
      * @url osce/pad/next-student
      * @access public
@@ -335,8 +335,8 @@ class DrawlotsController extends CommonController
             $teacher_id =(int)$request->input('teacher_id');
             ExamQueue::where('id',$examQueueId)->increment('next_num', 1);//下一次次数增加
             $exam = Exam::doingExam();
-            $studentModel = new  Student();
-            $studentData = $studentModel->nextStudentList($stationId, $exam);
+            //$studentModel = new  Student();
+            //$studentData = $studentModel->nextStudentList($stationId, $exam);
 
             list($room_id, $stations) = $this->getRoomIdAndStation($teacher_id, $exam);
             if ($exam->sequence_mode == 1) {
@@ -351,7 +351,7 @@ class DrawlotsController extends CommonController
             $this->getNextExaminee($request);//推送下一组
             $this->getExaminee($request);//推送当前小组
             return response()->json(
-                $this->success_data($studentData['nextTester'], 1, '验证完成')
+                $this->success_data($examQueue, 1, '验证完成')
             );
 
         } catch (\Exception $ex) {
