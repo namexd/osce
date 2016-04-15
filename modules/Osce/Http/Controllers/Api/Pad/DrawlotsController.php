@@ -349,6 +349,7 @@ class DrawlotsController extends CommonController
             $request['id']=$teacher_id;
             $request['exam_id']=$exam->id;
             $this->getNextExaminee($request);//推送下一组
+            $this->getExaminee($request);//推送当前小组
             return response()->json(
                 $this->success_data($studentData['nextTester'], 1, '验证完成')
             );
