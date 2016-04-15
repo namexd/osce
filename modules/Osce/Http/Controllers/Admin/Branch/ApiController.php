@@ -751,6 +751,7 @@ class ApiController extends CommonController
                                     ->where('exam_screening_id', '=', $examScreeningId)
                                     ->where('station_id', '=', $stationId)
                                     ->where('status', '=', 0)
+                                    ->orderBy('begin_dt', 'asc')
                                     ->first();
         if (is_null($examQenen)) {
             $retval = ['title' => '未查到相应考试队列信息'];
@@ -762,7 +763,7 @@ class ApiController extends CommonController
         $watchLogModel = new WatchLog();
         $watch = $watchLogModel->leftJoin('watch', function($join){
             $join->on('watch_log.watch_id', '=', 'watch.id');
-        })->where('watch_log.student_id', '=', $examQenen->student_id)
+        })->where('watch_log.student_id', '=', $examQenen->student_id) //7382
                  ->where('watch.status', '=', 1)
                  ->select([
                     'watch.nfc_code as nfc_code',

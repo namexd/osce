@@ -142,32 +142,4 @@ class WatchLog extends CommonModel{
 
         return $builder;
     }
-
-    //查询使用中的腕表数据
-    public function getWatchAboutData($status,$type,$nfc_code,$examId){
-        if($type === 0){
-            $builder = $this->whereIn('exam_queue.status',[0,1]);
-        }elseif($type == 1){
-            $builder = $this->where('exam_queue.status','=',2);
-        }elseif($type == 2){
-            $builder = $this->where('exam_queue.status','=',3);
-        }else{
-            $builder = $this;
-        }
-
-        if(!empty($nfc_code)){
-            $builder = $builder->where('watch.code','=',$nfc_code);
-        }
-
-
-        $builder = $builder->where('watch.status','=',$status)->where('exam_queue.exam_id','=',$examId)->leftjoin('watch',function($watchLog){
-            $watchLog->on('watch.id','=','watch_log.watch_id');
-        })->leftjoin('exam_queue',function($examQueue){
-            $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
-        })->leftjoin('student',function($examQueue){
-            $examQueue->on('student.id','=','watch_log.student_id');
-        })->groupBy('name')->select('watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')->get();
-
-        return $builder;
-    }
 }

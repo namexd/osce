@@ -873,6 +873,7 @@ class InvigilatePadController extends CommonController
         );
     }
 
+
     /**
      *  查看考生及与其绑定的腕表的详细信息
      * @method GET
@@ -962,8 +963,8 @@ class InvigilatePadController extends CommonController
             $nfc_code = $request->get('nfc_code');
             $examing = Exam::where('status','=',1)->first();
             //查询使用中的腕表数据
-            $watchLogModel = new WatchLog();
-            $watchData = $watchLogModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
+            $watchModel = new Watch();
+            $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
 
             if(count($watchData) > 0){
                 $watchData = $watchData->toArray();
