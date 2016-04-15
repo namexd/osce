@@ -1,7 +1,13 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
-
+    <style>
+        @media (max-width: 1204px) {
+            .min1024{
+                width:230px !important;
+            }
+        }
+    </style>
 @stop
 
 @section('only_js')
@@ -28,7 +34,7 @@
             <div class="container-fluid ibox-content">
                 <div class="input-group" style="margin:20px 0;">
                     <label for="" class="pull-left exam-name">考试名称：</label>
-                    <select name="name" class="input-sm form-control exam_select" style="width: 250px;height: 34px">
+                    <select name="name" class="input-sm form-control exam_select min1024" style="width: 250px;height: 34px">
                         @if(!empty($examlist))
                             @foreach(@$examlist as $exam)
                         <option value="{{ $exam['id'] }}">{{ $exam['name'] }}</option>
@@ -36,7 +42,7 @@
                         @endif
                     </select>
                     <label for="" class="pull-left exam-name" style="margin-left: 20px;">科目名称：</label>
-                    <select name="name" class="input-sm form-control student_select" style="width: 250px;height: 34px">
+                    <select name="name" class="input-sm form-control student_select min1024" style="width: 250px;height: 34px">
 
                     </select>
                     <button type="submit" class="btn btn-sm btn-primary marl_10" id="search">搜索</button>
