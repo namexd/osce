@@ -320,7 +320,7 @@ class DrawlotsController extends CommonController
      */
     public function nextStudent(Request $request){
         $this->validate($request, [
-            'exam_queue_id' => 'required|integer',
+            'exam_queue_id' => 'sometime|integer',
             'station_id' => 'required|integer',
             'teacher_id' =>'required|integer'
 
@@ -333,7 +333,9 @@ class DrawlotsController extends CommonController
             $stationId = (int)$request->input('station_id');
             $examQueueId = (int)$request->input('exam_queue_id');//队列id
             $teacher_id =(int)$request->input('teacher_id');
-            ExamQueue::where('id',$examQueueId)->increment('next_num', 1);//下一次次数增加
+            if($examQueueId) {
+                ExamQueue::where('id', $examQueueId)->increment('next_num', 1);//下一次次数增加
+            }
             $exam = Exam::doingExam();
             //$studentModel = new  Student();
 
