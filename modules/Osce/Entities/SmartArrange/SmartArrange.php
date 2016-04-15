@@ -135,7 +135,7 @@ class SmartArrange
 
         //获取当前考试场次的流程个数
         $this->flowNum = $this->flowNum($this->_E);
-        
+
         /*
          * 获得场次的开始和结束时间
          */
@@ -143,7 +143,6 @@ class SmartArrange
         $endDt = strtotime($screen->end_dt);
         //本次场次的流程
         $serialnumber = array_unique($this->_E->pluck('serialnumber')->toArray());
-
         /*
          * 得到完整流程所需的时间
          * 先初始化流程总时间
@@ -168,7 +167,6 @@ class SmartArrange
 
         $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
         $this->doorStatus = count($this->_E); //将当前实体的个数作为开关门的初始值
-
         //初始化数据
         $i = $beginDt;
         $k = 3;
@@ -182,7 +180,6 @@ class SmartArrange
                     $tempBool = true;
                 }
 
-
                 if (!$tempBool) {
                     //将总考池和侯考区考生打包进数组
                     $params = ['total' => $this->_S, 'wait' => $this->_S_W, 'serialnumber' => $serialnumber, 'exam' => $this->exam];
@@ -193,14 +190,12 @@ class SmartArrange
 
                     $this->_S = $this->cate->getTotalStudent();
                     $this->_S_W = $this->cate->getWaitStudent();
-
                     if (count($students) == 0) {
                         continue;
                     }
                     //变更学生的状态(写记录)
                     foreach ($students as &$student) {
                         $data = $this->mode->dataBuilder($this->exam, $screen, $student, $entity, $i);
-
                         if (ExamPlanRecord::create($data)) {
                             $this->doorStatus--;
                         } else {
@@ -246,8 +241,10 @@ class SmartArrange
             }
             //TODO 排完后终止循环的操作，待施工
             if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum) {
+//                dd($this->overStudentCount($screen), $this->_S_Count, $this->flowNum);
                 break;
             }
+//            sleep(1);
         }
         
         //获取未走完流程的考生

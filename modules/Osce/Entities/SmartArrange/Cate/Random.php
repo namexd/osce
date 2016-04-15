@@ -39,7 +39,9 @@ class Random extends AbstractCate implements CateInterface
          * 从正在考的学生里找到对应个数的考生
          * 如果该考生已经考过了这个流程，就忽略掉
          */
-        $result = $this->studentNum($entity, $testStudents, $result);
+
+        $result = $this->studentNum($entity, $screen, $testStudents, $result);
+
 
 
         /*
@@ -85,13 +87,13 @@ class Random extends AbstractCate implements CateInterface
 
         $arrays = [];
         foreach ($waitingStudents as $waitingStudent) {
-            $arrays = $waitingStudent->student;
+            $arrays[] = $waitingStudent->student;
         }
 
         if (count($testingStudents) == 0) {
             $arrays = $this->beginStudents($entity);
         }
 
-        return $this->testingStudents($this->exam, $arrays);
+        return $this->testingStudents($this->exam, $screen, $arrays);
     }
 }

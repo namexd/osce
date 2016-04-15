@@ -87,6 +87,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
 //                    $exam->id)->first();  //通过查询数据表中是否有没有写入end_dt的数据
 
                 if (count($this->model->getStudents()) != 0 || count($this->model->getWaitStudents()) != 0) {
+//                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()));
                     throw new \Exception('人数太多，所设时间无法完成考试', -99);
                 }
             }
@@ -201,7 +202,6 @@ class SmartArrangeRepository extends AbstractSmartArrange
             $connection->commit();
         } catch (\Exception $ex) {
             $connection->rollBack();
-            dd($ex);
             throw $ex;
         }
     }

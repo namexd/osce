@@ -23,7 +23,8 @@ class RoomMode extends AbstractEntity implements EntityInterface
 
         //为每个考场写入多少个考站和用时多少
         foreach ($entities as &$entity) {
-            $roomStation = $this->roomStation($screen, $entity->room_id);
+            $roomStation = $this->roomStation($exam, $screen, $entity->room_id);
+
             $entity->needNum = count($roomStation);
         }
 
@@ -34,6 +35,7 @@ class RoomMode extends AbstractEntity implements EntityInterface
 
     function dataBuilder($exam, $screen, $student, $entity, $i)
     {
+        
         // TODO: Implement dataBuilder() method.
         $data = [
             'student_id' => is_null($student->id) ? $student->student_id : $student->id,
@@ -42,7 +44,7 @@ class RoomMode extends AbstractEntity implements EntityInterface
             'exam_id' => $exam->id,
             'exam_screening_id' => $screen->id,
             'begin_dt' => date('Y-m-d H:i:s', $i),
-            'serialnumber' => $entity->gradation_order,
+            'serialnumber' => $entity->serialnumber,
             'flow_id' => $entity->flow_id,
             'gradation_order' => $screen->gradation_order
         ];

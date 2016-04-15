@@ -28,11 +28,9 @@ class Poll extends AbstractCate implements CateInterface
          * 从正在考的学生里找到对应个数的考生
          * 如果该考生已经考过了这个流程，就忽略掉
          */
-        $result = $this->studentNum($entity, $testStudnts, $result);
-
+        $result = $this->studentNum($entity, $screen,$testStudnts, $result);
         if (count($result) < $entity->needNum) {
-            $hasStudent = $entity->needNum - count($result);
-            for ($i = 0; $i <= $hasStudent; $i++) {
+            for ($i = 0; $i <= $entity->needNum - count($result); $i++) {
                 if (count($this->_S_W) > 0) {
                     $thisStudent = array_shift($this->_S_W);
                     if (!is_null($thisStudent)) {
@@ -76,6 +74,6 @@ class Poll extends AbstractCate implements CateInterface
         if (count($tempArrays) == 0) {
             $arrays = $this->beginStudents($entity);
         }
-        return $this->testingStudents($this->exam, $arrays);
+        return $this->testingStudents($this->exam, $screen, $arrays);
     }
 }
