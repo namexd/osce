@@ -241,10 +241,13 @@ class AnswerController extends CommonController
         try{
             $answerModel->saveAnswer($data,$resultData);
             \Session::pull('systemTimeStart');//删除session
+
             return response()->json(
+
                 $this->success_data([],1,'success')
             );
         }catch (\Exception $ex) {
+            
             return response()->json($this->fail($ex));
 
         }
