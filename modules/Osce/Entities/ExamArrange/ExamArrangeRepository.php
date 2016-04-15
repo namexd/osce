@@ -17,7 +17,7 @@ use Modules\Osce\Entities\Station;
 
 class ExamArrangeRepository extends AbstractExamArrange
 {
-    use SqlTraits;
+    use SqlTraits, SundryTraits;
 
     /**
      * 返回实体类的类名，带命名空间
@@ -58,7 +58,7 @@ class ExamArrangeRepository extends AbstractExamArrange
             $result = $data->groupBy('exam_gradation_id');
 
             //遍历之，查看其中是否有相同的考站
-            $this->model->checkSameEntity($result, $field);
+            $this->checkSameEntity($result, $field);
 
             return $data;
         } else {
@@ -67,7 +67,7 @@ class ExamArrangeRepository extends AbstractExamArrange
             $result = $data->groupBy('exam_gradation_id');
 
             //遍历之，查看其中是否有相同的考站
-            $this->model->checkSameEntity($result, $field);
+            $this->checkSameEntity($result, $field);
             return $data;
         }
     }
