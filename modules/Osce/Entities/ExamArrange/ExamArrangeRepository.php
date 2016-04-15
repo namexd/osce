@@ -123,6 +123,7 @@ class ExamArrangeRepository extends AbstractExamArrange
             $result = true;
         }else{
             //比较小站里的数据是否一致
+
             
 
         }
