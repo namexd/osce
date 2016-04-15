@@ -20,6 +20,10 @@ function statistics_teach_score(){
                     trigger: "axis"
                 },
                 legend: {
+                    orient: 'horizontal', // 'vertical'
+                    x: 'right', // 'center' | 'left' | {number},
+                    y: 0, // 'center' | 'bottom' | {number}
+                    padding:40,
                     data: ["平均成绩","最高分","最低分"]
                 },
                 calculable: false,
@@ -163,6 +167,10 @@ function teach_detail(){
                     trigger: "axis"
                 },
                 legend: {
+                    orient: 'horizontal', // 'vertical'
+                    x: 'right', // 'center' | 'left' | {number},
+                    y: 0, // 'center' | 'bottom' | {number}
+                    padding:40,
                     data: ["得分","平均分"]
                 },
                 calculable: false,
