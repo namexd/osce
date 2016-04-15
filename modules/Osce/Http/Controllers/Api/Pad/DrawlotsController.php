@@ -586,7 +586,14 @@ class DrawlotsController extends CommonController
                     $request['nfc_code'] = $watchData->nfc_code;
                     $studentWatchController->getStudentExamReminder($request);
                 }
-            }
+            }/*else{
+                $request['uid']=;
+                $request['room_id']=$id;
+                $request['teacher_id']=$id;
+
+
+                $this->getStation($request);
+            }*/
 
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
