@@ -483,13 +483,13 @@ class ExamArrangeController extends CommonController
             'room_name'     => 'sometimes',
             'id'            => 'required',
             'exam_id'       => 'sometimes',
-            'station'       => 'sometimes',
+            'station_id'    => 'sometimes',
             'order'         => 'sometimes',
         ]);
         $name       = $request->get('room_name');
         $id         = $request->get('id');
         $exam_id    = $request->get('exam_id');
-        $order      = $request->get('station');          //站序号（如第一站）
+        $order      = $request->get('order');           //站序号（如第一站）
         $stage_id   = $request->get('exam_gradation_id');
 
         $examDraftFlow = new ExamDraftFlow();
