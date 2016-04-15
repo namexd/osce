@@ -4696,17 +4696,8 @@ function station_assignment(){
             return false;
         }
 
-        var warn = null;
-        $('.station-container').find('.exam-item').each(function(key,elem) {
-            warn = true;
 
-            if($(elem).attr('exam-item-flag') == 1) {
-                warn = false;
-                return false;
-            }
-        });
-
-        if(warn==false){
+        /*if(warn==false){
             layer.confirm('考试项目更改将导致智能排考重排？',{
                 title:'删除',
                 btn: ['确定','取消'],
@@ -4729,22 +4720,44 @@ function station_assignment(){
                     }
                 })
             }); 
-        } else {
-            $.ajax({
-                type:'post',
-                url: pars.save,
-                data:{exam_id:examId},
-                success: function(res) {
-                    if(res.code != 1) {
-                        layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
-                    } else {
-                        layer.msg('数据保存成功！',{skin:'msg-success',icon:1},function () {
+        } else {*/
+        $.ajax({
+            type:'post',
+            url: pars.save,
+            data:{exam_id:examId},
+            success: function(res) {
+                if(res.code == -1) {
+                    layer.confirm('考试项目更改将导致智能排考重排？',{
+                        title:'提示',
+                        btn: ['确定','取消'],
+                        cancel: function() {
                             location.reload();
-                        });
-                    }
+                        }
+                    },function() {
+                        $.ajax({
+                            type:'post',
+                            url: pars.save,
+                            data:{exam_id:examId,flag:1},
+                            success: function(res) {
+                                if(res.code != 1) {
+                                    layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
+                                } else {
+                                    layer.msg('数据保存成功！',{skin:'msg-success',icon:1},function () {
+                                        location.reload();
+                                    });
+                                }
+                            }
+                        })
+                    });
+                } else if(res.code == 1) {
+                    layer.msg('数据保存成功！',{skin:'msg-success',icon:1},function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
                 }
-            })
-        }
+            }
+        })
         
     });
 
