@@ -811,40 +811,42 @@ class ExamArrangeController extends CommonController
             ]);
 
             $exam_id       = $request->get('exam_id');
-            $status        =  $request->get('flig');
+            $status        =  $request->get('flag');
 
             $ExamDraftFlow = new ExamDraftFlow();
 
             $FrontArrangeData = $examArrangeRepository->getInquireExamArrange($exam_id);
-          
-
 
             //保存考场安排所有数据
             if(!$ExamDraftFlow->saveArrangeDatas($exam_id))
             {
                 throw new \Exception('保存失败');
             }else{
-                if($status == 1){
+                if($status = 1){
                     //清除数据
                     $connection->commit();
-                }else{
-                    $connection->rollBack();
-                }
-
-                //判断挡前数据和之前数据是否有变化如果有就清除排考内容
-                $LaterArrangeData = $examArrangeRepository->getInquireExamArrange($exam_id);
-                $ArrangeData = $examArrangeRepository->getDataDifference($exam_id,$FrontArrangeData,$LaterArrangeData);
-                if($ArrangeData){
-                    //有改动还回code=-1用户确定
-                    return response()->json(
-                        $this->success_data([], -1, '数据改动是否保存！')
-                    );
-
-                }else{
                     return response()->json(
                         $this->success_data([], 1, '数据改动是否保存！')
                     );
+                }else{
+                    //判断挡前数据和之前数据是否有变化如果有就清除排考内容
+                    $LaterArrangeData = $examArrangeRepository->getInquireExamArrange($exam_id);
+                    $ArrangeData = $examArrangeRepository->getDataDifference($exam_id,$FrontArrangeData,$LaterArrangeData);
+                    if($ArrangeData){
+                        //有改动还回code=-1用户确定
+                        return response()->json(
+                            $this->success_data([], -1, '数据改动是否保存！')
+                        );
+
+                    }else{
+                        $connection->commit();
+                        return response()->json(
+                            $this->success_data([], 1, '数据改动是否保存！')
+                        );
+                    }
                 }
+
+
 
             }
 

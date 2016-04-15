@@ -115,7 +115,7 @@ class ExamArrangeRepository extends AbstractExamArrange
         $result = '';
         if(is_null($FrontArrangeData)){
             //说明是刚新增就就不弹框直接保存
-            $result = true;
+            $result = false;
         }
         
         //比较小站数据条数是否一致
