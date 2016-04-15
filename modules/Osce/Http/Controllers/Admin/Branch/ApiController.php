@@ -829,13 +829,13 @@ class ApiController extends CommonController
 
                 throw new \Exception(' 找不到该考试场次的学生信息！',-101);
             }
+
             $examQueueModel = new ExamQueue();
             $unExamStationIds = $examQueueModel->where('student_id', '=', $studentId)
                 ->where('exam_screening_id', '=', $examScreeningId)
                 ->where('status', '=', 0)->get()->pluck('station_id');
 
             if ($mode == 1) {
-
                 //如果选择否，只是做标记
                 //标记替考
                 $examMonitorModel = new ExamMonitor();
@@ -854,9 +854,7 @@ class ApiController extends CommonController
                         }
                     }
                 }
-
                 $retval['title'] = '标记替考成功';
-
                 return response()->json(
                     $this->success_data($retval,1,'success')
                 );
@@ -866,7 +864,6 @@ class ApiController extends CommonController
                     'is_end' => 1,
                     'status' => 2,
                 ];
-
                 $examScreeningStudentModel->where('id', '=', $examScreeningStudent->id)->update($data);
                 if (!empty($unExamStationIds)) {
                     $examQueueModel->where('student_id', '=', $studentId)
@@ -906,6 +903,7 @@ class ApiController extends CommonController
                 }
 
                 $retval['title'] = '确定替考成功';
+
 
                 return response()->json(
                     $this->success_data($retval,1,'success')

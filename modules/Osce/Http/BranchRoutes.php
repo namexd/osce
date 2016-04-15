@@ -197,6 +197,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
         //获取正在考试列表
         Route::get('exam-control/getexamlist',['uses'=>'ExamControlController@getExamlist','as'=>'osce.admin.ExamControlController.getExamlist']);
+        //接口测试地址
+        Route::get('exam-control/apitest',['uses'=>'ApiTestControlController@apitest','as'=>'osce.admin.ApiTestControlController.apitest']);
         //终止考试数据交互
         Route::get('exam-control/poststopexam',['uses'=>'ExamControlController@postStopExam','as'=>'osce.admin.ExamControlController.postStopExam']);
 
