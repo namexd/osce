@@ -320,7 +320,7 @@ class DrawlotsController extends CommonController
      */
     public function nextStudent(Request $request){
         $this->validate($request, [
-            'exam_queue_id' => 'sometime|integer',
+            'exam_queue_id' => 'sometimes|integer',
             'station_id' => 'required|integer',
             'teacher_id' =>'required|integer'
 
