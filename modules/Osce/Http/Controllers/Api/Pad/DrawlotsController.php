@@ -386,7 +386,7 @@ class DrawlotsController extends CommonController
      */
     public function nextStudent(Request $request){
 
-        /*$this->validate($request, [
+        $this->validate($request, [
             'exam_queue_id' => 'sometimes|integer',
             'station_id' => 'required|integer',
             'teacher_id' =>'required|integer'
@@ -394,7 +394,8 @@ class DrawlotsController extends CommonController
         ], [
             'station_id.required' => '考站编号信息必须',
             'teacher_id.required'=>'老师编号信息必须',
-        ]);*/
+        ]);
+        dd(1);
         try {
             $stationId = (int)$request->input('station_id');
             $examQueueId = (int)$request->input('exam_queue_id');//队列id
