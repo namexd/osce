@@ -241,7 +241,7 @@ class InvigilatePadController extends CommonController
                 $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return $studentData['nextTester'];
             } else {
-                $redis->publish('pad_message', json_encode($this->success_data([], -2, '当前没有学生')));
+                $redis->publish('pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
                 return [];
             }
 
