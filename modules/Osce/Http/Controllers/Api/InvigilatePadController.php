@@ -217,8 +217,9 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function getAuthentication_arr(Request $request)
+    public function getAuthentication_arr($request)
     {
+
         $this->validate($request, [
             'station_id' => 'required|integer',
             'teacher_id' => 'required|integer'
@@ -227,10 +228,11 @@ class InvigilatePadController extends CommonController
             'teacher_id.required' => '老师编号必须'
         ]);
 
-        try {
+
+
             $redis = Redis::connection('message');
-            $stationId = (int)$request->input('station_id');
-            $teacher_id = (int)$request->input('teacher_id');
+            $stationId = $request['station_id'];
+            $teacher_id = $request['teacher_id'];
             $exam = Exam::doingExam();
             $studentModel = new  Student();
             $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
@@ -238,15 +240,11 @@ class InvigilatePadController extends CommonController
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
                 $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return $studentData['nextTester'];
-
             } else {
-                $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
-                throw new \Exception('学生信息查询失败', -2);
+                $redis->publish('pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
+                return [];
             }
-        } catch (\Exception $ex) {
-            return $ex;
 
-        }
     }
 
 
