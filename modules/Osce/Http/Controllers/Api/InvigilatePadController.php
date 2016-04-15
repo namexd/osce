@@ -902,15 +902,14 @@ class InvigilatePadController extends CommonController
             if(count($studentWatchData) > 0){
                 $studentWatchData = $studentWatchData->toArray();
 
-                foreach($studentWatchData as $k=>$v){
-                    if($v['status'] < 2){
-                        $studentWatchData[$k]['status'] = '0';
-                    }elseif($v['status'] == 2){
-                        $studentWatchData[$k]['status'] = '1';
-                    }else{
-                        $studentWatchData[$k]['status'] = '2';
-                    }
+                if($studentWatchData['status'] < 2){
+                    $studentWatchData['status'] = '0';
+                }elseif($studentWatchData['status'] == 2){
+                    $studentWatchData['status'] = '1';
+                }else{
+                    $studentWatchData['status'] = '2';
                 }
+
             }
 
             //查找考生的剩余考站数量
