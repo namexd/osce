@@ -493,10 +493,16 @@ class ExamArrangeController extends CommonController
         $exam_id    = $request->get('exam_id');
         $order      = $request->get('order');           //站序号（如第一站）
         $stage_id   = $request->get('exam_gradation_id');
+        $condition  = [
+            'stage_id'  => $stage_id,
+            'room'      => 1,
+            'station'   => null,
+            'order'     => $order
+        ];
 
         $examDraftFlow = new ExamDraftFlow();
         //临时保存缓存表中的数据
-        $roomIdArray = $examDraftFlow->saveArrangeDatas($exam_id, $stage_id, $room = 1, $station = null, $order);
+        $roomIdArray = $examDraftFlow->saveArrangeDatas($exam_id, $condition);
 
         if (empty($roomIdArray)){
             $roomIdArray = ExamDraftTemp::where('old_draft_flow_id', '=', $id)->get()->pluck('room_id')->toArray();
@@ -533,11 +539,16 @@ class ExamArrangeController extends CommonController
         $id         = $request->get('id');
         $exam_id    = $request->get('exam_id');
         $stage_id   = $request->get('exam_gradation_id');
+        $condition  = [
+            'stage_id'  => $stage_id,
+            'room'      => null,
+            'station'   => 1,
+        ];
 
         //查询出已用过的考站
         $examDraftFlow = new ExamDraftFlow();
         //临时保存缓存表中的数据
-        $stationIdArray = $examDraftFlow->saveArrangeDatas($exam_id, $stage_id, $room = null, $station = 1);
+        $stationIdArray = $examDraftFlow->saveArrangeDatas($exam_id, $condition);
 
         if (empty($stationIdArray)){
             $stationIdArray = ExamDraftTemp::where('old_draft_flow_id', '=', $id)->get()->pluck('station_id')->toArray();
