@@ -416,6 +416,7 @@ class DrawlotsController extends CommonController
             }
             $request['id']=$teacher_id;
             $request['exam_id']=$exam->id;
+            dd(1);
             $this->getNextExaminee_arr($request);//推送下一组
             $this->getExaminee_arr($request);//推送当前小组
             return response()->json(
