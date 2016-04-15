@@ -385,6 +385,7 @@ class DrawlotsController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function nextStudent(Request $request){
+        dd(1222);
         $this->validate($request, [
             'exam_queue_id' => 'sometimes|integer',
             'station_id' => 'required|integer',
