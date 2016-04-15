@@ -72,16 +72,17 @@ class SmartArrangeRepository extends AbstractSmartArrange
                     $this->model->screenPlan($screen);
 
                     //判断是否需要下场排考
-                    $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id',
-                        $exam->id)->first();  //通过查询数据表中是否有没有写入end_dt的数据
-
-                    if (count($this->model->getStudents()) == 0 && count($this->model->getWaitStudents()) == 0 && is_null($examPlanNull)) {
-                        return $this->output($exam);
-                    }
+//                    $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id',
+//                        $exam->id)->first();  //通过查询数据表中是否有没有写入end_dt的数据
+//
+//                    if (count($this->model->getStudents()) == 0 && count($this->model->getWaitStudents()) == 0 && is_null($examPlanNull)) {
+//                        return $this->output($exam);
+//                    }
                 }
                 throw new \Exception('人数太多，所设时间无法完成考试', -99);
             }
-            throw new \Exception('人数太多，所设阶段无法完成考试', -98);
+            return $this->output($exam);
+//            throw new \Exception('人数太多，所设阶段无法完成考试', -98);
         } catch (\Exception $ex) {
             if (ExamPlanRecord::where('exam_id', $exam->id)->count()) {
                 if (!ExamPlanRecord::where('exam_id', $exam->id)->delete()) {
