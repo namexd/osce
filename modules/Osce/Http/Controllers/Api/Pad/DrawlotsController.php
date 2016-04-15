@@ -537,7 +537,9 @@ class DrawlotsController extends CommonController
             //将考场名字和考站名字封装起来
             $station->name = $room->name . '-' . $station->name;
             //场次id
-            $station->exam_screening_id=$room->exam_screening_id;
+            $roomMsg = StationTeacher::where('user_id', $id)->where('exam_id', $exam->id)->orderBy('created_at',
+                'desc')->first();
+            $station->exam_screening_id=$roomMsg->exam_screening_id;
             //将考场的id封装进去
             $station->room_id = $room->id;
 
