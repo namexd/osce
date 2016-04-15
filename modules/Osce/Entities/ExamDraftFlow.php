@@ -71,7 +71,7 @@ class ExamDraftFlow extends CommonModel
      * @author Zhoufuxiang 2016-04-14
      * @return array
      */
-    public function saveArrangeDatas($exam_id, $stage_id = null, $room = null, $station = null, $order = null)
+    public function saveArrangeDatas($exam_id, $condition = [])
     {
         $connection = DB::connection('osce_mis');
         $connection ->beginTransaction();
@@ -105,8 +105,8 @@ class ExamDraftFlow extends CommonModel
                 throw new \Exception('处理待删除数据失败');
             }
             //存在阶段ID，为临时获取数据，无需保存提交
-            if (!is_null($stage_id)){
-                $reData = $this->getTempDatas($exam_id, $stage_id, $room, $station, $order);
+            if (!empty($condition)){
+                $reData = $this->getTempDatas($exam_id, $condition);
                 $connection->rollBack();
                 return $reData;
             }
@@ -116,8 +116,8 @@ class ExamDraftFlow extends CommonModel
 
         } catch (\Exception $ex){
             //存在阶段ID，为临时获取数据，无需保存提交
-            if (!is_null($stage_id)){
-                $reData = $this->getTempDatas($exam_id, $stage_id, $room, $station, $order);
+            if (!empty($condition)){
+                $reData = $this->getTempDatas($exam_id, $condition);
                 $connection->rollBack();
                 return $reData;
             }
@@ -364,24 +364,24 @@ class ExamDraftFlow extends CommonModel
      * @author Zhoufuxiang 2016-4-15
      * @return array
      */
-    public function getTempDatas($exam_id, $stage_id, $room = null, $station = null, $order = null)
+    public function getTempDatas($exam_id, $condition)
     {
         $examInfo = Exam::where('id','=',$exam_id)->first();
 
         $datas = ExamDraft::select(['exam_draft.room_id', 'exam_draft.station_id'])
                 ->leftJoin('exam_draft_flow','exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
                 ->where('exam_draft_flow.exam_id', '=', $exam_id)
-                ->where('exam_draft_flow.exam_gradation_id', '=', $stage_id);
+                ->where('exam_draft_flow.exam_gradation_id', '=', $condition['stage_id']);
 
         //考场分组模式
         if($examInfo->sequence_mode == 1){
-            if ($room === 1){
-                $datas = $datas->where('exam_draft_flow.order', '<>', $order);
+            if ($condition['room'] === 1){
+                $datas = $datas->where('exam_draft_flow.order', '<>', $condition['order']);
             }
         }
 
         //取考场相关数据
-        if ($room === 1){
+        if ($condition['room'] === 1){
             $rooms = $datas->whereNotNull('exam_draft.room_id')->groupBy('exam_draft.room_id')->get();
             if(!$rooms->isEmpty())
             {
@@ -393,7 +393,7 @@ class ExamDraftFlow extends CommonModel
             }
         }
         //取考站相关数据
-        if ($station === 1){
+        if ($condition['station'] === 1){
             $stations = $datas->whereNotNull('exam_draft.station_id')->groupBy('exam_draft.station_id')->get();
             if(!$stations->isEmpty())
             {
