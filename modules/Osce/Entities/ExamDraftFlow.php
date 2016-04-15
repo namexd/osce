@@ -382,14 +382,29 @@ class ExamDraftFlow extends CommonModel
 
         //取考场相关数据
         if ($room === 1){
-            return $datas = $datas->groupBy('exam_draft.room_id')->get()
-                            ->pluck('room_id')->toArray();
+            $rooms = $datas->whereNotNUll('exam_draft.room_id')->groupBy('exam_draft.station_id')->get();
+            if(!$rooms->isEmpty())
+            {
+                $datas  =   $rooms   ->pluck('room_id')->toArray();
+            }
+            else
+            {
+                $datas  =   [];
+            }
         }
         //取考站相关数据
         if ($station === 1){
-            return $datas = $datas->groupBy('exam_draft.station_id')->get()
-                            ->pluck('station_id')->toArray();
+            $stations = $datas->whereNotNUll('exam_draft.station_id')->groupBy('exam_draft.station_id')->get();
+            if(!$stations->isEmpty())
+            {
+                $datas  =   $stations   ->pluck('station_id')->toArray();
+            }
+            else
+            {
+                $datas  =   [];
+            }
         }
+        return $datas;
     }
 
 
