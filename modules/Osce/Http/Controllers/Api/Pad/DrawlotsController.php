@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
@@ -536,6 +537,16 @@ class DrawlotsController extends CommonController
 
             //将考场名字和考站名字封装起来
             $station->name = $room->name . '-' . $station->name;
+            //场次id
+            $examScreen=new ExamScreening();
+            $roomMsg = $examScreen->getExamingScreening($exam->id);
+            $roomMsg_two = $examScreen->getNearestScreening($exam->id);
+
+            if($roomMsg){
+                $station->exam_screening_id=$roomMsg->id;
+            }elseif($roomMsg_two){
+                $station->exam_screening_id=$roomMsg->id;
+            }
 
             //将考场的id封装进去
             $station->room_id = $room->id;
@@ -560,7 +571,6 @@ class DrawlotsController extends CommonController
             $this->getExaminee_arr($request);//当前组推送(可以获得)
             $inv=new InvigilatePadController();
             $msg=$inv->getAuthentication_arr($request);//当前考生推送(如果有)
-            dd($msg);
             if($msg) {
                 //调用向腕表推送消息的方法
                 $examQueue = ExamQueue::where('student_id', '=', $msg->student_id)
@@ -576,7 +586,14 @@ class DrawlotsController extends CommonController
                     $request['nfc_code'] = $watchData->nfc_code;
                     $studentWatchController->getStudentExamReminder($request);
                 }
-            }
+            }/*else{
+                $request['uid']=;
+                $request['room_id']=$id;
+                $request['teacher_id']=$id;
+
+
+                $this->getStation($request);
+            }*/
 
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {

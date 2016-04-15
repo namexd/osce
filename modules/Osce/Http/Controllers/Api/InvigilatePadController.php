@@ -229,7 +229,7 @@ class InvigilatePadController extends CommonController
         ]);
 
 
-        try {
+
             $redis = Redis::connection('message');
             $stationId = $request['station_id'];
             $teacher_id = $request['teacher_id'];
@@ -241,13 +241,10 @@ class InvigilatePadController extends CommonController
                 $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return $studentData['nextTester'];
             } else {
-                $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
-                throw new \Exception('学生信息查询失败', -2);
+                $redis->publish('pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
+                return [];
             }
-        } catch (\Exception $ex) {
-            return $ex;
 
-        }
     }
 
 
@@ -905,15 +902,14 @@ class InvigilatePadController extends CommonController
             if(count($studentWatchData) > 0){
                 $studentWatchData = $studentWatchData->toArray();
 
-                foreach($studentWatchData as $k=>$v){
-                    if($v['status'] < 2){
-                        $studentWatchData[$k]['status'] = '0';
-                    }elseif($v['status'] == 2){
-                        $studentWatchData[$k]['status'] = '1';
-                    }else{
-                        $studentWatchData[$k]['status'] = '2';
-                    }
+                if($studentWatchData['status'] < 2){
+                    $studentWatchData['status'] = '0';
+                }elseif($studentWatchData['status'] == 2){
+                    $studentWatchData['status'] = '1';
+                }else{
+                    $studentWatchData['status'] = '2';
                 }
+
             }
 
             //查找考生的剩余考站数量
