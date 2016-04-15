@@ -22,6 +22,10 @@ function subject_statistics(){
                     trigger: "axis"
                 },
                 legend: {
+                    orient: 'horizontal', // 'vertical'
+                    x: 'right', // 'center' | 'left' | {number},
+                    y: 0, // 'center' | 'bottom' | {number}
+                    padding:40,
                     data: ["平均成绩"]
                 },
                 calculable: false,
@@ -110,6 +114,10 @@ function subject_level(){
                     trigger: "axis"
                 },
                 legend: {
+                    orient: 'horizontal', // 'vertical'
+                    x: 'right', // 'center' | 'left' | {number},
+                    y: 0, // 'center' | 'bottom' | {number}
+                    padding:40,
                     data: ["合格率"]
                 },
                 calculable: false,
@@ -217,6 +225,10 @@ function examation_statistics(){
                     trigger: "axis"
                 },
                 legend: {
+                    orient: 'horizontal', // 'vertical'
+                    x: 'right', // 'center' | 'left' | {number},
+                    y: 0, // 'center' | 'bottom' | {number}
+                    padding:40,
                     data: ["平均成绩"]
                 },
                 calculable: false,
@@ -319,6 +331,10 @@ function statistics_check(){
                     trigger: "axis"
                 },
                 legend: {
+                    orient: 'horizontal', // 'vertical'
+                    x: 'right', // 'center' | 'left' | {number},
+                    y: 0, // 'center' | 'bottom' | {number}
+                    padding:40,
                     data: ["合格率"]
                 },
                 calculable: false,
