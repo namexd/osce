@@ -42,9 +42,11 @@ trait SqlTraits
      */
     public function emptyingPlan($examId)
     {
-        if (!ExamPlan::where('exam_id', $examId)->delete()) {
-            throw new \Exception('清空排考表失败！');
-        };
+        if (ExamPlan::where('exam_id', $examId)->first()) {
+            if (!ExamPlan::where('exam_id', $examId)->delete()) {
+                throw new \Exception('清空排考表失败！');
+            };
+        }
 
         return true;
     }
@@ -59,9 +61,12 @@ trait SqlTraits
      */
     public function emptyingPlanRecord($examId)
     {
-        if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
-            throw new \Exception('清空排考数据表失败！');
+        if (ExamPlanRecord::where('exam_id', $examId)->first()) {
+            if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
+                throw new \Exception('清空排考数据表失败！');
+            }
         }
+
 
         return true;
     }
@@ -76,8 +81,10 @@ trait SqlTraits
      */
     public function emptyingOrder($examId)
     {
-        if (!ExamOrder::where('exam_id', $examId)->delete()) {
-            throw new \Exception('清空腕表顺序表失败！');
+        if (ExamOrder::where('exam_id', $examId)->first()) {
+            if (!ExamOrder::where('exam_id', $examId)->delete()) {
+                throw new \Exception('清空腕表顺序表失败！');
+            }
         }
 
         return true;
