@@ -10,6 +10,8 @@ namespace Modules\Osce\Entities;
 
 use DB;
 use Auth;
+use Illuminate\Container\Container as App;
+use Modules\Osce\Entities\ExamArrange\ExamArrangeRepository;
 
 class Exam extends CommonModel
 {
@@ -391,11 +393,11 @@ class Exam extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editExam($exam_id, array $examData, array $examScreeningData, $gradation)
+    public function editExam($exam_id, array $examData, array $examScreeningData, $gradation, ExamArrangeRepository $examArrangeRepository)
     {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
-        try {
+//        try {
             //更新考试信息
             $exam   =   $this->find($exam_id);
             if($exam->sequence_mode!=$examData['sequence_mode'])
@@ -405,22 +407,16 @@ class Exam extends CommonModel
                 {
                     throw new \Exception('重置作废数据失败');
                 }
+               //清除考试安排
+////                $app = new App();
+////                $ExamArrange = new ExamArrangeRepository($app);
+//                $examArrangeRepository->getEmptyExamArrange($exam_id);
+
                 if(ExamPlan::where('exam_id','=',$exam_id)->delete()===false)
                 {
                     throw new \Exception('重置作废数据失败');
                 }
-                if(ExamFlowRoom::where('exam_id','=',$exam_id)->delete()===false)
-                {
-                    throw new \Exception('重置作废数据失败');
-                }
-                if(ExamFlowStation::where('exam_id','=',$exam_id)->delete()===false)
-                {
-                    throw new \Exception('重置作废数据失败');
-                }
-                if(ExamFlow::where('exam_id','=',$exam_id)->delete()===false)
-                {
-                    throw new \Exception('重置作废数据失败');
-                }
+              
                 if(ExamRoom::where('exam_id','=',$exam_id)->delete()===false)
                 {
                     throw new \Exception('重置作废数据失败');
@@ -530,10 +526,10 @@ class Exam extends CommonModel
 
             $connection->commit();
             return true;
-        } catch (\Exception $ex) {
-            $connection->rollBack();
-            throw $ex;
-        }
+//        } catch (\Exception $ex) {
+//            $connection->rollBack();
+//            throw $ex;
+//        }
     }
 
     //考生查询

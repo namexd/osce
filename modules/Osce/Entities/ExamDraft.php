@@ -113,7 +113,7 @@ class ExamDraft extends CommonModel
                     break;
                 default: throw new \Exception('操作有误！');
             }
-            return true;
+            return $data;
 
         } catch (\Exception $ex){
             throw $ex;

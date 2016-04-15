@@ -30,5 +30,8 @@ abstract class AbstractExamArrange
     }
 
     abstract public function getModel();
+    
+    
+    
 
 }

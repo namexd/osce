@@ -317,11 +317,14 @@ class Common
     static public function handleRedirect($request, $result)
     {
         $data = $request->headers->all()['referer'][0];
-        if (!is_null($data)) {
+
+        $fileNameArray = explode('?', $data);
+
+        $fileArray = explode('&', $fileNameArray[1]);
+        if (is_null($fileArray)) {
             return false;
         }
-        $fileNameArray = explode('?', $data);
-        $fileArray = explode('&', $fileNameArray[1]);
+
         $fileData = [];
         foreach ($fileArray as $item) {
             $ensue = explode('=', $item);
