@@ -106,7 +106,12 @@ class ExamArrangeRepository extends AbstractExamArrange
         }
     }
 
-//清空考试安排
+
+    /**
+     * 清空考试安排
+     * @author zhouqiang
+     * @time 2016-04-14
+     */
     public function getExamManner($exam_id){
         if($this->model->getEmptyExamArrange($exam_id)){
             if($this->model->getTeacherArrange($exam_id)){
