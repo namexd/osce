@@ -871,6 +871,7 @@ class InvigilatePadController extends CommonController
             $this->success_data('',0,'没有数据')
         );
     }
+    
 
     /**
      *  查看考生及与其绑定的腕表的详细信息
