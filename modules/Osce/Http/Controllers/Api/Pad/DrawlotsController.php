@@ -556,11 +556,10 @@ class DrawlotsController extends CommonController
 
             $request['station_id']=$station->id;
             $request['teacher_id']=$id;
+            $request['exam_id']=$station->exam_id;
             $this->getExaminee_arr($request);//当前组推送(可以获得)
-
             $inv=new InvigilatePadController();
             $msg=$inv->getAuthentication_arr($request);//当前考生推送(如果有)
-            $request['exam_id']=$station->exam_id;
             if($msg) {
                 //调用向腕表推送消息的方法
                 $examQueue = ExamQueue::where('student_id', '=', $msg->student_id)
@@ -577,6 +576,7 @@ class DrawlotsController extends CommonController
                     $studentWatchController->getStudentExamReminder($request);
                 }
             }
+
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
