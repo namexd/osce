@@ -336,8 +336,8 @@ class DrawlotsController extends CommonController
             ExamQueue::where('id',$examQueueId)->increment('next_num', 1);//下一次次数增加
             $exam = Exam::doingExam();
             //$studentModel = new  Student();
-            //$studentData = $studentModel->nextStudentList($stationId, $exam);
 
+            //$studentData = $studentModel->nextStudentList($stationId, $exam);
             list($room_id, $stations) = $this->getRoomIdAndStation($teacher_id, $exam);
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations);

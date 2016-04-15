@@ -872,6 +872,7 @@ class InvigilatePadController extends CommonController
         );
     }
 
+
     /**
      *  查看考生及与其绑定的腕表的详细信息
      * @method GET
@@ -1034,6 +1035,7 @@ class InvigilatePadController extends CommonController
             return response()->json($this->fail($ex));
 
         }
+
     }
 
 

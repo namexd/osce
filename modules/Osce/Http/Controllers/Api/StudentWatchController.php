@@ -56,13 +56,13 @@ class StudentWatchController extends CommonController
             'surplus'      => '',
             'score'        => '',
         ];
-        $code = -2; // 默认返回的code，对于腕表程序无意义
 
         $redis = Redis::connection('message');
 
         //根据腕表nfc_code找到腕表
         $watch = Watch::where('nfc_code', '=', $watchNfcCode)->first();
         if (is_null($watch)) {
+            $code = -2;
             $data['title'] = '未找到腕表';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code, 'error')));
             return response()->json(
@@ -72,7 +72,7 @@ class StudentWatchController extends CommonController
 
         //判定腕表是否解绑
         if($watch->status == 0){
-            $code = -1;
+            $code = -1; // -1 腕表未绑定
             $data['title'] = '腕表未绑定';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code, 'error')));
             return response()->json(
@@ -83,7 +83,8 @@ class StudentWatchController extends CommonController
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)->where('is_end', '=', 0)->orderBy('signin_dt','desc')->first();
         if (is_null($watchStudent)) {
-            $data['title'] = '没有找到学生的腕表信息';
+            $code = -3;
+            $data['title'] = '没有找到腕表对应的学生信息';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code, 'error')));
             return response()->json(
                 $this->success_data($data, $code, 'error')
@@ -93,13 +94,14 @@ class StudentWatchController extends CommonController
         //得到学生id
         $studentId = $watchStudent->student_id;
         // 根据考生id找到当前的考试
-        $examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
-        $examId = $examInfo->exam_id;
+        //$examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
+        //$examId = $examInfo->exam_id;
 
         //根据考生id在队列中得到当前考试的所有考试队列
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
         if(is_null($examQueueCollect)){
+            $code = -4;
             $data['title'] = '学生队列信息不正确';
             $redis->publish('watch_message', json_encode($this->success_data($data, $code, 'error')));
             return response()->json(
@@ -108,8 +110,8 @@ class StudentWatchController extends CommonController
         }
 
         //判断考试的状态
-        $data = $this->nowQueue($examQueueCollect);
-        $redis->publish('watch_message', json_encode($this->success_data($data, $code = $data['code'])));
+        $data = $this->nowQueue($examQueueCollect, $redis);
+        $redis->publish('watch_message', json_encode([$watchNfcCode, $data, 'success']));
         return response()->json(
             $this->success_data($data, 1) // 返回给pad的成功信息(code为1)
         );
@@ -122,30 +124,30 @@ class StudentWatchController extends CommonController
      * @internal param $room_id
      * @author zhouqiang
      */
-    public function nowQueue($examQueueCollect)
+    public function nowQueue($examQueueCollect, $redis)
     {
-        $status         =   $examQueueCollect->pluck('status');
-        $statusArray    =   $status->toArray();
+        $status      = $examQueueCollect->pluck('status');
+        $statusArray = $status->toArray();
 
-        if(in_array(1,$statusArray))
-        {
-            return $this->getStatusOneExam($examQueueCollect);
+        if (in_array(1, $statusArray)) {
+            return $this->getStatusOneExam($examQueueCollect, $redis);
         }
-        if(in_array(2,$statusArray))
-        {
+
+        if (in_array(2, $statusArray)) {
             return $this->getStatusTwoExam($examQueueCollect);
         }
-        if(in_array(3,$statusArray))
-        {
+
+        if (in_array(3, $statusArray)) {
             return $this->getStatusThreeExam($examQueueCollect);
         }
+
         return $this->getStatusWaitExam($examQueueCollect);
     }
 
     //判断腕表提醒状态为1时
-    private function getStatusOneExam($examQueueCollect){
-        $items = array_where($examQueueCollect,function($key,$value){
-            if($value ->status  ==  1) {
+    private function getStatusOneExam($examQueueCollect, $redis){
+        $items = array_where($examQueueCollect, function($key, $value) {
+            if ($value ->status == 1) {
                 return $value;
             }
         });
