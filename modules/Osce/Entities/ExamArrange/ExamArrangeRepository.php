@@ -18,6 +18,7 @@ use Modules\Osce\Entities\Station;
 class ExamArrangeRepository extends AbstractExamArrange
 {
     use SqlTraits, SundryTraits;
+
     /**
      * 返回实体类的类名，带命名空间
      * @method GET
@@ -38,7 +39,7 @@ class ExamArrangeRepository extends AbstractExamArrange
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-        public function getModel()
+    public function getModel()
     {
         return 'Modules\Osce\Entities\ExamArrange\ExamArrange';
     }
@@ -53,29 +54,12 @@ class ExamArrangeRepository extends AbstractExamArrange
         if (is_null($collection)) {
             //获取该场考试的数据
             $data = $this->checkExamArrange($examId);
-			//打包数据，用考试阶段来打包
+            //打包数据，用考试阶段来打包
             $result = $data->groupBy('exam_gradation_id');
 
             //遍历之，查看其中是否有相同的考站
-            foreach ($result as $item) {
-                $entityIds = $item->pluck($field);
-                $uniEntityIdsIds = $entityIds->unique();
-                if (count($entityIds) != count($uniEntityIdsIds)) {
-                    $entityId = $this->getDiff($entityIds, $uniEntityIdsIds);
-                    switch ($field) {
-                        case 'station_id':
-                            $entityName = Station::findOrFail($entityId)->name;
-                            break;
-                        case 'room_id':
-                            $entityName = Room::findOrFail($entityId)->name;
-                            break;
-                        default:
-                            throw new \Exception('系统异常，请重试');
-                            break;
-                    }
-                    throw new \Exception('当前考试安排中' . $entityName . '出现了多次');
-                }
-            }
+            $this->checkSameEntity($result, $field);
+
             return $data;
         } else {
             $data = $collection;
@@ -83,25 +67,7 @@ class ExamArrangeRepository extends AbstractExamArrange
             $result = $data->groupBy('exam_gradation_id');
 
             //遍历之，查看其中是否有相同的考站
-            foreach ($result as $item) {
-                $entityIds = $item->pluck($field);
-                $uniEntityIdsIds = $entityIds->unique();
-                if (count($entityIds) != count($uniEntityIdsIds)) {
-                    $entityId = $this->getDiff($entityIds, $uniEntityIdsIds);
-                    switch ($field) {
-                        case 'station_id':
-                            $entityName = Station::findOrFail($entityId)->name;
-                            break;
-                        case 'room_id':
-                            $entityName = Room::findOrFail($entityId)->name;
-                            break;
-                        default:
-                            throw new \Exception('系统异常，请重试');
-                            break;
-                    }
-                    throw new \Exception('当前考试安排中' . $entityName . '出现了多次');
-                }
-            }
+            $this->checkSameEntity($result, $field);
             return $data;
         }
     }
@@ -112,19 +78,16 @@ class ExamArrangeRepository extends AbstractExamArrange
      * @author zhouqiang
      * @time 2016-04-14
      */
-    public function getExamManner($exam_id){
-        if($this->model->getEmptyExamArrange($exam_id)){
-            if($this->model->getTeacherArrange($exam_id)){
-                if($this->model->getTeacherInvite($exam_id)){
+    public function getExamManner($exam_id)
+    {
+        if ($this->model->getEmptyExamArrange($exam_id)) {
+            if ($this->model->getTeacherArrange($exam_id)) {
+                if ($this->model->getTeacherInvite($exam_id)) {
                     //清除智能排考
+                    $this->model->resetSmartArrange($exam_id);
                 }
             }
         }
         return true;
-
-
-
     }
-
-
 }
