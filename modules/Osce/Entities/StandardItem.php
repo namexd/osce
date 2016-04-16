@@ -170,6 +170,7 @@ class StandardItem extends CommonModel
             foreach($prointList as $item)
             {
                 $data[$item->pid][] =   $item;
+                $data[$item->pid][]['subject_id'] =   $subject_id;
             }
 
             $return =   [];
@@ -181,7 +182,7 @@ class StandardItem extends CommonModel
                 if(array_key_exists($proint->id,$data))
                 {
                     $prointData['test_term']    =   $data[$proint->id];
-                    $prointData['test_term']['subject_id']    =   $subject_id;
+                    //$prointData['test_term']['subject_id']    =   $subject_id;
 
                 } else{
                     $prointData['test_term']    =   [];
