@@ -19,6 +19,4 @@ class ExamPaperStation extends CommonModel
     protected $guarded      = [];
     protected $hidden       = [];
     protected $fillable     = ['exam_id', 'exam_paper_id', 'station_id'];
-
-
 }
