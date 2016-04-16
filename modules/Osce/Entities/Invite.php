@@ -36,7 +36,12 @@ class Invite extends CommonModel
         //开启事务
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
-//        try {
+        try {
+            //判断哪些老师已邀请过
+
+
+
+
         foreach ($data as &$list) {
 
             //查询出老师名字
@@ -53,14 +58,9 @@ class Invite extends CommonModel
                     $examScreening->status = 0;
                     if (!$examScreening->save()) {
                         throw new \Exception('邀请失败，请重试！');
-                    } else {
-                        continue;
-                    }
+                    } 
                 } else {
-                    if ($examScreening) {
                         throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
-
-                    }
                 }
             }
 
@@ -94,10 +94,10 @@ class Invite extends CommonModel
         $connection->commit();
         $this->sendMsg($data);
         return true;
-//        } catch (\Exception $ex) {
-//            $connection->rollBack();
-//            throw $ex;
-//        }
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
 
     }
 

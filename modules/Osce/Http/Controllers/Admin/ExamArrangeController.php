@@ -114,8 +114,13 @@ class ExamArrangeController extends CommonController
                 }
 
             }
+            //查看阶段是否有安排过时间
+//            $ExamGradation =
 
-            
+
+
+
+
             $result = ExamDraftFlowTemp::create($data);
 
                 if ($result&&$type != 2) {
@@ -789,11 +794,13 @@ class ExamArrangeController extends CommonController
                 'type' => 'required|integer',
                 'teacher_id' => 'sometimes'
             ]);
+            
             $subject_id = intval($request->get('subject_id'));
             $type = intval($request->get('type'));
             $teacherSubject = new TeacherSubject();
             //根据考试项目 获取对应的考官
             $invigilates = $teacherSubject->getTeachers($subject_id, $type);
+
 
             return response()->json(
                 $this->success_data($invigilates, 1, 'success')
