@@ -764,7 +764,7 @@ class InvigilatePadController extends CommonController
             //dd($AlterResult);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
-                $redis->publish('pad_message', json_encode($this->success_data([$date], 105, '开始考试成功')));
+                $redis->publish('pad_message', json_encode($this->success_data([$date], 106, '开始考试成功')));
 
                 //调用向腕表推送消息的方法
                 $examQueue = ExamQueue::where('student_id', '=', $studentId)
