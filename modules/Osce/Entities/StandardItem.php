@@ -146,7 +146,7 @@ class StandardItem extends CommonModel
                 //获取评分标准下的所有考核点、考核项
                 foreach ($standardStandards as $standard) {
                     //
-                    $result    = $this->ItmeList($standard->standard_id);
+                    $result    = $this->ItmeList($standard->standard_id,$subject_id);
                     $standards = array_merge($standards, $result);
                 }
             }
@@ -162,7 +162,7 @@ class StandardItem extends CommonModel
      * @author zhouqiang <zhouqiang@misrobot.com>  Zhoufuxiang
      * @return array
      */
-    public function ItmeList($standard_id){
+    public function ItmeList($standard_id,$subject_id){
         try{
             $prointList =   $this->where('standard_id','=',$standard_id)->get();
 
@@ -177,6 +177,7 @@ class StandardItem extends CommonModel
             foreach($data[0] as $proint)
             {
                 $prointData =   $proint;
+                $prointData['subject_id'] =   $subject_id;
                 if(array_key_exists($proint->id,$data))
                 {
                     $prointData['test_term']    =   $data[$proint->id];
