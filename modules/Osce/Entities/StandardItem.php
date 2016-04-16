@@ -181,6 +181,7 @@ class StandardItem extends CommonModel
                 if(array_key_exists($proint->id,$data))
                 {
                     $prointData['test_term']    =   $data[$proint->id];
+                    $prointData['test_term']['subject_id']    =   $subject_id;
 
                 } else{
                     $prointData['test_term']    =   [];
