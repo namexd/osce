@@ -337,17 +337,22 @@ class ExamController extends CommonController
 
         try{
             //判断输入的时间是否有误
+            $keyArr = array_keys($examScreeningData);
+            if (empty($keyArr)){
+                throw new \Exception('请添加时间！');
+            }
+            $firstKey = $keyArr[0];
             foreach($examScreeningData as $key => $value){
                 $bd = $value['begin_dt'];   //开始时间
                 $ed = $value['end_dt'];     //结束时间
                 if(!strtotime($bd) || !strtotime($ed) || $ed<$bd){
                     throw new \Exception('时间输入有误！');
                 }
-                if($key>1 && $examScreeningData[$key-1]['end_dt']> $bd){
+                if($key>$firstKey && $examScreeningData[$key-1]['end_dt']> $bd){
                     throw new \Exception('后一场的开始时间必须大于前一场的结束时间！');
                 }
                 //获取最早开始时间，最晚结束时间
-                if($key == 1){
+                if($key == $firstKey){
                     $begin_dt   = $bd;
                 }
                 if($key == count($examScreeningData)){
