@@ -188,8 +188,8 @@ class SmartArrange
                     $tempBool = true;
                 }
 
-                dump(!$tempBool, date('Y-m-d H:i;s', $i), $this->doorStatus, $k);
-//                echo '=============';
+//                dump(!$tempBool, date('Y-m-d H:i;s', $i), $this->doorStatus, $k);
+//                echo '++++++++++++++++++';
                 if (!$tempBool) {
                     //将总考池和侯考区考生打包进数组
                     $params = [
@@ -308,7 +308,7 @@ class SmartArrange
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_W);
         $this->_S = $this->_S->merge(array_unique($undoneStudents));
-        dd($undoneStudents);
+//        dd($undoneStudents);
     }
 
     /**

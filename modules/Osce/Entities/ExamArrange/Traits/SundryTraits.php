@@ -47,19 +47,7 @@ trait SundryTraits
             $uniEntityIdsIds = collect(array_unique($entityIds->toArray()));
 
             if (count($entityIds) != count($uniEntityIdsIds)) {
-                $entityId = $this->getDiff($entityIds, $uniEntityIdsIds);
-                switch ($field) {
-                    case 'station_id':
-                        $entityName = Station::findOrFail($entityId)->name;
-                        break;
-                    case 'room_id':
-                        $entityName = Room::findOrFail($entityId)->name;
-                        break;
-                    default:
-                        throw new \Exception('系统异常，请重试');
-                        break;
-                }
-                throw new \Exception('当前考试安排中' . $entityName . '出现了多次');
+                throw new \Exception('当前考试安排不合法');
             }
         }
         return true;
