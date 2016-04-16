@@ -488,14 +488,14 @@ class Exam extends CommonModel
                             ];
                             if (!ExamGradation::create($gradationData)) {
                                 throw new \Exception('创建考试阶段关系失败！');
-                            } else {
-                                //清空原考试安排数据
-                                if (!$examArrangeRepository->getExamManner($exam_id)) {
-
-                                    throw new \Exception('重置作废数据失败');
-                                }
                             }
                         }
+                            //清空原考试安排数据
+                            if (!$examArrangeRepository->getExamManner($exam_id)) {
+
+                                throw new \Exception('重置作废数据失败');
+                            }
+
                     }
                 }
 
@@ -521,7 +521,7 @@ class Exam extends CommonModel
 
 
                     array_push($examScreening_ids, $result->id);
-                    
+
                 } else {
                     array_push($examScreening_ids, $value['id']);
                     $examScreening = new ExamScreening();
