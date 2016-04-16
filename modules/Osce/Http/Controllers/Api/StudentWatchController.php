@@ -60,7 +60,7 @@ class StudentWatchController extends CommonController
         $redis = Redis::connection('message');
 
         //根据腕表nfc_code找到腕表
-        $watch = Watch::where('nfc_code', '=', $watchNfcCode)->first();
+        $watch = Watch::where('code', '=', $watchNfcCode)->first();
         if (is_null($watch)) {
             $code = -2;
             $data['title'] = '未找到腕表';
