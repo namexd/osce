@@ -33,14 +33,14 @@ trait SundryTraits
     }
 
     /**
-     * 寻找相同的考站或考场
+     * 寻找相同的考站
      * @param $result
      * @param $field
      * @throws \Exception
      * @author Jiangzhiheng
      * @time 2016-04-15 10:24
      */
-    public function checkSameEntity($result, $field)
+    public function checkSameEntity($result, $field = 'station_id')
     {
         foreach ($result as $item) {
             $entityIds = $item->pluck($field);
@@ -51,5 +51,36 @@ trait SundryTraits
             }
         }
         return true;
+    }
+
+    /**
+     * 判断考场是否合乎规则
+     * @param $result
+     * @throws \Exception
+     */
+    function checkSameRoom($result)
+    {
+        $gradation = null;
+        $draft = null;
+        $data = [];
+        foreach ($result as $items) {
+            $draft = $items->first()->exam_draft_flow_order;
+            $gradation = $items->first()->exam_gradation_id;
+            foreach ($result as $values) {
+                foreach ($values as $value) {
+                    if ($value->exam_draft_flow_id != $draft && $value->exam_gradation_id == $gradation) {
+                        $data[] = $value;
+                    }
+                }
+            }
+            //判断data中room_id是否重复
+            $roomId = collect($data)->pluck('room_id');
+            $uniRoomId = array_unique($roomId->toArray());
+            if (count($roomId) != count($uniRoomId)) {
+                throw new \Exception('考场安排不符规则');
+            }
+
+
+        }
     }
 }

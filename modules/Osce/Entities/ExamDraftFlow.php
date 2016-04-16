@@ -83,10 +83,6 @@ class ExamDraftFlow extends CommonModel
             //获取所有临时数据
             $datas = $this->getAllTempDatas($exam_id);
 
-//            if (empty($datas)) {
-//                throw new \Exception('数据为空');
-//            }
-
             foreach ($datas as $data) {
                 //操作大表
                 if ($data['is_draft_flow'] == 1) {
@@ -115,8 +111,17 @@ class ExamDraftFlow extends CommonModel
             }
 
             //最后检查，考站、考场安排是否符合要求
-            $examArrangeRepository->checkData($exam_id, 'station_id');
-            $examArrangeRepository->checkData($exam_id, 'room_id');
+            $exam = Exam::doingExam($exam_id);
+            switch ($exam->sequence_mode) {
+                case 1:
+                    $examArrangeRepository->checkData($exam_id, 'room_id');
+                    break;
+                case 2:
+                    $examArrangeRepository->checkData($exam_id, 'station_id');
+                    break;
+                default:
+                    throw new \Exception('System Error!');
+            }
 
             if ($status == 1) {
                 //清空数据
