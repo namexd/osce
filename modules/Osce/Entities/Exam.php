@@ -420,20 +420,20 @@ class Exam extends CommonModel
             }
 
             //如果考试顺序变化清空智能排考
-            if ($exam->sequence_mode != $examData['sequence_cate']) {
+            if ($exam->sequence_cate != $examData['sequence_cate']) {
                 //清空智能排考
-//                if (!$examArrangeRepository->resetSmartArrange($exam_id)) {
-//                    throw new \Exception('重置作废智能排考数据失败');
-//                }
+                if (!$examArrangeRepository->resetSmartArrange($exam_id)) {
+                    throw new \Exception('重置作废智能排考数据失败');
+                }
             }
 
 
             //同时进出改变清空排考
             if ($exam->same_time != $examData['same_time']) {
                 //清空智能排考
-//                    if(!$examArrangeRepository->resetSmartArrange($exam_id)){
-//                        throw new \Exception('重置作废排考数据失败');
-//                    }
+                    if(!$examArrangeRepository->resetSmartArrange($exam_id)){
+                        throw new \Exception('重置作废排考数据失败');
+                    }
             }
 
             foreach ($examData as $field => $item) {
@@ -512,22 +512,22 @@ class Exam extends CommonModel
                     if (!$result = ExamScreening::create($value)) {
                         throw new \Exception('添加考试场次信息失败');
                     } else {
+                        //清空原考试安排数据
+                        if (!$examArrangeRepository->getExamManner($exam_id)) {
 
+                            throw new \Exception('重置作废数据失败');
+                        }
                     }
 
+
                     array_push($examScreening_ids, $result->id);
+                    
                 } else {
                     array_push($examScreening_ids, $value['id']);
                     $examScreening = new ExamScreening();
 
                     if (!$result = $examScreening->updateData($value['id'], $value)) {
                         throw new \Exception('更新考试场次信息失败');
-                    } else {
-                        //清空原考试安排数据
-                        if (!$examArrangeRepository->getExamManner($exam_id)) {
-
-                            throw new \Exception('重置作废数据失败');
-                        }
                     }
 
 
