@@ -779,7 +779,7 @@ class InvigilatePadController extends CommonController
                 $request['nfc_code'] = $watchData->nfc_code;
                 $studentWatchController->getStudentExamReminder($request);
                 return response()->json(
-                    $this->success_data([$date], 1, '开始考试成功')
+                    $this->success_data(['start_time'=>$date,'student_id'=>$studentId], 1, '开始考试成功')
                 );
             }
 //            return response()->json(
