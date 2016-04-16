@@ -4940,9 +4940,9 @@ function examiner_manage() {
             data:req,
             success: function(res) {
                 if(res.code != 1) {
-                    layer.msg('保存成功失败！',{skin:'msg-error',icon:1});
+                    layer.msg('保存失败！',{skin:'msg-error',icon:1});
                 } else {
-                    layer.msg('保存成功成功！',{skin:'msg-success',icon:1}, function() {
+                    layer.msg('保存成功！',{skin:'msg-success',icon:1}, function() {
                         location.reload();
                     });
                 }

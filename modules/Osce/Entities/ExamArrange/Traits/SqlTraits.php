@@ -64,7 +64,7 @@ trait SqlTraits
         if (ExamPlanRecord::where('exam_id', $examId)->first()) {
             if (!ExamPlanRecord::where('exam_id', $examId)->delete()) {
                 throw new \Exception('清空排考数据表失败！');
-            }
+            };
         }
 
 
@@ -84,7 +84,7 @@ trait SqlTraits
         if (ExamOrder::where('exam_id', $examId)->first()) {
             if (!ExamOrder::where('exam_id', $examId)->delete()) {
                 throw new \Exception('清空腕表顺序表失败！');
-            }
+            };
         }
 
         return true;

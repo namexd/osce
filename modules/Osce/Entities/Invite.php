@@ -180,6 +180,7 @@ class Invite extends CommonModel
         $invite = Invite::where('user_id', '=', $teacher_id)
             ->where('exam_id', '=', $exam_id)
             ->where('station_id', '=', $stationId)
+            ->whereIn('status',[0,2])
             ->first();
         return $invite;
     }
@@ -190,8 +191,10 @@ class Invite extends CommonModel
         $teacherDel = StationTeacher::where('user_id', '=', $teacher_id)
             ->where('exam_id', '=', $exam_id)
             ->where('station_id', '=', $stationId)
-            ->delete();
-          
+            ->first();
+//        if($teacherDel){
+//            $teacherDel = $teacherDel ->delete();
+//        }
            return $teacherDel;
     }
     
