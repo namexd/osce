@@ -9,7 +9,7 @@
 namespace Modules\Osce\Entities\SmartArrange\Cate;
 
 
-use Modules\Osce\Entities\AutomaticPlanArrangement\Student;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\SmartArrange\Traits\SQLTraits;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
 

@@ -283,15 +283,6 @@ class AutomaticPlanArrangement
             if ($k === 1) {
                 $k = 2;
             }
-
-
-//            if (count($this->_S_ING) == 0 && count($this->_S) == 0 ){
-//                $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id', $examId)->first();  //通过查询数据表中是否有没有写入end_dt的数据
-//                if(is_null($examPlanNull))
-//                {
-//                    break;
-//                }
-//            }
         }
 
         //获取未走完流程的考生
