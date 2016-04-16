@@ -90,6 +90,7 @@ trait SQLTraits
     {
         $num = ExamScreening::join('exam_gradation', 'exam_gradation.order', '=', 'exam_screening.gradation_order')
             ->join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
+            ->join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
             ->where('exam_gradation.exam_id', '=', $exam->id)
             ->where('exam_screening.id', '=', $screen->id)
             ->count();

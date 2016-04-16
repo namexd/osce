@@ -125,6 +125,7 @@ class SmartArrange
     {
         $this->mode = ModeFactory::getMode($exam);
         $this->_E = $this->mode->entity($this->exam, $screen);
+        $this->_E_F = $this->_E->groupBy('serialnumber');
     }
 
 
@@ -141,6 +142,7 @@ class SmartArrange
          */
         $beginDt = strtotime($screen->begin_dt);
         $endDt = strtotime($screen->end_dt);
+
         //本次场次的流程
         $serialnumber = array_unique($this->_E->pluck('serialnumber')->toArray());
         /*
@@ -167,6 +169,7 @@ class SmartArrange
 
         $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
         $this->doorStatus = count($this->_E); //将当前实体的个数作为开关门的初始值
+
         //初始化数据
         $i = $beginDt;
         $k = 3;
@@ -180,22 +183,31 @@ class SmartArrange
                     $tempBool = true;
                 }
 
+//                dump(!$tempBool, date('Y-m-d H:i;s', $i), $k);
                 if (!$tempBool) {
                     //将总考池和侯考区考生打包进数组
-                    $params = ['total' => $this->_S, 'wait' => $this->_S_W, 'serialnumber' => $serialnumber, 'exam' => $this->exam];
+                    $params = [
+                        'total' => $this->_S,
+                        'wait' => $this->_S_W,
+                        'serialnumber' => $serialnumber,
+                        'exam' => $this->exam
+                    ];
                     //将排序模式注入
                     $this->setCate(CateFactory::getCate($this->exam, $params));
-                    
+
                     $students = $this->cate->needStudents($entity, $screen, $this->exam);
 
                     $this->_S = $this->cate->getTotalStudent();
                     $this->_S_W = $this->cate->getWaitStudent();
                     if (count($students) == 0) {
+                        $this->doorStatus--;
                         continue;
                     }
                     //变更学生的状态(写记录)
                     foreach ($students as &$student) {
+//                        dump($student->name, date('Y-m-d H:i;s', $i));
                         $data = $this->mode->dataBuilder($this->exam, $screen, $student, $entity, $i);
+
                         if (ExamPlanRecord::create($data)) {
                             $this->doorStatus--;
                         } else {
@@ -213,6 +225,7 @@ class SmartArrange
                             if (!empty($tempValue->end_dt)) {
                                 continue;
                             }
+
                             $tempValue->end_dt = date('Y-m-d H:i:s', $i);
                             if (!$tempValue->save()) {
                                 throw new \Exception('开门失败！', -10);
@@ -225,6 +238,7 @@ class SmartArrange
                         $entity->timer += $step;
                     }
                 }
+
             }
 
             if ($k === 3) {
@@ -239,14 +253,14 @@ class SmartArrange
             if ($k === 1) {
                 $k = 2;
             }
+
             //TODO 排完后终止循环的操作，待施工
             if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum) {
 //                dd($this->overStudentCount($screen), $this->_S_Count, $this->flowNum);
                 break;
             }
-//            sleep(1);
         }
-        
+
         //获取未走完流程的考生
         $studentList = $this->testingStudentList($this->exam, $this->flowNum);
 
@@ -384,23 +398,23 @@ class SmartArrange
             throw new \Exception('弃用旧安排失败');
         }
 //        try {
-            foreach ($planList as $plan) {
-                if (!array_key_exists($plan->student_id, $studentOrderData)) {
-                    $studentOrderData[$plan->student_id] = [
-                        'exam_id' => $exam->id,
-                        'exam_screening_id' => $plan->exam_screening_id,
-                        'student_id' => $plan->student_id,
-                        'begin_dt' => $plan->begin_dt,
-                        'status' => 0,
-                        'created_user_id' => \Auth::id(),
-                    ];
-                }
+        foreach ($planList as $plan) {
+            if (!array_key_exists($plan->student_id, $studentOrderData)) {
+                $studentOrderData[$plan->student_id] = [
+                    'exam_id' => $exam->id,
+                    'exam_screening_id' => $plan->exam_screening_id,
+                    'student_id' => $plan->student_id,
+                    'begin_dt' => $plan->begin_dt,
+                    'status' => 0,
+                    'created_user_id' => \Auth::id(),
+                ];
             }
-            foreach ($studentOrderData as $stduentOrder) {
-                if (!ExamOrder::create($stduentOrder)) {
-                    throw new \Exception('保存学生考试顺序失败');
-                }
+        }
+        foreach ($studentOrderData as $stduentOrder) {
+            if (!ExamOrder::create($stduentOrder)) {
+                throw new \Exception('保存学生考试顺序失败');
             }
+        }
 //        } catch (\Exception $ex) {
 //            throw $ex;
 //        }
