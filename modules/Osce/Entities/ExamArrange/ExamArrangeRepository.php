@@ -71,6 +71,8 @@ class ExamArrangeRepository extends AbstractExamArrange
             //遍历之，查看其中是否有相同的考站
             $this->checkSameEntity($result, $field);
             return $data;
+        } else {
+            throw new \Exception('系统异常');
         }
     }
 

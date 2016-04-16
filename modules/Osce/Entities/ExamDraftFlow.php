@@ -114,9 +114,9 @@ class ExamDraftFlow extends CommonModel
                 return $reData;
             }
 
-            //最后 检查，是否符合要求
-            $data = $examArrangeRepository->checkData($exam_id);
-            $examArrangeRepository->checkData($exam_id, 'room_id', $data);
+            //最后检查，考站、考场安排是否符合要求
+            $examArrangeRepository->checkData($exam_id, 'station_id');
+            $examArrangeRepository->checkData($exam_id, 'room_id');
 
             if ($status == 1) {
                 //清空数据
@@ -431,5 +431,34 @@ class ExamDraftFlow extends CommonModel
         return $datas;
     }
 
+    /**
+     * 清楚考场安排数据
+     * @param $exam_id
+     *
+     * @author Zhoufuxiang 2016-4-16
+     * @throws \Exception
+     */
+    public function delDraftDatas($exam_id)
+    {
+        $draftFlows = $this->where('exam_id','=',$exam_id)->get();
+        if (!$draftFlows->isEmpty()){
+            foreach ($draftFlows as $index => $draftFlow) {
+                $examDrafts = ExamDraft::where('exam_draft_flow_id','=',$draftFlow->id)->get();
+                if (!$examDrafts->isEmpty()){
+                    foreach ($examDrafts as $index => $examDraft) {
+                        if (!$examDraft->delete()){
+                            throw new \Exception('删除考场安排失败，请重试！');
+                        }
+                    }
+                }
+                //删除站
+                if (!$draftFlow->delete()){
+                    throw new \Exception('删除考场安排失败，请重试！');
+                }
+            }
+        }
+
+        return $draftFlows;
+    }
 
 }

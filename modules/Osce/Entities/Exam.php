@@ -217,6 +217,12 @@ class Exam extends CommonModel
                     }
                 }
             }
+
+            //删除考场安排 相关信息
+            $examDraftFlow = new ExamDraftFlow();
+            $examDraftFlow ->delDraftDatas($id);
+
+            //删除考试阶段 相关信息
             $examGradations = ExamGradation::where('exam_id', '=', $id)->get();
             if (!$examGradations->isEmpty()) {
                 foreach ($examGradations as $examGradation) {
@@ -225,6 +231,7 @@ class Exam extends CommonModel
                     }
                 }
             }
+            
             //删除考试考场关联
             if (!ExamRoom::where('exam_id', $id)->get()->isEmpty()) {
                 if (!ExamRoom::where('exam_id', $id)->delete()) {
@@ -338,7 +345,7 @@ class Exam extends CommonModel
     public function addExam(array $examData, array $examScreeningData, $gradation = 1)
     {
         $connection = DB::connection($this->connection);
-        $connection->beginTransaction();
+        $connection ->beginTransaction();
         try {
             //将exam表的数据插入exam表
             if (!$result = $this->create($examData)) {
@@ -348,10 +355,10 @@ class Exam extends CommonModel
             if ($gradation) {
                 for ($i = 1; $i <= $gradation; $i++) {
                     $gradationData = [
-                        'exam_id' => $result->id,
-                        'order' => $i,
-                        'gradation_number' => $gradation,
-                        'created_user_id' => Auth::user()->id
+                        'exam_id'           => $result->id,
+                        'order'             => $i,
+                        'gradation_number'  => $gradation,
+                        'created_user_id'   => Auth::user()->id
                     ];
                     if (!ExamGradation::create($gradationData)) {
                         throw new \Exception('创建考试阶段关系失败！');
@@ -361,8 +368,8 @@ class Exam extends CommonModel
 
             //将考试对应的考次关联数据写入考试场次表中
             foreach ($examScreeningData as $key => $value) {
-                $value['exam_id'] = $result->id;
-                $value['status'] = 0;
+                $value['exam_id']   = $result->id;
+                $value['status']    = 0;
                 if (!$examScreening = ExamScreening::create($value)) {
                     throw new \Exception('创建考试场次信息失败');
                 }
