@@ -134,10 +134,24 @@ class ExamArrangeRepository extends AbstractExamArrange
                 $result = true;
             }else{
                 //比较小站里的数据是否一致
+                foreach ($FrontArrangeData['DraftData'] as $key=>$item){
+                    foreach ($LaterArrangeData['DraftData'] as $keys=>$value){
+                        if($key == $keys && $item['subject_id'] != $value['subject_id']){
 
+//
+//                            dd($FrontArrangeData['DraftData'],$LaterArrangeData['DraftData']);
+//
+//                            dd($item['subject_id'],$value['subject_id']);
+                            $result = true;
+                        }elseif($key == $keys && $item['station_id'] != $value['station_id']){
 
+                            $result = true;
+                        }elseif($key == $keys && $item['room_id'] != $value['room_id']){
 
-
+                            $result = true;
+                        }
+                    }
+                }
 
                 if(count($FrontArrangeData['FlowData'])!=count($LaterArrangeData['FlowData'])){
 
