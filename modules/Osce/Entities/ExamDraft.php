@@ -290,7 +290,8 @@ class ExamDraft extends CommonModel
                     'exam_draft.id','exam_draft.subject_id','subject.title as subject_title',
                     'station.id as station_id','station.name as station_name','station.type as station_type'
                 ])
-                ->groupBy('station_id')->get();
+//                ->groupBy('station_id')
+                ->get();
 
         return $data;
     }
