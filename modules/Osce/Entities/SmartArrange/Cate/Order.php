@@ -81,4 +81,9 @@ class Order extends AbstractCate implements CateInterface
             return collect([]);
         }
     }
+
+    public function checkDoor()
+    {
+        return true;
+    }
 }

@@ -150,9 +150,10 @@ trait SQLTraits
      * @author Jiangzhiheng
      * @time 2016-04-08 14:49
      */
-    function testingStudentList($exam, $flowsNum)
+    function testingStudentList($exam, $screen, $flowsNum)
     {
         return ExamPlanRecord::where('exam_id', $exam->id)
+            ->where('exam_screening_id', $screen->id)
             ->whereNotNull('end_dt')
             ->groupBy('student_id')
             ->select(

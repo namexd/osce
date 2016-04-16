@@ -51,9 +51,9 @@ class ExamArrangeRepository extends AbstractExamArrange
      * @author Jiangzhiheng
      * @time 2016-04-14 17:27
      */
-    function checkData($examId, $field = 'station_id', Collection $collection = null)
+    function checkData($examId, $field = 'station_id')
     {
-        if (is_null($collection)) {
+        if ($field == 'station_id') {
             //获取该场考试的数据
             $data = $this->checkExamArrange($examId);
             //打包数据，用考试阶段来打包
@@ -63,10 +63,10 @@ class ExamArrangeRepository extends AbstractExamArrange
             $this->checkSameEntity($result, $field);
 
             return $data;
-        } else {
-            $data = $collection;
+        } elseif ($field == 'room_id') {
             //打包数据，用考试阶段来打包
-            $result = $data->groupBy('exam_gradation_id');
+            $data = $this->checkExamArrange($examId);
+            $result = $data->groupBy('exam_draft_flow_order');
 
             //遍历之，查看其中是否有相同的考站
             $this->checkSameEntity($result, $field);
