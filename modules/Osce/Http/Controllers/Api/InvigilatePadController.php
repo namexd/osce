@@ -399,9 +399,12 @@ class InvigilatePadController extends CommonController
             }
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage());
-            return response()->json(
+        /*    return response()->json(
                 $this->fail(new \Exception('成绩提交失败'))
-            );
+
+
+            );*/
+            return response()->json($this->fail($ex));
         }
 
     }
