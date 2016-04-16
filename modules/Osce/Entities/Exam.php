@@ -421,17 +421,17 @@ class Exam extends CommonModel
 
             //如果考试顺序变化清空智能排考
             if ($exam->sequence_cate != $examData['sequence_cate']) {
+                $DelExamArrange =$examArrangeRepository->resetSmartArrange($exam_id);
                 //清空智能排考
-                if (!$examArrangeRepository->resetSmartArrange($exam_id)) {
+                if (!$DelExamArrange && $DelExamArrange!=null) {
                     throw new \Exception('重置作废智能排考数据失败');
                 }
             }
 
-
             //同时进出改变清空排考
             if ($exam->same_time != $examData['same_time']) {
                 //清空智能排考
-                    if(!$examArrangeRepository->resetSmartArrange($exam_id)){
+                    if(!$examArrangeRepository->resetSmartArrange($exam_id) && $examArrangeRepository->resetSmartArrange($exam_id)!=null){
                         throw new \Exception('重置作废排考数据失败');
                     }
             }
