@@ -247,7 +247,7 @@ class AnswerController extends CommonController
                 $this->success_data([],1,'success')
             );
         }catch (\Exception $ex) {
-            
+
             return response()->json($this->fail($ex));
 
         }

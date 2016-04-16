@@ -769,7 +769,7 @@ class ApiController extends CommonController
         })->where('watch_log.student_id', '=', $examQenen->student_id) //7382
                  ->where('watch.status', '=', 1)
                  ->select([
-                    'watch.nfc_code as nfc_code',
+                    'watch.code as nfc_code',
                  ])->first();
         if (is_null($watch)) {
             $retval = ['title' => '未查到相应腕表信息'];

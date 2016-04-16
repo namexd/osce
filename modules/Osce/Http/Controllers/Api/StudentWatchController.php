@@ -60,34 +60,34 @@ class StudentWatchController extends CommonController
         $redis = Redis::connection('message');
 
         //根据腕表nfc_code找到腕表
-        $watch = Watch::where('nfc_code', '=', $watchNfcCode)->first();
+        $watch = Watch::where('code', '=', $watchNfcCode)->first();
         if (is_null($watch)) {
-            $code = -2;
             $data['title'] = '未找到腕表';
-            $redis->publish('watch_message', json_encode($this->success_data($data, $code, 'error')));
+            $data['code'] = -2;
+            $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']));
             return response()->json(
-                $this->success_data($data, $code, 'error')
+                ['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']
             );
         }
 
         //判定腕表是否解绑
         if($watch->status == 0){
-            $code = -1; // -1 腕表未绑定
             $data['title'] = '腕表未绑定';
-            $redis->publish('watch_message', json_encode($this->success_data($data, $code, 'error')));
+            $data['code'] = -1; // -1 腕表未绑定
+            $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']));
             return response()->json(
-                $this->success_data($data, $code, 'error')
+                ['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']
             );
         }
 
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)->where('is_end', '=', 0)->orderBy('signin_dt','desc')->first();
         if (is_null($watchStudent)) {
-            $code = -3;
             $data['title'] = '没有找到腕表对应的学生信息';
-            $redis->publish('watch_message', json_encode($this->success_data($data, $code, 'error')));
+            $data['code'] = -3;
+            $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']));
             return response()->json(
-                $this->success_data($data, $code, 'error')
+                ['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']
             );
         }
 
@@ -101,11 +101,11 @@ class StudentWatchController extends CommonController
         $ExamQueueModel = new ExamQueue();
         $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
         if(is_null($examQueueCollect)){
-            $code = -4;
             $data['title'] = '学生队列信息不正确';
-            $redis->publish('watch_message', json_encode($this->success_data($data, $code, 'error')));
+            $data['code'] = -4;
+            $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']));
             return response()->json(
-                $this->success_data($data, $code, 'error')
+                ['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']
             );
         }
 
