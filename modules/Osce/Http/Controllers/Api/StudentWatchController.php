@@ -66,7 +66,7 @@ class StudentWatchController extends CommonController
             $data['code'] = -2;
             $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']));
             return response()->json(
-                $this->success_data($data, -2, 'error')
+                ['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']
             );
         }
 
@@ -76,7 +76,7 @@ class StudentWatchController extends CommonController
             $data['code'] = -1; // -1 腕表未绑定
             $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']));
             return response()->json(
-                $this->success_data($data, -1, 'error')
+                ['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']
             );
         }
 
@@ -87,7 +87,7 @@ class StudentWatchController extends CommonController
             $data['code'] = -3;
             $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']));
             return response()->json(
-                $this->success_data($data, -3, 'error')
+                ['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']
             );
         }
 
@@ -105,7 +105,7 @@ class StudentWatchController extends CommonController
             $data['code'] = -4;
             $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']));
             return response()->json(
-                $this->success_data($data, -4, 'error')
+                ['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']
             );
         }
 
