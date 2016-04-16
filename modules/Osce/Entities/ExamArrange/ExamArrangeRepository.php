@@ -158,9 +158,9 @@ class ExamArrangeRepository extends AbstractExamArrange
                     $result = true;
                 }else{
                     //比较阶段是否一致
-                    foreach ($FrontArrangeData['FlowData'] as $item){
-                        foreach ($LaterArrangeData['FlowData'] as $value){
-                            if($item['exam_gradation_id'] != $value['exam_gradation_id']){
+                    foreach ($FrontArrangeData['FlowData'] as $key=>$item){
+                        foreach ($LaterArrangeData['FlowData'] as $keys=>$value){
+                            if($key == $keys && $item['exam_gradation_id'] != $value['exam_gradation_id']){
                                 $result = true;
                             }
                         }
