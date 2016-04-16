@@ -644,6 +644,7 @@ class DrawlotsController extends CommonController
             //$redis = Redis::connection('message');
             //$redis->publish('watch_message', json_encode($this->success_data($station)));
 
+            /*
             $request['station_id']=$station->id;
             $request['teacher_id']=$id;
             $request['exam_id']=$station->exam_id;
@@ -665,7 +666,10 @@ class DrawlotsController extends CommonController
                     $request['nfc_code'] = $watchData->nfc_code;
                     $studentWatchController->getStudentExamReminder($request);
                 }
-            }/*else{
+            }
+            */
+
+            /*else{
                 $request['uid']=;
                 $request['room_id']=$id;
                 $request['teacher_id']=$id;
