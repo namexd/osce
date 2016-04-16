@@ -170,7 +170,7 @@ class StandardItem extends CommonModel
             foreach($prointList as $item)
             {
                 $data[$item->pid][] =   $item;
-                $data[$item->pid][]['subject_id'] =   $subject_id;
+               // $data[$item->pid][]['subject_id'] =   $subject_id;
             }
 
             $return =   [];
