@@ -4940,7 +4940,7 @@ function examiner_manage() {
             data:req,
             success: function(res) {
                 if(res.code != 1) {
-                    layer.msg(res.messages,{skin:'msg-error',icon:1});
+                    layer.msg(res.message,{skin:'msg-error',icon:1});
                 } else {
                     layer.msg('保存成功！',{skin:'msg-success',icon:1}, function() {
                         location.reload();
