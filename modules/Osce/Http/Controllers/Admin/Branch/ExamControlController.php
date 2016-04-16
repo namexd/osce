@@ -107,7 +107,7 @@ class ExamControlController extends CommonController
                 ->where('student_id','=',$data['studentId'])->first();
 
             $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
-            $request['nfc_code'] = $watchData->nfc_code;
+            $request['nfc_code'] = $watchData->code;
             $studentWatchController = new StudentWatchController();
             $studentWatchController->getStudentExamReminder($request);
             return response()->json(
