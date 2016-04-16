@@ -843,9 +843,6 @@ class ExamArrangeController extends CommonController
                 $code =1;
             }
 
-         
-
-
             return response()->json(
                 $this->success_data([], $code)
             );

@@ -4728,7 +4728,7 @@ function station_assignment(){
             data:{exam_id:examId},
             success: function(res) {
                 if(res.code == -1) {
-                    layer.confirm('考试项目更改将导致智能排考重排？',{
+                    layer.confirm('考试项目更改将导致智能排考重排',{
                         title:'提示',
                         btn: ['确定','取消'],
                         cancel: function() {
@@ -4741,7 +4741,7 @@ function station_assignment(){
                             data:{exam_id:examId,flag:1},
                             success: function(res) {
                                 if(res.code != 1) {
-                                    layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
+                                    layer.msg(res.message,{skin:'msg-error',icon:1});
                                 } else {
                                     layer.msg('数据保存成功！',{skin:'msg-success',icon:1},function () {
                                         location.reload();
@@ -4755,7 +4755,7 @@ function station_assignment(){
                         location.reload();
                     });
                 } else {
-                    layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
+                    layer.msg(res.message,{skin:'msg-error',icon:1});
                 }
             }
         })
@@ -4940,7 +4940,7 @@ function examiner_manage() {
             data:req,
             success: function(res) {
                 if(res.code != 1) {
-                    layer.msg('保存失败！',{skin:'msg-error',icon:1});
+                    layer.msg(res.messages,{skin:'msg-error',icon:1});
                 } else {
                     layer.msg('保存成功！',{skin:'msg-success',icon:1}, function() {
                         location.reload();

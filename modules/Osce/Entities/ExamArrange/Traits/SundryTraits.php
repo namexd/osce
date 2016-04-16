@@ -10,6 +10,8 @@ namespace Modules\Osce\Entities\ExamArrange\Traits;
 
 
 use Illuminate\Database\Eloquent\Collection;
+use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\Room;
 
 trait SundryTraits
 {
@@ -21,12 +23,12 @@ trait SundryTraits
      * @author Jiangzhiheng
      * @time 2016-04-14 18:23
      */
-    public function getDiff(Collection $data1, Collection $data2)
+    public function getDiff($data1, $data2)
     {
         $keys1 = $data1->keys();
         $keys2 = $data2->keys();
 
-        $diff = $keys1->diff($keys2);
+        $diff = collect($keys1)->diff($keys2);
         return $diff = $diff->first();
     }
 
@@ -42,7 +44,8 @@ trait SundryTraits
     {
         foreach ($result as $item) {
             $entityIds = $item->pluck($field);
-            $uniEntityIdsIds = $entityIds->unique();
+            $uniEntityIdsIds = collect(array_unique($entityIds->toArray()));
+
             if (count($entityIds) != count($uniEntityIdsIds)) {
                 $entityId = $this->getDiff($entityIds, $uniEntityIdsIds);
                 switch ($field) {
