@@ -40,6 +40,9 @@ class SmartArrange
     //经过流程分组的考试实体，为对象集合
     protected $_E_F;
 
+    //当前考试考站总数
+    protected $stationCount;
+
     //开关门的状态
     protected $doorStatus = 0;
 
@@ -72,6 +75,7 @@ class SmartArrange
     public function setStudents(StudentInterface $student)
     {
         $this->_S = $student->get($this->exam);
+        $this->_S = $this->upset($this->_S);
         $this->_S_Count = count($this->_S);
         return $this->_S_Count;
     }
@@ -126,6 +130,7 @@ class SmartArrange
         $this->mode = ModeFactory::getMode($exam);
         $this->_E = $this->mode->entity($this->exam, $screen);
         $this->_E_F = $this->_E->groupBy('serialnumber');
+        $this->stationCount = $this->_E->sum('needNum');
     }
 
 
@@ -160,7 +165,6 @@ class SmartArrange
 
         //将考生放入侯考区
         $this->_S_W = $this->waitExamQueue();
-
         //获得考试实体的最大公约数
         $mixCommonDivisors = [];
         foreach ($this->_E as $item) {
@@ -168,13 +172,14 @@ class SmartArrange
         }
 
         $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
-        $this->doorStatus = count($this->_E); //将当前实体的个数作为开关门的初始值
+        $this->doorStatus = $this->stationCount; //将当前实体的个数作为开关门的初始值
 
         //初始化数据
         $i = $beginDt;
         $k = 3;
         $step = $mixCommonDivisor * 60; //为考试实体考试时间的秒数
         //开始计时器
+
         while ($i <= $endDt) {
             foreach ($this->_E as &$entity) {
                 if ($this->doorStatus > 0) {
@@ -183,7 +188,8 @@ class SmartArrange
                     $tempBool = true;
                 }
 
-//                dump(!$tempBool, date('Y-m-d H:i;s', $i), $k);
+                dump(!$tempBool, date('Y-m-d H:i;s', $i), $this->doorStatus, $k);
+//                echo '=============';
                 if (!$tempBool) {
                     //将总考池和侯考区考生打包进数组
                     $params = [
@@ -196,11 +202,15 @@ class SmartArrange
                     $this->setCate(CateFactory::getCate($this->exam, $params));
 
                     $students = $this->cate->needStudents($entity, $screen, $this->exam);
-
+//                    dump(count($students));
+//                    echo '================';
                     $this->_S = $this->cate->getTotalStudent();
                     $this->_S_W = $this->cate->getWaitStudent();
+
                     if (count($students) == 0) {
-                        $this->doorStatus--;
+                        if ($this->cate->checkDoor()) {
+                            $this->doorStatus--;
+                        }
                         continue;
                     }
                     //变更学生的状态(写记录)
@@ -262,7 +272,7 @@ class SmartArrange
         }
 
         //获取未走完流程的考生
-        $studentList = $this->testingStudentList($this->exam, $this->flowNum);
+        $studentList = $this->testingStudentList($this->exam, $screen, $this->flowNum);
 
         //未考完的学生实例数组
         $undoneStudents = [];
@@ -298,6 +308,7 @@ class SmartArrange
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_W);
         $this->_S = $this->_S->merge(array_unique($undoneStudents));
+        dd($undoneStudents);
     }
 
     /**

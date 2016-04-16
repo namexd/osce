@@ -96,4 +96,9 @@ class Random extends AbstractCate implements CateInterface
 
         return $this->testingStudents($this->exam, $screen, $arrays);
     }
+
+    public function checkDoor()
+    {
+        return false;
+    }
 }
