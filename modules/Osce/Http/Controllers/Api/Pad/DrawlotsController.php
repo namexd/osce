@@ -300,7 +300,73 @@ class DrawlotsController extends CommonController
             return response()->json($this->fail($ex));
         }
     }
+    /**
+     * 根据考场ID获取当前时间段的考生列表(接口)
+     * @method GET
+     * @url osce/pad/next-examinee
+     * @access public
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse ${response}
+     *
+     * @internal param Request $request
+     * @internal param Request $request post请求<br><br>
+     * <b>post请求字段：</b>
+     *
+     * @version 1.0
+     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @date 2016-01-23 12:06
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getNextExaminee_arr(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer',
+            'exam_id' => 'sometimes|integer'
+        ]);
 
+        try {
+            $redis = Redis::connection('message');
+            $id = $request->input('id');
+            $examId = $request->input('exam_id', null);
+            //获取正在考试中的考试
+            $exam = Exam::doingExam($examId);
+            if (is_null($exam)) {
+                $redis->publish('pad_message', json_encode($this->success_data([], 3000, '当前没有正在进行的考试')));
+                throw new \Exception('当前没有正在进行的考试', 3000);
+            }
+
+
+
+//            //获取当前老师对应的考站id
+            $station = StationTeacher::where('exam_id', '=', $exam->id)
+                ->where('user_id', '=', $id)
+                ->first();
+
+            if (is_null($station)) {
+                $redis->publish('pad_message', json_encode($this->success_data([], -999, '你没有参加此次考试')));
+                throw new \Exception('你没有参加此次考试');
+            }
+
+            list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
+
+            if ($exam->sequence_mode == 1) {
+                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $exam->id, $stations);
+            } elseif ($exam->sequence_mode == 2) {
+
+                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $exam->id);
+            } else {
+                $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
+                throw new \Exception('考试模式不存在！', -703);
+            }
+            // dd($examQueue);
+            //从集合中移除blocking
+//            $students->forget('blocking');
+            $redis->publish('pad_message', json_encode($this->success_data($examQueue,104,'获取成功')));//信息推送
+           // return response()->json($this->success_data($examQueue));
+        } catch (\Exception $ex) {
+            return [];
+        }
+    }
     /**
      * 获取下个考生信息返回当前组学生信息
      * @method GET
@@ -319,21 +385,24 @@ class DrawlotsController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function nextStudent(Request $request){
+
         $this->validate($request, [
             'exam_queue_id' => 'sometimes|integer',
             'station_id' => 'required|integer',
             'teacher_id' =>'required|integer'
 
         ], [
-            'exam_queue_id.required' => '考生队列编号信息必须',
             'station_id.required' => '考站编号信息必须',
             'teacher_id.required'=>'老师编号信息必须',
         ]);
+
         try {
             $stationId = (int)$request->input('station_id');
             $examQueueId = (int)$request->input('exam_queue_id');//队列id
             $teacher_id =(int)$request->input('teacher_id');
+
             if($examQueueId) {
+
                 ExamQueue::where('id', $examQueueId)->increment('next_num', 1);//下一次次数增加
             }
             $exam = Exam::doingExam();
@@ -342,16 +411,20 @@ class DrawlotsController extends CommonController
             //$studentData = $studentModel->nextStudentList($stationId, $exam);
             list($room_id, $stations) = $this->getRoomIdAndStation($teacher_id, $exam);
             if ($exam->sequence_mode == 1) {
+
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations);
             } elseif ($exam->sequence_mode == 2) {
+
                 $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id);
             } else {
                 throw new \Exception('考试模式不存在！', -703);
             }
+
             $request['id']=$teacher_id;
             $request['exam_id']=$exam->id;
-            $this->getNextExaminee($request);//推送下一组
-            $this->getExaminee($request);//推送当前小组
+
+            $this->getNextExaminee_arr($request);//推送下一组
+            $this->getExaminee_arr($request);//推送当前小组
             return response()->json(
                 $this->success_data($examQueue, 1, '验证完成')
             );
@@ -571,6 +644,7 @@ class DrawlotsController extends CommonController
             //$redis = Redis::connection('message');
             //$redis->publish('watch_message', json_encode($this->success_data($station)));
 
+            /*
             $request['station_id']=$station->id;
             $request['teacher_id']=$id;
             $request['exam_id']=$station->exam_id;
@@ -592,7 +666,10 @@ class DrawlotsController extends CommonController
                     $request['nfc_code'] = $watchData->nfc_code;
                     $studentWatchController->getStudentExamReminder($request);
                 }
-            }/*else{
+            }
+            */
+
+            /*else{
                 $request['uid']=;
                 $request['room_id']=$id;
                 $request['teacher_id']=$id;

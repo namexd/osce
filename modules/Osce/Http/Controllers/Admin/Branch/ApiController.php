@@ -25,6 +25,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Watch;
 use Modules\Osce\Entities\WatchLog;
+use Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
@@ -726,11 +727,13 @@ class ApiController extends CommonController
             'exam_id'           => 'required|integer',
             'station_id'        => 'required|integer',
             'exam_screening_id' => 'required|integer',
+            'teacher_id'        =>'required|integer',
         ]);
 
         $examId          = $request->input('exam_id');
         $stationId       = $request->input('station_id');
         $examScreeningId = $request->input('exam_screening_id');
+        $teacher_id      = $request->input('teacher_id');
 
         //$redis = Redis::connection('message');
 
@@ -766,7 +769,7 @@ class ApiController extends CommonController
         })->where('watch_log.student_id', '=', $examQenen->student_id) //7382
                  ->where('watch.status', '=', 1)
                  ->select([
-                    'watch.nfc_code as nfc_code',
+                    'watch.code as nfc_code',
                  ])->first();
         if (is_null($watch)) {
             $retval = ['title' => '未查到相应腕表信息'];
@@ -782,6 +785,30 @@ class ApiController extends CommonController
             'title' => '当前考站准备完成成功',
             'code'  => $watch['nfc_code'],
         ];
+        $request['station_id']=$stationId;
+        $request['teacher_id']=$teacher_id;
+        $request['exam_id']=$examId;
+        $draw=new DrawlotsController();
+        $request['id']=$teacher_id;
+        $draw->getExaminee_arr($request);//当前组推送(可以获得)
+        $draw->getNextExaminee_arr($request);
+        $inv=new InvigilatePadController();
+        $msg=$inv->getAuthentication_arr($request);//当前考生推送(如果有)
+        if($msg) {
+            //调用向腕表推送消息的方法
+            $examQueue = ExamQueue::where('student_id', '=', $msg->student_id)
+                ->where('station_id', '=', $stationId)
+                ->whereIn('status', [0, 2])
+                ->first();
+            if ($examQueue) {
+                $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id', '=', $examQueue->exam_screening_id)
+                    ->where('student_id', '=', $examQueue->student_id)->first();
+                $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
+                $studentWatchController = new StudentWatchController();
+                $request['nfc_code'] = $watchData->nfc_code;
+                $studentWatchController->getStudentExamReminder($request);
+            }
+        }
         return response()->json(
             $this->success_data($retval)
         );

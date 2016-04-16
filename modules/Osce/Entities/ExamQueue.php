@@ -201,7 +201,7 @@ class ExamQueue extends CommonModel
                     'student.mobile as student_mobile',
                     'student.code as student_code',
                     'student.avator as student_avator',
-                    'student.description as student_description','exam_queue.id as exam_queue_id'
+                    'student.description as student_description','exam_queue.id as exam_queue_id','exam_queue.station_id as station_id'
                 )
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
@@ -339,7 +339,7 @@ class ExamQueue extends CommonModel
             //dd($studentId);
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
                 ->where('station_id', '=', $stationId)
-                ->whereIn('status',[0,2])
+                ->whereIn('status',[0,1,2])
                 ->first();
             //dd($examQueue);
             if(is_null($examQueue)){
@@ -354,7 +354,7 @@ class ExamQueue extends CommonModel
             if ( $examQueue->save()) {
                 ExamQueue::where('student_id', '=', $studentId)->where('exam_id',$exam->id)->update(['blocking'=>0]);//设置阻塞
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
-                    ->whereIn('exam_queue.status', [0, 2])
+                    ->whereIn('exam_queue.status', [0,1, 2])
                     ->orderBy('begin_dt', 'asc')
                     ->get();
                 $nowQueue = null;
