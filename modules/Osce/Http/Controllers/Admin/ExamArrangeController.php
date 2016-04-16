@@ -18,6 +18,7 @@ use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamDraftFlowTemp;
 use Modules\Osce\Entities\ExamDraftTemp;
 use Modules\Osce\Entities\ExamGradation;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Invite;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Station;
@@ -579,7 +580,15 @@ class ExamArrangeController extends CommonController
                 'exam_id' => 'required|integer',
             ]);
             $exam_id = intval($request->get('exam_id'));
-            $data = ExamGradation::where('exam_id', '=', $exam_id)->get();
+            //拿到考试中已安排过得阶段序号
+            $gradation = ExamScreening::where('exam_id','=',$exam_id)->get()->pluck('gradation_order');
+//           $ExamGradationModel  = new ExamGradation();
+
+//            $ExamGradationModel->getExamGradation($exam_id,$gradation);
+
+            $data = ExamGradation::where('exam_id', '=', $exam_id)->whereIn('order',$gradation)->get();
+
+
 
             return response()->json(
                 $this->success_data($data, 1, 'success')
@@ -842,9 +851,6 @@ class ExamArrangeController extends CommonController
             }else{
                 $code =1;
             }
-
-         
-
 
             return response()->json(
                 $this->success_data([], $code)

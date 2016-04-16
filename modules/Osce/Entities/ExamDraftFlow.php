@@ -83,9 +83,9 @@ class ExamDraftFlow extends CommonModel
             //获取所有临时数据
             $datas = $this->getAllTempDatas($exam_id);
 
-            if (empty($datas)) {
-                throw new \Exception('数据为空');
-            }
+//            if (empty($datas)) {
+//                throw new \Exception('数据为空');
+//            }
 
             foreach ($datas as $data) {
                 //操作大表
@@ -114,6 +114,10 @@ class ExamDraftFlow extends CommonModel
                 return $reData;
             }
 
+            //最后 检查，是否符合要求
+            $data = $examArrangeRepository->checkData($exam_id);
+            $examArrangeRepository->checkData($exam_id, 'room_id', $data);
+
             if ($status == 1) {
                 //清空数据
                 $result = $examArrangeRepository->resetSmartArrange($exam_id);
@@ -130,8 +134,10 @@ class ExamDraftFlow extends CommonModel
                 //有改动还回code=-1用户确定
                 return -100;
             }
-                $connection->commit();
-                return true;
+
+            $connection->commit();
+            return true;
+
         } catch (\Exception $ex) {
 
             //存在阶段ID，为临时获取数据，无需保存提交
