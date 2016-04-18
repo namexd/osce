@@ -285,12 +285,15 @@ class ExamDraft extends CommonModel
         $data = $this->leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', $this->table.'.exam_draft_flow_id')
                 ->leftJoin('station', 'station.id', '=', $this->table.'.station_id')
                 ->leftJoin('subject', 'subject.id', '=', $this->table.'.subject_id')
+//                ->leftJoin('station_teacher', 'station_teacher.station_id', '=', $this->table.'.station_id')
                 ->where('exam_draft_flow.exam_id','=',$exam_id)
                 ->select([
-                    'exam_draft.id','exam_draft.subject_id','subject.title as subject_title',
-                    'station.id as station_id','station.name as station_name','station.type as station_type'
+                    'exam_draft.id','exam_draft.subject_id','subject.title as subject_title','subject.id as subject_id',
+
+                    'station.id as station_id','station.name as station_name','station.type as station_type',
+//                    'station_teacher.id as station_teacher_id',
                 ])
-//                ->groupBy('station_id')
+//                ->groupBy('exam_draft_flow.id')
                 ->get();
 
         return $data;
