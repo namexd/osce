@@ -4827,8 +4827,6 @@ function station_assignment(){
             layer.alert('请选择阶段！');
             return false;
         }
-
-
         
         $.ajax({
             type:'post',
