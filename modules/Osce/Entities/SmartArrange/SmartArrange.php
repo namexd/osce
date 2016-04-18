@@ -231,17 +231,19 @@ class SmartArrange
                         };
                     }
 
-                    //$entity->timer += $step;
+                    if ($k == 2) {
+                        $entity->timer += $step;
+                    }
+                    if ($k == 3) {
+                        $entity->timer += $step;
+                    }
                 } else { //反之，则是关门状态
                     $tempValues = $this->examPlanRecordIsOpenDoor($entity, $screen);
-//                    dump($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60);
-//                    dump($entity->timer);
-//                    dump($entity->mins * 60);
-                    if ($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60) {
+                    if (($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60)) {
                         $entity->timer = 0;
                         //将结束时间写在表内
                         foreach ($tempValues as $tempValue) {
-                            if (!empty($tempValue->end_dt)) {
+                            if (!is_null($tempValue->end_dt)) {
                                 continue;
                             }
 
@@ -251,9 +253,9 @@ class SmartArrange
                             } else {
                                 $k = 1;
                                 $this->doorStatus++;
-                                $entity->timer += $step;
                             }
                         }
+                        $entity->timer += $step;
                     } else {
                         $entity->timer += $step;
                     }

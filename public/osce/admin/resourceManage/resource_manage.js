@@ -51,6 +51,49 @@ $(function(){
     }
 });
 
+
+/**
+ * select2 模糊搜索样式
+ * @author mao
+ * @version 3.4
+ * @date    2016-04-18
+ */
+function formatRepoSelection (repo) {
+  return repo.full_name || repo.text;
+}
+
+/**
+ * select2 下拉选择样式
+ * @author mao
+ * @version 1.0
+ * @date    2016-04-18
+ */
+function formatRepo (repo) {
+  if (repo.loading) return repo.text;
+
+  var markup = "<div class='select2-result-repository clearfix'>" +
+    "<div class='select2-result-repository__avatar'><img src='" + repo.owner.avatar_url + "' /></div>" +
+    "<div class='select2-result-repository__meta'>" +
+      "<div class='select2-result-repository__title'>" + repo.full_name + "</div>";
+
+  if (repo.description) {
+    markup += "<div class='select2-result-repository__description'>" + repo.description + "</div>";
+  }
+
+  markup += "<div class='select2-result-repository__statistics'>" +
+    "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> " + repo.forks_count + " Forks</div>" +
+    "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> " + repo.stargazers_count + " Stars</div>" +
+    "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> " + repo.watchers_count + " Watchers</div>" +
+  "</div>" +
+  "</div></div>";
+
+  return markup;
+}
+
+
+
+
+
 /**
  * 腕表管理
  * @author mao
@@ -2625,6 +2668,7 @@ function staff_manage_invigilator_add() {
         }
     });
 
+
     /**
      * 多选下拉框
      * @author mao
@@ -2637,6 +2681,11 @@ function staff_manage_invigilator_add() {
         url: pars.get_subject,
         dataType: 'json',
         delay: 250,
+        data: function(params) {
+            return {
+                title: params.term
+            };
+        },
         processResults: function (res) {
           
             //数据格式化
@@ -2650,7 +2699,9 @@ function staff_manage_invigilator_add() {
             return {
                 results: str
             };
-        }
+        },
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
       }
     });
 
@@ -2886,6 +2937,11 @@ function staff_manage_invigilator_edit() {
             url: pars.get_subject,
             dataType: 'json',
             delay: 250,
+            data: function(params) {
+                return {
+                    title: params.term
+                };
+            },
             processResults: function (res) {
 
                 //数据格式化
@@ -2899,7 +2955,9 @@ function staff_manage_invigilator_edit() {
                 return {
                     results: str
                 };
-            }
+            },
+            templateResult: formatRepo,
+            templateSelection: formatRepoSelection
         }
     });
 
@@ -3192,6 +3250,11 @@ function staff_manage_invigilator_sp_add() {
             url: pars.get_subject,
             dataType: 'json',
             delay: 250,
+            data: function(params) {
+                return {
+                    title: params.term
+                };
+            },
             processResults: function (res) {
 
                 //数据格式化
@@ -3205,7 +3268,9 @@ function staff_manage_invigilator_sp_add() {
                 return {
                     results: str
                 };
-            }
+            },
+            templateResult: formatRepo,
+            templateSelection: formatRepoSelection
         }
     });
 }
@@ -3448,6 +3513,11 @@ function staff_manage_invigilator_sp_edit() {
             url: pars.get_subject,
             dataType: 'json',
             delay: 250,
+            data: function(params) {
+                return {
+                    title: params.term
+                };
+            },
             processResults: function (res) {
 
                 //数据格式化
@@ -3461,7 +3531,9 @@ function staff_manage_invigilator_sp_edit() {
                 return {
                     results: str
                 };
-            }
+            },
+            templateResult: formatRepo,
+            templateSelection: formatRepoSelection
         }
     });
     /**

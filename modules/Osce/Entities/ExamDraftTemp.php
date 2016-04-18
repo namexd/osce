@@ -21,7 +21,11 @@ class ExamDraftTemp extends CommonModel{
     public    $search       = [];
 
 
-
+    /**
+     * 清空考场安排临时表数据
+     * @param $id
+     * @return bool
+     */
     public function getTempData($id){
         $delExamDraftTemp = $this->where('exam_id','=',$id)->delete();
         if($delExamDraftTemp || $delExamDraftTemp == 0){

@@ -172,6 +172,7 @@ class StationTeacher extends CommonModel
                 'teacher.type as teacher_type',
 //                'invite.status as status',
                 $this->table . '.station_id',
+                $this->table . '.id',
 
             ])
             ->get();
