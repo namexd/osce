@@ -416,7 +416,8 @@ class SmartArrange
      */
     public function saveStudentOrder($exam)
     {
-        $planList = ExamOrder::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
+        //$planList = ExamOrder::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
+        $planList = ExamPlanRecord::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
         $studentOrderData = [];
         if (ExamOrder::where('exam_id', '=', $exam->id)->delete() === false) {
             throw new \Exception('弃用旧安排失败');
