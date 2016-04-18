@@ -684,6 +684,7 @@ class ExamArrangeController extends CommonController
          $ExamDraft     = new ExamDraft();
          $datas = $ExamDraft->getDraftFlowData($exam_id);
 
+
          $stationId = [];
 
          foreach ($datas as $item){
@@ -718,22 +719,27 @@ class ExamArrangeController extends CommonController
              }
 //         }
          $teacher = $datas->toArray();
+//         dd($teacher);
+
+
          foreach($teacher as &$teacherData){
 
 
              foreach ($teacherDatas as $value) {
 
+
                  if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id) {
 
-                     $teacherData['sp_teacher'][$value['id']] =$value;
+                     $teacherData['sp_teacher'][] =$value;
 
 
                  } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id){
-                     $teacherData['teacher'][$value['id']] =$value;
+                     $teacherData['teacher'][] =$value;
 
                  }
 
              }
+
 
 
          }

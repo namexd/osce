@@ -241,7 +241,7 @@ class SmartArrange
                     }
                 } else { //反之，则是关门状态
                     $tempValues = $this->examPlanRecordIsOpenDoor($entity, $screen);
-                    if ($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60) {
+                    if (($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60)) {
                         $entity->timer = 0;
                         //将结束时间写在表内
                         foreach ($tempValues as $tempValue) {
@@ -257,6 +257,7 @@ class SmartArrange
                                 $this->doorStatus++;
                             }
                         }
+                        $entity->timer += $step;
                     } else {
                         $entity->timer += $step;
                     }
