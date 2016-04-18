@@ -47,7 +47,7 @@ class Order extends AbstractCate implements CateInterface
                 return $result;
             } else {
                 for ($i = 0; $i < $entity->needNum; $i++) {
-                    $result[] = $testStudent->shift();
+                    $result[] = array_shift($testStudent);
                 }
                 return $result;
             }
@@ -71,14 +71,14 @@ class Order extends AbstractCate implements CateInterface
          * 如果不是，就说明前面有流程了
          */
         if ($entity->serialnumber != 1) {
-            $tempArrays = $this->orderBeginStudent($screen, $entity->serialnumber);
+            $tempArrays = $this->orderBeginStudent($screen, $entity);
             if (count($tempArrays) != 0) {
-                return Student::whereIn('id', $tempArrays)->get();
+                return Student::whereIn('id', $tempArrays)->get()->all();
             } else {
-                return collect([]);
+                return [];
             }
         } else {
-            return collect([]);
+            return [];
         }
     }
 
