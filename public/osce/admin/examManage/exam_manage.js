@@ -1635,10 +1635,7 @@ function timePicker(background){
                 var days = Math.floor(current/(1000*60*60*24)),
                     hours = Math.floor((current/(1000*60*60*24)-days)*24),
                     minutes = Math.round((((current/(1000*60*60*24)-days)*24)-hours)*60);
-                thisElement.next().next().text(days+'天'+hours+'小时'+minutes+'分');
-
-
-                
+                thisElement.next().next().text(days+'天'+hours+'小时'+minutes+'分'); 
             }
         }
     };
@@ -1687,6 +1684,11 @@ function timePicker(background){
         option.elem = '.'+id;
         $(this).addClass(id);
         $(this).attr('id',id);
+
+        //最小值限制
+        if(!(option.min < option.max)&&option.max!=='') {
+            option.min = option.max;
+        }
         //数据绑定
         laydate(option);
     });
