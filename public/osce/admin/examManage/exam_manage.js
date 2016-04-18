@@ -4443,7 +4443,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].title});
                     }
-                    str.push({id:-999,text:'新增考试项目'});
+                    str.push({id:-999,text:'==新增考试项目=='});
 
                     //加载入数据
                     return {
@@ -4513,7 +4513,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name,type:data[i].type});
                     }
-                    str.push({id:-999,text:'新增考站'});
+                    str.push({id:-999,text:'==新增考站=='});
 
                     //加载入数据
                     return {
@@ -4596,7 +4596,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
-                    str.push({id:-999,text:'新增考场'});
+                    str.push({id:-999,text:'==新增考场=='});
 
                     //加载入数据
                     return {
@@ -5101,6 +5101,7 @@ function examiner_manage() {
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增考官=='});
 
                     //加载入数据
                     return {
@@ -5108,8 +5109,9 @@ function examiner_manage() {
                     };
                 }
             }
-        }).on('select2:unselect', function(e) {
 
+        //删除选择
+        }).on('select2:unselect', function(e) {
             //删除
             $.ajax({
                 type:'get',
@@ -5126,6 +5128,35 @@ function examiner_manage() {
                 }
             })
 
+        }).on('select2:select', function(e){
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考场',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  success: function(){
+                    var curretArr = $elem.find('.custom-teacher').val();
+
+                    for(var i in curretArr) {
+                        if(curretArr[i] == -999) {
+                            delete curretArr[i];
+                        }
+                    }
+
+                    //取消新增选项选择
+                    $elem.find('.custom-teacher').val(curretArr).trigger("change");
+
+                  },
+                  end: function(){
+                    //更改请求数据
+                    
+                  },
+                  content: pars.add_examiner + '?status=1&tr='+$elem.attr('class')
+                });
+            }
         });
     }
     
@@ -5161,6 +5192,7 @@ function examiner_manage() {
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增sp=='});
 
                     //加载入数据
                     return {
@@ -5186,6 +5218,35 @@ function examiner_manage() {
                 }
             })
 
+        }).on('select2:select', function(e){
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考场',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  success: function(){
+                    var curretArr = $elem.find('.custom-sp').val();
+
+                    for(var i in curretArr) {
+                        if(curretArr[i] == -999) {
+                            delete curretArr[i];
+                        }
+                    }
+
+                    //取消新增选项选择
+                    $elem.find('.custom-sp').val(curretArr).trigger("change");
+
+                  },
+                  end: function(){
+                    //更改请求数据
+                    
+                  },
+                  content: pars.add_sp + '?status=1&tr='+$elem.attr('class')
+                });
+            }
         });
     }
     
