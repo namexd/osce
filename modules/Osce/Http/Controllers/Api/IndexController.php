@@ -835,7 +835,7 @@ class IndexController extends CommonController
         try {
             $examDraftFlowModel = new ExamDraftFlow();
 
-            $countStation = $examDraftFlowModel->leftjoin('exam_draft', function ($join) {
+            $stations = $examDraftFlowModel->leftjoin('exam_draft', function ($join) {
                 $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
             })->where('exam_draft_flow.exam_id', '=', $exam_id)
                 ->where('exam_draft_flow.exam_screening_id', '=', $screen_id)
@@ -851,11 +851,11 @@ class IndexController extends CommonController
             } else{
                 $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
             }
+            */
             $countStation=[];
             foreach($stations as $item){
                 $countStation[]=$item->station_id;
             }
-            */
             $countStation=array_unique($countStation);
             $batch=config('osce.batch_num');//默认为2
             $countStation=count($countStation)*$batch;//可以绑定的学生数量 考站数乘以倍数
