@@ -660,8 +660,11 @@ class InvigilatorController extends CommonController
                 $connect   = \DB::connection('sys_mis');
                 $connect->beginTransaction();
                 $user_role = \DB::table('sys_user_role')->where('user_id','=',$id)->where('role_id','=',$role_id)->first();
+
                 if(!is_null($user_role)){
-                    if(!SysUserRole::where('id','=',$user_role->id)->delete()){
+
+                    if(!SysUserRole::where('user_id','=',$user_role->user_id)->delete()){
+
 
                         $connect->rollBack();
 
