@@ -1780,6 +1780,11 @@ function course_module(){
      */
     $('#judgement tbody').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
+        layer.confirm('确认删除？', {
+                title:"删除",
+                btn: ['确定','取消'] //按钮
+            }, function(its){
+
         if(thisElement.attr('child')==undefined){
             //父类删除
             var classElement = '.'+thisElement.attr('class');
@@ -1843,6 +1848,7 @@ function course_module(){
                 change.html(option);
                 change.val(total);
                 $('.'+className+'[parent='+parent+']').attr('current',cu);
+                layer.close(its);
                 return;
             }
             var option = '';
@@ -1858,6 +1864,9 @@ function course_module(){
 
 
         }
+
+            layer.close(its);
+        });
     });
 
     /**
@@ -2312,7 +2321,7 @@ function course_module(){
                             '<select class="form-control js-example-basic-single" name="goods['+index+'][name]" style="width: 481px;"></select>'+
                         '</td>'+
                         '<td>'+
-                            '<input class="form-control" type="text" value="1" name="goods['+index+'][number]"/>'+
+                            '<input class="form-control" type="number" value="1" name="goods['+index+'][number]" placeholder="请输入数量"/>'+
                         '</td>'+
                         '<td>'+
                             '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
