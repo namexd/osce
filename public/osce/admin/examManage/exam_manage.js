@@ -4948,6 +4948,8 @@ function examiner_manage() {
 
             statusArr.push({_teacher:_teacher,_sp_teacher:_sp_teacher});
 
+            var control = data[i].station_type==2?'':'disabled="disabled"';
+
             //dom准备
             html += '<tr class="tr-id-'+i+'" value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'">'+
                         '<td>'+data[i].subject_title+'</td>'+
@@ -4961,7 +4963,7 @@ function examiner_manage() {
                         '</td>'+
                         '<td style="width:481px;">'+
                             '<div class="col-sm-10">'+
-                            '<select class="form-control custom-sp"  name=""  multiple="multiple">'+str_sp+
+                            '<select class="form-control custom-sp"  name="" '+control+'  multiple="multiple">'+str_sp+
                             '</select>'+
                             '</div>'+
                         '</td>'+
