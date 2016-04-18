@@ -28,7 +28,7 @@ class TestScoresController  extends CommonController
     public function TestScoreList(Request $request){
         //查找所有考试信息
         $examlist = Exam::where('status','=',2)->get();
-        return view('osce::admin.statisticalanalysis.statistics_student_score',[
+        return view('osce::admin.statisticalAnalysis.statistics_student_score',[
             'examlist'=>$examlist
         ]);
     }
@@ -182,7 +182,7 @@ class TestScoresController  extends CommonController
             'avgdata' => $avgdata//平均成绩
         ];
         //dd($data);
-        return view('osce::admin.statisticalanalysis.statistics_student_subject',[
+        return view('osce::admin.statisticalAnalysis.statistics_student_subject',[
             'data' => $data,
             'avg' => $avg,
             'totle' => $totle,

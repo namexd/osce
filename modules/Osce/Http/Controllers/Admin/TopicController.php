@@ -543,8 +543,7 @@ class TopicController extends CommonController
            'cases_name'=>'sometimes',
 
        ]);
-       //病例名称
-       $caseName = $request->get('q');
+       $caseName = $request->get('cases_name');
 //       $paginate = $request->get('paginate');
        try{
           
@@ -573,7 +572,7 @@ class TopicController extends CommonController
                'name'=>'sometimes'
             ]);
 
-        $name = e($request->get('name'));
+        $name = e($request->get('q'));
 
         try{
             $caseModel = new Supply();
