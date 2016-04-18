@@ -23,8 +23,24 @@ class Exam extends CommonModel
     protected $guarded = [];
     protected $hidden = [];
     protected $fillable = [
-        'code', 'name', 'begin_dt', 'end_dt', 'status', 'total', 'create_user_id', 'description', 'sequence_cate',
-        'sequence_mode', 'rules', 'address', 'teacher_arrange', 'arrangement', 'same_time', 'stage', 'real_push', 'archived'
+        'code',
+        'name',
+        'begin_dt',
+        'end_dt',
+        'status',
+        'total',
+        'create_user_id',
+        'description',
+        'sequence_cate',
+        'sequence_mode',
+        'rules',
+        'address',
+        'teacher_arrange',
+        'arrangement',
+        'same_time',
+        'stage',
+        'real_push',
+        'archived'
     ];
 
     protected $statuValues = [
@@ -60,8 +76,9 @@ class Exam extends CommonModel
      * 考试自能排考关联
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function examPlan(){
-        return $this->hasMany('\Modules\Osce\Entities\ExamPlan','exam_id','id');
+    public function examPlan()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\ExamPlan', 'exam_id', 'id');
 
     }
 
@@ -224,7 +241,7 @@ class Exam extends CommonModel
 
             //删除考场安排 相关信息
             $examDraftFlow = new ExamDraftFlow();
-            $examDraftFlow ->delDraftDatas($id);
+            $examDraftFlow->delDraftDatas($id);
 
             //删除考试阶段 相关信息
             $examGradations = ExamGradation::where('exam_id', '=', $id)->get();
@@ -235,7 +252,7 @@ class Exam extends CommonModel
                     }
                 }
             }
-            
+
             //删除考试考场关联
             if (!ExamRoom::where('exam_id', $id)->get()->isEmpty()) {
                 if (!ExamRoom::where('exam_id', $id)->delete()) {
@@ -338,7 +355,7 @@ class Exam extends CommonModel
     public function addExam(array $examData, array $examScreeningData, $gradation = 1)
     {
         $connection = DB::connection($this->connection);
-        $connection ->beginTransaction();
+        $connection->beginTransaction();
         try {
             //将exam表的数据插入exam表
             if (!$result = $this->create($examData)) {
@@ -348,10 +365,10 @@ class Exam extends CommonModel
             if ($gradation) {
                 for ($i = 1; $i <= $gradation; $i++) {
                     $gradationData = [
-                        'exam_id'           => $result->id,
-                        'order'             => $i,
-                        'gradation_number'  => $gradation,
-                        'created_user_id'   => Auth::user()->id
+                        'exam_id' => $result->id,
+                        'order' => $i,
+                        'gradation_number' => $gradation,
+                        'created_user_id' => Auth::user()->id
                     ];
                     if (!ExamGradation::create($gradationData)) {
                         throw new \Exception('创建考试阶段关系失败！');
@@ -361,8 +378,8 @@ class Exam extends CommonModel
 
             //将考试对应的考次关联数据写入考试场次表中
             foreach ($examScreeningData as $key => $value) {
-                $value['exam_id']   = $result->id;
-                $value['status']    = 0;
+                $value['exam_id'] = $result->id;
+                $value['status'] = 0;
                 if (!$examScreening = ExamScreening::create($value)) {
                     throw new \Exception('创建考试场次信息失败');
                 }
@@ -394,8 +411,13 @@ class Exam extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editExam($exam_id, array $examData, array $examScreeningData, $gradation, ExamArrangeRepository $examArrangeRepository)
-    {
+    public function editExam(
+        $exam_id,
+        array $examData,
+        array $examScreeningData,
+        $gradation,
+        ExamArrangeRepository $examArrangeRepository
+    ) {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
@@ -421,9 +443,9 @@ class Exam extends CommonModel
 
             //如果考试顺序变化清空智能排考
             if ($exam->sequence_cate != $examData['sequence_cate']) {
-                $DelExamArrange =$examArrangeRepository->resetSmartArrange($exam_id);
+                $DelExamArrange = $examArrangeRepository->resetSmartArrange($exam_id);
                 //清空智能排考
-                if (!$DelExamArrange && $DelExamArrange!=null) {
+                if (!$DelExamArrange && $DelExamArrange != null) {
                     throw new \Exception('重置作废智能排考数据失败');
                 }
             }
@@ -431,9 +453,9 @@ class Exam extends CommonModel
             //同时进出改变清空排考
             if ($exam->same_time != $examData['same_time']) {
                 //清空智能排考
-                    if(!$examArrangeRepository->resetSmartArrange($exam_id) && $examArrangeRepository->resetSmartArrange($exam_id)!=null){
-                        throw new \Exception('重置作废排考数据失败');
-                    }
+                if (!$examArrangeRepository->resetSmartArrange($exam_id) && $examArrangeRepository->resetSmartArrange($exam_id) != null) {
+                    throw new \Exception('重置作废排考数据失败');
+                }
             }
 
             foreach ($examData as $field => $item) {
@@ -490,11 +512,11 @@ class Exam extends CommonModel
                                 throw new \Exception('创建考试阶段关系失败！');
                             }
                         }
-                            //清空原考试安排数据
-                            if (!$examArrangeRepository->getExamManner($exam_id)) {
+                        //清空原考试安排数据
+                        if (!$examArrangeRepository->getExamManner($exam_id)) {
 
-                                throw new \Exception('重置作废数据失败');
-                            }
+                            throw new \Exception('重置作废数据失败');
+                        }
 
                     }
                 }
@@ -666,13 +688,13 @@ class Exam extends CommonModel
         }
         $today = strtotime(date('Y-m-d', $time));    //当天凌晨
 
-        $result= $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
+        $result = $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
                                 or unix_timestamp(date_format(end_dt, "%Y-%m-%d")) = ?
                                 or (unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) < ?
-                                    and unix_timestamp(date_format(end_dt, "%Y-%m-%d")) > ?)', [$today, $today, $today, $today])
-
-                ->with('examPlan')
-                ->get();
+                                    and unix_timestamp(date_format(end_dt, "%Y-%m-%d")) > ?)',
+            [$today, $today, $today, $today])
+            ->with('examPlan')
+            ->get();
 
 
         return $result;
@@ -915,10 +937,11 @@ class Exam extends CommonModel
 			*/
             //修改考试考场学生表 (删除)
             foreach ($examScreeningObj as $item) {
-                $examScreeningStudent = ExamScreeningStudent::where('exam_screening_id', '=', $item->id)->get();       //TODO 更改考试场次终止为0
+                $examScreeningStudent = ExamScreeningStudent::where('exam_screening_id', '=',
+                    $item->id)->get();       //TODO 更改考试场次终止为0
                 foreach ($examScreeningStudent as $value) {
-                    
-                    if(!$value->delete()){
+
+                    if (!$value->delete()) {
                         throw new \Exception('s删除考试考场学生失败！');
 
                     }
@@ -958,35 +981,35 @@ class Exam extends CommonModel
     public function handleScreeningTime($examScreeningData, $user)
     {
         //考试的最早时间（开始时间）、最晚时间（结束时间）
-        $begin_dt   = '';
-        $end_dt     = '';
-        $keyArr     = array_keys($examScreeningData);
-        if (empty($keyArr)){
+        $begin_dt = '';
+        $end_dt = '';
+        $keyArr = array_keys($examScreeningData);
+        if (empty($keyArr)) {
             throw new \Exception('请添加时间！');
         }
         $firstKey = $keyArr[0];
-        foreach($examScreeningData as $key => $value){
+        foreach ($examScreeningData as $key => $value) {
             $bd = $value['begin_dt'];   //开始时间
             $ed = $value['end_dt'];     //结束时间
-            if(!strtotime($bd) || !strtotime($ed) || $ed<$bd){
+            if (!strtotime($bd) || !strtotime($ed) || strtotime($ed) <= strtotime($bd)) {
                 throw new \Exception('时间输入有误！');
             }
-            if($key>$firstKey && $examScreeningData[$key-1]['end_dt']> $bd){
+            if ($key > $firstKey && $examScreeningData[$key - 1]['end_dt'] > $bd) {
                 throw new \Exception('后一场的开始时间必须大于前一场的结束时间！');
             }
             //获取最早开始时间，最晚结束时间
-            if($key == $firstKey){
-                $begin_dt   = $bd;
+            if ($key == $firstKey) {
+                $begin_dt = $bd;
             }
-            if($key == count($examScreeningData)){
+            if ($key == count($examScreeningData)) {
                 $end_dt = $ed;
             }
-            $examScreeningData[$key]['create_user_id'] = $user -> id;
+            $examScreeningData[$key]['create_user_id'] = $user->id;
         }
 
         return [
-            'begin_dt'          => $begin_dt,
-            'end_dt'            => $end_dt,
+            'begin_dt' => $begin_dt,
+            'end_dt' => $end_dt,
             'examScreeningData' => $examScreeningData,
         ];
     }
