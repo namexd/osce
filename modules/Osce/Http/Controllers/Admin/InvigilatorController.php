@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use App\Entities\SysUserRole;
 use App\Entities\User;
 use App\Repositories\Common;
+use Modules\Osce\Repositories\Common as teacherCommon;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Invigilator;
@@ -210,12 +211,17 @@ class InvigilatorController extends CommonController
 
         $Invigilator    =   new Teacher();
         try{
-            if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
+            if($result = $Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
 
 //                return redirect()->back('osce.admin.invigilator.getInvigilatorList')->withErrors(['这个号码已有过关联，不能修改']);
+                
+                $Redirect =teacherCommon::handleRedirect($request,$result);
+                if($Redirect == false){
+                    return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type])->withErrors(['msg'=>'保存成功','code'=>1]);
+                }else{
+                    return $Redirect;
+                }
 
-
-                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type])->withErrors(['msg'=>'保存成功','code'=>1]);
 
             } else{
                 throw new \Exception('新增失败');
@@ -288,9 +294,18 @@ class InvigilatorController extends CommonController
             //获取支持的考试项目
             $subjects = $request->get('subject');
             $Invigilator    =   new Teacher();
-            if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData,$subjects)){
+            if($result =$Invigilator ->  addInvigilator($role_id, $userData , $teacherData,$subjects)){
 
-                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList')->withErrors(['msg'=>'保存成功','code'=>1]);
+                //todo 调用弹窗时新增的跳转 周强 2016-4-13
+                $Redirect =teacherCommon::handleRedirect($request,$result);
+                if($Redirect == false){
+                    return redirect()->route('osce.admin.invigilator.getSpInvigilatorList')->withErrors(['msg'=>'保存成功','code'=>1]);
+                }else{
+          
+                    return $Redirect;
+                }
+
+
             } else{
                 throw new \Exception('新增失败');
             }
