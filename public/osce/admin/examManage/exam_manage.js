@@ -4294,24 +4294,33 @@ function station_assignment(){
         var $that = $(this).parent().parent().parent().parent(),
             judgeType = $that.find('.select-stage').attr('type') == 2 ? 2 :5;
 
-        $.ajax({
-            type:'get',
-            url: pars.del_flow,
-            data: {exam_id:examId,flow_id:$that.find('table').attr('station-id'),type:judgeType},
-            success: function(res) {
-                if(res.code != 1) {
-                    layer.msg('删除失败！',{skin:'msg-error',icon:1});
-                } else {
-                    $that.remove();
-                    $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
+        layer.confirm('确认删除？',{
+                title:'删除',
+                btn: ['确定','取消'] 
+            }, function(its) {
+                $.ajax({
+                    type:'get',
+                    url: pars.del_flow,
+                    data: {exam_id:examId,flow_id:$that.find('table').attr('station-id'),type:judgeType},
+                    success: function(res) {
+                        if(res.code != 1) {
+                            layer.msg('删除失败！',{skin:'msg-error',icon:1});
+                        } else {
+                            $that.remove();
+                            $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
 
-                    //更新考站显示
-                    $('.station-container').find('.col-sm-4').each(function(key,elem) {
-                        $(elem).find('.control-label').text('第'+stationName[key]+'站');
-                    });
-                }
-            }
-        });
+                            //更新考站显示
+                            $('.station-container').find('.col-sm-4').each(function(key,elem) {
+                                $(elem).find('.control-label').text('第'+stationName[key]+'站');
+                            });
+
+                            layer.close(its);
+                        }
+                    }
+                });
+            });
+
+        
     });
 
     /**
@@ -4403,22 +4412,27 @@ function station_assignment(){
             return;
         }
 
-
-        $.ajax({
-            type:'get',
-            url: pars.del_draft,
-            data: {exam_id:examId,flow_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:judgeType},
-            success: function(res) {
-                if(res.code != 1) {
-                    layer.msg('删除失败！',{skin:'msg-error',icon:1});
-                } else {
-                    //序数更新
-                    $that.parent().attr('index', parseInt($that.parent().attr('index'))-1);
-                    $that.remove();
-                }
-            }
-        });
-
+        //一般删除
+        layer.confirm('确认删除？',{
+                title:'删除',
+                btn: ['确定','取消'] 
+            }, function(its) {
+                   $.ajax({
+                        type:'get',
+                        url: pars.del_draft,
+                        data: {exam_id:examId,flow_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:judgeType},
+                        success: function(res) {
+                            if(res.code != 1) {
+                                layer.msg('删除失败！',{skin:'msg-error',icon:1});
+                            } else {
+                                //序数更新
+                                $that.parent().attr('index', parseInt($that.parent().attr('index'))-1);
+                                $that.remove();
+                                layer.close(its);
+                            }
+                        }
+                    }); 
+            });
     });
 
     /**
