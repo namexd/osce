@@ -115,7 +115,7 @@ class ExamDraftFlow extends CommonModel
             switch ($exam->sequence_mode) {
                 case 1:
                     $examArrangeRepository->checkData($exam_id, 'station_id');
-//                    $examArrangeRepository->checkData($exam_id, 'room_id');
+                    $examArrangeRepository->checkData($exam_id, 'room_id');
                     break;
                 case 2:
                     $examArrangeRepository->checkData($exam_id, 'station_id');
