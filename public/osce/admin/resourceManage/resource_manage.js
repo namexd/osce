@@ -700,6 +700,10 @@ function equipment_manage_video_add() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: 'IP不能为空'
+                    },
+                    regexp: {
+                        regexp: /\b(([01]?\d?\d|2[0-4]\d|25[0-5])\.){3}([01]?\d?\d|2[0-4]\d|25[0-5])\b/,
+                        message: '请输入正确的IP地址'
                     }
                 }
             },
@@ -871,6 +875,10 @@ function equipment_manage_video_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: 'IP不能为空'
+                    },
+                    regexp: {
+                        regexp: /\b(([01]?\d?\d|2[0-4]\d|25[0-5])\.){3}([01]?\d?\d|2[0-4]\d|25[0-5])\b/,
+                        message: '请输入正确的IP地址'
                     }
                 }
             },
