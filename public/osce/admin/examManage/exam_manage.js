@@ -993,6 +993,23 @@ function exam_assignment_add(){
         }
     })
     /**
+     * 新增考试 实时发布成绩
+     * @author chenxia
+     * @version 3.3
+     * @date    2016-04-18
+     */
+    $(".checkbox_three").click(function(){
+        if ($(this).find("input").is(':checked')) {
+            $(this).find(".check_icon ").addClass("check");
+            $(this).find("input").attr("checked","checked");
+            $(this).find("input").val("1")
+        } else {
+            $(this).find(".check_icon").removeClass("check");
+            $(this).find("input").removeAttr("checked","checked")
+            $(this).find("input").val("0")
+        }
+    })
+    /**
      * 阶段选择框
      * @author chenxia
      * @version 3.4
@@ -1283,6 +1300,23 @@ function exam_basic_info(){
         } else {
             $(this).find(".check_icon").removeClass("check");
             $(this).find("input").removeAttr("checked","checked");
+            $(this).find("input").val("0")
+        }
+    })
+    /**
+     * 新增考试 实时发布成绩
+     * @author chenxia
+     * @version 3.3
+     * @date    2016-04-18
+     */
+    $(".checkbox_three").click(function(){
+        if ($(this).find("input").is(':checked')) {
+            $(this).find(".check_icon ").addClass("check");
+            $(this).find("input").attr("checked","checked");
+            $(this).find("input").val("1")
+        } else {
+            $(this).find(".check_icon").removeClass("check");
+            $(this).find("input").removeAttr("checked","checked")
             $(this).find("input").val("0")
         }
     })
