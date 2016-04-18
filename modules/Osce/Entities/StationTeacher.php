@@ -85,7 +85,7 @@ class StationTeacher extends CommonModel
                 foreach ($teacherData as $key => $item) {
 
                     $stationType = Station::find($item['station_id']);
-                    if ($stationType->type == 2) {
+                    if ($stationType->type != 2) {
                         if ($item['teacher'] == "" || $item['teacher'] == "") {
 
                             throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
