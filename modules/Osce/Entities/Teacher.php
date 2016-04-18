@@ -297,6 +297,7 @@ class Teacher extends CommonModel
         try{
             $mobile = $userData['mobile'];
             $user   = User::where('username', '=', $mobile)->first();
+            dump($user,1111);
 
             if(!$user){
                 if(config('debug')==true)
@@ -323,6 +324,7 @@ class Teacher extends CommonModel
                 $this -> sendRegisterEms($mobile, $password);
 
             }else{
+                dump($user,2222);
                 foreach($userData as $feild=> $value) {
                     $user    ->  $feild  =   $value;
                 }
