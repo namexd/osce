@@ -695,7 +695,7 @@ class ExamArrangeController extends CommonController
          $stationteaxherModel = new StationTeacher();
 
          $teacherDatas= $stationteaxherModel->getTeacherData($stationId,$exam_id);
-
+         
          $inviteData = Invite::status($exam_id);
 
 
@@ -706,7 +706,7 @@ class ExamArrangeController extends CommonController
 
                  $item->status = 0;
                  foreach ($inviteData as $value) {
-                     if ($item->id == $value->invite_user_id) {
+                     if ($item->id == $value->invite_user_id && $item->station_id ==$value->invite_station_id) {
 
                          $item->status = $value->status;
 //
@@ -718,20 +718,29 @@ class ExamArrangeController extends CommonController
              }
 //         }
          $teacher = $datas->toArray();
-         foreach($teacher as $key=>&$teacherData){
+         foreach($teacher as &$teacherData){
+
 
              foreach ($teacherDatas as $value) {
 
                  if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id) {
-                     $teacherData['sp_teacher'][] =$value;
+
+                     $teacherData['sp_teacher'][$value['id']] =$value;
+
 
                  } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id){
-                     $teacherData['teacher'][] =$value;
+                     $teacherData['teacher'][$value['id']] =$value;
 
                  }
 
              }
+
+
          }
+
+
+
+
 //            dump($teacher);
          return response()->json(
              $this->success_data($teacher, 1, 'success')
