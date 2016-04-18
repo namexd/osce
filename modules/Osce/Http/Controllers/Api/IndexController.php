@@ -9,6 +9,7 @@ use Modules\Osce\Entities\Exam;
 
 use Modules\Osce\Entities\ExamAbsent;
 
+use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
@@ -832,6 +833,15 @@ class IndexController extends CommonController
         $screen_id = $examScreening->id;
         $studentModel = new Student();
         try {
+            $examDraftFlowModel = new ExamDraftFlow();
+
+            $countStation = $examDraftFlowModel->leftjoin('exam_draft', function ($join) {
+                $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
+            })->where('exam_draft_flow.exam_id', '=', $exam_id)
+                ->where('exam_draft_flow.exam_screening_id', '=', $screen_id)
+                ->select('exam_draft.station_id')
+                ->get();
+            /*
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
             //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
             if($mode==1){
@@ -845,6 +855,7 @@ class IndexController extends CommonController
             foreach($stations as $item){
                 $countStation[]=$item->station_id;
             }
+            */
             $countStation=array_unique($countStation);
             $batch=config('osce.batch_num');//默认为2
             $countStation=count($countStation)*$batch;//可以绑定的学生数量 考站数乘以倍数
