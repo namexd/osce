@@ -278,7 +278,7 @@ class SmartArrange
             }
 
             //TODO 排完后终止循环的操作，待施工
-            if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum) {
+            if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum&&false) {
 //                dd($this->overStudentCount($screen), $this->_S_Count, $this->flowNum);
                 break;
             }
@@ -416,7 +416,8 @@ class SmartArrange
      */
     public function saveStudentOrder($exam)
     {
-        $planList = ExamOrder::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
+        //$planList = ExamOrder::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
+        $planList = ExamPlanRecord::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
         $studentOrderData = [];
         if (ExamOrder::where('exam_id', '=', $exam->id)->delete() === false) {
             throw new \Exception('弃用旧安排失败');
