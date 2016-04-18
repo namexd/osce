@@ -227,7 +227,7 @@ class InvigilatorController extends CommonController
                 throw new \Exception('新增失败');
             }
         } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex->getMessage());
+//            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 

@@ -298,6 +298,7 @@ class Teacher extends CommonModel
             $mobile = $userData['mobile'];
             $user   = User::where('username', '=', $mobile)->first();
 
+
             if(!$user){
                 if(config('debug')==true)
                 {
@@ -309,7 +310,9 @@ class Teacher extends CommonModel
                 }
 
                 $user       =   $this   ->  registerUser($userData, $password);
+                dump($user,$role_id);
                 $role = SysUserRole::where('role_id','=',$role_id)->where('user_id','=',$user->id)->first();
+                dd($role);
                 if(empty($role)){
                     DB::table('sys_user_role')->insert(
                         [
@@ -323,6 +326,7 @@ class Teacher extends CommonModel
                 $this -> sendRegisterEms($mobile, $password);
 
             }else{
+                dump($user,2222);
                 foreach($userData as $feild=> $value) {
                     $user    ->  $feild  =   $value;
                 }
