@@ -205,6 +205,7 @@ class Station extends CommonModel
             }
 
             list($stationData, $vcrId, $roomId) = $formData;
+         
 
             //修改 考站与对应摄像机的关系
             $this->handleStationVcr($vcrId, $id);

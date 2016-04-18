@@ -60,16 +60,16 @@
                             {{--</div>--}}
                             {{--<div class="hr-line-dashed sub-id"></div>--}}
 
-                            {{--<div class="form-group sub-id">--}}
-                                {{--<label class="col-sm-2 control-label">科目</label>--}}
-                                {{--<div class="col-sm-10">--}}
-                                    {{--<select id="subject_id"  class="form-control" name="subject_id">--}}
-                                        {{--@foreach($subject as $key=>$item)--}}
-                                            {{--<option value="{{$item->id}}">{{$item->title}}</option>--}}
-                                        {{--@endforeach--}}
-                                    {{--</select>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
+                            <div class="form-group sub-id">
+                                <label class="col-sm-2 control-label">考试项目</label>
+                                <div class="col-sm-10">
+                                    <select id="subject_id"  class="form-control" name="subject_id">
+                                        @foreach($subject as $key=>$item)
+                                            <option value="{{$item->id}}">{{$item->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             {{--<div class="hr-line-dashed noTheory sub-id"></div>--}}
 
                             {{--<div class="form-group noTheory sub-id">--}}
