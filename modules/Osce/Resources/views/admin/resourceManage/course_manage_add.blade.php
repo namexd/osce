@@ -87,13 +87,6 @@
                         }
                     }
                 },
-                'cases[]':{
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '病例不能为空'
-                        }
-                    }
-                },
                 desc: {
                     validators: {
                         notEmpty: {/*非空提示*/
@@ -136,7 +129,7 @@
                             message: '时间不能为空'
                         },
                         regexp: {
-                            regexp:/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+                            regexp: /^[1-9]\d*$/,
                             message: '请输入正确的时间'
                         },
                         stringLength: {
