@@ -2312,7 +2312,7 @@ function course_module(){
                             '<select class="form-control js-example-basic-single" name="goods['+index+'][name]" style="width: 481px;"></select>'+
                         '</td>'+
                         '<td>'+
-                            '<input class="form-control" type="text" value="1" name="goods['+index+'][number]"/>'+
+                            '<input class="form-control" type="number" value="1" name="goods['+index+'][number]" placeholder="请输入数量"/>'+
                         '</td>'+
                         '<td>'+
                             '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
