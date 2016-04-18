@@ -195,8 +195,8 @@ class InvigilatorController extends CommonController
             //从配置中获取角色对应的ID号, 考官角色默认为1
             $role_id = config('osce.invigilatorRoleId',1);
         }else{
-            //从配置中获取角色对应的ID号, 考官角色默认为3
-            $role_id = config('osce.invigilatorRoleId',3);
+            //从配置中获取角色对应的ID号, 巡考角色默认为3
+            $role_id = config('osce.patrolRoleId',6);
         }
         $teacherData['type']            = $type;
         $teacherData['case_id']         = null;
@@ -227,7 +227,7 @@ class InvigilatorController extends CommonController
                 throw new \Exception('新增失败');
             }
         } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex->getMessage());
+//            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -660,8 +660,11 @@ class InvigilatorController extends CommonController
                 $connect   = \DB::connection('sys_mis');
                 $connect->beginTransaction();
                 $user_role = \DB::table('sys_user_role')->where('user_id','=',$id)->where('role_id','=',$role_id)->first();
+
                 if(!is_null($user_role)){
-                    if(!SysUserRole::where('id','=',$user_role->id)->delete()){
+
+                    if(!SysUserRole::where('user_id','=',$user_role->user_id)->delete()){
+
 
                         $connect->rollBack();
 

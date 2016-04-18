@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Entities;
 
+use App\Entities\SysRoles;
 use App\Entities\SysUserRole;
 use Modules\Osce\Repositories\Common;
 use App\Entities\User;
@@ -299,51 +300,9 @@ class Student extends CommonModel
                 throw new \Exception('未找到当前操作人信息');
             }
 
-            //根据条件：查找用户是否有账号和密码
-            $user = User::where(['username' => $examineeData['mobile']])->first();
-            $role_id = config('osce.studentRoleId');
+            //处理考生用户信息（基本信息、角色分配）
+            $user = $this->handleUser($userData);
 
-            //如果查找到了，对用户信息 进行编辑处理
-            if (count($user) != 0) {
-                //获取数据（姓名,性别,身份证号,手机号,学号,邮箱,照片）
-                foreach ($userData as $field => $value) {
-                    $user->$field = $value;
-                }
-
-                if (!($user->save())) {      //跟新用户
-                    throw new \Exception('新增考生失败！');
-                }
-                $sysUserRole = SysUserRole::where('user_id','=',$user->is)->where('role_id','=',$role_id)->first();
-                if(!$sysUserRole){
-                    DB::table('sys_user_role')->insert(
-                        [
-                            'role_id'   => $role_id,
-                            'user_id'   => $user->id,
-                            'created_at'=> time(),
-                            'updated_at'=> time(),
-                        ]
-                    );
-                }
-
-            } else {      //如果没找到，新增处理,   如果新增成功，发短信通知用户
-                //手机号未注册，查询手机号码是否已经使用
-                $mobile = User::where(['mobile' => $userData['mobile']])->first();
-                //该手机号码已经使用
-                if ($mobile) {
-                    throw new \Exception('手机号已经存在，请输入新的手机号');
-                }
-                $password = '123456';
-                $user = $this->registerUser($userData, $password);
-                $this->sendRegisterEms($userData['mobile'], $password);
-                DB::table('sys_user_role')->insert(
-                    [
-                        'role_id'   => $role_id,
-                        'user_id'   => $user->id,
-                        'created_at'=> time(),
-                        'updated_at'=> time(),
-                    ]
-                );
-            }
             //查询学号是否存在
             $code = $this->where('code', $examineeData['code'])->where('user_id', '<>', $user->id)->first();
 
@@ -358,13 +317,15 @@ class Student extends CommonModel
                 throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该考生已经存在，不能再次添加！');
 
             } else {
+
                 $examineeData['exam_id'] = $exam_id;
                 $examineeData['user_id'] = $user->id;
                 $examineeData['create_user_id'] = $operator->id;
                 //新增考试对应的考生
-                if (!$result = $this->create($examineeData)) {
+                if (!$student = $this->create($examineeData)) {
                     throw new \Exception('新增考生失败！');
                 }
+
                 //更新考试对应的考生数量
                 $exam = new Exam();
                 $examData = ['total' => count(Student::where('exam_id', $exam_id)->get())];
@@ -374,15 +335,83 @@ class Student extends CommonModel
             }
 
             $connection->commit();
-            return true;
+            return $student;
 
         } catch (\Exception $ex) {
+
             if ($ex->getCode() == 23000) {
                 throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该手机号码已经使用，请输入新的手机号');
             }
             $connection->rollBack();
             throw $ex;
         }
+    }
+
+    /**
+     * 处理用户信息（基本信息、角色分配）
+     * @param $userData
+     *
+     * @author Zhoufuxiang 2016-04-18
+     * @return static
+     * @throws \Exception
+     */
+    private function handleUser($userData)
+    {
+        //根据条件：查找用户是否有账号和密码
+        $user    = User::where(['username' => $userData['mobile']])->first();
+        $role_id = config('osce.studentRoleId');
+        $roles   = SysRoles::where('id','=',$role_id)->first();
+        if (is_null($roles)){
+            throw new \Exception('没有对应的角色，请去新增对应角色，或者查看角色配置！');
+        }
+
+        //如果查找到了，对用户信息 进行编辑处理
+        if (!is_null($user)) {
+            //获取数据（姓名,性别,身份证号,手机号,学号,邮箱,照片）
+            foreach ($userData as $field => $value) {
+                $user->$field = $value;
+            }
+
+            if (!($user->save())) {      //跟新用户
+                throw new \Exception('新增考生失败！');
+            }
+            //查询用户角色
+            $sysUserRole = SysUserRole::where('user_id','=',$user->is)->where('role_id','=',$role_id)->first();
+            if(!$sysUserRole){
+                DB::table('sys_user_role')->insert(
+                    [
+                        'role_id'   => $role_id,
+                        'user_id'   => $user->id,
+                        'created_at'=> date('Y-m-d H:i:s'),
+                        'updated_at'=> date('Y-m-d H:i:s'),
+                    ]
+                );
+            }
+
+        } else {      //如果没找到，新增处理,   如果新增成功，发短信通知用户
+
+            //手机号未注册，查询手机号码是否已经使用
+            $mobile = User::where(['mobile' => $userData['mobile']])->first();
+            //该手机号码已经使用
+            if ($mobile) {
+                throw new \Exception('手机号已经存在，请输入新的手机号');
+            }
+            //注册 新用户
+            $password = '123456';
+            $user = $this->registerUser($userData, $password);
+            $this ->sendRegisterEms($userData['mobile'], $password);
+            //给用户分配角色
+            DB::table('sys_user_role')->insert(
+                [
+                    'role_id'   => $role_id,
+                    'user_id'   => $user->id,
+                    'created_at'=> date('Y-m-d H:i:s'),
+                    'updated_at'=> date('Y-m-d H:i:s'),
+                ]
+            );
+        }
+
+        return $user;
     }
 
     public function registerUser($data, $password)

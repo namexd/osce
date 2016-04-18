@@ -67,6 +67,14 @@ class CaseModel extends CommonModel
                 throw new \Exception($caseName->name.'病例 已与 '.$teacher->name.'SP教师 相关联，不能被删除！');
             }
 
+            //查询是否和考试项目关联
+            $subjectCases = SubjectCases::where('case_id','=',$id)->first();
+            if($subjectCases){
+                $subjectName = Subject::where('id','=',$subjectCases->subject_id)->first();
+                throw new \Exception($caseName->name.'病例 已与 '.$subjectName->name.'考试项目 相关联，不能被删除！');
+            }
+
+
             return $this->where($this->table.'.id', '=', $id)->delete();
         } catch (\Exception $ex) {
             throw $ex;
@@ -88,10 +96,16 @@ class CaseModel extends CommonModel
         try {
         $case = CaseModel::where('name', str_replace(' ','',$formData['name']))->where('id','<>',$id)->first();
 
+
         if (!is_null($case)) {
             throw new \Exception('已经有此病例名！');
         }
-
+            //查询是否和考试项目关联
+            $subjectCases = SubjectCases::where('case_id','=',$id)->first();
+            if($subjectCases){
+                $subjectName = Subject::where('id','=',$subjectCases->subject_id)->first();
+                throw new \Exception($case->name.'病例 已与 '.$subjectName->name.'考试项目 相关联，不能修改！');
+            }
         if (!$result = $this->where('id',$id)->update($formData)) {
             throw new \Exception('更新失败！');
         }
@@ -113,12 +127,11 @@ class CaseModel extends CommonModel
      */
     public function getCasesList($caseName){
         //查询出数据
-        $builder = $this->select([
-            'id',
-            'name',
-            'description'
-        ])->get();
-        return $builder;
+        $builder = $this->select(['id', 'name', 'description']);
+        if (!empty($caseName)){
+            $builder = $builder->where('name', 'like', '%\\'.$caseName.'%');
+        }
+        return $builder->get();
 
     }
 }

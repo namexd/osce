@@ -182,7 +182,6 @@ class ExamController extends CommonController
             'time.required'     =>  '考试时间必填',
             'address.required'  =>  '考试地址必填',
         ]);
-
         $user   =   Auth::user();
         if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
@@ -193,7 +192,6 @@ class ExamController extends CommonController
         try{
             //处理考试场次时间
             $timeData = $model->handleScreeningTime($examScreeningData, $user);
-
             //获取相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'code'           => 100,

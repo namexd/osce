@@ -31,6 +31,45 @@ $(function(){
     }
 });
 
+
+/**
+ * select2 模糊搜索样式
+ * @author mao
+ * @version 3.4
+ * @date    2016-04-18
+ */
+function formatRepoSelection (repo) {
+  return repo.full_name || repo.text;
+}
+
+/**
+ * select2 下拉选择样式
+ * @author mao
+ * @version 1.0
+ * @date    2016-04-18
+ */
+function formatRepo (repo) {
+  if (repo.loading) return repo.text;
+
+  var markup = "<div class='select2-result-repository clearfix'>" +
+    "<div class='select2-result-repository__avatar'><img src='" + repo.owner.avatar_url + "' /></div>" +
+    "<div class='select2-result-repository__meta'>" +
+      "<div class='select2-result-repository__title'>" + repo.full_name + "</div>";
+
+  if (repo.description) {
+    markup += "<div class='select2-result-repository__description'>" + repo.description + "</div>";
+  }
+
+  markup += "<div class='select2-result-repository__statistics'>" +
+    "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> " + repo.forks_count + " Forks</div>" +
+    "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> " + repo.stargazers_count + " Stars</div>" +
+    "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> " + repo.watchers_count + " Watchers</div>" +
+  "</div>" +
+  "</div></div>";
+
+  return markup;
+}
+
 /**
  * 成绩查询
  * @author mao
@@ -96,12 +135,12 @@ function score_query_detail() {
     function charts(standard,student_name,avg,xAxis){
 
         //考核点数据较少处理
-        if(xAxis.length<8){
+        /*if(xAxis.length<8){
             var len = 7 - xAxis.length;
             for(var i = 0;i<=len;i++){
                 xAxis.push('');
             }
-        }
+        }*/
 
         var option = {
             title : {
@@ -219,7 +258,6 @@ function score_query_detail() {
         }
     }
 
-    console.log(standard,avg,xAxis)
     //触发图表格
     charts(standard,$('#student').text(),avg,xAxis);
 
@@ -1084,13 +1122,13 @@ function exam_assignment_add(){
         var hours = timeLength.split(':')[0];
         var minutes = timeLength.split(':')[1];
 
-         var html = '<tr>'+
+         var html = '<tr index= '+parseInt(index)+'>'+
              '<td>'+parseInt(index)+'</td>'+
              '<td class="laydate">'+
-             '<input type="text" class="laydate-icon end data_start" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
              '</td>'+
              '<td class="laydate">'+
-             '<input type="text" class="laydate-icon end data_end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
+             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
              '</td>'+
              '<td>0天0小时0分</td>'+
              '<td class="check_select">' +
@@ -1189,15 +1227,7 @@ function exam_assignment_add(){
             $('#exam_add tbody').find('tr').each(function(key,elem){
                 $(elem).find('td').eq(0).text(parseInt(key)+1);
             });
-            $('#exam_add tbody tr').find('select').each(function(key,elem){
-                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][gradation_order]');
-            });
-            $('#exam_add tbody tr').find('.data_start').each(function(key,elem){
-                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][begin_dt]');
-            });
-            $('#exam_add tbody tr').find('.data_end').each(function(key,elem){
-                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][end_dt]');
-            });
+
             layer.close(thisID);
         });
         //var thisElement = $(this).parent().parent().parent().parent();
@@ -1426,10 +1456,10 @@ function exam_basic_info(){
             var html = '<tr>'+
                 '<td>'+parseInt(index)+'</td>'+
                 '<td class="laydate">'+
-                '<input type="text" class="laydate-icon end data_start" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+                '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
                 '</td>'+
                 '<td class="laydate">'+
-                '<input type="text" class="laydate-icon end data_end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
+                '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
                 '</td>'+
                 '<td>0天0小时0分</td>'+
                 '<td class="check_select">' +
@@ -1530,21 +1560,7 @@ function exam_basic_info(){
             $('#add-basic tbody').find('tr').each(function(key,elem){
                 $(elem).find('td').eq(0).text(parseInt(key)+1);
             });
-            $('#add-basic tbody tr').find('select').each(function(key,elem){
-                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][gradation_order]');
-            });
-            $('#add-basic tbody tr').find('.data_start').each(function(key,elem){
-                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][begin_dt]');
-            });
-            $('#add-basic tbody tr').find('.data_startid').each(function(key,elem){
-                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][begin_dt]');
-            });
-            $('#add-basic tbody tr').find('.data_startexamid').each(function(key,elem){
-                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][begin_dt]');
-            });
-            $('#add-basic tbody tr').find('.data_end').each(function(key,elem){
-                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][end_dt]');
-            });
+
             layer.close(thisID);
         });
 
@@ -4519,6 +4535,11 @@ function station_assignment(){
                 type:'get',
                 url: pars.exam_item,
                 delay: 250,
+                data: function(params) {
+                    return {
+                        subject_name: params.term
+                    };
+                },
                 processResults: function (res) {
 
                     //数据格式化
@@ -4533,7 +4554,9 @@ function station_assignment(){
                     return {
                         results: str
                     };
-                }
+                },
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
             }
 
         //数据更新，交互数据
@@ -4581,12 +4604,13 @@ function station_assignment(){
                 type:'get',
                 url: pars.station_list,
                 delay: 250,
-                data: function() {
+                data: function(params) {
                     return {
                         exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
                         station_id:$elem.parent().parent().attr('station-id'),
                         exam_id: examId,
                         order: parseInt($elem.parent().parent().attr('table-order'))+1,
+                        station_name:params.term
                     } 
                 },
                 processResults: function (res) {
@@ -4603,7 +4627,9 @@ function station_assignment(){
                     return {
                         results: str
                     };
-                }
+                },
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
             }
 
         //数据更新，交互数据
@@ -4664,12 +4690,13 @@ function station_assignment(){
                 type:'get',
                 url: pars.room_list,
                 delay: 250,
-                data: function() {
+                data: function(params) {
                     return {
                         exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
                         station_id:$elem.parent().parent().attr('station-id'),
                         exam_id: examId,
                         order: parseInt($elem.parent().parent().attr('table-order'))+1,
+                        room_name:params.term
                     } 
                 },
                 processResults: function (res) {
@@ -4686,7 +4713,9 @@ function station_assignment(){
                     return {
                         results: str
                     };
-                }
+                },
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
             }
 
         //数据更新，交互数据
@@ -4794,32 +4823,13 @@ function station_assignment(){
             layer.alert('请选择考试项目/考站/所属考场！');
             return false;
         }
+        if(flag == null) {
+            layer.alert('请选择阶段！');
+            return false;
+        }
 
 
-        /*if(warn==false){
-            layer.confirm('考试项目更改将导致智能排考重排？',{
-                title:'删除',
-                btn: ['确定','取消'],
-                cancel: function() {
-                    location.reload();
-                }
-            },function() {
-                $.ajax({
-                    type:'post',
-                    url: pars.save,
-                    data:{exam_id:examId,flag:1},
-                    success: function(res) {
-                        if(res.code != 1) {
-                            layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
-                        } else {
-                            layer.msg('数据保存成功！',{skin:'msg-success',icon:1},function () {
-                                location.reload();
-                            });
-                        }
-                    }
-                })
-            }); 
-        } else {*/
+        
         $.ajax({
             type:'post',
             url: pars.save,
@@ -4941,6 +4951,8 @@ function examiner_manage() {
 
             statusArr.push({_teacher:_teacher,_sp_teacher:_sp_teacher});
 
+            var control = data[i].station_type==2?'':'disabled="disabled"';
+
             //dom准备
             html += '<tr class="tr-id-'+i+'" value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'">'+
                         '<td>'+data[i].subject_title+'</td>'+
@@ -4954,7 +4966,7 @@ function examiner_manage() {
                         '</td>'+
                         '<td style="width:481px;">'+
                             '<div class="col-sm-10">'+
-                            '<select class="form-control custom-sp"  name=""  multiple="multiple">'+str_sp+
+                            '<select class="form-control custom-sp"  name="" '+control+'  multiple="multiple">'+str_sp+
                             '</select>'+
                             '</div>'+
                         '</td>'+
@@ -5162,67 +5174,83 @@ function examiner_manage() {
      * @param   {object} dom选择器
      */
     function teacherInit($elem) {
-        $.ajax({
-            type:'get',
-            dataType: 'json',
-            url: pars.teacher_list,
-            data:{subject_id:$elem.attr('value'),exam_id: exam_id,type:1},
-            success:function(res) {
-                //数据格式化
-                var str = [];
-                var data = res.data;
-                for(var i in data){
-                    str.push({id:data[i].teacher_id,text:data[i].name});
-                }
-                str.push({id:-999,text:'==新增sp=='});
+        $elem.find('.custom-teacher').select2({
+            placeholder:'请选择',
+            ajax: {
+                type:'get',
+                dataType: 'json',
+                url: pars.teacher_list,
+                data:function() {
 
-                //初始化
-                $elem.find('.custom-teacher').select2({data:str}).on('select2:unselect', function(e) {
-                    //删除
-                    $.ajax({
-                        type:'get',
-                        url: pars.del_teacher,
-                        data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
-                        success: function(res) {
-                            if(res.code == 1) {
-                                layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
-                            } else if(res.code == 2) {
-                                return true;
-                            } else {
-                                layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
-                            }
-                        }
-                    })
+                    return {
+                        subject_id:$elem.attr('value'),
+                        exam_id: exam_id,
+                        type:1
+                    };
+                },
+                delay: 250,
+                processResults: function (res) {
 
-                }).on('select2:select', function(e){
-                    //新增页面
-                    if(e.params.data.id == -999) {
-                        layer.open({
-                          type: 2,
-                          title: '新增考场',
-                          shadeClose: true,
-                          shade: 0.8,
-                          area: ['90%', '90%'],
-                          success: function(){
-                            var curretArr = $elem.find('.custom-teacher').val();
-
-                            for(var i in curretArr) {
-                                if(curretArr[i] == -999) {
-                                    delete curretArr[i];
-                                }
-                            }
-
-                            //取消新增选项选择
-                            $elem.find('.custom-teacher').val(curretArr).trigger("change");
-
-                          },
-                          end: function(){
-                            //更改请求数据
-                            
-                          },
-                          content: pars.add_examiner + '?status=1&tr='+$elem.attr('class')
-                        });
+                    //数据格式化
+                    var str = [];
+                    var data = res.data;
+                    for(var i in data){
+                        str.push({id:data[i].teacher_id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增考官=='});
+
+                    //加载入数据
+                    return {
+                        results: str
+                    };
+                }
+            }
+
+        //删除选择
+        }).on('select2:unselect', function(e) {
+            //删除
+            $.ajax({
+                type:'get',
+                url: pars.del_teacher,
+                data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
+                success: function(res) {
+                    if(res.code == 1) {
+                        layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
+                    } else if(res.code == 2) {
+                        return true;
+                    } else {
+                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
+                    }
+                }
+            })
+
+        }).on('select2:select', function(e){
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考场',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  success: function(){
+                    var curretArr = $elem.find('.custom-teacher').val();
+
+                    for(var i in curretArr) {
+                        if(curretArr[i] == -999) {
+                            delete curretArr[i];
+                        }
+                    }
+
+                    //取消新增选项选择
+                    $elem.find('.custom-teacher').val(curretArr).trigger("change");
+
+                  },
+                  end: function(){
+                    //更改请求数据
+                    
+                  },
+                  content: pars.add_examiner + '?status=1&tr='+$elem.attr('class')
                 });
             }
         });
@@ -5237,71 +5265,85 @@ function examiner_manage() {
      * @param   {object} dom选择器
      */
     function teacher_spInit($elem) {
-        $.ajax({
-            type:'get',
-            dataType: 'json',
-            url: pars.teacher_list,
-            data:{subject_id:$elem.attr('value'),exam_id: exam_id,type:2},
-            success:function(res) {
-                //数据格式化
-                var str = [];
-                var data = res.data;
-                for(var i in data){
-                    str.push({id:data[i].teacher_id,text:data[i].name});
-                }
-                str.push({id:-999,text:'==新增sp=='});
+        $elem.find('.custom-sp').select2({
+            placeholder:'请选择',
+            ajax: {
+                type:'get',
+                dataType: 'json',
+                url: pars.teacher_list,
+                data:function() {
 
-                //初始化
-                $elem.find('.custom-sp').select2({data:str}).on('select2:unselect', function(e) {
-                    //删除
-                    $.ajax({
-                        type:'get',
-                        url: pars.del_teacher,
-                        data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
-                        success: function(res) {
-                            if(res.code == 1) {
-                                layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
-                            } else if(res.code == 2) {
-                                return true;
-                            } else {
-                                layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
-                            }
-                        }
-                    })
+                    return {
+                        subject_id:$elem.attr('value'),
+                        exam_id: exam_id,
+                        type:2
+                    };
+                },
+                delay: 250,
+                processResults: function (res) {
 
-                }).on('select2:select', function(e){
-                    //新增页面
-                    if(e.params.data.id == -999) {
-                        layer.open({
-                          type: 2,
-                          title: '新增考场',
-                          shadeClose: true,
-                          shade: 0.8,
-                          area: ['90%', '90%'],
-                          success: function(){
-                            var curretArr = $elem.find('.custom-sp').val();
-
-                            for(var i in curretArr) {
-                                if(curretArr[i] == -999) {
-                                    delete curretArr[i];
-                                }
-                            }
-
-                            //取消新增选项选择
-                            $elem.find('.custom-sp').val(curretArr).trigger("change");
-
-                          },
-                          end: function(){
-                            //更改请求数据
-                            
-                          },
-                          content: pars.add_sp + '?status=1&tr='+$elem.attr('class')
-                        });
+                    //数据格式化
+                    var str = [];
+                    var data = res.data;
+                    for(var i in data){
+                        str.push({id:data[i].teacher_id,text:data[i].name});
                     }
-                });
+                    str.push({id:-999,text:'==新增sp=='});
 
+                    //加载入数据
+                    return {
+                        results: str
+                    };
+                }
             }
-          });
+        }).on('select2:unselect', function(e) {
+
+            //删除
+            $.ajax({
+                type:'get',
+                url: pars.del_teacher,
+                data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
+                success: function(res) {
+                    if(res.code == 1) {
+                        layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
+                    } else if(res.code == 2) {
+                        return true;
+                    } else {
+                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
+                    }
+                }
+            })
+
+        }).on('select2:select', function(e){
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考场',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  success: function(){
+                    var curretArr = $elem.find('.custom-sp').val();
+
+                    for(var i in curretArr) {
+                        if(curretArr[i] == -999) {
+                            delete curretArr[i];
+                        }
+                    }
+
+                    //取消新增选项选择
+                    $elem.find('.custom-sp').val(curretArr).trigger("change");
+
+                  },
+                  end: function(){
+                    //更改请求数据
+                    
+                  },
+                  content: pars.add_sp + '?status=1&tr='+$elem.attr('class')
+                });
+            }
+        });
     }
     
 

@@ -42,10 +42,10 @@ class TeacherSubject extends CommonModel
      * @throws \Exception
      */
     public function getTeacherSubjects(){
-        //拿到当前开始
-        $exam = Exam::doingExam();
+        //拿到当前 正在考试的考试
+        $examArray = Exam::where('status', 1)->get()->pluck('id')->toArray();
         //考试考试下面所有的老师
-        $TeacherArray= StationTeacher::where('exam_id','=',$exam->id)->get()->pluck('user_id');
+        $TeacherArray= StationTeacher::whereIn('exam_id' ,$examArray)->whereNotNull('user_id')->get()->pluck('user_id');
         if(!is_null($TeacherArray)){
 
             //拿到考试项目关联的老师
