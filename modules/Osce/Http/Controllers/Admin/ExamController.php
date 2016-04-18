@@ -187,7 +187,7 @@ class ExamController extends CommonController
         if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
         }
-
+        //考试场次 及时间
         $examScreeningData =  $request  ->  get('time');
 
         try{
@@ -212,14 +212,17 @@ class ExamController extends CommonController
             //阶段
             $gradation = intval($request->get('gradation_order', 1))? :1;
 
-            if($exam = $model -> addExam($examData, $timeData['examScreeningData'], $gradation))
-            {
-                //TODO：罗海华2016-01-18 13:55将 成功后的重定向 改为编辑页面
-                return redirect()->route('osce.admin.exam.getEditExam',['id'=>$exam->id]);
-            } else {
+            //添加考试
+            $result = $model -> addExam($examData, $timeData['examScreeningData'], $gradation);
+            if(!$result){
                 throw new \Exception('新增考试失败');
             }
+
+            //成功后，重定向为编辑页面
+            return redirect()->route('osce.admin.exam.getEditExam',['id'=>$result->id]);
+
         } catch(\Exception $ex) {
+            //返回原来的页面，并抛出错误
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -284,7 +287,7 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postEditExam(Request $request, ExamArrangeRepository $examArrangeRepository)
+    public function postEditExam(Request $request, Exam $examModel, ExamArrangeRepository $examArrangeRepository)
     {
         //验证,略过
         $this->validate($request, [
@@ -309,7 +312,6 @@ class ExamController extends CommonController
         }
 
         try{
-            $examModel = new Exam();
             //处理考试场次时间
             $timeData = $examModel->handleScreeningTime($examScreeningData, $user);
 
@@ -329,13 +331,15 @@ class ExamController extends CommonController
             $gradation = intval($request->input('gradation_order',1))? :1;
 
             //编辑考试相关信息
-            if($result = $examModel -> editExam($exam_id, $examData, $timeData['examScreeningData'], $gradation, $examArrangeRepository))
+            $result = $examModel -> editExam($exam_id, $examData, $timeData['examScreeningData'], $gradation, $examArrangeRepository);
+            if(!$result)
             {
-                return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
-            } else {
                 throw new \Exception('修改考试失败');
             }
+            return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
+
         } catch(\Exception $ex) {
+
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
