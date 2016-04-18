@@ -237,7 +237,7 @@ class SmartArrange
 //                    dump($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60);
 //                    dump($entity->timer);
 //                    dump($entity->mins * 60);
-                    if ($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60) {
+                    if (($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60)) {
                         $entity->timer = 0;
                         //将结束时间写在表内
                         foreach ($tempValues as $tempValue) {
@@ -251,9 +251,9 @@ class SmartArrange
                             } else {
                                 $k = 1;
                                 $this->doorStatus++;
-                                $entity->timer += $step;
                             }
                         }
+                        $entity->timer += $step;
                     } else {
                         $entity->timer += $step;
                     }
