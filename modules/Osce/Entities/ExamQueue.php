@@ -810,7 +810,8 @@ class ExamQueue extends CommonModel
     }
 
     //查看学生当前状态
-    public function getExamineeStatus($examing,$studentId){
+    public function
+    getExamineeStatus($examing,$studentId){
         $builder = $this->where('exam_id','=',$examing)->where('student_id','=',$studentId)->first();
         return $builder;
     }

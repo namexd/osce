@@ -725,7 +725,7 @@ class InvigilatePadController extends CommonController
      */
     public function getStartExam(Request $request)
     {
-//        try {
+        try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
                 'station_id' => 'required|integer'
@@ -781,17 +781,22 @@ class InvigilatePadController extends CommonController
 
                 $request['nfc_code'] = $watchData->code;
                 $studentWatchController->getStudentExamReminder($request);
+
+                $studentModel = new Student();
+                $exam = Exam::doingExam();
+                $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
+                $redis->publish('pad_message', json_encode($this->success_data($publishMessage,102,'学生信息')));
                 return response()->json(
                     $this->success_data(['start_time'=>$date,'student_id'=>$studentId], 1, '开始考试成功')
                 );
             }
-//            return response()->json(
-//                $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
-//            );
-//        } catch (\Exception $ex) {
-//            \Log::alert($ex->getMessage() . '');
-//            return response()->json($this->fail($ex));
-//        }
+            return response()->json(
+                $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
+            );
+        } catch (\Exception $ex) {
+            \Log::alert($ex->getMessage() . '');
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
