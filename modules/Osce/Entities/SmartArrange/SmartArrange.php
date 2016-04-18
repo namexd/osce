@@ -231,12 +231,10 @@ class SmartArrange
                         };
                     }
 
-                    if($k==2)
-                    {
+                    if ($k == 2) {
                         $entity->timer += $step;
                     }
-                    if($k==3)
-                    {
+                    if ($k == 3) {
                         $entity->timer += $step;
                     }
                 } else { //反之，则是关门状态
