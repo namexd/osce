@@ -59,7 +59,7 @@
 
 @section('content')
 
-    <input type="hidden" id="parameter" value="{'pagename':'examiner_manage','teacher_list':'{{route('osce.admin.exam-arrange.getInvigilatesBySubject')}}','invation_sp':'{{route('osce.wechat.invitation.getInvitationList')}}','save_data':'{{route('osce.admin.exam-arrange.postInvigilateArrange')}}','data_list':'{{route('osce.admin.exam-arrange.getExamTeacherArrange')}}','del_teacher':'{{route('osce.wechat.invitation.getDelTeacherInvite')}}','allInvitation':'{{route('osce.wechat.invitation.getInviteAllTeacher')}}'}" />
+    <input type="hidden" id="parameter" value="{'pagename':'examiner_manage','teacher_list':'{{route('osce.admin.exam-arrange.getInvigilatesBySubject')}}','invation_sp':'{{route('osce.wechat.invitation.getInvitationList')}}','save_data':'{{route('osce.admin.exam-arrange.postInvigilateArrange')}}','data_list':'{{route('osce.admin.exam-arrange.getExamTeacherArrange')}}','del_teacher':'{{route('osce.wechat.invitation.getDelTeacherInvite')}}','allInvitation':'{{route('osce.wechat.invitation.getInviteAllTeacher')}}','add_examiner':'{{route('osce.admin.invigilator.getAddInvigilator')}}','add_sp':'{{route('osce.admin.invigilator.getAddSpInvigilator')}}'}" />
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">

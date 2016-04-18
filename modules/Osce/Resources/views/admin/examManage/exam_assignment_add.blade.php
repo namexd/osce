@@ -142,13 +142,19 @@ input.laydate-icon{
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                             <label class="col-sm-2 control-label">实时发布成绩</label>
-                             <div class="col-sm-10">
-                                 <select class="form-control" style="width:200px;" name="real_push" >
-                                      <option value="1">是</option>
-                                      <option value="0">否</option>
-                                 </select>
-                             </div>
+                            <div class="row">
+                                 <div class="col-md-12">
+                                      <div class="clearfix form-group" style="margin-bottom: 0;">
+                                           <div class="col-sm-12" id="checkbox_div">
+                                                <label class="check_label checkbox_input checkbox_three" style="height: 34px;line-height: 28px;margin-left: 12.1%;">
+                                                      <div class="check_icon check" style="display: inline-block;margin:5px 0 0 5px;float:left;"></div>
+                                                      <input type="checkbox" name="real_push" value="1" checked="checked">
+                                                      <span class="check_name" style="display: inline-block;float:left;">实时发布成绩</span>
+                                                </label>
+                                           </div>
+                                      </div>
+                                 </div>
+                            </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 

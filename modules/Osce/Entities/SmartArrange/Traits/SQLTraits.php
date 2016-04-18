@@ -387,7 +387,7 @@ trait SQLTraits
     function prevSerial($screen, $serialnumber)
     {
         return ExamPlanRecord::where('exam_screening_id', '=', $screen->id)
-            ->where('serialnumber', '=', $serialnumber)
+            ->where('serialnumber', '=', $serialnumber - 1)
             ->whereNotNull('end_dt')
             ->orderBy('end_dt', 'asc')
             ->get()
@@ -406,7 +406,7 @@ trait SQLTraits
     {
         return ExamPlanRecord::where('exam_screening_id', $screen->id)
             ->whereNotNull('end_dt')
-            ->where('serialnumber', '=', $serialnumber - 1)
+            ->where('serialnumber', '=', $serialnumber)
             ->orderBy('end_dt', 'asc')
             ->get()
             ->pluck('student_id');

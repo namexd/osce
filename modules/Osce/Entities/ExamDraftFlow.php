@@ -404,6 +404,10 @@ class ExamDraftFlow extends CommonModel
     public function getTempDatas($exam_id, $condition)
     {
         $examInfo = Exam::where('id', '=', $exam_id)->first();
+        //考站分组模式，考场无限制 2016-04-18 Zhoufuxiang
+        if ($examInfo->sequence_mode == 2 && $condition['room'] === 1) {
+            return [];
+        }
 
         $datas = ExamDraft::select(['exam_draft.room_id', 'exam_draft.station_id'])
             ->leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')

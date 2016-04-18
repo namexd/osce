@@ -187,43 +187,19 @@ class ExamController extends CommonController
         if(empty($user)){
             throw new \Exception('未找到当前操作人信息');
         }
-
+        //考试场次 及时间
         $examScreeningData =  $request  ->  get('time');
-        //考试的最早时间（开始时间）、最晚时间（结束时间）
-        $begin_dt = '';
-        $end_dt = '';
 
         try{
-            //判断输入的时间是否有误
-            foreach($examScreeningData as $key => $value){
-                $bd = $value['begin_dt'];   //开始时间
-                $ed = $value['end_dt'];     //结束时间
-                if(!strtotime($bd) || !strtotime($ed) || $ed<$bd){
-                    throw new \Exception('时间输入有误,请重新选择！');
-                }
-                //获取第一组时间数据
-                if($key == 1){
-                    $begin_dt   = $bd;
-                    $end_dt     = $ed;
-                }
-                if($key>1 && $examScreeningData[$key-1]['end_dt']> $bd){
-                    throw new \Exception('后一场的开始时间必须大于前一场的结束时间！');
-                }
-                //获取最早开始时间，最晚结束时间
-                if($key == 1){
-                    $begin_dt   = $bd;
-                }
-                if($key == count($examScreeningData)){
-                    $end_dt = $ed;
-                }
-                $examScreeningData[$key]['create_user_id'] = $user -> id;
-            }
-            //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
+            //处理考试场次时间
+            $timeData = $model->handleScreeningTime($examScreeningData, $user);
+
+            //获取相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'code'           => 100,
                 'name'           => e($request  ->  get('name')),
-                'begin_dt'       => $begin_dt,
-                'end_dt'         => $end_dt,
+                'begin_dt'       => $timeData['begin_dt'],
+                'end_dt'         => $timeData['end_dt'],
                 'status'         => 0,
                 'total'          => 0,
                 'create_user_id' => $user -> id,
@@ -234,16 +210,19 @@ class ExamController extends CommonController
                 'real_push'      => intval($request  ->  get('real_push')),
             ];
             //阶段
-            $gradation = intval($request->get('gradation_order', 1));
+            $gradation = intval($request->get('gradation_order', 1))? :1;
 
-            if($exam = $model -> addExam($examData, $examScreeningData, $gradation))
-            {
-                //TODO：罗海华2016-01-18 13:55将 成功后的重定向 改为编辑页面
-                return redirect()->route('osce.admin.exam.getEditExam',['id'=>$exam->id]);
-            } else {
+            //添加考试
+            $result = $model -> addExam($examData, $timeData['examScreeningData'], $gradation);
+            if(!$result){
                 throw new \Exception('新增考试失败');
             }
+
+            //成功后，重定向为编辑页面
+            return redirect()->route('osce.admin.exam.getEditExam',['id'=>$result->id]);
+
         } catch(\Exception $ex) {
+            //返回原来的页面，并抛出错误
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -295,10 +274,10 @@ class ExamController extends CommonController
      *
      * @param Request $request post请求<br><br>
      * <b>post请求字段：</b>
-     * * string        exam_id        考试id(必须的)
-     * * string        name           考试名(必须的)
-     * * string        begin_dt       开始时间(必须的)
-     * * string        end_dt         结束时间(必须的)
+     * * string        exam_id          考试id(必须的)
+     * * string        name             考试名称(必须的)
+     * * string        time             场次时间(必须的)
+     * * string        address          考试地址(必须的)
      *
      * @return redirect
      *
@@ -308,7 +287,7 @@ class ExamController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function postEditExam(Request $request, ExamArrangeRepository $examArrangeRepository)
+    public function postEditExam(Request $request, Exam $examModel, ExamArrangeRepository $examArrangeRepository)
     {
         //验证,略过
         $this->validate($request, [
@@ -331,41 +310,16 @@ class ExamController extends CommonController
         if (empty($user)) {
             throw new \Exception('未找到当前操作人信息');
         }
-        //考试的最早时间（开始时间）、最晚时间（结束时间）
-        $begin_dt = '';
-        $end_dt = '';
 
         try{
-            //判断输入的时间是否有误
-            $keyArr = array_keys($examScreeningData);
-            if (empty($keyArr)){
-                throw new \Exception('请添加时间！');
-            }
-            $firstKey = $keyArr[0];
-            foreach($examScreeningData as $key => $value){
-                $bd = $value['begin_dt'];   //开始时间
-                $ed = $value['end_dt'];     //结束时间
-                if(!strtotime($bd) || !strtotime($ed) || $ed<$bd){
-                    throw new \Exception('时间输入有误！');
-                }
-                if($key>$firstKey && $examScreeningData[$key-1]['end_dt']> $bd){
-                    throw new \Exception('后一场的开始时间必须大于前一场的结束时间！');
-                }
-                //获取最早开始时间，最晚结束时间
-                if($key == $firstKey){
-                    $begin_dt   = $bd;
-                }
-                if($key == count($examScreeningData)){
-                    $end_dt = $ed;
-                }
-                $examScreeningData[$key]['create_user_id'] = $user -> id;
-            }
+            //处理考试场次时间
+            $timeData = $examModel->handleScreeningTime($examScreeningData, $user);
 
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'name'          => e($request  ->  get('name')),
-                'begin_dt'      => $begin_dt,
-                'end_dt'        => $end_dt,
+                'begin_dt'      => $timeData['begin_dt'],
+                'end_dt'        => $timeData['end_dt'],
                 'total'         => count(Student::where('exam_id', $exam_id)->get()),
                 'sequence_cate' => $request  ->  get('sequence_cate'),
                 'sequence_mode' => $request  ->  get('sequence_mode'),
@@ -374,16 +328,18 @@ class ExamController extends CommonController
                 'real_push'     => intval($request  ->  get('real_push')),
             ];
             //阶段
-            $gradation = intval($request->input('gradation_order',1));
-            $examModel = new Exam();
+            $gradation = intval($request->input('gradation_order',1))? :1;
 
-            if($result = $examModel -> editExam($exam_id, $examData, $examScreeningData, $gradation, $examArrangeRepository))
+            //编辑考试相关信息
+            $result = $examModel -> editExam($exam_id, $examData, $timeData['examScreeningData'], $gradation, $examArrangeRepository);
+            if(!$result)
             {
-                return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
-            } else {
                 throw new \Exception('修改考试失败');
             }
+            return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
+
         } catch(\Exception $ex) {
+
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
