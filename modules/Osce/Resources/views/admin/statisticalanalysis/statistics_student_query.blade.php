@@ -95,7 +95,7 @@
                                         <div class="text">
                                             <?php $Result=explode('、',$val1['answer'])?>
                                             <?php $c = array_diff($Result, $val1['studentAnswerAarry']);?>
-                                            @if(!empty($c))
+                                            @if(count($c)!=count($Result))
                                                 <p>考生答案：<span style="color:#ed5565">{{ @$val1['student_answer'] }}</span>（{{ @$val1['answer'] }}）</p>
                                             @else
                                                 <p>考生答案：<span style="color:#56b04b">{{ @$val1['student_answer'] }}</span>（{{ @$val1['answer'] }}）</p>
