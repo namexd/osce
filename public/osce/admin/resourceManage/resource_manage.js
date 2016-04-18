@@ -700,6 +700,10 @@ function equipment_manage_video_add() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: 'IP不能为空'
+                    },
+                    regexp: {
+                        regexp: /\b(([01]?\d?\d|2[0-4]\d|25[0-5])\.){3}([01]?\d?\d|2[0-4]\d|25[0-5])\b/,
+                        message: '请输入正确的IP地址'
                     }
                 }
             },
@@ -709,6 +713,10 @@ function equipment_manage_video_add() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '端口不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]*[1-9][0-9]*$/,
+                        message: '请输入正确的端口'
                     }
                 }
             },
@@ -718,6 +726,10 @@ function equipment_manage_video_add() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '实时端口不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]*[1-9][0-9]*$/,
+                        message: '请输入正确的实时端口'
                     }
                 }
             },
@@ -871,6 +883,10 @@ function equipment_manage_video_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: 'IP不能为空'
+                    },
+                    regexp: {
+                        regexp: /\b(([01]?\d?\d|2[0-4]\d|25[0-5])\.){3}([01]?\d?\d|2[0-4]\d|25[0-5])\b/,
+                        message: '请输入正确的IP地址'
                     }
                 }
             },
@@ -880,6 +896,10 @@ function equipment_manage_video_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '端口不能为空'
+                    },
+                    regexp: {
+                        regexp:  /^[0-9]*[1-9][0-9]*$/,
+                        message: '请输入正确的端口'
                     }
                 }
             },
@@ -889,6 +909,10 @@ function equipment_manage_video_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '实时端口不能为空'
+                    },
+                    regexp: {
+                        regexp:  /^[0-9]*[1-9][0-9]*$/,
+                        message: '请输入正确的实时端口'
                     }
                 }
             },
@@ -1780,6 +1804,11 @@ function course_module(){
      */
     $('#judgement tbody').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
+        layer.confirm('确认删除？', {
+                title:"删除",
+                btn: ['确定','取消'] //按钮
+            }, function(its){
+
         if(thisElement.attr('child')==undefined){
             //父类删除
             var classElement = '.'+thisElement.attr('class');
@@ -1843,6 +1872,7 @@ function course_module(){
                 change.html(option);
                 change.val(total);
                 $('.'+className+'[parent='+parent+']').attr('current',cu);
+                layer.close(its);
                 return;
             }
             var option = '';
@@ -1858,6 +1888,9 @@ function course_module(){
 
 
         }
+
+            layer.close(its);
+        });
     });
 
     /**
@@ -2312,7 +2345,7 @@ function course_module(){
                             '<select class="form-control js-example-basic-single" name="goods['+index+'][name]" style="width: 481px;"></select>'+
                         '</td>'+
                         '<td>'+
-                            '<input class="form-control" type="text" value="1" name="goods['+index+'][number]"/>'+
+                            '<input class="form-control" type="number" value="1" name="goods['+index+'][number]" placeholder="请输入数量"/>'+
                         '</td>'+
                         '<td>'+
                             '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
@@ -2610,13 +2643,17 @@ function staff_manage_invigilator_add() {
     });
     $("#images_upload").change(function(e){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
 
         $.ajaxFileUpload
@@ -2870,13 +2907,17 @@ function staff_manage_invigilator_edit() {
     });
     $("#images_upload").change(function(){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
 
         $.ajaxFileUpload
@@ -3181,13 +3222,17 @@ function staff_manage_invigilator_sp_add() {
     });
     $("#images_upload").change(function(){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
 
         $.ajaxFileUpload
@@ -3446,13 +3491,17 @@ function staff_manage_invigilator_sp_edit() {
 
     $("#images_upload").change(function(){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
 
         $.ajaxFileUpload
@@ -3757,13 +3806,17 @@ function staff_manage_invigilator_patrol_add() {
     });
     $("#images_upload").change(function(){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
 
         $.ajaxFileUpload
@@ -3976,13 +4029,17 @@ function staff_manage_invigilator_patrol_edit() {
     });
     $("#images_upload").change(function(){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
         
         $.ajaxFileUpload

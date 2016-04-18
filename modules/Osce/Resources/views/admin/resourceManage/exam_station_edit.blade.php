@@ -68,23 +68,23 @@
                                     {{--<input type="text"    ng-model="num" id="code" class="form-control" name="mins" value="{{$rollmsg['mins']}}" placeholder="请输入分钟数">--}}
                                 {{--</div>--}}
                             {{--</div>--}}
-                            {{--<div class="hr-line-dashed sub-id"></div>--}}
+                            <div class="hr-line-dashed sub-id"></div>
 
-                            {{--<div class="form-group noTheory sub-id">--}}
-                                {{--<label class="col-sm-2 control-label">科目</label>--}}
-                                {{--<div class="col-sm-10">--}}
-                                    {{--<select id="" required  class="form-control" name="subject_id">--}}
-                                        {{--<option value="">请选择</option>--}}
-                                        {{--@foreach($subject as $key=>$item)--}}
-                                            {{--<option value="{{$item['id']}}"--}}
-                                                    {{--@if($rollmsg['subject_id'] == $item['id'])--}}
-                                                    {{--selected="selected"--}}
-                                                    {{--@endif--}}
-                                            {{-->{{$item['title']}}</option>--}}
-                                        {{--@endforeach--}}
-                                    {{--</select>--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
+                            <div class="form-group noTheory sub-id">
+                                <label class="col-sm-2 control-label">考试项目</label>
+                                <div class="col-sm-10">
+                                    <select id="" required  class="form-control" name="subject_id">
+                                        <option value="">请选择</option>
+                                        @foreach($subject as $key=>$item)
+                                            <option value="{{$item['id']}}"
+                                                    @if($rollmsg['subject_id'] == $item['id'])
+                                                    selected="selected"
+                                                    @endif
+                                            >{{$item['title']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             {{--<div class="hr-line-dashed sub-id"></div>--}}
 
                             {{--<div class="form-group noTheory sub-id">--}}

@@ -43,7 +43,7 @@
                         <th>#</th>
                         <th>考站名称</th>
                         <th>类型</th>
-                        <th>科目</th>
+                        <th>考试项目</th>
                         <th>操作</th>
                     </tr>
                     </thead>

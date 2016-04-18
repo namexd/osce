@@ -16,6 +16,8 @@ use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\Station;
+use Modules\Osce\Entities\ExamPaper;
+use Modules\Osce\Entities\Subject;
 
 trait SQLTraits
 {
@@ -228,18 +230,23 @@ trait SQLTraits
         $stations = ExamScreening::join('exam_gradation', 'exam_gradation.order', '=', 'exam_screening.gradation_order')
             ->join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
             ->join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
-            ->join('subject', 'subject.id', '=', 'exam_draft.subject_id')
             ->join('station', 'station.id', '=', 'exam_draft.station_id')
+            ->leftJoin('subject', 'subject.id', '=', 'exam_draft.subject_id')
+            ->leftJoin('exam_paper_exam_station', 'exam_paper_exam_station.station_id', '=', 'exam_draft.station_id')
+            ->leftJoin('exam_paper', 'exam_paper.id', '=', 'exam_paper_exam_station.exam_paper_id')
             ->where('exam_screening.id', $screen->id)
             ->where('exam_gradation.exam_id', $exam->id)
             ->select(
                 'station.name as name',
+                'station.type as station_type',
                 'subject.mins as mins',
+                'exam_paper.length as length',
                 'exam_draft.station_id as station_id',
                 'exam_draft.room_id as room_id',
                 'exam_screening.id as exam_screening_id',
                 'exam_draft_flow.optional',
                 'exam_draft_flow.order as order',
+                'exam_draft_flow.exam_id as exam_id',
                 'exam_gradation.order as gradation_order'
             )->get();
 
@@ -298,19 +305,22 @@ trait SQLTraits
         $rooms = ExamScreening::join('exam_gradation', 'exam_gradation.order', '=', 'exam_screening.gradation_order')
             ->join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
             ->join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
-            ->join('subject', 'subject.id', '=', 'exam_draft.subject_id')
             ->join('room', 'room.id', '=', 'exam_draft.room_id')
+            ->leftJoin('subject', 'subject.id', '=', 'exam_draft.subject_id')
+            ->leftJoin('exam_paper_exam_station', 'exam_paper_exam_station.station_id', '=', 'exam_draft.station_id')
+            ->leftJoin('exam_paper', 'exam_paper.id', '=', 'exam_paper_exam_station.exam_paper_id')
             ->where('exam_screening.id', $screen->id)
             ->where('exam_gradation.exam_id', $exam->id)
             ->select(
                 'room.name as name',
                 'subject.mins as mins',
+                'exam_paper.length as length',
                 'exam_draft.room_id as room_id',
                 'exam_draft_flow.exam_screening_id as exam_screening_id',
                 'exam_gradation.order as gradation_order',
                 'exam_draft_flow.order as order',
                 'exam_draft_flow.optional'
-            )->distinct()
+            )
             ->get();
 
         foreach ($rooms as &$room) {
@@ -463,6 +473,7 @@ trait SQLTraits
             $collections = $collection->sortByDesc($sortBy)->groupBy($groupBy);
         }
 
+
         $result = [];
 
         foreach ($collections as $items) {
@@ -480,4 +491,20 @@ trait SQLTraits
 
         return collect($result);
     }
+
+    /**
+     * 获取理论考试的考试时间
+     * @param $entity
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-18 18:15
+     */
+    function getTheoryMins($entity)
+    {
+        return ExamPaper::join('exam_paper_exam_station', 'exam_paper_exam_station.exam_paper_id', '=', 'exam_paper.id')
+            ->where('exam_paper_exam_station.station_id', '=', '$entity.station_id')
+            ->where('exam_id', $entity->exam_id)
+            ->first();
+    }
+
 }

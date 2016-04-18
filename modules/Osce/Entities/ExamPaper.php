@@ -20,6 +20,4 @@ class ExamPaper extends CommonModel
     protected $hidden       = [];
     protected $fillable     = ['name', 'status', 'mode', 'type', 'length', 'created_user_id'];
 
-
-
 }

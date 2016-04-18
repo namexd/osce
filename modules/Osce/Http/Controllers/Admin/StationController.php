@@ -124,13 +124,14 @@ class StationController extends CommonController
             'type.required'       =>  '考站类型必选',
         ]);
 
+
         try {
             $user = Auth::user();
             if(empty($user)){
                 throw new \Exception('未找到当前操作人信息');
             }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $stationData = $request->only('name', 'type');
+            $stationData = $request->only('name', 'type','subject_id');
             $vcrId  = $request->input('vcr_id', null);
             $roomId = $request->input('room_id');
 
@@ -235,13 +236,14 @@ class StationController extends CommonController
             'type.required'       =>  '考站类型必选',
         ]);
 
+
         try {
             $user = Auth::user();
             if(empty($user)){
                 throw new \Exception('未找到当前操作人信息');
             }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
-            $placeData = $request->only('name', 'type');
+            $placeData = $request->only('name', 'type','subject_id');
             $vcrId     = $request->input('vcr_id');
             $roomId    = $request->input('room_id');
             $id        = $request->input('id');
@@ -257,7 +259,7 @@ class StationController extends CommonController
                 $placeData['paper_id'] = null;
             }
 
-            $placeData['create_user_id'] = $user->id;
+
 
             $formData = [$placeData, $vcrId, $roomId];
 

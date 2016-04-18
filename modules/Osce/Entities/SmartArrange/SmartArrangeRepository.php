@@ -53,6 +53,9 @@ class SmartArrangeRepository extends AbstractSmartArrange
              * 将阶段遍历，在每个阶段中进行排考
              */
             $gradations = $this->getGradations($exam);
+            if ($gradations->isEmpty()) {
+                throw new \Exception('当前考试没有安排考场或考站!');
+            }
             foreach ($gradations as $key => $gradation) {
                 //初始化学生
                 $this->_S_Count = $this->model->setStudents(new StudentFromDatabase());
@@ -77,7 +80,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
 
                     //将考试实体初始化进去
                     $this->model->setEntity($exam, $screen);
-                    $this->checkEntityIsZero($this->model->getEntity()); //检查当前考试是否安排了考试实体
+
                     $screen = $this->setFlowsnumToScreen($exam, $screen); //将该场次有多少流程写入场次对象
 
                     $this->model->screenPlan($screen);

@@ -83,7 +83,7 @@ class SubjectStatisticsController  extends CommonController
         if($request->ajax()){
             return $this->success_data(['list'=>$rew,'StrList'=>$StrList],1,'成功');
         }
-        return  view('osce::admin.statisticalanalysis.statistics_subject',['examlist'=>$examlist,'StrList'=>$StrList,'list'=>$rew]);
+        return  view('osce::admin.statisticalAnalysis.statistics_subject',['examlist'=>$examlist,'StrList'=>$StrList,'list'=>$rew]);
 
     }
 
@@ -154,7 +154,7 @@ class SubjectStatisticsController  extends CommonController
         }
        // dd($StrList);
 
-        return view('osce::admin.statisticalanalysis.statistics_subject_level', ['list' => $rew, 'subjectList' => $SubjectList, 'StrList' => $StrList]);
+        return view('osce::admin.statisticalAnalysis.statistics_subject_level', ['list' => $rew, 'subjectList' => $SubjectList, 'StrList' => $StrList]);
     }
 
     /**考站成绩分析列表
@@ -240,7 +240,7 @@ class SubjectStatisticsController  extends CommonController
 
         //将数据展示到页面
 
-        return view('osce::admin.statisticalanalysis.statistics_subject_examation', [
+        return view('osce::admin.statisticalAnalysis.statistics_subject_examation', [
             'examInfo' =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'stationList'=>$datas, //考站成绩分析列表
@@ -294,7 +294,7 @@ class SubjectStatisticsController  extends CommonController
         }
         //($title);
         //将数据展示到页面
-        return view('osce::admin.statisticalanalysis.statistics_subject_examation_detail', [
+        return view('osce::admin.statisticalAnalysis.statistics_subject_examation_detail', [
             'title' =>$title ,//头部数据
             'stationDetails' =>$stationDetails ,//考站详情
         ]);
@@ -425,7 +425,7 @@ class SubjectStatisticsController  extends CommonController
 
         //将数据展示到页面
 //        dd($datas);
-        return view('osce::admin.statisticalanalysis.statistics_subject_standard', [
+        return view('osce::admin.statisticalAnalysis.statistics_subject_standard', [
             'examInfo'      =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
             'standardList' =>$datas, //考核点分析列表
@@ -512,7 +512,7 @@ class SubjectStatisticsController  extends CommonController
             }
         }
 
-        return view('osce::admin.statisticalanalysis.statistics_subject_standard_detail', [
+        return view('osce::admin.statisticalAnalysis.statistics_subject_standard_detail', [
             'datas'=>$datas
            // 'examInfo'      =>$examInfo ,//考试列表
            // 'subjectInfo' =>$subjectInfo ,//科目列表
