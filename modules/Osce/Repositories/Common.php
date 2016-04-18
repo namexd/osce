@@ -332,6 +332,11 @@ class Common
             $ensue = explode('=', $item);
             $fileData[$ensue[0]] = $ensue[1];
         }
+        if(!in_array('table ',$fileData)){
+            $fileData ['table'] = 0;
+        }
+
+//        dd($fileArray,$fileData);
         foreach ($fileArray as $value)
             if ($value == 'status=1') {
                 return view('osce::admin.index.layer_success', [
