@@ -29,7 +29,7 @@
         <span id="result-name" value="{{$result->name}}"></span>
         <span id="table-id" value="{{$fileArray['table']}}"></span>
         <span id="tr-id" value="{{$fileArray['tr']}}"></span>
-        <span id="selector" value="{{$fileArray['selector']}}"></span>
+        <span id="selector" value=""></span>
     </div>
     <i>数据新增成功</i>
 </div>
