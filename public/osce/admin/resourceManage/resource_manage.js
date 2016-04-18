@@ -1780,6 +1780,11 @@ function course_module(){
      */
     $('#judgement tbody').on('click','.fa-trash-o',function(){
         var thisElement = $(this).parent().parent().parent().parent();
+        layer.confirm('确认删除？', {
+                title:"删除",
+                btn: ['确定','取消'] //按钮
+            }, function(its){
+
         if(thisElement.attr('child')==undefined){
             //父类删除
             var classElement = '.'+thisElement.attr('class');
@@ -1843,6 +1848,7 @@ function course_module(){
                 change.html(option);
                 change.val(total);
                 $('.'+className+'[parent='+parent+']').attr('current',cu);
+                layer.close(its);
                 return;
             }
             var option = '';
@@ -1858,6 +1864,9 @@ function course_module(){
 
 
         }
+
+            layer.close(its);
+        });
     });
 
     /**
