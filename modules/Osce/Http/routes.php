@@ -457,7 +457,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 /**
  * WindowsAPP接口
  */
-Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\Http\Controllers','middleware' => [''],], function()
+Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\Http\Controllers','middleware' => [],], function()
 {
 	Route::group(['prefix'=>'watch','namespace'=>'Api'],function(){
 
