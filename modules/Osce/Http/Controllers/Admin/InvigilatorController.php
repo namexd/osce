@@ -195,7 +195,7 @@ class InvigilatorController extends CommonController
             //从配置中获取角色对应的ID号, 考官角色默认为1
             $role_id = config('osce.invigilatorRoleId',1);
         }else{
-            //从配置中获取角色对应的ID号, 考官角色默认为3
+            //从配置中获取角色对应的ID号, 巡考角色默认为3
             $role_id = config('osce.invigilatorRoleId',3);
         }
         $teacherData['type']            = $type;
@@ -227,7 +227,7 @@ class InvigilatorController extends CommonController
                 throw new \Exception('新增失败');
             }
         } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex->getMessage());
+//            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 

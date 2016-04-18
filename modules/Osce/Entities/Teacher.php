@@ -300,7 +300,6 @@ class Teacher extends CommonModel
 
 
             if(!$user){
-                dump($user,1111);
                 if(config('debug')==true)
                 {
                     $password   =   123456;
@@ -325,7 +324,6 @@ class Teacher extends CommonModel
                 $this -> sendRegisterEms($mobile, $password);
 
             }else{
-                dump($user,2222);
                 foreach($userData as $feild=> $value) {
                     $user    ->  $feild  =   $value;
                 }
