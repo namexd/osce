@@ -614,7 +614,15 @@ class ExamArrangeController extends CommonController
     public function getAllSubjects(Request $request)
     {
         try {
-            $data = Subject::where('archived', '<>', 1)->select(['id', 'title'])->get();
+            $this->validate($request,[
+                'subject_name'  => 'sometimes'
+            ]);
+            $title = trim($request->get('subject_name'));
+            $data  = Subject::where('archived', '<>', 1)->select(['id', 'title']);
+            if (!empty($title)){
+                $data = $data->where('title', 'like', '%\\'.$title.'%');
+            }
+            $data  = $data->get();
 
             return response()->json(
                 $this->success_data($data, 1, 'success')
