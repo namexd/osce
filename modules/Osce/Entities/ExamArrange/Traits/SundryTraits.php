@@ -61,26 +61,26 @@ trait SundryTraits
     function checkSameRoom($result)
     {
         $gradation = null;
-        $draft = null;
         $data = [];
-        foreach ($result as $items) {
-            $draft = $items->first()->exam_draft_flow_order;
+        foreach ($result as $key => $items) {
             $gradation = $items->first()->exam_gradation_id;
             foreach ($result as $values) {
                 foreach ($values as $value) {
-                    if ($value->exam_draft_flow_id != $draft && $value->exam_gradation_id == $gradation) {
-                        $data[] = $value;
+                    if ($value->exam_draft_flow_order != $key && $value->exam_gradation_id == $gradation) {
+                        $data[$value->exam_draft_flow_order][] = $value->room_id;
                     }
                 }
             }
-            //判断data中room_id是否重复
-            $roomId = collect($data)->pluck('room_id');
-            $uniRoomId = array_unique($roomId->toArray());
-            if (count($roomId) != count($uniRoomId)) {
-                throw new \Exception('考场安排不符规则');
+        }
+        //判断data中room_id是否重复
+//        dd($data);
+        $array = [];
+        foreach ($data as $v) {
+            $v = array_unique($v);
+            if (count(array_diff($v, $array)) != count($v)) {
+                throw new \Exception('考场安排错误！');
             }
-
-
+            $array = array_merge($array, $v);
         }
     }
 }
