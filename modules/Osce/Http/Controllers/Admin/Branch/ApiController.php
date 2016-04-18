@@ -756,6 +756,7 @@ class ApiController extends CommonController
                                     ->where('status', '=', 0)
                                     ->orderBy('begin_dt', 'asc')
                                     ->first();
+        dd($examQenen);
         if (is_null($examQenen)) {
             $retval = ['title' => '未查到相应考试队列信息'];
             return response()->json(
