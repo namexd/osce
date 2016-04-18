@@ -27,9 +27,10 @@
     <div style="display: none;">
         <span id="result-id" value="{{$result->id}}"></span>
         <span id="result-name" value="{{$result->name}}"></span>
+        <span id="result-type" value="{{$result->type}}"></span>
         <span id="table-id" value="{{$fileArray['table']}}"></span>
         <span id="tr-id" value="{{$fileArray['tr']}}"></span>
-        <span id="selector" value=""></span>
+        <span id="selector" value="{{$fileArray['selector']}}"></span>
     </div>
     <i>数据新增成功</i>
 </div>
@@ -48,13 +49,23 @@ $(function() {
         name = $('#result-name').attr('value'),
         table_id = $('#table-id').attr('value'),
         tr_id = $('#tr-id').attr('value'),
-        selector = $('#selector').attr('value');
+        selector = $('#selector').attr('value'),
+        type = $('#result-type').attr('value');
 
     //等待三秒关闭
     layer.load(3)
     setTimeout(function() {
         //新增的数据传过去
-        parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).append('<option value="'+ID+'" selected="selected">'+name+'</option>').val(ID).trigger("change");
+        
+        if(table_id!=undefined) {
+            parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).append('<option value="'+ID+'" selected="selected">'+name+'</option>').val(ID).trigger("change");
+        }
+        else if(type!= undefined) {
+            parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).parent().attr('status-type',type);
+        } else {
+            parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).append('<option value="'+ID+'" selected="selected">'+name+'</option>').val(ID).trigger("change");
+        }
+        
         parent.layer.close(index);
     }, 2000);  
 })

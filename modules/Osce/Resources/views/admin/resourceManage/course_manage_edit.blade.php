@@ -95,13 +95,6 @@
                         }
                     }
                 },
-                desc: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '描述不能为空'
-                        }
-                    }
-                },
                 case_id: {
                     validators: {
                         notEmpty: {/*非空提示*/

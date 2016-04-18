@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities;
 
 
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Repositories\Common;
 
 class ExamDraft extends CommonModel
@@ -297,5 +298,60 @@ class ExamDraft extends CommonModel
                 ->get();
 
         return $data;
+    }
+
+    /**
+     * 理论考站，处理考试、试卷、考站关系
+     * @param $item
+     *
+     * @author Zhoufuxiang 2016-04-18
+     * @return array|static
+     * @throws \Exception
+     */
+    public function handleExamPaperStation($exam_id)
+    {
+        //查询考试对应理论考站、试卷数据
+        $result = ExamPaperExamStation::where('exam_id','=',$exam_id)->select('station_id')
+                ->get()->pluck('station_id')->toArray();
+
+        $stations = $this->leftJoin('station','station.id','=','exam_draft.station_id')
+                    ->leftJoin('exam_draft_flow','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
+                    ->where('exam_draft_flow.exam_id','=',$exam_id)
+                    ->where('station.type','=',3)
+                    ->select(['exam_draft.station_id'])
+                    ->get()->pluck('station_id')->toArray();
+
+        $delStations = array_diff($result, $stations);     //原来有，现在不具有（需删除）
+        $addStations = array_diff($stations, $result);     //现在有，原来不具有（需添加）
+
+        //删除考试、试卷、考站关系
+        if (!empty($delStations)){
+            $delPaperStiations = ExamPaperExamStation::where('exam_id','=',$exam_id)->whereIn('station_id',$delStations)->get();
+            if (!$delPaperStiations->isEmpty()){
+                foreach ($delPaperStiations as $item) {
+                    if (!$item->delete()){
+                        throw new \Exception('删除考试试卷考站关系失败，请重试！');
+                    }
+                }
+            }
+        }
+
+        //添加考试、试卷、考站关系
+        if (!empty($addStations)){
+            foreach ($addStations as $station_id) {
+                $Station = Station::where('id','=',$station_id)->first();
+                $paper_exam_station = [
+                    'exam_id'       => $exam_id,
+                    'exam_paper_id' => $Station->paper_id,
+                    'station_id'    => $Station->id,
+                ];
+                $result = ExamPaperExamStation::create($paper_exam_station);
+                if (!$result){
+                    throw new \Exception('添加考试试卷考站关系失败，请重试！');
+                }
+            }
+        }
+
+        return $result;
     }
 }

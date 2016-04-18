@@ -124,6 +124,9 @@ class ExamDraftFlow extends CommonModel
                     throw new \Exception('System Error!');
             }
 
+            //理论考站，处理考试、试卷、考站关系
+            $ExamDraft->handleExamPaperStation($exam_id);
+
             if ($status == 1) {
                 //清空数据
                 $result = $examArrangeRepository->resetSmartArrange($exam_id);

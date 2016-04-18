@@ -4644,6 +4644,11 @@ function station_assignment(){
                 station:e.params.data.id
             };
 
+            //理论考站判断
+            if(e.params.data.type!=3) {
+                $elem.find('.exam-item').removeAttr('disabled');
+            }
+
             //新增页面
             if(e.params.data.id == -999) {
                 layer.open({
@@ -4660,7 +4665,21 @@ function station_assignment(){
                         data:req,
                         success: function(res) {
                             //更新考站类型
-                            //$elem.find('.exam-station').parent().next().text(typeToName[e.params.data.type])
+                            var status_type = $elem.find('.exam-station').parent().next().text(typeToName[$elem.find('.exam-station').parent().attr('status-type')])
+                            
+                            if($elem.find('.exam-station').parent().attr('status-type') == '3' ) {
+                                $elem.find('.exam-item').attr('disabled','disabled');
+                                $elem.find('.exam-item').val(-999).trigger('change');
+
+                                var req_s = {
+                                    exam_id:examId,
+                                    type:$elem.find('.exam-item').parent().attr('type'),
+                                    draft_id:$elem.attr('item-id'),
+                                    flow_id:$elem.parent().parent().attr('station-id'),
+                                    subject:-999
+                                };
+                                ajaxUpdate(req_s, pars.update_data);
+                            }
                         }
                     })
                   },

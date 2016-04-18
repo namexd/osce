@@ -87,10 +87,10 @@
                         }
                     }
                 },
-                desc: {
+                'cases[]':{
                     validators: {
                         notEmpty: {/*非空提示*/
-                            message: '描述不能为空'
+                            message: '病例不能为空'
                         }
                     }
                 },
