@@ -68,9 +68,13 @@ class ExamArrangeRepository extends AbstractExamArrange
             $data = $this->checkExamArrange($examId);
             $result = $data->groupBy('exam_draft_flow_order');
 
-            //遍历之，查看其中是否有相同的考站
+            //遍历之，查看其中是否有相同的考场
             $this->checkSameEntity($result, $field);
+            $this->checkSameRoom($result);
+            
             return $data;
+        } else {
+            throw new \Exception('系统异常');
         }
     }
 

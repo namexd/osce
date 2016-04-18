@@ -993,6 +993,23 @@ function exam_assignment_add(){
         }
     })
     /**
+     * 新增考试 实时发布成绩
+     * @author chenxia
+     * @version 3.3
+     * @date    2016-04-18
+     */
+    $(".checkbox_three").click(function(){
+        if ($(this).find("input").is(':checked')) {
+            $(this).find(".check_icon ").addClass("check");
+            $(this).find("input").attr("checked","checked");
+            $(this).find("input").val("1")
+        } else {
+            $(this).find(".check_icon").removeClass("check");
+            $(this).find("input").removeAttr("checked","checked")
+            $(this).find("input").val("0")
+        }
+    })
+    /**
      * 阶段选择框
      * @author chenxia
      * @version 3.4
@@ -1089,6 +1106,16 @@ function exam_assignment_add(){
 
     });
     /**
+     * 阶段输入框获光标的时候
+     * @author chenxia
+     * @version 3.4
+     * @date    2016-04-18
+     */
+    var checkbox_focus;
+    $(".checkbox_num").focus(function(){
+        checkbox_focus=$(".checkbox_num").val();
+    })
+    /**
      * 这是阶段输入框失去光标的时候的判断
      * @author chenxia
      * @version 3.4
@@ -1097,39 +1124,42 @@ function exam_assignment_add(){
     $(".checkbox_num").blur(function(){
         //获取阶段输入框的值
         var checkbox_num=$(".checkbox_num").val();
-        //这里是判断《阶段》后面的输入框是不是输入的1-20的整数
-        var pattern = /^(\d|1\d|20)$/gm;
+        if(checkbox_num!=checkbox_focus){
 
-        if(!pattern.test(checkbox_num)){
-            layer.alert('请输入1-20的整数！');
-            $(".layui-layer-btn0").click(function(){
-                $(".checkbox_num").val("1").focus();
-            })
-            return false;
-        }
-        //这里是判断输入的值是否大于20
-        if(checkbox_num>20||checkbox_num==0){
-            layer.alert('请输入1-20的整数！');
-            $(".layui-layer-btn0").click(function(){
-                $(".checkbox_num").val("1").focus();
-            })
-            return false;
-        }else{
-            $('table tr td select').each(function(){
-                //移除所有的option
-                $('table tr td select option').remove();
-                //获取考生分阶段考试的值;
-                var number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+            //这里是判断《阶段》后面的输入框是不是输入的1-20的整数
+            var pattern = /^(\d|1\d|20)$/gm;
+
+            if(!pattern.test(checkbox_num)){
+                layer.alert('请输入1-20的整数！');
+                $(".layui-layer-btn0").click(function(){
+                    $(".checkbox_num").val("1").focus();
+                })
+                return false;
+            }
+            //这里是判断输入的值是否大于20
+            if(checkbox_num>20||checkbox_num==0){
+                layer.alert('请输入1-20的整数！');
+                $(".layui-layer-btn0").click(function(){
+                    $(".checkbox_num").val("1").focus();
+                })
+                return false;
+            }else{
+                $('table tr td select').each(function(){
+                    //移除所有的option
+                    $('table tr td select option').remove();
+                    //获取考生分阶段考试的值;
+                    var number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
 
                     var checkbox_number='';
                     for(var i=1;i<=checkbox_num;i++) {
                         checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
                     }
 
-                var html = checkbox_number;
+                    var html = checkbox_number;
                     //记录计数
                     $('#exam_add').find('select').append(html);
                 });
+            }
         }
     })
 
@@ -1287,6 +1317,23 @@ function exam_basic_info(){
         }
     })
     /**
+     * 新增考试 实时发布成绩
+     * @author chenxia
+     * @version 3.3
+     * @date    2016-04-18
+     */
+    $(".checkbox_three").click(function(){
+        if ($(this).find("input").is(':checked')) {
+            $(this).find(".check_icon ").addClass("check");
+            $(this).find("input").attr("checked","checked");
+            $(this).find("input").val("1")
+        } else {
+            $(this).find(".check_icon").removeClass("check");
+            $(this).find("input").removeAttr("checked","checked")
+            $(this).find("input").val("0")
+        }
+    })
+    /**
      * 阶段选择框
      * @author chenxia
      * @version 3.4
@@ -1389,50 +1436,64 @@ function exam_basic_info(){
             $('#add-basic').find('tbody').append(html);
     });
     /**
+     * 阶段输入框获光标的时候
+     * @author chenxia
+     * @version 3.4
+     * @date    2016-04-18
+     */
+    var checkbox_focus;
+    $(".checkbox_num").focus(function(){
+        checkbox_focus=$(".checkbox_num").val();
+    })
+
+    /**
      * 阶段输入框
      * @author chenxia
      * @version 3.4
      * @date    2016-04-06
      */
     $(".checkbox_num").blur(function(){
-        $('#add-basic tr td select').each(function(){
-            //移除所有的option
-            $('table tr td select option').remove();
+        var checkbox_num=$(".checkbox_num").val();
+        if(checkbox_num!=checkbox_focus){
+            $('#add-basic tr td select').each(function(){
+                //移除所有的option
+                $('table tr td select option').remove();
 
-            //获取考生分阶段考试的值
-            var checkbox_num=$(".checkbox_num").val(),
-                number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
-            //这里是判断《阶段》后面的输入框是不是输入的1-20的整数
-            var pattern = /^(\d|1\d|20)$/gm;
+                //获取考生分阶段考试的值
 
-            if(!pattern.test(checkbox_num)){
-                layer.alert('请输入1-20的整数！');
-                $(".layui-layer-btn0").click(function(){
-                    $(".checkbox_num").val("1").focus();
-                })
-                return false;
-            }
-            //这里是判断输入的值是否大于20
-            if(checkbox_num>20||checkbox_num==0){
-                layer.alert('请输入1-20的整数！');
-                $(".layui-layer-btn0").click(function(){
-                    $(".checkbox_num").val("1").focus();
-                })
-                return false;
-            }else{
+                var number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                //这里是判断《阶段》后面的输入框是不是输入的1-20的整数
+                var pattern = /^(\d|1\d|20)$/gm;
 
-                /**
-                 * 这里是生成<阶段>
-                 */
-                var checkbox_number = '';
-                for(var i=1;i<=checkbox_num;i++) {
-                    checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                if(!pattern.test(checkbox_num)){
+                    layer.alert('请输入1-20的整数！');
+                    $(".layui-layer-btn0").click(function(){
+                        $(".checkbox_num").val("1").focus();
+                    })
+                    return false;
                 }
-                var html = checkbox_number;
-                //记录计数
-                $('#add-basic').find('select').append(html);
-            }
-        });
+                //这里是判断输入的值是否大于20
+                if(checkbox_num>20||checkbox_num==0){
+                    layer.alert('请输入1-20的整数！');
+                    $(".layui-layer-btn0").click(function(){
+                        $(".checkbox_num").val("1").focus();
+                    })
+                    return false;
+                }else{
+
+                    /**
+                     * 这里是生成<阶段>
+                     */
+                    var checkbox_number = '';
+                    for(var i=1;i<=checkbox_num;i++) {
+                        checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                    }
+                    var html = checkbox_number;
+                    //记录计数
+                    $('#add-basic').find('select').append(html);
+                }
+            });
+        }
     })
 
     /**
@@ -4260,24 +4321,33 @@ function station_assignment(){
         var $that = $(this).parent().parent().parent().parent(),
             judgeType = $that.find('.select-stage').attr('type') == 2 ? 2 :5;
 
-        $.ajax({
-            type:'get',
-            url: pars.del_flow,
-            data: {exam_id:examId,flow_id:$that.find('table').attr('station-id'),type:judgeType},
-            success: function(res) {
-                if(res.code != 1) {
-                    layer.msg('删除失败！',{skin:'msg-error',icon:1});
-                } else {
-                    $that.remove();
-                    $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
+        layer.confirm('确认删除？',{
+                title:'删除',
+                btn: ['确定','取消'] 
+            }, function(its) {
+                $.ajax({
+                    type:'get',
+                    url: pars.del_flow,
+                    data: {exam_id:examId,flow_id:$that.find('table').attr('station-id'),type:judgeType},
+                    success: function(res) {
+                        if(res.code != 1) {
+                            layer.msg('删除失败！',{skin:'msg-error',icon:1});
+                        } else {
+                            $that.remove();
+                            $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
 
-                    //更新考站显示
-                    $('.station-container').find('.col-sm-4').each(function(key,elem) {
-                        $(elem).find('.control-label').text('第'+stationName[key]+'站');
-                    });
-                }
-            }
-        });
+                            //更新考站显示
+                            $('.station-container').find('.col-sm-4').each(function(key,elem) {
+                                $(elem).find('.control-label').text('第'+stationName[key]+'站');
+                            });
+
+                            layer.close(its);
+                        }
+                    }
+                });
+            });
+
+        
     });
 
     /**
@@ -4369,22 +4439,27 @@ function station_assignment(){
             return;
         }
 
-
-        $.ajax({
-            type:'get',
-            url: pars.del_draft,
-            data: {exam_id:examId,flow_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:judgeType},
-            success: function(res) {
-                if(res.code != 1) {
-                    layer.msg('删除失败！',{skin:'msg-error',icon:1});
-                } else {
-                    //序数更新
-                    $that.parent().attr('index', parseInt($that.parent().attr('index'))-1);
-                    $that.remove();
-                }
-            }
-        });
-
+        //一般删除
+        layer.confirm('确认删除？',{
+                title:'删除',
+                btn: ['确定','取消'] 
+            }, function(its) {
+                   $.ajax({
+                        type:'get',
+                        url: pars.del_draft,
+                        data: {exam_id:examId,flow_id:$that.parent().parent().attr('station-id'),draft_id: $that.attr('item-id'),type:judgeType},
+                        success: function(res) {
+                            if(res.code != 1) {
+                                layer.msg('删除失败！',{skin:'msg-error',icon:1});
+                            } else {
+                                //序数更新
+                                $that.parent().attr('index', parseInt($that.parent().attr('index'))-1);
+                                $that.remove();
+                                layer.close(its);
+                            }
+                        }
+                    }); 
+            });
     });
 
     /**
@@ -4429,7 +4504,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].title});
                     }
-                    str.push({id:-999,text:'新增考试项目'});
+                    str.push({id:-999,text:'==新增考试项目=='});
 
                     //加载入数据
                     return {
@@ -4499,7 +4574,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name,type:data[i].type});
                     }
-                    str.push({id:-999,text:'新增考站'});
+                    str.push({id:-999,text:'==新增考站=='});
 
                     //加载入数据
                     return {
@@ -4582,7 +4657,7 @@ function station_assignment(){
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
-                    str.push({id:-999,text:'新增考场'});
+                    str.push({id:-999,text:'==新增考场=='});
 
                     //加载入数据
                     return {
@@ -4940,7 +5015,7 @@ function examiner_manage() {
             data:req,
             success: function(res) {
                 if(res.code != 1) {
-                    layer.msg(res.messages,{skin:'msg-error',icon:1});
+                    layer.msg(res.message,{skin:'msg-error',icon:1});
                 } else {
                     layer.msg('保存成功！',{skin:'msg-success',icon:1}, function() {
                         location.reload();
@@ -5087,6 +5162,7 @@ function examiner_manage() {
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增考官=='});
 
                     //加载入数据
                     return {
@@ -5094,8 +5170,9 @@ function examiner_manage() {
                     };
                 }
             }
-        }).on('select2:unselect', function(e) {
 
+        //删除选择
+        }).on('select2:unselect', function(e) {
             //删除
             $.ajax({
                 type:'get',
@@ -5112,6 +5189,35 @@ function examiner_manage() {
                 }
             })
 
+        }).on('select2:select', function(e){
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考场',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  success: function(){
+                    var curretArr = $elem.find('.custom-teacher').val();
+
+                    for(var i in curretArr) {
+                        if(curretArr[i] == -999) {
+                            delete curretArr[i];
+                        }
+                    }
+
+                    //取消新增选项选择
+                    $elem.find('.custom-teacher').val(curretArr).trigger("change");
+
+                  },
+                  end: function(){
+                    //更改请求数据
+                    
+                  },
+                  content: pars.add_examiner + '?status=1&tr='+$elem.attr('class')
+                });
+            }
         });
     }
     
@@ -5147,6 +5253,7 @@ function examiner_manage() {
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增sp=='});
 
                     //加载入数据
                     return {
@@ -5172,6 +5279,35 @@ function examiner_manage() {
                 }
             })
 
+        }).on('select2:select', function(e){
+            //新增页面
+            if(e.params.data.id == -999) {
+                layer.open({
+                  type: 2,
+                  title: '新增考场',
+                  shadeClose: true,
+                  shade: 0.8,
+                  area: ['90%', '90%'],
+                  success: function(){
+                    var curretArr = $elem.find('.custom-sp').val();
+
+                    for(var i in curretArr) {
+                        if(curretArr[i] == -999) {
+                            delete curretArr[i];
+                        }
+                    }
+
+                    //取消新增选项选择
+                    $elem.find('.custom-sp').val(curretArr).trigger("change");
+
+                  },
+                  end: function(){
+                    //更改请求数据
+                    
+                  },
+                  content: pars.add_sp + '?status=1&tr='+$elem.attr('class')
+                });
+            }
         });
     }
     

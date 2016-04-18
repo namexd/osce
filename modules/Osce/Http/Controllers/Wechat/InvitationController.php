@@ -132,16 +132,16 @@ class InvitationController extends CommonController
         $stationId = $request->get('station_id');
 
         try {
-            $code ='';
+            $code = '';
             //查询到该老师的邀请数据
             $inviteModel = new Invite();
             $TeacherInvite = $inviteModel->getTeacherInvite($teacher_id, $exam_id, $stationId);
 
             if (is_null($TeacherInvite)) {
                 $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
-                if(is_null($teacherDel)){
-                    $code =2;
-                }else {
+                if (is_null($teacherDel)) {
+                    $code = 2;
+                } else {
                     if (!$teacherDel->delete()) {
                         throw new \Exception('删除老师关联失败');
                     } else {
@@ -150,7 +150,7 @@ class InvitationController extends CommonController
                 }
 
             } else {
-  
+
                 //根据老师id查询老师的信息和openid
                 $teacher = new Teacher();
                 $teacherData = $teacher->invitationContent($teacher_id);
@@ -165,13 +165,13 @@ class InvitationController extends CommonController
                     $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
                     if (!$teacherDel) {
                         throw new \Exception('删除老师关联失败');
-                    }else{
-                        $code =1;
+                    } else {
+                        $code = 1;
                     }
                 }
             }
             return response()->json(
-                $this->success_data('',$code)
+                $this->success_data('', $code)
             );
         } catch (\Exception $ex) {
             return response()->json(
@@ -206,12 +206,17 @@ class InvitationController extends CommonController
 
         $teacherData = $request->get('data');
 
-
         try {
             $teacherId = [];
             foreach ($teacherData as $key => $item) {
 
+                if (empty($item['teacher'])) {
+                    throw new \Exception(' 还有考试没有安排考官！请安排考官！重试！');
+                }
 
+                if (empty($item['sp_teacher'])) {
+                    continue;
+                }
                 foreach ($item['teacher'] as $value) {
                     $teacherId[] = $value;
                 }
@@ -225,17 +230,18 @@ class InvitationController extends CommonController
 
                 $inviteData = $this->getInviteData($exam_id, $teacherData, $item['station_id']);
                 $InviteModel = new Invite();
-                if ($InviteModel->addInvite($inviteData)) {
-                    continue;
-                } else {
-                    throw new \Exception('邀请失败');
+                if (!$InviteModel->addInvite($inviteData)) {
+                    throw new \Exception('邀请失败 ！请重试！！');
                 }
             }
+
             return response()->json(
                 $this->success_data()
             );
 
         } catch (\Exception $ex) {
+            
+            
             return response()->json(
                 $this->fail($ex)
             );

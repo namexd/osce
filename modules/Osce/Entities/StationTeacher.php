@@ -24,7 +24,7 @@ class StationTeacher extends CommonModel
 
     public function station()
     {
-        return $this->belongsTo('\Modules\Osce\Entities\Station','station_id','id');
+        return $this->belongsTo('\Modules\Osce\Entities\Station', 'station_id', 'id');
     }
 
 
@@ -40,37 +40,37 @@ class StationTeacher extends CommonModel
      */
     public function getVcrInfo($exam_id, $teacher_id, $room_id)
     {
-        try{
-            $data = $this->select(['vcr.id','vcr.name','vcr.ip','vcr.status','vcr.port','vcr.realport','vcr.channel','vcr.username','vcr.password'])
-                ->leftJoin('room_station', 'room_station.station_id', '=', $this->table.'.station_id')
-                ->leftJoin('station_vcr', 'station_vcr.station_id', '=', $this->table.'.station_id')
+        try {
+            $data = $this->select(['vcr.id', 'vcr.name', 'vcr.ip', 'vcr.status', 'vcr.port', 'vcr.realport', 'vcr.channel', 'vcr.username', 'vcr.password'])
+                ->leftJoin('room_station', 'room_station.station_id', '=', $this->table . '.station_id')
+                ->leftJoin('station_vcr', 'station_vcr.station_id', '=', $this->table . '.station_id')
                 ->leftJoin('vcr', 'vcr.id', '=', 'station_vcr.vcr_id')
                 ->where('room_station.room_id', $room_id)
-                ->where($this->table.'.user_id', $teacher_id)
-                ->where($this->table.'.exam_id', $exam_id)
+                ->where($this->table . '.user_id', $teacher_id)
+                ->where($this->table . '.exam_id', $exam_id)
                 ->get();
 
             return $data;
-        } catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return $ex;
         }
     }
 
     //保存考官安排
-    
-    public function getsaveteacher($teacherData,$exam_id)
+
+    public function getsaveteacher($teacherData, $exam_id)
     {
 
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
         try {
             //判断是新增还是编辑
-            $examTeacherData = $this->where('exam_id','=',$exam_id)->get();
+            $examTeacherData = $this->where('exam_id', '=', $exam_id)->get();
 
-            if(count($examTeacherData) !=0){
+            if (count($examTeacherData) != 0) {
                 //这里是编辑先删除以前的数据
-                foreach ($examTeacherData as $item){
-                    if(!$item->delete()){
+                foreach ($examTeacherData as $item) {
+                    if (!$item->delete()) {
                         throw new \Exception('删除旧数据失败！');
                     }
                 }
@@ -83,22 +83,42 @@ class StationTeacher extends CommonModel
             if ($teacherData) {
 
                 foreach ($teacherData as $key => $item) {
-                    if($item['teacher'] == "" && $item['sp_teacher'] == ""){
-                        continue;
+
+                    $stationType = Station::find($item['station_id']);
+                    if ($stationType->type == 2) {
+                        if ($item['teacher'] == "" || $item['teacher'] == "") {
+
+                            throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
+//                        continue;
+                        }
+                        if ($item['teacher'] == null || $item['teacher'] == null) {
+                            throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
+//                        continue;
+                        }
+
+                    } else {
+                        if ($item['teacher'] == "" && $item['sp_teacher'] == "" || $item['teacher'] == "" || $item['sp_teacher'] == "") {
+
+                            throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
+//                        continue;
+                        }
+                        if ($item['teacher'] == null && $item['sp_teacher'] == null || $item['teacher'] == null || $item['sp_teacher'] == null) {
+                            throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
+//                        continue;
+                        }
                     }
-                    if($item['teacher'] == null && $item['sp_teacher'] == null){
-                        continue;
-                    }
-                    $teacherIDs =[];
 
 
-                    if(!empty($item['teacher'])){
-                        foreach ($item['teacher'] as $value){
+                    $teacherIDs = [];
+
+
+                    if (!empty($item['teacher'])) {
+                        foreach ($item['teacher'] as $value) {
                             $teacherIDs[] = $value;
                         }
                     }
-                    if(!empty($item['sp_teacher'])){
-                        foreach ($item['sp_teacher'] as $value){
+                    if (!empty($item['sp_teacher'])) {
+                        foreach ($item['sp_teacher'] as $value) {
                             $teacherIDs[] = $value;
                         }
                     }
@@ -112,20 +132,20 @@ class StationTeacher extends CommonModel
                     foreach ($teacherIDs as $teacherID) {
                         //考站-老师关系表 数据
                         $stationTeacher = [
-                            'station_id'        =>  $item['station_id'],
-                            'user_id'           =>  $teacherID,
+                            'station_id' => $item['station_id'],
+                            'user_id' => $teacherID,
 //                            'case_id'           =>  $case_id,
-                            'exam_id'           =>  $exam_id,
-                            'created_user_id'   =>  $user ->id,
+                            'exam_id' => $exam_id,
+                            'created_user_id' => $user->id,
 //                            'type'              =>  empty($item['teacher_id']) ? 2 : 1
                         ];
-                        if(!$StationTeachers = StationTeacher::create($stationTeacher)) {
+                        if (!$StationTeachers = StationTeacher::create($stationTeacher)) {
                             throw new \Exception('考站-老师关系添加失败！');
                         }
                     }
 
                 }
-                
+
                 $connection->commit();
                 return true;
             }
@@ -139,29 +159,25 @@ class StationTeacher extends CommonModel
     }
 
 
+    public function getTeacherData($stationId, $exam_id)
+    {
 
-
-    public function getTeacherData($stationId,$exam_id){
-
-        $data = $this->leftJoin('teacher', 'teacher.id', '=', $this->table.'.user_id')
+        $data = $this->leftJoin('teacher', 'teacher.id', '=', $this->table . '.user_id')
 //            ->leftJoin('invite', 'invite.user_id', '=',$this->table.'.user_id')
-            ->whereIn('station_teacher.station_id',$stationId)
-            ->where('station_teacher.exam_id','=',$exam_id)
+            ->whereIn('station_teacher.station_id', $stationId)
+            ->where('station_teacher.exam_id', '=', $exam_id)
             ->select([
                 'teacher.id as teacher_id',
                 'teacher.name as teacher_name',
                 'teacher.type as teacher_type',
 //                'invite.status as status',
-                $this->table.'.station_id',
+                $this->table . '.station_id',
 
             ])
-
             ->get();
-  
-        
+
+
         return $data;
-
-
 
 
     }
