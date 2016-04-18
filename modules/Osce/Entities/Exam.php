@@ -246,14 +246,12 @@ class Exam extends CommonModel
                 }
             }
 
-
             //删除考试流程关联
             if (!ExamFlow::where('exam_id', $id)->get()->isEmpty()) {
                 if (!ExamFlow::where('exam_id', $id)->delete()) {
                     throw new \Exception('删除考试流程关联失败，请重试！');
                 }
             }
-
 
             //通过考试流程-考站关系表得到考站信息
             if ($examObj->sequence_mode == 1) {
@@ -278,17 +276,8 @@ class Exam extends CommonModel
                             throw new \Exception('弃用考站老师关联失败，请重试！');
                         }
                     }
-
-//                    foreach ($stationIds as $stationId) {
-//                        if (!StationTeacher::where('station_id',$stationId->station_id)->get()->isEmpty()) {
-//                            if (!StationTeacher::where('station_id',$stationId->station_id)->delete()) {
-//                                throw new \Exception('删除考站老师关联失败，请重试！');
-//                            }
-//                        }
-//                    }
                 }
             }
-
 
             //删除考试对应的资讯通知
             $informInfo = InformInfo::where('exam_id', $id)->get();
@@ -948,6 +937,50 @@ class Exam extends CommonModel
         } catch (\Exception $ex) {
             return false;
         }
+    }
 
+    /**
+     * 处理考试场次时间
+     * @param $examScreeningData
+     * @param $user
+     *
+     * @author Zhoufuxiang 2016-04-18
+     * @return array
+     * @throws \Exception
+     */
+    public function handleScreeningTime($examScreeningData, $user)
+    {
+        //考试的最早时间（开始时间）、最晚时间（结束时间）
+        $begin_dt   = '';
+        $end_dt     = '';
+        $keyArr     = array_keys($examScreeningData);
+        if (empty($keyArr)){
+            throw new \Exception('请添加时间！');
+        }
+        $firstKey = $keyArr[0];
+        foreach($examScreeningData as $key => $value){
+            $bd = $value['begin_dt'];   //开始时间
+            $ed = $value['end_dt'];     //结束时间
+            if(!strtotime($bd) || !strtotime($ed) || $ed<$bd){
+                throw new \Exception('时间输入有误！');
+            }
+            if($key>$firstKey && $examScreeningData[$key-1]['end_dt']> $bd){
+                throw new \Exception('后一场的开始时间必须大于前一场的结束时间！');
+            }
+            //获取最早开始时间，最晚结束时间
+            if($key == $firstKey){
+                $begin_dt   = $bd;
+            }
+            if($key == count($examScreeningData)){
+                $end_dt = $ed;
+            }
+            $examScreeningData[$key]['create_user_id'] = $user -> id;
+        }
+
+        return [
+            'begin_dt'          => $begin_dt,
+            'end_dt'            => $end_dt,
+            'examScreeningData' => $examScreeningData,
+        ];
     }
 }
