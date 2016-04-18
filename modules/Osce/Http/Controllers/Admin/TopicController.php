@@ -543,19 +543,15 @@ class TopicController extends CommonController
            'cases_name'=>'sometimes',
 
        ]);
-       $caseName = $request->get('cases_name');
+       //病例名称
+       $caseName = $request->get('q');
 //       $paginate = $request->get('paginate');
        try{
           
            $caseModel = new CaseModel();
-          
-           if(empty($caseName)){
 
-               //查询出所有的病例
-               $casesList = $caseModel->getCasesList($caseName);
-           }else{
-               $casesList = $caseModel->getCasesList($caseName);
-           }
+           //查询出所有的病例
+           $casesList = $caseModel->getCasesList($caseName);
            
 //           return response()->json(
 //               $this->success_rows(1,'success',$pagination->total(),$pagesize=config('msc.page_size'),$pagination->currentPage(),$data)
