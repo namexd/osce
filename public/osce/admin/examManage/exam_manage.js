@@ -96,12 +96,12 @@ function score_query_detail() {
     function charts(standard,student_name,avg,xAxis){
 
         //考核点数据较少处理
-        /*if(xAxis.length<8){
+        if(xAxis.length<8){
             var len = 7 - xAxis.length;
             for(var i = 0;i<=len;i++){
                 xAxis.push('');
             }
-        }*/
+        }
 
         var option = {
             title : {
@@ -219,6 +219,7 @@ function score_query_detail() {
         }
     }
 
+    console.log(standard,avg,xAxis)
     //触发图表格
     charts(standard,$('#student').text(),avg,xAxis);
 
@@ -1083,13 +1084,13 @@ function exam_assignment_add(){
         var hours = timeLength.split(':')[0];
         var minutes = timeLength.split(':')[1];
 
-         var html = '<tr index= '+parseInt(index)+'>'+
+         var html = '<tr>'+
              '<td>'+parseInt(index)+'</td>'+
              '<td class="laydate">'+
-             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+             '<input type="text" class="laydate-icon end data_start" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
              '</td>'+
              '<td class="laydate">'+
-             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
+             '<input type="text" class="laydate-icon end data_end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
              '</td>'+
              '<td>0天0小时0分</td>'+
              '<td class="check_select">' +
@@ -1188,7 +1189,15 @@ function exam_assignment_add(){
             $('#exam_add tbody').find('tr').each(function(key,elem){
                 $(elem).find('td').eq(0).text(parseInt(key)+1);
             });
-
+            $('#exam_add tbody tr').find('select').each(function(key,elem){
+                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][gradation_order]');
+            });
+            $('#exam_add tbody tr').find('.data_start').each(function(key,elem){
+                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][begin_dt]');
+            });
+            $('#exam_add tbody tr').find('.data_end').each(function(key,elem){
+                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][end_dt]');
+            });
             layer.close(thisID);
         });
         //var thisElement = $(this).parent().parent().parent().parent();
@@ -1417,10 +1426,10 @@ function exam_basic_info(){
             var html = '<tr>'+
                 '<td>'+parseInt(index)+'</td>'+
                 '<td class="laydate">'+
-                '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+                '<input type="text" class="laydate-icon end data_start" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
                 '</td>'+
                 '<td class="laydate">'+
-                '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
+                '<input type="text" class="laydate-icon end data_end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
                 '</td>'+
                 '<td>0天0小时0分</td>'+
                 '<td class="check_select">' +
@@ -1522,7 +1531,21 @@ function exam_basic_info(){
             $('#add-basic tbody').find('tr').each(function(key,elem){
                 $(elem).find('td').eq(0).text(parseInt(key)+1);
             });
-
+            $('#add-basic tbody tr').find('select').each(function(key,elem){
+                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][gradation_order]');
+            });
+            $('#add-basic tbody tr').find('.data_start').each(function(key,elem){
+                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][begin_dt]');
+            });
+            $('#add-basic tbody tr').find('.data_startid').each(function(key,elem){
+                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][begin_dt]');
+            });
+            $('#add-basic tbody tr').find('.data_startexamid').each(function(key,elem){
+                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][begin_dt]');
+            });
+            $('#add-basic tbody tr').find('.data_end').each(function(key,elem){
+                $(elem).eq(0).attr('name','time['+(parseInt(key)+1)+'][end_dt]');
+            });
             layer.close(thisID);
         });
 
