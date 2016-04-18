@@ -196,7 +196,7 @@ class InvigilatorController extends CommonController
             $role_id = config('osce.invigilatorRoleId',1);
         }else{
             //从配置中获取角色对应的ID号, 巡考角色默认为3
-            $role_id = config('osce.invigilatorRoleId',3);
+            $role_id = config('osce.patrolRoleId',6);
         }
         $teacherData['type']            = $type;
         $teacherData['case_id']         = null;

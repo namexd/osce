@@ -85,7 +85,7 @@ class ApiController extends CommonController
             }
         }
         // dd($questionInfo);
-        return  view('osce::admin.resourcemanage.subject_papers_add_detail',[
+        return  view('osce::admin.resourceManage.subject_papers_add_detail',[
             'examQuestionLabelTypeList'=>$examQuestionLabelTypeList,
             'examQuestionTypeList'=>$examQuestionTypeList,
             'questionInfo'=>$questionInfo,
@@ -337,7 +337,7 @@ class ApiController extends CommonController
        // dd($PaperPreviewArr);
 
         //-------------------------------------
-        return  view('osce::admin.resourcemanage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
+        return  view('osce::admin.resourceManage.subject_papers_add_preview',['PaperPreviewArr'=>$PaperPreviewArr]);
     }
 
     /**
