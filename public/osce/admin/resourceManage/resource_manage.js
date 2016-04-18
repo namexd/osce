@@ -2610,13 +2610,17 @@ function staff_manage_invigilator_add() {
     });
     $("#images_upload").change(function(e){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
 
         $.ajaxFileUpload
@@ -2870,13 +2874,17 @@ function staff_manage_invigilator_edit() {
     });
     $("#images_upload").change(function(){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
 
         $.ajaxFileUpload
@@ -3181,13 +3189,17 @@ function staff_manage_invigilator_sp_add() {
     });
     $("#images_upload").change(function(){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
 
         $.ajaxFileUpload
@@ -3446,13 +3458,17 @@ function staff_manage_invigilator_sp_edit() {
 
     $("#images_upload").change(function(){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
 
         $.ajaxFileUpload
@@ -3757,13 +3773,17 @@ function staff_manage_invigilator_patrol_add() {
     });
     $("#images_upload").change(function(){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
 
         $.ajaxFileUpload
@@ -3976,13 +3996,17 @@ function staff_manage_invigilator_patrol_edit() {
     });
     $("#images_upload").change(function(){
 
-        var files=document.getElementById("file0").files,
-            kb=Math.floor(files[0].size/1024);
-        //console.log(kb);
-        if(kb>2048){
-            layer.alert('文件大小不得超过2M!');
-            $("#file0").val('');
-            return false;
+        var files=document.getElementById("file0").files;
+
+        //兼容ie9
+        if(files) {
+            var kb=Math.floor(files[0].size/1024);
+            //console.log(kb);
+            if(kb>2048){
+                layer.alert('文件大小不得超过2M!');
+                $("#file0").val('');
+                return false;
+            }
         }
         
         $.ajaxFileUpload
