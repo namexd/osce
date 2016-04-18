@@ -137,7 +137,7 @@
                             message: '时间不能为空'
                         },
                         regexp: {
-                            regexp: /^([0-9]+)$/,
+                            regexp: /^[1-9]\d*$/,
                             message: '请输入正确的时间'
                         },
                         stringLength: {

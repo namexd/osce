@@ -1533,7 +1533,6 @@ function exam_basic_info(){
             });
         }
     })
-
     /**
      * 删除一条记录
      * @author mao
@@ -4828,8 +4827,6 @@ function station_assignment(){
             layer.alert('请选择阶段！');
             return false;
         }
-
-
         
         $.ajax({
             type:'post',
