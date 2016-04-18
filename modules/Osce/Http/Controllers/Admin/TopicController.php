@@ -572,7 +572,7 @@ class TopicController extends CommonController
                'name'=>'sometimes'
             ]);
 
-        $name = e($request->get('name'));
+        $name = e($request->get('q'));
 
         try{
             $caseModel = new Supply();

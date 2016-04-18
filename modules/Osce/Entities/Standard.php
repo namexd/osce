@@ -75,10 +75,10 @@ class Standard extends CommonModel
                 foreach ($subject->standards as $standard)
                 {
                     $standardItem->delItemBySubject($standard);
-                }
-                //删除评分标准
-                if(!$standard->delete()){
-                    throw new \Exception('删除评分标准失败');
+                    //删除评分标准
+                    if(!$standard->delete()){
+                        throw new \Exception('删除评分标准失败');
+                    }
                 }
             }
             return true;
