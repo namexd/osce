@@ -444,7 +444,7 @@ class ExamDraftFlow extends CommonModel
     }
 
     /**
-     * 清楚考场安排数据
+     * 清空考场安排数据
      * @param $exam_id
      *
      * @author Zhoufuxiang 2016-4-16
@@ -452,6 +452,13 @@ class ExamDraftFlow extends CommonModel
      */
     public function delDraftDatas($exam_id)
     {
+        //1、清空考场安排 临时表数据
+        $draftTemp = new ExamDraftTemp();
+        $tempData  = $draftTemp->getTempData($exam_id);
+        if(!$tempData){
+            throw new \Exception('清空临时数据失败');
+        }
+
         $draftFlows = $this->where('exam_id','=',$exam_id)->get();
         if (!$draftFlows->isEmpty()){
             foreach ($draftFlows as $index => $draftFlow) {
