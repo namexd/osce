@@ -23,6 +23,12 @@
     .check_top {top: 8px;margin-right: 10px;}
     /*select2样式*/
     .select2-container--default .select2-selection--multiple{border: 1px solid #e5e6e7;border-radius:2px;}
+    /*图片上传*/
+    #file {position: relative;overflow: hidden;}
+    #file input{position: absolute;right: 0;top: 0;font-size: 100px;}
+    .file-msg{color: #42b2b1;}
+    .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
+    .fa-remove:hover{cursor: pointer;}
 </style>
 @stop
 
@@ -31,10 +37,12 @@
     <script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script src="{{asset('osce/admin/js/all_checkbox.js')}}"> </script>
+    <script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
+
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add'}">
+    <input type="hidden" id="parameter" value="{'pagename':'subject_manage_add','imgUrl':'{{ route('osce.admin.ExamQuestionController.postQuestionUpload') }}'}">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -45,7 +53,7 @@
             <div class="ibox-content">
                 <div class="row">
                     <div class="col-md-12 ">
-                        <form method="post" class="form-horizontal" id="sourceForm" action="{{ route('osce.admin.ExamQuestionController.postExamQuestionAdd') }}">
+                        <form method="post" class="form-horizontal" id="sourceForm" action="{{ route('osce.admin.ExamQuestionController.postExamQuestionAdd') }}" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">题目类型</label>
                                 <div class="col-sm-10">
@@ -63,6 +71,20 @@
                                 <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>题目</label>
                                 <div class="col-sm-10">
                                     <textarea name="name" id="subjectName" cols="10" rows="5" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">题目图片</label>
+                                <div class="col-sm-10">
+                                    <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file" title="请选择图片">
+                                        选择图片
+                                        <input type="file" id="picFile" name="file">
+                                    </a>
+                                    <span class="file-msg">(图片大小不得超过2M，仅支持JPG、PNG、JPEG格式！)</span>
+                                    <div class="picBox upload_list">
+
+                                    </div>
                                 </div>
                             </div>
                             <div class="hr-line-dashed chooseLine"></div>
@@ -215,7 +237,7 @@
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-sm btn-primary" id="sure" type="submit" disabled>确定</button>
+                                    <button class="btn btn-sm btn-primary" id="sure" type="submit">确定</button>
                                     <a href="{{ route('osce.admin.ExamQuestionController.showExamQuestionList') }}" class="btn btn-white btn-sm" id="cancel">取消</a>
                                 </div>
                             </div>

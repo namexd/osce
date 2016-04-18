@@ -59,7 +59,7 @@
                                     <td>{{@$v['avgScore']}}</td>
                                     <td>{{@$v['AllavgScore']}}</td>
                                     <td>
-                                        <span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="{{@$v['id']}}" resultid="{{@$v['rid']}}" subid="{{@$v['sid']}}"></i></span>
+                                        <span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="{{@$v['id']}}" resultid="{{@$classId}}" subid="{{@$v['sid']}}"></i></span>
                                     </td>
                                 </tr>
                             @endforeach

@@ -324,6 +324,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('next-examinee',['uses'=>'DrawlotsController@getNextExaminee','as'=>'osce.pad.getNextExaminee']);  //下一组考生
 		Route::get('station-list',['uses'=>'DrawlotsController@getStationList','as'=>'osce.pad.getStationList']);  //登陆之后给予考站信息
 		Route::get('change-status',['uses'=>'PadController@getChangeStatus','as'=>'osce.admin.PadController.getChangeStatus']);
+		Route::get('next-student',['uses'=>'DrawlotsController@nextStudent','as'=>'osce.pad.nextStudent']);  //下一个考生
 	});
 
 
@@ -429,10 +430,27 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/end-exam', 	['uses'=>'InvigilatePadController@getEndExam','as'=>'osce.api.invigilatepad.getEndExam']);
 		Route::get('invigilatepad/test-index', 	['uses'=>'InvigilatePadController@getTestIndex','as'=>'osce.api.invigilatepad.getTestIndex']);
 
+
+
 		//pad的上传
 		Route::post('upload-image',['uses'=>'InvigilatePadController@postTestAttachImage','as'=>'osce.pad.InvigilatePad.postTestAttachImage']);
 		Route::post('upload-radio',['uses'=>'InvigilatePadController@postTestAttachRadio','as'=>'osce.pad.InvigilatePad.postTestAttachRadio']);
 		Route::post('store-anchor',['uses'=>'InvigilatePadController@postStoreAnchor','as'=>'osce.pad.InvigilatePad.StoreAnchor']);
+
+		//显示所有已绑定但未解绑人员的接口
+		Route::get('invigilatepad/bound-watch-members', 	['uses'=>'InvigilatePadController@getBoundWatchMembers','as'=>'osce.api.invigilatepad.getBoundWatchMembers']);
+		//获取考生详细信息的接口
+		Route::get('invigilatepad/examinee-bound-watch-detail', 	['uses'=>'InvigilatePadController@getExamineeBoundWatchDetail','as'=>'osce.api.invigilatepad.getExamineeBoundWatchDetail']);
+		//查询使用中的腕表数据
+		Route::get('invigilatepad/useing-watch-data', 	['uses'=>'InvigilatePadController@getUseingWatchData','as'=>'osce.api.invigilatepad.getUseingWatchData']);
+		//查询某个腕表的考试状态
+		Route::get('invigilatepad/single-watch-data', 	['uses'=>'InvigilatePadController@getSingleWatchData','as'=>'osce.api.invigilatepad.getSingleWatchData']);
+		//查询学生考试状态
+		Route::get('invigilatepad/examinee-status', 	['uses'=>'InvigilatePadController@getExamineeStatus','as'=>'osce.api.invigilatepad.getExamineeStatus']);
+		//解绑腕表
+		Route::get('invigilatepad/watch-unbundling', 	['uses'=>'InvigilatePadController@getWatchUnbundling','as'=>'osce.api.invigilatepad.getWatchUnbundling']);
+		//解绑腕表
+		Route::get('invigilatepad/watch-unbundling-report', 	['uses'=>'InvigilatePadController@getWatchUnbundlingReport','as'=>'osce.api.invigilatepad.getWatchUnbundlingReport']);
 	});
 });
 
@@ -491,6 +509,7 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 });
 
 //TODO:测试用
+
 Route::get('test/test', function(\Illuminate\Http\Request $request) {
 //	//验证规则
 //	$this -> validate($request,[
@@ -523,6 +542,20 @@ Route::get('test/test', function(\Illuminate\Http\Request $request) {
 	dd($a);
 //	return '失败';
 });
+Route::get('test/test', function() {
+//    $redis = Redis::connection('message');
+//    $redis->publish('test-channel', json_encode(['test' => 'message']));
+	$a = serialize(['station_id' => 1, 'teacher_id' => 2]);
+	dd(unserialize($a));
+});
+Route::get('redis', function(){
+    $redis = Redis::connection('message');
+    $redis->subscribe('test-channel', function($message){
+        echo $message;
+    });
+
+});
+
 //TODO:清空考试数据使用 	Zhoufuxiang
 Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 
@@ -536,10 +569,10 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 	$exam = new \Modules\Osce\Entities\Exam();
 
 	if($exam->emptyData($exam_id)){
-		return '成功-'.rand(1000,9999);
+		return '成功-' . mt_rand(1000,9999);
 	}
 
-	return '失败-'.rand(1000,9999);
+	return '失败-' . mt_rand(1000,9999);
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 

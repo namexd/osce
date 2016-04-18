@@ -202,33 +202,35 @@ class Room extends CommonModel
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
 
-                //修改当前摄像机状态
-                $vcr = Vcr::FindOrFail($vcr_id);
-                $vcr->used = 1;
-                if (!$vcr->save()) {
-                    throw new \Exception('考场绑定摄像机失败！请重试');
-                }
+                if ($vcr_id !== "0") {
+                    //修改当前摄像机状态
+                    $vcr = Vcr::FindOrFail($vcr_id);
+                    $vcr->used = 1;
+                    if (!$vcr->save()) {
+                        throw new \Exception('考场绑定摄像机失败！请重试');
+                    }
 
+                    $data = [
+                        'room_id' => $id,
+                        'vcr_id' => $vcr_id,
+                        'created_user_id' => $user->id
+                    ];
+
+                    if (!RoomVcr::create($data)) {
+                        throw new \Exception('考场绑定摄像机失败！请重试');
+                    }
+                }
                 //将原来的摄像机的状态恢复
                 $vcr = Vcr::findOrFail($roomVcr->vcr_id);
                 $vcr->used = 0;
                 if (!$vcr->save()) {
                     throw new \Exception('考场绑定摄像机失败！请重试');
                 }
-
-                $data = [
-                    'room_id' => $id,
-                    'vcr_id' => $vcr_id,
-                    'created_user_id' => $user->id
-                ];
-
-                if (!RoomVcr::create($data)) {
-                    throw new \Exception('考场绑定摄像机失败！请重试');
-                };
             } else {
-                throw new \Exception('该场所并未绑定设备，请删除此场所');
+                if ($vcr_id !== '0') {
+                    $this->roomVcr($vcr_id, $user->id, $room);
+                }
             }
-
 
             $connection->commit();
             return true;
@@ -258,12 +260,13 @@ class Room extends CommonModel
             if (!$room = $this->create($formData)) {
                 throw new \Exception('新建房间失败');
             }
-            if(!empty($vcrId)){
+            if(!empty($vcrId)) {
                 $data = [
                     'room_id' => $room->id,
                     'vcr_id' => $vcrId,
                     'created_user_id' => $userId
                 ];
+
 
                 if (!RoomVcr::create($data)) {
                     throw new \Exception('摄像机与房间关联失败');
@@ -275,12 +278,19 @@ class Room extends CommonModel
                     throw new \Exception('修改摄像机状态失败');
                 }
             }
+
+            if ($vcrId !== "0") {
+                $this->roomVcr($vcrId, $userId, $room);
+            }
+
             $connection->commit();
             return $room;
         } catch (\Exception $ex) {
             throw $ex;
         }
     }
+
+
 
 
      public function  getRoomList(array $roomIdArray = [],$name){
@@ -314,4 +324,32 @@ class Room extends CommonModel
          }
          
      }
+
+    /**
+     * @param $vcrId
+     * @param $userId
+     * @param $room
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time
+     */
+    private function roomVcr($vcrId, $userId, $room)
+    {
+        $data = [
+            'room_id' => $room->id,
+            'vcr_id' => $vcrId,
+            'created_user_id' => $userId
+        ];
+
+        if (!RoomVcr::create($data)) {
+            throw new \Exception('摄像机与房间关联失败');
+        }
+
+        $vcr = Vcr::findOrFail($vcrId);
+        $vcr->used = 1;
+        if (!$vcr->save()) {
+            throw new \Exception('修改摄像机状态失败');
+        }
+    }
+
 }

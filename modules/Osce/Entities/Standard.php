@@ -37,6 +37,7 @@ class Standard extends CommonModel
 
     public function standardItem(){
         return $this->hasMany('Modules\Osce\Entities\StandardItem','standard_id','id');
+
     }
 
     /**
@@ -86,6 +87,5 @@ class Standard extends CommonModel
             throw $ex;
         }
     }
-
-
+    
 }

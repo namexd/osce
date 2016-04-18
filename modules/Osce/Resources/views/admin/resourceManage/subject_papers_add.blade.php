@@ -1,6 +1,9 @@
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
+    <style>
+        .modal-title{color: #16beb0!important;}
+    </style>
 @stop
 
 @section('only_js')
@@ -212,6 +215,12 @@
             $('#addForm').submit(function(){//添加题型
                 var now = 0;
                 var length = $('#paper2 tbody tr').length;//修改时获取tr数量
+                var verify=/^[0-9]\d*$/;
+                if(!verify.test($("#addForm input[name='questionScore']").val())){//判断输入是否为整数
+                    layer.alert('每题分数必须为正整数!');
+                    console.log('ss');
+                    return false;
+                }else {
                 if(length){
                     now = length;
                 }else{
@@ -244,7 +253,7 @@
                 $('#paper2').find('tbody').attr('index',now);
                 $('.close').trigger('click');
                 editOneCount();
-                return  false;
+                return  false;}
             });
 
             $('#paper2 tbody').on('click','.fa-cog',function(){//添加题目
@@ -650,7 +659,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-success" id='sure'>确定</button>
+            <button type="submit" class="btn btn-primary" id='sure'>确定</button>
             <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
         </div>
     </form>
@@ -677,12 +686,12 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span class="dot" style="color: #ed5565;">*</span>每题分数：</label>
                 <div class="col-sm-9">
-                    <input type="number" name="questionScore2"  class="form-control" placeholder="仅支持大于0的数">
+                    <input type="number" name="questionScore2"  class="form-control" placeholder="仅支持大于0的整数">
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-success" id='editSure'>确定</button>
+            <button type="submit" class="btn btn-primary" id='editSure'>确定</button>
             <button type="button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">取消</button>
         </div>
     </form>

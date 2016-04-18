@@ -451,7 +451,7 @@ class QuestionBankRepositories  extends BaseRepository
     }
 
     /**
-     * 检验用户是否是监考老师
+     * 检验用户是否是理论站的监考老师
      * @method
      * @url /osce/
      * @access public
@@ -462,6 +462,7 @@ class QuestionBankRepositories  extends BaseRepository
      */
     public function LoginAuth(){
         $user = Auth::user();
+
         if(count($user->roles)>0){
             $roles = $user
                 ->roles
@@ -470,20 +471,48 @@ class QuestionBankRepositories  extends BaseRepository
         } else {
             $roles = [];
         }
-        //监考老师 目前的角色id为1
+
         if(in_array(config('osce.invigilatorRoleId'), $roles)){
-            return  $user->id;
-        }else{
-            $teacher    =   Teacher::find($user->id);
-            if(!is_null($teacher))
-            {
-                if($teacher->type==1)
-                {
-                    return  $user->id;
-                }
-            }
-            return  false;
+            return  true;
+        } else {
+            return false;
         }
+    }
+
+    /**
+     * 获得理论考试登录用户角色类型
+     * @method GET
+     * @url /osce/admin/
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string        参数英文名        参数中文名(必须的)
+     *
+     * @return mixed
+     *
+     * @version 3.3a
+     * @author wangjiang <wangjiang@misrobot.com>
+     * @date 2016-03-31
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamLoginUserRoleType () {
+        $roleIds = Auth::user()->roles->pluck('id')->toArray();
+
+        if (empty($roleIds)) {
+            return false;
+        }
+
+        if (in_array(config('osce.invigilatorRoleId'), $roleIds)) {
+            return 1;
+        }
+
+        if (in_array(config('osce.studentRoleId'), $roleIds)) {
+            return 2;
+        }
+
+
+        return false;
     }
 
     /**

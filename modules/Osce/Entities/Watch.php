@@ -222,4 +222,47 @@ class Watch extends CommonModel implements MachineInterface
 
         return $builder->get();
     }
+
+    //查询使用中的腕表数据
+    public function getWatchAboutData($status,$type,$nfc_code,$examId){
+        if($type === 0){
+            $builder = $this->whereIn('exam_queue.status',[0,1]);
+        }elseif($type == 1){
+            $builder = $this->where('exam_queue.status','=',2);
+        }elseif($type == 2){
+            $builder = $this->where('exam_queue.status','=',3);
+        }else{
+            $builder = $this;
+        }
+
+        if(!empty($nfc_code)){
+            $builder = $builder->where('watch.code','=',$nfc_code);
+        }
+
+
+        $builder = $builder->where('watch.status','=',$status)->where('exam_screening_student.is_end','=',0)->where('watch_log.action','=','绑定')->where('exam_queue.exam_id','=',$examId)->leftjoin('watch_log',function($watchLog){
+            $watchLog->on('watch_log.watch_id','=','watch.id');
+        })->leftjoin('exam_queue',function($examQueue){
+            $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
+        })->leftjoin('student',function($examQueue){
+            $examQueue->on('student.id','=','watch_log.student_id');
+        })->rightjoin('exam_screening_student',function($join){
+            $join->on('exam_screening_student.student_id','=','watch_log.student_id');
+        })->groupBy('watch_log.student_id')->select('watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')->get();
+
+        return $builder;
+    }
+
+    //查询某个腕表的考试状态
+    public function getWatchExamStatus($ncfCode,$examId){
+        $builder = $this->where('watch.code','=',$ncfCode)->where('exam_queue.exam_id','=',$examId)->where('exam_screening_student.is_end','=',0)->leftjoin('watch_log',function($watchLog){
+            $watchLog->on('watch_log.watch_id','=','watch.id');
+        })->leftjoin('exam_queue',function($examQueue){
+            $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
+        })->rightjoin('exam_screening_student',function($join){
+            $join->on('exam_screening_student.student_id','=','watch_log.student_id');
+        })->select('exam_queue.status')->first();
+
+        return $builder;
+    }
 }

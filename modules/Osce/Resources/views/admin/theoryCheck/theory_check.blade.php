@@ -21,10 +21,13 @@
             line-height:29px;font-size:20px;
             font-weight:bold;text-align:center;
             color:#ff0101; margin-right:5px;}
+        /*图片样式*/
+        .pic{padding: 1em;}
+        .pic:hover{cursor: pointer;}
     </style>
     <link href="{{asset('osce/admin/plugins/css/plugins/iCheck/custom.css')}}" rel="stylesheet">
     <link href="{{asset('osce/admin/plugins/css/plugins/steps/jquery.stepschange.css')}}" rel="stylesheet">
-
+    <link href="{{asset('osce/admin/plugins/js/plugins/fancybox/jquery.fancybox.css')}}" rel="stylesheet">
 @stop
 
 @section('only_js')
@@ -34,14 +37,33 @@
     <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/jquery.classyled.js') }}"></script>
     <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/raphael.js') }}"></script>
     <script src="{{ asset('osce/admin/plugins/js/plugins/staps/jquery.stepschange.js') }}"></script>
+    <script src="{{ asset('osce/admin/plugins/js/plugins/fancybox/jquery.fancybox.js') }}"></script>
     <script>
         $(document).ready(function() {
             $(".wizard").steps();
+            //            图片点击显示大图
+            $('.fancybox').fancybox({
+                openEffect: 'none',
+                closeEffect: 'none'
+            });
+            //阻止F5刷新
+//            document.onkeydown = function (e) {
+//                var ev = window.event || e;
+//                var code = ev.keyCode || ev.which;
+//                if (code == 116) {
+//                    ev.keyCode ? ev.keyCode = 0 : ev.which = 0;
+//                    cancelBubble = true;
+//                    return false;
+//                }
+//            };
+//            window.onbeforeunload=function(){
+//                window.event.returnValue='刷新页面或者跳转页面会丢失当前数据！'
+//            };
             $(".check_label").change(function(){
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
                 var answer="";//答案
-                if($(this).children("input").checked=="true"){
+                if($(this).children(".check_icon").hasClass("check")){
                     $(this).children(".check_icon").removeClass("check");
                     $(this).children("input").attr("checked",false);
                 }else{
@@ -58,13 +80,19 @@
                 Set_answer(examCategoryFormalId,exam_question_id,answer);//保存成绩
             });
 
-            $(".radio_label").change(function(){//单选按钮
+            $(".radio_label").click(function(){//单选按钮
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
                 var answer = $(this).children("input").val();
                 Set_answer(examCategoryFormalId,exam_question_id,answer);//保存成绩
-                if($(this).children("input").checked=="true"){
-                    $(this).children(".radio_icon").removeClass("check");
+//                if($(this).children("input").checked=="true"){
+//                    $(this).children(".radio_icon").removeClass("check");
+//                }else{
+//                    $(this).parent().siblings(".answerBox").find(".radio_icon").removeClass("check");
+//                    $(this).children(".radio_icon").addClass("check");
+//                }
+                if($(this).children(".radio_icon").hasClass("check")){
+//                    $(this).children(".radio_icon").removeClass("check");
                 }else{
                     $(this).parent().siblings(".answerBox").find(".radio_icon").removeClass("check");
                     $(this).children(".radio_icon").addClass("check");
@@ -91,6 +119,7 @@
             }
             $(".actions").find("a[href='#finish']").click(function(){
                 //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
+                clearInterval(statusTimer);
                 var examPaperFormalId=$('#examPaperFormalId').val();
                 var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
                 var stationId = $(".allData").attr("stationId");
@@ -99,36 +128,63 @@
                 var examId = $(".allData").attr("examId");
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                         {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
-                    if(obj.status=='1'){
+                    if(obj.code=='1'){
                         $.ajax({
                             url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
                             cache:false,
                             dataType:"json",
                             type:"get",
                             success:function(res){
-                                if(res.code == 1){
-                                    //查询该考生成绩
-                                    location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
-                                }
+                                location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
                             }
                         });
-                    }
-                    if(obj.status=='2'){
-                        layer.confirm('保存失败！');
-
+                    }else{
+                        layer.confirm(obj.message);
                     }
                 })
             })
 
         });
-        $(function(){
-            countDown("{{$systemTimeEnd}}","#colockbox1");
-        });
+        countDown("{{$systemTimeEnd}}","#colockbox1");
+        //被终止考试状态改变请求
+        var statusTimer = setInterval(function(){
+            var examPaperFormalId=$('#examPaperFormalId').val();
+            var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
+            var stationId = $(".allData").attr("stationId");
+            var userId = $(".allData").attr("userId");
+            var studentId = $(".allData").attr("studentId");
+            var examId = $(".allData").attr("examId");
+            $.ajax({
+                url:"{{route('osce.admin.AnswerController.getControlMark')}}",
+                type:"get",
+                dataType:"json",
+                cache:false,
+                data:{examId:examId,studentId:studentId,stationId:stationId},
+                success:function(res){
+                    if(res == 1){
+                        clearInterval(statusTimer);
+                        $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
+                                {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
+                                    if(obj.code=='1'){
+                                        $.ajax({
+                                            url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
+                                            cache:false,
+                                            dataType:"json",
+                                            type:"get",
+                                            success:function(res){
+                                                location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                                            }
+                                        });
+                                    }else{
+                                        layer.confirm(obj.message);
+                                    }
+                                });
+                    }
+                }
+            })
+        },3000);
         function countDown(time,id){
             var day_elem = $(id).find('.day');
-            var hour_elem = $(id).find('.hour');
-            var minute_elem = $(id).find('.minute');
-            var second_elem = $(id).find('.second');
             var end_time = new Date(time).getTime(),//月份是实际月份-1
                     sys_second = (end_time-new Date().getTime())/1000;
             var timer = setInterval(function(){
@@ -139,34 +195,31 @@
                     var minute = Math.floor((sys_second / 60) % 60);
                     var second = Math.floor(sys_second % 60);
                     day_elem && $(day_elem).text(day);//计算天
-                    $(hour_elem).text(hour<10?"0"+hour:hour);//计算小时
-                    $(minute_elem).text(minute<10?"0"+minute:minute);//计算分钟
-                    $(second_elem).text(second<10?"0"+second:second);//计算秒杀
+                    $("#hour").text(hour<10?"0"+hour:hour);//计算小时
+                    $("#minute").text(minute<10?"0"+minute:minute);//计算分钟
+                    $("#second").text(second<10?"0"+second:second);//计算秒杀
                 } else {
-                    //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                     var examPaperFormalId=$('#examPaperFormalId').val();
                     var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
                     var stationId = $(".allData").attr("stationId");
                     var userId = $(".allData").attr("userId");
                     var studentId = $(".allData").attr("studentId");
                     var examId = $(".allData").attr("examId");
+                    console.log("22222");
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                             {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
-                        if(obj.status=='1'){
+                        if(obj.code=='1'){
                             $.ajax({
                                 url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
                                 cache:false,
                                 dataType:"json",
                                 type:"get",
                                 success:function(res){
-                                    if(res.code == 1){
-                                        location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
-                                    }
+                                    location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
                                 }
                             });
-                        }
-                        if(obj.status=='2'){
-                            layer.confirm('保存失败！');
+                        }else{
+                            layer.confirm(obj.message);
                         }
                     })
                 }
@@ -207,12 +260,21 @@
                                     @foreach(@$examCategoryFormalData as $val )
                                         <h1>{{$val["serialNumber"]}} </h1>
                                         <div class="step-content">
-                                            <span class="font20">{{@$val["examCategoryFormalName"]}}</span>
+                                            <span class="font20" style="font-weight: 700;">{{@$val["examCategoryFormalName"]}}</span>
                                             <span style="margin-left: 1em;">共<span class="subjectNum">{{@$val["examCategoryFormalNumber"]}}</span>题，</span>
                                             <span>每题<span class="subjectScore">{{@$val["examCategoryFormalScore"]}}</span>分</span>
                                             <div class="allSubject">
                                                 <div class="subjectBox   mart_10 " exam_question_id="{{@$val["id"]}}">
-                                                    <span class="font16 subjectContent">{{ @$val["name"]}}(　　　)</span>
+                                                    <span class="font16 subjectContent">{{ @$val["name"]}}</span>
+                                                </div>
+                                                <div class="picBox">
+                                                    @if(!empty($val['image']))
+                                                        @foreach($val['image'] as $item)
+                                                            <a href="{{$item}}" class="fancybox">
+                                                                <img src="{{$item}}" alt="image" class="pic" style="height: 150px;width: 150px;">
+                                                            </a>
+                                                        @endforeach
+                                                    @endif
                                                 </div>
                                                 @if(@$val["examQuestionTypeId"]==1)
                                                     @foreach(@$val["content"] as $k=> $val2 )
@@ -237,21 +299,29 @@
                                                     @endforeach
                                                 @endif
                                                 @if(@$val["examQuestionTypeId"]==4)
-                                                    @foreach($val["content"] as $k=> $val2 )
-                                                        <div class="answerBox" examCategoryFormalId="{{@$val["exam_question_type_id"]}}">
+                                                    {{--@foreach($val["content"] as $k=> $val2 )--}}
+                                                        <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
                                                             <label class="radio_label mart_20 check_top">
                                                                 <div class="radio_icon left" ></div>
-                                                                <input type="radio" name="{{@$val["serialNumber"]}}" value="{{@$k}}">
+                                                                <input type="radio" name="{{@$val["serialNumber"]}}" value="0">
                                                                 <span class="marl_10 answer">
-                                                                    @if($val2==0)
-                                                                        错误
-                                                                    @elseif($val2==1)
-                                                                        正确
-                                                                     @endif
+                                                                    {{--@if($val2==0)--}}
+                                                                        {{--错误--}}
+                                                                    {{--@elseif($val2==1)--}}
+                                                                        {{--正确--}}
+                                                                    {{--@endif--}}
+                                                                    错误
                                                                 </span>
                                                             </label>
                                                         </div>
-                                                    @endforeach
+                                                        <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
+                                                            <label for="" class="radio_label mart_20 check_top">
+                                                                <div class="radio_icon left" ></div>
+                                                                <input type="radio" name="{{@$val["serialNumber"]}}" value="1">
+                                                                <span class="marl_10 answer">正确</span>
+                                                            </label>
+                                                        </div>
+                                                    {{--@endforeach--}}
                                                 @endif
                                             </div>
                                         </div>
@@ -263,7 +333,11 @@
 
                         <div class="btnBox" style="margin:0 auto; padding:70px 0; text-align: center; width: 400px;">
                             <span class="marl_10 left" style="height: 29px; line-height: 29px;">剩余时间：</span>
-                            <div class="colockbox" id="colockbox1"><span class="hour">00</span><span class="left">:</span> <span class="minute">00</span> <span class="left">:</span> <span class="second">00</span> </div>
+                            <div class="colockbox" id="colockbox1">
+                                <span class="hour" id="hour">00</span><span class="left">:</span>
+                                <span class="minute" id="minute">00</span><span class="left">:</span>
+                                <span class="second" id="second">00</span>
+                            </div>
                         </div>
                     </div>
 

@@ -65,10 +65,17 @@ return [
         ],
         'sys_mis' => [
             'driver'    => 'mysql',
+
             'host'      => env('DB_HOST_SYS', 'localhost'),
             'database'  => env('DB_DATABASE_SYS', 'sys_mis'),
             'username'  => env('DB_USERNAME_MSC', 'luohaihua'),
             'password'  => env('DB_PASSWORD_MSC', 'luohaihua'),
+
+//            'host'      => env('DB_HOST_SYS', '139.196.49.64'),
+//            'database'  => env('DB_DATABASE_SYS', 'wj_dev_sys_mis'),
+//			'username'  => env('DB_USERNAME_SYS', 'myy'),
+//			'password'  => env('DB_PASSWORD_SYS', '123456'),
+
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -76,10 +83,17 @@ return [
         ],
         'osce_mis' => [
             'driver'    => 'mysql',
+
             'host'      => env('DB_HOST_OSCE', 'localhost'),
             'database'  => env('DB_DATABASE_OSCE', 'osce_mis'),
             'username'  => env('DB_USERNAME_OSCE', 'luohaihua'),
             'password'  => env('DB_PASSWORD_OSCE', 'luohaihua'),
+
+//            'host'      => env('DB_HOST_OSCE', '139.196.49.64'),
+//            'database'  => env('DB_DATABASE_OSCE', 'wj_dev_osce_mis'),
+//            'username'  => env('DB_USERNAME_OSCE', 'myy'),
+//            'password'  => env('DB_PASSWORD_OSCE', '123456'),
+
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -154,7 +168,12 @@ return [
             'port'     => 6379,
             'database' => 2,
         ],
-
+        'message' => [
+            'host' => 'cloud.misrobot.com',
+            'port' => 6379,
+            'database' => 3,
+            'password' => 'gogoMisrobot123'
+        ]
     ],
 
 ];

@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Entities;
 
+use App\Entities\SysUserRole;
 use Modules\Osce\Repositories\Common;
 use App\Entities\User;
 use Auth;
@@ -300,6 +301,7 @@ class Student extends CommonModel
 
             //根据条件：查找用户是否有账号和密码
             $user = User::where(['username' => $examineeData['mobile']])->first();
+            $role_id = config('osce.studentRoleId');
 
             //如果查找到了，对用户信息 进行编辑处理
             if (count($user) != 0) {
@@ -310,6 +312,17 @@ class Student extends CommonModel
 
                 if (!($user->save())) {      //跟新用户
                     throw new \Exception('新增考生失败！');
+                }
+                $sysUserRole = SysUserRole::where('user_id','=',$user->is)->where('role_id','=',$role_id)->first();
+                if(!$sysUserRole){
+                    DB::table('sys_user_role')->insert(
+                        [
+                            'role_id'   => $role_id,
+                            'user_id'   => $user->id,
+                            'created_at'=> time(),
+                            'updated_at'=> time(),
+                        ]
+                    );
                 }
 
             } else {      //如果没找到，新增处理,   如果新增成功，发短信通知用户
@@ -322,6 +335,14 @@ class Student extends CommonModel
                 $password = '123456';
                 $user = $this->registerUser($userData, $password);
                 $this->sendRegisterEms($userData['mobile'], $password);
+                DB::table('sys_user_role')->insert(
+                    [
+                        'role_id'   => $role_id,
+                        'user_id'   => $user->id,
+                        'created_at'=> time(),
+                        'updated_at'=> time(),
+                    ]
+                );
             }
             //查询学号是否存在
             $code = $this->where('code', $examineeData['code'])->where('user_id', '<>', $user->id)->first();
@@ -390,16 +411,21 @@ class Student extends CommonModel
      * @return bool
      */
 
+    public function studentList($stationId ,$exam,$teacher_id)
 
-    public function studentList($stationId)
     {
-        return Student::leftjoin('exam_queue', function ($join) {
+        // 查询下一个待考考生信息
+        $nextTester =  Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
         })->leftjoin('station_teacher', function ($join) {
             $join->on('exam_queue.station_id', '=', 'station_teacher.station_id');
-        })->where('exam_queue.station_id', '=', $stationId)
+        })
+            ->where('exam_queue.station_id', '=', $stationId)
+            ->where('exam_queue.exam_id','=',$exam->id)
             ->whereIn('exam_queue.status', [1, 2])
+            ->where('exam_queue.blocking', 1)
             ->orderBy('exam_queue.begin_dt', 'asc')
+            ->orderBy('exam_queue.next_num', 'asc')
             ->select([
                 'student.name as name',
                 'student.code as code',
@@ -408,10 +434,60 @@ class Student extends CommonModel
                 'student.avator as avator',
                 'exam_queue.status as status',
                 'student.id as student_id',
-                'student.exam_sequence as exam_sequence',
-            ])
+                'student.exam_sequence as exam_sequence','station_teacher.user_id as teacher_id','exam_queue.id as exam_queue_id'
+            ])->first();
+
+        // 查询考试是否结束 // edit by wangjiang 2016-03-29 for 查询考试是否结束
+        $waitingList = Student::leftjoin('exam_queue', function ($join) {
+            $join->on('student.id', '=', 'exam_queue.student_id');
+        })->leftjoin('station_teacher', function ($join) {
+            $join->on('exam_queue.station_id', '=', 'station_teacher.station_id');
+        })->where('exam_queue.station_id', '=', $stationId)
+            ->where('exam_queue.status', '<>', 3)
             ->first();
+
+
+        return [
+            'nextTester'  => $nextTester,
+            'waitingList' => $waitingList,
+        ];
     }
+    /*
+     * 获取待考学生
+     *
+     * */
+    public function nextStudentList($stationId ,$exam)
+
+    {//\DB::connection('osce_mis')->enableQueryLog();
+        // 查询下一个待考考生信息
+        $nextTester =  Student::leftjoin('exam_queue', function ($join) {
+            $join->on('student.id', '=', 'exam_queue.student_id');
+        })
+            ->where('exam_queue.station_id', '=', $stationId)
+            ->where('exam_queue.exam_id','=',$exam->id)
+            ->where('exam_queue.status', 1)
+            ->where('exam_queue.blocking', 1)
+            ->orderBy('exam_queue.next_num', 'asc')
+            ->orderBy('exam_queue.begin_dt', 'asc')
+            ->orderBy('exam_queue.updated_at', 'asc')
+            ->select([
+                'student.name as student_name',
+                'student.code as student_code','student.user_id as student_user_id',
+                'student.idcard as student_idcard',
+                'student.mobile as student_mobile',
+                'student.avator as student_avator',
+                'exam_queue.status as status',
+                'student.id as student_id',
+                'student.exam_sequence as exam_sequence','exam_queue.id as exam_queue_id','student.description as student_description',
+            ])->get();
+       // $queries = \DB::connection('osce_mis')->getQueryLog();
+
+        return [
+            'nextTester'  => $nextTester
+        ];
+    }
+
+
 
     //考生查询
     public function getList($formData = '')
@@ -521,7 +597,8 @@ class Student extends CommonModel
                 'student.id as student_id',
                 'exam_result.id as exam_result_id',
                 'exam_result.score as exam_result_score',
-                'exam_result.time as exam_result_time'
+                'exam_result.time as exam_result_time',
+                'station.type as station_type'
             )
             ->paginate(config('osce.page_size'));
     }
@@ -618,4 +695,83 @@ class Student extends CommonModel
         }
     }
 
+
+    //user表关联学生表
+    public function screeningStudent(){
+        return $this->hasMany('Modules\Osce\Entities\ExamScreeningStudent', 'student_id', 'id');
+    }
+
+
+
+    //获取用Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel户的信息及已报的考试
+    public function getStudentExamInfo($userId,$examID){
+        //查找当前学生信息
+        $studentInfo = $this->where('student.user_id','=',$userId)->where('student.exam_id','=',$examID)->first();
+        return $studentInfo;
+    }
+
+    //获取考生的详细信息
+    public function getExameeStatus($studentId){
+        $builder = $this->where('student.id','=',$studentId)->leftjoin('exam_screening_student',function($join){
+            $join->on('exam_screening_student.student_id','=','student.id');
+        })->leftjoin('exam_screening',function($examScreening){
+            $examScreening->on('exam_screening.id','=','exam_screening_student.exam_screening_id');
+        })->leftjoin('exam_queue',function($examQueue){
+            $examQueue->on('exam_queue.exam_screening_id','=','exam_screening.id');
+        })->select('exam_queue.status')->first();
+
+        return $builder;
+    }
+
+    //统计考生的剩余考站
+    public function getExameeStationsCount($studentId,$examId){
+        $DB = \DB::connection('osce_mis');
+        $builder = $this->where('student.id','=',$studentId)->where('student.exam_id','=',$examId)->where('exam_queue.status','!=',3)->leftjoin('exam_screening_student',function($join){
+            $join->on('exam_screening_student.student_id','=','student.id');
+        })->leftjoin('exam_screening',function($examScreening){
+            $examScreening->on('exam_screening.id','=','exam_screening_student.exam_screening_id');
+        })->leftjoin('exam_queue',function($examQueue){
+            $examQueue->on('exam_queue.exam_screening_id','=','exam_screening.id');
+        })->select($DB->raw('count(exam_queue.station_id) as num'))->first();
+
+        return $builder;
+    }
+
+
+
+
+    //查找学生所报考试
+    public function getExamings($userid){
+        $builder = $this->where('user_id','=',$userid)->select('exam_id')->get();
+
+        return $builder;
+    }
+
+
+
+    //获取考生信息
+    public function getStudentInfo($stationId ,$exam,$teacher_id){
+        $builder =  Student::leftjoin('exam_queue', function ($join) {
+            $join->on('student.id', '=', 'exam_queue.student_id');
+        })->leftjoin('station_teacher', function ($join) {
+            $join->on('exam_queue.station_id', '=', 'station_teacher.station_id');
+        })
+            ->where('exam_queue.station_id', '=', $stationId)
+            ->where('exam_queue.exam_id','=',$exam->id)
+            ->whereIn('exam_queue.status', [1, 2])
+            ->where('exam_queue.blocking', 1)
+            ->orderBy('exam_queue.begin_dt', 'asc')
+            ->orderBy('exam_queue.next_num', 'asc')
+            ->select([
+                'student.name as name',
+                'student.code as code',
+                'student.idcard as idcard',
+                'student.mobile as mobile',
+                'student.avator as avator',
+                'exam_queue.status as status',
+                'student.id as student_id',
+                'student.exam_sequence as exam_sequence','station_teacher.user_id as teacher_id','exam_queue.id as exam_queue_id'
+            ])->first();
+        return $builder;
+    }
 }

@@ -171,7 +171,7 @@ class SubjectStatisticsController  extends CommonController
     public function stationGradeList(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         //获取考试列表信息
         $examList = $subjectStatisticsRepositories->GetExamList();
-        $examInfo = '';
+        $examInfo = [];
         if(count($examList)>0){
             foreach($examList as $k=>$v){
                 $examInfo[$k]['id'] = $v['id'];
@@ -192,6 +192,7 @@ class SubjectStatisticsController  extends CommonController
             'examId' => 'sometimes|int',//考试编号
             'subjectId' => 'sometimes|int',//科目编号
         ]);
+
         $examId = $request->input('examId',count($examInfo)>0?$examInfo[0]['id']:0);
 
         $subjectList = $subjectStatisticsRepositories->subjectDownlist($examId);
@@ -237,6 +238,7 @@ class SubjectStatisticsController  extends CommonController
         }
 
         //将数据展示到页面
+
         return view('osce::admin.statisticalanalysis.statistics_subject_examation', [
             'examInfo' =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
@@ -313,8 +315,9 @@ class SubjectStatisticsController  extends CommonController
      */
     public function standardGradeList(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         //获取考试列表信息
-        $examList = $subjectStatisticsRepositories->GetExamList();
-        $examInfo = '';
+        //$examList = $subjectStatisticsRepositories->GetExamList();
+        $examList = $subjectStatisticsRepositories->GetExamListNoStandardGrade();
+        $examInfo = [];
         if(count($examList)>0){
             foreach($examList as $k=>$v){
                 $examInfo[$k]['id'] = $v['id'];

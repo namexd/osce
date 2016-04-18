@@ -30,15 +30,20 @@ use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestAttach;
+use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\TestResult;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
 use Storage;
 use Auth;
+use Redis;
 use Symfony\Component\HttpKernel\Tests\DataCollector\DumpDataCollectorTest;
+use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
 
+use Modules\Osce\Http\Controllers\Api\StudentWatchController;
 class InvigilatePadController extends CommonController
 {
 
@@ -46,9 +51,7 @@ class InvigilatePadController extends CommonController
 //    测试
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
-    {;
-      $bar =  asset('djhf');
-        dd($bar);
+    {
         $info = array('coffee', 'brown', 'caffeine');
 
 // 列出所有变量
@@ -129,7 +132,7 @@ class InvigilatePadController extends CommonController
                 'name' => $fileName,
                 'description' => $date . '-' . $params['student_name'],
                 'standard_id' => $standardId,
-                'student_id'=>$studentId,
+                 'student_id'=>$studentId,
             ];
 
             //将内容插入数据库
@@ -166,25 +169,84 @@ class InvigilatePadController extends CommonController
     public function getAuthentication(Request $request)
     {
         $this->validate($request, [
-            'station_id' => 'required|integer'
+            'station_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
         ], [
-            'station_id.required' => '考站编号必须'
+            'station_id.required' => '考站编号必须',
+            'teacher_id.required' => '老师编号必须'
         ]);
-        $stationId = (int)$request->input('station_id');
-        $studentModel = new  Student();
-        $studentData = $studentModel->studentList($stationId);
-        if ($studentData) {
-            $studentData->avator = asset($studentData->avator);
+
+        try {
+            $redis = Redis::connection('message');
+            $stationId = (int)$request->input('station_id');
+            $teacher_id = (int)$request->input('teacher_id');
+            $exam = Exam::doingExam();
+            $studentModel = new  Student();
+            $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
+            if ($studentData['nextTester']) {
+                $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+                $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
+                return response()->json(
+                    $this->success_data($studentData['nextTester'], 102, '验证完成')
+                );
+            } else {
+                $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
+                throw new \Exception('学生信息查询失败', -2);
+            }
+        } catch (\Exception $ex) {
             return response()->json(
-                $this->success_data($studentData, 1, '验证完成')
-            );
-        } else {
-            return response()->json(
-                $this->fail(new \Exception('学生信息查询失败', -2))
+                $this->fail($ex)
             );
         }
+    }
+
+    /**
+     * 身份验证推送
+     * @method GET
+     * @url /osce/api/invigilatepad/authentication
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string    id      老师id(必须的)
+     *
+     * @return view
+     *
+     * @version 1.0
+     * @author wangtao <zhouqiang@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+    public function getAuthentication_arr($request)
+    {
+
+        $this->validate($request, [
+            'station_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
+        ], [
+            'station_id.required' => '考站编号必须',
+            'teacher_id.required' => '老师编号必须'
+        ]);
+
+
+
+            $redis = Redis::connection('message');
+            $stationId = $request['station_id'];
+            $teacher_id = $request['teacher_id'];
+            $exam = Exam::doingExam();
+            $studentModel = new  Student();
+            $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
+            if ($studentData['nextTester']) {
+                $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+                $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 102, '验证完成')));
+                return $studentData['nextTester'];
+            } else {
+                $redis->publish('pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
+                return [];
+            }
 
     }
+
 
 
     /**
@@ -210,10 +272,8 @@ class InvigilatePadController extends CommonController
 
             $this->validate($request, [
                 'station_id' => 'required|integer',
-//            'exam_id'  => 'required|integer'
             ], [
                 'station_id.required' => '没有获取到当前考站',
-                'exam_id.required' => '没有获取到当前考试'
             ]);
 
             $stationId = $request->get('station_id');
@@ -225,12 +285,19 @@ class InvigilatePadController extends CommonController
             //考试标准时间
             $mins = $station->mins;
             $exam = Exam::find($examId);
-            $StandardItem = new StandardItem();
-            $standardList = $StandardItem->getSubjectStandards($station->subject_id);
 
-            if (count($standardList) != 0) {
+//            $StandardItem = new StandardItem();
+//            $standardList = $StandardItem->getSubjectStandards($station->subject_id);
+//
+//            if (count($standardList) != 0) {
+
+            $standardItemModel = new StandardItem();
+            $standardItemList = $standardItemModel->getSubjectStandards($station->subject_id);
+            //dd($standardItemList);
+            if (count($standardItemList) != 0) {
+
                 return response()->json(
-                    $this->success_data($standardList, 1, '数据传送成功')
+                    $this->success_data($standardItemList, 1, '数据传送成功')
                 );
 
             } else {
@@ -242,7 +309,6 @@ class InvigilatePadController extends CommonController
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage());
         }
-
     }
 
     /**
@@ -292,9 +358,9 @@ class InvigilatePadController extends CommonController
             $useTime = strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt);
 //            getMinutes
             $data = [
-                'station_id' => $stationId,
-                'student_id' => $studentId,
-                'exam_screening_id' => $examScreeningId,
+                'station_id' => $stationId,//考站编号
+                'student_id' => $studentId,//考生编号
+                'exam_screening_id' => $examScreeningId,//场次编号
                 'begin_dt' => $studentExamTime->begin_dt,//考试开始时间
                 'end_dt' => $studentExamTime->end_dt,//考试实际结束时间
                 'time' => $useTime,//考试用时
@@ -322,7 +388,8 @@ class InvigilatePadController extends CommonController
                 try {
                     $examResultModel = new ExamResult();
 
-                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'],$stationId);
+                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id']);
+
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
@@ -338,9 +405,12 @@ class InvigilatePadController extends CommonController
             }
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage());
-            return response()->json(
+        /*    return response()->json(
                 $this->fail(new \Exception('成绩提交失败'))
-            );
+
+
+            );*/
+            return response()->json($this->fail($ex));
         }
 
     }
@@ -537,6 +607,7 @@ class InvigilatePadController extends CommonController
             $examId = $request->input('exam_id');
             $timeAnchor = $request->input('time_anchors');
             $teacherId = $request->input('user_id');
+            \Log::alert('anchor', $timeAnchor);
             //将戳过来的字符串变成数组
             $timeAnchor = explode(',', $timeAnchor);
 
@@ -670,11 +741,13 @@ class InvigilatePadController extends CommonController
                 'student_id.required' => '考生编号信息必须',
                 'station_id.required' => '考站编号信息必须'
             ]);
+            $redis = Redis::connection('message');
             $nowTime = time();
             $date = date('Y-m-d H:i:s', $nowTime);
             $studentId = $request->get('student_id');
             $stationId = $request->get('station_id');
             $teacherId =$request->get('user_id');
+            $type =$request->get('type');
             //开始考试时创建成绩
 //            $ExamResultData=[
 //                'student_id'=>$studentId,
@@ -697,16 +770,36 @@ class InvigilatePadController extends CommonController
 //               throw new \Exception('成绩创建失败',-106);
 //           }
             $ExamQueueModel = new ExamQueue();
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$type);
+            //dd($AlterResult);
             if ($AlterResult) {
                 \Log::alert($AlterResult);
+                $redis->publish('pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 106, '开始考试成功')));
+
+                //调用向腕表推送消息的方法
+                $examQueue = ExamQueue::where('student_id', '=', $studentId)
+                    ->where('station_id', '=', $stationId)
+                    ->whereIn('status',[0,2])
+                    ->first();
+                $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$examQueue->exam_screening_id)
+                    ->where('student_id','=',$examQueue->student_id)->first();
+                $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
+                $studentWatchController = new StudentWatchController();
+
+                $request['nfc_code'] = $watchData->code;
+                $studentWatchController->getStudentExamReminder($request);
+
+                $studentModel = new Student();
+                $exam = Exam::doingExam();
+                $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
+                $redis->publish('pad_message', json_encode($this->success_data($publishMessage,102,'学生信息')));
                 return response()->json(
-                    $this->success_data([$date], 1, '开始考试成功')
+                    $this->success_data(['start_time'=>$date,'student_id'=>$studentId], 1, '开始考试成功')
                 );
             }
-//            return response()->json(
-//                $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
-//            );
+            return response()->json(
+                $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
+            );
         } catch (\Exception $ex) {
             \Log::alert($ex->getMessage() . '');
             return response()->json($this->fail($ex));
@@ -755,4 +848,570 @@ class InvigilatePadController extends CommonController
     }
 
 
+    /**
+     *  显示所有已绑定但未解绑人员的接口
+     * @method GET
+     * @url
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getBoundWatchMembers(Request $request){
+        $WatchLog = new WatchLog();
+        $boundWatchInfo = $WatchLog->getBoundWatchInfos();
+
+        if(count($boundWatchInfo) > 0){
+            $boundWatchInfo = $boundWatchInfo->toArray();
+
+            foreach($boundWatchInfo as $k=>$v){
+                if($v['status'] < 2){
+                    $boundWatchInfo[$k]['status'] = '0';
+                }elseif($v['status'] == 2){
+                    $boundWatchInfo[$k]['status'] = '1';
+                }else{
+                    $boundWatchInfo[$k]['status'] = '2';
+                }
+            }
+            return response()->json(
+                $this->success_data($boundWatchInfo,200)
+            );
+        }
+
+        return response()->json(
+            $this->success_data('',0,'没有数据')
+        );
+    }
+
+
+    /**
+     *  查看考生及与其绑定的腕表的详细信息
+     * @method GET
+     * @url invigilatepad/examinee-bound-watch-detail
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     student_id   exam_id    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamineeBoundWatchDetail(Request $request){
+        $this->validate($request, [
+            'nfc_code' => 'required|string',
+        ]);
+
+        try {
+            //考生基本信息
+            $equipmentId = $request->get('nfc_code');
+
+            //查找考生及与其绑定的腕表的详细信息
+            $watchModel = new WatchLog();
+            $studentWatchData = $watchModel->getExamineeBoundWatchDetails($equipmentId);
+
+            if(count($studentWatchData) > 0){
+                $studentWatchData = $studentWatchData->toArray();
+
+                if($studentWatchData['status'] < 2){
+                    $studentWatchData['status'] = '0';
+                }elseif($studentWatchData['status'] == 2){
+                    $studentWatchData['status'] = '1';
+                }else{
+                    $studentWatchData['status'] = '2';
+                }
+
+            }
+
+            //查找考生的剩余考站数量
+            $examQueue = new ExamQueue();
+            $station_num = $examQueue->getStationNum($studentWatchData['student_id']);
+            if(!empty($studentWatchData)){
+                $studentWatchData['station_num'] = $station_num->station_num;
+                unset($studentWatchData['student_id']);
+            }
+            if(count($studentWatchData) > 0){
+                return response()->json(
+                    $this->success_data($studentWatchData,200,'success')
+                );
+            }else{
+                throw new \Exception('没有找到相关信息', -2);
+            }
+
+
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
+        }
+    }
+
+    /**
+     *  查询使用中的腕表数据
+     * @method GET
+     * @url api/invigilatepad/useing-watch-data
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     status   type    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getUseingWatchData(Request $request){
+        try{
+            $this->validate($request, [
+                'status' => 'required|integer',
+                'type' => 'sometimes|integer',
+                'nfc_code' => 'sometimes|string'
+            ]);
+
+            $status = $request->get('status')?$request->get('status'):1;  //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
+            $type = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
+            $nfc_code = $request->get('nfc_code');
+            $examing = Exam::where('status','=',1)->first();
+            //查询使用中的腕表数据
+            $watchModel = new Watch();
+            $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
+
+            if(count($watchData) > 0){
+                $watchData = $watchData->toArray();
+                foreach($watchData as $k=>$v){
+                    if($v['status'] < 2){
+                        $watchData[$k]['status'] = '0';
+                    }elseif($v['status'] == 2){
+                        $watchData[$k]['status'] = '1';
+                    }else{
+                        $watchData[$k]['status'] = '2';
+                    }
+                }
+                return response()->json(
+                    $this->success_data($watchData,200,'success')
+                );
+            }else{
+                throw new \Exception('没有找到相关设备信息', -2);
+            }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
+        }
+
+
+    }
+    /**
+     *  查询某个腕表的考试状态
+     * @method GET
+     * @url api/invigilatepad/useing-watch-data
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     status   type    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getSingleWatchData(Request $request){
+
+        try{
+            $this->validate($request, [
+                'nfc_code' => 'required|string',
+            ]);
+
+            $ncfCode = $request->get('nfc_code');//腕表NCF编码
+
+            $examing = Exam::where('status','=',1)->first();
+            //查询某个腕表的考试状态
+            $watchModel = new Watch();
+            $watchData = $watchModel->getWatchExamStatus($ncfCode,$examing->id);
+
+            if(count($watchData) > 0){
+                if($watchData->status < 2){
+                    $status = 0;
+                }elseif($watchData->status == 2){
+                    $status = 1;
+                }else{
+                    $status = 2;
+                }
+                return response()->json(
+                    $this->success_data($status,200,'success')
+                );
+            }else{
+                throw new \Exception('没有找到相关设备信息', -2);
+            }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
+        }
+
+    }
+
+
+    /**
+     *  查看考生当前状态
+     * @method GET
+     * @url api/invigilatepad/useing-watch-data
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     status   type    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamineeStatus(Request $request){
+        try{
+            $this->validate($request, [
+                'student_id' => 'required|integer',
+            ]);
+
+            //查找当前正在进行的考试
+            $examing = Exam::where('status','=',1)->first();
+            $studentId = $request->get('student_id');//学生ID
+
+            //查询某个腕表的考试状态
+            $examQueue = new ExamQueue();
+            $studentStatus = $examQueue->getExamineeStatus($examing->id,$studentId);
+
+            if(count($studentStatus) > 0){
+                if($studentStatus->status < 2){
+                    $status = 0;
+                }elseif($studentStatus->status == 2){
+                    $status = 1;
+                }else{
+                    $status = 2;
+                }
+                return response()->json(
+                    $this->success_data($status,200,'success')
+                );
+            }else{
+                throw new \Exception('没有找到相关信息', -2);
+            }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
+        }
+    }
+
+
+    /**
+     *  解除腕表绑定
+     * @method GET
+     * @url api/invigilatepad/useing-watch-data
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     status   type    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchUnbundling(Request $request){
+        $this->validate($request,[
+            'code'      =>'required',//腕表设备编码
+            'exam_id'   =>'required', //考试id
+        ]);
+
+        $code=$request->get('code');
+        $exam_id=$request->get('exam_id');
+        //开启事务
+        $connection = \DB::connection('osce_mis');
+        $connection ->beginTransaction();
+        try{
+            $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
+            $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
+            if(!$student_id){    //如果学生不存在
+                $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
+                if($result){
+                    return \Response::json(array('code'=>2));       //该腕表绑定的学生不存在
+                }else{
+                    return \Response::json(array('code'=>0));       //解绑失败
+                }
+            }
+            $student_id=$student_id->student_id;
+            //获取学生信息
+            $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
+
+            $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
+            if(!$screen_id){
+                $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
+                if($result){
+                    $action = '解绑';
+                    $updated_at = date('Y-m-d H:i:s',time());
+                    $data = array(
+                        'watch_id'       =>$id,
+                        'action'         =>$action,
+                        'context'        =>array('time'=>$updated_at,'status'=>0),
+                        'student_id'     =>$student_id,
+                    );
+                    //将解绑记录添加到腕表使用历史表中
+                    $watchModel = new WatchLog();
+                    $watchModel->unwrapRecord($data);
+                    return \Response::json([
+                        'code' => 200,
+                    ]);   //解绑成功
+                }else{
+                    throw new \Exception('解绑失败');
+                }
+            }
+            $exam_screen_id = $screen_id->exam_screening_id;
+            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
+            $ExamFlowModel = new  ExamFlow();
+            $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
+            if($ExamFinishStatus==$studentExamSum){ //如果考试流程结束
+                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
+                ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
+                $result = Watch::where('id',$id)->update(['status'=>0]);
+                if($result){
+                    $action='解绑';
+                    $updated_at = date('Y-m-d H:i:s',time());
+                    $data = array(
+                        'watch_id'       =>$id,
+                        'action'         =>$action,
+                        'context'        =>array('time'=>$updated_at,'status'=>0),
+                        'student_id'     =>$student_id,
+                    );
+                    $watchModel=new WatchLog();
+                    $watchModel->unwrapRecord($data);
+
+
+                    //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
+                    $examScreening  =  new ExamScreening();
+                    $examScreening  -> getExamCheck();
+                    $connection->commit();
+
+                    return \Response::json([
+                        'code' => 200,
+
+                    ]);
+                }else{
+                    throw new \Exception('解绑失败');
+                }
+            }
+
+            //如果考试流程未结束 还是解绑,把考试排序的状态改为0
+            $result=Watch::where('id',$id)->update(['status'=>0]);
+            if($result){
+                $action = '解绑';
+                $result = ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>0]);
+                if($result){
+                    $updated_at =date('Y-m-d H:i:s',time());
+                    $data = array(
+                        'watch_id'       =>$id,
+                        'action'         =>$action,
+                        'context'        =>array('time'=>$updated_at,'status'=>0),
+                        'student_id'     =>$student_id,
+                    );
+                    $watchModel = new WatchLog();
+                    $watchModel->unwrapRecord($data);
+                    ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
+
+                    //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
+                    $examScreening   =   new ExamScreening();
+                    $examScreening  ->getExamCheck();
+                    //检查考试是否可以结束
+                    $connection->commit();
+                }
+                return \Response::json([
+                    'code' => 200,
+
+                ]);
+            }else{
+                throw new \Exception('解绑失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            $connection->rollBack();
+            return \Response::json(array('code'=>0));
+        }
+    }
+
+    /**
+     *  监控标记学生替考记录表
+     * @method GET
+     * @url api/invigilatepad/useing-watch-data
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     status   type    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description,$userId){
+        $data = array();
+        $data = [
+            'station_id'        => $station_id,
+            'exam_id'           => $exam_id,
+            'student_id'        => $student_id,
+            'created_user_id'   => $userId,
+            'type'              => $type,
+            'description'       => $description
+        ];
+        ExamMonitor::create($data);
+    }
+    /**
+     *  解除腕表绑定并上报
+     * @method GET
+     * @url api/invigilatepad/watch-unbundling-report
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     status   type    (必须的)
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getWatchUnbundlingReport(Request $request){
+        $this->validate($request,[
+            'code'      =>'required',//腕表设备编码
+            'exam_id'   =>'required', //考试id
+            'description'   =>'required', //解绑原因
+            'type'   =>'required', //上报类型
+            'user_id'   =>'required' //上报类型
+        ]);
+
+        $code=$request->get('code');
+        $exam_id=$request->get('exam_id');
+        $description=$request->get('description');
+        $type=$request->get('type');
+        $userId=$request->get('user_id');
+        //开启事务
+        $connection = \DB::connection('osce_mis');
+        $connection ->beginTransaction();
+        try{
+            $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
+            $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
+           // dd($student_id);
+            if(!$student_id){    //如果学生不存在
+                $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
+                if($result){
+                    return \Response::json(array('code'=>2));       //该腕表绑定的学生不存在
+                }else{
+                    return \Response::json(array('code'=>0));       //解绑失败
+                }
+            }
+            $student_id=$student_id->student_id;
+            //获取学生信息
+            $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
+
+            $station_id = ExamQueue::where('exam_id','=',$exam_id)->first();
+            $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
+            if(!$screen_id){
+                $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
+                if($result){
+                    $action = '解绑';
+                    $updated_at = date('Y-m-d H:i:s',time());
+                    $data = array(
+                        'watch_id'       =>$id,
+                        'action'         =>$action,
+                        'context'        =>array('time'=>$updated_at,'status'=>0),
+                        'student_id'     =>$student_id,
+                    );
+                    //将解绑记录添加到腕表使用历史表中
+                    $watchModel = new WatchLog();
+                    $watchModel->unwrapRecord($data);
+
+                    //解绑上报
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
+                    return \Response::json([
+                        'code' => 200,
+                    ]);   //解绑成功
+                }else{
+                    throw new \Exception('解绑失败');
+                }
+            }
+            $exam_screen_id = $screen_id->exam_screening_id;
+            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
+            $ExamFlowModel = new  ExamFlow();
+            $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
+            if($ExamFinishStatus==$studentExamSum){ //如果考试流程结束
+                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
+                ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
+                $result = Watch::where('id',$id)->update(['status'=>0]);
+                if($result){
+                    $action='解绑';
+                    $updated_at = date('Y-m-d H:i:s',time());
+                    $data = array(
+                        'watch_id'       =>$id,
+                        'action'         =>$action,
+                        'context'        =>array('time'=>$updated_at,'status'=>0),
+                        'student_id'     =>$student_id,
+                    );
+                    $watchModel=new WatchLog();
+                    $watchModel->unwrapRecord($data);
+
+
+                    //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
+                    $examScreening  =  new ExamScreening();
+                    $examScreening  -> getExamCheck();
+                    //解绑上报
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
+                    $connection->commit();
+
+                    return \Response::json([
+                        'code' => 200,
+
+                    ]);
+                }else{
+                    throw new \Exception('解绑失败');
+                }
+            }
+
+            //如果考试流程未结束 还是解绑,把考试排序的状态改为0
+            $result=Watch::where('id',$id)->update(['status'=>0]);
+            if($result){
+                $action = '解绑';
+                $result = ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>0]);
+                if($result){
+                    $updated_at =date('Y-m-d H:i:s',time());
+                    $data = array(
+                        'watch_id'       =>$id,
+                        'action'         =>$action,
+                        'context'        =>array('time'=>$updated_at,'status'=>0),
+                        'student_id'     =>$student_id,
+                    );
+                    $watchModel = new WatchLog();
+                    $watchModel->unwrapRecord($data);
+                    ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
+
+                    //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
+                    $examScreening   =   new ExamScreening();
+                    $examScreening  ->getExamCheck();
+                    //解绑上报
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
+                    //检查考试是否可以结束
+                    $connection->commit();
+                }
+                return \Response::json([
+                    'code' => 200,
+
+                ]);
+            }else{
+                throw new \Exception('解绑失败');
+            }
+        }
+        catch(\Exception $ex)
+        {
+            $connection->rollBack();
+            return \Response::json(array('code'=>0));
+        }
+    }
 }

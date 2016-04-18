@@ -63,7 +63,7 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $builder = new ExamResult();
         if($student_id){
-            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','subject.score as subscore','station.mins','exam_result.id as result_id','exam_result.time','exam_result.score','subject.id','station.mins');
+            $builder = $builder->where('exam_result.student_id','=',$student_id)->select('subject.title','subject.score as subscore','station.mins','exam_result.id as result_id','exam_result.time','exam_result.score','subject.id','station.mins','station.type','exam_result.student_id');
         }else{
             $builder = $builder->select(
                 $DB->raw('avg(exam_result.time) as timeAvg'),
@@ -72,7 +72,7 @@ class TestScoreRepositories  extends BaseRepository
                 'subject.title',
                 'subject.score',
                 'exam_result.id as result_id',
-                'station.mins'
+                'station.mins','station.type','exam_result.student_id'
             );
         }
         if(!empty($subjectId)){
@@ -194,7 +194,7 @@ class TestScoreRepositories  extends BaseRepository
                     'subject.id',
                     'exam_result.id as result_id',
                     'exam.id as exam_id',
-                    'exam.name as exam_name'
+                    'exam.name as exam_name','exam_result.student_id','station.type'
                 );
         }else{
             $builder = $builder->where('exam_result.student_id', '=', $student_id)
@@ -205,7 +205,7 @@ class TestScoreRepositories  extends BaseRepository
                     'exam_result.id as result_id',
                     'exam_result.score','subject.id',
                     'exam.id as exam_id',
-                    'exam.name as exam_name'
+                    'exam.name as exam_name','exam_result.student_id','station.type'
                 );
         }
         $data = $builder->where('subject.id', '=', $subid)

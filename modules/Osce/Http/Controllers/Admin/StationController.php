@@ -22,7 +22,10 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
+
 use Modules\Osce\Repositories\Common;
+use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
+
 
 class StationController extends CommonController
 {
@@ -114,12 +117,11 @@ class StationController extends CommonController
         $this->validate($request, [
             'name'          => 'required|unique:osce_mis.station,name',
             'type'          => 'required|integer',
-            'vcr_id'        => 'required|integer'
+            'vcr_id'        => 'sometimes'
         ],[
             'name.required'       =>  '考站名称必填',
             'name.unique'         =>  '考站名称必须唯一',
             'type.required'       =>  '考站类型必选',
-            'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
         DB::connection('osce_mis')->beginTransaction();
@@ -142,6 +144,7 @@ class StationController extends CommonController
                 }
                 $stationData['paper_id'] = $paperId;
             }
+
             $stationData['create_user_id'] = $user->id;
 
             //如果该考场id已经在考试中注册，就不允许增添考站到该考场
@@ -229,17 +232,17 @@ class StationController extends CommonController
      */
     public function postEditStation(Request $request, Station $model)
     {
+
         //验证数据，暂时省略
         $this->validate($request, [
             'id'            => 'required|integer',
             'name'          => 'required',
             'type'          => 'required|integer',
-            'vcr_id'        => 'required|integer',
+            'vcr_id'        => 'sometimes',
         ],[
             'name.required'       =>  '考站名称必填',
             'name.unique'         =>  '考站名称必须唯一',
             'type.required'       =>  '考站类型必选',
-            'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
         try {
@@ -263,6 +266,7 @@ class StationController extends CommonController
             }else{
                 $placeData['paper_id'] = null;
             }
+
             $placeData['create_user_id'] = $user->id;
 
             $formData = [$placeData, $vcrId, $roomId];

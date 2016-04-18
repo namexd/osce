@@ -316,6 +316,7 @@ class Subject extends CommonModel
 
         try {
             $TeacherSubject = new TeacherSubject();
+
             //获取当前正在考试的考试对应的所有老师考试项目关系数据
             if(!$TeacherSubject->getTeacherSubjects()->isEmpty()){
 
@@ -353,6 +354,29 @@ class Subject extends CommonModel
         }
     }
 
+    /**
+     * 删除考试项目 对应的 评分标准
+     *
+     * @param $subject
+     *
+     * @author Zhoufuxiang  2016-04-13 10:55
+     * @return bool
+     * @throws \Exception
+     */
+    public function delStandard($subject)
+    {
+        if(!$subject->standards->isEmpty())
+        {
+            $standardItem = new StandardItem();
+            foreach ($subject->standards as $standard)
+            {
+                $standardItem->delItemBySubject($standard);
+            }
+        }
+        return true;
+    }
+
+    
     /**
      * @author Jiangzhiheng
      * @param $examId

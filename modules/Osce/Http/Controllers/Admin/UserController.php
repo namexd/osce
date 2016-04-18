@@ -45,7 +45,7 @@ class UserController extends CommonController
     public function getStaffList(Request $request, Common $common)
     {
         $list = $common->getUserList();
-        
+
         return view('osce::admin.systemManage.user_manage', ['list' => $list]);
     }
 
@@ -174,6 +174,22 @@ class UserController extends CommonController
                 if(!$sysUserRole->delete()){
                     throw new \Exception('删除该用户管理员角色失败！');
                 }
+//            $noAdminRole = [
+//                config('config.teacherRoleId'),
+//                config('config.examineeRoleId'),
+//                config('config.spRoleId'),
+//                config('config.superRoleId'),
+//                config('config.patrolRoleId')
+//            ];
+//            $userRole = SysUserRole::where('user_id','=',$id)->whereNotIn('role_id',$noAdminRole)->first();
+//            if($userRole){
+//                throw new \Exception('该用户拥有多重角色，无法删除！');
+//            }
+//            $user = User::find($id);
+//            if ($user->delete()) {
+//                return $this->success_data('删除成功！');
+//            } else {
+//                throw new \Exception('删除失败！');
             }
 
 //            $user = User::find($id);
@@ -188,11 +204,12 @@ class UserController extends CommonController
         }
     }
 
-    public function getLogout()
+    public function getLogout(Request $request)
     {
-
+        //dd(111);
         if (Auth::check()) {
             $nowTime = time();
+            $type = $request->get('type');
             try {
                 Auth::logout();
                 //修改用户最后登录时间
@@ -204,8 +221,15 @@ class UserController extends CommonController
                     $connection->table('users')->where('id', $user->id)->update(['lastlogindate' => $nowTime]);
                 }
             } catch (\Exception $ex) {
+                if($type == 'student'){
+                    return redirect()->route('osce.admin.ApiController.LoginAuthView')->with('message', '你现在已经退出登录了!');
+                }
                 return redirect()->route('osce.admin.postIndex')->with('message', '你现在已经退出登录了!');
             }
+        }
+
+        if($type == 'student'){
+            return redirect()->route('osce.admin.ApiController.LoginAuthView')->with('message', '你现在已经退出登录了!');
         }
         return redirect()->route('osce.admin.postIndex')->with('message', '你现在已经退出登录了!');
     }

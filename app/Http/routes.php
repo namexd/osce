@@ -26,11 +26,12 @@ Route::group(['prefix' => "api/1.0/public",'middleware' => ['cors']], function()
     Route::post('oauth/access_token', function(){
         try{
             $userEnter=Authorizer::issueAccessToken();
+            $redis = Redis::connection('message');
+            $redis->publish('pad_message', json_encode(['code' => 100,'message' => '登录成功','data' => $userEnter]));
              return $userEnter;
         }catch (\Exception $ex) {
             if( $ex->getMessage()=='The user credentials were incorrect.'){
                 return \Response::json( [ 'access_token' => 'defeat', 'token_type' =>'defeat','expires_in'=>0,'user_id'=>'defeat'] );
-
             }else{
                 return Response::json(Authorizer::issueAccessToken());
             }

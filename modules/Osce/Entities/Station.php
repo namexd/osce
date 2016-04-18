@@ -249,6 +249,7 @@ class Station extends CommonModel
             if (!$vcr->save()) {
                 throw new \Exception('更改摄像机状态失败');
             }
+
             $stationVcrData = [
                 'vcr_id'     => $vcrId,
                 'station_id' => $station_id

@@ -26,7 +26,7 @@ class ExamQuestion extends Model
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'exam_question_type_id', 'name', 'parsing', 'answer'];
+    protected $fillable = ['id', 'exam_question_type_id', 'name', 'parsing', 'answer','image','imageName'];
 
 
     //试题子项表
@@ -227,6 +227,8 @@ class ExamQuestion extends Model
             'exam_question.name',//题目
             'exam_question.answer',//正确答案
             'exam_question.parsing',//解析
+            'exam_question.image',//图片
+            'exam_question.imageName',//图片名称
             ])->first();
         return $data;
     }
@@ -386,14 +388,7 @@ class ExamQuestion extends Model
             $structureArr['score'] = 0;
             $structureArr['total_score'] = 0;
             $structureInfo = $questionBankRepositories->StructureExamQuestionArr([0=>$structureArr]);
-
-            if(count($structureInfo[0]['child']) >= $data['questionNumber']){
-                return true;
-            }else{
-                return count($structureInfo[0]['child']);
-            }
-        }else{
-            return false;
+            return count($structureInfo[0]['child']);
         }
     }
 }

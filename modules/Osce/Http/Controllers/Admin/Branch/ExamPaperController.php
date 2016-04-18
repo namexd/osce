@@ -658,27 +658,32 @@ class ExamPaperController extends CommonController
         foreach($questions as $k=>$v){
             $type[] = explode('@',$v);
         }
-        foreach($type as $kk=>$vv){
-            $questionsID = explode(',',$vv[2]);
-            $structure['exam_paper_id'] = $examPaperID;
-            $structure['exam_question_type_id'] = $vv[0];
-            $structure['score'] = $vv[1];
-            $structure['num'] = count($questionsID);
-            $structure['total_score'] = count(explode(',',$vv[2])) * $vv[1];
-            $structure['created_user_id'] = $user->id;
-            $addPaperStructure = ExamPaperStructure::create($structure);
-            //dd($addPaperStructure);
-            if(!$addPaperStructure){
-                $DB->rollBack();
-                return false;die;
-            }else{
-                foreach($questionsID as $val){
-                    $structure_question['exam_paper_structure_id'] = $addPaperStructure->id;
-                    $structure_question['exam_question_id'] = $val;
-                    $addStructureQuestion = ExamPaperStructureQuestion::create($structure_question);
-                    if(!$addStructureQuestion){
-                        $DB->rollBack();
-                        return false;die;
+
+        foreach($type as $kk=>$vv) {
+            if (isset($vv[2]) && !empty($vv[2])) {
+                $questionsID = explode(',', $vv[2]);
+                $structure['exam_paper_id'] = $examPaperID;
+                $structure['exam_question_type_id'] = $vv[0];
+                $structure['score'] = $vv[1];
+                $structure['num'] = count($questionsID);
+                $structure['total_score'] = count(explode(',', $vv[2])) * $vv[1];
+                $structure['created_user_id'] = $user->id;
+                $addPaperStructure = ExamPaperStructure::create($structure);
+                //dd($addPaperStructure);
+                if (!$addPaperStructure) {
+                    $DB->rollBack();
+                    return false;
+                    die;
+                } else {
+                    foreach ($questionsID as $val) {
+                        $structure_question['exam_paper_structure_id'] = $addPaperStructure->id;
+                        $structure_question['exam_question_id'] = $val;
+                        $addStructureQuestion = ExamPaperStructureQuestion::create($structure_question);
+                        if (!$addStructureQuestion) {
+                            $DB->rollBack();
+                            return false;
+                            die;
+                        }
                     }
                 }
             }
@@ -1025,7 +1030,12 @@ class ExamPaperController extends CommonController
         //分割字符串-拼合数组
         $questions = Input::get('question-type');
         foreach($questions as $k=>$v){
-            $type[] = explode('@',$v);
+            $arr= explode('@',$v);
+            if(isset($arr[2])&&!empty($arr[2])){
+                $type[] =$arr;
+            }
+
+
         }
         //dd($type);
         foreach($type as $kk=>$vv){

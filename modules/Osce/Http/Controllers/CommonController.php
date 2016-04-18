@@ -197,4 +197,36 @@ abstract class CommonController extends Controller
         }
 
     }
+
+
+    /**
+     *  判断考试状态
+     * @method GET
+     * @url
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string
+     * @return json
+     * @version
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function checkType($status){
+        if(!is_null($status)){
+            if($status < 2){
+                $name = '等待中';
+            }elseif($status == 2){
+                $name = '考试中';
+            }else{
+                $name = '已结束';
+            }
+        }else{
+            $name = '没有考试';
+        }
+
+
+        return $name;
+    }
 }

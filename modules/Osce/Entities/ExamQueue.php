@@ -192,6 +192,7 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.status', '<', 3)
                 ->where('student.exam_id', $examId)
+                ->where('exam_queue.blocking', 1)
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -200,9 +201,11 @@ class ExamQueue extends CommonModel
                     'student.mobile as student_mobile',
                     'student.code as student_code',
                     'student.avator as student_avator',
-                    'student.description as student_description'
+                    'student.description as student_description','exam_queue.id as exam_queue_id','exam_queue.station_id as station_id'
                 )
+                ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.updated_at', 'asc')
                 ->groupBy('student.id')
                 ->take(count($stations))
                 ->get();
@@ -217,6 +220,7 @@ class ExamQueue extends CommonModel
             ->where('exam_queue.station_id', $stationId)
             ->where('exam_queue.status', '<', 3)
             ->where('student.exam_id', $examId)
+            ->where('exam_queue.blocking', 1)
             ->select(
                 'student.id as student_id',
                 'student.name as student_name',
@@ -225,9 +229,11 @@ class ExamQueue extends CommonModel
                 'student.mobile as student_mobile',
                 'student.code as student_code',
                 'student.avator as student_avator',
-                'student.description as student_description'
+                'student.description as student_description','exam_queue.station_id as station_id','exam_queue.id as exam_queue_id'
             )
+            ->orderBy('exam_queue.next_num', 'asc')
             ->orderBy('exam_queue.begin_dt', 'asc')
+            ->orderBy('exam_queue.updated_at', 'asc')
             ->take(1)
             ->get();
     }
@@ -248,13 +254,14 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
+                ->where('exam_queue.blocking', 1)
                 ->skip(count($station))
                 ->take(count($station))
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
-                    'student.code as student_code'
+                    'student.code as student_code','exam_queue.station_id as station_id'
                 )
                 ->groupBy('student.id')
                 ->get();
@@ -270,13 +277,14 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.station_id', $stationId)
                 ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
+                ->where('exam_queue.blocking', 1)
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->skip(1)//TODO 可能要改
                 ->take(1)
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
-                    'student.code as student_code'
+                    'student.code as student_code','exam_queue.station_id as station_id'
                 )
                 ->groupBy('student.id')
                 ->get();
@@ -327,22 +335,26 @@ class ExamQueue extends CommonModel
             //拿到正在考的考试
             $exam = Exam::where('status', '=', 1)->first();
 
-//                查询学生是否已开始考试
+            //查询学生是否已开始考试
+            //dd($studentId);
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
                 ->where('station_id', '=', $stationId)
-                ->whereIn('status',[1,2])
+                ->whereIn('status',[0,1,2])
                 ->first();
+            //dd($examQueue);
             if(is_null($examQueue)){
                 throw new \Exception('该学生还没有抽签', -105);
             }
             if ($examQueue->status == 2) {
                 return true;
             }
-//            修改队列状态
+            //修改队列状态
             $examQueue->status=2;
+            //$examQueue->stick=null;
             if ( $examQueue->save()) {
+                ExamQueue::where('student_id', '=', $studentId)->where('exam_id',$exam->id)->update(['blocking'=>0]);//设置阻塞
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
-                    ->whereIn('exam_queue.status', [0, 2])
+                    ->whereIn('exam_queue.status', [0,1, 2])
                     ->orderBy('begin_dt', 'asc')
                     ->get();
                 $nowQueue = null;
@@ -372,6 +384,7 @@ class ExamQueue extends CommonModel
                            throw new \Exception('当前队列开始时间不正确',-104);
                        }
                     }
+                    //考试排序模式
                     if ($exam->sequence_mode == 2) {
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
                     } else {
@@ -766,5 +779,40 @@ class ExamQueue extends CommonModel
         $data = array_values($data);
 
         return $data;
+    }
+
+
+    //exam_station
+    public function examstation(){
+        return $this->hasOne('Modules\Osce\Entities\ExamStation', 'station_id', 'station_id');
+    }
+
+
+
+    //查找学生队列中的考试
+    public function getExamingData($examId,$studentId){
+        $builder = $this->whereIn('exam_queue.exam_id',$examId)->where('exam_queue.student_id',$studentId)->where('station.type','=',3)->leftjoin('exam',function($exam){
+            $exam->on('exam.id','=','exam_queue.exam_id');
+        })->leftjoin('station',function($exam){
+            $exam->on('station.id','=','exam_queue.station_id');
+        })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id')->get();
+
+        return $builder;
+    }
+
+    //获取考生的考站数量
+    public function getStationNum($studentId){
+        $DB = \DB::connection('osce_mis');
+        $builder = $this->where('student_id','=',$studentId)->where('status','!=',3)->select(
+            $DB->raw('count(station_id) as station_num')
+        )->first();
+        return $builder;
+    }
+
+    //查看学生当前状态
+    public function
+    getExamineeStatus($examing,$studentId){
+        $builder = $this->where('exam_id','=',$examing)->where('student_id','=',$studentId)->first();
+        return $builder;
     }
 }

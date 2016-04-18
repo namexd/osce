@@ -25,6 +25,7 @@ use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
+use Modules\Osce\Repositories\Common;
 
 class StudentExamQueryController extends CommonController
 {
@@ -154,6 +155,7 @@ class StudentExamQueryController extends CommonController
 //                date_default_timezone_set("UTC");
 //                $stationType->time = date('H:i:s', $stationType->time);
 //                date_default_timezone_set("PRC");
+//                $stationType->time = Common::handleTime($stationType->time);
 
                 $stationData[] = [
                     'exam_result_id' => $stationType->exam_result_id,
@@ -203,45 +205,47 @@ class StudentExamQueryController extends CommonController
 
     public function  getExamDetails(Request $request)
     {
-        $this->validate($request, [
-            'exam_screening_id' => 'required|integer',
+        try{
+            $this->validate($request, [
+                'exam_screening_id' => 'required|integer',
 //            'station_id'    => 'required|integer'
-        ]);
+            ]);
 
-        $examScreeningId = intval(Input::get('exam_screening_id'));
-        $station_id = intval(Input::get('station_id'));
-        //根据考试场次id查询出该结果详情
-        $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->where('station_id', '=', $station_id)->first();
-        if(is_null($examresultList)){
-            throw new \Exception('该考试结果不存在');
-        }
-        //得到考试名字
-        $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
+            $examScreeningId = intval(Input::get('exam_screening_id'));
+            $station_id = intval(Input::get('station_id'));
+            //根据考试场次id查询出该结果详情
+            $examresultList = ExamResult::where('exam_screening_id', '=', $examScreeningId)->where('station_id', '=', $station_id)->first();
 
-        //查询出详情列表
-        $examscoreModel = new ExamScore();
-        $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
+            if(is_null($examresultList)){
+                throw new \Exception('该考试结果不存在');
+            }
+            //得到考试名字
+            $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
 
-        //TODO: zhoufuxiang
-        $scores = [];
-        $itemScore = [];
-        foreach ($examScoreList as $itm) {
-            $pid = $itm->standard->pid;
-            $scores[$pid]['items'][] = [
-                'standard' => $itm->standard,
-                'score' => $itm->score,
-            ];
-            $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
-        }
+            //查询出详情列表
+            $examscoreModel = new ExamScore();
+            $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
 
-        foreach ($scores as $index => $item) {
-            //获取考核点信息
-            $standardM = Standard::where('id', $index)->first();
-            $scores[$index]['sort'] = $standardM->sort;
-            $scores[$index]['content'] = $standardM->content;
-            $scores[$index]['tScore'] = $standardM->score;
-            $scores[$index]['score'] = $itemScore[$index]['totalScore'];
-        }
+            //TODO: zhoufuxiang
+            $scores = [];
+            $itemScore = [];
+            foreach ($examScoreList as $itm) {
+                $pid = $itm->standard->pid;
+                $scores[$pid]['items'][] = [
+                    'standard' => $itm->standard,
+                    'score' => $itm->score,
+                ];
+                $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
+            }
+
+            foreach ($scores as $index => $item) {
+                //获取考核点信息
+                $standardM = Standard::where('id', $index)->first();
+                $scores[$index]['sort'] = $standardM->sort;
+                $scores[$index]['content'] = $standardM->content;
+                $scores[$index]['tScore'] = $standardM->score;
+                $scores[$index]['score'] = $itemScore[$index]['totalScore'];
+            }
 
 
 //        $groupData = [];
@@ -272,12 +276,17 @@ class StudentExamQueryController extends CommonController
 //            }
 //        }
 
-        return view('osce::wechat.resultquery.examination_detail',
-            [
-                'examScoreList' => $scores,
-                'examresultList' => $examresultList,
-                'examName' => $examName
-            ]);
+            return view('osce::wechat.resultquery.examination_detail',
+                [
+                    'examScoreList' => $scores,
+                    'examresultList' => $examresultList,
+                    'examName' => $examName
+                ]);
+
+        }catch (\Exception $ex){
+            return  redirect()->back()->withErrors($ex->getMessage());
+        }
+
     }
 
 
@@ -325,7 +334,6 @@ class StudentExamQueryController extends CommonController
         }
     }
 
-
     /**
      * 监考老师查询科目成绩和学生情况
      * @method GET
@@ -371,9 +379,11 @@ class StudentExamQueryController extends CommonController
 
                 if ($avg->pluck('score')->count() != 0 || $avg->pluck('time')->count() != 0) {
                     $item['avg_score'] = number_format($avg->pluck('score')->sum() / $avg->pluck('score')->count(), 2);
-                    date_default_timezone_set("UTC");
-                    $item['avg_time'] = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
-                    date_default_timezone_set("PRC");
+//                    date_default_timezone_set("UTC");
+//                    $item['avg_time'] = date('H:i:s', $avg->pluck('time')->sum() / $avg->pluck('time')->count());
+//                    date_default_timezone_set("PRC");
+
+                    $item['avg_time'] = Common::handleTime($avg->pluck('time')->sum() / $avg->pluck('time')->count());
                     $item['avg_total'] = $avg->count();
                 } else {
                     $item['avg_score'] = 0;

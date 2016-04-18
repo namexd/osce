@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamRoom;
+use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
@@ -22,7 +23,9 @@ use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Vcr;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
+use Modules\Osce\Http\Controllers\Api\StudentWatchController;
 
 class PadController extends  CommonController{
     /**
@@ -365,7 +368,8 @@ class PadController extends  CommonController{
 
 
     /**
-     * 考试在后修改状态
+     * 考试在后修改状态(结束考试请求)
+     * url \osce\pad\change-status
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @author Jiangzhiheng
@@ -386,9 +390,26 @@ class PadController extends  CommonController{
             $stationId = $request->input('station_id', null);
             $teacherId = $request->input('user_id');
 
-            /** @var 学生id $studentId */
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-            return response()->json($this->success_data([$date,$queue->exam_screening_id]));
+
+            //将该条信息的首位置零
+//            $queue->stick = 0;
+//            if (!$queue->save()) {
+//                throw new \Exception('结束考试失败', -10);
+//            }
+
+            //考试结束后，调用向腕表推送消息的方法
+            $examScreeningStudentModel = new ExamScreeningStudent();
+            $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
+                ->where('student_id','=',$queue->student_id)->first();
+            $watchModel = new Watch();
+            $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+            $studentWatchController = new StudentWatchController();
+            $request['nfc_code'] = $watchData->code;
+            $studentWatchController->getStudentExamReminder($request);
+
+            return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
+
         } catch (\Exception $ex) {
             \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
@@ -433,11 +454,19 @@ class PadController extends  CommonController{
      */
     public function getDoneExams(Request $request)
     {
+      $page = $request->get('pagesize',1);
         //获取已经考完的所有考试列表
         $examList = Exam::where('status','=', 2)->select(['id','name', 'begin_dt', 'end_dt'])->paginate(10);
-
+//        return response()->json(
+//            $this->success_rows(1, 'success', $noticeList['total'], config('osce.page_size'), $page, $list)
+//        );
+//        return response()->json(
+//            $this->success_rows(1, 'success', $pagination->total(), $pagesize = config('msc.page_size'),
+//                $pagination->currentPage(), $data)
+//        );
         //返回数据
         return $this->success_rows(1,'获取成功',
+
             $examList->lastPage(),
             $examList->perPage(),
             $examList->currentPage(),

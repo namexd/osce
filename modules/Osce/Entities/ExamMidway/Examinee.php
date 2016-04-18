@@ -59,11 +59,12 @@ class Examinee
 
             //直接仍回学生实例
             $students = $this->mode->getExaminee($serialnumber);
-
+            
             //将图片地址加上域名
             foreach ($students as &$student) {
                 $student->student_avator = asset($student->student_avator);
             }
+
 
             return $students;
         } catch (\Exception $ex) {
