@@ -234,7 +234,7 @@ class ExamController extends CommonController
                 'real_push'      => intval($request  ->  get('real_push')),
             ];
             //阶段
-            $gradation = intval($request->get('gradation_order', 1));
+            $gradation = intval($request->get('gradation_order', 1))? :1;
 
             if($exam = $model -> addExam($examData, $examScreeningData, $gradation))
             {
@@ -374,7 +374,7 @@ class ExamController extends CommonController
                 'real_push'     => intval($request  ->  get('real_push')),
             ];
             //阶段
-            $gradation = intval($request->input('gradation_order',1));
+            $gradation = intval($request->input('gradation_order',1))? :1;
             $examModel = new Exam();
 
             if($result = $examModel -> editExam($exam_id, $examData, $examScreeningData, $gradation, $examArrangeRepository))
