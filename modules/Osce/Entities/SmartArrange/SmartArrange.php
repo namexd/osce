@@ -278,7 +278,7 @@ class SmartArrange
             }
 
             //TODO 排完后终止循环的操作，待施工
-            if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum) {
+            if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum&&false) {
 //                dd($this->overStudentCount($screen), $this->_S_Count, $this->flowNum);
                 break;
             }
