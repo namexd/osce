@@ -66,7 +66,7 @@ trait SundryTraits
     public function checkStatus($entity, $screen)
     {
         $examPlanRecord = $this->examPlanRecordIsOpenDoor($entity, $screen);
-
+//        dump($examPlanRecord);
         //如果有，说明是关门状态
         if ($examPlanRecord->isEmpty()) {
             return false;  //开门状态
@@ -95,15 +95,15 @@ trait SundryTraits
      * @author Jiangzhiheng
      * @time 2016-04-11 11:05
      */
-    function orderBeginStudent($screen, $serialnumber)
+    function orderBeginStudent($screen, $entity)
     {
         try {
-            $prevSerial = $this->prevSerial($screen, $serialnumber);
+            $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
 
-            $thisSerial = $this->thisSerial($screen, $serialnumber);
+            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
 
             //求取差集
-            return array_diff($thisSerial->toArray(), $prevSerial->toArray());
+            return array_diff($prevSerial->toArray(), $thisSerial->toArray());
         } catch (\Exception $ex) {
             throw $ex;
         }

@@ -114,7 +114,8 @@ class ExamDraftFlow extends CommonModel
             $exam = Exam::doingExam($exam_id);
             switch ($exam->sequence_mode) {
                 case 1:
-                    $examArrangeRepository->checkData($exam_id, 'room_id');
+                    $examArrangeRepository->checkData($exam_id, 'station_id');
+//                    $examArrangeRepository->checkData($exam_id, 'room_id');
                     break;
                 case 2:
                     $examArrangeRepository->checkData($exam_id, 'station_id');
@@ -126,6 +127,8 @@ class ExamDraftFlow extends CommonModel
             if ($status == 1) {
                 //清空数据
                 $result = $examArrangeRepository->resetSmartArrange($exam_id);
+                //清空考官安排
+                
                 if ($result||$result==null){
                     $connection->commit();
                     return true;
@@ -402,6 +405,10 @@ class ExamDraftFlow extends CommonModel
     public function getTempDatas($exam_id, $condition)
     {
         $examInfo = Exam::where('id', '=', $exam_id)->first();
+        //考站分组模式，考场无限制 2016-04-18 Zhoufuxiang
+        if ($examInfo->sequence_mode == 2 && $condition['room'] === 1) {
+            return [];
+        }
 
         $datas = ExamDraft::select(['exam_draft.room_id', 'exam_draft.station_id'])
             ->leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')

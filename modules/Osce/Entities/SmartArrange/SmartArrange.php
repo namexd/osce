@@ -172,16 +172,16 @@ class SmartArrange
         }
 
         $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
-        $this->doorStatus = $this->stationCount; //将当前实体的个数作为开关门的初始值
-
+        $this->doorStatus = $this->stationCount; //将当前所需人数作为开关门的初始值
         //初始化数据
         $i = $beginDt;
         $k = 3;
         $step = $mixCommonDivisor * 60; //为考试实体考试时间的秒数
         //开始计时器
-
         while ($i <= $endDt) {
             foreach ($this->_E as &$entity) {
+//                dump(date('Y-m-d H:i;s', $i));
+//
                 if ($this->doorStatus > 0) {
                     $tempBool = $this->checkStatus($entity, $screen);
                 } else {
@@ -208,9 +208,15 @@ class SmartArrange
                     $this->_S_W = $this->cate->getWaitStudent();
 
                     if (count($students) == 0) {
-                        if ($this->cate->checkDoor()) {
-                            $this->doorStatus--;
-                        }
+//                        if ($this->cate->checkDoor()) {
+//                            for ($j = 0; $j < $entity->needNum; $j++) {
+//                                $this->doorStatus--;
+//                            }
+//                        }
+//                        $entity->timer += $step;
+//                        echo '========';
+//                        dump($this->doorStatus);
+//                        dump(date('Y-m-d H:i;s', $i));
                         continue;
                     }
                     //变更学生的状态(写记录)
@@ -225,9 +231,12 @@ class SmartArrange
                         };
                     }
 
-                    $entity->timer += $step;
+                    //$entity->timer += $step;
                 } else { //反之，则是关门状态
                     $tempValues = $this->examPlanRecordIsOpenDoor($entity, $screen);
+//                    dump($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60);
+//                    dump($entity->timer);
+//                    dump($entity->mins * 60);
                     if ($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60) {
                         $entity->timer = 0;
                         //将结束时间写在表内
@@ -242,13 +251,15 @@ class SmartArrange
                             } else {
                                 $k = 1;
                                 $this->doorStatus++;
+                                $entity->timer += $step;
                             }
                         }
                     } else {
                         $entity->timer += $step;
                     }
                 }
-
+//                dump($this->doorStatus);
+//                dump(date('Y-m-d H:i:s', $i));
             }
 
             if ($k === 3) {
@@ -269,6 +280,7 @@ class SmartArrange
 //                dd($this->overStudentCount($screen), $this->_S_Count, $this->flowNum);
                 break;
             }
+//            sleep(2);
         }
 
         //获取未走完流程的考生
@@ -308,7 +320,6 @@ class SmartArrange
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_W);
         $this->_S = $this->_S->merge(array_unique($undoneStudents));
-//        dd($undoneStudents);
     }
 
     /**

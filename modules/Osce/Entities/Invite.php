@@ -167,7 +167,8 @@ class Invite extends CommonModel
         return Invite::whereIn('invite.exam_screening_id', $examScreeningIds)
             ->select(
                 'status as status',
-                'user_id as invite_user_id'
+                'user_id as invite_user_id',
+                'station_id as invite_station_id'
             )
             ->get();
     }

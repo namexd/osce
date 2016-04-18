@@ -35,7 +35,6 @@ class RoomMode extends AbstractEntity implements EntityInterface
 
     function dataBuilder($exam, $screen, $student, $entity, $i)
     {
-        
         // TODO: Implement dataBuilder() method.
         $data = [
             'student_id' => is_null($student->id) ? $student->student_id : $student->id,
