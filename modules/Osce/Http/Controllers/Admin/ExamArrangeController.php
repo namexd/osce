@@ -277,12 +277,23 @@ class ExamArrangeController extends CommonController
 
                 $ExamDraftTempType  = ExamDraftTemp::find($DraftId);
                 if(!is_null($subjectId)){
+                    if(!Subject::where('id','=',$subjectId)->first()){
+                        throw new \Exception('该考试项目不存在');
+                    }
                     $ExamDraftTempType->subject_id =$data['subject_id'];
                 }
                 if(!is_null($stationId)){
+
+                    if(!Station::where('id','=',$stationId)->first()){
+                        throw new \Exception('该考站不存在');
+                    }
                     $ExamDraftTempType->station_id =$data['station_id'];
                 }
                 if(!is_null($roomId)){
+
+                    if(!Room::where('id','=',$roomId)->first()){
+                        throw new \Exception('该考场不存在');
+                    }
                     $ExamDraftTempType->room_id =$data['room_id'];
                 }
 
@@ -299,10 +310,10 @@ class ExamArrangeController extends CommonController
 
                 }
             }
-
-            if ($type == 4) {
-                $data['ctrl_type'] = $type;
-            }
+//
+//            if ($type == 4) {
+//                $data['ctrl_type'] = $type;
+//            }
 
             $result = ExamDraftTemp::create($data);
 
@@ -932,6 +943,19 @@ class ExamArrangeController extends CommonController
                 foreach ($ExamDraftRequest as $value){
 
                     if($item['id'] == $value['exam_draft_flow_id']){
+                        if(is_null($value['station_id'])){
+                            $value['station_id'] = '';
+                        }
+                        if(is_null($value['room_id'])){
+                            $value['room_id'] = '';
+                        }
+                        if(is_null($value['subject_id'])){
+                            $value['subject_id'] = '';
+                        }
+
+                        if(is_null($value['station_type'])){
+                            $value['station_type'] = 0;
+                        }
 
                         $item['item'][] = $value;
                     }
