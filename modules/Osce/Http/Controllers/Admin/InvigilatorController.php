@@ -945,9 +945,17 @@ class InvigilatorController extends CommonController
      * @author Zhoufuxiang 2016-3-30
      * @return string
      */
-    public function getSubjects(){
+    public function getSubjects(Request $request){
         try{
-            $data = Subject::all();
+            $this->validate($request,[
+                'title' => 'sometimes'
+            ]);
+            $title = trim($request->get('title'));
+            $data  = Subject::select('id','title');
+            if (!empty($title)){
+                $data  = $data->where('title', 'like', '%'.$title.'%');
+            }
+            $data  = $data->get();
 
             return response()->json(
                 $this->success_data($data, 1, 'success')

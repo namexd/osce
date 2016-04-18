@@ -114,15 +114,12 @@ class StationController extends CommonController
         $this->validate($request, [
             'name'          => 'required|unique:osce_mis.station,name',
             'type'          => 'required|integer',
-            'vcr_id'        => 'required|integer'
+            'vcr_id'        => 'sometimes'
         ],[
             'name.required'       =>  '考站名称必填',
             'name.unique'         =>  '考站名称必须唯一',
             'type.required'       =>  '考站类型必选',
-            'vcr_id.required'     =>  '关联摄像机必选',
         ]);
-
-        DB::connection('osce_mis')->beginTransaction();
 
         try {
             $user = Auth::user();
@@ -152,18 +149,10 @@ class StationController extends CommonController
             //将参数放进一个数组中，方便传送
             $formData = [$stationData, $vcrId, $roomId];
 
-            //将当前时间限定的值放入session
-//            $time = $request->input('mins');
-//            $request->session()->put('time', $time);
-//            if (!$request->session()->has('time')) {
-//                throw new \Exception('未能将时间保存！');
-//            }
-
+            //添加考站
             if (!$result=$model->addStation($formData)) {
                 throw new \Exception('未能将考站保存！');
             };
-
-            DB::connection('osce_mis')->commit();
 
             //todo 调用弹窗时新增的跳转 周强 2016-4-13
             $Redirect = Common::handleRedirect($request,$result);
@@ -175,7 +164,7 @@ class StationController extends CommonController
             }
 
         } catch (\Exception $ex) {
-            DB::connection('osce_mis')->rollBack();
+
             return redirect()->back()->withErrors($ex->getMessage())->withInput();
         }
 
@@ -234,12 +223,11 @@ class StationController extends CommonController
             'id'            => 'required|integer',
             'name'          => 'required',
             'type'          => 'required|integer',
-            'vcr_id'        => 'required|integer',
+            'vcr_id'        => 'sometimes',
         ],[
             'name.required'       =>  '考站名称必填',
             'name.unique'         =>  '考站名称必须唯一',
             'type.required'       =>  '考站类型必选',
-            'vcr_id.required'     =>  '关联摄像机必选',
         ]);
 
         try {
