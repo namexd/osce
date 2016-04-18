@@ -300,7 +300,6 @@ class Teacher extends CommonModel
 
 
             if(!$user){
-                dump($user,1111);
                 if(config('debug')==true)
                 {
                     $password   =   123456;
@@ -311,7 +310,9 @@ class Teacher extends CommonModel
                 }
 
                 $user       =   $this   ->  registerUser($userData, $password);
+                dump($user,$role_id);
                 $role = SysUserRole::where('role_id','=',$role_id)->where('user_id','=',$user->id)->first();
+                dd($role);
                 if(empty($role)){
                     DB::table('sys_user_role')->insert(
                         [
