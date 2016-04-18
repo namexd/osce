@@ -5140,83 +5140,67 @@ function examiner_manage() {
      * @param   {object} dom选择器
      */
     function teacherInit($elem) {
-        $elem.find('.custom-teacher').select2({
-            placeholder:'请选择',
-            ajax: {
-                type:'get',
-                dataType: 'json',
-                url: pars.teacher_list,
-                data:function() {
-
-                    return {
-                        subject_id:$elem.attr('value'),
-                        exam_id: exam_id,
-                        type:1
-                    };
-                },
-                delay: 250,
-                processResults: function (res) {
-
-                    //数据格式化
-                    var str = [];
-                    var data = res.data;
-                    for(var i in data){
-                        str.push({id:data[i].teacher_id,text:data[i].name});
-                    }
-                    str.push({id:-999,text:'==新增考官=='});
-
-                    //加载入数据
-                    return {
-                        results: str
-                    };
+        $.ajax({
+            type:'get',
+            dataType: 'json',
+            url: pars.teacher_list,
+            data:{subject_id:$elem.attr('value'),exam_id: exam_id,type:1},
+            success:function(res) {
+                //数据格式化
+                var str = [];
+                var data = res.data;
+                for(var i in data){
+                    str.push({id:data[i].teacher_id,text:data[i].name});
                 }
-            }
+                str.push({id:-999,text:'==新增sp=='});
 
-        //删除选择
-        }).on('select2:unselect', function(e) {
-            //删除
-            $.ajax({
-                type:'get',
-                url: pars.del_teacher,
-                data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
-                success: function(res) {
-                    if(res.code == 1) {
-                        layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
-                    } else if(res.code == 2) {
-                        return true;
-                    } else {
-                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
-                    }
-                }
-            })
-
-        }).on('select2:select', function(e){
-            //新增页面
-            if(e.params.data.id == -999) {
-                layer.open({
-                  type: 2,
-                  title: '新增考场',
-                  shadeClose: true,
-                  shade: 0.8,
-                  area: ['90%', '90%'],
-                  success: function(){
-                    var curretArr = $elem.find('.custom-teacher').val();
-
-                    for(var i in curretArr) {
-                        if(curretArr[i] == -999) {
-                            delete curretArr[i];
+                //初始化
+                $elem.find('.custom-teacher').select2({data:str}).on('select2:unselect', function(e) {
+                    //删除
+                    $.ajax({
+                        type:'get',
+                        url: pars.del_teacher,
+                        data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
+                        success: function(res) {
+                            if(res.code == 1) {
+                                layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
+                            } else if(res.code == 2) {
+                                return true;
+                            } else {
+                                layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
+                            }
                         }
+                    })
+
+                }).on('select2:select', function(e){
+                    //新增页面
+                    if(e.params.data.id == -999) {
+                        layer.open({
+                          type: 2,
+                          title: '新增考场',
+                          shadeClose: true,
+                          shade: 0.8,
+                          area: ['90%', '90%'],
+                          success: function(){
+                            var curretArr = $elem.find('.custom-teacher').val();
+
+                            for(var i in curretArr) {
+                                if(curretArr[i] == -999) {
+                                    delete curretArr[i];
+                                }
+                            }
+
+                            //取消新增选项选择
+                            $elem.find('.custom-teacher').val(curretArr).trigger("change");
+
+                          },
+                          end: function(){
+                            //更改请求数据
+                            
+                          },
+                          content: pars.add_examiner + '?status=1&tr='+$elem.attr('class')
+                        });
                     }
-
-                    //取消新增选项选择
-                    $elem.find('.custom-teacher').val(curretArr).trigger("change");
-
-                  },
-                  end: function(){
-                    //更改请求数据
-                    
-                  },
-                  content: pars.add_examiner + '?status=1&tr='+$elem.attr('class')
                 });
             }
         });
@@ -5231,85 +5215,71 @@ function examiner_manage() {
      * @param   {object} dom选择器
      */
     function teacher_spInit($elem) {
-        $elem.find('.custom-sp').select2({
-            placeholder:'请选择',
-            ajax: {
-                type:'get',
-                dataType: 'json',
-                url: pars.teacher_list,
-                data:function() {
-
-                    return {
-                        subject_id:$elem.attr('value'),
-                        exam_id: exam_id,
-                        type:2
-                    };
-                },
-                delay: 250,
-                processResults: function (res) {
-
-                    //数据格式化
-                    var str = [];
-                    var data = res.data;
-                    for(var i in data){
-                        str.push({id:data[i].teacher_id,text:data[i].name});
-                    }
-                    str.push({id:-999,text:'==新增sp=='});
-
-                    //加载入数据
-                    return {
-                        results: str
-                    };
+        $.ajax({
+            type:'get',
+            dataType: 'json',
+            url: pars.teacher_list,
+            data:{subject_id:$elem.attr('value'),exam_id: exam_id,type:2},
+            success:function(res) {
+                //数据格式化
+                var str = [];
+                var data = res.data;
+                for(var i in data){
+                    str.push({id:data[i].teacher_id,text:data[i].name});
                 }
-            }
-        }).on('select2:unselect', function(e) {
+                str.push({id:-999,text:'==新增sp=='});
 
-            //删除
-            $.ajax({
-                type:'get',
-                url: pars.del_teacher,
-                data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
-                success: function(res) {
-                    if(res.code == 1) {
-                        layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
-                    } else if(res.code == 2) {
-                        return true;
-                    } else {
-                        layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
-                    }
-                }
-            })
-
-        }).on('select2:select', function(e){
-            //新增页面
-            if(e.params.data.id == -999) {
-                layer.open({
-                  type: 2,
-                  title: '新增考场',
-                  shadeClose: true,
-                  shade: 0.8,
-                  area: ['90%', '90%'],
-                  success: function(){
-                    var curretArr = $elem.find('.custom-sp').val();
-
-                    for(var i in curretArr) {
-                        if(curretArr[i] == -999) {
-                            delete curretArr[i];
+                //初始化
+                $elem.find('.custom-sp').select2({data:str}).on('select2:unselect', function(e) {
+                    //删除
+                    $.ajax({
+                        type:'get',
+                        url: pars.del_teacher,
+                        data:{teacher_id: e.params.data.id,exam_id: exam_id,station_id:$elem.attr('data-id')},
+                        success: function(res) {
+                            if(res.code == 1) {
+                                layer.msg('成功通知老师取消考试！',{skin:'msg-success',icon:1});
+                            } else if(res.code == 2) {
+                                return true;
+                            } else {
+                                layer.msg((res.message).split(':')[1],{skin:'msg-error',icon:1});
+                            }
                         }
+                    })
+
+                }).on('select2:select', function(e){
+                    //新增页面
+                    if(e.params.data.id == -999) {
+                        layer.open({
+                          type: 2,
+                          title: '新增考场',
+                          shadeClose: true,
+                          shade: 0.8,
+                          area: ['90%', '90%'],
+                          success: function(){
+                            var curretArr = $elem.find('.custom-sp').val();
+
+                            for(var i in curretArr) {
+                                if(curretArr[i] == -999) {
+                                    delete curretArr[i];
+                                }
+                            }
+
+                            //取消新增选项选择
+                            $elem.find('.custom-sp').val(curretArr).trigger("change");
+
+                          },
+                          end: function(){
+                            //更改请求数据
+                            
+                          },
+                          content: pars.add_sp + '?status=1&tr='+$elem.attr('class')
+                        });
                     }
-
-                    //取消新增选项选择
-                    $elem.find('.custom-sp').val(curretArr).trigger("change");
-
-                  },
-                  end: function(){
-                    //更改请求数据
-                    
-                  },
-                  content: pars.add_sp + '?status=1&tr='+$elem.attr('class')
                 });
+
             }
-        });
+          });
     }
     
 
