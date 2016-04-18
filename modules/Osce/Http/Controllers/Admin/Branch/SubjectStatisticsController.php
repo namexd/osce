@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
+use Modules\Osce\Entities\StandardItem;
 use Modules\Osce\Entities\SubjectItem;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\SubjectStatisticsRepositories;
@@ -350,7 +351,6 @@ class SubjectStatisticsController  extends CommonController
 
         //统计相关数据方便  下一步运算
         $rew = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId,$subjectId);
-
         $datas = [];
         $standardContent = '';//考核点
         $qualifiedPass = '';//合格率
@@ -393,7 +393,7 @@ class SubjectStatisticsController  extends CommonController
                 //计算该考核点的合格率
                 $rew[$k]['studentQualifiedPercentage'] = sprintf("%.4f",$rew[$k]['studentQualifiedCount']/$rew[$k]['studentCount'])*100;
                 //获取该考核点名称
-                $content = SubjectItem::where('id','=',$v['pid'])->select('content')->first();
+                $content = StandardItem::where('id','=',$v['pid'])->select('content')->first();
                 $content = !empty($content)?$content['content']:'-';
                 $datas[] = [
                     'number'               => $number++,//序号

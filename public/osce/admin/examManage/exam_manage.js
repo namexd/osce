@@ -4118,8 +4118,10 @@ function station_assignment(){
             //记录dom结构
             var str = '';
             for(var j in data[i].item) {
+                var control = data[i].item[j].station_type == 3 ? 'disabled':'';
+
                 str += '<tr class="item-id-'+j+'" item-id="'+data[i].item[j].id+'">'+
-                            '<td type="2"><select class="form-control exam-item" exam-item-flag="0"><option selected="selected" value="'+data[i].item[j].subject_id+'">'+data[i].item[j].subject_name+'</option></select></td>'+
+                            '<td type="2"><select class="form-control exam-item" '+control+' exam-item-flag="0"><option selected="selected" value="'+data[i].item[j].subject_id+'">'+data[i].item[j].subject_name+'</option></select></td>'+
                             '<td type="2"><select class="form-control exam-station"><option selected="selected" value="'+data[i].item[j].station_id+'">'+data[i].item[j].station_name+'</option></select></td>'+
                             '<td type="2">'+typeToName[data[i].item[j].station_type]+'</td>'+
                             '<td type="2"><select class="form-control station-belong"><option selected="selected" value="'+data[i].item[j].room_id+'">'+data[i].item[j].room_name+'</option></select></td>'+
@@ -4133,7 +4135,6 @@ function station_assignment(){
                 //存储select2 class
                 arr.push({table:'.table-id-'+i, tr:'.item-id-'+j});
             }
-
 
             //一个站的dom结构
             html += '<div class="form-group">'+
@@ -4643,6 +4644,11 @@ function station_assignment(){
                 station:e.params.data.id
             };
 
+            //理论考站判断
+            if(e.params.data.type!=3) {
+                $elem.find('.exam-item').removeAttr('disabled');
+            }
+
             //新增页面
             if(e.params.data.id == -999) {
                 layer.open({
@@ -4659,7 +4665,21 @@ function station_assignment(){
                         data:req,
                         success: function(res) {
                             //更新考站类型
-                            //$elem.find('.exam-station').parent().next().text(typeToName[e.params.data.type])
+                            var status_type = $elem.find('.exam-station').parent().next().text(typeToName[$elem.find('.exam-station').parent().attr('status-type')])
+                            
+                            if($elem.find('.exam-station').parent().attr('status-type') == '3' ) {
+                                $elem.find('.exam-item').attr('disabled','disabled');
+                                $elem.find('.exam-item').val(-999).trigger('change');
+
+                                var req_s = {
+                                    exam_id:examId,
+                                    type:$elem.find('.exam-item').parent().attr('type'),
+                                    draft_id:$elem.attr('item-id'),
+                                    flow_id:$elem.parent().parent().attr('station-id'),
+                                    subject:-999
+                                };
+                                ajaxUpdate(req_s, pars.update_data);
+                            }
                         }
                     })
                   },
@@ -4673,6 +4693,19 @@ function station_assignment(){
                     success: function(res) {
                         //更新考站类型
                         $elem.find('.exam-station').parent().next().text(typeToName[e.params.data.type])
+                        if(e.params.data.type == 3) {
+                            $elem.find('.exam-item').attr('disabled','disabled');
+                            $elem.find('.exam-item').val(-999).trigger('change');
+
+                            var req_s = {
+                                exam_id:examId,
+                                type:$elem.find('.exam-item').parent().attr('type'),
+                                draft_id:$elem.attr('item-id'),
+                                flow_id:$elem.parent().parent().attr('station-id'),
+                                subject:-999
+                            };
+                            ajaxUpdate(req_s, pars.update_data);
+                        }
                     }
                 }) 
             }
@@ -5248,7 +5281,7 @@ function examiner_manage() {
                     //更改请求数据
                     
                   },
-                  content: pars.add_examiner + '?status=1&tr='+$elem.attr('class')
+                  content: pars.add_examiner + '?status=1&tr='+$elem.attr('class')+'&selector=custom-teacher'
                 });
             }
         });
@@ -5338,7 +5371,7 @@ function examiner_manage() {
                     //更改请求数据
                     
                   },
-                  content: pars.add_sp + '?status=1&tr='+$elem.attr('class')
+                  content: pars.add_sp + '?status=1&tr='+$elem.attr('class')+'&selector=custom-sp'
                 });
             }
         });
