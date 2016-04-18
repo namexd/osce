@@ -88,6 +88,13 @@
                         }
                     }
                 },
+                'cases[]':{
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '病例不能为空'
+                        }
+                    }
+                },
                 desc: {
                     validators: {
                         notEmpty: {/*非空提示*/
