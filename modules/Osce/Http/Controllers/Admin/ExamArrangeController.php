@@ -737,10 +737,7 @@ class ExamArrangeController extends CommonController
 
 
          }
-
-
-
-
+         
 //            dump($teacher);
          return response()->json(
              $this->success_data($teacher, 1, 'success')
