@@ -96,12 +96,12 @@ function score_query_detail() {
     function charts(standard,student_name,avg,xAxis){
 
         //考核点数据较少处理
-        if(xAxis.length<8){
+        /*if(xAxis.length<8){
             var len = 7 - xAxis.length;
             for(var i = 0;i<=len;i++){
                 xAxis.push('');
             }
-        }
+        }*/
 
         var option = {
             title : {
@@ -219,7 +219,6 @@ function score_query_detail() {
         }
     }
 
-    console.log(standard,avg,xAxis)
     //触发图表格
     charts(standard,$('#student').text(),avg,xAxis);
 

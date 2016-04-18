@@ -511,36 +511,7 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(\Illuminate\Http\Request $request) {
-//	//验证规则
-//	$this -> validate($request,[
-//		'id'	=> 'required'
-//	]);
-
-//	$exam_id = $request->get('id');
-//	if(empty($exam_id)){
-//		return '请传入id，id对应考试ID';
-//	}
-//
-//	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
-//	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
-//	$exam = new \Modules\Osce\Entities\Exam();
-//	if($exam->emptyData($exam_id)){
-//		return '成功';
-//	}
-//	$redis = Redis::connection('message');
-//    $redis->publish(1, 'test');
-//
-//	dd(\Modules\Osce\Entities\Exam::join('exam_screening', 'exam.id', '=', 'exam_screening.exam_id')->lists('exam_screening.exam_id')->toArray());
-	$a = \Modules\Osce\Entities\ExamGradation::join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
-        ->where('exam_draft_flow.exam_id', 480)
-        ->select(
-            'exam_gradation.order as gradation_order',
-            'exam_gradation.id as exam_gradation_id'
-        )
-        ->get()
-        ->keyBy('gradation_order');
-	dd($a);
-//	return '失败';
+	
 });
 Route::get('test/test', function() {
 //    $redis = Redis::connection('message');
