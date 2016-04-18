@@ -126,6 +126,8 @@ class ExamDraftFlow extends CommonModel
             if ($status == 1) {
                 //清空数据
                 $result = $examArrangeRepository->resetSmartArrange($exam_id);
+                //清空考官安排
+                
                 if ($result||$result==null){
                     $connection->commit();
                     return true;
