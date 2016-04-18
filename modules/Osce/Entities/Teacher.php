@@ -297,9 +297,10 @@ class Teacher extends CommonModel
         try{
             $mobile = $userData['mobile'];
             $user   = User::where('username', '=', $mobile)->first();
-            dump($user,1111);
+
 
             if(!$user){
+                dump($user,1111);
                 if(config('debug')==true)
                 {
                     $password   =   123456;
