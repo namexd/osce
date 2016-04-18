@@ -217,7 +217,7 @@ class ExamController extends CommonController
             }
 
             //成功后，重定向为编辑页面
-            return redirect()->route('osce.admin.exam.getEditExam',['id'=>$result->id]);
+            return redirect()->route('osce.admin.exam.getEditExam',['id'=>$result->id])->withErrors(['msg'=>'保存成功','code'=>1]);
 
         } catch(\Exception $ex) {
             //返回原来的页面，并抛出错误
