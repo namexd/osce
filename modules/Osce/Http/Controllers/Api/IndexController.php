@@ -9,6 +9,7 @@ use Modules\Osce\Entities\Exam;
 
 use Modules\Osce\Entities\ExamAbsent;
 
+use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
@@ -830,8 +831,18 @@ class IndexController extends CommonController
             return \Response::json(array('code' => 2));
         }
         $screen_id = $examScreening->id;
+        dd($screen_id);
         $studentModel = new Student();
         try {
+            $examDraftFlowModel = new ExamDraftFlow();
+
+            $stations = $examDraftFlowModel->leftjoin('exam_draft', function ($join) {
+                $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
+            })->where('exam_draft_flow.exam_id', '=', $exam_id)
+                ->where('exam_draft_flow.exam_screening_id', '=', $screen_id)
+                ->select('exam_draft.station_id')
+                ->get();
+            /*
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
             //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
             if($mode==1){
@@ -841,6 +852,7 @@ class IndexController extends CommonController
             } else{
                 $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
             }
+            */
             $countStation=[];
             foreach($stations as $item){
                 $countStation[]=$item->station_id;
