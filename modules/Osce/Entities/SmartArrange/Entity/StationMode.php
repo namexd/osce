@@ -27,6 +27,8 @@ class StationMode extends AbstractEntity implements EntityInterface
         // TODO: Implement entity() method.
         //获得该考试下的所有考站
         $entities = $this->getStation($exam, $screen);
+        //将各个考站的真正时间给到各个对象
+        $entities = $this->entityTime($entities);
         //为考站设定考试时间
         $entities = $this->entityMins($entities, $exam->same_time);
         //为考站设定needNum

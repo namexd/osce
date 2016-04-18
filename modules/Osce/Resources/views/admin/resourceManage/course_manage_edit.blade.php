@@ -95,13 +95,6 @@
                         }
                     }
                 },
-                desc: {
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '描述不能为空'
-                        }
-                    }
-                },
                 case_id: {
                     validators: {
                         notEmpty: {/*非空提示*/
@@ -137,7 +130,7 @@
                             message: '时间不能为空'
                         },
                         regexp: {
-                            regexp: /^([0-9]+)$/,
+                            regexp: /^[1-9]\d*$/,
                             message: '请输入正确的时间'
                         },
                         stringLength: {
