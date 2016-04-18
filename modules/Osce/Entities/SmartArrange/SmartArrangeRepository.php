@@ -201,6 +201,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
             $this->model->stationStatus($exam, $attributes);
 
             //将数据保存到examOrder
+            dd($this->model);
             $this->model->saveStudentOrder($exam);
             $connection->commit();
         } catch (\Exception $ex) {
