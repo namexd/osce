@@ -748,7 +748,7 @@ class ApiController extends CommonController
                 $this->success_data($retval, -1, 'error')
             );
         }
-        \DB::connection('osce_mis')->enableQueryLog();
+
         $examQenenModel = new ExamQueue();
         $examQenen = $examQenenModel->where('exam_id', '=', $examId)
                                     ->where('exam_screening_id', '=', $examScreeningId)
@@ -756,8 +756,6 @@ class ApiController extends CommonController
                                     ->where('status', '=', 0)
                                     ->orderBy('begin_dt', 'asc')
                                     ->first();
-        $queries = \DB::connection('osce_mis')->getQueryLog();
-        dd($queries);
         if (is_null($examQenen)) {
             $retval = ['title' => '未查到相应考试队列信息'];
             return response()->json(
