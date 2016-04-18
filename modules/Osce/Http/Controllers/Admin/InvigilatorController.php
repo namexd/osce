@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use App\Entities\SysUserRole;
 use App\Entities\User;
 use App\Repositories\Common;
+use Modules\Osce\Repositories\Common as teacherCommon;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Invigilator;
@@ -194,7 +195,7 @@ class InvigilatorController extends CommonController
             //从配置中获取角色对应的ID号, 考官角色默认为1
             $role_id = config('osce.invigilatorRoleId',1);
         }else{
-            //从配置中获取角色对应的ID号, 考官角色默认为3
+            //从配置中获取角色对应的ID号, 巡考角色默认为3
             $role_id = config('osce.invigilatorRoleId',3);
         }
         $teacherData['type']            = $type;
@@ -210,18 +211,23 @@ class InvigilatorController extends CommonController
 
         $Invigilator    =   new Teacher();
         try{
-            if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
+            if($result = $Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
 
 //                return redirect()->back('osce.admin.invigilator.getInvigilatorList')->withErrors(['这个号码已有过关联，不能修改']);
+                
+                $Redirect =teacherCommon::handleRedirect($request,$result);
+                if($Redirect == false){
+                    return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type])->withErrors(['msg'=>'保存成功','code'=>1]);
+                }else{
+                    return $Redirect;
+                }
 
-
-                return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type])->withErrors(['msg'=>'保存成功','code'=>1]);
 
             } else{
                 throw new \Exception('新增失败');
             }
         } catch(\Exception $ex){
-            return redirect()->back()->withErrors($ex->getMessage());
+//            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -288,9 +294,18 @@ class InvigilatorController extends CommonController
             //获取支持的考试项目
             $subjects = $request->get('subject');
             $Invigilator    =   new Teacher();
-            if($Invigilator ->  addInvigilator($role_id, $userData , $teacherData,$subjects)){
+            if($result =$Invigilator ->  addInvigilator($role_id, $userData , $teacherData,$subjects)){
 
-                return redirect()->route('osce.admin.invigilator.getSpInvigilatorList')->withErrors(['msg'=>'保存成功','code'=>1]);
+                //todo 调用弹窗时新增的跳转 周强 2016-4-13
+                $Redirect =teacherCommon::handleRedirect($request,$result);
+                if($Redirect == false){
+                    return redirect()->route('osce.admin.invigilator.getSpInvigilatorList')->withErrors(['msg'=>'保存成功','code'=>1]);
+                }else{
+          
+                    return $Redirect;
+                }
+
+
             } else{
                 throw new \Exception('新增失败');
             }
@@ -945,9 +960,17 @@ class InvigilatorController extends CommonController
      * @author Zhoufuxiang 2016-3-30
      * @return string
      */
-    public function getSubjects(){
+    public function getSubjects(Request $request){
         try{
-            $data = Subject::all();
+            $this->validate($request,[
+                'title' => 'sometimes'
+            ]);
+            $title = trim($request->get('title'));
+            $data  = Subject::select('id','title');
+            if (!empty($title)){
+                $data  = $data->where('title', 'like', '%'.$title.'%');
+            }
+            $data  = $data->get();
 
             return response()->json(
                 $this->success_data($data, 1, 'success')

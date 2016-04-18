@@ -298,6 +298,7 @@ class Teacher extends CommonModel
             $mobile = $userData['mobile'];
             $user   = User::where('username', '=', $mobile)->first();
 
+
             if(!$user){
                 if(config('debug')==true)
                 {

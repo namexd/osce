@@ -31,6 +31,45 @@ $(function(){
     }
 });
 
+
+/**
+ * select2 模糊搜索样式
+ * @author mao
+ * @version 3.4
+ * @date    2016-04-18
+ */
+function formatRepoSelection (repo) {
+  return repo.full_name || repo.text;
+}
+
+/**
+ * select2 下拉选择样式
+ * @author mao
+ * @version 1.0
+ * @date    2016-04-18
+ */
+function formatRepo (repo) {
+  if (repo.loading) return repo.text;
+
+  var markup = "<div class='select2-result-repository clearfix'>" +
+    "<div class='select2-result-repository__avatar'><img src='" + repo.owner.avatar_url + "' /></div>" +
+    "<div class='select2-result-repository__meta'>" +
+      "<div class='select2-result-repository__title'>" + repo.full_name + "</div>";
+
+  if (repo.description) {
+    markup += "<div class='select2-result-repository__description'>" + repo.description + "</div>";
+  }
+
+  markup += "<div class='select2-result-repository__statistics'>" +
+    "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> " + repo.forks_count + " Forks</div>" +
+    "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> " + repo.stargazers_count + " Stars</div>" +
+    "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> " + repo.watchers_count + " Watchers</div>" +
+  "</div>" +
+  "</div></div>";
+
+  return markup;
+}
+
 /**
  * 成绩查询
  * @author mao
@@ -96,12 +135,12 @@ function score_query_detail() {
     function charts(standard,student_name,avg,xAxis){
 
         //考核点数据较少处理
-        if(xAxis.length<8){
+        /*if(xAxis.length<8){
             var len = 7 - xAxis.length;
             for(var i = 0;i<=len;i++){
                 xAxis.push('');
             }
-        }
+        }*/
 
         var option = {
             title : {
@@ -219,7 +258,6 @@ function score_query_detail() {
         }
     }
 
-    console.log(standard,avg,xAxis)
     //触发图表格
     charts(standard,$('#student').text(),avg,xAxis);
 
@@ -1635,10 +1673,7 @@ function timePicker(background){
                 var days = Math.floor(current/(1000*60*60*24)),
                     hours = Math.floor((current/(1000*60*60*24)-days)*24),
                     minutes = Math.round((((current/(1000*60*60*24)-days)*24)-hours)*60);
-                thisElement.next().next().text(days+'天'+hours+'小时'+minutes+'分');
-
-
-                
+                thisElement.next().next().text(days+'天'+hours+'小时'+minutes+'分'); 
             }
         }
     };
@@ -1687,6 +1722,11 @@ function timePicker(background){
         option.elem = '.'+id;
         $(this).addClass(id);
         $(this).attr('id',id);
+
+        //最小值限制
+        if(!(option.min < option.max)&&option.max!=='') {
+            option.min = option.max;
+        }
         //数据绑定
         laydate(option);
     });
@@ -4496,6 +4536,11 @@ function station_assignment(){
                 type:'get',
                 url: pars.exam_item,
                 delay: 250,
+                data: function(params) {
+                    return {
+                        subject_name: params.term
+                    };
+                },
                 processResults: function (res) {
 
                     //数据格式化
@@ -4510,7 +4555,9 @@ function station_assignment(){
                     return {
                         results: str
                     };
-                }
+                },
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
             }
 
         //数据更新，交互数据
@@ -4558,12 +4605,13 @@ function station_assignment(){
                 type:'get',
                 url: pars.station_list,
                 delay: 250,
-                data: function() {
+                data: function(params) {
                     return {
                         exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
                         station_id:$elem.parent().parent().attr('station-id'),
                         exam_id: examId,
                         order: parseInt($elem.parent().parent().attr('table-order'))+1,
+                        station_name:params.term
                     } 
                 },
                 processResults: function (res) {
@@ -4580,7 +4628,9 @@ function station_assignment(){
                     return {
                         results: str
                     };
-                }
+                },
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
             }
 
         //数据更新，交互数据
@@ -4641,12 +4691,13 @@ function station_assignment(){
                 type:'get',
                 url: pars.room_list,
                 delay: 250,
-                data: function() {
+                data: function(params) {
                     return {
                         exam_gradation_id: $elem.parent().parent().parent().find('.select-stage').val(),
                         station_id:$elem.parent().parent().attr('station-id'),
                         exam_id: examId,
                         order: parseInt($elem.parent().parent().attr('table-order'))+1,
+                        room_name:params.term
                     } 
                 },
                 processResults: function (res) {
@@ -4663,7 +4714,9 @@ function station_assignment(){
                     return {
                         results: str
                     };
-                }
+                },
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
             }
 
         //数据更新，交互数据
@@ -4773,30 +4826,7 @@ function station_assignment(){
         }
 
 
-        /*if(warn==false){
-            layer.confirm('考试项目更改将导致智能排考重排？',{
-                title:'删除',
-                btn: ['确定','取消'],
-                cancel: function() {
-                    location.reload();
-                }
-            },function() {
-                $.ajax({
-                    type:'post',
-                    url: pars.save,
-                    data:{exam_id:examId,flag:1},
-                    success: function(res) {
-                        if(res.code != 1) {
-                            layer.msg('保存数据失败！',{skin:'msg-error',icon:1});
-                        } else {
-                            layer.msg('数据保存成功！',{skin:'msg-success',icon:1},function () {
-                                location.reload();
-                            });
-                        }
-                    }
-                })
-            }); 
-        } else {*/
+        
         $.ajax({
             type:'post',
             url: pars.save,
