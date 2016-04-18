@@ -4824,6 +4824,10 @@ function station_assignment(){
             layer.alert('请选择考试项目/考站/所属考场！');
             return false;
         }
+        if(flag == null) {
+            layer.alert('请选择阶段！');
+            return false;
+        }
 
 
         
