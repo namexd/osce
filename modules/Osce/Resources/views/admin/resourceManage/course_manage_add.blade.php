@@ -87,13 +87,6 @@
                         }
                     }
                 },
-                'cases[]':{
-                    validators: {
-                        notEmpty: {/*非空提示*/
-                            message: '病例不能为空'
-                        }
-                    }
-                },
                 desc: {
                     validators: {
                         notEmpty: {/*非空提示*/
@@ -136,7 +129,7 @@
                             message: '时间不能为空'
                         },
                         regexp: {
-                            regexp: /^([0-9]+)$/,
+                            regexp: /^[1-9]\d*$/,
                             message: '请输入正确的时间'
                         },
                         stringLength: {
@@ -148,6 +141,7 @@
             }
         });
     })
+
 </script>
 @stop
 
@@ -205,7 +199,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">时间限制(分钟)</label>
                             <div class="col-sm-10">
-                                <input id="time" class="form-control" name="mins" value="{{$time}}" placeholder="请输入分钟数" />
+                                <input id="time" class="form-control" name="mins" value="" placeholder="请输入分钟数" />
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
