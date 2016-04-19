@@ -1812,6 +1812,13 @@ class ExamController extends CommonController
         $studentId   = $request->input('id');
         //根据条件判断
         if(!empty($mobile)){
+            $userU = User::where('username','=',$mobile)->first();
+            if (is_null($userU)){
+                $userM = User::where('mobile','=',$mobile)->first();
+                if (!is_null($userM)){
+                    return json_encode(['valid' =>false]);
+                }
+            }
             $where = ['exam_id'=>$examId, 'mobile' => $mobile];
         }elseif(!empty($idcard)){
             $where = ['exam_id'=>$examId, 'idcard' => $idcard];
