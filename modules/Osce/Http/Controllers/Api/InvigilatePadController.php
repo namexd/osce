@@ -772,7 +772,8 @@ class InvigilatePadController extends CommonController
 //           }
             $ExamQueueModel = new ExamQueue();
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$type);
-            //dd($AlterResult);
+            dd(ExamQueue::find(9)->status);
+
             if ($AlterResult) {
                 \Log::alert($AlterResult);
                 $redis->publish('pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
