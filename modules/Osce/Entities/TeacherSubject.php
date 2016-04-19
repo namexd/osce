@@ -26,12 +26,17 @@ class TeacherSubject extends CommonModel
     }
 
     public function getTeachers($type, $subject_id){
-//        return TeacherSubject::leftJoin('teacher', 'teacher.id', '=', 'teacher_subject.teacher_id')
-//            ->where('teacher_subject.subject_id', '=', $subject_id)
-//            ->where('teacher.type', '=', $type)
-//            ->select(['teacher_subject.teacher_id', 'teacher.name'])->get();
+        if ($subject_id == 0){
 
-        return Teacher::where('type','=', $type)->select(['id as teacher_id', 'name'])->get();
+            return Teacher::where('archived','=',0)->where('type','=', $type)->select(['id as teacher_id', 'name'])->get();
+        }else{
+
+            return TeacherSubject::leftJoin('teacher', 'teacher.id', '=', 'teacher_subject.teacher_id')
+                ->where('teacher_subject.subject_id', '=', $subject_id)
+                ->where('teacher.type', '=', $type)
+                ->select(['teacher_subject.teacher_id', 'teacher.name'])->get();
+        }
+
     }
 
     /**
