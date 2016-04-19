@@ -982,13 +982,14 @@ class Exam extends CommonModel
     {
         //考试的最早时间（开始时间）、最晚时间（结束时间）
         $begin_dt = '';
-        $end_dt = '';
-        $keyArr = array_keys($examScreeningData);
+        $end_dt   = '';
+        $keyArr   = array_keys($examScreeningData);
         if (empty($keyArr)) {
             throw new \Exception('请添加时间！');
         }
         $firstKey = $keyArr[0];
-        foreach ($examScreeningData as $key => $value) {
+        foreach ($examScreeningData as $key => $value)
+        {
             $bd = $value['begin_dt'];   //开始时间
             $ed = $value['end_dt'];     //结束时间
             if (!strtotime($bd) || !strtotime($ed) || strtotime($ed) <= strtotime($bd)) {
@@ -1008,8 +1009,8 @@ class Exam extends CommonModel
         }
 
         return [
-            'begin_dt' => $begin_dt,
-            'end_dt' => $end_dt,
+            'begin_dt'  => $begin_dt,
+            'end_dt'    => $end_dt,
             'examScreeningData' => $examScreeningData,
         ];
     }
