@@ -362,9 +362,9 @@ class Exam extends CommonModel
             $this->handleGradation($result->id, $gradation, $examArrangeRepository);
 
             //将考试对应的考次关联数据写入考试场次表中
-            foreach ($examScreeningData as $key => $value) {
-                $value['exam_id'] = $result->id;
-                $value['status'] = 0;
+            foreach ($examScreeningData as $value) {
+                $value['exam_id']   = $result->id;
+                $value['status']    = 0;
                 if (!$examScreening = ExamScreening::create($value)) {
                     throw new \Exception('创建考试场次信息失败');
                 }
@@ -397,20 +397,17 @@ class Exam extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editExam(
-        $exam_id,
-        array $examData,
-        array $examScreeningData,
-        $gradation,
-        ExamArrangeRepository $examArrangeRepository
-    )
+    public function editExam($exam_id, array $examData, array $examScreeningData, $gradation, ExamArrangeRepository $examArrangeRepository)
     {
         $connection = DB::connection($this->connection);
-        $connection->beginTransaction();
+        $connection ->beginTransaction();
         try {
             //更新考试信息
-            $exam = $this->find($exam_id);
-            if ($exam->sequence_mode != $examData['sequence_mode']) {
+            $exam = $this->doingExam($exam_id);
+
+            //重置与当前考试相关的关联数据
+            if ($exam->sequence_mode != $examData['sequence_mode'])
+            {
                 //如果排考模式变化 删除 已有 教师关联 和 排考计划
                 if (!$examArrangeRepository->getExamManner($exam_id)) {
 
@@ -425,84 +422,34 @@ class Exam extends CommonModel
                 if (ExamStation::where('exam_id', '=', $exam_id)->delete() === false) {
                     throw new \Exception('重置作废数据失败');
                 }
-
             }
 
-            //如果考试顺序变化清空智能排考
-            if ($exam->sequence_cate != $examData['sequence_cate']) {
+            //如果考试顺序变化清空智能排考， 同时进出改变清空排考
+            if ($exam->sequence_cate != $examData['sequence_cate'] || $exam->same_time != $examData['same_time'])
+            {
                 $DelExamArrange = $examArrangeRepository->resetSmartArrange($exam_id);
                 //清空智能排考
                 if (!$DelExamArrange && $DelExamArrange != null) {
                     throw new \Exception('重置作废智能排考数据失败');
                 }
             }
+            //处理 考试阶段关系 数据
+            $this->handleGradation($exam_id, $gradation, $examArrangeRepository);
 
-            //同时进出改变清空排考
-            if ($exam->same_time != $examData['same_time']) {
-                //清空智能排考
-                if (!$examArrangeRepository->resetSmartArrange($exam_id) && $examArrangeRepository->resetSmartArrange($exam_id) != null) {
-                    throw new \Exception('重置作废排考数据失败');
-                }
-            }
+            //处理 考试场次
+            $this->handleExamScreening($exam_id, $examScreeningData, $examArrangeRepository);
 
+            //修改考试基本信息
             foreach ($examData as $field => $item) {
                 $exam->$field = $item;
             }
             if (!$exam->save()) {
                 throw new \Exception('修改考试信息失败!');
             }
-            //处理 考试阶段关系 数据
-            $this->handleGradation($exam_id, $gradation, $examArrangeRepository);
-
-            $examScreening_ids = [];
-            //判断输入的时间是否有误
-            foreach ($examScreeningData as $value) {
-                //不存在id,为新添加的数据
-                if (!isset($value['id'])) {
-                    $value['exam_id'] = $exam_id;
-
-                    if (!$result = ExamScreening::create($value)) {
-                        throw new \Exception('添加考试场次信息失败');
-                    } else {
-                        //清空原考试安排数据
-                        if (!$examArrangeRepository->getExamManner($exam_id)) {
-
-                            throw new \Exception('重置作废数据失败');
-                        }
-                    }
-
-
-                    array_push($examScreening_ids, $result->id);
-
-                } else {
-                    array_push($examScreening_ids, $value['id']);
-                    $examScreening = new ExamScreening();
-
-                    if (!$result = $examScreening->updateData($value['id'], $value)) {
-                        throw new \Exception('更新考试场次信息失败');
-                    }
-
-
-                }
-            }
-            //查询是否有要删除的考试场次
-            $result = ExamScreening::where('exam_id', '=', $exam_id)->whereNotIn('id', $examScreening_ids)->get();
-            if (count($result) != 0) {
-                foreach ($result as $value) {
-                    if (!$res = ExamScreening::where('id', '=', $value['id'])->delete()) {
-                        throw new \Exception('删除考试场次信息失败');
-                    } else {
-                        //清空原考试安排数据
-                        if (!$examArrangeRepository->getExamManner($exam_id)) {
-
-                            throw new \Exception('重置作废数据失败');
-                        }
-                    }
-                }
-            }
 
             $connection->commit();
-            return true;
+            return $exam;
+
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -975,18 +922,18 @@ class Exam extends CommonModel
      * @return array
      * @throws \Exception
      */
-    public function handleScreeningTime($examScreeningData, $user)
+    public function handleScreeningTime($screeningData, $user)
     {
         //考试的最早时间（开始时间）、最晚时间（结束时间）
         $begin_dt = '';
         $end_dt   = '';
-        $keyArr   = array_keys($examScreeningData);
+        $keyArr   = array_keys($screeningData);
         if (empty($keyArr)) {
             throw new \Exception('请添加时间！');
         }
         $firstKey = $keyArr[0];
 
-        foreach ($examScreeningData as $key => $value)
+        foreach ($screeningData as $key => $value)
         {
             $bd = $value['begin_dt'];   //开始时间
             $ed = $value['end_dt'];     //结束时间
@@ -994,23 +941,88 @@ class Exam extends CommonModel
                 throw new \Exception('时间输入有误！');
             }
 
-            if ($key > $firstKey && $examScreeningData[$key - 1]['end_dt'] > $bd) {
+            if ($key > $firstKey && strtotime($screeningData[$key-1]['end_dt']) >= strtotime($bd))
+            {
                 throw new \Exception('后一场的开始时间必须大于前一场的结束时间！');
             }
             //获取最早开始时间，最晚结束时间
             if ($key == $firstKey) {
                 $begin_dt = $bd;
             }
-            if ($key == count($examScreeningData)) {
+            if ($key == count($screeningData)) {
                 $end_dt = $ed;
             }
-            $examScreeningData[$key]['create_user_id'] = $user->id;
+            $screeningData[$key]['create_user_id'] = $user->id;
         }
 
         return [
-            'begin_dt'  => $begin_dt,
-            'end_dt'    => $end_dt,
-            'examScreeningData' => $examScreeningData,
+            'begin_dt'          => $begin_dt,
+            'end_dt'            => $end_dt,
+            'examScreeningData' => $screeningData,
         ];
     }
+
+    /**
+     * 处理考试场次
+     * @param $exam_id
+     * @param $examScreeningData
+     * @param ExamArrangeRepository $examArrangeRepository
+     *
+     * @author Zhoufuxiang 2016-04-18
+     * @return static
+     * @throws \Exception
+     */
+    public function handleExamScreening($exam_id, $examScreeningData, ExamArrangeRepository $examArrangeRepository)
+    {
+        $ExamScreening = new ExamScreening();
+        $screening_ids = [];
+        //判断输入的时间是否有误
+        foreach ($examScreeningData as $value)
+        {
+            //不存在id,为新添加的数据
+            if (!isset($value['id']))
+            {
+                $value['exam_id'] = $exam_id;
+                $result = ExamScreening::create($value);
+                if (!$result) {
+                    throw new \Exception('添加考试场次信息失败');
+                } else {
+                    //清空原考试安排数据
+                    if (!$examArrangeRepository->getExamManner($exam_id))
+                    {
+                        throw new \Exception('重置作废数据失败');
+                    }
+                }
+                array_push($screening_ids, $result->id);
+
+            } else {
+
+                array_push($screening_ids, $value['id']);
+                $result = $ExamScreening->updateData($value['id'], $value);
+                if (!$result) {
+                    throw new \Exception('更新考试场次信息失败');
+                }
+            }
+        }
+
+        //查询是否有要删除的考试场次
+        $result = ExamScreening::where('exam_id', '=', $exam_id)->whereNotIn('id', $screening_ids)->get();
+        if (count($result) != 0) {
+            foreach ($result as $value)
+            {
+                if (!$res = ExamScreening::where('id', '=', $value['id'])->delete()) {
+                    throw new \Exception('删除考试场次信息失败');
+                } else {
+                    //清空原考试安排数据
+                    if (!$examArrangeRepository->getExamManner($exam_id))
+                    {
+                        throw new \Exception('重置作废数据失败');
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
 }

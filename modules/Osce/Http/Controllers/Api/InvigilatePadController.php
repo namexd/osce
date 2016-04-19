@@ -15,8 +15,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\ExamAbsent;
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
@@ -270,7 +272,8 @@ class InvigilatePadController extends CommonController
      */
     public function getExamGrade(Request $request)
     {
-        try {
+      
+//        try {
 
             $this->validate($request, [
                 'station_id' => 'required|integer',
@@ -281,11 +284,52 @@ class InvigilatePadController extends CommonController
             $stationId = $request->get('station_id');
 
             $examId = $request->get('exam_id');
+            if(empty($examId))
+            {
+                $exam   =  Exam::doingExam();
+                $examId =   $exam->id;
+            }
+
             //根据考站id查询出下面所有的考试项目
             $station = Station::find($stationId);
+            $ExamScreening   =  new ExamScreening();
+            $screening   =   $ExamScreening  ->getExamingScreening($examId);
+            if(is_null($screening))
+            {
+                $screening  =   $ExamScreening->getNearestScreening($examId);
+            }
+            
+            if(is_null($screening))
+            {
+                throw new \Exception('没有对应的考试');
+            }
+            $exam_gradation =   ExamGradation::where('exam_id','=',$examId)->where('order','=',$screening->gradation_order)->first();
+            if(is_null($exam_gradation))
+            {
+                throw new \Exception('没有找到对应的阶段');
+            }
+            $exam_gradation_id  =   $exam_gradation->id;
 
+            $ExamDraft  =   ExamDraft:: leftJoin('exam_draft_flow','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
+                        ->  where('exam_draft_flow.exam_id','=',$examId)
+                        ->  where('exam_draft_flow.exam_gradation_id','=',$exam_gradation_id)
+                        ->  where('exam_draft.station_id','=',$stationId)
+                        ->  with('station')
+                        ->  first();
+            if(is_null($ExamDraft->subject_id))
+            {
+                if($ExamDraft->station->type==3)
+                {
+                    throw new \Exception('请检查考站类型');
+                }
+                else
+                {
+                    throw new \Exception('请检查考试安排数据');
+                }
+            }
             //考试标准时间
-            $mins = $station->mins;
+            //$mins = $station->mins;
+
             $exam = Exam::find($examId);
 
 //            $StandardItem = new StandardItem();
@@ -294,7 +338,7 @@ class InvigilatePadController extends CommonController
 //            if (count($standardList) != 0) {
 
             $standardItemModel = new StandardItem();
-            $standardItemList = $standardItemModel->getSubjectStandards($station->subject_id);
+            $standardItemList = $standardItemModel->getSubjectStandards($ExamDraft->subject_id);
             //dd($standardItemList);
             if (count($standardItemList) != 0) {
 
@@ -307,10 +351,10 @@ class InvigilatePadController extends CommonController
                     $this->fail(new \Exception('数据查询失败'))
                 );
             }
-
-        } catch (\Exception $ex) {
-            \Log::alert($ex->getMessage());
-        }
+//
+//        } catch (\Exception $ex) {
+//            \Log::alert($ex->getMessage());
+//        }
     }
 
     /**
@@ -734,7 +778,7 @@ class InvigilatePadController extends CommonController
      */
     public function getStartExam(Request $request)
     {
-        try {
+//        try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
                 'station_id' => 'required|integer'
@@ -773,11 +817,11 @@ class InvigilatePadController extends CommonController
 //           }
             $ExamQueueModel = new ExamQueue();
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$type);
-            //dd($AlterResult);
-            if ($AlterResult) {
-                \Log::alert($AlterResult);
-                $redis->publish('pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 106, '开始考试成功')));
 
+
+            if ($AlterResult) {
+                $redis->publish('pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
+                
                 //调用向腕表推送消息的方法
                 $examQueue = ExamQueue::where('student_id', '=', $studentId)
                     ->where('station_id', '=', $stationId)
@@ -790,10 +834,11 @@ class InvigilatePadController extends CommonController
 
                 $request['nfc_code'] = $watchData->code;
                 $studentWatchController->getStudentExamReminder($request);
-
+                
                 $studentModel = new Student();
                 $exam = Exam::doingExam();
                 $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
+                
                 $redis->publish('pad_message', json_encode($this->success_data($publishMessage,102,'学生信息')));
                 return response()->json(
                     $this->success_data(['start_time'=>$date,'student_id'=>$studentId], 1, '开始考试成功')
@@ -802,10 +847,10 @@ class InvigilatePadController extends CommonController
             return response()->json(
                 $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
             );
-        } catch (\Exception $ex) {
-            \Log::alert($ex->getMessage() . '');
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            \Log::alert($ex->getMessage() . '');
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
