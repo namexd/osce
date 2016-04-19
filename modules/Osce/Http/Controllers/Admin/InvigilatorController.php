@@ -194,29 +194,27 @@ class InvigilatorController extends CommonController
             }
             //从配置中获取角色对应的ID号, 考官角色默认为1
             $role_id = config('osce.invigilatorRoleId',1);
+            //获取支持的考试项目
+            $subjects = $request->get('subject');
         }else{
             //从配置中获取角色对应的ID号, 巡考角色默认为3
             $role_id = config('osce.patrolRoleId',6);
+            //获取支持的考试项目
+            $subjects = [];
         }
         $teacherData['type']            = $type;
         $teacherData['case_id']         = null;
         $teacherData['status']          = 1;
         $teacherData['create_user_id']  = $user->id;
 
-        //获取支持的考试项目
-        $subjects = $request->get('subject');
 
-//        //从配置中获取角色对应的ID号, 考官角色默认为1
-//        $role_id = config('osce.invigilatorRoleId',1);
 
         $Invigilator    =   new Teacher();
         try{
             if($result = $Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
-
-//                return redirect()->back('osce.admin.invigilator.getInvigilatorList')->withErrors(['这个号码已有过关联，不能修改']);
-                
                 $Redirect =teacherCommon::handleRedirect($request,$result);
                 if($Redirect == false){
+
                     return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type])->withErrors(['msg'=>'保存成功','code'=>1]);
                 }else{
                     return $Redirect;
@@ -227,7 +225,7 @@ class InvigilatorController extends CommonController
                 throw new \Exception('新增失败');
             }
         } catch(\Exception $ex){
-//            return redirect()->back()->withErrors($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
