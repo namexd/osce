@@ -831,7 +831,6 @@ class IndexController extends CommonController
             return \Response::json(array('code' => 2));
         }
         $screen_id = $examScreening->id;
-        dd($screen_id);
         $studentModel = new Student();
         try {
             $examDraftFlowModel = new ExamDraftFlow();
