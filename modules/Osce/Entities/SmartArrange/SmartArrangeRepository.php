@@ -198,7 +198,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
             $this->model->changeEffect($exam, $attributes);
 
             //将数据写入stationStatus
-            $this->model->stationStatus($exam, $attributes);
+            $this->model->stationStatus($exam);
 
             //将数据保存到examOrder
             $this->model->saveStudentOrder($exam);
