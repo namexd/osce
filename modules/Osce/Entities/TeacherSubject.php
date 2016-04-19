@@ -25,12 +25,20 @@ class TeacherSubject extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Subject','id','subject_id');
     }
 
-    public function getTeachers($subject_id, $type){
-        return TeacherSubject::leftJoin('teacher', 'teacher.id', '=', 'teacher_subject.teacher_id')
-            ->where('teacher_subject.subject_id', '=', $subject_id)
-            ->where('teacher.type', '=', $type)
-            ->select(['teacher_subject.teacher_id', 'teacher.name'])->get();
+    public function getTeachers($type, $subject_id){
+        if ($subject_id == 0){
+
+            return Teacher::where('archived','=',0)->where('type','=', $type)->select(['id as teacher_id', 'name'])->get();
+        }else{
+
+            return TeacherSubject::leftJoin('teacher', 'teacher.id', '=', 'teacher_subject.teacher_id')
+                ->where('teacher_subject.subject_id', '=', $subject_id)
+                ->where('teacher.type', '=', $type)
+                ->select(['teacher_subject.teacher_id', 'teacher.name'])->get();
+        }
+
     }
+
 
     /**
      * 获取当前正在考试的考试对应的所有老师考试项目关系数据
