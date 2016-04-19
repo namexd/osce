@@ -250,6 +250,7 @@ class ExamArrangeController extends CommonController
         $roomId = $request->get('room');
         $DraftId = $request->get('draft_id');
 
+
         try {
             //获取当前操作信息
             $user = Auth::user();
