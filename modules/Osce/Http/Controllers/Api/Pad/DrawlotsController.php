@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\ExamFlowRoom;
@@ -612,7 +613,7 @@ class DrawlotsController extends CommonController
             $room = $this->getRoomId($id, $exam->id);
 
             //判断其考站或考场是否在该次考试中使用
-            $this->checkEffected($exam, $room, $station);
+//            $this->checkEffected($exam, $room, $station);
 
             //将考场名字和考站名字封装起来
             $station->name = $room->name . '-' . $station->name;
@@ -949,7 +950,12 @@ class DrawlotsController extends CommonController
      */
     private function checkEffected($exam, $room, $station)
     {
-        switch ($exam->sequence_mode) {
+
+        $examMsg = StationTeacher::where('exam_id', $exam->id)-;
+        if(is_null($examMsg)){
+            throw new \Exception('当前老师并没有被安排在这场考试中', -1011);
+        }
+        /*switch ($exam->sequence_mode) {
             case 1:
                 $examFlowRooms = ExamFlowRoom::where('room_id', $room->id)
                     ->where('exam_id', $exam->id)->get();
@@ -969,6 +975,6 @@ class DrawlotsController extends CommonController
             default:
                 throw new \Exception('系统异常，请重试', -955);
                 break;
-        }
+        }*/
     }
 }
