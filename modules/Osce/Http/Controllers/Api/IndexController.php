@@ -822,18 +822,18 @@ class IndexController extends CommonController
         //$screen_id = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->orderBy('begin_dt')->first();
         $examScreeningModel =   new ExamScreening();
         $examScreening      =   $examScreeningModel ->  getExamingScreening($exam_id);
-        var_dump($examScreening);echo "<br>";
+
         if(is_null($examScreening))
         {
             $examScreening  =   $examScreeningModel->getNearestScreening($exam_id);
         }
-        dd($examScreening);
+
         if (!$examScreening) {
             return \Response::json(array('code' => 2));
         }
         $screen_id = $examScreening->id;
         $studentModel = new Student();
-//        try {
+        try {
             $screenModel = new ExamScreening();
 
 //            $stations = $examDraftFlowModel->leftjoin('exam_draft', function ($join) {
@@ -911,11 +911,11 @@ class IndexController extends CommonController
 //                );
 //            }
 
-//        } catch (\Exception $ex) {
-//            return response()->json(
-//                $this->fail($ex)
-//            );
-//        }
+        } catch (\Exception $ex) {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
     }
 
 
