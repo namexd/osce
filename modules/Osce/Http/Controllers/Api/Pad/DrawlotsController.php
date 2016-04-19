@@ -637,7 +637,7 @@ class DrawlotsController extends CommonController
             }
 
             //将考场的id封装进去
-            $station->room_id = $room->id;
+            $station->room_id = $room->room_id;
 
             //将考试的id封装进去
             $station->exam_id = $exam->id;
