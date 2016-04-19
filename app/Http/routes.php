@@ -30,6 +30,7 @@ Route::group(['prefix' => "api/1.0/public",'middleware' => ['cors']], function()
             $redis->publish('pad_message', json_encode(['code' => 100,'message' => '登录成功','data' => $userEnter]));
              return $userEnter;
         }catch (\Exception $ex) {
+            dd($ex);
             if( $ex->getMessage()=='The user credentials were incorrect.'){
                 return \Response::json( [ 'access_token' => 'defeat', 'token_type' =>'defeat','expires_in'=>0,'user_id'=>'defeat'] );
             }else{
