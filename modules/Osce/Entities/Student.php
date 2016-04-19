@@ -377,7 +377,7 @@ class Student extends CommonModel
             }
             //查询用户角色
             $sysUserRole = SysUserRole::where('user_id','=',$user->is)->where('role_id','=',$role_id)->first();
-            if(!$sysUserRole){
+            if(is_null($sysUserRole)){
                 DB::table('sys_user_role')->insert(
                     [
                         'role_id'   => $role_id,
@@ -400,15 +400,20 @@ class Student extends CommonModel
             $password = '123456';
             $user = $this->registerUser($userData, $password);
             $this ->sendRegisterEms($userData['mobile'], $password);
+            //查询用户角色
+            $sysUserRole = SysUserRole::where('user_id','=',$user->is)->where('role_id','=',$role_id)->first();
             //给用户分配角色
-            DB::table('sys_user_role')->insert(
-                [
-                    'role_id'   => $role_id,
-                    'user_id'   => $user->id,
-                    'created_at'=> date('Y-m-d H:i:s'),
-                    'updated_at'=> date('Y-m-d H:i:s'),
-                ]
-            );
+            if(is_null($sysUserRole)){
+                DB::table('sys_user_role')->insert(
+                    [
+                        'role_id'   => $role_id,
+                        'user_id'   => $user->id,
+                        'created_at'=> date('Y-m-d H:i:s'),
+                        'updated_at'=> date('Y-m-d H:i:s'),
+                    ]
+                );
+            }
+
         }
 
         return $user;
