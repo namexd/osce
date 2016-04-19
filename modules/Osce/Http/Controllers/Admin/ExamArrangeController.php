@@ -250,6 +250,7 @@ class ExamArrangeController extends CommonController
         $roomId = $request->get('room');
         $DraftId = $request->get('draft_id');
 
+
         try {
             //获取当前操作信息
             $user = Auth::user();
@@ -823,9 +824,9 @@ class ExamArrangeController extends CommonController
         try {
             //验证
             $this->validate($request, [
-                'subject_id' => 'required|integer',
-                'type' => 'required|integer',
-                'teacher_id' => 'sometimes'
+                'subject_id'    => 'required|integer',
+                'type'          => 'required|integer',
+                'teacher_id'    => 'sometimes'
             ]);
             
             $subject_id = intval($request->get('subject_id'));
