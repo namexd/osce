@@ -1465,10 +1465,10 @@ function exam_basic_info(){
             var html = '<tr>'+
                 '<td>'+parseInt(index)+'</td>'+
                 '<td class="laydate">'+
-                '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+                '<input type="text" class="laydate-icon end data_start" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
                 '</td>'+
                 '<td class="laydate">'+
-                '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
+                '<input type="text" class="laydate-icon end data_end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
                 '</td>'+
                 '<td>0天0小时0分</td>'+
                 '<td class="check_select">' +
