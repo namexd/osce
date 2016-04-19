@@ -1605,7 +1605,7 @@ function course_module(){
             number = true;
         $('#things-use tbody').find('tr').each(function(key,elem){
             goods = true;
-
+            console.log($(elem).find('input').val())
             if($(elem).find('input').val()==''){
                 goods = false;
                 return false;
@@ -2351,7 +2351,7 @@ function course_module(){
                             '<select class="form-control js-example-basic-single" name="goods['+index+'][name]" style="width: 481px;"></select>'+
                         '</td>'+
                         '<td>'+
-                            '<input class="form-control" type="number" value="1" name="goods['+index+'][number]" placeholder="请输入数量"/>'+
+                            '<input class="form-control" type="number" value="1" name="goods['+index+'][number]" placeholder="请输入数量" min="1"/>'+
                         '</td>'+
                         '<td>'+
                             '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
