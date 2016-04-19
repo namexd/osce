@@ -692,8 +692,8 @@ class ExamQueue extends CommonModel
                     /*
                      * 将考试结束的时间写进锚点表里
                      */
-                    CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
-                        $teacherId, [strtotime($date)]);
+//                    CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
+//                        $teacherId, [strtotime($date)]);
 
                     //将该学生的阻塞状态变成1
                     if (!ExamQueue::where('exam_id', $queue->exam_id)
