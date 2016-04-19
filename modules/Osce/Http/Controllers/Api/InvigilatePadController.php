@@ -772,12 +772,11 @@ class InvigilatePadController extends CommonController
 //           }
             $ExamQueueModel = new ExamQueue();
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$type);
-            dd(ExamQueue::find(9)->status);
+
 
             if ($AlterResult) {
-                \Log::alert($AlterResult);
                 $redis->publish('pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
-
+                dump(ExamQueue::find(9)->status);
                 //调用向腕表推送消息的方法
                 $examQueue = ExamQueue::where('student_id', '=', $studentId)
                     ->where('station_id', '=', $stationId)
@@ -790,10 +789,11 @@ class InvigilatePadController extends CommonController
 
                 $request['nfc_code'] = $watchData->code;
                 $studentWatchController->getStudentExamReminder($request);
-
+                dump(ExamQueue::find(9)->status);
                 $studentModel = new Student();
                 $exam = Exam::doingExam();
                 $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
+                dump(ExamQueue::find(9)->status);
                 $redis->publish('pad_message', json_encode($this->success_data($publishMessage,102,'学生信息')));
                 return response()->json(
                     $this->success_data(['start_time'=>$date,'student_id'=>$studentId], 1, '开始考试成功')
