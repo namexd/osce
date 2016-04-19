@@ -239,7 +239,6 @@ class InvitationController extends CommonController
                     }
                 }
 
-
                 //根据老师id查询老师的信息和openid
                 $teacher = new Teacher();
                 $teacherData = $teacher->invitationContent($teacherId);
