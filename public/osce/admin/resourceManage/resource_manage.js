@@ -1383,7 +1383,7 @@ function site_manage_add() {
                        message: '可使用面积不能为空'
                    },
                     regexp: {
-                        regexp: /^[0-9]*$/,
+                        regexp: /^\d+(\.\d+)?$/,
                         message: '使用面积必须输入数字'
                     }
                 }
@@ -1495,7 +1495,7 @@ function site_manage_edit() {
                        message: '可使用面积不能为空'
                    },
                     regexp: {
-                        regexp: /^[0-9]*$/,
+                        regexp: /^\d+(\.\d+)?$/,
                         message: '使用面积必须输入数字'
                     }
                 }
