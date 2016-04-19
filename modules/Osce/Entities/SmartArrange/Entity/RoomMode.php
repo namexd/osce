@@ -57,15 +57,20 @@ class RoomMode extends AbstractEntity implements EntityInterface
     private function mergeRoom($entities)
     {
         $array = [];
-        $temp = $entities->groupBy('room_id');
-        foreach ($temp as $item) {
-            if (count($item) > 1) {
-                $array[] = $item->sortBy('mins')->pop();
-            } else {
-                $array[] = $item;
+        $tempGroups = $entities->groupBy('room_id');
+//        dd($temp);
+        foreach ($tempGroups as $temp)
+        {
+//            dd($temp);
+            foreach ($temp as $item) {
+                if (count($item) > 1) {
+                    $array[] = $item->sortBy('mins')->pop();
+                } else {
+                    $array[] = $item;
+                }
             }
         }
-
+        dd(collect($array));
         return collect($array)->collapse();
     }
 }

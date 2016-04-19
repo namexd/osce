@@ -272,6 +272,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$standardPid=0){
+        //dd($ExamId.','.$SubjectId);468,12,exam_screening.id:477 exam_result:11,12,13
         $DB = \DB::connection('osce_mis');
 
         $builder = $this->ExamResultModel->leftJoin('station', function($join){
@@ -282,28 +283,34 @@ class SubjectStatisticsRepositories  extends BaseRepository
             $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
         })->leftJoin('exam_score', function($join){
             $join -> on('exam_score.exam_result_id', '=','exam_result.id');
+        })->leftJoin('standard_item', function($join){
+            $join -> on('standard_item.id', '=','exam_score.standard_id');
         })->leftJoin('standard', function($join){
-            $join -> on('standard.id', '=','exam_score.standard_id');
+            $join -> on('standard_item.standard_id', '=','standard.id');
         });
 
 
         $builder = $builder->where('subject.id','=',$SubjectId)
             ->where('exam_screening.exam_id','=',$ExamId);
 
+
+
+
         //根据需求 group不同的字段
         if($standardPid){
-            $builder = $builder->where('standard.pid','=',$standardPid)
+            $builder = $builder->where('standard_item.pid','=',$standardPid)
                 ->groupBy($DB->raw('standard.id,exam_result.student_id'));
         }else{
-            $builder = $builder->groupBy($DB->raw('standard.pid,exam_result.student_id'));
+            $builder = $builder->groupBy($DB->raw('standard_item.pid,exam_result.student_id'));
         }
 
         $builder->select(
-                'standard.pid as pid',
+                'standard_item.pid as pid',
                 'standard.id as standard_id',
                 'exam_result.student_id',
+                'exam_result.id',
                 $DB->raw('SUM(exam_score.score) as score'),//该科目的某一个考核点实际得分
-                $DB->raw('SUM(standard.score) as Zscore')   //该科目所有考核点总分
+                $DB->raw('SUM(standard_item.score) as Zscore')   //该科目所有考核点总分
             );
         return  $builder->get();
     }

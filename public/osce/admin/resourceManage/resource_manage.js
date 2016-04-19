@@ -713,6 +713,10 @@ function equipment_manage_video_add() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '端口不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]*[1-9][0-9]*$/,
+                        message: '请输入正确的端口'
                     }
                 }
             },
@@ -722,6 +726,10 @@ function equipment_manage_video_add() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '实时端口不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]*[1-9][0-9]*$/,
+                        message: '请输入正确的实时端口'
                     }
                 }
             },
@@ -888,6 +896,10 @@ function equipment_manage_video_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '端口不能为空'
+                    },
+                    regexp: {
+                        regexp:  /^[0-9]*[1-9][0-9]*$/,
+                        message: '请输入正确的端口'
                     }
                 }
             },
@@ -897,6 +909,10 @@ function equipment_manage_video_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '实时端口不能为空'
+                    },
+                    regexp: {
+                        regexp:  /^[0-9]*[1-9][0-9]*$/,
+                        message: '请输入正确的实时端口'
                     }
                 }
             },
