@@ -171,7 +171,7 @@ class ExamDraft extends CommonModel
             //获取 不为null的值
             $examDraft = $this->getNotNullValue($examDraft, 'station_id', $item);
             $examDraft = $this->getNotNullValue($examDraft, 'room_id',    $item);
-            $examDraft = $this->getNotNullValue($examDraft, 'subject_id', $item);
+            $examDraft->subject_id = $item->subject_id;
             $examDraft = $this->getNotNullValue($examDraft, 'effected',   $item);
 
             if(!$examDraft->save())
@@ -203,7 +203,7 @@ class ExamDraft extends CommonModel
             //获取 不为null的值
             $examDraft = $this->getNotNullValue($examDraft, 'station_id', $item);
             $examDraft = $this->getNotNullValue($examDraft, 'room_id',    $item);
-            $examDraft = $this->getNotNullValue($examDraft, 'subject_id', $item);
+            $examDraft->subject_id = $item->subject_id;
             $examDraft = $this->getNotNullValue($examDraft, 'effected',   $item);
 
             if(!$examDraft->save())
@@ -227,8 +227,8 @@ class ExamDraft extends CommonModel
             $item   = $data['item'];
             $draft_flow_temp_id = $item->old_draft_flow_id;
             $exam_draft_flow_id = ExamDraftFlowTemp::where('id','=',$draft_flow_temp_id)->first();
-            $this->judgeValueIfNull($exam_draft_flow_id, -204, '数据有误，请重试！');       //判断值是否为null
-            $this->judgeValueIfNull($exam_draft_flow_id->exam_draft_flow_id, -205, '排序有误，请重试！');       //判断值是否为null
+            $this->judgeValueIfNull($exam_draft_flow_id, -204, '数据有误，请重试！');                        //判断值是否为null
+            $this->judgeValueIfNull($exam_draft_flow_id->exam_draft_flow_id, -205, '排序有误，请重试！');    //判断值是否为null
 
             $draftData = [
                 'station_id'        => $item->station_id,
