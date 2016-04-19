@@ -281,9 +281,14 @@ class InvigilatePadController extends CommonController
             ]);
 
             $stationId = $request->get('station_id');
-        dump($stationId);
 
             $examId = $request->get('exam_id');
+            if(empty($examId))
+            {
+                $exam   =  Exam::doingExam();
+                $examId =   $exam->id;
+            }
+
             //根据考站id查询出下面所有的考试项目
             $station = Station::find($stationId);
             $ExamScreening   =  new ExamScreening();
@@ -292,6 +297,7 @@ class InvigilatePadController extends CommonController
             {
                 $screening  =   $ExamScreening->getNearestScreening($examId);
             }
+            dd($screening);
             if(is_null($screening))
             {
                 throw new \Exception('没有对应的考试');
