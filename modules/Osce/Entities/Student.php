@@ -375,18 +375,8 @@ class Student extends CommonModel
             if (!($user->save())) {      //跟新用户
                 throw new \Exception('新增考生失败！');
             }
-            //查询用户角色
-            $sysUserRole = SysUserRole::where('user_id','=',$user->is)->where('role_id','=',$role_id)->first();
-            if(is_null($sysUserRole)){
-                DB::table('sys_user_role')->insert(
-                    [
-                        'role_id'   => $role_id,
-                        'user_id'   => $user->id,
-                        'created_at'=> date('Y-m-d H:i:s'),
-                        'updated_at'=> date('Y-m-d H:i:s'),
-                    ]
-                );
-            }
+            //给用户分配角色
+            $this->addUserRoles($user, $role_id);
 
         } else {      //如果没找到，新增处理,   如果新增成功，发短信通知用户
 
@@ -400,20 +390,8 @@ class Student extends CommonModel
             $password = '123456';
             $user = $this->registerUser($userData, $password);
             $this ->sendRegisterEms($userData['mobile'], $password);
-            //查询用户角色
-            $sysUserRole = SysUserRole::where('user_id','=',$user->is)->where('role_id','=',$role_id)->first();
             //给用户分配角色
-            if(is_null($sysUserRole)){
-                DB::table('sys_user_role')->insert(
-                    [
-                        'role_id'   => $role_id,
-                        'user_id'   => $user->id,
-                        'created_at'=> date('Y-m-d H:i:s'),
-                        'updated_at'=> date('Y-m-d H:i:s'),
-                    ]
-                );
-            }
-
+            $this->addUserRoles($user, $role_id);
         }
 
         return $user;
@@ -437,6 +415,30 @@ class Student extends CommonModel
     {
         //发送短消息
         Common::sendRegisterEms($mobile, $password);
+    }
+
+    /**
+     * 给用户分配角色
+     * @param $user
+     * @param $role_id
+     * @return mixed
+     */
+    private function addUserRoles($user, $role_id)
+    {
+        //查询用户角色
+        $sysUserRole = SysUserRole::where('user_id','=',$user->id)->where('role_id','=',$role_id)->first();
+        //给用户分配角色
+        if(is_null($sysUserRole)){
+            $sysUserRole = DB::table('sys_user_role')->insert(
+                        [
+                            'role_id'   => $role_id,
+                            'user_id'   => $user->id,
+                            'created_at'=> date('Y-m-d H:i:s'),
+                            'updated_at'=> date('Y-m-d H:i:s'),
+                        ]
+            );
+        }
+        return $sysUserRole;
     }
 
     /**
