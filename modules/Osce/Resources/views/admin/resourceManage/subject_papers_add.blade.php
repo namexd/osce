@@ -216,11 +216,11 @@
                 var now = 0;
                 var length = $('#paper2 tbody tr').length;//修改时获取tr数量
                 var verify=/^[0-9]\d*$/;
-                var questionScore=$("#addForm input[name='questionScore']").val();
-                if(!verify.test(questionScore) || questionScore>=20){//判断输入是否为整数
-                    layer.alert('每题分数必须为不能大于20的正整数!');
+                if(!verify.test($("#addForm input[name='questionScore']").val())){//判断输入是否为整数
+                    layer.alert('每题分数必须为正整数!');
+                    console.log('ss');
                     return false;
-                } else {
+                }else {
                 if(length){
                     now = length;
                 }else{

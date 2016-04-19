@@ -1383,7 +1383,7 @@ function site_manage_add() {
                        message: '可使用面积不能为空'
                    },
                     regexp: {
-                        regexp: /^\d+(\.\d+)?$/,
+                        regexp: /^[0-9]*$/,
                         message: '使用面积必须输入数字'
                     }
                 }
@@ -1495,7 +1495,7 @@ function site_manage_edit() {
                        message: '可使用面积不能为空'
                    },
                     regexp: {
-                        regexp: /^\d+(\.\d+)?$/,
+                        regexp: /^[0-9]*$/,
                         message: '使用面积必须输入数字'
                     }
                 }
@@ -1592,11 +1592,11 @@ function course_module(){
                 str = scores < 0 ? ('比总分多'+Math.abs(scores)+'分！'):('比总分少'+Math.abs(scores)+'分！')
 
             if(isNaN(scores)) {
-                layer.alert('请添加考核项/评分标准或填写总分');
+                layer.alert('请添加考核项/评分标准');
             } else {
                 layer.alert(str);
             }
-            
+
             return false;
         }
 
@@ -1605,14 +1605,6 @@ function course_module(){
             number = true;
         $('#things-use tbody').find('tr').each(function(key,elem){
             goods = true;
-
-
-            var reg = new RegExp("^[0-9]*$");
-            if(!reg.test($(elem).find('input').val())){
-                number = false;
-                return false;
-            };
-
             if($(elem).find('input').val()==''){
                 goods = false;
                 return false;
@@ -1637,7 +1629,7 @@ function course_module(){
 
         //检查物品数
         if(number == false) {
-            layer.alert('物品数必须正整数');
+            layer.alert('物品数必须大于0');
             return false;
         }
 
@@ -2358,7 +2350,7 @@ function course_module(){
                             '<select class="form-control js-example-basic-single" name="goods['+index+'][name]" style="width: 481px;"></select>'+
                         '</td>'+
                         '<td>'+
-                            '<input class="form-control" type="number" value="1" name="goods['+index+'][number]" placeholder="请输入数量"/>'+
+                            '<input class="form-control" type="number" value="1" name="goods['+index+'][number]" placeholder="请输入数量" min="1"/>'+
                         '</td>'+
                         '<td>'+
                             '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
