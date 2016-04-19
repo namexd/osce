@@ -76,7 +76,7 @@ class PasswordGrant extends AbstractGrant
         if (is_null($this->callback) || !is_callable($this->callback)) {
             throw new Exception\ServerErrorException('Null or non-callable callback set on Password grant');
         }
-        dd($this->callback);
+
         return $this->callback;
     }
 

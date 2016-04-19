@@ -12,7 +12,7 @@ class PasswordGrantVerifier
         {
             return false;
         }
-        dd($username,$password);
+
         if (Auth::attempt(['username' => $username, 'password' =>$password])    ||
             Auth::attempt(['code' => $username, 'password' =>$password])        ||
             Auth::attempt(['mobile' => $username, 'password' =>$password])      ||
