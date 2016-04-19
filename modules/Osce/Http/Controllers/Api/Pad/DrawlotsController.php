@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamDraft;
+use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\ExamFlowRoom;
@@ -613,7 +614,8 @@ class DrawlotsController extends CommonController
             $room = $this->getRoomId($id, $exam->id);
 
             //判断其考站或考场是否在该次考试中使用
-//            $this->checkEffected($exam, $room, $station);
+            $check = $this->checkEffected($exam, $room, $station);
+            Common::valueIsNull($check, -785, '当前考站或考场没有安排在此考试中');
 
             //将考场名字和考站名字封装起来
             $station->name = $room->name . '-' . $station->name;
@@ -950,31 +952,11 @@ class DrawlotsController extends CommonController
      */
     private function checkEffected($exam, $room, $station)
     {
+        return ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft_flow.exam_id', '=', $exam->id)
+            ->where('exam_draft.station_id', $station->id)
+            ->where('exam_draft.room_id', $room->id)
+            ->first();
 
-       /* $examMsg = StationTeacher::where('exam_id', $exam->id)-;
-        if(is_null($examMsg)){
-            throw new \Exception('当前老师并没有被安排在这场考试中', -1011);
-        }*/
-        /*switch ($exam->sequence_mode) {
-            case 1:
-                $examFlowRooms = ExamFlowRoom::where('room_id', $room->id)
-                    ->where('exam_id', $exam->id)->get();
-                $effected = $examFlowRooms->pluck('effected'); //获取effected的一维集合
-                if ($effected->search('1') === false) {  //如果集合里面没有1，就报错
-                    throw new \Exception('当前老师并没有被安排在这场考试中', -1010);
-                }
-                break;
-            case 2:
-                $examFlowStations = ExamFlowStation::where('station_id', $station->id)
-                    ->where('exam_id', $exam->id)->get();
-                $effected = $examFlowStations->pluck('effected'); //获取effected的一维集合
-                if ($effected->search('1') === false) { //如果集合里面没有1，就报错
-                    throw new \Exception('当前老师并没有被安排在这场考试中', -1011);
-                }
-                break;
-            default:
-                throw new \Exception('系统异常，请重试', -955);
-                break;
-        }*/
     }
 }
