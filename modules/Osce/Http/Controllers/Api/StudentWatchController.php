@@ -44,7 +44,6 @@ class StudentWatchController extends CommonController
         $this->validate($request, [
             'nfc_code' => 'required|string'
         ]);
-        dump(ExamQueue::find(9)->status);
         $watchNfcCode = $request->input('nfc_code');
         $data = [
             'title' => '',
