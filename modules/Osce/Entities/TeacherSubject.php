@@ -25,11 +25,13 @@ class TeacherSubject extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Subject','id','subject_id');
     }
 
-    public function getTeachers($subject_id, $type){
-        return TeacherSubject::leftJoin('teacher', 'teacher.id', '=', 'teacher_subject.teacher_id')
-            ->where('teacher_subject.subject_id', '=', $subject_id)
-            ->where('teacher.type', '=', $type)
-            ->select(['teacher_subject.teacher_id', 'teacher.name'])->get();
+    public function getTeachers($type, $subject_id){
+//        return TeacherSubject::leftJoin('teacher', 'teacher.id', '=', 'teacher_subject.teacher_id')
+//            ->where('teacher_subject.subject_id', '=', $subject_id)
+//            ->where('teacher.type', '=', $type)
+//            ->select(['teacher_subject.teacher_id', 'teacher.name'])->get();
+
+        return Teacher::where('type','=', $type)->select(['id as teacher_id', 'name'])->get();
     }
 
     /**

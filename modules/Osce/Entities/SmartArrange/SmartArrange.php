@@ -16,6 +16,7 @@ use Modules\Osce\Entities\SmartArrange\Traits\SQLTraits;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\ExamOrder;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Repositories\Common;
 
@@ -391,31 +392,31 @@ class SmartArrange
     public function saveStudentOrder($exam)
     {
         //$planList = ExamOrder::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
-        $planList = ExamPlanRecord::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
+        $planList = ExamPlan::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
         $studentOrderData = [];
         if (ExamOrder::where('exam_id', '=', $exam->id)->delete() === false) {
             throw new \Exception('弃用旧安排失败');
         }
-//        try {
-        foreach ($planList as $plan) {
-            if (!array_key_exists($plan->student_id, $studentOrderData)) {
-                $studentOrderData[$plan->student_id] = [
-                    'exam_id' => $exam->id,
-                    'exam_screening_id' => $plan->exam_screening_id,
-                    'student_id' => $plan->student_id,
-                    'begin_dt' => $plan->begin_dt,
-                    'status' => 0,
-                    'created_user_id' => \Auth::id(),
-                ];
+        try {
+            foreach ($planList as $plan) {
+                if (!array_key_exists($plan->student_id, $studentOrderData)) {
+                    $studentOrderData[$plan->student_id] = [
+                        'exam_id' => $exam->id,
+                        'exam_screening_id' => $plan->exam_screening_id,
+                        'student_id' => $plan->student_id,
+                        'begin_dt' => $plan->begin_dt,
+                        'status' => 0,
+                        'created_user_id' => \Auth::id(),
+                    ];
+                }
             }
-        }
-        foreach ($studentOrderData as $stduentOrder) {
-            if (!ExamOrder::create($stduentOrder)) {
-                throw new \Exception('保存学生考试顺序失败');
+            foreach ($studentOrderData as $stduentOrder) {
+                if (!ExamOrder::create($stduentOrder)) {
+                    throw new \Exception('保存学生考试顺序失败');
+                }
             }
+        } catch (\Exception $ex) {
+            throw $ex;
         }
-//        } catch (\Exception $ex) {
-//            throw $ex;
-//        }
     }
 }
