@@ -823,9 +823,9 @@ class ExamArrangeController extends CommonController
         try {
             //验证
             $this->validate($request, [
-                'subject_id' => 'required|integer',
-                'type' => 'required|integer',
-                'teacher_id' => 'sometimes'
+                'subject_id'    => 'required|integer',
+                'type'          => 'required|integer',
+                'teacher_id'    => 'sometimes'
             ]);
             
             $subject_id = intval($request->get('subject_id'));

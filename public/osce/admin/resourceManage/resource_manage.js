@@ -1586,11 +1586,17 @@ function course_module(){
                 total += parseInt($(elem).find('td').eq(2).find('span').text());
             }
         });
+
         if(total != parseInt($('#total').val())){
             var scores = parseInt($('#total').val()) - total,
                 str = scores < 0 ? ('比总分多'+Math.abs(scores)+'分！'):('比总分少'+Math.abs(scores)+'分！')
 
-            layer.alert(str);
+            if(isNaN(scores)) {
+                layer.alert('请添加考核项/评分标准');
+            } else {
+                layer.alert(str);
+            }
+            
             return false;
         }
 
