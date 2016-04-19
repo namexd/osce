@@ -305,6 +305,7 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为0时
     private function getStatusWaitExam($examQueueCollect)
     {
+        dd(123);
         $items = array_where($examQueueCollect, function ($key, $value) {
             if ($value->status == 0) {
                 return $value;
@@ -325,7 +326,7 @@ class StudentWatchController extends CommonController
                 'title' => '等待老师准备中',
             ];
         }
-        dump(ExamQueue::find(9)->status);
+
         //判断前面是否有人考试
         if (empty($item->station_id)) {
             $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
@@ -339,7 +340,7 @@ class StudentWatchController extends CommonController
                 ->whereBetween('status', [1, 2])
                 ->count();
         }
-        dump(ExamQueue::find(9)->status);
+
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
         if ($examStudent == 0) {
@@ -347,13 +348,13 @@ class StudentWatchController extends CommonController
         } else {
             $willStudents = $studentnum + 1;
         }
-        dump(ExamQueue::find(9)->status);
+
         //判断预计考试时间
         $examtimes = date('H:i', (strtotime($item->begin_dt)));
         //判断进入如的考场教室名字
         $examRoomName = $item->room->name;
         if ($willStudents > 0) {
-            dump(ExamQueue::find(9)->status);
+
             $data = [
                 'code' => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
                 'title' => '考生等待信息',
@@ -384,7 +385,7 @@ class StudentWatchController extends CommonController
             }
 
         }
-        dump(ExamQueue::find(9)->status);
+
         return $data;
     }
 
