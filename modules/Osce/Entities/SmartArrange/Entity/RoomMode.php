@@ -58,19 +58,15 @@ class RoomMode extends AbstractEntity implements EntityInterface
     {
         $array = [];
         $tempGroups = $entities->groupBy('room_id');
-//        dd($temp);
-        foreach ($tempGroups as $temp)
+        foreach ($tempGroups as $item)
         {
-//            dd($temp);
-            foreach ($temp as $item) {
                 if (count($item) > 1) {
                     $array[] = $item->sortBy('mins')->pop();
                 } else {
-                    $array[] = $item;
+                    $array[] = $item->pop();
                 }
-            }
         }
-        dd(collect($array));
-        return collect($array)->collapse();
+
+        return collect($array);
     }
 }
