@@ -382,7 +382,7 @@ class PadController extends  CommonController{
             'user_id' => 'required|integer'
         ]);
 
-        try {
+//        try {
             //获取当前的服务器时间
             $date = date('Y-m-d H:i:s');
             //通过考生的腕表id来找到对应的队列id
@@ -410,10 +410,10 @@ class PadController extends  CommonController{
 
             return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
 
-        } catch (\Exception $ex) {
-            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
