@@ -113,6 +113,7 @@ class StudentWatchController extends CommonController
 
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect, $redis);
+        dump(ExamQueue::find(9)->status);
         $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'success']));
         return response()->json(
             $this->success_data($data, 1) // 返回给pad的成功信息(code为1)
