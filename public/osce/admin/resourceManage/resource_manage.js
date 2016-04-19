@@ -1592,7 +1592,7 @@ function course_module(){
                 str = scores < 0 ? ('比总分多'+Math.abs(scores)+'分！'):('比总分少'+Math.abs(scores)+'分！')
 
             if(isNaN(scores)) {
-                layer.alert('请添加考核项/评分标准');
+                layer.alert('请添加考核项/评分标准或填写总分');
             } else {
                 layer.alert(str);
             }
@@ -1605,6 +1605,13 @@ function course_module(){
             number = true;
         $('#things-use tbody').find('tr').each(function(key,elem){
             goods = true;
+
+
+            var reg = new RegExp("^[0-9]*$");
+            if(!reg.test($(elem).find('input').val())){
+                number = false;
+                return false;
+            };
 
             if($(elem).find('input').val()==''){
                 goods = false;
@@ -1630,7 +1637,7 @@ function course_module(){
 
         //检查物品数
         if(number == false) {
-            layer.alert('物品数必须大于0');
+            layer.alert('物品数必须正整数');
             return false;
         }
 
