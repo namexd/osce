@@ -8,6 +8,8 @@
 
 namespace Modules\Osce\Entities\SmartArrange\Traits;
 
+use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
+
 trait SundryTraits
 {
     /**
@@ -32,13 +34,14 @@ trait SundryTraits
     public function flowTime()
     {
         $flowTime = 0;
-        foreach ($this->_E as $v) {
+        foreach ($this->_E_F as $value) {
+//        foreach ($this->_E as $v) {
             //如果是数组，先将时间字符串变成时间戳，然后排序，并取最后（最大的数）;
-            if (is_array($v->all())) {
-                $flowTime += $v->pluck('mins')->sort()->pop();
+            if (is_array($value->all())) {
+                $flowTime += $value->pluck('mins')->sort()->pop();
                 //否则就直接加上这个值
             } else {
-                $flowTime += $v->mins;
+                $flowTime += $value->mins;
             }
         }
         return $flowTime;

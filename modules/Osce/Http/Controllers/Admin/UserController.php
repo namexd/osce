@@ -209,7 +209,7 @@ class UserController extends CommonController
         //dd(111);
         if (Auth::check()) {
             $nowTime = time();
-            $type = $request->get('type');
+            $type = $request->input('type', null);
             try {
                 Auth::logout();
                 //修改用户最后登录时间
@@ -220,6 +220,10 @@ class UserController extends CommonController
                     $connection = \DB::connection('sys_mis');
                     $connection->table('users')->where('id', $user->id)->update(['lastlogindate' => $nowTime]);
                 }
+                
+                if($type == 'student'){
+                    return redirect()->route('osce.admin.ApiController.LoginAuthView')->with('message', '你现在已经退出登录了!');
+                }
             } catch (\Exception $ex) {
                 if($type == 'student'){
                     return redirect()->route('osce.admin.ApiController.LoginAuthView')->with('message', '你现在已经退出登录了!');
@@ -228,9 +232,7 @@ class UserController extends CommonController
             }
         }
 
-        if($type == 'student'){
-            return redirect()->route('osce.admin.ApiController.LoginAuthView')->with('message', '你现在已经退出登录了!');
-        }
+
         return redirect()->route('osce.admin.postIndex')->with('message', '你现在已经退出登录了!');
     }
 
