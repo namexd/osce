@@ -365,7 +365,7 @@ class SmartArrange
      * @author Jiangzhiheng
      * @time 2016-04-14 15：35
      */
-    public function stationStatus($exam, array $attributes)
+    public function stationStatus($exam)
     {
         $examStationStatus = ExamStationStatus::where('exam_id', $exam->id)->get();
 
@@ -373,7 +373,9 @@ class SmartArrange
             ExamStationStatus::where('exam_id', $exam->id)->delete();
         }
 
+        $attributes = $this->getDraft($exam)->toArray();
         foreach ($attributes as $attribute) {
+            $attribute['status'] = 0;
             if (!ExamStationStatus::create($attribute)) {
                 throw new \Exception('保存数据失败！');
             };

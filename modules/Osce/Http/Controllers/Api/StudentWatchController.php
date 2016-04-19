@@ -61,6 +61,7 @@ class StudentWatchController extends CommonController
 
         //根据腕表nfc_code找到腕表
         $watch = Watch::where('code', '=', $watchNfcCode)->first();
+        //$redis->publish('watch_message', json_encode(['id'=>$watch->id, 'status'=>$watch->status]));
         if (is_null($watch)) {
             $data['title'] = '未找到腕表';
             $data['code'] = -2;
