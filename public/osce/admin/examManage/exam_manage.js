@@ -4222,11 +4222,11 @@ function station_assignment(){
                 var data = res.data;
 
                 for(var i in data) {
-                    var str = data[i].order - 1;
+                    var str = data[i].order;
                     if(data[i].id == count) {
-                        exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+stationName[str]+'</option>';
+                        exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+str+'</option>';
                     } else {
-                        exam_stage_str += '<option value="'+data[i].id+'">阶段'+stationName[str]+'</option>';
+                        exam_stage_str += '<option value="'+data[i].id+'">阶段'+str+'</option>';
                     }
                 }
             }
@@ -4277,7 +4277,7 @@ function station_assignment(){
 
         //请求数据
         req['exam_id'] = examId;
-        req['name'] = '第'+stationName[index]+'站';
+        req['name'] = '第'+index+'站';
         req['order'] = index;
         req['exam_gradation_id'] = 1;
 
@@ -4292,8 +4292,8 @@ function station_assignment(){
                 var data = res.data;
 
                 for(var i in data) {
-                    var str = data[i].order - 1;
-                    exam_stage_str += '<option value="'+data[i].order+'">阶段'+stationName[str]+'</option>';
+                    var str = data[i].order;
+                    exam_stage_str += '<option value="'+data[i].order+'">阶段'+str+'</option>';
                 }
                 req['order'] = index + 1;
                 req['exam_gradation_id'] = data[0].id;
