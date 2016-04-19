@@ -832,15 +832,23 @@ class IndexController extends CommonController
         }
         $screen_id = $examScreening->id;
         $studentModel = new Student();
-        try {
-            $examDraftFlowModel = new ExamDraftFlow();
+//        try {
+            $screenModel = new ExamScreening();
 
-            $stations = $examDraftFlowModel->leftjoin('exam_draft', function ($join) {
+//            $stations = $examDraftFlowModel->leftjoin('exam_draft', function ($join) {
+//                $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
+//            })->where('exam_draft_flow.exam_id', '=', $exam_id)
+//                ->where('exam_draft_flow.exam_screening_id', '=', $screen_id)
+//                ->select('exam_draft.station_id')
+//                ->get();
+        //查找exam_screening
+        $stations = $screenModel->where('exam_screening.exam_id','=',$exam_id)->leftjoin('exam_gradation', function ($join) {
+                $join->on('exam_gradation.order', '=', 'exam_screening.gradation_order');
+            })->leftjoin('exam_draft_flow', function ($join) {
+                $join->on('exam_draft_flow.order', '=', 'exam_gradation.order');
+            })->leftjoin('exam_draft', function ($join) {
                 $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
-            })->where('exam_draft_flow.exam_id', '=', $exam_id)
-                ->where('exam_draft_flow.exam_screening_id', '=', $screen_id)
-                ->select('exam_draft.station_id')
-                ->get();
+            })->groupBy('exam_screening.id')->get();
             /*
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
             //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
@@ -856,10 +864,13 @@ class IndexController extends CommonController
             foreach($stations as $item){
                 $countStation[]=$item->station_id;
             }
+
             $countStation=array_unique($countStation);
             $batch=config('osce.batch_num');//默认为2
             $countStation=count($countStation)*$batch;//可以绑定的学生数量 考站数乘以倍数
+
             $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);//获取考生队列
+        //dd($list);
             $data=[];
             foreach($list as $itm){
                 $data[]=[
@@ -899,11 +910,11 @@ class IndexController extends CommonController
 //                );
 //            }
 
-        } catch (\Exception $ex) {
-            return response()->json(
-                $this->fail($ex)
-            );
-        }
+//        } catch (\Exception $ex) {
+//            return response()->json(
+//                $this->fail($ex)
+//            );
+//        }
     }
 
 
