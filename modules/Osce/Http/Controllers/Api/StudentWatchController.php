@@ -198,7 +198,7 @@ class StudentWatchController extends CommonController
 
         if ($surplus <= 0) {
             //todo 调用jiangzhiheng接口
-            $endStudentExam = ExamQueue::endStudentQueueExam($item->student_id);
+            //$endStudentExam = ExamQueue::endStudentQueueExam($item->student_id);
         };
         $data = [
             'code' => 4, // 考试状态（对应界面：当前考试剩余时间）
@@ -305,7 +305,6 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为0时
     private function getStatusWaitExam($examQueueCollect)
     {
-        dd(123);
         $items = array_where($examQueueCollect, function ($key, $value) {
             if ($value->status == 0) {
                 return $value;
