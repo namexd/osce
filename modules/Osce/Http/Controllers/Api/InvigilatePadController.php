@@ -15,8 +15,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\ExamAbsent;
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
@@ -269,7 +271,7 @@ class InvigilatePadController extends CommonController
      */
     public function getExamGrade(Request $request)
     {
-        dd(1111);
+      
 //        try {
 
             $this->validate($request, [
@@ -279,13 +281,47 @@ class InvigilatePadController extends CommonController
             ]);
 
             $stationId = $request->get('station_id');
+        dump($stationId);
 
             $examId = $request->get('exam_id');
             //根据考站id查询出下面所有的考试项目
             $station = Station::find($stationId);
+            $ExamScreening   =  new ExamScreening();
+            $screening   =   $ExamScreening  ->getExamingScreening($examId);
+            if(is_null($screening))
+            {
+                $screening  =   $ExamScreening->getNearestScreening($examId);
+            }
+            if(is_null($screening))
+            {
+                throw new \Exception('没有对应的考试');
+            }
+            $exam_gradation =   ExamGradation::where('exam_id','=',$examId)->where('order','=',$screening->gradation_order)->first();
+            if(is_null($exam_gradation))
+            {
+                throw new \Exception('没有找到对应的阶段');
+            }
+            $exam_gradation_id  =   $exam_gradation->id;
 
+            $ExamDraft  =   ExamDraft:: leftJoin('exam_draft_flow','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
+                        ->  where('exam_draft_flow.exam_id','=',$examId)
+                        ->  where('exam_draft_flow.exam_gradation_id','=',$exam_gradation_id)
+                        ->  where('exam_draft.station_id','=',$stationId)
+                        ->  with('station')
+                        ->  first();
+            if(is_null($ExamDraft->subject_id))
+            {
+                if($ExamDraft->station->type==3)
+                {
+                    throw new \Exception('请检查考站类型');
+                }
+                else
+                {
+                    throw new \Exception('请检查考试安排数据');
+                }
+            }
             //考试标准时间
-            $mins = $station->mins;
+            //$mins = $station->mins;
 
             $exam = Exam::find($examId);
 
@@ -295,7 +331,7 @@ class InvigilatePadController extends CommonController
 //            if (count($standardList) != 0) {
 
             $standardItemModel = new StandardItem();
-            $standardItemList = $standardItemModel->getSubjectStandards($station->subject_id);
+            $standardItemList = $standardItemModel->getSubjectStandards($ExamDraft->subject_id);
             //dd($standardItemList);
             if (count($standardItemList) != 0) {
 
