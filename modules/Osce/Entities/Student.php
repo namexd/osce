@@ -421,7 +421,9 @@ class Student extends CommonModel
      * 给用户分配角色
      * @param $user
      * @param $role_id
-     * @return mixed
+     *
+     * @author Zhoufuxiang 2016-04-18
+     * @return object
      */
     private function addUserRoles($user, $role_id)
     {

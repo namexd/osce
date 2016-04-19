@@ -123,7 +123,6 @@
                     async:false,
                     type:"POST",
                     success:function(res){
-                        console.log(res);
                         mark =  res.valid;
                     }
                 });

@@ -226,7 +226,7 @@
                                                     <select class="form-control" name="time[{{$key+1}}][gradation_order]">
                                                         @forelse($examData->gradation as $gradation)
                                                             <option value="{{$gradation->order}}" {{($gradation->order ==$item->gradation_order)?'selected':''}}>
-                                                                阶段{{$examData->gradationVals[$gradation->order]}}
+                                                                阶段{{$gradation->order}}
                                                             </option>
                                                         @empty
                                                         @endforelse

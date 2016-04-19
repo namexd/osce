@@ -291,7 +291,10 @@ class IndexController extends CommonController
             $ExamFlowModel = new  ExamFlow();
             $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
             if($ExamFinishStatus==$studentExamSum){ //如果考试流程结束
-                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
+                if($status != 0){
+                    ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
+                }
+
                 ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
                 $result = Watch::where('id',$id)->update(['status'=>0]);
                 if($result){

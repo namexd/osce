@@ -69,7 +69,6 @@ class StationController extends CommonController
 
         //获得展示数据
         $data = $model->showList([],  $ajax = false, $name);
-
         //将展示数据放在页面上
         return view('osce::admin.resourceManage.exam_station',['data' => $data, 'placeCate'=>$placeCate, 'name'=>$name]);
 
@@ -124,7 +123,6 @@ class StationController extends CommonController
             'type.required'       =>  '考站类型必选',
         ]);
 
-
         try {
             $user = Auth::user();
             if(empty($user)){
@@ -138,6 +136,7 @@ class StationController extends CommonController
             //TODO:考卷 Zhoufuxiang，2016-3-22
             $paperId= $request->input('paper_id');
             if($stationData['type'] == 3){
+                $stationData['subject_id'] = null;
                 if(empty($paperId)){
                     throw new \Exception('考卷必选！');
                 }
@@ -169,7 +168,6 @@ class StationController extends CommonController
             }
 
         } catch (\Exception $ex) {
-
             return redirect()->back()->withErrors($ex->getMessage())->withInput();
         }
 
@@ -251,6 +249,7 @@ class StationController extends CommonController
             //TODO:考卷 Zhoufuxiang，2016-3-22
             $paperId   = $request->input('paper_id');
             if($placeData['type'] == 3){
+                $placeData['subject_id'] = null;
                 if(empty($paperId)){
                     throw new \Exception('考卷必选！');
                 }
@@ -258,8 +257,6 @@ class StationController extends CommonController
             }else{
                 $placeData['paper_id'] = null;
             }
-
-
 
             $formData = [$placeData, $vcrId, $roomId];
 
