@@ -63,9 +63,9 @@ class DrawlotsController extends CommonController
     {
         try {
             //通过教师id去寻找对应的考场,返回考场对象
-            $room = StationTeacher::where('user_id', $teacher_id)->where('exam_id', $examId)->orderBy('created_at',
-                'desc')->first()->station->room;
-
+//            $room = StationTeacher::where('user_id', $teacher_id)->where('exam_id', $examId)->orderBy('created_at',
+//                'desc')->first()->station->room;
+            $room = $this->getStationAndRoom($teacher_id, $examId);
             if ($room->isEmpty()) {
                 throw new \Exception('未能查到该老师对应的考场！');
             }
@@ -535,7 +535,7 @@ class DrawlotsController extends CommonController
             }
 
             //如果考生走错了房间
-        dd($roomId, $watchLog->student_id, $examId);
+//        dd($roomId, $watchLog->student_id, $examId);
             if (ExamQueue::where('room_id', '=', $roomId)
                 ->where('student_id', '=', $watchLog->student_id)
                 ->where('exam_id', '=', $examId)->get()
@@ -632,7 +632,7 @@ class DrawlotsController extends CommonController
             }
 
             //将考场的id封装进去
-            $station->room_id = $room->id;
+            $station->room_id = $room->room_id;
 
             //将考试的id封装进去
             $station->exam_id = $exam->id;
@@ -805,19 +805,21 @@ class DrawlotsController extends CommonController
             $room = $this->getRoomId($id, $exam->id);
 
             //获得考场的id
-            $room_id = $room->id;
+            $room_id = $room->room_id;
             //获得当前考场考站的实例列表
-            $stations = StationTeacher::where('exam_id', $exam->id)->groupBy('station_id')->get();
+//            $stations = StationTeacher::where('exam_id', $exam->id)->groupBy('station_id')->get();
+//
+//            $roomStations = [];
+//
+//            foreach ($stations as $station) {
+//                $thisStationRoomdId = $station->station->roomStation->room_id;
+//                $roomStations[$thisStationRoomdId][] = $station;
+//            }
+            $stationIds = $this->getStationAndRoom($id, $exam->id)->pluck('station_id');
+            $stations = Station::whereIn('id', $stationIds)->get();
 
-            $roomStations = [];
 
-            foreach ($stations as $station) {
-                $thisStationRoomdId = $station->station->roomStation->room_id;
-                $roomStations[$thisStationRoomdId][] = $station;
-            }
-
-
-            return array($room_id, $roomStations[$room_id]);
+            return array($room_id, $stations);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -956,8 +958,26 @@ class DrawlotsController extends CommonController
         return ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft_flow.exam_id', '=', $exam->id)
             ->where('exam_draft.station_id', $station->id)
-            ->where('exam_draft.room_id', $room->id)
+            ->where('exam_draft.room_id', $room->room_id)
             ->first();
 
+    }
+
+    /**
+     * @param $teacher_id
+     * @param $examId
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time
+     */
+    private function getStationAndRoom($teacher_id, $examId)
+    {
+        $room = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->join('station_teacher', 'station_teacher.station_id', '=', 'exam_draft.station_id')
+            ->where('station_teacher.user_id', $teacher_id)
+            ->where('exam_draft_flow.exam_id', '=', $examId)
+            ->where('station_teacher.exam_id', $examId)
+            ->get();
+        return $room;
     }
 }
