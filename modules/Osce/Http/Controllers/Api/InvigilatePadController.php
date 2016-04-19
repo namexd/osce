@@ -269,7 +269,7 @@ class InvigilatePadController extends CommonController
      */
     public function getExamGrade(Request $request)
     {
-        try {
+//        try {
 
             $this->validate($request, [
                 'station_id' => 'required|integer',
@@ -285,6 +285,7 @@ class InvigilatePadController extends CommonController
 
             //考试标准时间
             $mins = $station->mins;
+
             $exam = Exam::find($examId);
 
 //            $StandardItem = new StandardItem();
@@ -306,10 +307,10 @@ class InvigilatePadController extends CommonController
                     $this->fail(new \Exception('数据查询失败'))
                 );
             }
-
-        } catch (\Exception $ex) {
-            \Log::alert($ex->getMessage());
-        }
+//
+//        } catch (\Exception $ex) {
+//            \Log::alert($ex->getMessage());
+//        }
     }
 
     /**
