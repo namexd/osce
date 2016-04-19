@@ -445,14 +445,17 @@ class InvigilatorController extends CommonController
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
         $type = $request->get('type',1);
 
-        if($type==1){
+        if($type == 1){
             if(is_null($request->get('subject'))){
                 throw new \Exception('考试项目必选');
             }
+            //获取支持的考试项目
+            $subjects = $request->get('subject');
+
+        }else{
+            //获取支持的考试项目
+            $subjects = [];
         }
-
-        $subjects    = $request -> get('subject');      //获取考试项目
-
         try{
             $teacherModel   =   new Teacher();
 
@@ -718,7 +721,7 @@ class InvigilatorController extends CommonController
         //返回数组
         return $data;
     }
-    
+
     /**
      * 查询老师是否已经存在(监,巡考老师,sp老师) 接口
      * @api GET /osce/admin/invigilator/postSelectTeacher
@@ -755,7 +758,7 @@ class InvigilatorController extends CommonController
 
     /**
      * 判断教师编号是否已经存在
-     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @url POST /osce/admin/resourcees-manager/postNameUnique
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
      */
     public function postCodeUnique(Request $request)
