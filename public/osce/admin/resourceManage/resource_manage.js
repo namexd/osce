@@ -1495,7 +1495,7 @@ function site_manage_edit() {
                        message: '可使用面积不能为空'
                    },
                     regexp: {
-                        regexp: /^\d+(\.\d+)?$/,
+                        regexp: /^[0-9]*$/,
                         message: '使用面积必须输入数字'
                     }
                 }
@@ -1596,7 +1596,7 @@ function course_module(){
             } else {
                 layer.alert(str);
             }
-            
+
             return false;
         }
 
@@ -1605,14 +1605,11 @@ function course_module(){
             number = true;
         $('#things-use tbody').find('tr').each(function(key,elem){
             goods = true;
-
-
             var reg = new RegExp("^[0-9]*$");
             if(!reg.test($(elem).find('input').val())){
                 number = false;
                 return false;
             };
-
             if($(elem).find('input').val()==''){
                 goods = false;
                 return false;
@@ -2358,7 +2355,7 @@ function course_module(){
                             '<select class="form-control js-example-basic-single" name="goods['+index+'][name]" style="width: 481px;"></select>'+
                         '</td>'+
                         '<td>'+
-                            '<input class="form-control" type="number" value="1" name="goods['+index+'][number]" placeholder="请输入数量"/>'+
+                            '<input class="form-control" type="number" value="1" name="goods['+index+'][number]" placeholder="请输入数量" />'+
                         '</td>'+
                         '<td>'+
                             '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+

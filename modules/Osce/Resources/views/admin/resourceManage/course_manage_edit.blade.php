@@ -262,7 +262,7 @@
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" type="number" value="{{round($subjectSupply->num)}}" name="goods[{{$key+1}}][number]">
+                                                        <input class="form-control" type="number" value="{{round($subjectSupply->num)}}" name="goods[{{$key+1}}][number]" min="1">
                                                     </td>
                                                     <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
                                                 </tr>

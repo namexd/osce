@@ -1820,7 +1820,6 @@ class ExamController extends CommonController
                 }
             }
             $where = ['exam_id'=>$examId, 'mobile' => $mobile];
-
         }elseif(!empty($idcard)){
             $where = ['exam_id'=>$examId, 'idcard' => $idcard];
         }elseif(!empty($code)){
@@ -1837,11 +1836,28 @@ class ExamController extends CommonController
         }
         //是否已存在
         if($result){
-            return json_encode(['valid' =>false]);      //存在
+            return json_encode(['valid' =>false]);
         }else{
             return json_encode(['valid' =>true]);
         }
+
+//       $id  = Student::where('exam_id',$examId)->where('exam_sequence',$examSequence)->select('id')->first();
+//        if(empty($studentId)){
+//            if($id){
+//                return json_encode(['valid' =>false]);
+//            }else{
+//                return json_encode(['valid' =>true]);
+//            }
+//        }else{
+//            if($id){
+//                if($id->id!=$studentId){
+//                    return json_encode(['valid' =>false]);
+//                }else{
+//                    return json_encode(['valid' =>true]);
+//                }
+//            }else{
+//                return json_encode(['valid' =>true]);
+//            }
+//        }
     }
-
-
 }

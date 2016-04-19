@@ -220,7 +220,7 @@
                 if(!verify.test(questionScore) || questionScore>=20){//判断输入是否为整数
                     layer.alert('每题分数必须为不能大于20的正整数!');
                     return false;
-                } else {
+                }else {
                 if(length){
                     now = length;
                 }else{
