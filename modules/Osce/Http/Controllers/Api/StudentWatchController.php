@@ -75,7 +75,7 @@ class StudentWatchController extends CommonController
         if($watch->status == 0){
             $data['title'] = '腕表未绑定';
             $data['code'] = -1; // -1 腕表未绑定
-            $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']));
+            $redis->publish('watch_message', json_encode(['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error1']));
             return response()->json(
                 ['nfc_code'=>$watchNfcCode, 'data'=>$data, 'message'=>'error']
             );
