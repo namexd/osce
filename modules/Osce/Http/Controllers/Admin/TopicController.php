@@ -108,7 +108,7 @@ class TopicController extends CommonController
             'mins'      => 'required',    //时间限制
             'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
-            'desc'      => 'required',    //描述
+            'desc'      => 'sometimes',    //描述
             'goods'     => 'sometimes',    //所需用物
 //            'stem'      => 'required',    //题干
 //            'equipments'=> 'required',    //所需设备
@@ -120,7 +120,6 @@ class TopicController extends CommonController
             'title.unique'      => '该科目已存在',
             'cases.required'    => '请选择病例',
             'total.required'    => '总分必填',
-            'desc.required'     => '必须填写描述',
             'mins.required'     => '必须填写时间限制',
             'content.required'  => '必须新增评分点',
             'score.required'    => '分数必填',
@@ -225,7 +224,7 @@ class TopicController extends CommonController
             'mins'      => 'required',    //时间限制
             'cases'     => 'required',    //病例
             'total'     => 'required',    //总分
-            'desc'      => 'required',    //描述
+            'desc'      => 'sometimes',    //描述
             'goods'     => 'sometimes',   //所需用物
 //            'stem'      => 'required',    //题干
 //            'equipments'=> 'required',    //所需设备
@@ -238,7 +237,6 @@ class TopicController extends CommonController
             'mins.required'     => '必须填写时间限制',
             'cases.required'    => '请选择病例',
             'total.required'    => '总分必填',
-            'desc.required'     => '必须填写描述',
             'content.required'  => '必须新增评分点',
             'score.required'    => '分数必填',
             'description.required'   => '请添加考核项',

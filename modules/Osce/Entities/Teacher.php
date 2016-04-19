@@ -270,90 +270,40 @@ class Teacher extends CommonModel
     }
 
     /**
-     * 新增监考人
+     * 添加老师（监考、巡考）
      * @access public
      *
      * @param array $data
-     * * string        name             用户姓名(必须的)
-     * * string        mobile           用户手机号(必须的)
-     * * string        code             用户工号(必须的)
-     * * string        type             用户类型(必须的)
-     * * string        case_id          病例ID(必须的)
-     * * string        status           用户状态(必须的)
-     * * string        create_user_id   创建人ID(必须的)
+     * * string         $role_id            角色ID(必须的)
+     * * array          $userData           用户信息(必须的)
+     * * array          $teacherData        老师信息(必须的)
+     * * array          $subjects           考试项目
      *
      * @return object
      *
-     * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2016-01-08 10:20
+     * @version 3.4
+     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @date 2016-04-10
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function addInvigilator($role_id, $userData , $teacherData, $subjects = [])
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try{
-            $mobile = $userData['mobile'];
-            $user   = User::where('username', '=', $mobile)->first();
-
-
-            if(!$user){
-                if(config('debug')==true)
-                {
-                    $password   =   123456;
-                }
-                else
-                {
-                    $password   =   Common::getRandStr(6);
-                }
-
-                $user       =   $this   ->  registerUser($userData, $password);
-                $role = SysUserRole::where('role_id','=',$role_id)->where('user_id','=',$user->id)->first();
-                if(empty($role)){
-                    DB::table('sys_user_role')->insert(
-                        [
-                            'role_id'   =>$role_id,
-                            'user_id'   =>$user->id,
-                            'created_at'=>time(),
-                            'updated_at'=>time(),
-                        ]
-                    );
-                }
-                $this -> sendRegisterEms($mobile, $password);
-
-            }else{
-                foreach($userData as $feild=> $value) {
-                    $user    ->  $feild  =   $value;
-                }
-                if(!$result = $user -> save()) {
-                    throw new \Exception('用户修改失败，请重试！');
-                }
-                //查询对应角色
-                $role = SysUserRole::where('role_id','=',$role_id)->where('user_id','=',$user->id)->first();
-                if (empty($role)){
-                    DB::table('sys_user_role')->insert(
-                        [
-                            'role_id'   =>$role_id,
-                            'user_id'   =>$user->id,
-                            'created_at'=>time(),
-                            'updated_at'=>time(),
-                        ]
-                    );
-                }
-            }
+            //处理老师用户信息（基本信息、角色分配）
+            $user = $this->handleUser($userData, $role_id);
 
             //查询老师是否存在
             $teacher    =   $this   ->where('id','=',$user->id)->first();
             //判断老师是否已归档
-            if(!is_null($teacher)&&$teacher->archived==1)
+            if(!is_null($teacher) && $teacher->archived==1)
             {
                 //开档（重新启用老师）
                 $this->openData($teacher);
-            }
-            else
-            {
+
+            } else {
+
                 //查询教师编号是否已经被别人使用
                 $code = $this->where('code', $teacherData['code'])->where('id','<>',$user->id)->first();
                 if(!empty($code)){
@@ -362,6 +312,7 @@ class Teacher extends CommonModel
 
                 if($teacher){
                     throw new \Exception('该教职员工已经存在');
+
                 } else{
                     $teacherData['id'] = $user -> id;
                     if(!($teacher = $this -> create($teacherData))){
@@ -371,18 +322,7 @@ class Teacher extends CommonModel
             }
 
             //插入老师-考试项目 关系 TODO:Zhoufuxiang 2016-3-30
-            if(count($subjects)>0){
-                foreach ($subjects as $index => $subject) {
-                    $subjectData = [
-                        'teacher_id'        => $user->id,
-                        'subject_id'        => $subject,
-                        'created_user_id'   => $teacherData['create_user_id'],
-                    ];
-                    if(!TeacherSubject::create($subjectData)){
-                        throw new \Exception('老师-考试项目关系绑定失败！');
-                    }
-                }
-            }
+            $teacherSubject = $this->handleTeacherSubject($subjects, $user->id, $teacherData['create_user_id']);
 
             $connection->commit();
             return $teacher;
@@ -391,6 +331,46 @@ class Teacher extends CommonModel
             $connection->rollBack();
             throw $ex;
         }
+    }
+
+    /**
+     * 处理用户信息（基本信息、角色分配）
+     * @param $userData
+     *
+     * @author Zhoufuxiang 2016-04-18
+     * @return static
+     * @throws \Exception
+     */
+    private function handleUser($userData, $role_id)
+    {
+        $mobile = $userData['mobile'];
+        //根据条件：查找用户是否有账号和密码
+        $user   = User::where('username', '=', $mobile)->first();
+
+        if(!$user){
+            if(config('debug')==true){
+                $password   =   123456;
+            }else{
+                $password   =   Common::getRandStr(6);
+            }
+
+            $user = $this -> registerUser($userData, $password);
+            $this -> sendRegisterEms($mobile, $password);
+            //给用户分配角色
+            $this -> addUserRoles($user, $role_id);
+
+        }else{
+            foreach($userData as $feild=> $value) {
+                $user    ->  $feild  =   $value;
+            }
+            if(!$result = $user -> save()) {
+                throw new \Exception('用户修改失败，请重试！');
+            }
+            //给用户分配角色
+            $this->addUserRoles($user, $role_id);
+        }
+
+        return $user;
     }
 
     public function registerUser($data,$password){
@@ -414,6 +394,81 @@ class Teacher extends CommonModel
     }
 
     /**
+     * 给用户分配角色
+     * @param $user
+     * @param $role_id
+     *
+     * @author Zhoufuxiang 2016-04-18
+     * @return object
+     */
+    private function addUserRoles($user, $role_id)
+    {
+        //查询用户角色
+        $sysUserRole = SysUserRole::where('user_id','=',$user->id)->where('role_id','=',$role_id)->first();
+        //给用户分配角色
+        if(is_null($sysUserRole)){
+            $sysUserRole = DB::table('sys_user_role')->insert(
+                [
+                    'role_id'   => $role_id,
+                    'user_id'   => $user->id,
+                    'created_at'=> date('Y-m-d H:i:s'),
+                    'updated_at'=> date('Y-m-d H:i:s'),
+                ]
+            );
+        }
+        return $sysUserRole;
+    }
+
+    /**
+     * 处理 老师、考试项目 关联关系
+     * @param $subjects         //考试项目数组
+     * @param $teacher_id       //对应老师ID
+     * @param $operator         //操作人员
+     *
+     * @author Zhoufuxiang 2016-04-18
+     * @throws \Exception
+     */
+    private function handleTeacherSubject($subjects, $teacher_id, $operator)
+    {
+        $teacherSubjects = TeacherSubject::where('teacher_id','=',$teacher_id)->whereNotNull('subject_id')->get();
+
+        $subjectArr  = $teacherSubjects->pluck('subject_id')->toArray();    //取出考试项目数组
+        $delSubjects = array_diff($subjectArr, $subjects);     //原来有，现在没有（删除）
+        $addSubjects = array_diff($subjects, $subjectArr);     //原来没有，现在有（添加）
+
+        //原来没有，现在有（添加）
+        if (!empty($addSubjects))
+        {
+            foreach ($addSubjects as $addSubject)
+            {
+                $subjectData = [
+                    'teacher_id'        => $teacher_id,
+                    'subject_id'        => $addSubject,
+                    'created_user_id'   => $operator,
+                ];
+                $teacherSubjects = TeacherSubject::create($subjectData);
+                if(!$teacherSubjects){
+                    throw new \Exception('添加老师-考试项目关系失败！');
+                }
+            }
+
+        }
+        //原来有，现在没有（删除）
+        if (!empty($delSubjects)){
+            foreach ($delSubjects as $delSubject)
+            {
+                $teacherSubjects = TeacherSubject::where('teacher_id','=',$teacher_id)->where('subject_id','=',$delSubject)->first();
+
+                if(!$teacherSubjects->delete()){
+                    throw new \Exception('删除老师-考试项目关系失败！');
+                }
+            }
+        }
+
+        return $teacherSubjects;
+    }
+
+    /**
      * 编辑非SP教务人员
      * @access public
      *
@@ -434,6 +489,10 @@ class Teacher extends CommonModel
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try{
+            $user = Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
             //教务人员信息变更
             $teacher    =   $this   ->  find($id);
 
@@ -454,50 +513,18 @@ class Teacher extends CommonModel
                 throw new   \Exception('教务人员信息变更失败');
             }
 
-
-            //教务人员用户信息变更
+            //教务人员，用户信息变更
             $userInfo   =   $teacher->userInfo;
-            foreach($userData as $feild => $value) {
+            foreach($userData as $feild => $value)
+            {
                 $userInfo    ->  $feild  =   $value;
             }
             if(!$userInfo->save()){
                 throw new   \Exception('教务人员用户信息变更失败');
             }
 
-            //插入老师-考试项目 关系 TODO:Zhoufuxiang 2016-3-30
-            $user = Auth::user();
-            if(empty($user)){
-                throw new \Exception('未找到当前操作人信息');
-            }
-            if(count($subjects)>0){
-                $subjectIds = [];
-                foreach ($subjects as $subject) {
-                    $subjectIds[] = $subject;
-                    $result = TeacherSubject::where('teacher_id','=',$id)->where('subject_id','=',$subject)->first();
-                    if($result){
-                        continue;   //存在，则跳过
-
-                    }else{
-                        $subjectData = [
-                            'teacher_id'        => $id,
-                            'subject_id'        => $subject,
-                            'created_user_id'   => $user->id,
-                        ];
-                        if(!TeacherSubject::create($subjectData)){
-                            throw new \Exception('老师-考试项目关系绑定失败！');
-                        }
-                    }
-                }
-                $teacherSubjects = TeacherSubject::where('teacher_id','=',$id)->whereNotIn('subject_id',$subjectIds)->get();
-                if(count($teacherSubjects)>0){
-                    foreach ($teacherSubjects as $teacherSubject) {
-                        if(!$teacherSubject->delete()){
-                            throw new \Exception('老师-考试项目关系绑定失败！');
-                        }
-
-                    }
-                }
-            }
+            //处理 老师、考试项目 关联关系 TODO:Zhoufuxiang 2016-3-30
+            $teacherSubject = $this->handleTeacherSubject($subjects, $id, $user);
 
             $connection->commit();
             return $teacher;
@@ -699,7 +726,14 @@ class Teacher extends CommonModel
     }
 
     /**
-     * 导入考生
+     * 导入老师
+     * @param $teacherDatas
+     * @param $operator
+     * @param $type
+     *
+     * @author Zhoufuxiang 2016-03-30
+     * @return int
+     * @throws \Exception
      */
     public function importTeacher($teacherDatas, $operator, $type)
     {

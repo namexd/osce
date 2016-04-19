@@ -1067,12 +1067,12 @@ function exam_assignment_add(){
                 //移除所有的option
                 $('table tr td select option').remove();
                 //获取考生分阶段考试的值
-                var checkbox_num=$(".checkbox_num").val(),
-                    number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                var checkbox_num=$(".checkbox_num").val()/*,
+                    number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];*/
 
                 var checkbox_number='';
                 for(var i=1;i<=checkbox_num;i++) {
-                    checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                    checkbox_number += '<option value="'+i+'">'+'阶段'+i+'</option>';
                 }
                 var html =  checkbox_number;
                 //记录计数
@@ -1089,7 +1089,7 @@ function exam_assignment_add(){
                 //移除所有的option
                 $('table tr td select option').remove();
 
-                var html = '<option value="1">'+'阶段一'+'</option>';
+                var html = '<option value="1">'+'阶段1'+'</option>';
                 //记录计数
                 $('#exam_add').find('select').append(html);
             });
@@ -1108,14 +1108,14 @@ function exam_assignment_add(){
         index = parseInt(index) + 1;
 
         //获取考生分阶段考试的值
-        var checkbox_num=$(".checkbox_num").val(),
-            number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+        var checkbox_num=$(".checkbox_num").val()/*,
+            number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];*/
         /**
          * 这里是生成<阶段>
          */
         var checkbox_number = '';
         for(var i=1;i<=checkbox_num;i++) {
-            checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+            checkbox_number += '<option value="'+i+'">'+'阶段'+i+'</option>';
         }
         //时长默认值
         var timeLength = (Time.getTime('YYYY-MM-DD hh:mm')).split(' ')[1];
@@ -1125,10 +1125,10 @@ function exam_assignment_add(){
          var html = '<tr index= '+parseInt(index)+'>'+
              '<td>'+parseInt(index)+'</td>'+
              '<td class="laydate">'+
-             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
+             '<input type="text" class="laydate-icon end data_start" readonly="readonly" name="time['+parseInt(index)+'][begin_dt]" value="'+Time.getTime('YYYY-MM-DD')+' 00:00"/>'+
              '</td>'+
              '<td class="laydate">'+
-             '<input type="text" class="laydate-icon end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
+             '<input type="text" class="laydate-icon end data_end" readonly="readonly" name="time['+parseInt(index)+'][end_dt]" value="" placeholder="YYYY-MM-DD hh:mm"/>'+
              '</td>'+
              '<td>0天0小时0分</td>'+
              '<td class="check_select">' +
@@ -1186,11 +1186,11 @@ function exam_assignment_add(){
                     //移除所有的option
                     $('table tr td select option').remove();
                     //获取考生分阶段考试的值;
-                    var number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                    /*var number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];*/
 
                     var checkbox_number='';
                     for(var i=1;i<=checkbox_num;i++) {
-                        checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                        checkbox_number += '<option value="'+i+'">'+'阶段'+i+'</option>';
                     }
 
                     var html = checkbox_number;
@@ -1227,7 +1227,16 @@ function exam_assignment_add(){
             $('#exam_add tbody').find('tr').each(function(key,elem){
                 $(elem).find('td').eq(0).text(parseInt(key)+1);
             });
-
+            /*更改name的数字值*/
+            $('#exam_add tbody tr td').find('.data_start').each(function(key,elem){
+                $(elem).eq(0).attr("name",'time['+(parseInt(key)+1)+'][begin_dt]');
+            });
+            $('#exam_add tbody tr td').find('.data_end').each(function(key,elem){
+                $(elem).eq(0).attr("name",'time['+(parseInt(key)+1)+'][end_dt]');
+            });
+            $('#exam_add tbody tr td').find('select').each(function(key,elem){
+                $(elem).eq(0).attr("name",'time['+(parseInt(key)+1)+'][gradation_order]');
+            });
             layer.close(thisID);
         });
         //var thisElement = $(this).parent().parent().parent().parent();
@@ -1391,12 +1400,12 @@ function exam_basic_info(){
                 //移除所有的option
                 $('table tr td select option').remove();
                 //获取考生分阶段考试的值
-                var checkbox_num=$(".checkbox_num").val(),
-                    number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                var checkbox_num=$(".checkbox_num").val()/*,
+                    number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十']*/;
 
                     var checkbox_number='';
                     for(var i=1;i<=checkbox_num;i++) {
-                        checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                        checkbox_number += '<option value="'+i+'">'+'阶段'+i+'</option>';
                     }
 
                     var html =  checkbox_number;
@@ -1416,7 +1425,7 @@ function exam_basic_info(){
                 //移除所有的option
                 $('table tr td select option').remove();
 
-                var html = '<option value="1">'+'阶段一'+'</option>';
+                var html = '<option value="1">'+'阶段1'+'</option>';
                 //记录计数
                 $('#add-basic').find('select').append(html);
 
@@ -1437,8 +1446,8 @@ function exam_basic_info(){
 
 
         //获取考生分阶段考试的值
-        var checkbox_num=$(".checkbox_num").val(),
-            number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+        var checkbox_num=$(".checkbox_num").val()/*,
+            number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十']*/;
 
 
         //时长默认值
@@ -1451,7 +1460,7 @@ function exam_basic_info(){
              */
             var checkbox_number = '';
             for(var i=1;i<=checkbox_num;i++) {
-                checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                checkbox_number += '<option value="'+i+'">'+'阶段'+i+'</option>';
             }
             var html = '<tr>'+
                 '<td>'+parseInt(index)+'</td>'+
@@ -1499,7 +1508,7 @@ function exam_basic_info(){
 
                 //获取考生分阶段考试的值
 
-                var number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];
+                /*var number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];*/
                 //这里是判断《阶段》后面的输入框是不是输入的1-20的整数
                 var pattern = /^(\d|1\d|20)$/gm;
 
@@ -1524,7 +1533,7 @@ function exam_basic_info(){
                      */
                     var checkbox_number = '';
                     for(var i=1;i<=checkbox_num;i++) {
-                        checkbox_number += '<option value="'+i+'">'+'阶段'+number[i]+'</option>';
+                        checkbox_number += '<option value="'+i+'">'+'阶段'+i+'</option>';
                     }
                     var html = checkbox_number;
                     //记录计数
@@ -1560,7 +1569,22 @@ function exam_basic_info(){
             $('#add-basic tbody').find('tr').each(function(key,elem){
                 $(elem).find('td').eq(0).text(parseInt(key)+1);
             });
-
+            /*更改name的数字值*/
+            $('#add-basic tbody tr td').find('.data_start').each(function(key,elem){
+                $(elem).eq(0).attr("name",'time['+(parseInt(key)+1)+'][begin_dt]');
+            });
+            $('#add-basic tbody tr td').find('.data_end').each(function(key,elem){
+                $(elem).eq(0).attr("name",'time['+(parseInt(key)+1)+'][end_dt]');
+            });
+            $('#add-basic tbody tr td').find('.data_startid').each(function(key,elem){
+                $(elem).eq(0).attr("name",'time['+(parseInt(key)+1)+'][id]');
+            });
+            $('#add-basic tbody tr td').find('.data_startexamid').each(function(key,elem){
+                $(elem).eq(0).attr("name",'time['+(parseInt(key)+1)+'][exam_id]');
+            });
+            $('#add-basic tbody tr td').find('select').each(function(key,elem){
+                $(elem).eq(0).attr("name",'time['+(parseInt(key)+1)+'][gradation_order]');
+            });
             layer.close(thisID);
         });
 
@@ -5212,12 +5236,18 @@ function examiner_manage() {
                 dataType: 'json',
                 url: pars.teacher_list,
                 data:function() {
-
-                    return {
+                    var req = {
                         subject_id:$elem.attr('value'),
                         exam_id: exam_id,
                         type:1
                     };
+
+                    //检测是否为理论考站
+                    if($elem.find('td').eq(2).text() == '理论考站') {
+                        req['station_id'] = $elem.attr('data-id');
+                    }
+
+                    return req;
                 },
                 delay: 250,
                 processResults: function (res) {
