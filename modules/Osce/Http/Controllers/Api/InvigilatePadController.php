@@ -777,7 +777,7 @@ class InvigilatePadController extends CommonController
      */
     public function getStartExam(Request $request)
     {
-        try {
+//        try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
                 'station_id' => 'required|integer'
@@ -846,10 +846,10 @@ class InvigilatePadController extends CommonController
             return response()->json(
                 $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
             );
-        } catch (\Exception $ex) {
-            \Log::alert($ex->getMessage() . '');
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            \Log::alert($ex->getMessage() . '');
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
