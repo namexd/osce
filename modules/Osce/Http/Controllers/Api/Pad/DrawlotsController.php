@@ -63,9 +63,14 @@ class DrawlotsController extends CommonController
     {
         try {
             //通过教师id去寻找对应的考场,返回考场对象
-            $room = StationTeacher::where('user_id', $teacher_id)->where('exam_id', $examId)->orderBy('created_at',
-                'desc')->first()->station->room;
-
+//            $room = StationTeacher::where('user_id', $teacher_id)->where('exam_id', $examId)->orderBy('created_at',
+//                'desc')->first()->station->room;
+            $room = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                ->join('station_teacher', 'station_teacher.station_id', '=', 'exam_draft.station_id')
+                ->where('station_teacher.user_id', $teacher_id)
+                ->where('exam_draft_flow.exam_id', '=', $examId)
+                ->where('station_teacher.exam_id', $examId)
+                ->get();
             if ($room->isEmpty()) {
                 throw new \Exception('未能查到该老师对应的考场！');
             }
@@ -535,7 +540,7 @@ class DrawlotsController extends CommonController
             }
 
             //如果考生走错了房间
-        dd($roomId, $watchLog->student_id, $examId);
+//        dd($roomId, $watchLog->student_id, $examId);
             if (ExamQueue::where('room_id', '=', $roomId)
                 ->where('student_id', '=', $watchLog->student_id)
                 ->where('exam_id', '=', $examId)->get()
