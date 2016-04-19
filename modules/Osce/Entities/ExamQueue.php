@@ -426,8 +426,7 @@ class ExamQueue extends CommonModel
 
             }
             // 调用锚点方法
-            //CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
-            $connection->commit();
+//            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
             return true;
         } catch (\Exception $ex) {
             $connection->rollBack();
