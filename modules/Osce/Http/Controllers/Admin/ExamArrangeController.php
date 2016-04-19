@@ -277,11 +277,18 @@ class ExamArrangeController extends CommonController
             if ($type == 3) {
 
                 $ExamDraftTempType  = ExamDraftTemp::find($DraftId);
+
+
                 if(!is_null($subjectId)){
-                    if(!Subject::where('id','=',$subjectId)->first()){
-                        throw new \Exception('该考试项目不存在');
+                    if($subjectId == -999){
+                        $data['subject_id'] =null;
+                    }else{
+                        if(!Subject::where('id','=',$subjectId)->first()){
+                            throw new \Exception('该考试项目不存在');
+                        }
                     }
                     $ExamDraftTempType->subject_id =$data['subject_id'];
+
                 }
                 if(!is_null($stationId)){
 
@@ -828,7 +835,7 @@ class ExamArrangeController extends CommonController
                 'type'          => 'required|integer',
                 'teacher_id'    => 'sometimes'
             ]);
-            
+            dd($request->all());
             $subject_id = intval($request->get('subject_id'));
             $type = intval($request->get('type'));
             $teacherSubject = new TeacherSubject();
