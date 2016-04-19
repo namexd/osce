@@ -123,7 +123,6 @@
                     async:false,
                     type:"POST",
                     success:function(res){
-                        console.log(res);
                         mark =  res.valid;
                     }
                 });
@@ -147,9 +146,9 @@
                 }else if($(".questionScore").val() == ""){
                     layer.alert("每题分数不能为空!");
                     return false;
-                }else if($(".questionScore").val() <= 0 || !(tests.test($(".questionScore").val()))){
+                }else if($(".questionScore").val() <= 0 || parseInt($(".questionScore").val()) >20 ||!(tests.test($(".questionScore").val()))){
                     console.log("w")
-                    layer.alert("每题分数必须为正整数!");
+                    layer.alert("每题分数必须不大于20的正整数!");
                     return false;
                 }
                 return true;

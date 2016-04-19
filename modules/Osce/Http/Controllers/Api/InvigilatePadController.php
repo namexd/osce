@@ -1129,6 +1129,7 @@ class InvigilatePadController extends CommonController
         //开启事务
         $connection = \DB::connection('osce_mis');
         $connection ->beginTransaction();
+
         try{
             $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
             $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
@@ -1143,7 +1144,10 @@ class InvigilatePadController extends CommonController
             $student_id=$student_id->student_id;
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
-
+            //获取学生的考试状态
+            $student = new Student();
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
+            $status = $this->checkType($exameeStatus->status);
             $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
             if(!$screen_id){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
@@ -1171,7 +1175,9 @@ class InvigilatePadController extends CommonController
             $ExamFlowModel = new  ExamFlow();
             $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
             if($ExamFinishStatus==$studentExamSum){ //如果考试流程结束
-                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
+                if($status != 0){
+                    ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
+                }
                 ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
                 $result = Watch::where('id',$id)->update(['status'=>0]);
                 if($result){
@@ -1311,6 +1317,10 @@ class InvigilatePadController extends CommonController
             $student_id=$student_id->student_id;
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
+            //获取学生的考试状态
+            $student = new Student();
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
+            $status = $this->checkType($exameeStatus->status);
 
             $station_id = ExamQueue::where('exam_id','=',$exam_id)->first();
             $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
@@ -1343,7 +1353,9 @@ class InvigilatePadController extends CommonController
             $ExamFlowModel = new  ExamFlow();
             $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
             if($ExamFinishStatus==$studentExamSum){ //如果考试流程结束
-                ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
+                if($status != 0){
+                    ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
+                }
                 ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
                 $result = Watch::where('id',$id)->update(['status'=>0]);
                 if($result){

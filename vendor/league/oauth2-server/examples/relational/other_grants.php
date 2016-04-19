@@ -26,6 +26,7 @@ $server->addGrantType($clientCredentials);
 
 $passwordGrant = new \League\OAuth2\Server\Grant\PasswordGrant();
 $passwordGrant->setVerifyCredentialsCallback(function ($username, $password) {
+    dd(123);
     $result = (new Model\Users())->get($username);
     if (count($result) !== 1) {
         return false;

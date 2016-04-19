@@ -77,15 +77,15 @@ class AutomaticPlanArrangementController extends CommonController
 //            return response()->json($this->fail($ex));
 //        }
 
-//        try {
+        try {
             $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
-//            $app = new App();
+            Common::valueIsNull($exam, -999, '当前的考试错误');
             $smartArrangeRepository = new SmartArrangeRepository($app);
 
             return response()->json($this->success_data($smartArrangeRepository->plan($exam)));
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -105,19 +105,18 @@ class AutomaticPlanArrangementController extends CommonController
         $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
 
         ExamPlan::where('exam_id', $examId)->delete();
-
-        $smartArrangeRepository->store($exam);
+        try {
+            $smartArrangeRepository->store($exam);
         //获取操作者
 //        $user = Auth::user();
 
 
 
-//        try {
 //            $examPlan->storePlan($examId, $user);
 
             return redirect()->route('osce.admin.exam.getIntelligence', ['id' => $examId]);
-//        } catch (\Exception $ex) {
-//            return redirect()->back()->withErrors($ex->getMessage());
-//        }
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 }
