@@ -1596,7 +1596,7 @@ function course_module(){
             } else {
                 layer.alert(str);
             }
-            
+
             return false;
         }
 
@@ -1605,7 +1605,6 @@ function course_module(){
             number = true;
         $('#things-use tbody').find('tr').each(function(key,elem){
             goods = true;
-            console.log($(elem).find('input').val())
             if($(elem).find('input').val()==''){
                 goods = false;
                 return false;
