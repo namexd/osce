@@ -535,7 +535,7 @@ class DrawlotsController extends CommonController
             }
 
             //如果考生走错了房间
-//        dd($roomId, $watchLog->student_id, $examId);
+        dd($roomId, $watchLog->student_id, $examId);
             if (ExamQueue::where('room_id', '=', $roomId)
                 ->where('student_id', '=', $watchLog->student_id)
                 ->where('exam_id', '=', $examId)->get()
