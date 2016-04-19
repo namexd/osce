@@ -339,9 +339,9 @@ class Student extends CommonModel
 
         } catch (\Exception $ex) {
 
-            if ($ex->getCode() == 23000) {
-                throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该手机号码已经使用，请输入新的手机号');
-            }
+//            if ($ex->getCode() == 23000) {
+//                throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该手机号码已经使用，请输入新的手机号');
+//            }
             $connection->rollBack();
             throw $ex;
         }
