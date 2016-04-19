@@ -810,7 +810,7 @@ class DrawlotsController extends CommonController
             $room = $this->getRoomId($id, $exam->id);
 
             //获得考场的id
-            $room_id = $room->id;
+            $room_id = $room->room_id;
             //获得当前考场考站的实例列表
             $stations = StationTeacher::where('exam_id', $exam->id)->groupBy('station_id')->get();
 
