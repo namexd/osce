@@ -42,6 +42,7 @@ return array(
     'CreateUsersPasswordResetsTable' => $baseDir . '/database/migrations/2015_12_17_131354_create_users_password_resets_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2015_12_17_131354_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
+    'ExamineeSeeder' => $baseDir . '/modules/Osce/Database/Seeders/ExamineeSeeder.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
     'File_Iterator_Facade' => $vendorDir . '/phpunit/php-file-iterator/src/Facade.php',
     'File_Iterator_Factory' => $vendorDir . '/phpunit/php-file-iterator/src/Factory.php',

@@ -507,4 +507,24 @@ trait SQLTraits
             ->first();
     }
 
+    /**
+     * 返回当场考试的考站及screen
+     * @author Jiangzhiheng
+     * @time 2016-04-19 10:52
+     */
+    function getDraft($exam)
+    {
+        return ExamScreening::join('exam_gradation', 'exam_gradation.order', '=', 'exam_screening.gradation_order')
+            ->join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
+            ->join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+            ->where('exam_gradation.exam_id', '=', $exam->id)
+            ->where('exam_screening.exam_id', '=', $exam->id)
+            ->select(
+                'exam_screening.id as exam_screening_id',
+                'exam_screening.exam_id as exam_id',
+                'exam_draft.station_id as station_id'
+            )
+            ->get();
+    }
+
 }
