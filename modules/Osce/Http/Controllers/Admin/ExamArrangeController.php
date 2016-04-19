@@ -250,7 +250,6 @@ class ExamArrangeController extends CommonController
         $roomId = $request->get('room');
         $DraftId = $request->get('draft_id');
 
-
         try {
             //获取当前操作信息
             $user = Auth::user();
@@ -277,18 +276,11 @@ class ExamArrangeController extends CommonController
             if ($type == 3) {
 
                 $ExamDraftTempType  = ExamDraftTemp::find($DraftId);
-
-
                 if(!is_null($subjectId)){
-                    if($subjectId == -999){
-                        $data['subject_id'] =null;
-                    }else{
-                        if(!Subject::where('id','=',$subjectId)->first()){
-                            throw new \Exception('该考试项目不存在');
-                        }
+                    if(!Subject::where('id','=',$subjectId)->first()){
+                        throw new \Exception('该考试项目不存在');
                     }
                     $ExamDraftTempType->subject_id =$data['subject_id'];
-
                 }
                 if(!is_null($stationId)){
 
@@ -831,16 +823,16 @@ class ExamArrangeController extends CommonController
         try {
             //验证
             $this->validate($request, [
-                'subject_id'    => 'sometimes',
-                'type'          => 'required|integer',
-                'teacher_id'    => 'sometimes'
+                'subject_id' => 'required|integer',
+                'type' => 'required|integer',
+                'teacher_id' => 'sometimes'
             ]);
-            dd($request->all());
+            
             $subject_id = intval($request->get('subject_id'));
-            $type       = intval($request->get('type'));
+            $type = intval($request->get('type'));
             $teacherSubject = new TeacherSubject();
             //根据考试项目 获取对应的考官
-            $invigilates = $teacherSubject->getTeachers($type, $subject_id);
+            $invigilates = $teacherSubject->getTeachers($subject_id, $type);
 
 
             return response()->json(
