@@ -4101,7 +4101,7 @@ function examinee_manage_edit() {
 function station_assignment(){
 
     //考站名称
-    var stationName = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'],
+    var stationName = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20'],
         examId = (location.href).split('=')[1],
         typeToName = ['','技能考站','sp考站','理论考站'],
         chioceToName = ['选考','必考'];
@@ -4222,11 +4222,11 @@ function station_assignment(){
                 var data = res.data;
 
                 for(var i in data) {
-                    var str = data[i].order;
+                    var str = data[i].order - 1;
                     if(data[i].id == count) {
-                        exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+str+'</option>';
+                        exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+stationName[str]+'</option>';
                     } else {
-                        exam_stage_str += '<option value="'+data[i].id+'">阶段'+str+'</option>';
+                        exam_stage_str += '<option value="'+data[i].id+'">阶段'+stationName[str]+'</option>';
                     }
                 }
             }
@@ -4277,7 +4277,7 @@ function station_assignment(){
 
         //请求数据
         req['exam_id'] = examId;
-        req['name'] = '第'+index+'站';
+        req['name'] = '第'+stationName[index]+'站';
         req['order'] = index;
         req['exam_gradation_id'] = 1;
 
@@ -4292,8 +4292,8 @@ function station_assignment(){
                 var data = res.data;
 
                 for(var i in data) {
-                    var str = data[i].order;
-                    exam_stage_str += '<option value="'+data[i].order+'">阶段'+str+'</option>';
+                    var str = data[i].order - 1;
+                    exam_stage_str += '<option value="'+data[i].order+'">阶段'+stationName[str]+'</option>';
                 }
                 req['order'] = index + 1;
                 req['exam_gradation_id'] = data[0].id;
