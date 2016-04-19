@@ -297,7 +297,7 @@ class InvigilatePadController extends CommonController
             {
                 $screening  =   $ExamScreening->getNearestScreening($examId);
             }
-            dd($screening);
+            
             if(is_null($screening))
             {
                 throw new \Exception('没有对应的考试');
