@@ -718,45 +718,7 @@ class InvigilatorController extends CommonController
         //返回数组
         return $data;
     }
-
-    /**
-     * 导入老师的数据
-     * @api GET /osce/admin/invigilator/import
-     * @access public
-     *
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * int        id        老师ID(必须的)
-     *
-     * @param Teacher $teacher
-     * @return redirect
-     * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
-     * @date 2016-01-09 16：48
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function postImportTeacher(Request $request, Teacher $teacher)
-    {
-        try {
-            //导入
-            $data = $this->postImport($request);
-            //将创建人插入到数组中
-            $createUser = Auth::user();
-            $data['create_user_id'] = $createUser->id;
-
-            //将数组导入到模型中的addInvigilator方法
-            if ($teacher->addInvigilator($data)) {
-
-                throw new \Exception('系统出错，请重试！');
-            } else {
-                echo json_encode($this->success_data());
-            }
-
-        } catch (\Exception $ex) {
-            echo json_encode($this->fail($ex));
-        }
-    }
-
+    
     /**
      * 查询老师是否已经存在(监,巡考老师,sp老师) 接口
      * @api GET /osce/admin/invigilator/postSelectTeacher
