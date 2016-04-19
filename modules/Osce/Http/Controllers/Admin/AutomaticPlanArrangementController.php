@@ -111,12 +111,12 @@ class AutomaticPlanArrangementController extends CommonController
 //        $user = Auth::user();
 
 
-//        try {
+        try {
 //            $examPlan->storePlan($examId, $user);
 
-        return redirect()->route('osce.admin.exam.getIntelligence', ['id' => $examId]);
-//        } catch (\Exception $ex) {
-//            return redirect()->back()->withErrors($ex->getMessage());
-//        }
+            return redirect()->route('osce.admin.exam.getIntelligence', ['id' => $examId]);
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 }
