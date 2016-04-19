@@ -620,7 +620,6 @@ class DrawlotsController extends CommonController
             $room = $this->getRoomId($id, $exam->id);
 
             //判断其考站或考场是否在该次考试中使用
-            dd($exam, $room, $station);
             $check = $this->checkEffected($exam, $room, $station);
             Common::valueIsNull($check, -785, '当前考站或考场没有安排在此考试中');
 
@@ -962,7 +961,7 @@ class DrawlotsController extends CommonController
         return ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft_flow.exam_id', '=', $exam->id)
             ->where('exam_draft.station_id', $station->id)
-            ->where('exam_draft.room_id', $room->id)
+            ->where('exam_draft.room_id', $room->room_id)
             ->first();
 
     }
