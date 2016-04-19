@@ -835,7 +835,6 @@ class ExamArrangeController extends CommonController
                 'type'          => 'required|integer',
                 'teacher_id'    => 'sometimes'
             ]);
-            dd($request->all());
             $subject_id = intval($request->get('subject_id'));
             $type       = intval($request->get('type'));
             $teacherSubject = new TeacherSubject();
