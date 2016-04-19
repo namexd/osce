@@ -746,7 +746,7 @@ class ExamArrangeController extends CommonController
              }
 //         }
          $teacher = $datas->toArray();
-//         dd($teacher);
+      
 
 
          foreach($teacher as &$teacherData){
