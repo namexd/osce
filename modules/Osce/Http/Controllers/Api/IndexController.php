@@ -832,7 +832,7 @@ class IndexController extends CommonController
         }
         $screen_id = $examScreening->id;
         $studentModel = new Student();
-//        try {
+        try {
             $examDraftFlowModel = new ExamDraftFlow();
 
             $stations = $examDraftFlowModel->leftjoin('exam_draft', function ($join) {
@@ -859,9 +859,7 @@ class IndexController extends CommonController
             $countStation=array_unique($countStation);
             $batch=config('osce.batch_num');//默认为2
             $countStation=count($countStation)*$batch;//可以绑定的学生数量 考站数乘以倍数
-        echo $exam_id.','.$screen_id.','.$countStation;
-            $list = $studentModel->getStudentQueue($exam_id, $screen_id,5);//获取考生队列
-        dd($list);
+            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);//获取考生队列
             $data=[];
             foreach($list as $itm){
                 $data[]=[
@@ -901,11 +899,11 @@ class IndexController extends CommonController
 //                );
 //            }
 
-//        } catch (\Exception $ex) {
-//            return response()->json(
-//                $this->fail($ex)
-//            );
-//        }
+        } catch (\Exception $ex) {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
     }
 
 
