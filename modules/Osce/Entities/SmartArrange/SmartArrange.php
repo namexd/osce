@@ -175,69 +175,19 @@ class SmartArrange
         $this->doorStatus = $this->stationCount; //将当前所需人数作为开关门的初始值
         //初始化数据
         $i = $beginDt;
+        //$k 枚举 1   2  3  4
         $k = 3;
         $step = $mixCommonDivisor * 60; //为考试实体考试时间的秒数
         //开始计时器
         while ($i <= $endDt) {
+            //开门动作
             foreach ($this->_E as &$entity) {
-//                dump(date('Y-m-d H:i;s', $i));
-//
                 if ($this->doorStatus > 0) {
                     $tempBool = $this->checkStatus($entity, $screen);
                 } else {
                     $tempBool = true;
                 }
-
-//                dump(!$tempBool, date('Y-m-d H:i;s', $i), $this->doorStatus, $k);
-//                echo '++++++++++++++++++';
-                if (!$tempBool) {
-                    //将总考池和侯考区考生打包进数组
-                    $params = [
-                        'total' => $this->_S,
-                        'wait' => $this->_S_W,
-                        'serialnumber' => $serialnumber,
-                        'exam' => $this->exam
-                    ];
-                    //将排序模式注入
-                    $this->setCate(CateFactory::getCate($this->exam, $params));
-
-                    $students = $this->cate->needStudents($entity, $screen, $this->exam);
-//                    dump(count($students));
-//                    echo '================';
-                    $this->_S = $this->cate->getTotalStudent();
-                    $this->_S_W = $this->cate->getWaitStudent();
-
-                    if (count($students) == 0) {
-//                        if ($this->cate->checkDoor()) {
-//                            for ($j = 0; $j < $entity->needNum; $j++) {
-//                                $this->doorStatus--;
-//                            }
-//                        }
-//                        $entity->timer += $step;
-//                        echo '========';
-//                        dump($this->doorStatus);
-//                        dump(date('Y-m-d H:i;s', $i));
-                        continue;
-                    }
-                    //变更学生的状态(写记录)
-                    foreach ($students as &$student) {
-//                        dump($student->name, date('Y-m-d H:i;s', $i));
-                        $data = $this->mode->dataBuilder($this->exam, $screen, $student, $entity, $i);
-
-                        if (ExamPlanRecord::create($data)) {
-                            $this->doorStatus--;
-                        } else {
-                            throw new \Exception('关门失败！', -11);
-                        };
-                    }
-
-                    if ($k == 2) {
-                        $entity->timer += $step;
-                    }
-                    if ($k == 3) {
-                        $entity->timer += $step;
-                    }
-                } else { //反之，则是关门状态
+                if ($tempBool) { //反之，则是关门状态
                     $tempValues = $this->examPlanRecordIsOpenDoor($entity, $screen);
                     if (($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60)) {
                         $entity->timer = 0;
@@ -251,38 +201,62 @@ class SmartArrange
                             if (!$tempValue->save()) {
                                 throw new \Exception('开门失败！', -10);
                             } else {
-                                $k = 1;
                                 $this->doorStatus++;
                             }
                         }
-                        $entity->timer += $step;
-                    } else {
+                    }
+                    else
+                    {
                         $entity->timer += $step;
                     }
                 }
-//                dump($this->doorStatus);
-//                dump(date('Y-m-d H:i:s', $i));
+
+            }
+            //关门动作
+            foreach ($this->_E as &$entity) {
+                if ($this->doorStatus > 0) {
+                    $tempBool = $this->checkStatus($entity, $screen);
+                } else {
+                    $tempBool = true;
+                }
+                if (!$tempBool) {
+                    //将总考池和侯考区考生打包进数组
+                    $params = [
+                        'total' => $this->_S,
+                        'wait' => $this->_S_W,
+                        'serialnumber' => $serialnumber,
+                        'exam' => $this->exam
+                    ];
+                    //将排序模式注入
+                    $this->setCate(CateFactory::getCate($this->exam, $params));
+
+                    $students = $this->cate->needStudents($entity, $screen, $this->exam);
+                    $this->_S = $this->cate->getTotalStudent();
+                    $this->_S_W = $this->cate->getWaitStudent();
+
+                    if (count($students) == 0) {
+                        continue;
+                    }
+                    //变更学生的状态(写记录)
+                    foreach ($students as &$student) {
+                        $data = $this->mode->dataBuilder($this->exam, $screen, $student, $entity, $i);
+                        if (ExamPlanRecord::create($data)) {
+                            $this->doorStatus--;
+                            $entity->timer += $step;
+                        } else {
+                            throw new \Exception('关门失败！', -11);
+                        };
+                    }
+                }
             }
 
-            if ($k === 3) {
-                $step = $mixCommonDivisor * 60;
-                $i += $step;
-            }
-            if ($k === 2) {
-                $step = $mixCommonDivisor * 60;
-                $k = 3;
-                $i += $step;
-            }
-            if ($k === 1) {
-                $k = 2;
-            }
+            $i+=$step;
 
             //TODO 排完后终止循环的操作，待施工
-            if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum&&false) {
+            if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum) {
 //                dd($this->overStudentCount($screen), $this->_S_Count, $this->flowNum);
                 break;
             }
-//            sleep(2);
         }
 
         //获取未走完流程的考生
