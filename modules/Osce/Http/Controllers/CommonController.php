@@ -87,7 +87,7 @@ abstract class CommonController extends Controller
         } else {
             $code = $ex->getCode();
         }
-
+         
         if ('Trying to get property of non-object' == $ex->getMessage()) {
             return [
                 'code' => -50000,

@@ -170,7 +170,7 @@ class ExamController extends CommonController
      * @date 2016-01-06 14:25
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postAddExam(Request $request, Exam $model)
+    public function postAddExam(Request $request, Exam $model, ExamArrangeRepository $examArrangeRepository)
     {
 
         $this   ->  validate($request,[
@@ -211,7 +211,7 @@ class ExamController extends CommonController
             $gradation = intval($request->get('gradation_order', 1))? :1;
 
             //添加考试
-            $result = $model -> addExam($examData, $timeData['examScreeningData'], $gradation);
+            $result = $model -> addExam($examData, $timeData['examScreeningData'], $gradation, $examArrangeRepository);
             if(!$result){
                 throw new \Exception('新增考试失败');
             }
