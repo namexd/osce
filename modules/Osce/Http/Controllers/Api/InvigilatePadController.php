@@ -269,6 +269,7 @@ class InvigilatePadController extends CommonController
      */
     public function getExamGrade(Request $request)
     {
+        dd(1111);
 //        try {
 
             $this->validate($request, [
