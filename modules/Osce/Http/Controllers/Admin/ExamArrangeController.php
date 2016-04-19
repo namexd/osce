@@ -707,6 +707,7 @@ class ExamArrangeController extends CommonController
          $stationId = [];
 
          foreach ($datas as $item){
+
              $stationId []=$item->station_id;
          }
 
@@ -738,12 +739,10 @@ class ExamArrangeController extends CommonController
              }
 //         }
          $teacher = $datas->toArray();
-//         dd($teacher);
-
-
          foreach($teacher as &$teacherData){
-
-
+             if(is_null($teacherData['subject_id'])&&is_null($teacherData['subject_title'])){
+                 $teacherData['subject_title']  = '当前为理论考站';
+             }
              foreach ($teacherDatas as $value) {
 
 
