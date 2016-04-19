@@ -339,9 +339,9 @@ class Student extends CommonModel
 
         } catch (\Exception $ex) {
 
-//            if ($ex->getCode() == 23000) {
-//                throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该手机号码已经使用，请输入新的手机号');
-//            }
+            if ($ex->getCode() == 23000) {
+                throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该手机号码已经使用，请输入新的手机号');
+            }
             $connection->rollBack();
             throw $ex;
         }
@@ -377,7 +377,7 @@ class Student extends CommonModel
             }
             //查询用户角色
             $sysUserRole = SysUserRole::where('user_id','=',$user->is)->where('role_id','=',$role_id)->first();
-            if(is_null($sysUserRole)){
+            if(!$sysUserRole){
                 DB::table('sys_user_role')->insert(
                     [
                         'role_id'   => $role_id,
@@ -400,20 +400,15 @@ class Student extends CommonModel
             $password = '123456';
             $user = $this->registerUser($userData, $password);
             $this ->sendRegisterEms($userData['mobile'], $password);
-            //查询用户角色
-            $sysUserRole = SysUserRole::where('user_id','=',$user->is)->where('role_id','=',$role_id)->first();
             //给用户分配角色
-            if(is_null($sysUserRole)){
-                DB::table('sys_user_role')->insert(
-                    [
-                        'role_id'   => $role_id,
-                        'user_id'   => $user->id,
-                        'created_at'=> date('Y-m-d H:i:s'),
-                        'updated_at'=> date('Y-m-d H:i:s'),
-                    ]
-                );
-            }
-
+            DB::table('sys_user_role')->insert(
+                [
+                    'role_id'   => $role_id,
+                    'user_id'   => $user->id,
+                    'created_at'=> date('Y-m-d H:i:s'),
+                    'updated_at'=> date('Y-m-d H:i:s'),
+                ]
+            );
         }
 
         return $user;

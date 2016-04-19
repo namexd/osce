@@ -5212,18 +5212,12 @@ function examiner_manage() {
                 dataType: 'json',
                 url: pars.teacher_list,
                 data:function() {
-                    var req = {
+
+                    return {
                         subject_id:$elem.attr('value'),
                         exam_id: exam_id,
                         type:1
                     };
-
-                    //检测是否为理论考站
-                    if($elem.find('td').eq(2).text() == '理论考站') {
-                        req['station_id'] = $elem.attr('data-id');
-                    }
-
-                    return req;
                 },
                 delay: 250,
                 processResults: function (res) {
