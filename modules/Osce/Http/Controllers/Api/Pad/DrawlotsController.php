@@ -951,10 +951,10 @@ class DrawlotsController extends CommonController
     private function checkEffected($exam, $room, $station)
     {
 
-        $examMsg = StationTeacher::where('exam_id', $exam->id)-;
+       /* $examMsg = StationTeacher::where('exam_id', $exam->id)-;
         if(is_null($examMsg)){
             throw new \Exception('当前老师并没有被安排在这场考试中', -1011);
-        }
+        }*/
         /*switch ($exam->sequence_mode) {
             case 1:
                 $examFlowRooms = ExamFlowRoom::where('room_id', $room->id)
