@@ -32,6 +32,13 @@ class ExamDraft extends CommonModel
         6   => '大表新增后，小表新增后更新',
     ];
 
+    public function subejct(){
+        //return $this->hasOne('Modules\Osce\Entities\Subject',);
+    }
+
+    public function station(){
+        return $this->hasOne('Modules\Osce\Entities\Station','id','station_id');
+    }
     /**
      * 获取 不为null的值
      * @param $object

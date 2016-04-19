@@ -460,6 +460,7 @@ class Student extends CommonModel
         })
             ->where('exam_queue.station_id', '=', $stationId)
             ->where('exam_queue.exam_id','=',$exam->id)
+            ->where('station_teacher.exam_id', $exam->id)
             ->whereIn('exam_queue.status', [1, 2])
             ->where('exam_queue.blocking', 1)
             ->orderBy('exam_queue.begin_dt', 'asc')
@@ -472,7 +473,9 @@ class Student extends CommonModel
                 'student.avator as avator',
                 'exam_queue.status as status',
                 'student.id as student_id',
-                'student.exam_sequence as exam_sequence','station_teacher.user_id as teacher_id','exam_queue.id as exam_queue_id'
+                'student.exam_sequence as exam_sequence',
+                'station_teacher.user_id as teacher_id',
+                'exam_queue.id as exam_queue_id'
             ])->first();
 
         // 查询考试是否结束 // edit by wangjiang 2016-03-29 for 查询考试是否结束

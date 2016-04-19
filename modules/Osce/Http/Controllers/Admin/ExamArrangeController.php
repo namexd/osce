@@ -699,34 +699,38 @@ class ExamArrangeController extends CommonController
              'exam_id' => 'required|integer'
          ]);
          //获得exam_id
-         $exam_id = $request->input('exam_id');
-         $exam    = Exam::where('id','=',$exam_id)->first();
-         if (is_null($exam)){
-             return redirect()->back()->withErrors('没有找到对应的考试！');
-         }
-         //判断考官安排是考场还是考站安排
-         $ExamDraft     = new ExamDraft();
-         $datas = $ExamDraft->getDraftFlowData($exam_id);
+         try{
+
+             $exam_id = $request->input('exam_id');
+             $exam    = Exam::where('id','=',$exam_id)->first();
+             if (is_null($exam)){
+//                 return redirect()->back()->withErrors('没有找到对应的考试！')
+                    throw new \Exception('没有找到对应的考试');
+             }
+             //判断考官安排是考场还是考站安排
+
+             $ExamDraft     = new ExamDraft();
+             $datas = $ExamDraft->getDraftFlowData($exam_id);
 
 
-         $stationId = [];
+             $stationId = [];
 
-         foreach ($datas as $item){
+             foreach ($datas as $item){
 
-             $stationId []=$item->station_id;
-         }
-
-
-         //查询出考站下对应的老师
-         $stationteaxherModel = new StationTeacher();
-
-         $teacherDatas= $stationteaxherModel->getTeacherData($stationId,$exam_id);
-         
-         $inviteData = Invite::status($exam_id);
+                 $stationId []=$item->station_id;
+             }
 
 
-         //将邀请状态插入$stationData
-         $examRoomData=  [];
+             //查询出考站下对应的老师
+             $stationteaxherModel = new StationTeacher();
+
+             $teacherDatas= $stationteaxherModel->getTeacherData($stationId,$exam_id);
+
+             $inviteData = Invite::status($exam_id);
+
+
+             //将邀请状态插入$stationData
+             $examRoomData=  [];
 //         foreach ($teacherDatas as $key=>&$items) {
              foreach ($teacherDatas as &$item) {
 
@@ -743,34 +747,47 @@ class ExamArrangeController extends CommonController
                  }
              }
 //         }
-         $teacher = $datas->toArray();
-         foreach($teacher as &$teacherData){
-             if(is_null($teacherData['subject_id'])&&is_null($teacherData['subject_title'])){
-                 $teacherData['subject_title']  = '当前为理论考站';
-             }
-             foreach ($teacherDatas as $value) {
+             $teacher = $datas->toArray();
+             foreach($teacher as &$teacherData){
+                 //查询出现在考站的类型
+
+                 $stationType =Station::find($teacherData['station_id']);
+                 if($stationType->type ==3){
+
+                     if(is_null($teacherData['subject_id'])&&is_null($teacherData['subject_title'])){
+                         $teacherData['subject_title']  = '当前为理论考站';
+                     }
+
+                 }else{
+                     if(is_null($teacherData['subject_id'])){
+
+                         throw new \Exception('前面考试安排中该考站'.$stationType->name.'没有安排考试项目');
+                     }
+                 }
+                 foreach ($teacherDatas as $value) {
 
 
-                 if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id) {
+                     if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id) {
 
-                     $teacherData['sp_teacher'][] =$value;
+                         $teacherData['sp_teacher'][] =$value;
 
 
-                 } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id){
-                     $teacherData['teacher'][] =$value;
+                     } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id){
+                         $teacherData['teacher'][] =$value;
+
+                     }
 
                  }
 
              }
-
-
-
-         }
-         
 //            dump($teacher);
-         return response()->json(
-             $this->success_data($teacher, 1, 'success')
-         );
+             return response()->json(
+                 $this->success_data($teacher, 1, 'success')
+             );
+
+         }catch (\Exception $ex){
+             return response()->json($this->fail($ex));
+         }
      }
 
 

@@ -194,29 +194,27 @@ class InvigilatorController extends CommonController
             }
             //从配置中获取角色对应的ID号, 考官角色默认为1
             $role_id = config('osce.invigilatorRoleId',1);
+            //获取支持的考试项目
+            $subjects = $request->get('subject');
         }else{
             //从配置中获取角色对应的ID号, 巡考角色默认为3
             $role_id = config('osce.patrolRoleId',6);
+            //获取支持的考试项目
+            $subjects = [];
         }
         $teacherData['type']            = $type;
         $teacherData['case_id']         = null;
         $teacherData['status']          = 1;
         $teacherData['create_user_id']  = $user->id;
 
-        //获取支持的考试项目
-        $subjects = $request->get('subject');
 
-//        //从配置中获取角色对应的ID号, 考官角色默认为1
-//        $role_id = config('osce.invigilatorRoleId',1);
 
         $Invigilator    =   new Teacher();
         try{
             if($result = $Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
-
-//                return redirect()->back('osce.admin.invigilator.getInvigilatorList')->withErrors(['这个号码已有过关联，不能修改']);
-                
                 $Redirect =teacherCommon::handleRedirect($request,$result);
                 if($Redirect == false){
+
                     return redirect()->route('osce.admin.invigilator.getInvigilatorList',['type'=> $type])->withErrors(['msg'=>'保存成功','code'=>1]);
                 }else{
                     return $Redirect;
@@ -227,7 +225,7 @@ class InvigilatorController extends CommonController
                 throw new \Exception('新增失败');
             }
         } catch(\Exception $ex){
-//            return redirect()->back()->withErrors($ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
@@ -447,14 +445,17 @@ class InvigilatorController extends CommonController
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
         $type = $request->get('type',1);
 
-        if($type==1){
+        if($type == 1){
             if(is_null($request->get('subject'))){
                 throw new \Exception('考试项目必选');
             }
+            //获取支持的考试项目
+            $subjects = $request->get('subject');
+
+        }else{
+            //获取支持的考试项目
+            $subjects = [];
         }
-
-        $subjects    = $request -> get('subject');      //获取考试项目
-
         try{
             $teacherModel   =   new Teacher();
 
@@ -722,44 +723,6 @@ class InvigilatorController extends CommonController
     }
 
     /**
-     * 导入老师的数据
-     * @api GET /osce/admin/invigilator/import
-     * @access public
-     *
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * int        id        老师ID(必须的)
-     *
-     * @param Teacher $teacher
-     * @return redirect
-     * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
-     * @date 2016-01-09 16：48
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function postImportTeacher(Request $request, Teacher $teacher)
-    {
-        try {
-            //导入
-            $data = $this->postImport($request);
-            //将创建人插入到数组中
-            $createUser = Auth::user();
-            $data['create_user_id'] = $createUser->id;
-
-            //将数组导入到模型中的addInvigilator方法
-            if ($teacher->addInvigilator($data)) {
-
-                throw new \Exception('系统出错，请重试！');
-            } else {
-                echo json_encode($this->success_data());
-            }
-
-        } catch (\Exception $ex) {
-            echo json_encode($this->fail($ex));
-        }
-    }
-
-    /**
      * 查询老师是否已经存在(监,巡考老师,sp老师) 接口
      * @api GET /osce/admin/invigilator/postSelectTeacher
      *
@@ -795,7 +758,7 @@ class InvigilatorController extends CommonController
 
     /**
      * 判断教师编号是否已经存在
-     * @url POST /osce/admin/resources-manager/postNameUnique
+     * @url POST /osce/admin/resourcees-manager/postNameUnique
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
      */
     public function postCodeUnique(Request $request)

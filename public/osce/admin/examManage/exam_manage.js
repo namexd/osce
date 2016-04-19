@@ -4101,7 +4101,7 @@ function examinee_manage_edit() {
 function station_assignment(){
 
     //考站名称
-    var stationName = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20'],
+    var stationName = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'],
         examId = (location.href).split('=')[1],
         typeToName = ['','技能考站','sp考站','理论考站'],
         chioceToName = ['选考','必考'];

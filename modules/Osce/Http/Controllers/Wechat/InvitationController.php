@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Modules\Osce\Entities\CaseModel;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamSpTeacher;
 use Modules\Osce\Entities\Invite;
 use Modules\Osce\Entities\Teacher;
@@ -210,7 +211,10 @@ class InvitationController extends CommonController
         $array = [];
         try {
             $teacherId = [];
-
+            $entity = ExamDraftFlow::where('exam_id', $exam_id)->count();
+            if ($entity == 0) {
+                throw new \Exception('当前考试未安排考场和考站');
+            }
 
             foreach ($teacherData as $key => $item) {
 
