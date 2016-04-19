@@ -198,7 +198,7 @@ class InvitationController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
 
-    public function getInviteAllTeacher(Request $request)
+    public function getInviteAllTeacher(Request $request, Invite $invite)
     {
 
 
@@ -206,45 +206,80 @@ class InvitationController extends CommonController
 
         $teacherData = $request->get('data');
 
+        $message = [];
+        $array = [];
         try {
             $teacherId = [];
+
+
             foreach ($teacherData as $key => $item) {
 
-                if (empty($item['teacher'])) {
-                    throw new \Exception(' 还有考试没有安排考官！请安排考官！重试！');
+                //查询出考站的类型
+                $stationType = Station::find($item['station_id']);
+                if ($stationType->type != 2) {
+                    if (empty($item['teacher'])) {
+                        throw new \Exception($stationType->name . '站没有安排考官！请安排考官！重试！');
+                    }
+                } else {
+                    if (empty($item['teacher'])) {
+                        throw new \Exception($stationType->name . '站没有安排考官！请安排考官！重试！');
+                    }
+                    if (empty($item['sp_teacher'])) {
+                        throw new \Exception($stationType->name . '站没有安排sp老师！请安排考官！重试！');
+                    }
+                }
+                if (!empty($item['sp_teacher'])) {
+                    foreach ($item['sp_teacher'] as $spTeacher) {
+                        $teacherId[] = $spTeacher;
+                    }
+                }
+                if (!empty($item['teacher'])) {
+                    foreach ($item['teacher'] as $value) {
+                        $teacherId[] = $value;
+                    }
                 }
 
-                if (empty($item['sp_teacher'])) {
-                    continue;
-                }
-                foreach ($item['teacher'] as $value) {
-                    $teacherId[] = $value;
-                }
-                foreach ($item['sp_teacher'] as $spTeacher) {
-                    $teacherId[] = $spTeacher;
-                }
 
                 //根据老师id查询老师的信息和openid
                 $teacher = new Teacher();
                 $teacherData = $teacher->invitationContent($teacherId);
 
+
                 $inviteData = $this->getInviteData($exam_id, $teacherData, $item['station_id']);
-                $InviteModel = new Invite();
-                if (!$InviteModel->addInvite($inviteData)) {
-                    throw new \Exception('邀请失败 ！请重试！！');
+
+                try {
+                    $invite->addInvite($inviteData);
+
+                } catch (\Exception $ex) {
+                    $message[] = $ex->getMessage();
                 }
             }
 
-            return response()->json(
-                $this->success_data()
-            );
+
+            if (count($message) > 0) {
+                throw new \Exception('温馨提示 ' . implode(',', array_unique(explode(',', implode(',', $message)))) . ' 目前还没有登录过微信号');
+            } else {
+                return response()->json(
+                    $this->success_data()
+                );
+
+            }
 
         } catch (\Exception $ex) {
-            
-            
-            return response()->json(
-                $this->fail($ex)
-            );
+//            if (count($message) > 0) {
+//                return response()->json(
+//
+//                    [
+//                        'code' => -999,
+//                        'message' => '错误信息：' . implode(',', $message)
+//                    ]
+//
+//                );
+//
+//            }
+
+            return response()->json($this->fail($ex));
+
         }
     }
 

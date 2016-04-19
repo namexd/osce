@@ -32,14 +32,14 @@ class Invite extends CommonModel
     //保存并发送邀请
     public function addInvite(array $data)
     {
-
         //开启事务
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
+
         try {
             //判断哪些老师已邀请过
 
-
+            $teacherName =[];
             foreach ($data as &$list) {
 
                 //查询出老师名字
@@ -51,14 +51,17 @@ class Invite extends CommonModel
                     ->where('station_id', '=', $list['station_id'])
 //                    ->whereIn('status',[0, 1])
                     ->first();
+
                 if (!is_null($examScreening)) {
                     if ($examScreening->status == 3 || $examScreening->status == 2) {
                         $examScreening->status = 0;
                         if (!$examScreening->save()) {
                             throw new \Exception('邀请失败，请重试！');
+                        }else{
+
+                            $teacherName []=$teacherName->name;
+//                        throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
                         }
-                    } else {
-                        throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
                     }
                 }
 
@@ -89,6 +92,7 @@ class Invite extends CommonModel
                     throw new \Exception('邀请保存失败');
                 }
             }
+            
             $this->sendMsg($data);
             $connection->commit();
             return true;
@@ -151,7 +155,7 @@ class Invite extends CommonModel
                     if ($ex_msg->getCode() == 45015) {
                         throw new \Exception('温馨提示' . implode(',', $nameList) . '长期未与公众号互动，无法发送');
                     }
-                    throw new \Exception('温馨提示' . implode(',', $nameList) . '目前还没有登录过微信号');
+                    throw new \Exception(implode(',', $nameList));
                 }
             }
         } catch (\Exception $ex) {
