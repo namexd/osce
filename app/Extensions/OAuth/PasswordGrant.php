@@ -73,8 +73,6 @@ class PasswordGrant extends  PwdGrant
         // Check if user's username and password are correct
         $userId = call_user_func($this->getVerifyCredentialsCallback(), $username, $password);
 
-        dd($username,$password);
-
         if ($userId === false) {
             $this->server->getEventEmitter()->emit(new Event\UserAuthenticationFailedEvent($this->server->getRequest()));
             throw new Exception\InvalidCredentialsException();
