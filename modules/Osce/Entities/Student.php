@@ -567,6 +567,7 @@ class Student extends CommonModel
         if ($num === 0 || $num < 0) {
             return array();
         }
+
         $builder = $this->leftjoin('exam_order', function ($join) {
             $join->on('student.id', '=', 'exam_order.student_id');
         })->where('exam_order.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
@@ -601,7 +602,7 @@ class Student extends CommonModel
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
         ])->orderBy('exam_order.begin_dt')->paginate(100);
-
+        //dd($builder);
         return $builder;
     }
 
