@@ -93,13 +93,9 @@ class CaseController extends CommonController
             DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withErrors('该病例名称已存在!');
         }
-
-
-
+        
 
         $result = $caseModel->insertData($formData);
-
-
 
         if ($result == false) {
             DB::connection('osce_mis')->rollBack();
