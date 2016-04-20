@@ -1393,6 +1393,10 @@ function site_manage_add() {
                     regexp: {
                         regexp: /^\d+(\.\d+)?$/,
                         message: '使用面积必须输入数字'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '使用面积输入长度不超过20个'
                     }
                 }
             }
@@ -1505,6 +1509,10 @@ function site_manage_edit() {
                     regexp: {
                         regexp: /^[0-9]*$/,
                         message: '使用面积必须输入数字'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '使用面积输入长度不超过20个'
                     }
                 }
             }
