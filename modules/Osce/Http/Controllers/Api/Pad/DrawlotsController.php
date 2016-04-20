@@ -650,6 +650,8 @@ class DrawlotsController extends CommonController
 
             //将考试的id封装进去
             $station->exam_id = $exam->id;
+            //考试模式
+            $station->sequence_mode = $exam->sequence_mode;
 
             //将当前的服务器时间返回
             $station->service_time = time() * 1000;
