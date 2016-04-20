@@ -103,6 +103,12 @@ class SmartArrange
         return $this->_S;
     }
 
+    /**
+     * 获取等待区的学生
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-08 11：15
+     */
     public function getWaitStudents()
     {
         return $this->_S_W;
@@ -137,6 +143,7 @@ class SmartArrange
 
     public function screenPlan($screen)
     {
+//        dd($this->_E);
         //重置考试实体计数器
         $this->resetStationTime();
 
@@ -251,11 +258,10 @@ class SmartArrange
                 }
             }
 
-            $i+=$step;
+            $i += $step;
 
             //TODO 排完后终止循环的操作，待施工
             if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum) {
-//                dd($this->overStudentCount($screen), $this->_S_Count, $this->flowNum);
                 break;
             }
         }
