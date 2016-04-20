@@ -150,9 +150,7 @@ class DrawlotsController extends CommonController
 //            foreach ($students as $student) {
 //                unset($student['blocking']);
 //            }
-            foreach($examQueue as $key=>$val){
-                $examQueue[$key]->sequence_mode=$exam->sequence_mode;
-            }
+
             $redis->publish('pad_message', json_encode($this->success_data($examQueue,103,'获取成功')));//信息推送
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
@@ -216,9 +214,7 @@ class DrawlotsController extends CommonController
                 $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
             }
-            foreach($examQueue as $key=>$val){
-                $examQueue[$key]->sequence_mode=$exam->sequence_mode;
-            }
+
             $redis->publish('pad_message', json_encode($this->success_data($examQueue,103,'获取成功')));//信息推送
         } catch (\Exception $ex) {
             return $ex;
@@ -297,11 +293,6 @@ class DrawlotsController extends CommonController
                 $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
             }
-            foreach($examQueue as $key=>$val){
-                $examQueue[$key]->sequence_mode=$exam->sequence_mode;
-            }
-
-           // dd($examQueue);
             //从集合中移除blocking
 //            $students->forget('blocking');
             $redis->publish('pad_message', json_encode($this->success_data($examQueue,104,'获取成功')));//信息推送
@@ -368,10 +359,7 @@ class DrawlotsController extends CommonController
                 $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
             }
-            foreach($examQueue as $key=>$val){
-                $examQueue[$key]->sequence_mode=$exam->sequence_mode;
-            }
-            // dd($examQueue);
+
             //从集合中移除blocking
 //            $students->forget('blocking');
             $redis->publish('pad_message', json_encode($this->success_data($examQueue,104,'获取成功')));//信息推送
@@ -432,10 +420,7 @@ class DrawlotsController extends CommonController
             } else {
                 throw new \Exception('考试模式不存在！', -703);
             }
-            foreach($examQueue as $key=>$val){
-                $examQueue[$key]->sequence_mode=$exam->sequence_mode;
-            }
-            
+
             $request['id']=$teacher_id;
             $request['exam_id']=$exam->id;
 
@@ -482,7 +467,7 @@ class DrawlotsController extends CommonController
             'room_id' => 'required|integer',
             'teacher_id' => 'required|integer'
         ]);
-//        try {
+       try {
             $examId = $request->input('exam_id', null);
             //获取uid和room_id
             $uid = $request->input('uid');
@@ -587,11 +572,11 @@ class DrawlotsController extends CommonController
             $inv->getAuthentication_arr($request);//当前考生推送
             return response()->json($this->success_data($result));
 
-//        } catch (\Exception $ex) {
-//            $connection->rollBack();
-//
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**

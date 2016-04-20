@@ -38,8 +38,8 @@ class Invite extends CommonModel
 
         try {
             //判断哪些老师已邀请过
-
-            $teacherName =[];
+            $datas = [];
+            $teacherNames = [];
             foreach ($data as &$list) {
 
                 //查询出老师名字
@@ -53,15 +53,18 @@ class Invite extends CommonModel
                     ->first();
 
                 if (!is_null($examScreening)) {
+
                     if ($examScreening->status == 3 || $examScreening->status == 2) {
                         $examScreening->status = 0;
                         if (!$examScreening->save()) {
                             throw new \Exception('邀请失败，请重试！');
                         }else{
-
-                            $teacherName []=$teacherName->name;
-//                        throw new \Exception('在该场考试中已经邀请过' . $teacherName->name . '老师了！！！');
+                            continue;
                         }
+
+                    } else {
+                        $teacherNames [] = $teacherName->name;
+                        continue;
                     }
                 }
 
@@ -82,7 +85,6 @@ class Invite extends CommonModel
 //                           'id'=>$data[$k]['teacher_id'],
                         'invite_id' => $notice->id,
                         'exam_screening_id' => $list['exam_screening_id'],
-//                        'case_id' => $list['case_id'],
                         'teacher_id' => $list['teacher_id'],
                     ];
                     //关联到考试邀请sp老师表
@@ -91,17 +93,37 @@ class Invite extends CommonModel
                 } else {
                     throw new \Exception('邀请保存失败');
                 }
+
+                $datas [] = [
+                    'id' => $notice->id,
+                    'exam_name' => $list['exam_name'],
+                    'openid' => $list['openid'],
+                    'teacher_name' => $list['teacher_name'],
+                ];
             }
-            
-            $this->sendMsg($data);
+
+            if(count($datas) != 0){
+
+                $this->sendMsg($datas);
+            }
+
             $connection->commit();
+
+            if (count($datas) == 0) {
+                if (count($teacherNames) > 0) {
+                    throw new \Exception('在该场考试中已经邀请过' . implode(',', $teacherNames) . '老师了！！！');
+                }
+            }
+
             return true;
+
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
 
     }
+
 
     // 发送邀请
 
@@ -132,9 +154,6 @@ class Invite extends CommonModel
                 }
 
                 $openIdList[] = $userInfo;
-//            $message    =   Common::CreateWeiXinMessage($msgData);
-//            Common::sendWeixinToMany($message,$data);
-//            oI7UquLMNUjVyUNaeMP0sRcF4VyU
             }
             try {
                 $message = Common::CreateWeiXinMessage($msgData);
@@ -149,7 +168,7 @@ class Invite extends CommonModel
                     if ($ex_msg->getCode() == 45015) {
                         throw new \Exception('温馨提示' . $openIdList[0]['teacher_name'] . '长期未与公众号互动，无法发送');
                     }
-                    throw new \Exception('温馨提示' . $openIdList[0]['teacher_name'] . '目前还没有登录过微信号');
+                    throw new \Exception( $openIdList[0]['teacher_name']);
                 } else {
                     $nameList = array_pluck($openIdList, 'teacher_name');
                     if ($ex_msg->getCode() == 45015) {
