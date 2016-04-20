@@ -38,7 +38,7 @@ class Invite extends CommonModel
 
         try {
             //判断哪些老师已邀请过
-            $datas = [];
+            $inviteDats = [];
             $teacherNames = [];
             foreach ($data as &$list) {
 
@@ -94,7 +94,7 @@ class Invite extends CommonModel
                     throw new \Exception('邀请保存失败');
                 }
 
-                $datas [] = [
+                $inviteDats[] = [
                     'id' => $notice->id,
                     'exam_name' => $list['exam_name'],
                     'openid' => $list['openid'],
@@ -102,21 +102,19 @@ class Invite extends CommonModel
                 ];
             }
 
-            if(count($datas) != 0){
+            if(count($inviteDats) != 0){
 
-                $this->sendMsg($datas);
+                $this->sendMsg($inviteDats);
             }
 
             $connection->commit();
 
-            if (count($datas) == 0) {
+            if (count($inviteDats) == 0) {
                 if (count($teacherNames) > 0) {
                     throw new \Exception('在该场考试中已经邀请过' . implode(',', $teacherNames) . '老师了！！！');
                 }
             }
-
             return true;
-
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -168,7 +166,7 @@ class Invite extends CommonModel
                     if ($ex_msg->getCode() == 45015) {
                         throw new \Exception('温馨提示' . $openIdList[0]['teacher_name'] . '长期未与公众号互动，无法发送');
                     }
-                    throw new \Exception( $openIdList[0]['teacher_name']);
+                    throw new \Exception( $openIdList[0]['teacher_name']. ' 目前还没有登录过微信号');
                 } else {
                     $nameList = array_pluck($openIdList, 'teacher_name');
                     if ($ex_msg->getCode() == 45015) {
@@ -203,7 +201,7 @@ class Invite extends CommonModel
         $invite = Invite::where('user_id', '=', $teacher_id)
             ->where('exam_id', '=', $exam_id)
             ->where('station_id', '=', $stationId)
-            ->whereIn('status', [0, 2])
+            ->whereIn('status', [0,1,2])
             ->first();
         return $invite;
     }
@@ -225,20 +223,21 @@ class Invite extends CommonModel
 
     public function getInviteStatus($TeacherInvite, $teacherData)
     {
-        foreach ($teacherData as &$value) {
-            $value['id'] = $TeacherInvite->id;
-        }
-        $TeacherInvite->status = 3;
+            foreach ($teacherData as &$value) {
+                $value['id'] = $TeacherInvite->id;
+            }
+            $TeacherInvite->status = 3;
 
-        if ($TeacherInvite->save()) {
-            //删除老师关联表
-            $type = 3;
-            $this->sendMsg($teacherData, $type);
-        } else {
-            throw new \Exception('改变老师邀请状态失败');
-        }
+            if ($TeacherInvite->save()) {
+                //删除老师关联表
+                $type = 3;
+                $this->sendMsg($teacherData, $type);
+            } else {
+                throw new \Exception($teacherData['teacher_name']);
+            }
 
-        return true;
+            return true;
+        
     }
 
 

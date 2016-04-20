@@ -293,9 +293,10 @@ class IndexController extends CommonController
             if($ExamFinishStatus==$studentExamSum){ //如果考试流程结束
                 if($status != 0){
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
+                    ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
                 }
 
-                ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
+
                 $result = Watch::where('id',$id)->update(['status'=>0]);
                 if($result){
                     $action='解绑';
@@ -847,12 +848,14 @@ class IndexController extends CommonController
 //                ->get();
         //查找exam_screening
         $stations = $screenModel->where('exam_screening.exam_id','=',$exam_id)->leftjoin('exam_gradation', function ($join) {
-                $join->on('exam_gradation.order', '=', 'exam_screening.gradation_order');
+                $join->on('exam_gradation.exam_id', '=', 'exam_screening.exam_id');
             })->leftjoin('exam_draft_flow', function ($join) {
                 $join->on('exam_draft_flow.order', '=', 'exam_gradation.order');
             })->leftjoin('exam_draft', function ($join) {
                 $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
             })->groupBy('exam_screening.id')->get();
+
+
             /*
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
             //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang

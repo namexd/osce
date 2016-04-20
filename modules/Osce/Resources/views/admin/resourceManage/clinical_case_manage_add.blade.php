@@ -8,7 +8,7 @@
 @stop
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'clinical_case_manage_add','name':'{{route('osce.admin.case.postNameUnique')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'clinical_case_manage_add','name':'{{route('osce.admin.case.postNameUnique')}}','cancel':'{{route('osce.admin.case.getCaseList')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -39,8 +39,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit">保存</button>
-                                <a class="btn btn-white" href="{{route("osce.admin.case.getCaseList")}}">取消</a>
-                                {{--<a href="{{route('osce.admin.case.getCaseList')}}" class="btn btn-white">取消</a>--}}
+                                <a class="btn btn-white" id="cancel-btn" href="javascript:void(0)">取消</a>
                             </div>
                         </div>
                     </form>
