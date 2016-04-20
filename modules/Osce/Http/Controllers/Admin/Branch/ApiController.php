@@ -794,11 +794,6 @@ class ApiController extends CommonController
                 $request['nfc_code'] = $watchNfcCode;
                 $studentWatchController->getStudentExamReminder($request);
             }
-
-            $retval = [
-                'title' => '当前考站准备完成成功',
-                'code'  => 1,
-            ];
         } else {
             // 考站排 一个学生
             $examQenens = $examQenenModel->where('exam_id', '=', $examId)
@@ -833,11 +828,6 @@ class ApiController extends CommonController
             $studentWatchController = new StudentWatchController();
             $request['nfc_code'] = $watch['nfc_code'];
             $studentWatchController->getStudentExamReminder($request);
-
-            $retval = [
-                'title' => '当前考站准备完成成功',
-                'code'  => 1,
-            ];
         }
 
 
@@ -869,6 +859,7 @@ class ApiController extends CommonController
             }
         }
 
+        $retval = ['title' => '当前考站准备完成成功'];
         return response()->json(
             $this->success_data($retval)
         );
