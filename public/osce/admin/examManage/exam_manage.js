@@ -4308,7 +4308,7 @@ function station_assignment(){
          */
         $.ajax({
             type: 'post',
-            async: true,
+            async: false,
             data: req,
             url: pars.stationAdd,
             success: function(res) {
@@ -4430,6 +4430,7 @@ function station_assignment(){
 
         $.ajax({
             type:'post',
+            async:false,
             url: pars.update_data,
             data: {exam_id:examId,flow_id:$that.parent().attr('station-id'),type:judgeType},
             success: function(res) {
@@ -4449,6 +4450,7 @@ function station_assignment(){
                             '</tr>';
 
                     //插入dom
+                    
                     $that.append(html);
                     $that.attr('index',index);
                     //select2初始化
@@ -4716,7 +4718,7 @@ function station_assignment(){
                     data:req,
                     success: function(res) {
                         //更新考站类型
-                        $elem.find('.exam-station').parent().next().text(typeToName[e.params.data.type])
+                        $elem.find('.exam-station').parent().next().text(typeToName[e.params.data.type]);
                         if(e.params.data.type == 3) {
                             $elem.find('.exam-item').attr('disabled','disabled');
                             $elem.find('.exam-item').val(-999).trigger('change');
