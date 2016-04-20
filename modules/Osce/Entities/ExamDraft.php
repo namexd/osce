@@ -188,7 +188,7 @@ class ExamDraft extends CommonModel
                     $examDraft->subject_id = $item->subject_id;
                 }
             }
-
+            
             if(!$examDraft->save())
             {
                 throw new \Exception('更新站下的考项失败，请重试！');
