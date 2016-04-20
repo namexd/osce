@@ -465,7 +465,7 @@ trait SQLTraits
      * @author Jiangzhiheng
      * @time 2016-04-13 16:20
      */
-    function setSerialnumber(DBCollection $collection, $groupBy = 'gradation_order', $sortBy = 'order', $desc = false)
+    function setSerialnumber(DBCollection $collection, $groupBy = 'order', $sortBy = 'order', $desc = false)
     {
         if ($desc === false) {
             $collections = $collection->sortBy($sortBy)->groupBy($groupBy);
@@ -475,9 +475,8 @@ trait SQLTraits
 
 
         $result = [];
-
+        $k = 1;
         foreach ($collections as $items) {
-            $k = 1;
             foreach ($items as $item) {
                 if ($item->optional == 1) {
                     $item->serialnumber = $k;
@@ -487,6 +486,10 @@ trait SQLTraits
                 }
                 $result[] = $item;
             }
+            if ($items->first()->optional == 0) {
+                $k++;
+            }
+
         }
 
         return collect($result);
