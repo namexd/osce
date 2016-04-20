@@ -3427,7 +3427,36 @@ function smart_assignment(){
         var index = layer.load(0, {
             shade: [0.1,'#fff'] //0.1透明度的白色背景
         });
-        $.post(pars.makePlanUrl,function(testData){
+        $.ajax({
+            type: 'POST',
+            url: pars.makePlanUrl,
+            success: function(testData) {
+                if(testData.code!=1)
+                {
+                    layer.msg(testData.message,{skin:'msg-error',icon:1});
+                    //关闭加载
+                    layer.close(index);
+                }
+                else
+                {
+                    $('.classroom-box').html('');
+                    //$('.time-list>ul').html('');
+                    maketotal(testData.data);
+                    //$('#makePlan').one('click',makePlan);
+                    makeTime();
+
+                    //关闭加载
+                    layer.close(index);
+                    layer.msg('排考成功！',{skin:'msg-success',icon:1});
+                }
+            },
+            error: function(error){
+                layer.msg('请求超时！',{skin:'msg-error',icon:1}, function() {
+                    href.reload();
+                });
+            }
+        });
+        /*$.post(pars.makePlanUrl,function(testData){
 
             if(testData.code!=1)
             {
@@ -3447,7 +3476,7 @@ function smart_assignment(){
                 layer.close(index);
                 layer.msg('排考成功！',{skin:'msg-success',icon:1});
             }
-        });
+        });*/
     }
     $('#makePlan').click(function(){
 
