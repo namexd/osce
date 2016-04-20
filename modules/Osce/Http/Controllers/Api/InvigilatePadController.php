@@ -816,7 +816,9 @@ class InvigilatePadController extends CommonController
 //               throw new \Exception('成绩创建失败',-106);
 //           }
             $ExamQueueModel = new ExamQueue();
+            
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$type);
+
 
 
             if ($AlterResult) {
