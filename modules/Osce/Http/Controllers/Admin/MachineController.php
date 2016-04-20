@@ -911,7 +911,7 @@ class MachineController extends CommonController
             }
             $model = $this->getMachineModel($cate_id);
             //通过id删除相应的设备
-            if ($result = $model->where('id', $id)->delete()) {
+            if ($result = $model->where('id', $id)->·()) {
                 return $this->success_data(['删除成功！']);
             } else {
                 throw new \Exception('该设备已于其他设备关联,无法删除!');

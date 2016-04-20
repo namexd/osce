@@ -45,6 +45,8 @@ class InvitationController extends CommonController
 
     public function getInvitationList(Request $request)
     {
+
+
         $this->validate($request, [
             'teacher_id' => 'required',
             'exam_id' => 'required|integer',
@@ -57,21 +59,34 @@ class InvitationController extends CommonController
         $teacher_id = $request->get('teacher_id');
         $exam_id = $request->get('exam_id');
         $stationId = $request->get('station_id');
-        //根据老师id查询老师的信息和openid
-        $teacher = new Teacher();
-        $teacherData = $teacher->invitationContent($teacher_id);
-
-        $inviteData = $this->getInviteData($exam_id, $teacherData, $stationId);
-
-        $InviteModel = new Invite();
+        $message = [];
         try {
-            if ($InviteModel->addInvite($inviteData)) {
+            //根据老师id查询老师的信息和openid
+            $teacher = new Teacher();
+            $teacherData = $teacher->invitationContent($teacher_id);
+
+            $inviteData = $this->getInviteData($exam_id, $teacherData, $stationId);
+
+            $InviteModel = new Invite();
+
+
+            try {
+                $InviteModel->addInvite($inviteData);
+            } catch (\Exception $se) {
+                $message[] = $se->getMessage();
+            }
+
+
+            if (count($message) > 0) {
+                throw new \Exception('温馨提示 ' . implode(',', array_unique(explode(',', implode(',', $message)))) . ' 目前还没有登录过微信号');
+            } else {
                 return response()->json(
                     $this->success_data()
                 );
-            } else {
-                throw new \Exception('邀请失败');
+
             }
+
+
         } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)
@@ -131,7 +146,7 @@ class InvitationController extends CommonController
         $teacher_id = $request->get('teacher_id');
         $exam_id = $request->get('exam_id');
         $stationId = $request->get('station_id');
-
+        $message = [];
         try {
             $code = '';
             //查询到该老师的邀请数据
@@ -159,21 +174,32 @@ class InvitationController extends CommonController
                 $inviteData = $this->getInviteData($exam_id, $teacherData, $stationId);
                 //查询到该老师的邀请数据
                 $inviteModel = new Invite();
-                $alterInvite = $inviteModel->getInviteStatus($TeacherInvite, $inviteData);
-                if (!$alterInvite) {
-                    throw  new \Exception('删除老师邀请失败');
+
+                try {
+
+                    $inviteModel->getInviteStatus($TeacherInvite, $inviteData);
+
+                } catch (\Exception $ex) {
+
+                    $message[] = $ex->getMessage();
+                }
+
+
+                $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
+                if (!$teacherDel) {
+                    throw new \Exception('删除老师关联失败');
                 } else {
-                    $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
-                    if (!$teacherDel) {
-                        throw new \Exception('删除老师关联失败');
-                    } else {
-                        $code = 1;
-                    }
+                    $code = 1;
                 }
             }
-            return response()->json(
-                $this->success_data('', $code)
-            );
+
+            if (count($message) > 0) {
+                throw new \Exception('温馨提示 ' . implode(',', array_unique(explode(',', implode(',', $message)))) . ' 目前还没有登录过微信号');
+            } else {
+                return response()->json(
+                    $this->success_data('', $code)
+                );
+            }
         } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)

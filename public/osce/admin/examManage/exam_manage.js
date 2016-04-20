@@ -70,6 +70,20 @@ function formatRepo (repo) {
   return markup;
 }
 
+//解决ie10,ie11下select2 多选bug
+var isIE10 = !!navigator.userAgent.match(/MSIE 10/i);
+var isIE11 = !!navigator.userAgent.match(/Trident.*rv\:11\./);
+
+
+
+
+
+
+
+
+
+
+
 /**
  * 成绩查询
  * @author mao
@@ -3413,7 +3427,36 @@ function smart_assignment(){
         var index = layer.load(0, {
             shade: [0.1,'#fff'] //0.1透明度的白色背景
         });
-        $.post(pars.makePlanUrl,function(testData){
+        $.ajax({
+            type: 'POST',
+            url: pars.makePlanUrl,
+            success: function(testData) {
+                if(testData.code!=1)
+                {
+                    layer.msg(testData.message,{skin:'msg-error',icon:1});
+                    //关闭加载
+                    layer.close(index);
+                }
+                else
+                {
+                    $('.classroom-box').html('');
+                    //$('.time-list>ul').html('');
+                    maketotal(testData.data);
+                    //$('#makePlan').one('click',makePlan);
+                    makeTime();
+
+                    //关闭加载
+                    layer.close(index);
+                    layer.msg('排考成功！',{skin:'msg-success',icon:1});
+                }
+            },
+            error: function(error){
+                layer.msg('请求超时！',{skin:'msg-error',icon:1}, function() {
+                    href.reload();
+                });
+            }
+        });
+        /*$.post(pars.makePlanUrl,function(testData){
 
             if(testData.code!=1)
             {
@@ -3433,7 +3476,7 @@ function smart_assignment(){
                 layer.close(index);
                 layer.msg('排考成功！',{skin:'msg-success',icon:1});
             }
-        });
+        });*/
     }
     $('#makePlan').click(function(){
 
@@ -3736,6 +3779,10 @@ function examinee_manage_add(){
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '用户名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '用户名不超过20个'
                     }
                 }
             },
@@ -3850,6 +3897,24 @@ function examinee_manage_add(){
                         message: '请输入正确的邮箱'
                     }
                 }
+            },
+            grade_class:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班级不能为空'
+                    }
+                }
+            },
+            teacher_name:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班主任姓名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '班主任姓名不超过20个'
+                    }
+                }
             }
         }
     });
@@ -3925,6 +3990,10 @@ function examinee_manage_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '用户名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '用户名不超过20个'
                     }
                 }
             },
@@ -4041,6 +4110,24 @@ function examinee_manage_edit() {
                     regexp: {
                         regexp: /^[a-z\d]+(\.[a-z\d]+)*@([\da-z](-[\da-z])?)+(\.{1,2}[a-z]+)+$/,
                         message: '请输入正确的邮箱'
+                    }
+                }
+            },
+            grade_class:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班级不能为空'
+                    }
+                }
+            },
+            teacher_name:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班主任姓名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '班主任姓名不超过20个'
                     }
                 }
             }
@@ -4572,10 +4659,11 @@ function station_assignment(){
                     //数据格式化
                     var str = [];
                     var data = res.data;
+
+                    str.push({id:-999,text:'==新增考试项目=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].title});
                     }
-                    str.push({id:-999,text:'==新增考试项目=='});
 
                     //加载入数据
                     return {
@@ -4645,10 +4733,11 @@ function station_assignment(){
                     //数据格式化
                     var str = [];
                     var data = res.data;
+
+                    str.push({id:-999,text:'==新增考站=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name,type:data[i].type});
                     }
-                    str.push({id:-999,text:'==新增考站=='});
 
                     //加载入数据
                     return {
@@ -4763,10 +4852,11 @@ function station_assignment(){
                     //数据格式化
                     var str = [];
                     var data = res.data;
+
+                    str.push({id:-999,text:'==新增考场=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
-                    str.push({id:-999,text:'==新增考场=='});
 
                     //加载入数据
                     return {
@@ -5232,7 +5322,7 @@ function examiner_manage() {
      */
     function teacherInit($elem) {
         $elem.find('.custom-teacher').select2({
-            placeholder:'请选择',
+            placeholder: isIE11 || isIE10 ? '' : '请选择',
             ajax: {
                 type:'get',
                 dataType: 'json',
@@ -5257,10 +5347,11 @@ function examiner_manage() {
                     //数据格式化
                     var str = [];
                     var data = res.data;
+                    
+                    str.push({id:-999,text:'==新增考官=='});
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
-                    str.push({id:-999,text:'==新增考官=='});
 
                     //加载入数据
                     return {
@@ -5329,7 +5420,7 @@ function examiner_manage() {
      */
     function teacher_spInit($elem) {
         $elem.find('.custom-sp').select2({
-            placeholder:'请选择',
+            placeholder: isIE11 || isIE10 ? '' : '请选择',
             ajax: {
                 type:'get',
                 dataType: 'json',
@@ -5348,10 +5439,11 @@ function examiner_manage() {
                     //数据格式化
                     var str = [];
                     var data = res.data;
+
+                    str.push({id:-999,text:'==新增sp=='});
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
-                    str.push({id:-999,text:'==新增sp=='});
 
                     //加载入数据
                     return {
@@ -5413,7 +5505,3 @@ function examiner_manage() {
     //$("#add-basic .custom-teacher").select2();
     //$("#add-basic .custom-sp").select2();
 }
-
-
-
-

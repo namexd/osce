@@ -52,6 +52,14 @@ $(function(){
 });
 
 
+
+//解决ie10,ie11下select2 多选bug
+var isIE10 = !!navigator.userAgent.match(/MSIE 10/i);
+var isIE11 = !!navigator.userAgent.match(/Trident.*rv\:11\./);
+
+
+
+
 /**
  * select2 模糊搜索样式
  * @author mao
@@ -1238,7 +1246,27 @@ function clinical_case_manage_add() {
             }
         }
     });
+
+
+    /**
+     * 病例弹出新增
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-20
+     */
+    var type_status = location.href.split('=')[1];
+    $('#cancel-btn').click(function() {
+        if(type_status == -999){
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+        } else {
+            location.href = pars.cancel;
+        }
+    });
+
+
 }
+
+
 
 /**
  * 病例管理编辑
@@ -1385,6 +1413,10 @@ function site_manage_add() {
                     regexp: {
                         regexp: /^\d+(\.\d+)?$/,
                         message: '使用面积必须输入数字'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '使用面积输入长度不超过20个'
                     }
                 }
             }
@@ -1497,6 +1529,10 @@ function site_manage_edit() {
                     regexp: {
                         regexp: /^[0-9]*$/,
                         message: '使用面积必须输入数字'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '使用面积输入长度不超过20个'
                     }
                 }
             }
@@ -2289,7 +2325,7 @@ function course_module(){
          * @date    2016-03-31
          */
         $('#select-clinical').select2({
-            placeholder:'==请选择==',
+            placeholder: isIE11 || isIE10 ? '' : '请选择',
             ajax: {
             url: pars.clinicalList,
             dataType: 'json',
@@ -2299,10 +2335,12 @@ function course_module(){
                     var data = res.data,
                         str = [];
 
+                    str.push({id:-999,text:'==新增病例=='});
+
                     for(var i in data) {
                         str.push({id:data[i].id,text:data[i].name});
                     }
-                    str.push({id:-999,text:'==新增病例=='});
+                    
                     return{
                         results:str
                     }
@@ -2384,7 +2422,9 @@ function course_module(){
                                 results:str
                             }
                         }
-                    }
+                    },
+                    templateResult: formatRepo,
+                    templateSelection: formatRepoSelection
                 }
             })
             
@@ -2413,7 +2453,9 @@ function course_module(){
                             results:str
                         }
                     }
-                }
+                },
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
             }
         })
 
