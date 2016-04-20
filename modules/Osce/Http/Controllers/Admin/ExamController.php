@@ -309,7 +309,7 @@ class ExamController extends CommonController
             throw new \Exception('未找到当前操作人信息');
         }
 
-        try{
+//        try{
             //处理考试场次时间
             $timeData = $examModel->handleScreeningTime($examScreeningData, $user);
 
@@ -336,10 +336,10 @@ class ExamController extends CommonController
             }
             return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
 
-        } catch(\Exception $ex) {
-
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch(\Exception $ex) {
+//
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**
