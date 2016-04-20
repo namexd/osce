@@ -166,7 +166,7 @@ class Invite extends CommonModel
                     if ($ex_msg->getCode() == 45015) {
                         throw new \Exception('温馨提示' . $openIdList[0]['teacher_name'] . '长期未与公众号互动，无法发送');
                     }
-                    throw new \Exception( $openIdList[0]['teacher_name']);
+                    throw new \Exception( $openIdList[0]['teacher_name']. ' 目前还没有登录过微信号');
                 } else {
                     $nameList = array_pluck($openIdList, 'teacher_name');
                     if ($ex_msg->getCode() == 45015) {
@@ -201,7 +201,7 @@ class Invite extends CommonModel
         $invite = Invite::where('user_id', '=', $teacher_id)
             ->where('exam_id', '=', $exam_id)
             ->where('station_id', '=', $stationId)
-            ->whereIn('status', [0, 2])
+            ->whereIn('status', [0,1,2])
             ->first();
         return $invite;
     }
@@ -214,9 +214,9 @@ class Invite extends CommonModel
             ->where('exam_id', '=', $exam_id)
             ->where('station_id', '=', $stationId)
             ->first();
-        if($teacherDel){
-            $teacherDel = $teacherDel ->delete();
-        }
+//        if($teacherDel){
+//            $teacherDel = $teacherDel ->delete();
+//        }
         return $teacherDel;
     }
 
