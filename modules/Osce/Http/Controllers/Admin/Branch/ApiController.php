@@ -753,7 +753,7 @@ class ApiController extends CommonController
         $examQenen = $examQenenModel->where('exam_id', '=', $examId)
                                     ->where('exam_screening_id', '=', $examScreeningId)
                                     ->where('station_id', '=', $stationId)
-                                    ->where('status', '=', 0)
+                                    ->where('status', '<', 3)
                                     ->orderBy('begin_dt', 'asc')
                                     ->first();
         if (is_null($examQenen)) {
