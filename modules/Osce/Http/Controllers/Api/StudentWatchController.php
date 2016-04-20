@@ -44,28 +44,28 @@ class StudentWatchController extends CommonController
         $this->validate($request, [
             'nfc_code' => 'required|string'
         ]);
+
         $watchNfcCode = $request->input('nfc_code');
+
         $data = [
-            'title' => '',
+            'title'        => '',
             'willStudents' => '',
-            'estTime' => '',
+            'estTime'      => '',
             'willRoomName' => '',
-            'roomName' => '',
+            'roomName'     => '',
             'nextExamName' => '',
-            'surplus' => '',
-            'score' => '',
+            'surplus'      => '',
+            'score'        => '',
         ];
 
         $redis = Redis::connection('message');
 
         //根据腕表nfc_code找到腕表
         $watch = Watch::where('code', '=', $watchNfcCode)->first();
-        //$redis->publish('watch_message', json_encode(['id'=>$watch->id, 'status'=>$watch->status]));
         if (is_null($watch)) {
             $data['title'] = '未找到腕表';
             $data['code'] = -2;
-            $redis->publish('watch_message',
-                json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
+            $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
             );
@@ -75,21 +75,18 @@ class StudentWatchController extends CommonController
         if ($watch->status == 0) {
             $data['title'] = '腕表未绑定';
             $data['code'] = -1; // -1 腕表未绑定
-            $redis->publish('watch_message',
-                json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
+            $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
             );
         }
 
         //  根据腕表id找到对应的考试场次和学生
-        $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)->where('is_end', '=',
-            0)->orderBy('signin_dt', 'desc')->first();
+        $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)->where('is_end', '=', 0)->orderBy('signin_dt', 'desc')->first();
         if (is_null($watchStudent)) {
             $data['title'] = '没有找到腕表对应的学生信息';
             $data['code'] = -3;
-            $redis->publish('watch_message',
-                json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
+            $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
             );
@@ -108,8 +105,7 @@ class StudentWatchController extends CommonController
         if (is_null($examQueueCollect)) {
             $data['title'] = '学生队列信息不正确';
             $data['code'] = -4;
-            $redis->publish('watch_message',
-                json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
+            $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
             );
@@ -118,8 +114,7 @@ class StudentWatchController extends CommonController
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect, $redis);
 
-        $redis->publish('watch_message',
-            json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']));
+        $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']));
         return response()->json(
             $this->success_data($data, 1) // 返回给pad的成功信息(code为1)
         );

@@ -621,6 +621,7 @@ class ExamController extends CommonController
             $student->judgeTemplet($studentList);
             //将中文表头转为英文
             $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
+            //导入考生
             $result = $student->importStudent($exam_id, $examineeData);
             if(!$result){
                 throw new \Exception('学生导入数据失败，请参考模板修改后重试');
