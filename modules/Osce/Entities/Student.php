@@ -452,8 +452,7 @@ class Student extends CommonModel
     public function studentList($stationId ,$exam,$teacher_id)
 
     {
-        // 查询下一个待考考生信息
-        $nextTester =  Student::leftjoin('exam_queue', function ($join) {
+        $queueing=$nextTester =  Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
         })->leftjoin('station_teacher', function ($join) {
             $join->on('exam_queue.station_id', '=', 'station_teacher.station_id');
@@ -461,22 +460,62 @@ class Student extends CommonModel
             ->where('exam_queue.station_id', '=', $stationId)
             ->where('exam_queue.exam_id','=',$exam->id)
             ->where('station_teacher.exam_id', $exam->id)
-            ->whereIn('exam_queue.status', [1, 2])
-            ->where('exam_queue.blocking', 1)
-            ->orderBy('exam_queue.begin_dt', 'asc')
-            ->orderBy('exam_queue.next_num', 'asc')
-            ->select([
-                'student.name as name',
-                'student.code as code',
-                'student.idcard as idcard',
-                'student.mobile as mobile',
-                'student.avator as avator',
-                'exam_queue.status as status',
-                'student.id as student_id',
-                'student.exam_sequence as exam_sequence',
-                'station_teacher.user_id as teacher_id',
-                'exam_queue.id as exam_queue_id'
-            ])->first();
+            ->where('exam_queue.status','=',2)
+            ->first();
+        if(is_null($queueing)) {//没有正在考试的
+            // 查询当前考生信息
+            $nextTester =  Student::leftjoin('exam_queue', function ($join) {
+                $join->on('student.id', '=', 'exam_queue.student_id');
+            })->leftjoin('station_teacher', function ($join) {
+                $join->on('exam_queue.station_id', '=', 'station_teacher.station_id');
+            })
+                ->where('exam_queue.station_id', '=', $stationId)
+                ->where('exam_queue.exam_id','=',$exam->id)
+                ->where('station_teacher.exam_id', $exam->id)
+                ->whereIn('exam_queue.status', [1, 2])
+                ->where('exam_queue.blocking', 1)
+                ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.next_num', 'asc')
+                ->select([
+                    'student.name as name',
+                    'student.code as code',
+                    'student.idcard as idcard',
+                    'student.mobile as mobile',
+                    'student.avator as avator',
+                    'exam_queue.status as status',
+                    'student.id as student_id',
+                    'student.exam_sequence as exam_sequence',
+                    'station_teacher.user_id as teacher_id',
+                    'exam_queue.id as exam_queue_id'
+                ])->first();
+
+        }else{//被中断的学生继续考试
+            $nextTester =  Student::leftjoin('exam_queue', function ($join) {
+                $join->on('student.id', '=', 'exam_queue.student_id');
+            })->leftjoin('station_teacher', function ($join) {
+                $join->on('exam_queue.station_id', '=', 'station_teacher.station_id');
+            })
+                ->where('exam_queue.station_id', '=', $stationId)
+                ->where('exam_queue.exam_id','=',$exam->id)
+                ->where('station_teacher.exam_id', $exam->id)
+                ->where('exam_queue.status','=',2)
+                ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.next_num', 'asc')
+                ->select([
+                    'student.name as name',
+                    'student.code as code',
+                    'student.idcard as idcard',
+                    'student.mobile as mobile',
+                    'student.avator as avator',
+                    'exam_queue.status as status',
+                    'student.id as student_id',
+                    'student.exam_sequence as exam_sequence',
+                    'station_teacher.user_id as teacher_id',
+                    'exam_queue.id as exam_queue_id'
+                ])->first();
+
+        }
+
 
         // 查询考试是否结束 // edit by wangjiang 2016-03-29 for 查询考试是否结束
         $waitingList = Student::leftjoin('exam_queue', function ($join) {
@@ -800,6 +839,7 @@ class Student extends CommonModel
         })
             ->where('exam_queue.station_id', '=', $stationId)
             ->where('exam_queue.exam_id','=',$exam->id)
+            ->where('station_teacher.exam_id','=', $exam->id)
             ->whereIn('exam_queue.status', [1, 2])
             ->where('exam_queue.blocking', 1)
             ->orderBy('exam_queue.begin_dt', 'asc')

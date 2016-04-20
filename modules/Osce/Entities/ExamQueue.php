@@ -188,8 +188,74 @@ class ExamQueue extends CommonModel
     static public function examineeByRoomId($room_id, $examId, $stations)
     {
         try {
-            return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+            $queueing=ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
+                ->where('exam_queue.status', '=', 2)
+                ->where('student.exam_id', $examId)
+                ->where('exam_queue.blocking', 0)
+                ->groupBy('student.id')
+               ->first();
+            if(is_null($queueing)){//没有正在考试的
+                return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                    ->where('exam_queue.room_id', $room_id)
+                    ->where('exam_queue.status', '<', 3)
+                    ->where('student.exam_id', $examId)
+                    ->where('exam_queue.blocking', 1)
+                    ->select(
+                        'student.id as student_id',
+                        'student.name as student_name',
+                        'student.user_id as student_user_id',
+                        'student.idcard as student_idcard',
+                        'student.mobile as student_mobile',
+                        'student.code as student_code',
+                        'student.avator as student_avator',
+                        'student.description as student_description','exam_queue.id as exam_queue_id','exam_queue.station_id as station_id'
+                    )
+                    ->orderBy('exam_queue.next_num', 'asc')
+                    ->orderBy('exam_queue.begin_dt', 'asc')
+                    ->orderBy('exam_queue.updated_at', 'asc')
+                    ->groupBy('student.id')
+                    ->take(count($stations))
+                    ->get();
+            }else{//不正常中断存在在考试的学生
+                return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                    ->where('exam_queue.room_id', $room_id)
+                    ->where('exam_queue.status', '<', 3)
+                    ->where('student.exam_id', $examId)
+                    ->select(
+                        'student.id as student_id',
+                        'student.name as student_name',
+                        'student.user_id as student_user_id',
+                        'student.idcard as student_idcard',
+                        'student.mobile as student_mobile',
+                        'student.code as student_code',
+                        'student.avator as student_avator',
+                        'student.description as student_description','exam_queue.id as exam_queue_id','exam_queue.station_id as station_id'
+                    )
+                    ->orderBy('exam_queue.next_num', 'asc')
+                    ->orderBy('exam_queue.begin_dt', 'asc')
+                    ->orderBy('exam_queue.updated_at', 'asc')
+                    ->groupBy('student.id')
+                    ->take(count($stations))
+                    ->get();
+            }
+
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    static public function examineeByStationId($stationId, $examId)
+    {
+        $queueing=ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+            ->where('exam_queue.station_id', $stationId)
+            ->where('exam_queue.status', '=', 2)
+            ->where('student.exam_id', $examId)
+           ->first();
+        if(is_null($queueing)) {//没有正在考试的
+            return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                ->where('exam_queue.station_id', $stationId)
                 ->where('exam_queue.status', '<', 3)
                 ->where('student.exam_id', $examId)
                 ->where('exam_queue.blocking', 1)
@@ -201,41 +267,35 @@ class ExamQueue extends CommonModel
                     'student.mobile as student_mobile',
                     'student.code as student_code',
                     'student.avator as student_avator',
-                    'student.description as student_description','exam_queue.id as exam_queue_id','exam_queue.station_id as station_id'
+                    'student.description as student_description','exam_queue.station_id as station_id','exam_queue.id as exam_queue_id'
                 )
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->orderBy('exam_queue.updated_at', 'asc')
-                ->groupBy('student.id')
-                ->take(count($stations))
+                ->take(1)
                 ->get();
-        } catch (\Exception $ex) {
-            throw $ex;
+        }else{
+            return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                ->where('exam_queue.station_id', $stationId)
+                ->where('exam_queue.status', '<', 3)
+                ->where('student.exam_id', $examId)
+                ->select(
+                    'student.id as student_id',
+                    'student.name as student_name',
+                    'student.user_id as student_user_id',
+                    'student.idcard as student_idcard',
+                    'student.mobile as student_mobile',
+                    'student.code as student_code',
+                    'student.avator as student_avator',
+                    'student.description as student_description','exam_queue.station_id as station_id','exam_queue.id as exam_queue_id'
+                )
+                ->orderBy('exam_queue.next_num', 'asc')
+                ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.updated_at', 'asc')
+                ->take(1)
+                ->get();
         }
-    }
 
-    static public function examineeByStationId($stationId, $examId)
-    {
-        return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
-            ->where('exam_queue.station_id', $stationId)
-            ->where('exam_queue.status', '<', 3)
-            ->where('student.exam_id', $examId)
-            ->where('exam_queue.blocking', 1)
-            ->select(
-                'student.id as student_id',
-                'student.name as student_name',
-                'student.user_id as student_user_id',
-                'student.idcard as student_idcard',
-                'student.mobile as student_mobile',
-                'student.code as student_code',
-                'student.avator as student_avator',
-                'student.description as student_description','exam_queue.station_id as station_id','exam_queue.id as exam_queue_id'
-            )
-            ->orderBy('exam_queue.next_num', 'asc')
-            ->orderBy('exam_queue.begin_dt', 'asc')
-            ->orderBy('exam_queue.updated_at', 'asc')
-            ->take(1)
-            ->get();
     }
 
     /**

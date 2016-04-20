@@ -334,7 +334,7 @@ class ExamController extends CommonController
             {
                 throw new \Exception('修改考试失败');
             }
-            return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id,'succ'=>1]);
+            return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id])->withErrors(['msg'=>'保存成功', 'code'=>1]);
 
         } catch(\Exception $ex) {
 
