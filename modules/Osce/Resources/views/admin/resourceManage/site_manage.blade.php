@@ -13,6 +13,13 @@
         .panel-options .nav.nav-tabs{
             margin-left: 20px!important;
         }
+        .description-this {
+            display: inline-block;
+            width: 293px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
     </style>
 @stop
 
@@ -70,7 +77,7 @@
                         <tr>
                             <td>{{$k+1}}</td>
                             <td>{{$item->name}}</td>
-                            <td>{{$item->description}}</td>
+                            <td><span class="description-this">{{$item->description}}</span></td>
                             <td>
                                 <a href="{{route('osce.admin.room.getEditRoom',['id'=>$item->id,'type'=>$type])}}">
                                     <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span>

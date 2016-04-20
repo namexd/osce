@@ -68,7 +68,7 @@
                                     {{--<input type="text"    ng-model="num" id="code" class="form-control" name="mins" value="{{$rollmsg['mins']}}" placeholder="请输入分钟数">--}}
                                 {{--</div>--}}
                             {{--</div>--}}
-                            <div class="hr-line-dashed sub-id"></div>
+                            {{--<div class="hr-line-dashed sub-id"></div>--}}
 
                             <div class="form-group noTheory sub-id">
                                 <label class="col-sm-2 control-label">考试项目</label>
@@ -85,7 +85,7 @@
                                     </select>
                                 </div>
                             </div>
-                            {{--<div class="hr-line-dashed sub-id"></div>--}}
+                            <div class="hr-line-dashed sub-id"></div>
 
                             {{--<div class="form-group noTheory sub-id">--}}
                                 {{--<label class="col-sm-2 control-label">病例</label>--}}

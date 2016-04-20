@@ -320,7 +320,7 @@
                                                     </td>
                                                     <td>
                                                         <select {!! $data->pid==0? 'style="display:none;"':''!!} class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
-                                                            @for($i=1; $i<=$data->score; $i++)
+                                                            @for($i=1; $i<=($data->score>15?$data->score:15); $i++)
                                                             <option value="{{$i}}" {{$data->score==$i? 'selected="selected"':''}}>{{$i}}</option>
                                                             @endfor
                                                         </select>

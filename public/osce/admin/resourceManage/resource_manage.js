@@ -1246,7 +1246,27 @@ function clinical_case_manage_add() {
             }
         }
     });
+
+
+    /**
+     * 病例弹出新增
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-20
+     */
+    var type_status = location.href.split('?')[1];
+    $('#cancel-btn').click(function() {
+        if(type_status != undefined){
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+        } else {
+            location.href = pars.cancel;
+        }
+    });
+
+
 }
+
+
 
 /**
  * 病例管理编辑
@@ -2315,10 +2335,12 @@ function course_module(){
                     var data = res.data,
                         str = [];
 
+                    str.push({id:-999,text:'==新增病例=='});
+
                     for(var i in data) {
                         str.push({id:data[i].id,text:data[i].name});
                     }
-                    str.push({id:-999,text:'==新增病例=='});
+                    
                     return{
                         results:str
                     }
@@ -2350,7 +2372,10 @@ function course_module(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  content: pars.clinical_add+"?value=-999"
+                  end: function() {
+
+                  },
+                  content: pars.clinical_add+'?status=1&table=clinical_case&tr=clinical_case&selector=select-clinical'
                 });
             }
         });

@@ -847,12 +847,14 @@ class IndexController extends CommonController
 //                ->get();
         //查找exam_screening
         $stations = $screenModel->where('exam_screening.exam_id','=',$exam_id)->leftjoin('exam_gradation', function ($join) {
-                $join->on('exam_gradation.order', '=', 'exam_screening.gradation_order');
+                $join->on('exam_gradation.exam_id', '=', 'exam_screening.exam_id');
             })->leftjoin('exam_draft_flow', function ($join) {
                 $join->on('exam_draft_flow.order', '=', 'exam_gradation.order');
             })->leftjoin('exam_draft', function ($join) {
                 $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
             })->groupBy('exam_screening.id')->get();
+
+
             /*
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
             //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang

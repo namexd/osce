@@ -178,9 +178,17 @@ class ExamDraft extends CommonModel
             //获取 不为null的值
             $examDraft = $this->getNotNullValue($examDraft, 'station_id', $item);
             $examDraft = $this->getNotNullValue($examDraft, 'room_id',    $item);
-            $examDraft->subject_id = $item->subject_id;
             $examDraft = $this->getNotNullValue($examDraft, 'effected',   $item);
+            $examDraft = $this->getNotNullValue($examDraft, 'subject_id', $item);
+            //理论考站，考试项目 另作处理
+            if (!is_null($examDraft->station_id)){
+                $Station = Station::where('id','=',$examDraft->station_id)->first();
+                if (!is_null($Station) && $Station->type == 3){
 
+                    $examDraft->subject_id = $item->subject_id;
+                }
+            }
+            
             if(!$examDraft->save())
             {
                 throw new \Exception('更新站下的考项失败，请重试！');
@@ -210,8 +218,16 @@ class ExamDraft extends CommonModel
             //获取 不为null的值
             $examDraft = $this->getNotNullValue($examDraft, 'station_id', $item);
             $examDraft = $this->getNotNullValue($examDraft, 'room_id',    $item);
-            $examDraft->subject_id = $item->subject_id;
             $examDraft = $this->getNotNullValue($examDraft, 'effected',   $item);
+            $examDraft = $this->getNotNullValue($examDraft, 'subject_id', $item);
+            //理论考站，考试项目 另作处理
+            if (!is_null($examDraft->station_id)){
+                $Station = Station::where('id','=',$examDraft->station_id)->first();
+                if (!is_null($Station) && $Station->type == 3){
+
+                    $examDraft->subject_id = $item->subject_id;
+                }
+            }
 
             if(!$examDraft->save())
             {
