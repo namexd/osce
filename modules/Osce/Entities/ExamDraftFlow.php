@@ -490,7 +490,9 @@ class ExamDraftFlow extends CommonModel
     /**
      * 修改站名称、序号
      * @param $exam_id
-     * @return mixed
+     *
+     * @author Zhoufuxiang 2016-4-16
+     * @return object
      * @throws \Exception
      */
     public function changeStationOrder($exam_id)
