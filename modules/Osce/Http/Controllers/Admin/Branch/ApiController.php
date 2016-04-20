@@ -745,9 +745,8 @@ class ApiController extends CommonController
                                                     ->where('station_id', '=', $stationId)
                                                     ->first();
         if (is_null($examStationStatus)) {
-            $retval = ['title' => '未查询到当前考站是否准备完成信息'];
             return response()->json(
-                $this->success_data($retval, -1, 'error')
+                $this->success_data([], -1, '未查询到当前考站是否准备完成信息')
             );
         }
 
@@ -768,9 +767,8 @@ class ApiController extends CommonController
                 ->toArray();
 
             if (is_null($studentIds)) {
-                $retval = ['title' => '未查到相应考试队列信息'];
                 return response()->json(
-                    $this->success_data($retval, -2, 'error')
+                    $this->success_data([], -2, '未查到相应考试队列信息')
                 );
             }
 
@@ -783,9 +781,8 @@ class ApiController extends CommonController
                 ->toArray();
 
             if (is_null($watchNfcCodes)) {
-                $retval = ['title' => '未查到相应腕表信息'];
                 return response()->json(
-                    $this->success_data($retval, -3, 'error')
+                    $this->success_data([], -3, '未查到相应腕表信息')
                 );
             }
 
@@ -794,11 +791,6 @@ class ApiController extends CommonController
                 $request['nfc_code'] = $watchNfcCode;
                 $studentWatchController->getStudentExamReminder($request);
             }
-
-            $retval = [
-                'title' => '当前考站准备完成成功',
-                'code'  => 1,
-            ];
         } else {
             // 考站排 一个学生
             $examQenens = $examQenenModel->where('exam_id', '=', $examId)
@@ -809,9 +801,8 @@ class ApiController extends CommonController
                 ->first();
 
             if (is_null($examQenens)) {
-                $retval = ['title' => '未查到相应考试队列信息'];
                 return response()->json(
-                    $this->success_data($retval, -2, 'error')
+                    $this->success_data([], -2, '未查到相应考试队列信息')
                 );
             }
 
@@ -824,20 +815,14 @@ class ApiController extends CommonController
                 ])->first();
 
             if (is_null($watch)) {
-                $retval = ['title' => '未查到相应腕表信息'];
                 return response()->json(
-                    $this->success_data($retval, -3, 'error')
+                    $this->success_data([], -3, '未查到相应腕表信息')
                 );
             }
 
             $studentWatchController = new StudentWatchController();
             $request['nfc_code'] = $watch['nfc_code'];
             $studentWatchController->getStudentExamReminder($request);
-
-            $retval = [
-                'title' => '当前考站准备完成成功',
-                'code'  => 1,
-            ];
         }
 
 
@@ -870,7 +855,7 @@ class ApiController extends CommonController
         }
 
         return response()->json(
-            $this->success_data($retval)
+            $this->success_data([], 1, '当前考站准备完成成功')
         );
     }
 
