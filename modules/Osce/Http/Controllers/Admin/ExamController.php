@@ -604,13 +604,13 @@ class ExamController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postImportStudent($id,Request $request, Student $student)
+    public function postImportStudent(Request $request, Student $student, $id)
     {
         try {
             //获得上传的数据
             $exam_id= $id;
             $data   = Common::getExclData($request, 'student');
-            $exam   = Exam::find($exam_id);
+            $exam   = Exam::doingExam($exam_id);
             if($exam->status!=0)
             {
                 throw new \Exception('此考试当前状态下不允许新增');
