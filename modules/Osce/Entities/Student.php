@@ -800,6 +800,7 @@ class Student extends CommonModel
         })
             ->where('exam_queue.station_id', '=', $stationId)
             ->where('exam_queue.exam_id','=',$exam->id)
+            ->where('station_teacher.exam_id','=', $exam->id)
             ->whereIn('exam_queue.status', [1, 2])
             ->where('exam_queue.blocking', 1)
             ->orderBy('exam_queue.begin_dt', 'asc')
