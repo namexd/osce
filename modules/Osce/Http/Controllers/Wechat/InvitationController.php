@@ -78,7 +78,7 @@ class InvitationController extends CommonController
 
 
             if (count($message) > 0) {
-                throw new \Exception('温馨提示 ' . implode(',', array_unique(explode(',', implode(',', $message)))) . ' 目前还没有登录过微信号');
+                throw new \Exception('温馨提示 ' . implode(',', array_unique(explode(',', implode(',', $message)))) );
             } else {
                 return response()->json(
                     $this->success_data()
@@ -154,6 +154,7 @@ class InvitationController extends CommonController
             $TeacherInvite = $inviteModel->getTeacherInvite($teacher_id, $exam_id, $stationId);
 
             if (is_null($TeacherInvite)) {
+
                 $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
                 if (is_null($teacherDel)) {
                     $code = 2;
@@ -186,15 +187,17 @@ class InvitationController extends CommonController
 
 
                 $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
-                if (!$teacherDel) {
-                    throw new \Exception('删除老师关联失败');
-                } else {
-                    $code = 1;
+                if(!is_null($teacherDel)){
+                    if (!$teacherDel->delete()) {
+                        throw new \Exception('删除老师关联失败');
+                    } else {
+                        $code = 1;
+                    }
                 }
             }
 
             if (count($message) > 0) {
-                throw new \Exception('温馨提示 ' . implode(',', array_unique(explode(',', implode(',', $message)))) . ' 目前还没有登录过微信号');
+                throw new \Exception('温馨提示 ' . implode(',', array_unique(explode(',', implode(',', $message)))) . '不能发送取消通知');
             } else {
                 return response()->json(
                     $this->success_data('', $code)
