@@ -105,6 +105,8 @@ class ExamDraftFlow extends CommonModel
             }
             //变更站顺序、名称
             $this->changeStationOrder($exam_id);
+            //理论考站，处理考试、试卷、考站关系
+            $ExamDraft->handleExamPaperStation($exam_id);
 
             //存在阶段ID，为临时获取数据，无需保存提交
             if (!empty($condition)) {
@@ -112,6 +114,7 @@ class ExamDraftFlow extends CommonModel
                 $connection->rollBack();
                 return $reData;
             }
+
 
             //最后检查，考站、考场安排是否符合要求
             $exam = Exam::doingExam($exam_id);
@@ -126,9 +129,6 @@ class ExamDraftFlow extends CommonModel
                 default:
                     throw new \Exception('System Error!');
             }
-
-            //理论考站，处理考试、试卷、考站关系
-            $ExamDraft->handleExamPaperStation($exam_id);
 
             if ($status == 1) {
                 //清空数据
@@ -490,7 +490,9 @@ class ExamDraftFlow extends CommonModel
     /**
      * 修改站名称、序号
      * @param $exam_id
-     * @return mixed
+     *
+     * @author Zhoufuxiang 2016-4-16
+     * @return object
      * @throws \Exception
      */
     public function changeStationOrder($exam_id)
