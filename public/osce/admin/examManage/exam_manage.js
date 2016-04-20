@@ -70,6 +70,20 @@ function formatRepo (repo) {
   return markup;
 }
 
+//解决ie10,ie11下select2 多选bug
+var isIE10 = !!navigator.userAgent.match(/MSIE 10/i);
+var isIE11 = !!navigator.userAgent.match(/Trident.*rv\:11\./);
+
+
+
+
+
+
+
+
+
+
+
 /**
  * 成绩查询
  * @author mao
@@ -3413,7 +3427,36 @@ function smart_assignment(){
         var index = layer.load(0, {
             shade: [0.1,'#fff'] //0.1透明度的白色背景
         });
-        $.post(pars.makePlanUrl,function(testData){
+        $.ajax({
+            type: 'POST',
+            url: pars.makePlanUrl,
+            success: function(testData) {
+                if(testData.code!=1)
+                {
+                    layer.msg(testData.message,{skin:'msg-error',icon:1});
+                    //关闭加载
+                    layer.close(index);
+                }
+                else
+                {
+                    $('.classroom-box').html('');
+                    //$('.time-list>ul').html('');
+                    maketotal(testData.data);
+                    //$('#makePlan').one('click',makePlan);
+                    makeTime();
+
+                    //关闭加载
+                    layer.close(index);
+                    layer.msg('排考成功！',{skin:'msg-success',icon:1});
+                }
+            },
+            error: function(error){
+                layer.msg('请求超时！',{skin:'msg-error',icon:1}, function() {
+                    href.reload();
+                });
+            }
+        });
+        /*$.post(pars.makePlanUrl,function(testData){
 
             if(testData.code!=1)
             {
@@ -3433,7 +3476,7 @@ function smart_assignment(){
                 layer.close(index);
                 layer.msg('排考成功！',{skin:'msg-success',icon:1});
             }
-        });
+        });*/
     }
     $('#makePlan').click(function(){
 
@@ -3736,6 +3779,10 @@ function examinee_manage_add(){
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '用户名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '用户名不超过20个'
                     }
                 }
             },
@@ -3850,6 +3897,24 @@ function examinee_manage_add(){
                         message: '请输入正确的邮箱'
                     }
                 }
+            },
+            grade_class:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班级不能为空'
+                    }
+                }
+            },
+            teacher_name:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班主任姓名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '班主任姓名不超过20个'
+                    }
+                }
             }
         }
     });
@@ -3925,6 +3990,10 @@ function examinee_manage_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '用户名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '用户名不超过20个'
                     }
                 }
             },
@@ -4041,6 +4110,24 @@ function examinee_manage_edit() {
                     regexp: {
                         regexp: /^[a-z\d]+(\.[a-z\d]+)*@([\da-z](-[\da-z])?)+(\.{1,2}[a-z]+)+$/,
                         message: '请输入正确的邮箱'
+                    }
+                }
+            },
+            grade_class:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班级不能为空'
+                    }
+                }
+            },
+            teacher_name:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班主任姓名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '班主任姓名不超过20个'
                     }
                 }
             }
@@ -4224,9 +4311,9 @@ function station_assignment(){
                 for(var i in data) {
                     var str = data[i].order - 1;
                     if(data[i].id == count) {
-                        exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+stationName[str]+'</option>';
+                        exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+data[i].order+'</option>';
                     } else {
-                        exam_stage_str += '<option value="'+data[i].id+'">阶段'+stationName[str]+'</option>';
+                        exam_stage_str += '<option value="'+data[i].id+'">阶段'+data[i].order+'</option>';
                     }
                 }
             }
@@ -4277,7 +4364,7 @@ function station_assignment(){
 
         //请求数据
         req['exam_id'] = examId;
-        req['name'] = '第'+stationName[index]+'站';
+        req['name'] = '第'+(index+1)+'站';
         req['order'] = index;
         req['exam_gradation_id'] = 1;
 
@@ -4293,7 +4380,7 @@ function station_assignment(){
 
                 for(var i in data) {
                     var str = data[i].order - 1;
-                    exam_stage_str += '<option value="'+data[i].order+'">阶段'+stationName[str]+'</option>';
+                    exam_stage_str += '<option value="'+data[i].order+'">阶段'+data[i].order+'</option>';
                 }
                 req['order'] = index + 1;
                 req['exam_gradation_id'] = data[0].id;
@@ -4308,7 +4395,7 @@ function station_assignment(){
          */
         $.ajax({
             type: 'post',
-            async: true,
+            async: false,
             data: req,
             url: pars.stationAdd,
             success: function(res) {
@@ -4319,7 +4406,7 @@ function station_assignment(){
                                 '<label class="col-sm-1 control-label">&nbsp;</label>'+
                                 '<div class="col-sm-10">'+
                                     '<div class="row">'+
-                                        '<div class="col-sm-4"><label class="control-label" order="'+index+'">第'+stationName[index]+'站</label></div>'+
+                                        '<div class="col-sm-4"><label class="control-label" order="'+index+'">'+req.name+'</label></div>'+
                                         '<div class="col-sm-6">'+
                                                 '<label class="control-label col-sm-2">阶段：</label>'+
                                                 '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+stageRender(1)+'</select>'+
@@ -4387,7 +4474,7 @@ function station_assignment(){
 
         layer.confirm('确认删除？',{
                 title:'删除',
-                btn: ['确定','取消'] 
+                btn: ['确定','取消']
             }, function(its) {
                 $.ajax({
                     type:'get',
@@ -4402,7 +4489,7 @@ function station_assignment(){
 
                             //更新考站显示
                             $('.station-container').find('.col-sm-4').each(function(key,elem) {
-                                $(elem).find('.control-label').text('第'+stationName[key]+'站');
+                                $(elem).find('.control-label').text('第'+(key+1)+'站');
                             });
 
                             layer.close(its);
@@ -4430,6 +4517,7 @@ function station_assignment(){
 
         $.ajax({
             type:'post',
+            async:false,
             url: pars.update_data,
             data: {exam_id:examId,flow_id:$that.parent().attr('station-id'),type:judgeType},
             success: function(res) {
@@ -4449,6 +4537,7 @@ function station_assignment(){
                             '</tr>';
 
                     //插入dom
+                    
                     $that.append(html);
                     $that.attr('index',index);
                     //select2初始化
@@ -4716,7 +4805,7 @@ function station_assignment(){
                     data:req,
                     success: function(res) {
                         //更新考站类型
-                        $elem.find('.exam-station').parent().next().text(typeToName[e.params.data.type])
+                        $elem.find('.exam-station').parent().next().text(typeToName[e.params.data.type]);
                         if(e.params.data.type == 3) {
                             $elem.find('.exam-item').attr('disabled','disabled');
                             $elem.find('.exam-item').val(-999).trigger('change');
@@ -5230,7 +5319,7 @@ function examiner_manage() {
      */
     function teacherInit($elem) {
         $elem.find('.custom-teacher').select2({
-            placeholder:'请选择',
+            placeholder: isIE11 || isIE10 ? '' : '请选择',
             ajax: {
                 type:'get',
                 dataType: 'json',
@@ -5327,7 +5416,7 @@ function examiner_manage() {
      */
     function teacher_spInit($elem) {
         $elem.find('.custom-sp').select2({
-            placeholder:'请选择',
+            placeholder: isIE11 || isIE10 ? '' : '请选择',
             ajax: {
                 type:'get',
                 dataType: 'json',
