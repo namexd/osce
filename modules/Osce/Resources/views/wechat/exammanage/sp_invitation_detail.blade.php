@@ -60,7 +60,14 @@
 
         <ul>
             @if(!empty($list))
+                @if($list['status'] ==3)
 
+                    <li>
+                        <span class="items">{{$list['exam_name']}}    考试邀请撤销通知  </span>
+
+                    </li>
+
+                    @endif
             <li>
                 考试邀请:<span class="items">{{$list['exam_name']}}</span>
             </li>
