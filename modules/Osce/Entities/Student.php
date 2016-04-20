@@ -629,7 +629,9 @@ class Student extends CommonModel
         //查询本场考试中 已考试过的 学生 ，用于剔除//TODO zhoufuxiang
         $students = $this->leftjoin('exam_screening_student', function ($join) {
             $join->on('student.id', '=', 'exam_screening_student.student_id');
-        })
+        })->leftjoin('exam_queue',function($exam_queue){
+            $exam_queue->on('exam_queue.exam_screening_id','=','exam_screening_student.exam_screening_id');
+        })->whereIn('exam_queue.status', [2,3])
             ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
             ->where('exam_screening_student.is_end', '=', 1)
             ->select(['exam_screening_student.student_id'])->get();
