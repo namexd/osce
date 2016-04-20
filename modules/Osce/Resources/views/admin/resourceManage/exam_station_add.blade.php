@@ -129,7 +129,7 @@
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="submit">保存</button>
-                                    <a class="btn btn-white" href="{{route("osce.admin.Station.getStationList")}}">取消</a>
+                                    <a class="btn btn-white" id="cancel-btn" href="javascript:void(0)">取消</a>
                                 </div>
                             </div>
                         </form>
@@ -138,5 +138,22 @@
             </div>
         </div>
     </div>
-
+<script>
+$(function() {
+    /**
+     * 弹出新增
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-20
+     */
+    var type_status = location.href.split('?')[1];
+    $('#cancel-btn').click(function() {
+        if(type_status != undefined){
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+        } else {
+            location.href = '{{route("osce.admin.Station.getStationList")}}';
+        }
+    });
+})
+</script>
 @stop{{-- 内容主体区域 --}}

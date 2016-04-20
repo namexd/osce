@@ -53,17 +53,23 @@ $(function() {
         type = $('#result-type').attr('value');
 
     //等待三秒关闭
-    layer.load(3)
+    layer.load(3);
+    
+    //新增数据传入父页面
     setTimeout(function() {
-        //新增的数据传过去
-        
-        if(table_id!=undefined) {
-            parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).append('<option value="'+ID+'" selected="selected">'+name+'</option>').val(ID).trigger("change");
-        }
-        else if(type!= undefined) {
-            parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).parent().attr('status-type',type);
+        if(tr_id == 'sp_assignment') {
+
+        } else if(tr_id == 'clinical_case') {
+
         } else {
-            parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).append('<option value="'+ID+'" selected="selected">'+name+'</option>').val(ID).trigger("change");
+            //考站新增
+            if(type == undefined) {
+                parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).parent().attr('status-type',type);
+                parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).append('<option value="'+ID+'" selected="selected">'+name+'</option>').val(ID).trigger("change");
+            } else {
+                //考试项目新增，所属考场新增
+                parent.$('.table-id-'+table_id).find('.'+tr_id).find('.'+selector).append('<option value="'+ID+'" selected="selected">'+name+'</option>').val(ID).trigger("change");
+            }
         }
         
         parent.layer.close(index);
