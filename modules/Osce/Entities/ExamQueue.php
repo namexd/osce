@@ -199,6 +199,7 @@ class ExamQueue extends CommonModel
                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->where('exam_queue.room_id', $room_id)
                     ->where('exam_queue.status', '<', 3)
+                    ->where('exam_queue.exam_id', '=',$examId)
                     ->where('student.exam_id', $examId)
                     ->where('exam_queue.blocking', 1)
                     ->select(
@@ -221,6 +222,7 @@ class ExamQueue extends CommonModel
                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->where('exam_queue.room_id', $room_id)
                     ->where('exam_queue.status', '<', 3)
+                    ->where('exam_queue.exam_id', '=',$examId)
                     ->where('student.exam_id', $examId)
                     ->select(
                         'student.id as student_id',
