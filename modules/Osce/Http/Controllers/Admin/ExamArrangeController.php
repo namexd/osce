@@ -872,11 +872,29 @@ class ExamArrangeController extends CommonController
      * @author zhouqiang 2016-04-06
      * @return string
      */
-    private function getUserProve($exam, $user)
+    private function getUserProve($examId, $user)
     {
         //根据考试编号id去查找计划表是否有操作人信息
-//        $userId =
+        $userId =   ExamDraftFlowTemp::where('exam_id','=',$examId)->first();
+        if(is_null($userId)){
+            //查询有没有只操作小表里有没有操作人信息
 
+
+            //如果是操作回显小表就看小表你的操作人信息
+//             $userId =
+                
+            
+        }else{
+            
+            //        $userId  = array_unique($userIds);
+            if($user->id == $userId->id){
+                throw  new \Exception('当前考试有老师正在操作中.......!');
+            }
+        }
+
+
+
+        return true;
     }
 
 
