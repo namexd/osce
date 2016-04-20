@@ -105,12 +105,12 @@ class StandardItem extends CommonModel
     public function getCheckPointAvg($pid, $subjectId)
     {
         $builder = $this-> leftJoin('exam_score', function($join){
-            $join -> on('standard.id', '=', 'exam_score.standard_id');
+            $join -> on('standard_item.id', '=', 'exam_score.standard_id');
         })
             -> leftJoin('exam_result', function($join){
                 $join -> on('exam_result.id', '=', 'exam_score.exam_result_id');
             });
-        $builder = $builder ->where('standard.pid', $pid)
+        $builder = $builder ->where('standard_item.pid', $pid)
             ->where('exam_score.subject_id', $subjectId)
             ->groupBy('exam_score.exam_result_id');
 
