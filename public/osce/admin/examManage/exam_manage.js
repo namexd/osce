@@ -3736,6 +3736,10 @@ function examinee_manage_add(){
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '用户名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '用户名不超过20个'
                     }
                 }
             },
@@ -3850,6 +3854,24 @@ function examinee_manage_add(){
                         message: '请输入正确的邮箱'
                     }
                 }
+            },
+            grade_class:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班级不能为空'
+                    }
+                }
+            },
+            teacher_name:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班主任姓名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '班主任姓名不超过20个'
+                    }
+                }
             }
         }
     });
@@ -3925,6 +3947,10 @@ function examinee_manage_edit() {
                 validators: {
                     notEmpty: {/*非空提示*/
                         message: '用户名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '用户名不超过20个'
                     }
                 }
             },
@@ -4041,6 +4067,24 @@ function examinee_manage_edit() {
                     regexp: {
                         regexp: /^[a-z\d]+(\.[a-z\d]+)*@([\da-z](-[\da-z])?)+(\.{1,2}[a-z]+)+$/,
                         message: '请输入正确的邮箱'
+                    }
+                }
+            },
+            grade_class:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班级不能为空'
+                    }
+                }
+            },
+            teacher_name:{
+                validators: {
+                    notEmpty: {/*非空提示*/
+                        message: '班主任姓名不能为空'
+                    },
+                    stringLength: {
+                        max:20,
+                        message: '班主任姓名不超过20个'
                     }
                 }
             }
