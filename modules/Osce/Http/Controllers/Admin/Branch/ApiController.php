@@ -826,7 +826,7 @@ class ApiController extends CommonController
 
             $retval = [
                 'title' => '当前考站准备完成成功',
-                'code'  => $watch['nfc_code'],
+                'code'  => [$watch['nfc_code']],
             ];
         }
 
