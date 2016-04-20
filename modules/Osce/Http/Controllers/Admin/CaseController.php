@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\StationCase;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\CaseModel as CaseModel;
+use Modules\Osce\Repositories\Common;
 
 class CaseController extends CommonController
 {
@@ -92,14 +93,32 @@ class CaseController extends CommonController
             DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withErrors('该病例名称已存在!');
         }
+
+
+
+
         $result = $caseModel->insertData($formData);
+
+
+
         if ($result == false) {
             DB::connection('osce_mis')->rollBack();
             return redirect()->back()->withErrors('数据插入失败,请重试!');
         }
 
+
         DB::connection('osce_mis')->commit();
-        return redirect()->route('osce.admin.case.getCaseList');
+
+        //todo 调用弹窗时新增的跳转 周强 2016-4-13
+        $Redirect = Common::handleRedirect($request,$result);
+
+        if($Redirect==false){
+            return redirect()->route('osce.admin.case.getCaseList');
+        }else{
+            return $Redirect;
+        }
+
+
     }
 
     /**

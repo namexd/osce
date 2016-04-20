@@ -731,7 +731,7 @@ class ExamArrangeController extends CommonController
 
              //将邀请状态插入$stationData
              $examRoomData=  [];
-//         foreach ($teacherDatas as $key=>&$items) {
+
              foreach ($teacherDatas as &$item) {
 
                  $item->status = 0;
@@ -739,14 +739,11 @@ class ExamArrangeController extends CommonController
                      if ($item->id == $value->invite_user_id && $item->station_id ==$value->invite_station_id) {
 
                          $item->status = $value->status;
-//
+
                      }
-//                    else {
-//                        $item->invite_status = 0;
-//                    }
                  }
              }
-//         }
+
              $teacher = $datas->toArray();
              foreach($teacher as &$teacherData){
                  //查询出现在考站的类型
@@ -765,10 +762,8 @@ class ExamArrangeController extends CommonController
                      }
                  }
                  foreach ($teacherDatas as $value) {
-
-
+                     
                      if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id) {
-
                          $teacherData['sp_teacher'][] =$value;
 
 
@@ -872,28 +867,22 @@ class ExamArrangeController extends CommonController
      * @author zhouqiang 2016-04-06
      * @return string
      */
-    private function getUserProve($examId, $user)
+    private function getUserProve($examId, $user,$flowiId ='')
     {
         //根据考试编号id去查找计划表是否有操作人信息
         $userId =   ExamDraftFlowTemp::where('exam_id','=',$examId)->first();
         if(is_null($userId)){
-            //查询有没有只操作小表里有没有操作人信息
-
-
             //如果是操作回显小表就看小表你的操作人信息
-//             $userId =
-                
-            
+            $userId = ExamDraftTemp::where('old_draft_flow_id','=',$flowiId)->get();
+            if($user->id == $userId->id){
+                throw  new \Exception('当前考试有老师正在操作中.......!');
+            }
         }else{
-            
             //        $userId  = array_unique($userIds);
             if($user->id == $userId->id){
                 throw  new \Exception('当前考试有老师正在操作中.......!');
             }
         }
-
-
-
         return true;
     }
 
