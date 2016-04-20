@@ -482,7 +482,7 @@ class DrawlotsController extends CommonController
             'room_id' => 'required|integer',
             'teacher_id' => 'required|integer'
         ]);
-//        try {
+       try {
             $examId = $request->input('exam_id', null);
             //获取uid和room_id
             $uid = $request->input('uid');
@@ -587,11 +587,11 @@ class DrawlotsController extends CommonController
             $inv->getAuthentication_arr($request);//当前考生推送
             return response()->json($this->success_data($result));
 
-//        } catch (\Exception $ex) {
-//            $connection->rollBack();
-//
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
