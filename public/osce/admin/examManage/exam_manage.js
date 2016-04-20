@@ -4580,6 +4580,10 @@ function station_assignment(){
                         } else {
                             $that.parent().parent().parent().parent().remove();
                             $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
+                            //更新考站显示
+                            $('.station-container').find('.col-sm-4').each(function(key,elem) {
+                                $(elem).find('.control-label').text('第'+(key+1)+'站');
+                            });
                         }
                     }
                 });
@@ -4659,10 +4663,11 @@ function station_assignment(){
                     //数据格式化
                     var str = [];
                     var data = res.data;
+
+                    str.push({id:-999,text:'==新增考试项目=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].title});
                     }
-                    str.push({id:-999,text:'==新增考试项目=='});
 
                     //加载入数据
                     return {
@@ -4732,10 +4737,11 @@ function station_assignment(){
                     //数据格式化
                     var str = [];
                     var data = res.data;
+
+                    str.push({id:-999,text:'==新增考站=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name,type:data[i].type});
                     }
-                    str.push({id:-999,text:'==新增考站=='});
 
                     //加载入数据
                     return {
@@ -4850,10 +4856,11 @@ function station_assignment(){
                     //数据格式化
                     var str = [];
                     var data = res.data;
+
+                    str.push({id:-999,text:'==新增考场=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
-                    str.push({id:-999,text:'==新增考场=='});
 
                     //加载入数据
                     return {
@@ -5344,10 +5351,11 @@ function examiner_manage() {
                     //数据格式化
                     var str = [];
                     var data = res.data;
+
+                    str.push({id:-999,text:'==新增考官=='});
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
-                    str.push({id:-999,text:'==新增考官=='});
 
                     //加载入数据
                     return {
@@ -5435,10 +5443,11 @@ function examiner_manage() {
                     //数据格式化
                     var str = [];
                     var data = res.data;
+
+                    str.push({id:-999,text:'==新增sp=='});
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
-                    str.push({id:-999,text:'==新增sp=='});
 
                     //加载入数据
                     return {
@@ -5500,7 +5509,3 @@ function examiner_manage() {
     //$("#add-basic .custom-teacher").select2();
     //$("#add-basic .custom-sp").select2();
 }
-
-
-
-

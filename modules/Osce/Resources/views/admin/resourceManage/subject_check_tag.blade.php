@@ -3,6 +3,13 @@
 @section('only_css')
     <style>
         #myModalLabel{color: #16BEB0;}
+        .description-this {
+            display: inline-block;
+            width: 350px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
     </style>
 @stop
 
@@ -69,7 +76,7 @@
                                         <td>{{ $k+1 }}</td>
                                         <td>{{ $val['name'] }}</td>
                                         <td>{{ $val['LabelType'] }}</td>
-                                        <td>{{ $val['describe'] }}</td>
+                                        <td><span class="description-this">{{ $val['describe'] }}</span></td>
                                         <td>
                                             <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" class="edit" dataId="{{ $val['id'] }}">
                                                 <span class="read state1 detail">
