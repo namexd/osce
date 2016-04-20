@@ -4224,9 +4224,9 @@ function station_assignment(){
                 for(var i in data) {
                     var str = data[i].order - 1;
                     if(data[i].id == count) {
-                        exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+stationName[str]+'</option>';
+                        exam_stage_str += '<option value="'+data[i].id+'" selected="selected">阶段'+data[i].order+'</option>';
                     } else {
-                        exam_stage_str += '<option value="'+data[i].id+'">阶段'+stationName[str]+'</option>';
+                        exam_stage_str += '<option value="'+data[i].id+'">阶段'+data[i].order+'</option>';
                     }
                 }
             }
@@ -4277,7 +4277,7 @@ function station_assignment(){
 
         //请求数据
         req['exam_id'] = examId;
-        req['name'] = '第'+stationName[index]+'站';
+        req['name'] = '第'+(index+1)+'站';
         req['order'] = index;
         req['exam_gradation_id'] = 1;
 
@@ -4293,7 +4293,7 @@ function station_assignment(){
 
                 for(var i in data) {
                     var str = data[i].order - 1;
-                    exam_stage_str += '<option value="'+data[i].order+'">阶段'+stationName[str]+'</option>';
+                    exam_stage_str += '<option value="'+data[i].order+'">阶段'+data[i].order+'</option>';
                 }
                 req['order'] = index + 1;
                 req['exam_gradation_id'] = data[0].id;
@@ -4319,7 +4319,7 @@ function station_assignment(){
                                 '<label class="col-sm-1 control-label">&nbsp;</label>'+
                                 '<div class="col-sm-10">'+
                                     '<div class="row">'+
-                                        '<div class="col-sm-4"><label class="control-label" order="'+index+'">第'+stationName[index]+'站</label></div>'+
+                                        '<div class="col-sm-4"><label class="control-label" order="'+index+'">'+req.name+'</label></div>'+
                                         '<div class="col-sm-6">'+
                                                 '<label class="control-label col-sm-2">阶段：</label>'+
                                                 '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+stageRender(1)+'</select>'+
@@ -4387,7 +4387,7 @@ function station_assignment(){
 
         layer.confirm('确认删除？',{
                 title:'删除',
-                btn: ['确定','取消'] 
+                btn: ['确定','取消']
             }, function(its) {
                 $.ajax({
                     type:'get',
@@ -4402,7 +4402,7 @@ function station_assignment(){
 
                             //更新考站显示
                             $('.station-container').find('.col-sm-4').each(function(key,elem) {
-                                $(elem).find('.control-label').text('第'+stationName[key]+'站');
+                                $(elem).find('.control-label').text('第'+(key+1)+'站');
                             });
 
                             layer.close(its);
