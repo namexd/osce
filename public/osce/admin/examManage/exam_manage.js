@@ -70,6 +70,20 @@ function formatRepo (repo) {
   return markup;
 }
 
+//解决ie10,ie11下select2 多选bug
+var isIE10 = !!navigator.userAgent.match(/MSIE 10/i);
+var isIE11 = !!navigator.userAgent.match(/Trident.*rv\:11\./);
+
+
+
+
+
+
+
+
+
+
+
 /**
  * 成绩查询
  * @author mao
@@ -5232,7 +5246,7 @@ function examiner_manage() {
      */
     function teacherInit($elem) {
         $elem.find('.custom-teacher').select2({
-            placeholder:'请选择',
+            placeholder: isIE11 || isIE10 ? '' : '请选择',
             ajax: {
                 type:'get',
                 dataType: 'json',
@@ -5329,7 +5343,7 @@ function examiner_manage() {
      */
     function teacher_spInit($elem) {
         $elem.find('.custom-sp').select2({
-            placeholder:'请选择',
+            placeholder: isIE11 || isIE10 ? '' : '请选择',
             ajax: {
                 type:'get',
                 dataType: 'json',
