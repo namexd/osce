@@ -103,6 +103,9 @@ class ExamDraftFlow extends CommonModel
             if (!$ExamDraftTempModel->handleDelDatas($exam_id)) {
                 throw new \Exception('处理待删除数据失败');
             }
+            //变更站顺序、名称
+            $this->changeStationOrder($exam_id);
+
             //存在阶段ID，为临时获取数据，无需保存提交
             if (!empty($condition)) {
                 $reData = $this->getTempDatas($exam_id, $condition);
@@ -262,11 +265,11 @@ class ExamDraftFlow extends CommonModel
         try {
             $item = $data['item'];
             $draftFlowData = [
-                'order' => $item->order,
-                'name' => $item->name,
+                'order'             => $item->order,
+                'name'              => $item->name,
+                'exam_id'           => $item->exam_id,
                 'exam_screening_id' => $item->exam_screening_id,
                 'exam_gradation_id' => $item->exam_gradation_id,
-                'exam_id' => $item->exam_id,
             ];
 
             $result = ExamDraftFlow::create($draftFlowData);
@@ -389,6 +392,7 @@ class ExamDraftFlow extends CommonModel
             if (!$result->save()) {
                 throw new \Exception('删除失败，请重试！');
             }
+            return $result;
 
         } catch (\Exception $ex) {
             throw $ex;
@@ -483,4 +487,25 @@ class ExamDraftFlow extends CommonModel
         return $draftFlows;
     }
 
+    /**
+     * 修改站名称、序号
+     * @param $exam_id
+     * @return mixed
+     * @throws \Exception
+     */
+    public function changeStationOrder($exam_id)
+    {
+        $result = $this->where('exam_id','=',$exam_id)->orderBy('id')->get();
+        if (!$result->isEmpty()){
+            foreach ($result as $key => $item) {
+                $item->order = $key+1;
+                $item->name  = '第'.($key+1).'站';
+                //保存
+                if (!$item->save){
+                    throw new \Exception('保存站名称、序号失败');
+                }
+            }
+        }
+        return $result;
+    }
 }
