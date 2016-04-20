@@ -2392,7 +2392,9 @@ function course_module(){
                                 results:str
                             }
                         }
-                    }
+                    },
+                    templateResult: formatRepo,
+                    templateSelection: formatRepoSelection
                 }
             })
             
@@ -2421,7 +2423,9 @@ function course_module(){
                             results:str
                         }
                     }
-                }
+                },
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
             }
         })
 
