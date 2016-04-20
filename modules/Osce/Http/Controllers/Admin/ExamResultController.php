@@ -183,7 +183,7 @@ class ExamResultController extends CommonController{
 //        $result['time'] = date('H:i:s',$result['time']);
 //        date_default_timezone_set("PRC");
         $result['time'] = Common::handleTime($result['time']);
-        $score = ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->get();
+        $score = ExamScore::where('exam_result_id',$id)->where('subject_id','=',$result['subject_id'])->get();
 
 //        $image=[];
 //        foreach($score as $itm){
@@ -224,11 +224,11 @@ class ExamResultController extends CommonController{
         $scores = [];
         $itemScore = [];
         foreach($score as $itm){
-            $pid = $itm->standard->pid;
+            $pid = $itm->standardItem->pid;
             $scores[$pid]['items'][] = [
-                'standard'  => $itm->standard,
+                'standard'  => $itm->standardItem,
                 'score'     => $itm->score,
-                'image'     => TestAttach::where('test_result_id',$result['id'])->where('standard_id',$itm->standard->id)->get(),
+                'image'     => TestAttach::where('test_result_id',$result['id'])->where('standard_id',$itm->standardItem->id)->get(),
             ];
             $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore'])? $itemScore[$pid]['totalScore']:0) + $itm->score;
         }
@@ -238,7 +238,7 @@ class ExamResultController extends CommonController{
         $standardItem =new StandardItem();
         foreach ($scores as $index => $item) {
             //获取考核点信息
-            $standardM = Standard::where('id', $index)->first();
+            $standardM = StandardItem::where('id', '=', $index)->first();
             $scores[$index]['sort']     = $standardM->sort;
             $scores[$index]['content']  = $standardM->content;
             $scores[$index]['tScore']   = $standardM->score;
