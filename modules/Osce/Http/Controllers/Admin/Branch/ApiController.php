@@ -713,7 +713,9 @@ class ApiController extends CommonController
      * <b>get请求字段：</b>
      * * int        $exam_id               考试id
      * * int        $station_id            考站id
+     * * int        $room_id               考场id
      * * int        $exam_screening_id     考试场次id
+     * * int        $teacher_id            老师id
      *
      * @return json
      *
@@ -728,12 +730,14 @@ class ApiController extends CommonController
             'station_id'        => 'required|integer',
             'exam_screening_id' => 'required|integer',
             'teacher_id'        => 'required|integer',
+            'room_id'           => 'required|integer',
         ]);
 
         $examId          = $request->input('exam_id');
         $stationId       = $request->input('station_id');
         $examScreeningId = $request->input('exam_screening_id');
         $teacher_id      = $request->input('teacher_id');
+        $roomId          = $request->input('room_id');
 
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
@@ -747,43 +751,98 @@ class ApiController extends CommonController
             );
         }
 
+        // 判断考试排考方式
+        $examModel = new Exam();
+        $examSequenceMode = $examModel->where('id', '=', $examId)->first()->sequence_mode;
+
         $examQenenModel = new ExamQueue();
-        $examQenen = $examQenenModel->where('exam_id', '=', $examId)
-                                    ->where('exam_screening_id', '=', $examScreeningId)
-                                    ->where('station_id', '=', $stationId)
-                                    ->where('status', '<', 3) // 确保可以多次点击
-                                    ->orderBy('begin_dt', 'asc')
-                                    ->first();
-        if (is_null($examQenen)) {
-            $retval = ['title' => '未查到相应考试队列信息'];
-            return response()->json(
-                $this->success_data($retval, -2, 'error')
-            );
+        $watchLogModel = new WatchLog();
+        if ($examSequenceMode == 1) {
+            // 考场排 多个学生
+            $studentIds = $examQenenModel->where('exam_id', '=', $examId)
+                ->where('exam_screening_id', '=', $examScreeningId)
+                ->where('room_id', '=', $roomId)
+                ->where('status', '<', 3) // 确保可以多次点击
+                ->get()
+                ->pluck('student_id')
+                ->toArray();
+
+            if (is_null($studentIds)) {
+                $retval = ['title' => '未查到相应考试队列信息'];
+                return response()->json(
+                    $this->success_data($retval, -2, 'error')
+                );
+            }
+
+            $watchNfcCodes = $watchLogModel->leftJoin('watch', function($join){
+                $join->on('watch_log.watch_id', '=', 'watch.id');
+            })->whereIn('watch_log.student_id', $studentIds)
+                ->where('watch.status', '=', 1)
+                ->get()
+                ->pluck('watch.code')
+                ->toArray();
+
+            if (is_null($watchNfcCodes)) {
+                $retval = ['title' => '未查到相应腕表信息'];
+                return response()->json(
+                    $this->success_data($retval, -3, 'error')
+                );
+            }
+
+            $studentWatchController = new StudentWatchController();
+            foreach ($watchNfcCodes as $watchNfcCode) {
+                $request['nfc_code'] = $watchNfcCode;
+                $studentWatchController->getStudentExamReminder($request);
+            }
+
+            $retval = [
+                'title' => '当前考站准备完成成功',
+                'code'  => 1,
+            ];
+        } else {
+            // 考站排 一个学生
+            $examQenens = $examQenenModel->where('exam_id', '=', $examId)
+                ->where('exam_screening_id', '=', $examScreeningId)
+                ->where('station_id', '=', $stationId)
+                ->where('status', '<', 3) // 确保可以多次点击
+                ->orderBy('begin_dt', 'asc')
+                ->first();
+
+            if (is_null($examQenens)) {
+                $retval = ['title' => '未查到相应考试队列信息'];
+                return response()->json(
+                    $this->success_data($retval, -2, 'error')
+                );
+            }
+
+            $watch = $watchLogModel->leftJoin('watch', function($join){
+                $join->on('watch_log.watch_id', '=', 'watch.id');
+            })->where('watch_log.student_id', '=', $examQenens->student_id)
+                ->where('watch.status', '=', 1)
+                ->select([
+                    'watch.code as nfc_code',
+                ])->first();
+
+            if (is_null($watch)) {
+                $retval = ['title' => '未查到相应腕表信息'];
+                return response()->json(
+                    $this->success_data($retval, -3, 'error')
+                );
+            }
+
+            $studentWatchController = new StudentWatchController();
+            $request['nfc_code'] = $watch['nfc_code'];
+            $studentWatchController->getStudentExamReminder($request);
+
+            $retval = [
+                'title' => '当前考站准备完成成功',
+                'code'  => 1,
+            ];
         }
 
-        $watchLogModel = new WatchLog();
-        $watch = $watchLogModel->leftJoin('watch', function($join){
-            $join->on('watch_log.watch_id', '=', 'watch.id');
-               })->where('watch_log.student_id', '=', $examQenen->student_id)
-                 ->where('watch.status', '=', 1)
-                 ->select([
-                    'watch.code as nfc_code',
-                 ])->first();
-        if (is_null($watch)) {
-            $retval = ['title' => '未查到相应腕表信息'];
-            return response()->json(
-                $this->success_data($retval, -3, 'error')
-            );
-        }
 
         $examStationStatus->status = 1;
         $examStationStatus->save();
-
-        // 准备成功返回信息
-        $retval = [
-            'title' => '当前考站准备完成成功',
-            'code'  => $watch['nfc_code'],
-        ];
 
         $request['station_id']=$stationId;
         $request['teacher_id']=$teacher_id;
@@ -809,7 +868,7 @@ class ApiController extends CommonController
                 $studentWatchController->getStudentExamReminder($request);
             }
         }
-        
+
         return response()->json(
             $this->success_data($retval)
         );

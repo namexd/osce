@@ -77,6 +77,7 @@ trait SundryTraits
         $array = [];
         foreach ($data as $v) {
             $v = array_unique($v);
+
             if (count(array_diff($v, $array)) != count($v)) {
                 throw new \Exception('考场安排错误！');
             }

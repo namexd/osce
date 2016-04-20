@@ -501,7 +501,7 @@ class ExamDraftFlow extends CommonModel
                 $item->order = $key+1;
                 $item->name  = '第'.($key+1).'站';
                 //保存
-                if (!$item->save){
+                if (!$item->save()){
                     throw new \Exception('保存站名称、序号失败');
                 }
             }
