@@ -789,9 +789,15 @@ class ApiController extends CommonController
                 );
             }
 
+            $studentWatchController = new StudentWatchController();
+            foreach ($watchNfcCodes as $watchNfcCode) {
+                $request['nfc_code'] = $watchNfcCode;
+                $studentWatchController->getStudentExamReminder($request);
+            }
+
             $retval = [
                 'title' => '当前考站准备完成成功',
-                'code'  => $watchNfcCodes,
+                'code'  => 1,
             ];
         } else {
             // 考站排 一个学生
@@ -824,9 +830,13 @@ class ApiController extends CommonController
                 );
             }
 
+            $studentWatchController = new StudentWatchController();
+            $request['nfc_code'] = $watch['nfc_code'];
+            $studentWatchController->getStudentExamReminder($request);
+
             $retval = [
                 'title' => '当前考站准备完成成功',
-                'code'  => [$watch['nfc_code']],
+                'code'  => 1,
             ];
         }
 
