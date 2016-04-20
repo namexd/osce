@@ -61,21 +61,20 @@ class InvitationController extends CommonController
         $stationId = $request->get('station_id');
         $message = [];
         try {
-        //根据老师id查询老师的信息和openid
-        $teacher = new Teacher();
-        $teacherData = $teacher->invitationContent($teacher_id);
+            //根据老师id查询老师的信息和openid
+            $teacher = new Teacher();
+            $teacherData = $teacher->invitationContent($teacher_id);
 
-        $inviteData = $this->getInviteData($exam_id, $teacherData, $stationId);
+            $inviteData = $this->getInviteData($exam_id, $teacherData, $stationId);
 
-        $InviteModel = new Invite();
+            $InviteModel = new Invite();
 
 
-            try{
+            try {
                 $InviteModel->addInvite($inviteData);
-            }catch (\Exception $se){
+            } catch (\Exception $se) {
                 $message[] = $se->getMessage();
             }
-
 
 
             if (count($message) > 0) {
@@ -147,7 +146,7 @@ class InvitationController extends CommonController
         $teacher_id = $request->get('teacher_id');
         $exam_id = $request->get('exam_id');
         $stationId = $request->get('station_id');
-
+        $message = [];
         try {
             $code = '';
             //查询到该老师的邀请数据
@@ -175,24 +174,33 @@ class InvitationController extends CommonController
                 $inviteData = $this->getInviteData($exam_id, $teacherData, $stationId);
                 //查询到该老师的邀请数据
                 $inviteModel = new Invite();
-                $alterInvite = $inviteModel->getInviteStatus($TeacherInvite, $inviteData);
-                if (!$alterInvite) {
-                    throw  new \Exception('删除老师邀请失败');
+
+                try {
+
+                    $inviteModel->getInviteStatus($TeacherInvite, $inviteData);
+
+                } catch (\Exception $ex) {
+
+                    $message[] = $ex->getMessage();
+                }
+
+
+                $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
+                if (!$teacherDel) {
+                    throw new \Exception('删除老师关联失败');
                 } else {
-                    $teacherDel = $inviteModel->getDelStationTeacher($teacher_id, $exam_id, $stationId);
-                    if (!$teacherDel) {
-                        throw new \Exception('删除老师关联失败');
-                    } else {
-                        $code = 1;
-                    }
+                    $code = 1;
                 }
             }
-            return response()->json(
-                $this->success_data('', $code)
-            );
-        } catch (\Exception $ex) {
 
-            
+            if (count($message) > 0) {
+                throw new \Exception('温馨提示 ' . implode(',', array_unique(explode(',', implode(',', $message)))) . ' 目前还没有登录过微信号');
+            } else {
+                return response()->json(
+                    $this->success_data('', $code)
+                );
+            }
+        } catch (\Exception $ex) {
             return response()->json(
                 $this->fail($ex)
             );
