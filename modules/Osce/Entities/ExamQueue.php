@@ -210,7 +210,7 @@ class ExamQueue extends CommonModel
                         'student.mobile as student_mobile',
                         'student.code as student_code',
                         'student.avator as student_avator',
-                        'student.description as student_description','exam_queue.id as exam_queue_id','exam_queue.station_id as station_id'
+                        'student.description as student_description','exam_queue.id as exam_queue_id','exam_queue.room_id as room_id'
                     )
                     ->orderBy('exam_queue.next_num', 'asc')
                     ->orderBy('exam_queue.begin_dt', 'asc')
@@ -323,7 +323,7 @@ class ExamQueue extends CommonModel
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
-                    'student.code as student_code','exam_queue.station_id as station_id'
+                    'student.code as student_code','exam_queue.room_id as room_id'
                 )
                 ->groupBy('student.id')
                 ->get();
