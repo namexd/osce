@@ -4326,6 +4326,14 @@ function station_assignment(){
         for(var i in arr) {
             select2Init($(arr[i].table).find(arr[i].tr));
         }
+
+        //影藏阶段一
+        $('.station-container').find('.select-stage').each(function(key,elem) {
+            if($(elem).text() == '阶段1') {
+                $(elem).parent().css('visibility','hidden');
+            }
+        });
+
     }
     //模拟数据触发
     //InitData(data);
@@ -4339,7 +4347,7 @@ function station_assignment(){
      * @param   {[number]}   count [第几个阶段]
      * @return  {[string]}         [option dom]
      */
-    function stageRender(count) {
+    function stageRender(count,$elem) {
        var exam_stage_str = '';
         $.ajax({
             type: 'get',
@@ -4494,6 +4502,13 @@ function station_assignment(){
                     $('.station-container').find('.item-id-'+index).attr('index',index + 1);
                     //初始化select2
                     select2Init($('.station-container').find('.table-id-'+index).find('.item-id-0'));
+
+                    //影藏阶段一
+                    $('.station-container').find('.select-stage').each(function(key,elem) {
+                        if($(elem).text() == '阶段1') {
+                            $(elem).parent().css('visibility','hidden');
+                        }
+                    });
                 }
             }
         });
