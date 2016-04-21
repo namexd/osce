@@ -39,7 +39,7 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder(Request $request)
+    public function getStudentExamReminder(Request $request, $stationId = null)
     {
         $this->validate($request, [
             'nfc_code' => 'required|string'
@@ -112,7 +112,7 @@ class StudentWatchController extends CommonController
         }
 
         //判断考试的状态
-        $data = $this->nowQueue($examQueueCollect, $redis);
+        $data = $this->nowQueue($examQueueCollect, $stationId);
 
         $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']));
         return response()->json(
@@ -127,13 +127,13 @@ class StudentWatchController extends CommonController
      * @internal param $room_id
      * @author zhouqiang
      */
-    public function nowQueue($examQueueCollect, $redis)
+    public function nowQueue($examQueueCollect, $stationId)
     {
         $status = $examQueueCollect->pluck('status');
         $statusArray = $status->toArray();
 
         if (in_array(1, $statusArray)) {
-            return $this->getStatusOneExam($examQueueCollect, $redis);
+            return $this->getStatusOneExam($examQueueCollect);
         }
 
         if (in_array(2, $statusArray)) {
@@ -141,14 +141,14 @@ class StudentWatchController extends CommonController
         }
 
         if (in_array(3, $statusArray)) {
-            return $this->getStatusThreeExam($examQueueCollect);
+            return $this->getStatusThreeExam($examQueueCollect, $stationId);
         }
 
-        return $this->getStatusWaitExam($examQueueCollect);
+        return $this->getStatusWaitExam($examQueueCollect, $stationId);
     }
 
     //判断腕表提醒状态为1时
-    private function getStatusOneExam($examQueueCollect, $redis)
+    private function getStatusOneExam($examQueueCollect)
     {
         $items = array_where($examQueueCollect, function ($key, $value) {
             if ($value->status == 1) {
@@ -165,8 +165,8 @@ class StudentWatchController extends CommonController
         $station = $item->station;
         $room = $item->room;
         $data = [
-            'code' => 3, // 抽签完成状态（对应界面：请到XX考站）
-            'title' => '请进入以下考站考试',
+            'code'     => 3, // 抽签完成状态（对应界面：请到XX考站）
+            'title'    => '请进入以下考站考试',
             'roomName' => $room->name . '-' . $station->name,
         ];
 
@@ -195,8 +195,8 @@ class StudentWatchController extends CommonController
             //$endStudentExam = ExamQueue::endStudentQueueExam($item->student_id);
         };
         $data = [
-            'code' => 4, // 考试状态（对应界面：当前考试剩余时间）
-            'title' => '当前考站剩余时间',
+            'code'    => 4, // 考试状态（对应界面：当前考试剩余时间）
+            'title'   => '当前考站剩余时间',
             'surplus' => $surplus,
         ];
 
@@ -204,7 +204,7 @@ class StudentWatchController extends CommonController
     }
 
     //判断腕表提醒状态为3时
-    private function getStatusThreeExam($examQueueCollect)
+    private function getStatusThreeExam($examQueueCollect, $stationId)
     {
         $nextExamQueue = '';
         $examQueue = '';
@@ -233,19 +233,19 @@ class StudentWatchController extends CommonController
             //判断下一场考试中是否还有学生在等待考试或者在开始中
 
             //调用状态为1的方法
-            $data = $this->getStatusWaitExam($examQueueCollect);
+            $data = $this->getStatusWaitExam($examQueueCollect, $stationId);
 
             if ($data['willStudents'] == 0) {
                 if (!is_null($nextExamQueue->station)) {
                     $data = [
-                        'code' => 5, // 考试结束，但还有考试（对应界面：请前往下一教室430）
-                        'title' => '当前考场考试已完成，请进入下一个考场',
+                        'code'         => 5, // 考试结束，但还有考试（对应界面：请前往下一教室430）
+                        'title'        => '当前考场考试已完成，请进入下一个考场',
                         'nextExamName' => $nextExamQueue->room->name . '-' . $nextExamQueue->station->name,
                     ];
                 } else {
                     $data = [
-                        'code' => 5, // 考试结束，但还有考试（对应界面：请前往下一教室430）
-                        'title' => '当前考场考试已完成，请进入下一个考场',
+                        'code'         => 5, // 考试结束，但还有考试（对应界面：请前往下一教室430）
+                        'title'        => '当前考场考试已完成，请进入下一个考场',
                         'nextExamName' => $nextExamQueue->room->name,
                     ];
                 }
@@ -271,7 +271,7 @@ class StudentWatchController extends CommonController
                 $testresultModel = new TestResult();
                 $score = $testresultModel->AcquireExam($examQueue->student_id);
                 $data = [
-                    'code' => 6, // 考试结束全部考完（对应界面：显示考试完成，显示总成绩）
+                    'code'  => 6, // 考试结束全部考完（对应界面：显示考试完成，显示总成绩）
                     'title' => '考试完成，最终总成绩',
                     'score' => $score,
                 ];
@@ -279,7 +279,7 @@ class StudentWatchController extends CommonController
                 return $data;
             } else {
                 $data = [
-                    'code' => -1,
+                    'code'  => -1,
                     'title' => '当前考试已完成',
                 ];
 
@@ -288,7 +288,7 @@ class StudentWatchController extends CommonController
 
         } else {
             $data = [
-                'code' => -1,
+                'code'  => -1,
                 'title' => '还有考试未完成',
             ];
 
@@ -297,7 +297,7 @@ class StudentWatchController extends CommonController
     }
 
     //判断腕表提醒状态为0时
-    private function getStatusWaitExam($examQueueCollect)
+    private function getStatusWaitExam($examQueueCollect, $stationId)
     {
         $items = array_where($examQueueCollect, function ($key, $value) {
             if ($value->status == 0) {
@@ -311,11 +311,11 @@ class StudentWatchController extends CommonController
         $examStationStatusModel = new ExamStationStatus();
         $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
             ->where('exam_screening_id', '=', $item->exam_screening_id)
-            ->where('station_id', '=', $item->station_id)
+            ->where('station_id', '=', $stationId)
             ->first();
         if ($instance->status == 0) {
             return [
-                'code' => 0, // 0，等待状态（对应界面：Prepare_fragment）
+                'code'  => 0, // 0，等待状态（对应界面：Prepare_fragment）
                 'title' => '等待老师准备中',
             ];
         }
@@ -349,31 +349,31 @@ class StudentWatchController extends CommonController
         if ($willStudents > 0) {
 
             $data = [
-                'code' => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-                'title' => '考生等待信息',
+                'code'         => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                'title'        => '考生等待信息',
                 'willStudents' => $willStudents,
-                'estTime' => $examtimes,
+                'estTime'      => $examtimes,
                 'willRoomName' => $examRoomName,
 
             ];
         } else {
             if (is_null($item->station_id)) {
                 $data = [
-                    'code' => 2, // 引导状态（对应界面：请前往教室420）
-                    'title' => '请进入以下考场考试',
+                    'code'         => 2, // 引导状态（对应界面：请前往教室420）
+                    'title'        => '请进入以下考场考试',
                     'willStudents' => '',
-                    'estTime' => '',
+                    'estTime'      => '',
                     'willRoomName' => '',
-                    'roomName' => $examRoomName,
+                    'roomName'     => $examRoomName,
                 ];
             } else {
                 $data = [
-                    'code' => 2, // // 引导状态（对应界面：请前往教室420）
-                    'title' => '请进入以下考站考试',
+                    'code'         => 2, // // 引导状态（对应界面：请前往教室420）
+                    'title'        => '请进入以下考站考试',
                     'willStudents' => '',
-                    'estTime' => '',
+                    'estTime'      => '',
                     'willRoomName' => '',
-                    'roomName' => $examRoomName . '-' . $item->station->name,
+                    'roomName'     => $examRoomName . '-' . $item->station->name,
                 ];
             }
 

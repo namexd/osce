@@ -3658,6 +3658,35 @@ function smart_assignment(){
         }
     }
 
+
+    /**
+     * 发送通知
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-21
+     */
+    $('#send-info').click(function() {
+        //考试id
+        var exma_id = (location.href).split('=')[1];
+
+        $.ajax({
+            type:'get',
+            url:pars.send_info,
+            data:{exam_id:exam_id},
+            success:function(res){
+                if(res.code!=1) {
+                    layer.msg(data.message,{skin:'msg-error',icon:1},function(its){
+                        layer.close(its);
+                    });
+                } else {
+                    layer.msg(data.message,{skin:'msg-success',icon:1},function(its){
+                        layer.close(its);
+                    });
+                }
+            }
+        });
+    });
+
 }
 
 

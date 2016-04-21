@@ -56,7 +56,7 @@ class ExamControl extends Model
         $doExamCount = count($examModel->leftJoin('exam_queue', function($join){
             $join -> on('exam.id', '=', 'exam_queue.exam_id');
         })->select('exam_queue.id')->where('exam.status','=',1)
-            ->where('exam_queue.status','<>',3)
+            ->where('exam_queue.status','=',2)
             ->get());
 
         //统计已完成考试数量
@@ -103,7 +103,7 @@ class ExamControl extends Model
             'exam_screening_student.exam_screening_id',//考试场次编号
             'exam_order.status as examOrderStatus'//考试学生排序状态
         )->where('exam.status','=',1)
-            ->where('exam_queue.status','<>',3)
+            ->where('exam_queue.status','=',2)
         ->get();
 
 
@@ -111,7 +111,7 @@ class ExamControl extends Model
         //查询该考生剩余考站数量和该考生是否有标记
         if(!empty($examInfo)&&count($examInfo)>0){
             foreach($examInfo as $key=>$val){
-                $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['stationId']);
+                $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['exam_screening_id']);
                 $examInfo[$key]['remainStationCount']=$remainExamQueueData['remainStationCount'];
                 $examMonitorModel = new ExamMonitor();
                 $examMonitorInfo= $examMonitorModel->where('station_id','=',$val['stationId'])
@@ -181,33 +181,15 @@ class ExamControl extends Model
             $result = $examQueueModel->where('exam_id','=',$data['examId'])
                 ->where('student_id','=',$data['studentId'])
                 ->where('exam_screening_id','=',$data['examScreeningId'])
-                ->where('station_id','=',$data['stationId'])
+                //->where('station_id','=',$data['stationId'])
                 ->update(['controlMark'=>1]);
             if(!$result){
                 throw new \Exception(' 更新考试队列中考试监控标记失败！');
             }
 
-            //② 更新该考生考试队列表中该考生剩余考站的状态（exam_queue）
-
-            //获取该考生剩余还没考的考站信息
-            $remainExamQueueData = $this->getRemainExamQueueData($data['examId'],$data['studentId'],$data['stationId']);
-            if(!empty($remainExamQueueData['examQueueInfo'])&&count($remainExamQueueData['examQueueInfo'])>0){
-                foreach($remainExamQueueData['examQueueInfo'] as $k=>$v){
-                    $examQueueResult = $examQueueModel->where('exam_id','=',$v['exam_id'])
-                        ->where('student_id','=',$v['student_id'])
-                        ->where('exam_screening_id','=',$v['exam_screening_id'])
-                        ->where('station_id','=',$v['station_id'])
-                        ->update(['status'=>3]);
-                    if(!$examQueueResult){
-                        throw new \Exception(' 更新剩余考试队列状态失败！');
-                    }
-                }
-            }
-
-
-            //③ 更新考试场次-学生关系表(exam_screening_student)
+            //② 更新考试场次-学生关系表(exam_screening_student)
             $examScreeningStudentData = array(
-                'is_end' => 1,
+               // 'is_end' => 1,
                 'status' => $data['status'],
                 'description' => $data['description']
             );
@@ -220,32 +202,49 @@ class ExamControl extends Model
             }
 
 
-            //③ 向考试结果记录表(exam_result) 和 监控标记学生替考记录表（exam_monitor）插入数据
-           //若该考生还有没考的其他考站，则将其他考站的分数记录为0
-            if(!empty($remainExamQueueData['remainExamQueueInfo'])&&count($remainExamQueueData['remainExamQueueInfo'])>0){
-                foreach($remainExamQueueData['remainExamQueueInfo'] as $key=>$val){
-                    //向考试结果记录表插入数据
-                    $examResultData=array(
-                        'student_id'=>$data['studentId'],
-                        'exam_screening_id'=>$val['exam_screening_id'],
-                        'station_id'=>$val['station_id'],
-                        'time'=>0,
-                        'score'=>0,
-                        'teacher_id'=>$data['userId'],
-                    );
-                    if(!ExamResult::create($examResultData)){
-                        throw new \Exception(' 插入考试结果记录表失败！');
+
+            //③ 更新该考生考试队列表中该考生剩余考站的状态（exam_queue）
+            //获取该考生剩余还没考的考站信息
+            $remainExamQueueData = $this->getRemainExamQueueData($data['examId'],$data['studentId'],$data['examScreeningId']);
+            if(!empty($remainExamQueueData['examQueueInfo'])&&count($remainExamQueueData['examQueueInfo'])>0){
+                foreach($remainExamQueueData['examQueueInfo'] as $k=>$v){
+                    $examQueueResult = $examQueueModel->where('exam_id','=',$v['exam_id'])
+                        ->where('student_id','=',$v['student_id'])
+                        ->where('exam_screening_id','=',$v['exam_screening_id'])
+                        ->where('station_id','=',$v['station_id'])
+                        ->update(['status'=>3]);
+                    if(!$examQueueResult){
+                        throw new \Exception(' 更新剩余考试队列状态失败！');
                     }
-                    //监控标记学生替考记录表
-                    $examMonitorData=array(
-                        'station_id'=>$val['station_id'],
-                        'exam_id'=>$val['examId'],
-                        'student_id'=>$val['studentId'],
-                        'type'=>$data['type'],
-                        'description'=>$data['description'],
-                    );
-                    if(!ExamMonitor::create($examMonitorData)){
-                        throw new \Exception(' 插入监控标记学生替考记录表失败！');
+                }
+
+                //③ 向考试结果记录表(exam_result) 和 监控标记学生替考记录表（exam_monitor）插入数据
+                //若该考生还有没考的其他考站，则将其他考站的分数记录为0
+                if(!empty($remainExamQueueData['remainExamQueueInfo'])&&count($remainExamQueueData['remainExamQueueInfo'])>0){
+                    foreach($remainExamQueueData['remainExamQueueInfo'] as $key=>$val){
+                        //向考试结果记录表插入数据
+                        $examResultData=array(
+                            'student_id'=>$data['studentId'],
+                            'exam_screening_id'=>$val['exam_screening_id'],
+                            'station_id'=>$val['station_id'],
+                            'time'=>0,
+                            'score'=>0,
+                            'teacher_id'=>$data['userId'],
+                        );
+                        if(!ExamResult::create($examResultData)){
+                            throw new \Exception(' 插入考试结果记录表失败！');
+                        }
+                        //监控标记学生替考记录表
+                        $examMonitorData=array(
+                            'station_id'=>$val['station_id'],
+                            'exam_id'=>$data['examId'],
+                            'student_id'=>$val['studentId'],
+                            'type'=>$data['type'],
+                            'description'=>$data['description'],
+                        );
+                        if(!ExamMonitor::create($examMonitorData)){
+                            throw new \Exception(' 插入监控标记学生替考记录表失败！');
+                        }
                     }
                 }
             }
@@ -335,26 +334,25 @@ class ExamControl extends Model
         }
     }
 
-
     /**获取该考生该场考试还没开考的剩余的考站数量和考试队列信息
      * @method
      * @url /osce/
      * @access public
      * @param $examId 考试id
-     * @param $studentId 考生id
-     * @param $stationId 正在进行的考站id
+     * @param $studentId 学生id
+     * @param $examScreeningId 场次id
      * @return array
      * @author xumin <xumin@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getRemainExamQueueData($examId,$studentId,$stationId){
+    public function getRemainExamQueueData($examId,$studentId,$examScreeningId){
         $examQueueModel = new ExamQueue();
         $examQueueInfo = $examQueueModel->select('exam_id','exam_screening_id','student_id','station_id')
             ->where('exam_id','=',$examId)
             ->where('student_id','=',$studentId)
-            ->where('station_id','<>',$stationId)
-            ->where('status','<>',3)
+            ->where('exam_screening_id','<>',$examScreeningId)
+            ->whereIn('status',[2,3])
             ->get();
         return array(
             'remainStationCount' =>count($examQueueInfo),//剩余考站数量

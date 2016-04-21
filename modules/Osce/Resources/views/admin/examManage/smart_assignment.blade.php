@@ -169,7 +169,7 @@
 
 @section('content')
     <input type="hidden" id="parameter" value="{'pagename':'smart_assignment','background_img':'{{asset('osce/admin/plugins/js/plugins/layer/laydate')}}'
-    ,'makePlanUrl':'{{route('osce.admin.arrangement.postBegin',['exam_id'=>$_GET['id']])}}'}" />
+    ,'makePlanUrl':'{{route('osce.admin.arrangement.postBegin',['exam_id'=>$_GET['id']])}}','send_info':'{{route('osce.admin.exam.getStudentInform')}}'}" />
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
@@ -208,7 +208,7 @@
             <div class="operate" >
                 <button class="btn btn-default" type="button" id="makePlan">智能排考</button>
                 <button class="btn btn-default save" type="submit">保存方案</button>
-                <button class="btn btn-default" type="button" style="display: none;">导出excel</button>
+                <a class="btn btn-default" id="send-info" href="javascript:void(0)">发送通知</a>
             </div>
             @endif
         </form>
