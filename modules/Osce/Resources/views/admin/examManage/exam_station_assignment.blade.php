@@ -12,6 +12,11 @@
 
     .station-container table thead tr td:nth-child(5) {display: none;}
     .station-container table tbody tr td:nth-child(5) {display: none;}
+    .select2-results__option{
+        word-break:break-all\9\0;
+        word-break:break-all\0;
+        width:173px\9\0;
+    }
     </style>
 @stop
 

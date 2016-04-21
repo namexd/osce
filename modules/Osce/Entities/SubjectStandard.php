@@ -48,6 +48,10 @@ class SubjectStandard extends CommonModel
      * @param $subject
      * @param $standard_name
      * @return static
+     *
+     * @author Zhoufuxiang
+     * @date   2016-04-06
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStandard($subject, $standard_name){
         $result = $this->where('subject_id','=',$subject->id)->select('standard_id as id')->first();
