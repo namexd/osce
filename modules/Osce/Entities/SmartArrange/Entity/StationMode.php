@@ -32,7 +32,7 @@ class StationMode extends AbstractEntity implements EntityInterface
         //为考站设定考试时间
         $entities = $this->entityMins($entities, $exam->same_time);
         //去重
-        $entities = $this->mergeRoom($entities);
+        $entities = $this->mergeRoom($entities, 'station_id');
         //加上序号
         $entities = $this->setSerialnumber($entities);
         //为考站设定needNum
@@ -60,18 +60,4 @@ class StationMode extends AbstractEntity implements EntityInterface
         return $data;
     }
 
-    function mergeRoom($entities)
-    {
-        $array = [];
-        $entities = $entities->groupBy('station_id');
-        foreach ($entities as $entity) {
-            if (count($entity) > 1) {
-                $array[] = $entity->sortBy('mins')->pop();
-            } else {
-                $array[] = $entity->pop();
-            }
-        }
-
-        return collect($array);
-    }
 }
