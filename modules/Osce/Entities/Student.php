@@ -653,6 +653,7 @@ class Student extends CommonModel
         if (count($studentIds)) {
             $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
         }
+        
 
         $builder = $builder->select([
             'student.id as id',
