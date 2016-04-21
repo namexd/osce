@@ -228,7 +228,7 @@ class ExamResultController extends CommonController{
             $scores[$pid]['items'][] = [
                 'standard'  => $itm->standardItem,
                 'score'     => $itm->score,
-                'image'     => TestAttach::where('test_result_id',$result['id'])->where('standard_id',$itm->standardItem->id)->get(),
+                'image'     => TestAttach::where('test_result_id',$result['id'])->where('standard_item_id',$itm->standardItem->id)->get(),
             ];
             $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore'])? $itemScore[$pid]['totalScore']:0) + $itm->score;
         }
@@ -243,10 +243,10 @@ class ExamResultController extends CommonController{
             $scores[$index]['content']  = $standardM->content;
             $scores[$index]['tScore']   = $standardM->score;
             $scores[$index]['score']    = $itemScore[$index]['totalScore'];
-            $scores[$index]['image']    = TestAttach::where('test_result_id',$result['id'])->where('standard_id',$index)->get();
+            $scores[$index]['image']    = TestAttach::where('test_result_id',$result['id'])->where('standard_item_id',$index)->get();
 
             $standard[$index] = $itemScore[$index]['totalScore'];
-            $avg[$index] = $standardItem->getCheckPointAvg($index, $result['subject_id']);
+            $avg[$index]      = $standardItem->getCheckPointAvg($index, $result['subject_id']);
         }
 
         return view('osce::admin.examManage.score_query_detail')->with(['result'=>$result,'scores'=>$scores,'standard'=>$standard,'avg'=>$avg]);
