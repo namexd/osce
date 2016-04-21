@@ -112,7 +112,7 @@ class StudentWatchController extends CommonController
         }
 
         //判断考试的状态
-        $data = $this->nowQueue($examQueueCollect, $redis, $stationId);
+        $data = $this->nowQueue($examQueueCollect, $stationId);
 
         $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']));
         return response()->json(
@@ -127,7 +127,7 @@ class StudentWatchController extends CommonController
      * @internal param $room_id
      * @author zhouqiang
      */
-    public function nowQueue($examQueueCollect, $redis, $stationId)
+    public function nowQueue($examQueueCollect, $stationId)
     {
         $status = $examQueueCollect->pluck('status');
         $statusArray = $status->toArray();
