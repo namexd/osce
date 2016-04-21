@@ -14,6 +14,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
@@ -30,6 +31,7 @@ use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
+use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\Teacher;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Entities\Watch;
@@ -638,20 +640,25 @@ class DrawlotsController extends CommonController
             }elseif($roomMsg_two){
                 $station->exam_screening_id=$roomMsg->id;
             }
-            $ExamDraft = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-                ->where('exam_draft_flow.exam_id', '=', $exam->id)
-                ->where('exam_draft.station_id', '=', $station->id)
-                ->with('subejct')
-                ->first();
-            if(!is_null($ExamDraft)){
-                $subject    =   $ExamDraft->subject;
-            }
-            //将考场的id封装进去
-            $station->room_id   = $room->room_id;
-            if(!is_null($subject)){
-                $station->mins      = $subject->mins;
+            if($station->type==3){//理论站
+                $paper=ExamPaper::where('id',$station->paper_id)->first();
+                $station->mins = $paper->length;
+            }else {
+                $ExamDraft = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                    ->where('exam_draft_flow.exam_id', '=', $exam->id)
+                    ->where('exam_draft.station_id', '=', $station->id)
+                    ->first();
+
+                if (!is_null($ExamDraft)) {
+                    $subject = Subject::where('id',$ExamDraft->subject_id)->first();
+                }
+                //将考场的id封装进去
+                if (!is_null($subject)) {
+                    $station->mins = $subject->mins;
+                }
             }
 
+            $station->room_id   = $room->room_id;
             //将考试的id封装进去
             $station->exam_id = $exam->id;
             //考试模式
