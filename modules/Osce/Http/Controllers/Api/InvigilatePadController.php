@@ -1009,7 +1009,7 @@ class InvigilatePadController extends CommonController
                 'nfc_code' => 'sometimes|string'
             ]);
 
-            $status = $request->get('status')?$request->get('status'):1;  //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
+            $status = $request->get('status');  //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
             $type = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
             $nfc_code = $request->get('nfc_code');
             $examing = Exam::where('status','=',1)->first();
