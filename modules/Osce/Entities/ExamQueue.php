@@ -429,8 +429,8 @@ class ExamQueue extends CommonModel
             //修改队列状态
             $examQueue->status=2;
             //$examQueue->stick=null;
-            if ( $examQueue->save()) {
-                ExamQueue::where('student_id', '=', $studentId)->where('exam_id',$exam->id)->update(['blocking'=>0]);//设置阻塞
+            if ($examQueue->save()) {
+                    ExamQueue::where('student_id', '=', $studentId)->where('exam_id',$exam->id)->update(['blocking'=>0]);//设置阻塞
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0,1, 2])
                     ->orderBy('begin_dt', 'asc')
@@ -505,6 +505,7 @@ class ExamQueue extends CommonModel
             }
             // 调用锚点方法
 //            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
+            $connection->commit();
             return true;
         } catch (\Exception $ex) {
             $connection->rollBack();

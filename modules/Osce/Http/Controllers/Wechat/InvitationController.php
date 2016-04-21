@@ -78,7 +78,7 @@ class InvitationController extends CommonController
 
 
             if (count($message) > 0) {
-                throw new \Exception('温馨提示 ' . implode(',', array_unique(explode(',', implode(',', $message)))) );
+                throw new \Exception('温馨提示 ' . implode(',', array_unique(explode(',', implode(',', $message)))). ' 目前还没有登录过微信号' );
             } else {
                 return response()->json(
                     $this->success_data()

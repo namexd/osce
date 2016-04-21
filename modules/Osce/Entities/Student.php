@@ -224,25 +224,25 @@ class Student extends CommonModel
                 }
                 //用户数据
                 $userData = [
-                    'name' => $studentData['name'],
-                    'gender' => $studentData['gender'],
-                    'idcard' => $studentData['idcard'],
-                    'mobile' => $studentData['mobile'],
-                    'code' => $studentData['code'],
-                    'avatar' => $studentData['avator'],
-                    'email' => $studentData['email']
+                    'name'      => $studentData['name'],
+                    'gender'    => $studentData['gender'],
+                    'idcard'    => $studentData['idcard'],
+                    'mobile'    => $studentData['mobile'],
+                    'code'      => $studentData['code'],
+                    'avatar'    => $studentData['avator'],
+                    'email'     => $studentData['email']
                 ];
                 //考生数据
                 $examineeData = [
-                    'name' => $studentData['name'],
-                    'idcard' => $studentData['idcard'],
-                    'mobile' => $studentData['mobile'],
-                    'code' => $studentData['code'],
-                    'avator' => $studentData['avator'],
-                    'description' => $studentData['description'],
+                    'name'      => $studentData['name'],
+                    'idcard'    => $studentData['idcard'],
+                    'mobile'    => $studentData['mobile'],
+                    'code'      => $studentData['code'],
+                    'avator'    => $studentData['avator'],
+                    'description'   => $studentData['description'],
                     'exam_sequence' => $studentData['exam_sequence'],
-                    'grade_class' => $studentData['grade_class'],
-                    'teacher_name' => $studentData['teacher_name']
+                    'grade_class'   => $studentData['grade_class'],
+                    'teacher_name'  => $studentData['teacher_name']
                 ];
                 //添加考生
                 if (!$this->addExaminee($exam_id, $examineeData, $userData, $key + 2)) {
@@ -322,7 +322,8 @@ class Student extends CommonModel
                 $examineeData['user_id'] = $user->id;
                 $examineeData['create_user_id'] = $operator->id;
                 //新增考试对应的考生
-                if (!$student = $this->create($examineeData)) {
+                $student = $this->create($examineeData);
+                if (!$student) {
                     throw new \Exception('新增考生失败！');
                 }
 
@@ -629,7 +630,9 @@ class Student extends CommonModel
         //查询本场考试中 已考试过的 学生 ，用于剔除//TODO zhoufuxiang
         $students = $this->leftjoin('exam_screening_student', function ($join) {
             $join->on('student.id', '=', 'exam_screening_student.student_id');
-        })
+        })->leftjoin('exam_queue',function($exam_queue){
+            $exam_queue->on('exam_queue.exam_screening_id','=','exam_screening_student.exam_screening_id');
+        })->whereIn('exam_queue.status', [2,3])
             ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
             ->where('exam_screening_student.is_end', '=', 1)
             ->select(['exam_screening_student.student_id'])->get();
