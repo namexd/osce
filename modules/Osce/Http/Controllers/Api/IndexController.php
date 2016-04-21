@@ -398,8 +398,8 @@ class IndexController extends CommonController
         $idCard=$request->get('id_card');
         $examId=$request->get('exam_id');
 
-        $studentInfo=Student::where('idcard',$idCard)->where('exam_id',$examId)->select(['id','idcard','code','exam_sequence'])->first();
-        dd($studentInfo);
+        $studentInfo=Student::where('idcard',$idCard)->where('exam_id',$examId)->select(['id','idcard','code','exam_sequence','name'])->first();
+
         if(!$studentInfo){
             return response()->json(
                 $this->success_rows(2,'未找到学生相关信息')
@@ -410,6 +410,7 @@ class IndexController extends CommonController
             'code'          => $studentInfo->code,           //学号
             'idcard'        => $studentInfo->idcard,         //身份证
             'exam_sequence' => $studentInfo->exam_sequence,  //准考证
+            'student_name' => $studentInfo->name,  //学生姓名
         ];
 
         $action=WatchLog::where('student_id',$studentInfo->id)->select('action')->orderBy('id','DESC')->first();
