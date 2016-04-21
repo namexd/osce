@@ -65,7 +65,11 @@ class StudentWatchController extends CommonController
         if (is_null($watch)) {
             $data['title'] = '未找到腕表';
             $data['code'] = -2;
-            $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
+            $redis->publish('watch_message', json_encode([
+                'nfc_code' => $watchNfcCode,
+                'data'     => $data,
+                'message'  => 'error',
+            ]));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
             );
@@ -75,18 +79,29 @@ class StudentWatchController extends CommonController
         if ($watch->status == 0) {
             $data['title'] = '腕表未绑定';
             $data['code'] = -1; // -1 腕表未绑定
-            $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
+            $redis->publish('watch_message', json_encode([
+                'nfc_code' => $watchNfcCode,
+                'data'     => $data,
+                'message'  => 'error'
+            ]));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
             );
         }
 
         //  根据腕表id找到对应的考试场次和学生
-        $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)->where('is_end', '=', 0)->orderBy('signin_dt', 'desc')->first();
+        $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)
+                                            ->where('is_end', '=', 0)
+                                            ->orderBy('signin_dt', 'desc')
+                                            ->first();
         if (is_null($watchStudent)) {
-            $data['title'] = '没有找到腕表对应的学生信息';
+            $data['title'] = '没有找到腕表对应的考试信息';
             $data['code'] = -3;
-            $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
+            $redis->publish('watch_message', json_encode([
+                'nfc_code' => $watchNfcCode,
+                'data'     => $data,
+                'message'  => 'error']
+            ));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
             );
@@ -94,18 +109,22 @@ class StudentWatchController extends CommonController
 
         //得到学生id
         $studentId = $watchStudent->student_id;
-        // 根据考生id找到当前的考试
+
+        //根据考生id找到当前的考试
         //$examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
         //$examId = $examInfo->exam_id;
 
-        //根据考生id在队列中得到当前考试的所有考试队列
-        $ExamQueueModel = new ExamQueue();
-        $examQueueCollect = $ExamQueueModel->StudentExamQueue($studentId);
-
+        //根据考生id得到所有该考生的队列列表
+        $examQueueModel = new ExamQueue();
+        $examQueueCollect = $examQueueModel->StudentExamQueue($studentId);
         if (is_null($examQueueCollect)) {
-            $data['title'] = '学生队列信息不正确';
+            $data['title'] = '未找到学生队列信息';
             $data['code'] = -4;
-            $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']));
+            $redis->publish('watch_message', json_encode([
+                'nfc_code' => $watchNfcCode,
+                'data'     => $data,
+                'message'  => 'error'
+            ]));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
             );
@@ -113,10 +132,13 @@ class StudentWatchController extends CommonController
 
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect, $stationId);
-
-        $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']));
+        $redis->publish('watch_message', json_encode([
+            'nfc_code' => $watchNfcCode,
+            'data'     => $data,
+            'message'  => 'success'
+        ]));
         return response()->json(
-            $this->success_data($data, 1) // 返回给pad的成功信息(code为1)
+            $this->success_data($data, 1)
         );
     }
 
@@ -129,8 +151,7 @@ class StudentWatchController extends CommonController
      */
     public function nowQueue($examQueueCollect, $stationId)
     {
-        $status = $examQueueCollect->pluck('status');
-        $statusArray = $status->toArray();
+        $statusArray = $examQueueCollect->pluck('status')->toArray();
 
         if (in_array(1, $statusArray)) {
             return $this->getStatusOneExam($examQueueCollect);
