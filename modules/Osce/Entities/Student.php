@@ -648,7 +648,7 @@ class Student extends CommonModel
                 array_push($studentIds, $student->student_id);
             }
         }
-        dd($studentIds);
+        //dd($studentIds);
 
         //剔除 已经考试过的学生
         if (count($studentIds)) {
