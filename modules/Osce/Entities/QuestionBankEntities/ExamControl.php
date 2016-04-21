@@ -56,7 +56,7 @@ class ExamControl extends Model
         $doExamCount = count($examModel->leftJoin('exam_queue', function($join){
             $join -> on('exam.id', '=', 'exam_queue.exam_id');
         })->select('exam_queue.id')->where('exam.status','=',1)
-            ->where('exam_queue.status','<>',3)
+            ->where('exam_queue.status','=',2)
             ->get());
 
         //统计已完成考试数量
@@ -103,7 +103,7 @@ class ExamControl extends Model
             'exam_screening_student.exam_screening_id',//考试场次编号
             'exam_order.status as examOrderStatus'//考试学生排序状态
         )->where('exam.status','=',1)
-            ->where('exam_queue.status','<>',3)
+            ->where('exam_queue.status','=',2)
         ->get();
 
 
@@ -111,7 +111,7 @@ class ExamControl extends Model
         //查询该考生剩余考站数量和该考生是否有标记
         if(!empty($examInfo)&&count($examInfo)>0){
             foreach($examInfo as $key=>$val){
-                $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['stationId']);
+                $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['exam_screening_id']);
                 $examInfo[$key]['remainStationCount']=$remainExamQueueData['remainStationCount'];
                 $examMonitorModel = new ExamMonitor();
                 $examMonitorInfo= $examMonitorModel->where('station_id','=',$val['stationId'])
@@ -335,25 +335,24 @@ class ExamControl extends Model
         }
     }
 
-
     /**获取该考生该场考试还没开考的剩余的考站数量和考试队列信息
      * @method
      * @url /osce/
      * @access public
      * @param $examId 考试id
-     * @param $studentId 考生id
-     * @param $stationId 正在进行的考站id
+     * @param $studentId 学生id
+     * @param $examScreeningId 场次id
      * @return array
      * @author xumin <xumin@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getRemainExamQueueData($examId,$studentId,$stationId){
+    public function getRemainExamQueueData($examId,$studentId,$examScreeningId){
         $examQueueModel = new ExamQueue();
         $examQueueInfo = $examQueueModel->select('exam_id','exam_screening_id','student_id','station_id')
             ->where('exam_id','=',$examId)
             ->where('student_id','=',$studentId)
-            ->where('station_id','<>',$stationId)
+            ->where('exam_screening_id','<>',$examScreeningId)
             ->where('status','<>',3)
             ->get();
         return array(
