@@ -780,6 +780,8 @@ class ApiController extends CommonController
                 ->pluck('watch.code')
                 ->toArray();
 
+            dd($watchNfcCodes);
+
             if (is_null($watchNfcCodes)) {
                 return response()->json(
                     $this->success_data([], -3, '未查到相应腕表信息')
