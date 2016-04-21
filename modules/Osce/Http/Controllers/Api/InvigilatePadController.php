@@ -386,8 +386,8 @@ class InvigilatePadController extends CommonController
             $examScreeningId = Input::get('exam_screening_id');
             //到队列表里查询出学生的开始和结束时间
             $studentExamTime = ExamQueue::where('station_id', '=', $stationId)
-                ->where('student_id', '=', $studentId)
                 ->where('exam_screening_id', '=', $examScreeningId)
+                ->where('student_id', '=', $studentId)
                 ->first();
             if (is_null($studentExamTime)) {
                 throw new \Exception('没有查询到该学生队列', -100);
@@ -418,6 +418,8 @@ class InvigilatePadController extends CommonController
             //查询出学生当前已完成的考试
             $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
 
+            $TestResultModel  = new TestResult();
+            $result = $TestResultModel->addTestResult($data, $score);
 
             if ($ExamFinishStatus == $studentExamSum) {
                 //todo 调用zhoufuxiang接口......
@@ -430,8 +432,6 @@ class InvigilatePadController extends CommonController
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
             }
-            $TestResultModel = new TestResult();
-            $result = $TestResultModel->addTestResult($data, $score);
 
 //                \Log::alert(json_encode($result));
 
@@ -473,14 +473,14 @@ class InvigilatePadController extends CommonController
     {
         try {
             $this->validate($request, [
-                'student_id' => 'required|integer',
-                'station_id' => 'required|integer',
-                'standard_id' => 'required|integer'
+                'student_id'        => 'required|integer',
+                'station_id'        => 'required|integer',
+                'standard_item_id'  => 'required|integer'
             ]);
             //获取数据
-            $studentId =  $request->input('student_id');
-            $stationId = $request->input('station_id');
-            $standardId = $request->input('standard_id');
+            $studentId      =  $request->input('student_id');
+            $stationId      = $request->input('station_id');
+            $standardItemId = $request->input('standard_item_id');
             $exam = Exam::where('status', 1)->first();
             if (is_null($exam)) {
                 throw new \Exception('当前没有正在进行的考试！', -701);
@@ -528,7 +528,7 @@ class InvigilatePadController extends CommonController
 
 
                 //拼装文件名,并插入数据库
-                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId,$studentId);
+                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardItemId,$studentId);
             }
 //            header('print',$result->id);
             return response()->json($this->success_data([$result->id]));
@@ -560,9 +560,9 @@ class InvigilatePadController extends CommonController
     public function postTestAttachRadio(Request $request) {
         try {
             //获取数据
-            $studentId = $request->input('student_id');
-            $stationId = $request->input('station_id');
-            $standardId = $request->input('standard_id');
+            $studentId      = $request->input('student_id');
+            $stationId      = $request->input('station_id');
+            $standardItemId = $request->input('standard_item_id');
 
             $exam = Exam::doingExam();
             if (is_null($exam)) {
@@ -605,7 +605,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错', -130);
                 }
 
-                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardId,$studentId);
+                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardItemId,$studentId);
             }
 
             return response()->json($this->success_data([$result->id]));

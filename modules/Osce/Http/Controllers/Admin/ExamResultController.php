@@ -130,7 +130,12 @@ class ExamResultController extends CommonController{
 //            date_default_timezone_set("PRC");
             $item->time = Common::handleTime($item->time);
         }
-        return view('osce::admin.examManage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams,'exam_id'=>$examId,'station_id'=>$stationId,'name'=>$name]);
+        return view('osce::admin.examManage.score_query')->with(
+            [
+                'examResults'=> $examResults, 'exams'    => $exams,
+                'stations'   => $stations,    'exam_id'  => $examId,
+                'station_id' => $stationId,   'name'     => $name
+            ]);
     }
 
     /**
@@ -184,41 +189,6 @@ class ExamResultController extends CommonController{
 //        date_default_timezone_set("PRC");
         $result['time'] = Common::handleTime($result['time']);
         $score = ExamScore::where('exam_result_id',$id)->where('subject_id','=',$result['subject_id'])->get();
-
-//        $image=[];
-//        foreach($score as $itm){
-//            $image[]=[
-//                'standard'=>$itm->standard,
-//                'score'=>$itm->score,
-//                'image'=>'',
-//            ];
-//        }
-//        $scores=[];
-//        foreach($image as $img){
-//            $scores[]=[
-//                'standard'=>$img['standard'],
-//                'score'=>$img['score'],
-//                'image'=>TestAttach::where('test_result_id',$result['id'])->where('standard_id',$img['standard']->id)->select()->get(),
-//            ];
-//        }
-//        $standard=[];
-//        foreach($scores as $standards){
-//            if($standards['standard']->pid==0){
-//                $standard[]=ExamScore::where('exam_result_id',$id)->where('subject_id',$result['subject_id'])->where('standard_id',$standards['standard']->id)->select()->first()->score;
-//            }
-//        }
-//        $standardModel=new StandardItem();
-//        $totalScore=$standardModel->getScore($result['station_id'],$result['subject_id']);
-//        if(is_null($totalScore)){
-//            $sort=$totalScore[0]->sort;
-//            $avg=[];
-//            for($i=1;$i<=$sort;$i++){
-//                $avg[]=$standardModel->getAvgScore($i,$result['station_id'],$result['subject_id']);
-//            }
-//        }else{
-//            $avg=[0];
-//        }
-
 
         //TODO: zhoufuxiang
         $scores = [];

@@ -48,6 +48,9 @@ class TopicController extends CommonController
      */
     public function getList(Request $request)
     {
+        $this->validate($request,[
+            'name'     => 'sometimes',    //名称
+        ]);
         $name = e($request->get('name'));
         $Subject = new Subject;
         $list = $Subject->getList($name);

@@ -32,19 +32,19 @@ class SubjectStatisticsRepositories  extends BaseRepository
     //TODO 考试和考站关联模型
     protected $ExamStationModel;
     //TODO 考试项目子项模型
-    protected $SubjectItemModel;
+    protected $StandardItemModel;
     //TODO 考站模型
     protected $StationModel;
     //TODO 考试项目模型
     protected $SubjectModel;
 
 
-    public function __construct(Exam $exam,ExamResult $examResult,ExamStation $ExamStation,SubjectItem $SubjectItem,Station $Station,Subject $Subject)
+    public function __construct(Exam $exam,ExamResult $examResult,ExamStation $ExamStation,SubjectItem $StandardItem,Station $Station,Subject $Subject)
     {
         $this->ExamModel = $exam;
         $this->ExamResultModel = $examResult;
         //$this->ExamStationModel = $ExamStation;
-        $this->SubjectItemModel = $SubjectItem;
+        $this->StandardItemModel = $StandardItem;
         //$this->StationModel = $Station;
         //$this->SubjectModel = $Subject;
 
@@ -343,7 +343,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GetContent($id){
-        $data = $this->SubjectItemModel
+        $data = $this->StandardItemModel
             ->where('id','=',$id)
             ->select('content')
             ->first();
@@ -455,15 +455,15 @@ class SubjectStatisticsRepositories  extends BaseRepository
      */
     public function GetStandardDetails($standardPid){
         $DB = \DB::connection('osce_mis');
-        $builder = $this->SubjectItemModel->leftJoin('exam_score', function($join){
-            $join -> on('exam_score.standard_id', '=','standard.id');
+        $builder = $this->StandardItemModel->leftJoin('exam_score', function($join){
+            $join -> on('exam_score.standard_item_id', '=','standard_item.id');
         });
-        $data = $builder->where('standard.pid','=',$standardPid)
-            ->groupBy('standard.id')
+        $data = $builder->where('standard_item.pid','=',$standardPid)
+            ->groupBy('standard_item.id')
             ->select(
-                'standard.pid',//评分标准父编号
-                'standard.content',//名称
-                'standard.score', //总分
+                'standard_item.pid',//评分标准父编号
+                'standard_item.content',//名称
+                'standard_item.score', //总分
                 'exam_score.score as grade'//成绩
             //$DB->raw('sum(exam_score.score) as totalGrade') //总成绩
             )->get();
