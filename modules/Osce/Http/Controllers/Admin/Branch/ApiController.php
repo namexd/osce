@@ -794,7 +794,7 @@ class ApiController extends CommonController
             $studentWatchController = new StudentWatchController();
             foreach ($watchNfcCodes as $watchNfcCode) {
                 $request['nfc_code'] = $watchNfcCode;
-                $studentWatchController->getStudentExamReminder($request);
+                $studentWatchController->getStudentExamReminder($request, $stationId);
             }
         } else {
             // 考站排 一个学生
@@ -827,7 +827,7 @@ class ApiController extends CommonController
 
             $studentWatchController = new StudentWatchController();
             $request['nfc_code'] = $watch['nfc_code'];
-            $studentWatchController->getStudentExamReminder($request);
+            $studentWatchController->getStudentExamReminder($request, $stationId);
         }
 
 
@@ -855,7 +855,7 @@ class ApiController extends CommonController
                 $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
                 $studentWatchController = new StudentWatchController();
                 $request['nfc_code'] = $watchData->nfc_code;
-                $studentWatchController->getStudentExamReminder($request);
+                $studentWatchController->getStudentExamReminder($request, $stationId);
             }
         }
 

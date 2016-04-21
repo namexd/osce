@@ -39,7 +39,7 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder(Request $request)
+    public function getStudentExamReminder(Request $request, $stationId)
     {
         $this->validate($request, [
             'nfc_code' => 'required|string'
@@ -112,7 +112,7 @@ class StudentWatchController extends CommonController
         }
 
         //判断考试的状态
-        $data = $this->nowQueue($examQueueCollect, $redis);
+        $data = $this->nowQueue($examQueueCollect, $redis, $stationId);
 
         $redis->publish('watch_message', json_encode(['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']));
         return response()->json(
@@ -127,7 +127,7 @@ class StudentWatchController extends CommonController
      * @internal param $room_id
      * @author zhouqiang
      */
-    public function nowQueue($examQueueCollect, $redis)
+    public function nowQueue($examQueueCollect, $redis, $stationId)
     {
         $status = $examQueueCollect->pluck('status');
         $statusArray = $status->toArray();
@@ -144,7 +144,7 @@ class StudentWatchController extends CommonController
             return $this->getStatusThreeExam($examQueueCollect);
         }
 
-        return $this->getStatusWaitExam($examQueueCollect);
+        return $this->getStatusWaitExam($examQueueCollect, $stationId);
     }
 
     //判断腕表提醒状态为1时
@@ -297,7 +297,7 @@ class StudentWatchController extends CommonController
     }
 
     //判断腕表提醒状态为0时
-    private function getStatusWaitExam($examQueueCollect)
+    private function getStatusWaitExam($examQueueCollect, $stationId)
     {
         $items = array_where($examQueueCollect, function ($key, $value) {
             if ($value->status == 0) {
@@ -311,7 +311,7 @@ class StudentWatchController extends CommonController
         $examStationStatusModel = new ExamStationStatus();
         $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
             ->where('exam_screening_id', '=', $item->exam_screening_id)
-            ->where('station_id', '=', $item->station_id)
+            ->where('station_id', '=', $stationId)
             ->first();
         if ($instance->status == 0) {
             return [
