@@ -1267,7 +1267,7 @@ class InvigilatePadController extends CommonController
                             $dataArr = [
                                 'status' => 3
                             ];
-                            ExamQueue::where('student_id','=',$student_id)->where('exam_id','=',$exam_id)->save($dataArr);
+                            ExamQueue::where('student_id','=',$student_id)->where('exam_id','=',$exam_id)->update($dataArr);
                         }
                     }
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
