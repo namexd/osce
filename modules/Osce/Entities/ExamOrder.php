@@ -23,4 +23,9 @@ class ExamOrder extends  CommonModel{
         3 => '缺考',
         4 => '跳过',
     ];
+
+    public function userInfo()
+    {
+        return $this->hasOne('\App\Entities\User', 'id', 'user_id');
+    }
 }

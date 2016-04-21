@@ -224,6 +224,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//考生
 		Route::post('student/judge-student', ['uses'=>'StudentController@postJudgeStudent','as'=>'osce.admin.exam.postJudgeStudent']);		//删除考生
+		Route::get('student/student-inform', ['uses'=>'StudentController@getStudentInform','as'=>'osce.admin.exam.getStudentInform']);		//删除考生
 
 		//成绩查询
 		Route::get('exam/exam-result-detail',['uses'=>'ExamResultController@getExamResultDetail','as'=>'osce.admin.getExamResultDetail']);

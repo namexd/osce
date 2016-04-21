@@ -106,7 +106,7 @@ class Invite extends CommonModel
 
                 $this->sendMsg($inviteDats);
             }
-
+            
             $connection->commit();
 
             if (count($inviteDats) == 0) {
