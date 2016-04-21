@@ -249,7 +249,6 @@ class StudentWatchController extends CommonController
             } else {
                 throw new \Exception('没有发现该考生相关排考计划');
             }
-
         } else {
             //判断下一场考试中是否还有学生在等待考试或者在开始中
 
@@ -344,15 +343,15 @@ class StudentWatchController extends CommonController
         //判断前面是否有人考试
         if (empty($item->station_id)) {
             $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
-                ->where('exam_id', '=', $item->exam_id)
-                ->whereBetween('status', [1, 2])
-                ->count();
+                                    ->where('exam_id', '=', $item->exam_id)
+                                    ->whereBetween('status', [1, 2])
+                                    ->count();
         } else {
             $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
-                ->where('exam_id', '=', $item->exam_id)
-                ->where('station_id', '=', $item->station_id)
-                ->whereBetween('status', [1, 2])
-                ->count();
+                                    ->where('exam_id', '=', $item->exam_id)
+                                    ->where('station_id', '=', $item->station_id)
+                                    ->whereBetween('status', [1, 2])
+                                    ->count();
         }
 
         //判断前面等待人数
@@ -365,10 +364,10 @@ class StudentWatchController extends CommonController
 
         //判断预计考试时间
         $examtimes = date('H:i', (strtotime($item->begin_dt)));
+
         //判断进入如的考场教室名字
         $examRoomName = $item->room->name;
         if ($willStudents > 0) {
-
             $data = [
                 'code'         => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
                 'title'        => '考生等待信息',
@@ -407,13 +406,12 @@ class StudentWatchController extends CommonController
     {
         $studentNum = 0;
         $willStudents = ExamQueue::where('room_id', '=', $item->room_id)
-            ->where('exam_screening_id', '=', $item->exam_screening_id)
-            ->where('station_id', '=', $item->station_id)
-            ->where('status', '=', 0)
-            ->orderBy('begin_dt', 'asc')
-            ->get();
+                                ->where('exam_screening_id', '=', $item->exam_screening_id)
+                                ->where('station_id', '=', $item->station_id)
+                                ->where('status', '=', 0)
+                                ->orderBy('begin_dt', 'asc')
+                                ->get();
         foreach ($willStudents as $key => $willStudent) {
-
             if ($willStudent->student_id == $item->student_id) {
                 $studentNum = $key;
                 continue;
