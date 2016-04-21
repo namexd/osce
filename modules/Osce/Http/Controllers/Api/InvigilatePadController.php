@@ -1449,7 +1449,16 @@ class InvigilatePadController extends CommonController
                     $watchModel = new WatchLog();
                     $watchModel->unwrapRecord($data);
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
-
+                    //获取学生当前状态
+                    $studentStatus = ExamQueue::where('student_id','=',$student_id)->where('exam_id','=',$exam_id)->first();
+                    if(count($studentStatus) > 0){
+                        if(in_array($studentStatus->status,[0,1])){
+                            $dataArr = [
+                                'status' => 3
+                            ];
+                            ExamQueue::where('student_id','=',$student_id)->where('exam_id','=',$exam_id)->update($dataArr);
+                        }
+                    }
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                     $examScreening   =   new ExamScreening();
                     $examScreening  ->getExamCheck();
