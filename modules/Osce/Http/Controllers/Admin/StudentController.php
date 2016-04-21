@@ -93,11 +93,15 @@ class StudentController extends CommonController
             $studentOpenid =$student->getStudentsOpendIds($examId);
             if(empty($studentOpenid)){
                 throw new \Exception('没有学生信息');
-            }else{
-                $sendMsg = $student->sendMsg($studentOpenid);
             }
+            if(!$student->sendMsg($studentOpenid)){
+                throw new \Exception('发送通知失败');
+            }
+
             
-            return $this->success_data([], $code = 1);   
+            return response()->json(
+                $this->success_data([], 1, 'success')
+            );
         } catch (\Exception $ex){
             throw $ex;
         }

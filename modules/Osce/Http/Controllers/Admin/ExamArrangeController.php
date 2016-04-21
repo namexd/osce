@@ -689,11 +689,17 @@ class ExamArrangeController extends CommonController
         return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id]);
     }
 
-    
-    
-    
 
-    //回显数据ajax请求
+
+    /**
+     *
+     *  回显数据ajax请求
+     * @url GET /osce/admin/exam-arrange/exam-teacher-arrange
+     * @param Request $request
+     * @author Zhoufuxiang 2016-04-06
+     * @return string
+     */
+
      public function getExamTeacherArrange(Request $request){
          $this->validate($request, [
              'exam_id' => 'required|integer'
@@ -785,11 +791,13 @@ class ExamArrangeController extends CommonController
          }
      }
 
-
     /**
+     *
      * 保存考官安排数据
+     * @url GET /osce/admin/exam-arrange/invigilate-arrange
      * @param Request $request
-     * @return mixed
+     * @author Zhoufuxiang 2016-04-06
+     * @return json 
      */
     public function postInvigilateArrange(Request $request)
     {
