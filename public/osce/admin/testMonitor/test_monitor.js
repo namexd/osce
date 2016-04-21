@@ -56,8 +56,8 @@ function monitor_test(){
             },
             dataType:"json",
             success:function(res){
-                if(res == true){
-                    window.location.href=window.location.href;
+                if(res){
+                   window.location.href=window.location.href;
                     layer.msg("提交成功！",{skin:'msg-success',icon:1});
                 }else{
                     layer.msg(res,{skin:'msg-error',icon:1});
