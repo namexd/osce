@@ -772,17 +772,20 @@ class ApiController extends CommonController
                 );
             }
 
-            $watchNfcCodes = $watchLogModel->leftJoin('watch', function($join){
+            $watches = $watchLogModel->leftJoin('watch', function($join){
                 $join->on('watch_log.watch_id', '=', 'watch.id');
             })->whereIn('watch_log.student_id', $studentIds)
                 ->where('watch.status', '=', 1)
                 ->get();
-                //->pluck('watch.code')
-                //->toArray();
 
-            dd($watchNfcCodes);
+            $watchNfcCodes = [];
+            if (!empty($watches)) {
+                foreach ($watches as $item) {
+                    $watchNfcCodes = $item['code'];
+                }
+            }
 
-            if (is_null($watchNfcCodes)) {
+            if (empty($watchNfcCodes)) {
                 return response()->json(
                     $this->success_data([], -3, '未查到相应腕表信息')
                 );
