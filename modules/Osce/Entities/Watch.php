@@ -239,9 +239,6 @@ class Watch extends CommonModel implements MachineInterface
             $builder = $builder->where('watch.code','=',$nfc_code);
         }
 
-        echo $status.'-'.$type.'-'.$nfc_code;
-
-    dd($examId);
 
         $builder = $builder->where('watch.status','=',$status)->where('exam_screening_student.is_end','=',0)->where('watch_log.action','=','绑定')->where('exam_queue.exam_id','=',$examId)->leftjoin('watch_log',function($watchLog){
             $watchLog->on('watch_log.watch_id','=','watch.id');
