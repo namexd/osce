@@ -647,16 +647,8 @@ class Student extends CommonModel
             $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
         }
 
-        $builder = $builder->select([
-            'student.id as id',
-            'student.name as name',
-            'student.idcard as idcard',
-            'student.code as code',
-            'student.mobile as mobile',
-            'exam_order.status as status',
-            'exam_order.exam_screening_id as exam_screening_id',
-        ])->orderBy('exam_order.begin_dt')->paginate(100);
-        //dd($builder);
+        $builder = $builder->paginate(100);
+        dd($builder->toArray());
         return $builder;
     }
 
