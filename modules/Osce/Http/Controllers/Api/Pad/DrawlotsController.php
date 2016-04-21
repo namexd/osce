@@ -616,6 +616,7 @@ class DrawlotsController extends CommonController
 
             $station = $stationTeacher->station;
 
+
             //拿到房间
             $room = $this->getRoomId($id, $exam->id);
 
@@ -630,14 +631,26 @@ class DrawlotsController extends CommonController
             $roomMsg = $examScreen->getExamingScreening($exam->id);
             $roomMsg_two = $examScreen->getNearestScreening($exam->id);
 
+
+
             if($roomMsg){
                 $station->exam_screening_id=$roomMsg->id;
             }elseif($roomMsg_two){
                 $station->exam_screening_id=$roomMsg->id;
             }
-
+            $ExamDraft = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                ->where('exam_draft_flow.exam_id', '=', $exam->id)
+                ->where('exam_draft.station_id', '=', $station->id)
+                ->with('subejct')
+                ->first();
+            if(!is_null($ExamDraft)){
+                $subject    =   $ExamDraft->subject;
+            }
             //将考场的id封装进去
-            $station->room_id = $room->room_id;
+            $station->room_id   = $room->room_id;
+            if(!is_null($subject)){
+                $station->mins      = $subject->mins;
+            }
 
             //将考试的id封装进去
             $station->exam_id = $exam->id;
