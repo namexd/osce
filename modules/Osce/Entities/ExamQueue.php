@@ -779,7 +779,7 @@ class ExamQueue extends CommonModel
                         ->where('student_id', $studentId)
                         ->update(['blocking' => 1])
                     ) {
-                        throw new \Exception('抽签失败！请重试', -2);
+                        throw new \Exception('阻塞状态修改失败！请重试', -2);
                     }
                 }
                 $connection->commit();

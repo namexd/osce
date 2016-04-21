@@ -240,7 +240,7 @@ class ExamMonitorController  extends CommonController
         //获取数据
         $examId = $request->input('exam_id');
         $studentId = $request->input('student_id');
-        $stationId=ExamStation::where('exam_id',$examId)->select('station_id')->get();//一个学生的所有考站
+        $stationId= ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->get();//一个学生的所有考站
         if(count($stationId)) {
             foreach($stationId as $key=>$val){//获取对应考站的视频信息
                 $stationId[$key]['name']=Station::where('id',$val->station_id)->pluck('name');
@@ -253,7 +253,7 @@ class ExamMonitorController  extends CommonController
                 }
             }
         }else{
-            throw new \Exception('没有数据');
+            throw new \Exception('没有对应的视频数据');
         }
         $topMsg=Student::leftJoin('exam', function($join){
             $join -> on('exam.id', '=', 'student.exam_id');
