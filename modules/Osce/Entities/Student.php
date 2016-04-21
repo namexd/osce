@@ -634,9 +634,10 @@ class Student extends CommonModel
         //查询本场考试中 已考试过的 学生 ，用于剔除//TODO zhoufuxiang
         $students = $this->leftjoin('exam_screening_student', function ($join) {
             $join->on('student.id', '=', 'exam_screening_student.student_id');
-        })->leftjoin('exam_queue', function ($exam_queue) {
-            $exam_queue->on('exam_queue.exam_screening_id', '=', 'exam_screening_student.exam_screening_id');
-        })->whereIn('exam_queue.status', [2, 3])
+        })->leftjoin('exam_queue',function($exam_queue){
+            $exam_queue->on('exam_queue.exam_screening_id','=','exam_screening_student.exam_screening_id');
+        })->whereIn('exam_queue.status', [2,3,4])
+
             ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
             ->where('exam_screening_student.is_end', '=', 1)
             ->select(['exam_screening_student.student_id'])->get();
@@ -647,11 +648,12 @@ class Student extends CommonModel
             }
         }
 
-        //dd($studentIds);
+        var_dump($studentIds);exit;
         //剔除 已经考试过的学生
         if (count($studentIds)) {
             $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
         }
+
 
         $builder = $builder->select([
             'student.id as id',

@@ -341,7 +341,6 @@ class SubjectStatisticsController  extends CommonController
             'subjectId' => 'sometimes|int',//科目编号
         ]);
 
-
         $examId = $request->input('examId',count($examInfo)>0?$examInfo[0]['id']:0);
         //获取考试项目数据
         $subjectList = $subjectStatisticsRepositories->subjectDownlist($examId);
@@ -349,8 +348,11 @@ class SubjectStatisticsController  extends CommonController
 
         $subjectId = $request->input('subjectId',count($subjectInfo)>0?$subjectInfo[0]['id']:0);
 
+        //dd($examId.','.$subjectId);17,42
+
         //统计相关数据方便  下一步运算
         $rew = $subjectStatisticsRepositories->GetSubjectStandardStatisticsList($examId,$subjectId);
+
         $datas = [];
         $standardContent = '';//考核点
         $qualifiedPass = '';//合格率
@@ -393,7 +395,9 @@ class SubjectStatisticsController  extends CommonController
                 //计算该考核点的合格率
                 $rew[$k]['studentQualifiedPercentage'] = sprintf("%.4f",$rew[$k]['studentQualifiedCount']/$rew[$k]['studentCount'])*100;
                 //获取该考核点名称
+
                 $content = StandardItem::where('id','=',$v['pid'])->select('content')->first();
+
                 $content = !empty($content)?$content['content']:'-';
                 $datas[] = [
                     'number'               => $number++,//序号
@@ -424,7 +428,6 @@ class SubjectStatisticsController  extends CommonController
         }
 
         //将数据展示到页面
-//        dd($datas);
         return view('osce::admin.statisticalAnalysis.statistics_subject_standard', [
             'examInfo'      =>$examInfo ,//考试列表
             'subjectInfo' =>$subjectInfo ,//科目列表
@@ -466,7 +469,7 @@ class SubjectStatisticsController  extends CommonController
             foreach($result as $k => $v){
                 if($k>=1){
                     //证明是同一个考核点下的子考核点
-                    if($result[$k]['standard_id'] == $result[$k-1]['standard_id']){
+                    if($result[$k]['standard_item_id'] == $result[$k-1]['standard_item_id']){
                         continue;
                     }
                 }
@@ -483,7 +486,7 @@ class SubjectStatisticsController  extends CommonController
                 $result[$k]['studentQualifiedPercentage'] = 0;
                 foreach($result as $key => $val){
                     //证明是同一个考核点下的子考核点
-                    if($v['standard_id'] == $val['standard_id']){
+                    if($v['standard_item_id'] == $val['standard_item_id']){
                         $result[$k]['studentCount'] = $result[$k]['studentCount']+1;
                         $result[$k]['studentTotalScore'] = $result[$k]['studentTotalScore']+$val['score'];
                         if($val['Zscore'] != 0){
@@ -499,12 +502,12 @@ class SubjectStatisticsController  extends CommonController
                 //计算该考核点的合格率
                 $result[$k]['studentQualifiedPercentage'] = sprintf("%.4f",$result[$k]['studentQualifiedCount']/$result[$k]['studentCount'])*100;
                 //获取该考核点名称
-                $content = SubjectItem::where('id','=',$v['standard_id'])->select('content')->first();
+                $content = StandardItem::where('id','=',$v['standard_item_id'])->select('content')->first();
 
                 $datas[] = [
                     'number'               => $number++,//序号
                     'standardContent'     => !empty($content)?$content['content']:'-',//考核点名称
-                    'id'                   => $v['standard_id'],//评分标准父编号
+                    'id'                   => $v['standard_item_id'],//评分标准父编号
                     'scoreAvg'             => $result[$k]['studentAvgScore'],//平均成绩
                     'studentQuantity'     => $result[$k]['studentCount'],//考试人数
                     'qualifiedPass'       => $result[$k]['studentQualifiedPercentage'].'%',//合格率
@@ -514,10 +517,6 @@ class SubjectStatisticsController  extends CommonController
 
         return view('osce::admin.statisticalAnalysis.statistics_subject_standard_detail', [
             'datas'=>$datas
-           // 'examInfo'      =>$examInfo ,//考试列表
-           // 'subjectInfo' =>$subjectInfo ,//科目列表
-           // 'standardList' =>$datas, //考核点分析列表
-           // 'StrList'=>$StrList,
         ]);
     }
 
