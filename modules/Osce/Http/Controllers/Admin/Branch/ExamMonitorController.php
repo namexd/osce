@@ -27,26 +27,6 @@ use Redis;
 
 class ExamMonitorController  extends CommonController
 {
-    /**
-     * 获得正在考试的考试监控列表
-     * @method GET
-     * @url /osce/admin/exam-monitor/normal
-     * @access public
-     *
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * string        参数英文名        参数中文名(必须的)
-     *
-     * @return view
-     *
-     * @version 3.3a
-     * @author wt <wangtao@misrobot.com>
-     * @date 2016-04-01 11:28
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getExamMonitorNormalList () {
-
-    }
 
     /**
      * 获得迟到的考试监控列表
@@ -199,6 +179,7 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorFinishList () {
+
         $data=$this->getExamMonitorListByStatus(4);
         if(count($data)){
             $data=$data->toArray();
@@ -240,7 +221,7 @@ class ExamMonitorController  extends CommonController
         //获取数据
         $examId = $request->input('exam_id');
         $studentId = $request->input('student_id');
-        $stationId=ExamStation::where('exam_id',$examId)->select('station_id')->get();//一个学生的所有考站
+        $stationId= ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->get();//一个学生的所有考站
         if(count($stationId)) {
             foreach($stationId as $key=>$val){//获取对应考站的视频信息
                 $stationId[$key]['name']=Station::where('id',$val->station_id)->pluck('name');
@@ -253,7 +234,7 @@ class ExamMonitorController  extends CommonController
                 }
             }
         }else{
-            throw new \Exception('没有数据');
+            throw new \Exception('没有对应的视频数据');
         }
         $topMsg=Student::leftJoin('exam', function($join){
             $join -> on('exam.id', '=', 'student.exam_id');
