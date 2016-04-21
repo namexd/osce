@@ -108,38 +108,39 @@ class Standard extends CommonModel
 
 
 
-
-
    public function getScore($stationId,$subjectId){
 
-       $builder=$this-> leftJoin('exam_score', function($join){
-           $join -> on('standard.id', '=', 'exam_score.standard_id');
-       })-> leftJoin('station', function($join){
-           $join -> on('station.subject_id', '=', 'exam_score.subject_id');
-       })-> leftJoin('exam_result', function($join){
-           $join -> on('station.id', '=', 'exam_result.station_id');
-       });
-       $builder=$builder->where('standard.pid',0)->where('exam_score.subject_id',$subjectId)->where('station.id',$stationId);
+       $builder = $this-> leftJoin('exam_score', function($join){
+                   $join -> on('standard_item.id', '=', 'exam_score.standard_item_id');
+               })-> leftJoin('station', function($join){
+                   $join -> on('station.subject_id', '=', 'exam_score.subject_id');
+               })-> leftJoin('exam_result', function($join){
+                   $join -> on('station.id', '=', 'exam_result.station_id');
+               });
+       $builder = $builder->where('standard_item.pid',0)
+                ->where('exam_score.subject_id', '=', $subjectId)->where('station.id','=',$stationId);
 
-       $builder=$builder->select([
-           'standard.score as score',
-           'standard.id as id',
-           'standard.sort as sort',
-       ])->orderBy('standard.sort','DESC')->get();
+       $builder = $builder->select([
+               'standard_item.score as score',
+               'standard_item.id as id',
+               'standard_item.sort as sort',
+           ])
+           ->orderBy('standard_item.sort','DESC')->get();
 
        return $builder;
     }
 
-   public function getAvgScore($sort,$stationId,$subjectId){
-
+   public function getAvgScore($sort,$stationId,$subjectId)
+   {
        $builder=$this-> leftJoin('exam_score', function($join){
-           $join -> on('standard.id', '=', 'exam_score.standard_id');
+           $join -> on('standard_item.id', '=', 'exam_score.standard_item_id');
        })-> leftJoin('station', function($join){
            $join -> on('station.subject_id', '=', 'exam_score.subject_id');
        })-> leftJoin('exam_result', function($join){
            $join -> on('station.id', '=', 'exam_result.station_id');
        });
-       $builder=$builder->where('standard.pid',0)->where('exam_score.subject_id',$subjectId)->where('station.id',$stationId)->where('sort',$sort);
+       $builder = $builder->where('standard_item.pid',0)->where('exam_score.subject_id',$subjectId)
+                ->where('station.id',$stationId)->where('sort',$sort);
 
        $builder=$builder->avg('exam_score.score');
 
@@ -153,12 +154,12 @@ class Standard extends CommonModel
     public function getCheckPointAvg($pid, $subjectId)
     {
         $builder = $this-> leftJoin('exam_score', function($join){
-                    $join -> on('standard.id', '=', 'exam_score.standard_id');
+                    $join -> on('standard_item.id', '=', 'exam_score.standard_item_id');
                 })
                 -> leftJoin('exam_result', function($join){
                     $join -> on('exam_result.id', '=', 'exam_score.exam_result_id');
                 });
-        $builder = $builder ->where('standard.pid', $pid)
+        $builder = $builder ->where('standard_item.pid', $pid)
                             ->where('exam_score.subject_id', $subjectId)
                             ->groupBy('exam_score.exam_result_id');
 

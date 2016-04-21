@@ -61,12 +61,10 @@ class ExamFlow extends CommonModel
 
         $SequenceMode = Exam::where('id', '=', $examId)->select('sequence_mode')->first();
 
-
         if ($SequenceMode->sequence_mode == 1) {
             //根据考场排序
             $studentExamSum = count(ExamFlowRoom::where('exam_id', '=', $examId)->where('effected',
                 1)->groupBy('serialnumber')->get());
-
 
         } else {
             //根据考站排序
@@ -74,8 +72,8 @@ class ExamFlow extends CommonModel
                 1)->groupBy('serialnumber')->get());
 
         }
-        return $studentExamSum;
 
+        return $studentExamSum;
     }
 
     /**

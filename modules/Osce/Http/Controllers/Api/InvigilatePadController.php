@@ -49,7 +49,6 @@ use Modules\Osce\Http\Controllers\Api\StudentWatchController;
 class InvigilatePadController extends CommonController
 {
 
-
 //    测试
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
@@ -98,7 +97,7 @@ class InvigilatePadController extends CommonController
      * @internal param $files
      * @internal param $testResultId
      */
-    protected static function uploadFileBuilder($type, $file, $date, array $params, $standardId,$studentId)
+    protected static function uploadFileBuilder($type, $file, $date, array $params, $standardItemId,$studentId)
     {
         try {
             //将上传的文件遍历
@@ -128,13 +127,13 @@ class InvigilatePadController extends CommonController
             $attachUrl = urldecode($savePath . $fileName);
             //将要插入数据库的数据拼装成数组
             $data = [
-                'test_result_id' => null,
-                'url' => $attachUrl,
-                'type' => $type,
-                'name' => $fileName,
-                'description' => $date . '-' . $params['student_name'],
-                'standard_id' => $standardId,
-                 'student_id'=>$studentId,
+                'student_id'        => $studentId,
+                'test_result_id'    => null,
+                'standard_item_id'  => $standardItemId,
+                'url'               => $attachUrl,
+                'type'              => $type,
+                'name'              => $fileName,
+                'description'       => $date . '-' . $params['student_name'],
             ];
 
             //将内容插入数据库
@@ -158,7 +157,7 @@ class InvigilatePadController extends CommonController
      * @access public
      * @param Request $request get请求<br><br>
      * <b>get请求字段：</b>
-     * * string    id      老师id(必须的)
+     * *string    id      老师id(必须的)
      *
      * @return view
      *
@@ -330,16 +329,11 @@ class InvigilatePadController extends CommonController
             //考试标准时间
             //$mins = $station->mins;
 
-            $exam = Exam::find($examId);
-
-//            $StandardItem = new StandardItem();
-//            $standardList = $StandardItem->getSubjectStandards($station->subject_id);
-//
-//            if (count($standardList) != 0) {
+            $exam = Exam::doingExam($examId);
 
             $standardItemModel = new StandardItem();
-            $standardItemList = $standardItemModel->getSubjectStandards($ExamDraft->subject_id);
-            //dd($standardItemList);
+            $standardItemList  = $standardItemModel->getSubjectStandards($ExamDraft->subject_id);
+
             if (count($standardItemList) != 0) {
 
                 return response()->json(
@@ -375,28 +369,25 @@ class InvigilatePadController extends CommonController
 
     public function postSaveExamResult(Request $request)
     {
-
         try {
 
             $this->validate($request, [
-                'score' => 'required',
-                'student_id' => 'required',
-                'station_id' => 'required',
+                'score'             => 'required',
+                'student_id'        => 'required',
+                'station_id'        => 'required',
                 'exam_screening_id' => 'required',
-//                'begin_dt' => 'required',
-//                'end_dt' => 'required',
-                'teacher_id' => 'required',
+                'teacher_id'        => 'required',
             ], [
-                'score.required' => '请检查评分标准分值',
+                'score.required'    => '请检查评分标准分值',
             ]);
-            $score = Input::get('score');
+            $score     = Input::get('score');
             $stationId = Input::get('station_id');
             $studentId = Input::get('student_id');
             $examScreeningId = Input::get('exam_screening_id');
             //到队列表里查询出学生的开始和结束时间
             $studentExamTime = ExamQueue::where('station_id', '=', $stationId)
-                ->where('student_id', '=', $studentId)
                 ->where('exam_screening_id', '=', $examScreeningId)
+                ->where('student_id', '=', $studentId)
                 ->first();
             if (is_null($studentExamTime)) {
                 throw new \Exception('没有查询到该学生队列', -100);
@@ -407,27 +398,28 @@ class InvigilatePadController extends CommonController
                 'station_id' => $stationId,//考站编号
                 'student_id' => $studentId,//考生编号
                 'exam_screening_id' => $examScreeningId,//场次编号
-                'begin_dt' => $studentExamTime->begin_dt,//考试开始时间
-                'end_dt' => $studentExamTime->end_dt,//考试实际结束时间
-                'time' => $useTime,//考试用时
-                'score_dt' => Input::get('end_dt'),//评分时间
+                'begin_dt'   => $studentExamTime->begin_dt,//考试开始时间
+                'end_dt'     => $studentExamTime->end_dt,//考试实际结束时间
+                'time'       => $useTime,//考试用时
+                'score_dt'   => Input::get('end_dt'),//评分时间
                 'teacher_id' => Input::get('teacher_id'),
-                'evaluate' => Input::get('evaluate'),//评价内容
-                'operation' => Input::get('operation'),//操作的连贯性
-                'skilled' => Input::get('skilled'),//工作的娴熟度
-                'patient' => Input::get('patient'),//病人关怀情况
-                'affinity' => Input::get('affinity'),//沟通亲和能力/
+                'evaluate'   => Input::get('evaluate'),//评价内容
+                'operation'  => Input::get('operation'),//操作的连贯性
+                'skilled'    => Input::get('skilled'),//工作的娴熟度
+                'patient'    => Input::get('patient'),//病人关怀情况
+                'affinity'   => Input::get('affinity'),//沟通亲和能力/
 
             ];
             //根据考生id获取到考试id
             $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
             //根据考试获取到考试流程
-            $ExamFlowModel = new  ExamFlow();
+            $ExamFlowModel  = new ExamFlow();
             $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
             //查询出学生当前已完成的考试
-            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=',
-                $data['student_id'])->count();
+            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
 
+            $TestResultModel  = new TestResult();
+            $result = $TestResultModel->addTestResult($data, $score);
 
             if ($ExamFinishStatus == $studentExamSum) {
                 //todo 调用zhoufuxiang接口......
@@ -440,8 +432,6 @@ class InvigilatePadController extends CommonController
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
             }
-            $TestResultModel = new TestResult();
-            $result = $TestResultModel->addTestResult($data, $score);
 
 //                \Log::alert(json_encode($result));
 
@@ -449,13 +439,10 @@ class InvigilatePadController extends CommonController
                 //修改exam_attach表里的结果id
                 return response()->json($this->success_data([], 1, '成绩提交成功'));
             }
+
         } catch (\Exception $ex) {
+
             \Log::alert($ex->getMessage());
-        /*    return response()->json(
-                $this->fail(new \Exception('成绩提交失败'))
-
-
-            );*/
             return response()->json($this->fail($ex));
         }
 
@@ -486,14 +473,14 @@ class InvigilatePadController extends CommonController
     {
         try {
             $this->validate($request, [
-                'student_id' => 'required|integer',
-                'station_id' => 'required|integer',
-                'standard_id' => 'required|integer'
+                'student_id'        => 'required|integer',
+                'station_id'        => 'required|integer',
+                'standard_item_id'  => 'required|integer'
             ]);
             //获取数据
-            $studentId =  $request->input('student_id');
-            $stationId = $request->input('station_id');
-            $standardId = $request->input('standard_id');
+            $studentId      =  $request->input('student_id');
+            $stationId      = $request->input('station_id');
+            $standardItemId = $request->input('standard_item_id');
             $exam = Exam::where('status', 1)->first();
             if (is_null($exam)) {
                 throw new \Exception('当前没有正在进行的考试！', -701);
@@ -541,7 +528,7 @@ class InvigilatePadController extends CommonController
 
 
                 //拼装文件名,并插入数据库
-                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardId,$studentId);
+                $result = self::uploadFileBuilder($type, $photos, $date, $params, $standardItemId,$studentId);
             }
 //            header('print',$result->id);
             return response()->json($this->success_data([$result->id]));
@@ -573,9 +560,9 @@ class InvigilatePadController extends CommonController
     public function postTestAttachRadio(Request $request) {
         try {
             //获取数据
-            $studentId = $request->input('student_id');
-            $stationId = $request->input('station_id');
-            $standardId = $request->input('standard_id');
+            $studentId      = $request->input('student_id');
+            $stationId      = $request->input('station_id');
+            $standardItemId = $request->input('standard_item_id');
 
             $exam = Exam::doingExam();
             if (is_null($exam)) {
@@ -618,7 +605,7 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('上传的音频出错', -130);
                 }
 
-                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardId,$studentId);
+                $result = self::uploadFileBuilder($type, $radios, $date, $params, $standardItemId,$studentId);
             }
 
             return response()->json($this->success_data([$result->id]));
@@ -835,7 +822,7 @@ class InvigilatePadController extends CommonController
                 $studentWatchController = new StudentWatchController();
 
                 $request['nfc_code'] = $watchData->code;
-                $studentWatchController->getStudentExamReminder($request);
+                $studentWatchController->getStudentExamReminder($request,$stationId);
                 
                 $studentModel = new Student();
                 $exam = Exam::doingExam();

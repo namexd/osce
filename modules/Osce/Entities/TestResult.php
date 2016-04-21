@@ -51,41 +51,32 @@ class TestResult extends CommonModel
         $connection->beginTransaction();
         try {
             //判断成绩是否已提交过
-             $ExamResult=$this->getRemoveScore($data);
-//            $examResult = $this->where('student_id', '=', $data['student_id'])
-//                ->where('exam_screening_id', '=', $data['exam_screening_id'])
-//                ->where('station_id', '=', $data['station_id'])
-//                ->count();
-//            if ($examResult > 0) {
-//                throw new \Exception('该成绩已提交过', -7);
-//            }
+            $ExamResult= $this->getRemoveScore($data);
+
             $scoreData = $this->getExamResult($score);
             //拿到总成绩
             $total  =   array_pluck($scoreData,'score');
             $total  =   array_sum($total);
             $data['score']  =   $total;
-//            function($data as $ExamResultKey=>$value ){
-//                $ExamResult->$ExamResultKey = $value;
-//            }
-//            if($ExamResult->save()){
-//
-//            }
+
             if ($testResult = $this->create($data)) {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;
                  $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-                 $this->getSaveExamAttach($data['student_id'],$ExamResultId,$score);
+                 $this->getSaveExamAttach($data['student_id'], $ExamResultId, $score);
+
             } else {
                 throw new \Exception('成绩提交失败',-1000);
             }
             $connection->commit();
             return $testResult;
+
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
-
     }
+
     //upload_document_id 音频 图片id集合去修改
     private function getSaveExamAttach($studentId,$ExamResultId,$score){
         try{
@@ -94,21 +85,25 @@ class TestResult extends CommonModel
 //            \Log::alert($arr);
             foreach($arr as $item){
                 $list[]=[
-                    'standard_id' =>$item['id']
+                    'standard_item_id' => $item['id']
                 ];
             }
-            $standardId = array_column($list, 'standard_id');
+            $standardItemId = array_column($list, 'standard_item_id');
 
-            if(is_null(TestAttach::whereIn('standard_id',$standardId)->get())){
+            if(is_null(TestAttach::whereIn('standard_item_id', $standardItemId)->get()))
+            {
                 throw new \Exception('该考试没有上传图片和音频');
             }
-            $AttachData = TestAttach::where('student_id','=',$studentId)->whereIn('standard_id',$standardId)->get();
-            foreach($AttachData as $item){
+
+            $AttachData = TestAttach::where('student_id','=',$studentId)->whereIn('standard_item_id',$standardItemId)->get();
+            foreach($AttachData as $item)
+            {
                 $item->test_result_id = $ExamResultId;
                 if(!$item->save()){
                     throw new \Exception('修改图片音频结果失败',-1400);
                 }
             }
+
         }catch (\Exception $ex){
             \Log::alert($ex->getMessage());
         }
@@ -118,7 +113,6 @@ class TestResult extends CommonModel
     {
         foreach ($scoreData as &$item) {
             $item['exam_result_id']=$ExamResultId;
-            //$result=$connection->table('exam_score')->insert($data);;
             $examScore=ExamScore::create($item);
             if(!$examScore)
             {
@@ -131,20 +125,23 @@ class TestResult extends CommonModel
     private function getRemoveScore($data){
         //判断成绩是否已提交过
         try{
-        $examResult = $this->where('student_id', '=',$data['student_id'] )
-            ->where('exam_screening_id', '=', $data['exam_screening_id'])
-            ->where('station_id', '=',$data['station_id'])
-            ->first();
-            if($examResult){
-          //拿到考试结果id去exam_score中删除数据
+            $examResult = $this->where('student_id', '=',$data['student_id'] )
+                        ->where('exam_screening_id', '=', $data['exam_screening_id'])
+                        ->where('station_id', '=',$data['station_id'])
+                        ->first();
+            if($examResult)
+            {
+                //拿到考试结果id去exam_score中删除数据
                 if(!$examResult->examScore()->delete())
                 {
                     throw new \Exception('舍弃考试评分详情失败',-1100);
                 }
-                    if(!$examResult->delete()) {
-                        throw new \Exception('舍弃考试成绩失败',-1200);
-                    }
+                if(!$examResult->delete())
+                {
+                    throw new \Exception('舍弃考试成绩失败',-1200);
+                }
             }
+
         }catch (\Exception $ex){
             throw $ex;
         }
@@ -187,9 +184,9 @@ class TestResult extends CommonModel
             foreach ($item['test_term'] as $str) {
 
                 $list [] = [
-                    'subject_id' => $str['subject_id'],
-                    'standard_id' => $str['id'],
-                    'score' =>$str['real'],
+                    'subject_id'        => $str['subject_id'],
+                    'standard_item_id'  => $str['id'],
+                    'score'             => $str['real'],
                 ];
             }
         }
