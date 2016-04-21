@@ -5028,7 +5028,7 @@ function station_assignment(){
                         title:'提示',
                         btn: ['确定','取消'],
                         cancel: function() {
-                            location.reload();
+                            //location.reload();
                         }
                     },function() {
                         $.ajax({
