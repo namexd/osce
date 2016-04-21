@@ -631,7 +631,7 @@ class Student extends CommonModel
         $students = $this->leftjoin('exam_screening_student', function ($join) {
             $join->on('student.id', '=', 'exam_screening_student.student_id');
         })->leftjoin('exam_queue',function($exam_queue){
-            $exam_queue->on('exam_queue.exam_screening_id','=','exam_order.exam_screening_id');
+            $exam_queue->on('exam_queue.exam_screening_id','=','exam_screening_student.exam_screening_id');
         })->whereIn('exam_queue.status', [2,4])
             ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
             ->where('exam_screening_student.is_end', '=', 1)
