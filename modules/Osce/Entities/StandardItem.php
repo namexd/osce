@@ -327,44 +327,5 @@ class StandardItem extends CommonModel
         }
     }
 
-//
-//    /**
-//     * @version 1.0
-//     * @author zhouchong <zhouchong@misrobot.com>
-//     */
-//    public function getScore($stationId,$subjectId){
-//
-//        $builder=$this-> leftJoin('exam_score', function($join){
-//            $join -> on('standard.id', '=', 'exam_score.standard_id');
-//        })-> leftJoin('station', function($join){
-//            $join -> on('station.subject_id', '=', 'exam_score.subject_id');
-//        })-> leftJoin('exam_result', function($join){
-//            $join -> on('station.id', '=', 'exam_result.station_id');
-//        });
-//        $builder=$builder->where('standard.pid',0)->where('exam_score.subject_id',$subjectId)->where('station.id',$stationId);
-//
-//        $builder=$builder->select([
-//            'standard.score as score',
-//            'standard.id as id',
-//            'standard.sort as sort',
-//        ])->orderBy('standard.sort','DESC')->get();
-//
-//        return $builder;
-//    }
-//    public function getAvgScore($sort,$stationId,$subjectId){
-//
-//        $builder=$this-> leftJoin('exam_score', function($join){
-//            $join -> on('standard.id', '=', 'exam_score.standard_id');
-//        })-> leftJoin('station', function($join){
-//            $join -> on('station.subject_id', '=', 'exam_score.subject_id');
-//        })-> leftJoin('exam_result', function($join){
-//            $join -> on('station.id', '=', 'exam_result.station_id');
-//        });
-//        $builder=$builder->where('standard.pid',0)->where('exam_score.subject_id',$subjectId)->where('station.id',$stationId)->where('sort',$sort);
-//
-//        $builder=$builder->avg('exam_score.score');
-//
-//        return $builder;
-//    }
-
+    
 }
