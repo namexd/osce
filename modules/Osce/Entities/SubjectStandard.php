@@ -33,7 +33,11 @@ class SubjectStandard extends CommonModel
      * 添加考试项目、评分标准间的关系
      * @param $subject
      * @param $standard
-     * @return static
+     * @return object
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date 2016-04-06 12:55
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function addSubjectStandard($subject, $standard){
         $data = [
@@ -47,9 +51,9 @@ class SubjectStandard extends CommonModel
      * 获取考核标准信息（ID）
      * @param $subject
      * @param $standard_name
-     * @return static
+     * @return object
      *
-     * @author Zhoufuxiang
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
      * @date   2016-04-06
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */

@@ -10,6 +10,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\ExamPlan;
 use DB;
@@ -58,4 +60,52 @@ class StudentController extends CommonController
             return $this->fail($ex);
         }
     }
+
+    /**
+     *学生通知
+     * @method GET
+     * @url /osce/admin/ Student/student-inform
+     * @access public
+     *
+     * @param Request $request get请求<br><br>
+     * <b>post请求字段：</b>
+     *
+     *
+     * @return ${response}
+     *
+     * @version 1.0
+     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @date ${DATE} ${TIME}
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+
+    public function getStudentInform(Request $request ,Student $student)
+    {
+        //验证
+        $this->validate($request, [
+            'exam_id'   => 'required|integer',
+        ]);
+        $examId = $request->get('exam_id');
+        
+        try{
+            //更据考试id拿到所有学生通知数据
+            $studentOpenid =$student->getStudentsOpendIds($examId);
+            if(empty($studentOpenid)){
+                throw new \Exception('没有学生信息');
+            }else{
+                $sendMsg = $student->sendMsg($studentOpenid);
+            }
+       
+            
+        } catch (\Exception $ex){
+            throw $ex;
+        }
+
+
+    }
+
+
+
+
 }

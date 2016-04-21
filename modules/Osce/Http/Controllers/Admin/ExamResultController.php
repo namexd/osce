@@ -130,7 +130,12 @@ class ExamResultController extends CommonController{
 //            date_default_timezone_set("PRC");
             $item->time = Common::handleTime($item->time);
         }
-        return view('osce::admin.examManage.score_query')->with(['examResults'=>$examResults,'stations'=>$stations,'exams'=>$exams,'exam_id'=>$examId,'station_id'=>$stationId,'name'=>$name]);
+        return view('osce::admin.examManage.score_query')->with(
+            [
+                'examResults'=> $examResults, 'exams'    => $exams,
+                'stations'   => $stations,    'exam_id'  => $examId,
+                'station_id' => $stationId,   'name'     => $name
+            ]);
     }
 
     /**
