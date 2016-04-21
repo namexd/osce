@@ -641,6 +641,7 @@ class Student extends CommonModel
             ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
             ->where('exam_screening_student.is_end', '=', 1)
             ->select(['exam_screening_student.student_id'])->get();
+        var_dump($students);exit;
         $studentIds = [];   //用于保存已经考试的学生ID
         if (count($students)) {
             foreach ($students as $index => $student) {
@@ -648,7 +649,7 @@ class Student extends CommonModel
             }
         }
 
-        var_dump($studentIds);exit;
+
         //剔除 已经考试过的学生
         if (count($studentIds)) {
             $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
