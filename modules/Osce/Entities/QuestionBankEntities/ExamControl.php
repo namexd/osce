@@ -181,7 +181,7 @@ class ExamControl extends Model
             $result = $examQueueModel->where('exam_id','=',$data['examId'])
                 ->where('student_id','=',$data['studentId'])
                 ->where('exam_screening_id','=',$data['examScreeningId'])
-                ->where('station_id','=',$data['stationId'])
+                //->where('station_id','=',$data['stationId'])
                 ->update(['controlMark'=>1]);
             if(!$result){
                 throw new \Exception(' 更新考试队列中考试监控标记失败！');
@@ -190,7 +190,7 @@ class ExamControl extends Model
             //② 更新该考生考试队列表中该考生剩余考站的状态（exam_queue）
 
             //获取该考生剩余还没考的考站信息
-            $remainExamQueueData = $this->getRemainExamQueueData($data['examId'],$data['studentId'],$data['stationId']);
+            $remainExamQueueData = $this->getRemainExamQueueData($data['examId'],$data['studentId'],$data['examScreeningId']);
             if(!empty($remainExamQueueData['examQueueInfo'])&&count($remainExamQueueData['examQueueInfo'])>0){
                 foreach($remainExamQueueData['examQueueInfo'] as $k=>$v){
                     $examQueueResult = $examQueueModel->where('exam_id','=',$v['exam_id'])
@@ -239,7 +239,7 @@ class ExamControl extends Model
                     //监控标记学生替考记录表
                     $examMonitorData=array(
                         'station_id'=>$val['station_id'],
-                        'exam_id'=>$val['examId'],
+                        'exam_id'=>$data['examId'],
                         'student_id'=>$val['studentId'],
                         'type'=>$data['type'],
                         'description'=>$data['description'],
@@ -353,7 +353,7 @@ class ExamControl extends Model
             ->where('exam_id','=',$examId)
             ->where('student_id','=',$studentId)
             ->where('exam_screening_id','<>',$examScreeningId)
-            ->where('status','<>',3)
+            ->whereIn('status',[2,3])
             ->get();
         return array(
             'remainStationCount' =>count($examQueueInfo),//剩余考站数量
