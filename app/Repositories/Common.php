@@ -276,7 +276,7 @@ class Common{
      * @return array
      * @throws \Exception
      */
-    public static function arrayChTOEn($data,$nameToEn=[]){
+    public static function arrayChTOEn($data, $nameToEn = 'osce.importForCnToEn.student'){
         if(is_string($nameToEn))
         {
             $nameToEn=config($nameToEn);

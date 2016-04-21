@@ -183,6 +183,7 @@ class Student extends CommonModel
             $total = 0;
             $sucNum = 0;    //导入成功的学生数
             $exiNum = 0;    //已经存在的学生数
+
             //将数组导入到模型中的addExaminee方法
             foreach ($examineeData as $key => $studentData) {
                 $total++;       //获取处理过的考生总数
@@ -356,7 +357,7 @@ class Student extends CommonModel
      * @return static
      * @throws \Exception
      */
-    private function handleUser($userData)
+    public function handleUser($userData)
     {
         //根据条件：查找用户是否有账号和密码
         $user    = User::where(['username' => $userData['mobile']])->first();
@@ -390,7 +391,7 @@ class Student extends CommonModel
             //注册 新用户
             $password = '123456';
             $user = $this->registerUser($userData, $password);
-            $this ->sendRegisterEms($userData['mobile'], $password);
+//            $this ->sendRegisterEms($userData['mobile'], $password);
             //给用户分配角色
             $this->addUserRoles($user, $role_id);
         }

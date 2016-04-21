@@ -19,17 +19,16 @@ abstract class AbstractAddAllExaminee
 
     abstract public function model();
 
-    public function __construct(App $app, Request $request, $fileName)
+    public function __construct(App $app)
     {
         $this->app = $app;
-        $this->makeModel($request, $fileName);
+        $this->makeModel();
     }
 
-    public function makeModel(Request $request, $fileName)
+    public function makeModel()
     {
         $model = $this->app->make($this->model());
 
         $this->model = $model;
-        $this->model->setData($request, $fileName);
     }
 }

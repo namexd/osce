@@ -513,12 +513,7 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 Route::get('test/test', function(\Illuminate\Http\Request $request) {
 	
 });
-Route::get('test/test', function() {
-//    $redis = Redis::connection('message');
-//    $redis->publish('test-channel', json_encode(['test' => 'message']));
-	$a = serialize(['station_id' => 1, 'teacher_id' => 2]);
-	dd(unserialize($a));
-});
+
 Route::get('redis', function(){
     $redis = Redis::connection('message');
     $redis->subscribe('test-channel', function($message){
