@@ -187,6 +187,7 @@ class Student extends CommonModel
             $total = 0;
             $sucNum = 0;    //导入成功的学生数
             $exiNum = 0;    //已经存在的学生数
+
             //将数组导入到模型中的addExaminee方法
             foreach ($examineeData as $key => $studentData) {
                 $total++;       //获取处理过的考生总数
@@ -360,7 +361,7 @@ class Student extends CommonModel
      * @return static
      * @throws \Exception
      */
-    private function handleUser($userData)
+    public function handleUser($userData)
     {
         //根据条件：查找用户是否有账号和密码
         $user = User::where(['username' => $userData['mobile']])->first();
@@ -394,7 +395,8 @@ class Student extends CommonModel
             //注册 新用户
             $password = '123456';
             $user = $this->registerUser($userData, $password);
-            $this->sendRegisterEms($userData['mobile'], $password);
+            //$this ->sendRegisterEms($userData['mobile'], $password);
+//            $this ->sendRegisterEms($userData['mobile'], $password);
             //给用户分配角色
             $this->addUserRoles($user, $role_id);
         }
@@ -628,30 +630,33 @@ class Student extends CommonModel
             $join->on('student.id', '=', 'exam_order.student_id');
         })->where('exam_order.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
         $builder = $builder->where(function ($query) {
-            $query->whereIn('exam_order.status',[0,2,4]);
+            $query->whereIn('exam_order.status',[0,1,4]);
         });
 
-        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO zhoufuxiang
-        $students = $this->leftjoin('exam_screening_student', function ($join) {
-            $join->on('student.id', '=', 'exam_screening_student.student_id');
-        })->leftjoin('exam_queue', function ($exam_queue) {
-            $exam_queue->on('exam_queue.exam_screening_id', '=', 'exam_screening_student.exam_screening_id');
-        })->whereIn('exam_queue.status', [2, 3])
-            ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
-            ->where('exam_screening_student.is_end', '=', 1)
-            ->select(['exam_screening_student.student_id'])->get();
-        $studentIds = [];   //用于保存已经考试的学生ID
-        if (count($students)) {
-            foreach ($students as $index => $student) {
-                array_push($studentIds, $student->student_id);
-            }
-        }
+//        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO zhoufuxiang
+//        $students = $this->leftjoin('exam_screening_student', function ($join) {
+//            $join->on('student.id', '=', 'exam_screening_student.student_id');
+//        })->leftjoin('exam_queue',function($exam_queue){
+//            $exam_queue->on('exam_queue.exam_screening_id','=','exam_screening_student.exam_screening_id');
+//        })->whereIn('exam_queue.status', [2,3,4])
+//
+//            ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
+////            ->where('exam_screening_student.is_end', '=', 1)
+//            ->select(['exam_screening_student.student_id'])->get();
+//
+//        $studentIds = [];   //用于保存已经考试的学生ID
+//        if (count($students)) {
+//            foreach ($students as $index => $student) {
+//                array_push($studentIds, $student->student_id);
+//            }
+//        }
+//        dd($studentIds);
+//
+//        //剔除 已经考试过的学生
+//        if (count($studentIds)) {
+//            $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
+//        }
 
-        //dd($studentIds);
-        //剔除 已经考试过的学生
-        if (count($studentIds)) {
-            $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
-        }
 
         $builder = $builder->select([
             'student.id as id',
@@ -662,7 +667,7 @@ class Student extends CommonModel
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
         ])->orderBy('exam_order.begin_dt')->paginate(100);
-        //dd($builder);
+        dd($builder);
         return $builder;
     }
 
@@ -888,11 +893,17 @@ class Student extends CommonModel
                 'exam_order.begin_dt as student_begin_dt',
                 'student.user_id as user_id',
                 'student.mobile as mobile',
+                'student.name as student_name',
                 'exam.name as exam_name',
 
             ])
             ->get();
-       
+
+
+            if(!$list){
+            throw new \Exception('请先给学生排考');
+         }
+
         foreach ($list as $student) {
             if (is_null($student->userInfo)) {
                 throw new \Exception('没有找到指定的考生用户信息');
@@ -902,10 +913,11 @@ class Student extends CommonModel
                 'id' => $student->userInfo->id,
                 'openid' => $student->userInfo->openid,
                 'email' => $student->userInfo->email,
-                'mobile' => $student->mobile,
+                'mobile' => $student->userInfo->mobile,
                 'exam_name' => $student->exam_name,
                 'student_begin_dt' => $student->student_begin_dt,
                 'student_id' => $student->student_id,
+                'student_name' => $student->student_name,
             ];
         }
         return $data;
@@ -922,13 +934,82 @@ class Student extends CommonModel
     public function sendSms($notice, $to, $url)
     {
         $sender = \App::make('messages.sms');
-        $content = [];
-        $content[] = $notice['exam_name'] . ' ' . $notice['student_begin_dt'];
-        $content[] = '详情查看' . $url;
+//        $content = [];
+    
+        $content = view('osce::admin.systemManage.student_inform',$notice)->render();
         foreach ($to as $mobile) {
-            $sender->send($mobile, implode('', $content) . ' 【敏行医学】');
+            $sender->send($mobile, $content. ' 【敏行医学】');
         }
     }
+
+    /**
+     * 微信通知方式
+     * @author zhouqing
+     * @time 2016-04-21
+     */
+
+    public function sendWechat($notice,$to,$url){
+        $msgData    =   [
+            [
+                'title' =>  '考试通知',
+                'desc' =>   '你有一场考试为'.$notice['exam_name']. ' ' .'考试开始时间为'.$notice['student_begin_dt'].'请你准时参加!!',
+                'url'   =>  $url
+            ]
+        ];
+        $message    =   AppCommon::CreateWeiXinMessage($msgData);
+        if(count($to)==1)
+        {
+            AppCommon::sendWeiXin($to[0],$message);
+        }
+        else
+        {
+            AppCommon::sendWeixinToMany($message,$to);
+        }
+    }
+
+
+
+    /**
+     *
+     * @author zhouqing
+     * @time 2016-04-21
+     */
+    public function sendPm($notice,$to,$url){
+        $sender =   \App::make('messages.pm');
+        foreach($to as $accept)
+        {
+            if(empty($accept))
+            {
+                continue;
+            }
+
+
+            $sender ->  send($accept,$url,$notice['exam_name']);
+        }
+    }
+
+    /**
+     * 邮件通知方式
+     * @author zhouqing
+     * @time 2016-04-21
+     */
+
+    public function sendEmail($notice,$to,$url){
+        try {
+            $sender =   \App::make('messages.email');
+            $content=   [];
+            $content[]  =   '亲爱的'.$notice['exam_name'].'同学:';
+            $content[]  =   '你有一场考试为'.$notice['exam_name']. ' ' .'考试开始时间为'.$notice['student_begin_dt'];
+            $content[]  =   '请你准时参加'.$url;
+            $sender ->  send($to,implode('',$content));
+        } catch (\Exception $ex) {
+            \Log::info($ex->getMessage());
+        }
+    }
+
+
+
+
 
 
     /**
@@ -951,23 +1032,30 @@ class Student extends CommonModel
             foreach ($studentOpenid as $value){
 
 
-//                if($sendType['student']['wechat'] == 1){
-//
-//                    $this->sendWechat($value, $value['openid'], $url);
-//                }
+                if($sendType['student']['wechat'] == 1){
+
+                    $this->sendWechat($value,array_pluck($studentOpenid,'openid'), $url);
+                }
 
                 if($sendType['student']['sms'] == 1){
                     $this->sendSms($value, array_pluck($studentOpenid,'mobile'), $url);
                 }
 
-//                if($sendType['student']['mail'] == 1){
-//                    $this->sendEmail($value, $value['openid'], $url);
-//
-//                }
+                if($sendType['student']['mail'] == 1){
+                    $this->sendEmail($value, array_pluck($studentOpenid,'email'), $url);
+
+                }
+
+                if($sendType['student']['mail'] == 1){
+                    $this->sendPm($value, array_pluck($studentOpenid,'id'), $url);
+
+                }
             }
 
+
+
             } catch (\Exception $ex) {
-                \Log::alert('应该是邮件问题');
+
             }
 
         } catch (\Exception $ex) {

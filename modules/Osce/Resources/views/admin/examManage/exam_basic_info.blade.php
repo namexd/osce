@@ -90,8 +90,8 @@
                                 <label class="col-sm-2 control-label">考试顺序</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;"  {{$examData['status']==0?'':'disabled'}} name="sequence_cate" >
-                                        <option value="2" {{($examData['sequence_cate']==2)?'selected=selected':''}}>顺序</option>
                                         <option value="3" {{($examData['sequence_cate']==3)?'selected=selected':''}}>轮循</option>
+                                        <option value="2" {{($examData['sequence_cate']==2)?'selected=selected':''}}>顺序</option>
                                         <option value="1" {{($examData['sequence_cate']==1)?'selected=selected':''}}>随机</option>
                                     </select>
                                 </div>
@@ -101,8 +101,8 @@
                                 <label class="col-sm-2 control-label">排考方式</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;" {{$examData['status']==0?'':'disabled'}} name="sequence_mode" v>
-                                        <option value="1" {{($examData['sequence_mode']==1)?'selected=selected':''}}>以考场分组</option>
                                         <option value="2" {{($examData['sequence_mode']==2)?'selected=selected':''}}>以考站分组</option>
+                                        <option value="1" {{($examData['sequence_mode']==1)?'selected=selected':''}}>以考场分组</option>
                                     </select>
                                 </div>
                             </div>

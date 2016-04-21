@@ -26,7 +26,9 @@ class RoomMode extends AbstractEntity implements EntityInterface
         $entities = $this->entityMins($entities, $exam->same_time);
 
         //去重，将room_id相同的考场合并为一个
-        $entities = $this->mergeRoom($entities);
+        $entities = $this->mergeRoom($entities, 'room_id');
+        //加上序号
+        $entities = $this->setSerialnumber($entities);
         //为每个考场写入多少个考站
         foreach ($entities as &$entity) {
             $roomStation = $this->roomStation($exam, $screen, $entity->room_id);
@@ -54,19 +56,4 @@ class RoomMode extends AbstractEntity implements EntityInterface
         return $data;
     }
 
-    private function mergeRoom($entities)
-    {
-        $array = [];
-        $tempGroups = $entities->groupBy('room_id');
-        foreach ($tempGroups as $item)
-        {
-                if (count($item) > 1) {
-                    $array[] = $item->sortBy('mins')->pop();
-                } else {
-                    $array[] = $item->pop();
-                }
-        }
-
-        return collect($array);
-    }
 }
