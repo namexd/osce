@@ -18,7 +18,7 @@ input.laydate-icon{
 	.checkbox_input{font-weight:100;cursor:pointer;}
 	.check_name{padding:0;height:16px;position: relative;top:-3px;font-weight: 700;}
 	.check_icon.check {background-position: -32px 0;}
-	.check_margin{display: inline-block;float:right;margin:5px 0 0 5px;}
+	.check_margin{display: inline-block;margin:5px 0 0 5px;}
 </style>
 @stop
 
@@ -62,8 +62,8 @@ input.laydate-icon{
                             <label class="col-sm-2 control-label">考试顺序</label>
                             <div class="col-sm-10">
                                 <select class="form-control" style="width:200px;" name="sequence_cate" >
-                                    <option value="2">顺序</option>
                                     <option value="3">轮循</option>
+                                    <option value="2">顺序</option>
                                     <option value="1">随机</option>
                                 </select>
                             </div>
@@ -74,8 +74,8 @@ input.laydate-icon{
                             <label class="col-sm-2 control-label">排考方式</label>
                             <div class="col-sm-10">
                                 <select class="form-control" style="width:200px;" name="sequence_mode" >
-                                    <option value="1">以考场分组</option>
                                     <option value="2">以考站分组</option>
+                                    <option value="1">以考场分组</option>
                                 </select>
                             </div>
                         </div>
@@ -128,7 +128,7 @@ input.laydate-icon{
                                                 <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
                                                     <div class="check_icon check_margin check" checkbox=1></div>
                                                     <input type="checkbox" name="gradation_order" value="1" checked="checked">
-                                                    <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
+                                                    <span class="check_name" style="display: inline-block;float:right;line-height: 29px;">考生分阶段考试</span>
                                                 </label>
                                                 <div class="col-sm-10 check_div">
                                                     <input type="text" class="form-control checkbox_num" id="gradation_order" name="gradation_order" style="float:left;width:200px;" value="1">
@@ -149,7 +149,7 @@ input.laydate-icon{
                                                 <label class="check_label checkbox_input checkbox_three" style="height: 34px;line-height: 28px;margin-left: 12.1%;">
                                                       <div class="check_icon check" style="display: inline-block;margin:5px 0 0 5px;float:left;"></div>
                                                       <input type="checkbox" name="real_push" value="1" checked="checked">
-                                                      <span class="check_name" style="display: inline-block;float:left;">实时发布成绩</span>
+                                                      <span class="check_name" style="display: inline-block;float:left;line-height: 29px;">实时发布成绩</span>
                                                 </label>
                                            </div>
                                       </div>

@@ -96,8 +96,8 @@ class StudentController extends CommonController
             }else{
                 $sendMsg = $student->sendMsg($studentOpenid);
             }
-       
             
+            return $this->success_data([], $code = 1);   
         } catch (\Exception $ex){
             throw $ex;
         }

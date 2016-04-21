@@ -255,7 +255,7 @@ trait SQLTraits
         }
 
         //为集合加上序号
-        $stations = $this->setSerialnumber($stations);
+//        $stations = $this->setSerialnumber($stations);
 
         return $stations;
     }
@@ -328,7 +328,7 @@ trait SQLTraits
         }
 
         //为集合加上序号
-        $rooms = $this->setSerialnumber($rooms);
+//        $rooms = $this->setSerialnumber($rooms);
 
         return $rooms;
     }
@@ -455,45 +455,7 @@ trait SQLTraits
         }
     }
 
-    /**
-     * 将考试实体加上序号
-     * @param Collection $collection
-     * @param string $groupBy
-     * @param string $sortBy
-     * @param bool $desc
-     * @return object
-     * @author Jiangzhiheng
-     * @time 2016-04-13 16:20
-     */
-    function setSerialnumber(DBCollection $collection, $groupBy = 'order', $sortBy = 'order', $desc = false)
-    {
-        if ($desc === false) {
-            $collections = $collection->sortBy($sortBy)->groupBy($groupBy);
-        } else {
-            $collections = $collection->sortByDesc($sortBy)->groupBy($groupBy);
-        }
 
-
-        $result = [];
-        $k = 1;
-        foreach ($collections as $items) {
-            foreach ($items as $item) {
-                if ($item->optional == 1) {
-                    $item->serialnumber = $k;
-                    $k++;
-                } else {
-                    $item->serialnumber = $k;
-                }
-                $result[] = $item;
-            }
-            if ($items->first()->optional == 0) {
-                $k++;
-            }
-
-        }
-
-        return collect($result);
-    }
 
     /**
      * 获取理论考试的考试时间
