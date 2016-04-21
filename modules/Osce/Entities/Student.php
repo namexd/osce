@@ -624,7 +624,7 @@ class Student extends CommonModel
             $join->on('student.id', '=', 'exam_order.student_id');
         })->where('exam_order.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
         $builder = $builder->where(function ($query) {
-            $query->where('exam_order.status', '=', 0)->orWhere('exam_order.status', '=', 4)->orWhere('exam_order.status', '=', 2);
+            $query->whereIn('exam_order.status',[0,2])->orWhere('exam_order.status', '=', 4);
         });
 
         //查询本场考试中 已考试过的 学生 ，用于剔除//TODO zhoufuxiang
