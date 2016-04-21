@@ -398,7 +398,7 @@ class IndexController extends CommonController
         $idCard=$request->get('id_card');
         $examId=$request->get('exam_id');
 
-        $studentInfo=Student::where('idcard',$idCard)->where('exam_id',$examId)->select(['id','idcard','code','exam_sequence'])->first();
+        $studentInfo=Student::where('idcard',$idCard)->where('exam_id',$examId)->select(['id','idcard','code','exam_sequence','name'])->first();
         dd($studentInfo);
         if(!$studentInfo){
             return response()->json(
