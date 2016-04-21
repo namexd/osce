@@ -938,9 +938,16 @@ class DrawlotsController extends CommonController
         $stationIdeds = $stationIds->all();
 
         //为该名考生分配一个还没有选择的station_id
-        $stationIds = RoomStation::where('room_id', $roomId)
+        /*$stationIds = RoomStation::where('room_id', $roomId)
             ->select(
                 'station_id'
+            )
+            ->get();*/
+        $stationIds = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft_flow.exam_id', '=', $examId)
+            ->where('exam_draft.room_id',$roomId)
+            ->select(
+                'exam_draft.station_id as station_id'
             )
             ->get();
 
