@@ -33,7 +33,7 @@ class ExamDraft extends CommonModel
     ];
 
     public function subejct(){
-        //return $this->hasOne('Modules\Osce\Entities\Subject',);
+        return $this->hasOne('Modules\Osce\Entities\Subject','id','subject_id');
     }
 
     public function station(){
