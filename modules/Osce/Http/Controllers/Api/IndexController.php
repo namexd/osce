@@ -399,7 +399,7 @@ class IndexController extends CommonController
         $examId=$request->get('exam_id');
 
         $studentInfo=Student::where('idcard',$idCard)->where('exam_id',$examId)->select(['id','idcard','code','exam_sequence'])->first();
-
+        dd($studentInfo);
         if(!$studentInfo){
             return response()->json(
                 $this->success_rows(2,'未找到学生相关信息')
