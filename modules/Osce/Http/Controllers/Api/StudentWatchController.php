@@ -39,7 +39,7 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder(Request $request, $stationId)
+    public function getStudentExamReminder(Request $request, $stationId = null)
     {
         $this->validate($request, [
             'nfc_code' => 'required|string'
