@@ -212,9 +212,7 @@ class SmartArrange
                                 $this->doorStatus++;
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $entity->timer += $step;
                     }
                 }

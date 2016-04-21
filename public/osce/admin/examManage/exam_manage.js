@@ -3201,6 +3201,43 @@ function exam_notice() {
  */
 
 function smart_assignment(){
+
+    /**
+     * 发送通知
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-21
+     */
+    $('#send-info').click(function() {
+        //考试id
+        var exam_id = (location.href).split('=')[1];
+
+        $.ajax({
+            type:'get',
+            url:pars.send_info,
+            data:{exam_id:exam_id},
+            success:function(res){
+                if(res.code!=1) {
+                    layer.msg(data.message,{skin:'msg-error',icon:1},function(its){
+                        layer.close(its);
+                    });
+                } else {
+                    layer.msg(data.message,{skin:'msg-success',icon:1},function(its){
+                        layer.close(its);
+                    });
+                }
+            },
+            error:function(data) {
+                layer.msg('通讯失败！',{skin:'msg-error',icon:1},function(its){
+                    layer.close(its);
+                });
+            }
+        });
+
+    });
+
+
+
     //var testData={"code":1,"message":"success","data":{"1":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[]},"2":{"begin":"1452557715","end":1452558615,"items":[]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}}},"2":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}}},"4":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}}},"5":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}}}}}
 
     var timesGroup  =   [];
@@ -4252,13 +4289,16 @@ function station_assignment(){
                         '<label class="col-sm-1 control-label">&nbsp;</label>'+
                         '<div class="col-sm-10">'+
                             '<div class="row">'+
-                                '<div class="col-sm-4"><label class="control-label" order="'+data[i].order+'">'+data[i].name+'</label></div>'+
-                                '<div class="col-sm-6">'+
-                                        '<label class="control-label col-sm-2">阶段：</label>'+
-                                        '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="2">'+stageRender(data[i].exam_gradation_id)+'</select>'+
+                                '<div class="col-sm-2"><label class="control-label" order="'+data[i].order+'">'+data[i].name+'</label></div>'+
+                                '<div class="col-sm-5">'+
+                                        '<label class="control-label col-sm-4">阶段：</label>'+
+                                        '<select class="form-control col-sm-8 select-stage" style="width: 200px;" type="2">'+stageRender(data[i].exam_gradation_id)+'</select>'+
                                 '</div>'+
-                                '<div class="col-sm-2">'+
-                                    '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="'+data[i].optional+'" type="2">'+chioceToName[data[i].optional]+'</a>'+
+                                '<div class="col-sm-5">'+
+                                    '<select class="form-control chioce-btn" type="2" style="width: 200px;display:inline-block;">'+
+                                        '<option value="1" '+(data[i].optional == 1 ?'selected':'')+'>必考</option>'+
+                                        '<option value="0" '+(data[i].optional == 0 ?'selected':'')+'>选考</option>'+
+                                    '</select>'+
                                     '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                 '</div>'+
                             '</div>'+
@@ -4406,13 +4446,16 @@ function station_assignment(){
                                 '<label class="col-sm-1 control-label">&nbsp;</label>'+
                                 '<div class="col-sm-10">'+
                                     '<div class="row">'+
-                                        '<div class="col-sm-4"><label class="control-label" order="'+index+'">'+req.name+'</label></div>'+
-                                        '<div class="col-sm-6">'+
-                                                '<label class="control-label col-sm-2">阶段：</label>'+
-                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+stageRender(1)+'</select>'+
+                                        '<div class="col-sm-2"><label class="control-label" order="'+index+'">'+req.name+'</label></div>'+
+                                        '<div class="col-sm-5">'+
+                                                '<label class="control-label col-sm-4">阶段：</label>'+
+                                                '<select class="form-control col-sm-8 select-stage" style="width: 200px;" type="3">'+stageRender(1)+'</select>'+
                                         '</div>'+
-                                        '<div class="col-sm-2">'+
-                                            '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="1" type="3">必考</a>'+
+                                        '<div class="col-sm-5">'+  
+                                        '<select class="form-control chioce-btn" type="3" style="width: 200px;display:inline-block;">'+
+                                            '<option value="1">必考</option>'+
+                                            '<option value="0">选考</option>'+
+                                        '</select>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
@@ -4488,7 +4531,7 @@ function station_assignment(){
                             $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
 
                             //更新考站显示
-                            $('.station-container').find('.col-sm-4').each(function(key,elem) {
+                            $('.station-container').find('.col-sm-2').each(function(key,elem) {
                                 $(elem).find('.control-label').text('第'+(key+1)+'站');
                             });
 
@@ -4581,7 +4624,7 @@ function station_assignment(){
                             $that.parent().parent().parent().parent().remove();
                             $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
                             //更新考站显示
-                            $('.station-container').find('.col-sm-4').each(function(key,elem) {
+                            $('.station-container').find('.col-sm-2').each(function(key,elem) {
                                 $(elem).find('.control-label').text('第'+(key+1)+'站');
                             });
                         }
@@ -4664,10 +4707,10 @@ function station_assignment(){
                     var str = [];
                     var data = res.data;
 
-                    str.push({id:-999,text:'==新增考试项目=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].title});
                     }
+                    str.push({id:-999,text:'==新增考试项目=='});
 
                     //加载入数据
                     return {
@@ -4738,10 +4781,10 @@ function station_assignment(){
                     var str = [];
                     var data = res.data;
 
-                    str.push({id:-999,text:'==新增考站=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name,type:data[i].type});
                     }
+                    str.push({id:-999,text:'==新增考站=='});
 
                     //加载入数据
                     return {
@@ -4857,10 +4900,10 @@ function station_assignment(){
                     var str = [];
                     var data = res.data;
 
-                    str.push({id:-999,text:'==新增考场=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增考场=='});
 
                     //加载入数据
                     return {
@@ -4925,23 +4968,23 @@ function station_assignment(){
      * @version 3.4
      * @date    2016-04-13
      */
-    $('.station-container').on('click', '.chioce-btn', function() {
-        var $that = $(this),
-            textName = ['必考','选考'],
+    $('.station-container').on('change', '.chioce-btn', function() {
+        var $that = $(this);
+            /*textName = ['必考','选考'],
             flag = $that.attr('value'),
-            toValue = [1,0];
+            toValue = [1,0];*/
 
         //状态更新
-        $that.text(textName[flag]);
-        $that.attr('value',toValue[flag]);
+        /*$that.text(textName[flag]);
+        $that.attr('value',toValue[flag]);*/
 
         //本站所有选项更新
-        $that.parent().parent().parent().find('.station-chioce').text(textName[flag]);
+        //$that.parent().parent().parent().find('.station-chioce').text(textName[flag]);
 
         $.ajax({
             type:'get',
             url: pars.chioce_btn,
-            data:{exam_id:examId, optional:toValue[flag],flow_id:$that.parent().parent().parent().find('table').attr('station-id'),type:$that.attr('type')},
+            data:{exam_id:examId, optional:$that.val(),flow_id:$that.parent().parent().parent().find('table').attr('station-id'),type:$that.attr('type')},
             success: function(res) {
                 if(res.code != 1) {
                     return true;
@@ -4991,7 +5034,7 @@ function station_assignment(){
                         title:'提示',
                         btn: ['确定','取消'],
                         cancel: function() {
-                            location.reload();
+                            //location.reload();
                         }
                     },function() {
                         $.ajax({
@@ -5109,13 +5152,13 @@ function examiner_manage() {
                         '<td>'+data[i].subject_title+'</td>'+
                         '<td>'+data[i].station_name+'</td>'+
                         '<td>'+typeToName[data[i].station_type]+'</td>'+
-                        '<td style="width:481px;">'+
+                        '<td style="width:281px;">'+
                             '<div class="col-sm-10">'+
                             '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+str_teacher+
                             '</select>'+
                             '</div>'+
                         '</td>'+
-                        '<td style="width:481px;">'+
+                        '<td style="width:281px;">'+
                             '<div class="col-sm-10">'+
                             '<select class="form-control custom-sp"  name="" '+control+'  multiple="multiple">'+str_sp+
                             '</select>'+
@@ -5352,10 +5395,10 @@ function examiner_manage() {
                     var str = [];
                     var data = res.data;
 
-                    str.push({id:-999,text:'==新增考官=='});
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增考官=='});
 
                     //加载入数据
                     return {
@@ -5444,10 +5487,10 @@ function examiner_manage() {
                     var str = [];
                     var data = res.data;
 
-                    str.push({id:-999,text:'==新增sp=='});
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增sp=='});
 
                     //加载入数据
                     return {

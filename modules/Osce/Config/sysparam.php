@@ -3,9 +3,9 @@
     * 通知选项保存
     */
     'inform' => [
-        'wechat' => 1,
+        'wechat' => 0,
         'sms' => 1,
-        'mail' => 1,
+        'mail' => 0,
         'user_pm' => 1,
     ],
 
@@ -15,12 +15,23 @@
     'invite' => [
         'wechat' => 1,
         'sms' => 1,
-        'mail' => 1,
+        'mail' => 0,
+        'user_pm' => 0,
+    ],
+
+
+    /*
+    * 学生通知方式保存
+    */
+    'student' => [
+        'wechat' => 0,
+        'sms' => 1,
+        'mail' => 0,
         'user_pm' => 0,
     ],
 
    /*
     * 间隔时间保存
     */
-    'mins' => 14
+    'mins' => 15
 ];

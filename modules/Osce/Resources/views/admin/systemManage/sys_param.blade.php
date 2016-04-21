@@ -89,6 +89,8 @@
                                 </div>
                             </div>
                         </div>
+
+
                         <div class="ibox-content">
                             <div class="row">
                                 <div class="col-md-12">
@@ -113,6 +115,39 @@
                                             <label class="check_label checkbox_input">
                                                 <div class="check_icon @if($data['invite']['user_pm'] == 1) check @endif" style="display: inline-block"></div>
                                                 <input type="checkbox" @if($data['invite']['user_pm'] == 1) checked="checked" @endif name="invite[user_pm]" value="1">
+                                                <span class="check_name">系统消息</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{--{{dd($data['student'])}}--}}
+                                    <div class="clearfix form-group" style="margin-bottom: 0;">
+                                        <label class="col-sm-2 control-label">学生通知方式：</label>
+                                        <div class="col-sm-10" id="checkbox_div">
+                                            <label class="check_label checkbox_input">
+                                                <div class="check_icon @if($data['student']['wechat'] == 1) check @endif" style="display: inline-block"></div>
+                                                <input type="checkbox" @if($data['student']['wechat'] == 1) checked="checked" @endif name="student[wechat]" value="1">
+                                                <span class="check_name">微信</span>
+                                            </label>
+                                            <label class="check_label checkbox_input">
+                                                <div class="check_icon @if($data['student']['sms'] == 1) check @endif" style="display: inline-block"></div>
+                                                <input type="checkbox" @if($data['student']['sms'] == 1) checked="checked" @endif name="student[sms]" value="1" >
+                                                <span class="check_name">短信</span>
+                                            </label>
+                                            <label class="check_label checkbox_input">
+                                                <div class="check_icon @if($data['student']['mail'] == 1) check @endif" style="display: inline-block"></div>
+                                                <input type="checkbox" @if($data['student']['mail'] == 1) checked="checked" @endif name="student[mail]" value="1">
+                                                <span class="check_name">邮件</span>
+                                            </label>
+                                            <label class="check_label checkbox_input">
+                                                <div class="check_icon @if($data['student']['user_pm'] == 1) check @endif" style="display: inline-block"></div>
+                                                <input type="checkbox" @if($data['student']['user_pm'] == 1) checked="checked" @endif name="student[user_pm]" value="1">
                                                 <span class="check_name">系统消息</span>
                                             </label>
                                         </div>

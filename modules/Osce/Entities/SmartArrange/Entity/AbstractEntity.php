@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities\SmartArrange\Entity;
 
 use Modules\Osce\Entities\SmartArrange\Traits\SQLTraits;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
+use Illuminate\Support\Collection;
 
 abstract class AbstractEntity
 {
@@ -61,5 +62,61 @@ abstract class AbstractEntity
         }
 
         return $entities;
+    }
+
+    /**
+     * 将考试实体加上序号
+     * @param Collection $collection
+     * @param string $groupBy
+     * @param string $sortBy
+     * @param bool $desc
+     * @return object
+     * @author Jiangzhiheng
+     * @time 2016-04-13 16:20
+     */
+    function setSerialnumber(Collection $collection, $groupBy = 'order', $sortBy = 'order', $desc = false)
+    {
+        if ($desc === false) {
+            $collections = $collection->sortBy($sortBy)->groupBy($groupBy);
+        } else {
+            $collections = $collection->sortByDesc($sortBy)->groupBy($groupBy);
+        }
+
+
+        $result = [];
+        $k = 1;
+        foreach ($collections as $items) {
+            foreach ($items as $item) {
+                if ($item->optional == 1) {
+                    $item->serialnumber = $k;
+                    $k++;
+                } else {
+                    $item->serialnumber = $k;
+                }
+                $result[] = $item;
+            }
+            if ($items->first()->optional == 0) {
+                $k++;
+            }
+
+        }
+
+        return collect($result);
+    }
+
+    protected function mergeRoom(Collection $entities, $field)
+    {
+        $array = [];
+        $tempGroups = $entities->groupBy($field);
+        foreach ($tempGroups as $item)
+        {
+            if (count($item) > 1) {
+                $array[] = $item->sortBy('mins')->pop();
+            } else {
+                $array[] = $item->pop();
+            }
+        }
+
+        return collect($array);
     }
 }

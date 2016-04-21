@@ -224,6 +224,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//考生
 		Route::post('student/judge-student', ['uses'=>'StudentController@postJudgeStudent','as'=>'osce.admin.exam.postJudgeStudent']);		//删除考生
+		Route::get('student/student-inform', ['uses'=>'StudentController@getStudentInform','as'=>'osce.admin.exam.getStudentInform']);		//删除考生
 
 		//成绩查询
 		Route::get('exam/exam-result-detail',['uses'=>'ExamResultController@getExamResultDetail','as'=>'osce.admin.getExamResultDetail']);
@@ -513,12 +514,7 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 Route::get('test/test', function(\Illuminate\Http\Request $request) {
 	
 });
-Route::get('test/test', function() {
-//    $redis = Redis::connection('message');
-//    $redis->publish('test-channel', json_encode(['test' => 'message']));
-	$a = serialize(['station_id' => 1, 'teacher_id' => 2]);
-	dd(unserialize($a));
-});
+
 Route::get('redis', function(){
     $redis = Redis::connection('message');
     $redis->subscribe('test-channel', function($message){

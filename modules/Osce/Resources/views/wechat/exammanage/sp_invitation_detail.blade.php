@@ -63,7 +63,7 @@
                 @if($list['status'] ==3)
 
                     <li>
-                        <span class="items">{{$list['exam_name']}}    考试邀请撤销通知  </span>
+                        <span class="items">{{$list['exam_name']}} 目前已被撤销，谢谢您的参与。</span>
 
                     </li>
 
