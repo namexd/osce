@@ -67,21 +67,22 @@ trait SundryTraits
             foreach ($result as $values) {
                 foreach ($values as $value) {
                     if ($value->exam_draft_flow_order != $key && $value->exam_gradation_id == $gradation) {
-                        $data[$value->exam_draft_flow_order][] = $value->room_id;
+                        $data[$gradation][$value->exam_draft_flow_order][] = $value->room_id;
                     }
                 }
             }
         }
         //判断data中room_id是否重复
-//        dd($data);
-        $array = [];
-        foreach ($data as $v) {
-            $v = array_unique($v);
-
-            if (count(array_diff($v, $array)) != count($v)) {
-                throw new \Exception('考场安排错误！');
+        foreach ($data as $item) {
+            $array = [];
+            foreach ($item as $v) {
+                $v = array_unique($v);
+                if (count(array_diff($v, $array)) != count($v)) {
+                    throw new \Exception('考场安排错误！');
+                }
+                $array = array_merge($array, $v);
             }
-            $array = array_merge($array, $v);
         }
+//        dd($array);
     }
 }
