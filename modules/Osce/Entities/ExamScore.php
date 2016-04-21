@@ -22,7 +22,7 @@ class ExamScore extends  CommonModel
     protected $fillable     = ['exam_result_id', 'subject_id', 'standard_id', 'score', 'evaluate','create_user_id'];
 
     public function standardItem(){
-        return $this->hasOne('\Modules\Osce\Entities\StandardItem','id','standard_id');
+        return $this->hasOne('\Modules\Osce\Entities\StandardItem','id','standard_item_id');
     }
 
     public  function examResult(){

@@ -736,9 +736,10 @@ class ApiController extends CommonController
         $examId          = $request->input('exam_id');
         $stationId       = $request->input('station_id');
         $examScreeningId = $request->input('exam_screening_id');
-        $teacher_id      = $request->input('teacher_id');
+        $teacherId       = $request->input('teacher_id');
         $roomId          = $request->input('room_id');
 
+        // 查询当前老师对应考站准备完成信息
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
                                                     ->where('exam_screening_id', '=', $examScreeningId)
@@ -750,9 +751,16 @@ class ApiController extends CommonController
             );
         }
 
-        // 判断考试排考方式
+        // 判断考试排考方式(分考站或者考场)
         $examModel = new Exam();
-        $examSequenceMode = $examModel->where('id', '=', $examId)->first()->sequence_mode;
+        $exam = $examModel->where('id', '=', $examId)->first();
+        if (is_null($exam)) {
+            return response()->json(
+                $this->success_data([], -4, '未查询到当前考试信息')
+            );
+        }
+
+        $examSequenceMode = $exam->sequence_mode;
 
         $examQenenModel = new ExamQueue();
         $watchLogModel = new WatchLog();
@@ -835,10 +843,10 @@ class ApiController extends CommonController
         $examStationStatus->save();
 
         $request['station_id']=$stationId;
-        $request['teacher_id']=$teacher_id;
+        $request['teacher_id']=$teacherId;
         $request['exam_id']=$examId;
         $draw=new DrawlotsController();
-        $request['id']=$teacher_id;
+        $request['id']=$teacherId;
         $draw->getExaminee_arr($request);//当前组推送(可以获得)
         $draw->getNextExaminee_arr($request);
         $inv=new InvigilatePadController();

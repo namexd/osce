@@ -105,7 +105,7 @@ class StandardItem extends CommonModel
     public function getCheckPointAvg($pid, $subjectId)
     {
         $builder = $this-> leftJoin('exam_score', function($join){
-            $join -> on('standard_item.id', '=', 'exam_score.standard_id');
+            $join -> on('standard_item.id', '=', 'exam_score.standard_item_id');
         })
             -> leftJoin('exam_result', function($join){
                 $join -> on('exam_result.id', '=', 'exam_score.exam_result_id');
@@ -130,12 +130,14 @@ class StandardItem extends CommonModel
 
     /**
      * 删除考试项目 对应的 评分标准
-     *
+     * @access public
      * @param $subject_id
-     *
-     * @author Zhoufuxiang  2016-04-13 14:13
-     * @return bool
+     * @return mixed
      * @throws \Exception
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-04-13 14:13
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getSubjectStandards($subject_id)
     {
@@ -151,6 +153,7 @@ class StandardItem extends CommonModel
                 }
             }
             return $standards;
+
         } catch (\Exception $ex){
             throw $ex;
         }
