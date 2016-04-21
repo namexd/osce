@@ -111,7 +111,7 @@ class ExamControl extends Model
         //查询该考生剩余考站数量和该考生是否有标记
         if(!empty($examInfo)&&count($examInfo)>0){
             foreach($examInfo as $key=>$val){
-                $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['stationId']);
+                $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['exam_screening_id']);
                 $examInfo[$key]['remainStationCount']=$remainExamQueueData['remainStationCount'];
                 $examMonitorModel = new ExamMonitor();
                 $examMonitorInfo= $examMonitorModel->where('station_id','=',$val['stationId'])
@@ -334,26 +334,25 @@ class ExamControl extends Model
             throw $ex;
         }
     }
-
-
+    
     /**获取该考生该场考试还没开考的剩余的考站数量和考试队列信息
      * @method
      * @url /osce/
      * @access public
      * @param $examId 考试id
-     * @param $studentId 考生id
-     * @param $stationId 正在进行的考站id
+     * @param $studentId 学生id
+     * @param $examScreeningId 场次id
      * @return array
      * @author xumin <xumin@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getRemainExamQueueData($examId,$studentId,$stationId){
+    public function getRemainExamQueueData($examId,$studentId,$examScreeningId){
         $examQueueModel = new ExamQueue();
         $examQueueInfo = $examQueueModel->select('exam_id','exam_screening_id','student_id','station_id')
             ->where('exam_id','=',$examId)
             ->where('student_id','=',$studentId)
-            ->where('station_id','<>',$stationId)
+            ->where('exam_screening_id','<>',$examScreeningId)
             ->where('status','<>',3)
             ->get();
         return array(
