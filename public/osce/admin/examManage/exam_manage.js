@@ -4289,13 +4289,16 @@ function station_assignment(){
                         '<label class="col-sm-1 control-label">&nbsp;</label>'+
                         '<div class="col-sm-10">'+
                             '<div class="row">'+
-                                '<div class="col-sm-4"><label class="control-label" order="'+data[i].order+'">'+data[i].name+'</label></div>'+
+                                '<div class="col-sm-2"><label class="control-label" order="'+data[i].order+'">'+data[i].name+'</label></div>'+
                                 '<div class="col-sm-5">'+
                                         '<label class="control-label col-sm-4">阶段：</label>'+
                                         '<select class="form-control col-sm-8 select-stage" style="width: 200px;" type="2">'+stageRender(data[i].exam_gradation_id)+'</select>'+
                                 '</div>'+
-                                '<div class="col-sm-3">'+
-                                    '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="'+data[i].optional+'" type="2">'+chioceToName[data[i].optional]+'</a>'+
+                                '<div class="col-sm-5">'+
+                                    '<select class="form-control chioce-btn" type="2" style="width: 200px;display:inline-block;">'+
+                                        '<option value="1" '+(data[i].optional == 1 ?'selected':'')+'>必考</option>'+
+                                        '<option value="0" '+(data[i].optional == 0 ?'selected':'')+'>选考</option>'+
+                                    '</select>'+
                                     '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                 '</div>'+
                             '</div>'+
@@ -4443,13 +4446,16 @@ function station_assignment(){
                                 '<label class="col-sm-1 control-label">&nbsp;</label>'+
                                 '<div class="col-sm-10">'+
                                     '<div class="row">'+
-                                        '<div class="col-sm-4"><label class="control-label" order="'+index+'">'+req.name+'</label></div>'+
+                                        '<div class="col-sm-2"><label class="control-label" order="'+index+'">'+req.name+'</label></div>'+
                                         '<div class="col-sm-5">'+
                                                 '<label class="control-label col-sm-4">阶段：</label>'+
                                                 '<select class="form-control col-sm-8 select-stage" style="width: 200px;" type="3">'+stageRender(1)+'</select>'+
                                         '</div>'+
-                                        '<div class="col-sm-3">'+
-                                            '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="1" type="3">必考</a>'+
+                                        '<div class="col-sm-5">'+  
+                                        '<select class="form-control chioce-btn" type="3" style="width: 200px;display:inline-block;">'+
+                                            '<option value="1">必考</option>'+
+                                            '<option value="0">选考</option>'+
+                                        '</select>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
                                     '</div>'+
@@ -4525,7 +4531,7 @@ function station_assignment(){
                             $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
 
                             //更新考站显示
-                            $('.station-container').find('.col-sm-4').each(function(key,elem) {
+                            $('.station-container').find('.col-sm-2').each(function(key,elem) {
                                 $(elem).find('.control-label').text('第'+(key+1)+'站');
                             });
 
@@ -4618,7 +4624,7 @@ function station_assignment(){
                             $that.parent().parent().parent().parent().remove();
                             $('.station-container').attr('index',parseInt($('.station-container').attr('index'))-1);
                             //更新考站显示
-                            $('.station-container').find('.col-sm-4').each(function(key,elem) {
+                            $('.station-container').find('.col-sm-2').each(function(key,elem) {
                                 $(elem).find('.control-label').text('第'+(key+1)+'站');
                             });
                         }
@@ -4962,23 +4968,23 @@ function station_assignment(){
      * @version 3.4
      * @date    2016-04-13
      */
-    $('.station-container').on('click', '.chioce-btn', function() {
-        var $that = $(this),
-            textName = ['必考','选考'],
+    $('.station-container').on('change', '.chioce-btn', function() {
+        var $that = $(this);
+            /*textName = ['必考','选考'],
             flag = $that.attr('value'),
-            toValue = [1,0];
+            toValue = [1,0];*/
 
         //状态更新
-        $that.text(textName[flag]);
-        $that.attr('value',toValue[flag]);
+        /*$that.text(textName[flag]);
+        $that.attr('value',toValue[flag]);*/
 
         //本站所有选项更新
-        $that.parent().parent().parent().find('.station-chioce').text(textName[flag]);
+        //$that.parent().parent().parent().find('.station-chioce').text(textName[flag]);
 
         $.ajax({
             type:'get',
             url: pars.chioce_btn,
-            data:{exam_id:examId, optional:toValue[flag],flow_id:$that.parent().parent().parent().find('table').attr('station-id'),type:$that.attr('type')},
+            data:{exam_id:examId, optional:$that.val(),flow_id:$that.parent().parent().parent().find('table').attr('station-id'),type:$that.attr('type')},
             success: function(res) {
                 if(res.code != 1) {
                     return true;
