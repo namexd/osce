@@ -15,15 +15,17 @@ use DB;
 
 class ExamResult extends CommonModel
 {
-    protected $connection = 'osce_mis';
-    protected $table = 'exam_result';
-    public $timestamps = true;
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $guarded = [];
-    protected $hidden = [];
-    protected $fillable = ['student_id', 'exam_screening_id', 'station_id', 'end_dt', 'begin_dt', 'time',
-        'create_user_id', 'score', 'score_dt', 'teacher_id','evaluate','operation','skilled','patient','affinity'];
+    protected $connection   = 'osce_mis';
+    protected $table        = 'exam_result';
+    public    $timestamps   = true;
+    protected $primaryKey   = 'id';
+    public    $incrementing = true;
+    protected $guarded      = [];
+    protected $hidden       = [];
+    protected $fillable     = [
+        'student_id', 'exam_screening_id', 'station_id', 'end_dt', 'begin_dt', 'time', 'score',
+        'score_dt', 'create_user_id', 'teacher_id', 'evaluate', 'operation', 'skilled', 'patient', 'affinity'
+    ];
 
     public function examScreening(){
         return $this->hasOne('\Modules\Osce\Entities\ExamScreening','id','exam_screening_id');
