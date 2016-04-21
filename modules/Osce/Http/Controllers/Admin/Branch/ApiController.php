@@ -781,7 +781,7 @@ class ApiController extends CommonController
             $watchNfcCodes = [];
             if (!empty($watches)) {
                 foreach ($watches as $item) {
-                    $watchNfcCodes = $item['code'];
+                    $watchNfcCodes[] = $item['code'];
                 }
             }
 
