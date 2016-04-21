@@ -888,6 +888,7 @@ class Student extends CommonModel
                 'exam_order.begin_dt as student_begin_dt',
                 'student.user_id as user_id',
                 'student.mobile as mobile',
+                'student.name as student_name',
                 'exam.name as exam_name',
 
             ])
@@ -906,6 +907,7 @@ class Student extends CommonModel
                 'exam_name' => $student->exam_name,
                 'student_begin_dt' => $student->student_begin_dt,
                 'student_id' => $student->student_id,
+                'student_name' => $student->student_name,
             ];
         }
         return $data;
@@ -922,13 +924,82 @@ class Student extends CommonModel
     public function sendSms($notice, $to, $url)
     {
         $sender = \App::make('messages.sms');
-        $content = [];
-        $content[] = $notice['exam_name'] . ' ' . $notice['student_begin_dt'];
-        $content[] = '详情查看' . $url;
+//        $content = [];
+    
+        $content = view('osce::admin.systemManage.student_inform',$notice)->render();
         foreach ($to as $mobile) {
-            $sender->send($mobile, implode('', $content) . ' 【敏行医学】');
+            $sender->send($mobile, $content. ' 【敏行医学】');
         }
     }
+
+    /**
+     * 微信通知方式
+     * @author zhouqing
+     * @time 2016-04-21
+     */
+
+    public function sendWechat($notice,$to,$url){
+        $msgData    =   [
+            [
+                'title' =>  '考试通知',
+                'desc' =>  $notice['exam_name'],
+                'url'   =>  $url
+            ]
+        ];
+        $message    =   AppCommon::CreateWeiXinMessage($msgData);
+        if(count($to)==1)
+        {
+            AppCommon::sendWeiXin($to[0],$message);
+        }
+        else
+        {
+            AppCommon::sendWeixinToMany($message,$to);
+        }
+    }
+
+
+
+    /**
+     *
+     * @author zhouqing
+     * @time 2016-04-21
+     */
+    public function sendPm($notice,$to,$url){
+        $sender =   \App::make('messages.pm');
+        foreach($to as $accept)
+        {
+            if(empty($accept))
+            {
+                continue;
+            }
+
+
+            $sender ->  send($accept,$url,$notice['exam_name']);
+        }
+    }
+
+    /**
+     * 邮件通知方式
+     * @author zhouqing
+     * @time 2016-04-21
+     */
+
+    public function sendEmail($notice,$to,$url){
+        try {
+            $sender =   \App::make('messages.email');
+            $content=   [];
+            $content[]  =   '亲爱的osce考试系统用户:';
+            $content[]  =   $notice['exam_name']. ' ' .$notice['student_begin_dt'];
+            $content[]  =   '详情查看'.$url;
+            $sender ->  send($to,implode('',$content));
+        } catch (\Exception $ex) {
+            \Log::info($ex->getMessage());
+        }
+    }
+
+
+
+
 
 
     /**
@@ -951,19 +1022,24 @@ class Student extends CommonModel
             foreach ($studentOpenid as $value){
 
 
-//                if($sendType['student']['wechat'] == 1){
-//
-//                    $this->sendWechat($value, $value['openid'], $url);
-//                }
+                if($sendType['student']['wechat'] == 1){
+
+                    $this->sendWechat($value,array_pluck($studentOpenid,'openid'), $url);
+                }
 
                 if($sendType['student']['sms'] == 1){
                     $this->sendSms($value, array_pluck($studentOpenid,'mobile'), $url);
                 }
 
-//                if($sendType['student']['mail'] == 1){
-//                    $this->sendEmail($value, $value['openid'], $url);
-//
-//                }
+                if($sendType['student']['mail'] == 1){
+                    $this->sendEmail($value, array_pluck($studentOpenid,'email'), $url);
+
+                }
+
+                if($sendType['student']['mail'] == 1){
+                    $this->sendPm($value, array_pluck($studentOpenid,'id'), $url);
+
+                }
             }
 
             } catch (\Exception $ex) {
