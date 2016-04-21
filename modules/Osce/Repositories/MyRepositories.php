@@ -40,12 +40,12 @@ class MyRepositories  extends BaseRepository
     //TODO 考试项目模型
     protected $SubjectModel;
     //TODO 评分标准模型
-    protected $StandardModel;
+    protected $StandardItemModel;
 
-    public function __construct(Exam $exam,ExamResult $examResult,ExamStation $ExamStation,SubjectItem $SubjectItem,Station $Station,Subject $Subject,Standard $Standard)
+    public function __construct(Exam $exam,ExamResult $examResult,ExamStation $ExamStation,SubjectItem $SubjectItem,Station $Station,Subject $Subject,StandardItem $StandardItem)
     {
         $this->ExamResultModel = $examResult;
-        $this->StandardModel = $Standard;
+        $this->StandardItemModel = $StandardItem;
     }
 
     /**
@@ -120,20 +120,20 @@ class MyRepositories  extends BaseRepository
             $join -> on('exam_screening.id', '=','exam_result.exam_screening_id');
         })->leftJoin('exam_score', function($join){
             $join -> on('exam_score.exam_result_id', '=','exam_result.id');
-        })->leftJoin('standard', function($join){
-            $join -> on('standard.id', '=','exam_score.standard_id');
+        })->leftJoin('standard_item', function($join){
+            $join -> on('standard_item.id', '=','exam_score.standard_item_id');
         })->leftJoin('subject', function($join){
             $join -> on('subject.id', '=','exam_score.subject_id');
         });
         //TODO 加上该条件为统计合格人数
         if($qualified){
-            $builder->having($DB->raw('sum(exam_score.score)/sum(standard.score)'),'>=','0.6');
+            $builder->having($DB->raw('sum(exam_score.score)/sum(standard_item.score)'),'>=','0.6');
         }
         $data = $builder->where('subject.id','=',$SubjectId)
             ->where('exam_screening.exam_id','=',$ExamId)
-            ->groupBy($DB->raw('standard.pid'))
+            ->groupBy($DB->raw('standard_item.pid'))
             ->select(
-                'standard.pid as pid',
+                'standard_item.pid as pid',
                 $DB->raw('avg(exam_score.score) as scoreAvg'),
                 $DB->raw('count(exam_result.student_id) as studentQuantity')
             )->get();
@@ -169,15 +169,15 @@ class MyRepositories  extends BaseRepository
      */
     public function GetStandardDetails($standardPid){
         $DB = \DB::connection('osce_mis');
-        $builder = $this->StandardModel->leftJoin('exam_score', function($join){
-            $join -> on('exam_score.standard_id', '=','standard.id');
+        $builder = $this->StandardItemModel->leftJoin('exam_score', function($join){
+            $join -> on('exam_score.standard_item_id', '=','standard_item.id');
         });
-        $data = $builder->where('standard.pid','=',$standardPid)
-            ->groupBy('standard.id')
+        $data = $builder->where('standard_item.pid','=',$standardPid)
+            ->groupBy('standard_item.id')
             ->select(
-            'standard.pid',//评分标准父编号
-            'standard.content',//名称
-            'standard.score', //总分
+            'standard_item.pid',//评分标准父编号
+            'standard_item.content',//名称
+            'standard_item.score', //总分
             'exam_score.score as grade'//成绩
             //$DB->raw('sum(exam_score.score) as totalGrade') //总成绩
         )->get();
@@ -186,11 +186,11 @@ class MyRepositories  extends BaseRepository
     }
     public function GetStandardDetails1($standardPid){
         $DB = \DB::connection('osce_mis');
-        $builder = $this->StandardModel->where('pid','=',$standardPid)->get();
+        $builder = $this->StandardItemModel->where('pid','=',$standardPid)->get();
         $examScore = new ExamScore();
         $id = $this->GetIdArr($builder);
         if(count($id)>0){
-            $grade = $examScore->whereIn('standard_id', $id)->get();
+            $grade = $examScore->whereIn('standard_item_id', $id)->get();
             dd($grade);
         }
 

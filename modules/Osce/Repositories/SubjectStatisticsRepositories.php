@@ -32,19 +32,19 @@ class SubjectStatisticsRepositories  extends BaseRepository
     //TODO 考试和考站关联模型
     protected $ExamStationModel;
     //TODO 考试项目子项模型
-    protected $SubjectItemModel;
+    protected $StandardItemModel;
     //TODO 考站模型
     protected $StationModel;
     //TODO 考试项目模型
     protected $SubjectModel;
 
 
-    public function __construct(Exam $exam,ExamResult $examResult,ExamStation $ExamStation,SubjectItem $SubjectItem,Station $Station,Subject $Subject)
+    public function __construct(Exam $exam,ExamResult $examResult,ExamStation $ExamStation,SubjectItem $StandardItem,Station $Station,Subject $Subject)
     {
         $this->ExamModel = $exam;
         $this->ExamResultModel = $examResult;
         //$this->ExamStationModel = $ExamStation;
-        $this->SubjectItemModel = $SubjectItem;
+        $this->StandardItemModel = $StandardItem;
         //$this->StationModel = $Station;
         //$this->SubjectModel = $Subject;
 
@@ -272,9 +272,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$standardPid=0){
-        //dd($ExamId.','.$SubjectId);468,12,exam_screening.id:477 exam_result:11,12,13
-        $DB = \DB::connection('osce_mis');
+        //dd($ExamId.','.$SubjectId);17,42,exam_screening.id:179 exam_result:4172-4175 4183-4188
 
+        $DB = \DB::connection('osce_mis');
         $builder = $this->ExamResultModel->leftJoin('station', function($join){
             $join -> on('station.id', '=', 'exam_result.station_id');
         })->leftJoin('subject', function($join){
@@ -284,7 +284,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
         })->leftJoin('exam_score', function($join){
             $join -> on('exam_score.exam_result_id', '=','exam_result.id');
         })->leftJoin('standard_item', function($join){
-            $join -> on('standard_item.id', '=','exam_score.standard_id');
+            $join -> on('standard_item.id', '=','exam_score.standard_item_id');
         })->leftJoin('standard', function($join){
             $join -> on('standard_item.standard_id', '=','standard.id');
         });
@@ -294,24 +294,23 @@ class SubjectStatisticsRepositories  extends BaseRepository
             ->where('exam_screening.exam_id','=',$ExamId);
 
 
-
-
         //根据需求 group不同的字段
         if($standardPid){
             $builder = $builder->where('standard_item.pid','=',$standardPid)
-                ->groupBy($DB->raw('standard.id,exam_result.student_id'));
+                ->groupBy($DB->raw('standard_item.id,exam_result.student_id'));
         }else{
             $builder = $builder->groupBy($DB->raw('standard_item.pid,exam_result.student_id'));
         }
 
         $builder->select(
-                'standard_item.pid as pid',
-                'standard.id as standard_id',
-                'exam_result.student_id',
-                'exam_result.id',
-                $DB->raw('SUM(exam_score.score) as score'),//该科目的某一个考核点实际得分
-                $DB->raw('SUM(standard_item.score) as Zscore')   //该科目所有考核点总分
-            );
+            'standard_item.pid as pid',
+            'standard.id as standard_id',
+            'exam_result.student_id',
+            'exam_score.standard_item_id',
+            'exam_result.id as exam_result_id',
+            $DB->raw('SUM(exam_score.score) as score'),//该科目的某一个考核点实际得分
+            $DB->raw('SUM(standard_item.score) as Zscore')   //该科目所有考核点总分
+        );
         return  $builder->get();
     }
     /**
@@ -344,7 +343,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GetContent($id){
-        $data = $this->SubjectItemModel
+        $data = $this->StandardItemModel
             ->where('id','=',$id)
             ->select('content')
             ->first();
@@ -382,10 +381,10 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GetExamListNoStandardGrade($status = 2){
-
-        return $this->ExamModel->leftJoin('exam_station', 'exam.id', '=', 'exam_station.exam_id')
-            ->leftJoin('station', 'station.id', '=', 'exam_station.station_id')
-            ->where('status','=',$status)
+        return $this->ExamModel->leftJoin('exam_draft_flow', 'exam.id', '=', 'exam_draft_flow.exam_id')
+            ->leftJoin('exam_draft', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->leftJoin('station', 'exam_draft.station_id', '=', 'station.id')
+            ->where('exam.status','=',$status)
             ->where('station.type','<>',3)
             ->select('exam.id as id','exam.name as name')
             ->orderBy('end_dt','desc')
@@ -456,15 +455,15 @@ class SubjectStatisticsRepositories  extends BaseRepository
      */
     public function GetStandardDetails($standardPid){
         $DB = \DB::connection('osce_mis');
-        $builder = $this->SubjectItemModel->leftJoin('exam_score', function($join){
-            $join -> on('exam_score.standard_id', '=','standard.id');
+        $builder = $this->StandardItemModel->leftJoin('exam_score', function($join){
+            $join -> on('exam_score.standard_item_id', '=','standard_item.id');
         });
-        $data = $builder->where('standard.pid','=',$standardPid)
-            ->groupBy('standard.id')
+        $data = $builder->where('standard_item.pid','=',$standardPid)
+            ->groupBy('standard_item.id')
             ->select(
-                'standard.pid',//评分标准父编号
-                'standard.content',//名称
-                'standard.score', //总分
+                'standard_item.pid',//评分标准父编号
+                'standard_item.content',//名称
+                'standard_item.score', //总分
                 'exam_score.score as grade'//成绩
             //$DB->raw('sum(exam_score.score) as totalGrade') //总成绩
             )->get();

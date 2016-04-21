@@ -26,15 +26,6 @@ class Standard extends CommonModel
         return $this->hasOne('App\Entities\User','created_user_id','id');
     }
 
-    //获取考核项
-    public function parent(){
-        return $this->hasOne('Modules\Osce\Entities\Standard','id','pid');
-    }
-
-    public function childrens(){
-        return $this->hasMany('Modules\Osce\Entities\Standard','pid','id');
-    }
-
     public function standardItem(){
         return $this->hasMany('Modules\Osce\Entities\StandardItem','standard_id','id');
 
@@ -42,11 +33,14 @@ class Standard extends CommonModel
 
     /**
      * 创建考核点、考核项
+     * @access public
      * @param $point
+     * @return static
+     *
      * @version 3.4
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
-     * @date 2016-04-12 12:55
-     * @return static
+     * @date   2016-04-12 12:55
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function addStandard($standard_name){
         $result = $this->where('title','=',$standard_name)->first();
@@ -61,10 +55,11 @@ class Standard extends CommonModel
      * 删除考试项目 对应的 评分标准
      *
      * @param $subject
-     *
-     * @author Zhoufuxiang  2016-04-13 10:55
      * @return bool
      * @throws \Exception
+     *
+     * @author Zhoufuxiang
+     * @date   2016-04-13 10:55
      */
     public function delStandard($subject)
     {

@@ -32,11 +32,6 @@ class Subject extends CommonModel
     {
         return $this->hasOne('App\Entities\User', 'created_user_id', 'id');
     }
-//
-//    public function items()
-//    {
-//        return $this->hasMany('Modules\Osce\Entities\SubjectItem', 'subject_id', 'id');
-//    }
 
     public function standards()
     {
@@ -138,6 +133,7 @@ class Subject extends CommonModel
      * @param array $points
      * @return object
      * @throws \Exception @version 3.4
+     *
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date 2016-04-12 18:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved

@@ -65,6 +65,7 @@ class ExamControlController extends CommonController
      */
     public function postStopExam(Request $request)
     {
+
         $this->validate($request,[
             'examId'       => 'required|integer',//考试编号
             'studentId'    => 'required|integer',//考生编号
@@ -96,9 +97,10 @@ class ExamControlController extends CommonController
         }
 
         try{
+
+
             $examControlModel = new ExamControl();
             $examControlModel->stopExam($data);
-
             //向pad端和watch端推送消息
             $redis = Redis::connection('message');
             $redis->publish('pad_message', json_encode($this->success_data([],106,'考试终止成功')));
@@ -109,7 +111,7 @@ class ExamControlController extends CommonController
             $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
             $request['nfc_code'] = $watchData->code;
             $studentWatchController = new StudentWatchController();
-            $studentWatchController->getStudentExamReminder($request);
+            $studentWatchController->getStudentExamReminder($request,$data['stationId']);
             return response()->json(
                 $this->success_data([],1,'success')
             );
@@ -131,7 +133,7 @@ class ExamControlController extends CommonController
         $stationId = $request->input('stationId');
         $examControlModel = new ExamControl();
         $vcrInfo    = $examControlModel->getVcrInfo($examId, $stationId);
-        //dd($vcrInfo);
+       // dd($vcrInfo);
 
         return view('osce::admin.testMonitor.monitor_test_video', [
             'data'      =>$vcrInfo,
