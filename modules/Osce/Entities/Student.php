@@ -642,6 +642,8 @@ class Student extends CommonModel
                 array_push($studentIds, $student->student_id);
             }
         }
+
+        dd($studentIds);
         //剔除 已经考试过的学生
         if (count($studentIds)) {
             $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
