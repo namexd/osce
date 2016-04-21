@@ -632,7 +632,7 @@ class Student extends CommonModel
             $join->on('student.id', '=', 'exam_screening_student.student_id');
         })->leftjoin('exam_queue',function($exam_queue){
             $exam_queue->on('exam_queue.exam_screening_id','=','exam_screening_student.exam_screening_id');
-        })->whereIn('exam_queue.status', [2,3])
+        })->whereIn('exam_queue.status', [2,3,4])
             ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
             ->where('exam_screening_student.is_end', '=', 1)
             ->select(['exam_screening_student.student_id'])->get();
@@ -643,7 +643,7 @@ class Student extends CommonModel
             }
         }
 
-        //dd($studentIds);
+        dd($studentIds);
         //剔除 已经考试过的学生
         if (count($studentIds)) {
             $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
