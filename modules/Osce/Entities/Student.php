@@ -896,7 +896,12 @@ class Student extends CommonModel
 
             ])
             ->get();
-       
+
+
+            if(!$list){
+            throw new \Exception('请先给学生排考');
+         }
+
         foreach ($list as $student) {
             if (is_null($student->userInfo)) {
                 throw new \Exception('没有找到指定的考生用户信息');
@@ -906,7 +911,7 @@ class Student extends CommonModel
                 'id' => $student->userInfo->id,
                 'openid' => $student->userInfo->openid,
                 'email' => $student->userInfo->email,
-                'mobile' => $student->mobile,
+                'mobile' => $student->userInfo->mobile,
                 'exam_name' => $student->exam_name,
                 'student_begin_dt' => $student->student_begin_dt,
                 'student_id' => $student->student_id,
@@ -945,7 +950,7 @@ class Student extends CommonModel
         $msgData    =   [
             [
                 'title' =>  '考试通知',
-                'desc' =>  $notice['exam_name'],
+                'desc' =>   '你有一场考试为'.$notice['exam_name']. ' ' .'考试开始时间为'.$notice['student_begin_dt'].'请你准时参加!!',
                 'url'   =>  $url
             ]
         ];
@@ -991,9 +996,9 @@ class Student extends CommonModel
         try {
             $sender =   \App::make('messages.email');
             $content=   [];
-            $content[]  =   '亲爱的osce考试系统用户:';
-            $content[]  =   $notice['exam_name']. ' ' .$notice['student_begin_dt'];
-            $content[]  =   '详情查看'.$url;
+            $content[]  =   '亲爱的'.$notice['exam_name'].'同学:';
+            $content[]  =   '你有一场考试为'.$notice['exam_name']. ' ' .'考试开始时间为'.$notice['student_begin_dt'];
+            $content[]  =   '请你准时参加'.$url;
             $sender ->  send($to,implode('',$content));
         } catch (\Exception $ex) {
             \Log::info($ex->getMessage());
@@ -1045,8 +1050,10 @@ class Student extends CommonModel
                 }
             }
 
+
+
             } catch (\Exception $ex) {
-                \Log::alert('应该是邮件问题');
+
             }
 
         } catch (\Exception $ex) {
