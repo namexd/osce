@@ -56,7 +56,7 @@ class ExamControl extends Model
         $doExamCount = count($examModel->leftJoin('exam_queue', function($join){
             $join -> on('exam.id', '=', 'exam_queue.exam_id');
         })->select('exam_queue.id')->where('exam.status','=',1)
-            ->where('exam_queue.status','<>',3)
+            ->where('exam_queue.status','=',2)
             ->get());
 
         //统计已完成考试数量
@@ -103,7 +103,7 @@ class ExamControl extends Model
             'exam_screening_student.exam_screening_id',//考试场次编号
             'exam_order.status as examOrderStatus'//考试学生排序状态
         )->where('exam.status','=',1)
-            ->where('exam_queue.status','<>',3)
+            ->where('exam_queue.status','=',2)
         ->get();
 
 
@@ -334,7 +334,7 @@ class ExamControl extends Model
             throw $ex;
         }
     }
-    
+
     /**获取该考生该场考试还没开考的剩余的考站数量和考试队列信息
      * @method
      * @url /osce/
