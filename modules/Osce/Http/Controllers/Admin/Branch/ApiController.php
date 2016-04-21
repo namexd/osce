@@ -772,15 +772,20 @@ class ApiController extends CommonController
                 );
             }
 
-            $watchNfcCodes = $watchLogModel->leftJoin('watch', function($join){
+            $watches = $watchLogModel->leftJoin('watch', function($join){
                 $join->on('watch_log.watch_id', '=', 'watch.id');
             })->whereIn('watch_log.student_id', $studentIds)
                 ->where('watch.status', '=', 1)
-                ->get()
-                ->pluck('watch.code')
-                ->toArray();
+                ->get();
 
-            if (is_null($watchNfcCodes)) {
+            $watchNfcCodes = [];
+            if (!empty($watches)) {
+                foreach ($watches as $item) {
+                    $watchNfcCodes[] = $item['code'];
+                }
+            }
+
+            if (empty($watchNfcCodes)) {
                 return response()->json(
                     $this->success_data([], -3, '未查到相应腕表信息')
                 );
@@ -789,7 +794,7 @@ class ApiController extends CommonController
             $studentWatchController = new StudentWatchController();
             foreach ($watchNfcCodes as $watchNfcCode) {
                 $request['nfc_code'] = $watchNfcCode;
-                $studentWatchController->getStudentExamReminder($request);
+                $studentWatchController->getStudentExamReminder($request, $stationId);
             }
         } else {
             // 考站排 一个学生
@@ -822,7 +827,7 @@ class ApiController extends CommonController
 
             $studentWatchController = new StudentWatchController();
             $request['nfc_code'] = $watch['nfc_code'];
-            $studentWatchController->getStudentExamReminder($request);
+            $studentWatchController->getStudentExamReminder($request, $stationId);
         }
 
 
@@ -850,7 +855,7 @@ class ApiController extends CommonController
                 $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
                 $studentWatchController = new StudentWatchController();
                 $request['nfc_code'] = $watchData->nfc_code;
-                $studentWatchController->getStudentExamReminder($request);
+                $studentWatchController->getStudentExamReminder($request, $stationId);
             }
         }
 
