@@ -140,7 +140,7 @@ class StudentWatchController extends CommonController
             return $this->getStatusTwoExam($examQueueCollect);
         }
 
-        if (in_array(3, $statusArray, $stationId)) {
+        if (in_array(3, $statusArray)) {
             return $this->getStatusThreeExam($examQueueCollect, $stationId);
         }
 
