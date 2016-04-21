@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use App\Entities\User;
 use Cache;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\AddAllExaminee\AddAllExamineeRepository;
 use Modules\Osce\Entities\AutomaticPlanArrangement\AutomaticPlanArrangement;
 use Modules\Osce\Entities\AutomaticPlanArrangement\ExamPlaceEntity;
 use Modules\Osce\Entities\Exam;
@@ -604,28 +605,31 @@ class ExamController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postImportStudent($id,Request $request, Student $student)
+    public function postImportStudent(Request $request, Student $student, $id)
     {
         try {
             //获得上传的数据
             $exam_id= $id;
             $data   = Common::getExclData($request, 'student');
-            $exam   = Exam::find($exam_id);
+            $exam   = Exam::doingExam($exam_id);
             if($exam->status!=0)
             {
                 throw new \Exception('此考试当前状态下不允许新增');
             }
-            //去掉sheet
-            $studentList = array_shift($data);
-            //判断模板 列数、表头是否有误
-            $student->judgeTemplet($studentList);
-            //将中文表头转为英文
-            $examineeData = Common::arrayChTOEn($studentList, 'osce.importForCnToEn.student');
-            //导入考生
-            $result = $student->importStudent($exam_id, $examineeData);
-            if(!$result){
-                throw new \Exception('学生导入数据失败，请参考模板修改后重试');
-            }
+//            //去掉sheet
+//            $studentList = array_shift($data);
+//            //判断模板 列数、表头是否有误
+//            $student->judgeTemplet($studentList);
+//            //将中文表头转为英文
+//            $examineeData = Common::arrayChTOEn($studentList);
+//            //导入考生
+//            $result = $student->importStudent($exam_id, $examineeData);
+//            if(!$result){
+//                throw new \Exception('学生导入数据失败，请参考模板修改后重试');
+//            }
+            $addAllExamineeRepository = new AddAllExamineeRepository(new App(), $request, 'student');
+
+            $result = $addAllExamineeRepository->importStudent($exam_id, $student);
 
             return json_encode($this->success_data([], 1, "成功导入{$result}个学生！"));
 

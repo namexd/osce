@@ -611,8 +611,9 @@ class ApiController extends CommonController
             'examData' => @$examData
         ]);
     }
-/**
-     *  获取当前考站所在流程考试是否已经结束
+
+    /**
+     * 获取当前考站所在流程考试是否已经结束
      * @url GET /osce/admin/api/exam-paper-status
      * @access public
      *
@@ -627,13 +628,12 @@ class ApiController extends CommonController
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2015-12-29 17:09
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function getExamPaperStatus(Request $request)
     {
         $this->validate($request, [
-            'exam_id' => 'sometimes|integer',//考试ID
-            'station_id' => 'sometimes|integer',//考站ID
+            'exam_id'    => 'required|integer',// 考试ID
+            'station_id' => 'required|integer',// 考站ID
         ]);
 
         $examId = $request->get('examId');
@@ -641,6 +641,7 @@ class ApiController extends CommonController
 
         try {
             $examScreeningModel = new ExamScreening();
+
             //获取正在进行的考试
             $examScreening = $examScreeningModel->getExamingScreening($examId);
             if (is_null($examScreening)) {
@@ -648,11 +649,26 @@ class ApiController extends CommonController
                 $examScreening = $examScreeningModel->getNearestScreening($examId);
             }
 
-            $exam = $examScreening->ExamInfo;
+            //$exam = $examScreening->ExamInfo;
 
 
+            $unExamQueues = ExamQueue::where('status', '<>', 3)
+                ->where('exam_id', '=', $examId)
+                ->where('exam_screening_id', '=', $examScreening->id)
+                ->where('station_id', '=', $stationId)
+                ->get();
 
+            if (count($unExamQueues) > 0) {
+                return response()->json(
+                    $this->success_data('', 1, '未考完')
+                );
+            } else {
+                return response()->json(
+                    $this->success_data('', 2, '已考完')
+                );
+            }
 
+            /*
             if ($exam->sequence_mode == 1) {
                 //若果是考场模式
                 //room_station
@@ -696,6 +712,7 @@ class ApiController extends CommonController
                     $this->success_data('', 2, '已考完')
                 );
             }
+            */
         } catch (\Exception $ex) {
             return response()->json(
                 $this->fail(new \Exception('查询是否考完失败', -2))

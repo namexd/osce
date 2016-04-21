@@ -27,6 +27,8 @@ class RoomMode extends AbstractEntity implements EntityInterface
 
         //去重，将room_id相同的考场合并为一个
         $entities = $this->mergeRoom($entities);
+        //加上序号
+        $entities = $this->setSerialnumber($entities);
         //为每个考场写入多少个考站
         foreach ($entities as &$entity) {
             $roomStation = $this->roomStation($exam, $screen, $entity->room_id);
