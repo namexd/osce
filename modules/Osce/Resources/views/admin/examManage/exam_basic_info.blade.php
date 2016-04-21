@@ -34,7 +34,7 @@
     .checkbox_input{font-weight:100;cursor:pointer;}
     .check_name{padding:0;height:16px;position: relative;top:0;font-weight: 700;}
     .check_icon.check {background-position: -32px 0;}
-    .check_margin{display: inline-block;float:right;margin:5px 0 0 5px;}
+    .check_margin{display: inline-block;margin:5px 0 0 5px;}
     </style>
 @stop
 
@@ -155,7 +155,7 @@
                                                    <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
                                                         <div class="check_icon check_margin {{($examData->gradation->count()>1)?'check':''}}" checkbox={{($examData->gradation->count()>1)?1:0}}></div>
                                                         <input type="checkbox" name="gradation_order" value="1" {{$examData['same_time']==1?'checked':''}}>
-                                                        <span class="check_name" style="display: inline-block;float:right;">考生分阶段考试</span>
+                                                        <span class="check_name" style="display: inline-block;float:right;line-height: 24px;">考生分阶段考试</span>
                                                    </label>
                                                    <div class="col-sm-10 check_div">
                                                         <input type="text" class="form-control checkbox_num" id="gradation_order" name="gradation_order" value="{{$examData->gradation->count()}}" style="float:left;width:200px;"  {{$examData['status']==0?'':'disabled'}} {{($examData->gradation->count()>1)?'':'readonly="readonly"'}}>
@@ -176,7 +176,7 @@
                                                      <label class="check_label checkbox_input checkbox_three" style="height: 34px;line-height: 28px;margin-left: 12.1%;">
                                                           <div class="check_icon  {{($examData['real_push'])?'check':''}}" style="display: inline-block;margin:5px 0 0 5px;float:left;"  {{$examData['status']==0?'':'disabled'}}></div>
                                                           <input type="checkbox" name="real_push" value="{{$examData['real_push']}}"  {{$examData['status']==0?'':'disabled'}} {{$examData['real_push']==1?'checked':''}}>
-                                                          <span class="check_name" style="display: inline-block;float:left;">实时发布成绩</span>
+                                                          <span class="check_name" style="display: inline-block;float:left;line-height: 24px;">实时发布成绩</span>
                                                      </label>
                                                 </div>
                                            </div>
