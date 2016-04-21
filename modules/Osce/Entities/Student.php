@@ -648,12 +648,12 @@ class Student extends CommonModel
             }
         }
 
-        dd($studentIds);
+        var_dump($studentIds);exit;
         //剔除 已经考试过的学生
         if (count($studentIds)) {
             $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
         }
-        
+
 
         $builder = $builder->select([
             'student.id as id',
