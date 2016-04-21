@@ -641,7 +641,7 @@ class Student extends CommonModel
             ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
             ->where('exam_screening_student.is_end', '=', 1)
             ->select(['exam_screening_student.student_id'])->get();
-        dd($students);
+
         $studentIds = [];   //用于保存已经考试的学生ID
         if (count($students)) {
             foreach ($students as $index => $student) {
