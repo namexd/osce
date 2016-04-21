@@ -772,6 +772,8 @@ class ApiController extends CommonController
                 );
             }
 
+            dd($studentIds);
+
             $watchNfcCodes = $watchLogModel->leftJoin('watch', function($join){
                 $join->on('watch_log.watch_id', '=', 'watch.id');
             })->whereIn('watch_log.student_id', $studentIds)
