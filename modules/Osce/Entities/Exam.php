@@ -192,13 +192,12 @@ class Exam extends CommonModel
      */
     public function deleteData($id)
     {
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
         try {
-            $connection = DB::connection($this->connection);
-            $connection->beginTransaction();
 
             //获得当前exam的实例
             $examObj = $this->findOrFail($id);
-
 
             //进入模型逻辑
             //删除与考场相关的流程
@@ -241,7 +240,7 @@ class Exam extends CommonModel
 
             //删除考场安排 相关信息
             $examDraftFlow = new ExamDraftFlow();
-            $examDraftFlow->delDraftDatas($id);
+            $examDraftFlow ->delDraftDatas($id);
 
             //删除考试阶段 相关信息
             $examGradations = ExamGradation::where('exam_id', '=', $id)->get();
@@ -275,29 +274,33 @@ class Exam extends CommonModel
             }
 
             //通过考试流程-考站关系表得到考站信息
-            if ($examObj->sequence_mode == 1) {
-                //删除考试考场流程关联
-                if (!ExamFlowRoom::where('exam_id', $id)->get()->isEmpty()) {
-                    if (!ExamFlowRoom::where('exam_id', $id)->delete()) {
-                        throw new \Exception('删除考试考场流程关联失败，请重试！');
-                    }
-                }
-            } elseif ($examObj->sequence_mode == 2) {
-                $station = ExamFlowStation::whereIn('flow_id', $flowIds);
-                $stationIds = $station->select('station_id')->get();
-                if (!$stationIds->isEmpty()) {
-                    //删除考试流程-考站关系表信息
-                    if (!$station->delete()) {
-                        throw new \Exception('删除考试考站流程关联失败，请重试！');
-                    }
-
-                    //通过考站id找到对应的考站-老师关系表
-                    if (!StationTeacher::where('exam_id', $id)->get()->isEmpty()) {
-                        if (!StationTeacher::where('exam_id', $id)->delete()) {
-                            throw new \Exception('弃用考站老师关联失败，请重试！');
+            switch ($examObj->sequence_mode)
+            {
+                case 1: //删除考试考场流程关联
+                        if (!ExamFlowRoom::where('exam_id', $id)->get()->isEmpty()) {
+                            if (!ExamFlowRoom::where('exam_id', $id)->delete()) {
+                                throw new \Exception('删除考试考场流程关联失败，请重试！');
+                            }
                         }
-                    }
-                }
+                        break;
+
+                case 2: $station = ExamFlowStation::whereIn('flow_id', $flowIds);
+                        $stationIds = $station->select('station_id')->get();
+                        if (!$stationIds->isEmpty()) {
+                            //删除考试流程-考站关系表信息
+                            if (!$station->delete()) {
+                                throw new \Exception('删除考试考站流程关联失败，请重试！');
+                            }
+
+                            //通过考站id找到对应的考站-老师关系表
+                            if (!StationTeacher::where('exam_id', $id)->get()->isEmpty()) {
+                                if (!StationTeacher::where('exam_id', $id)->delete()) {
+                                    throw new \Exception('弃用考站老师关联失败，请重试！');
+                                }
+                            }
+                        }
+                        break;
+                default:    throw new \Exception('System Errors');
             }
 
             //删除考试对应的资讯通知
@@ -793,19 +796,24 @@ class Exam extends CommonModel
         }
     }
 
+    /**
+     * 重置考试数据
+     * @param   $id         //考试ID
+     * @return  bool
+     * @author  Zhoufuxiang <zhoufuxiang@misrobot.com>
+     */
     public function emptyData($id)
     {
         try {
             //获得当前exam的实例
             $examObj = $this->findOrFail($id);
             //获取与考场相关的流程
-//            $flowIds = ExamFlow::where('exam_id',$id)->select('flow_id')->get()->pluck('flow_id'); //获得流程的id
-            $examScreening = ExamScreening::where('exam_id', $id);
+            $examScreening    = ExamScreening::where('exam_id', '=', $id);
             $examScreeningObj = $examScreening->select('id')->get();
             $examScreeningIds = $examScreeningObj->pluck('id');
 
-            $examResult = ExamResult::whereIn('exam_screening_id', $examScreeningIds)->select('id')->get();
-            $examResultIds = $examResult->pluck('id');
+            $examResult       = ExamResult::whereIn('exam_screening_id', $examScreeningIds)->select('id')->get();
+            $examResultIds    = $examResult->pluck('id');
 
             //删除考试得分
             $examScores = ExamScore::whereIn('exam_result_id', $examResultIds)->get();
@@ -821,73 +829,14 @@ class Exam extends CommonModel
                 }
             }
 
-            /*
-                    $examSpTeachers = ExamSpTeacher::whereIn('exam_screening_id',$examScreeningIds)->get();
-                    if (!$examSpTeachers->isEmpty()) {
-                        foreach ($examSpTeachers as $valueST) {
-                            $valueST->delete();
-                        }
-                    }
-                    //删除邀请
-                    $invites = Invite::whereIn('exam_screening_id',$examScreeningIds)->get();
-                    if (!$invites->isEmpty()) {
-                        foreach ($invites as $valueI) {
-                            $valueI->delete();
-                        }
-                    }
-                    //删除考试对应的考生
-                    $examObj->students()->delete();
-                    //删除智能排考记录
-                    ExamPlanRecord::where('exam_id',$id)->delete();
-                    //删除考试计划
-                    ExamPlan::where('exam_id',$id)->delete();
-                    //删除考试考场关联
-                    ExamRoom::where('exam_id',$id)->delete();
-                    //删除考试考站关联
-                    ExamStation::where('exam_id',$id)->delete();
-                    //删除考试流程关联
-                    ExamFlow::where('exam_id',$id)->delete();
-                    //通过考试流程-考站关系表得到考站信息
-                    if ($examObj->sequence_mode == 1) {
-                        //删除考试考场流程关联
-                        ExamFlowRoom::where('exam_id',$id)->delete();
-                    } elseif ($examObj->sequence_mode == 2) {
-                        ExamFlowStation::whereIn('flow_id',$flowIds)->delete();
-                        StationTeacher::where('exam_id',$id)->delete();
-                    }
-                    //删除考试对应的资讯通知
-                    $informInfo = InformInfo::where('exam_id', $id)->get();
-                    if(count($informInfo) !=0){
-                        foreach ($informInfo as $item) {
-                            $item->delete();
-                        }
-                    }
-                    //如果有flow的话，就删除
-                    if (count($flowIds) != 0) {
-                        foreach ($flowIds as $flowId) {
-                            Flows::where('id',$flowId)->delete();
-                        }
-                    }
-            
-				   Exam::doingExam();    //获取正在考试的考试
-
-				   //删除考试场次-学生关系表
-				   $exam_screening_student =ExamScreeningStudent::whereIn('exam_screening_id',$examResultIds)->get();
-				   if(!$exam_screening_student->isEmpty()){
-					   foreach($exam_screening_student as $item ){
-						   $item->delete();
-					   }
-				   }
-			*/
             //修改考试考场学生表 (删除)
-            foreach ($examScreeningObj as $item) {
-                $examScreeningStudent = ExamScreeningStudent::where('exam_screening_id', '=',
-                    $item->id)->get();       //TODO 更改考试场次终止为0
-                foreach ($examScreeningStudent as $value) {
-
+            foreach ($examScreeningObj as $item)
+            {
+                $examScreeningStudent = ExamScreeningStudent::where('exam_screening_id', '=', $item->id)->get();
+                foreach ($examScreeningStudent as $value)
+                {
                     if (!$value->delete()) {
-                        throw new \Exception('s删除考试考场学生失败！');
-
+                        throw new \Exception('删除考试场次学生失败！');
                     }
                 }
             }
@@ -899,15 +848,16 @@ class Exam extends CommonModel
                 }
             }
             //删除缺考
-            ExamAbsent::where('exam_id', $id)->delete();
+            ExamAbsent::where('exam_id', '=', $id)->delete();
             //删除考试队列
-            ExamQueue::where('exam_id', $id)->delete();
-            //更改考生排序状态
-            ExamOrder::where('exam_id', $id)->update(['status' => 0]);     //TODO 更改状态为0
+            ExamQueue::where('exam_id', '=', $id)->delete();
+            //更改考生排序状态  TODO:（ExamOrder表中数据是在智能排考时添加进去的）
+            ExamOrder::where('exam_id', '=', $id)->update(['status' => 0]);     //TODO 更改状态为0（0为未绑定腕表）
             //更改考试状态
-            $result = $this->where('id', $id)->update(['status' => 0]);    //TODO 更改状态为0
+            $result = $this->where('id', '=', $id)->update(['status' => 0]);    //TODO 更改状态为0（0为未开考）
 
-            return true;
+            return $result;
+
         } catch (\Exception $ex) {
             return false;
         }
