@@ -4701,10 +4701,10 @@ function station_assignment(){
                     var str = [];
                     var data = res.data;
 
-                    str.push({id:-999,text:'==新增考试项目=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].title});
                     }
+                    str.push({id:-999,text:'==新增考试项目=='});
 
                     //加载入数据
                     return {
@@ -4775,10 +4775,10 @@ function station_assignment(){
                     var str = [];
                     var data = res.data;
 
-                    str.push({id:-999,text:'==新增考站=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name,type:data[i].type});
                     }
+                    str.push({id:-999,text:'==新增考站=='});
 
                     //加载入数据
                     return {
@@ -4894,10 +4894,10 @@ function station_assignment(){
                     var str = [];
                     var data = res.data;
 
-                    str.push({id:-999,text:'==新增考场=='});
                     for(var i in data){
                         str.push({id:data[i].id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增考场=='});
 
                     //加载入数据
                     return {
@@ -5028,7 +5028,7 @@ function station_assignment(){
                         title:'提示',
                         btn: ['确定','取消'],
                         cancel: function() {
-                            location.reload();
+                            //location.reload();
                         }
                     },function() {
                         $.ajax({
@@ -5389,10 +5389,10 @@ function examiner_manage() {
                     var str = [];
                     var data = res.data;
 
-                    str.push({id:-999,text:'==新增考官=='});
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增考官=='});
 
                     //加载入数据
                     return {
@@ -5481,10 +5481,10 @@ function examiner_manage() {
                     var str = [];
                     var data = res.data;
 
-                    str.push({id:-999,text:'==新增sp=='});
                     for(var i in data){
                         str.push({id:data[i].teacher_id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增sp=='});
 
                     //加载入数据
                     return {
