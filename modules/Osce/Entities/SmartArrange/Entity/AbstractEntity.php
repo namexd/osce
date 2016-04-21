@@ -103,4 +103,20 @@ abstract class AbstractEntity
 
         return collect($result);
     }
+
+    protected function mergeRoom(Collection $entities, $field)
+    {
+        $array = [];
+        $tempGroups = $entities->groupBy($field);
+        foreach ($tempGroups as $item)
+        {
+            if (count($item) > 1) {
+                $array[] = $item->sortBy('mins')->pop();
+            } else {
+                $array[] = $item->pop();
+            }
+        }
+
+        return collect($array);
+    }
 }

@@ -4290,11 +4290,11 @@ function station_assignment(){
                         '<div class="col-sm-10">'+
                             '<div class="row">'+
                                 '<div class="col-sm-4"><label class="control-label" order="'+data[i].order+'">'+data[i].name+'</label></div>'+
-                                '<div class="col-sm-6">'+
-                                        '<label class="control-label col-sm-2">阶段：</label>'+
-                                        '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="2">'+stageRender(data[i].exam_gradation_id)+'</select>'+
+                                '<div class="col-sm-5">'+
+                                        '<label class="control-label col-sm-4">阶段：</label>'+
+                                        '<select class="form-control col-sm-8 select-stage" style="width: 200px;" type="2">'+stageRender(data[i].exam_gradation_id)+'</select>'+
                                 '</div>'+
-                                '<div class="col-sm-2">'+
+                                '<div class="col-sm-3">'+
                                     '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="'+data[i].optional+'" type="2">'+chioceToName[data[i].optional]+'</a>'+
                                     '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                 '</div>'+
@@ -4444,11 +4444,11 @@ function station_assignment(){
                                 '<div class="col-sm-10">'+
                                     '<div class="row">'+
                                         '<div class="col-sm-4"><label class="control-label" order="'+index+'">'+req.name+'</label></div>'+
-                                        '<div class="col-sm-6">'+
-                                                '<label class="control-label col-sm-2">阶段：</label>'+
-                                                '<select class="form-control col-sm-10 select-stage" style="width: 381px;" type="3">'+stageRender(1)+'</select>'+
+                                        '<div class="col-sm-5">'+
+                                                '<label class="control-label col-sm-4">阶段：</label>'+
+                                                '<select class="form-control col-sm-8 select-stage" style="width: 200px;" type="3">'+stageRender(1)+'</select>'+
                                         '</div>'+
-                                        '<div class="col-sm-2">'+
+                                        '<div class="col-sm-3">'+
                                             '<a class="btn btn-primary chioce-btn" href="javascript:void(0)" value="1" type="3">必考</a>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
@@ -5146,13 +5146,13 @@ function examiner_manage() {
                         '<td>'+data[i].subject_title+'</td>'+
                         '<td>'+data[i].station_name+'</td>'+
                         '<td>'+typeToName[data[i].station_type]+'</td>'+
-                        '<td style="width:481px;">'+
+                        '<td style="width:281px;">'+
                             '<div class="col-sm-10">'+
                             '<select class="form-control custom-teacher"  name=""  multiple="multiple">'+str_teacher+
                             '</select>'+
                             '</div>'+
                         '</td>'+
-                        '<td style="width:481px;">'+
+                        '<td style="width:281px;">'+
                             '<div class="col-sm-10">'+
                             '<select class="form-control custom-sp"  name="" '+control+'  multiple="multiple">'+str_sp+
                             '</select>'+
