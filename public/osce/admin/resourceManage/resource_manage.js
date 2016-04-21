@@ -2335,11 +2335,11 @@ function course_module(){
                     var data = res.data,
                         str = [];
 
-                    str.push({id:-999,text:'==新增病例=='});
 
                     for(var i in data) {
                         str.push({id:data[i].id,text:data[i].name});
                     }
+                    str.push({id:-999,text:'==新增病例=='});
                     
                     return{
                         results:str

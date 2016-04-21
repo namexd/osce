@@ -73,9 +73,7 @@
             width: 600px;
             margin: 20px auto;
         }
-        .operate button{
-            margin-left: 50px;
-        }
+        .operate .btn{margin-left: 50px;} 
         .classroom-box{
             min-height: 500px;
             text-align: center;
