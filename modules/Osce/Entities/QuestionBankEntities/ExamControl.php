@@ -380,65 +380,6 @@ class ExamControl extends Model
         return $data;
     }
 
-    /**Pad端消息推送
-     * @method
-     * @url /osce/
-     * @access public
-     * @param $studentId 学生编号
-     * @author xumin <xumin@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getReplaceExam($studentId){
-        $DB = DB::connection('osce_mis');
-        $DB->beginTransaction();
-        if($studentId){
-            $student = new Student();
-            $data = $student->where('id','=',$studentId)->first();
-
-            try{
-                if(empty($data)){
-                    throw new \Exception(' 没有对应的学生信息！');
-                }
-                $DB->commit();
-                return $data;
-            }catch (\Exception $ex){
-                $DB->rollback();
-                throw $ex;
-            }
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
