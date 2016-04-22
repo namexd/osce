@@ -75,66 +75,66 @@ class StationTeacher extends CommonModel
                     }
                 }
             }
-
             $user = Auth::user();
             if (empty($user)) {
                 throw new \Exception('未找到当前操作人信息！');
             }
+            $teacherModel = new Teacher();
             if ($teacherData) {
-
                 foreach ($teacherData as $key => $item) {
-
                     $stationType = Station::find($item['station_id']);
                     if ($stationType->type != 2) {
                         if ($item['teacher'] == "" || $item['teacher'] == "") {
 
                             throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
-//                        continue;
                         }
                         if ($item['teacher'] == null || $item['teacher'] == null) {
                             throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
-//                        continue;
                         }
-
                     } else {
                         if ($item['teacher'] == "" && $item['sp_teacher'] == "" || $item['teacher'] == "" || $item['sp_teacher'] == "") {
-
                             throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
-//                        continue;
                         }
                         if ($item['teacher'] == null && $item['sp_teacher'] == null || $item['teacher'] == null || $item['sp_teacher'] == null) {
                             throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
-//                        continue;
                         }
                     }
-
-
                     $teacherIDs = [];
-
-
+                    $subjectId = [];
                     if (!empty($item['teacher'])) {
                         foreach ($item['teacher'] as $value) {
+
+                            //判该老师是否支持该项目如果不支持添加
+                            $subjectId = TeacherSubject::where('teacher_id', '=', $value)->get()->pluck('subject_id')->toArray();
+                            $subjectId [] = intval($item['subject_id']);
+                            $subjectId = array_unique($subjectId);
+                            $teacherModel->handleTeacherSubject($subjectId, $value, $user->id);
                             $teacherIDs[] = $value;
                         }
                     }
                     if (!empty($item['sp_teacher'])) {
                         foreach ($item['sp_teacher'] as $value) {
+                            //判该老师是否支持该项目如果不支持添加
+                            $subjectId = TeacherSubject::where('teacher_id', '=', $value)->get()->pluck('subject_id')->toArray();
+                            $subjectId [] = intval($item['subject_id']);
+                            $subjectId = array_unique($subjectId);
+                            $teacherModel->handleTeacherSubject($subjectId, $value, $user->id);
                             $teacherIDs[] = $value;
                         }
                     }
-
-                    //根据考站id，获取对应的病例id
-//                    $stationCase = StationCase::where('station_id', $item['station_id'])->first();
-//                    if(empty($stationCase)){
-//                        throw new \Exception('找不到考站对应的病例对象');
-//                    }
-//                    $case_id = $stationCase->case_id;
+////                    根据科目id，获取对应的病例id
+                    $stationCase = SubjectCases::where('subject_id', $item['subject_id'])->first();
+                    if (is_null($stationCase)) {
+                        $case_id = NULL;
+                    } else {
+                        $case_id = $stationCase->case_id;
+                    }
                     foreach ($teacherIDs as $teacherID) {
                         //考站-老师关系表 数据
                         $stationTeacher = [
                             'station_id' => $item['station_id'],
                             'user_id' => $teacherID,
-//                            'case_id'           =>  $case_id,
+                            'case_id' => $case_id,
                             'exam_id' => $exam_id,
                             'created_user_id' => $user->id,
 //                            'type'              =>  empty($item['teacher_id']) ? 2 : 1
@@ -143,27 +143,22 @@ class StationTeacher extends CommonModel
                             throw new \Exception('考站-老师关系添加失败！');
                         }
                     }
-
                 }
-
                 $connection->commit();
                 return true;
             }
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
-
         }
-
 
     }
 
 
     public function getTeacherData($stationId, $exam_id)
     {
-
         $data = $this->leftJoin('teacher', 'teacher.id', '=', $this->table . '.user_id')
-            ->leftJoin('teacher_subject', 'teacher_subject.teacher_id', '=',$this->table.'.user_id')
+            ->leftJoin('teacher_subject', 'teacher_subject.teacher_id', '=', $this->table . '.user_id')
             ->whereIn('station_teacher.station_id', $stationId)
             ->where('station_teacher.exam_id', '=', $exam_id)
             ->select([
@@ -177,11 +172,7 @@ class StationTeacher extends CommonModel
             ])
 //            ->groupBy('teacher.id')
             ->get();
-        
-
 
         return $data;
-
-
     }
 }
