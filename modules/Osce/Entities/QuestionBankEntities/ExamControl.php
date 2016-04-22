@@ -304,7 +304,7 @@ class ExamControl extends Model
                     if(!ExamResult::create($examResultData)){
                         throw new \Exception(' 插入考试结果记录表失败！');
                     }
-                    
+
    /*                 //④向监控标记学生替考记录表（exam_monitor）中插入数据
                     if(!empty($val['station_id'])){
                         $examMonitorData=array(

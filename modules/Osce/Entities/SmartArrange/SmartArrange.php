@@ -143,7 +143,6 @@ class SmartArrange
 
     public function screenPlan($screen)
     {
-//        dd($this->_E);
         //重置考试实体计数器
         $this->resetStationTime();
 
@@ -176,7 +175,7 @@ class SmartArrange
         //获得考试实体的最大公约数
         $mixCommonDivisors = [];
         foreach ($this->_E as $item) {
-            $mixCommonDivisors[] = $item->mins + config('osce.begin_dt_buffer');
+            $mixCommonDivisors[] = $item->mins + config('osce.sys_param.mins');
         }
 
         $mixCommonDivisor = Common::mixCommonDivisor($mixCommonDivisors);
@@ -197,7 +196,7 @@ class SmartArrange
                 }
                 if ($tempBool) { //反之，则是关门状态
                     $tempValues = $this->examPlanRecordIsOpenDoor($entity, $screen);
-                    if (($entity->timer >= $entity->mins * 60 + config('osce.begin_dt_buffer') * 60)) {
+                    if (($entity->timer >= $entity->mins * 60 + config('osce.sys_param.mins') * 60)) {
                         $entity->timer = 0;
                         //将结束时间写在表内
                         foreach ($tempValues as $tempValue) {

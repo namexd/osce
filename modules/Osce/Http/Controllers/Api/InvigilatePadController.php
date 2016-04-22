@@ -804,7 +804,7 @@ class InvigilatePadController extends CommonController
 //           }
             $ExamQueueModel = new ExamQueue();
             
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$type);
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
 
 
 
@@ -820,10 +820,8 @@ class InvigilatePadController extends CommonController
                     ->where('student_id','=',$examQueue->student_id)->first();
                 $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
                 $studentWatchController = new StudentWatchController();
-
                 $request['nfc_code'] = $watchData->code;
-     $studentWatchController->getStudentExamReminder($request,$stationId);
-                
+                $studentWatchController->getStudentExamReminder($request,$stationId);
                 $studentModel = new Student();
                 $exam = Exam::doingExam();
                 $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
