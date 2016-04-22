@@ -68,7 +68,7 @@ class ExamArrangeRepository extends AbstractExamArrange
             $data = $this->checkExamArrange($examId);
             $result = $data->groupBy('exam_draft_flow_order');
             //遍历之，查看其中是否有相同的考场
-//            $this->checkSameRoom($result);
+            $this->checkSameRoom($result);
             
             return $data;
         } else {
@@ -133,6 +133,8 @@ class ExamArrangeRepository extends AbstractExamArrange
             if(count($FrontArrangeData['DraftData'])!=count($LaterArrangeData['DraftData'])){
                 $result = true;
             }else{
+
+                //把以前小站的数据放入一个数组，把新的小站的数据放入一个数组。
                 //比较小站里的数据是否一致
                 foreach ($FrontArrangeData['DraftData'] as $key=>$item){
                     foreach ($LaterArrangeData['DraftData'] as $keys=>$value){

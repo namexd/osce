@@ -53,12 +53,13 @@ $(function() {
         type = $('#result-type').attr('value');
 
     //等待三秒关闭
-    layer.load(3);
+    //layer.load(3);
     
     //新增数据传入父页面
     setTimeout(function() {
         if(tr_id == 'sp_assignment') {
-
+            /*parent.$('.'+selector).append('<option value="245">这老师</option>');
+            parent.$('.js-example-basic-single').attr('array',245);*/
         } else if(tr_id == 'clinical_case') {
 
         } else {
@@ -72,7 +73,7 @@ $(function() {
             }
         }
         
-        parent.layer.close(index);
+        //parent.layer.close(index);
     }, 2000);  
 })
 </script>

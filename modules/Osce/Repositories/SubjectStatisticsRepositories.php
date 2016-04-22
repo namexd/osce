@@ -170,6 +170,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GetSubjectStationStatisticsList($ExamId,$SubjectId){
+        //dd($ExamId.','.$SubjectId);17,42 exam_screening_id:179
         $DB = \DB::connection('osce_mis');
 
 /*      由于 exam_station 模型 数据缺失 暂时注释掉 改用exam_screening表链接

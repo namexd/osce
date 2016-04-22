@@ -23,7 +23,7 @@
         }
         .assign-box{
             width:100%;
-            height: 600px;
+            min-height: 600px;
             margin-top: 20px;
         }
         .classroom-box>ul>li{
