@@ -4378,7 +4378,7 @@ function station_assignment(){
 
         req['exam_id'] = examId;
         req['name'] = $(this).parent().siblings('.col-sm-2').find('label').text();
-        req['order'] = $(this).parent().siblings('.col-sm-2').find('label').attr('order')
+        req['order'] = $(this).parent().siblings('.col-sm-2').find('label').attr('order');
         req['exam_gradation_id'] = $(this).val();
         req['type'] = $(this).attr('type');
         req['flow_id'] = $that.find('table').attr('station-id');
