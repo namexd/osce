@@ -53,14 +53,14 @@ $(function() {
         type = $('#result-type').attr('value');
 
     //等待三秒关闭
-    //layer.load(3);
+    layer.load(3);
     
     //新增数据传入父页面
     setTimeout(function() {
-        if(tr_id == 'sp_assignment') {
+        if(table_id == 'sp_assignment') {
             parent.$('.'+tr_id).find('.'+selector).attr('params',ID);
             parent.$('.'+tr_id).find('.'+selector).append('<option value="'+ID+'">'+name+'</option>');
-        } else if(tr_id == 'clinical_case') {
+        } else if(table_id == 'clinical_case') {
 
         } else {
             //考站新增
@@ -73,7 +73,7 @@ $(function() {
             }
         }
         
-        //parent.layer.close(index);
+        parent.layer.close(index);
     }, 2000);  
 })
 </script>
