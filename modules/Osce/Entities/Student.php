@@ -669,6 +669,7 @@ class Student extends CommonModel
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
         ])->orderBy('exam_order.begin_dt')->paginate(100);
+       // dd($builder);
         return $builder;
     }
 
