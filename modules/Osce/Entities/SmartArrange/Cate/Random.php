@@ -42,8 +42,6 @@ class Random extends AbstractCate implements CateInterface
 
         $result = $this->studentNum($entity, $screen, $testStudents, $result);
 
-
-
         /*
          * 如果$result中保存的人数少于考站需要的人数，就从侯考区里面补上，并将这些人从侯考区踢掉
          * 再将人从学生池里抽人进入侯考区

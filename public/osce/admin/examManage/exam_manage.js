@@ -4326,6 +4326,14 @@ function station_assignment(){
         for(var i in arr) {
             select2Init($(arr[i].table).find(arr[i].tr));
         }
+
+        //影藏阶段一
+        $('.station-container').find('.select-stage').each(function(key,elem) {
+            if($(elem).text() == '阶段1') {
+                $(elem).parent().css('visibility','hidden');
+            }
+        });
+
     }
     //模拟数据触发
     //InitData(data);
@@ -4339,7 +4347,7 @@ function station_assignment(){
      * @param   {[number]}   count [第几个阶段]
      * @return  {[string]}         [option dom]
      */
-    function stageRender(count) {
+    function stageRender(count,$elem) {
        var exam_stage_str = '';
         $.ajax({
             type: 'get',
@@ -4369,8 +4377,8 @@ function station_assignment(){
             req = {};
 
         req['exam_id'] = examId;
-        req['name'] = $(this).parent().siblings('.col-sm-4').find('label').text();
-        req['order'] = $(this).parent().siblings('.col-sm-4').find('label').attr('order')
+        req['name'] = $(this).parent().siblings('.col-sm-2').find('label').text();
+        req['order'] = $(this).parent().siblings('.col-sm-2').find('label').attr('order');
         req['exam_gradation_id'] = $(this).val();
         req['type'] = $(this).attr('type');
         req['flow_id'] = $that.find('table').attr('station-id');
@@ -4494,6 +4502,13 @@ function station_assignment(){
                     $('.station-container').find('.item-id-'+index).attr('index',index + 1);
                     //初始化select2
                     select2Init($('.station-container').find('.table-id-'+index).find('.item-id-0'));
+
+                    //影藏阶段一
+                    $('.station-container').find('.select-stage').each(function(key,elem) {
+                        if($(elem).text() == '阶段1') {
+                            $(elem).parent().css('visibility','hidden');
+                        }
+                    });
                 }
             }
         });
