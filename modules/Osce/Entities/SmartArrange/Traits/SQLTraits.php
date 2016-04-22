@@ -72,9 +72,10 @@ trait SQLTraits
 
     function waitingStudentSql($screen)
     {
-        return ExamPlanRecord::where('exam_screening_id', $screen->id)
+        return ExamPlanRecord::with('student')
             ->select(\DB::raw('(count(end_dt) = count(begin_dt)) as num,student_id,count(`station_id`) as flows_num'))
             ->where('exam_screening_id', $screen->id)
+
             ->havingRaw('num > ?', [0])
             ->havingRaw('flows_num < ?', [$screen->flowNum])
             ->groupBy('student_id')
@@ -382,8 +383,8 @@ trait SQLTraits
     {
         return ExamPlanRecord::where('student_id', $testingStudent->id)
             ->where('gradation_order', $screen->gradation_order)
-            ->where('exam_id', $exam->id)->get()
-            ->pluck('serialnumber');
+            ->where('exam_id', $exam->id)
+            ->lists('serialnumber');
     }
 
     /**
@@ -400,8 +401,7 @@ trait SQLTraits
             ->where('serialnumber', '=', $serialnumber - 1)
             ->whereNotNull('end_dt')
             ->orderBy('end_dt', 'asc')
-            ->get()
-            ->pluck('student_id');
+            ->lists('student_id');
     }
 
     /**
@@ -418,8 +418,7 @@ trait SQLTraits
             ->whereNotNull('end_dt')
             ->where('serialnumber', '=', $serialnumber)
             ->orderBy('end_dt', 'asc')
-            ->get()
-            ->pluck('student_id');
+            ->lists('student_id');
     }
 
     /**
