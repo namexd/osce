@@ -181,6 +181,8 @@ class Student extends CommonModel
      */
     public function importStudent($exam_id, $examineeData)
     {
+        //考生角色ID
+        $role_id = config('osce.studentRoleId', 2);
         $backArr = [];
 
         try {
@@ -229,28 +231,28 @@ class Student extends CommonModel
                 }
                 //用户数据
                 $userData = [
-                    'name' => $studentData['name'],
-                    'gender' => $studentData['gender'],
-                    'idcard' => $studentData['idcard'],
-                    'mobile' => $studentData['mobile'],
-                    'code' => $studentData['code'],
-                    'avatar' => $studentData['avator'],
-                    'email' => $studentData['email']
+                    'name'      => $studentData['name'],
+                    'gender'    => $studentData['gender'],
+                    'idcard'    => $studentData['idcard'],
+                    'mobile'    => $studentData['mobile'],
+                    'code'      => $studentData['code'],
+                    'avatar'    => $studentData['avator'],
+                    'email'     => $studentData['email']
                 ];
                 //考生数据
                 $examineeData = [
-                    'name' => $studentData['name'],
-                    'idcard' => $studentData['idcard'],
-                    'mobile' => $studentData['mobile'],
-                    'code' => $studentData['code'],
-                    'avator' => $studentData['avator'],
-                    'description' => $studentData['description'],
+                    'name'      => $studentData['name'],
+                    'idcard'    => $studentData['idcard'],
+                    'mobile'    => $studentData['mobile'],
+                    'code'      => $studentData['code'],
+                    'avator'    => $studentData['avator'],
+                    'description'   => $studentData['description'],
                     'exam_sequence' => $studentData['exam_sequence'],
-                    'grade_class' => $studentData['grade_class'],
-                    'teacher_name' => $studentData['teacher_name']
+                    'grade_class'   => $studentData['grade_class'],
+                    'teacher_name'  => $studentData['teacher_name']
                 ];
                 //添加考生
-                if (!$this->addExaminee($exam_id, $examineeData, $userData, $key + 2)) {
+                if (!$this->addExaminee($exam_id, $examineeData, $userData, $role_id, $key + 2)) {
                     throw new \Exception('学生导入数据失败，请修改后重试');
                 } else {
                     $sucNum++;      //添加成功的考生数
@@ -295,7 +297,7 @@ class Student extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function addExaminee($exam_id, $examineeData, $userData, $key = '')
+    public function addExaminee($exam_id, $examineeData, $userData, $role_id, $key = '')
     {
         $connection = DB::connection($this->connection);
         $connection->beginTransaction();
@@ -306,7 +308,8 @@ class Student extends CommonModel
             }
 
             //处理考生用户信息（基本信息、角色分配）
-            $user = $this->handleUser($userData);
+            $user = Common::handleUser($userData, $role_id);
+//            $user = $this->handleUser($userData);
 
             //查询学号是否存在
             $code = $this->where('code', $examineeData['code'])->where('user_id', '<>', $user->id)->first();
@@ -434,6 +437,12 @@ class Student extends CommonModel
      */
     private function addUserRoles($user, $role_id)
     {
+        $superRole   = config('osce.superRoleId', 5);
+        //查询用户是否是超级管理员
+        $superUser   = SysUserRole::where('user_id','=',$user->id)->where('role_id','=',$superRole)->first();
+        if (!is_null($superUser)){
+            throw new \Exception('该用户为超级管理员，不能添加，请修改！');
+        }
         //查询用户角色
         $sysUserRole = SysUserRole::where('user_id', '=', $user->id)->where('role_id', '=', $role_id)->first();
         //给用户分配角色
@@ -634,8 +643,9 @@ class Student extends CommonModel
         $builder = $builder->where(function ($query) {
             $query->whereIn('exam_order.status',[0,4]);
         });*/
+       // $endStudentList=ExamQueue::where('exam_id',$exam_id)->where()
 
-        $builder = $this->leftjoin('exam_order', function ($join) {
+        $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
             $join->on('student.id', '=', 'exam_order.student_id');
         })->where('exam_order.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
         $builder = $builder->where(function ($query) {
@@ -645,28 +655,26 @@ class Student extends CommonModel
 
 
 //        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO zhoufuxiang
-//        $students = $this->leftjoin('exam_screening_student', function ($join) {
-//            $join->on('student.id', '=', 'exam_screening_student.student_id');
-//        })->leftjoin('exam_queue',function($exam_queue){
-//            $exam_queue->on('exam_queue.exam_screening_id','=','exam_screening_student.exam_screening_id');
-//        })->whereIn('exam_queue.status', [2,3,4])
-//
-//            ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
-////            ->where('exam_screening_student.is_end', '=', 1)
-//            ->select(['exam_screening_student.student_id'])->get();
-//
-//        $studentIds = [];   //用于保存已经考试的学生ID
-//        if (count($students)) {
-//            foreach ($students as $index => $student) {
-//                array_push($studentIds, $student->student_id);
-//            }
-//        }
-//        dd($studentIds);
+        $students = $this->leftjoin('exam_queue',function($exam_queue){
+            $exam_queue->on('exam_queue.student_id','=','student.id');
+        })->whereIn('exam_queue.status', [2,3,4])
+
+            ->where('exam_queue.exam_screening_id', '=', $screen_id)
+            //->where('exam_screening_student.is_end', '=', 1)
+            ->select(['exam_queue.student_id'])->get();
+
+        $studentIds = [];   //用于保存已经考试的学生ID
+        if (count($students)) {
+            foreach ($students as $index => $student) {
+                array_push($studentIds, $student->student_id);
+            }
+       }
+       // dump($studentIds);
 //
 //        //剔除 已经考试过的学生
-//        if (count($studentIds)) {
-//            $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
-//        }
+       if (count($studentIds)) {
+            $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
+       }
 
 
         $builder = $builder->select([
@@ -678,7 +686,7 @@ class Student extends CommonModel
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
         ])->orderBy('exam_order.begin_dt')->paginate(100);
-        
+        //dd($builder->toArray());
         return $builder;
     }
 
@@ -911,10 +919,9 @@ class Student extends CommonModel
             ->get();
 
 
-            if(!$list){
+        if(!$list){
             throw new \Exception('请先给学生排考');
          }
-
         foreach ($list as $student) {
             if (is_null($student->userInfo)) {
                 throw new \Exception('没有找到指定的考生用户信息');

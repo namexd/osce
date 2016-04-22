@@ -4461,8 +4461,8 @@ function station_assignment(){
                                         '</div>'+
                                         '<div class="col-sm-5">'+  
                                         '<select class="form-control chioce-btn" type="3" style="width: 200px;display:inline-block;">'+
-                                            '<option value="1">必考</option>'+
                                             '<option value="0">选考</option>'+
+                                            '<option value="1">必考</option>'+
                                         '</select>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
@@ -5445,7 +5445,7 @@ function examiner_manage() {
             if(e.params.data.id == -999) {
                 layer.open({
                   type: 2,
-                  title: '新增考场',
+                  title: '新增考官',
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
@@ -5464,9 +5464,11 @@ function examiner_manage() {
                   },
                   end: function(){
                     //更改请求数据
-                    
+                    var array = $elem.find('.custom-teacher').val();
+                    array.push($elem.find('.custom-teacher').attr('params'));
+                    $elem.find('.custom-teacher').val(array).trigger('change');
                   },
-                  content: pars.add_examiner + '?status=1&tr='+$elem.attr('class')+'&selector=custom-teacher'
+                  content: pars.add_examiner + '?status=1&table=sp_assignment&tr='+$elem.attr('class')+'&selector=custom-teacher'
                 });
             }
         });
@@ -5536,7 +5538,7 @@ function examiner_manage() {
             if(e.params.data.id == -999) {
                 layer.open({
                   type: 2,
-                  title: '新增考场',
+                  title: '新增sp',
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
@@ -5557,7 +5559,7 @@ function examiner_manage() {
                     //更改请求数据
                     
                   },
-                  content: pars.add_sp + '?status=1&tr='+$elem.attr('class')+'&selector=custom-sp'
+                  content: pars.add_sp + '?status=1&table=sp_assignment&tr='+$elem.attr('class')+'&selector=custom-sp'
                 });
             }
         });
