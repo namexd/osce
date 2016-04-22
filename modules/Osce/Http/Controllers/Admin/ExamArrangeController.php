@@ -812,8 +812,8 @@ class ExamArrangeController extends CommonController
             $teacherData = $request->input('data');
 
 
-          
-  
+
+
             //保存老师的数据
             $stationteaxherModel = new StationTeacher();
 
