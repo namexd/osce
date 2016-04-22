@@ -329,16 +329,21 @@ class Common
         if (is_null($fileArray)) {
             return false;
         }
+
+//        dd($fileArray);
         $fileData = [];
         foreach ($fileArray as $item) {
+
             $ensue = explode('=', $item);
             $fileData[$ensue[0]] = $ensue[1];
         }
-        if(!in_array('table ',$fileData)){
+        if(!in_array('table=0',$fileArray)){
             $fileData ['table'] = 0;
         }
 
-//        dd($fileArray,$fileData);
+
+
+        dd($fileArray,$fileData);
         foreach ($fileArray as $value)
             if ($value == 'status=1') {
                 return view('osce::admin.index.layer_success', [
