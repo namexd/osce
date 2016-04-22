@@ -58,8 +58,8 @@ $(function() {
     //新增数据传入父页面
     setTimeout(function() {
         if(tr_id == 'sp_assignment') {
-            /*parent.$('.'+selector).append('<option value="245">这老师</option>');
-            parent.$('.js-example-basic-single').attr('array',245);*/
+            parent.$('.'+tr_id).find('.'+selector).attr('params',ID);
+            parent.$('.'+tr_id).find('.'+selector).append('<option value="'+ID+'">'+name+'</option>');
         } else if(tr_id == 'clinical_case') {
 
         } else {

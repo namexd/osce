@@ -5464,7 +5464,9 @@ function examiner_manage() {
                   },
                   end: function(){
                     //更改请求数据
-                    
+                    var array = $elem.find('.custom-teacher').val();
+                    array.push($elem.find('.custom-teacher').attr('params'));
+                    $elem.find('.custom-teacher').val(array).trigger('change');
                   },
                   content: pars.add_examiner + '?status=1&tr='+$elem.attr('class')+'&selector=custom-teacher'
                 });
