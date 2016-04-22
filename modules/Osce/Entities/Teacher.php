@@ -9,23 +9,25 @@
 namespace Modules\Osce\Entities;
 
 
-use App\Entities\SysUserRole;
-use App\Entities\User;
-use DB;
 use Modules\Osce\Repositories\Common;
+use App\Entities\SysUserRole;
+use App\Entities\SysRoles;
+use App\Entities\User;
 use Auth;
+use DB;
 
 class Teacher extends CommonModel
 {
-    protected $connection = 'osce_mis';
-    protected $table = 'teacher';
-    public $timestamps = true;
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $guarded = [];
-    protected $hidden = [];
-    protected $fillable = ['id','name', 'code', 'type', 'case_id','status', 'create_user_id','description'];
-    private $excludeId = [];
+    protected $connection   = 'osce_mis';
+    protected $table        = 'teacher';
+    public    $timestamps   = true;
+    protected $primaryKey   = 'id';
+    public    $incrementing = true;
+    protected $guarded      = [];
+    protected $hidden       = [];
+    protected $fillable     = ['id','name', 'code', 'type', 'case_id','status', 'create_user_id','description'];
+
+    private   $excludeId    = [];
 
     protected $type_values  =   [
         '1' =>  '监考老师',
@@ -283,7 +285,7 @@ class Teacher extends CommonModel
      *
      * @version 3.4
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
-     * @date 2016-04-10
+     * @date 2016-03-30
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function addInvigilator($role_id, $userData , $teacherData, $subjects = [])
@@ -292,10 +294,11 @@ class Teacher extends CommonModel
         $connection ->beginTransaction();
         try{
             //处理老师用户信息（基本信息、角色分配）
-            $user = $this->handleUser($userData, $role_id);
+            $user   = Common::handleUser($userData, $role_id);
+//            $user = $this->handleUser($userData, $role_id);
 
             //查询老师是否存在
-            $teacher    =   $this   ->where('id','=',$user->id)->first();
+            $teacher= $this ->where('id','=',$user->id)->first();
             //判断老师是否已归档
             if(!is_null($teacher) && $teacher->archived==1)
             {
@@ -343,34 +346,45 @@ class Teacher extends CommonModel
      */
     private function handleUser($userData, $role_id)
     {
-        $mobile = $userData['mobile'];
-        //根据条件：查找用户是否有账号和密码
-        $user   = User::where('username', '=', $mobile)->first();
+        try{
+            $roles = SysRoles::where('id', '=', $role_id)->first();
+            if (is_null($roles)) {
+                throw new \Exception('没有对应的角色，请去新增对应角色，或者查看角色配置！');
+            }
 
-        if(!$user){
-            if(config('debug')==true){
-                $password   =   123456;
+            $mobile = $userData['mobile'];
+            //根据条件：查找用户是否有账号和密码
+            $user   = User::where('username', '=', $mobile)->first();
+
+            if(!$user){
+                if(config('debug')==true){
+                    $password   =   123456;
+                }else{
+                    $password   =   Common::getRandStr(6);
+                }
+
+                $user = $this -> registerUser($userData, $password);
+                $this -> sendRegisterEms($mobile, $password);
+                //给用户分配角色
+                $this -> addUserRoles($user, $role_id);
+
             }else{
-                $password   =   Common::getRandStr(6);
+                foreach($userData as $feild=> $value) {
+                    $user    ->  $feild  =   $value;
+                }
+                if(!$result = $user -> save()) {
+                    throw new \Exception('用户修改失败，请重试！');
+                }
+                //给用户分配角色
+                $this->addUserRoles($user, $role_id);
             }
 
-            $user = $this -> registerUser($userData, $password);
-            $this -> sendRegisterEms($mobile, $password);
-            //给用户分配角色
-            $this -> addUserRoles($user, $role_id);
+            return $user;
 
-        }else{
-            foreach($userData as $feild=> $value) {
-                $user    ->  $feild  =   $value;
-            }
-            if(!$result = $user -> save()) {
-                throw new \Exception('用户修改失败，请重试！');
-            }
-            //给用户分配角色
-            $this->addUserRoles($user, $role_id);
+        } catch (\Exception $ex){
+
+            throw $ex;
         }
-
-        return $user;
     }
 
     public function registerUser($data,$password){
@@ -403,6 +417,12 @@ class Teacher extends CommonModel
      */
     private function addUserRoles($user, $role_id)
     {
+        $superRole   = config('osce.superRoleId', 5);
+        //查询用户是否是超级管理员
+        $sysUserRole = SysUserRole::where('user_id','=',$user->id)->where('role_id','=',$superRole)->first();
+        if (!is_null($sysUserRole)){
+            throw new \Exception('该用户为超级管理员，不能添加，请修改！');
+        }
         //查询用户角色
         $sysUserRole = SysUserRole::where('user_id','=',$user->id)->where('role_id','=',$role_id)->first();
         //给用户分配角色
