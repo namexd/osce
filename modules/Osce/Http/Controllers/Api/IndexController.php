@@ -892,7 +892,7 @@ class IndexController extends CommonController
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
 
             $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);//获取考生队列
-
+dd($list);
             $data=[];
             foreach($list as $itm){
                 $data[]=[
