@@ -122,12 +122,13 @@ class Answer extends Model
 
                 }
             }
+
             //将向考试结果记录表增加一条数据
             $score = $this->selectGrade($resultData['examPaperFormalId'])['totalScore'];//获取该考生成绩
-
             $examQueueInfo = ExamQueue::where('exam_id','=',$resultData['examId'])
-                                            ->where('student_id','=',$resultData['studentId'])
-                                            ->where('station_id','=',$resultData['stationId'])->first();
+                ->where('student_id','=',$resultData['studentId'])
+                ->where('station_id','=',$resultData['stationId'])->first();
+
             $examResultData=array(
                 'student_id'=>$resultData['studentId'],
                 'exam_screening_id'=>$examQueueInfo['exam_screening_id'],
@@ -138,8 +139,20 @@ class Answer extends Model
                 'begin_dt'=>$resultData['begin_dt'],//考试开始时间
                 'end_dt'=>$resultData['end_dt'],//考试结束时间
             );
-            if(!ExamResult::create($examResultData)){
-                throw new \Exception(' 插入考试结果记录表失败！',-102);
+            //查询是否已有该考生的成绩
+            $examResultInfo = ExamResult::where('student_id','=',$resultData['studentId'])
+                                        ->where('exam_screening_id','=',$examQueueInfo['exam_screening_id'])
+                                        ->where('station_id','=',$resultData['stationId'])->first();
+            if(empty($examResultInfo)){
+                //如果没有成绩则新增
+                if(!ExamResult::create($examResultData)){
+                    throw new \Exception(' 向考试结果记录表中插入数据失败！',-102);
+                }
+            }else{
+                //有成绩则更新
+                if(!ExamResult::where('id','=',$examResultInfo['id'])->update($examResultData)){
+                    throw new \Exception(' 保存考生成绩失败！',-103);
+                }
             }
             $DB->commit();
             return true;
