@@ -43,7 +43,7 @@ class AnswerController extends CommonController
 
         ]);
 
-      //admin/answer/formalpaper-list?stationId=91&userId=964&studentId=7319&id=24&examId=552
+      //admin/answer/formalpaper-list?stationId=21&userId=140&studentId=222&id=12&examId=4
         $ExamPaperId = $request->input('id');//试卷id  132
         $examId = $request->input('examId');//考试id  421
         $stationId = $request->input('stationId');//考站id 20

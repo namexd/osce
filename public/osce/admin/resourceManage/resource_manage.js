@@ -2356,14 +2356,8 @@ function course_module(){
          * @date    2016-03-31
          */
         $('#select-clinical').on("select2:select",function(e) {
-            var arr = $(this).val();
-
-            //去掉新增病例项
-            for(var i in arr) {
-                if(arr[i] == -999) delete arr[i]
-            }
-            //重置
-            $(this).val(arr).trigger("change");
+            
+            var $that = $(this);
 
             if(e.params.data.id == -999) {
                 layer.open({
@@ -2372,8 +2366,21 @@ function course_module(){
                   shadeClose: true,
                   shade: 0.8,
                   area: ['90%', '90%'],
-                  end: function() {
+                  success: function() {
+                    var arr = $that.val();
 
+                    //去掉新增病例项
+                    for(var i in arr) {
+                        if(arr[i] == -999) delete arr[i]
+                    }
+                    //重置
+                    $that.val(arr).trigger("change");
+                  },
+                  end: function() {
+                    //更改请求数据
+                    var array = $that.val();
+                    array.push($that.attr('params'));
+                    $that.val(array).trigger('change');
                   },
                   content: pars.clinical_add+'?status=1&table=clinical_case&tr=clinical_case&selector=select-clinical'
                 });
