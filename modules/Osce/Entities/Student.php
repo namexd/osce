@@ -617,11 +617,12 @@ class Student extends CommonModel
 //    }
 
     public function getStudentQueue($exam_id, $screen_id, $countStation)
-    {
+    {dd(1);
         $buondNum = ExamOrder::where('exam_id', $exam_id)->where('exam_screening_id', $screen_id)->where('status',
             1)->select()->get();
         $buondNum = count($buondNum);
         $num = $countStation - $buondNum;
+        dump($num);
         if ($num === 0 || $num < 0) {
             return array();
         }
@@ -669,7 +670,7 @@ class Student extends CommonModel
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
         ])->orderBy('exam_order.begin_dt')->paginate(100);
-       // dd($builder);
+        dd($builder);
         return $builder;
     }
 
