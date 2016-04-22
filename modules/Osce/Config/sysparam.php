@@ -24,7 +24,7 @@
     * 学生通知方式保存
     */
     'student' => [
-        'wechat' => 0,
+        'wechat' => 1,
         'sms' => 1,
         'mail' => 0,
         'user_pm' => 0,

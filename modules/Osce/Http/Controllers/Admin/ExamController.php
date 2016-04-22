@@ -487,6 +487,8 @@ class ExamController extends CommonController
             'teacher_name.required' =>  '班主任姓名必填'
         ]);
 
+        //考生角色ID
+        $role_id = config('osce.studentRoleId', 2);
         //考试id
         $exam_id = $request->get('exam_id');
         $images  = $request->get('images_path');      //照片
@@ -498,7 +500,7 @@ class ExamController extends CommonController
         $examineeData['avator'] = $images[0];  //照片
 
         try{
-            if($exam = $model -> addExaminee($exam_id, $examineeData, $userData))
+            if($exam = $model -> addExaminee($exam_id, $examineeData, $userData, $role_id))
             {
                 return redirect()->route('osce.admin.exam.getExamineeManage', ['id' => $exam_id]);
             } else {
