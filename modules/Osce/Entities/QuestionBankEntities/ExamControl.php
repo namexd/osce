@@ -276,7 +276,7 @@ class ExamControl extends Model
             }
             //③ 更新考试场次-学生关系表(exam_screening_student)
             $examScreeningStudentData = array(
-                'is_end' => 1,
+                //'is_end' => 1,
                 'status' => $data['status'],
                 'description' => $data['description']
             );
@@ -304,7 +304,7 @@ class ExamControl extends Model
                     if(!ExamResult::create($examResultData)){
                         throw new \Exception(' 插入考试结果记录表失败！');
                     }
-                    //④向监控标记学生替考记录表（exam_monitor）中插入数据
+   /*                 //④向监控标记学生替考记录表（exam_monitor）中插入数据
                     if(!empty($val['station_id'])){
                         $examMonitorData=array(
                             'station_id'=>$val['station_id'],
@@ -316,7 +316,7 @@ class ExamControl extends Model
                         if(!ExamMonitor::create($examMonitorData)){
                             throw new \Exception(' 插入监控标记学生替考记录表失败！');
                         }
-                    }
+                    }*/
                 }
             }
             $DB->commit();
