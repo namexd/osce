@@ -622,19 +622,27 @@ class Student extends CommonModel
             1)->select()->get();
         $buondNum = count($buondNum);
         $num = $countStation - $buondNum;
-        dump($num);
         if ($num === 0 || $num < 0) {
             return array();
         }
 
-        $builder = $this->leftjoin('exam_order', function ($join) {
+        /*$builder = $this->leftjoin('exam_order', function ($join) {
             $join->on('student.id', '=', 'exam_order.student_id');
         })->leftjoin('exam_queue',function($exam_queue){
             $exam_queue->on('exam_queue.exam_screening_id','=','exam_order.exam_screening_id');
         })->whereIn('exam_queue.status', [0,1])->where('exam_order.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
         $builder = $builder->where(function ($query) {
             $query->whereIn('exam_order.status',[0,4]);
+        });*/
+
+        $builder = $this->leftjoin('exam_order', function ($join) {
+            $join->on('student.id', '=', 'exam_order.student_id');
+        })->where('exam_order.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
+        $builder = $builder->where(function ($query) {
+            $query->whereIn('exam_order.status',[0,4]);
         });
+
+
 
 //        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO zhoufuxiang
 //        $students = $this->leftjoin('exam_screening_student', function ($join) {
@@ -670,7 +678,7 @@ class Student extends CommonModel
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
         ])->orderBy('exam_order.begin_dt')->paginate(100);
-        dd($builder);
+        
         return $builder;
     }
 
