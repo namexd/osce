@@ -33,14 +33,14 @@ class ApiTestControlController extends CommonController
 {
     public function apitest(Request $request)
     {
-/*        //测试替考接口
+      /* //测试替考接口
         $request['mode'] = 2;
-        $request['exam_id'] = 552;
-        $request['student_id'] = 7319;
-        $request['exam_screening_id'] = 561;
+        $request['exam_id'] = 4;
+        $request['student_id'] = 222;
+        $request['exam_screening_id'] = 143;
         $apiController = new ApiController();
         $result = $apiController->postAlertExamReplace($request);
-        dd($request);*/
+        dd($result);*/
 
 
 /*        //测试开始考试接口
