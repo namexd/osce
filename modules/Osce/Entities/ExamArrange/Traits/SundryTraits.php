@@ -83,6 +83,7 @@ trait SundryTraits
                 $array = array_merge($array, $v);
             }
         }
-//        dd($array);
+
+        return true;
     }
 }

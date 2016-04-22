@@ -29,6 +29,12 @@ class Poll extends AbstractCate implements CateInterface
          * 如果该考生已经考过了这个流程，就忽略掉
          */
         $result = $this->studentNum($entity, $screen,$testStudnts, $result);
+
+        /*
+         * 如果$result中保存的人数少于考站需要的人数，就从侯考区里面补上，并将这些人从侯考区踢掉
+         * 再将人从学生池里抽人进入侯考区
+         * 直接使用array_shift函数
+         */
         if (count($result) < $entity->needNum) {
             for ($i = 0; $i <= $entity->needNum - count($result); $i++) {
                 if (count($this->_S_W) > 0) {

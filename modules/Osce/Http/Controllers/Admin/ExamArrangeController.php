@@ -62,11 +62,11 @@ class ExamArrangeController extends CommonController
 
     public function postAddExamFlow(Request $request)
     {
-        try {
+//        try {
             $this->validate($request, [
                 'exam_id' => 'required',
-                'name' => 'required',
-                'order' => 'required',
+//                'name' => 'required',
+//                'order' => 'required',
                 'exam_gradation_id' => 'sometimes', //阶段
                 'type' => 'sometimes',
             ]);
@@ -146,12 +146,12 @@ class ExamArrangeController extends CommonController
             return response()->json(
                 $this->success_data(['id' => $result->id], 1, 'success')
             );
-        } catch (\Exception $ex) {
-            return response()->json(
-                $this->fail($ex)
-            );
+//        } catch (\Exception $ex) {
+//            return response()->json(
+//                $this->fail($ex)
+//            );
 
-        }
+//        }
 
     }
 
@@ -730,7 +730,9 @@ class ExamArrangeController extends CommonController
              //查询出考站下对应的老师
              $stationteaxherModel = new StationTeacher();
 
-             $teacherDatas= $stationteaxherModel->getTeacherData($stationId,$exam_id);
+             $teacherList= $stationteaxherModel->getTeacherData($stationId,$exam_id);
+//             dd($teacherList->toArray());
+
 
              $inviteData = Invite::status($exam_id);
 
@@ -738,7 +740,7 @@ class ExamArrangeController extends CommonController
              //将邀请状态插入$stationData
              $examRoomData=  [];
 
-             foreach ($teacherDatas as &$item) {
+             foreach ($teacherList as &$item) {
 
                  $item->status = 0;
                  foreach ($inviteData as $value) {
@@ -767,21 +769,21 @@ class ExamArrangeController extends CommonController
                          throw new \Exception('前面考试安排中该考站'.$stationType->name.'没有安排考试项目');
                      }
                  }
-                 foreach ($teacherDatas as $value) {
+                 foreach ($teacherList as $value) {
                      
-                     if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id) {
-                         $teacherData['sp_teacher'][] =$value;
+                     if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id && $teacherData['subject_id'] == $value->subject_id) {
+                        $teacherData['sp_teacher'][$value->teacher_id] =$value;
 
-
-                     } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id){
-                         $teacherData['teacher'][] =$value;
+                     } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id && $teacherData['subject_id'] == $value->subject_id){
+                         $teacherData['teacher'][$value->teacher_id] =$value ;
 
                      }
 
                  }
 
              }
-//            dump($teacher);
+//     dump($teacher);
+
              return response()->json(
                  $this->success_data($teacher, 1, 'success')
              );

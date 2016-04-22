@@ -163,19 +163,21 @@ class StationTeacher extends CommonModel
     {
 
         $data = $this->leftJoin('teacher', 'teacher.id', '=', $this->table . '.user_id')
-//            ->leftJoin('invite', 'invite.user_id', '=',$this->table.'.user_id')
+            ->leftJoin('teacher_subject', 'teacher_subject.teacher_id', '=',$this->table.'.user_id')
             ->whereIn('station_teacher.station_id', $stationId)
             ->where('station_teacher.exam_id', '=', $exam_id)
             ->select([
                 'teacher.id as teacher_id',
                 'teacher.name as teacher_name',
                 'teacher.type as teacher_type',
-//                'invite.status as status',
+                'teacher_subject.subject_id as subject_id',
                 $this->table . '.station_id',
                 $this->table . '.id',
 
             ])
+//            ->groupBy('teacher.id')
             ->get();
+        
 
 
         return $data;

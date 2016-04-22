@@ -97,7 +97,7 @@ input.laydate-icon{
                             	<div class="col-md-12">
                             		<div class="clearfix form-group" style="margin-bottom: 0;">
                                         <div class="col-sm-12" id="checkbox_div">
-                                            <label class="check_label checkbox_input checkbox_one" style="height: 34px;line-height: 28px;margin-left: 12.1%;">
+                                            <label class="check_label checkbox_input checkbox_one" style="height: 15px;line-height: 28px;margin-left: 12.7%;">
                                                  <div class="check_icon check" style="display: inline-block;margin:5px 0 0 5px;float:left;"></div>
                                                  <input type="checkbox" name="same_time" value="1" checked="checked">
                                                  <span class="check_name" style="display: inline-block;float:left;">要求考生同时进出考站（考站的时间采用最长考站时间）</span>
@@ -125,13 +125,13 @@ input.laydate-icon{
                                  <div class="col-md-12">
                                       <div class="clearfix form-group" style="margin-bottom: 0;">
                                            <div class="col-sm-12" id="checkbox_div">
-                                                <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;">
-                                                    <div class="check_icon check_margin check" checkbox=1></div>
-                                                    <input type="checkbox" name="gradation_order" value="1" checked="checked">
+                                                <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;width:20.2%">
+                                                    <div class="check_icon check_margin" checkbox=0></div>
+                                                    <input type="checkbox" name="gradation_order" value="0">
                                                     <span class="check_name" style="display: inline-block;float:right;line-height: 29px;">考生分阶段考试</span>
                                                 </label>
-                                                <div class="col-sm-10 check_div">
-                                                    <input type="text" class="form-control checkbox_num" id="gradation_order" name="gradation_order" style="float:left;width:200px;" value="1">
+                                                <div class="col-sm-9 check_div">
+                                                    <input type="text" class="form-control checkbox_num" id="gradation_order" name="gradation_order" style="float:left;width:200px;" value="1" readonly="readonly">
                                                     <span style="float:left;margin-left:5px;margin-top: 5px;">阶段</span>
                                                 </div>
                                            </div>
@@ -146,9 +146,9 @@ input.laydate-icon{
                                  <div class="col-md-12">
                                       <div class="clearfix form-group" style="margin-bottom: 0;">
                                            <div class="col-sm-12" id="checkbox_div">
-                                                <label class="check_label checkbox_input checkbox_three" style="height: 34px;line-height: 28px;margin-left: 12.1%;">
-                                                      <div class="check_icon check" style="display: inline-block;margin:5px 0 0 5px;float:left;"></div>
-                                                      <input type="checkbox" name="real_push" value="1" checked="checked">
+                                                <label class="check_label checkbox_input checkbox_three" style="height: 15px;line-height: 28px;margin-left: 12.7%;">
+                                                      <div class="check_icon" style="display: inline-block;margin:5px 0 0 5px;float:left;"></div>
+                                                      <input type="checkbox" name="real_push" value="0">
                                                       <span class="check_name" style="display: inline-block;float:left;line-height: 29px;">实时发布成绩</span>
                                                 </label>
                                            </div>

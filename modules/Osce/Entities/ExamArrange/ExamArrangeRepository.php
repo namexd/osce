@@ -101,13 +101,11 @@ class ExamArrangeRepository extends AbstractExamArrange
             if($this->model->resetSmartArrange($exam_id)){
                 return true;
             }
+            return false;
            
         }catch (\Exception $ex){
             throw $ex;
         }
-
-
-
     }
     
 
