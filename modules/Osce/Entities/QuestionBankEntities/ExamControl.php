@@ -261,6 +261,7 @@ class ExamControl extends Model
             //② 更新该考生考试队列表中该考生剩余考站的状态（exam_queue）
             //获取该考生所有的考站信息
             $examQueueData = $this->getExamQueueData($data['examId'],$data['studentId']);
+
             if(!empty($examQueueData['examQueueInfo'])&&count($examQueueData['examQueueInfo'])>0){
                 foreach($examQueueData['examQueueInfo'] as $k=>$v){
                     $examQueueResult = $examQueueModel->where('exam_id','=',$v['exam_id'])
@@ -275,7 +276,7 @@ class ExamControl extends Model
             }
             //③ 更新考试场次-学生关系表(exam_screening_student)
             $examScreeningStudentData = array(
-                'is_end' => 1,
+                //'is_end' => 1,
                 'status' => $data['status'],
                 'description' => $data['description']
             );
@@ -286,11 +287,10 @@ class ExamControl extends Model
             if (!$result) {
                 throw new \Exception('更新考试场次-学生关系表失败！');
             }
-            
-            //若该考生还有其他考站，则将其他考站的分数记录为0
-            if(!empty($examQueueData['remainExamQueueInfo'])&&count($examQueueData['remainExamQueueInfo'])>0){
-                foreach($examQueueData['remainExamQueueInfo'] as $key=>$val){
 
+            //将该考生的所有成绩记为0
+            if(!empty($examQueueData['examQueueInfo'])&&count($examQueueData['examQueueInfo'])>0){
+                foreach($examQueueData['examQueueInfo'] as $key=>$val){
                     //⑤ 向考试结果记录表(exam_result)插入数据
                     $data['userId']=StationTeacher::where('station_id',$val['station_id'])->where('exam_id',$val['exam_id'])->where('exam_screening_id',$val['exam_screening_id'])->pluck('id');
                     $examResultData=array(
@@ -304,21 +304,20 @@ class ExamControl extends Model
                     if(!ExamResult::create($examResultData)){
                         throw new \Exception(' 插入考试结果记录表失败！');
                     }
-
-
-                    //④向监控标记学生替考记录表（exam_monitor）中插入数据
-
-                    //向监控标记学生替考记录表插入数据
-                    $examMonitorData=array(
-                        'station_id'=>$val['station_id'],
-                        'exam_id'=>$val['examId'],
-                        'student_id'=>$val['studentId'],
-                        'type'=>$data['type'],
-                        'description'=>$data['description'],
-                    );
-                    if(!ExamMonitor::create($examMonitorData)){
-                        throw new \Exception(' 插入监控标记学生替考记录表失败！');
-                    }
+                    
+   /*                 //④向监控标记学生替考记录表（exam_monitor）中插入数据
+                    if(!empty($val['station_id'])){
+                        $examMonitorData=array(
+                            'station_id'=>$val['station_id'],
+                            'exam_id'=>$val['examId'],
+                            'student_id'=>$val['studentId'],
+                            'type'=>$data['type'],
+                            'description'=>$data['description'],
+                        );
+                        if(!ExamMonitor::create($examMonitorData)){
+                            throw new \Exception(' 插入监控标记学生替考记录表失败！');
+                        }
+                    }*/
 
                 }
             }
