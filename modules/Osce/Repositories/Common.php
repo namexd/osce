@@ -63,10 +63,10 @@ class Common
     static public function registerUser($data, $password)
     {
         $form_user = $data;
-        $form_user['username'] = $data['username'];
-        $form_user['mobile'] = $data['username'];
-        $form_user['openid'] = '';
-        $form_user['password'] = bcrypt($password);
+        $form_user['username']  = $data['username'];
+        $form_user['mobile']    = $data['username'];
+        $form_user['openid']    = '';
+        $form_user['password']  = bcrypt($password);
         $user = \App\Entities\User::create($form_user);
         if ($user) {
             return $user;
@@ -329,16 +329,17 @@ class Common
         if (is_null($fileArray)) {
             return false;
         }
+
+//        dd($fileArray);
         $fileData = [];
         foreach ($fileArray as $item) {
+
             $ensue = explode('=', $item);
             $fileData[$ensue[0]] = $ensue[1];
         }
-        if(!in_array('table ',$fileData)){
-            $fileData ['table'] = 0;
+        if(!array_key_exists('table',$fileData)){
+            $fileData['table'] = '';
         }
-
-//        dd($fileArray,$fileData);
         foreach ($fileArray as $value)
             if ($value == 'status=1') {
                 return view('osce::admin.index.layer_success', [
@@ -489,8 +490,10 @@ class Common
 
             if(is_null($user)){
                 //设置密码
-                $password = (config('config.debug') == true)? '123456': Common::getRandStr(6);
+                $password = (config('osce.debug') == true)? '123456': Common::getRandStr(6);
                 //注册用户
+                $userData['username'] = $userData['mobile'];
+                unset($userData['mobile']);
                 $user = Common::registerUser($userData, $password);
                 //给用户发送短信
                 Common::sendRegisterEms($mobile, $password);
