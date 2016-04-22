@@ -4461,8 +4461,8 @@ function station_assignment(){
                                         '</div>'+
                                         '<div class="col-sm-5">'+  
                                         '<select class="form-control chioce-btn" type="3" style="width: 200px;display:inline-block;">'+
-                                            '<option value="1">必考</option>'+
                                             '<option value="0">选考</option>'+
+                                            '<option value="1">必考</option>'+
                                         '</select>'+
                                             '<a  href="javascript:void(0)" class="btn btn-primary del-station" style="float: right;">删除</a>'+
                                         '</div>'+
