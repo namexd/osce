@@ -662,7 +662,7 @@ class Student extends CommonModel
         })->whereIn('exam_queue.status', [2,3,4])
 
             ->where('exam_screening_student.exam_screening_id', '=', $screen_id)
-            ->where('exam_screening_student.is_end', '=', 1)
+            //->where('exam_screening_student.is_end', '=', 1)
             ->select(['exam_screening_student.student_id'])->get();
 
         $studentIds = [];   //用于保存已经考试的学生ID
@@ -671,7 +671,7 @@ class Student extends CommonModel
                 array_push($studentIds, $student->student_id);
             }
        }
-        dd($studentIds);
+        dump($studentIds);
 //
 //        //剔除 已经考试过的学生
        if (count($studentIds)) {
@@ -688,7 +688,7 @@ class Student extends CommonModel
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
         ])->orderBy('exam_order.begin_dt')->paginate(100);
-
+        dd($builder);
         return $builder;
     }
 
