@@ -61,7 +61,8 @@ $(function() {
             parent.$('.'+tr_id).find('.'+selector).attr('params',ID);
             parent.$('.'+tr_id).find('.'+selector).append('<option value="'+ID+'">'+name+'</option>');
         } else if(table_id == 'clinical_case') {
-
+            parent.$('#'+selector).attr('params',ID);
+            parent.$('#'+selector).append('<option value="'+ID+'">'+name+'</option>');
         } else {
             //考站新增
             if(type == undefined) {
