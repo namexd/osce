@@ -304,7 +304,7 @@ class ExamControl extends Model
                     if(!ExamResult::create($examResultData)){
                         throw new \Exception(' 插入考试结果记录表失败！');
                     }
-                    
+
    /*                 //④向监控标记学生替考记录表（exam_monitor）中插入数据
                     if(!empty($val['station_id'])){
                         $examMonitorData=array(
@@ -379,65 +379,6 @@ class ExamControl extends Model
             ->first();
         return $data;
     }
-
-    /**Pad端消息推送
-     * @method
-     * @url /osce/
-     * @access public
-     * @param $studentId 学生编号
-     * @author xumin <xumin@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getReplaceExam($studentId){
-        $DB = DB::connection('osce_mis');
-        $DB->beginTransaction();
-        if($studentId){
-            $student = new Student();
-            $data = $student->where('id','=',$studentId)->first();
-
-            try{
-                if(empty($data)){
-                    throw new \Exception(' 没有对应的学生信息！');
-                }
-                $DB->commit();
-                return $data;
-            }catch (\Exception $ex){
-                $DB->rollback();
-                throw $ex;
-            }
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

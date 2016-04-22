@@ -38,12 +38,7 @@ class ExamControlController extends CommonController
 
     public function getExamlist()
     {
-
         $examControlModel = new ExamControl();
-
-        //$data=$examControlModel->getReplaceExam(6631);
-
-
         $data = $examControlModel->getDoingExamList();
         //dd($data);
         return view('osce::admin.testMonitor.monitor_test', [
