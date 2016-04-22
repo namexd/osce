@@ -55,7 +55,7 @@ class ExamArrange
     }
 
 
-    //归档考试邀请
+    //归档考试邀请,只归档当前修改的老师
     public function getTeacherInvite($examId){
 
         
