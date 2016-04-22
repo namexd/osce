@@ -8,6 +8,7 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScreeningStudent;
 
@@ -123,10 +124,13 @@ class Answer extends Model
             }
             //将向考试结果记录表增加一条数据
             $score = $this->selectGrade($resultData['examPaperFormalId'])['totalScore'];//获取该考生成绩
-            $exam_screening_id = ExamScreeningStudent::where('student_id','=',$resultData['studentId'])->first();
+
+            $examQueueInfo = ExamQueue::where('exam_id','=',$resultData['examId'])
+                                            ->where('student_id','=',$resultData['studentId'])
+                                            ->where('station_id','=',$resultData['stationId'])->first();
             $examResultData=array(
                 'student_id'=>$resultData['studentId'],
-                'exam_screening_id'=>$exam_screening_id['exam_screening_id'],
+                'exam_screening_id'=>$examQueueInfo['exam_screening_id'],
                 'station_id'=>$resultData['stationId'],
                 'time'=>$resultData['time'],
                 'score'=>$score,

@@ -61,67 +61,74 @@ class ExamPaperFormal extends CommonModel
                 'student_id'=>$studentId,
                 'total_score'=>$total_score
             ];
-            //创建真实试卷
-            $NewExamPaperInfo = $this->create($ExamPaperData);
-            if(empty($NewExamPaperInfo->id)){
-                throw new \Exception(' 创建试卷失败！');
-            }
-            //统计试卷总分
-            if(count($ExamPaperInfo['item'])>0){
-                foreach($ExamPaperInfo['item'] as $k => $v){
-                    $ExamQuestionType = new ExamQuestionType;
-                    //根据题目类型获取相应的题目类型id
-                    $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$v['type'])->select('name')->first();
-                    $ExamCategoryFormalData = [
-                        'name'=>!empty($ExamQuestionTypeInfo['name'])?$ExamQuestionTypeInfo['name']:'题目类型名称已经被删除',
-                        'exam_question_type_id'=>$v['type'],
-                        'number'=>$v['num'],
-                        'score'=>$v['score'],
-                        'exam_paper_formal_id'=>$NewExamPaperInfo->id
-                    ];
-                    //创建正式试题分类表数据
-                    if($ExamCategoryFormalInfo = ExamCategoryFormal::create($ExamCategoryFormalData)){
-                        if(count($v['child'])>0){
-                            foreach($v['child'] as $val){
-                                $ExamQuestionInfo = ExamQuestion::where('id','=',$val)->first();
-                                //dd($ExamQuestionInfo->examQuestionItem);
-                                //dd(count($ExamQuestionInfo->examQuestionItem));
-                                //拼凑试题内容
-                                $content = '';
-                                if(!empty($ExamQuestionInfo) && count($ExamQuestionInfo->examQuestionItem)>0){
-                                    foreach($ExamQuestionInfo->examQuestionItem as $value){
-                                        if($content){
-                                            $content .= '|%|'.$value['name'].'.'.$value['content'];
-                                        }else{
-                                            $content .= $value['name'].'.'.$value['content'];
-                                        }
+            //查询正式试卷中是否存在该考生的试卷信息，有返回试卷id，无则新增试卷信息，并返回新增的试卷id
+            $examPaperFormalData = $this->where('exam_paper_id','=',$ExamPaperInfo['id'])->where('student_id','=',$studentId)->first();
+            if(empty($examPaperFormalData)){
+                //创建真实试卷
+                $NewExamPaperInfo = $this->create($ExamPaperData);
+                if(empty($NewExamPaperInfo->id)){
+                    throw new \Exception(' 创建试卷失败！');
+                }
+                //统计试卷总分
+                if(count($ExamPaperInfo['item'])>0){
+                    foreach($ExamPaperInfo['item'] as $k => $v){
+                        $ExamQuestionType = new ExamQuestionType;
+                        //根据题目类型获取相应的题目类型id
+                        $ExamQuestionTypeInfo = $ExamQuestionType->where('id','=',$v['type'])->select('name')->first();
+                        $ExamCategoryFormalData = [
+                            'name'=>!empty($ExamQuestionTypeInfo['name'])?$ExamQuestionTypeInfo['name']:'题目类型名称已经被删除',
+                            'exam_question_type_id'=>$v['type'],
+                            'number'=>$v['num'],
+                            'score'=>$v['score'],
+                            'exam_paper_formal_id'=>$NewExamPaperInfo->id
+                        ];
+                        //创建正式试题分类表数据
+                        if($ExamCategoryFormalInfo = ExamCategoryFormal::create($ExamCategoryFormalData)){
+                            if(count($v['child'])>0){
+                                foreach($v['child'] as $val){
+                                    $ExamQuestionInfo = ExamQuestion::where('id','=',$val)->first();
+                                    //dd($ExamQuestionInfo->examQuestionItem);
+                                    //dd(count($ExamQuestionInfo->examQuestionItem));
+                                    //拼凑试题内容
+                                    $content = '';
+                                    if(!empty($ExamQuestionInfo) && count($ExamQuestionInfo->examQuestionItem)>0){
+                                        foreach($ExamQuestionInfo->examQuestionItem as $value){
+                                            if($content){
+                                                $content .= '|%|'.$value['name'].'.'.$value['content'];
+                                            }else{
+                                                $content .= $value['name'].'.'.$value['content'];
+                                            }
 
+                                        }
+                                    }
+                                    $ExamQuestionData = [
+                                        'name'=>$ExamQuestionInfo['name'],
+                                        'image'=>$ExamQuestionInfo['image'],
+                                        'exam_question_id'=>$ExamQuestionInfo['id'],
+                                        'content'=>$content,
+                                        'answer'=>$ExamQuestionInfo['answer'],
+                                        'parsing'=>$ExamQuestionInfo['parsing'],
+                                        'exam_category_formal_id'=>$ExamCategoryFormalInfo['id'],
+                                    ];
+
+
+                                    if(!ExamQuestionFormal::create($ExamQuestionData)){
+                                        throw new \Exception(' 创建试题表数据失败！');
                                     }
                                 }
-                                $ExamQuestionData = [
-                                    'name'=>$ExamQuestionInfo['name'],
-                                    'image'=>$ExamQuestionInfo['image'],
-                                    'exam_question_id'=>$ExamQuestionInfo['id'],
-                                    'content'=>$content,
-                                    'answer'=>$ExamQuestionInfo['answer'],
-                                    'parsing'=>$ExamQuestionInfo['parsing'],
-                                    'exam_category_formal_id'=>$ExamCategoryFormalInfo['id'],
-                                ];
-
-
-                                if(!ExamQuestionFormal::create($ExamQuestionData)){
-                                    throw new \Exception(' 创建试题表数据失败！');
-                                }
                             }
+                        }else{
+                            throw new \Exception(' 创建试题分类表数据失败！');
                         }
-                    }else{
-                        throw new \Exception(' 创建试题分类表数据失败！');
                     }
                 }
-            }
+                $examPaperFormalId = $NewExamPaperInfo->id;
+            }else{
 
+                $examPaperFormalId = $examPaperFormalData['id'];
+            }
             $DB->commit();
-            return  $NewExamPaperInfo->id;
+            return  $examPaperFormalId;
 
         }catch (\Exception $ex){
             $DB->rollBack();
