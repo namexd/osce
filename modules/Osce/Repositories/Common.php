@@ -9,6 +9,8 @@
 namespace Modules\Osce\Repositories;
 
 
+use App\Entities\SysUserRole;
+use App\Entities\SysRoles;
 use App\Entities\User;
 use DB;
 
@@ -436,8 +438,16 @@ class Common
         return true;
     }
 
-
-    static public function handleTime($time){
+    /**
+     *
+     * @param $time
+     * @return string
+     *
+     * @author Zhoufuxiang
+     * @date   2016-03-22 11:00
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public static function handleTime($time){
         $h = floor($time / 3600);
         $m = floor(($time%3600)/60);
         $s = $time % 60;
@@ -450,4 +460,99 @@ class Common
 
         return $time;
     }
+
+    /**
+     * 处理用户 账户、角色
+     * @param $userData
+     * @param $role_id
+     * @return static
+     * @throws \Exception
+     *
+     * @author Zhoufuxiang
+     * @date   2016-04-22 11:00
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public static function handleUser($userData, $role_id)
+    {
+        $connection = DB::connection('sys_mis');
+        $connection ->beginTransaction();
+        try{
+            //查询是否有对应角色
+            $roles = SysRoles::where('id', '=', $role_id)->first();
+            if (is_null($roles)) {
+                throw new \Exception('没有对应的角色，请去新增对应角色，或者查看角色配置！');
+            }
+
+            $mobile = $userData['mobile'];
+            //根据条件：查找用户是否有账号和密码
+            $user   = User::where('username', '=', $mobile)->first();
+
+            if(is_null($user)){
+                //设置密码
+                $password = (config('config.debug') == true)? '123456': Common::getRandStr(6);
+                //注册用户
+                $user = Common::registerUser($userData, $password);
+                //给用户发送短信
+                Common::sendRegisterEms($mobile, $password);
+                //给用户分配角色
+                Common::addUserRoles($user, $role_id);
+
+            }else{
+                //给用户分配角色
+                Common::addUserRoles($user, $role_id);
+
+                //修改用户基本信息
+                foreach($userData as $feild=> $value) {
+                    $user    ->  $feild  =   $value;
+                }
+                if(!$user -> save()) {
+                    throw new \Exception('用户修改失败，请重试！');
+                }
+            }
+
+            $connection->commit();
+            return $user;
+
+        } catch (\Exception $ex){
+            $connection->rollBack();
+            throw $ex;
+        }
+    }
+
+    /**
+     * 用户角色处理
+     * @param $user
+     * @param $role_id
+     * @return mixed
+     * @throws \Exception
+     *
+     * @author Zhoufuxiang
+     * @date   2016-04-22 11:00
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public static function addUserRoles($user, $role_id)
+    {
+        $superRole   = config('osce.superRoleId', 5);
+        //查询用户是否是超级管理员
+        $superUser   = SysUserRole::where('user_id','=',$user->id)->where('role_id','=',$superRole)->first();
+        if (!is_null($superUser)){
+            throw new \Exception('该用户为超级管理员，不能添加，请修改！');
+        }
+        //查询用户角色（是否已经拥有了该角色）
+        $sysUserRole = SysUserRole::where('user_id','=',$user->id)->where('role_id','=',$role_id)->first();
+        //给用户分配角色
+        if(is_null($sysUserRole)){
+            $sysUserRole = DB::table('sys_user_role')->insert(
+                [
+                    'role_id'   => $role_id,
+                    'user_id'   => $user->id,
+                    'created_at'=> date('Y-m-d H:i:s'),
+                    'updated_at'=> date('Y-m-d H:i:s'),
+                ]
+            );
+        }
+        return $sysUserRole;
+    }
+
+
 }
