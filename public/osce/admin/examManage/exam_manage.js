@@ -5557,7 +5557,9 @@ function examiner_manage() {
                   },
                   end: function(){
                     //更改请求数据
-                    
+                    var array = $elem.find('.custom-sp').val();
+                    array.push($elem.find('.custom-sp').attr('params'));
+                    $elem.find('.custom-sp').val(array).trigger('change');
                   },
                   content: pars.add_sp + '?status=1&table=sp_assignment&tr='+$elem.attr('class')+'&selector=custom-sp'
                 });
