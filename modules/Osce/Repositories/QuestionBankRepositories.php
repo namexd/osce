@@ -399,7 +399,7 @@ class QuestionBankRepositories  extends BaseRepository
         $ExamPaper = new ExamPaper;
         $ExamPaperInfo = $ExamPaper->where('id','=',$ExamPaperId)->first();
 
-        if(count($ExamPaperInfo)>0){
+        if(!empty($ExamPaperInfo)&&count($ExamPaperInfo)>0){
             //随机试卷处理方法
             if($ExamPaperInfo->type == 1){
                 if(count($ExamPaperInfo->ExamPaperStructure)>0){
