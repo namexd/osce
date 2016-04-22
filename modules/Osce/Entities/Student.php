@@ -920,10 +920,9 @@ class Student extends CommonModel
             ->get();
 
 
-            if(!$list){
+        if(!$list){
             throw new \Exception('请先给学生排考');
          }
-
         foreach ($list as $student) {
             if (is_null($student->userInfo)) {
                 throw new \Exception('没有找到指定的考生用户信息');
