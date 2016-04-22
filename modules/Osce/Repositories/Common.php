@@ -337,13 +337,9 @@ class Common
             $ensue = explode('=', $item);
             $fileData[$ensue[0]] = $ensue[1];
         }
-        if(!in_array('table=0',$fileArray)){
-            $fileData ['table'] = 0;
+        if(!array_key_exists('table',$fileData)){
+            $fileData['table'] = '';
         }
-
-
-
-        dd($fileArray,$fileData);
         foreach ($fileArray as $value)
             if ($value == 'status=1') {
                 return view('osce::admin.index.layer_success', [
