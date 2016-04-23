@@ -68,6 +68,7 @@ class DrawlotsController extends CommonController
 //            $room = StationTeacher::where('user_id', $teacher_id)->where('exam_id', $examId)->orderBy('created_at',
 //                'desc')->first()->station->room;
             $room = $this->getStationAndRoom($teacher_id, $examId);
+
             if ($room->isEmpty()) {
                 throw new \Exception('未能查到该老师对应的考场！');
             }
@@ -407,21 +408,25 @@ class DrawlotsController extends CommonController
             $stationId = (int)$request->input('station_id');
             $examQueueId = (int)$request->input('exam_queue_id');//队列id
             $teacher_id =(int)$request->input('teacher_id');
-
-            if($examQueueId) {
-
-                ExamQueue::where('id', $examQueueId)->increment('next_num', 1);//下一次次数增加
-            }
             $exam = Exam::doingExam();
-            //$studentModel = new  Student();
+            if($examQueueId) {
+                ExamQueue::where('id', $examQueueId)->increment('next_num', 1);//下一次次数增加
+            }else{//没有刷表的学生时点击下一个取当前小组第一个
+                list($room_id, $stations) = $this->getRoomIdAndStation($teacher_id, $exam);
+                if ($exam->sequence_mode == 1) {
+                    $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations);
+                } elseif ($exam->sequence_mode == 2) {
+                    $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id);
+                }
+                if(count($examQueue)){
+                    ExamQueue::where('id', $examQueue[0]->exam_queue_id)->increment('next_num', 1);//下一次次数增加
+                }
 
-            //$studentData = $studentModel->nextStudentList($stationId, $exam);
+            }
             list($room_id, $stations) = $this->getRoomIdAndStation($teacher_id, $exam);
             if ($exam->sequence_mode == 1) {
-
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations);
             } elseif ($exam->sequence_mode == 2) {
-
                 $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id);
             } else {
                 throw new \Exception('考试模式不存在！', -703);
