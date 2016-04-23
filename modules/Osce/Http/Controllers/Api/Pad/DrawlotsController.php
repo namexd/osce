@@ -917,14 +917,17 @@ class DrawlotsController extends CommonController
 
             $tempExamQueue = ExamQueue::where('student_id', $student->id)
                 ->where('exam_id', $examId)
-                ->orderBy('begin_dt', 'asc')
-                ->get();
-
+                ->where('status',0)
+                //->orderBy('begin_dt', 'asc')
+                ->get()->pluck('room_id');
+              if(!in_array($roomId,$tempExamQueue)){
+                  throw new \Exception('当前考生走错了考场！', 3400);
+              }
             //判断其是否应该在这个考站考试
-            $tempStationIdKey = $stationIdKey - 1;
+            /*$tempStationIdKey = $stationIdKey - 1;
             if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
                 throw new \Exception('当前考生走错了考场！', 3400);
-            }
+            }*/
 
             return true;
         } catch (\Exception $ex) {
