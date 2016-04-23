@@ -283,6 +283,7 @@ class IndexController extends CommonController
             if(!$screen_id){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
+                    ExamQueue::where('student_id',$student_id)->where('exam_id',$exam_id)->delete();
                     $action = '解绑';
                     $updated_at = date('Y-m-d H:i:s',time());
                     $data = array(
@@ -322,6 +323,7 @@ class IndexController extends CommonController
                 ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
                 $result = Watch::where('id',$id)->update(['status'=>0]);
                 if($result){
+                    ExamQueue::where('student_id',$student_id)->where('exam_id',$exam_id)->delete();
                     $action='解绑';
                     $updated_at = date('Y-m-d H:i:s',time());
                     $data = array(
