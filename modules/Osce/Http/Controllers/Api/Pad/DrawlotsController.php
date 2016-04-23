@@ -643,6 +643,8 @@ class DrawlotsController extends CommonController
             if($roomMsg){
                 $station->exam_screening_id=$roomMsg->id;
             }elseif($roomMsg_two){
+                dump($roomMsg_two);
+                dd($roomMsg);
                 $station->exam_screening_id=$roomMsg->id;
             }
             if($station->type==3){//理论站
