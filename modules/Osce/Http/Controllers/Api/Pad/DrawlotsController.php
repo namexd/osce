@@ -486,7 +486,7 @@ class DrawlotsController extends CommonController
             $uid = $request->input('uid');
             $roomId = $request->input('room_id');
             $teacherId = $request->input('teacher_id');
-            $redis = Redis::connection('message');dd($uid,$roomId,$teacherId);
+            $redis = Redis::connection('message');//dd($uid,$roomId,$teacherId);
             //根据uid查到对应的腕表编号
             $watch = Watch::where('code', $uid)->first();
             if (is_null($watch)) {
