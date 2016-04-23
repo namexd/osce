@@ -920,9 +920,13 @@ class DrawlotsController extends CommonController
                 ->where('status',0)
                 //->orderBy('begin_dt', 'asc')
                 ->get()->pluck('room_id');
-              if(!in_array($roomId,$tempExamQueue)){
-                  throw new \Exception('当前考生走错了考场！', 3400);
-              }
+            if(count($tempExamQueue)) {
+                if (!in_array($roomId, $tempExamQueue)) {
+                    throw new \Exception('当前考生走错了考场！', 3400);
+                }
+            }else{
+                throw new \Exception('暂时没有空闲考场！', 3401);
+            }
             //判断其是否应该在这个考站考试
             /*$tempStationIdKey = $stationIdKey - 1;
             if ($tempStationIdKey >= 0 && $tempExamQueue[$tempStationIdKey]->status != 3) {
