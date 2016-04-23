@@ -803,6 +803,8 @@ class ApiController extends CommonController
                 ->where('watch.status', '=', 1)
                 ->get();
 
+            dd($watches);
+
             $watchNfcCodes = [];
             if (!empty($watches)) {
                 foreach ($watches as $item) {
