@@ -919,7 +919,7 @@ class DrawlotsController extends CommonController
                 ->where('exam_id', $examId)
                 ->where('status',0)
                 //->orderBy('begin_dt', 'asc')
-                ->get()->pluck('room_id');
+                ->get()->pluck('room_id')->toArray();
             if(count($tempExamQueue)) {
                 dd($roomId,$tempExamQueue);
                 if (!in_array($roomId, $tempExamQueue)) {
