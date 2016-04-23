@@ -337,6 +337,10 @@ class StudentWatchController extends CommonController
             return [
                 'code'  => 0, // 0，等待状态（对应界面：Prepare_fragment）
                 'title' => '等待老师准备中',
+                'willStudents' => '',
+
+
+                
             ];
         }
 
