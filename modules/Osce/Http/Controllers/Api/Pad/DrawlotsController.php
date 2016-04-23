@@ -921,7 +921,7 @@ class DrawlotsController extends CommonController
                 //->orderBy('begin_dt', 'asc')
                 ->get()->pluck('room_id');
             if(count($tempExamQueue)) {
-                dd($roomId,$tempExamQueue);
+//                dd($roomId,$tempExamQueue);
                 if (!in_array($roomId, $tempExamQueue)) {
                     throw new \Exception('当前考生走错了考场！', 3400);
                 }
