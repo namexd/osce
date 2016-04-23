@@ -486,7 +486,7 @@ class DrawlotsController extends CommonController
             $uid = $request->input('uid');
             $roomId = $request->input('room_id');
             $teacherId = $request->input('teacher_id');
-            $redis = Redis::connection('message');
+            $redis = Redis::connection('message');dd($uid,$roomId,$teacherId);
             //根据uid查到对应的腕表编号
             $watch = Watch::where('code', $uid)->first();
             if (is_null($watch)) {
@@ -736,7 +736,7 @@ class DrawlotsController extends CommonController
         try {
             //获取正在考试中的考试
             $examId = $student->exam_id;
-
+//dd($student, $roomId, $teacherId, $exam);
             //得知当前学生是否已经抽签
             $temp = ExamQueue::where('student_id', $student->id)
                 ->where('exam_id', $examId)
