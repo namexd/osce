@@ -512,7 +512,6 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(\Illuminate\Http\Request $request) {
-	
 });
 
 Route::get('redis', function(){
@@ -542,6 +541,11 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 	return '失败-' . mt_rand(1000,9999);
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
-
+	$examId = $request->input('exam_id');
+	$exam = \Modules\Osce\Entities\Exam::doingExam($examId);
+	$app = new \Illuminate\Container\Container;
+	$smartArrangeRepository = new \Modules\Osce\Entities\SmartArrange\SmartArrangeRepository($app);
+	$smartArrangeRepository->plan($exam);
+	return view('osce::admin.login');
 });
 

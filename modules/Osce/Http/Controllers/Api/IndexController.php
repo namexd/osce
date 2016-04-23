@@ -308,11 +308,14 @@ class IndexController extends CommonController
                 }
             }
             $exam_screen_id = $screen_id->exam_screening_id;
-            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
-            $ExamFlowModel = new  ExamFlow();
-            $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
-            if($ExamFinishStatus==$studentExamSum){ //如果考试流程结束
-                if($status != 0){
+            $ExamFinishStatus = ExamQueue::whereNotIn('status', [3,4])->where('student_id', '=', $student_id)
+                                            ->where('exam_screening_id',$exam_screen_id)
+                                            ->count();
+
+            //$ExamFlowModel = new  ExamFlow();
+            //$studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
+            if($ExamFinishStatus==0){ //如果考试流程结束
+                if($exameeStatus->status != 0){
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
                 }
 

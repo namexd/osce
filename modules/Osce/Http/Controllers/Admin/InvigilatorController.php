@@ -212,6 +212,9 @@ class InvigilatorController extends CommonController
         $Invigilator    =   new Teacher();
         try{
             if($result = $Invigilator ->  addInvigilator($role_id, $userData , $teacherData, $subjects)){
+                
+                
+                
                 $Redirect =teacherCommon::handleRedirect($request,$result);
                 if($Redirect == false){
 

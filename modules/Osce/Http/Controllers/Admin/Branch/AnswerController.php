@@ -17,9 +17,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\QuestionBankRepositories;
 use Illuminate\Http\Request;
 
-
-
-/**考试答题控制器
+/**理论考试-考试答题控制器
  * Class Answer
  * @package Modules\Osce\Http\Controllers\Admin\Branch
  */
@@ -45,7 +43,7 @@ class AnswerController extends CommonController
 
         ]);
 
-      //admin/answer/formalpaper-list?stationId=91&userId=964&studentId=7319&id=24&examId=552
+      //admin/answer/formalpaper-list?stationId=21&userId=140&studentId=222&id=12&examId=4
         $ExamPaperId = $request->input('id');//试卷id  132
         $examId = $request->input('examId');//考试id  421
         $stationId = $request->input('stationId');//考站id 20
@@ -54,6 +52,7 @@ class AnswerController extends CommonController
 
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
+
         $ExamPaperFormal = new ExamPaperFormal;
         //生成正式的试卷并且 返回id
         $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo,$studentId);
@@ -123,8 +122,7 @@ class AnswerController extends CommonController
                 }
             }
         }
-       // echo "<pre>";
-      //  print_r($examCategoryFormalData);
+        //echo date('Y/m/d H:i:s',$systemTimeStart).'and'.date('Y/m/d H:i:s',$systemTimeEnd);
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -133,7 +131,7 @@ class AnswerController extends CommonController
             'stationId'                    => $stationId,//考站id
             'userId'                       => $userId,//老师id
             'studentId'                       =>$studentId,//学生id
-            'examId'                       =>$examId,//考试
+            'examId'                       =>$examId,//考试id
         ]);
     }
     /**保存考生答案
@@ -148,10 +146,13 @@ class AnswerController extends CommonController
     public function postSaveAnswer(Request $request)
     {
         $this->validate($request,[
-            'examPaperFormalId'       => 'required|integer',
-            'studentId'    => 'required|integer',
-            'stationId'    => 'required|integer',
-            'teacherId'    => 'required|integer',
+            'examId'    => 'required|integer', //考试id
+            'studentId'    => 'required|integer',//学生id
+            'stationId'    => 'required|integer',//考站id
+            'teacherId'    => 'required|integer', //老师id
+            'examPaperFormalId'       => 'required|integer',//正式试卷id
+
+
 
         ]);
 
@@ -227,11 +228,12 @@ class AnswerController extends CommonController
         }
 
         $resultData = array(
-            'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
+            'examId' =>$request->input('examId'), //考试id
             'studentId' =>$request->input('studentId'),//学生Id
             'stationId' => $request->input('stationId'),//考站id
-            'time'=>$actualLength,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
             'teacherId'=>$request->input('teacherId'),//评分人编号
+            'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
+            'time'=>$actualLength,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
             'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
             'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
         );

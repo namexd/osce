@@ -85,13 +85,14 @@ class ExamArrangeController extends CommonController
                 throw new \Exception('未找到当前操作人信息');
             }
             $data = [
-                'exam_id' => $examId,
-                'name' => $name,
-                'order' => $order,
-                'exam_gradation_id' => $examGradationId,
+                'exam_id'   => $examId,
+                'name'      => $name,
+                'order'     => $order,
+                'exam_gradation_id'  => $examGradationId,
                 'exam_draft_flow_id' => $request->get('flow_id'),
-                'user_id' => $user->id,
+                'user_id'   => $user->id,
                 'ctrl_type' => $type,
+                'optional'  => 1,
             ];
 
             if(is_null($type)){
@@ -116,9 +117,6 @@ class ExamArrangeController extends CommonController
             }
             //查看阶段是否有安排过时间
 //            $ExamGradation =
-
-
-
 
 
             $result = ExamDraftFlowTemp::create($data);
@@ -160,10 +158,10 @@ class ExamArrangeController extends CommonController
 
     public function  getExamSelect(Request $request){
         $this->validate($request, [
-            'exam_id' => 'required',
-            'optional' => 'required',
-            'flow_id' => 'required',
-            'type' => 'sometimes',
+            'exam_id'   => 'required',
+            'optional'  => 'required',
+            'flow_id'   => 'required',
+            'type'      => 'sometimes',
         ]);
         $ExamFlowId = $request->get('flow_id');
         $examId = $request->get('exam_id');
@@ -812,10 +810,6 @@ class ExamArrangeController extends CommonController
             //获得exam_id
             $exam_id = $request->input('exam_id');
             $teacherData = $request->input('data');
-
-
-          
-  
             //保存老师的数据
             $stationteaxherModel = new StationTeacher();
 

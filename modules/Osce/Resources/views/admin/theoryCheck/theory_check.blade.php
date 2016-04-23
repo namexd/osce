@@ -127,7 +127,7 @@
                 var studentId = $(".allData").attr("studentId");
                 var examId = $(".allData").attr("examId");
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
-                        {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
+                        {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
                     if(obj.code=='1'){
                         $.ajax({
                             url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
@@ -135,6 +135,10 @@
                             dataType:"json",
                             type:"get",
                             success:function(res){
+                                location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                            },
+                            error:function(res){
+
                                 location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
                             }
                         });
@@ -164,7 +168,7 @@
                     if(res == 1){
                         clearInterval(statusTimer);
                         $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
-                                {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
+                                {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
                                     if(obj.code=='1'){
                                         $.ajax({
                                             url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
@@ -172,6 +176,10 @@
                                             dataType:"json",
                                             type:"get",
                                             success:function(res){
+                                                location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                                            },
+                                            error:function(res){
+
                                                 location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
                                             }
                                         });
@@ -207,7 +215,7 @@
                     var examId = $(".allData").attr("examId");
                     console.log("22222");
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
-                            {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId},function(obj){
+                            {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
                         if(obj.code=='1'){
                             $.ajax({
                                 url:"/osce/pad/change-status?student_id="+studentId+"&station_id="+stationId+"&user_id="+userId,
@@ -215,6 +223,10 @@
                                 dataType:"json",
                                 type:"get",
                                 success:function(res){
+                                    location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                                },
+                                error:function(res){
+
                                     location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
                                 }
                             });

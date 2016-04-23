@@ -95,5 +95,7 @@ return [
 		2	=>	'走廊',
 		3	=>	'侯考区'
 	],
-	'sys_param' => include 'sysparam.php'
+	'sys_param' => include 'sysparam.php',
+
+	'debug'		=>	env('debug',false),
 ];
