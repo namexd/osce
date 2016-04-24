@@ -319,6 +319,7 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为0时
     private function getStatusWaitExam($examQueueCollect, $stationId)
     {
+        dump(333333);
         $items = array_where($examQueueCollect, function ($key, $value) {
             if ($value->status == 0) {
                 return $value;
@@ -326,6 +327,7 @@ class StudentWatchController extends CommonController
         });
 
         $item = array_shift($items);
+        dump($item,2222);
 
         // 判断老师是否准备完成
         $examStationStatusModel = new ExamStationStatus();
@@ -338,14 +340,12 @@ class StudentWatchController extends CommonController
                 'code'  => 0, // 0，等待状态（对应界面：Prepare_fragment）
                 'title' => '等待老师准备中',
                 'willStudents' => '',
-
-
-                
             ];
         }
 
         //判断前面是否有人考试
         if (empty($item->station_id)) {
+            dump($item->station_id,1111);
             $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
                                     ->where('exam_id', '=', $item->exam_id)
                                     ->whereBetween('status', [1, 2])
