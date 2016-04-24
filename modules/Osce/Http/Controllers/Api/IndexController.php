@@ -873,7 +873,7 @@ class IndexController extends CommonController
                     $join->on('exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id');
                 })->leftjoin('exam_draft', function ($join) {
                     $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
-                })->groupBy('exam_screening.id')->get();
+                })->groupBy('exam_draft.station_id')->get();
 
                 dd($stations);
             /*
