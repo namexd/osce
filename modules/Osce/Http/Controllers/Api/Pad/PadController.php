@@ -391,8 +391,6 @@ class PadController extends  CommonController{
             $teacherId = $request->input('user_id');
 
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-        dd($queue);
-
             //将该条信息的首位置零
 //            $queue->stick = 0;
 //            if (!$queue->save()) {
@@ -403,6 +401,7 @@ class PadController extends  CommonController{
             $examScreeningStudentModel = new ExamScreeningStudent();
             $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
                 ->where('student_id','=',$queue->student_id)->first();
+
             $watchModel = new Watch();
             $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
             $studentWatchController = new StudentWatchController();
