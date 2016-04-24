@@ -195,6 +195,7 @@ class StationController extends CommonController
         //获取编辑考场的数据
         $rollMsg = $model->rollmsg($id);
         list($placeCate, $vcr, $case, $room, $subject, $papers) = $this->dropDownList($id);
+        dd($vcr);
 
         //判断在关联表中是否有数据
         $examFlowStation = ExamFlowStation::where('station_id',$id)->first();
