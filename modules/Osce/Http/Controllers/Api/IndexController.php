@@ -874,8 +874,6 @@ class IndexController extends CommonController
                 })->leftjoin('exam_draft', function ($join) {
                     $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
                 })->groupBy('exam_draft.station_id')->get();
-
-                dd($stations);
             /*
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
             //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
