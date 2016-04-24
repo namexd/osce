@@ -327,7 +327,7 @@ class StudentWatchController extends CommonController
         });
 
         $item = array_shift($items);
-        dump($item,2222);
+    
 
         // 判断老师是否准备完成
         $examStationStatusModel = new ExamStationStatus();

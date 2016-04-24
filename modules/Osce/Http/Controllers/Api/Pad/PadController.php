@@ -391,6 +391,7 @@ class PadController extends  CommonController{
             $teacherId = $request->input('user_id');
 
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
+        dd($queue);
 
             //将该条信息的首位置零
 //            $queue->stick = 0;
@@ -399,14 +400,14 @@ class PadController extends  CommonController{
 //            }
 
             //考试结束后，调用向腕表推送消息的方法
-//            $examScreeningStudentModel = new ExamScreeningStudent();
-//            $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
-//                ->where('student_id','=',$queue->student_id)->first();
-//            $watchModel = new Watch();
-//            $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
-//            $studentWatchController = new StudentWatchController();
-//            $request['nfc_code'] = $watchData->code;
-//            $studentWatchController->getStudentExamReminder($request,$stationId);
+            $examScreeningStudentModel = new ExamScreeningStudent();
+            $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
+                ->where('student_id','=',$queue->student_id)->first();
+            $watchModel = new Watch();
+            $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+            $studentWatchController = new StudentWatchController();
+            $request['nfc_code'] = $watchData->code;
+            $studentWatchController->getStudentExamReminder($request,$stationId);
 
             return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
 
