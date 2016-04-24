@@ -234,7 +234,7 @@ class StationController extends CommonController
             'name.unique'         =>  '考站名称必须唯一',
             'type.required'       =>  '考站类型必选',
         ]);
-
+        dd($request->all());
 
         try {
             $user = Auth::user();
@@ -310,12 +310,14 @@ class StationController extends CommonController
     private function dropDownList($id = "")
     {
         //将下拉菜单的数据查出
+        dump($id);
         $placeCate = ['1' => '技能操作', '2' => '标准化病人(SP)', '3' => '理论考试']; //考站类型
         if ($id == "") {
             $vcr = Vcr::where('used', 0)
                 ->whereNotIn('status',[2,3])
                 ->select('id', 'name')
                 ->get();     //关联摄像机
+            dump($vcr);
         } else {
             //根据station的id找到对应的vcr的id
             $vcrStation = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first();
@@ -330,6 +332,7 @@ class StationController extends CommonController
                     ->get();     //关联摄像机
             }else{
                 $vcr = [];
+                    dump($vcr);
             }
 
         }
