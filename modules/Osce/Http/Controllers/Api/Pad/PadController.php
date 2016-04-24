@@ -406,8 +406,6 @@ class PadController extends  CommonController{
             $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
             $studentWatchController = new StudentWatchController();
             $request['nfc_code'] = $watchData->code;
-            dd($request->all(),$stationId);
-        
             $studentWatchController->getStudentExamReminder($request,$stationId);
 
             return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
