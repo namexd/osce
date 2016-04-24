@@ -335,7 +335,7 @@ class StudentWatchController extends CommonController
             ->where('exam_screening_id', '=', $item->exam_screening_id)
             ->where('station_id', '=', $stationId)
             ->first();
-            dd($instance);
+            dd($stationId,$item->exam_id,$item->exam_screening_id);
         if ($instance->status == 0) {
             return [
                 'code'  => 0, // 0，等待状态（对应界面：Prepare_fragment）
