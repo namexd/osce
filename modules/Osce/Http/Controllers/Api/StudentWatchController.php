@@ -327,7 +327,6 @@ class StudentWatchController extends CommonController
         });
 
         $item = array_shift($items);
-        dd($item);
         dump($item,2222);
 
         // 判断老师是否准备完成
