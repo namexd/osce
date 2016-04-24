@@ -825,8 +825,11 @@ class InvigilatePadController extends CommonController
                 $studentModel = new Student();
                 $exam = Exam::doingExam();
                 $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
-                
-                $redis->publish('pad_message', json_encode($this->success_data($publishMessage,102,'学生信息')));
+                $station=Station::where('id',$stationId)->first();
+                if($station->type==3) {//理论考试
+                    $publishMessage->avator = asset($publishMessage->avator);
+                    $redis->publish('pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
+                }
                 return response()->json(
                     $this->success_data(['start_time'=>$date,'student_id'=>$studentId], 1, '开始考试成功')
                 );
