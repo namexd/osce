@@ -195,7 +195,6 @@ class StationController extends CommonController
         //获取编辑考场的数据
         $rollMsg = $model->rollmsg($id);
         list($placeCate, $vcr, $case, $room, $subject, $papers) = $this->dropDownList($id);
-        dd($vcr);
 
         //判断在关联表中是否有数据
         $examFlowStation = ExamFlowStation::where('station_id',$id)->first();
@@ -319,6 +318,7 @@ class StationController extends CommonController
                 ->get();     //关联摄像机
             dump($vcr,111111);
         } else {
+            dump(33333333333);
             //根据station的id找到对应的vcr的id
             $vcrStation = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first();
             if (!is_null($vcrStation)){
