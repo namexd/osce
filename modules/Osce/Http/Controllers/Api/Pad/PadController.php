@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamRoom;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\RoomStation;
@@ -404,12 +405,14 @@ class PadController extends  CommonController{
 
             $watchModel = new Watch();
             $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+
+            //拿到所有场次id
+            $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$queue->gradation_order)->get()->pluck();
+
             $studentWatchController = new StudentWatchController();
             $request['nfc_code'] = $watchData->code;
-            //判断队列中当前考试是否为
 
-
-            $studentWatchController->getStudentExamReminder($request,$stationId ,$queue->exam_screening_id);
+            $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
 
             return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
 

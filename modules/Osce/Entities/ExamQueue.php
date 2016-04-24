@@ -166,7 +166,7 @@ class ExamQueue extends CommonModel
 //                'exam_queue.exam_id as exam_id'
 //            ])->get();
         return $this->where('student_id', '=', $studentId)
-                    ->where('exam_screening_id','=',$examscreeningId)
+                    ->whereIn('exam_screening_id',$examscreeningId)
                     ->orderBy('begin_dt', 'asc')
                      ->get();
     }
