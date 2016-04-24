@@ -317,7 +317,7 @@ class StationController extends CommonController
                 ->whereNotIn('status',[2,3])
                 ->select('id', 'name')
                 ->get();     //关联摄像机
-            dump($vcr);
+            dump($vcr,111111);
         } else {
             //根据station的id找到对应的vcr的id
             $vcrStation = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first();
@@ -332,7 +332,6 @@ class StationController extends CommonController
                     ->get();     //关联摄像机
             }else{
                 $vcr = [];
-                    dump($vcr);
             }
 
         }
