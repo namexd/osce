@@ -648,7 +648,6 @@ class Student extends CommonModel
         if(count($endStudentList)){
 
             $studentList=ExamQueue::where('status',3)->where('exam_id',$exam_id)->groupBy('student_id')->get()->pluck('student_id')->toArray();
-
             $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
                 $join->on('student.id', '=', 'exam_order.student_id');
             })->where('exam_order.exam_id', '=', $exam_id)
