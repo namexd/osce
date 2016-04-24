@@ -330,6 +330,7 @@ class StationController extends CommonController
                     })
                     ->select('id', 'name')
                     ->get();     //关联摄像机
+                dump($vcr,$vcrStation,$vcrId,2222222222);
             }else{
                 $vcr = [];
             }
