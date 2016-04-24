@@ -870,7 +870,7 @@ class IndexController extends CommonController
                 ->leftjoin('exam_gradation', function ($join) {
                     $join->on('exam_gradation.exam_id', '=', 'exam_screening.exam_id');
                 })->leftjoin('exam_draft_flow', function ($join) {
-                    $join->on('exam_draft_flow.order', '=', 'exam_gradation.order');
+                    $join->on('exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id');
                 })->leftjoin('exam_draft', function ($join) {
                     $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
                 })->groupBy('exam_screening.id')->get();
