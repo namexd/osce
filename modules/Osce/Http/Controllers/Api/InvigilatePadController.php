@@ -812,16 +812,19 @@ class InvigilatePadController extends CommonController
                 $redis->publish('pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
                 
                 //调用向腕表推送消息的方法
-                $examQueue = ExamQueue::where('student_id', '=', $studentId)
+
+                $exam = Exam::where('status', '=', 1)->first();
+                $examQueue = ExamQueue::where('exam_id',$exam->id)
+                    ->where('student_id', '=', $studentId)
                     ->where('station_id', '=', $stationId)
-                    ->whereIn('status',[0,2])
+                    ->where('status','=','2')
                     ->first();
                 $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$examQueue->exam_screening_id)
                     ->where('student_id','=',$examQueue->student_id)->first();
                 $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
                 $studentWatchController = new StudentWatchController();
                 $request['nfc_code'] = $watchData->code;
-                $studentWatchController->getStudentExamReminder($request,$stationId);
+                $studentWatchController->getStudentExamReminder($request);
                 $studentModel = new Student();
                 $exam = Exam::doingExam();
                 $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);

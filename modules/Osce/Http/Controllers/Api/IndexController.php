@@ -127,7 +127,7 @@ class IndexController extends CommonController
         $check = $watchModel->leftjoin('watch_log',function($log){
             $log->on('watch_log.watch_id','=','watch.id');
         })->where('watch.code','=',$code)->orderBy('watch_log.id','desc')->first();
-
+        dd($check);
         if(count($check) > 0){
             if($check->action == '绑定'){
                 return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
