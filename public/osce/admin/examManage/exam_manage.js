@@ -1037,11 +1037,11 @@ function exam_assignment_add(){
         if ($(this).find("input").is(':checked')) {
             $(this).find(".check_icon ").addClass("check");
             $(this).find("input").attr("checked","checked");
-            $(this).find("input").val("1")
+            $(this).find("input").val("1");
         } else {
             $(this).find(".check_icon").removeClass("check");
             $(this).find("input").removeAttr("checked","checked")
-            $(this).find("input").val("0")
+            $(this).find("input").val("0");
         }
     })
     /**
@@ -1075,7 +1075,11 @@ function exam_assignment_add(){
             $(this).parent().find(".check_div input").removeAttr('readonly');
             $(this).find(".check_icon ").attr("checkbox","1");
             $(this).find("input").val("1");
-            $(".checkbox_num").val("1")
+            $(".checkbox_num").val("1");
+
+            //分阶段操作
+            $('.grading').show();
+
             //当选中后在取消后在选中，替换掉以前的
             $('table tr td select').each(function(){
                 //移除所有的option
@@ -1092,23 +1096,96 @@ function exam_assignment_add(){
                 //记录计数
                 $('#exam_add').find('select').append(html);
             });
+
+            //显示阶段
+            $('#exam_add').find('.check_select select').show();
         } else {
             $(this).find(".check_icon").removeClass("check");
             $(this).parent().find(".check_div input").attr('readonly','readonly');
             $(this).find(".check_icon ").attr("checkbox","0");
             $(this).find("input").removeAttr("checked","checked");
-            $(this).find("input").val("0")
+            $(this).find("input").val("0");
+
+            //分阶段操作
+            $('.grading').hide();
+            $('.grading-un-normal').hide();
+            $('.grading-normal').show();
+
             //当选中后在取消后，替换掉以前的
-            $('table tr td select').each(function(){
+            $('#exam_add tr td select').each(function(){
                 //移除所有的option
-                $('table tr td select option').remove();
+                $('#exam_add tr td select option').remove();
 
                 var html = '<option value="1">'+'阶段1'+'</option>';
                 //记录计数
                 $('#exam_add').find('select').append(html);
             });
+
+            //显示阶段
+            $('#exam_add').find('.check_select select').hide();
         }
-    })
+    });
+
+    /**
+     * 分阶段
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-25
+     */
+    $('.grading select').change(function() {
+        var $that = $(this);
+
+        if($that.val() == 2) {
+            var value = $('#gradation_order').val(),
+                html = '';
+
+            for(var i = 1; i <= value; i++) {
+                html += '<tr>'+
+                            '<td>阶段'+i+'</td>'+
+                            '<td>'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                    '<option value="3">轮循</option>'+
+                                    '<option value="2">顺序</option>'+
+                                    '<option value="1">随机</option>'+
+                                '</select>'+
+                            '</td>'+
+                        '</tr>';
+            }
+            $('.grading-un-normal table tbody').html(html);
+            $('.grading-un-normal').show();
+            $('.grading-normal').hide();
+        } else {
+             $('.grading-un-normal').hide();
+        }
+    });
+
+    /**
+     * 当显示时想更改阶段数
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-25
+     */
+    $('#gradation_order').on('blur', function() {
+        var $that = $(this),
+            html = '',
+            value = $('#gradation_order').val();
+
+        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2) {
+            for(var i = 1; i <= value; i++) {
+                html += '<tr>'+
+                            '<td>阶段'+i+'</td>'+
+                            '<td>'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                    '<option value="3">轮循</option>'+
+                                    '<option value="2">顺序</option>'+
+                                    '<option value="1">随机</option>'+
+                                '</select>'+
+                            '</td>'+
+                        '</tr>';
+            }
+            $('.grading-un-normal table tbody').html(html);
+        }
+    });
 
     /**
      * 新增一条
@@ -1118,7 +1195,9 @@ function exam_assignment_add(){
      */
     $('#add-new').click(function(){
         //计数器标志
-        var index = $('#exam_add').find('tbody').attr('index');
+        var index = $('#exam_add').find('tbody').attr('index'),
+            stage_show = $('.checkbox_two').find("input").is(':checked');   //阶段显示判断
+
         index = parseInt(index) + 1;
 
         //获取考生分阶段考试的值
@@ -1155,6 +1234,13 @@ function exam_assignment_add(){
          //记录计数
          $('#exam_add').find('tbody').attr('index',index);
          $('#exam_add').find('tbody').append(html);
+
+         //阶段显示
+         if(stage_show) {
+            $('#exam_add').find('.check_select select').show();
+         } else{
+            $('#exam_add').find('.check_select select').hide();
+         }
 
     });
     /**
@@ -1196,9 +1282,9 @@ function exam_assignment_add(){
                 })
                 return false;
             }else{
-                $('table tr td select').each(function(){
+                $('#exam_add tr td select').each(function(){
                     //移除所有的option
-                    $('table tr td select option').remove();
+                    $('#exam_add tr td select option').remove();
                     //获取考生分阶段考试的值;
                     /*var number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十'];*/
 
@@ -1211,6 +1297,7 @@ function exam_assignment_add(){
                     //记录计数
                     $('#exam_add').find('select').append(html);
                 });
+
             }
         }
     })
@@ -1408,11 +1495,15 @@ function exam_basic_info(){
             $(this).parent().find(".check_div input").removeAttr('readonly');
             $(this).find("input").attr("checked","checked");
             $(this).find("input").val("1");
-            $(".checkbox_num").val("1")
+            $(".checkbox_num").val("1");
+
+            //分阶段操作
+            $('.grading').show();
+
             //当选中后在取消后在选中，替换掉以前的
             $('#add-basic tr td select').each(function(){
                 //移除所有的option
-                $('table tr td select option').remove();
+                $('#add-basic tr td select option').remove();
                 //获取考生分阶段考试的值
                 var checkbox_num=$(".checkbox_num").val()/*,
                     number = ['','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十']*/;
@@ -1426,26 +1517,100 @@ function exam_basic_info(){
                     //记录计数
                     $('#add-basic').find('select').append(html);
             });
+
+            //显示阶段
+            $('#add-basic').find('.check_select select').show();
         } else {
             $(this).find(".check_icon").removeClass("check");
             $(this).find(".check_icon ").attr("checkbox","0");
             $(this).parent().find(".check_div input").attr('readonly','readonly');
             $(this).find("input").removeAttr("checked","checked");
-            $(this).find("input").val("0")
+            $(this).find("input").val("0");
+
+            //分阶段操作
+            $('.grading').hide();
+            $('.grading-un-normal').hide();
+            $('.grading-normal').show();
+
             //移除所有的option
-            $('table tr td select option').remove();
+            $('#add-basic tr td select option').remove();
             //当选中后在取消后，替换掉以前的
             $('#add-basic tr td select').each(function(){
                 //移除所有的option
-                $('table tr td select option').remove();
+                $('#add-basic tr td select option').remove();
 
                 var html = '<option value="1">'+'阶段1'+'</option>';
                 //记录计数
                 $('#add-basic').find('select').append(html);
 
             });
+
+            //显示阶段
+            $('#add-basic').find('.check_select select').hide();
         }
     })
+
+
+    /**
+     * 分阶段
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-25
+     */
+    $('.grading select').change(function() {
+        var $that = $(this);
+
+        if($that.val() == 2) {
+            var value = $('#gradation_order').val(),
+                html = '';
+
+            for(var i = 1; i <= value; i++) {
+                html += '<tr>'+
+                            '<td>阶段'+i+'</td>'+
+                            '<td>'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                    '<option value="3">轮循</option>'+
+                                    '<option value="2">顺序</option>'+
+                                    '<option value="1">随机</option>'+
+                                '</select>'+
+                            '</td>'+
+                        '</tr>';
+            }
+            $('.grading-un-normal table tbody').html(html);
+            $('.grading-un-normal').show();
+            $('.grading-normal').hide();
+        } else {
+             $('.grading-un-normal').hide();
+        }
+    });
+
+    /**
+     * 当显示时想更改阶段数
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-25
+     */
+    $('#gradation_order').on('blur', function() {
+        var $that = $(this),
+            html = '',
+            value = $('#gradation_order').val();
+
+        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2) {
+            for(var i = 1; i <= value; i++) {
+                html += '<tr>'+
+                            '<td>阶段'+i+'</td>'+
+                            '<td>'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                    '<option value="3">轮循</option>'+
+                                    '<option value="2">顺序</option>'+
+                                    '<option value="1">随机</option>'+
+                                '</select>'+
+                            '</td>'+
+                        '</tr>';
+            }
+            $('.grading-un-normal table tbody').html(html);
+        }
+    });
 
     /**
      * 新增一条
@@ -1455,7 +1620,9 @@ function exam_basic_info(){
      */
     $('#add-new').click(function(){
         //计数器标志
-        var index = $('#add-basic').find('tbody').attr('index');
+        var index = $('#add-basic').find('tbody').attr('index'),
+            stage_show = $('.checkbox_two').find("input").is(':checked');   //阶段显示判断;
+
         index = parseInt(index) + 1;
 
 
@@ -1495,6 +1662,13 @@ function exam_basic_info(){
             //记录计数
             $('#add-basic').find('tbody').attr('index',index);
             $('#add-basic').find('tbody').append(html);
+
+            //阶段显示
+             if(stage_show) {
+                $('#add-basic').find('.check_select select').show();
+             } else{
+                $('#add-basic').find('.check_select select').hide();
+             }
     });
     /**
      * 阶段输入框获光标的时候
@@ -1518,7 +1692,7 @@ function exam_basic_info(){
         if(checkbox_num!=checkbox_focus){
             $('#add-basic tr td select').each(function(){
                 //移除所有的option
-                $('table tr td select option').remove();
+                $('#add-basic tr td select option').remove();
 
                 //获取考生分阶段考试的值
 
@@ -3773,7 +3947,7 @@ function examinee_manage(){
                             success:function(data){
                                 if(data.code ==1){
                                     layer.msg('删除成功！',{'skin':'msg-success','icon':1});
-                                    location.reload();
+                                    location.href = pars.reload;
                                 }else {
                                     layer.msg(data.message,{'skin':'msg-error','icon':1});
                                 }
