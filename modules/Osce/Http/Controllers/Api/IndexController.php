@@ -124,10 +124,13 @@ class IndexController extends CommonController
 
         //判断腕表是否已绑定并且没有解绑
         $watchModel = new Watch();
-        $check = $watchModel->where('watch.code','=',$code)->get();
-        dd($check);
+        $check = $watchModel->where('watch.code','=',$code)->first();
+
         if(count($check) > 0){
-            if($check->action == '绑定'){
+            //dd($check->id);
+            $watchLog = WatchLog::where('watch_id','=',intval($check->id))->first();
+            dd($watchLog);
+            if($watchLog->action == '绑定'){
                 return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
             }
         }
