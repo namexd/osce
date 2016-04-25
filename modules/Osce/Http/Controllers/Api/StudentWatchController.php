@@ -39,7 +39,7 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder(Request $request, $stationId = null,$examscreeningId=[])
+    public function getStudentExamReminder(Request $request, $stationId = null,$examscreeningId = [])
     {
         $this->validate($request, [
             'nfc_code' => 'required|string'
@@ -116,7 +116,6 @@ class StudentWatchController extends CommonController
 
         //根据考生id得到所有该考生的队列列表
         $examQueueModel = new ExamQueue();
-        dd($examscreeningId,$studentId);
         $examQueueCollect = $examQueueModel->StudentExamQueue($studentId,$examscreeningId);
         if (is_null($examQueueCollect)) {
             $data['title'] = '未找到学生队列信息';
@@ -319,7 +318,6 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为0时
     private function getStatusWaitExam($examQueueCollect, $stationId)
     {
-       
         $items = array_where($examQueueCollect, function ($key, $value) {
             if ($value->status == 0) {
                 return $value;
