@@ -39,7 +39,7 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder(Request $request, $stationId = null,$examscreeningId=[])
+    public function getStudentExamReminder(Request $request, $stationId = null,$examscreeningId = [])
     {
         $this->validate($request, [
             'nfc_code' => 'required|string'
@@ -151,6 +151,7 @@ class StudentWatchController extends CommonController
      */
     public function nowQueue($examQueueCollect, $stationId)
     {
+        
         $statusArray = $examQueueCollect->pluck('status')->toArray();
         if (in_array(1, $statusArray)) {
             return $this->getStatusOneExam($examQueueCollect);
@@ -249,8 +250,6 @@ class StudentWatchController extends CommonController
                 throw new \Exception('没有发现该考生相关排考计划');
             }
         } else {
-                
-            
 
             //调用状态为1的方法
             $data = $this->getStatusWaitExam($examQueueCollect, $stationId);
@@ -319,7 +318,6 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为0时
     private function getStatusWaitExam($examQueueCollect, $stationId)
     {
-       
         $items = array_where($examQueueCollect, function ($key, $value) {
             if ($value->status == 0) {
                 return $value;
@@ -331,6 +329,7 @@ class StudentWatchController extends CommonController
 
         // 判断老师是否准备完成
         $examStationStatusModel = new ExamStationStatus();
+
         $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
             ->where('exam_screening_id', '=', $item->exam_screening_id)
             ->where('station_id', '=', $stationId)
