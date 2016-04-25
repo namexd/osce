@@ -117,9 +117,22 @@ class IndexController extends CommonController
             'exam_id'   => 'required' //考试id
         ]);
 
+
         $code   = $request->get('code');
         $id_card= $request->get('id_card');
         $exam_id= $request->get('exam_id');
+
+        //判断腕表是否已绑定并且没有解绑
+        $watchModel = new Watch();
+        $check = $watchModel->leftjoin('watch_log',function($log){
+            $log->on('watch_log.watch_id','=','watch.id');
+        })->where('watch.code','=',$code)->orderBy('watch_log.id','desc')->first();
+
+        if(count($check) > 0){
+            if($check->action == '绑定'){
+                return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
+            }
+        }
         //获取腕表id
         $id     = Watch::where('code',$code)->select('id')->first()->id;
 
@@ -183,6 +196,7 @@ class IndexController extends CommonController
                 'student_id'=> $student_id
             );
             $watchModel = new WatchLog();
+            //
             $watchModel ->historyRecord($data, $student_id, $exam_id, $exam_screen_id); //腕表插入使用记录
 
             //签到
@@ -262,7 +276,8 @@ class IndexController extends CommonController
         try{
             $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
             $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
-            if(!$student_id){    //如果学生不存在
+            //1、腕表绑定的学生不存在（直接解绑，反馈学生不存在）
+            if(is_null($student_id)){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
                     return \Response::json(array('code'=>2));       //该腕表绑定的学生不存在
@@ -283,6 +298,7 @@ class IndexController extends CommonController
             if(!$screen_id){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
+                   // ExamQueue::where('student_id',$student_id)->where('exam_id',$exam_id)->delete();
                     $action = '解绑';
                     $updated_at = date('Y-m-d H:i:s',time());
                     $data = array(
@@ -322,6 +338,7 @@ class IndexController extends CommonController
                 ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
                 $result = Watch::where('id',$id)->update(['status'=>0]);
                 if($result){
+                   // ExamQueue::where('student_id',$student_id)->where('exam_id',$exam_id)->delete();
                     $action='解绑';
                     $updated_at = date('Y-m-d H:i:s',time());
                     $data = array(
@@ -369,6 +386,8 @@ class IndexController extends CommonController
                     $watchModel = new WatchLog();
                     $watchModel->unwrapRecord($data);
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
+                    //中途解绑（更改队列）
+                    ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);//下一次次数增加
 
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                     $examScreening   =   new ExamScreening();
@@ -388,6 +407,7 @@ class IndexController extends CommonController
             }else{
                 throw new \Exception('解绑失败');
             }
+
         }
         catch(\Exception $ex)
         {
@@ -868,12 +888,10 @@ class IndexController extends CommonController
                 ->leftjoin('exam_gradation', function ($join) {
                     $join->on('exam_gradation.exam_id', '=', 'exam_screening.exam_id');
                 })->leftjoin('exam_draft_flow', function ($join) {
-                    $join->on('exam_draft_flow.order', '=', 'exam_gradation.order');
+                    $join->on('exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id');
                 })->leftjoin('exam_draft', function ($join) {
                     $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
-                })->groupBy('exam_screening.id')->get();
-
-
+                })->groupBy('exam_draft.station_id')->get();
             /*
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
             //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang

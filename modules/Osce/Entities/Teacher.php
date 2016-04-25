@@ -328,7 +328,7 @@ class Teacher extends CommonModel
             $teacherSubject = $this->handleTeacherSubject($subjects, $user->id, $teacherData['create_user_id']);
 
             $connection->commit();
-            return $teacher;
+            return $user;
 
         } catch(\Exception $ex){
             $connection->rollBack();
@@ -448,7 +448,7 @@ class Teacher extends CommonModel
      * @author Zhoufuxiang 2016-04-18
      * @throws \Exception
      */
-    private function handleTeacherSubject($subjects, $teacher_id, $operator)
+    public function handleTeacherSubject($subjects, $teacher_id, $operator)
     {
         $teacherSubjects = TeacherSubject::where('teacher_id','=',$teacher_id)->whereNotNull('subject_id')->get();
 

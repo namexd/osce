@@ -39,7 +39,7 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder(Request $request, $stationId = null)
+    public function getStudentExamReminder(Request $request, $stationId = null,$examscreeningId = [])
     {
         $this->validate($request, [
             'nfc_code' => 'required|string'
@@ -116,7 +116,7 @@ class StudentWatchController extends CommonController
 
         //根据考生id得到所有该考生的队列列表
         $examQueueModel = new ExamQueue();
-        $examQueueCollect = $examQueueModel->StudentExamQueue($studentId);
+        $examQueueCollect = $examQueueModel->StudentExamQueue($studentId,$examscreeningId);
         if (is_null($examQueueCollect)) {
             $data['title'] = '未找到学生队列信息';
             $data['code'] = -4;
@@ -151,8 +151,8 @@ class StudentWatchController extends CommonController
      */
     public function nowQueue($examQueueCollect, $stationId)
     {
+        
         $statusArray = $examQueueCollect->pluck('status')->toArray();
-
         if (in_array(1, $statusArray)) {
             return $this->getStatusOneExam($examQueueCollect);
         }
@@ -250,7 +250,6 @@ class StudentWatchController extends CommonController
                 throw new \Exception('没有发现该考生相关排考计划');
             }
         } else {
-            //判断下一场考试中是否还有学生在等待考试或者在开始中
 
             //调用状态为1的方法
             $data = $this->getStatusWaitExam($examQueueCollect, $stationId);
@@ -326,9 +325,11 @@ class StudentWatchController extends CommonController
         });
 
         $item = array_shift($items);
+    
 
         // 判断老师是否准备完成
         $examStationStatusModel = new ExamStationStatus();
+
         $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
             ->where('exam_screening_id', '=', $item->exam_screening_id)
             ->where('station_id', '=', $stationId)
@@ -337,9 +338,9 @@ class StudentWatchController extends CommonController
             return [
                 'code'  => 0, // 0，等待状态（对应界面：Prepare_fragment）
                 'title' => '等待老师准备中',
+                'willStudents' => '',
             ];
         }
-
         //判断前面是否有人考试
         if (empty($item->station_id)) {
             $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
