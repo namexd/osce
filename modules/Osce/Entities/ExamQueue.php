@@ -443,6 +443,7 @@ class ExamQueue extends CommonModel
             //查询学生是否已开始考试
             //dd($studentId);
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
+                ->where('exam_id', '=', $exam->id)
                 ->where('station_id', '=', $stationId)
                 ->whereIn('status', [0,1,2])
                 ->first();
@@ -513,6 +514,7 @@ class ExamQueue extends CommonModel
                     } else {
                         //查询到考站的标准时间
                         $ExamTime = ExamQueue::where('student_id', '=', $studentId)
+                            ->where('exam_id',$exam->id)
                             ->where('station_id', '=', $stationId)
                             ->where('status', '=', 2)
                             ->first();
