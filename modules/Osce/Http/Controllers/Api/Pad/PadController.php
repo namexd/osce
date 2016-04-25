@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamRoom;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\RoomStation;
@@ -391,7 +392,6 @@ class PadController extends  CommonController{
             $teacherId = $request->input('user_id');
 
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-
             //将该条信息的首位置零
 //            $queue->stick = 0;
 //            if (!$queue->save()) {
@@ -402,11 +402,19 @@ class PadController extends  CommonController{
             $examScreeningStudentModel = new ExamScreeningStudent();
             $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
                 ->where('student_id','=',$queue->student_id)->first();
+
             $watchModel = new Watch();
             $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+            //拿到阶段序号
+            $gradationOrder =ExamScreening::find($queue->exam_screening_id);
+            //拿到所有场次id
+
+            $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+        
             $studentWatchController = new StudentWatchController();
             $request['nfc_code'] = $watchData->code;
-            $studentWatchController->getStudentExamReminder($request,$stationId);
+
+            $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
 
             return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
 

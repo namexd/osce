@@ -762,6 +762,7 @@ class ApiController extends CommonController
                                                     ->where('exam_screening_id', '=', $examScreeningId)
                                                     ->where('station_id', '=', $stationId)
                                                     ->first();
+
         if (is_null($examStationStatus)) {
             return response()->json(
                 $this->success_data([], -1, '未查询到当前考站是否准备完成信息')
@@ -802,6 +803,8 @@ class ApiController extends CommonController
             })->whereIn('watch_log.student_id', $studentIds)
                 ->where('watch.status', '=', 1)
                 ->get();
+
+          //  dd($watches);
 
             $watchNfcCodes = [];
             if (!empty($watches)) {

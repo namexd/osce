@@ -133,7 +133,7 @@ class ExamQueue extends CommonModel
      * @throws \Exception
      * @author zhouqiang
      */
-    public function StudentExamQueue($studentId)
+    public function StudentExamQueue($studentId,$examscreeningId)
     {
 //        $todayStart = date('Y-m-d 00:00:00');
 //        $todayEnd = date('Y-m-d 23:59:59');
@@ -165,9 +165,17 @@ class ExamQueue extends CommonModel
 //                'station.mins as mins',
 //                'exam_queue.exam_id as exam_id'
 //            ])->get();
-        return $this->where('student_id', '=', $studentId)
-            ->orderBy('begin_dt', 'asc')
-            ->get();
+        if(!is_null($examscreeningId)){
+            return $this->where('student_id', '=', $studentId)
+                ->whereIn('exam_screening_id',$examscreeningId)
+                ->orderBy('begin_dt', 'asc')
+                ->get();
+        }else{
+            return $this->where('student_id', '=', $studentId)
+                ->orderBy('begin_dt', 'asc')
+                ->get();
+        }
+
     }
 
 
