@@ -55,7 +55,8 @@
     'excel':'{{route('osce.admin.exam.postImportStudent')}}',
     'id':'{{$id}}',
     'judgeUrl':'{{route('osce.admin.exam.postJudgeStudent')}}',
-    'deleteUrl':'{{route('osce.admin.exam.postDelStudent')}}'}"/>
+    'deleteUrl':'{{route('osce.admin.exam.postDelStudent')}}',
+    'reload':'{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}'}"/>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">

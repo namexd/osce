@@ -3947,7 +3947,7 @@ function examinee_manage(){
                             success:function(data){
                                 if(data.code ==1){
                                     layer.msg('删除成功！',{'skin':'msg-success','icon':1});
-                                    location.reload();
+                                    location.href = pars.reload;
                                 }else {
                                     layer.msg(data.message,{'skin':'msg-error','icon':1});
                                 }
