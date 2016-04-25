@@ -117,9 +117,22 @@ class IndexController extends CommonController
             'exam_id'   => 'required' //考试id
         ]);
 
+
         $code   = $request->get('code');
         $id_card= $request->get('id_card');
         $exam_id= $request->get('exam_id');
+
+        //判断腕表是否已绑定并且没有解绑
+        $watchModel = new Watch();
+        $check = $watchModel->leftjoin('watch_log',function($log){
+            $log->on('watch_log.watch_id','=','watch.id');
+        })->where('watch.code','=',$code)->orderBy('watch_log.id','desc')->first();
+
+        if(count($check) > 0){
+            if($check->action == '绑定'){
+                return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
+            }
+        }
         //获取腕表id
         $id     = Watch::where('code',$code)->select('id')->first()->id;
 
