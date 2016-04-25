@@ -226,6 +226,7 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为3时
     private function getStatusThreeExam($examQueueCollect, $stationId)
     {
+        dump($examQueueCollect,222);
         $nextExamQueue = '';
         $examQueue = '';
         foreach ($examQueueCollect as $examQueue) {
@@ -250,7 +251,7 @@ class StudentWatchController extends CommonController
             }
         } else {
                 
-            
+            dump(1111);
 
             //调用状态为1的方法
             $data = $this->getStatusWaitExam($examQueueCollect, $stationId);
@@ -331,6 +332,7 @@ class StudentWatchController extends CommonController
 
         // 判断老师是否准备完成
         $examStationStatusModel = new ExamStationStatus();
+
         $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
             ->where('exam_screening_id', '=', $item->exam_screening_id)
             ->where('station_id', '=', $stationId)
