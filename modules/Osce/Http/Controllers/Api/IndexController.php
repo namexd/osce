@@ -200,9 +200,9 @@ class IndexController extends CommonController
             $action     = '绑定';
             $updated_at = date('Y-m-d H:i:s', time());
             $data       = array(
-                'watch_id' => $id,
-                'action' => $action,
-                'context' => array('time' => $updated_at, 'status' => 1),
+                'watch_id'   => $id,
+                'action'     => $action,
+                'context'    => array('time' => $updated_at, 'status' => 1),
                 'student_id' => $student_id
             );
             $watchModel = new WatchLog();
@@ -305,14 +305,30 @@ class IndexController extends CommonController
             $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
             $status = $this->checkType($exameeStatus->status);
 
-            $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
-            if(!$screen_id){
+            //修改场次状态
+            $examScreeningModel = new ExamScreening();
+            $examScreening      = $examScreeningModel -> getExamingScreening($exam_id);
+            if(is_null($examScreening))
+            {
+                $examScreening  = $examScreeningModel -> getNearestScreening($exam_id);
+                $examScreening  ->status = 1;
+                //场次开考（场次状态变为1）
+                if(!$examScreening -> save())
+                {
+                    throw new \Exception('场次开考失败！');
+                }
+            }
+            $exam_screen_id = $examScreening->id;
+
+//            $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
+
+            if(!$exam_screen_id){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
                    // ExamQueue::where('student_id',$student_id)->where('exam_id',$exam_id)->delete();
-                    $action = '解绑';
+                    $action     = '解绑';
                     $updated_at = date('Y-m-d H:i:s',time());
-                    $data = array(
+                    $data       = array(
                         'watch_id'       =>$id,
                         'action'         =>$action,
                         'context'        =>array('time'=>$updated_at,'status'=>0),
@@ -320,7 +336,7 @@ class IndexController extends CommonController
                     );
                     //将解绑记录添加到腕表使用历史表中
                     $watchModel = new WatchLog();
-                    $watchModel->unwrapRecord($data);
+                    $watchModel ->unwrapRecord($data);
                     return \Response::json([
                         'code' => 1,
                         'data' => [
@@ -334,14 +350,17 @@ class IndexController extends CommonController
                     throw new \Exception('解绑失败');
                 }
             }
-            $exam_screen_id = $screen_id->exam_screening_id;
+
             $ExamFinishStatus = ExamQueue::whereNotIn('status', [3,4])->where('student_id', '=', $student_id)
-                                            ->where('exam_screening_id',$exam_screen_id)
-                                            ->count();
+                                         ->where('exam_screening_id',$exam_screen_id)
+                                         ->count();
 
             //$ExamFlowModel = new  ExamFlow();
             //$studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
-            if($ExamFinishStatus==0){ //如果考试流程结束
+
+            //如果考试流程结束
+            if($ExamFinishStatus == 0)
+            {
                 if($exameeStatus->status != 0){
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
                 }
