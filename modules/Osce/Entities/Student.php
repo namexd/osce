@@ -707,7 +707,7 @@ class Student extends CommonModel
             'student.mobile as mobile',
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
-        ])->orderBy('exam_order.begin_dt')->paginate(100);
+        ])->orderBy('student.id')->paginate(100);
        // $queries = \DB::connection('osce_mis')->getQueryLog();
         //dd($builder->toArray());
         return $builder;
