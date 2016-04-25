@@ -41,6 +41,9 @@ class StudentWatchController extends CommonController
      */
     public function getStudentExamReminder(Request $request, $stationId = null,$examscreeningId=[])
     {
+
+        
+        dd($examscreeningId);
         $this->validate($request, [
             'nfc_code' => 'required|string'
         ]);
@@ -318,7 +321,6 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为0时
     private function getStatusWaitExam($examQueueCollect, $stationId)
     {
-       dd($examQueueCollect);
         $items = array_where($examQueueCollect, function ($key, $value) {
             if ($value->status == 0) {
                 return $value;
