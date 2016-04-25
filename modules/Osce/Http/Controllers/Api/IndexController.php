@@ -125,30 +125,20 @@ class IndexController extends CommonController
         //判断腕表是否存在
         $watchModel = new Watch();
 
-        $check = $watchModel->where('watch.code', '=', $code)->first();
+            $watchInfo = $watchModel->where('watch.code', '=', $code)->first();
+            if (is_null($watchInfo)) {
+                return \Response::json(array('code' => 111)); //前腕表不存在
+            }
+            $id = $watchInfo->id;       //获取腕表id
 
-        if (count($check) > 0) {
-            //dd($check->id);
-            $watchLog = WatchLog::where('watch_id', '=', intval($check->id))->orderBy('id', 'desc')->first();
+            /** 判断腕表是否已绑定并且没有解绑 **/
+            //取腕表最后一次使用记录
+            $watchLog = WatchLog::where('watch_id', '=', intval($id))->orderBy('created_at', 'desc')->first();
             if (!is_null($watchLog)) {
                 if ($watchLog->action == '绑定') {
                     return \Response::json(array('code' => 11)); //判断当前腕表已绑定身份证
                 }
-
-                $watchInfo = $watchModel->where('watch.code', '=', $code)->first();
-                if (is_null($watchInfo)) {
-                    return \Response::json(array('code' => 111)); //前腕表不存在
-                }
-                $id = $watchInfo->id;       //获取腕表id
-
-                /** 判断腕表是否已绑定并且没有解绑 **/
-                //取腕表最后一次使用记录
-                $watchLog = WatchLog::where('watch_id', '=', intval($id))->orderBy('created_at', 'desc')->first();
-                if (!is_null($watchLog)) {
-                    if ($watchLog->action == '绑定') {
-                        return \Response::json(array('code' => 11)); //判断当前腕表已绑定身份证
-                    }
-                }
+            }
 
                 //查询学生是否参加当前考试
                 $studentExam = Student::where('idcard', '=', $id_card)->where('exam_id', '=', $exam_id)->first();
@@ -253,8 +243,8 @@ class IndexController extends CommonController
                 }
 
             }
-        }
-    }
+
+
 
     /**
      *解除绑定腕表
