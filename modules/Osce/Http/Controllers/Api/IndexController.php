@@ -384,6 +384,8 @@ class IndexController extends CommonController
                     $watchModel = new WatchLog();
                     $watchModel->unwrapRecord($data);
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
+                    //中途解绑（更改队列）
+                    ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);//下一次次数增加
 
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                     $examScreening   =   new ExamScreening();
