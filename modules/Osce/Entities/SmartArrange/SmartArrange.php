@@ -405,9 +405,7 @@ class SmartArrange
         }
         try {
             foreach ($planList as $plan) {
-                dd($planList,$plan);
-
-                if (!array_key_exists($plan->exam_screening_id, $studentOrderData)) {
+                if (!array_key_exists($plan->student_id, $studentOrderData)) {
                     $studentOrderData[$plan->exam_screening_id][$plan->student_id] = [
                         'exam_id' => $exam->id,
                         'exam_screening_id' => $plan->exam_screening_id,
@@ -419,12 +417,15 @@ class SmartArrange
                 }
 
             }
-            dd($studentOrderData);
+         
             foreach ($studentOrderData as $stduentOrder) {
-
-                if (!ExamOrder::create($stduentOrder)) {
-                    throw new \Exception('保存学生考试顺序失败');
+                foreach ($stduentOrder as $value){
+                    if (!ExamOrder::create($value)) {
+                        throw new \Exception('保存学生考试顺序失败');
+                    }
                 }
+
+
             }
         } catch (\Exception $ex) {
             throw $ex;
