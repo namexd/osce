@@ -165,7 +165,8 @@ class ExamQueue extends CommonModel
 //                'station.mins as mins',
 //                'exam_queue.exam_id as exam_id'
 //            ])->get();
-        if(is_null($examscreeningId)){
+        if(!is_null($examscreeningId)){
+
             return $this->where('student_id', '=', $studentId)
                 ->whereIn('exam_screening_id',$examscreeningId)
                 ->orderBy('begin_dt', 'asc')
