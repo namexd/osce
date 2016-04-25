@@ -353,7 +353,9 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.blocking', 1)
                 ->skip(count($station))
                 ->take(count($station))
+                ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.updated_at', 'asc')
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -381,7 +383,9 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.exam_id', $examId)
                 ->where('exam_queue.blocking', 1)
                 ->where('exam_queue.gradation_order', $ExamDraftFlow->order)
+                ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.updated_at', 'asc')
                 ->skip(1)//TODO 可能要改
                 ->take(1)
                 ->select(
@@ -671,8 +675,25 @@ class ExamQueue extends CommonModel
     static public function findQueueIdByStudentId($studentId, $stationId)
     {
         try {
+            //修改场次状态
+            $examId =Exam::doingExam();
+            $examScreeningModel = new ExamScreening();
+            $examScreening      = $examScreeningModel -> getExamingScreening($examId->id);
+            if(is_null($examScreening))
+            {
+                $examScreening  = $examScreeningModel -> getNearestScreening($examId->id);
+                $examScreening  ->status = 1;
+                //场次开考（场次状态变为1）
+                if(!$examScreening -> save())
+                {
+                    throw new \Exception('场次开考失败！');
+                }
+            }
+            $exam_screen_id = $examScreening->id;
+
+
             //通过学生id找到对应的examScreeningStudent实例
-            $examScreening = ExamScreeningStudent::where('student_id', $studentId)->first();
+            $examScreening = ExamScreeningStudent::where('student_id', $studentId)->where('exam_screening_id','=', $exam_screen_id)->first();
 
             if (is_null($examScreening)) {
                 throw new \Exception('没找到对应的学生编号', 2100);
