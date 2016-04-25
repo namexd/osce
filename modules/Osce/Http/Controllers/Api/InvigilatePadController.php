@@ -829,7 +829,7 @@ class InvigilatePadController extends CommonController
                 $request['nfc_code'] = $watchData->code;
 
                 $studentWatchController->getStudentExamReminder($request);
-                
+
                 $studentModel = new Student();
                 $exam = Exam::doingExam();
                 $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
