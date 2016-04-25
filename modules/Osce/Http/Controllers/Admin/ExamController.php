@@ -193,6 +193,7 @@ class ExamController extends CommonController
         try{
             //处理考试场次时间
             $timeData = $model->handleScreeningTime($examScreeningData, $user);
+            $sequenceCate = $request->input('sequence_cate', null);
             //获取相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'code'           => 100,
@@ -202,7 +203,7 @@ class ExamController extends CommonController
                 'status'         => 0,
                 'total'          => 0,
                 'create_user_id' => $user -> id,
-                'sequence_cate'  => e($request  ->  get('sequence_cate')),
+                'sequence_cate'  => is_array($sequenceCate) ? null : $sequenceCate,
                 'sequence_mode'  => e($request  ->  get('sequence_mode')),
                 'address'        => e($request  ->  get('address')),
                 'same_time'      => intval($request  ->  get('same_time')),
@@ -210,9 +211,9 @@ class ExamController extends CommonController
             ];
             //阶段
             $gradation = intval($request->get('gradation_order', 1))? :1;
-            $gradationMode = $request->input('gradation_sequence_mode', []);
+
             //添加考试
-            $result = $model -> addExam($examData, $timeData['examScreeningData'], $gradationMode, $gradation, $examArrangeRepository);
+            $result = $model -> addExam($examData, $timeData['examScreeningData'], $sequenceCate, $gradation, $examArrangeRepository);
             if(!$result){
                 throw new \Exception('新增考试失败');
             }
@@ -313,14 +314,14 @@ class ExamController extends CommonController
         try{
             //处理考试场次时间
             $timeData = $examModel->handleScreeningTime($examScreeningData, $user);
-
+            $sequenceCate = $request->input('sequence_cate', null);
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'name'          => e($request  ->  get('name')),
                 'begin_dt'      => $timeData['begin_dt'],
                 'end_dt'        => $timeData['end_dt'],
                 'total'         => count(Student::where('exam_id', $exam_id)->get()),
-                'sequence_cate' => $request  ->  get('sequence_cate'),
+                'sequence_cate' => is_array($sequenceCate) ? null : $sequenceCate,
                 'sequence_mode' => $request  ->  get('sequence_mode'),
                 'address'       => e($request  ->  get('address')),
                 'same_time'     => intval($request  ->  get('same_time')),
@@ -328,10 +329,9 @@ class ExamController extends CommonController
             ];
             //阶段
             $gradation = intval($request->input('gradation_order',1))? :1;
-            $gradationMode = $request->input('gradation_sequence_mode', []);
 
             //编辑考试相关信息
-            $result = $examModel -> editExam($exam_id, $examData, $timeData['examScreeningData'], $gradation, $gradationMode, $examArrangeRepository);
+            $result = $examModel -> editExam($exam_id, $examData, $timeData['examScreeningData'], $gradation, $sequenceCate, $examArrangeRepository);
             if(!$result)
             {
                 throw new \Exception('修改考试失败');

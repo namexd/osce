@@ -474,6 +474,10 @@ class Exam extends CommonModel
         $examGradation = ExamGradation::where('exam_id', '=', $exam_id)->get();
         $num = $examGradation->count();
 
+        if (!is_array($gradationMode)) {
+            $gradationMode = null;
+        }
+
         //比较 阶段个数 (不相等，则添加 或者 删除)
         if ($num != $gradation) {
             if ($num != 0){
@@ -507,7 +511,7 @@ class Exam extends CommonModel
                         'exam_id'           => $exam_id,
                         'order'             => $i,
                         'gradation_number'  => $gradation,
-                        '$gradationMode' => count($gradationMode) == 0 ? null : $gradationMode[$i],
+                        '$gradationMode' => $gradationMode[$i],
                         'created_user_id'   => Auth::user()->id
                     ];
                     if (!ExamGradation::create($gradationData)) {
