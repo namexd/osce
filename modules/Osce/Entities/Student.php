@@ -635,10 +635,11 @@ class Student extends CommonModel
 
     public function getStudentQueue($exam_id, $screen_id, $countStation)
     {
-        $buondNum = ExamOrder::where('exam_id', $exam_id)->where('exam_screening_id', $screen_id)->where('status',
-            1)->select()->get();
+        $buondNum = ExamOrder::where('exam_id', '=', $exam_id)->where('status','=',1)
+                             ->where('exam_screening_id', '=', $screen_id)->get();
         $buondNum = count($buondNum);
-        $num = $countStation - $buondNum;
+        $num      = $countStation - $buondNum;
+
         if ($num === 0 || $num < 0) {
             return array();
         }
@@ -651,11 +652,13 @@ class Student extends CommonModel
         $builder = $builder->where(function ($query) {
             $query->whereIn('exam_order.status',[0,4]);
         });*/
-        $endStudentList=ExamQueue::where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->whereIn('status', [0,2,1])->get();
+        $endStudentList = ExamQueue::where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->whereIn('status', [0,2,1])->get();
 
         if(count($endStudentList)){
 
-            $studentList=ExamQueue::where('status',3)->where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->groupBy('student_id')->get()->pluck('student_id')->toArray();
+            $studentList = ExamQueue::where('status',3)->where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)
+                                    ->groupBy('student_id')->get()->pluck('student_id')->toArray();
+
             $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
                 $join->on('student.id', '=', 'exam_order.student_id');
             })->where('exam_order.exam_id', '=', $exam_id)

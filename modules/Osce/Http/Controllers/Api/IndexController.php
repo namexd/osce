@@ -117,7 +117,6 @@ class IndexController extends CommonController
             'exam_id'   => 'required' //考试id
         ]);
 
-
         $code   = $request->get('code');
         $id_card= $request->get('id_card');
         $exam_id= $request->get('exam_id');
@@ -126,7 +125,7 @@ class IndexController extends CommonController
         $watchModel = new Watch();
         $watchInfo  = $watchModel->where('watch.code', '=', $code)->first();
         if(is_null($watchInfo)){
-            return \Response::json(array('code'=>111)); //前腕表不存在
+            return \Response::json(array('code'=>111)); //当前腕表不存在
         }
         $id = $watchInfo->id;       //获取腕表id
 
@@ -139,6 +138,14 @@ class IndexController extends CommonController
             }
         }
 
+        //查询 正在考试的考试 是否是当前考试
+        $examStatus = Exam::where('status','=',1)->first();
+        if($examStatus){
+            if($examStatus->id != $exam_id){
+                return \Response::json(array('code'=>6));   //正在考试 的考试 不是当前考试（当前考试未开考，另外有其他的考试正在考）
+            }
+        }
+
         //查询学生是否参加当前考试
         $studentExam= Student::where('idcard','=',$id_card)->where('exam_id','=',$exam_id)->first();
         if(is_null($studentExam)){
@@ -146,30 +153,23 @@ class IndexController extends CommonController
         }
         $student_id = $studentExam->id;     //获取学生id
 
-        //查询是否安排考试
-        $planId     = ExamPlan::where('student_id',$student_id)->where('exam_id',$exam_id)->select('id')->first();
+        //查询该学生是否在 当前考试的排考计划中
+        $planId     = ExamPlan::where('student_id','=',$student_id)->where('exam_id','=',$exam_id)->select('id')->first();
         if(is_null($planId)){
             return \Response::json(array('code' =>4));  //未安排当前考试
         }
 
-        //获取考生列表
+        //获取考试队列中的考生列表
         $students   = $this->getStudentList($request);
         $idcards    = [];
         $students   = json_decode($students->content());
-
+        //判断当前考生，是否在队列中
         foreach($students->data as $item)
         {
             $idcards[] = $item->idcard;
         }
         if(!in_array($id_card,$idcards)){
             return \Response::json(array('code'=>5));   //未在考试队列 请等待
-        }
-
-        $examStatus = Exam::where('status','=',1)->first();
-        if($examStatus){
-            if($examStatus->id != $exam_id){
-                return \Response::json(array('code'=>6));   //正在考试 的考试 不是当前考试（当前考试未开考，另外有其他的考试正在考）
-            }
         }
 
         //修改场次状态
@@ -185,9 +185,13 @@ class IndexController extends CommonController
                 throw new \Exception('场次开考失败！');
             }
         }
+        $exam_screen_id = $examScreening->id;
+
         //获取考试场次Id
-        $screen_id      = ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
-        $exam_screen_id = $screen_id->exam_screening_id;
+//        $screen_id      = ExamOrder::where('exam_id',$exam_id)
+//                        ->where('student_id',$student_id)->select('exam_screening_id')->first();
+//        $exam_screen_id = $screen_id->exam_screening_id;
+
 
         $result         = Watch::where('id', $id)->update(['status' => 1]);//修改腕表状态
         if ($result)
@@ -872,21 +876,20 @@ class IndexController extends CommonController
             'exam_id' => 'required|integer'
         ]);
         $exam_id = $request->get('exam_id');
-        $examScreeningModel =   new ExamScreening();
-        $examScreening      =   $examScreeningModel ->  getExamingScreening($exam_id);
+        $screenModel    =   new ExamScreening();
+        $examScreening  =   $screenModel ->getExamingScreening($exam_id);
 
         if(is_null($examScreening))
         {
-            $examScreening  =   $examScreeningModel->getNearestScreening($exam_id);
+            $examScreening = $screenModel->getNearestScreening($exam_id);
         }
 
         if (!$examScreening) {
             return \Response::json(array('code' => 2));     //没有对应的开考场次 —— 考试场次没有(1、0)
         }
-        $screen_id  = $examScreening->id;
+        $screen_id    = $examScreening->id;
         $studentModel = new Student();
         try {
-            $screenModel = new ExamScreening();
 
             //查找exam_screening
             $stations = $screenModel->where('exam_screening.exam_id','=',$exam_id)
@@ -917,11 +920,11 @@ class IndexController extends CommonController
             $batch        = config('osce.batch_num');       //默认为2
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
 
-            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);//获取考生队列
+            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列
 
-            $data=[];
+            $data = [];
             foreach($list as $itm){
-                $data[]=[
+                $data[] = [
                     'name'   => $itm->name,
                     'idcard' => $itm->idcard,
                     'code'   => $itm->code,
