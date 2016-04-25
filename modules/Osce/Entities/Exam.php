@@ -352,7 +352,7 @@ class Exam extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addExam(array $examData, array $examScreeningData, $gradation = 1, ExamArrangeRepository $examArrangeRepository)
+    public function addExam(array $examData, array $examScreeningData, $gradationMode, $gradation = 1, ExamArrangeRepository $examArrangeRepository)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -362,7 +362,7 @@ class Exam extends CommonModel
                 throw new \Exception('创建考试基本信息失败');
             }
             //处理 考试阶段关系 数据
-            $this->handleGradation($result->id, $gradation, $examArrangeRepository);
+            $this->handleGradation($result->id, $gradation, $gradationMode, $examArrangeRepository);
 
             //将考试对应的考次关联数据写入考试场次表中
             foreach ($examScreeningData as $value) {
@@ -400,7 +400,7 @@ class Exam extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function editExam($exam_id, array $examData, array $examScreeningData, $gradation, ExamArrangeRepository $examArrangeRepository)
+    public function editExam($exam_id, array $examData, array $examScreeningData, $gradation, $gradationMode, ExamArrangeRepository $examArrangeRepository)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
@@ -437,7 +437,7 @@ class Exam extends CommonModel
                 }
             }
             //处理 考试阶段关系 数据
-            $this->handleGradation($exam_id, $gradation, $examArrangeRepository);
+            $this->handleGradation($exam_id, $gradation, $gradationMode, $examArrangeRepository);
 
             //处理 考试场次
             $this->handleExamScreening($exam_id, $examScreeningData, $examArrangeRepository);
@@ -468,11 +468,15 @@ class Exam extends CommonModel
      * @author Zhoufuxiang 2016-04-18
      * @throws \Exception
      */
-    private function handleGradation($exam_id, $gradation, ExamArrangeRepository $examArrangeRepository)
+    private function handleGradation($exam_id, $gradation, $gradationMode, ExamArrangeRepository $examArrangeRepository)
     {
         //查询原有的 考试阶段 个数
         $examGradation = ExamGradation::where('exam_id', '=', $exam_id)->get();
         $num = $examGradation->count();
+
+        if (!is_array($gradationMode)) {
+            $gradationMode = null;
+        }
 
         //比较 阶段个数 (不相等，则添加 或者 删除)
         if ($num != $gradation) {
@@ -507,6 +511,7 @@ class Exam extends CommonModel
                         'exam_id'           => $exam_id,
                         'order'             => $i,
                         'gradation_number'  => $gradation,
+                        '$gradationMode' => $gradationMode[$i],
                         'created_user_id'   => Auth::user()->id
                     ];
                     if (!ExamGradation::create($gradationData)) {

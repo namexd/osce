@@ -40,9 +40,12 @@ class RoomMode extends AbstractEntity implements EntityInterface
 
     function dataBuilder($exam, $screen, $student, $entity, $i)
     {
+//        if ($entity->room_id == 30 && $student->id == 5031) {
+//            dump($entity->room_id, $entity->name, date('Y-m-d H:i:s', $i));
+//        }
         // TODO: Implement dataBuilder() method.
-        $data = [
-            'student_id' => is_null($student->id) ? $student->student_id : $student->id,
+        return [
+            'student_id' => $student->id,
             'room_id' => $entity->room_id,
             'station_id' => null,
             'exam_id' => $exam->id,
@@ -52,8 +55,6 @@ class RoomMode extends AbstractEntity implements EntityInterface
             'flow_id' => $entity->flow_id,
             'gradation_order' => $screen->gradation_order
         ];
-
-        return $data;
     }
 
 }

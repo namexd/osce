@@ -82,6 +82,27 @@ trait SQLTraits
             ->get();
     }
 
+    function waitingPollStudentSql($screen, $entity)
+    {
+        $build = ExamPlanRecord::with('student')
+            ->select(\DB::raw('(count(end_dt) = count(begin_dt)) as num,student_id,count(`station_id`) as flows_num'))
+            ->where('exam_screening_id', $screen->id)
+            ->havingRaw('num > ?', [0])
+            ->havingRaw('flows_num < ?', [$screen->flowNum])
+            ->groupBy('student_id');
+
+        switch ($entity->type) {
+            case 1:
+
+                return $build->where('room_id', '<>', $entity->room_id)->get();
+            case 2:
+                return $build->where('station_id', '<>', $entity->station_id)->get();
+            default:
+                throw new \Exception('System Error');
+        }
+
+    }
+
     /**
      * 将流程写进screen
      * @param $screen
@@ -309,7 +330,11 @@ trait SQLTraits
             ->join('room', 'room.id', '=', 'exam_draft.room_id')
             ->leftJoin('subject', 'subject.id', '=', 'exam_draft.subject_id')
             ->leftJoin('exam_paper_exam_station', 'exam_paper_exam_station.station_id', '=', 'exam_draft.station_id')
-            ->leftJoin('exam_paper', 'exam_paper.id', '=', 'exam_paper_exam_station.exam_paper_id')
+//            ->leftJoin('exam_paper', 'exam_paper.id', '=', 'exam_paper_exam_station.exam_paper_id')
+            ->leftJoin('exam_paper', function ($join) use ($exam){
+                $join->on('exam_paper.id', '=', 'exam_paper_exam_station.exam_paper_id')
+                    ->where('exam_paper_exam_station.exam_id', '=', $exam->id);
+            })
             ->where('exam_screening.id', $screen->id)
             ->where('exam_gradation.exam_id', $exam->id)
             ->select(

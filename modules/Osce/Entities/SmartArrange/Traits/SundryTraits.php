@@ -56,13 +56,12 @@ trait SundryTraits
     {
         $temp = [];
         //依据考试实体数量乘上系数为总数，进行循环
-        for ($i = 0; $i < (count($this->_E)) * config('osce.wait_student_num'); ++$i) {
+        for ($i = 0; $i < $this->stationCount * config('osce.wait_student_num'); ++$i) {
             //将最后的学生弹出，放入到侯考区属性里
             if (count($this->_S) != 0) {
                 $temp[] = $this->_S->pop();
             }
         }
-
         return $temp;
     }
 
