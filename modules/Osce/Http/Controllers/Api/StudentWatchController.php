@@ -41,9 +41,6 @@ class StudentWatchController extends CommonController
      */
     public function getStudentExamReminder(Request $request, $stationId = null,$examscreeningId=[])
     {
-
-        
-        dd($examscreeningId);
         $this->validate($request, [
             'nfc_code' => 'required|string'
         ]);
