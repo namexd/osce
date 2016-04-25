@@ -2651,7 +2651,7 @@ function staff_manage_invigilator_add() {
                         message: '身份证号不能为空'
                     },
                     regexp: {
-                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        regexp: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
                         message: '请输入正确的身份证号'
                     }
                 }
@@ -2917,7 +2917,7 @@ function staff_manage_invigilator_edit() {
                         message: '身份证号不能为空'
                     },
                     regexp: {
-                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        regexp: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
                         message: '请输入正确的身份证号'
                     }
                 }
@@ -3232,7 +3232,7 @@ function staff_manage_invigilator_sp_add() {
                         message: '身份证号不能为空'
                     },
                     regexp: {
-                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        regexp: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
                         message: '请输入正确的身份证号'
                     }
                 }
@@ -3499,7 +3499,7 @@ function staff_manage_invigilator_sp_edit() {
                         message: '身份证号不能为空'
                     },
                     regexp: {
-                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        regexp: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
                         message: '请输入正确的身份证号'
                     }
                 }
@@ -3826,7 +3826,7 @@ function staff_manage_invigilator_patrol_add() {
                         message: '身份证号不能为空'
                     },
                     regexp: {
-                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        regexp: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
                         message: '请输入正确的身份证号'
                     }
                 }
@@ -4048,7 +4048,7 @@ function staff_manage_invigilator_patrol_edit() {
                         message: '身份证号不能为空'
                     },
                     regexp: {
-                        regexp: /^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
+                        regexp: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/,
                         message: '请输入正确的身份证号'
                     }
                 }

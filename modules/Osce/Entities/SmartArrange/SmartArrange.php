@@ -398,15 +398,15 @@ class SmartArrange
     {
         //$planList = ExamOrder::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
         $planList = ExamPlan::where('exam_id', '=', $exam->id)->orderBy('begin_dt', 'asc')->get();
+
         $studentOrderData = [];
         if (ExamOrder::where('exam_id', '=', $exam->id)->delete() === false) {
             throw new \Exception('弃用旧安排失败');
         }
         try {
             foreach ($planList as $plan) {
-
-                if (!array_key_exists($plan->exam_screening_id, $studentOrderData)) {
-                    $studentOrderData[$plan->student_id] = [
+                if (!array_key_exists($plan->student_id, $studentOrderData)) {
+                    $studentOrderData[$plan->exam_screening_id][$plan->student_id] = [
                         'exam_id' => $exam->id,
                         'exam_screening_id' => $plan->exam_screening_id,
                         'student_id' => $plan->student_id,
@@ -415,13 +415,18 @@ class SmartArrange
                         'created_user_id' => \Auth::id(),
                     ];
                 }
-                foreach ($studentOrderData as $stduentOrder) {
-                    if (!ExamOrder::create($stduentOrder)) {
+
+            }
+         
+            foreach ($studentOrderData as $stduentOrder) {
+                foreach ($stduentOrder as $value){
+                    if (!ExamOrder::create($value)) {
                         throw new \Exception('保存学生考试顺序失败');
                     }
                 }
-            }
 
+
+            }
         } catch (\Exception $ex) {
             throw $ex;
         }
