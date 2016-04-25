@@ -849,7 +849,7 @@ class Student extends CommonModel
             $examScreening->on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
         })->leftjoin('exam_queue', function ($examQueue) {
             $examQueue->on('exam_queue.exam_screening_id', '=', 'exam_screening.id');
-        })->select('exam_queue.status')->first();
+        })->select('exam_queue.status', 'exam_queue.id')->first();
 
         return $builder;
     }
