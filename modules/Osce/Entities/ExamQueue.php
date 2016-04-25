@@ -198,10 +198,16 @@ class ExamQueue extends CommonModel
     static public function examineeByRoomId($room_id, $examId, $stations)
     {
         try {
+
+                $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
+                ->where('exam_draft.room_id',$room_id)
+                ->where('exam_draft_flow.exam_id',$examId)
+                ->first();
             $queueing=ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.status', '=', 2)
                 ->where('student.exam_id', $examId)
+                ->where('exam_queue.gradation_order',$ExamDraftFlow->order)
                 ->where('exam_queue.blocking', 0)
                 ->groupBy('student.id')
                ->first();
@@ -211,6 +217,7 @@ class ExamQueue extends CommonModel
                     ->where('exam_queue.status', '<', 3)
                     ->where('exam_queue.exam_id', '=',$examId)
                     ->where('student.exam_id', $examId)
+                    ->where('exam_queue.gradation_order',$ExamDraftFlow->order)
                     ->where('exam_queue.blocking', 1)
                     ->select(
                         'student.id as student_id',
@@ -236,6 +243,7 @@ class ExamQueue extends CommonModel
                     ->where('exam_queue.room_id', $room_id)
                     ->where('exam_queue.status', '<', 3)
                     ->where('exam_queue.exam_id', '=',$examId)
+                    ->where('exam_queue.gradation_order',$ExamDraftFlow->order)
                     ->where('student.exam_id', $examId)
                     ->select(
                         'student.id as student_id',
@@ -266,9 +274,14 @@ class ExamQueue extends CommonModel
 
     static public function examineeByStationId($stationId, $examId)
     {
+        $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
+            ->where('exam_draft.station_id',$stationId)
+            ->where('exam_draft_flow.exam_id',$examId)
+            ->first();
         $queueing=ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
             ->where('exam_queue.station_id', $stationId)
             ->where('exam_queue.status', '=', 2)
+            ->where('exam_queue.gradation_order',$ExamDraftFlow->order)
             ->where('student.exam_id', $examId)
            ->first();
         if(is_null($queueing)) {//没有正在考试的
@@ -276,6 +289,7 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.station_id', $stationId)
                 ->where('exam_queue.status', '<', 3)
                 ->where('student.exam_id', $examId)
+                ->where('exam_queue.gradation_order',$ExamDraftFlow->order)
                 ->where('exam_queue.blocking', 1)
                 ->select(
                     'student.id as student_id',
@@ -299,6 +313,7 @@ class ExamQueue extends CommonModel
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.station_id', $stationId)
                 ->where('exam_queue.status', '<', 3)
+                ->where('exam_queue.gradation_order',$ExamDraftFlow->order)
                 ->where('student.exam_id', $examId)
                 ->select(
                     'student.id as student_id',
@@ -334,10 +349,15 @@ class ExamQueue extends CommonModel
     static public function nextExamineeByRoomId($room_id, $examId, $station)
     {
         try {
+            $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
+                ->where('exam_draft.room_id',$room_id)
+                ->where('exam_draft_flow.exam_id',$examId)
+                ->first();
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
+                ->where('exam_queue.gradation_order', $ExamDraftFlow->order)
                 ->where('exam_queue.blocking', 1)
                 ->skip(count($station))
                 ->take(count($station))
@@ -359,11 +379,16 @@ class ExamQueue extends CommonModel
     static public function nextExamineeByStationId($stationId, $examId)
     {
         try {
+            $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
+                ->where('exam_draft.station_id',$stationId)
+                ->where('exam_draft_flow.exam_id',$examId)
+                ->first();
             return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.station_id', $stationId)
                 ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
                 ->where('exam_queue.blocking', 1)
+                ->where('exam_queue.gradation_order', $ExamDraftFlow->order)
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->skip(1)//TODO 可能要改
                 ->take(1)
