@@ -476,15 +476,22 @@ class Exam extends CommonModel
 
         if (!is_array($gradationMode)) {
             $gradationMode = null;
+            $exam = Exam::doingExam($exam_id);
+            $exam->sequence_cate = null;
+            if (!$exam->save()) {
+                throw new \Exception('系统错误！');
+            }
         }
 
         //比较 阶段个数 (不相等，则添加 或者 删除)
+        $a = 0;
         if ($num != $gradation) {
             if ($num != 0){
-                foreach ($examGradation as $item)
+                foreach ($examGradation as $a => $item)
                 {
                     //1、更新共同 拥有的
                     $item->gradation_number = $gradation;   //更新 当前考试阶段总数量
+                    $item->sequence_cate = is_null($gradationMode) ? null : $gradationMode[$a + 1];
                     if (!$item->save()) {
                         throw new \Exception('更新考试阶段关系失败!');
                     }
@@ -511,9 +518,10 @@ class Exam extends CommonModel
                         'exam_id'           => $exam_id,
                         'order'             => $i,
                         'gradation_number'  => $gradation,
-                        '$gradationMode' => $gradationMode[$i],
+                        'sequence_cate' => is_null($gradationMode) ? null : $gradationMode[$i + $a],
                         'created_user_id'   => Auth::user()->id
                     ];
+//                    dd($gradationData);
                     if (!ExamGradation::create($gradationData)) {
                         throw new \Exception('创建考试阶段关系失败！');
                     }
@@ -524,8 +532,15 @@ class Exam extends CommonModel
                     throw new \Exception('重置作废数据失败');
                 }
             }
+        } else {
+            //重写cate字段
+            foreach ($examGradation as $b => $item) {
+                $item->sequence_cate = is_null($gradationMode) ? null : $gradationMode[$b + 1];
+                if (!$item->save()) {
+                    throw new \Exception('系统错误！');
+                }
+            }
         }
-        //一样多，则无需处理
 
         return $examGradation;
     }

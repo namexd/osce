@@ -1143,7 +1143,7 @@ function exam_assignment_add(){
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
                             '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
                                     '<option value="3">轮循</option>'+
                                     '<option value="2">顺序</option>'+
                                     '<option value="1">随机</option>'+
@@ -1176,7 +1176,7 @@ function exam_assignment_add(){
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
                             '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
                                     '<option value="3">轮循</option>'+
                                     '<option value="2">顺序</option>'+
                                     '<option value="1">随机</option>'+
@@ -1569,7 +1569,7 @@ function exam_basic_info(){
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
                             '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
                                     '<option value="3">轮循</option>'+
                                     '<option value="2">顺序</option>'+
                                     '<option value="1">随机</option>'+
@@ -1602,7 +1602,7 @@ function exam_basic_info(){
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
                             '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
                                     '<option value="3">轮循</option>'+
                                     '<option value="2">顺序</option>'+
                                     '<option value="1">随机</option>'+

@@ -18,7 +18,7 @@ class ExamGradation extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['exam_id', 'order', 'gradation_number', 'created_user_id'];
+    protected $fillable     = ['exam_id', 'order', 'gradation_number', 'sequence_cate', 'created_user_id'];
 
 
     public function exam(){
