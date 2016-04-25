@@ -134,6 +134,7 @@ class IndexController extends CommonController
             /** 判断腕表是否已绑定并且没有解绑 **/
             //取腕表最后一次使用记录
             $watchLog = WatchLog::where('watch_id', '=', intval($id))->orderBy('created_at', 'desc')->first();
+        dd($watchLog);
             if (!is_null($watchLog)) {
                 if ($watchLog->action == '绑定') {
                     return \Response::json(array('code' => 11)); //判断当前腕表已绑定身份证
