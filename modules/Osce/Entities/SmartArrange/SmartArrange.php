@@ -405,9 +405,7 @@ class SmartArrange
         }
         try {
             foreach ($planList as $plan) {
-                dd($planList,$plan);
-
-                if (!array_key_exists($plan->exam_screening_id, $studentOrderData)) {
+                if (!array_key_exists($plan->student_id, $studentOrderData)) {
                     $studentOrderData[$plan->exam_screening_id][$plan->student_id] = [
                         'exam_id' => $exam->id,
                         'exam_screening_id' => $plan->exam_screening_id,
