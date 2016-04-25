@@ -415,12 +415,13 @@ class SmartArrange
                         'created_user_id' => \Auth::id(),
                     ];
                 }
-            }
-            foreach ($studentOrderData as $stduentOrder) {
-                if (!ExamOrder::create($stduentOrder)) {
-                    throw new \Exception('保存学生考试顺序失败');
+                foreach ($studentOrderData as $stduentOrder) {
+                    if (!ExamOrder::create($stduentOrder)) {
+                        throw new \Exception('保存学生考试顺序失败');
+                    }
                 }
             }
+
         } catch (\Exception $ex) {
             throw $ex;
         }
