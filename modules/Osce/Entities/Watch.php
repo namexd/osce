@@ -248,7 +248,7 @@ class Watch extends CommonModel implements MachineInterface
             $examQueue->on('student.id','=','watch_log.student_id');
         })->rightjoin('exam_screening_student',function($join){
             $join->on('exam_screening_student.student_id','=','watch_log.student_id');
-        })->groupBy('watch_log.student_id')->select('watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')->get();
+        })->groupBy('watch_log.student_id')->select('watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')->orderBy('watch_log.id','desc')->get();
         //dd($builder->toArray());
         return $builder;
     }
