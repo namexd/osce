@@ -405,10 +405,12 @@ class PadController extends  CommonController{
 
             $watchModel = new Watch();
             $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
-
+            //拿到阶段序号
+            $gradationOrder =ExamScreening::find($queue->exam_screening_id);
             //拿到所有场次id
-            $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$queue->gradation_order)->get()->pluck('exam_screening_id');
 
+            $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+        
             $studentWatchController = new StudentWatchController();
             $request['nfc_code'] = $watchData->code;
 

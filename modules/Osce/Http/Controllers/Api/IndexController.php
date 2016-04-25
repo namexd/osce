@@ -196,6 +196,7 @@ class IndexController extends CommonController
                 'student_id'=> $student_id
             );
             $watchModel = new WatchLog();
+            //
             $watchModel ->historyRecord($data, $student_id, $exam_id, $exam_screen_id); //腕表插入使用记录
 
             //签到
@@ -275,7 +276,8 @@ class IndexController extends CommonController
         try{
             $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
             $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
-            if(!$student_id){    //如果学生不存在
+            //1、腕表绑定的学生不存在（直接解绑，反馈学生不存在）
+            if(is_null($student_id)){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
                     return \Response::json(array('code'=>2));       //该腕表绑定的学生不存在
@@ -405,6 +407,7 @@ class IndexController extends CommonController
             }else{
                 throw new \Exception('解绑失败');
             }
+
         }
         catch(\Exception $ex)
         {
