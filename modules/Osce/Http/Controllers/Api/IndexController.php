@@ -134,7 +134,7 @@ class IndexController extends CommonController
                 if($watchLog->action == '绑定'){
                     return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
                 }
-                
+
         $watchInfo  = $watchModel->where('watch.code', '=', $code)->first();
         if(is_null($watchInfo)){
             return \Response::json(array('code'=>111)); //前腕表不存在
@@ -147,7 +147,6 @@ class IndexController extends CommonController
         if(!is_null($watchLog)){
             if($watchLog->action == '绑定'){
                 return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
->>>>>>> b97f9486839ffc67a3586f206caac01247d56a99
             }
         }
 
