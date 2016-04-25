@@ -1039,7 +1039,7 @@ class InvigilatePadController extends CommonController
                 $watchData = $watchData->toArray();
                 foreach($watchData as $k=>$v){
 
-                    $watchModel = WatchLog::where('watch.id','=',$v['id'])->orderBy('id','desc')->first();
+                    $watchModel = WatchLog::where('id','=',$v['id'])->orderBy('id','desc')->first();
                     if(!is_null($watchModel)){
                         if($watchModel->action == '绑定'){
                             if($v['status'] < 2){
