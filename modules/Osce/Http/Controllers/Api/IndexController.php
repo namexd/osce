@@ -127,6 +127,7 @@ class IndexController extends CommonController
         $check = $watchModel->where('watch.code','=',$code)->first();
 
         if(count($check) > 0){
+            dd($check->id);
             $watchLog = WatchLog::where('watch_id','=',$check->id)->orderBy('id','desc')->first();
             dd($watchLog);
             if($watchLog->action == '绑定'){
