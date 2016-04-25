@@ -693,7 +693,7 @@ class ExamQueue extends CommonModel
 
 
             //通过学生id找到对应的examScreeningStudent实例
-            $examScreening = ExamScreeningStudent::where('student_id', $studentId)->where('exam_screen_id','=', $exam_screen_id)->first();
+            $examScreening = ExamScreeningStudent::where('student_id', $studentId)->where('exam_screening_id','=', $exam_screen_id)->first();
 
             if (is_null($examScreening)) {
                 throw new \Exception('没找到对应的学生编号', 2100);
