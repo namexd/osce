@@ -817,14 +817,19 @@ class InvigilatePadController extends CommonController
                 $examQueue = ExamQueue::where('exam_id',$exam->id)
                     ->where('student_id', '=', $studentId)
                     ->where('station_id', '=', $stationId)
-                    ->where('status','=','2')
+                    ->where('status','=',2)
                     ->first();
+
                 $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$examQueue->exam_screening_id)
                     ->where('student_id','=',$examQueue->student_id)->first();
+
                 $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
+
                 $studentWatchController = new StudentWatchController();
                 $request['nfc_code'] = $watchData->code;
+
                 $studentWatchController->getStudentExamReminder($request);
+                
                 $studentModel = new Student();
                 $exam = Exam::doingExam();
                 $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
