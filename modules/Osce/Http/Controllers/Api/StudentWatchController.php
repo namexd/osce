@@ -329,7 +329,6 @@ class StudentWatchController extends CommonController
 
         // 判断老师是否准备完成
         $examStationStatusModel = new ExamStationStatus();
-        dd($item,$stationId,$examQueueCollect);
 
         $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
             ->where('exam_screening_id', '=', $item->exam_screening_id)
