@@ -25,14 +25,23 @@ abstract class AbstractCate
 
     protected $serialnumber;
 
-    function __construct($params)
+    function __construct($exam)
+    {
+        $this->exam = $exam;
+    }
+
+    /**
+     * 设置参数
+     * @param $params
+     * @author Jiangzhiheng
+     * @time 2016-04-22 16:55
+     */
+    function setParams($params)
     {
         $this->_S = $params['total'];
         $this->_S_W = $params['wait'];
         $this->serialnumber = $params['serialnumber'];
-        $this->exam = $params['exam'];
     }
-
 
 
     protected function beginStudents($entity) {
@@ -51,6 +60,7 @@ abstract class AbstractCate
             }
             $this->_S_W[] = $a;
         }
+
 
         return $students;
     }
@@ -79,6 +89,7 @@ abstract class AbstractCate
                 $tempTestStudent[] = $tempStudent;
             }
         }
+        
         return $tempTestStudent;
     }
 
@@ -92,6 +103,7 @@ abstract class AbstractCate
                 if (in_array($entity->serialnumber, $serialnumber->toArray())) {
                     continue;
                 }
+
             }
 
             $result[] = $testStudent;
@@ -100,6 +112,7 @@ abstract class AbstractCate
             if (count($result) == $entity->needNum) {
                 break;
             }
+
         }
         return $result;
     }

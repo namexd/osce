@@ -210,9 +210,9 @@ class ExamController extends CommonController
             ];
             //阶段
             $gradation = intval($request->get('gradation_order', 1))? :1;
-
+            $gradationMode = $request->input('gradation_sequence_mode', []);
             //添加考试
-            $result = $model -> addExam($examData, $timeData['examScreeningData'], $gradation, $examArrangeRepository);
+            $result = $model -> addExam($examData, $timeData['examScreeningData'], $gradationMode, $gradation, $examArrangeRepository);
             if(!$result){
                 throw new \Exception('新增考试失败');
             }
@@ -328,9 +328,10 @@ class ExamController extends CommonController
             ];
             //阶段
             $gradation = intval($request->input('gradation_order',1))? :1;
+            $gradationMode = $request->input('gradation_sequence_mode', []);
 
             //编辑考试相关信息
-            $result = $examModel -> editExam($exam_id, $examData, $timeData['examScreeningData'], $gradation, $examArrangeRepository);
+            $result = $examModel -> editExam($exam_id, $examData, $timeData['examScreeningData'], $gradation, $gradationMode, $examArrangeRepository);
             if(!$result)
             {
                 throw new \Exception('修改考试失败');

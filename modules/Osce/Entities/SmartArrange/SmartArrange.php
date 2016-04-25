@@ -143,6 +143,7 @@ class SmartArrange
 
     public function screenPlan($screen)
     {
+//        dd($this->_E);
         //重置考试实体计数器
         $this->resetStationTime();
 
@@ -185,6 +186,7 @@ class SmartArrange
         //$k 枚举 1   2  3  4
         $k = 3;
         $step = $mixCommonDivisor * 60; //为考试实体考试时间的秒数
+        
         //开始计时器
         while ($i <= $endDt) {
             //开门动作
@@ -195,9 +197,9 @@ class SmartArrange
                     $tempBool = true;
                 }
                 if ($tempBool) { //反之，则是关门状态
-                    $tempValues = $this->examPlanRecordIsOpenDoor($entity, $screen);
                     if (($entity->timer >= $entity->mins * 60 + config('osce.sys_param.mins') * 60)) {
                         $entity->timer = 0;
+                        $tempValues = $this->examPlanRecordIsOpenDoor($entity, $screen);
                         //将结束时间写在表内
                         foreach ($tempValues as $tempValue) {
                             if (!is_null($tempValue->end_dt)) {
@@ -230,20 +232,19 @@ class SmartArrange
                         'total' => $this->_S,
                         'wait' => $this->_S_W,
                         'serialnumber' => $serialnumber,
-                        'exam' => $this->exam
                     ];
-                    //将排序模式注入
-                    $this->setCate(CateFactory::getCate($this->exam, $params));
+                    //将参数注入
+                    $this->cate->setParams($params);
 
                     $students = $this->cate->needStudents($entity, $screen, $this->exam);
                     $this->_S = $this->cate->getTotalStudent();
                     $this->_S_W = $this->cate->getWaitStudent();
-
                     if (count($students) == 0) {
                         continue;
                     }
+
                     //变更学生的状态(写记录)
-                    foreach ($students as &$student) {
+                    foreach ($students as $student) {
                         $data = $this->mode->dataBuilder($this->exam, $screen, $student, $entity, $i);
                         if (ExamPlanRecord::create($data)) {
                             $this->doorStatus--;
@@ -279,7 +280,7 @@ class SmartArrange
 
             //将没有考完的考生放回到总的考生池里
             foreach ($studentNotOvers as $studentNotOver) {
-                $undoneStudents[] = Student::findOrFail($studentNotOver);
+                $undoneStudents[] = Student::find($studentNotOver);
             }
         }
 
@@ -287,7 +288,7 @@ class SmartArrange
         $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
         $undoneStudentsIds = $examPlanEntity->pluck('student_id');
         foreach ($undoneStudentsIds as $undoneStudentsId) {
-            $undoneStudents[] = Student::findOrFail($undoneStudentsId);
+            $undoneStudents[] = Student::find($undoneStudentsId);
         }
 
         //删除未考完学生记录
