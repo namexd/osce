@@ -128,7 +128,7 @@ class IndexController extends CommonController
 
         if(count($check) > 0){
             //dd($check->id);
-            DB::connection()->enableQueryLog();
+            DB::connection('myy')->enableQueryLog();
             $watchLog = WatchLog::where('watch_id','=',intval($check->id))->first();
             $queries = DB::getQueryLog();
             dd($queries);
