@@ -121,7 +121,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <input class="btn btn-primary" type="submit" id="save" value="保存" />
-                                <a class="btn btn-white" id="cancel-btn" href="javasript:void(0)">取消</a>
+                                <a class="btn btn-white" id="cancel-btn" href="javascript:void(0);">取消</a>
                             </div>
                         </div>
                     </div>
@@ -142,7 +142,7 @@ $(function() {
      */
     var type_status = location.href.split('?')[1];
     $('#cancel-btn').click(function() {
-        if(type_status.split('=')[0] != 'type'){
+        if(type_status != undefined){
             parent.layer.close(parent.layer.getFrameIndex(window.name));
         } else {
             location.href = '{{route("osce.admin.invigilator.getInvigilatorList")}}';
