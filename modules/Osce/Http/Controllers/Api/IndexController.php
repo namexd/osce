@@ -122,31 +122,32 @@ class IndexController extends CommonController
         $id_card= $request->get('id_card');
         $exam_id= $request->get('exam_id');
 
-        //判断腕表是否已绑定并且没有解绑
+        //判断腕表是否存在
         $watchModel = new Watch();
-        $check = $watchModel->where('watch.code','=',$code)->first();
-
-        if(count($check) > 0){
-            //dd($check->id);
-            $watchLog = WatchLog::where('watch_id','=',intval($check->id))->first();
-            if(!is_null($watchLog)){
-                if($watchLog->action == '绑定'){
-                    return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
-                }
-
-            }
-
+        $watchInfo  = $watchModel->where('watch.code', '=', $code)->first();
+        if(is_null($watchInfo)){
+            return \Response::json(array('code'=>111)); //前腕表不存在
         }
-        //获取腕表id
-        $id     = Watch::where('code',$code)->select('id')->first()->id;
+        $id = $watchInfo->id;       //获取腕表id
 
-        $student_id = Student::where('idcard',$id_card)->where('exam_id',$exam_id)->select()->first();//查询学生是否参加当前考试
-        if(!$student_id){
+        /** 判断腕表是否已绑定并且没有解绑 **/
+        //取腕表最后一次使用记录
+        $watchLog = WatchLog::where('watch_id', '=', intval($id))->orderBy('created_at', 'desc')->first();
+        if(!is_null($watchLog)){
+            if($watchLog->action == '绑定'){
+                return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
+            }
+        }
+
+        //查询学生是否参加当前考试
+        $studentExam= Student::where('idcard','=',$id_card)->where('exam_id','=',$exam_id)->first();
+        if(is_null($studentExam)){
             return \Response::json(array('code' => 3)); //没有参加当前考试
         }
-        $student_id = $student_id->id;//获取学生id
+        $student_id = $studentExam->id;     //获取学生id
 
-        $planId     = ExamPlan::where('student_id',$student_id)->where('exam_id',$exam_id)->select('id')->first();  //查询是否安排考试
+        //查询是否安排考试
+        $planId     = ExamPlan::where('student_id',$student_id)->where('exam_id',$exam_id)->select('id')->first();
         if(is_null($planId)){
             return \Response::json(array('code' =>4));  //未安排当前考试
         }
