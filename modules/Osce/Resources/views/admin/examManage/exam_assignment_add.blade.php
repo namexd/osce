@@ -59,6 +59,38 @@ input.laydate-icon{
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
+                             <div class="form-group row">
+                                 <div class="col-md-12">
+                                      <div class="clearfix form-group" style="margin-bottom: 0;">
+                                           <div class="col-sm-12" id="checkbox_div">
+                                                <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;width:20.2%">
+                                                    <div class="check_icon check_margin" checkbox=0></div>
+                                                    <input type="checkbox" name="gradation_order" value="0">
+                                                    <span class="check_name" style="display: inline-block;float:right;line-height: 29px;">考生分阶段考试</span>
+                                                </label>
+                                                <div class="col-sm-9 check_div">
+                                                    <input type="text" class="form-control checkbox_num" id="gradation_order" name="gradation_order" style="float:left;width:200px;" value="1" readonly="readonly">
+                                                    <span style="float:left;margin-left:5px;margin-top: 5px;">阶段</span>
+                                                </div>
+                                           </div>
+                                      </div>
+                                 </div>
+                             </div>
+
+                             <div class="row grading" style="display: none;">
+                                <div class="col-md-1">&nbsp;</div>
+                                <div class="col-md-11">
+                                    <select class="form-control" style="width:250px;margin-left: 70px;" name="" >
+                                        <option value="1">统一设置各阶段考试顺序</option>
+                                        <option value="2">单独设置各阶段考试顺序</option>
+                                    </select>
+                                </div>
+                                
+                             </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group grading-normal">
                             <label class="col-sm-2 control-label">考试顺序</label>
                             <div class="col-sm-10">
                                 <select class="form-control" style="width:200px;" name="sequence_cate" >
@@ -66,6 +98,32 @@ input.laydate-icon{
                                     <option value="2">顺序</option>
                                     <option value="1">随机</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group grading-un-normal" style="display: none;">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-11" style="margin-left: 190px;">
+                                <table class="table table-bordered" style="width: 450px;">
+                                    <thead>
+                                        <tr>
+                                            <td>阶段</td>
+                                            <td>考试顺序</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>阶段1</td>
+                                            <td>
+                                                <select class="form-control" style="width:200px;" name="sequence_cate" >
+                                                    <option value="3">轮循</option>
+                                                    <option value="2">顺序</option>
+                                                    <option value="1">随机</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -119,27 +177,6 @@ input.laydate-icon{
                              </div>
                         </div>
                         <div class="hr-line-dashed" style="display:none"></div>
-
-                        <div class="form-group">
-                             <div class="row">
-                                 <div class="col-md-12">
-                                      <div class="clearfix form-group" style="margin-bottom: 0;">
-                                           <div class="col-sm-12" id="checkbox_div">
-                                                <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;width:20.2%">
-                                                    <div class="check_icon check_margin" checkbox=0></div>
-                                                    <input type="checkbox" name="gradation_order" value="0">
-                                                    <span class="check_name" style="display: inline-block;float:right;line-height: 29px;">考生分阶段考试</span>
-                                                </label>
-                                                <div class="col-sm-9 check_div">
-                                                    <input type="text" class="form-control checkbox_num" id="gradation_order" name="gradation_order" style="float:left;width:200px;" value="1" readonly="readonly">
-                                                    <span style="float:left;margin-left:5px;margin-top: 5px;">阶段</span>
-                                                </div>
-                                           </div>
-                                      </div>
-                                 </div>
-                             </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <div class="row">

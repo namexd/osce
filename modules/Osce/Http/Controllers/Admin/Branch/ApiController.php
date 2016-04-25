@@ -742,6 +742,7 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getReadyExam (Request $request) {
+
         $this->validate($request, [
             'exam_id'           => 'required|integer',
             'station_id'        => 'required|integer',

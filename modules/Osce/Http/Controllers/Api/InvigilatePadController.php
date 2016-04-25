@@ -812,24 +812,41 @@ class InvigilatePadController extends CommonController
                 $redis->publish('pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
                 
                 //调用向腕表推送消息的方法
-                $examQueue = ExamQueue::where('student_id', '=', $studentId)
+
+                $exam = Exam::where('status', '=', 1)->first();
+                $examQueue = ExamQueue::where('exam_id',$exam->id)
+                    ->where('student_id', '=', $studentId)
                     ->where('station_id', '=', $stationId)
-                    ->whereIn('status',[0,2])
+                    ->where('status','=',2)
                     ->first();
+
                 $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$examQueue->exam_screening_id)
                     ->where('student_id','=',$examQueue->student_id)->first();
+
                 $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
+
                 $studentWatchController = new StudentWatchController();
                 $request['nfc_code'] = $watchData->code;
-                $studentWatchController->getStudentExamReminder($request,$stationId);
+
+                //拿到阶段序号
+                $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
+
+                //拿到属于该场考试，该场阶段所对应的所有场次id
+                $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+
+                $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
+
                 $studentModel = new Student();
                 $exam = Exam::doingExam();
                 $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
+
                 $station=Station::where('id',$stationId)->first();
+
                 if($station->type==3) {//理论考试
                     $publishMessage->avator = asset($publishMessage->avator);
                     $redis->publish('pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
                 }
+
                 return response()->json(
                     $this->success_data(['start_time'=>$date,'student_id'=>$studentId], 1, '开始考试成功')
                 );

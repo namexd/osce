@@ -30,20 +30,32 @@ class WatchLog extends CommonModel{
         return $this->hasOne('\Modules\Osce\Entities\Watch', 'id', 'watch_id');
     }
 
-   public function historyRecord($data,$student_id,$exam_id,$exam_screen_id){
-       $time=time();
-       $examQue=new ExamQueue();
-       $examQue->createExamQueue($exam_id, $student_id,$time,$exam_screen_id);
-         if($data['context']){
-             $data['context']=serialize($data['context']);
-         }
-          WatchLog::create([
-              'watch_id' => $data['watch_id'],
-              'action' => $data['action'],
-              'context' => $data['context'],
-              'student_id' => $data['student_id']
-          ]);
-   }
+    /**
+     * 添加腕表使用记录
+     * @param $data
+     * @param $student_id
+     * @param $exam_id
+     * @param $exam_screen_id
+     * @throws \Exception
+     */
+    public function historyRecord($data,$student_id,$exam_id,$exam_screen_id)
+    {
+        $nowTime = time();
+        $examQue = new ExamQueue();
+        //创建考试队列
+        $examQue ->createExamQueue($exam_id, $student_id, $nowTime, $exam_screen_id);
+        //将context 序列化
+        if($data['context']){
+            $data['context'] = serialize($data['context']);
+        }
+        //创建腕表使用记录
+        WatchLog::create([
+            'watch_id'   => $data['watch_id'],
+            'action'     => $data['action'],
+            'context'    => $data['context'],
+            'student_id' => $data['student_id']
+        ]);
+    }
 
    public function unwrapRecord($data){
        if($data['context']){
