@@ -151,6 +151,7 @@ class StudentWatchController extends CommonController
      */
     public function nowQueue($examQueueCollect, $stationId)
     {
+        dd($examQueueCollect);
         $statusArray = $examQueueCollect->pluck('status')->toArray();
         if (in_array(1, $statusArray)) {
             return $this->getStatusOneExam($examQueueCollect);
@@ -226,7 +227,6 @@ class StudentWatchController extends CommonController
     //判断腕表提醒状态为3时
     private function getStatusThreeExam($examQueueCollect, $stationId)
     {
-        dump($examQueueCollect,222);
         $nextExamQueue = '';
         $examQueue = '';
         foreach ($examQueueCollect as $examQueue) {
@@ -250,8 +250,6 @@ class StudentWatchController extends CommonController
                 throw new \Exception('没有发现该考生相关排考计划');
             }
         } else {
-                
-            dump(1111);
 
             //调用状态为1的方法
             $data = $this->getStatusWaitExam($examQueueCollect, $stationId);
