@@ -128,8 +128,10 @@ class IndexController extends CommonController
 
         if(count($check) > 0){
             //dd($check->id);
+            DB::connection('myy')->enableQueryLog();
             $watchLog = WatchLog::where('watch_id','=',intval($check->id))->first();
-            dd($watchLog);
+            $queries = DB::getQueryLog();
+            dd($queries);
             if($watchLog->action == '绑定'){
                 return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
             }
