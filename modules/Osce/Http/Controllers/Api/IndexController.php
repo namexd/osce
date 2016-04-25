@@ -124,9 +124,9 @@ class IndexController extends CommonController
 
         //判断腕表是否已绑定并且没有解绑
         $watchModel = new Watch();
-        $check = $watchModel->leftjoin('watch_log',function($log){
+        $check = $watchModel->where('watch.code','=',$code)->leftjoin('watch_log',function($log){
             $log->on('watch_log.watch_id','=','watch.id');
-        })->where('watch.code','=',$code)->orderBy('watch_log.id','desc')->select('watch.id','watch_log.id as logid')->first();
+        })->orderBy('watch_log.id','desc')->get();
         dd($check);
         if(count($check) > 0){
             if($check->action == '绑定'){
