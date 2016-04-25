@@ -111,136 +111,130 @@ class IndexController extends CommonController
      */
     public function getBoundWatch(Request $request)
     {
-        $this->validate($request,[
-            'code'      => 'required',//腕表code
-            'id_card'   => 'required',//身份证号
-            'exam_id'   => 'required' //考试id
+        $this->validate($request, [
+            'code' => 'required',//腕表code
+            'id_card' => 'required',//身份证号
+            'exam_id' => 'required' //考试id
         ]);
 
 
-        $code   = $request->get('code');
-        $id_card= $request->get('id_card');
-        $exam_id= $request->get('exam_id');
+        $code = $request->get('code');
+        $id_card = $request->get('id_card');
+        $exam_id = $request->get('exam_id');
 
         //判断腕表是否存在
         $watchModel = new Watch();
 
-        $check = $watchModel->where('watch.code','=',$code)->first();
+        $check = $watchModel->where('watch.code', '=', $code)->first();
 
-        if(count($check) > 0){
+        if (count($check) > 0) {
             //dd($check->id);
-            $watchLog = WatchLog::where('watch_id','=',intval($check->id))->orderBy('id','desc')->first();
-            if(!is_null($watchLog)){
-                if($watchLog->action == '绑定'){
-                    return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
+            $watchLog = WatchLog::where('watch_id', '=', intval($check->id))->orderBy('id', 'desc')->first();
+            if (!is_null($watchLog)) {
+                if ($watchLog->action == '绑定') {
+                    return \Response::json(array('code' => 11)); //判断当前腕表已绑定身份证
                 }
 
-        $watchInfo  = $watchModel->where('watch.code', '=', $code)->first();
-        if(is_null($watchInfo)){
-            return \Response::json(array('code'=>111)); //前腕表不存在
-        }
-        $id = $watchInfo->id;       //获取腕表id
+                $watchInfo = $watchModel->where('watch.code', '=', $code)->first();
+                if (is_null($watchInfo)) {
+                    return \Response::json(array('code' => 111)); //前腕表不存在
+                }
+                $id = $watchInfo->id;       //获取腕表id
 
-        /** 判断腕表是否已绑定并且没有解绑 **/
-        //取腕表最后一次使用记录
-        $watchLog = WatchLog::where('watch_id', '=', intval($id))->orderBy('created_at', 'desc')->first();
-        if(!is_null($watchLog)){
-            if($watchLog->action == '绑定'){
-                return \Response::json(array('code'=>11)); //判断当前腕表已绑定身份证
-            }
-        }
-
-        //查询学生是否参加当前考试
-        $studentExam= Student::where('idcard','=',$id_card)->where('exam_id','=',$exam_id)->first();
-        if(is_null($studentExam)){
-            return \Response::json(array('code' => 3)); //没有参加当前考试
-        }
-        $student_id = $studentExam->id;     //获取学生id
-
-        //查询是否安排考试
-        $planId     = ExamPlan::where('student_id',$student_id)->where('exam_id',$exam_id)->select('id')->first();
-        if(is_null($planId)){
-            return \Response::json(array('code' =>4));  //未安排当前考试
-        }
-
-        //获取考生列表
-        $students   = $this->getStudentList($request);
-        $idcards    = [];
-        $students   = json_decode($students->content());
-
-        foreach($students->data as $item)
-        {
-            $idcards[] = $item->idcard;
-        }
-        if(!in_array($id_card,$idcards)){
-            return \Response::json(array('code'=>5));   //未在考试队列 请等待
-        }
-
-        $examStatus = Exam::where('status','=',1)->first();
-        if($examStatus){
-            if($examStatus->id != $exam_id){
-                return \Response::json(array('code'=>6));   //正在考试 的考试 不是当前考试（当前考试未开考，另外有其他的考试正在考）
-            }
-        }
-
-        //修改场次状态
-        $examScreeningModel = new ExamScreening();
-        $examScreening      = $examScreeningModel -> getExamingScreening($exam_id);
-        if(is_null($examScreening))
-        {
-            $examScreening  = $examScreeningModel -> getNearestScreening($exam_id);
-            $examScreening  ->status = 1;
-            //场次开考（场次状态变为1）
-            if(!$examScreening -> save())
-            {
-                throw new \Exception('场次开考失败！');
-            }
-        }
-        //获取考试场次Id
-        $screen_id      = ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->select('exam_screening_id')->first();
-        $exam_screen_id = $screen_id->exam_screening_id;
-
-        $result         = Watch::where('id', $id)->update(['status' => 1]);//修改腕表状态
-        if ($result)
-        {
-            $action     = '绑定';
-            $updated_at = date('Y-m-d H:i:s',time());
-            $data       = array(
-                'watch_id'  => $id,
-                'action'    => $action,
-                'context'   => array('time' => $updated_at, 'status' => 1),
-                'student_id'=> $student_id
-            );
-            $watchModel = new WatchLog();
-            //
-            $watchModel ->historyRecord($data, $student_id, $exam_id, $exam_screen_id); //腕表插入使用记录
-
-            //签到
-            $examScreeningStudent = ExamScreeningStudent::where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
-            if(is_null($examScreeningStudent))
-            {
-                $screeningStudentData = [
-                    'watch_id'          => $id,
-                    'student_id'        => $student_id,
-                    'signin_dt'         => $updated_at,
-                    'exam_screening_id' => $exam_screen_id,
-                    'is_signin'         => 1
-                ];
-                $result = ExamScreeningStudent::create($screeningStudentData);
-                if(!$result){
-                    throw new \Exception('签到失败');
+                /** 判断腕表是否已绑定并且没有解绑 **/
+                //取腕表最后一次使用记录
+                $watchLog = WatchLog::where('watch_id', '=', intval($id))->orderBy('created_at', 'desc')->first();
+                if (!is_null($watchLog)) {
+                    if ($watchLog->action == '绑定') {
+                        return \Response::json(array('code' => 11)); //判断当前腕表已绑定身份证
+                    }
                 }
 
-            } else {
-
-                $examScreeningStudent -> is_end     = 0;
-                $examScreeningStudent -> watch_id   = $id;
-                $examScreeningStudent -> signin_dt  = $updated_at;
-                if(!$examScreeningStudent->save())
-                {
-                    throw new \Exception('签到失败');
+                //查询学生是否参加当前考试
+                $studentExam = Student::where('idcard', '=', $id_card)->where('exam_id', '=', $exam_id)->first();
+                if (is_null($studentExam)) {
+                    return \Response::json(array('code' => 3)); //没有参加当前考试
                 }
-            }
+                $student_id = $studentExam->id;     //获取学生id
+
+                //查询是否安排考试
+                $planId = ExamPlan::where('student_id', $student_id)->where('exam_id', $exam_id)->select('id')->first();
+                if (is_null($planId)) {
+                    return \Response::json(array('code' => 4));  //未安排当前考试
+                }
+
+                //获取考生列表
+                $students = $this->getStudentList($request);
+                $idcards = [];
+                $students = json_decode($students->content());
+
+                foreach ($students->data as $item) {
+                    $idcards[] = $item->idcard;
+                }
+                if (!in_array($id_card, $idcards)) {
+                    return \Response::json(array('code' => 5));   //未在考试队列 请等待
+                }
+
+                $examStatus = Exam::where('status', '=', 1)->first();
+                if ($examStatus) {
+                    if ($examStatus->id != $exam_id) {
+                        return \Response::json(array('code' => 6));   //正在考试 的考试 不是当前考试（当前考试未开考，另外有其他的考试正在考）
+                    }
+                }
+
+                //修改场次状态
+                $examScreeningModel = new ExamScreening();
+                $examScreening = $examScreeningModel->getExamingScreening($exam_id);
+                if (is_null($examScreening)) {
+                    $examScreening = $examScreeningModel->getNearestScreening($exam_id);
+                    $examScreening->status = 1;
+                    //场次开考（场次状态变为1）
+                    if (!$examScreening->save()) {
+                        throw new \Exception('场次开考失败！');
+                    }
+                }
+                //获取考试场次Id
+                $screen_id = ExamOrder::where('exam_id', $exam_id)->where('student_id', $student_id)->select('exam_screening_id')->first();
+                $exam_screen_id = $screen_id->exam_screening_id;
+
+                $result = Watch::where('id', $id)->update(['status' => 1]);//修改腕表状态
+                if ($result) {
+                    $action = '绑定';
+                    $updated_at = date('Y-m-d H:i:s', time());
+                    $data = array(
+                        'watch_id' => $id,
+                        'action' => $action,
+                        'context' => array('time' => $updated_at, 'status' => 1),
+                        'student_id' => $student_id
+                    );
+                    $watchModel = new WatchLog();
+                    //
+                    $watchModel->historyRecord($data, $student_id, $exam_id, $exam_screen_id); //腕表插入使用记录
+
+                    //签到
+                    $examScreeningStudent = ExamScreeningStudent::where('student_id', '=', $student_id)->where('exam_screening_id', '=', $exam_screen_id)->first();
+                    if (is_null($examScreeningStudent)) {
+                        $screeningStudentData = [
+                            'watch_id' => $id,
+                            'student_id' => $student_id,
+                            'signin_dt' => $updated_at,
+                            'exam_screening_id' => $exam_screen_id,
+                            'is_signin' => 1
+                        ];
+                        $result = ExamScreeningStudent::create($screeningStudentData);
+                        if (!$result) {
+                            throw new \Exception('签到失败');
+                        }
+
+                    } else {
+
+                        $examScreeningStudent->is_end = 0;
+                        $examScreeningStudent->watch_id = $id;
+                        $examScreeningStudent->signin_dt = $updated_at;
+                        if (!$examScreeningStudent->save()) {
+                            throw new \Exception('签到失败');
+                        }
+                    }
 //            $ExamScreeingStudentId=ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->where('exam_screening_id','=',$exam_screen_id)->first();
 //            if($ExamScreeingStudentId){
 //                ExamScreeningStudent::where('watch_id' ,'=',$id)->where('student_id','=',$student_id)->update(['is_end'=>0]);
@@ -248,16 +242,18 @@ class IndexController extends CommonController
 //                ExamScreeningStudent::create(['watch_id' => $id,'student_id'=>$student_id,'signin_dt'=>$updated_at,'exam_screening_id'=>$exam_screen_id,'is_signin'=>1]);//签到
 //
 //            }
-            //更改考生状态（1：已绑定腕表）
-            ExamOrder::where('exam_id',$exam_id)->where('student_id',$student_id)->update(['status'=>1]);
-            Exam::where('id',$exam_id)->update(['status'=>1]);  //更改考试状态（把考试状态改为正在考试）
+                    //更改考生状态（1：已绑定腕表）
+                    ExamOrder::where('exam_id', $exam_id)->where('student_id', $student_id)->update(['status' => 1]);
+                    Exam::where('id', $exam_id)->update(['status' => 1]);  //更改考试状态（把考试状态改为正在考试）
 
-            return \Response::json(array('code' => 1));
+                    return \Response::json(array('code' => 1));
 
-        } else {
-            return \Response::json(array('code' => 0));
+                } else {
+                    return \Response::json(array('code' => 0));
+                }
+
+            }
         }
-
     }
 
     /**
