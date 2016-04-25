@@ -417,12 +417,15 @@ class SmartArrange
                 }
 
             }
-            dd($studentOrderData);
+         
             foreach ($studentOrderData as $stduentOrder) {
-
-                if (!ExamOrder::create($stduentOrder)) {
-                    throw new \Exception('保存学生考试顺序失败');
+                foreach ($stduentOrder as $value){
+                    if (!ExamOrder::create($value)) {
+                        throw new \Exception('保存学生考试顺序失败');
+                    }
                 }
+
+
             }
         } catch (\Exception $ex) {
             throw $ex;
