@@ -116,6 +116,7 @@ class StudentWatchController extends CommonController
 
         //根据考生id得到所有该考生的队列列表
         $examQueueModel = new ExamQueue();
+        dd($examscreeningId,$studentId);
         $examQueueCollect = $examQueueModel->StudentExamQueue($studentId,$examscreeningId);
         if (is_null($examQueueCollect)) {
             $data['title'] = '未找到学生队列信息';
