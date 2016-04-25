@@ -240,7 +240,7 @@ class Watch extends CommonModel implements MachineInterface
         }
 
 
-        $builder = $builder->where('watch.status','=',$status)->where('exam_screening_student.is_end','=',0)->where('watch_log.action','=','绑定')->where('exam_queue.exam_id','=',$examId)->leftjoin('watch_log',function($watchLog){
+        $builder = $builder->where('watch.status','=',$status)->where('exam_screening_student.is_end','=',0)->whereNotin('status',[1,2,3,4,5,6])->where('watch_log.action','=','绑定')->where('exam_queue.exam_id','=',$examId)->leftjoin('watch_log',function($watchLog){
             $watchLog->on('watch_log.watch_id','=','watch.id');
         })->leftjoin('exam_queue',function($examQueue){
             $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
