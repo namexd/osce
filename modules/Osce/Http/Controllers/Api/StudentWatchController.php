@@ -151,7 +151,7 @@ class StudentWatchController extends CommonController
      */
     public function nowQueue($examQueueCollect, $stationId)
     {
-        dd($examQueueCollect);
+        
         $statusArray = $examQueueCollect->pluck('status')->toArray();
         if (in_array(1, $statusArray)) {
             return $this->getStatusOneExam($examQueueCollect);
