@@ -242,7 +242,7 @@ class IndexController extends CommonController
 //            }
 
             //更改考生状态（1：已绑定腕表）
-            ExamOrder::where('exam_id', $exam_id)->where('student_id', $student_id)->update(['status' => 1]);
+            ExamOrder::where('exam_id', $exam_id)->where('student_id', $student_id)->where('exam_screening_id', '=', $exam_screen_id)->update(['status' => 1]);
             Exam::where('id', $exam_id)->update(['status' => 1]);  //更改考试状态（把考试状态改为正在考试）
 
             return \Response::json(array('code' => 1));
@@ -365,7 +365,7 @@ class IndexController extends CommonController
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
                 }
 
-                ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
+                ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>2]);//更改考生排序状态
                 $result = Watch::where('id',$id)->update(['status'=>0]);
                 if($result){
                    // ExamQueue::where('student_id',$student_id)->where('exam_id',$exam_id)->delete();
@@ -404,7 +404,7 @@ class IndexController extends CommonController
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
                 $action = '解绑';
-                $result = ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>0]);
+                $result = ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>0]);
                 if($result){
                     $updated_at =date('Y-m-d H:i:s',time());
                     $data = array(
