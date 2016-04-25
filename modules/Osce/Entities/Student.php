@@ -678,7 +678,7 @@ class Student extends CommonModel
                 $query->whereIn('exam_order.status', [0, 4]);
             });
         /*    //\DB::connection('osce_mis')->enableQueryLog();
-//        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO zhoufuxiang
+//        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO .
             $students = $this->leftjoin('exam_queue',function($exam_queue){
                 $exam_queue->on('exam_queue.student_id','=','student.id');
             })->whereIn('exam_queue.status', [2,3,4])
@@ -707,7 +707,7 @@ class Student extends CommonModel
             'student.mobile as mobile',
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
-        ])->orderBy('exam_order.begin_dt')->paginate(100);
+        ])->orderBy('student.id')->paginate(100);
        // $queries = \DB::connection('osce_mis')->getQueryLog();
         //dd($builder->toArray());
         return $builder;
