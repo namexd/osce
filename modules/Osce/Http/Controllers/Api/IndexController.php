@@ -206,7 +206,7 @@ class IndexController extends CommonController
                 'student_id' => $student_id
             );
             $watchModel = new WatchLog();
-            //添加腕表使用记录、创建队列
+            //添加腕表使用记录、创建考试队列
             $watchModel ->historyRecord($data, $student_id, $exam_id, $exam_screen_id); //腕表插入使用记录
 
             //签到（根据场次签到）

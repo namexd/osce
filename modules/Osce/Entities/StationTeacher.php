@@ -128,6 +128,7 @@ class StationTeacher extends CommonModel
                         }
                     }
                     //根据科目id，获取对应的病例id
+
                     $stationCase = SubjectCases::where('subject_id', $item['subject_id'])->first();
                     if (is_null($stationCase)) {
                         $case_id = NULL;
@@ -170,20 +171,20 @@ class StationTeacher extends CommonModel
     public function getTeacherData($stationId, $exam_id)
     {
         $data = $this->leftJoin('teacher', 'teacher.id', '=', $this->table . '.user_id')
-            ->leftJoin('teacher_subject', 'teacher_subject.teacher_id', '=', $this->table . '.user_id')
+//            ->leftJoin('teacher_subject', 'teacher_subject.teacher_id', '=', $this->table . '.user_id')
             ->whereIn('station_teacher.station_id', $stationId)
             ->where('station_teacher.exam_id', '=', $exam_id)
             ->select([
                 'teacher.id as teacher_id',
                 'teacher.name as teacher_name',
                 'teacher.type as teacher_type',
-                'teacher_subject.subject_id as subject_id',
                 $this->table . '.station_id',
                 $this->table . '.id',
 
             ])
 //            ->groupBy('teacher.id')
             ->get();
+
 
         return $data;
     }
@@ -255,10 +256,12 @@ class StationTeacher extends CommonModel
         foreach ($teachers as $teacherId)
         {
             //判该老师是否支持该项目如果不支持添加
-            $subjectId    = TeacherSubject::where('teacher_id', '=', $teacherId)->get()->pluck('subject_id')->toArray();
-            $subjectId[]  = intval($subject_id);
-            $subjectId    = array_unique($subjectId);
-            $teacherModel-> handleTeacherSubject($subjectId, $teacherId, $user->id);
+            if ($subject_id != 'null'){
+                $subjectId    = TeacherSubject::where('teacher_id', '=', $teacherId)->get()->pluck('subject_id')->toArray();
+                $subjectId[]  = intval($subject_id);
+                $subjectId    = array_unique($subjectId);
+                $teacherModel-> handleTeacherSubject($subjectId, $teacherId, $user->id);
+            }
 
             //查询是否存在
             $teacher = $this->where('exam_id', '=', $exam_id)->where('station_id', '=', $station_id)
