@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Input;
+use Mockery\CountValidator\Exception;
 use Modules\Osce\Entities\ExamAbsent;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamFlow;
@@ -271,33 +272,27 @@ class InvigilatePadController extends CommonController
      */
     public function getExamGrade(Request $request)
     {
-      
-//        try {
-
+        try{
             $this->validate($request, [
                 'station_id' => 'required|integer',
             ], [
                 'station_id.required' => '没有获取到当前考站',
             ]);
-
             $stationId = $request->get('station_id');
-
             $examId = $request->get('exam_id');
             if(empty($examId))
             {
                 $exam   =  Exam::doingExam();
                 $examId =   $exam->id;
             }
-
             //根据考站id查询出下面所有的考试项目
-            $station = Station::find($stationId);
             $ExamScreening   =  new ExamScreening();
             $screening   =   $ExamScreening  ->getExamingScreening($examId);
             if(is_null($screening))
             {
                 $screening  =   $ExamScreening->getNearestScreening($examId);
             }
-            
+
             if(is_null($screening))
             {
                 throw new \Exception('没有对应的考试');
@@ -305,50 +300,43 @@ class InvigilatePadController extends CommonController
             $exam_gradation =   ExamGradation::where('exam_id','=',$examId)->where('order','=',$screening->gradation_order)->first();
             if(is_null($exam_gradation))
             {
-                throw new \Exception('没有找到对应的阶段');
+                throw new \Exception('没有找到对应的阶段',-101);
             }
             $exam_gradation_id  =   $exam_gradation->id;
 
             $ExamDraft  =   ExamDraft:: leftJoin('exam_draft_flow','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
-                        ->  where('exam_draft_flow.exam_id','=',$examId)
-                        ->  where('exam_draft_flow.exam_gradation_id','=',$exam_gradation_id)
-                        ->  where('exam_draft.station_id','=',$stationId)
-                        ->  with('station')
-                        ->  first();
-            if(is_null($ExamDraft->subject_id))
+                ->  where('exam_draft_flow.exam_id','=',$examId)
+                ->  where('exam_draft_flow.exam_gradation_id','=',$exam_gradation_id)
+                ->  where('exam_draft.station_id','=',$stationId)
+                ->  with('station')
+                ->  first();
+
+
+            if(!empty($ExamDraft)&&!empty($ExamDraft->subject_id))
             {
                 if($ExamDraft->station->type==3)
                 {
-                    throw new \Exception('请检查考站类型');
+                    throw new \Exception('请检查考站类型',-102);
                 }
-                else
-                {
-                    throw new \Exception('请检查考试安排数据');
+
+                $standardItemModel = new StandardItem();
+                $standardItemList  = $standardItemModel->getSubjectStandards($ExamDraft->subject_id);
+                if (empty($standardItemList)) {
+
+                    throw new \Exception('数据查询失败',-103);
                 }
             }
-            //考试标准时间
-            //$mins = $station->mins;
-
-            $exam = Exam::doingExam($examId);
-
-            $standardItemModel = new StandardItem();
-            $standardItemList  = $standardItemModel->getSubjectStandards($ExamDraft->subject_id);
-
-            if (count($standardItemList) != 0) {
-
-                return response()->json(
-                    $this->success_data($standardItemList, 1, '数据传送成功')
-                );
-
-            } else {
-                return response()->json(
-                    $this->fail(new \Exception('数据查询失败'))
-                );
+            else
+            {
+                throw new \Exception('请检查考试安排数据',-104);
             }
-//
-//        } catch (\Exception $ex) {
-//            \Log::alert($ex->getMessage());
-//        }
+            return response()->json(
+                $this->success_data($standardItemList, 1, '数据传送成功')
+            );
+        }catch (\Exception $ex){
+            return response()->json($this->fail($ex));
+        }
+
     }
 
     /**
@@ -1514,5 +1502,59 @@ class InvigilatePadController extends CommonController
             $connection->rollBack();
             return \Response::json(array('code'=>0));
         }
+    }
+
+
+
+    /**考生现场照片采集
+     * @method
+     * @url api/invigilatepad/live-photo-upload
+     * @access public
+     * @param Request $request
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postLivePhotoUpload(Request $request){
+        $data   =   [
+            'path'  =>  '',
+            'name'=>''
+        ];
+        if ($request->hasFile('file'))
+        {
+            $status = 200;
+            $file   =   $request->file('file');
+            $oldfileName = $file->getClientOriginalName();//获取上传图片的名称
+            $type = substr($oldfileName, strrpos($oldfileName,'.'));//图片格式
+            $arr = array('.jpg','.JPG');
+            if(!in_array($type,$arr)){
+                $status = 0;
+                $info   = '格式错误！';
+            }
+
+            $imagesize = getClientOriginalName($oldfileName);
+            if($imagesize[0] != 480 || $imagesize[0] != 640){
+                $status = 0;
+                $info   = '图片分辨率不匹配！';
+            }
+
+            if($status){
+
+                $path   =   'osce/studentphoto/'.date('Y-m-d').'/';
+                $destinationPath    =   public_path($path);
+
+                $file->move($destinationPath,$oldfileName);
+                $pathReturn    =   '/'.$path.$oldfileName;
+
+                $data   =   [
+                    'path'=>$pathReturn,
+                    'name'=>$oldfileName,
+                ];
+                $info   = '上传成功';
+            }
+        }
+        return json_encode(
+            $this->success_data($data,$status,$info)
+        );
     }
 }
