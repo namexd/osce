@@ -123,7 +123,7 @@
                             <div class="form-group grading-normal" style="display: {{is_null($examGradation->first()->sequence_cate) && !is_null($examData->sequence_cate)?'block;':'none;'}}">
                                 <label class="col-sm-2 control-label">考试顺序</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" style="width:200px;"  {{$examData['status']==0?'':'disabled'}} name="sequence_cate" >
+                                    <select class="form-control" style="width:200px;"  {{$examData['status']==0?'':'disabled'}} name="sequence_cate_1" >
                                         <option value="3" {{($examData['sequence_cate']==3)?'selected=selected':''}}>轮循</option>
                                         <option value="2" {{($examData['sequence_cate']==2)?'selected=selected':''}}>顺序</option>
                                         <option value="1" {{($examData['sequence_cate']==1)?'selected=selected':''}}>随机</option>
@@ -146,7 +146,7 @@
                                             <tr>
                                                 <td>阶段{{$key + 1}}</td>
                                                 <td>
-                                                    <select class="form-control" style="width:200px;" @if($value->sequence_cate != null) name="sequence_cate[{{$key + 1}}]" @endif >
+                                                    <select class="form-control" style="width:200px;" name="sequence_cate[{{$key + 1}}]" >
                                                         <option @if($value->sequence_cate == 3) selected = "selected" @endif value="3">轮循</option>
                                                         <option @if($value->sequence_cate == 2) selected = "selected" @endif value="2">顺序</option>
                                                         <option @if($value->sequence_cate == 1) selected = "selected" @endif value="1">随机</option>
