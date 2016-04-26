@@ -36,7 +36,6 @@ class TeacherSubject extends CommonModel
                     'station_teacher.user_id'
                 ])
                 ->get()->toArray();
-
         if ($subject_id == 0){
 
             return Teacher::where('archived','=',0)->where('type','=', $type)->select(['id as teacher_id', 'name'])->get();
