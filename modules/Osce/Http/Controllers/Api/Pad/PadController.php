@@ -405,6 +405,7 @@ class PadController extends  CommonController{
 
             $watchModel = new Watch();
             $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+
             //拿到阶段序号
             $gradationOrder =ExamScreening::find($queue->exam_screening_id);
             //拿到所有场次id
