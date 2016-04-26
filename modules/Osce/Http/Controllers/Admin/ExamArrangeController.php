@@ -707,7 +707,6 @@ class ExamArrangeController extends CommonController
              //判断考官安排是考场还是考站安排
              $ExamDraft     = new ExamDraft();
              $datas = $ExamDraft->getDraftFlowData($exam_id);
-
              $stationId = [];
              foreach ($datas as $item)
              {
@@ -745,20 +744,21 @@ class ExamArrangeController extends CommonController
                      if(is_null($teacherData['subject_id'])&&is_null($teacherData['subject_title'])){
                          $teacherData['subject_title']  = '当前为理论考站';
                      }
-
                  }else{
                      if(is_null($teacherData['subject_id'])){
 
                          throw new \Exception('前面考试安排中该考站'.$stationType->name.'没有安排考试项目');
                      }
                  }
+
+
                  foreach ($teacherList as $value)
                  {
-                     if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id && $teacherData['subject_id'] == $value->subject_id)
+                     if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id )
                      {
                         $teacherData['sp_teacher'][$value->teacher_id] =$value;
 
-                     } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id && $teacherData['subject_id'] == $value->subject_id){
+                     } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id){
                          $teacherData['teacher'][$value->teacher_id] =$value ;
                      }
                  }
