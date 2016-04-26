@@ -782,7 +782,7 @@ class ExamArrangeController extends CommonController
      */
     public function postInvigilateArrange(Request $request)
     {
-        try {
+//        try {
             //验证
             $this->validate($request, [
                 'exam_id'           => 'required|integer',
@@ -823,9 +823,9 @@ class ExamArrangeController extends CommonController
                 return response()->json($this->success_data([], 1, 'success'));
             }
 
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**

@@ -92,18 +92,43 @@ class ExamControlController extends CommonController
             $data['type'] = 2;//上报弃考
         }
 
-        try{
+/*
+        $examControlModel = new ExamControl();
+        $result = $examControlModel->stopExam($data);
+        if($result){
+            //向pad端推送消息
+            $redis = Redis::connection('message');
+            $redis->publish('pad_message', json_encode($this->success_data([],106,'考试终止成功')));
+            $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
+                ->where('student_id','=',$data['studentId'])->first();
 
+            if(!empty($examScreeningStudentData)){
+                //向watch端推送消息
+                $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
+                $request['nfc_code'] = $watchData->code;
+                //拿到阶段序号
+                $gradationOrder = ExamScreening::find($data['examScreeningId']);
+                //拿到所有场次id
+                $examscreeningId = ExamScreening::where('exam_id','=',$data['examId'])->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+                $studentWatchController = new StudentWatchController();
+                $studentWatchController->getStudentExamReminder($request,$data['stationId'],$examscreeningId);
+            }
+            return response()->json(
+                $this->success_data([],1,'success')
+            );
+        }
+*/
+
+
+        try{
 
             $examControlModel = new ExamControl();
             $examControlModel->stopExam($data);
             //向pad端推送消息
             $redis = Redis::connection('message');
             $redis->publish('pad_message', json_encode($this->success_data([],106,'考试终止成功')));
-
             $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
                 ->where('student_id','=',$data['studentId'])->first();
-
             if(!empty($examScreeningStudentData)){
                 //向watch端推送消息
                 $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
@@ -121,7 +146,6 @@ class ExamControlController extends CommonController
             );
         }catch (\Exception $ex) {
             return response()->json($this->fail($ex));
-
         }
 
     }
