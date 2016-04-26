@@ -680,10 +680,9 @@ class ExamArrangeController extends CommonController
             return redirect()->back()->withErrors('没有找到对应的考试！');
         }
         //判断考官安排是考场还是考站安排
-//        $ExamDraft     = new ExamDraft();
-//        $datas = $ExamDraft->getDraftFlowData($exam_id);
-
-        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id]);
+        $ExamDraft     = new ExamDraft();
+        $datas = $ExamDraft->getDraftFlowData($exam_id);
+        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id,'data'=>$datas]);
     }
 
 
@@ -716,6 +715,7 @@ class ExamArrangeController extends CommonController
              $datas = $ExamDraft->getDraftFlowData($exam_id);
 
 
+             
              $stationId = [];
 
              foreach ($datas as $item){
@@ -844,14 +844,19 @@ class ExamArrangeController extends CommonController
             $this->validate($request, [
                 'subject_id' => 'sometimes',
                 'type' => 'required|integer',
-                'teacher_id' => 'sometimes'
+                'teacher_id' => 'sometimes',
+                'exam_gradation_id' => 'sometimes',
+                'exam_id' => 'required',
             ]);
             
             $subject_id = intval($request->get('subject_id'));
             $type = intval($request->get('type'));
+            $examGradationId = intval($request->get('exam_gradation_id'));
+            $examId = intval($request->get('exam_id'));
+            
             $teacherSubject = new TeacherSubject();
             //根据考试项目 获取对应的考官
-            $invigilates = $teacherSubject->getTeachers($type,$subject_id);
+            $invigilates = $teacherSubject->getTeachers($type,$subject_id,$examGradationId,$examId);
 
 
             return response()->json(
