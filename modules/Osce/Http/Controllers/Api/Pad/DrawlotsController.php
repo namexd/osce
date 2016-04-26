@@ -1017,10 +1017,6 @@ class DrawlotsController extends CommonController
                 'exam_draft.station_id as station_id'
             )
             ->get();
-
-            dd($station,$stationIds);
-
-
         //$stationIds为还没有被使用的考站
         $stationIds = array_diff($stationIds->pluck('station_id')->toArray(), $stationIdeds);
         //$ranStationId为随机选择的一个考站
