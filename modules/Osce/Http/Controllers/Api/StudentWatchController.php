@@ -114,7 +114,7 @@ class StudentWatchController extends CommonController
         //$examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
         //$examId = $examInfo->exam_id;
 
-        //根据考生id得到所有该考生的队列列表
+        //根据考生id得到该场考试该阶段的所有队列列表
         $examQueueModel = new ExamQueue();
         $examQueueCollect = $examQueueModel->StudentExamQueue($studentId,$examscreeningId);
         if (is_null($examQueueCollect)) {
