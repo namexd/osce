@@ -185,6 +185,7 @@ class StationTeacher extends CommonModel
             ])
 //            ->groupBy('teacher.id')
             ->get();
+        dd($data);
 
         return $data;
     }

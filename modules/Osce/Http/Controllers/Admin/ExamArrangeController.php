@@ -754,7 +754,6 @@ class ExamArrangeController extends CommonController
 
                  foreach ($teacherList as $value)
                  {
-                     dump( $teacherData['station_id'],$value->station_id);
                      if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id )
                      {
                         $teacherData['sp_teacher'][$value->teacher_id] =$value;
