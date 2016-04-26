@@ -165,30 +165,26 @@ abstract class CommonController extends Controller
     {
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
-        try {
+		try {
             //获得站点摄像机关联表
             $stationVcr = StationVcr::where('station_id', $stationId)->first();
-            if (is_null($stationVcr)) {
-                throw new \Exception('该考站未关联摄像机', -200);
-            }
-
-            foreach ($timeAnchors as $timeAnchor) {
-                //拼凑数组
-                $data = [
-                    'station_vcr_id' => $stationVcr->id,
-                    'begin_dt' => date('Y-m-d H:i:s', $timeAnchor),
-                    'end_dt' => date('Y-m-d H:i:s', $timeAnchor),
-                    'created_user_id' => $teacherId,
-                    'exam_id' => $examId,
-                    'student_id' => $studentId,
-                ];
-
-                //将数据插入库
-                if (!$result = StationVideo::create($data)) {
-                    throw new \Exception('保存失败！请重试', -210);
+            if (!is_null($stationVcr)) {
+                foreach ($timeAnchors as $timeAnchor) {
+                    //拼凑数组
+                    $data = [
+                        'station_vcr_id' => $stationVcr->id,
+                        'begin_dt' => date('Y-m-d H:i:s', $timeAnchor),
+                        'end_dt' => date('Y-m-d H:i:s', $timeAnchor),
+                        'created_user_id' => $teacherId,
+                        'exam_id' => $examId,
+                        'student_id' => $studentId,
+                    ];
+                    //将数据插入库
+                    if (!$result = StationVideo::create($data)) {
+                        throw new \Exception('保存失败！请重试', -210);
+                    }
                 }
             }
-
             $connection->commit();
             return ['锚点上传成功！'];
         } catch (\Exception $ex) {
