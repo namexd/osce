@@ -75,7 +75,7 @@ class StudentWatchController extends CommonController
             );
         }
 
-        //判定腕表是否解绑
+        //判定腕表是否绑定
         if ($watch->status == 0) {
             $data['title'] = '腕表未绑定';
             $data['code'] = -1; // -1 腕表未绑定

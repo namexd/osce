@@ -109,10 +109,10 @@ class StationTeacher extends CommonModel
                         foreach ($item['teacher'] as $value)
                         {
                             //判该老师是否支持该项目如果不支持添加
-                            $subjectId   = TeacherSubject::where('teacher_id', '=', $value)->get()->pluck('subject_id')->toArray();
-                            $subjectId[] = intval($item['subject_id']);
-                            $subjectId   = array_unique($subjectId);
-                            $teacherModel->handleTeacherSubject($subjectId, $value, $user->id);
+//                            $subjectId   = TeacherSubject::where('teacher_id', '=', $value)->get()->pluck('subject_id')->toArray();
+//                            $subjectId[] = intval($item['subject_id']);
+//                            $subjectId   = array_unique($subjectId);
+//                            $teacherModel->handleTeacherSubject($subjectId, $value, $user->id);
                             $teacherIDs[] = $value;
                         }
                     }
@@ -120,10 +120,10 @@ class StationTeacher extends CommonModel
                         foreach ($item['sp_teacher'] as $value)
                         {
                             //判该老师是否支持该项目如果不支持添加
-                            $subjectId    = TeacherSubject::where('teacher_id', '=', $value)->get()->pluck('subject_id')->toArray();
-                            $subjectId[]  = intval($item['subject_id']);
-                            $subjectId    = array_unique($subjectId);
-                            $teacherModel-> handleTeacherSubject($subjectId, $value, $user->id);
+//                            $subjectId    = TeacherSubject::where('teacher_id', '=', $value)->get()->pluck('subject_id')->toArray();
+//                            $subjectId[]  = intval($item['subject_id']);
+//                            $subjectId    = array_unique($subjectId);
+//                            $teacherModel-> handleTeacherSubject($subjectId, $value, $user->id);
                             $teacherIDs[] = $value;
                         }
                     }
