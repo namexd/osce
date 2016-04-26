@@ -68,7 +68,7 @@ class DrawlotsController extends CommonController
 //            $room = StationTeacher::where('user_id', $teacher_id)->where('exam_id', $examId)->orderBy('created_at',
 //                'desc')->first()->station->room;
             $room = $this->getStationAndRoom($teacher_id, $examId);
-            dd($room);
+
             if ($room->isEmpty()) {
                 throw new \Exception('未能查到该老师对应的考场！');
             }
@@ -1073,7 +1073,7 @@ class DrawlotsController extends CommonController
 //  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '类型',
 //  `exam_id` int(11) NOT NULL COMMENT '考试编号',
 //  `exam_screening_id` int(11) DEFAULT NULL COMMENT '场次ID',
-
+        dd(3333);
 
 
         $stationTeacher =   StationTeacher::where('user_id','=',$teacher_id)
