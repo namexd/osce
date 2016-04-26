@@ -179,7 +179,6 @@ class ExamControl extends Model
             $result = $examQueueModel->where('exam_id','=',$data['examId'])
                 ->where('student_id','=',$data['studentId'])
                 ->where('exam_screening_id','=',$data['examScreeningId'])
-                //->where('station_id','=',$data['stationId'])
                 ->update(['controlMark'=>1]);
             if(!$result){
                 throw new \Exception(' 更新考试队列中考试监控标记失败！');
@@ -196,13 +195,15 @@ class ExamControl extends Model
                 throw new \Exception('更新考试场次-学生关系表失败！');
             }
 
+
             //③向监控标记学生替考记录表插入数据
             $examMonitorData=array(
-                'station_id'=>$data['stationId'],
-                'exam_id'=>$data['examId'],
-                'student_id'=>$data['studentId'],
-                'type'=>$data['type'],
-                'description'=>$data['description'],
+                'exam_screening_id' =>$data['examScreeningId'],
+                'station_id'         =>$data['stationId'],
+                'exam_id'             =>$data['examId'],
+                'student_id'         =>$data['studentId'],
+                'type'                =>$data['type'],
+                'description'        =>$data['description'],
             );
             if(!ExamMonitor::create($examMonitorData)){
                 throw new \Exception(' 插入监控标记学生替考记录表失败！');

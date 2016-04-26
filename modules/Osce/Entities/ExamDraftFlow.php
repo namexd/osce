@@ -270,6 +270,8 @@ class ExamDraftFlow extends CommonModel
                 'exam_id'           => $item->exam_id,
                 'exam_screening_id' => $item->exam_screening_id,
                 'exam_gradation_id' => $item->exam_gradation_id,
+                'optional'          => $item->optional,
+                'number'            => $item->number,
             ];
 
             $result = ExamDraftFlow::create($draftFlowData);
