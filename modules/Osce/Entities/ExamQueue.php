@@ -207,6 +207,7 @@ class ExamQueue extends CommonModel
                 ->groupBy('student.id')
                ->first();
             if(is_null($queueing)){//没有正在考试的
+                
                 return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->where('exam_queue.room_id', $room_id)
                     ->where('exam_queue.status', '<', 3)
