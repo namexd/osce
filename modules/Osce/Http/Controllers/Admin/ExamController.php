@@ -314,11 +314,13 @@ class ExamController extends CommonController
         if (empty($user)) {
             throw new \Exception('未找到当前操作人信息');
         }
-
-        try{
+//        try{
             //处理考试场次时间
             $timeData = $examModel->handleScreeningTime($examScreeningData, $user);
             $sequenceCate = $request->input('sequence_cate', null);
+            if (is_array($sequenceCate) && count($sequenceCate) == 1) {
+                $sequenceCate = $sequenceCate[1];
+            }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'name'          => e($request  ->  get('name')),
@@ -342,10 +344,10 @@ class ExamController extends CommonController
             }
             return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id])->withErrors(['msg'=>'保存成功', 'code'=>1]);
 
-        } catch(\Exception $ex) {
-
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch(\Exception $ex) {
+//
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**
