@@ -268,9 +268,10 @@ class ExamMonitorController  extends CommonController
 
         $exam_id=Exam::where('status',1)->pluck('id');//正在考试id
         if(empty($exam_id)) return [];
-        $ExamScreening = $this->getExamingScreening($exam_id);
+        $examScreen=new ExamScreening();
+        $ExamScreening = $examScreen->getExamingScreening($exam_id);
         if (is_null($ExamScreening)) {
-            $ExamScreening = $this->getNearestScreening($exam_id);
+            $ExamScreening = $examScreen->getNearestScreening($exam_id);
         }
         $builder=ExamScreeningStudent::leftJoin('student', function($join){//弃考 已完成页面数据对象
             $join -> on('exam_screening_student.student_id', '=', 'student.id');

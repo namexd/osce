@@ -191,7 +191,7 @@ class ExamController extends CommonController
         //考试场次 及时间
         $examScreeningData =  $request  ->  get('time');
 
-//        try{
+        try{
             //处理考试场次时间
             $timeData = $model->handleScreeningTime($examScreeningData, $user);
             $sequenceCate = $request->input('sequence_cate_1', null);
@@ -224,10 +224,10 @@ class ExamController extends CommonController
             //成功后，重定向为编辑页面
             return redirect()->route('osce.admin.exam.getEditExam',['id'=>$result->id])->withErrors(['msg'=>'保存成功','code'=>1]);
 
-//        } catch(\Exception $ex) {
-//            //返回原来的页面，并抛出错误
-//            return redirect()->back()->withErrors($ex->getMessage());
-//        }
+        } catch(\Exception $ex) {
+            //返回原来的页面，并抛出错误
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
@@ -314,11 +314,13 @@ class ExamController extends CommonController
         if (empty($user)) {
             throw new \Exception('未找到当前操作人信息');
         }
-
         try{
             //处理考试场次时间
             $timeData = $examModel->handleScreeningTime($examScreeningData, $user);
             $sequenceCate = $request->input('sequence_cate', null);
+            if (is_array($sequenceCate) && count($sequenceCate) == 1) {
+                $sequenceCate = head($sequenceCate);
+            }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'name'          => e($request  ->  get('name')),
@@ -343,7 +345,6 @@ class ExamController extends CommonController
             return redirect()->route('osce.admin.exam.getEditExam', ['id'=>$exam_id])->withErrors(['msg'=>'保存成功', 'code'=>1]);
 
         } catch(\Exception $ex) {
-
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
