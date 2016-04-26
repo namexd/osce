@@ -75,7 +75,7 @@ class ExamArrangeController extends CommonController
 
             //根据阶段ID查询场次ID
             if (!empty($gradationId)){
-                $screening   = ExamGradation::getScreenIdByGradationId($gradationId);
+                $screening   = ExamGradation::getScreenIdByGradationId($examId, $gradationId);
                 $screeningId = $screening->id;
             }else{
                 $screeningId = null;
@@ -785,14 +785,35 @@ class ExamArrangeController extends CommonController
         try {
             //验证
             $this->validate($request, [
-                'exam_id' => 'required|integer'
+                'exam_id'           => 'required|integer',
+                'subject_id'        => 'sometimes',
+                'station_id'        => 'sometimes',
+                'exam_screening_id' => 'sometimes',
+                'exam_gradation_id' => 'sometimes',
+                'teacher'           => 'sometimes',
+                'sp_teacher'        => 'sometimes',
             ]);
             //获得exam_id
             $exam_id     = $request->input('exam_id');
-            $teacherData = $request->input('data');
-            //保存老师的数据
-            $stationTeacherModel = new StationTeacher();
-            $result = $stationTeacherModel->getsaveteacher($teacherData,$exam_id);
+            $teacherData = $request->input('data');     //全部保存数据
+
+            //单个保存数据
+            $data = [
+                'station_id'  => $request->get('station_id'),
+                'subject_id'  => $request->get('subject_id'),
+                'screeningId' => $request->get('exam_screening_id'),
+                'gradationId' => $request->get('exam_gradation_id'),
+                'teacher'     => $request->get('teacher'),
+                'sp_teacher'  => $request->get('sp_teacher')
+            ];
+
+            $StationTeacher = new StationTeacher();
+            //单个保存老师数据
+            if (empty($teacherData)){
+                $teacher = $StationTeacher->singleSaveTeacher($exam_id, $data);
+            }
+            //全部保存老师的数据
+            $result = $StationTeacher->getsaveteacher($teacherData, $exam_id);
 
             if(!$result){
                 throw new \Exception('保存老师数据失败，请重试！！');
@@ -878,7 +899,7 @@ class ExamArrangeController extends CommonController
      * @return mixed
      * @throws \Exception
      */
-    public function postArrangeSave(Request $request,ExamArrangeRepository $examArrangeRepository)
+    public function postArrangeSave(Request $request, ExamArrangeRepository $examArrangeRepository)
     {
         try{
             $this->validate($request, [
