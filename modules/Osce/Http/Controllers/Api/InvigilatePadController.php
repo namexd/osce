@@ -1503,4 +1503,58 @@ class InvigilatePadController extends CommonController
             return \Response::json(array('code'=>0));
         }
     }
+
+
+
+    /**考生现场照片采集
+     * @method
+     * @url api/invigilatepad/live-photo-upload
+     * @access public
+     * @param Request $request
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postLivePhotoUpload(Request $request){
+        $data   =   [
+            'path'  =>  '',
+            'name'=>''
+        ];
+        if ($request->hasFile('file'))
+        {
+            $status = 200;
+            $file   =   $request->file('file');
+            $oldfileName = $file->getClientOriginalName();//获取上传图片的名称
+            $type = substr($oldfileName, strrpos($oldfileName,'.'));//图片格式
+            $arr = array('.jpg','.JPG');
+            if(!in_array($type,$arr)){
+                $status = 0;
+                $info   = '格式错误！';
+            }
+
+            $imagesize = getClientOriginalName($oldfileName);
+            if($imagesize[0] != 480 || $imagesize[0] != 640){
+                $status = 0;
+                $info   = '图片分辨率不匹配！';
+            }
+
+            if($status){
+
+                $path   =   'osce/studentphoto/'.date('Y-m-d').'/';
+                $destinationPath    =   public_path($path);
+
+                $file->move($destinationPath,$oldfileName);
+                $pathReturn    =   '/'.$path.$oldfileName;
+
+                $data   =   [
+                    'path'=>$pathReturn,
+                    'name'=>$oldfileName,
+                ];
+                $info   = '上传成功';
+            }
+        }
+        return json_encode(
+            $this->success_data($data,$status,$info)
+        );
+    }
 }

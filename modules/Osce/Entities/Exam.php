@@ -475,17 +475,25 @@ class Exam extends CommonModel
         //查询原有的 考试阶段 个数
         $examGradation = ExamGradation::where('exam_id', '=', $exam_id)->get();
         $num = $examGradation->count();
+        $keys = [];
+        $key = 0;
 
         if (!is_array($gradationMode)) {
             $gradationMode = null;
+        } else {
+            $keys = array_keys($gradationMode);
+            $key = array_pop($keys);
         }
 
         //比较 阶段个数 (不相等，则添加 或者 删除)
-        $a = 0;
         if ($num != $gradation) {
             if ($num != 0){
                 foreach ($examGradation as $a => $item)
                 {
+                    if ($key > 0 && $a + 1 > $key) {
+                        $a = $key - 1;
+                    }
+
                     //1、更新共同 拥有的
                     $item->gradation_number = $gradation;   //更新 当前考试阶段总数量
                     $item->sequence_cate = is_null($gradationMode) ? null : $gradationMode[$a + 1];
@@ -515,7 +523,7 @@ class Exam extends CommonModel
                         'exam_id'           => $exam_id,
                         'order'             => $i,
                         'gradation_number'  => $gradation,
-                        'sequence_cate' => is_null($gradationMode) ? null : $gradationMode[$i + $a],
+                        'sequence_cate' => is_null($gradationMode) ? null : $gradationMode[$i],
                         'created_user_id'   => Auth::user()->id
                     ];
 //                    dd($gradationData);

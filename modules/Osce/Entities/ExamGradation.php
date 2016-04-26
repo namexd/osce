@@ -38,13 +38,13 @@ class ExamGradation extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public static function getScreenIdByGradationId($gradationId)
+    public static function getScreenIdByGradationId($examId, $gradationId)
     {
-        $gradation = ExamGradation::where('id', '=', $gradationId)->select('order')->first();
+        $gradation = ExamGradation::where('id', '=', $gradationId)->where('exam_id', '=', $examId)->select('order')->first();
         if (is_null($gradation)){
             throw new \Exception('阶段有误！');
         }
-        $screening = ExamScreening::where('gradation_order', '=', $gradation->order)->first();
+        $screening = ExamScreening::where('gradation_order', '=', $gradation->order)->where('exam_id', '=', $examId)->first();
         if (is_null($screening)){
             throw new \Exception('场次有误！');
         }
