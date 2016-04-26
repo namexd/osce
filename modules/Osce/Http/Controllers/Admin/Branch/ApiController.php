@@ -412,6 +412,7 @@ class ApiController extends CommonController
 
         if (Auth::attempt(['username' => $username, 'password' => $password]))
         {
+            dd(11);
             /*
             //获取当前登录账户的角色名称
             $user = new User();
@@ -441,6 +442,7 @@ class ApiController extends CommonController
         }
         else
         {
+            dd(3333);
             return redirect()->back()->withErrors('账号密码错误');
         }
     }
