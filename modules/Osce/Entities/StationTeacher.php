@@ -137,6 +137,7 @@ class StationTeacher extends CommonModel
                             'case_id' => $case_id,
                             'exam_id' => $exam_id,
                             'created_user_id' => $user->id,
+                            'exam_screening_id' => $item['exam_screening_id'],
 //                            'type'              =>  empty($item['teacher_id']) ? 2 : 1
                         ];
                         if (!$StationTeachers = StationTeacher::create($stationTeacher)) {

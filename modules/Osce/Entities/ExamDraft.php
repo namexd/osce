@@ -315,7 +315,8 @@ class ExamDraft extends CommonModel
                     'exam_draft.id','exam_draft.subject_id','subject.title as subject_title','subject.id as subject_id',
 
                     'station.id as station_id','station.name as station_name','station.type as station_type',
-//                    'station_teacher.id as station_teacher_id',
+                    'exam_draft_flow.exam_gradation_id as exam_gradation_id',
+                    'exam_draft_flow.exam_screening_id as exam_screening_id',
                 ])
 //              ->groupBy('subject.id')
                 ->get();
