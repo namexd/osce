@@ -5621,6 +5621,16 @@ function examiner_manage() {
             })
 
         }).on('select2:select', function(e){
+            //请求数据
+            var req = {
+                exam_screening_id: $elem.attr('exam_screening_id'),
+                exam_gradation_id: $elem.attr('stage-id'),
+                subject_id:$elem.attr('value'),
+                station_id: $elem.attr('data-id'),
+                sp_teacher:$elem.find('.custom-sp').val(),
+                exam_id:exam_id
+            };
+
             //新增页面
             if(e.params.data.id == -999) {
                 layer.open({
@@ -5647,9 +5657,17 @@ function examiner_manage() {
                     var array = $elem.find('.custom-teacher').val();
                     array.push($elem.find('.custom-teacher').attr('params'));
                     $elem.find('.custom-teacher').val(array).trigger('change');
+
+                    //请求后台
+                    req['teacher'] = $elem.find('.custom-teacher').val();
+                    ajaxSelect(req,pars.save_data);
                   },
                   content: pars.add_examiner + '?status=1&table=sp_assignment&tr='+$elem.attr('class')+'&selector=custom-teacher'
                 });
+            } else {
+                //请求后台
+                req['teacher'] = $elem.find('.custom-teacher').val();
+                ajaxSelect(req,pars.save_data);
             }
         });
     }
@@ -5715,6 +5733,16 @@ function examiner_manage() {
             })
 
         }).on('select2:select', function(e){
+            //请求数据
+            var req = {
+                exam_screening_id: $elem.attr('exam_screening_id'), 
+                exam_gradation_id: $elem.attr('stage-id'),
+                subject_id:$elem.attr('value'), 
+                station_id: $elem.attr('data-id'), 
+                teacher:$elem.find('.custom-teacher').val(),
+                exam_id:exam_id
+            };
+
             //新增页面
             if(e.params.data.id == -999) {
                 layer.open({
@@ -5741,14 +5769,38 @@ function examiner_manage() {
                     var array = $elem.find('.custom-sp').val();
                     array.push($elem.find('.custom-sp').attr('params'));
                     $elem.find('.custom-sp').val(array).trigger('change');
+
+                    //请求后台
+                    req['sp_teacher'] = $elem.find('.custom-sp').val();
+                    ajaxSelect(req,pars.save_data);
                   },
                   content: pars.add_sp + '?status=1&table=sp_assignment&tr='+$elem.attr('class')+'&selector=custom-sp'
                 });
+            } else {
+                //请求后台
+                req['sp_teacher'] = $elem.find('.custom-sp').val();
+                ajaxSelect(req,pars.save_data);
             }
         });
     }
     
 
-    //$("#add-basic .custom-teacher").select2();
-    //$("#add-basic .custom-sp").select2();
+    /**
+     * 考官选择
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-26
+     * @param   {object}   req 请求数据
+     * @param   {string}   url 请求地址
+     */
+    function ajaxSelect(req,url) {
+        $.ajax({
+            type:'post',
+            url: url,
+            data:req,
+            success: function(res) {
+                return true;
+            }
+        })
+    }
 }
