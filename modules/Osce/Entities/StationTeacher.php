@@ -210,8 +210,8 @@ class StationTeacher extends CommonModel
 
         //判断是否为空值
         Common::valueIsNull($station_id,  -666, '考站ID必传');
-        Common::valueIsNull($subject_id,  -666, '科目ID必传');
-        Common::valueIsNull($screeningId, -666, '场次ID必传');
+        Common::valueIsNull($subject_id,  -665, '科目ID必传');
+        Common::valueIsNull($screeningId, -664, '场次ID必传');
 
         //根据科目id，获取对应的病例id
         $stationCase = SubjectCases::where('subject_id', '=', $subject_id)->first();
@@ -223,12 +223,12 @@ class StationTeacher extends CommonModel
 
         //保存考官数据
         if (!empty($teachers)){
-            $teacher = $this->saveStationTeacher($teachers, $exam_id, $station_id, $case_id, $screeningId, $subject_id, $user);
+            $teacher = $this->saveStationTeacher($exam_id, $user, $case_id, $data, $teachers);
         }
 
         //保存SP考官数据
         if (!empty($sp_teachers)){
-            $sp_teacher = $this->saveStationTeacher($sp_teachers, $exam_id, $station_id, $case_id, $screeningId, $subject_id, $user);
+            $sp_teacher = $this->saveStationTeacher($exam_id, $user, $case_id, $data, $sp_teachers);
         }
 
         return $data;
@@ -250,8 +250,12 @@ class StationTeacher extends CommonModel
      * @date   2016-04-26 16:02
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function saveStationTeacher($teachers, $exam_id, $station_id, $case_id, $screeningId, $subject_id, $user)
+    public function saveStationTeacher($exam_id, $user, $case_id, $data, $teachers)
     {
+        $station_id  = $data['station_id'];
+        $subject_id  = $data['subject_id'];
+        $screeningId = $data['screeningId'];
+
         $teacher = null;
         $teacherModel = new Teacher();
         foreach ($teachers as $teacherId)
