@@ -20,6 +20,7 @@ use Modules\Osce\Entities\ExamArrange\ExamArrangeRepository;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamFlowRoom;
 use Modules\Osce\Entities\ExamFlowStation;
+use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\Examinee;
 use Modules\Osce\Entities\ExamPlanForRoom;
 use Modules\Osce\Entities\ExamPlanRecord;
@@ -190,10 +191,11 @@ class ExamController extends CommonController
         //考试场次 及时间
         $examScreeningData =  $request  ->  get('time');
 
-        try{
+//        try{
             //处理考试场次时间
             $timeData = $model->handleScreeningTime($examScreeningData, $user);
             $sequenceCate = $request->input('sequence_cate', null);
+//            dd($sequenceCate);
             //获取相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'code'           => 100,
@@ -221,10 +223,10 @@ class ExamController extends CommonController
             //成功后，重定向为编辑页面
             return redirect()->route('osce.admin.exam.getEditExam',['id'=>$result->id])->withErrors(['msg'=>'保存成功','code'=>1]);
 
-        } catch(\Exception $ex) {
-            //返回原来的页面，并抛出错误
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch(\Exception $ex) {
+//            //返回原来的页面，并抛出错误
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**
@@ -257,9 +259,10 @@ class ExamController extends CommonController
         try {
             $examData = Exam::findOrFail($id);
             $examScreeningData = ExamScreening::where(['exam_id' => $id])->get();
+            $examGradation = ExamGradation::where('exam_id', $id)->get();
 
             return view('osce::admin.examManage.exam_basic_info',[
-                'id'=>$id, 'examData'=>$examData, 'examScreeningData'=>$examScreeningData
+                'id'=>$id, 'examData'=>$examData, 'examGradation' => $examGradation, 'examScreeningData'=>$examScreeningData
             ]);
 
         } catch (\Exception $ex) {

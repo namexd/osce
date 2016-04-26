@@ -378,7 +378,7 @@ class InvigilatePadController extends CommonController
                 'exam_screening_id' => 'required',
                 'teacher_id'        => 'required',
             ], [
-                'score.required'    => '请检查评分标准分值',
+                'score.required'    => '请检查评分标准分值',//json的格式
             ]);
             $score     = Input::get('score');
             $stationId = Input::get('station_id');
@@ -413,10 +413,17 @@ class InvigilatePadController extends CommonController
             //根据考生id获取到考试id
             $ExamId = Student::where('id', '=', $data['student_id'])->select('exam_id')->first();
             //根据考试获取到考试流程
-            $ExamFlowModel  = new ExamFlow();
-            $studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
+            //$ExamFlowModel  = new ExamFlow();
+            //$studentExamSum = $ExamFlowModel->studentExamSum($ExamId->exam_id);
+
+            //获取该考生在该场考试所有场次所有阶段所对应的考试数量
+            $studentExamSum = ExamPlan::where('exam_id','=',$ExamId->exam_id)->where('student_id','=',$data['student_id'])->count();
+
             //查询出学生当前已完成的考试
-            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $data['student_id'])->count();
+            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('exam_id','=',$ExamId->exam_id)->where('student_id', '=', $data['student_id'])->count();
+
+            //获取该考生在该场考试所对应的所有场次id
+            $studentExamScreeningIdArr = ExamPlan::where('exam_id','=',$ExamId->exam_id)->where('student_id','=',$data['student_id'])->select('exam_screening_id')->get()->toArray();
 
             $TestResultModel  = new TestResult();
             $result = $TestResultModel->addTestResult($data, $score);
@@ -426,7 +433,7 @@ class InvigilatePadController extends CommonController
                 try {
                     $examResultModel = new ExamResult();
 
-                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'],$data['station_id']);
+                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'],$data['station_id'],$studentExamScreeningIdArr);
  
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
@@ -1038,13 +1045,22 @@ class InvigilatePadController extends CommonController
             if(count($watchData) > 0){
                 $watchData = $watchData->toArray();
                 foreach($watchData as $k=>$v){
-                    if($v['status'] < 2){
-                        $watchData[$k]['status'] = '0';
-                    }elseif($v['status'] == 2){
-                        $watchData[$k]['status'] = '1';
-                    }else{
-                        $watchData[$k]['status'] = '2';
+
+                    $watchModel = WatchLog::where('id','=',$v['id'])->orderBy('id','desc')->first();
+                    if(!is_null($watchModel)){
+                        if($watchModel->action == '绑定'){
+                            if($v['status'] < 2){
+                                $watchData[$k]['status'] = '0';
+                            }elseif($v['status'] == 2){
+                                $watchData[$k]['status'] = '1';
+                            }else{
+                                $watchData[$k]['status'] = '2';
+                            }
+                        }else{
+                           unset($watchData[$k]);
+                        }
                     }
+
                 }
                 return response()->json(
                     $this->success_data($watchData,200,'success')

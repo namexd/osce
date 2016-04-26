@@ -94,7 +94,7 @@
                                          <div class="clearfix form-group" style="margin-bottom: 0;">
                                               <div class="col-sm-12" id="checkbox_div">
                                                    <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;width:20.2%">
-                                                        <div class="check_icon check_margin {{($examData->gradation->count()>1)?'check':''}}" checkbox={{($examData->gradation->count()>1)?1:0}}></div>
+                                                        <div class="check_icon check_margin {{($examData->gradation->count()>=1)?'check':''}}" checkbox={{($examData->gradation->count()>1)?1:0}}></div>
                                                         <input type="checkbox" name="gradation_order" value="1" {{$examData['same_time']==1?'checked':''}}>
                                                         <span class="check_name" style="display: inline-block;float:right;line-height: 24px;">考生分阶段考试</span>
                                                    </label>
@@ -107,12 +107,12 @@
                                      </div>
                                  </div>
 
-                                 <div class="row grading" style="display: none;">
+                                 <div class="row grading" @if(is_null($examGradation->first()->sequence_cate)) style="display: none;" @else style="display: block;" @endif>
                                     <div class="col-md-1">&nbsp;</div>
                                     <div class="col-md-11">
                                         <select class="form-control" style="width:250px;margin-left: 70px;" name="" >
-                                            <option value="1">统一设置各阶段考试顺序</option>
-                                            <option value="2">单独设置各阶段考试顺序</option>
+                                            <option @if(is_null($examGradation->first()->sequence_cate)) selected = "selected" @endif value="1" >统一设置各阶段考试顺序</option>
+                                            <option @if(!is_null($examGradation->first()->sequence_cate)) selected = "selected" @endif value="2" >单独设置各阶段考试顺序</option>
                                         </select>
                                     </div>
                                     
@@ -120,6 +120,7 @@
                             </div>
                             <div class="hr-line-dashed"></div>
 
+                            @if($examGradation->isEmpty() && is_null($examData->sequence_cate))
                             <div class="form-group grading-normal">
                                 <label class="col-sm-2 control-label">考试顺序</label>
                                 <div class="col-sm-10">
@@ -130,8 +131,9 @@
                                     </select>
                                 </div>
                             </div>
+                            @endif
 
-                            <div class="form-group grading-un-normal" style="display: none;">
+                            <div class="form-group grading-un-normal" @if(is_null($examGradation->first()->sequence_cate)) style="display: none;" @else style="display: block;" @endif>
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-11" style="margin-left: 190px;">
                                     <table class="table table-bordered" style="width: 450px;">
@@ -142,16 +144,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach($examGradation as $key => $value)
                                             <tr>
-                                                <td>阶段1</td>
+                                                <td>阶段{{$key + 1}}</td>
                                                 <td>
-                                                    <select class="form-control" style="width:200px;" name="sequence_cate" >
-                                                        <option value="3">轮循</option>
-                                                        <option value="2">顺序</option>
-                                                        <option value="1">随机</option>
+                                                    <select class="form-control" style="width:200px;" @if($value->sequence_cate != null) name="sequence_cate[{{$key + 1}}]" @endif >
+                                                        <option @if($value->sequence_cate == 3) selected = "selected" @endif value="3">轮循</option>
+                                                        <option @if($value->sequence_cate == 2) selected = "selected" @endif value="2">顺序</option>
+                                                        <option @if($value->sequence_cate == 1) selected = "selected" @endif value="1">随机</option>
                                                     </select>
                                                 </td>
                                             </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>

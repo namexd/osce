@@ -1143,7 +1143,7 @@ function exam_assignment_add(){
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
                             '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
                                     '<option value="3">轮循</option>'+
                                     '<option value="2">顺序</option>'+
                                     '<option value="1">随机</option>'+
@@ -1176,7 +1176,7 @@ function exam_assignment_add(){
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
                             '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
                                     '<option value="3">轮循</option>'+
                                     '<option value="2">顺序</option>'+
                                     '<option value="1">随机</option>'+
@@ -1569,7 +1569,7 @@ function exam_basic_info(){
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
                             '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
                                     '<option value="3">轮循</option>'+
                                     '<option value="2">顺序</option>'+
                                     '<option value="1">随机</option>'+
@@ -1602,7 +1602,7 @@ function exam_basic_info(){
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
                             '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate" >'+
+                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
                                     '<option value="3">轮循</option>'+
                                     '<option value="2">顺序</option>'+
                                     '<option value="1">随机</option>'+
@@ -5339,7 +5339,7 @@ function examiner_manage() {
             var control = data[i].station_type==2?'':'disabled="disabled"';
 
             //dom准备
-            html += '<tr class="tr-id-'+i+'" value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'">'+
+            html += '<tr class="tr-id-'+i+'" value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'" stage-id="'+data[i].exam_gradation_id+'">'+
                         '<td>'+data[i].subject_title+'</td>'+
                         '<td>'+data[i].station_name+'</td>'+
                         '<td>'+typeToName[data[i].station_type]+'</td>'+
@@ -5421,7 +5421,7 @@ function examiner_manage() {
             var $that = $(this);
 
             //老师列表数组
-            arr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            arr.push({exam_gradation_id: $that.attr('stage-id'), subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
             
         });
     
@@ -5569,7 +5569,8 @@ function examiner_manage() {
                     var req = {
                         subject_id:$elem.attr('value'),
                         exam_id: exam_id,
-                        type:1
+                        type:1,
+                        exam_gradation_id:$elem.attr('stage-id')
                     };
 
                     //检测是否为理论考站
@@ -5670,7 +5671,8 @@ function examiner_manage() {
                     return {
                         subject_id:$elem.attr('value'),
                         exam_id: exam_id,
-                        type:2
+                        type:2,
+                        exam_gradation_id:$elem.attr('stage-id')
                     };
                 },
                 delay: 250,
