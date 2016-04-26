@@ -1056,9 +1056,9 @@ class DrawlotsController extends CommonController
     {
         $room = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->join('station_teacher', 'station_teacher.station_id', '=', 'exam_draft.station_id')
-            ->where('station_teacher.user_id', $teacher_id)
+//            ->where('station_teacher.user_id', $teacher_id)
             ->where('exam_draft_flow.exam_id', '=', $examId)
-            ->where('station_teacher.exam_id', $examId)
+//            ->where('station_teacher.exam_id', $examId)
             ->get();
         return $room;
     }
