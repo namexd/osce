@@ -1008,12 +1008,12 @@ class IndexController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getAbsentStudent($studentId,$examId){
-             $status=ExamOrder::where('student_id',$studentId)->where('exam_id',$examId)->select('status')->first()->status;
+    public function getAbsentStudent($studentId,$examId,$screen_id){
+             $status=ExamOrder::where('student_id',$studentId)->where('exam_screening_id',$screen_id)->where('exam_id',$examId)->select('status')->first()->status;
              if($status==4){
-               $result=ExamOrder::where('student_id',$studentId)->where('exam_id',$examId)->update(['status'=>3]);
+               $result=ExamOrder::where('student_id',$studentId)->where('exam_screening_id',$screen_id)->where('exam_id',$examId)->update(['status'=>3]);
                if($result){
-                   $screen_id=ExamScreening::where('exam_id',$examId)->where('status',1)->orderBy('begin_dt')->first()->id;
+                  // $screen_id=ExamScreening::where('exam_id',$examId)->where('status',1)->orderBy('begin_dt')->first()->id;
                    $result=ExamAbsent::create([
                        'student_id'  => $studentId,
                        'exam_id'     => $examId,
@@ -1022,7 +1022,7 @@ class IndexController extends CommonController
                    if($result){
                        //TODO zhoufuxiang
                        //获取该考试最后一位学生（按开始考试时间排序）, 若此学生与当前缺考学生是同一个，则将考试标为已结束
-                       $examOrder = ExamOrder::where('exam_id', $examId)->select(['begin_dt', 'student_id'])->orderBy('begin_dt', 'DESC')->first();
+                       $examOrder = ExamOrder::where('exam_id', $examId)->where('exam_screening_id',$screen_id)->select(['begin_dt', 'student_id'])->orderBy('begin_dt', 'DESC')->first();
                        if($examOrder->student_id == $studentId){
                            //检查考试是否可以结束
                            $examScreening   =   new ExamScreening();
@@ -1066,7 +1066,17 @@ class IndexController extends CommonController
           return \Response::json(array('code'=>2));//未找到该学生
         }
         $studentId=$studentId->id;
-        $screen_id=ExamOrder::where('student_id',$studentId)->where('exam_id',$exam_id)->select('exam_screening_id')->first()->exam_screening_id;
+        //当前场次
+        $examScreen=new ExamScreening();
+        $roomMsg = $examScreen->getExamingScreening($exam_id);
+        $roomMsg_two = $examScreen->getNearestScreening($exam_id);
+        if($roomMsg){
+            $screen_id=$roomMsg->id;
+        }elseif($roomMsg_two){
+            $screen_id=$roomMsg_two->id;
+        }
+
+
         $result=$this->changeSkip($studentId,$exam_id,$screen_id);
 //        $examScreening=new ExamScreening();
 //        $examScreening->closeExam($request->get('exam_id'));
@@ -1097,9 +1107,9 @@ class IndexController extends CommonController
      */
     public function changeSkip($studentId,$exam_id,$screen_id)
     {
-        $status = ExamOrder::where('student_id', $studentId)->where('exam_id', $exam_id)->select('status')->first()->status; //查询学生当前状态
+        $status = ExamOrder::where('student_id', $studentId)->where('exam_id', $exam_id)->where('exam_screening_id',$screen_id)->select('status')->first()->status; //查询学生当前状态
         if ($status == 4) {
-            return $this->getAbsentStudent($studentId, $exam_id); //插入缺考记录 学生已缺考
+            return $this->getAbsentStudent($studentId, $exam_id,$screen_id); //插入缺考记录 学生已缺考
         } elseif ($status == 2) {
             return \Response::json(array('code' => 3));//该学生考试已结束
         } elseif ($status == 1) {
