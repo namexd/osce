@@ -137,6 +137,7 @@ class DrawlotsController extends CommonController
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations,$exam_screening_id);
+                dump($examQueue,33333);
             
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id,$exam_screening_id);
@@ -240,7 +241,6 @@ class DrawlotsController extends CommonController
             foreach($examQueue as $key=>$val){
                 $examQueue[$key]->student_avator = asset($examQueue[$key]->student_avator);
             }
-            dump($examQueue ,1111111);
             $redis->publish('pad_message', json_encode($this->success_data($examQueue,103,'获取成功')));//信息推送
         } catch (\Exception $ex) {
             return $ex;
