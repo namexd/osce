@@ -126,7 +126,7 @@ class ExamControlController extends CommonController
             $examControlModel->stopExam($data);
             //向pad端推送消息
             $redis = Redis::connection('message');
-            $redis->publish('pad_message', json_encode($this->success_data([],106,'考试终止成功')));
+            $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([],106,'考试终止成功')));
             $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
                 ->where('student_id','=',$data['studentId'])->first();
             if(!empty($examScreeningStudentData)){
