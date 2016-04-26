@@ -35,15 +35,16 @@ class TeacherSubject extends CommonModel
                 ->select([
                     'station_teacher.user_id'
                 ])
-                ->get()->toArray();
+                ->get()->pluck('user_id');
         if ($subject_id == 0){
 
-            return Teacher::where('archived','=',0)->where('type','=', $type)->select(['id as teacher_id', 'name'])->get();
+            return Teacher::where('archived','=',0)->where('type','=', $type)->whereNotIn('id',$data)->select(['id as teacher_id', 'name'])->get();
         }else{
 
             return TeacherSubject::leftJoin('teacher', 'teacher.id', '=', 'teacher_subject.teacher_id')
                 ->where('teacher_subject.subject_id', '=', $subject_id)
                 ->where('teacher.type', '=', $type)
+                ->whereNotIn('teacher.id',$data)
                 ->select(['teacher_subject.teacher_id', 'teacher.name'])->get();
         }
 

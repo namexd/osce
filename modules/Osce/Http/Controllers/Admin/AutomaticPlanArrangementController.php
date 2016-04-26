@@ -77,6 +77,7 @@ class AutomaticPlanArrangementController extends CommonController
 //            return response()->json($this->fail($ex));
 //        }
 //        try {
+            set_time_limit(0);
             $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
             Common::valueIsNull($exam, -999, '当前的考试错误');
             $smartArrangeRepository = new SmartArrangeRepository($app);
