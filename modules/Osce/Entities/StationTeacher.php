@@ -256,10 +256,12 @@ class StationTeacher extends CommonModel
         foreach ($teachers as $teacherId)
         {
             //判该老师是否支持该项目如果不支持添加
-            $subjectId    = TeacherSubject::where('teacher_id', '=', $teacherId)->get()->pluck('subject_id')->toArray();
-            $subjectId[]  = intval($subject_id);
-            $subjectId    = array_unique($subjectId);
-            $teacherModel-> handleTeacherSubject($subjectId, $teacherId, $user->id);
+            if ($subject_id != 'null'){
+                $subjectId    = TeacherSubject::where('teacher_id', '=', $teacherId)->get()->pluck('subject_id')->toArray();
+                $subjectId[]  = intval($subject_id);
+                $subjectId    = array_unique($subjectId);
+                $teacherModel-> handleTeacherSubject($subjectId, $teacherId, $user->id);
+            }
 
             //查询是否存在
             $teacher = $this->where('exam_id', '=', $exam_id)->where('station_id', '=', $station_id)
