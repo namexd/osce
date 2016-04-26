@@ -153,15 +153,15 @@ class StudentWatchController extends CommonController
     {
         
         $statusArray = $examQueueCollect->pluck('status')->toArray();
-        if (in_array(1, $statusArray)) {
+        if (in_array(1, $statusArray)) {//候考
             return $this->getStatusOneExam($examQueueCollect);
         }
 
-        if (in_array(2, $statusArray)) {
+        if (in_array(2, $statusArray)) {//正在考试
             return $this->getStatusTwoExam($examQueueCollect);
         }
 
-        if (in_array(3, $statusArray)) {
+        if (in_array(3, $statusArray)) {//结束考试
             return $this->getStatusThreeExam($examQueueCollect, $stationId);
         }
 
