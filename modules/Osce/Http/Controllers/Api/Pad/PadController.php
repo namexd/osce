@@ -377,6 +377,7 @@ class PadController extends  CommonController{
      */
     public function getChangeStatus(Request $request)
     {
+
         $this->validate($request, [
             'student_id' => 'required|integer',
             'station_id' => 'sometimes|integer',
