@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities;
 
 use Auth;
 use DB;
+use Modules\Osce\Repositories\Common;
 
 class StationTeacher extends CommonModel
 {
@@ -58,19 +59,15 @@ class StationTeacher extends CommonModel
 
     //保存考官安排
 
-    public function getsaveteacher($teacherData, $exam_id)
+    public function getsaveteacher($teacherData, $exam_id, $user)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try {
-            //查询当前操作人
-            $user = Auth::user();
-            if (empty($user)) {
-                throw new \Exception('未找到当前操作人信息！');
-            }
             //判断是新增还是编辑
             $examTeacherData = $this->where('exam_id', '=', $exam_id)->get();
 
+            /*
             if (count($examTeacherData) != 0)
             {
                 //这里是编辑先删除以前的数据
@@ -79,7 +76,8 @@ class StationTeacher extends CommonModel
                         throw new \Exception('删除旧数据失败！');
                     }
                 }
-            }
+            }*/
+
             $teacherModel = new Teacher();
             if ($teacherData)
             {
@@ -104,6 +102,7 @@ class StationTeacher extends CommonModel
                             throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
                         }
                     }
+                    /****************
                     $teacherIDs = [];
                     $subjectId = [];
                     if (!empty($item['teacher'])) {
@@ -153,6 +152,7 @@ class StationTeacher extends CommonModel
                             throw new \Exception('考站-老师关系添加失败！');
                         }
                     }
+                     ****************/
                 }
                 $connection->commit();
                 return true;
@@ -188,16 +188,109 @@ class StationTeacher extends CommonModel
         return $data;
     }
 
-    public function singleSaveTeacher($exam_id, $data)
+    /**
+     * 考官安排：单个保存考官选择
+     * @param $exam_id
+     * @param $data
+     * @return mixed
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-04-26 16:02
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function singleSaveTeacher($exam_id, $data, $user)
     {
         $station_id  = $data['station_id'];
         $subject_id  = $data['subject_id'];
-        $screeningId = $data['exam_screening_id'];
-        $gradationId = $data['exam_gradation_id'];
-        $teacher     = $data['teacher'];
-        $sp_teacher  = $data['sp_teacher'];
-        
+        $screeningId = $data['screeningId'];
+        $teachers    = $data['teacher'];
+        $sp_teachers = $data['sp_teacher'];
+
+        //判断是否为空值
+        Common::valueIsNull($station_id,  -666, '考站ID必传');
+        Common::valueIsNull($subject_id,  -666, '科目ID必传');
+        Common::valueIsNull($screeningId, -666, '场次ID必传');
+
+        //根据科目id，获取对应的病例id
+        $stationCase = SubjectCases::where('subject_id', '=', $subject_id)->first();
+        if (is_null($stationCase)) {
+            $case_id = NULL;
+        } else {
+            $case_id = $stationCase->case_id;
+        }
+
+        //保存考官数据
+        if (!empty($teachers)){
+            $teacher = $this->saveStationTeacher($teachers, $exam_id, $station_id, $case_id, $screeningId, $subject_id, $user);
+        }
+
+        //保存SP考官数据
+        if (!empty($sp_teachers)){
+            $sp_teacher = $this->saveStationTeacher($sp_teachers, $exam_id, $station_id, $case_id, $screeningId, $subject_id, $user);
+        }
 
         return $data;
     }
+
+    /**
+     * 保存考官数据
+     * @param $teachers
+     * @param $exam_id
+     * @param $station_id
+     * @param $case_id
+     * @param $screeningId
+     * @param $subject_id
+     * @param $user
+     * @return null|static
+     * @throws \Exception
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-04-26 16:02
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function saveStationTeacher($teachers, $exam_id, $station_id, $case_id, $screeningId, $subject_id, $user)
+    {
+        $teacher = null;
+        $teacherModel = new Teacher();
+        foreach ($teachers as $teacherId)
+        {
+            //判该老师是否支持该项目如果不支持添加
+            $subjectId    = TeacherSubject::where('teacher_id', '=', $teacherId)->get()->pluck('subject_id')->toArray();
+            $subjectId[]  = intval($subject_id);
+            $subjectId    = array_unique($subjectId);
+            $teacherModel-> handleTeacherSubject($subjectId, $teacherId, $user->id);
+
+            //查询是否存在
+            $teacher = $this->where('exam_id', '=', $exam_id)->where('station_id', '=', $station_id)
+                            ->where('user_id', '=', $teacherId)->first();
+            //1、不存在，则添加
+            if (is_null($teacher)){
+                $stationTeacherData = [
+                    'station_id'        => $station_id,
+                    'user_id'           => $teacherId,
+                    'case_id'           => $case_id,
+                    'created_user_id'   => $user->id,
+                    'exam_id'           => $exam_id,
+                    'exam_screening_id' => $screeningId,
+                ];
+                //添加考站老师关系
+                $teacher = StationTeacher::create($stationTeacherData);
+                if (!$teacher){
+                    throw new \Exception('考官安排保存失败！');
+                }
+
+                //2、存在，则修改
+            } else{
+
+                $teacher->case_id           = $case_id;
+                $teacher->exam_screening_id = $screeningId;
+                if (!$teacher->save()){
+                    throw new \Exception('考官安排修改失败！');
+                }
+            }
+        }
+
+        return $teacher;
+    }
+
 }
