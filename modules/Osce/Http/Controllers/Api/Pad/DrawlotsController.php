@@ -136,10 +136,10 @@ class DrawlotsController extends CommonController
 
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
             if ($exam->sequence_mode == 1) {
-                $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations);
-                dump($examQueue,222222);
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations,$exam_screening_id);
+            
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id);
+                $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id,$exam_screening_id);
             } else {
               //  $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
@@ -230,9 +230,9 @@ class DrawlotsController extends CommonController
 
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
             if ($exam->sequence_mode == 1) {
-                $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations);
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations,$exam_screening_id);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id);
+                $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id,$exam_screening_id);
             } else {
                 $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
@@ -249,7 +249,7 @@ class DrawlotsController extends CommonController
 
 
     /**
-     * 根据考场ID获取当前时间段的考生列表(接口)
+     * 根据考场ID获取下一组考生列表(接口)
      * @method GET
      * @url osce/pad/next-examinee
      * @access public
@@ -320,10 +320,10 @@ class DrawlotsController extends CommonController
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
 
             if ($exam->sequence_mode == 1) {
-                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $exam->id, $stations);
+                $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $exam->id, $stations,$exam_screening_id);
             } elseif ($exam->sequence_mode == 2) {
 
-                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $exam->id);
+                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $exam->id,$exam_screening_id);
             } else {
                 //$redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);

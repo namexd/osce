@@ -237,6 +237,9 @@ class InvigilatePadController extends CommonController
             $stationId = $request['station_id'];
             $teacher_id = $request['teacher_id'];
             $exam = Exam::doingExam();
+        
+        
+        
             $studentModel = new  Student();
             $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
             if ($studentData['nextTester']) {
