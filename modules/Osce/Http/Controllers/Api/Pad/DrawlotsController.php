@@ -790,6 +790,7 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations,$examScreeingId);
                 $studentids = $examQueue->pluck('student_id')->toArray();
 
+
                 //随机获取一个考站的id
                 $ranStationId = $this->ranStationSelect($roomId, $examId, $studentids,$examScreeingId);
 
@@ -981,7 +982,7 @@ class DrawlotsController extends CommonController
      * @author Jiangzhiheng
      * @time 2016-03-01
      */
-    private function ranStationSelect($roomId, $examId, $studentids)
+    private function ranStationSelect($roomId, $examId, $studentids,$examScreeingId)
     {
         /*
          * 从ExamQueue表中将房间和学生对应的列表查出
@@ -989,8 +990,9 @@ class DrawlotsController extends CommonController
          */
         $station = ExamQueue::where('room_id', '=', $roomId)
             ->where('exam_id', $examId)
-            ->whereIn('student_id', $studentids)
-            ->whereNotNull('station_id')
+            ->where('exam_screening_id', $examScreeingId)
+            ->whereIn('status',[1,2])
+            ->groupBy('station_id')
             ->get();
 
         if (!$station->isEmpty()) {
@@ -1015,6 +1017,9 @@ class DrawlotsController extends CommonController
                 'exam_draft.station_id as station_id'
             )
             ->get();
+
+            dd($station,$stationIds);
+
 
         //$stationIds为还没有被使用的考站
         $stationIds = array_diff($stationIds->pluck('station_id')->toArray(), $stationIdeds);
