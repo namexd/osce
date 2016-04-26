@@ -662,9 +662,6 @@ class ExamArrangeController extends CommonController
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
-     *
-     *
      */
     public function getInvigilateArrange(Request $request)
     {
@@ -680,79 +677,68 @@ class ExamArrangeController extends CommonController
             return redirect()->back()->withErrors('没有找到对应的考试！');
         }
         //判断考官安排是考场还是考站安排
-        $ExamDraft     = new ExamDraft();
-        $datas = $ExamDraft->getDraftFlowData($exam_id);
-        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id,'data'=>$datas]);
+        $ExamDraft = new ExamDraft();
+        $datas     = $ExamDraft->getDraftFlowData($exam_id);
+
+        return view('osce::admin.examManage.examiner_manage', ['id' => $exam_id, 'data'=>$datas]);
     }
 
-
-
     /**
-     *
-     *  回显数据ajax请求
+     * 回显数据ajax请求
      * @url GET /osce/admin/exam-arrange/exam-teacher-arrange
-     * @param Request $request
+     * @param  exam_id
      * @author Zhoufuxiang 2016-04-06
      * @return string
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-
-     public function getExamTeacherArrange(Request $request){
+     public function getExamTeacherArrange(Request $request)
+     {
          $this->validate($request, [
              'exam_id' => 'required|integer'
          ]);
          //获得exam_id
          try{
-
              $exam_id = $request->input('exam_id');
              $exam    = Exam::where('id','=',$exam_id)->first();
              if (is_null($exam)){
-//                 return redirect()->back()->withErrors('没有找到对应的考试！')
                     throw new \Exception('没有找到对应的考试');
              }
-             //判断考官安排是考场还是考站安排
 
+             //判断考官安排是考场还是考站安排
              $ExamDraft     = new ExamDraft();
              $datas = $ExamDraft->getDraftFlowData($exam_id);
 
-
-             
              $stationId = [];
-
-             foreach ($datas as $item){
-
+             foreach ($datas as $item)
+             {
                  $stationId []=$item->station_id;
              }
-
 
              //查询出考站下对应的老师
              $stationteaxherModel = new StationTeacher();
 
              $teacherList= $stationteaxherModel->getTeacherData($stationId,$exam_id);
-//             dd($teacherList->toArray());
-
 
              $inviteData = Invite::status($exam_id);
-
 
              //将邀请状态插入$stationData
              $examRoomData=  [];
 
-             foreach ($teacherList as &$item) {
-
+             foreach ($teacherList as &$item)
+             {
                  $item->status = 0;
                  foreach ($inviteData as $value) {
-                     if ($item->id == $value->invite_user_id && $item->station_id ==$value->invite_station_id) {
-
+                     if ($item->id == $value->invite_user_id && $item->station_id ==$value->invite_station_id)
+                     {
                          $item->status = $value->status;
-
                      }
                  }
              }
 
              $teacher = $datas->toArray();
-             foreach($teacher as &$teacherData){
+             foreach($teacher as &$teacherData)
+             {
                  //查询出现在考站的类型
-
                  $stationType =Station::find($teacherData['station_id']);
                  if($stationType->type ==3){
 
@@ -766,20 +752,17 @@ class ExamArrangeController extends CommonController
                          throw new \Exception('前面考试安排中该考站'.$stationType->name.'没有安排考试项目');
                      }
                  }
-                 foreach ($teacherList as $value) {
-                     
-                     if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id && $teacherData['subject_id'] == $value->subject_id) {
+                 foreach ($teacherList as $value)
+                 {
+                     if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id && $teacherData['subject_id'] == $value->subject_id)
+                     {
                         $teacherData['sp_teacher'][$value->teacher_id] =$value;
 
                      } else if($value->teacher_type == 1 && $teacherData['station_id'] ==$value->station_id && $teacherData['subject_id'] == $value->subject_id){
                          $teacherData['teacher'][$value->teacher_id] =$value ;
-
                      }
-
                  }
-
              }
-//     dump($teacher);
 
              return response()->json(
                  $this->success_data($teacher, 1, 'success')
@@ -791,39 +774,33 @@ class ExamArrangeController extends CommonController
      }
 
     /**
-     *
      * 保存考官安排数据
-     * @url GET /osce/admin/exam-arrange/invigilate-arrange
+     * @url POST /osce/admin/exam-arrange/invigilate-arrange
      * @param Request $request
      * @author Zhoufuxiang 2016-04-06
      * @return json 
      */
     public function postInvigilateArrange(Request $request)
     {
-
         try {
             //验证
             $this->validate($request, [
                 'exam_id' => 'required|integer'
             ]);
             //获得exam_id
-            $exam_id = $request->input('exam_id');
+            $exam_id     = $request->input('exam_id');
             $teacherData = $request->input('data');
             //保存老师的数据
-            $stationteaxherModel = new StationTeacher();
+            $stationTeacherModel = new StationTeacher();
+            $result = $stationTeacherModel->getsaveteacher($teacherData,$exam_id);
 
-            if(!$stationteaxherModel->getsaveteacher($teacherData,$exam_id)){
+            if(!$result){
+                throw new \Exception('保存老师数据失败，请重试！！');
 
-                        throw new \Exception('保存老师数据失败，请重试！！');
-                    
-                }else{
-                return response()->json(
-                    $this->success_data([], 1, 'success')
-                );
+            } else {
 
+                return response()->json($this->success_data([], 1, 'success'));
             }
-            
-//            return redirect()->route('osce.admin.exam-arrange.getInvigilateArrange', ['id' => $exam_id]);
 
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -842,22 +819,21 @@ class ExamArrangeController extends CommonController
         try {
             //验证
             $this->validate($request, [
-                'subject_id' => 'sometimes',
-                'type' => 'required|integer',
-                'teacher_id' => 'sometimes',
+                'subject_id'        => 'sometimes',
+                'type'              => 'required|integer',
+                'teacher_id'        => 'sometimes',
                 'exam_gradation_id' => 'sometimes',
-                'exam_id' => 'required',
+                'exam_id'           => 'required',
             ]);
             
-            $subject_id = intval($request->get('subject_id'));
-            $type = intval($request->get('type'));
-            $examGradationId = intval($request->get('exam_gradation_id'));
-            $examId = intval($request->get('exam_id'));
+            $subject_id  = intval($request->get('subject_id'));
+            $type        = intval($request->get('type'));
+            $gradationId = intval($request->get('exam_gradation_id'));
+            $examId      = intval($request->get('exam_id'));
             
             $teacherSubject = new TeacherSubject();
             //根据考试项目 获取对应的考官
-            $invigilates = $teacherSubject->getTeachers($type,$subject_id,$examGradationId,$examId);
-
+            $invigilates = $teacherSubject->getTeachers($type, $subject_id, $gradationId, $examId);
 
             return response()->json(
                 $this->success_data($invigilates, 1, 'success')
