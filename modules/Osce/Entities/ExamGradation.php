@@ -32,5 +32,24 @@ class ExamGradation extends CommonModel
             ->keyBy('order');
     }
 
+    /**
+     * 根据阶段ID 获取 场次信息
+     * @param $gradationId
+     * @return mixed
+     * @throws \Exception
+     */
+    public static function getScreenIdByGradationId($gradationId)
+    {
+        $gradation = ExamGradation::where('id', '=', $gradationId)->select('order')->first();
+        if (is_null($gradation)){
+            throw new \Exception('阶段有误！');
+        }
+        $screening = ExamScreening::where('gradation_order', '=', $gradation->order)->first();
+        if (is_null($screening)){
+            throw new \Exception('场次有误！');
+        }
+        return $screening;
+    }
+
 
 }

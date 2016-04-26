@@ -149,17 +149,18 @@ class TestResult extends CommonModel
     /**
      *获取学生考试最终成绩
      * @param $studentId
+     * @param $studentExamScreeningIdArr 该考生在该场考试所对应所有场次id
      * @return
      * @throws \Exception
      * @author zhouqiang
      */
-    public function AcquireExam($studentId)
+    public function AcquireExam($studentId,$studentExamScreeningIdArr)
     {
         if (empty($studentId)) {
             return NULL;
         } else {
 
-            $studentExamScore = TestResult::where('student_id', '=', $studentId)->select('score')->get()->toArray();
+            $studentExamScore = TestResult::where('student_id', '=', $studentId)->whereIn('exam_screening_id',$studentExamScreeningIdArr)->select('score')->get()->toArray();
             $StudentScores = 0;
             foreach ($studentExamScore as $val) {
                 $StudentScores += $val['score'];
