@@ -331,7 +331,7 @@ class IndexController extends CommonController
 
             //不存在考试场次，直接解绑
             if(!$exam_screen_id){
-                $result = Watch::where('id',$id)->update(['status'=>0]);    //解绑
+                $result = Watch::where('id', '=', $id)->update(['status'=>0]);    //解绑
                 if($result){
                     //腕表解绑，添加腕表解绑记录
                     $this->watchUnbundling($id, $student_id);
@@ -459,37 +459,38 @@ class IndexController extends CommonController
             'exam_id' => 'required'
         ]);
 
-        $idCard=$request->get('id_card');
-        $examId=$request->get('exam_id');
+        $idCard = $request->get('id_card');
+        $examId = $request->get('exam_id');
 
-        $studentInfo=Student::where('idcard',$idCard)->where('exam_id',$examId)->select(['id','idcard','code','exam_sequence','name'])->first();
+        $studentInfo = Student::where('idcard',$idCard)->where('exam_id',$examId)->select(['id','idcard','code','exam_sequence','name'])->first();
 
-        if(!$studentInfo){
+        if(is_null($studentInfo)){
             return response()->json(
                 $this->success_rows(2,'未找到学生相关信息')
             );
         }
         //返回的数据
         $data = [
-            'code'          => $studentInfo->code,           //学号
-            'idcard'        => $studentInfo->idcard,         //身份证
-            'exam_sequence' => $studentInfo->exam_sequence,  //准考证
-            'student_name' => $studentInfo->name,  //学生姓名
+            'code'          => $studentInfo->code,          //学号
+            'idcard'        => $studentInfo->idcard,        //身份证
+            'exam_sequence' => $studentInfo->exam_sequence, //准考证
+            'student_name'  => $studentInfo->name,          //学生姓名
         ];
 
-        $action=WatchLog::where('student_id',$studentInfo->id)->select('action')->orderBy('id','DESC')->first();
-        if($action){
-            if($action->action=='绑定') {
+        $action = WatchLog::where('student_id', $studentInfo->id)->select('action')->orderBy('id','DESC')->first();
+        if(!is_null($action)){
+            if($action->action == '绑定') {
                 return response()->json(
                     $this->success_data($data, 1, '已绑定腕表'));
             }else{
                 return response()->json(
-                    $this->success_data($data,0,'未绑定腕表')
+                    $this->success_data($data, 0, '未绑定腕表')
                 );
             }
+
         }else{
             return response()->json(
-                $this->success_data($data,0,'未绑定腕表')
+                $this->success_data($data, 0, '未绑定腕表')
             );
         }
 
@@ -527,31 +528,31 @@ class IndexController extends CommonController
             'nfc'                   =>  'sometimes',
         ]);
 
-        $code=$request->get('code');
-        $id=Watch::where('code',$code)->select()->first();
+        $code   = $request->get('code');
+        $id     = Watch::where('code',$code)->select()->first();
         if($id){
             return \Response::json(array('code'=>3));
         }
-        $nfc=$request->get('nfc');
-        $id=Watch::where('nfc_code',$nfc)->select()->first();
+        $nfc    = $request->get('nfc');
+        $id     = Watch::where('nfc_code',$nfc)->select()->first();
         if($id){
             return \Response::json(array('code'=>3));
         }
 
         try{
-            $watch=Watch::create([
+            $watch = Watch::create([
                 'code'          =>  $request->get('code'),
                 'name'          =>  $request->get('name',''),
                 'status'        =>  $request->get('status',1),
                 'description'   =>  $request->get('description',''),
                 'factory'       =>  $request->get('factory',''),
                 'sp'            =>  $request->get('sp',''),
-                'create_user_id'=> $request->get('create_user_id'),
-                'purchase_dt'   => $request->get('purchase_dt'),
-                'nfc_code'      => $request->get('nfc',''),
+                'create_user_id'=>  $request->get('create_user_id'),
+                'purchase_dt'   =>  $request->get('purchase_dt'),
+                'nfc_code'      =>  $request->get('nfc',''),
             ]);
 
-            if($watch->id>0){
+            if($watch->id > 0){
                 return response()->json(
                     $this->success_data()
                 );
@@ -998,32 +999,36 @@ class IndexController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getAbsentStudent($studentId,$examId,$screen_id){
-             $status=ExamOrder::where('student_id',$studentId)->where('exam_screening_id',$screen_id)->where('exam_id',$examId)->select('status')->first()->status;
-             if($status==4){
-               $result=ExamOrder::where('student_id',$studentId)->where('exam_screening_id',$screen_id)->where('exam_id',$examId)->update(['status'=>3]);
-               if($result){
-                  // $screen_id=ExamScreening::where('exam_id',$examId)->where('status',1)->orderBy('begin_dt')->first()->id;
-                   $result=ExamAbsent::create([
-                       'student_id'  => $studentId,
-                       'exam_id'     => $examId,
-                       'exam_screening_id'  => $screen_id,
-                   ]);
-                   if($result){
-                       //TODO zhoufuxiang
-                       //获取该考试最后一位学生（按开始考试时间排序）, 若此学生与当前缺考学生是同一个，则将考试标为已结束
-                       $examOrder = ExamOrder::where('exam_id', $examId)->where('exam_screening_id',$screen_id)->select(['begin_dt', 'student_id'])->orderBy('begin_dt', 'DESC')->first();
-                       if($examOrder->student_id == $studentId){
-                           //检查考试是否可以结束
-                           $examScreening   =   new ExamScreening();
-                           $examScreening  ->getExamCheck();
-                       }
+    public function getAbsentStudent($studentId, $examId, $screen_id)
+    {
+        $status = ExamOrder::where('student_id', $studentId)->where('exam_screening_id', $screen_id)
+                           ->where('exam_id',$examId)->select('status')->first()->status;
+        if($status==4){
+            $result = ExamOrder::where('student_id', $studentId)->where('exam_screening_id', $screen_id)
+                               ->where('exam_id',$examId)->update(['status'=>3]);
+            if($result){
+                // $screen_id=ExamScreening::where('exam_id',$examId)->where('status',1)->orderBy('begin_dt')->first()->id;
+                $result = ExamAbsent::create([
+                    'student_id'        => $studentId,
+                    'exam_id'           => $examId,
+                    'exam_screening_id' => $screen_id,
+                ]);
+                if($result){
+                    //TODO zhoufuxiang
+                    //获取该考试最后一位学生（按开始考试时间排序）, 若此学生与当前缺考学生是同一个，则将考试标为已结束
+                    $examOrder = ExamOrder::where('exam_id', '=', $examId)->where('exam_screening_id', '=', $screen_id)
+                                          ->select(['begin_dt', 'student_id'])->orderBy('begin_dt', 'DESC')->first();
+                    if($examOrder->student_id == $studentId){
+                    //检查考试是否可以结束
+                    $examScreening  = new ExamScreening();
+                    $examScreening  ->getExamCheck();
+                    }
 
-                       return \Response::json(array('code'=>1));//缺考记录插入成功
-                   }
-                   return \Response::json(array('code'=>0));//缺考记录插入失败
-               }
-             }
+                    return \Response::json(array('code'=>1));//缺考记录插入成功
+                }
+                return \Response::json(array('code'=>0));//缺考记录插入失败
+            }
+        }
     }
 
     /**
@@ -1097,18 +1102,28 @@ class IndexController extends CommonController
      */
     public function changeSkip($studentId,$exam_id,$screen_id)
     {
-        $status = ExamOrder::where('student_id', $studentId)->where('exam_id', $exam_id)->where('exam_screening_id',$screen_id)->select('status')->first()->status; //查询学生当前状态
+        //查询学生当前状态
+        $status = ExamOrder::where('student_id', $studentId)->where('exam_id', $exam_id)
+                           ->where('exam_screening_id',$screen_id)->select('status')->first()->status;
         if ($status == 4) {
             return $this->getAbsentStudent($studentId, $exam_id,$screen_id); //插入缺考记录 学生已缺考
+
         } elseif ($status == 2) {
             return \Response::json(array('code' => 3));//该学生考试已结束
+
         } elseif ($status == 1) {
             return \Response::json(array('code' => 4));//该学生正在考试
         }
-        $beginDt = ExamOrder::where('exam_id', $exam_id)->where('exam_screening_id', $screen_id)->select('begin_dt')->orderBy('begin_dt', 'DESC')->first()->begin_dt;//获取最后一位学生的开始考试时间
+        //获取最后一位学生的开始考试时间
+        $beginDt = ExamOrder::where('exam_id', $exam_id)->where('exam_screening_id', $screen_id)
+                            ->select('begin_dt')->orderBy('begin_dt', 'DESC')->first()->begin_dt;
+
+        //将此学生 在最后一个学生的基础上 再推后10分钟
         $lastDt = strtotime($beginDt) + 10;
-        $time = date('Y-m-d H:i:s', $lastDt);
-        $result = ExamOrder::where('exam_id', $exam_id)->where('student_id', $studentId)->update(['begin_dt' => $time, 'status' => 4]);//修改该学生考试开始时间
+        $time   = date('Y-m-d H:i:s', $lastDt);
+        //修改该学生考试开始时间
+        $result = ExamOrder::where('exam_id', $exam_id)->where('student_id', $studentId)
+                           ->update(['begin_dt' => $time, 'status' => 4]);
         if ($result) {
             return \Response::json(array('code' => 1));
         }
