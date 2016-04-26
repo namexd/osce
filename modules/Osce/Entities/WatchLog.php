@@ -124,7 +124,7 @@ class WatchLog extends CommonModel{
         })->leftjoin('student',function($student){
             $student->on('student.id','=','watch_log.student_id');
         })->leftjoin('exam_queue',function($examQueue){
-            $examQueue->on('exam_queue.exam_screening_id','=','exam_screening.id');
+            $examQueue->on('exam_queue.exam_screening_id','=','student.id');
         })->groupby('watch_log.student_id')->select('watch.id','watch.nfc_code','student.name','exam_queue.status')->get();
 
 
