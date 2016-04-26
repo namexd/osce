@@ -319,7 +319,7 @@ class ExamController extends CommonController
             $timeData = $examModel->handleScreeningTime($examScreeningData, $user);
             $sequenceCate = $request->input('sequence_cate', null);
             if (is_array($sequenceCate) && count($sequenceCate) == 1) {
-                $sequenceCate = $sequenceCate[1];
+                $sequenceCate = head($sequenceCate);
             }
             //处理相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
