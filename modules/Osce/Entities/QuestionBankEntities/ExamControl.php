@@ -348,7 +348,7 @@ class ExamControl extends Model
             ->where('exam_id','=',$examId)
             ->where('student_id','=',$studentId)
             ->where('exam_screening_id','<>',$examScreeningId)
-            ->whereNotIn('status',[2,3])
+            ->whereNotIn('status',[2,3,4])
             ->get();
         return array(
             'remainStationCount' =>count($examQueueInfo),//剩余考站数量
