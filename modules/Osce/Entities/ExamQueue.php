@@ -269,10 +269,10 @@ class ExamQueue extends CommonModel
 
     static public function examineeByStationId($stationId, $examId,$exam_screening_id)
     {
-        $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
-            ->where('exam_draft.station_id',$stationId)
-            ->where('exam_draft_flow.exam_id',$examId)
-            ->first();
+//        $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
+//            ->where('exam_draft.station_id',$stationId)
+//            ->where('exam_draft_flow.exam_id',$examId)
+//            ->first();
         $queueing=ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
             ->where('exam_queue.station_id', $stationId)
             ->where('exam_queue.status', '=', 2)
