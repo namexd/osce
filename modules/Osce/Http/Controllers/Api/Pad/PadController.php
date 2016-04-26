@@ -409,8 +409,7 @@ class PadController extends  CommonController{
 
             //拿到阶段序号
             $gradationOrder =ExamScreening::find($queue->exam_screening_id);
-            //拿到所有场次id
-
+            //拿到属于该场考试该阶段的所有场次id
             $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
         
             $studentWatchController = new StudentWatchController();
