@@ -777,12 +777,15 @@ class ExamArrangeController extends CommonController
      * 保存考官安排数据
      * @url POST /osce/admin/exam-arrange/invigilate-arrange
      * @param Request $request
-     * @author Zhoufuxiang 2016-04-06
-     * @return json 
+     * @return json
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-04-06 16:02
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postInvigilateArrange(Request $request)
     {
-//        try {
+        try {
             //验证
             $this->validate($request, [
                 'exam_id'           => 'required|integer',
@@ -799,33 +802,41 @@ class ExamArrangeController extends CommonController
 
             //单个保存数据
             $data = [
-                'station_id'  => $request->get('station_id'),
-                'subject_id'  => $request->get('subject_id'),
-                'screeningId' => $request->get('exam_screening_id'),
-                'gradationId' => $request->get('exam_gradation_id'),
-                'teacher'     => $request->get('teacher'),
-                'sp_teacher'  => $request->get('sp_teacher')
+                'station_id'  => $request->get('station_id', null),
+                'subject_id'  => $request->get('subject_id', null),
+                'screeningId' => $request->get('exam_screening_id', null),
+                'gradationId' => $request->get('exam_gradation_id', null),
+                'teacher'     => $request->get('teacher', null),
+                'sp_teacher'  => $request->get('sp_teacher', null)
             ];
 
+            //查询当前操作人
+            $user = Auth::user();
+            if (empty($user)) {
+                throw new \Exception('未找到当前操作人信息！');
+            }
             $StationTeacher = new StationTeacher();
             //单个保存老师数据
             if (empty($teacherData)){
-                $teacher = $StationTeacher->singleSaveTeacher($exam_id, $data);
+                $result = $StationTeacher->singleSaveTeacher($exam_id, $data, $user);
+                if(!$result){
+                    throw new \Exception('保存老师数据失败！');
+                }
+
+            }else{
+                //全部保存老师的数据
+                $result = $StationTeacher->getsaveteacher($teacherData, $exam_id, $user);
+
+                if(!$result){
+                    throw new \Exception('保存老师数据失败，请重试！！');
+                }
             }
-            //全部保存老师的数据
-            $result = $StationTeacher->getsaveteacher($teacherData, $exam_id);
 
-            if(!$result){
-                throw new \Exception('保存老师数据失败，请重试！！');
+            return response()->json($this->success_data([], 1, 'success'));
 
-            } else {
-
-                return response()->json($this->success_data([], 1, 'success'));
-            }
-
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
