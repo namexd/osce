@@ -358,9 +358,11 @@ class Exam extends CommonModel
         $connection ->beginTransaction();
         try {
             //将exam表的数据插入exam表
+//            dd($examData);
             if (!$result = $this->create($examData)) {
                 throw new \Exception('创建考试基本信息失败');
             }
+
             //处理 考试阶段关系 数据
             $this->handleGradation($result->id, $gradation, $gradationMode, $examArrangeRepository);
 
@@ -476,11 +478,6 @@ class Exam extends CommonModel
 
         if (!is_array($gradationMode)) {
             $gradationMode = null;
-            $exam = Exam::doingExam($exam_id);
-            $exam->sequence_cate = null;
-            if (!$exam->save()) {
-                throw new \Exception('系统错误！');
-            }
         }
 
         //比较 阶段个数 (不相等，则添加 或者 删除)
