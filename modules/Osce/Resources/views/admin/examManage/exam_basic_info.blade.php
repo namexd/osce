@@ -120,8 +120,7 @@
                             </div>
                             <div class="hr-line-dashed"></div>
 
-                            @if(is_null($examGradation->first()->sequence_cate) && !is_null($examData->sequence_cate))
-                            <div class="form-group grading-normal">
+                            <div class="form-group grading-normal" style="display: {{is_null($examGradation->first()->sequence_cate) && !is_null($examData->sequence_cate)?'block;':'none;'}}">
                                 <label class="col-sm-2 control-label">考试顺序</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;"  {{$examData['status']==0?'':'disabled'}} name="sequence_cate" >
@@ -131,7 +130,6 @@
                                     </select>
                                 </div>
                             </div>
-                            @endif
 
                             <div class="form-group grading-un-normal" @if(is_null($examGradation->first()->sequence_cate)) style="display: none;" @else style="display: block;" @endif>
                                 <div class="col-sm-2"></div>

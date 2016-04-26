@@ -116,8 +116,17 @@ class DrawlotsController extends CommonController
                // $redis->publish('pad_message', json_encode($this->success_data([], -777, '当前考试没有进行')));
                 throw new \Exception('当前考试没有进行', -777);
             }
-
+            //当前场次
+            $examScreen=new ExamScreening();
+            $roomMsg = $examScreen->getExamingScreening($exam->id);
+            $roomMsg_two = $examScreen->getNearestScreening($exam->id);
+            if($roomMsg){
+                $exam_screening_id=$roomMsg->id;
+            }elseif($roomMsg_two){
+                $exam_screening_id=$roomMsg_two->id;
+            }
             $station = StationTeacher::where('exam_id', '=', $exam->id)
+                ->where('exam_screening_id',$exam_screening_id)
                 ->where('user_id', '=', $id)
                 ->first();
             if (is_null($station)) {
@@ -201,8 +210,16 @@ class DrawlotsController extends CommonController
                 $redis->publish('pad_message', json_encode($this->success_data([], -777, '当前考试没有进行')));
                 throw new \Exception('当前考试没有进行', -777);
             }
-
-            $station = StationTeacher::where('exam_id', '=', $exam->id)
+//当前场次
+            $examScreen=new ExamScreening();
+            $roomMsg = $examScreen->getExamingScreening($exam->id);
+            $roomMsg_two = $examScreen->getNearestScreening($exam->id);
+            if($roomMsg){
+                $exam_screening_id=$roomMsg->id;
+            }elseif($roomMsg_two){
+                $exam_screening_id=$roomMsg_two->id;
+            }
+            $station = StationTeacher::where('exam_id', '=', $exam->id)->where('exam_screening_id',$exam_screening_id)
                 ->where('user_id', '=', $id)
                 ->first();
             if (is_null($station)) {
@@ -280,8 +297,17 @@ class DrawlotsController extends CommonController
 //            }
 
 //            //获取当前老师对应的考站id
+            //当前场次
+            $examScreen=new ExamScreening();
+            $roomMsg = $examScreen->getExamingScreening($exam->id);
+            $roomMsg_two = $examScreen->getNearestScreening($exam->id);
+            if($roomMsg){
+                $exam_screening_id=$roomMsg->id;
+            }elseif($roomMsg_two){
+                $exam_screening_id=$roomMsg_two->id;
+            }
             $station = StationTeacher::where('exam_id', '=', $exam->id)
-                ->where('user_id', '=', $id)
+                ->where('user_id', '=', $id)->where('exam_screening_id',$exam_screening_id)
                 ->first();
 
             if (is_null($station)) {
@@ -345,11 +371,18 @@ class DrawlotsController extends CommonController
 
 
 
-//            //获取当前老师对应的考站id
+//当前场次
+            $examScreen=new ExamScreening();
+            $roomMsg = $examScreen->getExamingScreening($exam->id);
+            $roomMsg_two = $examScreen->getNearestScreening($exam->id);
+            if($roomMsg){
+                $exam_screening_id=$roomMsg->id;
+            }elseif($roomMsg_two){
+                $exam_screening_id=$roomMsg_two->id;
+            }
             $station = StationTeacher::where('exam_id', '=', $exam->id)
-                ->where('user_id', '=', $id)
+                ->where('user_id', '=', $id)->where('exam_screening_id',$exam_screening_id)
                 ->first();
-
             if (is_null($station)) {
                 $redis->publish('pad_message', json_encode($this->success_data([], -999, '你没有参加此次考试')));
                 throw new \Exception('你没有参加此次考试');
