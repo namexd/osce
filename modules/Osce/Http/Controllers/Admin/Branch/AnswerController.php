@@ -123,6 +123,7 @@ class AnswerController extends CommonController
             }
         }
         //echo date('Y/m/d H:i:s',$systemTimeStart).'and'.date('Y/m/d H:i:s',$systemTimeEnd);
+
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -321,6 +322,38 @@ class AnswerController extends CommonController
         }
         return response()->json($controlMark);
 
+    }
+
+    /**改变队列中的状态
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @throws \Exception
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postSaveStatus(Request $request){
+        $this->validate($request,[
+            'examId'       => 'required|integer',
+            'studentId'    => 'required|integer',
+        ]);
+        $examId = $request->input('examId');
+        $studentId = $request->input('studentId');
+        //得到queue实例
+        $queue = ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status', 2)->first();
+        if(!empty($queue)){
+            //获取当前的服务器时间
+            $date = date('Y-m-d H:i:s');
+            //修改状态
+            $data = array(
+                'status' =>3,
+                'end_dt' =>$date,
+                'blocking' =>1
+            );
+            ExamQueue::where('id', $queue->id)->update($data);
+        }
     }
 
 
