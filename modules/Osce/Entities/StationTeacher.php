@@ -129,6 +129,7 @@ class StationTeacher extends CommonModel
                         }
                     }
                     //根据科目id，获取对应的病例id
+
                     $stationCase = SubjectCases::where('subject_id', $item['subject_id'])->first();
                     if (is_null($stationCase)) {
                         $case_id = NULL;
