@@ -169,7 +169,7 @@ class ExamScreening extends CommonModel
     public function getExamingScreening($exam_id)
     {
         return $this->where('exam_id', '=', $exam_id)
-            ->where('status', '=', 1)
+            ->where('status', '=', 1) //等候考试
             ->OrderBy('begin_dt', 'asc')
             ->first();
     }

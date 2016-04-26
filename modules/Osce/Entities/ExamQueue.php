@@ -633,7 +633,7 @@ class ExamQueue extends CommonModel
                         $item->begin_dt = date('Y-m-d H:i:s', strtotime($item->begin_dt) + $difference);
                         $item->end_dt = date('Y-m-d H:i:s', strtotime($item->end_dt) + $difference);
                     }
-                    $item->status = 0;
+                    $item->status = 0;//抽完签
 
                     $data = [
                         "exam_id"           => $item->exam_id,

@@ -100,8 +100,8 @@ class ExamMonitorController  extends CommonController
 
         if($result==true){
             $redis = Redis::connection('message');
-            $redis->publish('watch_message', json_encode($this->success_data([],1,'迟到确认弃考成功')));
-            $redis->publish('pad_message', json_encode($this->success_data([],1,'迟到确认弃考成功')));
+            $redis->publish(md5($_SERVER['SERVER_NAME']).'watch_message', json_encode($this->success_data([],1,'迟到确认弃考成功')));
+            $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([],1,'迟到确认弃考成功')));
             return response()->json(true);
         }else{
             return response()->json($result);
@@ -268,11 +268,11 @@ class ExamMonitorController  extends CommonController
 
         $exam_id=Exam::where('status',1)->pluck('id');//正在考试id
         if(empty($exam_id)) return [];
-        $examScreen=new ExamScreening();
+        /*$examScreen=new ExamScreening();
         $ExamScreening = $examScreen->getExamingScreening($exam_id);
         if (is_null($ExamScreening)) {
             $ExamScreening = $examScreen->getNearestScreening($exam_id);
-        }
+        }*/
         $builder=ExamScreeningStudent::leftJoin('student', function($join){//弃考 已完成页面数据对象
             $join -> on('exam_screening_student.student_id', '=', 'student.id');
         })->select('student.name','student.exam_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status');
@@ -283,10 +283,10 @@ class ExamMonitorController  extends CommonController
                 })-> leftJoin('exam_screening_student', function($join){
                     $join -> on('exam_screening_student.student_id', '=', 'student.id');
                 })->select('student.name','student.exam_id as examId','exam_screening_student.id as examScreeningStudentId', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status')
-                    ->where('exam_absent.exam_screening_id',$ExamScreening->id)
+                   // ->where('exam_absent.exam_screening_id',$ExamScreening->id)
                     ->where('student.exam_id',$exam_id)
                     ->where('exam_absent.exam_id',$exam_id)
-                    ->where('exam_screening_student.exam_screening_id',$ExamScreening->id)
+                    //->where('exam_screening_student.exam_screening_id',$ExamScreening->id)
                     ->where('exam_screening_student.is_end',0)
                     ->paginate(config('osce.page_size'));
 
@@ -297,7 +297,7 @@ class ExamMonitorController  extends CommonController
                     $join -> on('exam_monitor.student_id', '=', 'student.id');
                 })->select('student.name','student.exam_id','student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence')
                     ->where('exam_monitor.exam_id',$exam_id)
-                    ->where('exam_monitor.exam_screening_id',$ExamScreening->id)
+                   // ->where('exam_monitor.exam_screening_id',$ExamScreening->id)
                     ->where('exam_monitor.type',1)
                     ->where('exam_monitor.description',1)//已经确认替考的
                     ->groupBy('exam_monitor.student_id')
@@ -317,13 +317,13 @@ class ExamMonitorController  extends CommonController
                 break;
             case 3://弃考
                 return $builder->where('exam_screening_student.status',1)
-                               ->where('exam_screening_id',$ExamScreening->id)
+                               //->where('exam_screening_id',$ExamScreening->id)
                                ->where('student.exam_id',$exam_id)
                                ->paginate(config('osce.page_size'));
                 break;
             case 4://已完成
                 return $builder->where('exam_screening_student.is_end',1)
-                               ->where('exam_screening_id',$ExamScreening->id)
+                               //->where('exam_screening_id',$ExamScreening->id)
                                ->where('student.exam_id',$exam_id)
                                ->paginate(config('osce.page_size'));
                 break;
