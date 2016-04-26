@@ -68,7 +68,7 @@ class DrawlotsController extends CommonController
 //            $room = StationTeacher::where('user_id', $teacher_id)->where('exam_id', $examId)->orderBy('created_at',
 //                'desc')->first()->station->room;
             $room = $this->getStationAndRoom($teacher_id, $examId);
-
+            dd($room);
             if ($room->isEmpty()) {
                 throw new \Exception('未能查到该老师对应的考场！');
             }
