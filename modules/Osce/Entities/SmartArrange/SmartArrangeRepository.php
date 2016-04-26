@@ -58,7 +58,9 @@ class SmartArrangeRepository extends AbstractSmartArrange
             }
             foreach ($gradations as $key => $gradation) {
                 //获取当前考试的状态
-                $type = is_null($gradation->sequence_mode) ? $exam->sequence_mode : $gradation->sequence_mode;
+                //$type = is_null($gradation->sequence_mode) ? $exam->sequence_mode : $gradation->sequence_mode;
+                $type = is_null($gradation->sequence_cate) ? $exam->sequence_cate : $gradation->sequence_cate;
+
                 //将排序模式注入
                 $this->model->setCate(CateFactory::getCate($exam, $type));
                 
@@ -95,7 +97,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
 //                    $exam->id)->first();  //通过查询数据表中是否有没有写入end_dt的数据
 
                 if (count($this->model->getStudents()) != 0 || count($this->model->getWaitStudents()) != 0) {
-                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
+//                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
                     throw new \Exception('人数太多，所设时间无法完成考试', -99);
                 }
             }

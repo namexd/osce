@@ -1079,6 +1079,7 @@ function exam_assignment_add(){
 
             //分阶段操作
             $('.grading').show();
+            $('.grading').find('select option[value="1"]').attr('selected',true);
 
             //当选中后在取消后在选中，替换掉以前的
             $('table tr td select').each(function(){
@@ -1500,6 +1501,8 @@ function exam_basic_info(){
 
             //分阶段操作
             $('.grading').show();
+            $('.grading').find('select option[value="1"]').attr('selected',true);
+
 
             //当选中后在取消后在选中，替换掉以前的
             $('#add-basic tr td select').each(function(){
