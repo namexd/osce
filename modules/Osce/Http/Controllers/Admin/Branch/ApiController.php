@@ -409,9 +409,9 @@ class ApiController extends CommonController
 
         $username = $request->get('username');
         $password = $request->get('password');
-            dd($username,$password);
-        if (Auth::attempt(['username' => $username, 'password' => $password]))
+        if (\Auth::attempt(['username' => $username, 'password' => $password]))
         {
+
 
             /*
             //获取当前登录账户的角色名称
