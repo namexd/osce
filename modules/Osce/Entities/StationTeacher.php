@@ -178,7 +178,6 @@ class StationTeacher extends CommonModel
                 'teacher.id as teacher_id',
                 'teacher.name as teacher_name',
                 'teacher.type as teacher_type',
-                'teacher_subject.subject_id as subject_id',
                 $this->table . '.station_id',
                 $this->table . '.id',
 

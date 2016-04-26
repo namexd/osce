@@ -23,11 +23,14 @@ Route::group(['prefix' => "admin",'middleware' => []], function()
 
 Route::group(['prefix' => "api/1.0/public",'middleware' => ['cors']], function()
 {
-    Route::post('oauth/access_token', function(){
+    Route::post('oauth/access_token', function(\Illuminate\Http\Request $request){
         try{
             $userEnter=Authorizer::issueAccessToken();
-            $redis = Redis::connection('message');
-            $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode(['code' => 100,'message' => '登录成功','data' => $userEnter]));
+            $flag=$request->input('watch');
+            if(empty($flag)) {//解决腕表与pad用户名相同
+                $redis = Redis::connection('message');
+                $redis->publish(md5($_SERVER['SERVER_NAME']) . 'pad_message', json_encode(['code' => 100, 'message' => '登录成功', 'data' => $userEnter]));
+            }
              return $userEnter;
         }catch (\Exception $ex) {
             if( $ex->getMessage()=='The user credentials were incorrect.'){
