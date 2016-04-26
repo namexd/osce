@@ -1079,6 +1079,7 @@ function exam_assignment_add(){
 
             //分阶段操作
             $('.grading').show();
+            $('.grading').find('select option[value="1"]').attr('selected',true);
 
             //当选中后在取消后在选中，替换掉以前的
             $('table tr td select').each(function(){
@@ -1500,6 +1501,8 @@ function exam_basic_info(){
 
             //分阶段操作
             $('.grading').show();
+            $('.grading').find('select option[value="1"]').attr('selected',true);
+
 
             //当选中后在取消后在选中，替换掉以前的
             $('#add-basic tr td select').each(function(){
@@ -5339,7 +5342,7 @@ function examiner_manage() {
             var control = data[i].station_type==2?'':'disabled="disabled"';
 
             //dom准备
-            html += '<tr class="tr-id-'+i+'" value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'">'+
+            html += '<tr class="tr-id-'+i+'" exam_screening_id="'+data[i].exam_screening_id+'" value="'+data[i].subject_id+'" data-id="'+data[i].station_id+'" stage-id="'+data[i].exam_gradation_id+'">'+
                         '<td>'+data[i].subject_title+'</td>'+
                         '<td>'+data[i].station_name+'</td>'+
                         '<td>'+typeToName[data[i].station_type]+'</td>'+
@@ -5421,7 +5424,7 @@ function examiner_manage() {
             var $that = $(this);
 
             //老师列表数组
-            arr.push({subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
+            arr.push({exam_screening_id: $that.attr('exam_screening_id'), exam_gradation_id: $that.attr('stage-id'), subject_id:$that.attr('value'), station_id: $that.attr('data-id'), teacher:$that.find('.custom-teacher').val(), sp_teacher: $that.find('.custom-sp').val()});
             
         });
     
@@ -5569,7 +5572,8 @@ function examiner_manage() {
                     var req = {
                         subject_id:$elem.attr('value'),
                         exam_id: exam_id,
-                        type:1
+                        type:1,
+                        exam_gradation_id:$elem.attr('stage-id')
                     };
 
                     //检测是否为理论考站
@@ -5617,6 +5621,16 @@ function examiner_manage() {
             })
 
         }).on('select2:select', function(e){
+            //请求数据
+            var req = {
+                exam_screening_id: $elem.attr('exam_screening_id'),
+                exam_gradation_id: $elem.attr('stage-id'),
+                subject_id:$elem.attr('value'),
+                station_id: $elem.attr('data-id'),
+                sp_teacher:$elem.find('.custom-sp').val(),
+                exam_id:exam_id
+            };
+
             //新增页面
             if(e.params.data.id == -999) {
                 layer.open({
@@ -5643,9 +5657,17 @@ function examiner_manage() {
                     var array = $elem.find('.custom-teacher').val();
                     array.push($elem.find('.custom-teacher').attr('params'));
                     $elem.find('.custom-teacher').val(array).trigger('change');
+
+                    //请求后台
+                    req['teacher'] = $elem.find('.custom-teacher').val();
+                    ajaxSelect(req,pars.save_data);
                   },
                   content: pars.add_examiner + '?status=1&table=sp_assignment&tr='+$elem.attr('class')+'&selector=custom-teacher'
                 });
+            } else {
+                //请求后台
+                req['teacher'] = $elem.find('.custom-teacher').val();
+                ajaxSelect(req,pars.save_data);
             }
         });
     }
@@ -5670,7 +5692,8 @@ function examiner_manage() {
                     return {
                         subject_id:$elem.attr('value'),
                         exam_id: exam_id,
-                        type:2
+                        type:2,
+                        exam_gradation_id:$elem.attr('stage-id')
                     };
                 },
                 delay: 250,
@@ -5710,6 +5733,16 @@ function examiner_manage() {
             })
 
         }).on('select2:select', function(e){
+            //请求数据
+            var req = {
+                exam_screening_id: $elem.attr('exam_screening_id'), 
+                exam_gradation_id: $elem.attr('stage-id'),
+                subject_id:$elem.attr('value'), 
+                station_id: $elem.attr('data-id'), 
+                teacher:$elem.find('.custom-teacher').val(),
+                exam_id:exam_id
+            };
+
             //新增页面
             if(e.params.data.id == -999) {
                 layer.open({
@@ -5736,14 +5769,38 @@ function examiner_manage() {
                     var array = $elem.find('.custom-sp').val();
                     array.push($elem.find('.custom-sp').attr('params'));
                     $elem.find('.custom-sp').val(array).trigger('change');
+
+                    //请求后台
+                    req['sp_teacher'] = $elem.find('.custom-sp').val();
+                    ajaxSelect(req,pars.save_data);
                   },
                   content: pars.add_sp + '?status=1&table=sp_assignment&tr='+$elem.attr('class')+'&selector=custom-sp'
                 });
+            } else {
+                //请求后台
+                req['sp_teacher'] = $elem.find('.custom-sp').val();
+                ajaxSelect(req,pars.save_data);
             }
         });
     }
     
 
-    //$("#add-basic .custom-teacher").select2();
-    //$("#add-basic .custom-sp").select2();
+    /**
+     * 考官选择
+     * @author mao
+     * @version 3.4
+     * @date    2016-04-26
+     * @param   {object}   req 请求数据
+     * @param   {string}   url 请求地址
+     */
+    function ajaxSelect(req,url) {
+        $.ajax({
+            type:'post',
+            url: url,
+            data:req,
+            success: function(res) {
+                return true;
+            }
+        })
+    }
 }

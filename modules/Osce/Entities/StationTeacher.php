@@ -13,14 +13,14 @@ use DB;
 
 class StationTeacher extends CommonModel
 {
-    protected $connection = 'osce_mis';
-    protected $table = 'station_teacher';
-    public $timestamps = true;
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $guarded = [];
-    protected $hidden = [];
-    protected $fillable = ['station_id', 'user_id', 'case_id', 'created_user_id', 'type', 'exam_id'];
+    protected $connection   = 'osce_mis';
+    protected $table        = 'station_teacher';
+    public    $timestamps   = true;
+    protected $primaryKey   = 'id';
+    public    $incrementing = true;
+    protected $guarded      = [];
+    protected $hidden       = [];
+    protected $fillable     = ['station_id', 'user_id', 'case_id', 'created_user_id', 'type', 'exam_id', 'exam_screening_id'];
 
     public function station()
     {
@@ -137,6 +137,7 @@ class StationTeacher extends CommonModel
                             'case_id' => $case_id,
                             'exam_id' => $exam_id,
                             'created_user_id' => $user->id,
+                            'exam_screening_id' => $item['exam_screening_id'],
 //                            'type'              =>  empty($item['teacher_id']) ? 2 : 1
                         ];
                         if (!$StationTeachers = StationTeacher::create($stationTeacher)) {

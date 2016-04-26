@@ -25,18 +25,29 @@ class TeacherSubject extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Subject','id','subject_id');
     }
 
-    public function getTeachers($type, $subject_id){
+    public function getTeachers($type, $subject_id,$examGradationId,$examId)
+    {
+        //查询出阶段下的大站id和小站里的数据拿到所有的考站id
+        $data = ExamDraftFlow::leftJoin('exam_draft', 'exam_draft.exam_draft_flow_id', '=','exam_draft_flow.id')
+                ->leftJoin('station_teacher', 'station_teacher.station_id', '=', 'exam_draft.station_id')
+                ->where('exam_draft_flow.exam_gradation_id', $examGradationId)
+                ->where('exam_draft_flow.exam_id', $examId)
+                ->where('station_teacher.exam_id', $examId)
+                ->select(['station_teacher.user_id as id'])
+                ->get()->pluck('id')->toArray();
+
         if ($subject_id == 0){
 
-            return Teacher::where('archived','=',0)->where('type','=', $type)->select(['id as teacher_id', 'name'])->get();
+            return Teacher::where('archived', '=', 0)->where('type', '=', $type)->whereNotIn('id', $data)
+                          ->select(['id as teacher_id', 'name'])->get();
         }else{
 
             return TeacherSubject::leftJoin('teacher', 'teacher.id', '=', 'teacher_subject.teacher_id')
-                ->where('teacher_subject.subject_id', '=', $subject_id)
-                ->where('teacher.type', '=', $type)
-                ->select(['teacher_subject.teacher_id', 'teacher.name'])->get();
+                                 ->where('teacher_subject.subject_id', '=', $subject_id)
+                                 ->where('teacher.type', '=', $type)
+                                 ->whereNotIn('teacher.id', $data)
+                                 ->select(['teacher_subject.teacher_id', 'teacher.name'])->get();
         }
-
     }
 
 

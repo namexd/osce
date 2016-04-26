@@ -73,6 +73,8 @@ class Poll extends AbstractCate implements CateInterface
 
         $num = $this->waitingPollStudentSql($screen, $entity);
 
+//        dd($num);
+
         $arrays = [];
         foreach ($num as $item) {
             $arrays[] = $item->student;
