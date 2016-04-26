@@ -36,7 +36,7 @@ function theory_validate(){
                             cache:false,
                             dateType:'json',
                             success:function(res){
-                                if(res.code == 1){
+                                if(res.code == 102){
                                     $(".showImf").show();
                                     $(".wait").hide();
                                     $(".stuName").text(res.data.name);
