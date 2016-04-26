@@ -385,39 +385,44 @@ class PadController extends  CommonController{
         ]);
 
 //        try {
-            //获取当前的服务器时间
-            $date = date('Y-m-d H:i:s');
-            //通过考生的腕表id来找到对应的队列id
-            $studentId = $request->input('student_id');
-            $stationId = $request->input('station_id', null);
-            $teacherId = $request->input('user_id');
+        //获取当前的服务器时间
+        $date = date('Y-m-d H:i:s');
+        //通过考生的腕表id来找到对应的队列id
+        $studentId = $request->input('student_id');
+        $stationId = $request->input('station_id', null);
+        $teacherId = $request->input('user_id');
 
-            $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-            //将该条信息的首位置零
+        $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
+
+        //拿到阶段序号
+        $gradationOrder =ExamScreening::find($queue->exam_screening_id);
+
+
+
+        //将该条信息的首位置零
 //            $queue->stick = 0;
 //            if (!$queue->save()) {
 //                throw new \Exception('结束考试失败', -10);
 //            }
 
-            //考试结束后，调用向腕表推送消息的方法
-            $examScreeningStudentModel = new ExamScreeningStudent();
-            $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
-                ->where('student_id','=',$queue->student_id)->first();
+        //考试结束后，调用向腕表推送消息的方法
+        $examScreeningStudentModel = new ExamScreeningStudent();
+        $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
+            ->where('student_id','=',$queue->student_id)->first();
 
-            $watchModel = new Watch();
-            $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+        $watchModel = new Watch();
+        $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
 
-            //拿到阶段序号
-            $gradationOrder =ExamScreening::find($queue->exam_screening_id);
-            //拿到属于该场考试该阶段的所有场次id
-            $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
-        
-            $studentWatchController = new StudentWatchController();
-            $request['nfc_code'] = $watchData->code;
 
-            $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
+        //拿到属于该场考试该阶段的所有场次id
+        $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
 
-            return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
+        $studentWatchController = new StudentWatchController();
+        $request['nfc_code'] = $watchData->code;
+
+        $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
+
+        return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
 
 //        } catch (\Exception $ex) {
 //            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
