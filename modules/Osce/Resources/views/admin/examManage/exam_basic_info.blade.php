@@ -120,7 +120,7 @@
                             </div>
                             <div class="hr-line-dashed"></div>
 
-                            @if($examGradation->isEmpty() && is_null($examData->sequence_cate))
+                            @if(is_null($examGradation->first()->sequence_cate) && !is_null($examData->sequence_cate))
                             <div class="form-group grading-normal">
                                 <label class="col-sm-2 control-label">考试顺序</label>
                                 <div class="col-sm-10">
