@@ -823,6 +823,34 @@ class ExamQueue extends CommonModel
             //找到对应的方法找到queue实例
             $queue = ExamQueue::findQueueIdByStudentId($studentId, $stationId);
 
+            //拿到阶段序号
+            $gradationOrder = ExamScreening::find($queue->exam_screening_id);
+
+
+            //拿到阶段id
+            $examGradationId = ExamGradation::where('exam_id',$queue->exam_id)->where('order',$gradationOrder)->first();
+
+            if(!empty($examGradationId)){
+                $examDraftFlowData = ExamDraftFlow::where('exam_id',$queue->exam_id)->where('exam_gradation_id',$examGradationId->id)->where('optional',0)->first();
+                //如果有选考，更新所有状态
+                if(!empty($examDraftFlowData)){
+                    //拿到属于该场考试该阶段的所有场次id
+                    $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+                    $data = array(
+                        'status' =>3,
+                        'end_dt' =>$date,
+                        'blocking' =>1,
+                    );
+                    //更新属于该阶段的所有考生状态
+                    $result = ExamQueue::where('student_id', $studentId)
+                        ->whereIn('exam_screening_id', $examscreeningId)
+                        ->update($data);
+                    if (!$result) {
+                        throw new \Exception('状态修改失败！请重试', 2000);
+                    }
+                }
+            }
+
             /*
              * 判断status状态
              * 如果是2的话，就说明是第一次访问，修改状态
