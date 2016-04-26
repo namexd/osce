@@ -17,6 +17,7 @@ function theory_validate(){
     //请求接口获取学生信息
     function queryAjax(){
         var stationId = $(".allData").attr("data");
+        var teacherId = $(".allData").attr("userId");
         var examId = $(".allData").attr("examId");
         var timer = setInterval(function(){
             $.ajax({
@@ -30,7 +31,7 @@ function theory_validate(){
                         clearInterval(timer);
                     } else {
                         $.ajax({
-                            url:'/osce/api/invigilatepad/authentication?station_id='+stationId,
+                            url:'/osce/api/invigilatepad/authentication?station_id='+stationId+'&teacher_id='+teacherId,
                             type:'get',
                             cache:false,
                             dateType:'json',

@@ -500,6 +500,7 @@ class ApiController extends CommonController
                     'info'=>$ExamInfo
                 );
             }
+           
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
