@@ -1054,12 +1054,42 @@ class DrawlotsController extends CommonController
      */
     private function getStationAndRoom($teacher_id, $examId)
     {
+        /*
         $room = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->join('station_teacher', 'station_teacher.station_id', '=', 'exam_draft.station_id')
 //            ->where('station_teacher.user_id', $teacher_id)
             ->where('exam_draft_flow.exam_id', '=', $examId)
 //            ->where('station_teacher.exam_id', $examId)
             ->get();
+        */
+//
+//        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+//  `station_id` int(11) NOT NULL COMMENT '考站_编号',
+//  `user_id` int(11) DEFAULT NULL COMMENT '教师_编号',
+//  `case_id` int(11) DEFAULT NULL COMMENT '病例_编号',
+//  `created_user_id` int(11) NOT NULL COMMENT '创建人',
+//  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+//  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+//  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '类型',
+//  `exam_id` int(11) NOT NULL COMMENT '考试编号',
+//  `exam_screening_id` int(11) DEFAULT NULL COMMENT '场次ID',
+
+
+
+        $stationTeacher =   StationTeacher::where('user_id','=',$teacher_id)
+                        ->where('exam_id','=',$examId)
+                        ->with('station')
+                        ->frist();
+        $station    =   $stationTeacher ->  station;
+        $stationPlan    =   ExamDraft   ::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                    ->  where('exam_draft.station_id','=',$station->id)
+                    ->  where('exam_draft_flow.exam_id','=',$examId)
+                    ->  frist();
+        $room       =   ExamDraft   ::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                    ->  where('exam_draft.room_id','=',$stationPlan->room_id)
+                    ->  where('exam_draft_flow.exam_id','=',$examId)
+                    ->  get();
+        dd($room);
         return $room;
     }
 
