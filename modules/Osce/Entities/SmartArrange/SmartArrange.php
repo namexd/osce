@@ -246,6 +246,9 @@ class SmartArrange
                     //变更学生的状态(写记录)
                     foreach ($students as $student) {
                         $data = $this->mode->dataBuilder($this->exam, $screen, $student, $entity, $i);
+//                        if ($entity->room_id == 30 && $student->id == 5031) {
+//                            dump($entity->room_id, $entity->name, date('Y-m-d H:i:s', $i));
+//                        }
                         if (ExamPlanRecord::create($data)) {
                             $this->doorStatus--;
                             $entity->timer += $step;

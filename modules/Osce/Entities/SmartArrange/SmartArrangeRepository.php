@@ -58,7 +58,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
             }
             foreach ($gradations as $key => $gradation) {
                 //获取当前考试的状态
-                $type = is_null($gradation->sequence_mode) ? $exam->sequence_mode : $gradation->sequence_mode;
+                $type = is_null($gradation->sequence_cate) ? $exam->sequence_cate : $gradation->sequence_cate;
                 //将排序模式注入
                 $this->model->setCate(CateFactory::getCate($exam, $type));
                 
