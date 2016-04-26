@@ -171,7 +171,7 @@ class StationTeacher extends CommonModel
     public function getTeacherData($stationId, $exam_id)
     {
         $data = $this->leftJoin('teacher', 'teacher.id', '=', $this->table . '.user_id')
-            ->leftJoin('teacher_subject', 'teacher_subject.teacher_id', '=', $this->table . '.user_id')
+//            ->leftJoin('teacher_subject', 'teacher_subject.teacher_id', '=', $this->table . '.user_id')
             ->whereIn('station_teacher.station_id', $stationId)
             ->where('station_teacher.exam_id', '=', $exam_id)
             ->select([
@@ -185,7 +185,7 @@ class StationTeacher extends CommonModel
             ])
 //            ->groupBy('teacher.id')
             ->get();
-        dd($data);
+
 
         return $data;
     }
