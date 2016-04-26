@@ -85,7 +85,7 @@ class ExamResult extends CommonModel
     /**
      * 考试成绩实时推送
      */
-    public function examResultPush($student_id, $screening_id, $stationId)
+    public function examResultPush($student_id, $screening_id, $stationId,$studentExamScreeningIdArr)
     {
         try {
             //考生信息
@@ -103,9 +103,10 @@ class ExamResult extends CommonModel
             if($userInfo){
                 
                 if(!empty($userInfo->openid)){
-                    //查询总成绩
+
+                    //查询该场考试该考生的总成绩
                     $testResult = new TestResult();
-                    $examResult = $testResult->AcquireExam($student_id);
+                    $examResult = $testResult->AcquireExam($student_id,$studentExamScreeningIdArr);
 
                     //成绩详情url地址
                     $url = route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$screening_id,'station_id'=>$stationId]);
