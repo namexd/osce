@@ -94,8 +94,8 @@
                                          <div class="clearfix form-group" style="margin-bottom: 0;">
                                               <div class="col-sm-12" id="checkbox_div">
                                                    <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;width:20.2%">
-                                                        <div class="check_icon check_margin {{($examData->gradation->count()>=1)?'check':''}}" checkbox={{($examData->gradation->count()>1)?1:0}}></div>
-                                                        <input type="checkbox" name="gradation_order" value="1" {{$examData['same_time']==1?'checked':''}}>
+                                                        <div class="check_icon check_margin {{($examData->gradation->count()>1)?'check':''}}" checkbox={{($examData->gradation->count()>1)?1:0}}></div>
+                                                        <input type="checkbox" name="gradation_order" value="1" {{$examData->gradation->count()>1?'checked':''}}>
                                                         <span class="check_name" style="display: inline-block;float:right;line-height: 24px;">考生分阶段考试</span>
                                                    </label>
                                                    <div class="col-sm-9 check_div">
@@ -120,8 +120,7 @@
                             </div>
                             <div class="hr-line-dashed"></div>
 
-                            @if($examGradation->isEmpty() && is_null($examData->sequence_cate))
-                            <div class="form-group grading-normal">
+                            <div class="form-group grading-normal" style="display: {{is_null($examGradation->first()->sequence_cate) && !is_null($examData->sequence_cate)?'block;':'none;'}}">
                                 <label class="col-sm-2 control-label">考试顺序</label>
                                 <div class="col-sm-10">
                                     <select class="form-control" style="width:200px;"  {{$examData['status']==0?'':'disabled'}} name="sequence_cate" >
@@ -131,7 +130,6 @@
                                     </select>
                                 </div>
                             </div>
-                            @endif
 
                             <div class="form-group grading-un-normal" @if(is_null($examGradation->first()->sequence_cate)) style="display: none;" @else style="display: block;" @endif>
                                 <div class="col-sm-2"></div>

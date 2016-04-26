@@ -93,7 +93,7 @@ input.laydate-icon{
                         <div class="form-group grading-normal">
                             <label class="col-sm-2 control-label">考试顺序</label>
                             <div class="col-sm-10">
-                                <select class="form-control" style="width:200px;" name="sequence_cate" >
+                                <select class="form-control" style="width:200px;" name="sequence_cate_1" >
                                     <option value="3">轮循</option>
                                     <option value="2">顺序</option>
                                     <option value="1">随机</option>

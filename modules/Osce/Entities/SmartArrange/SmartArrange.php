@@ -237,6 +237,7 @@ class SmartArrange
                     $this->cate->setParams($params);
 
                     $students = $this->cate->needStudents($entity, $screen, $this->exam);
+
                     $this->_S = $this->cate->getTotalStudent();
                     $this->_S_W = $this->cate->getWaitStudent();
                     if (count($students) == 0) {
@@ -244,15 +245,39 @@ class SmartArrange
                     }
 
                     //变更学生的状态(写记录)
+                    $insertData =   [];
+
+
+
                     foreach ($students as $student) {
                         $data = $this->mode->dataBuilder($this->exam, $screen, $student, $entity, $i);
-                        if (ExamPlanRecord::create($data)) {
-                            $this->doorStatus--;
-                            $entity->timer += $step;
-                        } else {
-                            throw new \Exception('关门失败！', -11);
-                        };
+//                        if ($entity->room_id == 30 && $data['student_id'] == 4854) {
+//                            dump($data['student_id'], $screen);
+//                        }
+                        $data['created_at'] =   date('Y-m-d H:i:s');
+                        $data['updated_at'] =   date('Y-m-d H:i:s');
+
+                        $insertData []  =   $data;
+//                        if (ExamPlanRecord::create($data)) {
+//                            $this->doorStatus--;
+//                            $entity->timer += $step;
+//                        } else {
+//                            throw new \Exception('关门失败！', -11);
+//                        };
                     }
+                    if($result =   ExamPlanRecord::insert($insertData))
+                    {
+                        $this->doorStatus-=count($insertData);
+                        $entity->timer += $step;
+                    }
+                    else
+                    {
+                        throw new \Exception('关门失败！', -11);
+                    }
+
+//                    if ($entity->room_id == 30) {
+//                        dd($insertData);
+//                    }
                 }
             }
 
