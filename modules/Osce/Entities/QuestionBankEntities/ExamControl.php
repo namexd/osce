@@ -198,11 +198,12 @@ class ExamControl extends Model
 
             //③向监控标记学生替考记录表插入数据
             $examMonitorData=array(
-                'station_id'=>$data['stationId'],
-                'exam_id'=>$data['examId'],
-                'student_id'=>$data['studentId'],
-                'type'=>$data['type'],
-                'description'=>$data['description'],
+                'exam_screening_id' =>$data['examScreeningId'],
+                'station_id'         =>$data['stationId'],
+                'exam_id'             =>$data['examId'],
+                'student_id'         =>$data['studentId'],
+                'type'                =>$data['type'],
+                'description'        =>$data['description'],
             );
             if(!ExamMonitor::create($examMonitorData)){
                 throw new \Exception(' 插入监控标记学生替考记录表失败！');

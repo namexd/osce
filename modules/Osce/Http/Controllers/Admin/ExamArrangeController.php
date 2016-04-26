@@ -58,26 +58,44 @@ class ExamArrangeController extends CommonController
      * @author zhouqiang 2016-04-06
      * @return string
      */
-
-
     public function postAddExamFlow(Request $request)
     {
-//        try {
+        try {
             $this->validate($request, [
-                'exam_id' => 'required',
-//                'name' => 'required',
-//                'order' => 'required',
+                'exam_id'           => 'required',
                 'exam_gradation_id' => 'sometimes', //阶段
-                'type' => 'sometimes',
+                'type'              => 'sometimes',
             ]);
-            $examId = $request->get('exam_id');
-            $name = $request->get('name');
-            $order = $request->get('order');
-            $examGradationId = $request->get('exam_gradation_id');
-            $type = $request->get('type');
+            $examId      = $request->get('exam_id');
+            $name        = $request->get('name');
+            $order       = $request->get('order');
+            $type        = $request->get('type');
+            $gradationId = $request->get('exam_gradation_id');
+            $draftFlowId = $request->get('flow_id');            //正式表大表的ID
 
+            //根据阶段ID查询场次ID
+            if (!empty($gradationId)){
+                $screening   = ExamGradation::getScreenIdByGradationId($gradationId);
+                $screeningId = $screening->id;
+            }else{
+                $screeningId = null;
+            }
 
-            //判断操作人是否一致
+            //type为3，操作为修改，直接对临时表进行修改操作
+            if ($type == 3) {
+                $examDraftFlow = ExamDraftFlowTemp::find($draftFlowId);
+                $examDraftFlow ->ctrl_type =1 ;
+                $examDraftFlow ->exam_gradation_id = $gradationId ;
+                $examDraftFlow ->exam_screening_id = $screeningId ;
+
+                if($examDraftFlow->save()){
+                    return response()->json(
+                        $this->success_data([], 1, 'success')
+                    );
+                }else{
+                    throw new \Exception('修改阶段失败！');
+                }
+            }
 
             //获取当前操作信息
             $user = Auth::user();
@@ -85,71 +103,52 @@ class ExamArrangeController extends CommonController
                 throw new \Exception('未找到当前操作人信息');
             }
             $data = [
-                'exam_id'   => $examId,
-                'name'      => $name,
-                'order'     => $order,
-                'exam_gradation_id'  => $examGradationId,
-                'exam_draft_flow_id' => $request->get('flow_id'),
-                'user_id'   => $user->id,
-                'ctrl_type' => $type,
-                'optional'  => 1,
+                'exam_id'           => $examId,
+                'exam_gradation_id' => $gradationId,
+                'exam_draft_flow_id'=> $draftFlowId,
+                'optional'          => 0,
+                'exam_screening_id' => $screeningId,
+                'ctrl_type'         => $type,
+                'user_id'           => $user->id,
+                'name'              => $name,
+                'order'             => $order,
             ];
 
             if(is_null($type)){
                 $data['ctrl_type'] = 1;
             }
 
-            //先保存到临时表
-            if ($type == 3) {
-
-                $examDraftFlow = ExamDraftFlowTemp::find($data['exam_draft_flow_id']);
-
-                $examDraftFlow->ctrl_type =1 ;
-
-                $examDraftFlow->exam_gradation_id = $examGradationId ;
-
-                if($examDraftFlow->save()){
-                    return response()->json(
-                        $this->success_data([], 1, 'success')
-                    );
-                }
-
-            }
-            //查看阶段是否有安排过时间
-//            $ExamGradation =
-
-
             $result = ExamDraftFlowTemp::create($data);
 
-                if ($result&&$type != 2) {
+            if ($result&&$type != 2)
+            {
+                //新增一条空的考站的子站数据
+                $DraftData = [
+                    'exam_id'           => $examId,
+                    'old_draft_flow_id' => $result->id,
+                    'ctrl_type'         => 4,
+                    'used'              => 0,
+                    'add_time'          => date('Y-m-d H:i:s',time()+1),
+                    'user_id'           => $user->id,
+                ];
+                $DraftResult = ExamDraftTemp::create($DraftData);
 
-                    //新增一条空的考站的子站数据
-                    $DraftData = [
-                        'exam_id' => $examId,
-                        'old_draft_flow_id' => $result->id,
-                        'ctrl_type' => 4,
-                        'used' => 0,
-                        'add_time' => date('Y-m-d H:i:s',time()+1),
-                        'user_id' => $user->id,
-                    ];
-                    $DraftResult = ExamDraftTemp::create($DraftData);
-
-                    if (!$DraftResult) {
-                        throw new \Exception('保存临时考站失败');
-                    }
-                    return response()->json(
-                        $this->success_data(['id' => $result->id, 'draft_id' => $DraftResult->id], 1, 'success')
-                    );
+                if (!$DraftResult) {
+                    throw new \Exception('保存临时考站失败');
                 }
+                return response()->json(
+                    $this->success_data(['id' => $result->id, 'draft_id' => $DraftResult->id], 1, 'success')
+                );
+            }
             return response()->json(
                 $this->success_data(['id' => $result->id], 1, 'success')
             );
-//        } catch (\Exception $ex) {
-//            return response()->json(
-//                $this->fail($ex)
-//            );
 
-//        }
+        } catch (\Exception $ex) {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
 
     }
 
@@ -911,7 +910,7 @@ class ExamArrangeController extends CommonController
             ]);
 
             $exam_id       = $request->get('exam_id');
-            $status        =  $request->get('flag');
+            $status        = $request->get('flag');
             $code ='';
             $ExamDraftFlow = new ExamDraftFlow();
                 //拿到之前的数据
