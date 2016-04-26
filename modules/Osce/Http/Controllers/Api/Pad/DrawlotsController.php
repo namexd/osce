@@ -1073,23 +1073,20 @@ class DrawlotsController extends CommonController
 //  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '类型',
 //  `exam_id` int(11) NOT NULL COMMENT '考试编号',
 //  `exam_screening_id` int(11) DEFAULT NULL COMMENT '场次ID',
-        dd(3333);
-
-
         $stationTeacher =   StationTeacher::where('user_id','=',$teacher_id)
                         ->where('exam_id','=',$examId)
                         ->with('station')
-                        ->frist();
+                        ->first();
         $station    =   $stationTeacher ->  station;
         $stationPlan    =   ExamDraft   ::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
                     ->  where('exam_draft.station_id','=',$station->id)
                     ->  where('exam_draft_flow.exam_id','=',$examId)
-                    ->  frist();
+                    ->  first();
         $room       =   ExamDraft   ::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
                     ->  where('exam_draft.room_id','=',$stationPlan->room_id)
                     ->  where('exam_draft_flow.exam_id','=',$examId)
                     ->  get();
-        dd($room);
+
         return $room;
     }
 
