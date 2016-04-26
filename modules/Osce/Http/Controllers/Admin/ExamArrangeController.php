@@ -744,15 +744,17 @@ class ExamArrangeController extends CommonController
                      if(is_null($teacherData['subject_id'])&&is_null($teacherData['subject_title'])){
                          $teacherData['subject_title']  = '当前为理论考站';
                      }
-
                  }else{
                      if(is_null($teacherData['subject_id'])){
 
                          throw new \Exception('前面考试安排中该考站'.$stationType->name.'没有安排考试项目');
                      }
                  }
+
+
                  foreach ($teacherList as $value)
                  {
+                     dump( $teacherData['station_id'],$value->station_id);
                      if ($value->teacher_type == 2 && $teacherData['station_id'] == $value->station_id )
                      {
                         $teacherData['sp_teacher'][$value->teacher_id] =$value;
