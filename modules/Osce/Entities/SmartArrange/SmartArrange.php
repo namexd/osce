@@ -143,7 +143,6 @@ class SmartArrange
 
     public function screenPlan($screen)
     {
-//        dd($this->_E);
         //重置考试实体计数器
         $this->resetStationTime();
 
@@ -183,7 +182,6 @@ class SmartArrange
         $this->doorStatus = $this->stationCount; //将当前所需人数作为开关门的初始值
         //初始化数据
         $i = $beginDt;
-        //$k 枚举 1   2  3  4
         $k = 3;
         $step = $mixCommonDivisor * 60; //为考试实体考试时间的秒数
         
@@ -273,12 +271,8 @@ class SmartArrange
             }
         }
 
-//        dump(count($this->_S), count($this->_S_W), '================');
         //获取未走完流程的考生
         $studentList = $this->testingStudentList($this->exam, $screen, $this->flowNum);
-//        if (count($studentList) == 45) {
-//            dd($studentList, '================');
-//        }
 
         //未考完的学生实例数组
         $undoneStudents = [];
@@ -313,11 +307,8 @@ class SmartArrange
 
 
         //获取候考区学生清单,并将未考完的考生还入总清单
-//        dump(count($this->_S), '===================');
         $this->_S = $this->_S->merge($this->_S_W);
         $this->_S = $this->_S->merge(array_unique($undoneStudents));
-//        dd($undoneStudents);
-//        dump(count($this->_S), '++++++++++++++');
     }
 
     /**
