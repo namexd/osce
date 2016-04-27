@@ -1536,6 +1536,7 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postLivePhotoUpload(Request $request){
+        $studentId = $request->studentId;
         $data   =   [
             'path'  =>  '',
             'name'=>''
@@ -1571,6 +1572,9 @@ class InvigilatePadController extends CommonController
                     'name'=>$oldfileName,
                 ];
                 $info   = '上传成功';
+
+                //保存考试临时头像
+                $addStudentPhoto = Student::where('id','=',$studentId)->update();
             }
         }
         return json_encode(
