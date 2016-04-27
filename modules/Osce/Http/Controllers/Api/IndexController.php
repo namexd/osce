@@ -218,7 +218,7 @@ class IndexController extends CommonController
             return \Response::json(array('code' =>4));  //未安排当前考试
         }
 
-        //获取考试队列中的考生列表
+        //获取考试队列中(exam_order)的考生列表
         $students   = $this->getStudentList($request);
         $idcards    = [];
         $students   = json_decode($students->content());
@@ -991,7 +991,7 @@ class IndexController extends CommonController
             $batch        = config('osce.batch_num');       //默认为2
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
 
-            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列
+            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列(exam_order表)
 
             $data = [];
             foreach($list as $itm){
@@ -1181,7 +1181,7 @@ class IndexController extends CommonController
         $lastDt = strtotime($beginDt) + 10;
         $time   = date('Y-m-d H:i:s', $lastDt);
         //修改该学生考试开始时间
-        $result = ExamOrder::where('exam_id', $exam_id)->where('student_id', $studentId)
+        $result = ExamOrder::where('exam_id', $exam_id)->where('student_id', $studentId)->where('exam_screening_id',$screen_id)
                            ->update(['begin_dt' => $time, 'status' => 4]);
         if ($result) {
             return \Response::json(array('code' => 1));

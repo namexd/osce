@@ -439,7 +439,9 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
 
+
     public function AlterTimeStatus($studentId, $stationId, $nowTime, $teacherId, $examscreeningId)
+
     {
         //开启事务
         $connection = DB::connection($this->connection);
@@ -453,8 +455,9 @@ class ExamQueue extends CommonModel
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
                 ->where('exam_id', '=', $exam->id)
                 ->where('station_id', '=', $stationId)
-                ->whereIn('exam_screening_id', '=', $examscreeningId)
-                ->whereIn('status', [0, 1, 2])
+                ->whereIn('exam_screening_id',$examscreeningId)
+                ->whereIn('status', [0,1,2])
+
                 ->first();
             //dd($examQueue);
             if (is_null($examQueue)) {
@@ -974,14 +977,13 @@ class ExamQueue extends CommonModel
 
 
     //查找学生队列中的考试
-    public function getExamingData($examId, $studentId)
-    {
-        $builder = $this->whereIn('exam_queue.exam_id', $examId)->where('exam_queue.student_id', $studentId)->where('station.type', '=', 3)->leftjoin('exam', function ($exam) {
-            $exam->on('exam.id', '=', 'exam_queue.exam_id');
-        })->leftjoin('station', function ($exam) {
-            $exam->on('station.id', '=', 'exam_queue.station_id');
-        })->select('exam.id', 'exam.name', 'exam_queue.station_id', 'exam_queue.status', 'exam_queue.room_id')->get();
 
+    public function getExamingData($examId,$studentId){
+        $builder = $this->where('exam_queue.exam_id',$examId)->where('exam_queue.student_id',$studentId)->where('station.type','=',3)->leftjoin('exam',function($exam){
+            $exam->on('exam.id','=','exam_queue.exam_id');
+        })->leftjoin('station',function($exam){
+            $exam->on('station.id','=','exam_queue.station_id');
+        })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id','station.paper_id')->get();
         return $builder;
     }
 

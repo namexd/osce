@@ -160,7 +160,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //考生登录成功页面
         Route::get('api/student-exam-index',['uses'=>'ApiController@getStudentExamIndex','as'=>'osce.admin.ApiController.getStudentExamIndex']);
 
-        //获取考试id
+        //获取对应的试卷id
         Route::get('api/get-exampaperid',['uses'=>'ApiController@getExamPaperId','as'=>'osce.admin.ApiController.getExamPaperId']);
 
         //获取当前考站所在流程考试是否已经结束

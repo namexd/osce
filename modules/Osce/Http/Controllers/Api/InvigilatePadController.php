@@ -800,6 +800,7 @@ class InvigilatePadController extends CommonController
 //            ];
 //           if(!ExamResult::create($ExamResultData)){
 //               throw new \Exception('成绩创建失败',-106);
+
             $exam = Exam::where('status', '=', 1)->first();
             $examQueue = ExamQueue::where('exam_id',$exam->id)
                 ->where('student_id', '=', $studentId)
@@ -811,19 +812,25 @@ class InvigilatePadController extends CommonController
 
             //拿到属于该场考试，该场阶段所对应的所有场次id
             $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
-
-
 //           }
             $ExamQueueModel = new ExamQueue();
-            
+
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId);
 
 
 
             if ($AlterResult) {
                 $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
-                
+
                 //调用向腕表推送消息的方法
+
+                $exam = Exam::where('status', '=', 1)->first();
+                $examQueue = ExamQueue::where('exam_id',$exam->id)
+                    ->where('student_id', '=', $studentId)
+                    ->where('station_id', '=', $stationId)
+                    ->where('status','=',2)
+                    ->first();
+
                 $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$examQueue->exam_screening_id)
                     ->where('student_id','=',$examQueue->student_id)->first();
 
@@ -832,7 +839,12 @@ class InvigilatePadController extends CommonController
                 $studentWatchController = new StudentWatchController();
                 $request['nfc_code'] = $watchData->code;
 
-              
+                //拿到阶段序号
+                $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
+
+                //拿到属于该场考试，该场阶段所对应的所有场次id
+                $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+
                 $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
 
                 $studentModel = new Student();
