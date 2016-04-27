@@ -648,7 +648,7 @@ class Student extends CommonModel
                              ->where('exam_screening_id', '=', $screen_id)->get();
         $buondNum = count($buondNum);
         $num      = $countStation - $buondNum;
-        dump($num,2222222222);
+        dump($screen_id,2222222222);
 
         if ($num === 0 || $num < 0) {
             return array();
@@ -663,10 +663,8 @@ class Student extends CommonModel
             $query->whereIn('exam_order.status',[0,4]);
         });*/
         $endStudentList = ExamQueue::where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->whereIn('status', [0,2,1])->get();
-        dump($endStudentList,3333333333333);
-        if(count($endStudentList)){
-            dump($endStudentList,11111111);
 
+        if(count($endStudentList)){
             $studentList = ExamQueue::where('status',3)->where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)
                                     ->groupBy('student_id')->get()->pluck('student_id')->toArray();
 
