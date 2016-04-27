@@ -1033,7 +1033,7 @@ class ExamQueue extends CommonModel
             $exam->on('exam.id','=','exam_queue.exam_id');
         })->leftjoin('station',function($exam){
             $exam->on('station.id','=','exam_queue.station_id');
-        })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id','station.paper_id')->get();
+        })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id','station.paper_id')->orderBy('exam_queue.begin_dt','asc')->first();
         return $builder;
     }
 
