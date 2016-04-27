@@ -435,7 +435,8 @@ class ApiController extends CommonController
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($roleType == 2){
                 $user = Auth::user();
-                dd($user);
+                $student_id = Student::where('user_id','=',$user->id)->first()->pluck('id');
+                dd($student_id);
 //                $request['uid'] = ;//nfc_code;
 //                $request['room_id'] = ;
 //                $request['teacher_id'] = ;
