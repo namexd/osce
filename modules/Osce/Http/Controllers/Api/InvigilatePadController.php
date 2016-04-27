@@ -764,7 +764,7 @@ class InvigilatePadController extends CommonController
      */
     public function getStartExam(Request $request)
     {
-        try {
+       // try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
                 'station_id' => 'required|integer'
@@ -800,7 +800,6 @@ class InvigilatePadController extends CommonController
 //            ];
 //           if(!ExamResult::create($ExamResultData)){
 //               throw new \Exception('成绩创建失败',-106);
-            dd(1111);
             $exam = Exam::where('status', '=', 1)->first();
             $examQueue = ExamQueue::where('exam_id',$exam->id)
                 ->where('student_id', '=', $studentId)
@@ -869,10 +868,10 @@ class InvigilatePadController extends CommonController
             return response()->json(
                 $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
             );
-        } catch (\Exception $ex) {
-            \Log::alert($ex->getMessage() . '');
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            \Log::alert($ex->getMessage() . '');
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
