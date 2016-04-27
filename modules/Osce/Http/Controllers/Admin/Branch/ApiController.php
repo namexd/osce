@@ -533,8 +533,8 @@ class ApiController extends CommonController
     public function getExamPaperId(Request $request)
     {
         $this->validate($request, [
-            'examId' => 'sometimes|integer',//试卷id
-            'stationId' => 'sometimes|integer',//试卷id
+            'examId' => 'sometimes|integer',
+            'stationId' => 'sometimes|integer',
         ]);
         $examId = $request->input('examId');//考试id
         $stationId = $request->input('stationId');//考站id
