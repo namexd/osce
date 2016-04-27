@@ -182,9 +182,8 @@ class SmartArrange
         $this->doorStatus = $this->stationCount; //将当前所需人数作为开关门的初始值
         //初始化数据
         $i = $beginDt;
-        $k = 3;
         $step = $mixCommonDivisor * 60; //为考试实体考试时间的秒数
-        
+
         //开始计时器
         while ($i <= $endDt) {
             //开门动作
@@ -243,21 +242,18 @@ class SmartArrange
                     }
 
                     //变更学生的状态(写记录)
-                    $insertData =   [];
+                    $insertData = [];
                     foreach ($students as $student) {
                         $data = $this->mode->dataBuilder($this->exam, $screen, $student, $entity, $i);
-                        $data['created_at'] =   date('Y-m-d H:i:s');
-                        $data['updated_at'] =   date('Y-m-d H:i:s');
+                        $data['created_at'] = date('Y-m-d H:i:s');
+                        $data['updated_at'] = date('Y-m-d H:i:s');
 
-                        $insertData []  =   $data;
+                        $insertData [] = $data;
                     }
-                    if($result =   ExamPlanRecord::insert($insertData))
-                    {
-                        $this->doorStatus-=count($insertData);
+                    if ($result = ExamPlanRecord::insert($insertData)) {
+                        $this->doorStatus -= count($insertData);
                         $entity->timer += $step;
-                    }
-                    else
-                    {
+                    } else {
                         throw new \Exception('关门失败！', -11);
                     }
                 }

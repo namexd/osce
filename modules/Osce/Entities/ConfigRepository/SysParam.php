@@ -9,7 +9,7 @@
 namespace Modules\Osce\Entities\ConfigRepository;
 
 
-class SysParam
+class SysParam implements ConfigInterface
 {
     /**
      * 返回sysParam需要的数据
