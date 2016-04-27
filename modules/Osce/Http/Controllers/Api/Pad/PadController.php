@@ -645,4 +645,12 @@ class PadController extends  CommonController{
         return $vcrs;
     }
 
+    /**
+     * 获取剩余时间
+     */
+    public function getSurplusTime()
+    {
+
+    }
+
 }

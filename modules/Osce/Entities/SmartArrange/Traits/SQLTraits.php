@@ -76,7 +76,6 @@ trait SQLTraits
         return ExamPlanRecord::with('student')
             ->select(\DB::raw('(count(end_dt) = count(begin_dt)) as num,student_id,count(`station_id`) as flows_num'))
             ->where('exam_screening_id', $screen->id)
-
             ->havingRaw('num > ?', [0])
             ->havingRaw('flows_num < ?', [$screen->flowNum])
             ->groupBy('student_id')
@@ -94,7 +93,6 @@ trait SQLTraits
 
         switch ($entity->type) {
             case 1:
-
                 return $build->where('room_id', '<>', $entity->room_id)->get();
             case 2:
                 return $build->where('station_id', '<>', $entity->station_id)->get();
@@ -158,12 +156,6 @@ trait SQLTraits
      */
     function flowNum(Collection $entities)
     {
-//        return ExamScreening::join('exam_gradation', function ($query) use ($exam) {
-//            $query->on('exam_gradation.order', '=', 'exam_screening.gradation_order')
-//                ->where('exam_gradation.exam_id', '=', $exam->id);
-//        })->join('exam_draft_flow', 'exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id')
-//            ->where('exam_screening.id', $screen->id)
-//            ->count();
         return $entities->groupBy('serialnumber')->count();
     }
 
@@ -192,6 +184,22 @@ trait SQLTraits
                     )
                 ))->Having('flowsNum', '<', $flowsNum)
             ->get();
+
+//        return ExamPlanRecord::where('exam_id', $exam->id)
+//            ->where('exam_screening_id', $screen->id)
+//            ->whereNotNull('end_dt')
+//            ->select(
+//                \DB::raw(
+//                    implode(',',
+//                        [
+//                            'count(`serialnumber`) as flowsNum',
+//                            'id',
+//                            'student_id'
+//                        ]
+//                    )
+//                )
+//            )
+//            ->having('')
     }
 
     /**
@@ -444,6 +452,15 @@ trait SQLTraits
             ->whereNotNull('end_dt')
             ->where('serialnumber', '=', $serialnumber)
             ->orderBy('end_dt', 'asc')
+            ->lists('student_id');
+    }
+
+    function thisNotSerial($screen, $serialnumber)
+    {
+        return ExamPlanRecord::where('exam_screening_id', $screen->id)
+            ->whereNotNull('begin_dt')
+            ->where('serialnumber', '=', $serialnumber)
+            ->orderBy('begin_dt', 'asc')
             ->lists('student_id');
     }
 

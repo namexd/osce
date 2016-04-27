@@ -111,4 +111,35 @@ trait SundryTraits
         }
     }
 
+    /**
+     * 轮询模式下需要的学生
+     * @param $screen
+     * @param $entity
+     * @param $last
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-26 20:24
+     */
+    function pollStudents($screen, $entity, $last)
+    {
+        if ($entity->serialnumber - 1 <= 0) {
+            $prevSerial = $this->thisSerial($screen, $last);
+            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
+            $thisNotSerial = $this->thisNotSerial($screen, $entity->serialnumber);
+            $a = array_diff($prevSerial->toArray(), $thisSerial->toArray(), $thisNotSerial->toArray());
+//            if (count($a) != 0) {
+//                dump($a);
+//            }
+            return $a;
+        } else {
+            $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
+            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
+            //求取差集
+            return array_diff($prevSerial->toArray(), $thisSerial->toArray());
+        }
+
+
+
+    }
+
 }
