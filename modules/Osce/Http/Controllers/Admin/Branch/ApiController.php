@@ -434,36 +434,6 @@ class ApiController extends CommonController
             if($roleType == 1){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($roleType == 2){
-                $user = Auth::user();
-                $student_id = Student::where('user_id','=',$user->id)->orderBy('created_at','desc')->first();
-                $examId = Exam::where('status','=',1)->first();
-
-
-                $studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id->id)->where('exam_queue.exam_id','=',$examId->id)->leftjoin('station_teacher',function($join){
-                    $join->on('station_teacher.exam_id','=','exam_queue.exam_id');
-                })->get();
-                dd($studentInfo);
-
-          /*      echo $examId->id.'='.$student_id->id;
-
-                $studentInfo = ExamQueue::where('student_id','=',$student_id->id)->where('exam_id','=',$examId->id)->first();
-
-                dd($studentInfo);
-
-                $station_teacher = StationTeacher::where('exam_id',$studentInfo->exam_id)->get();*/
-
-                dd($station_teacher);
-
-
-
-
-
-                dd($studentInfo);
-//                $request['uid'] = ;//nfc_code;
-//                $request['room_id'] = ;
-//                $request['teacher_id'] = ;
-                $DrawlotsController = new DrawlotsController();
-                $DrawlotsController->getStation();
                 return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
             }else{
                 return redirect()->back()->withErrors('你没有权限！');
@@ -634,14 +604,14 @@ class ApiController extends CommonController
                     $examData[$key]['station_id'] = $station;
                     $examData[$key]['teacher_id'] = @$stationTeacher->user_id;
                     $examData[$key]['student_id'] = @$userInfo->id;
-                    $examData[$key]['paper_id'] = $v['paper_id'];
+                    $examData[$key]['paper_id'] = $examPaper->exam_paper_id;
                     $examData[$key]['exam_id'] = $v['id'];
                     $examData[$key]['exam_name'] = $v['name'];
                     $examData[$key]['status'] = $v['status'];
 
             }
         }
-        dd($examData);
+        //dd($examData);
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData

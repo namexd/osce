@@ -1029,12 +1029,11 @@ class ExamQueue extends CommonModel
     //查找学生队列中的考试
 
     public function getExamingData($examId,$studentId){
-        echo $examId.'-'.$studentId;exit;
         $builder = $this->where('exam_queue.exam_id',$examId)->where('exam_queue.student_id',$studentId)->where('station.type','=',3)->leftjoin('exam',function($exam){
             $exam->on('exam.id','=','exam_queue.exam_id');
         })->leftjoin('station',function($exam){
             $exam->on('station.id','=','exam_queue.station_id');
-        })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id','station.paper_id')->orderBy('exam_queue.begin_dt','asc')->first();
+        })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id','station.paper_id')->orderBy('exam_queue.begin_dt','asc')->get();
         return $builder;
     }
 
