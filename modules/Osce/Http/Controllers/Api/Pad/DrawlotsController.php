@@ -1093,14 +1093,35 @@ class DrawlotsController extends CommonController
 //            ->where('station_teacher.exam_id', $examId)
             ->get();
         */
+            $exam =Exam::doingExam();
+        /*$exam_screening_id = $this->getexamScreeing($exam);
+
+         $stationId     =   ExamStationStatus::where('exam_screening_id','=',$exam_screening_id)->get()->pluck('station_id');
+        if($stationId->isEmpty()){
+            throw new \Exception('没有对应的考站');
+        }
+        $stationId = $stationId->toArray();
+        dump($stationId);*/
+
+        $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
+        $stationList = StationTeacher::where('exam_id', '=', $exam->id)
+            ->where('user_id', '=', $id)
+            ->get()->pluck('station_id')->toArray();
+        $arr=array_intersect ($stationLists,$stationList);
+        $stationId=array_pop($arr);
+        if(is_null($stationId)){
+            throw new \Exception('没有对应的考站！');
+        }
+
         $stationTeacher =   StationTeacher::where('user_id','=',$teacher_id)
                         ->where('exam_id','=',$examId)
                         ->with('station')
                         ->first();
         $station    =   $stationTeacher ->  station;
         $stationPlan    =   ExamDraft   ::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-                    ->  where('exam_draft.station_id','=',$station->id)
+                    ->  where('exam_draft.station_id','=',$stationId)
                     ->  where('exam_draft_flow.exam_id','=',$examId)
+
                     ->  first();
         $room       =   ExamDraft   ::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
                     ->  where('exam_draft.room_id','=',$stationPlan->room_id)
