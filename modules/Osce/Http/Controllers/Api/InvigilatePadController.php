@@ -533,6 +533,7 @@ class InvigilatePadController extends CommonController
             return response()->json($this->success_data([$result->id]));
 
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
@@ -609,6 +610,7 @@ class InvigilatePadController extends CommonController
 
             return response()->json($this->success_data([$result->id]));
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
@@ -645,6 +647,7 @@ class InvigilatePadController extends CommonController
 
             return response()->json($this->success_data(self::storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor)));
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }

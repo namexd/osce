@@ -204,7 +204,7 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.status', '=', 2)
                 ->where('student.exam_id', $examId)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
-                ->where('exam_queue.blocking', 0)
+                //->where('exam_queue.blocking', 0)
                 ->groupBy('student.id')
                 ->first();
             if (is_null($queueing)) {//没有正在考试的
@@ -215,7 +215,7 @@ class ExamQueue extends CommonModel
                     ->where('exam_queue.exam_id', '=', $examId)
                     ->where('student.exam_id', $examId)
                     ->where('exam_queue.exam_screening_id', $exam_screening_id)
-                    ->where('exam_queue.blocking', 1)
+                    //->where('exam_queue.blocking', 1)
                     ->select(
                         'student.id as student_id',
                         'student.name as student_name',
@@ -287,7 +287,7 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.status', '<', 3)
                 ->where('student.exam_id', $examId)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
-                ->where('exam_queue.blocking', 1)
+                //->where('exam_queue.blocking', 1)
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -355,7 +355,7 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
-                ->where('exam_queue.blocking', 1)
+                //->where('exam_queue.blocking', 1)
                 ->skip(count($station))
                 ->take(count($station))
                 ->orderBy('exam_queue.next_num', 'asc')
@@ -386,7 +386,7 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.station_id', $stationId)
                 ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
-                ->where('exam_queue.blocking', 1)
+                //->where('exam_queue.blocking', 1)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
@@ -935,12 +935,12 @@ class ExamQueue extends CommonModel
 //                        $teacherId, [strtotime($date)]);
 
                     //将该学生的阻塞状态变成1
-                    if (!ExamQueue::where('exam_id', $queue->exam_id)
+                    /*if (!ExamQueue::where('exam_id', $queue->exam_id)
                         ->where('student_id', $studentId)
                         ->update(['blocking' => 1])
                     ) {
                         throw new \Exception('阻塞状态修改失败！请重试', -2);
-                    }
+                    }*/
                 }
                 $connection->commit();
                 return $queue;
