@@ -577,6 +577,8 @@ class ApiController extends CommonController
         //dd($examingDO);
         if(count($examingDO) > 0){
             $studentModel = new Student();
+            echo $examingDO->id;
+            dd($user->id);
             $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
 
             //在队列表中查找与考试相关的数据
@@ -601,7 +603,7 @@ class ApiController extends CommonController
                     }
                     $station = !empty($v['station_id'])?$v['station_id']:$station_id;
                     $stationTeacher = $StationTeacher->where('station_id','=',$station)->first();
-//                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
+                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
                     $examData[$key]['station_id'] = $station;
                     $examData[$key]['teacher_id'] = @$stationTeacher->user_id;
                     $examData[$key]['student_id'] = @$userInfo->id;
