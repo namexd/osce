@@ -806,6 +806,7 @@ class InvigilatePadController extends CommonController
                 ->where('station_id', '=', $stationId)
                 ->whereIn('status', [1,2])
                 ->first();
+
             //拿到阶段序号
             $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
 
