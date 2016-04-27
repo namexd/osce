@@ -34,7 +34,8 @@ trait SQLTraits
             ->where('exam_draft_flow.exam_id', $exam->id)
             ->select(
                 'exam_gradation.order as gradation_order',
-                'exam_gradation.id as exam_gradation_id'
+                'exam_gradation.id as exam_gradation_id',
+                'exam_gradation.sequence_cate as sequence_cate'
             )
             ->get()
             ->keyBy('gradation_order');
