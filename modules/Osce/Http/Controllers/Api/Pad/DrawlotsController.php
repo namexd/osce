@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
+use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\Student;
@@ -1010,17 +1011,33 @@ class DrawlotsController extends CommonController
                 'station_id'
             )
             ->get();*/
+
+         $gradationOrder = ExamScreening::find($examScreeingId);
+        if(!$gradationOrder){
+
+            throw new \Exception('没有找到对应的阶段',3660);
+
+        }else{
+            $gradationOrderId = ExamGradation::where('exam_id','=',$examId)->where('order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+
+        }
+
         $stationIds = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft_flow.exam_id', '=', $examId)
             ->where('exam_draft.room_id',$roomId)
+            ->whereIn('exam_draft_flow.exam_gradation_id',$gradationOrderId)
             ->select(
                 'exam_draft.station_id as station_id'
             )
             ->get();
         //$stationIds为还没有被使用的考站
         $stationIds = array_diff($stationIds->pluck('station_id')->toArray(), $stationIdeds);
+        if(empty($stationIds)){
+            throw new \Exception('当前没有空闲考站，请等待！！',3670);
+        }
         //$ranStationId为随机选择的一个考站
         $ranStationId = $stationIds[array_rand($stationIds)];
+
         return $ranStationId;
     }
 
