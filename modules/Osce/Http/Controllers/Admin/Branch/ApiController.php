@@ -577,10 +577,9 @@ class ApiController extends CommonController
         //dd($examingDO);
         if(count($examingDO) > 0){
             $studentModel = new Student();
-            echo $examingDO->id;
-            dd($user->id);
-            $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
 
+            $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
+            dd($userInfo);
             //在队列表中查找与考试相关的数据
             $examquen = new ExamQueue();
             $examing = $examquen->getExamingData($examingDO->id,@$userInfo->id);
