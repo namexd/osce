@@ -246,24 +246,12 @@ class SmartArrange
 
                     //变更学生的状态(写记录)
                     $insertData =   [];
-
-
-
                     foreach ($students as $student) {
                         $data = $this->mode->dataBuilder($this->exam, $screen, $student, $entity, $i);
-//                        if ($entity->room_id == 30 && $data['student_id'] == 4854) {
-//                            dump($data['student_id'], $screen);
-//                        }
                         $data['created_at'] =   date('Y-m-d H:i:s');
                         $data['updated_at'] =   date('Y-m-d H:i:s');
 
                         $insertData []  =   $data;
-//                        if (ExamPlanRecord::create($data)) {
-//                            $this->doorStatus--;
-//                            $entity->timer += $step;
-//                        } else {
-//                            throw new \Exception('关门失败！', -11);
-//                        };
                     }
                     if($result =   ExamPlanRecord::insert($insertData))
                     {
@@ -274,23 +262,23 @@ class SmartArrange
                     {
                         throw new \Exception('关门失败！', -11);
                     }
-
-//                    if ($entity->room_id == 30) {
-//                        dd($insertData);
-//                    }
                 }
             }
 
             $i += $step;
 
             //TODO 排完后终止循环的操作，待施工
-            if ($this->overStudentCount($screen) == $this->_S_Count * $this->flowNum) {
+            if ($this->overStudentCount($screen->id) == $this->_S_Count * $this->flowNum) {
                 break;
             }
         }
 
+//        dump(count($this->_S), count($this->_S_W), '================');
         //获取未走完流程的考生
         $studentList = $this->testingStudentList($this->exam, $screen, $this->flowNum);
+//        if (count($studentList) == 45) {
+//            dd($studentList, '================');
+//        }
 
         //未考完的学生实例数组
         $undoneStudents = [];
@@ -323,9 +311,13 @@ class SmartArrange
             }
         }
 
+
         //获取候考区学生清单,并将未考完的考生还入总清单
+//        dump(count($this->_S), '===================');
         $this->_S = $this->_S->merge($this->_S_W);
         $this->_S = $this->_S->merge(array_unique($undoneStudents));
+//        dd($undoneStudents);
+//        dump(count($this->_S), '++++++++++++++');
     }
 
     /**

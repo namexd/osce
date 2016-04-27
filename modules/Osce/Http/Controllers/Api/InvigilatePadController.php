@@ -800,10 +800,23 @@ class InvigilatePadController extends CommonController
 //            ];
 //           if(!ExamResult::create($ExamResultData)){
 //               throw new \Exception('成绩创建失败',-106);
+            $exam = Exam::where('status', '=', 1)->first();
+            $examQueue = ExamQueue::where('exam_id',$exam->id)
+                ->where('student_id', '=', $studentId)
+                ->where('station_id', '=', $stationId)
+                ->whereIn('status', [0,1,2])
+                ->first();
+            //拿到阶段序号
+            $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
+
+            //拿到属于该场考试，该场阶段所对应的所有场次id
+            $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+
+
 //           }
             $ExamQueueModel = new ExamQueue();
             
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId);
 
             echo 1;
 

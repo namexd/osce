@@ -439,7 +439,7 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId)
     {
         //开启事务
         $connection = DB::connection($this->connection);
@@ -453,6 +453,7 @@ class ExamQueue extends CommonModel
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
                 ->where('exam_id', '=', $exam->id)
                 ->where('station_id', '=', $stationId)
+                ->whereIn('exam_screening_id', '=', $examscreeningId)
                 ->whereIn('status', [0,1,2])
                 ->first();
             //dd($examQueue);
@@ -462,13 +463,24 @@ class ExamQueue extends CommonModel
             if ($examQueue->status == 2) {
                 return true;
             }
+
+
+            $lateTime = $nowTime - strtotime($examQueue->begin_dt);
+            //判断考生的迟到时间
+            if($lateTime<0){
+                $lateTime=0;
+            }
+
+
             //修改队列状态
             $examQueue->status=2;
+            $examQueue->begin_dt=date('Y-m-d H:i:s', $nowTime);
+
             //$examQueue->stick=null;
             if ($examQueue->save()) {
-                    ExamQueue::where('student_id', '=', $studentId)->where('exam_id',$exam->id)->update(['blocking'=>0]);//设置阻塞
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0,1, 2])
+                    ->whereIn('exam_screening_id', '=', $examscreeningId)
                     ->orderBy('begin_dt', 'asc')
                     ->get();
                 $nowQueue = null;
@@ -481,14 +493,11 @@ class ExamQueue extends CommonModel
                 if (is_null($nowQueue)) {
                     throw new \Exception('进入考试失败', -103);
                 }
-                $lateTime = $nowTime - strtotime($nowQueue->begin_dt);
-                //判断考生的迟到时间
-                if($lateTime<0){
-                    $lateTime=0;
-                }
+
                 //拿到状态为三的队列
                 $endQueue =ExamQueue::where('exam_id','=',$exam->id)
                     ->where('student_id', '=', $studentId)
+                    ->whereIn('exam_screening_id', '=', $examscreeningId)
                     ->where('status','=',3)
                     ->get();
 
