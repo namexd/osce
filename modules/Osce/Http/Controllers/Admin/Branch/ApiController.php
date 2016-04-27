@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
 use Modules\Osce\Entities\Station;
@@ -574,7 +575,6 @@ class ApiController extends CommonController
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
-            dd($examing);
 
 
 
@@ -586,7 +586,7 @@ class ApiController extends CommonController
 
             foreach($examing as $key=>$v){
                     if(!$v['station_id']){
-                        $station_id = RoomStation::where('room_id','=',$v['room_id'])->first()->station_id;
+                        $station_id = ExamStation::where('exam_id','=',$v['id'])->first()->station_id;
                     }
                     $station = !empty($v['station_id'])?$v['station_id']:@$station_id;
                     $stationTeacher = $StationTeacher->where('station_id','=',$station)->first();
