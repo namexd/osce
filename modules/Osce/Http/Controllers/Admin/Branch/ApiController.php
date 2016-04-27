@@ -586,7 +586,7 @@ class ApiController extends CommonController
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
-            
+
             //整理考试数据
             $examData = array();
             $StationTeacher = new StationTeacher();
@@ -610,7 +610,7 @@ class ApiController extends CommonController
 
             }
         }
-
+        dd($examData);
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData
