@@ -15,6 +15,7 @@ use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\ExamFlowRoom;
@@ -126,20 +127,20 @@ class DrawlotsController extends CommonController
             }elseif($roomMsg_two){
                 $exam_screening_id=$roomMsg_two->id;
             }
-            $station = StationTeacher::where('exam_id', '=', $exam->id)
-                ->where('exam_screening_id',$exam_screening_id)
-                ->where('user_id', '=', $id)
-                ->first();
-            if (is_null($station)) {
-              // $redis->publish('pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试')));
+            $stationId=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->pluck('station_id');
+            $stationList = StationTeacher::where('exam_id', '=', $exam->id)
+            ->where('user_id', '=', $id)
+            ->get()->pluck('station_id')->toArray();
+            if(!in_array($stationId,$stationList)||is_null($stationList)){
                 throw new \Exception('你没有参加此次考试');
             }
+
 
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations,$exam_screening_id);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id,$exam_screening_id);
+                $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id,$exam_screening_id);
             } else {
               //  $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
@@ -220,11 +221,11 @@ class DrawlotsController extends CommonController
             }elseif($roomMsg_two){
                 $exam_screening_id=$roomMsg_two->id;
             }
-            $station = StationTeacher::where('exam_id', '=', $exam->id)->where('exam_screening_id',$exam_screening_id)
+            $stationId=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->pluck('station_id');
+            $stationList = StationTeacher::where('exam_id', '=', $exam->id)
                 ->where('user_id', '=', $id)
-                ->first();
-            if (is_null($station)) {
-                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试')));
+                ->get()->pluck('station_id')->toArray();
+            if(!in_array($stationId,$stationList)||is_null($stationList)){
                 throw new \Exception('你没有参加此次考试');
             }
 
@@ -232,7 +233,7 @@ class DrawlotsController extends CommonController
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations,$exam_screening_id);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id,$exam_screening_id);
+                $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id,$exam_screening_id);
             } else {
                 $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
@@ -654,15 +655,14 @@ class DrawlotsController extends CommonController
             }
             //根据id获取考站信息
 
-            $stationTeacher = StationTeacher::where('user_id', $id)->where('exam_id', $exam->id)->first();
-
-            if (is_null($stationTeacher)) {
+            $stationId=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->pluck('station_id');
+            $stationList = StationTeacher::where('exam_id', '=', $exam->id)
+                ->where('user_id', '=', $id)
+                ->get()->pluck('station_id')->toArray();
+            if(!in_array($stationId,$stationList||is_null($stationList))){
                 throw new \Exception('当前老师没有考试！', 4000);
             }
-
-            $station = $stationTeacher->station;
-
-
+            $station =Station::where('id',$stationId)->first();
             //拿到房间
             $room = $this->getRoomId($id, $exam->id);
 
