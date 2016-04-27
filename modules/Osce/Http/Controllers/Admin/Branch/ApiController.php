@@ -534,18 +534,29 @@ class ApiController extends CommonController
     public function getExamPaperId(Request $request)
     {
         $this->validate($request, [
-            'examId' => 'sometimes|integer',
-            'stationId' => 'sometimes|integer',
+            'stationId' => 'required|int',
         ]);
-        $examId = $request->input('examId');//考试id
+
         $stationId = $request->input('stationId');//考站id
+
+ /*
         //根据考试id和考站id查询对应的试卷id
         $examPaperExamStationModel = new ExamPaperExamStation();
         $data = $examPaperExamStationModel->where('exam_id','=',$examId)->where('station_id','=',$stationId)->first();
+
         if(!empty($data)){
             $examPaperId = $data['exam_paper_id'];
             return response()->json($examPaperId);
         }else{
+            return response()->json(false);
+        }*/
+
+        $stationInfo = Station::where('id',$stationId)->where('type',3)->first();
+        if(!empty($stationInfo)){
+
+            return response()->json($stationInfo['paper_id']);
+        }else{
+
             return response()->json(false);
         }
     }
