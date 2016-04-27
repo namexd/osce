@@ -119,4 +119,32 @@ abstract class AbstractEntity
 
         return collect($array);
     }
+
+    /**
+     * 将每个大站的第一个序号写进每个实体
+     * @author Jiangzhiheng
+     * @time 2016-04-26 19:23
+     */
+    protected function setMinSerialnumber($entities)
+    {
+        $entities = $entities->groupBy('order');
+        $arrays = [];
+        foreach ($entities as $key => $entity) {
+            foreach ($entity as $k => $item) {
+                if ($item->optional == 0) {
+                    $item->min_serialnumber = true;
+                } else {
+                    if ($k == 0) {
+                        $item->min_serialnumber = true;
+                    } else {
+                        $item->min_serialnumber = false;
+                    }
+                }
+
+                $arrays[] = $item;
+            }
+        }
+
+        return collect($arrays);
+    }
 }

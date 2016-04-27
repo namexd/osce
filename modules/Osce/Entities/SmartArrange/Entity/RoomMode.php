@@ -29,6 +29,8 @@ class RoomMode extends AbstractEntity implements EntityInterface
         $entities = $this->mergeRoom($entities, 'room_id');
         //加上序号
         $entities = $this->setSerialnumber($entities);
+        //加上是否为大站的第一个站
+        $entities = $this->setMinSerialnumber($entities);
         //为每个考场写入多少个考站
         foreach ($entities as &$entity) {
             $roomStation = $this->roomStation($exam, $screen, $entity->room_id);
@@ -40,12 +42,9 @@ class RoomMode extends AbstractEntity implements EntityInterface
 
     function dataBuilder($exam, $screen, $student, $entity, $i)
     {
-//        if ($entity->room_id == 30 && $student->id == 5031) {
-//            dump($entity->room_id, $entity->name, date('Y-m-d H:i:s', $i));
-//        }
         // TODO: Implement dataBuilder() method.
         return [
-            'student_id' => $student->id,
+            'student_id' => is_null($student->id) ? $student->student_id : $student->id,
             'room_id' => $entity->room_id,
             'station_id' => null,
             'exam_id' => $exam->id,
