@@ -827,7 +827,7 @@ class ExamQueue extends CommonModel
             //找到对应的方法找到queue实例
             $queue = ExamQueue::findQueueIdByStudentId($studentId, $stationId);
 
-            //拿到阶段序号
+         /*   //拿到阶段序号
             $gradationOrder = ExamScreening::find($queue->exam_screening_id);
 
 
@@ -853,7 +853,7 @@ class ExamQueue extends CommonModel
                         throw new \Exception('状态修改失败！请重试', 2000);
                     }
                 }
-            }
+            }*/
 
             /*
              * 判断status状态
