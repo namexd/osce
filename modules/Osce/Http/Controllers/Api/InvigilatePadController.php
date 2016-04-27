@@ -188,12 +188,12 @@ class InvigilatePadController extends CommonController
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 
-                $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
+                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return response()->json(
                     $this->success_data($studentData['nextTester'], 102, '验证完成')
                 );
             } else {
-                $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
+                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
                 throw new \Exception('学生信息查询失败', -2);
             }
         } catch (\Exception $ex) {
@@ -237,15 +237,19 @@ class InvigilatePadController extends CommonController
             $stationId = $request['station_id'];
             $teacher_id = $request['teacher_id'];
             $exam = Exam::doingExam();
+        
+        
+        
             $studentModel = new  Student();
             $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 //                dump($this->success_data($studentData['nextTester']));
-                $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 102, '验证完成')));
+
+                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 102, '验证完成')));
                 return $studentData['nextTester'];
             } else {
-                $redis->publish('pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
+                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
                 return [];
             }
 
@@ -804,7 +808,7 @@ class InvigilatePadController extends CommonController
 
 
             if ($AlterResult) {
-                $redis->publish('pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
+                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
                 
                 //调用向腕表推送消息的方法
 
@@ -839,7 +843,7 @@ class InvigilatePadController extends CommonController
 
                 if($station->type==3) {//理论考试
                     $publishMessage->avator = asset($publishMessage->avator);
-                    $redis->publish('pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
+                    $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
                 }
 
                 return response()->json(
