@@ -761,7 +761,7 @@ class DrawlotsController extends CommonController
     private function drawlots($student, $roomId, $teacherId, $exam)
     {
 
-        try {
+//        try {
             //获取正在考试中的考试
             $examId = $student->exam_id;
 //dd($student, $roomId, $teacherId, $exam);
@@ -794,6 +794,7 @@ class DrawlotsController extends CommonController
 
                 //随机获取一个考站的id
                 $ranStationId = $this->ranStationSelect($roomId, $examId, $studentids,$examScreeingId);
+                dd($ranStationId);
                 if(is_null($ranStationId)){
                     throw new \Exception('当前没有空闲考站，请等待！！',3601);
 
@@ -855,9 +856,9 @@ class DrawlotsController extends CommonController
                 return Station::findOrFail($stationId);
             }
 
-        } catch (\Exception $ex) {
-            throw $ex;
-        }
+//        } catch (\Exception $ex) {
+//            throw $ex;
+//        }
     }
 
     /**
