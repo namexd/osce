@@ -437,7 +437,7 @@ class ApiController extends CommonController
                 $user = Auth::user();
                 $student_id = Student::where('user_id','=',$user->id)->first()->pluck('id');
                 $examId = Exam::where('status','=',1)->first();
-
+                echo $student_id.'='.$examId->id;exit;
                 $studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id)->where('exam_queue.exam_id','=',$examId->id)->get();
                 dd($studentInfo);
 //                $request['uid'] = ;//nfc_code;
