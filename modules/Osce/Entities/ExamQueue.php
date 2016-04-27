@@ -453,7 +453,7 @@ class ExamQueue extends CommonModel
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
                 ->where('exam_id', '=', $exam->id)
                 ->where('station_id', '=', $stationId)
-                ->whereIn('exam_screening_id',$examscreeningId)
+//                ->whereIn('exam_screening_id',$examscreeningId)
                 ->whereIn('status', [0,1,2])
                 ->first();
             //dd($examQueue);
