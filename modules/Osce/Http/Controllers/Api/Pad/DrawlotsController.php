@@ -1094,18 +1094,18 @@ class DrawlotsController extends CommonController
             ->get();
         */
             $exam =Exam::doingExam();
-        /*$exam_screening_id = $this->getexamScreeing($exam);
-
-         $stationId     =   ExamStationStatus::where('exam_screening_id','=',$exam_screening_id)->get()->pluck('station_id');
-        if($stationId->isEmpty()){
-            throw new \Exception('没有对应的考站');
-        }
-        $stationId = $stationId->toArray();
-        dump($stationId);*/
+       $exam_screening_id = $this->getexamScreeing($exam);
+        /*
+                $stationId     =   ExamStationStatus::where('exam_screening_id','=',$exam_screening_id)->get()->pluck('station_id');
+               if($stationId->isEmpty()){
+                   throw new \Exception('没有对应的考站');
+               }
+               $stationId = $stationId->toArray();
+               dump($stationId);*/
 
         $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
         $stationList = StationTeacher::where('exam_id', '=', $exam->id)
-            ->where('user_id', '=', $id)
+            ->where('user_id', '=', $teacher_id)
             ->get()->pluck('station_id')->toArray();
         $arr=array_intersect ($stationLists,$stationList);
         $stationId=array_pop($arr);
