@@ -439,7 +439,7 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId)
     {
         //开启事务
         $connection = DB::connection($this->connection);
