@@ -134,7 +134,7 @@ class ExamAnswerController extends CommonController
         }
 //dd($data);
         $examItems['stuScore'] =ExamResult::where('student_id',$studentMsg->id)->pluck('score');
-         return view('osce::admin.statisticalanalysis.statistics_student_query',
+         return view('osce::admin.statisticalAnalysis.statistics_student_query',
              [
                  'examItems'=>$examItems,
                  'data'=>$data
