@@ -648,6 +648,7 @@ class Student extends CommonModel
                              ->where('exam_screening_id', '=', $screen_id)->get();
         $buondNum = count($buondNum);
         $num      = $countStation - $buondNum;
+        dump($num,2222222222);
 
         if ($num === 0 || $num < 0) {
             return array();
@@ -662,8 +663,9 @@ class Student extends CommonModel
             $query->whereIn('exam_order.status',[0,4]);
         });*/
         $endStudentList = ExamQueue::where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->whereIn('status', [0,2,1])->get();
-
+        dump($endStudentList,3333333333333);
         if(count($endStudentList)){
+            dump($endStudentList,11111111);
 
             $studentList = ExamQueue::where('status',3)->where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)
                                     ->groupBy('student_id')->get()->pluck('student_id')->toArray();
@@ -682,7 +684,6 @@ class Student extends CommonModel
                 $builder = $builder->whereNotIn('exam_order.student_id', $studentList);
             }
         }else {
-                dump(1111);
             $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
                 $join->on('student.id', '=', 'exam_order.student_id');
             })->where('exam_order.exam_id', '=', $exam_id)->where('student.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
