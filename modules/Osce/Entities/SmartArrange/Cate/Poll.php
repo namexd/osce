@@ -77,24 +77,9 @@ class Poll extends AbstractCate implements CateInterface
      */
     protected function pollTestStudents($entity, $screen)
     {
-//        $tempArrays = $this->pollBeginStudent($entity, $screen);
-//
-//        $num = $this->waitingPollStudentSql($screen, $entity);
-//
-//        $arrays = [];
-//        foreach ($num as $item) {
-//            $arrays[] = $item->student;
-//        }
-//
-//        if (count($tempArrays) == 0) {
-//            $arrays = $this->beginStudents($entity);
-//        }
         //声明两个变量
         $arrays = [];
         $tempStudents = [];
-//        $tempStudents = $this->prevSerial($screen, $entity->serialnumber);
-//
-//        $thisStudents = $this->thisSerial($screen, $entity->serialnumber);
 
         //如果当前的流程号不等于实体的流程号，就将学生属性置为空
         if ($this->serNum != $entity->serialnumber) {
@@ -134,7 +119,5 @@ class Poll extends AbstractCate implements CateInterface
         $this->serNum = $entity->serialnumber;
         //如果没找到，就直接返回空数组
         return $arrays;
-
-//        return $this->testingStudents($this->exam, $screen, $arrays);
     }
 }

@@ -483,7 +483,7 @@ class ExamQueue extends CommonModel
             if ($examQueue->save()) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0, 1, 2])
-                    ->whereIn('exam_screening_id', '=', $examscreeningId)
+                    ->whereIn('exam_screening_id', $examscreeningId)
                     ->orderBy('begin_dt', 'asc')
                     ->get();
                 $nowQueue = null;
@@ -500,7 +500,7 @@ class ExamQueue extends CommonModel
                 //拿到状态为三的队列
                 $endQueue = ExamQueue::where('exam_id', '=', $exam->id)
                     ->where('student_id', '=', $studentId)
-                    ->whereIn('exam_screening_id', '=', $examscreeningId)
+                    ->whereIn('exam_screening_id', $examscreeningId)
                     ->where('status', '=', 3)
                     ->get();
 
