@@ -464,6 +464,7 @@ class ExamQueue extends CommonModel
             }
             //修改队列状态
             $examQueue->status=2;
+            $examQueue->begin_dt=$nowTime;
             //$examQueue->stick=null;
             if ($examQueue->save()) {
                     ExamQueue::where('student_id', '=', $studentId)->where('exam_id',$exam->id)->update(['blocking'=>0]);//设置阻塞
