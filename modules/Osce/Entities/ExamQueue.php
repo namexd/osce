@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities;
 use DB;
 use Doctrine\Common\Persistence\ObjectManager;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 
@@ -511,36 +512,19 @@ class ExamQueue extends CommonModel
                         }
                     }
 
-                   //考试排序模式
+                  /* //考试排序模式
                     if ($exam->sequence_mode == 2) {
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
                     } else {
                         //这是已考场安排的需拿到room_id
                         $stationTime = $this->getRoomStationMaxTime($item->room_id);
-                    }
-
-                 /*   if($station->type==3){//理论站
-                        $paper=ExamPaper::where('id',$station->paper_id)->first();
-                        $station->mins = $paper->length;
-                    }else {
-                        $ExamDraft = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-                            ->where('exam_draft_flow.exam_id', '=', $exam->id)
-                            ->where('exam_draft.station_id', '=', $station->id)
-                            ->first();
-
-                        if (!is_null($ExamDraft)) {
-                            $subject = Subject::where('id',$ExamDraft->subject_id)->first();
-                        }
-                        //将考场的id封装进去
-                        if (!is_null($subject)) {
-                            $station->mins = $subject->mins;
-                        }
                     }*/
-
-
 
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         if ($item->status == 2) {
+                            //获取标准考试时间
+                            $stationTime = $this->stationTime($item->station_id,$exam->id);
+
                             $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
                             $item->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
                         } else {
@@ -562,6 +546,10 @@ class ExamQueue extends CommonModel
                         if (is_null($ExamTime)) {
                             throw new \Exception('没有找到对应的队列信息', -102);
                         }
+
+                        //获取标准考试时间
+                        $stationTime = $this->stationTime($ExamTime->station_id,$exam->id);
+
                         $ExamTime->begin_dt = date('Y-m-d H:i:s', $nowTime);
                         $ExamTime->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
                         if (!$ExamTime->save()) {
@@ -581,8 +569,49 @@ class ExamQueue extends CommonModel
             $connection->rollBack();
             throw $ex;
         }
-
     }
+
+    /**获取标准考试时间
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $station_id 考站id
+     * @param $exam_id 考试id
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function stationTime($station_id,$exam_id){
+        $stationTime = 0;
+        $station = Station::where('id',$station_id)->first();
+        if(!empty($station)){
+            if($station->type==3){
+                //理论站
+                $paper = ExamPaper::where('id',$station->paper_id)->first();
+                if(!empty($paper)){
+                    $stationTime = $paper->length;
+                }
+            }else {
+
+                $ExamDraft = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                    ->where('exam_draft_flow.exam_id', '=', $exam_id)
+                    ->where('exam_draft.station_id', '=', $station->id)
+                    ->first();
+                if (!is_null($ExamDraft)) {
+
+                    $subject = Subject::where('id',$ExamDraft->subject_id)->first();
+                    if (!is_null($subject)) {
+
+                        $stationTime = $subject->mins;
+                    }
+                }
+            }
+        }
+        return $stationTime;
+    }
+
+
+
 
     private function getRoomStationMaxTime($roomdId)
     {
