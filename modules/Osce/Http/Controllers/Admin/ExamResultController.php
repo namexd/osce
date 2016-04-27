@@ -282,18 +282,19 @@ class ExamResultController extends CommonController{
                 'student_id' => 'required|integer',
                 'station_id' => 'required|integer'
             ]);
-
             //获取数据
             $examId = $request->input('exam_id');
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             //根据考试id拿到场次id临时修改
             $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get()->pluck('id');
+
             //更据考站id查询到
-            $stationVcrId = StationVcr::where('station_id','=',$stationId)->first()->id;
-            if(is_null($stationVcrId)){
+            $stationVcr = StationVcr::where('station_id','=',$stationId)->first();
+            if(is_null($stationVcr)){
                 throw new \Exception('没有找到相关联的摄像机');
             }
+            $stationVcrId = $stationVcr->id;
             //查询到页面需要的数据
             $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningId);
             //查询出时间锚点追加到数组中
