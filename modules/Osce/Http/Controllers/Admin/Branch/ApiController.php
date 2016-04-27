@@ -444,7 +444,9 @@ class ApiController extends CommonController
                 })->get();*/
 
 
-                $studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id->id)->where('exam_queue.exam_id','=',$examId->id)->first();
+                $studentInfo = ExamQueue::where('student_id','=',$student_id->id)->where('exam_id','=',$examId->id)->first();
+
+                dd($studentInfo);
 
                 $station_teacher = StationTeacher::where('exam_id',$studentInfo->exam_id)->get();
 
