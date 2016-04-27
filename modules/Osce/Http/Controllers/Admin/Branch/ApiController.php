@@ -409,9 +409,10 @@ class ApiController extends CommonController
 
         $username = $request->get('username');
         $password = $request->get('password');
-
-        if (Auth::attempt(['username' => $username, 'password' => $password]))
+        if (\Auth::attempt(['username' => $username, 'password' => $password]))
         {
+
+
             /*
             //获取当前登录账户的角色名称
             $user = new User();
@@ -441,6 +442,7 @@ class ApiController extends CommonController
         }
         else
         {
+
             return redirect()->back()->withErrors('账号密码错误');
         }
     }
@@ -500,6 +502,7 @@ class ApiController extends CommonController
                     'info'=>$ExamInfo
                 );
             }
+           
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
