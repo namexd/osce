@@ -659,7 +659,7 @@ class DrawlotsController extends CommonController
             $stationList = StationTeacher::where('exam_id', '=', $exam->id)
                 ->where('user_id', '=', $id)
                 ->get()->pluck('station_id')->toArray();
-            if(!in_array($stationId,$stationList||is_null($stationList))){
+            if(!in_array($stationId,$stationList)||is_null($stationList)){
                 throw new \Exception('当前老师没有考试！', 4000);
             }
             $station =Station::where('id',$stationId)->first();
