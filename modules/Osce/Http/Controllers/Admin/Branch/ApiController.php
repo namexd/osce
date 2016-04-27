@@ -439,9 +439,21 @@ class ApiController extends CommonController
                 $examId = Exam::where('status','=',1)->first();
                 echo $examId->id;
 
-                $studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id->id)->where('exam_queue.exam_id','=',$examId->id)->leftjoin('station_teacher',function($join){
+                /*$studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id->id)->where('exam_queue.exam_id','=',$examId->id)->leftjoin('station_teacher',function($join){
                     $join->on('station_teacher.exam_id','=','exam_queue.exam_id');
-                })->get();
+                })->get();*/
+
+
+                $studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id->id)->where('exam_queue.exam_id','=',$examId->id)->first();
+
+                $station_teacher = StationTeacher::where('exam_id',$studentInfo->exam_id)->get();
+
+                dd($station_teacher);
+
+
+
+
+
                 dd($studentInfo);
 //                $request['uid'] = ;//nfc_code;
 //                $request['room_id'] = ;
