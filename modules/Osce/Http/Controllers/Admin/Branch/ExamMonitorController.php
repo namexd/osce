@@ -100,8 +100,8 @@ class ExamMonitorController  extends CommonController
 
         if($result==true){
             $redis = Redis::connection('message');
-            $redis->publish(md5($_SERVER['SERVER_NAME']).'watch_message', json_encode($this->success_data([],1,'迟到确认弃考成功')));
-            $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([],1,'迟到确认弃考成功')));
+            $redis->publish('watch_message', json_encode($this->success_data([],1,'迟到确认弃考成功')));
+            $redis->publish('pad_message', json_encode($this->success_data([],1,'迟到确认弃考成功')));
             return response()->json(true);
         }else{
             return response()->json($result);

@@ -127,6 +127,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
         //保存考生答案
         Route::post('answer/postsaveanswer',['uses'=>'AnswerController@postSaveAnswer','as'=>'osce.admin.AnswerController.postSaveAnswer']);
+        //保存成功后，改变队列中的状态为已完成
+        Route::post('answer/save-status',['uses'=>'AnswerController@postSaveStatus','as'=>'osce.admin.AnswerController.postSaveStatus']);
 
         //查询理论考试考试是否结束
         Route::post('answer/isfinish',['uses'=>'AnswerController@isfinish','as'=>'osce.admin.AnswerController.isfinish']);

@@ -57,16 +57,21 @@ class WatchLog extends CommonModel{
         ]);
     }
 
+    /**
+     * 创建腕表解绑记录
+     * @param $data
+     */
    public function unwrapRecord($data){
        if($data['context']){
            $data['context']=serialize($data['context']);
        }
-       WatchLog::create([
-           'watch_id' => $data['watch_id'],
-           'action' => $data['action'],
-           'context' => $data['context'],
+       $result = WatchLog::create([
+           'watch_id'   => $data['watch_id'],
+           'action'     => $data['action'],
+           'context'    => $data['context'],
            'student_id' => $data['student_id']
        ]);
+       return $result;
    }
 
    public function getList($code='',$studentName='',$beginDt='',$endDt=''){
