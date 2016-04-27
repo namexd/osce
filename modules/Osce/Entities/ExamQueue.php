@@ -935,12 +935,12 @@ class ExamQueue extends CommonModel
 //                        $teacherId, [strtotime($date)]);
 
                     //将该学生的阻塞状态变成1
-                    if (!ExamQueue::where('exam_id', $queue->exam_id)
+                    /*if (!ExamQueue::where('exam_id', $queue->exam_id)
                         ->where('student_id', $studentId)
                         ->update(['blocking' => 1])
                     ) {
                         throw new \Exception('阻塞状态修改失败！请重试', -2);
-                    }
+                    }*/
                 }
                 $connection->commit();
                 return $queue;
