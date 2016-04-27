@@ -711,7 +711,7 @@ class Student extends CommonModel
                 $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
             }*/
         }
-        $builder = $builder->select([
+        $builder = $builder->whereRaw('unix_timestamp(exam_order.begin_dt) > ?',[strtotime(date('Y-m-d H:i:s'))])->select([
             'student.id as id',
             'student.name as name',
             'student.idcard as idcard',

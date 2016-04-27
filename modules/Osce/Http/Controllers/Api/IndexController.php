@@ -31,7 +31,7 @@ class IndexController extends CommonController
 {
 
     /**
-     *检测腕表是否存在
+     * 检测腕表是否存在
      * @method GET 接口
      * @url /api/1.0/private/osce/watch/watch-status
      * @access public
@@ -90,6 +90,65 @@ class IndexController extends CommonController
                    );
                }
         }
+    }
+
+    /**
+     * 查询腕表状态
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author Zhoufuxiang  2016-04-27
+     */
+    public function getWatchStatus2(Request $request)
+    {
+        $this->validate($request,[
+            'code' =>'required'
+        ]);
+        $code   = $request->get('code');
+        $watch  = Watch::where('code', '=', $code)->first();
+        //1、没有查询到对应的腕表信息（腕表不存在）
+        if (is_null($watch)) {
+            return \Response::json(array('code' => 3));     //数据库无腕表
+        }
+        $id         = $watch->id;           //获取腕表ID
+        $status     = $watch->status;       //获取腕表状态
+        //查询学生签到记录
+        $watchLog   = WatchLog::where('watch_id', '=', $id)->orderBy('id','DESC')->first();
+        //组合反馈数据
+        $data       = [
+            'student_id'=> '',
+            'status'    => $status
+        ];
+        //根据腕表状态 反馈信息
+        switch ($status)
+        {
+            //1为腕表状态是使用中
+            case 1: if(is_null($watchLog)){
+                        $code    = 4;
+                        $message = '该腕表已绑定';          //该腕表已绑定，无腕表绑定记录
+                    }else{
+
+                        //根据学生ID，查询学生信息
+                        $studentCode = Student::where('id', '=', $watchLog->student_id)->select('code')->first();
+                        $studentCode = is_null($studentCode) ? '' : $studentCode;
+                        //腕表绑定中返回绑定的学生信息
+                        $data['code']       = $studentCode;
+                        $data['student_id'] = $watchLog->student_id;
+                        $code       = 1;
+                        $message    = '该腕表已绑定';     //该腕表已绑定
+                    }
+                    break;
+
+            case 0:     $code = 0;
+                        $message = '未绑定';             //腕表未绑定
+                    break;
+
+            default:    $code = 2;
+                        $message = '该腕表已损坏';
+        }
+        //反馈信息
+        return response()->json(
+            $this->success_data($data, $code, $message)
+        );
     }
 
     /**
@@ -159,7 +218,7 @@ class IndexController extends CommonController
             return \Response::json(array('code' =>4));  //未安排当前考试
         }
 
-        //获取考试队列中的考生列表
+        //获取考试队列中(exam_order)的考生列表
         $students   = $this->getStudentList($request);
         $idcards    = [];
         $students   = json_decode($students->content());
@@ -932,7 +991,7 @@ class IndexController extends CommonController
             $batch        = config('osce.batch_num');       //默认为2
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
 
-            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列
+            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列(exam_order表)
 
             $data = [];
             foreach($list as $itm){

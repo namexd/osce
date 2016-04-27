@@ -802,14 +802,14 @@ class InvigilatePadController extends CommonController
 //               throw new \Exception('成绩创建失败',-106);
 //           }
             $ExamQueueModel = new ExamQueue();
-            
+
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
 
 
 
             if ($AlterResult) {
                 $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
-                
+
                 //调用向腕表推送消息的方法
 
                 $exam = Exam::where('status', '=', 1)->first();
