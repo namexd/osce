@@ -41,7 +41,4 @@ abstract class AbstractSmartArrange implements SmartArrangeInterface
 
         return $this->model = $model;
     }
-
-    
-
 }

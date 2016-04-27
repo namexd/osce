@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
+use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\Student;
@@ -507,7 +508,7 @@ class DrawlotsController extends CommonController
             'room_id' => 'required|integer',
             'teacher_id' => 'required|integer'
         ]);
-       try {
+//       try {
             $examId = $request->input('exam_id', null);
             //获取uid和room_id
             $uid = $request->input('uid');
@@ -613,11 +614,11 @@ class DrawlotsController extends CommonController
             $inv->getAuthentication_arr($request);//当前考生推送
             return response()->json($this->success_data($result));
 
-        } catch (\Exception $ex) {
-            $connection->rollBack();
-
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            $connection->rollBack();
+//
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
@@ -1010,17 +1011,33 @@ class DrawlotsController extends CommonController
                 'station_id'
             )
             ->get();*/
+
+         $gradationOrder = ExamScreening::find($examScreeingId);
+        if(!$gradationOrder){
+
+            throw new \Exception('没有找到对应的阶段');
+
+        }else{
+            $gradationOrderId = ExamGradation::where('exam_id','=',$examId)->where('order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+
+        }
+
         $stationIds = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft_flow.exam_id', '=', $examId)
             ->where('exam_draft.room_id',$roomId)
+            ->whereIn('exam_draft_flow.exam_gradation_id',$gradationOrderId)
             ->select(
                 'exam_draft.station_id as station_id'
             )
             ->get();
         //$stationIds为还没有被使用的考站
         $stationIds = array_diff($stationIds->pluck('station_id')->toArray(), $stationIdeds);
+        if(empty($stationIds)){
+            throw new \Exception('当前没有空闲考站，请等待！！',3601);
+        }
         //$ranStationId为随机选择的一个考站
         $ranStationId = $stationIds[array_rand($stationIds)];
+
         return $ranStationId;
     }
 
@@ -1060,17 +1077,6 @@ class DrawlotsController extends CommonController
 //            ->where('station_teacher.exam_id', $examId)
             ->get();
         */
-//
-//        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
-//  `station_id` int(11) NOT NULL COMMENT '考站_编号',
-//  `user_id` int(11) DEFAULT NULL COMMENT '教师_编号',
-//  `case_id` int(11) DEFAULT NULL COMMENT '病例_编号',
-//  `created_user_id` int(11) NOT NULL COMMENT '创建人',
-//  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
-//  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
-//  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '类型',
-//  `exam_id` int(11) NOT NULL COMMENT '考试编号',
-//  `exam_screening_id` int(11) DEFAULT NULL COMMENT '场次ID',
         $stationTeacher =   StationTeacher::where('user_id','=',$teacher_id)
                         ->where('exam_id','=',$examId)
                         ->with('station')
