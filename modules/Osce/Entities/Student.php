@@ -648,8 +648,6 @@ class Student extends CommonModel
                              ->where('exam_screening_id', '=', $screen_id)->get();
         $buondNum = count($buondNum);
         $num      = $countStation - $buondNum;
-        dump($screen_id,2222222222);
-
         if ($num === 0 || $num < 0) {
             return array();
         }
@@ -710,7 +708,8 @@ class Student extends CommonModel
                 $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
             }*/
         }
-        $builder = $builder->whereRaw('unix_timestamp(exam_order.begin_dt) > ?',[strtotime(date('Y-m-d H:i:s'))])->select([
+//        $builder = $builder->whereRaw('unix_timestamp(exam_order.begin_dt) > ?',[strtotime(date('Y-m-d H:i:s'))])->select([
+        $builder =$builder->select([
             'student.id as id',
             'student.name as name',
             'student.idcard as idcard',
