@@ -440,7 +440,7 @@ class ExamQueue extends CommonModel
      */
 
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime, $teacherId, $examscreeningId)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId)
 
     {
         //开启事务
