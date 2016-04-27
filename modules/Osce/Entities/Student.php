@@ -854,7 +854,7 @@ class Student extends CommonModel
     public function getStudentExamInfo($userId, $examID)
     {
         //查找当前学生信息
-        $studentInfo = $this->where('student.user_id', '=', $userId)->where('student.exam_id', '=', $examID)->first();
+        $studentInfo = $this->where('student.user_id', '=', $userId)->where('student.exam_id', '=', $examID)->orderBy('student.id','desc')->first();
         return $studentInfo;
     }
 
