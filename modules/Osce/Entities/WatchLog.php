@@ -155,7 +155,7 @@ class WatchLog extends CommonModel{
             'watch.factory',
             'watch.sp',
             'watch_log.student_id'
-        )->first();
+        )->orderBy('watch_log.created_at','desc')->first();
 
         return $builder;
     }
