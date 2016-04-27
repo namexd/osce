@@ -682,7 +682,7 @@ class Student extends CommonModel
                 $builder = $builder->whereNotIn('exam_order.student_id', $studentList);
             }
         }else {
-
+                dump(1111);
             $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
                 $join->on('student.id', '=', 'exam_order.student_id');
             })->where('exam_order.exam_id', '=', $exam_id)->where('student.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
