@@ -717,7 +717,7 @@ class Student extends CommonModel
             'student.mobile as mobile',
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
-        ])->orderBy('student.id')->paginate(100);dd(date('Y-m-d H:i:s',1461740372));
+        ])->orderBy('student.id')->paginate(100);
        // $queries = \DB::connection('osce_mis')->getQueryLog();
         //dd($builder->toArray());
         return $builder;
@@ -854,7 +854,7 @@ class Student extends CommonModel
     public function getStudentExamInfo($userId, $examID)
     {
         //查找当前学生信息
-        $studentInfo = $this->where('student.user_id', '=', $userId)->where('student.exam_id', '=', $examID)->first();
+        $studentInfo = $this->where('student.user_id', '=', $userId)->where('student.exam_id', '=', $examID)->orderBy('student.id','desc')->first();
         return $studentInfo;
     }
 

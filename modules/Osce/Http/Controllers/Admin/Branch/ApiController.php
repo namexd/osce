@@ -587,6 +587,8 @@ class ApiController extends CommonController
                 $examing = $examing->toArray();
             }
 
+
+
             //整理考试数据
             $examData = array();
             $StationTeacher = new StationTeacher();
@@ -594,10 +596,10 @@ class ApiController extends CommonController
 
 
             foreach($examing as $key=>$v){
-//                    if(!$v['station_id']){
-//                        $station_id = ExamStation::where('exam_id','=',$v['id'])->first()->station_id;
-//                    }
-                    $station = $v['station_id'];
+                    if(!$v['station_id']){
+                        $station_id = ExamStation::where('exam_id','=',$v['id'])->first()->station_id;
+                    }
+                    $station = !empty($v['station_id'])?$v['station_id']:$station_id;
                     $stationTeacher = $StationTeacher->where('station_id','=',$station)->first();
 //                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
                     $examData[$key]['station_id'] = $station;
@@ -610,7 +612,7 @@ class ApiController extends CommonController
 
             }
         }
-        //dd($examData);
+
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData

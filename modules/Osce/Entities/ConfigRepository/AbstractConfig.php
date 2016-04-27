@@ -10,7 +10,7 @@ namespace Modules\Osce\Entities\ConfigRepository;
 
 use Illuminate\Container\Container as App;
 
-abstract class AbstractConfig implements ConfigInterface
+abstract class AbstractConfig
 {
     private $app;
 
