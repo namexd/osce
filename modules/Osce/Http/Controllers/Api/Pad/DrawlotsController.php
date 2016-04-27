@@ -794,10 +794,7 @@ class DrawlotsController extends CommonController
 
                 //随机获取一个考站的id
                 $ranStationId = $this->ranStationSelect($roomId, $examId, $studentids,$examScreeingId);
-                if(is_null($ranStationId)){
-                    throw new \Exception('当前没有空闲考站，请等待！！',3601);
 
-                }
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id', $student->id)
                     ->where('room_id', $roomId)
@@ -1035,7 +1032,9 @@ class DrawlotsController extends CommonController
             ->get();
         //$stationIds为还没有被使用的考站
         $stationIds = array_diff($stationIds->pluck('station_id')->toArray(), $stationIdeds);
-        dump($stationIds);
+        if(is_null($stationIds)){
+            throw new \Exception('当前没有空闲考站，请等待！！',3601);
+        }
         //$ranStationId为随机选择的一个考站
         $ranStationId = $stationIds[array_rand($stationIds)];
 
