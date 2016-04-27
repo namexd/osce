@@ -43,7 +43,6 @@ use Modules\Osce\Http\Controllers\Admin\Branch\AnswerController;
 use Modules\Osce\Entities\StationTeacher;
 use Illuminate\Support\Facades\Redis;
 use Modules\Osce\Http\Controllers\Api\StudentWatchController;
-
 class ApiController extends CommonController
 {
     private $name;
@@ -435,6 +434,36 @@ class ApiController extends CommonController
             if($roleType == 1){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($roleType == 2){
+                $user = Auth::user();
+                $student_id = Student::where('user_id','=',$user->id)->orderBy('created_at','desc')->first();
+                $examId = Exam::where('status','=',1)->first();
+
+
+                $studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id->id)->where('exam_queue.exam_id','=',$examId->id)->leftjoin('station_teacher',function($join){
+                    $join->on('station_teacher.exam_id','=','exam_queue.exam_id');
+                })->get();
+                dd($studentInfo);
+
+          /*      echo $examId->id.'='.$student_id->id;
+
+                $studentInfo = ExamQueue::where('student_id','=',$student_id->id)->where('exam_id','=',$examId->id)->first();
+
+                dd($studentInfo);
+
+                $station_teacher = StationTeacher::where('exam_id',$studentInfo->exam_id)->get();*/
+
+                dd($station_teacher);
+
+
+
+
+
+                dd($studentInfo);
+//                $request['uid'] = ;//nfc_code;
+//                $request['room_id'] = ;
+//                $request['teacher_id'] = ;
+                $DrawlotsController = new DrawlotsController();
+                $DrawlotsController->getStation();
                 return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
             }else{
                 return redirect()->back()->withErrors('你没有权限！');
