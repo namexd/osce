@@ -810,10 +810,12 @@ class InvigilatePadController extends CommonController
             //拿到阶段序号
             $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
 
-            echo 1;
+            dd($gradationOrder);
             //拿到属于该场考试，该场阶段所对应的所有场次id
-            $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
-            dd($examscreeningId);
+            $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get();
+            if(!is_null($examscreeningId)){
+                $examscreeningId = $examscreeningId->pluck('id');
+            }
 //           }
             $ExamQueueModel = new ExamQueue();
 
