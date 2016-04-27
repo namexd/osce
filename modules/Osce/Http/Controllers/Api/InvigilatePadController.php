@@ -805,7 +805,7 @@ class InvigilatePadController extends CommonController
             
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
 
-
+            echo 1;
 
             if ($AlterResult) {
                 $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
@@ -818,29 +818,29 @@ class InvigilatePadController extends CommonController
                     ->where('station_id', '=', $stationId)
                     ->where('status','=',2)
                     ->first();
-
+                echo 2;
                 $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$examQueue->exam_screening_id)
                     ->where('student_id','=',$examQueue->student_id)->first();
 
                 $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
-
+                echo 3;
                 $studentWatchController = new StudentWatchController();
                 $request['nfc_code'] = $watchData->code;
 
                 //拿到阶段序号
                 $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
-
+                echo 4;
                 //拿到属于该场考试，该场阶段所对应的所有场次id
                 $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
 
                 $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
-
+                echo 5;
                 $studentModel = new Student();
                 $exam = Exam::doingExam();
                 $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
 
                 $station=Station::where('id',$stationId)->first();
-
+                echo 6;
                 if($station->type==3) {//理论考试
                     $publishMessage->avator = asset($publishMessage->avator);
                     $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
@@ -849,6 +849,7 @@ class InvigilatePadController extends CommonController
                 return response()->json(
                     $this->success_data(['start_time'=>$date,'student_id'=>$studentId], 1, '开始考试成功')
                 );
+                dd(7);
             }
             return response()->json(
                 $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
