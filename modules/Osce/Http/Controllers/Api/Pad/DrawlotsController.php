@@ -97,7 +97,9 @@ class DrawlotsController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExaminee(Request $request)
-    {dd($_SERVER['SERVER_NAME']);
+    {
+        dd($_SERVER);
+        dd($_SERVER['SERVER_NAME']);
         $this->validate($request, [
             'id' => 'required|integer',
             'exam_id' => 'sometimes|integer'
