@@ -188,12 +188,12 @@ class InvigilatePadController extends CommonController
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return response()->json(
                     $this->success_data($studentData['nextTester'], 102, '验证完成')
                 );
             } else {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
                 throw new \Exception('学生信息查询失败', -2);
             }
         } catch (\Exception $ex) {
@@ -246,10 +246,10 @@ class InvigilatePadController extends CommonController
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 //                dump($this->success_data($studentData['nextTester']));
 
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 102, '验证完成')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 102, '验证完成')));
                 return $studentData['nextTester'];
             } else {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
                 return [];
             }
 
@@ -533,6 +533,7 @@ class InvigilatePadController extends CommonController
             return response()->json($this->success_data([$result->id]));
 
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
@@ -609,6 +610,7 @@ class InvigilatePadController extends CommonController
 
             return response()->json($this->success_data([$result->id]));
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
@@ -645,6 +647,7 @@ class InvigilatePadController extends CommonController
 
             return response()->json($this->success_data(self::storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor)));
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
@@ -764,7 +767,7 @@ class InvigilatePadController extends CommonController
      */
     public function getStartExam(Request $request)
     {
-        try {
+       // try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
                 'station_id' => 'required|integer'
@@ -800,16 +803,32 @@ class InvigilatePadController extends CommonController
 //            ];
 //           if(!ExamResult::create($ExamResultData)){
 //               throw new \Exception('成绩创建失败',-106);
+            $exam = Exam::where('status', '=', 1)->first();
+            $examQueue = ExamQueue::where('exam_id',$exam->id)
+                ->where('student_id', '=', $studentId)
+                ->where('station_id', '=', $stationId)
+                ->whereIn('status', [0,1,2])
+                ->first();
+
+            //拿到阶段序号
+            $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
+
+
+            //拿到属于该场考试，该场阶段所对应的所有场次id
+            $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get();
+            if(!is_null($examscreeningId)){
+                $examscreeningId = $examscreeningId->pluck('id');
+            }
 //           }
             $ExamQueueModel = new ExamQueue();
-            
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
+
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId);
 
 
 
             if ($AlterResult) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
-                
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
+
                 //调用向腕表推送消息的方法
 
                 $exam = Exam::where('status', '=', 1)->first();
@@ -843,7 +862,7 @@ class InvigilatePadController extends CommonController
 
                 if($station->type==3) {//理论考试
                     $publishMessage->avator = asset($publishMessage->avator);
-                    $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
+                    $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
                 }
 
                 return response()->json(
@@ -853,10 +872,10 @@ class InvigilatePadController extends CommonController
             return response()->json(
                 $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
             );
-        } catch (\Exception $ex) {
-            \Log::alert($ex->getMessage() . '');
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            \Log::alert($ex->getMessage() . '');
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
@@ -1520,6 +1539,7 @@ class InvigilatePadController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postLivePhotoUpload(Request $request){
+        $studentId = $request->studentId;
         $data   =   [
             'path'  =>  '',
             'name'=>''
@@ -1555,6 +1575,9 @@ class InvigilatePadController extends CommonController
                     'name'=>$oldfileName,
                 ];
                 $info   = '上传成功';
+
+                //保存考试临时头像
+                $addStudentPhoto = Student::where('id','=',$studentId)->update();
             }
         }
         return json_encode(

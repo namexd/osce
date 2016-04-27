@@ -21,7 +21,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
     private $_S_Count;
 
     /**
-     * 返回SmartArrange的类名
+     * 返回具体的实现类的类名
      * @return string
      * @author Jiangzhiheng
      * @time 2016-04-13 11:45
@@ -45,7 +45,6 @@ class SmartArrangeRepository extends AbstractSmartArrange
         try {
             //将考试初始化进去
             $this->model->exam = $exam;
-
 
             $this->checkDataBase($this->model->exam); //检查临时表中是否有数据，如果有，就删除之
 
@@ -91,15 +90,13 @@ class SmartArrangeRepository extends AbstractSmartArrange
 
                     $this->model->screenPlan($screen);
                 }
-                //判断是否需要报错
-//                    $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id',
-//                    $exam->id)->first();  //通过查询数据表中是否有没有写入end_dt的数据
 
                 if (count($this->model->getStudents()) != 0 || count($this->model->getWaitStudents()) != 0) {
-                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
+//                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
                     throw new \Exception('人数太多，所设时间无法完成考试', -99);
                 }
             }
+
             return $this->output($exam);
         } catch (\Exception $ex) {
             if (ExamPlanRecord::where('exam_id', $exam->id)->count()) {
@@ -162,14 +159,21 @@ class SmartArrangeRepository extends AbstractSmartArrange
         }
         return $timeData;
     }
-    
+
+    /**
+     * 将数据保存
+     * @param $exam
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-11 17:20
+     */
     function store($exam)
     {
         // TODO: Implement store() method.
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
         try {
-            $this->model->changeEffect($exam);
+            $this->changeEffect($exam);
 
             $data = ExamPlanRecord::where('exam_id', $exam->id)->get();
 
@@ -201,13 +205,13 @@ class SmartArrangeRepository extends AbstractSmartArrange
             }
 
             //将考试使用了的实体的effected都变成1
-            $this->model->changeEffect($exam, $attributes);
+            $this->changeEffect($exam, $attributes);
 
             //将数据写入stationStatus
-            $this->model->stationStatus($exam);
+            $this->stationStatus($exam);
 
             //将数据保存到examOrder
-            $this->model->saveStudentOrder($exam);
+            $this->saveStudentOrder($exam);
             $connection->commit();
         } catch (\Exception $ex) {
             $connection->rollBack();
