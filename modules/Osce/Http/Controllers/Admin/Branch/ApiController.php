@@ -435,7 +435,7 @@ class ApiController extends CommonController
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($roleType == 2){
                 $user = Auth::user();
-                $student_id = Student::where('user_id','=',$user->id)->first()->pluck('id');
+                $student_id = Student::where('user_id','=',$user->id)->orderBy('created_at','desc')->first()->pluck('id');
                 $examId = Exam::where('status','=',1)->first();
                 echo $student_id.'='.$examId->id;exit;
                 $studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id)->where('exam_queue.exam_id','=',$examId->id)->get();
