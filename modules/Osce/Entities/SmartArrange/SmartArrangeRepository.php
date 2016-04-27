@@ -92,7 +92,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
                 }
 
                 if (count($this->model->getStudents()) != 0 || count($this->model->getWaitStudents()) != 0) {
-                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
+//                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
                     throw new \Exception('人数太多，所设时间无法完成考试', -99);
                 }
             }
@@ -173,7 +173,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
         try {
-            $this->model->changeEffect($exam);
+            $this->changeEffect($exam);
 
             $data = ExamPlanRecord::where('exam_id', $exam->id)->get();
 
@@ -205,13 +205,13 @@ class SmartArrangeRepository extends AbstractSmartArrange
             }
 
             //将考试使用了的实体的effected都变成1
-            $this->model->changeEffect($exam, $attributes);
+            $this->changeEffect($exam, $attributes);
 
             //将数据写入stationStatus
-            $this->model->stationStatus($exam);
+            $this->stationStatus($exam);
 
             //将数据保存到examOrder
-            $this->model->saveStudentOrder($exam);
+            $this->saveStudentOrder($exam);
             $connection->commit();
         } catch (\Exception $ex) {
             $connection->rollBack();
