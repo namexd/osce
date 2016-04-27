@@ -439,17 +439,18 @@ class ApiController extends CommonController
                 $examId = Exam::where('status','=',1)->first();
 
 
-                /*$studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id->id)->where('exam_queue.exam_id','=',$examId->id)->leftjoin('station_teacher',function($join){
+                $studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id->id)->where('exam_queue.exam_id','=',$examId->id)->leftjoin('station_teacher',function($join){
                     $join->on('station_teacher.exam_id','=','exam_queue.exam_id');
-                })->get();*/
+                })->get();
+                dd($studentInfo);
 
-                echo $examId->id.'='.$student_id->id;
+          /*      echo $examId->id.'='.$student_id->id;
 
                 $studentInfo = ExamQueue::where('student_id','=',$student_id->id)->where('exam_id','=',$examId->id)->first();
 
                 dd($studentInfo);
 
-                $station_teacher = StationTeacher::where('exam_id',$studentInfo->exam_id)->get();
+                $station_teacher = StationTeacher::where('exam_id',$studentInfo->exam_id)->get();*/
 
                 dd($station_teacher);
 
