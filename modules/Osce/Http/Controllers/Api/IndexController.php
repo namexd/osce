@@ -1122,7 +1122,7 @@ class IndexController extends CommonController
         $lastDt = strtotime($beginDt) + 10;
         $time   = date('Y-m-d H:i:s', $lastDt);
         //修改该学生考试开始时间
-        $result = ExamOrder::where('exam_id', $exam_id)->where('student_id', $studentId)
+        $result = ExamOrder::where('exam_id', $exam_id)->where('student_id', $studentId)->where('exam_screening_id',$screen_id)
                            ->update(['begin_dt' => $time, 'status' => 4]);
         if ($result) {
             return \Response::json(array('code' => 1));
