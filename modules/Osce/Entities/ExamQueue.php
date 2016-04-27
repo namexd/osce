@@ -453,7 +453,7 @@ class ExamQueue extends CommonModel
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
                 ->where('exam_id', '=', $exam->id)
                 ->where('station_id', '=', $stationId)
-                ->whereIn('exam_screening_id', '=', $examscreeningId)
+                ->whereIn('exam_screening_id',$examscreeningId)
                 ->whereIn('status', [0,1,2])
                 ->first();
             //dd($examQueue);
@@ -982,7 +982,7 @@ class ExamQueue extends CommonModel
             $exam->on('exam.id','=','exam_queue.exam_id');
         })->leftjoin('station',function($exam){
             $exam->on('station.id','=','exam_queue.station_id');
-        })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id')->get();
+        })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id','station.paper_id')->get();
 
         return $builder;
     }

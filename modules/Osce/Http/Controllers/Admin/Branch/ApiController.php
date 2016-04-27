@@ -585,16 +585,16 @@ class ApiController extends CommonController
 
 
             foreach($examing as $key=>$v){
-                    if(!$v['station_id']){
-                        $station_id = ExamStation::where('exam_id','=',$v['id'])->first()->station_id;
-                    }
-                    $station = !empty($v['station_id'])?$v['station_id']:@$station_id;
+//                    if(!$v['station_id']){
+//                        $station_id = ExamStation::where('exam_id','=',$v['id'])->first()->station_id;
+//                    }
+                    $station = $v['station_id'];
                     $stationTeacher = $StationTeacher->where('station_id','=',$station)->first();
-                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
+//                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
                     $examData[$key]['station_id'] = $station;
                     $examData[$key]['teacher_id'] = @$stationTeacher->user_id;
                     $examData[$key]['student_id'] = @$userInfo->id;
-                    $examData[$key]['paper_id'] = @$examPaper->exam_paper_id;
+                    $examData[$key]['paper_id'] = $v['paper_id'];
                     $examData[$key]['exam_id'] = $v['id'];
                     $examData[$key]['exam_name'] = $v['name'];
                     $examData[$key]['status'] = $v['status'];

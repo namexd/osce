@@ -804,7 +804,7 @@ class InvigilatePadController extends CommonController
             $ExamQueueModel = new ExamQueue();
 
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
-            dd(111);
+
 
 
             if ($AlterResult) {
