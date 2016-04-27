@@ -510,13 +510,34 @@ class ExamQueue extends CommonModel
                             throw new \Exception('当前队列开始时间不正确', -104);
                         }
                     }
-                    //考试排序模式
+
+                   //考试排序模式
                     if ($exam->sequence_mode == 2) {
                         $stationTime = $item->station->mins ? $item->station->mins : 0;
                     } else {
                         //这是已考场安排的需拿到room_id
                         $stationTime = $this->getRoomStationMaxTime($item->room_id);
                     }
+
+                 /*   if($station->type==3){//理论站
+                        $paper=ExamPaper::where('id',$station->paper_id)->first();
+                        $station->mins = $paper->length;
+                    }else {
+                        $ExamDraft = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                            ->where('exam_draft_flow.exam_id', '=', $exam->id)
+                            ->where('exam_draft.station_id', '=', $station->id)
+                            ->first();
+
+                        if (!is_null($ExamDraft)) {
+                            $subject = Subject::where('id',$ExamDraft->subject_id)->first();
+                        }
+                        //将考场的id封装进去
+                        if (!is_null($subject)) {
+                            $station->mins = $subject->mins;
+                        }
+                    }*/
+
+
 
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         if ($item->status == 2) {
