@@ -89,21 +89,26 @@ class Poll extends AbstractCate implements CateInterface
 //        if (count($tempArrays) == 0) {
 //            $arrays = $this->beginStudents($entity);
 //        }
+        //声明两个变量
         $arrays = [];
         $tempStudents = [];
 //        $tempStudents = $this->prevSerial($screen, $entity->serialnumber);
 //
 //        $thisStudents = $this->thisSerial($screen, $entity->serialnumber);
 
+        //如果当前的流程号不等于实体的流程号，就将学生属性置为空
         if ($this->serNum != $entity->serialnumber) {
             $this->students = null;
         }
 
+        //如果学生属性置为空，那么就分配考生
         if (is_null($this->students)) {
             $this->students = $this->pollStudents($screen, $entity, count($this->serialnumber));
         }
 
+        //循环，找到合适的学生
         for ($i = 0; $i < 100; $i++) {
+            //直接将学生踢出来
             $a = array_shift($this->students);
             if (!is_null($a)) {
                 $tempStudents[] = $a;
@@ -114,18 +119,20 @@ class Poll extends AbstractCate implements CateInterface
             }
         }
 
-
+        //如果有数据，就将查找到的id转为学生实体
         if (count($tempStudents) != 0) {
             foreach ($tempStudents as $tempStudent) {
                 $arrays[] = Student::find($tempStudent);
                 if (count($arrays) == $entity->needNum) {
-                    $this->serNum = $entity->serialnumber;
+                    $this->serNum = $entity->serialnumber; //将serNum置为当前实体的
                     return $arrays;
                 }
             }
         }
 
+        //将serNum置为当前实体的
         $this->serNum = $entity->serialnumber;
+        //如果没找到，就直接返回空数组
         return $arrays;
 
 //        return $this->testingStudents($this->exam, $screen, $arrays);
