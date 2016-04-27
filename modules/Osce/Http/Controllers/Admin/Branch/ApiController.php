@@ -588,7 +588,7 @@ class ApiController extends CommonController
             }
 
 
-            dd($examing);
+            //dd($examing);
             //整理考试数据
             $examData = array();
             $StationTeacher = new StationTeacher();
