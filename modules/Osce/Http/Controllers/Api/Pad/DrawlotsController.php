@@ -653,8 +653,8 @@ class DrawlotsController extends CommonController
                 $exam_screening_id=$roomMsg_two->id;
             }
             //根据id获取考站信息
-        dd($examId,$exam_screening_id);
-            $stationTeacher = StationTeacher::where('user_id', $id)->where('exam_id', $exam->id)->where('exam_screening_id',$exam_screening_id)->first();
+
+            $stationTeacher = StationTeacher::where('user_id', $id)->where('exam_id', $exam->id)->first();
 
             if (is_null($stationTeacher)) {
                 throw new \Exception('当前老师没有考试！', 4000);
