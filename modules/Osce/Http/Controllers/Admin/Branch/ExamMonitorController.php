@@ -113,6 +113,8 @@ class ExamMonitorController  extends CommonController
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
+
+    /*插入缺考学生*/
     private function getAbsentStudent($studentId, $examId, $screen_id)
     {
         $status = ExamOrder::where('student_id', $studentId)->where('exam_screening_id', $screen_id)
@@ -121,7 +123,6 @@ class ExamMonitorController  extends CommonController
             $result = ExamOrder::where('student_id', $studentId)->where('exam_screening_id', $screen_id)
                 ->where('exam_id',$examId)->update(['status'=>3]);
             if($result){
-                // $screen_id=ExamScreening::where('exam_id',$examId)->where('status',1)->orderBy('begin_dt')->first()->id;
                 $result = ExamAbsent::create([
                     'student_id'        => $studentId,
                     'exam_id'           => $examId,

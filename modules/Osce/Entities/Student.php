@@ -503,7 +503,7 @@ class Student extends CommonModel
                 ->where('exam_queue.station_id', '=', $stationId)
                 ->where('exam_queue.exam_id', '=', $exam->id)
                 ->where('station_teacher.exam_id', $exam->id)
-                ->where('exam_queue.status', 1)
+                ->where('exam_queue.status', [1, 2])
                 ->where('exam_queue.blocking', 1)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->orderBy('exam_queue.begin_dt', 'asc')
@@ -717,7 +717,7 @@ class Student extends CommonModel
             'student.mobile as mobile',
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
-        ])->orderBy('student.id')->paginate(100);
+        ])->orderBy('student.id')->paginate(100);dd(date('Y-m-d H:i:s',1461740372));
        // $queries = \DB::connection('osce_mis')->getQueryLog();
         //dd($builder->toArray());
         return $builder;
