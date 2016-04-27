@@ -764,7 +764,7 @@ class InvigilatePadController extends CommonController
      */
     public function getStartExam(Request $request)
     {
-        try {
+       // try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
                 'station_id' => 'required|integer'
@@ -800,16 +800,32 @@ class InvigilatePadController extends CommonController
 //            ];
 //           if(!ExamResult::create($ExamResultData)){
 //               throw new \Exception('成绩创建失败',-106);
+            $exam = Exam::where('status', '=', 1)->first();
+            $examQueue = ExamQueue::where('exam_id',$exam->id)
+                ->where('student_id', '=', $studentId)
+                ->where('station_id', '=', $stationId)
+                ->whereIn('status', [1,2])
+                ->first();
+
+            //拿到阶段序号
+            $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
+
+
+            //拿到属于该场考试，该场阶段所对应的所有场次id
+            $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get();
+            if(!is_null($examscreeningId)){
+                $examscreeningId = $examscreeningId->pluck('id');
+            }
 //           }
             $ExamQueueModel = new ExamQueue();
-            
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
+
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId);
 
 
 
             if ($AlterResult) {
                 $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
-                
+
                 //调用向腕表推送消息的方法
 
                 $exam = Exam::where('status', '=', 1)->first();
@@ -853,10 +869,10 @@ class InvigilatePadController extends CommonController
             return response()->json(
                 $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
             );
-        } catch (\Exception $ex) {
-            \Log::alert($ex->getMessage() . '');
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            \Log::alert($ex->getMessage() . '');
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
