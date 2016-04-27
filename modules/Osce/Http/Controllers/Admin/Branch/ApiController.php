@@ -437,6 +437,7 @@ class ApiController extends CommonController
                 $user = Auth::user();
                 $student_id = Student::where('user_id','=',$user->id)->orderBy('created_at','desc')->first();
                 $examId = Exam::where('status','=',1)->first();
+                echo $examId->id;
 
                 $studentInfo = ExamQueue::where('exam_queue.student_id','=',$student_id->id)->where('exam_queue.exam_id','=',$examId->id)->leftjoin('station_teacher',function($join){
                     $join->on('station_teacher.exam_id','=','exam_queue.exam_id');
