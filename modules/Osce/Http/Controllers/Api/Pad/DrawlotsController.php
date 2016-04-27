@@ -127,12 +127,14 @@ class DrawlotsController extends CommonController
             }elseif($roomMsg_two){
                 $exam_screening_id=$roomMsg_two->id;
             }
-            $stationId=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->pluck('station_id');
+            $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
             $stationList = StationTeacher::where('exam_id', '=', $exam->id)
-            ->where('user_id', '=', $id)
-            ->get()->pluck('station_id')->toArray();
-            if(!in_array($stationId,$stationList)||is_null($stationList)){
-                throw new \Exception('你没有参加此次考试');
+                ->where('user_id', '=', $id)
+                ->get()->pluck('station_id')->toArray();
+            $arr=array_intersect ($stationLists,$stationList);
+            $stationId=array_pop($arr);
+            if(is_null($stationId)){
+                throw new \Exception('当前老师没有考试！', 4000);
             }
 
 
@@ -221,12 +223,14 @@ class DrawlotsController extends CommonController
             }elseif($roomMsg_two){
                 $exam_screening_id=$roomMsg_two->id;
             }
-            $stationId=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->pluck('station_id');
+            $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
             $stationList = StationTeacher::where('exam_id', '=', $exam->id)
                 ->where('user_id', '=', $id)
                 ->get()->pluck('station_id')->toArray();
-            if(!in_array($stationId,$stationList)||is_null($stationList)){
-                throw new \Exception('你没有参加此次考试');
+            $arr=array_intersect ($stationLists,$stationList);
+            $stationId=array_pop($arr);
+            if(is_null($stationId)){
+                throw new \Exception('当前老师没有考试！', 4000);
             }
 
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
@@ -655,14 +659,18 @@ class DrawlotsController extends CommonController
             }
             //根据id获取考站信息
 
-            $stationId=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->pluck('station_id');
+            $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
             $stationList = StationTeacher::where('exam_id', '=', $exam->id)
                 ->where('user_id', '=', $id)
                 ->get()->pluck('station_id')->toArray();
-            if(!in_array($stationId,$stationList)||is_null($stationList)){
-                throw new \Exception('当前老师没有考试！', 4000);
-            }
+                $arr=array_intersect ($stationLists,$stationList);
+                $stationId=array_pop($arr);
+                if(is_null($stationId)){
+                    throw new \Exception('当前老师没有考试！', 4000);
+                }
+
             $station =Station::where('id',$stationId)->first();
+            //$station =$stationList->station;
             //拿到房间
             $room = $this->getRoomId($id, $exam->id);
 
