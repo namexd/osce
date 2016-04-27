@@ -398,8 +398,7 @@ class Student extends CommonModel
             //注册 新用户
             $password = '123456';
             $user = $this->registerUser($userData, $password);
-            //$this ->sendRegisterEms($userData['mobile'], $password);
-//            $this ->sendRegisterEms($userData['mobile'], $password);
+            $this ->sendRegisterEms($userData['mobile'], $password);
             //给用户分配角色
             $this->addUserRoles($user, $role_id);
         }

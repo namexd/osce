@@ -31,10 +31,42 @@ class Common{
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public static function sendSms($mobile,$message){
-        $sender=\App::make('messages.sms');
-        $sender->send($mobile,$message);
+    public static function sendSms($mobile,$message,$access = '',$type = 'msg')
+    {
+//        $sender=\App::make('messages.sms');
+//        $sender->send($mobile,$message);
 
+        //将要发送的信息，写入数据库中 TODO：zhoufuxiang 2016-04-27
+        $mobile  = json_encode($mobile);
+        $message = json_encode($message);
+        $access  = json_encode($access);        //保存域名之类（第三方发送认证参数）
+
+        $datas = [
+            'to'            => $mobile,
+            'content'       => $message,
+            'decode_type'   => $type,               //默认为短信（短信：msg，邮件：email, 微信：wechat）
+            'access'        => $access,
+            'status'        => 0,
+        ];
+        $messageModel = new \Modules\Osce\Entities\Message();
+        $result = $messageModel->create($datas);
+        if (!$result){
+            throw new \Exception('信息写入失败！');
+        }
+    }
+
+    /**
+     * 一次性写入多条信息
+     * @param array $data
+     * @throws \Exception
+     */
+    public static function sendManySms(array $data)
+    {
+        $messageModel = new \Modules\Osce\Entities\Message();
+        $result = $messageModel->insert($data);
+        if (!$result){
+            throw new \Exception('信息写入失败！');
+        }
     }
 
     /**

@@ -109,12 +109,12 @@ class IndexController extends CommonController
         if (is_null($watch)) {
             return \Response::json(array('code' => 3));     //数据库无腕表
         }
-        $id         = $watch->id;           //获取腕表ID
-        $status     = $watch->status;       //获取腕表状态
-        //查询学生签到记录
-        $watchLog   = WatchLog::where('watch_id', '=', $id)->orderBy('id','DESC')->first();
+        $id       = $watch->id;           //获取腕表ID
+        $status   = $watch->status;       //获取腕表状态
+        //查询使用记录
+        $watchLog = WatchLog::where('watch_id', '=', $id)->orderBy('id','DESC')->first();
         //组合反馈数据
-        $data       = [
+        $data = [
             'student_id'=> '',
             'status'    => $status
         ];
