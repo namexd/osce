@@ -612,7 +612,7 @@ class DrawlotsController extends CommonController
             $request['teacher_id']=$teacherId;
             $inv=new InvigilatePadController();
             $inv->getAuthentication_arr($request);//当前考生推送
-           dd($inv->getAuthentication_arr($request));
+       
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
@@ -653,6 +653,7 @@ class DrawlotsController extends CommonController
                 $exam_screening_id=$roomMsg_two->id;
             }
             //根据id获取考站信息
+        dd($examId,$exam_screening_id);
             $stationTeacher = StationTeacher::where('user_id', $id)->where('exam_id', $exam->id)->where('exam_screening_id',$exam_screening_id)->first();
 
             if (is_null($stationTeacher)) {
