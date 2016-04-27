@@ -439,7 +439,7 @@ class ExamQueue extends CommonModel
      * @author  zhouqiang
      */
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId)
     {
         //开启事务
         $connection = DB::connection($this->connection);
@@ -453,6 +453,7 @@ class ExamQueue extends CommonModel
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
                 ->where('exam_id', '=', $exam->id)
                 ->where('station_id', '=', $stationId)
+                ->whereIn('exam_screening_id', '=', $examscreeningId)
                 ->whereIn('status', [0,1,2])
                 ->first();
             //dd($examQueue);
@@ -479,6 +480,7 @@ class ExamQueue extends CommonModel
             if ($examQueue->save()) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
                     ->whereIn('exam_queue.status', [0,1, 2])
+                    ->whereIn('exam_screening_id', '=', $examscreeningId)
                     ->orderBy('begin_dt', 'asc')
                     ->get();
                 $nowQueue = null;
@@ -495,6 +497,7 @@ class ExamQueue extends CommonModel
                 //拿到状态为三的队列
                 $endQueue =ExamQueue::where('exam_id','=',$exam->id)
                     ->where('student_id', '=', $studentId)
+                    ->whereIn('exam_screening_id', '=', $examscreeningId)
                     ->where('status','=',3)
                     ->get();
 
