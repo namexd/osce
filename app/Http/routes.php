@@ -29,7 +29,7 @@ Route::group(['prefix' => "api/1.0/public",'middleware' => ['cors']], function()
             $flag=$request->input('watch');
             if(empty($flag)) {//解决腕表与pad用户名相同
                 $redis = Redis::connection('message');
-                $redis->publish(md5($_SERVER['SERVER_NAME']) . 'pad_message', json_encode(['code' => 100, 'message' => '登录成功', 'data' => $userEnter]));
+                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode(['code' => 100, 'message' => '登录成功', 'data' => $userEnter]));
             }
              return $userEnter;
         }catch (\Exception $ex) {

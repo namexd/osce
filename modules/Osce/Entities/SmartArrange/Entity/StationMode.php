@@ -35,6 +35,8 @@ class StationMode extends AbstractEntity implements EntityInterface
         $entities = $this->mergeRoom($entities, 'station_id');
         //加上序号
         $entities = $this->setSerialnumber($entities);
+        //加上是否为大站的第一个站
+        $entities = $this->setMinSerialnumber($entities);
         //为考站设定needNum
         foreach ($entities as &$entity) {
             $entity->needNum = 1;

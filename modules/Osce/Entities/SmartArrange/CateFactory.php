@@ -21,7 +21,6 @@ class CateFactory
     }
 
     static function getCate($exam, $type) {
-
         switch ($type) {
             case 1:
                 return new Random($exam);

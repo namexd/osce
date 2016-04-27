@@ -503,7 +503,7 @@ class Student extends CommonModel
                 ->where('exam_queue.station_id', '=', $stationId)
                 ->where('exam_queue.exam_id', '=', $exam->id)
                 ->where('station_teacher.exam_id', $exam->id)
-                ->whereIn('exam_queue.status', [1, 2])
+                ->where('exam_queue.status', 1)
                 ->where('exam_queue.blocking', 1)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->orderBy('exam_queue.begin_dt', 'asc')
@@ -711,7 +711,7 @@ class Student extends CommonModel
                 $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
             }*/
         }
-        $builder = $builder->select([
+        $builder = $builder->whereRaw('unix_timestamp(exam_order.begin_dt) > ?',[strtotime(date('Y-m-d H:i:s'))])->select([
             'student.id as id',
             'student.name as name',
             'student.idcard as idcard',
