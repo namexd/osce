@@ -612,6 +612,7 @@ class DrawlotsController extends CommonController
             $request['teacher_id']=$teacherId;
             $inv=new InvigilatePadController();
             $inv->getAuthentication_arr($request);//当前考生推送
+           dd($inv->getAuthentication_arr($request));
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
