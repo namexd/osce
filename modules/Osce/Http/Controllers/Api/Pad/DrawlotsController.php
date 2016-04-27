@@ -680,7 +680,7 @@ class DrawlotsController extends CommonController
 
             //判断其考站或考场是否在该次考试中使用
             $check = $this->checkEffected($exam, $room, $station);
-        dd($check);
+
             Common::valueIsNull($check, -785, '当前考站或考场没有安排在此考试中');
 
             //将考场名字和考站名字封装起来
