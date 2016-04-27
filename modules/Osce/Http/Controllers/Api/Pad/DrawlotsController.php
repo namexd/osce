@@ -795,6 +795,7 @@ class DrawlotsController extends CommonController
                 //随机获取一个考站的id
                 $ranStationId = $this->ranStationSelect($roomId, $examId, $studentids,$examScreeingId);
 
+
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id', $student->id)
                     ->where('room_id', $roomId)
@@ -1030,6 +1031,7 @@ class DrawlotsController extends CommonController
                 'exam_draft.station_id as station_id'
             )
             ->get();
+        dump($stationIds,$stationIdeds);
         //$stationIds为还没有被使用的考站
         $stationIds = array_diff($stationIds->pluck('station_id')->toArray(), $stationIdeds);
         //$ranStationId为随机选择的一个考站
