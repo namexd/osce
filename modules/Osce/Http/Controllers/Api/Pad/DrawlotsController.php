@@ -536,7 +536,6 @@ class DrawlotsController extends CommonController
             }
 
             //如果考生走错了房间
-//        dd($roomId, $watchLog->student_id, $examId);
             if (ExamQueue::where('room_id', '=', $roomId)
                 ->where('student_id', '=', $watchLog->student_id)
                 ->where('exam_id', '=', $examId)->get()
@@ -605,29 +604,12 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             Common::valueIsNull($exam, -333);
-            //当前场次
-            $examScreen = new ExamScreening();
-            $roomMsg = $examScreen->getExamingScreening($exam->id);
-            $roomMsg_two = $examScreen->getNearestScreening($exam->id);
-            if ($roomMsg) {
-                $exam_screening_id = $roomMsg->id;
-            } elseif ($roomMsg_two) {
-                $exam_screening_id = $roomMsg_two->id;
-            }
-            //根据id获取考站信息
-
-            $stationLists = ExamStationStatus::where('exam_screening_id', $exam_screening_id)->get()->pluck('station_id')->toArray();
-            $stationList = StationTeacher::where('exam_id', '=', $exam->id)
-                ->where('user_id', '=', $id)
-                ->get()->pluck('station_id')->toArray();
-            $arr = array_intersect($stationLists, $stationList);
-            $stationId = array_pop($arr);
-            if (is_null($stationId)) {
-                throw new \Exception('当前老师没有考试！', 4000);
-            }
+            //获取当前考试场次
+            $exam_screening_id = $this->getexamScreeing($exam);
+            //拿到当前老师支持的考站
+            $stationId = $this->getTeacherStation($exam_screening_id,$exam,$id);
 
             $station = Station::where('id', $stationId)->first();
-            //$station =$stationList->station;
             //拿到房间
             $room = $this->getRoomId($id, $exam->id);
 
@@ -733,7 +715,6 @@ class DrawlotsController extends CommonController
         try {
             //获取正在考试中的考试
             $examId = $student->exam_id;
-//dd($student, $roomId, $teacherId, $exam);
             $examScreen = new ExamScreening();
             $ExamScreening = $examScreen->getExamingScreening($exam->id);
             if (is_null($ExamScreening)) {
@@ -1115,7 +1096,8 @@ class DrawlotsController extends CommonController
         }
     }
 
-    private function getTeacherStation($exam_screening_id,$exam,$userId){
+    private function getTeacherStation($exam_screening_id,$exam,$userId)
+    {
 
         $redis = Redis::connection('message');
         //拿到当前场次下的考站集合
