@@ -644,7 +644,7 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-        //try {
+        try {
             //获取当前登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
@@ -759,9 +759,9 @@ class DrawlotsController extends CommonController
             }*/
 
             return response()->json($this->success_data($station));
-        /*} catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
-        }*/
+        }
     }
 
     /**
