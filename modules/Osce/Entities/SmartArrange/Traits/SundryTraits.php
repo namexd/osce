@@ -126,16 +126,13 @@ trait SundryTraits
             $prevSerial = $this->thisSerial($screen, $last);
             $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
             $thisNotSerial = $this->thisNotSerial($screen, $entity->serialnumber);
-            $a = array_diff($prevSerial->toArray(), $thisSerial->toArray(), $thisNotSerial->toArray());
-//            if (count($a) != 0) {
-//                dump($a);
-//            }
+            $a = array_diff(array_unique($prevSerial->toArray()), array_unique($thisSerial->toArray()), array_unique($thisNotSerial->toArray()));
             return $a;
         } else {
             $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
             $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
             //求取差集
-            return array_diff($prevSerial->toArray(), $thisSerial->toArray());
+            return array_diff(array_unique($prevSerial->toArray()), array_unique($thisSerial->toArray()));
         }
 
 
