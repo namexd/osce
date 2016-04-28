@@ -293,6 +293,7 @@ class ExamController extends CommonController
      */
     public function postEditExam(Request $request, Exam $examModel, ExamArrangeRepository $examArrangeRepository)
     {
+//        dd($request->all());
         //验证,略过
         $this->validate($request, [
             'exam_id'   => 'required',
@@ -319,8 +320,9 @@ class ExamController extends CommonController
             $timeData = $examModel->handleScreeningTime($examScreeningData, $user);
             $sequenceCate = $request->input('sequence_cate', null);
             $gradationOrder = $request->input('gradation_order', null);
+            $sc = $request->input('sc', null);
 
-            if ($gradationOrder == 1) {
+            if ($gradationOrder == 1 || $sc == 1) {
                 $sequenceCate = $request->input('sequence_cate_1', null);
                 if (is_array($sequenceCate)) {
                     $sequenceCate = head($sequenceCate);
