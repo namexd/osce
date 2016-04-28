@@ -9,6 +9,8 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
+use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Repositories\TestScoreRepositories;
@@ -269,7 +271,13 @@ class TestScoresController  extends CommonController
      */
     public function getSubjectLists(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examid = $request->examid;
-        $datalist = $TestScoreRepositories->getSubjectlist($examid);
+        $datalist = ExamResult::where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
+            $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+        })->leftjoin('station',function($join){
+            $join->on('station.id','=','exam_result.station_id');
+        })->leftjoin('exam_paper',function($join){
+            $join->on('exam_paper.id','=','station.paper_id');
+        })->select('exam_paper.id','exam_paper.name')->get();
         return $this->success_data(['datalist'=>$datalist]);
     }
 
