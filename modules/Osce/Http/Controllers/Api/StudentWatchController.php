@@ -285,23 +285,24 @@ class StudentWatchController extends CommonController
             ->where('student_id', '=', $examQueue->student_id)
             ->where('student_id', '=', $examQueue->exam_id)
             ->groupBy('exam_screening_id')
-            ->get()
-            ->toArray();
+            ->select('exam_screening_id')
+            ->get()->toArray();
 
         //获取计划表里所有的场次
         $studentExamScreeningIdArr = ExamPlan::where('exam_id', '=', $examQueue->exam_id)
-            ->where('student_id', '=', $examQueue->student_id)
+            ->where('student_id', '=', $examQueue->student_id) ->groupBy('exam_screening_id')
             ->select('exam_screening_id')->get()->toArray();
-        dd(count($ExamFinishStatus),count($studentExamScreeningIdArr));
 
+        //查询出考试结果里面所有的场次
+        $examResultScreening = ExamResult::where('student_id', '=', $examQueue->student_id)
+            ->select('exam_screening_id')->get()->toArray();
 
         if (count($ExamFinishStatus) >= count($studentExamScreeningIdArr)) {
-            //查询出考试结果
-            $examResult = ExamResult::where('student_id', '=', $examQueue->student_id)->count();
 
-            if ($examResult >= $ExamFinishStatus) {
+                //判断已考完的场次是否和队列里考完的场次相等
+            if (count($examResultScreening) >= count($ExamFinishStatus)) {
                 $testresultModel = new TestResult();
-                $score = $testresultModel->AcquireExam($examQueue->student_id, $studentExamScreeningIdArr);
+                $score = $testresultModel->AcquireExam($examQueue->student_id, $examResultScreening);
                 $data = [
                     'code' => 6, // 考试结束全部考完（对应界面：显示考试完成，显示总成绩）
                     'title' => '考试完成，最终总成绩',
