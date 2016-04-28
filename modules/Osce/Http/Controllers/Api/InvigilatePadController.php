@@ -1574,10 +1574,11 @@ class InvigilatePadController extends CommonController
                     'path'=>$pathReturn,
                     'name'=>$oldfileName,
                 ];
-                $info   = '上传成功';
+
 
                 //保存考试临时头像
-                $addStudentPhoto = Student::where('id','=',$studentId)->update();
+                $addStudentPhoto = Student::where('id','=',$studentId)->update(['photo'=>$pathReturn]);
+                $info   = '上传成功';
             }
         }
         return json_encode(
