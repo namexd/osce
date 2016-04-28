@@ -1074,7 +1074,7 @@ class InvigilatePadController extends CommonController
 //                    }
 
                 }
-                dd($watchData);
+                //dd($watchData);
                 return response()->json(
                     $this->success_data($watchData,200,'success')
                 );
