@@ -25,7 +25,7 @@ class MessageController extends CommonController
      * @date    2016-04-27  15:00:00
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getSendMessage(Request $request)
+    public function getSendMessage()
     {
         $messageModel = new Message();
         $result = $messageModel->sendMessage();
