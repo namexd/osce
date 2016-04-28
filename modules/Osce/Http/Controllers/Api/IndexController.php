@@ -964,9 +964,9 @@ class IndexController extends CommonController
         try {
 
             //查找exam_screening
-            $stations = $examModel->where('exam.exam_id','=',$exam_id)
+            $stations = $examModel->where('exam.id','=',$exam_id)
                 ->leftjoin('exam_gradation', function ($join) {
-                    $join->on('exam_gradation.exam_id', '=', 'exam.exam_id');
+                    $join->on('exam_gradation.exam_id', '=', 'exam.id');
                 })->leftjoin('exam_draft_flow', function ($join) {
                     $join->on('exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id');
                 })->leftjoin('exam_draft', function ($join) {
