@@ -125,9 +125,9 @@
                                         message: '考试时长不能为空'
                                     },
                                     callback: {
-                                        message: '考试时长必须是20及以上的整数',
+                                        message: '考试时长必须是1及以上的整数',
                                         callback:function(){
-                                            if($("#code").val() >= 20){
+                                            if($("#code").val() >= 1){
                                                 return true;
                                             }else{
                                                 return false;
