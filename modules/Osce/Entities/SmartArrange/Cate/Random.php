@@ -33,26 +33,26 @@ class Random extends AbstractCate implements CateInterface
         //拿到已经考过了的考生和正在考的考生
         $testStudents = $this->randomTestStudent($entity, $screen);
         //申明数组
-        $result = [];
+//        $result = [];
         /*
          * 获取当前实体需要几个考生 $station->needNum
          * 从正在考的学生里找到对应个数的考生
          * 如果该考生已经考过了这个流程，就忽略掉
          */
 
-        $result = $this->studentNum($entity, $screen, $testStudents, $result);
+//        $result = $this->studentNum($entity, $screen, $testStudents, $result);
 
         /*
          * 如果$result中保存的人数少于考站需要的人数，就从侯考区里面补上，并将这些人从侯考区踢掉
          * 再将人从学生池里抽人进入侯考区
          * 直接使用array_shift函数
          */
-        if (count($result) < $entity->needNum) {
-            for ($i = 0; $i <= $entity->needNum - count($result); $i++) {
+        if (count($testStudents) < $entity->needNum) {
+            for ($i = 0; $i <= 100; $i++) {
                 if (count($this->_S_W) > 0) {
                     $thisStudent = array_shift($this->_S_W);
                     if (!is_null($thisStudent)) {
-                        $result[] = $thisStudent;
+                        $testStudents[] = $thisStudent;
                     }
                     if (count($this->_S) > 0) {
                         if (is_array($this->_S)) {
@@ -62,10 +62,16 @@ class Random extends AbstractCate implements CateInterface
                         }
 
                     }
+
+                    if (count($testStudents) == $entity->needNum) {
+                        return $testStudents;
+                    }
                 }
             }
         }
-        return $result;
+
+
+        return $testStudents;
     }
 
     /**
@@ -79,24 +85,28 @@ class Random extends AbstractCate implements CateInterface
      */
     protected function randomTestStudent($entity, $screen)
     {
-        $testingStudents = $this->randomBeginStudent($screen);
+        //获取当前正在考试区的学生
+        $testingStudents = $this->randomBeginStudent($screen, $entity);
+        $testStudents = $this->randomTestingStudent($screen, $entity);
+        $temp = array_diff($testingStudents->toArray(), $testStudents->toArray());
 
-        $waitingStudents = $this->waitingStudentSql($screen);
+
+//        $waitingStudents = $this->waitingStudentSql($screen);
+        /*
+         * 获取本考试实体需要的考生
+         * 也就是没有考过自己序号的考生
+         */
+        $tempStudents = $this->randomNeedStudent($entity, $temp);
 
         $arrays = [];
-        foreach ($waitingStudents as $waitingStudent) {
-            $arrays[] = $waitingStudent->student;
-        }
+//        foreach ($waitingStudents as $waitingStudent) {
+//            $arrays[] = $waitingStudent->student;
+//        }
 
-        if (count($testingStudents) == 0) {
-            $arrays = $this->beginStudents($entity);
-        }
-
-        return $this->testingStudents($this->exam, $screen, $arrays);
-    }
-
-    public function checkDoor()
-    {
-        return false;
+//        if (count($testingStudents) == 0) {
+//            $arrays = $this->beginStudents($entity);
+//        }
+        return $tempStudents;
+//        return $this->testingStudents($this->exam, $screen, $arrays);
     }
 }

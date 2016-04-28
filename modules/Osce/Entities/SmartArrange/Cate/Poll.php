@@ -97,32 +97,34 @@ class Poll extends AbstractCate implements CateInterface
         for ($i = 0; $i < 100; $i++) {
             //直接将学生踢出来
             $a = array_shift($this->students);
-            if (!is_null($a)) {
+            if (!empty($a)) {
                 $tempStudents[] = $a;
             }
 
             if (count($tempStudents) == $entity->needNum) {
-                break;
+//                break;
+                $this->serNum = $entity->serialnumber; //将serNum置为当前实体的
+                return $tempStudents;
             }
         }
 
 
         //如果有数据，就将查找到的id转为学生实体
-        if (count($tempStudents) != 0) {
-            foreach ($tempStudents as $tempStudent) {
-                $arrays[] = $tempStudent;
-//                $arrays[] = Student::find($tempStudent);
-                if (count($arrays) == $entity->needNum) {
-                    $this->serNum = $entity->serialnumber; //将serNum置为当前实体的
-                    return $arrays;
-                }
-            }
-        }
+//        if (count($tempStudents) != 0) {
+//            foreach ($tempStudents as $tempStudent) {
+//                $arrays[] = $tempStudent;
+////                $arrays[] = Student::find($tempStudent);
+//                if (count($arrays) == $entity->needNum) {
+//                    $this->serNum = $entity->serialnumber; //将serNum置为当前实体的
+//                    return $arrays;
+//                }
+//            }
+//        }
 
         //将serNum置为当前实体的
         $this->serNum = $entity->serialnumber;
         //如果没找到，就直接返回空数组
-        return $arrays;
+        return $tempStudents;
     }
 
 }
