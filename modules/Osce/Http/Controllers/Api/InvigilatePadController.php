@@ -809,7 +809,13 @@ class InvigilatePadController extends CommonController
                 ->where('station_id', '=', $stationId)
                 ->whereIn('status', [1,2])
                 ->first();
-            dd($examQueue);
+            if(is_null($examQueue)){
+                $examQueue = ExamQueue::where('exam_id',$exam->id)
+                ->where('student_id', '=', $studentId)
+                ->where('station_id', '=', $stationId)
+                ->whereIn('status', [0,1,2])
+                ->first();
+            }
             //拿到阶段序号
             $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
 
