@@ -960,12 +960,13 @@ class IndexController extends CommonController
         }
         $screen_id    = $examScreening->id;
         $studentModel = new Student();
+        $examOrderModel = new ExamOrder();
         try {
 
             //查找exam_screening
-            $stations = $screenModel->where('exam_screening.exam_id','=',$exam_id)
+            $stations = $examOrderModel->where('exam_order.exam_id','=',$exam_id)
                 ->leftjoin('exam_gradation', function ($join) {
-                    $join->on('exam_gradation.exam_id', '=', 'exam_screening.exam_id');
+                    $join->on('exam_gradation.exam_id', '=', 'exam_order.exam_id');
                 })->leftjoin('exam_draft_flow', function ($join) {
                     $join->on('exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id');
                 })->leftjoin('exam_draft', function ($join) {
