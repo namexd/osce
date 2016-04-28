@@ -26,6 +26,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	Route::get('admin/index/set-exam', ['uses'=>'Admin\IndexController@getSetExam','as'=>'osce.admin.index.getSetExam']);	//设置开考
 	Route::get('/index', 'OsceController@index');
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
+
+		//发送信息
+		Route::get('message/send-message', ['uses'=>'MessageController@getSendMessage', 'as'=>'osce.admin.message.getSendMessage']);	//从数据库读取信息，再发送信息（短信、邮件、微信）
 		//房间
         Route::controller('room','RoomController');
         Route::get('room/room-list', ['uses'=>'RoomController@getRoomList','as'=>'osce.admin.room.getRoomList']);  //列表的着陆页
@@ -151,7 +154,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//考场
 		Route::post('room/delete',['uses'=>'RoomController@postDelete','as'=>'osce.admin.room.postDelete']);
-//		Route::get('room/room-list',['uses'=>'RoomController@getRoomList','as'=>'osce.admin.room.getRoomList']);	//(前面已存在)
 		Route::post('room/name-unique',['uses'=>'RoomController@postNameUnique','as'=>'osce.admin.room.postNameUnique']);	//判断名称是否存在
 
 		//用户管理
@@ -452,6 +454,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/watch-unbundling', 	['uses'=>'InvigilatePadController@getWatchUnbundling','as'=>'osce.api.invigilatepad.getWatchUnbundling']);
 		//解绑腕表
 		Route::get('invigilatepad/watch-unbundling-report', 	['uses'=>'InvigilatePadController@getWatchUnbundlingReport','as'=>'osce.api.invigilatepad.getWatchUnbundlingReport']);
+		//考生现场照片采集
+		Route::get('invigilatepad/live-photo-upload', 	['uses'=>'InvigilatePadController@postLivePhotoUpload','as'=>'osce.api.invigilatepad.postLivePhotoUpload']);
 	});
 });
 

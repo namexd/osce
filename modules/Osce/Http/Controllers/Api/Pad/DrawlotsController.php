@@ -15,6 +15,7 @@ use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\ExamFlowRoom;
@@ -126,20 +127,22 @@ class DrawlotsController extends CommonController
             }elseif($roomMsg_two){
                 $exam_screening_id=$roomMsg_two->id;
             }
-            $station = StationTeacher::where('exam_id', '=', $exam->id)
-                ->where('exam_screening_id',$exam_screening_id)
+            $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
+            $stationList = StationTeacher::where('exam_id', '=', $exam->id)
                 ->where('user_id', '=', $id)
-                ->first();
-            if (is_null($station)) {
-              // $redis->publish('pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试')));
-                throw new \Exception('你没有参加此次考试');
+                ->get()->pluck('station_id')->toArray();
+            $arr=array_intersect ($stationLists,$stationList);
+            $stationId=array_pop($arr);
+            if(is_null($stationId)){
+                throw new \Exception('当前老师没有考试！', 4000);
             }
+
 
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations,$exam_screening_id);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id,$exam_screening_id);
+                $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id,$exam_screening_id);
             } else {
               //  $redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
@@ -205,10 +208,10 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], -50, '今天没有正在进行的考试')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -50, '今天没有正在进行的考试')));
                 throw new \Exception('今天没有正在进行的考试', -50);
             } elseif ($exam->status != 1) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], -777, '当前考试没有进行')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -777, '当前考试没有进行')));
                 throw new \Exception('当前考试没有进行', -777);
             }
 //当前场次
@@ -220,27 +223,29 @@ class DrawlotsController extends CommonController
             }elseif($roomMsg_two){
                 $exam_screening_id=$roomMsg_two->id;
             }
-            $station = StationTeacher::where('exam_id', '=', $exam->id)->where('exam_screening_id',$exam_screening_id)
+            $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
+            $stationList = StationTeacher::where('exam_id', '=', $exam->id)
                 ->where('user_id', '=', $id)
-                ->first();
-            if (is_null($station)) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试')));
-                throw new \Exception('你没有参加此次考试');
+                ->get()->pluck('station_id')->toArray();
+            $arr=array_intersect ($stationLists,$stationList);
+            $stationId=array_pop($arr);
+            if(is_null($stationId)){
+                throw new \Exception('当前老师没有考试！', 4000);
             }
 
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations,$exam_screening_id);
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($station->station_id, $exam->id,$exam_screening_id);
+                $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id,$exam_screening_id);
             } else {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
             }
             foreach($examQueue as $key=>$val){
                 $examQueue[$key]->student_avator = asset($examQueue[$key]->student_avator);
             }
-            $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data($examQueue,103,'获取成功')));//信息推送
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($examQueue,103,'获取成功')));//信息推送
         } catch (\Exception $ex) {
             return $ex;
         }
@@ -307,13 +312,14 @@ class DrawlotsController extends CommonController
             }elseif($roomMsg_two){
                 $exam_screening_id=$roomMsg_two->id;
             }
-            $station = StationTeacher::where('exam_id', '=', $exam->id)
-                ->where('user_id', '=', $id)->where('exam_screening_id',$exam_screening_id)
-                ->first();
-
-            if (is_null($station)) {
-              //  $redis->publish('pad_message', json_encode($this->success_data([], -999, '你没有参加此次考试')));
-                throw new \Exception('你没有参加此次考试');
+            $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
+            $stationList = StationTeacher::where('exam_id', '=', $exam->id)
+                ->where('user_id', '=', $id)
+                ->get()->pluck('station_id')->toArray();
+            $arr=array_intersect ($stationLists,$stationList);
+            $stationId=array_pop($arr);
+            if(is_null($stationId)){
+                throw new \Exception('你没有参加此次考试！', 4000);
             }
 
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
@@ -322,7 +328,7 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $exam->id, $stations,$exam_screening_id);
             } elseif ($exam->sequence_mode == 2) {
 
-                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $exam->id,$exam_screening_id);
+                $examQueue = ExamQueue::nextExamineeByStationId($stationId, $exam->id,$exam_screening_id);
             } else {
                 //$redis->publish('pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
@@ -366,7 +372,7 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], 3000, '当前没有正在进行的考试')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 3000, '当前没有正在进行的考试')));
                 throw new \Exception('当前没有正在进行的考试', 3000);
             }
 
@@ -374,12 +380,15 @@ class DrawlotsController extends CommonController
 
 //当前场次
             $exam_screening_id = $this->getexamScreeing($exam);
-            $station = StationTeacher::where('exam_id', '=', $exam->id)
-                ->where('user_id', '=', $id)->where('exam_screening_id',$exam_screening_id)
-                ->first();
-            if (is_null($station)) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], -999, '你没有参加此次考试')));
-                throw new \Exception('你没有参加此次考试');
+            $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
+            $stationList = StationTeacher::where('exam_id', '=', $exam->id)
+                ->where('user_id', '=', $id)
+                ->get()->pluck('station_id')->toArray();
+            $arr=array_intersect ($stationLists,$stationList);
+            $stationId=array_pop($arr);
+            if(is_null($stationId)){
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -999, '你没有参加此次考试')));
+                throw new \Exception('你没有参加此次考试！');
             }
 
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
@@ -388,15 +397,15 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $exam->id, $stations,$exam_screening_id);
             } elseif ($exam->sequence_mode == 2) {
 
-                $examQueue = ExamQueue::nextExamineeByStationId($station->station_id, $exam->id,$exam_screening_id);
+                $examQueue = ExamQueue::nextExamineeByStationId($stationId, $exam->id,$exam_screening_id);
             } else {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -703, '考试模式不存在')));
                 throw new \Exception('考试模式不存在！', -703);
             }
 
             //从集合中移除blocking
 //            $students->forget('blocking');
-            $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data($examQueue,104,'获取成功')));//信息推送
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($examQueue,104,'获取成功')));//信息推送
            // return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return [];
@@ -518,7 +527,7 @@ class DrawlotsController extends CommonController
             //根据uid查到对应的腕表编号
             $watch = Watch::where('code', $uid)->first();
             if (is_null($watch)) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
                 throw new \Exception('没有找到对应的腕表信息！', 3100);
             }
 
@@ -526,20 +535,20 @@ class DrawlotsController extends CommonController
             $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
             if (!$watchLog) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
                 throw new \Exception('没有找到学生对应的腕表信息！', 3200);
             }
 
             //获取腕表对应的学生实例
             if (!$student = $watchLog->student) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], 3300, '没有找到对应的学生信息!')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 3300, '没有找到对应的学生信息!')));
                 throw new \Exception('没有找到对应的学生信息！', 3300);
             }
 
 //            //判断当前学生是否在当前小组中
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], 3000, '当前没有正在进行的考试!')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 3000, '当前没有正在进行的考试!')));
                 throw new \Exception('当前没有正在进行的考试', 3000);
             }
             $examId = $exam->id;
@@ -550,7 +559,7 @@ class DrawlotsController extends CommonController
                 ->where('user_id', '=', $teacherId)
                 ->first();
             if (is_null($station)) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试!')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试!')));
                 throw new \Exception('你没有参加此次考试', 7100);
             }
            $exam_screening_id = $this->getexamScreeing($exam);
@@ -561,17 +570,17 @@ class DrawlotsController extends CommonController
                 //从队列表中通过考场ID得到对应的当前组的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations,$exam_screening_id);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
-                    $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
+                    $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
                     throw new \Exception('该考生不在当前考生小组中', 7200);
                 }
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId,$exam_screening_id);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
-                    $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], 7201, '该考生不在当前考生小组中!')));
+                    $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 7201, '该考生不在当前考生小组中!')));
                     throw new \Exception('该考生不在当前考生小组中', 7201);
                 }
             } else {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], -705, '没有这种考试模式!')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -705, '没有这种考试模式!')));
                 throw new \Exception('没有这种考试模式！', -705);
             }
 
@@ -582,7 +591,7 @@ class DrawlotsController extends CommonController
                 ->where('exam_id', '=', $examId)->get()
                 ->isEmpty()
             ) {
-                $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data([], 3400, '当前考生走错了考场!')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 3400, '当前考生走错了考场!')));
                 throw new \Exception('当前考生走错了考场！', 3400);
             }
 
@@ -606,12 +615,13 @@ class DrawlotsController extends CommonController
             //判断时间
             $this->judgeTime($watchLog->student_id);
             $connection->commit();
-            $redis->publish(md5($_SERVER['SERVER_NAME']).'pad_message', json_encode($this->success_data($result, 1, '抽签成功!')));
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($result, 1, '抽签成功!')));
             //推送当前学生
             $request['station_id']=$result->id;
             $request['teacher_id']=$teacherId;
             $inv=new InvigilatePadController();
             $inv->getAuthentication_arr($request);//当前考生推送
+       
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
@@ -634,7 +644,7 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-        //try {
+        try {
             //获取当前登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
@@ -652,20 +662,26 @@ class DrawlotsController extends CommonController
                 $exam_screening_id=$roomMsg_two->id;
             }
             //根据id获取考站信息
-            $stationTeacher = StationTeacher::where('user_id', $id)->where('exam_id', $exam->id)->where('exam_screening_id',$exam_screening_id)->first();
 
-            if (is_null($stationTeacher)) {
-                throw new \Exception('当前老师没有考试！', 4000);
-            }
+            $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
+            $stationList = StationTeacher::where('exam_id', '=', $exam->id)
+                ->where('user_id', '=', $id)
+                ->get()->pluck('station_id')->toArray();
+                $arr=array_intersect ($stationLists,$stationList);
+                $stationId=array_pop($arr);
+                if(is_null($stationId)){
+                    throw new \Exception('当前老师没有考试！', 4000);
+                }
 
-            $station = $stationTeacher->station;
-
-
+            $station =Station::where('id',$stationId)->first();
+            //$station =$stationList->station;
             //拿到房间
             $room = $this->getRoomId($id, $exam->id);
 
             //判断其考站或考场是否在该次考试中使用
+     
             $check = $this->checkEffected($exam, $room, $station);
+
             Common::valueIsNull($check, -785, '当前考站或考场没有安排在此考试中');
 
             //将考场名字和考站名字封装起来
@@ -743,9 +759,9 @@ class DrawlotsController extends CommonController
             }*/
 
             return response()->json($this->success_data($station));
-        /*} catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
-        }*/
+        }
     }
 
     /**
@@ -1077,14 +1093,35 @@ class DrawlotsController extends CommonController
 //            ->where('station_teacher.exam_id', $examId)
             ->get();
         */
+            $exam =Exam::doingExam();
+       $exam_screening_id = $this->getexamScreeing($exam);
+        /*
+                $stationId     =   ExamStationStatus::where('exam_screening_id','=',$exam_screening_id)->get()->pluck('station_id');
+               if($stationId->isEmpty()){
+                   throw new \Exception('没有对应的考站');
+               }
+               $stationId = $stationId->toArray();
+               dump($stationId);*/
+
+        $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
+        $stationList = StationTeacher::where('exam_id', '=', $exam->id)
+            ->where('user_id', '=', $teacher_id)
+            ->get()->pluck('station_id')->toArray();
+        $arr=array_intersect ($stationLists,$stationList);
+        $stationId=array_pop($arr);
+        if(is_null($stationId)){
+            throw new \Exception('没有对应的考站！');
+        }
+
         $stationTeacher =   StationTeacher::where('user_id','=',$teacher_id)
                         ->where('exam_id','=',$examId)
                         ->with('station')
                         ->first();
         $station    =   $stationTeacher ->  station;
         $stationPlan    =   ExamDraft   ::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-                    ->  where('exam_draft.station_id','=',$station->id)
+                    ->  where('exam_draft.station_id','=',$stationId)
                     ->  where('exam_draft_flow.exam_id','=',$examId)
+
                     ->  first();
         $room       =   ExamDraft   ::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
                     ->  where('exam_draft.room_id','=',$stationPlan->room_id)

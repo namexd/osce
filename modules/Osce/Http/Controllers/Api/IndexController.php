@@ -109,12 +109,12 @@ class IndexController extends CommonController
         if (is_null($watch)) {
             return \Response::json(array('code' => 3));     //数据库无腕表
         }
-        $id         = $watch->id;           //获取腕表ID
-        $status     = $watch->status;       //获取腕表状态
-        //查询学生签到记录
-        $watchLog   = WatchLog::where('watch_id', '=', $id)->orderBy('id','DESC')->first();
+        $id       = $watch->id;           //获取腕表ID
+        $status   = $watch->status;       //获取腕表状态
+        //查询使用记录
+        $watchLog = WatchLog::where('watch_id', '=', $id)->orderBy('id','DESC')->first();
         //组合反馈数据
-        $data       = [
+        $data = [
             'student_id'=> '',
             'status'    => $status
         ];
@@ -1164,10 +1164,7 @@ class IndexController extends CommonController
         //查询学生当前状态
         $status = ExamOrder::where('student_id', $studentId)->where('exam_id', $exam_id)
                            ->where('exam_screening_id',$screen_id)->select('status')->first()->status;
-        if ($status == 4) {
-            return $this->getAbsentStudent($studentId, $exam_id,$screen_id); //插入缺考记录 学生已缺考
-
-        } elseif ($status == 2) {
+        if ($status == 2) {
             return \Response::json(array('code' => 3));//该学生考试已结束
 
         } elseif ($status == 1) {

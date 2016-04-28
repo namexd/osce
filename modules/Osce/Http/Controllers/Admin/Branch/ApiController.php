@@ -43,7 +43,6 @@ use Modules\Osce\Http\Controllers\Admin\Branch\AnswerController;
 use Modules\Osce\Entities\StationTeacher;
 use Illuminate\Support\Facades\Redis;
 use Modules\Osce\Http\Controllers\Api\StudentWatchController;
-
 class ApiController extends CommonController
 {
     private $name;
@@ -577,8 +576,8 @@ class ApiController extends CommonController
         //dd($examingDO);
         if(count($examingDO) > 0){
             $studentModel = new Student();
-            $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
 
+            $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
             //在队列表中查找与考试相关的数据
             $examquen = new ExamQueue();
             $examing = $examquen->getExamingData($examingDO->id,@$userInfo->id);
@@ -588,7 +587,7 @@ class ApiController extends CommonController
             }
 
 
-
+            //dd($examing);
             //整理考试数据
             $examData = array();
             $StationTeacher = new StationTeacher();
@@ -596,23 +595,23 @@ class ApiController extends CommonController
 
 
             foreach($examing as $key=>$v){
-                    if(!$v['station_id']){
-                        $station_id = ExamStation::where('exam_id','=',$v['id'])->first()->station_id;
-                    }
-                    $station = !empty($v['station_id'])?$v['station_id']:$station_id;
+//                    if(!$v['station_id']){
+//                        $station_id = ExamStation::where('exam_id','=',$v['id'])->first()->station_id;
+//                    }
+                    $station = $v['station_id'];
                     $stationTeacher = $StationTeacher->where('station_id','=',$station)->first();
-//                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
+                    $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
                     $examData[$key]['station_id'] = $station;
                     $examData[$key]['teacher_id'] = @$stationTeacher->user_id;
                     $examData[$key]['student_id'] = @$userInfo->id;
-                    $examData[$key]['paper_id'] = $v['paper_id'];
+                    $examData[$key]['paper_id'] = $examPaper->exam_paper_id;
                     $examData[$key]['exam_id'] = $v['id'];
                     $examData[$key]['exam_name'] = $v['name'];
                     $examData[$key]['status'] = $v['status'];
 
             }
         }
-
+        //dd($examData);
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData

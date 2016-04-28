@@ -398,8 +398,7 @@ class Student extends CommonModel
             //注册 新用户
             $password = '123456';
             $user = $this->registerUser($userData, $password);
-            //$this ->sendRegisterEms($userData['mobile'], $password);
-//            $this ->sendRegisterEms($userData['mobile'], $password);
+            $this ->sendRegisterEms($userData['mobile'], $password);
             //给用户分配角色
             $this->addUserRoles($user, $role_id);
         }
@@ -503,7 +502,7 @@ class Student extends CommonModel
                 ->where('exam_queue.station_id', '=', $stationId)
                 ->where('exam_queue.exam_id', '=', $exam->id)
                 ->where('station_teacher.exam_id', $exam->id)
-                ->where('exam_queue.status', [1, 2])
+                ->where('exam_queue.status', 1)
                 ->where('exam_queue.blocking', 1)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->orderBy('exam_queue.begin_dt', 'asc')
@@ -682,9 +681,11 @@ class Student extends CommonModel
         }else {
             $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
                 $join->on('student.id', '=', 'exam_order.student_id');
-            })->where('exam_order.exam_id', '=', $exam_id)->where('student.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
+            })->where('exam_order.exam_id', '=', $exam_id)
+                ->where('student.exam_id', '=', $exam_id)
+                ->where('exam_order.exam_screening_id', '=', $screen_id);
             $builder = $builder->where(function ($query) {
-                $query->whereIn('exam_order.status', [0, 4]);
+                $query->whereIn('exam_order.status', [0,2,4]);
             });
         /*    //\DB::connection('osce_mis')->enableQueryLog();
 //        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO .
@@ -717,7 +718,7 @@ class Student extends CommonModel
             'student.mobile as mobile',
             'exam_order.status as status',
             'exam_order.exam_screening_id as exam_screening_id',
-        ])->orderBy('student.id')->paginate(100);dd(date('Y-m-d H:i:s',1461740372));
+        ])->orderBy('student.id')->paginate(100);
        // $queries = \DB::connection('osce_mis')->getQueryLog();
         //dd($builder->toArray());
         return $builder;
