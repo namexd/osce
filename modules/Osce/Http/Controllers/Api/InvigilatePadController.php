@@ -1055,6 +1055,7 @@ class InvigilatePadController extends CommonController
 
             if(count($watchData) > 0){
                 $watchData = $watchData->toArray();
+                dd($watchData);
                 foreach($watchData as $k=>$v){
 
                     $watchModel = WatchLog::where('id','=',$v['id'])->orderBy('id','desc')->first();
