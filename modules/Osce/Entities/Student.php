@@ -720,7 +720,6 @@ class Student extends CommonModel
             'exam_order.exam_screening_id as exam_screening_id',
         ])->orderBy('student.id')->paginate(100);
        // $queries = \DB::connection('osce_mis')->getQueryLog();
-        dd($builder->toArray());
         return $builder;
     }
 
