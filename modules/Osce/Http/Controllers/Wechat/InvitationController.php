@@ -402,27 +402,34 @@ class InvitationController extends CommonController
      */
     public function getMsg()
     {
-
-        $id = intval(Input::get('id'));//邀请id
+        $id          = intval(Input::get('id'));     //邀请id
         $inviteModel = Invite::where('id', '=', $id)->select('name', 'begin_dt', 'end_dt', 'status', 'user_id')->first();
-        if ($inviteModel) {
-            $caseId = ExamSpTeacher::where('teacher_id', '=', $inviteModel->user_id)->select('case_id')->first();
-            if (!$caseId) {
-                throw new \Exception('没有找到相关病例');
-            } else {
-                $caseModel = CaseModel:: where('id', '=', $caseId->case_id)->select('name')->first()->name;
-                $teacher = Teacher:: find($inviteModel->user_id);
+        if (!is_null($inviteModel))
+        {
+            //获取老师信息
+            $teacher = Teacher:: find($inviteModel->user_id);
+            //获取病例信息
+            $caseId  = ExamSpTeacher::where('teacher_id', '=', $inviteModel->user_id)
+                                   ->whereNotNull('case_id')->select('case_id')->first();
+            $caseName= '';     //默认为空
+            if (!is_null($caseId))
+            {
+                $caseModel = CaseModel:: where('id', '=', $caseId->case_id)->select('name')->first();
+                if(!is_null($caseModel)){
+                    $caseName = $caseModel->name;
+                }
             }
-        } else {
+        }
+        else {
             return redirect()->back()->withErrors(['该考试信息已被删除或者取消']);
         }
         $list = [
-            'exam_name' => $inviteModel->name,
-            'begin_dt' => $inviteModel->begin_dt,
-            'end_dt' => $inviteModel->end_dt,
-            'case_name' => $caseModel,
-            'status' => $inviteModel->status,
-            'teacher_name' => $teacher->name,
+            'exam_name'     => $inviteModel->name,
+            'begin_dt'      => $inviteModel->begin_dt,
+            'end_dt'        => $inviteModel->end_dt,
+            'case_name'     => $caseName,
+            'status'        => $inviteModel->status,
+            'teacher_name'  => $teacher->name,
         ];
 //          dd($list);
         return view('osce::wechat.exammanage.sp_invitation_detail', [
