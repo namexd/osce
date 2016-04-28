@@ -982,12 +982,12 @@ class IndexController extends CommonController
                 $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
             }
             */
-
+            dd($stations);
             $countStation=[];
             foreach($stations as $item){
                 $countStation[]=$item->station_id;
             }
-dd($countStation);
+
             $countStation = array_unique($countStation);
             $batch        = config('osce.batch_num');       //默认为2
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
