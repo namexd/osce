@@ -14,20 +14,16 @@ use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamOrder;
-use Illuminate\Container\Container as App;
 
 
 abstract class AbstractSmartArrange implements SmartArrangeInterface
 {
     use CheckTraits, SQLTraits;
 
-    private $app;
-
     protected $model;
 
-    public function __construct(App $app)
+    public function __construct()
     {
-        $this->app = $app;
         $this->makeModel();
     }
 
@@ -41,7 +37,7 @@ abstract class AbstractSmartArrange implements SmartArrangeInterface
 
     public function makeModel()
     {
-        $model = $this->app->make($this->model());
+        $model = \App::make($this->model());
 
         return $this->model = $model;
     }

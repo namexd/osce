@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Modules\Osce\Http\Controllers\Admin\MessageController;
 
 class Kernel extends ConsoleKernel
 {
@@ -34,5 +35,9 @@ class Kernel extends ConsoleKernel
         }
 //        $schedule->command('inspire')
 //                 ->hourly();
+
+        //临时代码，用于执行发送信息
+        $messageContro = \App::make('Modules\Osce\Http\Controllers\Admin\MessageController');
+        $messageContro ->getSendMessage();
     }
 }

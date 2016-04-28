@@ -73,17 +73,13 @@ class Order extends AbstractCate implements CateInterface
         if ($entity->serialnumber != 1) {
             $tempArrays = $this->orderBeginStudent($screen, $entity);
             if (count($tempArrays) != 0) {
-                return Student::whereIn('id', $tempArrays)->get()->all();
+                return $tempArrays;
+//                return Student::whereIn('id', $tempArrays)->get()->all();
             } else {
                 return [];
             }
         } else {
             return [];
         }
-    }
-
-    public function checkDoor()
-    {
-        return true;
     }
 }

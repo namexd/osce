@@ -56,22 +56,4 @@ abstract class AbstractConfig
     {
         return $this->model->setData($data);
     }
-
-    /**
-     * 返回对象的类名
-     * @return mixed
-     * @author Jiangzhiheng
-     * @time 2016-04-13 20：27
-     */
-    abstract function getModel();
-
-    /**
-     * 设置类名
-     * @param $model
-     * @return mixed
-     * @author Jiangzhiheng
-     * @time 2016-04-14 10:14
-     */
-    abstract function setModel();
-
 }

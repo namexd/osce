@@ -48,7 +48,7 @@ class StationMode extends AbstractEntity implements EntityInterface
     function dataBuilder($exam, $screen, $student, $entity, $i)
     {
         $data = [
-            'student_id' => is_null($student->id) ? $student->student_id : $student->id,
+            'student_id' => $student,
             'room_id' => $entity->room_id,
             'station_id' => $entity->station_id,
             'exam_id' => $exam->id,
