@@ -35,6 +35,15 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
         return Common::getExclData($request, $fileName);
     }
 
+    /**
+     * 导入考生的方法
+     * @param $examId
+     * @param $studentModel
+     * @return int
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-06-28 11:17
+     */
     public function importStudent($examId, $studentModel)
     {
         $backArr = [];
@@ -43,8 +52,8 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
         $total = 0;     //处理过的考生总数
         $sucNum = 0;    //导入成功的学生数
         $exiNum = 0;    //已经存在的学生数
-        $connection = \DB::connection('osce_mis');
-        $connection->beginTransaction();
+//        $connection = \DB::connection('osce_mis');
+//        $connection->beginTransaction();
 
         try {
             $data = $this->model->getData();
@@ -150,15 +159,16 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
             $exam = Exam::doingExam($examId);
             $exam->total = $sucNum;
             if (!$exam->save()) {
+
                 throw new \Exception('保存考试人数失败！');
             }
-            $connection->commit();
+//            $connection->commit();
             return $sucNum;     //返回导入成功的个数
         } catch (\Exception $ex) {
             if ($ex->getCode() == 23000) {
+
                 throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该手机号码已经使用，请输入新的手机号');
             }
-            $connection->rollBack();
             throw $ex;
         }
 
