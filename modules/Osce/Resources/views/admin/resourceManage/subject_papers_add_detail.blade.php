@@ -12,7 +12,13 @@
     <script src="{{asset('osce/common/select2-4.0.0/js/select2.full.min.js')}}"></script>
     <script>
         $(function(){
-            $(".tag").select2({});
+            $(".tag").select2({
+                language:{
+                    noResults: function (term) {
+                        return '未找到';
+                    }
+                }
+            });
             var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
             //自动组卷总计
             function randomCount(){
