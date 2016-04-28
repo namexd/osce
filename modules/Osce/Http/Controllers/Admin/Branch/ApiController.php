@@ -972,22 +972,29 @@ class ApiController extends CommonController
                         $examScreeningStudentData = [
                             'status' => 2,
                         ];
+
                         //更新exam_screening_student表（考试场次-学生关系表）
-                        if(!ExamScreeningStudent::where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->update($examScreeningStudentData)){
-                            throw new \Exception(' 更新考试场次-学生关系表失败！',-103);
+                        $result = ExamScreeningStudent::where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
+                        if(!empty($result)){
+                            if(!ExamScreeningStudent::where('id',$result->id)->update($examScreeningStudentData)){
+                                throw new \Exception(' 更新考试场次-学生关系表失败！',-103);
+                            }
+
+                        }else{
+                            throw new \Exception('没有该考生对应的场次！',-104);
                         }
+
                         //向监控标记学生替考记录表插入数据
                         $examMonitorData = array(
                             'station_id'  =>$val->station_id,
                             'exam_id'      =>$val->exam_id,
                             'student_id'  =>$val->student_id,
-                            'description'         =>3,
+                            'description' =>3,
                             'exam_screening_id'=>$val->exam_screening_id,
                         );
                         if(!ExamMonitor::create($examMonitorData)){
-                            throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-104);
+                            throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-105);
                         }
-
                         //向exam_result（考试结果记录表）插入数据
                         $examResultData = [
                             'student_id'        => $studentId,
@@ -1000,7 +1007,7 @@ class ApiController extends CommonController
                             'create_user_id'    => Auth::user()->id,
                         ];
                         if(!ExamResult::create($examResultData)){
-                            throw new \Exception(' 向考试结果记录表插入数据失败！',-105);
+                            throw new \Exception(' 向考试结果记录表插入数据失败！',-106);
                         }
                     }
                     $retval['title'] = '确定替考成功';
@@ -1008,9 +1015,11 @@ class ApiController extends CommonController
                         $this->success_data($retval,1,'success')
                     );
                 }
+
             }else{
-                throw new \Exception(' 找不到该考生的考试队列信息！',-106);
+                throw new \Exception(' 找不到该考生的考试队列信息！',-107);
             }
+
 
         }catch (\Exception $ex) {
             return response()->json($this->fail($ex));

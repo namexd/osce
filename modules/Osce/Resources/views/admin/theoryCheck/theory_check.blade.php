@@ -203,20 +203,21 @@
                     var userId = $(".allData").attr("userId");
                     var studentId = $(".allData").attr("studentId");
                     var examId = $(".allData").attr("examId");
-                    console.log("22222");
+
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                             {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
-                        if(obj.code=='1'){
-                            $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId},function(res){
-                                if(res.code==1){
-                                    location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
-                                }else{
-                                    layer.confirm(obj.message);
-                                }
-                            })
-                        }else{
-                            layer.confirm(obj.message);
-                        }
+                                alert(obj.code);
+                        // if(obj.code == 1){
+                        //     $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId},function(res){
+                        //         if(res.code == 1){
+                        //             location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                        //         }else{
+                        //             layer.confirm(obj.message);
+                        //         }
+                        //     })
+                        // }else{
+                        //     layer.confirm(obj.message);
+                        // }
                     })
                 }
             }, 1000);
