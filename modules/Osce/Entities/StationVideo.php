@@ -10,15 +10,15 @@ namespace Modules\Osce\Entities;
 
 class StationVideo extends CommonModel
 {
-    protected $connection = 'osce_mis';
-    protected $table = 'station_video';
-    public $timestamps = true;
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $guarded = [];
-    protected $hidden = [];
-    protected $fillable = ['station_vcr_id', 'begin_dt', 'end_dt', 'exam_id', 'student_id'];
-    public $search = [];
+    protected $connection   = 'osce_mis';
+    protected $table        = 'station_video';
+    public    $timestamps   = true;
+    protected $primaryKey   = 'id';
+    public    $incrementing = true;
+    protected $guarded      = [];
+    protected $hidden       = [];
+    protected $fillable     = ['station_vcr_id', 'begin_dt', 'end_dt', 'exam_id', 'student_id'];
+    public    $search       = [];
 
 
     public function getTiming($vcrId,$beginDt,$examId,$endDt){
