@@ -35,20 +35,20 @@ class AnswerController extends CommonController
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
         $this->validate($request,[
-            'id'       => 'required|integer',
-            'examId'    => 'required|integer',
-            'stationId'    => 'required|integer',
-            'userId'    => 'required|integer',
-            'studentId'    => 'required|integer',
+            'id'       => 'required|integer',//试卷id
+            'examId'    => 'required|integer',//考试id
+            'stationId'    => 'required|integer',//考站id
+            'userId'    => 'required|integer',//老师id
+            'studentId'    => 'required|integer',//学生id
 
         ]);
 
       //admin/answer/formalpaper-list?stationId=21&userId=140&studentId=222&id=12&examId=4
-        $ExamPaperId = $request->input('id');//试卷id  132
-        $examId = $request->input('examId');//考试id  421
-        $stationId = $request->input('stationId');//考站id 20
-        $userId = $request->input('userId');//老师id
-        $studentId = $request->input('studentId');//学生id
+        $ExamPaperId = $request->input('id');
+        $examId = $request->input('examId');
+        $stationId = $request->input('stationId');
+        $userId = $request->input('userId');
+        $studentId = $request->input('studentId');
 
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
@@ -147,13 +147,11 @@ class AnswerController extends CommonController
     public function postSaveAnswer(Request $request)
     {
         $this->validate($request,[
-            'examId'    => 'required|integer', //考试id
-            'studentId'    => 'required|integer',//学生id
-            'stationId'    => 'required|integer',//考站id
-            'teacherId'    => 'required|integer', //老师id
-            'examPaperFormalId'       => 'required|integer',//正式试卷id
-
-
+            'examId'               => 'required|integer', //考试id
+            'studentId'            => 'required|integer',//学生id
+            'stationId'            => 'required|integer',//考站id
+            'teacherId'            => 'required|integer', //老师id
+            'examPaperFormalId'   => 'required|integer',//正式试卷id
 
         ]);
 
