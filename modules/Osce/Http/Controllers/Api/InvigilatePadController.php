@@ -1584,6 +1584,9 @@ class InvigilatePadController extends CommonController
                     $status = 0;
                 }
             }
+        }else{
+            $info   = '没有上传文件';
+            $status = 0;
         }
         return json_encode(
             $this->success_data($data,$status,$info)
