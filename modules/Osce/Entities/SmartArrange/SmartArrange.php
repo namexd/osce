@@ -24,7 +24,10 @@ class SmartArrange
 {
     use SQLTraits, SundryTraits;
     //当前考试实体，为对象
-    public $exam;
+    private $exam;
+
+    //获取学生的实例
+    private $student;
 
     //侯考区学生,为对象集合
     protected $_S_W;
@@ -55,6 +58,22 @@ class SmartArrange
 
     //当前考试场次的流程个数
     private $flowNum;
+
+    public function __construct($student)
+    {
+        return $this->student = $student;
+    }
+
+    /**
+     * 设置考试实例
+     * @param $exam
+     * @author Jiangzhiheng
+     * @time 2016-04-28 15:27
+     */
+    public function setExam($exam)
+    {
+        return $this->exam = $exam;
+    }
 
     /**
      * @param $cate
@@ -239,6 +258,8 @@ class SmartArrange
                     if (count($students) == 0) {
                         continue;
                     }
+
+//                    dump($students, date('Y-m-d H:i:s', $i), $entity->name);
 
                     //变更学生的状态(写记录)
                     $insertData = [];

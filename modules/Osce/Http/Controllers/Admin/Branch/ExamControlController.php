@@ -101,7 +101,7 @@ class ExamControlController extends CommonController
             $nowTime = time();
             $date = date('Y-m-d H:i:s', $nowTime);
 
-            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$data['studentId']],106,'考试终止成功')));
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$data['studentId'],'exam_screening_id'=>$data['examScreeningId']],106,'考试终止成功')));
 
             $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
                 ->where('student_id','=',$data['studentId'])->first();
