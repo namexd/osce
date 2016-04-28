@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities\SmartArrange;
 
 
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\SmartArrange\Student\StudentFromDB;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
@@ -20,16 +21,17 @@ class SmartArrangeRepository extends AbstractSmartArrange
 
     private $_S_Count;
 
-    /**
-     * 返回具体的实现类的类名
-     * @return string
-     * @author Jiangzhiheng
-     * @time 2016-04-13 11:45
-     */
-    function model()
+    public function __construct()
     {
-        // TODO: Implement model() method.
-        return 'Modules\Osce\Entities\SmartArrange\SmartArrange';
+        \App::bind('student', function () {
+            return new StudentFromDB();
+        });
+
+        \App::bind('SmartArrange', function () {
+            return new SmartArrange(\App::make('student'));
+        });
+
+        $this->model = \App::make('SmartArrange');
     }
 
     /**
@@ -43,10 +45,9 @@ class SmartArrangeRepository extends AbstractSmartArrange
     function plan($exam)
     {
         try {
-            //将考试初始化进去
-            $this->model->exam = $exam;
+            $this->model->setExam($exam); //将考试实例注入
 
-            $this->checkDataBase($this->model->exam); //检查临时表中是否有数据，如果有，就删除之
+            $this->checkDataBase($exam); //检查临时表中是否有数据，如果有，就删除之
 
             /*
              * 将阶段遍历，在每个阶段中进行排考
@@ -92,7 +93,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
                     $this->model->screenPlan($screen);
                 }
                 if (count($this->model->getStudents()) != 0 || count($this->model->getWaitStudents()) != 0) {
-//                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
+                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
                     throw new \Exception('人数太多，所设时间无法完成考试', -99);
                 }
             }

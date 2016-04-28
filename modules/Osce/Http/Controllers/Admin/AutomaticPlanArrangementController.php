@@ -63,7 +63,7 @@ class AutomaticPlanArrangementController extends CommonController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    function postBegin(Request $request)
+    function postBegin(Request $request, SmartArrangeRepository $smartArrangeRepository)
     {
         $this->validate($request, [
             'exam_id' => 'required|integer'
@@ -71,16 +71,15 @@ class AutomaticPlanArrangementController extends CommonController
 
         $examId = $request->input('exam_id');
         
-        try {
+//        try {
             set_time_limit(0);
             $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
             Common::valueIsNull($exam, -999, '当前的考试错误');
-            $smartArrangeRepository = new SmartArrangeRepository();
 
             return response()->json($this->success_data($smartArrangeRepository->plan($exam)));
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**

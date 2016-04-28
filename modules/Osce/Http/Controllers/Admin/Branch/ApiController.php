@@ -430,7 +430,7 @@ class ApiController extends CommonController
             //获取当前登录账户的角色名称
             $questionBankRepositories = new QuestionBankRepositories();
             $roleType = $questionBankRepositories->getExamLoginUserRoleType();
-           // dd($roleType);
+            //dd($roleType);
             if($roleType == 1){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($roleType == 2){
@@ -935,7 +935,7 @@ class ApiController extends CommonController
             $examQueueModel = new ExamQueue();
             $examQueue = $examQueueModel->where('student_id', $studentId)
                 ->where('exam_id',$examId)
-                ->whereNotIn('status',[2,3,4])->get();
+                ->whereNotIn('status',[3,4])->get();
             if (!empty($examQueue)) {
                 if ($mode == 1) {
                     //如果选择否，只是做标记
