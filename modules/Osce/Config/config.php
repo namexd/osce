@@ -9,7 +9,7 @@ return [
     'num'    =>10,
     'student_num'    =>20,
 	'begin_dt_buffer' => 10,
-	'batch_num' => 3,
+	'batch_num' => 10,
 	'wait_student_num' => 4,
 
 	'topticOptionMaxNumer'	=>	15,

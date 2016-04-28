@@ -27,7 +27,7 @@ class Exam implements ExamInterface
 //        $this->exam = $exam;
 //    }
 
-    /**
+    /** 
      * 获取场次列表
      * @param $examId
      * @return mixed

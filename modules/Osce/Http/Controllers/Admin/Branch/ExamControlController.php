@@ -97,7 +97,12 @@ class ExamControlController extends CommonController
             $examControlModel->stopExam($data);
             //向pad端推送消息
             $redis = Redis::connection('message');
-            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([],106,'考试终止成功')));
+
+            $nowTime = time();
+            $date = date('Y-m-d H:i:s', $nowTime);
+
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$data['studentId']],106,'考试终止成功')));
+
             $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
                 ->where('student_id','=',$data['studentId'])->first();
             if(!empty($examScreeningStudentData)){
@@ -106,7 +111,7 @@ class ExamControlController extends CommonController
                 $request['nfc_code'] = $watchData->code;
                 //拿到阶段序号
                 $gradationOrder = ExamScreening::find($data['examScreeningId']);
-                //拿到所有场次id
+                //拿到该阶段所对应的所有场次id
                 $examscreeningId = ExamScreening::where('exam_id','=',$data['examId'])->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
                 $studentWatchController = new StudentWatchController();
                 $studentWatchController->getStudentExamReminder($request,$data['stationId'],$examscreeningId);

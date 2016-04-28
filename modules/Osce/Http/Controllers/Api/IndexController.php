@@ -983,7 +983,7 @@ class IndexController extends CommonController
                 $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
             }
             */
-            dd($stations);
+            //dd($stations);
             $countStation=[];
             foreach($stations as $item){
                 $countStation[]=$item->station_id;
@@ -994,7 +994,7 @@ class IndexController extends CommonController
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
 
             $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列(exam_order表)
-            dd($list->toArray());
+            //dd($list->toArray());
             $data = [];
             foreach($list as $itm){
                 $data[] = [
