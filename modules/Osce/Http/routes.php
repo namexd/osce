@@ -454,6 +454,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/watch-unbundling', 	['uses'=>'InvigilatePadController@getWatchUnbundling','as'=>'osce.api.invigilatepad.getWatchUnbundling']);
 		//解绑腕表
 		Route::get('invigilatepad/watch-unbundling-report', 	['uses'=>'InvigilatePadController@getWatchUnbundlingReport','as'=>'osce.api.invigilatepad.getWatchUnbundlingReport']);
+		//考生现场照片采集
+		Route::get('invigilatepad/live-photo-upload', 	['uses'=>'InvigilatePadController@postLivePhotoUpload','as'=>'osce.api.invigilatepad.postLivePhotoUpload']);
 	});
 });
 
