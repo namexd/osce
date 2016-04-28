@@ -278,7 +278,7 @@ class TestScoresController  extends CommonController
         })->leftjoin('exam_paper',function($join){
             $join->on('exam_paper.id','=','station.paper_id');
         })->orderBy('station.paper_id')->select('exam_paper.id','exam_paper.name')->get();
-        return $this->success_data(['datalist'=>$datalist]);
+        return $this->success_data(['datalist'=>array_unique($datalist)]);
     }
 
     /**
