@@ -228,6 +228,10 @@ class Exam extends CommonModel
                 throw new \Exception('删除考试学生表失败，请重试！');
             }
 
+            //删除考场安排 相关信息
+            $examDraftFlow = new ExamDraftFlow();
+            $examDraftFlow ->delDraftDatas($id);
+
             //删除考试考场关联表
             $examScreenings = $examScreening->get();
             if (!$examScreenings->isEmpty()) {
@@ -237,10 +241,6 @@ class Exam extends CommonModel
                     }
                 }
             }
-
-            //删除考场安排 相关信息
-            $examDraftFlow = new ExamDraftFlow();
-            $examDraftFlow ->delDraftDatas($id);
 
             //删除考试阶段 相关信息
             $examGradations = ExamGradation::where('exam_id', '=', $id)->get();
