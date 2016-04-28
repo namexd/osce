@@ -306,11 +306,11 @@ class ExamMonitorController  extends CommonController
 
         $exam_id=Exam::where('status',1)->pluck('id');//正在考试id
         if(empty($exam_id)) return [];
-        /*$examScreen=new ExamScreening();
+        $examScreen=new ExamScreening();
         $ExamScreening = $examScreen->getExamingScreening($exam_id);
         if (is_null($ExamScreening)) {
             $ExamScreening = $examScreen->getNearestScreening($exam_id);
-        }*/
+        }
         $builder=ExamScreeningStudent::leftJoin('student', function($join){//弃考 已完成页面数据对象
             $join -> on('exam_screening_student.student_id', '=', 'student.id');
         })->select('student.name','student.exam_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status');
@@ -336,9 +336,9 @@ class ExamMonitorController  extends CommonController
                 })->select('student.name','student.exam_id','student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence')
                     ->where('exam_monitor.exam_id',$exam_id)
                    // ->where('exam_monitor.exam_screening_id',$ExamScreening->id)
-                    ->where('exam_monitor.type',1)
+                    ->where('exam_monitor.type',2)
                     ->where('exam_monitor.description',1)//已经确认替考的
-                    ->groupBy('exam_monitor.student_id')
+                   // ->groupBy('exam_monitor.student_id')
                     ->paginate(config('osce.page_size'));
 
                 if(empty($list->toArray()['data'])){return [];}
