@@ -278,17 +278,21 @@ class StudentWatchController extends CommonController
 
     private function getExamComplete($examQueue)
     {
-        //根据考试获取到考试流程
-        $ExamFlowModel = new  ExamFlow();
-        $studentExamSum = $ExamFlowModel->studentExamSum($examQueue->exam_id);
-        //查询出学生当前已完成的考试
-        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $examQueue->student_id)->count();
-        if ($ExamFinishStatus >= $studentExamSum)
+//        $ExamFlowModel = new  ExamFlow();
+//        $studentExamSum = $ExamFlowModel->studentExamSum($examQueue->exam_id);
+        //查询出学生当前已完成的考试已完成的场次
+        $ExamFinishStatus = ExamQueue::where('status', '=', 3)
+                            ->where('student_id', '=', $examQueue->student_id)
+                            ->where('student_id', '=', $examQueue->exam_id)
+                            ->groupBy('exam_screening_id')
+                            ->get()
+                            ->toArray() ;
+        //获取计划表里所有的场次
+        $studentExamScreeningIdArr = ExamPlan::where('exam_id', '=', $examQueue->exam_id)
+            ->where('student_id','=',$examQueue->student_id)
+            ->select('exam_screening_id')->get()->toArray();
+        if (count($ExamFinishStatus) >= count($studentExamScreeningIdArr))
         {
-            //获取该考生在该场考试所对应的所有场次id
-            $studentExamScreeningIdArr = ExamPlan::where('exam_id', '=', $examQueue->exam_id)
-                                        ->where('student_id','=',$examQueue->student_id)
-                                        ->select('exam_screening_id')->get()->toArray();
             //查询出考试结果
             $examResult = ExamResult::where('student_id', '=', $examQueue->student_id)->count();
             if ($examResult >= $ExamFinishStatus)
