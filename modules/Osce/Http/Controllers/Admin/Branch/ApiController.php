@@ -1015,11 +1015,12 @@ class ApiController extends CommonController
                         $this->success_data($retval,1,'success')
                     );
                 }
-                
+
             }else{
                 throw new \Exception(' 找不到该考生的考试队列信息！',-107);
             }
 
+            
         }catch (\Exception $ex) {
             return response()->json($this->fail($ex));
 
