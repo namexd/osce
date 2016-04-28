@@ -180,7 +180,7 @@ class Answer extends Model
     public function saveStatus($examId,$studentId){
         $DB = \DB::connection('osce_mis');
         $DB->beginTransaction();
-        try{
+        // try{
             //获取该考生对应的队列信息
             $quene = ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status',2)->first();
             if(!empty($quene)){
@@ -193,18 +193,19 @@ class Answer extends Model
                     'end_dt' =>$date,
                     'blocking' =>1
                 );
-                if(!ExamQueue::where('id',$quene->id)->update($data)){
-                    throw new \Exception('状态更新失败',-102);
-                }
-            }else{
-                throw new \Exception('没有该考生的队列信息',-101);
-            }
+                dd(ExamQueue::where('id',$quene->id)->update($data));
+                // if(!){
+                //     throw new \Exception('状态更新失败',-102);
+                // }
+            // }else{
+            //     throw new \Exception('没有该考生的队列信息',-101);
+            // }
 
 
 
-        }catch (\Exception $ex){
-            return response()->json($this->fail($ex));
-        }
+        // }catch (\Exception $ex){
+        //     return response()->json($this->fail($ex));
+        // }
 
     }
 
