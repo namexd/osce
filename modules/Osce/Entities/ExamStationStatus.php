@@ -21,14 +21,9 @@ use DB;
 
 class ExamStationStatus extends CommonModel
 {
-    protected $connection = 'osce_mis';
-    protected $table = 'exam_station_status';
-    public $incrementing = true;
-    public $timestamps = true;
-    protected $fillable = [
-        'exam_id',
-        'exam_screening_id',
-        'station_id',
-        'status'
-    ];
+    protected $connection   = 'osce_mis';
+    protected $table        = 'exam_station_status';
+    public    $incrementing = true;
+    public    $timestamps   = true;
+    protected $fillable     = ['exam_id', 'exam_screening_id', 'station_id', 'status'];
 }
