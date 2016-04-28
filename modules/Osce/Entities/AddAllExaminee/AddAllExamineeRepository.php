@@ -125,6 +125,13 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
                 $sucNum++;
             } //循环over
 
+            //更新考试的人数
+            $exam = Exam::doingExam($examId);
+            $exam->total = $sucNum + $exam->total;
+            if (!$exam->save()) {
+                throw new \Exception('保存考试人数失败！');
+            }
+
             //将拼装好的$studentArrays一次性插入student表
             if (count($studentArrays) != 0) {
                 if (!$studentModel->insert($studentArrays)) {
@@ -155,13 +162,7 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
                 throw new \Exception(trim($message, '，'));
             }
 
-            //更新考试的人数
-            $exam = Exam::doingExam($examId);
-            $exam->total = $sucNum;
-            if (!$exam->save()) {
 
-                throw new \Exception('保存考试人数失败！');
-            }
 //            $connection->commit();
             return $sucNum;     //返回导入成功的个数
         } catch (\Exception $ex) {
