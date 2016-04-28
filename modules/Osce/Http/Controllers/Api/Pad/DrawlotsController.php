@@ -104,35 +104,33 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-//        try {
+        try {
             //首先得到登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
-          //  $redis = Redis::connection('message');
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
-                //$redis->publish('pad_message', json_encode($this->success_data([], -50, '今天没有正在进行的考试')));
                 throw new \Exception('今天没有正在进行的考试', -50);
             } elseif ($exam->status != 1) {
-               // $redis->publish('pad_message', json_encode($this->success_data([], -777, '当前考试没有进行')));
                 throw new \Exception('当前考试没有进行', -777);
             }
-            //当前场次
-            $examScreen=new ExamScreening();
-            $roomMsg = $examScreen->getExamingScreening($exam->id);
-            $roomMsg_two = $examScreen->getNearestScreening($exam->id);
-            if($roomMsg){
-                $exam_screening_id=$roomMsg->id;
-            }elseif($roomMsg_two){
-                $exam_screening_id=$roomMsg_two->id;
-            }
-            $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)->get()->pluck('station_id')->toArray();
+            //获取当前考试场次
+            $exam_screening_id = $this->getexamScreeing($exam);
+            //拿到当前场次下的考站集合
+            $stationLists=ExamStationStatus::where('exam_screening_id',$exam_screening_id)
+                ->get()->pluck('station_id')->toArray();
+            //拿到当前老师支持的考站集合
             $stationList = StationTeacher::where('exam_id', '=', $exam->id)
                 ->where('user_id', '=', $id)
                 ->get()->pluck('station_id')->toArray();
+
+            //拿到老师在该场次里支持的考站
             $arr=array_intersect ($stationLists,$stationList);
+
             $stationId=array_pop($arr);
+
+
             if(is_null($stationId)){
                 throw new \Exception('当前老师没有考试！', 4000);
             }
@@ -171,9 +169,9 @@ class DrawlotsController extends CommonController
             }
            // $redis->publish('pad_message', json_encode($this->success_data($examQueue,103,'获取成功')));//信息推送
             return response()->json($this->success_data($examQueue));
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
