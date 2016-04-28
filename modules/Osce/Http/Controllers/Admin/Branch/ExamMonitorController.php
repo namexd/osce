@@ -331,7 +331,7 @@ class ExamMonitorController  extends CommonController
 
                 break;
             case 2://替考
-                $list=ExamMonitor::leftJoin('student', function($join){
+                /*$list=ExamScreeningStudent::leftJoin('student', function($join){
                     $join -> on('exam_monitor.student_id', '=', 'student.id');
                 })->select('student.name','student.exam_id','student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence')
                     ->where('exam_monitor.exam_id',$exam_id)
@@ -339,8 +339,11 @@ class ExamMonitorController  extends CommonController
                     ->where('exam_monitor.type',2)
                     ->where('exam_monitor.description',1)//已经确认替考的
                    // ->groupBy('exam_monitor.student_id')
+                    ->paginate(config('osce.page_size'));*/
+                $list=$builder->where('exam_screening_student.status',2)
+                    ->where('exam_screening_student.is_end',1)
+                    ->where('student.exam_id',$exam_id)
                     ->paginate(config('osce.page_size'));
-
                 if(empty($list->toArray()['data'])){return [];}
                 $list=$list->toArray()['data'];
                 foreach($list as $key=>$v) { //替考学生
