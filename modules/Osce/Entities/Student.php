@@ -685,7 +685,7 @@ class Student extends CommonModel
                 ->where('student.exam_id', '=', $exam_id)
                 ->where('exam_order.exam_screening_id', '=', $screen_id);
             $builder = $builder->where(function ($query) {
-                $query->whereIn('exam_order.status', [0,2,4]);
+                $query->whereIn('exam_order.status', [0,4]);
             });
         /*    //\DB::connection('osce_mis')->enableQueryLog();
 //        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO .
@@ -720,7 +720,6 @@ class Student extends CommonModel
             'exam_order.exam_screening_id as exam_screening_id',
         ])->orderBy('student.id')->paginate(100);
        // $queries = \DB::connection('osce_mis')->getQueryLog();
-        //dd($builder->toArray());
         return $builder;
     }
 

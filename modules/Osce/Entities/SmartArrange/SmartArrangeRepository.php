@@ -10,8 +10,8 @@ namespace Modules\Osce\Entities\SmartArrange;
 
 
 use Modules\Osce\Entities\ExamPlan;
+use Modules\Osce\Entities\SmartArrange\Student\StudentFromDB;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
-use Modules\Osce\Entities\SmartArrange\Student\StudentFromDatabase;
 use Modules\Osce\Entities\ExamPlanRecord;
 
 class SmartArrangeRepository extends AbstractSmartArrange
@@ -63,7 +63,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
                 $this->model->setCate(CateFactory::getCate($exam, $type));
                 
                 //初始化学生
-                $this->_S_Count = $this->model->setStudents(new StudentFromDatabase());
+                $this->_S_Count = $this->model->setStudents(new StudentFromDB());
                 /*
                  * 做排考的前期准备
                  * 检查各项数据是否存在
@@ -87,16 +87,15 @@ class SmartArrangeRepository extends AbstractSmartArrange
                     $this->model->setEntity($exam, $screen);
 
                     $screen = $this->setFlowsnumToScreen($exam, $screen); //将该场次有多少流程写入场次对象
+                    $screen->gradation_order = $key;
 
                     $this->model->screenPlan($screen);
                 }
-
                 if (count($this->model->getStudents()) != 0 || count($this->model->getWaitStudents()) != 0) {
 //                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
                     throw new \Exception('人数太多，所设时间无法完成考试', -99);
                 }
             }
-
             return $this->output($exam);
         } catch (\Exception $ex) {
             if (ExamPlanRecord::where('exam_id', $exam->id)->count()) {
@@ -146,7 +145,6 @@ class SmartArrangeRepository extends AbstractSmartArrange
                         }
 
                         $student = $record->student;
-
                         $timeData[$screeningId][$entityId]['name'] = $name;
                         $timeData[$screeningId][$entityId]['child'][$batch]['start'] = strtotime($record->begin_dt);
                         $timeData[$screeningId][$entityId]['child'][$batch]['end'] = strtotime($record->end_dt);
