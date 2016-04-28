@@ -36,7 +36,7 @@ class Kernel extends ConsoleKernel
 //        $schedule->command('inspire')
 //                 ->hourly();
 
-//        $messageContro = new MessageController();
+        //临时代码，用于执行发送信息
         $messageContro = \App::make('Modules\Osce\Http\Controllers\Admin\MessageController');
         $messageContro ->getSendMessage();
     }

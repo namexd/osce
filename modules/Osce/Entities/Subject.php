@@ -312,9 +312,9 @@ class Subject extends CommonModel
 
         try {
             $TeacherSubject = new TeacherSubject();
-
+            
             //获取当前正在考试的考试对应的所有老师考试项目关系数据
-            if(!$TeacherSubject->getTeacherSubjects()->isEmpty())
+            if(!$TeacherSubject->getTeacherSubjects($subject)->isEmpty())
             {
                 throw new \Exception('支持该考试项目的老师已被安排考试');
 
