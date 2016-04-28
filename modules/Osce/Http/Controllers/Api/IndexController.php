@@ -960,12 +960,13 @@ class IndexController extends CommonController
         }
         $screen_id    = $examScreening->id;
         $studentModel = new Student();
+        $examModel = new Exam();
         try {
 
             //查找exam_screening
-            $stations = $screenModel->where('exam_screening.exam_id','=',$exam_id)
+            $stations = $examModel->where('exam.id','=',$exam_id)
                 ->leftjoin('exam_gradation', function ($join) {
-                    $join->on('exam_gradation.exam_id', '=', 'exam_screening.exam_id');
+                    $join->on('exam_gradation.exam_id', '=', 'exam.id');
                 })->leftjoin('exam_draft_flow', function ($join) {
                     $join->on('exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id');
                 })->leftjoin('exam_draft', function ($join) {
@@ -982,6 +983,7 @@ class IndexController extends CommonController
                 $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
             }
             */
+            dd($stations);
             $countStation=[];
             foreach($stations as $item){
                 $countStation[]=$item->station_id;
@@ -992,7 +994,7 @@ class IndexController extends CommonController
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
 
             $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列(exam_order表)
-
+            dd($list->toArray());
             $data = [];
             foreach($list as $itm){
                 $data[] = [
