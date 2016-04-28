@@ -26,8 +26,7 @@ class Poll extends AbstractCate implements CateInterface
     {
         // TODO: Implement needStudents() method.
         $testStudents = $this->pollTestStudents($entity, $screen);
-        //申明数组
-//        $result = [];
+
 
         /*
          * 获取当前实体需要几个考生 $station->needNum
@@ -45,7 +44,7 @@ class Poll extends AbstractCate implements CateInterface
          */
         if (count($testStudents) < $entity->needNum) {
             if ($entity->min_serialnumber == true) {
-                for ($i = count($testStudents); $i < $entity->needNum; $i++) {
+                for ($i = 0; $i < 100; $i++) {
                     if (count($this->_S_W) > 0) {
                         $thisStudent = array_shift($this->_S_W);
                         if (!is_null($thisStudent)) {
@@ -59,10 +58,13 @@ class Poll extends AbstractCate implements CateInterface
                             }
                         }
                     }
+
+                    if (count($testStudents) == $entity->needNum) {
+                        break;
+                    }
                 }
             }
         }
-
         return $testStudents;
     }
 
@@ -104,10 +106,12 @@ class Poll extends AbstractCate implements CateInterface
             }
         }
 
+
         //如果有数据，就将查找到的id转为学生实体
         if (count($tempStudents) != 0) {
             foreach ($tempStudents as $tempStudent) {
-                $arrays[] = Student::find($tempStudent);
+                $arrays[] = $tempStudent;
+//                $arrays[] = Student::find($tempStudent);
                 if (count($arrays) == $entity->needNum) {
                     $this->serNum = $entity->serialnumber; //将serNum置为当前实体的
                     return $arrays;
@@ -120,4 +124,5 @@ class Poll extends AbstractCate implements CateInterface
         //如果没找到，就直接返回空数组
         return $arrays;
     }
+
 }

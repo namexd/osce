@@ -22,4 +22,6 @@ class ConfigRepository extends AbstractConfig
     {
         return $this->className;
     }
+    
+    
 }
