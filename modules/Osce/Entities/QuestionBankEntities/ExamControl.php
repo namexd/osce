@@ -381,10 +381,4 @@ class ExamControl extends Model
         return $data;
     }
 
-
-
-
-
-
-
 }
