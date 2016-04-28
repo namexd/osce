@@ -276,7 +276,7 @@ class ExamResultController extends CommonController{
     public function getResultVideo(Request $request)
     {
 
-        try {
+//        try {
             $this->validate($request,[
                 'exam_id' => 'required|integer',
                 'student_id' => 'required|integer',
@@ -299,9 +299,9 @@ class ExamResultController extends CommonController{
             //查询出时间锚点追加到数组中
             $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationVcrId);
             return view('osce::admin.statisticalAnalysis.exam_video',['data'=>$data,'anchor'=>$anchor]);
-        } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     //下载安装包
