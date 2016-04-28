@@ -22,18 +22,10 @@ abstract class AbstractSmartArrange implements SmartArrangeInterface
 
     protected $model;
 
-    public function __construct()
-    {
-        $this->makeModel();
-    }
-
-    /**
-     * 类的名字
-     * @return mixed
-     * @author Jiangzhiheng
-     * @time 2016-04-13 11:31
-     */
-    abstract function model();
+//    public function __construct()
+//    {
+//        $this->makeModel();
+//    }
 
     public function makeModel()
     {
