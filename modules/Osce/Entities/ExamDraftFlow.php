@@ -420,9 +420,8 @@ class ExamDraftFlow extends CommonModel
         }
 
         $datas = ExamDraft::select(['exam_draft.room_id', 'exam_draft.station_id'])
-            ->leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-            ->where('exam_draft_flow.exam_id', '=', $exam_id)
-            ->where('exam_draft_flow.exam_gradation_id', '=', $condition['stage_id']);
+                ->leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                ->where('exam_draft_flow.exam_id', '=', $exam_id);
 
         //考场分组模式
         if ($examInfo->sequence_mode == 1) {
@@ -433,7 +432,9 @@ class ExamDraftFlow extends CommonModel
 
         //取考场相关数据
         if ($condition['room'] === 1) {
-            $rooms = $datas->whereNotNull('exam_draft.room_id')->groupBy('exam_draft.room_id')->get();
+
+            $rooms = $datas->where('exam_draft_flow.exam_gradation_id', '=', $condition['stage_id'])
+                           ->whereNotNull('exam_draft.room_id')->groupBy('exam_draft.room_id')->get();
             if (!$rooms->isEmpty()) {
                 $datas = $rooms->pluck('room_id')->toArray();
             } else {

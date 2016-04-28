@@ -57,16 +57,21 @@ class WatchLog extends CommonModel{
         ]);
     }
 
+    /**
+     * 创建腕表解绑记录
+     * @param $data
+     */
    public function unwrapRecord($data){
        if($data['context']){
            $data['context']=serialize($data['context']);
        }
-       WatchLog::create([
-           'watch_id' => $data['watch_id'],
-           'action' => $data['action'],
-           'context' => $data['context'],
+       $result = WatchLog::create([
+           'watch_id'   => $data['watch_id'],
+           'action'     => $data['action'],
+           'context'    => $data['context'],
            'student_id' => $data['student_id']
        ]);
+       return $result;
    }
 
    public function getList($code='',$studentName='',$beginDt='',$endDt=''){
@@ -124,7 +129,7 @@ class WatchLog extends CommonModel{
         })->leftjoin('student',function($student){
             $student->on('student.id','=','watch_log.student_id');
         })->leftjoin('exam_queue',function($examQueue){
-            $examQueue->on('exam_queue.exam_screening_id','=','exam_screening.id');
+            $examQueue->on('exam_queue.exam_screening_id','=','student.id');
         })->groupby('watch_log.student_id')->select('watch.id','watch.nfc_code','student.name','exam_queue.status')->get();
 
 
@@ -143,6 +148,7 @@ class WatchLog extends CommonModel{
             'student.name',
             'student.idcard',
             'student.exam_sequence',
+            'student.photo',
             'exam_queue.status',
             'watch.code as nfc_code',
             'watch.nfc_code as code',
@@ -150,7 +156,7 @@ class WatchLog extends CommonModel{
             'watch.factory',
             'watch.sp',
             'watch_log.student_id'
-        )->first();
+        )->orderBy('watch_log.created_at','desc')->first();
 
         return $builder;
     }

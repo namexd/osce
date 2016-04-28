@@ -127,6 +127,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
         //保存考生答案
         Route::post('answer/postsaveanswer',['uses'=>'AnswerController@postSaveAnswer','as'=>'osce.admin.AnswerController.postSaveAnswer']);
+        //保存成功后，改变队列中的状态为已完成
+        Route::post('answer/save-status',['uses'=>'AnswerController@postSaveStatus','as'=>'osce.admin.AnswerController.postSaveStatus']);
 
         //查询理论考试考试是否结束
         Route::post('answer/isfinish',['uses'=>'AnswerController@isfinish','as'=>'osce.admin.AnswerController.isfinish']);
@@ -158,7 +160,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //考生登录成功页面
         Route::get('api/student-exam-index',['uses'=>'ApiController@getStudentExamIndex','as'=>'osce.admin.ApiController.getStudentExamIndex']);
 
-        //获取考试id
+        //获取对应的试卷id
         Route::get('api/get-exampaperid',['uses'=>'ApiController@getExamPaperId','as'=>'osce.admin.ApiController.getExamPaperId']);
 
         //获取当前考站所在流程考试是否已经结束

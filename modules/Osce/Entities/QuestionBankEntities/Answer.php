@@ -8,6 +8,7 @@
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Mockery\CountValidator\Exception;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScreeningStudent;
@@ -123,36 +124,40 @@ class Answer extends Model
                 }
             }
 
-            //将向考试结果记录表增加一条数据
-            $score = $this->selectGrade($resultData['examPaperFormalId'])['totalScore'];//获取该考生成绩
+
             $examQueueInfo = ExamQueue::where('exam_id','=',$resultData['examId'])
                 ->where('student_id','=',$resultData['studentId'])
                 ->where('station_id','=',$resultData['stationId'])->first();
-
-            $examResultData=array(
-                'student_id'=>$resultData['studentId'],
-                'exam_screening_id'=>$examQueueInfo['exam_screening_id'],
-                'station_id'=>$resultData['stationId'],
-                'time'=>$resultData['time'],
-                'score'=>$score,
-                'teacher_id'=>$resultData['teacherId'],
-                'begin_dt'=>$resultData['begin_dt'],//考试开始时间
-                'end_dt'=>$resultData['end_dt'],//考试结束时间
-            );
-            //查询是否已有该考生的成绩
-            $examResultInfo = ExamResult::where('student_id','=',$resultData['studentId'])
-                                        ->where('exam_screening_id','=',$examQueueInfo['exam_screening_id'])
-                                        ->where('station_id','=',$resultData['stationId'])->first();
-            if(empty($examResultInfo)){
-                //如果没有成绩则新增
-                if(!ExamResult::create($examResultData)){
-                    throw new \Exception(' 向考试结果记录表中插入数据失败！',-102);
+            if(!empty($examQueueInfo)){
+                //将向考试结果记录表增加一条数据
+                $score = $this->selectGrade($resultData['examPaperFormalId'])['totalScore'];//获取该考生成绩
+                $examResultData=array(
+                    'student_id'=>$resultData['studentId'],
+                    'exam_screening_id'=>$examQueueInfo['exam_screening_id'],
+                    'station_id'=>$resultData['stationId'],
+                    'time'=>$resultData['time'],
+                    'score'=>$score,
+                    'teacher_id'=>$resultData['teacherId'],
+                    'begin_dt'=>$resultData['begin_dt'],//考试开始时间
+                    'end_dt'=>$resultData['end_dt'],//考试结束时间
+                );
+                //查询是否已有该考生的成绩
+                $examResultInfo = ExamResult::where('student_id','=',$resultData['studentId'])
+                    ->where('exam_screening_id','=',$examQueueInfo['exam_screening_id'])
+                    ->where('station_id','=',$resultData['stationId'])->first();
+                if(empty($examResultInfo)){
+                    //如果没有成绩则新增
+                    if(!ExamResult::create($examResultData)){
+                        throw new \Exception(' 向考试结果记录表中插入数据失败！',-102);
+                    }
+                }else{
+                    //有成绩则更新
+                    if(!ExamResult::where('id','=',$examResultInfo['id'])->update($examResultData)){
+                        throw new \Exception(' 保存考生成绩失败！',-103);
+                    }
                 }
             }else{
-                //有成绩则更新
-                if(!ExamResult::where('id','=',$examResultInfo['id'])->update($examResultData)){
-                    throw new \Exception(' 保存考生成绩失败！',-103);
-                }
+                throw new \Exception(' 没有对应的考生数据！',-104);
             }
             $DB->commit();
             return true;
@@ -161,6 +166,51 @@ class Answer extends Model
             throw $ex;
         }
     }
+
+    /**改变该考生在考试队列中的状态为已完成
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $examId 考试id
+     * @param $studentId 学生id
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function saveStatus($examId,$studentId){
+        $DB = \DB::connection('osce_mis');
+        $DB->beginTransaction();
+        try{
+            //获取该考生对应的队列信息
+            $quene = ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status',2)->first();
+            if(!empty($quene)){
+
+                //获取当前的服务器时间
+                $date = date('Y-m-d H:i:s');
+                //修改状态
+                $data = array(
+                    'status' =>3,
+                    'end_dt' =>$date,
+                    'blocking' =>1
+                );
+                if(!ExamQueue::where('id',$quene->id)->update($data)){
+                    throw new \Exception('状态更新失败',-102);
+                }
+            }else{
+                throw new \Exception('没有该考生的队列信息',-101);
+            }
+
+
+
+        }catch (\Exception $ex){
+
+        }
+
+    }
+
+
+
+
     /**查询该考生理论考试成绩及该场考试相关信息
      * @method
      * @url /osce/

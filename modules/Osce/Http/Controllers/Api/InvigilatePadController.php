@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Input;
+use Mockery\CountValidator\Exception;
 use Modules\Osce\Entities\ExamAbsent;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamFlow;
@@ -187,12 +188,12 @@ class InvigilatePadController extends CommonController
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 
-                $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return response()->json(
                     $this->success_data($studentData['nextTester'], 102, '验证完成')
                 );
             } else {
-                $redis->publish('pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
                 throw new \Exception('学生信息查询失败', -2);
             }
         } catch (\Exception $ex) {
@@ -236,15 +237,19 @@ class InvigilatePadController extends CommonController
             $stationId = $request['station_id'];
             $teacher_id = $request['teacher_id'];
             $exam = Exam::doingExam();
+        
+        
+        
             $studentModel = new  Student();
             $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 //                dump($this->success_data($studentData['nextTester']));
-                $redis->publish('pad_message', json_encode($this->success_data($studentData['nextTester'], 102, '验证完成')));
+
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 102, '验证完成')));
                 return $studentData['nextTester'];
             } else {
-                $redis->publish('pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
                 return [];
             }
 
@@ -271,33 +276,27 @@ class InvigilatePadController extends CommonController
      */
     public function getExamGrade(Request $request)
     {
-      
-//        try {
-
+        try{
             $this->validate($request, [
                 'station_id' => 'required|integer',
             ], [
                 'station_id.required' => '没有获取到当前考站',
             ]);
-
             $stationId = $request->get('station_id');
-
             $examId = $request->get('exam_id');
             if(empty($examId))
             {
                 $exam   =  Exam::doingExam();
                 $examId =   $exam->id;
             }
-
             //根据考站id查询出下面所有的考试项目
-            $station = Station::find($stationId);
             $ExamScreening   =  new ExamScreening();
             $screening   =   $ExamScreening  ->getExamingScreening($examId);
             if(is_null($screening))
             {
                 $screening  =   $ExamScreening->getNearestScreening($examId);
             }
-            
+
             if(is_null($screening))
             {
                 throw new \Exception('没有对应的考试');
@@ -305,50 +304,43 @@ class InvigilatePadController extends CommonController
             $exam_gradation =   ExamGradation::where('exam_id','=',$examId)->where('order','=',$screening->gradation_order)->first();
             if(is_null($exam_gradation))
             {
-                throw new \Exception('没有找到对应的阶段');
+                throw new \Exception('没有找到对应的阶段',-101);
             }
             $exam_gradation_id  =   $exam_gradation->id;
 
             $ExamDraft  =   ExamDraft:: leftJoin('exam_draft_flow','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
-                        ->  where('exam_draft_flow.exam_id','=',$examId)
-                        ->  where('exam_draft_flow.exam_gradation_id','=',$exam_gradation_id)
-                        ->  where('exam_draft.station_id','=',$stationId)
-                        ->  with('station')
-                        ->  first();
-            if(is_null($ExamDraft->subject_id))
+                ->  where('exam_draft_flow.exam_id','=',$examId)
+                ->  where('exam_draft_flow.exam_gradation_id','=',$exam_gradation_id)
+                ->  where('exam_draft.station_id','=',$stationId)
+                ->  with('station')
+                ->  first();
+
+
+            if(!empty($ExamDraft)&&!empty($ExamDraft->subject_id))
             {
                 if($ExamDraft->station->type==3)
                 {
-                    throw new \Exception('请检查考站类型');
+                    throw new \Exception('请检查考站类型',-102);
                 }
-                else
-                {
-                    throw new \Exception('请检查考试安排数据');
+
+                $standardItemModel = new StandardItem();
+                $standardItemList  = $standardItemModel->getSubjectStandards($ExamDraft->subject_id);
+                if (empty($standardItemList)) {
+
+                    throw new \Exception('数据查询失败',-103);
                 }
             }
-            //考试标准时间
-            //$mins = $station->mins;
-
-            $exam = Exam::doingExam($examId);
-
-            $standardItemModel = new StandardItem();
-            $standardItemList  = $standardItemModel->getSubjectStandards($ExamDraft->subject_id);
-
-            if (count($standardItemList) != 0) {
-
-                return response()->json(
-                    $this->success_data($standardItemList, 1, '数据传送成功')
-                );
-
-            } else {
-                return response()->json(
-                    $this->fail(new \Exception('数据查询失败'))
-                );
+            else
+            {
+                throw new \Exception('请检查考试安排数据',-104);
             }
-//
-//        } catch (\Exception $ex) {
-//            \Log::alert($ex->getMessage());
-//        }
+            return response()->json(
+                $this->success_data($standardItemList, 1, '数据传送成功')
+            );
+        }catch (\Exception $ex){
+            return response()->json($this->fail($ex));
+        }
+
     }
 
     /**
@@ -541,6 +533,7 @@ class InvigilatePadController extends CommonController
             return response()->json($this->success_data([$result->id]));
 
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
@@ -617,6 +610,7 @@ class InvigilatePadController extends CommonController
 
             return response()->json($this->success_data([$result->id]));
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
@@ -653,6 +647,7 @@ class InvigilatePadController extends CommonController
 
             return response()->json($this->success_data(self::storeAnchor($stationId, $studentId, $examId, $teacherId, $timeAnchor)));
         } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }
@@ -772,7 +767,7 @@ class InvigilatePadController extends CommonController
      */
     public function getStartExam(Request $request)
     {
-        try {
+       // try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
                 'station_id' => 'required|integer'
@@ -808,16 +803,32 @@ class InvigilatePadController extends CommonController
 //            ];
 //           if(!ExamResult::create($ExamResultData)){
 //               throw new \Exception('成绩创建失败',-106);
+            $exam = Exam::where('status', '=', 1)->first();
+            $examQueue = ExamQueue::where('exam_id',$exam->id)
+                ->where('student_id', '=', $studentId)
+                ->where('station_id', '=', $stationId)
+                ->whereIn('status', [0,1,2])
+                ->first();
+
+            //拿到阶段序号
+            $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
+
+
+            //拿到属于该场考试，该场阶段所对应的所有场次id
+            $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get();
+            if(!is_null($examscreeningId)){
+                $examscreeningId = $examscreeningId->pluck('id');
+            }
 //           }
             $ExamQueueModel = new ExamQueue();
-            
-            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId);
+
+            $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId);
 
 
 
             if ($AlterResult) {
-                $redis->publish('pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
-                
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
+
                 //调用向腕表推送消息的方法
 
                 $exam = Exam::where('status', '=', 1)->first();
@@ -851,7 +862,7 @@ class InvigilatePadController extends CommonController
 
                 if($station->type==3) {//理论考试
                     $publishMessage->avator = asset($publishMessage->avator);
-                    $redis->publish('pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
+                    $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
                 }
 
                 return response()->json(
@@ -861,10 +872,10 @@ class InvigilatePadController extends CommonController
             return response()->json(
                 $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
             );
-        } catch (\Exception $ex) {
-            \Log::alert($ex->getMessage() . '');
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            \Log::alert($ex->getMessage() . '');
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
@@ -1044,24 +1055,26 @@ class InvigilatePadController extends CommonController
 
             if(count($watchData) > 0){
                 $watchData = $watchData->toArray();
+
                 foreach($watchData as $k=>$v){
 
-                    $watchModel = WatchLog::where('id','=',$v['id'])->orderBy('id','desc')->first();
-                    if(!is_null($watchModel)){
-                        if($watchModel->action == '绑定'){
-                            if($v['status'] < 2){
-                                $watchData[$k]['status'] = '0';
-                            }elseif($v['status'] == 2){
-                                $watchData[$k]['status'] = '1';
-                            }else{
-                                $watchData[$k]['status'] = '2';
-                            }
-                        }else{
-                           unset($watchData[$k]);
-                        }
+//                    $watchModel = WatchLog::where('id','=',$v['id'])->orderBy('id','desc')->first();
+//                    if(!is_null($watchModel)){
+//                        if($watchModel->action == '绑定'){
+                    if($v['status'] < 2){
+                        $watchData[$k]['status'] = '0';
+                    }elseif($v['status'] == 2){
+                        $watchData[$k]['status'] = '1';
+                    }elseif($v['status'] > 2){
+                        $watchData[$k]['status'] = '2';
                     }
+//                        }else{
+//
+//                        }
+//                    }
 
                 }
+                //dd($watchData);
                 return response()->json(
                     $this->success_data($watchData,200,'success')
                 );
@@ -1514,5 +1527,71 @@ class InvigilatePadController extends CommonController
             $connection->rollBack();
             return \Response::json(array('code'=>0));
         }
+    }
+
+
+
+    /**考生现场照片采集
+     * @method
+     * @url api/invigilatepad/live-photo-upload
+     * @access public
+     * @param Request $request
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postLivePhotoUpload(Request $request){
+        $exam_sequence = $request->exam_sequence;//学号
+        $data   =   [
+            'path'  =>  '',
+            'name'=>''
+        ];
+        if ($request->hasFile('file'))
+        {
+            $status = 200;
+            $file   =   $request->file('file');
+            $oldfileName = $file->getClientOriginalName();//获取上传图片的名称
+            $type = substr($oldfileName, strrpos($oldfileName,'.'));//图片格式
+            $arr = array('.jpg','.JPG');
+            if(!in_array($type,$arr)){
+                $status = 0;
+                $info   = '格式错误！';
+            }
+
+            $imagesize = getClientOriginalName($oldfileName);
+            if($imagesize[0] != 480 || $imagesize[0] != 640){
+                $status = 0;
+                $info   = '图片分辨率不匹配！';
+            }
+
+            if($status){
+
+                $path   =   'osce/studentphoto/'.date('Y-m-d').'/';
+                $destinationPath    =   public_path($path);
+
+                $file->move($destinationPath,$oldfileName);
+                $pathReturn    =   '/'.$path.$oldfileName;
+
+                $data   =   [
+                    'path'=>$pathReturn,
+                    'name'=>$oldfileName,
+                ];
+
+
+                //保存考试临时头像
+                $addStudentPhoto = Student::where('exam_sequence','=',$exam_sequence)->update(['photo'=>$pathReturn]);
+                $info   = '上传成功';
+                if(!$addStudentPhoto){
+                    $info   = '上传失败';
+                    $status = 0;
+                }
+            }
+        }else{
+            $info   = '没有上传文件';
+            $status = 0;
+        }
+        return json_encode(
+            $this->success_data($data,$status,$info)
+        );
     }
 }

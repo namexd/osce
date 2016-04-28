@@ -377,52 +377,57 @@ class PadController extends  CommonController{
      */
     public function getChangeStatus(Request $request)
     {
+
         $this->validate($request, [
             'student_id' => 'required|integer',
             'station_id' => 'sometimes|integer',
             'user_id' => 'required|integer'
         ]);
 
-//        try {
-            //获取当前的服务器时间
-            $date = date('Y-m-d H:i:s');
-            //通过考生的腕表id来找到对应的队列id
-            $studentId = $request->input('student_id');
-            $stationId = $request->input('station_id', null);
-            $teacherId = $request->input('user_id');
+        try {
+        //获取当前的服务器时间
+        $date = date('Y-m-d H:i:s');
+        //通过考生的腕表id来找到对应的队列id
+        $studentId = $request->input('student_id');
+        $stationId = $request->input('station_id', null);
+        $teacherId = $request->input('user_id');
 
-            $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-            //将该条信息的首位置零
+        $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
+
+        //拿到阶段序号
+        $gradationOrder =ExamScreening::find($queue->exam_screening_id);
+
+
+
+        //将该条信息的首位置零
 //            $queue->stick = 0;
 //            if (!$queue->save()) {
 //                throw new \Exception('结束考试失败', -10);
 //            }
 
-            //考试结束后，调用向腕表推送消息的方法
-            $examScreeningStudentModel = new ExamScreeningStudent();
-            $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
-                ->where('student_id','=',$queue->student_id)->first();
+        //考试结束后，调用向腕表推送消息的方法
+        $examScreeningStudentModel = new ExamScreeningStudent();
+        $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
+            ->where('student_id','=',$queue->student_id)->first();
 
-            $watchModel = new Watch();
-            $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+        $watchModel = new Watch();
+        $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
 
-            //拿到阶段序号
-            $gradationOrder =ExamScreening::find($queue->exam_screening_id);
-            //拿到所有场次id
 
-            $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
-        
-            $studentWatchController = new StudentWatchController();
-            $request['nfc_code'] = $watchData->code;
+        //拿到属于该场考试该阶段的所有场次id
+        $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
 
-            $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
+        $studentWatchController = new StudentWatchController();
+        $request['nfc_code'] = $watchData->code;
 
-            return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
+        $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
 
-//        } catch (\Exception $ex) {
-//            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
-//            return response()->json($this->fail($ex));
-//        }
+        return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
+
+        } catch (\Exception $ex) {
+            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -638,6 +643,14 @@ class PadController extends  CommonController{
         }
 
         return $vcrs;
+    }
+
+    /**
+     * 获取剩余时间
+     */
+    public function getSurplusTime()
+    {
+
     }
 
 }

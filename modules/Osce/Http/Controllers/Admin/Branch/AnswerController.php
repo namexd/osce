@@ -35,20 +35,20 @@ class AnswerController extends CommonController
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
         $this->validate($request,[
-            'id'       => 'required|integer',
-            'examId'    => 'required|integer',
-            'stationId'    => 'required|integer',
-            'userId'    => 'required|integer',
-            'studentId'    => 'required|integer',
+            'id'       => 'required|integer',//试卷id
+            'examId'    => 'required|integer',//考试id
+            'stationId'    => 'required|integer',//考站id
+            'userId'    => 'required|integer',//老师id
+            'studentId'    => 'required|integer',//学生id
 
         ]);
 
       //admin/answer/formalpaper-list?stationId=21&userId=140&studentId=222&id=12&examId=4
-        $ExamPaperId = $request->input('id');//试卷id  132
-        $examId = $request->input('examId');//考试id  421
-        $stationId = $request->input('stationId');//考站id 20
-        $userId = $request->input('userId');//老师id
-        $studentId = $request->input('studentId');//学生id
+        $ExamPaperId = $request->input('id');
+        $examId = $request->input('examId');
+        $stationId = $request->input('stationId');
+        $userId = $request->input('userId');
+        $studentId = $request->input('studentId');
 
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
@@ -123,6 +123,7 @@ class AnswerController extends CommonController
             }
         }
         //echo date('Y/m/d H:i:s',$systemTimeStart).'and'.date('Y/m/d H:i:s',$systemTimeEnd);
+
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -146,13 +147,11 @@ class AnswerController extends CommonController
     public function postSaveAnswer(Request $request)
     {
         $this->validate($request,[
-            'examId'    => 'required|integer', //考试id
-            'studentId'    => 'required|integer',//学生id
-            'stationId'    => 'required|integer',//考站id
-            'teacherId'    => 'required|integer', //老师id
-            'examPaperFormalId'       => 'required|integer',//正式试卷id
-
-
+            'examId'               => 'required|integer', //考试id
+            'studentId'            => 'required|integer',//学生id
+            'stationId'            => 'required|integer',//考站id
+            'teacherId'            => 'required|integer', //老师id
+            'examPaperFormalId'   => 'required|integer',//正式试卷id
 
         ]);
 
@@ -243,13 +242,11 @@ class AnswerController extends CommonController
         try{
             $answerModel->saveAnswer($data,$resultData);
             \Session::pull('systemTimeStart');//删除session
-
             return response()->json(
-
                 $this->success_data([],1,'success')
             );
+            return response()->json(true);
         }catch (\Exception $ex) {
-
             return response()->json($this->fail($ex));
 
         }
@@ -312,7 +309,6 @@ class AnswerController extends CommonController
                                 ->where('exam_id','=',$examId)
                                 ->where('student_id','=',$studentId)
                                 ->where('station_id','=',$stationId)->first();
-        //dd(data);
 
         if(!empty($data)){
             $controlMark = $data['controlMark'];
@@ -321,6 +317,36 @@ class AnswerController extends CommonController
         }
         return response()->json($controlMark);
 
+    }
+
+    /**更新该考生在队列中的状态为已完成
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @throws \Exception
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postSaveStatus(Request $request){
+
+        try{
+            $this->validate($request,[
+                'examId'       => 'required|integer',
+                'studentId'    => 'required|integer',
+            ]);
+            $examId = $request->input('examId');
+            $studentId = $request->input('studentId');
+            $answerModel = new Answer();
+            $answerModel->saveStatus($examId,$studentId);
+            return response()->json(
+                $this->success_data([],1,'success')
+            );
+        }catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
+        }
     }
 
 

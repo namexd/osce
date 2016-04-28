@@ -398,8 +398,7 @@ class Student extends CommonModel
             //注册 新用户
             $password = '123456';
             $user = $this->registerUser($userData, $password);
-            //$this ->sendRegisterEms($userData['mobile'], $password);
-//            $this ->sendRegisterEms($userData['mobile'], $password);
+            $this ->sendRegisterEms($userData['mobile'], $password);
             //给用户分配角色
             $this->addUserRoles($user, $role_id);
         }
@@ -468,10 +467,19 @@ class Student extends CommonModel
     public function studentList($stationId, $exam, $teacher_id)
 
     {
-        $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
-            ->where('exam_draft.station_id',$stationId)
-            ->where('exam_draft_flow.exam_id',$exam->id)
-            ->first();
+//        $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
+//            ->where('exam_draft.station_id',$stationId)
+//            ->where('exam_draft_flow.exam_id',$exam->id)
+//            ->first();
+        //当前场次
+        $examScreen=new ExamScreening();
+        $roomMsg = $examScreen->getExamingScreening($exam->id);
+        $roomMsg_two = $examScreen->getNearestScreening($exam->id);
+        if($roomMsg){
+            $exam_screening_id=$roomMsg->id;
+        }elseif($roomMsg_two){
+            $exam_screening_id=$roomMsg_two->id;
+        }
 
         $queueing = $nextTester = Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
@@ -481,7 +489,7 @@ class Student extends CommonModel
             ->where('exam_queue.station_id', '=', $stationId)
             ->where('exam_queue.exam_id', '=', $exam->id)
             ->where('station_teacher.exam_id', $exam->id)
-            ->where('exam_queue.gradation_order', $ExamDraftFlow->order)
+            ->where('exam_queue.exam_screening_id', $exam_screening_id)
             ->where('exam_queue.status', '=', 2)
             ->first();
         if (is_null($queueing)) {//没有正在考试的
@@ -494,9 +502,9 @@ class Student extends CommonModel
                 ->where('exam_queue.station_id', '=', $stationId)
                 ->where('exam_queue.exam_id', '=', $exam->id)
                 ->where('station_teacher.exam_id', $exam->id)
-                ->whereIn('exam_queue.status', [1, 2])
+                ->where('exam_queue.status', 1)
                 ->where('exam_queue.blocking', 1)
-                ->where('exam_queue.gradation_order', $ExamDraftFlow->order)
+                ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->select([
@@ -522,7 +530,7 @@ class Student extends CommonModel
                 ->where('exam_queue.exam_id', '=', $exam->id)
                 ->where('station_teacher.exam_id', $exam->id)
                 ->where('exam_queue.status', '=', 2)
-                ->where('exam_queue.gradation_order', $ExamDraftFlow->order)
+                ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->select([
@@ -639,7 +647,6 @@ class Student extends CommonModel
                              ->where('exam_screening_id', '=', $screen_id)->get();
         $buondNum = count($buondNum);
         $num      = $countStation - $buondNum;
-
         if ($num === 0 || $num < 0) {
             return array();
         }
@@ -655,7 +662,6 @@ class Student extends CommonModel
         $endStudentList = ExamQueue::where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->whereIn('status', [0,2,1])->get();
 
         if(count($endStudentList)){
-
             $studentList = ExamQueue::where('status',3)->where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)
                                     ->groupBy('student_id')->get()->pluck('student_id')->toArray();
 
@@ -673,12 +679,13 @@ class Student extends CommonModel
                 $builder = $builder->whereNotIn('exam_order.student_id', $studentList);
             }
         }else {
-
             $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
                 $join->on('student.id', '=', 'exam_order.student_id');
-            })->where('exam_order.exam_id', '=', $exam_id)->where('student.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
+            })->where('exam_order.exam_id', '=', $exam_id)
+                ->where('student.exam_id', '=', $exam_id)
+                ->where('exam_order.exam_screening_id', '=', $screen_id);
             $builder = $builder->where(function ($query) {
-                $query->whereIn('exam_order.status', [0, 4]);
+                $query->whereIn('exam_order.status', [0,4]);
             });
         /*    //\DB::connection('osce_mis')->enableQueryLog();
 //        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO .
@@ -702,7 +709,8 @@ class Student extends CommonModel
                 $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
             }*/
         }
-        $builder = $builder->select([
+//        $builder = $builder->whereRaw('unix_timestamp(exam_order.begin_dt) > ?',[strtotime(date('Y-m-d H:i:s'))])->select([
+        $builder =$builder->select([
             'student.id as id',
             'student.name as name',
             'student.idcard as idcard',
@@ -712,7 +720,6 @@ class Student extends CommonModel
             'exam_order.exam_screening_id as exam_screening_id',
         ])->orderBy('student.id')->paginate(100);
        // $queries = \DB::connection('osce_mis')->getQueryLog();
-        //dd($builder->toArray());
         return $builder;
     }
 
@@ -847,7 +854,7 @@ class Student extends CommonModel
     public function getStudentExamInfo($userId, $examID)
     {
         //查找当前学生信息
-        $studentInfo = $this->where('student.user_id', '=', $userId)->where('student.exam_id', '=', $examID)->first();
+        $studentInfo = $this->where('student.user_id', '=', $userId)->where('student.exam_id', '=', $examID)->orderBy('student.id','desc')->first();
         return $studentInfo;
     }
 

@@ -228,6 +228,10 @@ class Exam extends CommonModel
                 throw new \Exception('删除考试学生表失败，请重试！');
             }
 
+            //删除考场安排 相关信息
+            $examDraftFlow = new ExamDraftFlow();
+            $examDraftFlow ->delDraftDatas($id);
+
             //删除考试考场关联表
             $examScreenings = $examScreening->get();
             if (!$examScreenings->isEmpty()) {
@@ -237,10 +241,6 @@ class Exam extends CommonModel
                     }
                 }
             }
-
-            //删除考场安排 相关信息
-            $examDraftFlow = new ExamDraftFlow();
-            $examDraftFlow ->delDraftDatas($id);
 
             //删除考试阶段 相关信息
             $examGradations = ExamGradation::where('exam_id', '=', $id)->get();
@@ -475,17 +475,25 @@ class Exam extends CommonModel
         //查询原有的 考试阶段 个数
         $examGradation = ExamGradation::where('exam_id', '=', $exam_id)->get();
         $num = $examGradation->count();
+        $keys = [];
+        $key = 0;
 
         if (!is_array($gradationMode)) {
             $gradationMode = null;
+        } else {
+            $keys = array_keys($gradationMode);
+            $key = array_pop($keys);
         }
 
         //比较 阶段个数 (不相等，则添加 或者 删除)
-        $a = 0;
         if ($num != $gradation) {
             if ($num != 0){
                 foreach ($examGradation as $a => $item)
                 {
+                    if ($key > 0 && $a + 1 > $key) {
+                        $a = $key - 1;
+                    }
+
                     //1、更新共同 拥有的
                     $item->gradation_number = $gradation;   //更新 当前考试阶段总数量
                     $item->sequence_cate = is_null($gradationMode) ? null : $gradationMode[$a + 1];
@@ -515,7 +523,7 @@ class Exam extends CommonModel
                         'exam_id'           => $exam_id,
                         'order'             => $i,
                         'gradation_number'  => $gradation,
-                        'sequence_cate' => is_null($gradationMode) ? null : $gradationMode[$i + $a],
+                        'sequence_cate' => is_null($gradationMode) ? null : $gradationMode[$i],
                         'created_user_id'   => Auth::user()->id
                     ];
 //                    dd($gradationData);
@@ -846,6 +854,17 @@ class Exam extends CommonModel
                 }
             }
 
+            //更改考试-场次-考站状态表 的状态
+            $stationVideos = StationVideo::where('exam_id', '=', $id)->get();
+            if(!$stationVideos->isEmpty()){
+                foreach ($stationVideos as $stationVideo)
+                {
+                    if(!$stationVideo->delete()){
+                        throw new \Exception('删除考试-锚点失败！');
+                    }
+                }
+            }
+
             //修改考试考场学生表 (删除)
             foreach ($examScreeningObj as $item)
             {
@@ -857,6 +876,18 @@ class Exam extends CommonModel
                     }
                 }
             }
+
+            //更改考试-场次-考站状态表 的状态
+            $examStationStatus = ExamStationStatus::where('exam_id', '=', $id)->get();
+            if(!$examStationStatus->isEmpty()){
+                foreach ($examStationStatus as $item) {
+                    $item->status = 0;
+                    if(!$item->save()){
+                        throw new \Exception('修改考试-场次-考站状态失败！');
+                    }
+                }
+            }
+
             //更改考试场次状态
             $examScreenings = $examScreening->get();
             if (!$examScreenings->isEmpty()) {
