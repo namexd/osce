@@ -82,6 +82,10 @@
                                     notEmpty: {/*非空提示*/
                                         message: '考试时长不能为空'
                                     },
+                                    regexp:{
+                                        regexp:/^[1-9]\d*$/,
+                                        message:'必须是1及以上的整数'
+                                    },
                                     callback: {
                                         message: '考试时长必须是1及以上的整数',
                                         callback:function(){
@@ -92,6 +96,7 @@
                                             }
                                         }
                                     }
+
                                 }
                             }
                         }
@@ -123,6 +128,10 @@
                                 validators: {
                                     notEmpty: {/*非空提示*/
                                         message: '考试时长不能为空'
+                                    },
+                                    regexp:{
+                                        regexp:/^[1-9]\d*$/,
+                                        message:'必须是1及以上的整数'
                                     },
                                     callback: {
                                         message: '考试时长必须是1及以上的整数',
@@ -465,7 +474,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>考试时长</label>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" id="code" name="time" value="@if(!empty(@$paperDetail['length'])){{@$paperDetail['length']}}@else{{@$paperDetails['length']}}@endif" placeholder="请输入分钟数">
+                        <input type="text" class="form-control" id="code" name="time" value="@if(!empty(@$paperDetail['length'])){{@$paperDetail['length']}}@else{{@$paperDetails['length']}}@endif" placeholder="请输入分钟数">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
