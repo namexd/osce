@@ -681,9 +681,11 @@ class Student extends CommonModel
         }else {
             $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
                 $join->on('student.id', '=', 'exam_order.student_id');
-            })->where('exam_order.exam_id', '=', $exam_id)->where('student.exam_id', '=', $exam_id)->where('exam_order.exam_screening_id', '=', $screen_id);
+            })->where('exam_order.exam_id', '=', $exam_id)
+                ->where('student.exam_id', '=', $exam_id)
+                ->where('exam_order.exam_screening_id', '=', $screen_id);
             $builder = $builder->where(function ($query) {
-                $query->whereIn('exam_order.status', [0, 4]);
+                $query->whereIn('exam_order.status', [0,2,4]);
             });
         /*    //\DB::connection('osce_mis')->enableQueryLog();
 //        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO .
