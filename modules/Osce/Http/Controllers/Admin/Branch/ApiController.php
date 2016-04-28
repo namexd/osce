@@ -935,7 +935,7 @@ class ApiController extends CommonController
             $examQueueModel = new ExamQueue();
             $examQueue = $examQueueModel->where('student_id', $studentId)
                 ->where('exam_id',$examId)
-                ->whereNotIn('status',[2,3,4])->get();
+                ->whereNotIn('status',[3,4])->get();
             if (!empty($examQueue)) {
                 if ($mode == 1) {
                     //如果选择否，只是做标记
