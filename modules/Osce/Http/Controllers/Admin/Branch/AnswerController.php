@@ -309,7 +309,6 @@ class AnswerController extends CommonController
                                 ->where('exam_id','=',$examId)
                                 ->where('student_id','=',$studentId)
                                 ->where('station_id','=',$stationId)->first();
-        //dd(data);
 
         if(!empty($data)){
             $controlMark = $data['controlMark'];
@@ -320,7 +319,7 @@ class AnswerController extends CommonController
 
     }
 
-    /**改变队列中的状态
+    /**更新该考生在队列中的状态为已完成
      * @method
      * @url /osce/
      * @access public

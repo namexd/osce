@@ -1055,6 +1055,7 @@ class InvigilatePadController extends CommonController
 
             if(count($watchData) > 0){
                 $watchData = $watchData->toArray();
+
                 foreach($watchData as $k=>$v){
 
                     $watchModel = WatchLog::where('id','=',$v['id'])->orderBy('id','desc')->first();
@@ -1064,15 +1065,17 @@ class InvigilatePadController extends CommonController
                                 $watchData[$k]['status'] = '0';
                             }elseif($v['status'] == 2){
                                 $watchData[$k]['status'] = '1';
-                            }else{
-                                $watchData[$k]['status'] = '2';
                             }
                         }else{
-                           unset($watchData[$k]);
+                            if($v['status'] > 2){
+                                echo $k;
+                                $watchData[$k]['status'] = '2';
+                            }
                         }
                     }
 
                 }
+                dd($watchData);
                 return response()->json(
                     $this->success_data($watchData,200,'success')
                 );
