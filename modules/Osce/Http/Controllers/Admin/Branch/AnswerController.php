@@ -242,13 +242,11 @@ class AnswerController extends CommonController
         try{
             $answerModel->saveAnswer($data,$resultData);
             \Session::pull('systemTimeStart');//删除session
-
             return response()->json(
-
                 $this->success_data([],1,'success')
             );
+            return response()->json(true);
         }catch (\Exception $ex) {
-
             return response()->json($this->fail($ex));
 
         }
@@ -333,24 +331,22 @@ class AnswerController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postSaveStatus(Request $request){
-        $this->validate($request,[
-            'examId'       => 'required|integer',
-            'studentId'    => 'required|integer',
-        ]);
-        $examId = $request->input('examId');
-        $studentId = $request->input('studentId');
-        //得到queue实例
-        $queue = ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status', 2)->first();
-        if(!empty($queue)){
-            //获取当前的服务器时间
-            $date = date('Y-m-d H:i:s');
-            //修改状态
-            $data = array(
-                'status' =>3,
-                'end_dt' =>$date,
-                'blocking' =>1
+
+        try{
+            $this->validate($request,[
+                'examId'       => 'required|integer',
+                'studentId'    => 'required|integer',
+            ]);
+            $examId = $request->input('examId');
+            $studentId = $request->input('studentId');
+            $answerModel = new Answer();
+            $answerModel->saveStatus($examId,$studentId);
+            return response()->json(
+                $this->success_data([],1,'success')
             );
-            ExamQueue::where('id', $queue->id)->update($data);
+        }catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
         }
     }
 
