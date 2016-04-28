@@ -67,7 +67,7 @@ function statistics_teach_score(){
             success:function(res){
                 $(res.data.datalist).each(function(){
                     $(".student_select").append('<option value="'+this.id+'">'+this.title+'</option>');
-                    console.log(this+'-option')
+                    console.log(this.title+'-option-'+this.id)
                 });
             }
         })
