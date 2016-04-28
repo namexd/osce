@@ -405,6 +405,7 @@ class PadController extends  CommonController{
 //                throw new \Exception('结束考试失败', -10);
 //            }
 
+
         //考试结束后，调用向腕表推送消息的方法
         $examScreeningStudentModel = new ExamScreeningStudent();
         $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
@@ -421,6 +422,11 @@ class PadController extends  CommonController{
         $request['nfc_code'] = $watchData->code;
 
         $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
+        //考试完成推送
+        $draw=new DrawlotsController();
+        $request['id']=$teacherId;
+        $draw->getExaminee_arr($request);//当前组推送(可以获得)
+        $draw->getNextExaminee_arr($request);//下一组
 
         return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
 
