@@ -708,7 +708,7 @@ class Student extends CommonModel
             }*/
         }
 //        $builder = $builder->whereRaw('unix_timestamp(exam_order.begin_dt) > ?',[strtotime(date('Y-m-d H:i:s'))])->select([
-        $builder =$builder->whereRaw('unix_timestamp(exam_order.begin_dt) > ?',[strtotime(date('Y-m-d H:i:s'))])->select([
+        $builder =$builder->select([
             'student.id as id',
             'student.name as name',
             'student.idcard as idcard',
