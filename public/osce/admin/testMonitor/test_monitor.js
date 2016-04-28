@@ -155,6 +155,10 @@ function monitor_test(){
 
 //考试监控迟到页面
 function monitor_late(){
+    //刷新
+    $("#refresh").click(function(){
+        window.location.href=window.location.href;
+    });
     //确认弃考
     $(".abandon").click(function(){
         var $student = $(this).parent().parent().siblings(".student").text();

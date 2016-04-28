@@ -124,7 +124,7 @@ class ExamControl extends Model
                     $examInfo[$key]['description'] = $examMonitorInfo['description'];
 
                 }else{
-                    
+
                     $examInfo[$key]['type'] = -1;
                     $examInfo[$key]['description'] = -1;
                 }
