@@ -230,6 +230,7 @@ class DrawlotsController extends CommonController
             $arr=array_intersect ($stationLists,$stationList);
             $stationId=array_pop($arr);
             if(is_null($stationId)){
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], 4000, '当前老师没有考试')));
                 throw new \Exception('当前老师没有考试！', 4000);
             }
 
@@ -620,8 +621,10 @@ class DrawlotsController extends CommonController
             $request['station_id']=$result->id;
             $request['teacher_id']=$teacherId;
             $inv=new InvigilatePadController();
-            $inv->getAuthentication_arr($request);//当前考生推送
-       
+            $studentMsg=$inv->getAuthentication_arr($request);//当前考生推送
+            if($studentMsg) {
+               $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data($studentMsg, 102, '验证完成')));
+            }
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {

@@ -105,12 +105,13 @@ class ExamControl extends Model
             ->get();
 
 
-
-        //查询该考生剩余考站数量和该考生是否有标记
         if(!empty($examInfo)&&count($examInfo)>0){
             foreach($examInfo as $key=>$val){
+                //获取该考生剩余考站数量
                 $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['exam_screening_id']);
                 $examInfo[$key]['remainStationCount']=$remainExamQueueData['remainStationCount'];
+
+                //查询正在考的这次考试是否有标记
                 $examMonitorModel = new ExamMonitor();
                 $examMonitorInfo= $examMonitorModel->where('station_id','=',$val['stationId'])
                                                     ->where('exam_id','=',$val['examId'])
@@ -120,7 +121,9 @@ class ExamControl extends Model
                 if(!empty($examMonitorInfo)){
                     $examInfo[$key]['type'] = $examMonitorInfo['type'];
                     $examInfo[$key]['description'] = $examMonitorInfo['description'];
+
                 }else{
+                    
                     $examInfo[$key]['type'] = -1;
                     $examInfo[$key]['description'] = -1;
                 }
@@ -380,7 +383,6 @@ class ExamControl extends Model
             ->first();
         return $data;
     }
-
 
 
 
