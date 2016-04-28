@@ -854,6 +854,17 @@ class Exam extends CommonModel
                 }
             }
 
+            //更改考试-场次-考站状态表 的状态
+            $stationVideos = StationVideo::where('exam_id', '=', $id)->get();
+            if(!$stationVideos->isEmpty()){
+                foreach ($stationVideos as $stationVideo)
+                {
+                    if(!$stationVideo->delete()){
+                        throw new \Exception('删除考试-锚点失败！');
+                    }
+                }
+            }
+
             //修改考试考场学生表 (删除)
             foreach ($examScreeningObj as $item)
             {
@@ -865,6 +876,18 @@ class Exam extends CommonModel
                     }
                 }
             }
+
+            //更改考试-场次-考站状态表 的状态
+            $examStationStatus = ExamStationStatus::where('exam_id', '=', $id)->get();
+            if(!$examStationStatus->isEmpty()){
+                foreach ($examStationStatus as $item) {
+                    $item->status = 0;
+                    if(!$item->save()){
+                        throw new \Exception('修改考试-场次-考站状态失败！');
+                    }
+                }
+            }
+
             //更改考试场次状态
             $examScreenings = $examScreening->get();
             if (!$examScreenings->isEmpty()) {

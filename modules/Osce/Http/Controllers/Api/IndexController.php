@@ -1164,10 +1164,7 @@ class IndexController extends CommonController
         //查询学生当前状态
         $status = ExamOrder::where('student_id', $studentId)->where('exam_id', $exam_id)
                            ->where('exam_screening_id',$screen_id)->select('status')->first()->status;
-        if ($status == 4) {
-            return $this->getAbsentStudent($studentId, $exam_id,$screen_id); //插入缺考记录 学生已缺考
-
-        } elseif ($status == 2) {
+        if ($status == 2) {
             return \Response::json(array('code' => 3));//该学生考试已结束
 
         } elseif ($status == 1) {
