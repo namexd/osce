@@ -203,7 +203,7 @@ class Answer extends Model
 
 
         }catch (\Exception $ex){
-
+            return response()->json($this->fail($ex));
         }
 
     }
