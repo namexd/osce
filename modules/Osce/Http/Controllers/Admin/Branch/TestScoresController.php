@@ -271,7 +271,7 @@ class TestScoresController  extends CommonController
      */
     public function getSubjectLists(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examid = $request->examid;
-        $datalist = ExamScreening::where('exam_screening.exam_id','=',$examid)->leftjoin('exam_result',function($join){
+        $datalist = ExamResult::where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
