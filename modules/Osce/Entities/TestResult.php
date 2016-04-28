@@ -154,13 +154,15 @@ class TestResult extends CommonModel
      * @throws \Exception
      * @author zhouqiang
      */
-    public function AcquireExam($studentId,$studentExamScreeningIdArr)
+    public function AcquireExam($studentId, $studentExamScreeningIdArr)
     {
         if (empty($studentId)) {
             return NULL;
         } else {
 
-            $studentExamScore = TestResult::where('student_id', '=', $studentId)->whereIn('exam_screening_id',$studentExamScreeningIdArr)->select('score')->get()->toArray();
+            $studentExamScore = TestResult::where('student_id', '=', $studentId)
+                                          ->whereIn('exam_screening_id',$studentExamScreeningIdArr)
+                                          ->select('score')->get()->toArray();
             $StudentScores = 0;
             foreach ($studentExamScore as $val) {
                 $StudentScores += $val['score'];

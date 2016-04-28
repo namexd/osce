@@ -67,6 +67,7 @@ function statistics_teach_score(){
             success:function(res){
                 $(res.data.datalist).each(function(){
                     $(".student_select").append('<option value="'+this.id+'">'+this.title+'</option>');
+                    console.log(this.title+'-option-'+this.id)
                 });
             }
         })
@@ -76,6 +77,7 @@ function statistics_teach_score(){
     $(".exam_select").change(function(){
         var id = $(this).val();
         select(id);
+        console.log(id+'-id')
     });
     //默认加载最近一次考试
     var $examId = $(".exam_select").children().first().val();

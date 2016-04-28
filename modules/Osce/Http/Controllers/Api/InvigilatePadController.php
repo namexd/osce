@@ -425,7 +425,7 @@ class InvigilatePadController extends CommonController
                 try {
                     $examResultModel = new ExamResult();
 
-                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'],$data['station_id'],$studentExamScreeningIdArr);
+                    $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'], $data['station_id'], $studentExamScreeningIdArr);
  
                 } catch (\Exception $mssge) {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
@@ -807,7 +807,7 @@ class InvigilatePadController extends CommonController
             $examQueue = ExamQueue::where('exam_id',$exam->id)
                 ->where('student_id', '=', $studentId)
                 ->where('station_id', '=', $stationId)
-                ->whereIn('status', [0,1,2])
+                ->whereIn('status', [1,2])
                 ->first();
 
             //拿到阶段序号
