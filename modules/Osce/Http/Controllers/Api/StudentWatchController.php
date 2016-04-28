@@ -19,6 +19,7 @@ use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\ExamStationStatus;
 use Illuminate\Support\Facades\Redis;
+use Modules\Osce\Entities\ExamPlan;
 
 class StudentWatchController extends CommonController
 {
@@ -281,14 +282,19 @@ class StudentWatchController extends CommonController
         $ExamFlowModel = new  ExamFlow();
         $studentExamSum = $ExamFlowModel->studentExamSum($examQueue->exam_id);
         //查询出学生当前已完成的考试
-        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=',
-            $examQueue->student_id)->count();
-        if ($ExamFinishStatus >= $studentExamSum) {
+        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $examQueue->student_id)->count();
+        if ($ExamFinishStatus >= $studentExamSum)
+        {
+            //获取该考生在该场考试所对应的所有场次id
+            $studentExamScreeningIdArr = ExamPlan::where('exam_id', '=', $examQueue->exam_id)
+                                        ->where('student_id','=',$examQueue->student_id)
+                                        ->select('exam_screening_id')->get()->toArray();
             //查询出考试结果
             $examResult = ExamResult::where('student_id', '=', $examQueue->student_id)->count();
-            if ($examResult >= $ExamFinishStatus) {
+            if ($examResult >= $ExamFinishStatus)
+            {
                 $testresultModel = new TestResult();
-                $score = $testresultModel->AcquireExam($examQueue->student_id);
+                $score = $testresultModel->AcquireExam($examQueue->student_id, $studentExamScreeningIdArr);
                 $data = [
                     'code'  => 6, // 考试结束全部考完（对应界面：显示考试完成，显示总成绩）
                     'title' => '考试完成，最终总成绩',
