@@ -1065,12 +1065,12 @@ class InvigilatePadController extends CommonController
                                 $watchData[$k]['status'] = '0';
                             }elseif($v['status'] == 2){
                                 $watchData[$k]['status'] = '1';
-                            }elseif($v['status'] > 2){
+                            }
+                        }else{
+                            if($v['status'] > 2){
                                 echo $k;
                                 $watchData[$k]['status'] = '2';
                             }
-                        }else{
-                           unset($watchData[$k]);
                         }
                     }
 
