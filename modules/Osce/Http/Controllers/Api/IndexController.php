@@ -943,7 +943,6 @@ class IndexController extends CommonController
 
     public function getStudentList(Request $request)
     {
-        dd(11111111111111);
         $this->validate($request, [
             'exam_id' => 'required|integer'
         ]);
@@ -993,7 +992,7 @@ class IndexController extends CommonController
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
 
             $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列(exam_order表)
-            //dd($list->toArray());
+            dd($list->toArray());
             $data = [];
             foreach($list as $itm){
                 $data[] = [
