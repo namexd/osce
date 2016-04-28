@@ -276,7 +276,7 @@ class ExamResultController extends CommonController{
     public function getResultVideo(Request $request)
     {
 
-//        try {
+        try {
             $this->validate($request,[
                 'exam_id' => 'required|integer',
                 'student_id' => 'required|integer',
@@ -290,18 +290,19 @@ class ExamResultController extends CommonController{
             //根据考试id拿到场次id临时修改
             $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get()->pluck('id');
             //更据考站id查询到
-            $stationVcrId = StationVcr::where('station_id','=',$stationId)->first()->id;
-            if(is_null($stationVcrId)){
+            $stationVcr = StationVcr::where('station_id','=',$stationId)->first();
+            if(is_null($stationVcr)){
                 throw new \Exception('没有找到相关联的摄像机');
             }
+            $stationVcrId = $stationVcr->id;
             //查询到页面需要的数据
             $data = StationVideo::label($examId,$studentId,$stationId,$examScreeningId);
             //查询出时间锚点追加到数组中
             $anchor = StationVideo:: getTationVideo($examId, $studentId, $stationVcrId);
             return view('osce::admin.statisticalAnalysis.exam_video',['data'=>$data,'anchor'=>$anchor]);
-//        } catch (\Exception $ex) {
-//            return redirect()->back()->withErrors($ex->getMessage());
-//        }
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     //下载安装包
