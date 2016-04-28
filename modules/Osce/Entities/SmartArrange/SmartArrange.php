@@ -234,7 +234,6 @@ class SmartArrange
                     $this->cate->setParams($params);
 
                     $students = $this->cate->needStudents($entity, $screen, $this->exam);
-
                     $this->_S = $this->cate->getTotalStudent();
                     $this->_S_W = $this->cate->getWaitStudent();
                     if (count($students) == 0) {
@@ -277,13 +276,13 @@ class SmartArrange
             $studentNotOvers = $studentList->pluck('student_id');
 
             //删除未走完流程的考生
-            if (!ExamPlanRecord::whereIn('student_id', $studentNotOvers->toArray())->delete()) {
+            if (!ExamPlanRecord::whereIn('student_id', $studentNotOvers->toArray())->where('gradation_order', $screen->gradation_order)->delete()) {
                 throw new \Exception('考试未完成学生移动失败', -21);
             }
 
             //将没有考完的考生放回到总的考生池里
             foreach ($studentNotOvers as $studentNotOver) {
-                $undoneStudents[] = Student::find($studentNotOver);
+                $undoneStudents[] = $studentNotOver;
             }
         }
 
@@ -291,16 +290,15 @@ class SmartArrange
         $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
         $undoneStudentsIds = $examPlanEntity->pluck('student_id');
         foreach ($undoneStudentsIds as $undoneStudentsId) {
-            $undoneStudents[] = Student::find($undoneStudentsId);
+            $undoneStudents[] = $undoneStudentsId;
         }
 
         //删除未考完学生记录
         if (!$undoneStudentsIds->isEmpty()) {
-            if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->delete()) {
+            if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->where('gradation_order', $screen->gradation_order)->delete()) {
                 throw new \Exception('删除未考完考生记录失败！', -2101);
             }
         }
-
 
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_W);
