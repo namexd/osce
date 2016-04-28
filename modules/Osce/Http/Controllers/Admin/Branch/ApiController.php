@@ -1020,7 +1020,7 @@ class ApiController extends CommonController
                 throw new \Exception(' 找不到该考生的考试队列信息！',-107);
             }
 
-            
+
         }catch (\Exception $ex) {
             return response()->json($this->fail($ex));
 

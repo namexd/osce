@@ -201,11 +201,12 @@ class Answer extends Model
             //     throw new \Exception('没有该考生的队列信息',-101);
             // }
 
-
-
-        // }catch (\Exception $ex){
-        //     return response()->json($this->fail($ex));
-        // }
+            $DB->commit();
+            return true;
+        }catch (\Exception $ex){
+            $DB->rollback();
+            throw $ex;
+        }
 
     }
 
