@@ -219,7 +219,6 @@ class ExamMonitorController  extends CommonController
     public function getExamMonitorFinishList () {
 
         $data=$this->getExamMonitorListByStatus(4);
-        dd($data);
         if(count($data)){
             $data=$data->toArray();
         }else{
@@ -327,7 +326,7 @@ class ExamMonitorController  extends CommonController
                     ->where('student.exam_id',$exam_id)
                     //->where('exam_absent.exam_id',$exam_id)
                     ->where('exam_order.exam_id',$exam_id)
-                    ->where('exam_order.status',4)
+                    ->where('exam_order.status',4)->groupBy('student_id')
                     //->where('exam_screening_student.exam_screening_id',$ExamScreening->id)
                    // ->where('exam_screening_student.is_end',0)
                     ->paginate(config('osce.page_size'));
@@ -346,7 +345,7 @@ class ExamMonitorController  extends CommonController
                     ->paginate(config('osce.page_size'));*/
                 $list=$builder->where('exam_screening_student.status',2)
                     ->where('exam_screening_student.is_end',1)
-                    ->where('student.exam_id',$exam_id)
+                    ->where('student.exam_id',$exam_id)->groupBy('student_id')
                     ->paginate(config('osce.page_size'));
                 if(empty($list->toArray()['data'])){return [];}
                 $list=$list->toArray()['data'];
@@ -364,13 +363,13 @@ class ExamMonitorController  extends CommonController
                 return $builder->where('exam_screening_student.status',1)
                                //->where('exam_screening_id',$ExamScreening->id)
                                ->where('exam_screening_student.is_end',1)
-                               ->where('student.exam_id',$exam_id)
+                               ->where('student.exam_id',$exam_id)->groupBy('student_id')
                                ->paginate(config('osce.page_size'));
                 break;
             case 4://已完成
                 return $builder->where('exam_screening_student.is_end',1)
                                ->where('exam_screening_id',$ExamScreening->id)
-                               ->where('student.exam_id',$exam_id)->orderBy('student_id')
+                               ->where('student.exam_id',$exam_id)->groupBy('student_id')
                                ->paginate(config('osce.page_size'));
                 break;
             default:
