@@ -1137,24 +1137,28 @@ function exam_assignment_add(){
         var $that = $(this);
 
         if($that.val() == 2) {
-            var value = $('#gradation_order').val(),
-                html = '';
+            if($('#gradation_order').val() < 20) {
+                var value = $('#gradation_order').val(),
+                    html = '';
 
-            for(var i = 1; i <= value; i++) {
-                html += '<tr>'+
-                            '<td>阶段'+i+'</td>'+
-                            '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
-                                    '<option value="3">轮循</option>'+
-                                    '<option value="2">顺序</option>'+
-                                    '<option value="1">随机</option>'+
-                                '</select>'+
-                            '</td>'+
-                        '</tr>';
+                for(var i = 1; i <= value; i++) {
+                    html += '<tr>'+
+                                '<td>阶段'+i+'</td>'+
+                                '<td>'+
+                                    '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
+                                        '<option value="3">轮循</option>'+
+                                        '<option value="2">顺序</option>'+
+                                        '<option value="1">随机</option>'+
+                                    '</select>'+
+                                '</td>'+
+                            '</tr>';
+                }
+                $('.grading-un-normal table tbody').html(html);
+                $('.grading-un-normal').show();
+                $('.grading-normal').hide();
+            } else {
+                $('.grading').find('select option[value="1"]').attr('selected',true);
             }
-            $('.grading-un-normal table tbody').html(html);
-            $('.grading-un-normal').show();
-            $('.grading-normal').hide();
         } else {
              $('.grading-un-normal').hide();
              $('.grading-normal').show();
@@ -1565,24 +1569,28 @@ function exam_basic_info(){
         var $that = $(this);
 
         if($that.val() == 2) {
-            var value = $('#gradation_order').val(),
-                html = '';
+            if($('#gradation_order').val() < 20) {
+                var value = $('#gradation_order').val(),
+                    html = '';
 
-            for(var i = 1; i <= value; i++) {
-                html += '<tr>'+
-                            '<td>阶段'+i+'</td>'+
-                            '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
-                                    '<option value="3">轮循</option>'+
-                                    '<option value="2">顺序</option>'+
-                                    '<option value="1">随机</option>'+
-                                '</select>'+
-                            '</td>'+
-                        '</tr>';
+                for(var i = 1; i <= value; i++) {
+                    html += '<tr>'+
+                                '<td>阶段'+i+'</td>'+
+                                '<td>'+
+                                    '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
+                                        '<option value="3">轮循</option>'+
+                                        '<option value="2">顺序</option>'+
+                                        '<option value="1">随机</option>'+
+                                    '</select>'+
+                                '</td>'+
+                            '</tr>';
+                }
+                $('.grading-un-normal table tbody').html(html);
+                $('.grading-un-normal').show();
+                $('.grading-normal').hide();
+            } else {
+                $('.grading').find('select option[value="1"]').attr('selected',true);
             }
-            $('.grading-un-normal table tbody').html(html);
-            $('.grading-un-normal').show();
-            $('.grading-normal').hide();
         } else {
              $('.grading-un-normal').hide();
              $('.grading-normal').show();

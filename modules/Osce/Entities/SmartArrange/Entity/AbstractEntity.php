@@ -48,16 +48,6 @@ abstract class AbstractEntity
     function entityTime($entities)
     {
         foreach ($entities as &$entity) {
-//            switch ($entity->station_type) {
-//                case 2:
-//                    $entity->mins = $this->getTheoryMins($entity)->length;
-//                    break;
-//                case 1 || 3:
-//
-//                    break;
-//                default:
-//                    throw new \Exception('系统异常！', -85);
-//            }
             $entity->mins = is_null($entity->length) ? $entity->mins : $entity->length;
         }
 

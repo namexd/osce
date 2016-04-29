@@ -516,8 +516,8 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(\Illuminate\Http\Request $request) {
-//	$a = new \Modules\Osce\Entities\Exam();
-//	dd();
+	$a = [];
+	dd(empty($a));
 });
 
 Route::get('redis', function(){
