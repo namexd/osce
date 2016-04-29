@@ -24,18 +24,14 @@ class Order extends AbstractCate implements CateInterface
 
         if ($entity->serialnumber == 1) {
             for ($i = 0; $i < $entity->needNum; $i++) {
-                if (count($this->_S_W) > 0) {
+                if (!empty($this->_S_W)) {
                     $thisStudent = array_shift($this->_S_W);
                     if (!is_null($thisStudent)) {
                         $result[] = $thisStudent;
                     }
 
-                    if (count($this->_S) > 0) {
-                        if (is_array($this->_S)) {
-                            $this->_S_W[] = array_shift($this->_S);
-                        } else {
-                            $this->_S_W[] = $this->_S->shift();
-                        }
+                    if (!$this->_S->isEmpty()) {
+                        $this->_S_W[] = $this->_S->shift();
                     }
                 }
             }
@@ -43,8 +39,7 @@ class Order extends AbstractCate implements CateInterface
         } else {
             $testStudent = $this->orderTestStudent($entity, $screen);
             if (count($testStudent) <= $entity->needNum) {
-                $result = $testStudent;
-                return $result;
+                return $testStudent;
             } else {
                 for ($i = 0; $i < $entity->needNum; $i++) {
                     $result[] = array_shift($testStudent);
@@ -72,12 +67,7 @@ class Order extends AbstractCate implements CateInterface
          */
         if ($entity->serialnumber != 1) {
             $tempArrays = $this->orderBeginStudent($screen, $entity);
-            if (count($tempArrays) != 0) {
-                return $tempArrays;
-//                return Student::whereIn('id', $tempArrays)->get()->all();
-            } else {
-                return [];
-            }
+            return $tempArrays;
         } else {
             return [];
         }
