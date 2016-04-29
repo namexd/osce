@@ -374,7 +374,7 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
         if($classId){
-            $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->where('subject.id','=',$subid)->select(
+            $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->where('exam_paper.id','=',$subid)->select(
                 'exam.name',
                 $DB->raw('avg(exam_result.score) as avgScore'),
                 'exam.id',
@@ -396,8 +396,8 @@ class TestScoreRepositories  extends BaseRepository
             $join->on('student.id','=','exam_result.student_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('subject',function($join){
-            $join->on('subject.id','=','station.subject_id');
+        })->leftjoin('exam_paper',function($join){
+            $join->on('exam_paper.id','=','station.paper_id');
         })->groupBy('student.teacher_name')->get();
         return $examlist;
     }

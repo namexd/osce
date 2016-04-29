@@ -341,12 +341,12 @@ class TestScoresController  extends CommonController
      */
     public function getGradeScoreList(Request $request,TestScoreRepositories $TestScoreRepositories){
         $classId = $request->classid;
-        $subid = $request->subid;
+        $paperid= $request->subid;    //试卷id
         $examid = $request->examid;
         //获取当前班级历史记录
-        $datalist = $TestScoreRepositories->getGradeScore($classId,$subid,$examid)->toArray();
+        $datalist = $TestScoreRepositories->getGradeScore($classId,$paperid,$examid)->toArray();
         //获取当前考试记录
-        $curent = $TestScoreRepositories->getGradeScore('',$subid,$examid)->toArray();
+        $curent = $TestScoreRepositories->getGradeScore('',$paperid,$examid)->toArray();
 
         $classData = '';
         $allData = '';
