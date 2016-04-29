@@ -53,13 +53,16 @@ class ExamControl extends Model
             $join -> on('exam.id', '=', 'exam_draft_flow.exam_id');
         })->leftJoin('exam_draft', function($join){//考试;
             $join -> on('exam_draft_flow.id', '=','exam_draft.exam_draft_flow_id');
-        })->select('exam_draft.station_id')->where('exam.status','=',1)->get());
+        })->leftJoin('station', function($join){//考试;
+            $join -> on('exam_draft.station_id', '=','station.id');
+        })->select('station.id')->groupBy('station.id')->where('exam.status','=',1)->get());
 
 
         //统计学生数量
-        $studentCount = count($examModel->leftJoin('student', function($join){
-            $join -> on('exam.id', '=', 'student.exam_id');
-        })->select('student.id')->where('exam.status','=',1)->get());
+        $studentCount = count($examModel->leftJoin('exam_queue', function($join){
+            $join -> on('exam.id', '=', 'exam_queue.exam_id');
+        })->select('exam_queue.student_id')->where('exam.status','=',1)->groupBy('exam_queue.student_id')->get());
+
         //统计正在考试数量
         $doExamCount = count($examModel->leftJoin('exam_queue', function($join){
             $join -> on('exam.id', '=', 'exam_queue.exam_id');
