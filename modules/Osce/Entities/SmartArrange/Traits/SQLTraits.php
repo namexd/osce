@@ -308,7 +308,7 @@ trait SQLTraits
      */
     function getRoomFuture($exam, $screen)
     {
-        $rooms = ExamDraft::with('subject')
+        $rooms = ExamDraft::with('subject', 'paper.paper')
             ->screening()
             ->join('room', 'room.id', '=', 'exam_draft.room_id')
             ->where('exam_screening.id', $screen->id)
