@@ -427,12 +427,12 @@ class TestScoreRepositories  extends BaseRepository
             $join->on('station.id','=','exam_result.station_id');
         });
         if(!empty($subid)){
-            $ExamResult = $ExamResult->where('exam_paper.id','=',$subid)->leftjoin('exam_paper',function($join){
+            $examlist = $examlist->where('exam_paper.id','=',$subid)->leftjoin('exam_paper',function($join){
                 $join->on('exam_paper.id','=','station.paper_id');
             });
         }
 
-        $ExamResult = $ExamResult->groupBy('student.teacher_name')->get();
+        $examlist = $examlist->groupBy('student.teacher_name')->get();
         return $examlist;
     }
 
