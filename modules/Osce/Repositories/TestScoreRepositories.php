@@ -416,14 +416,14 @@ class TestScoreRepositories  extends BaseRepository
 
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        $examlist = $ExamResult->where('exam.id','=',intval($examID))->where('subject.id','=',$subID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
+        $examlist = $ExamResult->where('exam.id','=',intval($examID))->where('exam_paper.id','=',$subID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
             $join->on('exam.id','=','exam_screening.exam_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('subject',function($join){
-            $join->on('subject.id','=','station.subject_id');
+        })->leftjoin('exam_paper',function($join){
+            $join->on('exam_paper.id','=','station.paper_id');
         })->leftjoin('student',function($join){
             $join->on('student.id','=','exam_result.student_id');
         })->leftjoin('teacher',function($join){
@@ -476,7 +476,7 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();//
         //dd($classID);
-        $examlist = $ExamResult->where('subject.id','=',$subjectID)->where('exam.id','=',$examID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
+        $examlist = $ExamResult->where('exam_paper.id','=',$subjectID)->where('exam.id','=',$examID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
             $join->on('exam.id','=','exam_screening.exam_id');
@@ -484,15 +484,15 @@ class TestScoreRepositories  extends BaseRepository
             $join->on('student.id','=','exam_result.student_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('subject',function($join){
-            $join->on('subject.id','=','station.subject_id');
+        })->leftjoin('exam_paper',function($join){
+            $join->on('exam_paper.id','=','station.paper_id');
         })->select(
             'exam.name',
             'exam_result.begin_dt',
             'exam_result.end_dt',
             'student.grade_class',
-            'subject.title',
-            'subject.id'
+            'exam_paper.name as paper_name',
+            'exam_paper.id'
         )->first();
         //dd($examlist);
         return $examlist;
