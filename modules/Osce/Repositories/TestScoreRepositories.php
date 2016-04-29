@@ -461,7 +461,7 @@ class TestScoreRepositories  extends BaseRepository
         if(intval($subID)){
             $ExamResult = $ExamResult->where('exam_paper.id','=',$subID);
         }
-        $examlist = $ExamResult->where('exam.id','=',intval($examID))->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
+        $ExamResult = $ExamResult->where('exam.id','=',intval($examID))->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
             $join->on('exam.id','=','exam_screening.exam_id');
@@ -474,7 +474,7 @@ class TestScoreRepositories  extends BaseRepository
             });
         }
 
-        $ExamResult = $ExamResult->leftjoin('student',function($join){
+        $examlist = $ExamResult->leftjoin('student',function($join){
             $join->on('student.id','=','exam_result.student_id');
         })->leftjoin('teacher',function($join){
             $join->on('teacher.id','=','exam_result.teacher_id');
@@ -525,25 +525,46 @@ class TestScoreRepositories  extends BaseRepository
     public function getExamDetails($examID,$classID,$subjectID){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();//
-        //dd($classID);
-        $examlist = $ExamResult->where('exam_paper.id','=',$subjectID)->where('exam.id','=',$examID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
-            $join->on('exam_screening.id','=','exam_result.exam_screening_id');
-        })->leftjoin('exam',function($join){
-            $join->on('exam.id','=','exam_screening.exam_id');
-        })->leftjoin('student',function($join){
-            $join->on('student.id','=','exam_result.student_id');
-        })->leftjoin('station',function($join){
-            $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('exam_paper',function($join){
-            $join->on('exam_paper.id','=','station.paper_id');
-        })->select(
-            'exam.name',
-            'exam_result.begin_dt',
-            'exam_result.end_dt',
-            'student.grade_class',
-            'exam_paper.name as paper_name',
-            'exam_paper.id'
-        )->first();
+
+        if(intval($subjectID)){
+            $examlist = $ExamResult->where('exam_paper.id','=',$subjectID)->where('exam.id','=',$examID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
+                $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+            })->leftjoin('exam',function($join){
+                $join->on('exam.id','=','exam_screening.exam_id');
+            })->leftjoin('student',function($join){
+                $join->on('student.id','=','exam_result.student_id');
+            })->leftjoin('station',function($join){
+                $join->on('station.id','=','exam_result.station_id');
+            })->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            })->select(
+                'exam.name',
+                'exam_result.begin_dt',
+                'exam_result.end_dt',
+                'student.grade_class',
+                'exam_paper.name as paper_name',
+                'exam_paper.id'
+            )->first();
+        }else{
+            $examlist = $ExamResult->where('exam.id','=',$examID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
+                $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+            })->leftjoin('exam',function($join){
+                $join->on('exam.id','=','exam_screening.exam_id');
+            })->leftjoin('student',function($join){
+                $join->on('student.id','=','exam_result.student_id');
+            })->leftjoin('station',function($join){
+                $join->on('station.id','=','exam_result.station_id');
+            })->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            })->select(
+                'exam.name',
+                'exam_result.begin_dt',
+                'exam_result.end_dt',
+                'student.grade_class',
+                'exam_paper.name as paper_name'
+            )->first();
+        }
+
         //dd($examlist);
         return $examlist;
     }
