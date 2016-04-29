@@ -157,6 +157,17 @@ class ExamControlController extends CommonController
 
     }
 
+    /**获取考生剩余考试时间
+     * @method
+     * @url GET /osce/admin/exam-control/getTime
+     * @access public
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+
     public function getTime(Request $request){
 
         try{

@@ -65,10 +65,16 @@ function statistics_teach_score(){
             cache:false,
             async:false,
             success:function(res){
-                $(res.data.datalist).each(function(){
-                    $(".student_select").append('<option value="'+this.id+'">'+this.name+'</option>');
-                    console.log(this.title+'-option-'+this.id)
-                });
+                if(res.data.datalist){
+                    $(res.data.datalist).each(function(){
+                        $(".student_select").append('<option value="'+this.id+'">'+this.name+'</option>');
+                        console.log(this.title+'-option-'+this.id)
+                    });
+                }else{
+                    $('.exam-name').hide();
+                    $('.student_select').hide();
+                }
+
             }
         })
     }
@@ -156,7 +162,7 @@ function statistics_teach_score(){
             shadeClose: true,
             shade: 0.8,
             area: ['90%', '90%'],
-            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid+'&subid='+pid+'&classid='+classid//iframe的url
+            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid+'&subid='+subid+'&classid='+classid//iframe的url
         });
     });
 }

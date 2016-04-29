@@ -39,13 +39,14 @@ class OsceTvController extends  CommonController{
           ]);
           $exam_id=$request->get('exam_id');
           $exams=Exam::where('id',$exam_id)->select()->first();
+
           $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
           $examQueModel= new ExamQueue();
           $list=$examQueModel->getStudent($mode,$exam_id);
-
           return view('osce::admin.examManage.exam_remind')->with(['list'=>$list,'exams'=>$exams]);
 //        return view('osce::admin.examManage.exam_remind');
     }
+
 
     public function postWaitDetail(Request $request)
     {

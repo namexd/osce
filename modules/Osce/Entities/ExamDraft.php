@@ -45,6 +45,11 @@ class ExamDraft extends CommonModel
         return $this->hasMany('Modules\Osce\Entities\ExamPaperStation', 'station_id', 'station_id');
     }
 
+	public function room()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Room', 'id', 'room_id');
+    }
+
     public function scopeScreening($query)
     {
         return $query->join('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
