@@ -397,15 +397,22 @@ class TestScoreRepositories  extends BaseRepository
         $ExamResult = new ExamResult();
         if($classId){
             if(intval($subid)){
-                $ExamResult = $ExamResult->where('exam_paper.id','=',$subid);
+                $ExamResult = $ExamResult->where('exam_paper.id','=',$subid)->where('student.grade_class','=',$classId)->select(
+                    'exam.name',
+                    $DB->raw('avg(exam_result.score) as avgScore'),
+                    'exam.id',
+                    'exam_result.id as rid',
+                    'exam_paper.id as pid'
+                );
+            }else{
+                $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
+                    'exam.name',
+                    $DB->raw('avg(exam_result.score) as avgScore'),
+                    'exam.id',
+                    'exam_result.id as rid'
+                );
             }
-            $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
-                'exam.name',
-                $DB->raw('avg(exam_result.score) as avgScore'),
-                'exam.id',
-                'exam_result.id as rid',
-                'exam_paper.id as pid'
-            );
+
         }else{
             if(intval($subid)){
                 $ExamResult = $ExamResult->where('exam_paper.id','=',$subid);
@@ -415,6 +422,7 @@ class TestScoreRepositories  extends BaseRepository
                 'exam.id'
             );
         }
+
         $ExamResult = $ExamResult->where('exam.id','=',$examid);
         $ExamResult = $ExamResult->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
@@ -426,7 +434,7 @@ class TestScoreRepositories  extends BaseRepository
             $join->on('station.id','=','exam_result.station_id');
         });
         if(intval($subid)){
-            dd(111);
+
             $ExamResult = $ExamResult->where('exam_paper.id','=',$subid)->leftjoin('exam_paper',function($join){
                 $join->on('exam_paper.id','=','station.paper_id');
             });
