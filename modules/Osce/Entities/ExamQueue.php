@@ -13,6 +13,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
+use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
 
 class ExamQueue extends CommonModel
 {
@@ -159,20 +160,20 @@ class ExamQueue extends CommonModel
 //                'station.mins as mins',
 //                'exam_queue.exam_id as exam_id'
 //            ])->get();
-        if (!empty($examscreeningId)) {
 
-            return $this->where('student_id', '=', $studentId)
-                ->whereIn('exam_screening_id', $examscreeningId)
-                ->orderBy('begin_dt', 'asc')
-                ->get();
-        } else {
-            return $this->where('student_id', '=', $studentId)
-                ->orderBy('begin_dt', 'asc')
-                ->get();
+        $exam = Exam::doingExam();
+        $examScreeningModel = new ExamScreening();
+        $examScreening = $examScreeningModel->getExamingScreening($exam->id);
+        if (is_null($examScreening)) {
+            $examScreening = $examScreeningModel->getNearestScreening($exam->id);
         }
-
+        $exam_screen_id = $examScreening->id;
+        return $this->where('student_id', '=', $studentId)
+            ->where('exam_id', '=', $exam->id)
+            ->where('exam_screening_id', '=', $exam_screen_id)
+            ->orderBy('begin_dt', 'asc')
+            ->get();
     }
-
 
     public function getPagination()
     {
@@ -441,7 +442,7 @@ class ExamQueue extends CommonModel
      */
 
 
-    public function AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId)
+    public function AlterTimeStatus($studentId, $stationId, $nowTime, $teacherId, $examscreeningId)
 
     {
         //开启事务
@@ -456,9 +457,8 @@ class ExamQueue extends CommonModel
             $examQueue = ExamQueue::where('student_id', '=', $studentId)
                 ->where('exam_id', '=', $exam->id)
                 ->where('station_id', '=', $stationId)
-                ->whereIn('exam_screening_id',$examscreeningId)
-                ->whereIn('status', [0,1,2])
-
+                ->whereIn('exam_screening_id', $examscreeningId)
+                ->whereIn('status', [0, 1, 2])
                 ->first();
             //dd($examQueue);
             if (is_null($examQueue)) {
@@ -512,18 +512,18 @@ class ExamQueue extends CommonModel
                         }
                     }
 
-                  /* //考试排序模式
-                    if ($exam->sequence_mode == 2) {
-                        $stationTime = $item->station->mins ? $item->station->mins : 0;
-                    } else {
-                        //这是已考场安排的需拿到room_id
-                        $stationTime = $this->getRoomStationMaxTime($item->room_id);
-                    }*/
+                    /* //考试排序模式
+                      if ($exam->sequence_mode == 2) {
+                          $stationTime = $item->station->mins ? $item->station->mins : 0;
+                      } else {
+                          //这是已考场安排的需拿到room_id
+                          $stationTime = $this->getRoomStationMaxTime($item->room_id);
+                      }*/
 
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         if ($item->status == 2) {
                             //获取标准考试时间
-                            $stationTime = $this->stationTime($item->station_id,$exam->id);
+                            $stationTime = $this->stationTime($item->station_id, $exam->id);
 
                             $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
                             $item->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
@@ -548,7 +548,7 @@ class ExamQueue extends CommonModel
                         }
 
                         //获取标准考试时间
-                        $stationTime = $this->stationTime($ExamTime->station_id,$exam->id);
+                        $stationTime = $this->stationTime($ExamTime->station_id, $exam->id);
 
                         $ExamTime->begin_dt = date('Y-m-d H:i:s', $nowTime);
                         $ExamTime->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
@@ -581,17 +581,18 @@ class ExamQueue extends CommonModel
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function stationTime($station_id,$exam_id){
+    public function stationTime($station_id, $exam_id)
+    {
         $stationTime = 0;
-        $station = Station::where('id',$station_id)->first();
-        if(!empty($station)){
-            if($station->type==3){
+        $station = Station::where('id', $station_id)->first();
+        if (!empty($station)) {
+            if ($station->type == 3) {
                 //理论站
-                $paper = ExamPaper::where('id',$station->paper_id)->first();
-                if(!empty($paper)){
+                $paper = ExamPaper::where('id', $station->paper_id)->first();
+                if (!empty($paper)) {
                     $stationTime = $paper->length;
                 }
-            }else {
+            } else {
 
                 $ExamDraft = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
                     ->where('exam_draft_flow.exam_id', '=', $exam_id)
@@ -599,7 +600,7 @@ class ExamQueue extends CommonModel
                     ->first();
                 if (!is_null($ExamDraft)) {
 
-                    $subject = Subject::where('id',$ExamDraft->subject_id)->first();
+                    $subject = Subject::where('id', $ExamDraft->subject_id)->first();
                     if (!is_null($subject)) {
 
                         $stationTime = $subject->mins;
@@ -609,8 +610,6 @@ class ExamQueue extends CommonModel
         }
         return $stationTime;
     }
-
-
 
 
     private function getRoomStationMaxTime($roomdId)
@@ -1028,12 +1027,13 @@ class ExamQueue extends CommonModel
 
     //查找学生队列中的考试
 
-    public function getExamingData($examId,$studentId){
-        $builder = $this->where('exam_queue.exam_id',$examId)->where('exam_queue.student_id',$studentId)->where('station.type','=',3)->leftjoin('exam',function($exam){
-            $exam->on('exam.id','=','exam_queue.exam_id');
-        })->leftjoin('station',function($exam){
-            $exam->on('station.id','=','exam_queue.station_id');
-        })->select('exam.id','exam.name','exam_queue.station_id','exam_queue.status','exam_queue.room_id','station.paper_id')->orderBy('exam_queue.begin_dt','asc')->get();
+    public function getExamingData($examId, $studentId)
+    {
+        $builder = $this->where('exam_queue.exam_id', $examId)->where('exam_queue.student_id', $studentId)->where('station.type', '=', 3)->leftjoin('exam', function ($exam) {
+            $exam->on('exam.id', '=', 'exam_queue.exam_id');
+        })->leftjoin('station', function ($exam) {
+            $exam->on('station.id', '=', 'exam_queue.station_id');
+        })->select('exam.id', 'exam.name', 'exam_queue.station_id', 'exam_queue.status', 'exam_queue.room_id', 'station.paper_id')->orderBy('exam_queue.begin_dt', 'asc')->get();
         return $builder;
     }
 
