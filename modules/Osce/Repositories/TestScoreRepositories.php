@@ -338,28 +338,48 @@ class TestScoreRepositories  extends BaseRepository
     public function getTeacherData($examid,$subjectid){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        if(!empty($subjectid)){
-            $ExamResult = $ExamResult->where('exam_paper.id','=',$subjectid);
+        if(intval($subjectid)){
+            $examlist = $ExamResult->where('exam_paper.id','=',$subjectid)->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
+                $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+            })->leftjoin('station',function($join){
+                $join->on('station.id','=','exam_result.station_id');
+            })->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            })->leftjoin('student',function($join){
+                $join->on('student.id','=','exam_result.student_id');
+            })->select(
+                'student.teacher_name',
+                'student.grade_class',
+                'exam_paper.id as pid',
+                'exam_screening.exam_id as exam_id',
+                'exam_result.id as rid',
+                $DB->raw('count(student.id) as stuNum'),
+                $DB->raw('avg(exam_result.score) as avgScore'),
+                $DB->raw('max(exam_result.score) as maxScore'),
+                $DB->raw('min(exam_result.score) as minScore')
+            )->groupBy('student.grade_class')->get();
+        }else{
+            $examlist = $ExamResult->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
+                $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+            })->leftjoin('station',function($join){
+                $join->on('station.id','=','exam_result.station_id');
+            })->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            })->leftjoin('student',function($join){
+                $join->on('student.id','=','exam_result.student_id');
+            })->select(
+                'student.teacher_name',
+                'student.grade_class',
+                'exam_paper.id as pid',
+                'exam_screening.exam_id as exam_id',
+                'exam_result.id as rid',
+                $DB->raw('count(student.id) as stuNum'),
+                $DB->raw('avg(exam_result.score) as avgScore'),
+                $DB->raw('max(exam_result.score) as maxScore'),
+                $DB->raw('min(exam_result.score) as minScore')
+            )->groupBy('student.grade_class')->get();
         }
-        $examlist = $ExamResult->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
-            $join->on('exam_screening.id','=','exam_result.exam_screening_id');
-        })->leftjoin('station',function($join){
-            $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('exam_paper',function($join){
-            $join->on('exam_paper.id','=','station.paper_id');
-        })->leftjoin('student',function($join){
-            $join->on('student.id','=','exam_result.student_id');
-        })->select(
-            'student.teacher_name',
-            'student.grade_class',
-            'exam_paper.id as pid',
-            'exam_screening.exam_id as exam_id',
-            'exam_result.id as rid',
-            $DB->raw('count(student.id) as stuNum'),
-            $DB->raw('avg(exam_result.score) as avgScore'),
-            $DB->raw('max(exam_result.score) as maxScore'),
-            $DB->raw('min(exam_result.score) as minScore')
-        )->groupBy('student.grade_class')->get();
+
         //dd($examlist->toArray());
         return $examlist;
     }
