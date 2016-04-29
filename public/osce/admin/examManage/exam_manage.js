@@ -1868,7 +1868,7 @@ function timePicker(background){
      * @type {Object}
      */
     var option = {
-        elem: '.end', //需显示日期的元素选择器
+        elem: '#end', //需显示日期的元素选择器
         event: 'click', //触发事件
         format: 'YYYY-MM-DD hh:mm', //日期格式
         istime: true, //是否开启时间选择
@@ -1935,6 +1935,7 @@ function timePicker(background){
         var thisElement = $(this).parent();
         if(!thisElement.prev().prev().length){
             option.max = (thisElement.next().find('input').val()).split(' ')[0];
+            option.min = laydate.now();  //修复开始时间默认选择问题
         }else{
             option.min = (thisElement.prev().find('input[type="text"]').val()).split(' ')[0];
             option.max = '2099-12-31 23:59:59';
@@ -1951,6 +1952,7 @@ function timePicker(background){
         if(!(option.min < option.max)&&option.max!=='') {
             option.min = option.max;
         }
+
         //数据绑定
         laydate(option);
     });

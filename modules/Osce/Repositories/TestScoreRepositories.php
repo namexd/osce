@@ -370,7 +370,6 @@ class TestScoreRepositories  extends BaseRepository
             })->select(
                 'student.teacher_name',
                 'student.grade_class',
-                'exam_paper.id as pid',
                 'exam_screening.exam_id as exam_id',
                 'exam_result.id as rid',
                 $DB->raw('count(student.id) as stuNum'),
@@ -397,7 +396,7 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
         if($classId){
-            if(!empty($subid)){
+            if(intval($subid)){
                 $ExamResult = $ExamResult->where('exam_paper.id','=',$subid);
             }
             $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
@@ -408,7 +407,7 @@ class TestScoreRepositories  extends BaseRepository
                 'exam_paper.id as pid'
             );
         }else{
-            if(!empty($subid)){
+            if(intval($subid)){
                 $ExamResult = $ExamResult->where('exam_paper.id','=',$subid);
             }
             $ExamResult = $ExamResult->select(
@@ -425,9 +424,15 @@ class TestScoreRepositories  extends BaseRepository
             $join->on('student.id','=','exam_result.student_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('exam_paper',function($join){
-            $join->on('exam_paper.id','=','station.paper_id');
-        })->groupBy('student.teacher_name')->get();
+        });
+        dd(intval($subid));
+        if(intval($subid)){
+            $examlist = $examlist->where('exam_paper.id','=',$subid)->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            });
+        }
+
+        $examlist = $examlist->groupBy('student.teacher_name')->get();
         return $examlist;
     }
 
@@ -445,7 +450,7 @@ class TestScoreRepositories  extends BaseRepository
 
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        if(!empty($subID)){
+        if(intval($subID)){
             $ExamResult = $ExamResult->where('exam_paper.id','=',$subID);
         }
         $examlist = $ExamResult->where('exam.id','=',intval($examID))->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
@@ -454,9 +459,14 @@ class TestScoreRepositories  extends BaseRepository
             $join->on('exam.id','=','exam_screening.exam_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('exam_paper',function($join){
-            $join->on('exam_paper.id','=','station.paper_id');
-        })->leftjoin('student',function($join){
+        });
+        if(intval($subID)){
+            $ExamResult = $ExamResult->where('exam_paper.id','=',$subID)->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            });
+        }
+
+        $ExamResult = $ExamResult->leftjoin('student',function($join){
             $join->on('student.id','=','exam_result.student_id');
         })->leftjoin('teacher',function($join){
             $join->on('teacher.id','=','exam_result.teacher_id');
