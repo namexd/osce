@@ -57,21 +57,6 @@ trait SQLTraits
     }
 
     /**
-     * 随机模式下的看是否有人考试
-     * @param $screen
-     * @return mixed
-     * @author Jiangzhiheng
-     * @time 2016-04-07 16:54
-     */
-    function randomBeginStudent($screen, $entity)
-    {
-        return ExamPlanRecord::where('exam_screening_id', $screen->id)
-            ->where('serialnumber', '<>', $entity->serialnumber)
-            ->whereNotNull('end_dt')
-            ->lists('student_id');
-    }
-
-    /**
      * 获取随机状态下该考站需要的考生
      * @param $entity
      * @param $students
@@ -82,7 +67,7 @@ trait SQLTraits
     {
         $arrays = [];
         foreach ($students as $key => $student) {
-                $arrays[] = $student;
+            $arrays[] = $student;
             if (count($arrays) == $entity->needNum) {
                 return $arrays;
             }
@@ -98,14 +83,15 @@ trait SQLTraits
      * @author Jiangzhiheng
      * @time 2016-04-28 19:48
      */
-    function randomTestingStudent($screen, $entity)
+    function randomBeginStudent($screen, $serialnumber)
     {
         return ExamPlanRecord::where('exam_screening_id', $screen->id)
-            ->whereNotNull('begin_dt')
-            ->where('serialnumber', $entity->serialnumber)
+            ->whereNotNull('end_dt')
+            ->where('serialnumber', "<>", $serialnumber)
             ->lists('student_id');
     }
 
+    //TODO 目前暂时被弃用
     function waitingStudentSql($screen)
     {
         return ExamPlanRecord::select(\DB::raw('(count(end_dt) = count(begin_dt)) as num,student_id,count(`station_id`) as flows_num'))
@@ -116,6 +102,7 @@ trait SQLTraits
             ->get();
     }
 
+    //TODO 目前暂时被弃用
     function waitingPollStudentSql($screen, $entity)
     {
         $build = ExamPlanRecord::with('student')
@@ -181,17 +168,7 @@ trait SQLTraits
         }
     }
 
-    /**
-     * 获取当前场次下的流程个数
-     * @param Collection $entities
-     * @return mixed
-     * @author Jiangzhiheng
-     * @time 2016-04-08 14:40
-     */
-    function flowNum(Collection $entities)
-    {
-        return $entities->groupBy('serialnumber')->count();
-    }
+    
 
     /**
      * 获取未走完流程的考生
@@ -374,7 +351,7 @@ trait SQLTraits
             ->leftJoin('subject', 'subject.id', '=', 'exam_draft.subject_id')
             ->leftJoin('exam_paper_exam_station', 'exam_paper_exam_station.station_id', '=', 'exam_draft.station_id')
 //            ->leftJoin('exam_paper', 'exam_paper.id', '=', 'exam_paper_exam_station.exam_paper_id')
-            ->leftJoin('exam_paper', function ($join) use ($exam){
+            ->leftJoin('exam_paper', function ($join) use ($exam) {
                 $join->on('exam_paper.id', '=', 'exam_paper_exam_station.exam_paper_id')
                     ->where('exam_paper_exam_station.exam_id', '=', $exam->id);
             })
@@ -427,18 +404,6 @@ trait SQLTraits
             ->get();
     }
 
-    /**
-     * 返回考场对应的考站的考试时间数组
-     * @param $roomStation
-     * @return array
-     * @author Jiangzhiheng
-     * @time 2016-04-08 18:01
-     */
-    function stationMins($roomStation)
-    {
-        $stationIds = $roomStation->pluck('station_id');
-        return Station::whereIn('station_id', $stationIds)->lists('mins')->toArray();
-    }
 
     /**
      * 获取学生考过的序号
@@ -530,7 +495,6 @@ trait SQLTraits
             throw $ex;
         }
     }
-
 
 
     /**
