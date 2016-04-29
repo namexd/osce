@@ -226,6 +226,7 @@ class ExamMonitorController  extends CommonController
         }
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
+        dd($data);
         return view('osce::admin.testMonitor.monitor_complete ', [
             'data'      =>$topMsg,'list'=>$data['data']
 
