@@ -338,7 +338,10 @@ class TestScoreRepositories  extends BaseRepository
     public function getTeacherData($examid,$subjectid){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        $examlist = $ExamResult->where('exam_paper.id','=',$subjectid)->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
+        if(!empty($subjectid)){
+            $ExamResult = $ExamResult->where('exam_paper.id','=',$subjectid);
+        }
+        $examlist = $ExamResult->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
@@ -374,7 +377,10 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
         if($classId){
-            $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->where('exam_paper.id','=',$subid)->select(
+            if(!empty($subid)){
+                $ExamResult = $ExamResult->where('exam_paper.id','=',$subid);
+            }
+            $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
                 'exam.name',
                 $DB->raw('avg(exam_result.score) as avgScore'),
                 'exam.id',
@@ -382,7 +388,10 @@ class TestScoreRepositories  extends BaseRepository
                 'exam_paper.id as pid'
             );
         }else{
-            $ExamResult = $ExamResult->where('exam_paper.id','=',$subid)->select(
+            if(!empty($subid)){
+                $ExamResult = $ExamResult->where('exam_paper.id','=',$subid);
+            }
+            $ExamResult = $ExamResult->select(
                 $DB->raw('avg(exam_result.score) as avgScore'),
                 'exam.id'
             );
@@ -416,7 +425,10 @@ class TestScoreRepositories  extends BaseRepository
 
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        $examlist = $ExamResult->where('exam.id','=',intval($examID))->where('exam_paper.id','=',$subID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
+        if(!empty($subID)){
+            $ExamResult = $ExamResult->where('exam_paper.id','=',$subID);
+        }
+        $examlist = $ExamResult->where('exam.id','=',intval($examID))->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
             $join->on('exam.id','=','exam_screening.exam_id');
