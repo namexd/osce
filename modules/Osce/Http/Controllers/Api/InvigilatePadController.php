@@ -827,7 +827,7 @@ class InvigilatePadController extends CommonController
 
 
             if ($AlterResult) {
-                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId], 105, '开始考试成功')));
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId,'exam_screening_id'=>@$examQueue->exam_screening_id], 105, '开始考试成功')));
 
                 //调用向腕表推送消息的方法
 
@@ -1558,11 +1558,11 @@ class InvigilatePadController extends CommonController
                 $info   = '格式错误！';
             }
 
-            $imagesize = getClientOriginalName($oldfileName);
-            if($imagesize[0] != 480 || $imagesize[0] != 640){
-                $status = 0;
-                $info   = '图片分辨率不匹配！';
-            }
+//            $imagesize = getClientOriginalName($oldfileName);
+//            if($imagesize[0] != 480 || $imagesize[0] != 640){
+//                $status = 0;
+//                $info   = '图片分辨率不匹配！';
+//            }
 
             if($status){
 

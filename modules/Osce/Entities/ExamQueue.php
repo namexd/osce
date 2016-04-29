@@ -87,8 +87,7 @@ class ExamQueue extends CommonModel
         $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft_flow.exam_id', '=',$exam_id)
             ->groupBy('exam_draft.room_id')
-            ->get();
-
+            ->paginate(config('osce.page.size'));
         $data = [];
         foreach ($examRoomList as $examFlowRoom) {
             $roomName = $examFlowRoom->room->name;
@@ -113,7 +112,7 @@ class ExamQueue extends CommonModel
         $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft_flow.exam_id', '=',$exam_id)
             ->groupBy('exam_draft.station_id')
-            ->get();
+            ->paginate(config('osce.page.size'));
 //        $examFlowStationList = ExamFlowStation::where('exam_id', '=', $exam_id)->paginate(config('osce.page_size'));
         $data = [];
         foreach ($examRoomList as $examFlowStation) {
@@ -1036,7 +1035,7 @@ class ExamQueue extends CommonModel
         $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft_flow.exam_id', '=',$exam_id)
             ->groupBy('exam_draft.room_id')
-            ->get();
+            ->paginate($pageSize);
         $data = [];
         foreach ($examRoomList as $examFlowRoom) {
             $roomName = $examFlowRoom->room->name;
