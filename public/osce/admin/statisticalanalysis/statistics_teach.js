@@ -115,7 +115,7 @@ function statistics_teach_score(){
                 var subname = $('.student_select option:selected').html();
                 if(avgStr){echartsSubject(teacherStr,avgStr,maxScore,minScore);}
                 $(res.data.data.datalist).each(function(i){
-                    var jumpUrl = '/osce/admin/testscores/grade-score-list?examid='+this.exam_id+'&classid='+this.grade_class+'&subname='+subname+'&subid='+this.subid+'&classid='+this.grade_class;
+                    var jumpUrl = '/osce/admin/testscores/grade-score-list?examid='+this.exam_id+'&classid='+this.grade_class+'&subname='+subname+'&subid='+this.pid+'&classid='+this.grade_class;
                     $(".subjectBody").append('<tr>' +
                         '<td>'+(i+1)+'</td>' +
                         '<td>'+this.teacher_name+'</td>' +
@@ -128,7 +128,7 @@ function statistics_teach_score(){
                         '<a href='+jumpUrl+'>' +
                         '<span class="read state1 detail"><i class="fa fa-cog fa-2x"></i></span>' +
                         '</a>' +
-                        '<span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="'+this.exam_id+'" resultid="'+this.rid+'" subid="'+this.subid+'" classid="'+this.grade_class+'" ></i></span>' +
+                        '<span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="'+this.exam_id+'" resultid="'+this.rid+'" subid="'+this.pid+'" classid="'+this.grade_class+'" ></i></span>' +
                         '</td>' +
                         '</tr>')
                 })
