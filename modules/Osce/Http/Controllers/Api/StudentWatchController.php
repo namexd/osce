@@ -115,6 +115,7 @@ class StudentWatchController extends CommonController
         //根据考生id得到该场考试该阶段的所有队列列表
         $examQueueModel = new ExamQueue();
         $examQueueCollect = $examQueueModel->StudentExamQueue($studentId, $examscreeningId);
+     
         if (is_null($examQueueCollect)) {
             $data['title'] = '未找到学生队列信息';
             $data['code'] = -4;
@@ -248,25 +249,8 @@ class StudentWatchController extends CommonController
                 throw new \Exception('没有发现该考生相关排考计划');
             }
         } else {
-
-            //调用状态为1的方法
+            //调用状态为0的方法
             $data = $this->getStatusWaitExam($examQueueCollect, $stationId);
-
-            if ($data['willStudents'] == 0) {
-                if (!is_null($nextExamQueue->station)) {
-                    $data = [
-                        'code' => 5, // 考试结束，但还有考试（对应界面：请前往下一教室430）
-                        'title' => '当前考场考试已完成，请进入下一个考场',
-                        'nextExamName' => $nextExamQueue->room->name . '-' . $nextExamQueue->station->name,
-                    ];
-                } else {
-                    $data = [
-                        'code' => 5, // 考试结束，但还有考试（对应界面：请前往下一教室430）
-                        'title' => '当前考场考试已完成，请进入下一个考场',
-                        'nextExamName' => $nextExamQueue->room->name,
-                    ];
-                }
-            }
         }
 
         return $data;
@@ -285,7 +269,7 @@ class StudentWatchController extends CommonController
 
         //获取计划表里所有的场次
         $studentExamScreeningIdArr = ExamPlan::where('exam_id', '=', $examQueue->exam_id)
-            ->where('student_id', '=', $examQueue->student_id) ->groupBy('exam_screening_id')
+            ->where('student_id', '=', $examQueue->student_id)->groupBy('exam_screening_id')
             ->select('exam_screening_id')->get()->toArray();
 
         //查询出考试结果里面所有的场次
@@ -294,7 +278,7 @@ class StudentWatchController extends CommonController
 
         if (count($ExamFinishStatus) >= count($studentExamScreeningIdArr)) {
 
-                //判断已考完的场次是否和队列里考完的场次相等
+            //判断已考完的场次是否和队列里考完的场次相等
             if (count($examResultScreening) >= count($ExamFinishStatus)) {
                 $testresultModel = new TestResult();
                 $score = $testresultModel->AcquireExam($examQueue->student_id, $examResultScreening);
@@ -336,14 +320,13 @@ class StudentWatchController extends CommonController
         $item = array_shift($items);
         // 判断老师是否准备完成
 
-        if(empty($this -> getTeacherPrepareStatus($item))){
+        if (empty($this->getTeacherPrepareStatus($item))) {
 
             $data = $this->getStudentWaitMessage($item);
 
 
-
-        }else{
-            $data =$this -> getTeacherPrepareStatus($item);
+        } else {
+            $data = $this->getTeacherPrepareStatus($item);
         }
         return $data;
     }
@@ -351,12 +334,23 @@ class StudentWatchController extends CommonController
     private function getWillStudent($item)
     {
         $studentNum = 0;
-        $willStudents = ExamQueue::where('room_id', '=', $item->room_id)
-            ->where('exam_screening_id', '=', $item->exam_screening_id)
-            ->where('station_id', '=', $item->station_id)
-            ->where('status', '=', 0)
-            ->orderBy('begin_dt', 'asc')
-            ->get();
+        if(is_null($item->station_id)){
+
+            $willStudents = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_screening_id', '=', $item->exam_screening_id)
+                ->where('status', '=', 0)
+                ->orderBy('begin_dt', 'asc')
+                ->get();
+        }else{
+            $willStudents = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_screening_id', '=', $item->exam_screening_id)
+                ->where('station_id', '=', $item->station_id)
+                ->where('status', '=', 0)
+                ->orderBy('begin_dt', 'asc')
+                ->get();
+        }
+
+
         foreach ($willStudents as $key => $willStudent) {
             if ($willStudent->student_id == $item->student_id) {
                 $studentNum = $key;
@@ -409,27 +403,23 @@ class StudentWatchController extends CommonController
     }
 
 
-
-    private  function getTeacherPrepareStatus($item)
+    private function getTeacherPrepareStatus($item)
     {
 
         $examStationStatusModel = new ExamStationStatus();
         //判断考试的排考模式
         $data = [];
-        if(is_null($item->station_id)){
+        if (is_null($item->station_id)) {
 
             //先拿到该考场里所有的考站id
-            $stationId = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-                ->where('exam_draft.room_id', '=', $item->room_id)
-                ->where('exam_draft_flow.exam_id', '=', $item->exam_id)
-                ->get()->pluck('station_id');
+            $stationId = $this->getStationData($item);
             //考场模式就看该场考试考场老师是否都准备完成
             $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
                 ->where('exam_screening_id', '=', $item->exam_screening_id)
-                ->where('status', '=',0)
+                ->where('status', '=', 0)
                 ->whereIn('station_id', $stationId)
                 ->first();
-            if($instance){
+            if ($instance) {
                 $data = [
                     'code' => 0, // 0，等待状态（对应界面：Prepare_fragment）
                     'title' => '该考场还有老师在准备中',
@@ -437,14 +427,14 @@ class StudentWatchController extends CommonController
                 ];
             }
 
-        }else{
+        } else {
             //考站模式就看该考站里的老师是否准备完成
             $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
                 ->where('exam_screening_id', '=', $item->exam_screening_id)
                 ->where('station_id', '=', $item->station_id)
                 ->first();
             if ($instance->status == 0) {
-                $data=  [
+                $data = [
                     'code' => 0, // 0，等待状态（对应界面：Prepare_fragment）
                     'title' => '等待老师准备中',
                     'willStudents' => '',
@@ -452,17 +442,23 @@ class StudentWatchController extends CommonController
             }
 
         }
+
         return $data;
     }
 
 
     private function getStudentWaitMessage($item)
     {
+
+
         //判断前面是否有人考试,分考场和考站模式
         if (empty($item->station_id)) {
+
+           $stationId =  $this->getStationData($item);
             $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
                 ->where('exam_id', '=', $item->exam_id)
-                ->whereBetween('status', [1, 2])
+                ->whereIn('station_id', $stationId)
+                ->where('status','=',3)
                 ->count();
         } else {
             $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
@@ -474,9 +470,9 @@ class StudentWatchController extends CommonController
         //判断前面等待人数
         $studentnum = $this->getwillStudent($item);
         if ($examStudent == 0) {
-            $willStudents = $studentnum;
-        } else {
             $willStudents = $studentnum + 1;
+        } else {
+            $willStudents = $studentnum;
         }
 
         //判断预计考试时间
@@ -519,7 +515,15 @@ class StudentWatchController extends CommonController
         return $data;
     }
 
-
-
+    //获取考场下所有的考站
+    private function getStationData($item)
+    {
+        //先拿到该考场里所有的考站id
+        $stationId = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft.room_id', '=', $item->room_id)
+            ->where('exam_draft_flow.exam_id', '=', $item->exam_id)
+            ->get()->pluck('station_id');
+        return $stationId;
+    }
 
 }

@@ -102,9 +102,9 @@ trait SundryTraits
             $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
 
             $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
-
+            $temp = $this->thisNotSerial($screen, $entity->serialnumber);
             //求取差集
-            return array_diff($prevSerial->toArray(), $thisSerial->toArray());
+            return array_diff($prevSerial->toArray(), $thisSerial->toArray(), $temp->toArray());
         } catch (\Exception $ex) {
             throw $ex;
         }

@@ -156,7 +156,7 @@ function statistics_teach_score(){
             shadeClose: true,
             shade: 0.8,
             area: ['90%', '90%'],
-            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid+'&subid='+subid+'&classid='+classid//iframe的url
+            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid+'&subid='+pid+'&classid='+classid//iframe的url
         });
     });
 }
@@ -239,7 +239,7 @@ function teach_detail(){
             shadeClose: true,
             shade: 0.8,
             area: ['90%', '90%'],
-            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&classid='+classid+'&subid='+pid//iframe的url
+            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&classid='+classid+'&subid='+subid//iframe的url
         });
 
     })
