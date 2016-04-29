@@ -103,16 +103,20 @@ class ExamQueue extends CommonModel
                 }
             }
         }
-   
+
         return $data;
     }
 
     //获取候考考站
     protected function getWaitStation($exam_id)
     {
-        $examFlowStationList = ExamFlowStation::where('exam_id', '=', $exam_id)->paginate(config('osce.page_size'));
+        $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft_flow.exam_id', '=',$exam_id)
+            ->groupBy('exam_draft.station_id')
+            ->get();
+//        $examFlowStationList = ExamFlowStation::where('exam_id', '=', $exam_id)->paginate(config('osce.page_size'));
         $data = [];
-        foreach ($examFlowStationList as $examFlowStation) {
+        foreach ($examRoomList as $examFlowStation) {
             $stationName = $examFlowStation->station->name;
             $station_id = $examFlowStation->station_id;
             $ExamQueue = new ExamQueue();
@@ -798,24 +802,42 @@ class ExamQueue extends CommonModel
      * @return
      * @throws \Exception
      * @author zhouchong
+     *
+     *
+     *
+     *
+     *    $builder = $this->leftJoin('exam_draft_flow',
+    function ($join) {
+    $join->on('exam_draft_flow.exam_id', '=', 'exam_queue.exam_id');
+    })
+    ->leftJoin('student', function ($join) {
+    $join->on('student.id', '=', 'exam_queue.student_id');
+    })
+    ->leftJoin('exam_draft', function ($join) {
+    $join->on('exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id');
+    })
      */
     public function getWaitStudentStation($station_id = '', $exam_id = '')
     {
-        $builder = $this->leftJoin('exam_flow_station',
+        $builder = $this->leftJoin('exam_draft_flow',
             function ($join) {
-                $join->on('exam_queue.station_id', '=', 'exam_flow_station.station_id');
+                $join->on('exam_draft_flow.exam_id', '=', 'exam_queue.exam_id');
+            })
+            ->leftJoin('exam_draft', function ($join) {
+                $join->on('exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id');
             })
             ->leftJoin('student', function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
             })
             ->where('exam_queue.station_id', '=', $station_id)
+            ->where('exam_draft.station_id', '=', $station_id)
+            ->where('exam_draft_flow.exam_id', '=', $exam_id)
             ->where('exam_queue.exam_id', '=', $exam_id)
             ->where('exam_queue.status', '=', 0)
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->orderBy('student.id', 'asc')
             ->select(['student.name as name', 'exam_queue.student_id', 'exam_queue.begin_dt'])
             ->distinct()->take(4)->get();
-
         if (count($builder) != 0) {
             foreach ($builder as &$item) {
                 //获取同一个人，在一场考试队列中是否有更早的考试
