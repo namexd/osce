@@ -115,7 +115,6 @@ function statistics_teach_score(){
                 var subname = $('.student_select option:selected').html();
                 $(res.data.data.datalist).each(function(i){
                     var jumpUrl = '/osce/admin/testscores/grade-score-list?examid='+this.exam_id+'&subname='+subname+'&subid='+this.pid+'&classid='+this.grade_class;
-                    alert(jumpUrl);
                     $(".subjectBody").append('<tr>' +
                         '<td>'+(i+1)+'</td>' +
                         '<td>'+this.teacher_name+'</td>' +
@@ -156,7 +155,7 @@ function statistics_teach_score(){
             shadeClose: true,
             shade: 0.8,
             area: ['90%', '90%'],
-            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid+'&subid='+subid+'&classid='+classid//iframe的url
+            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&resultID='+resultid+'&subid='+pid+'&classid='+classid//iframe的url
         });
     });
 }
@@ -239,7 +238,7 @@ function teach_detail(){
             shadeClose: true,
             shade: 0.8,
             area: ['90%', '90%'],
-            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&classid='+classid+'&subid='+subid//iframe的url
+            content:'/osce/admin/testscores/grade-detail?examid='+examid+'&classid='+classid+'&subid='+pid//iframe的url
         });
 
     })
