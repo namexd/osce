@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-sm-6"><p>考试：{{@$data->name}}</p></div>
                 <div class="col-sm-6"><p>考试时间：{{@$data->time}}</p></div>
-                <div class="col-sm-6"><p>科目：{{@$data->title}}</p></div>
+                <div class="col-sm-6"><p>试卷：{{@$data->paper_name}}</p></div>
                 <div class="col-sm-6"><p>班级：{{@$data->grade_class}}</p></div>
             </div>
             <table class="table table-bordered">

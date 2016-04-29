@@ -390,18 +390,18 @@ class TestScoresController  extends CommonController
      */
     public function getGradeDetail(Request $request,TestScoreRepositories $TestScoreRepositories,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $examID = $request->examid;
-        $subjectID = $request->subid;
+        $paperID = $request->subid;
         $classid = $request->classid;
 
         //dd($request->all());
         //班级成绩明细简介
-        $data = $TestScoreRepositories->getExamDetails($examID,$classid,$subjectID);
+        $data = $TestScoreRepositories->getExamDetails($examID,$classid,$paperID);
         if($data){
             $data->time = date('Y-m-d H:i',strtotime($data->begin_dt)).' ~ '.date('H:i',strtotime($data->end_dt));
         }
 
         //列表数据
-       $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID,$classid);
+       $datalist = $TestScoreRepositories->getGradeDetailList($examID,$paperID,$classid);
         foreach($datalist as $k=>$v){
             $datalist[$k]['time'] = $subjectStatisticsRepositories->timeTransformation($v->time);
         }
