@@ -107,10 +107,10 @@
                                      </div>
                                  </div>
 
-                                 <div class="row grading" @if(is_null($examGradation->first()->sequence_cate)) style="display: none;" @else style="display: block;" @endif>
+                                 <div class="row grading" @if(!is_null($examData->sequence_cate) && $examData->gradation->count() <= 1) style="display: none;" @else style="display: block;" @endif>
                                     <div class="col-md-1">&nbsp;</div>
                                     <div class="col-md-11">
-                                        <select class="form-control" style="width:250px;margin-left: 70px;" name="" >
+                                        <select class="form-control" style="width:250px;margin-left: 70px;" name="sc" >
                                             <option @if(is_null($examGradation->first()->sequence_cate)) selected = "selected" @endif value="1" >统一设置各阶段考试顺序</option>
                                             <option @if(!is_null($examGradation->first()->sequence_cate)) selected = "selected" @endif value="2" >单独设置各阶段考试顺序</option>
                                         </select>
