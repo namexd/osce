@@ -53,7 +53,9 @@ class ExamControl extends Model
             $join -> on('exam.id', '=', 'exam_draft_flow.exam_id');
         })->leftJoin('exam_draft', function($join){//考试;
             $join -> on('exam_draft_flow.id', '=','exam_draft.exam_draft_flow_id');
-        })->select('exam_draft.station_id')->where('exam.status','=',1)->get());
+        })->leftJoin('station', function($join){//考试;
+            $join -> on('exam_draft.station_id', '=','station.id');
+        })->select('station.id')->groupBy('station.id')->where('exam.status','=',1)->get());
 
 
         //统计学生数量
