@@ -57,10 +57,10 @@ class ExamControl extends Model
 
 
         //统计学生数量
-        $studentCount = $examModel->leftJoin('exam_queue', function($join){
+        $studentCount = count($examModel->leftJoin('exam_queue', function($join){
             $join -> on('exam.id', '=', 'exam_queue.exam_id');
-        })->select('exam.id','exam_queue.student_id')->groupBy('exam_queue.student_id')->where('exam.status','=',1)->count();
-        
+        })->select('exam_queue.student_id')->where('exam.status','=',1)->groupBy('exam_queue.student_id')->get());
+
         //统计正在考试数量
         $doExamCount = count($examModel->leftJoin('exam_queue', function($join){
             $join -> on('exam.id', '=', 'exam_queue.exam_id');
