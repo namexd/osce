@@ -8,8 +8,7 @@
 
 namespace Modules\Osce\Entities\SmartArrange\Traits;
 
-use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
-
+use Modules\Osce\Entities\Station;
 trait SundryTraits
 {
     /**
@@ -103,9 +102,9 @@ trait SundryTraits
             $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
 
             $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
-
+            $temp = $this->thisNotSerial($screen, $entity->serialnumber);
             //求取差集
-            return array_diff($prevSerial->toArray(), $thisSerial->toArray());
+            return array_diff($prevSerial->toArray(), $thisSerial->toArray(), $temp->toArray());
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -134,9 +133,31 @@ trait SundryTraits
             //求取差集
             return array_diff(array_unique($prevSerial->toArray()), array_unique($thisSerial->toArray()));
         }
+    }
 
+    /**
+     * 获取当前场次下的流程个数
+     * @param $entities
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-08 14:40
+     */
+    function flowNum($entities)
+    {
+        return $entities->groupBy('serialnumber')->count();
+    }
 
-
+    /**
+     * 返回考场对应的考站的考试时间数组
+     * @param $roomStation
+     * @return array
+     * @author Jiangzhiheng
+     * @time 2016-04-08 18:01
+     */
+    function stationMins($roomStation)
+    {
+        $stationIds = $roomStation->pluck('station_id');
+        return Station::whereIn('station_id', $stationIds)->lists('mins')->toArray();
     }
 
 }
