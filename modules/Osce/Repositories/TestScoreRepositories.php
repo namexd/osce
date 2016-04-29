@@ -370,7 +370,6 @@ class TestScoreRepositories  extends BaseRepository
             })->select(
                 'student.teacher_name',
                 'student.grade_class',
-                'exam_paper.id as pid',
                 'exam_screening.exam_id as exam_id',
                 'exam_result.id as rid',
                 $DB->raw('count(student.id) as stuNum'),
