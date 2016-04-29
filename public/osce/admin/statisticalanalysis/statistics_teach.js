@@ -114,6 +114,7 @@ function statistics_teach_score(){
                 var minScore = res.data.data.minScore.split(",");
                 var subname = $('.student_select option:selected').html();
                 if(avgStr){echartsSubject(teacherStr,avgStr,maxScore,minScore);}
+                console.log(res.data.data.datalist);
                 $(res.data.data.datalist).each(function(i){
                     var jumpUrl = '/osce/admin/testscores/grade-score-list?examid='+this.exam_id+'&classid='+this.grade_class+'&subname='+subname+'&subid='+this.pid+'&classid='+this.grade_class;
                     $(".subjectBody").append('<tr>' +
