@@ -108,6 +108,9 @@ function statistics_teach_score(){
             type:"get",
             cache:false,
             success:function(res){
+
+                console.log(res);
+                alert(res);
                 var teacherStr = res.data.data.teacherStr.split(",");
                 var avgStr = res.data.data.avgStr.split(",");
                 var maxScore = res.data.data.maxScore.split(",");
