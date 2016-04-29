@@ -26,7 +26,10 @@
         </div>
         <div class="ibox-content">
             <span class="student_name">{{@$classId}}</span>
-            <span class="marl_10 student_subject">{{@$subname}}</span>
+            @if(!empty(@$subname))
+                <span class="marl_10 student_subject">{{@$subname}}</span>
+                @endif
+
             <span>历史成绩分析</span>
             <button class="btn btn-sm btn-primary marl_10 right" id="back">返回</button>
         </div>

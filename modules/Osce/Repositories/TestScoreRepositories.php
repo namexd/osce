@@ -425,9 +425,14 @@ class TestScoreRepositories  extends BaseRepository
             $join->on('student.id','=','exam_result.student_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('exam_paper',function($join){
-            $join->on('exam_paper.id','=','station.paper_id');
-        })->groupBy('student.teacher_name')->get();
+        });
+        if(!empty($subid)){
+            $ExamResult = $ExamResult->where('exam_paper.id','=',$subid)->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            });
+        }
+
+        $ExamResult = $ExamResult->groupBy('student.teacher_name')->get();
         return $examlist;
     }
 
@@ -454,9 +459,14 @@ class TestScoreRepositories  extends BaseRepository
             $join->on('exam.id','=','exam_screening.exam_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('exam_paper',function($join){
-            $join->on('exam_paper.id','=','station.paper_id');
-        })->leftjoin('student',function($join){
+        });
+        if(!empty($subID)){
+            $ExamResult = $ExamResult->where('exam_paper.id','=',$subID)->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            });
+        }
+
+        $ExamResult = $ExamResult->leftjoin('student',function($join){
             $join->on('student.id','=','exam_result.student_id');
         })->leftjoin('teacher',function($join){
             $join->on('teacher.id','=','exam_result.teacher_id');
