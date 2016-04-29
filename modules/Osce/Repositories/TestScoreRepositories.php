@@ -363,8 +363,6 @@ class TestScoreRepositories  extends BaseRepository
                 $join->on('exam_screening.id','=','exam_result.exam_screening_id');
             })->leftjoin('station',function($join){
                 $join->on('station.id','=','exam_result.station_id');
-            })->leftjoin('exam_paper',function($join){
-                $join->on('exam_paper.id','=','station.paper_id');
             })->leftjoin('student',function($join){
                 $join->on('student.id','=','exam_result.student_id');
             })->select(
