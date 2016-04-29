@@ -219,6 +219,7 @@ class ExamMonitorController  extends CommonController
     public function getExamMonitorFinishList () {
 
         $data=$this->getExamMonitorListByStatus(4);
+        dd($data);
         if(count($data)){
             $data=$data->toArray();
         }else{
@@ -226,7 +227,7 @@ class ExamMonitorController  extends CommonController
         }
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
-        dd($data);
+
         return view('osce::admin.testMonitor.monitor_complete ', [
             'data'      =>$topMsg,'list'=>$data['data']
 
@@ -306,6 +307,7 @@ class ExamMonitorController  extends CommonController
     protected function getExamMonitorListByStatus($status){
 
         $exam_id=Exam::where('status',1)->pluck('id');//正在考试id
+        echo $exam_id;
         if(empty($exam_id)) return [];
         $examScreen=new ExamScreening();
         $ExamScreening = $examScreen->getExamingScreening($exam_id);
