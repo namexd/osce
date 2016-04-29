@@ -326,6 +326,7 @@ class TestScoresController  extends CommonController
             'maxScore' => trim($maxScore,','),
             'minScore' => trim($minScore,',')
         ];
+        dd($data);
         return $this->success_data(['data'=>$data]);
     }
 
