@@ -9,6 +9,9 @@ namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamDraftFlow;
+use Modules\Osce\Entities\ExamGradation;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScreeningStudent;
@@ -105,12 +108,13 @@ class ExamControl extends Model
             ->get();
 
 
-
-        //查询该考生剩余考站数量和该考生是否有标记
         if(!empty($examInfo)&&count($examInfo)>0){
             foreach($examInfo as $key=>$val){
+                //获取该考生剩余考站数量
                 $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['exam_screening_id']);
                 $examInfo[$key]['remainStationCount']=$remainExamQueueData['remainStationCount'];
+
+                //查询正在考的这次考试是否有标记
                 $examMonitorModel = new ExamMonitor();
                 $examMonitorInfo= $examMonitorModel->where('station_id','=',$val['stationId'])
                                                     ->where('exam_id','=',$val['examId'])
@@ -120,7 +124,9 @@ class ExamControl extends Model
                 if(!empty($examMonitorInfo)){
                     $examInfo[$key]['type'] = $examMonitorInfo['type'];
                     $examInfo[$key]['description'] = $examMonitorInfo['description'];
+
                 }else{
+
                     $examInfo[$key]['type'] = -1;
                     $examInfo[$key]['description'] = -1;
                 }
@@ -253,54 +259,50 @@ class ExamControl extends Model
 
     /*迟到确认弃考*/
 
-    public function stopExamLate($data){
+    public function stopExamLate($data,$screen_id){
 
         $DB = DB::connection('osce_mis');
         $DB->beginTransaction();
         try{
-            $examQueueModel = new ExamQueue();
-            //② 更新该考生考试队列表中该考生剩余考站的状态（exam_queue）
-            //获取该考生所有的考站信息
-            $examQueueData = $this->getExamQueueData($data['examId'],$data['studentId']);
-
-            if(!empty($examQueueData['examQueueInfo'])&&count($examQueueData['examQueueInfo'])>0){
-                foreach($examQueueData['examQueueInfo'] as $k=>$v){
-                    $examQueueResult = $examQueueModel->where('exam_id','=',$v['exam_id'])
-                        ->where('student_id','=',$v['student_id'])
-                        ->where('exam_screening_id','=',$v['exam_screening_id'])
-                        ->where('station_id','=',$v['station_id'])
-                        ->update(['status'=>3]);
-                    if(!$examQueueResult){
-                        throw new \Exception(' 更新考试队列状态失败！');
-                    }
-                }
-            }
+            //迟到学生未进对了
             //③ 更新考试场次-学生关系表(exam_screening_student)
             $examScreeningStudentData = array(
-                //'is_end' => 1,
-                'status' => $data['status'],
-                'description' => $data['description']
+                'exam_screening_id'=>$screen_id,
+                'student_id'=>$data['studentId'],
+                'is_end'=>1,
+                'status'=>3,
+                'description'=>1
             );
             //保存考试场次-学生关系表（exam_screening_student）
             $examScreeningStudentModel = new ExamScreeningStudent();
-            $result = $examScreeningStudentModel->where('id','=',$data['examScreeningStudentId'])->update($examScreeningStudentData);
+            $result = $examScreeningStudentModel->create($examScreeningStudentData);
 
             if (!$result) {
-                throw new \Exception('更新考试场次-学生关系表失败！');
+                throw new \Exception('结束考生考试失败！');
             }
 
-            //将该考生的所有成绩记为0
-            if(!empty($examQueueData['examQueueInfo'])&&count($examQueueData['examQueueInfo'])>0){
-                foreach($examQueueData['examQueueInfo'] as $key=>$val){
+                  $emamPlanMsg=ExamPlan::where('exam_id',$data['examId'])->where('exam_screening_id',$screen_id)->where('student_id',$data['studentId'])->first();
+                  $gardaMsg=ExamGradation::where('exam_id',$data['examId'])->where('order',$emamPlanMsg->gradation_order)->first();
+                  $msg=ExamDraftFlow::leftJoin('exam_draft','exam_draft.exam_draft_flow_id','=','exam_draft_flow.id')
+                                ->where('exam_draft_flow.exam_screening_id',$screen_id)
+                      ->where('exam_draft_flow.exam_gradation_id',$gardaMsg->id)
+                      ->where('exam_draft_flow.exam_id',$data['examId'])
+                      ->where('exam_draft.room_id',$emamPlanMsg->room_id)
+                      ->select(['exam_draft.station_id'])
+                      ->first();
+                    $teacher_id=StationTeacher::where('station_id',$msg->station_id)->where('exam_id',$data['examId'])->first();
+                  //将该考生的场次下成绩记为0
                     //⑤ 向考试结果记录表(exam_result)插入数据
-                    $data['userId']=StationTeacher::where('station_id',$val['station_id'])->where('exam_id',$val['exam_id'])->where('exam_screening_id',$val['exam_screening_id'])->pluck('id');
-                    $examResultData=array(
+                  $examResultData=array(
                         'student_id'=>$data['studentId'],
-                        'exam_screening_id'=>$val['exam_screening_id'],
-                        'station_id'=>$val['station_id'],
+                        'exam_screening_id'=>$screen_id,
                         'time'=>0,
                         'score'=>0,
-                        'teacher_id'=>$data['userId'],
+                        'begin_dt'=>date('Y-m-d H:i:s',time()),
+                        'end_dt'=>date('Y-m-d H:i:s',time()),
+                        'station_id'=>$msg->station_id,
+                        'teacher_id'=>$teacher_id->user_id,
+                        'operation'=>0,'skilled'=>0,'patient'=>0,'affinity'=>0,
                     );
                     if(!ExamResult::create($examResultData)){
                         throw new \Exception(' 插入考试结果记录表失败！');
@@ -320,8 +322,6 @@ class ExamControl extends Model
                         }
                     }*/
 
-                }
-            }
             $DB->commit();
             return true;
         }catch (\Exception $ex){
@@ -380,7 +380,6 @@ class ExamControl extends Model
             ->first();
         return $data;
     }
-
 
 
 

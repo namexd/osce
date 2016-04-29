@@ -430,7 +430,7 @@ class ApiController extends CommonController
             //获取当前登录账户的角色名称
             $questionBankRepositories = new QuestionBankRepositories();
             $roleType = $questionBankRepositories->getExamLoginUserRoleType();
-           // dd($roleType);
+            //dd($roleType);
             if($roleType == 1){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($roleType == 2){
@@ -926,108 +926,105 @@ class ApiController extends CommonController
             'student_id'        => 'required|integer',
             'exam_screening_id' => 'required|integer',
         ]);
-
         $mode            = $request->input('mode');
         $examId          = $request->input('exam_id');
         $studentId       = $request->input('student_id');
         $examScreeningId = $request->input('exam_screening_id');
-
         try {
 
-            $examScreeningStudentModel = new ExamScreeningStudent();
-            $examScreeningStudent = $examScreeningStudentModel->where('exam_screening_id', '=', $examScreeningId)
-                ->where('student_id', '=', $studentId)
-                ->first();
-            if (is_null($examScreeningStudent)) {
-
-                throw new \Exception(' 找不到该考试场次的学生信息！',-101);
-            }
-
             $examQueueModel = new ExamQueue();
-            $unExamStationIds = $examQueueModel->where('student_id', '=', $studentId)
-                ->where('exam_screening_id', '=', $examScreeningId)
-                ->where('status', '=', 0)->get()->pluck('station_id');
-
-            if ($mode == 1) {
-                //如果选择否，只是做标记
-                //标记替考
-                $examMonitorModel = new ExamMonitor();
-                if (!empty($unExamStationIds)) {
-                    foreach ($unExamStationIds as $unExamStationId) {
+            $examQueue = $examQueueModel->where('student_id', $studentId)
+                ->where('exam_id',$examId)
+                ->whereNotIn('status',[3,4])->get();
+            if (!empty($examQueue)) {
+                if ($mode == 1) {
+                    //如果选择否，只是做标记
+                    //向监控标记学生替考记录表插入数据
+                    $examMonitorModel = new ExamMonitor();
+                    foreach ($examQueue as $val) {
                         $examMonitorData = array(
-                            'station_id'  =>$unExamStationId,
-                            'exam_id'      =>$examId,
-                            'student_id'  =>$studentId,
+                            'station_id'  =>$val->station_id,
+                            'exam_id'      =>$val->exam_id,
+                            'student_id'  =>$val->student_id,
                             'type'         =>1,
+                            'exam_screening_id'=>$val->exam_screening_id,
                         );
-                        $result = $examMonitorModel->create($examMonitorData);
-                        if(!$result){
-
-                            throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-102);
+                        if(!$examMonitorModel->create($examMonitorData)){
+                            throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-101);
                         }
                     }
-                }
-                $retval['title'] = '标记替考成功';
-                return response()->json(
-                    $this->success_data($retval,1,'success')
-                );
-            } else {
-                //如果选择是，终止这场考试
-                $data = [
-                    'is_end' => 1,
-                    'status' => 2,
-                ];
-                $examScreeningStudentModel->where('id', '=', $examScreeningStudent->id)->update($data);
-                if (!empty($unExamStationIds)) {
-                    $examQueueModel->where('student_id', '=', $studentId)
-                        ->where('exam_screening_id', '=', $examScreeningId)
-                        ->where('status', '=', 0)->update(['status'=>3]);//status=0,已经绑定腕表
+                    $retval['title'] = '标记替考成功';
+                    return response()->json(
+                        $this->success_data($retval,1,'success')
+                    );
+                } else {
+                    //如果选择是，终止这场考试
+                    foreach ($examQueue as $val) {
+                        //更新exam_queue表（考试队列）
+                        $examQueueData= array(
+                            'status'=>3,
+                            'blocking'=>1
+                        );
+                        if(!ExamQueue::where('id',$val->id)->update($examQueueData)){
+                            throw new \Exception(' 更新考试队列表失败！',-102);
+                        }
 
-                    $examResultModel = new ExamResult();
-                    $stationTeacherModel = new StationTeacher();
-                    foreach ($unExamStationIds as $unExamStationId) {
-                        $teacher = $stationTeacherModel->leftJoin('teacher', function($join){
-                            $join -> on('teacher.id', '=', 'station_teacher.user_id');
-                        })->where('station_teacher.station_id', '=', $unExamStationId)
-                            ->where('station_teacher.exam_id', '=', $examId)
-                            ->select([
-                                'teacher.id as teacherId',
-                            ])->first();
+                        $examScreeningStudentData = [
+                            'status' => 2,
+                        ];
 
-                        $data = [
+                        //更新exam_screening_student表（考试场次-学生关系表）
+                        $result = ExamScreeningStudent::where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
+                        if(!empty($result)){
+                            if(!ExamScreeningStudent::where('id',$result->id)->update($examScreeningStudentData)){
+                                throw new \Exception(' 更新考试场次-学生关系表失败！',-103);
+                            }
+
+                        }else{
+                            throw new \Exception('没有该考生对应的场次！',-104);
+                        }
+
+                        //向监控标记学生替考记录表插入数据
+                        $examMonitorData = array(
+                            'station_id'  =>$val->station_id,
+                            'exam_id'      =>$val->exam_id,
+                            'student_id'  =>$val->student_id,
+                            'description' =>3,
+                            'exam_screening_id'=>$val->exam_screening_id,
+                        );
+                        if(!ExamMonitor::create($examMonitorData)){
+                            throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-105);
+                        }
+                        //向exam_result（考试结果记录表）插入数据
+                        $examResultData = [
                             'student_id'        => $studentId,
                             'exam_screening_id' => $examScreeningId,
-                            'station_id'        => $unExamStationId,
+                            'station_id'        => $val->station_id,
                             'begin_dt'          => date('Y-m-d H:i:s', time()),
                             'end_dt'            => date('Y-m-d H:i:s', time()),
                             'score'             => 0,
                             'score_dt'          => date('Y-m-d H:i:s', time()),
                             'create_user_id'    => Auth::user()->id,
-                            'teacher_id'        => $teacher['teacherId'],
                         ];
-
-                        $result = $examResultModel->create($data);
-                        if(!$result){
-
-                            throw new \Exception(' 向考试结果记录表插入数据失败！',-103);
+                        if(!ExamResult::create($examResultData)){
+                            throw new \Exception(' 向考试结果记录表插入数据失败！',-106);
                         }
-
                     }
+                    $retval['title'] = '确定替考成功';
+                    return response()->json(
+                        $this->success_data($retval,1,'success')
+                    );
                 }
 
-                $retval['title'] = '确定替考成功';
-
-
-                return response()->json(
-                    $this->success_data($retval,1,'success')
-                );
+            }else{
+                throw new \Exception(' 找不到该考生的考试队列信息！',-107);
             }
+
+
         }catch (\Exception $ex) {
             return response()->json($this->fail($ex));
 
         }
-
-
 
     }
 }

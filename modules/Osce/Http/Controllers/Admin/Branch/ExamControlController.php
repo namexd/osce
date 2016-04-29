@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use Illuminate\Support\Facades\Redis;
 use Modules\Osce\Entities\AutomaticPlanArrangement\Student;
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\QuestionBankEntities\ExamControl;
@@ -91,42 +92,18 @@ class ExamControlController extends CommonController
             $data['description'] = -1;
             $data['type'] = 2;//上报弃考
         }
-
-/*
-        $examControlModel = new ExamControl();
-        $result = $examControlModel->stopExam($data);
-        if($result){
-            //向pad端推送消息
-            $redis = Redis::connection('message');
-            $redis->publish('pad_message', json_encode($this->success_data([],106,'考试终止成功')));
-            $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
-                ->where('student_id','=',$data['studentId'])->first();
-
-            if(!empty($examScreeningStudentData)){
-                //向watch端推送消息
-                $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
-                $request['nfc_code'] = $watchData->code;
-                //拿到阶段序号
-                $gradationOrder = ExamScreening::find($data['examScreeningId']);
-                //拿到所有场次id
-                $examscreeningId = ExamScreening::where('exam_id','=',$data['examId'])->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
-                $studentWatchController = new StudentWatchController();
-                $studentWatchController->getStudentExamReminder($request,$data['stationId'],$examscreeningId);
-            }
-            return response()->json(
-                $this->success_data([],1,'success')
-            );
-        }
-*/
-
-
         try{
 
             $examControlModel = new ExamControl();
             $examControlModel->stopExam($data);
             //向pad端推送消息
             $redis = Redis::connection('message');
-            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([],106,'考试终止成功')));
+
+            $nowTime = time();
+            $date = date('Y-m-d H:i:s', $nowTime);
+
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$data['studentId'],'exam_screening_id'=>$data['examScreeningId']],106,'考试终止成功')));
+
             $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
                 ->where('student_id','=',$data['studentId'])->first();
             if(!empty($examScreeningStudentData)){
@@ -135,7 +112,7 @@ class ExamControlController extends CommonController
                 $request['nfc_code'] = $watchData->code;
                 //拿到阶段序号
                 $gradationOrder = ExamScreening::find($data['examScreeningId']);
-                //拿到所有场次id
+                //拿到该阶段所对应的所有场次id
                 $examscreeningId = ExamScreening::where('exam_id','=',$data['examId'])->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
                 $studentWatchController = new StudentWatchController();
                 $studentWatchController->getStudentExamReminder($request,$data['stationId'],$examscreeningId);
@@ -149,6 +126,17 @@ class ExamControlController extends CommonController
         }
 
     }
+
+    /**获取获取摄像头信息
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @return \Illuminate\View\View
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
 
     public function getVcrsList(Request $request)
     {
@@ -168,6 +156,23 @@ class ExamControlController extends CommonController
         ]);
 
     }
+
+    public function getTime(Request $request){
+        $this->validate($request,[
+            'exam_id' =>'required|integer', //考试id
+            'student_id'=>'required|integer' //学生id
+        ]);
+
+        $exam_id    = $request->input('exam_id');
+        $student_id = $request->input('student_id');
+        $examQueue = ExamQueue::where('exam_id',$exam_id)->where('student_id',$student_id)->where('status',2)->first();
+
+
+
+    }
+
+
+
 
 
 

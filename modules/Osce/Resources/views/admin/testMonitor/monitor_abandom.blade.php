@@ -13,6 +13,13 @@
 @stop
 
 @section('only_js')
+    <script>
+        $(function(){
+            $("#refresh").click(function(){
+                window.location.href=window.location.href;
+            });
+        })
+    </script>
 @stop
 
 @section('content')
@@ -21,6 +28,9 @@
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">考试监控</h5>
+            </div>
+            <div class="col-xs-6 col-md-2 right">
+                <button class="btn btn-sm btn-primary marl_10 right" id="refresh">刷新</button>
             </div>
         </div>
         <div class="container-fluid ibox-content">

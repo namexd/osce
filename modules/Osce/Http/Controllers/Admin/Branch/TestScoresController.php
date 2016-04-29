@@ -9,6 +9,8 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
+use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Repositories\TestScoreRepositories;
@@ -269,8 +271,14 @@ class TestScoresController  extends CommonController
      */
     public function getSubjectLists(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examid = $request->examid;
-        $datalist = $TestScoreRepositories->getSubjectlist($examid);
+        $datalist = ExamResult::where('exam_paper_exam_station.exam_id','=',$examid)->leftjoin('exam_paper_exam_station',function($join){
+            $join->on('exam_paper_exam_station.station_id','=','exam_result.station_id');
+        })->leftjoin('exam_paper',function($join){
+            $join->on('exam_paper.id','=','exam_paper_exam_station.exam_paper_id');
+        })->groupBy('exam_paper.id')->select('exam_paper.id','exam_paper.name')->get();
+        //dd($datalist->toArray());
         return $this->success_data(['datalist'=>$datalist]);
+
     }
 
     /**
@@ -284,8 +292,8 @@ class TestScoresController  extends CommonController
      */
     public function getTeacherDataList(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examid = $request->examid;
-        $subjectid = $request->subjectid;
-        $datalist = $TestScoreRepositories->getTeacherData($examid,$subjectid);
+        $paperid = $request->subjectid;
+        $datalist = $TestScoreRepositories->getTeacherData($examid,$paperid);
         $teacherStr = '';
         $avgStr = '';
         $maxScore = '';
@@ -318,6 +326,7 @@ class TestScoresController  extends CommonController
             'maxScore' => trim($maxScore,','),
             'minScore' => trim($minScore,',')
         ];
+        //dd($data);
         return $this->success_data(['data'=>$data]);
     }
 
@@ -332,12 +341,12 @@ class TestScoresController  extends CommonController
      */
     public function getGradeScoreList(Request $request,TestScoreRepositories $TestScoreRepositories){
         $classId = $request->classid;
-        $subid = $request->subid;
+        $paperid= $request->subid;    //试卷id
         $examid = $request->examid;
         //获取当前班级历史记录
-        $datalist = $TestScoreRepositories->getGradeScore($classId,$subid,$examid)->toArray();
+        $datalist = $TestScoreRepositories->getGradeScore($classId,$paperid,$examid)->toArray();
         //获取当前考试记录
-        $curent = $TestScoreRepositories->getGradeScore('',$subid,$examid)->toArray();
+        $curent = $TestScoreRepositories->getGradeScore('',$paperid,$examid)->toArray();
 
         $classData = '';
         $allData = '';

@@ -21,6 +21,9 @@
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">考试监控</h5>
             </div>
+            <div class="col-xs-6 col-md-2 right">
+                <button class="btn btn-sm btn-primary marl_10 right" id="refresh">刷新</button>
+            </div>
         </div>
         <div class="container-fluid ibox-content">
             <ul class="sortable-list connectList agile-list ui-sortable" style="background-color: #fff;">

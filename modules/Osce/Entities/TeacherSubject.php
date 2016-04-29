@@ -60,17 +60,18 @@ class TeacherSubject extends CommonModel
      * @return mixed
      * @throws \Exception
      */
-    public function getTeacherSubjects(){
+    public function getTeacherSubjects($subject){
         //拿到当前 正在考试的考试
         $examArray = Exam::where('status', 1)->get()->pluck('id')->toArray();
         //考试考试下面所有的老师
         $TeacherArray= StationTeacher::whereIn('exam_id' ,$examArray)->whereNotNull('user_id')->get()->pluck('user_id');
-        if(!is_null($TeacherArray)){
-
+        if(!is_null($TeacherArray))
+        {
             //拿到考试项目关联的老师
             $TeacherId = array_diff($TeacherArray->all(), [null]);
-            $teacherSubjects = TeacherSubject::whereIn('teacher_id',$TeacherId)->get();
-        }else{
+            $teacherSubjects = TeacherSubject::whereIn('teacher_id',$TeacherId)->where('subject_id', '=', $subject->id)->get();
+        }
+        else{
             $teacherSubjects = collect([]);
         }
 

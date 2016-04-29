@@ -63,18 +63,52 @@ trait SQLTraits
      * @author Jiangzhiheng
      * @time 2016-04-07 16:54
      */
-    function randomBeginStudent($screen)
+    function randomBeginStudent($screen, $entity)
     {
         return ExamPlanRecord::where('exam_screening_id', $screen->id)
+            ->where('serialnumber', '<>', $entity->serialnumber)
             ->whereNotNull('end_dt')
-            ->groupBy('student_id')
-            ->get();
+            ->lists('student_id');
+    }
+
+    /**
+     * 获取随机状态下该考站需要的考生
+     * @param $entity
+     * @param $students
+     * @author Jiangzhiheng
+     * @time 2016-04-28 16：48
+     */
+    function randomNeedStudent($entity, $students)
+    {
+        $arrays = [];
+        foreach ($students as $key => $student) {
+                $arrays[] = $student;
+            if (count($arrays) == $entity->needNum) {
+                return $arrays;
+            }
+        }
+
+        return $arrays;
+    }
+
+    /**
+     * 获取目前正在考试的学生
+     * @param $screen
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-28 19:48
+     */
+    function randomTestingStudent($screen, $entity)
+    {
+        return ExamPlanRecord::where('exam_screening_id', $screen->id)
+            ->whereNotNull('begin_dt')
+            ->where('serialnumber', $entity->serialnumber)
+            ->lists('student_id');
     }
 
     function waitingStudentSql($screen)
     {
-        return ExamPlanRecord::with('student')
-            ->select(\DB::raw('(count(end_dt) = count(begin_dt)) as num,student_id,count(`station_id`) as flows_num'))
+        return ExamPlanRecord::select(\DB::raw('(count(end_dt) = count(begin_dt)) as num,student_id,count(`station_id`) as flows_num'))
             ->where('exam_screening_id', $screen->id)
             ->havingRaw('num > ?', [0])
             ->havingRaw('flows_num < ?', [$screen->flowNum])

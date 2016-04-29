@@ -27,5 +27,5 @@ class ExamMonitor extends Model
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id','station_id', 'exam_id', 'student_id', 'created_user_id', 'created_at', 'updated_at','type','description'];
+    protected $fillable = ['id','station_id', 'exam_id', 'student_id', 'created_user_id', 'created_at', 'updated_at','type','description','exam_screening_id'];
 }
