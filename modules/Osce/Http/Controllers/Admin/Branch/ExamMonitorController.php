@@ -168,6 +168,8 @@ class ExamMonitorController  extends CommonController
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
         $data=$this->getExamMonitorListByStatus(2);
+
+        dd($data);
         $data=count($data)?$data:[];
         return view('osce::admin.testMonitor.monitor_replace', [
             'list'      =>$data,'data'=>$topMsg
@@ -355,7 +357,7 @@ class ExamMonitorController  extends CommonController
                         $station_names=Station::where('id',$val['station_id'])->pluck('name');
                         if(!empty($station_names)) $station_name[]=$station_names;
                     }
-                    
+
                     $list[$key]['stationName']=count($station_name)?implode(',',$station_name):'';
                 }
                 return $list;
