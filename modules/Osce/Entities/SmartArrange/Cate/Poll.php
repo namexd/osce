@@ -36,7 +36,6 @@ class Poll extends AbstractCate implements CateInterface
 //        $result = $this->studentNum($entity, $screen,$testStudents, $result);
 
 
-
         /*
          * 如果$result中保存的人数少于考站需要的人数，就从侯考区里面补上，并将这些人从侯考区踢掉
          * 再将人从学生池里抽人进入侯考区
@@ -50,12 +49,8 @@ class Poll extends AbstractCate implements CateInterface
                         if (!is_null($thisStudent)) {
                             $testStudents[] = $thisStudent;
                         }
-                        if (count($this->_S) > 0) {
-                            if (is_array($this->_S)) {
-                                $this->_S_W[] = array_shift($this->_S);
-                            } else {
-                                $this->_S_W[] = $this->_S->shift();
-                            }
+                        if (!$this->_S->isEmpty()) {
+                            $this->_S_W[] = $this->_S->shift();
                         }
                     }
 
@@ -79,8 +74,7 @@ class Poll extends AbstractCate implements CateInterface
      */
     protected function pollTestStudents($entity, $screen)
     {
-        //声明两个变量
-        $arrays = [];
+        //声明变量
         $tempStudents = [];
 
         //如果当前的流程号不等于实体的流程号，就将学生属性置为空
@@ -94,7 +88,7 @@ class Poll extends AbstractCate implements CateInterface
         }
 
         //循环，找到合适的学生
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             //直接将学生踢出来
             $a = array_shift($this->students);
             if (!empty($a)) {
@@ -102,24 +96,10 @@ class Poll extends AbstractCate implements CateInterface
             }
 
             if (count($tempStudents) == $entity->needNum) {
-//                break;
                 $this->serNum = $entity->serialnumber; //将serNum置为当前实体的
                 return $tempStudents;
             }
         }
-
-
-        //如果有数据，就将查找到的id转为学生实体
-//        if (count($tempStudents) != 0) {
-//            foreach ($tempStudents as $tempStudent) {
-//                $arrays[] = $tempStudent;
-////                $arrays[] = Student::find($tempStudent);
-//                if (count($arrays) == $entity->needNum) {
-//                    $this->serNum = $entity->serialnumber; //将serNum置为当前实体的
-//                    return $arrays;
-//                }
-//            }
-//        }
 
         //将serNum置为当前实体的
         $this->serNum = $entity->serialnumber;

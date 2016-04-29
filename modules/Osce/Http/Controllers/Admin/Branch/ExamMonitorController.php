@@ -226,6 +226,7 @@ class ExamMonitorController  extends CommonController
         }
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
+
         return view('osce::admin.testMonitor.monitor_complete ', [
             'data'      =>$topMsg,'list'=>$data['data']
 
@@ -305,6 +306,7 @@ class ExamMonitorController  extends CommonController
     protected function getExamMonitorListByStatus($status){
 
         $exam_id=Exam::where('status',1)->pluck('id');//正在考试id
+
         if(empty($exam_id)) return [];
         $examScreen=new ExamScreening();
         $ExamScreening = $examScreen->getExamingScreening($exam_id);
@@ -313,7 +315,8 @@ class ExamMonitorController  extends CommonController
         }
         $builder=ExamScreeningStudent::leftJoin('student', function($join){//弃考 已完成页面数据对象
             $join -> on('exam_screening_student.student_id', '=', 'student.id');
-        })->select('student.name','student.exam_id', 'student.code','student.id as student_id','student.idcard','student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status');
+        })->select('student.name','student.exam_id', 'student.code','student.id as student_id','student.idcard',
+            'student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','exam_screening_student.id');
         switch ($status){
             case 1://迟到
                 return Student:: leftJoin('exam_order', function($join){
@@ -323,7 +326,7 @@ class ExamMonitorController  extends CommonController
                     ->where('student.exam_id',$exam_id)
                     //->where('exam_absent.exam_id',$exam_id)
                     ->where('exam_order.exam_id',$exam_id)
-                    ->where('exam_order.status',4)
+                    ->where('exam_order.status',4)->groupBy('student_id')
                     //->where('exam_screening_student.exam_screening_id',$ExamScreening->id)
                    // ->where('exam_screening_student.is_end',0)
                     ->paginate(config('osce.page_size'));
@@ -342,7 +345,7 @@ class ExamMonitorController  extends CommonController
                     ->paginate(config('osce.page_size'));*/
                 $list=$builder->where('exam_screening_student.status',2)
                     ->where('exam_screening_student.is_end',1)
-                    ->where('student.exam_id',$exam_id)
+                    ->where('student.exam_id',$exam_id)->groupBy('student_id')
                     ->paginate(config('osce.page_size'));
                 if(empty($list->toArray()['data'])){return [];}
                 $list=$list->toArray()['data'];
@@ -360,13 +363,13 @@ class ExamMonitorController  extends CommonController
                 return $builder->where('exam_screening_student.status',1)
                                //->where('exam_screening_id',$ExamScreening->id)
                                ->where('exam_screening_student.is_end',1)
-                               ->where('student.exam_id',$exam_id)
+                               ->where('student.exam_id',$exam_id)->groupBy('student_id')
                                ->paginate(config('osce.page_size'));
                 break;
             case 4://已完成
                 return $builder->where('exam_screening_student.is_end',1)
-                               //->where('exam_screening_id',$ExamScreening->id)
-                               ->where('student.exam_id',$exam_id)
+                               ->where('exam_screening_id',$ExamScreening->id)
+                               ->where('student.exam_id',$exam_id)->groupBy('student_id')
                                ->paginate(config('osce.page_size'));
                 break;
             default:
