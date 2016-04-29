@@ -317,9 +317,7 @@ class ExamMonitorController  extends CommonController
         $builder=ExamScreeningStudent::leftJoin('student', function($join){//弃考 已完成页面数据对象
             $join -> on('exam_screening_student.student_id', '=', 'student.id');
         })->select('student.name','student.exam_id', 'student.code','student.id as student_id','student.idcard',
-            'student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','exam_screening_student.id')
-            ->where('exam_screening_student.is_end',1)->where('student.exam_id',$exam_id)->get();
-        dd($builder);
+            'student.mobile','student.grade_class','student.teacher_name','student.exam_sequence','exam_screening_student.status','exam_screening_student.id');
         switch ($status){
             case 1://迟到
                 return Student:: leftJoin('exam_order', function($join){
@@ -371,9 +369,9 @@ class ExamMonitorController  extends CommonController
                 break;
             case 4://已完成
                 return $builder->where('exam_screening_student.is_end',1)
-                               //->where('exam_screening_id',$ExamScreening->id)
-                               ->where('student.exam_id',$exam_id)->get();
-                              // ->paginate(config('osce.page_size'));
+                               ->where('exam_screening_id',$ExamScreening->id)
+                               ->where('student.exam_id',$exam_id)->orderBy('student_id')
+                               ->paginate(config('osce.page_size'));
                 break;
             default:
                 return [];
