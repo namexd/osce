@@ -382,7 +382,7 @@ class TestScoreRepositories  extends BaseRepository
                 'exam_paper.id as pid'
             );
         }else{
-            $ExamResult = $ExamResult->where('subject.id','=',$subid)->select(
+            $ExamResult = $ExamResult->where('exam_paper.id','=',$subid)->select(
                 $DB->raw('avg(exam_result.score) as avgScore'),
                 'exam.id'
             );
