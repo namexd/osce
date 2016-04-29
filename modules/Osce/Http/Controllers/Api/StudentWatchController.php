@@ -9,10 +9,12 @@
 namespace Modules\Osce\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestResult;
@@ -59,8 +61,23 @@ class StudentWatchController extends CommonController
             'surplus' => '',
             'score' => '',
         ];
-
         $redis = Redis::connection('message');
+
+        //通过学生id拿到nfc_code;todo 待确定是否只要学生id，推送腕表信息
+//        $watchNfcCode =$this->getStudentWatchNfcCode($studentId);
+//        if(empty($watchNfcCode)){
+//            $data['title'] = '未找到腕表';
+//            $data['code'] = -2;
+//            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
+//                'nfc_code' => $watchNfcCode,
+//                'data' => $data,
+//                'message' => 'error',
+//            ]));
+//            return response()->json(
+//                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
+//            );
+//
+//        }
 
         //根据腕表nfc_code找到腕表
         $watch = Watch::where('code', '=', $watchNfcCode)->first();
@@ -524,6 +541,30 @@ class StudentWatchController extends CommonController
             ->where('exam_draft_flow.exam_id', '=', $item->exam_id)
             ->get()->pluck('station_id');
         return $stationId;
+    }
+
+
+
+    private  function getStudentWatchNfcCode($studentId)
+    {
+        //拿到正在进行的考试
+        $nfc_Code = '';
+        $exam = Exam::doingExam();
+        $examScreeningModel = new ExamScreening();
+        $examScreening = $examScreeningModel->getExamingScreening($exam->id);
+        if (is_null($examScreening)) {
+            $examScreening = $examScreeningModel->getNearestScreening($exam->id);
+        }
+        $exam_screen_id = $examScreening->id;
+
+        $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id',$exam_screen_id)
+            ->where('student_id', '=', $studentId)->first();
+        if (!is_null($examScreeningStudentData)) {
+            //拿到腕表的nfc_code
+            $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
+            $nfc_Code = $watchData->code;
+        }
+        return $nfc_Code;
     }
 
 }

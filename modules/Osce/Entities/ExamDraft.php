@@ -39,6 +39,11 @@ class ExamDraft extends CommonModel
     public function station(){
         return $this->hasOne('Modules\Osce\Entities\Station','id','station_id');
     }
+
+    public function room()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Room', 'id', 'room_id');
+    }
     /**
      * 获取 不为null的值
      * @param $object

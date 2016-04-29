@@ -83,21 +83,27 @@ class ExamQueue extends CommonModel
     //获取候考教室
     protected function getWaitRoom($exam_id)
     {
-        $examFlowRoomList = ExamFlowRoom::where('exam_id', '=', $exam_id)->paginate(config('osce.page_size'));
+        //获取到该考试场次下所有的房间
+        $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft_flow.exam_id', '=',$exam_id)
+            ->groupBy('exam_draft.room_id')
+            ->get();
+
         $data = [];
-        foreach ($examFlowRoomList as $examFlowRoom) {
+        foreach ($examRoomList as $examFlowRoom) {
             $roomName = $examFlowRoom->room->name;
             $room_id = $examFlowRoom->room_id;
 //            $students = $examFlowRoom->queueStudent()->where('exam_id', '=', $exam->id)->get();
             $ExamQueue = new ExamQueue();
             $students = $ExamQueue->getWaitStudentRoom($room_id, $exam_id);
+
             foreach ($students as $examQueue) {
                 foreach ($examQueue->student as $student) {
                     $data[$roomName][] = $student;
                 }
             }
         }
-
+   
         return $data;
     }
 
@@ -834,20 +840,26 @@ class ExamQueue extends CommonModel
      */
     public function getWaitStudentRoom($room_id = '', $exam_id = '')
     {
-        $builder = $this->leftJoin('exam_flow_room',
+        $builder = $this->leftJoin('exam_draft_flow',
             function ($join) {
-                $join->on('exam_queue.room_id', '=', 'exam_flow_room.room_id');
+                $join->on('exam_draft_flow.exam_id', '=', 'exam_queue.exam_id');
             })
             ->leftJoin('student', function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
             })
+            ->leftJoin('exam_draft', function ($join) {
+                $join->on('exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id');
+            })
             ->where('exam_queue.room_id', '=', $room_id)
+            ->where('exam_draft.room_id', '=', $room_id)
             ->where('exam_queue.exam_id', '=', $exam_id)
+            ->where('exam_draft_flow.exam_id', '=', $exam_id)
             ->where('exam_queue.status', '=', 0)
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->orderBy('student.id', 'asc')
             ->select(['student.name as name', 'exam_queue.student_id', 'exam_queue.begin_dt'])
             ->distinct()->take(4)->get();
+
 
         if (count($builder) != 0) {
             foreach ($builder as &$item) {
@@ -968,9 +980,12 @@ class ExamQueue extends CommonModel
      */
     public function getWaitStationStudents($exam_id, $pageSize = 4)
     {
-        $examFlowStationList = ExamFlowStation::where('exam_id', '=', $exam_id)->paginate($pageSize);
+        $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft_flow.exam_id', '=',$exam_id)
+            ->groupBy('exam_draft.station_id')
+            ->paginate($pageSize);
         $data = [];
-        foreach ($examFlowStationList as $examFlowStation) {
+        foreach ($examRoomList as $examFlowStation) {
             $stationName = $examFlowStation->station->name;
             $station_id = $examFlowStation->station_id;
             $ExamQueue = new ExamQueue();
@@ -995,9 +1010,13 @@ class ExamQueue extends CommonModel
      */
     public function getWaitRoomStudents($exam_id, $pageSize = 4)
     {
-        $examFlowRoomList = ExamFlowRoom::where('exam_id', '=', $exam_id)->paginate($pageSize);
+        //获取到该考试下所有的房间
+        $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft_flow.exam_id', '=',$exam_id)
+            ->groupBy('exam_draft.room_id')
+            ->get();
         $data = [];
-        foreach ($examFlowRoomList as $examFlowRoom) {
+        foreach ($examRoomList as $examFlowRoom) {
             $roomName = $examFlowRoom->room->name;
             $room_id = $examFlowRoom->room_id;
             $ExamQueue = new ExamQueue();
