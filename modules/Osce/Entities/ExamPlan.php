@@ -884,7 +884,8 @@ class ExamPlan extends CommonModel
     {
         return $this->where('exam_screening_id', '=', $ExamScreeningId)
             ->where('exam_id','=',$examId)
-            ->groupBy('student_id')
+            ->lists('student_id')
+            ->unique()
             ->count();
     }
 
