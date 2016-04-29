@@ -338,18 +338,18 @@ class TestScoreRepositories  extends BaseRepository
     public function getTeacherData($examid,$subjectid){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        $examlist = $ExamResult->where('subject.id','=',$subjectid)->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
+        $examlist = $ExamResult->where('exam_paper.id','=',$subjectid)->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('subject',function($join){
-            $join->on('subject.id','=','station.subject_id');
+        })->leftjoin('exam_paper',function($join){
+            $join->on('exam_paper.id','=','station.paper_id');
         })->leftjoin('student',function($join){
             $join->on('student.id','=','exam_result.student_id');
         })->select(
             'student.teacher_name',
             'student.grade_class',
-            'subject.id as subid',
+            'exam_paper.id as pid',
             'exam_screening.exam_id as exam_id',
             'exam_result.id as rid',
             $DB->raw('count(student.id) as stuNum'),
@@ -357,7 +357,7 @@ class TestScoreRepositories  extends BaseRepository
             $DB->raw('max(exam_result.score) as maxScore'),
             $DB->raw('min(exam_result.score) as minScore')
         )->groupBy('student.grade_class')->get();
-        //dd($examlist);
+        dd($examlist->toArray());
         return $examlist;
     }
     /**

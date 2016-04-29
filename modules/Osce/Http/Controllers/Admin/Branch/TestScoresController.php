@@ -292,8 +292,8 @@ class TestScoresController  extends CommonController
      */
     public function getTeacherDataList(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examid = $request->examid;
-        $subjectid = $request->subjectid;
-        $datalist = $TestScoreRepositories->getTeacherData($examid,$subjectid);
+        $paperid = $request->subjectid;
+        $datalist = $TestScoreRepositories->getTeacherData($examid,$paperid);
         $teacherStr = '';
         $avgStr = '';
         $maxScore = '';
