@@ -349,15 +349,32 @@ class ExamMonitorController  extends CommonController
                     ->paginate(config('osce.page_size'));
                 if(empty($list->toArray()['data'])){return [];}
                 $list=$list->toArray()['data'];
-                $station_name = [];
-                foreach($list as $key=>$v) { //替考学生
 
-                    $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('exam_id',$exam_id)->where('exam_screening_id',$ExamScreening->id)->where('type',1)->get()->toArray();//上报停考信息
-                    foreach($replaceList as $val){
+                foreach($list as $key=>$v) { //替考学生
+                    //查询标记替考的考站
+                    $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('exam_id',$exam_id)->where('type',1)->get()->toArray();//上报停考信息
+                    if(!empty($replaceList)){
+                        $station_name = '';//单个学生对于的考站名称
+                        foreach($replaceList as $val){
+                            if(!empty($val['station_id'])){ //考站id有值的情况下
+                                //查询考站名称
+                                $name=Station::where('id',$val['station_id'])->pluck('name');
+                                if(!empty($station_name)){
+                                    $station_name.= ','.$name;
+                                }else{
+                                    $station_name = $name;
+                                }
+                            }
+                        }
+                        $list[$key]['station_name']=$station_name;
+                    }
+
+
+               /*     foreach($replaceList as $val){
                         $station_names=Station::where('id',$val['station_id'])->pluck('name');
                         if(!empty($station_names)) $station_name[]=$station_names;
                     }
-                    $list[$key]['station_name']=count($station_name)?implode(',',$station_name):'';
+                    $list[$key]['station_name']=count($station_name)?implode(',',$station_name):'';*/
                 }
                 return $list;
                 break;
