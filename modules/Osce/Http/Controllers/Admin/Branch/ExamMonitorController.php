@@ -355,7 +355,8 @@ class ExamMonitorController  extends CommonController
                         $station_names=Station::where('id',$val['station_id'])->pluck('name');
                         if(!empty($station_names)) $station_name[]=$station_names;
                     }
-                    $list[$key]['station_name']=count($station_name)?implode(',',$station_name):'';
+                    
+                    $list[$key]['stationName']=count($station_name)?implode(',',$station_name):'';
                 }
                 return $list;
                 break;
