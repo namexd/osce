@@ -970,6 +970,7 @@ class ApiController extends CommonController
                         }
 
                         $examScreeningStudentData = [
+                            'is_end'=>1,
                             'status' => 2,
                         ];
 
