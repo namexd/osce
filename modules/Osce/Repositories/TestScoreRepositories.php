@@ -360,7 +360,7 @@ class TestScoreRepositories  extends BaseRepository
             $DB->raw('max(exam_result.score) as maxScore'),
             $DB->raw('min(exam_result.score) as minScore')
         )->groupBy('student.grade_class')->get();
-        //dd($examlist->toArray());
+        dd($examlist->toArray());
         return $examlist;
     }
     /**
