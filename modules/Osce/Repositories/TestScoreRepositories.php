@@ -397,7 +397,7 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
         if($classId){
-            if(!empty($subid)){
+            if(intval($subid)){
                 $ExamResult = $ExamResult->where('exam_paper.id','=',$subid);
             }
             $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
@@ -408,7 +408,7 @@ class TestScoreRepositories  extends BaseRepository
                 'exam_paper.id as pid'
             );
         }else{
-            if(!empty($subid)){
+            if(intval($subid)){
                 $ExamResult = $ExamResult->where('exam_paper.id','=',$subid);
             }
             $ExamResult = $ExamResult->select(
@@ -426,7 +426,7 @@ class TestScoreRepositories  extends BaseRepository
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
         });
-        if(!empty($subid)){
+        if(intval($subid)){
             $examlist = $examlist->where('exam_paper.id','=',$subid)->leftjoin('exam_paper',function($join){
                 $join->on('exam_paper.id','=','station.paper_id');
             });
@@ -450,7 +450,7 @@ class TestScoreRepositories  extends BaseRepository
 
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        if(!empty($subID)){
+        if(intval($subID)){
             $ExamResult = $ExamResult->where('exam_paper.id','=',$subID);
         }
         $examlist = $ExamResult->where('exam.id','=',intval($examID))->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
@@ -460,7 +460,7 @@ class TestScoreRepositories  extends BaseRepository
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
         });
-        if(!empty($subID)){
+        if(intval($subID)){
             $ExamResult = $ExamResult->where('exam_paper.id','=',$subID)->leftjoin('exam_paper',function($join){
                 $join->on('exam_paper.id','=','station.paper_id');
             });
