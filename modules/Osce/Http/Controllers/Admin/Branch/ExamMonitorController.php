@@ -168,8 +168,6 @@ class ExamMonitorController  extends CommonController
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
         $data=$this->getExamMonitorListByStatus(2);
-
-        dd($data);
         $data=count($data)?$data:[];
         return view('osce::admin.testMonitor.monitor_replace', [
             'list'      =>$data,'data'=>$topMsg
@@ -351,14 +349,15 @@ class ExamMonitorController  extends CommonController
                     ->paginate(config('osce.page_size'));
                 if(empty($list->toArray()['data'])){return [];}
                 $list=$list->toArray()['data'];
+                $station_name = [];
                 foreach($list as $key=>$v) { //替考学生
+
                     $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('exam_id',$exam_id)->where('exam_screening_id',$ExamScreening->id)->where('type',1)->get()->toArray();//上报停考信息
                     foreach($replaceList as $val){
                         $station_names=Station::where('id',$val['station_id'])->pluck('name');
                         if(!empty($station_names)) $station_name[]=$station_names;
                     }
-
-                    $list[$key]['stationName']=count($station_name)?implode(',',$station_name):'';
+                    $list[$key]['station_name']=count($station_name)?implode(',',$station_name):'';
                 }
                 return $list;
                 break;
