@@ -190,7 +190,7 @@ class ExamScreening extends CommonModel
     public function getExamCheck()
     {
         //取得考试实例
-        $exam = Exam::where('status', '=', 1)->orderBy('begin_dt', 'desc')->first();
+        $exam = Exam::doingExam();
         if (is_null($exam)) {
             throw new \Exception('没有找到考试');
         }
