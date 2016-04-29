@@ -556,8 +556,7 @@ class TestScoreRepositories  extends BaseRepository
                 'exam.name',
                 'exam_result.begin_dt',
                 'exam_result.end_dt',
-                'student.grade_class',
-                'exam_paper.name as paper_name'
+                'student.grade_class'
             )->first();
         }
 
