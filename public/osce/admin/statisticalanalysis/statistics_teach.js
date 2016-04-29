@@ -65,10 +65,16 @@ function statistics_teach_score(){
             cache:false,
             async:false,
             success:function(res){
-                $(res.data.datalist).each(function(){
-                    $(".student_select").append('<option value="'+this.id+'">'+this.name+'</option>');
-                    console.log(this.title+'-option-'+this.id)
-                });
+                if(res.data.datalist){
+                    $(res.data.datalist).each(function(){
+                        $(".student_select").append('<option value="'+this.id+'">'+this.name+'</option>');
+                        console.log(this.title+'-option-'+this.id)
+                    });
+                }else{
+                    $('.exam-name').hide();
+                    $('.student_select').hide();
+                }
+
             }
         })
     }
