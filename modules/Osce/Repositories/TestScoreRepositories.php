@@ -338,6 +338,8 @@ class TestScoreRepositories  extends BaseRepository
     public function getTeacherData($examid,$subjectid){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
+        echo $subjectid;
+        dd(intval($subjectid));
         if(!empty($subjectid)){
             $examlist = $ExamResult->where('exam_paper.id','=',$subjectid)->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
                 $join->on('exam_screening.id','=','exam_result.exam_screening_id');
