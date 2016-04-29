@@ -128,7 +128,7 @@ function statistics_teach_score(){
                         '<a href='+jumpUrl+'>' +
                         '<span class="read state1 detail"><i class="fa fa-cog fa-2x"></i></span>' +
                         '</a>' +
-                        '<span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="'+this.exam_id+'" resultid="'+this.rid+'" subid="'+this.subid+'" classid="'+this.grade_class+'" ></i></span>' +
+                        '<span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="'+this.exam_id+'" resultid="'+this.rid+'" subid="'+this.pid+'" classid="'+this.grade_class+'" ></i></span>' +
                         '</td>' +
                         '</tr>')
                 })
