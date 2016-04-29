@@ -1172,7 +1172,7 @@ function exam_assignment_add(){
             html = '',
             value = $('#gradation_order').val();
 
-        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2) {
+        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2 && $('#gradation_order').val() < 20) {
             for(var i = 1; i <= value; i++) {
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
@@ -1600,7 +1600,7 @@ function exam_basic_info(){
             html = '',
             value = $('#gradation_order').val();
 
-        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2) {
+        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2 && $('#gradation_order').val() < 20) {
             for(var i = 1; i <= value; i++) {
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
