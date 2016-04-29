@@ -425,6 +425,7 @@ class TestScoreRepositories  extends BaseRepository
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
         });
+        dd(intval($subid));
         if(intval($subid)){
             $examlist = $examlist->where('exam_paper.id','=',$subid)->leftjoin('exam_paper',function($join){
                 $join->on('exam_paper.id','=','station.paper_id');
