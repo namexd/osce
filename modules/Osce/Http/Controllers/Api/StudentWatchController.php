@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
@@ -111,10 +112,6 @@ class StudentWatchController extends CommonController
         //得到学生id
         $studentId = $watchStudent->student_id;
 
-        //根据考生id找到当前的考试
-        //$examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
-        //$examId = $examInfo->exam_id;
-
         //根据考生id得到该场考试该阶段的所有队列列表
         $examQueueModel = new ExamQueue();
         $examQueueCollect = $examQueueModel->StudentExamQueue($studentId, $examscreeningId);
@@ -166,7 +163,7 @@ class StudentWatchController extends CommonController
             return $this->getStatusThreeExam($examQueueCollect, $stationId);
         }
 
-        return $this->getStatusWaitExam($examQueueCollect, $stationId);
+        return $this->getStatusWaitExam($examQueueCollect, $stationId);     //刚绑定腕表
     }
 
     //判断腕表提醒状态为1时
@@ -278,8 +275,6 @@ class StudentWatchController extends CommonController
 
     private function getExamComplete($examQueue)
     {
-//        $ExamFlowModel = new  ExamFlow();
-//        $studentExamSum = $ExamFlowModel->studentExamSum($examQueue->exam_id);
         //查询出学生当前已完成的考试已完成的场次
         $ExamFinishStatus = ExamQueue::where('status', '=', 3)
             ->where('student_id', '=', $examQueue->student_id)
@@ -339,81 +334,17 @@ class StudentWatchController extends CommonController
         });
 
         $item = array_shift($items);
-
-
         // 判断老师是否准备完成
-        $examStationStatusModel = new ExamStationStatus();
 
-        $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
-            ->where('exam_screening_id', '=', $item->exam_screening_id)
-            ->where('station_id', '=', $stationId)
-            ->first();
-        if ($instance->status == 0) {
-            return [
-                'code' => 0, // 0，等待状态（对应界面：Prepare_fragment）
-                'title' => '等待老师准备中',
-                'willStudents' => '',
-            ];
+        if(empty($this -> getTeacherPrepareStatus($item))){
+
+            $data = $this->getStudentWaitMessage($item);
+
+
+
+        }else{
+            $data =$this -> getTeacherPrepareStatus($item);
         }
-        //判断前面是否有人考试
-        if (empty($item->station_id)) {
-            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
-                ->where('exam_id', '=', $item->exam_id)
-                ->whereBetween('status', [1, 2])
-                ->count();
-        } else {
-            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
-                ->where('exam_id', '=', $item->exam_id)
-                ->where('station_id', '=', $item->station_id)
-                ->whereBetween('status', [1, 2])
-                ->count();
-        }
-
-        //判断前面等待人数
-        $studentnum = $this->getwillStudent($item);
-        if ($examStudent == 0) {
-            $willStudents = $studentnum;
-        } else {
-            $willStudents = $studentnum + 1;
-        }
-
-        //判断预计考试时间
-        $examtimes = date('H:i', (strtotime($item->begin_dt)));
-
-        //判断进入如的考场教室名字
-        $examRoomName = $item->room->name;
-        if ($willStudents > 0) {
-            $data = [
-                'code' => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-                'title' => '考生等待信息',
-                'willStudents' => $willStudents,
-                'estTime' => $examtimes,
-                'willRoomName' => $examRoomName,
-
-            ];
-        } else {
-            if (is_null($item->station_id)) {
-                $data = [
-                    'code' => 2, // 引导状态（对应界面：请前往教室420）
-                    'title' => '请进入以下考场考试',
-                    'willStudents' => '',
-                    'estTime' => '',
-                    'willRoomName' => '',
-                    'roomName' => $examRoomName,
-                ];
-            } else {
-                $data = [
-                    'code' => 2, // // 引导状态（对应界面：请前往教室420）
-                    'title' => '请进入以下考站考试',
-                    'willStudents' => '',
-                    'estTime' => '',
-                    'willRoomName' => '',
-                    'roomName' => $examRoomName . '-' . $item->station->name,
-                ];
-            }
-
-        }
-
         return $data;
     }
 
@@ -476,5 +407,119 @@ class StudentWatchController extends CommonController
             );
         }
     }
+
+
+
+    private  function getTeacherPrepareStatus($item)
+    {
+
+        $examStationStatusModel = new ExamStationStatus();
+        //判断考试的排考模式
+        $data = [];
+        if(is_null($item->station_id)){
+
+            //先拿到该考场里所有的考站id
+            $stationId = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                ->where('exam_draft.room_id', '=', $item->room_id)
+                ->where('exam_draft_flow.exam_id', '=', $item->exam_id)
+                ->get()->pluck('station_id');
+            //考场模式就看该场考试考场老师是否都准备完成
+            $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
+                ->where('exam_screening_id', '=', $item->exam_screening_id)
+                ->where('status', '=',0)
+                ->whereIn('station_id', $stationId)
+                ->first();
+            if($instance){
+                $data = [
+                    'code' => 0, // 0，等待状态（对应界面：Prepare_fragment）
+                    'title' => '该考场还有老师在准备中',
+                    'willStudents' => '',
+                ];
+            }
+
+        }else{
+            //考站模式就看该考站里的老师是否准备完成
+            $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
+                ->where('exam_screening_id', '=', $item->exam_screening_id)
+                ->where('station_id', '=', $item->station_id)
+                ->first();
+            if ($instance->status == 0) {
+                $data=  [
+                    'code' => 0, // 0，等待状态（对应界面：Prepare_fragment）
+                    'title' => '等待老师准备中',
+                    'willStudents' => '',
+                ];
+            }
+
+        }
+        return $data;
+    }
+
+
+    private function getStudentWaitMessage($item)
+    {
+        //判断前面是否有人考试,分考场和考站模式
+        if (empty($item->station_id)) {
+            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_id', '=', $item->exam_id)
+                ->whereBetween('status', [1, 2])
+                ->count();
+        } else {
+            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_id', '=', $item->exam_id)
+                ->where('station_id', '=', $item->station_id)
+                ->whereBetween('status', [1, 2])
+                ->count();
+        }
+        //判断前面等待人数
+        $studentnum = $this->getwillStudent($item);
+        if ($examStudent == 0) {
+            $willStudents = $studentnum;
+        } else {
+            $willStudents = $studentnum + 1;
+        }
+
+        //判断预计考试时间
+        $examtimes = date('H:i', (strtotime($item->begin_dt)));
+
+        //判断进入如的考场教室名字
+        $examRoomName = $item->room->name;
+        if ($willStudents > 0) {
+            $data = [
+                'code' => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                'title' => '考生等待信息',
+                'willStudents' => $willStudents,
+                'estTime' => $examtimes,
+                'willRoomName' => $examRoomName,
+
+            ];
+        } else {
+            if (is_null($item->station_id)) {
+                $data = [
+                    'code' => 2, // 引导状态（对应界面：请前往教室420）
+                    'title' => '请进入以下考场考试',
+                    'willStudents' => '',
+                    'estTime' => '',
+                    'willRoomName' => '',
+                    'roomName' => $examRoomName,
+                ];
+            } else {
+                $data = [
+                    'code' => 2, // // 引导状态（对应界面：请前往教室420）
+                    'title' => '请进入以下考站考试',
+                    'willStudents' => '',
+                    'estTime' => '',
+                    'willRoomName' => '',
+                    'roomName' => $examRoomName . '-' . $item->station->name,
+                ];
+            }
+
+        }
+
+        return $data;
+    }
+
+
+
 
 }
