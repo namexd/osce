@@ -21,10 +21,6 @@ class RoomMode extends AbstractEntity implements EntityInterface
         // TODO: Implement entity() method.
         $entities = $this->getRoom($exam, $screen);
 
-        //为每个考场写入用时多少
-        $entities = $this->entityTime($entities);
-        $entities = $this->entityMins($entities, $exam->same_time);
-
         //去重，将room_id相同的考场合并为一个
         $entities = $this->mergeRoom($entities, 'room_id');
         //加上序号

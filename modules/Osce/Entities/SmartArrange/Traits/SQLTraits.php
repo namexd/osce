@@ -296,40 +296,52 @@ trait SQLTraits
             $station->type = 2;
         }
 
-        //为集合加上序号
-//        $stations = $this->setSerialnumber($stations);
-
         return $stations;
     }
 
     /**
-     * TODO 这个方法现在无法实现，等后续版本
-     * 返回考场实体
+     * 返回考场实体,新的方法，现在不改
      * @param $screen
      * @return mixed
      * @author Jiangzhiheng
      * @time 2016-04-08 17:07
      */
-    function getRoomFuture($screen)
+    function getRoomFuture($exam, $screen)
     {
-        $rooms = ExamDraftFlow::join('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+        $rooms = ExamDraft::with('subject')
+            ->screening()
             ->join('room', 'room.id', '=', 'exam_draft.room_id')
-            ->join('exam_gradation', 'exam_gradation.id', '=', 'exam_draft_flow.exam_gradation_id')
-            ->join('subject', 'subject.id', '=', 'exam_draft.subject_id')
-            ->where('exam_screening_id', $screen->id)
+            ->where('exam_screening.id', $screen->id)
+            ->where('exam_gradation.exam_id', $exam->id)
             ->select(
                 'room.name as name',
-                'subject.mins as mins',
+                'exam_draft.station_id as station_id',
+                'exam_draft.subject_id as subject_id',
                 'exam_draft.room_id as room_id',
-                'exam_screening.id as exam_screening_id',
+                'exam_draft_flow.exam_screening_id as exam_screening_id',
                 'exam_gradation.order as gradation_order',
-                'exam_draft_flow.order as order'
-            )->distinct()
+                'exam_draft_flow.order as order',
+                'exam_draft_flow.optional'
+            )
             ->get();
+       foreach ($rooms as $room) {
+            $subject = $room->subject;
+            if (!is_null($subject)) {
+                $room->mins = $subject->mins;
+            } else {
+                $paper = $room->paper()->where('exam_id', $exam->id)->first()->paper;
+                if (!is_null($paper)) {
+                    $room->mins = $paper->length;
+                }
+            }
+        }
 
         foreach ($rooms as &$room) {
             $room->type = 1;
         }
+
+        //为每个考场写入用时多少
+        $rooms = $this->entityMinsFuture($rooms, $exam->same_time);
 
         return $rooms;
     }
@@ -350,7 +362,6 @@ trait SQLTraits
             ->join('room', 'room.id', '=', 'exam_draft.room_id')
             ->leftJoin('subject', 'subject.id', '=', 'exam_draft.subject_id')
             ->leftJoin('exam_paper_exam_station', 'exam_paper_exam_station.station_id', '=', 'exam_draft.station_id')
-//            ->leftJoin('exam_paper', 'exam_paper.id', '=', 'exam_paper_exam_station.exam_paper_id')
             ->leftJoin('exam_paper', function ($join) use ($exam) {
                 $join->on('exam_paper.id', '=', 'exam_paper_exam_station.exam_paper_id')
                     ->where('exam_paper_exam_station.exam_id', '=', $exam->id);
@@ -373,11 +384,14 @@ trait SQLTraits
             $room->type = 1;
         }
 
-        //为集合加上序号
-//        $rooms = $this->setSerialnumber($rooms);
+        $rooms = $this->entityTime($rooms);
+        //为每个考场写入用时多少
+        $rooms = $this->entityMins($rooms, $exam->same_time);
 
         return $rooms;
     }
+
+
 
 
     /**

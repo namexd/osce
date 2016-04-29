@@ -32,13 +32,31 @@ class ExamDraft extends CommonModel
         6   => '大表新增后，小表新增后更新',
     ];
 
-    public function subejct(){
+    public function subject(){
         return $this->hasOne('Modules\Osce\Entities\Subject','id','subject_id');
     }
 
     public function station(){
         return $this->hasOne('Modules\Osce\Entities\Station','id','station_id');
     }
+
+    public function paper()
+    {
+        return $this->hasMany('Modules\Osce\Entities\ExamPaperStation', 'station_id', 'station_id');
+    }
+
+	public function room()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Room', 'id', 'room_id');
+    }
+
+    public function scopeScreening($query)
+    {
+        return $query->join('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+            ->join('exam_gradation', 'exam_gradation.id', '=', 'exam_gradation_id')
+            ->join('exam_screening', 'exam_screening.gradation_order', '=', 'exam_gradation.order');
+    }
+    
     /**
      * 获取 不为null的值
      * @param $object

@@ -17,6 +17,50 @@ abstract class AbstractEntity
 {
     use SQLTraits, SundryTraits;
 
+    /**
+     * 用于新模式的分配实体时间
+     * @param $entities
+     * @param $sameTime
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-29 14:56
+     */
+    function entityMinsFuture($entities, $sameTime)
+    {
+        //获得考试实体们对应的mins
+        switch ($sameTime) {
+            case 0:
+
+                return $entities;
+            case 1:
+                $array = [];
+                //按照order分组
+                $entities = $entities->groupBy('order');
+                foreach ($entities as $entity) {
+                    $mins = $entity->pluck('mins')->toArray();
+                    $min = $this->mins($mins);
+                    foreach ($entity as $item) {
+                        $item->mins = $min;
+                        $array[] = $item;
+                    }
+                }
+                return collect($array);
+            default:
+                throw new \Exception('系统错误，请重试！', -20);
+                break;
+        }
+    }
+
+    /**
+     * 用于旧模式的分配实体时间
+     * @param $entities
+     * @param $sameTime
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-29 14：57
+     */
     function entityMins($entities, $sameTime)
     {
         //获得考试实体们对应的mins
@@ -25,11 +69,11 @@ abstract class AbstractEntity
 
                 return $entities;
             case 1:
-                $mins = $entities->pluck('mins')->toArray();
-                $min = $this->mins($mins);
-                foreach ($entities as &$entity) {
-                    $entity->mins = $min;
-                }
+                    $mins = $entities->pluck('mins')->toArray();
+                    $min = $this->mins($mins);
+                    foreach ($entities as &$item) {
+                        $item->mins = $min;
+                    }
 
                 return $entities;
             default:
