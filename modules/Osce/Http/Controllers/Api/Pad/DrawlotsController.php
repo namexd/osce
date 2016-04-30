@@ -1096,6 +1096,14 @@ class DrawlotsController extends CommonController
         }
     }
 
+
+    /**
+     * @param $teacher_id
+     * @param $examId
+     * @return mixed
+     * @author zhouqaing
+     * @time
+     */
     private function getTeacherStation($exam_screening_id,$exam,$userId)
     {
 
