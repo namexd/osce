@@ -184,7 +184,7 @@ class ExamControl extends Model
         try{
             //获取该考生的考试队列信息
             $examQueue = ExamQueue::where('student_id', $data['studentId'])
-                ->where('exam_id',$data['exam_id'])
+                ->where('exam_id',$data['examId'])
                 ->whereNotIn('status',[3,4])->get();
 
             if (!empty($examQueue)){

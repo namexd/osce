@@ -59,17 +59,18 @@ class AnswerController extends CommonController
 
         //将开始时间存入session中
         if(\Session::get('systemTimeStart')){
-            $systemTimeStart =\Session::get('systemTimeStart');
+            //如果存在，先删除开始时间
+            \Session::pull('systemTimeStart');//删除session
+            \Session::put('systemTimeStart',time());
+            $systemTimeStart=time();
         }else{
             $systemTimeStart=time();
-            \Session::put('systemTimeStart',$systemTimeStart);
         }
 
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
         $examPaperFormalData ='';
-        $systemTimeEnd =0;
         if($examPaperFormalList) {
             $examPaperFormalData = array(
                 'id' => $examPaperFormalList->id,//正式试卷id
@@ -78,6 +79,9 @@ class AnswerController extends CommonController
                 'totalScore' => $examPaperFormalList->total_score,//正式试卷总分
             );
           $systemTimeEnd =$systemTimeStart+$examPaperFormalData['length']*60; //结束时间
+        }else{
+
+            $systemTimeEnd = $systemTimeStart;
         }
         $examCategoryFormalData=[];//正式试题信息(根据试题类型进行分类)
         $categoryData=[];
@@ -123,7 +127,6 @@ class AnswerController extends CommonController
             }
         }
         //echo date('Y/m/d H:i:s',$systemTimeStart).'and'.date('Y/m/d H:i:s',$systemTimeEnd);
-
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -156,6 +159,7 @@ class AnswerController extends CommonController
         ]);
 
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
+
         $systemTimeEnd  =time();//考试结束时间
         $actualLength = $systemTimeEnd-$systemTimeStart;//考试用时
         $data =array(
@@ -241,7 +245,9 @@ class AnswerController extends CommonController
         $answerModel = new Answer();
         try{
             $answerModel->saveAnswer($data,$resultData);
+
             \Session::pull('systemTimeStart');//删除session
+
             return response()->json(
                 $this->success_data([],1,'success')
             );
