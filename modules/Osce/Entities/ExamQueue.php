@@ -1063,7 +1063,7 @@ class ExamQueue extends CommonModel
         $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
         if(!in_array($screen_id,$OderExamScreeningId)){
             $screen_id = ExamOrder::where('exam_id','=',$exam_id)
-                ->where('status','=',0)
+                ->where('status','=',1)
                 ->OrderBy('begin_dt', 'asc')
                 ->first();
             $screen_id = $screen_id->exam_screening_id;
