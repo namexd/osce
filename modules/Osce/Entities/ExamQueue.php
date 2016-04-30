@@ -773,19 +773,6 @@ class ExamQueue extends CommonModel
 
             //拿到$examScreeningId和$studentId
             $examScreeningId = $examScreening->exam_screening_id;
-            //得到queue实例
-           /* if (is_null($stationId)) {
-                $queue = ExamQueue::where('student_id', $studentId)
-                    ->where('exam_screening_id', $examScreeningId)
-                    ->where('status', 2)
-                    ->first();
-            } else {
-                $queue = ExamQueue::where('student_id', $studentId)
-                    ->where('station_id', $stationId)
-                    ->where('exam_screening_id', $examScreeningId)
-                    ->first();
-            }*/
-
             //获取考生正在进行考试的队列信息
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)
