@@ -383,7 +383,7 @@ class IndexController extends CommonController
             $exam_screen_id = $examScreening->id;       //获取场次id
 
 
-            //判断该场次是否被安排考试 //拿到oder表里的场次 todo 周强 2016-4-30
+            //判断该场次是否被排考安排考试 //拿到oder表里的场次 todo 周强 2016-4-30
 
             $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
             if(!in_array($exam_screen_id,$OderExamScreeningId)){
