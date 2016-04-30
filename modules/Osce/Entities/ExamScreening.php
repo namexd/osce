@@ -211,7 +211,7 @@ class ExamScreening extends CommonModel
             ->count();
 
         //获取考试场次已考试完成的人数
-        $examFinishStudent = ExamScreeningStudent::where('is_end', '=', 1)
+        $examFinishStudent = ExamScreeningStudent::whereIn('is_end', '=', [1,2])
             ->where('exam_screening_id', '=', $ExamScreening->id)
             ->lists('student_id')
             ->unique()

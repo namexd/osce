@@ -379,14 +379,20 @@ class IndexController extends CommonController
             if(is_null($examScreening))
             {
                 $examScreening  = $examScreeningModel -> getNearestScreening($exam_id);
-                $examScreening  ->status = 1;
-                //场次开考（场次状态变为1）
-                if(!$examScreening -> save())
-                {
-                    throw new \Exception('场次开考失败！');
-                }
             }
             $exam_screen_id = $examScreening->id;       //获取场次id
+
+
+            //判断该场次是否被安排考试 //拿到oder表里的场次 todo 周强 2016-4-30
+
+            $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
+            if(!in_array($exam_screen_id,$OderExamScreeningId)){
+                $screen_id = ExamOrder::where('exam_id','=',$exam_id)
+                    ->where('status','=',1)
+                    ->first();
+                $exam_screen_id = $screen_id->exam_screening_id;
+            }
+
 
             //不存在考试场次，直接解绑
             if(!$exam_screen_id){
@@ -410,7 +416,7 @@ class IndexController extends CommonController
                 }
             }
 
-            //查询考试流程 是否结束
+            //查询考试流程 是否结束   todo 改为查看当前场次学生是否考完  todo 周强 2016-4-30
             $ExamFinishStatus = ExamQueue::whereNotIn('status', [3,4])->where('student_id', '=', $student_id)
                                          ->where('exam_screening_id', '=', $exam_screen_id)
                                          ->count();
@@ -455,6 +461,7 @@ class IndexController extends CommonController
 
             //如果考试流程未结束 还是解绑,把考试排序的状态改为0
             $result = Watch::where('id', '=', $id)->update(['status'=>0]);
+
             if($result){
                 //更改 （状态改为 未绑定：status=0）
                 $result = ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
@@ -961,10 +968,9 @@ class IndexController extends CommonController
         $screen_id    = $examScreening->id;
 
 
-        //拿到oder表里的考试场次
-        $examOderexamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
-        if(!in_array($screen_id,$examOderexamScreeningId)){
-            //拿到当前考试所有的考试场次
+        //拿到oder表里的考试场次 todo 周强 2016-4-30
+        $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
+        if(!in_array($screen_id,$OderExamScreeningId)){
             $screen_id = ExamOrder::where('exam_id','=',$exam_id)
                 ->where('status','=',0)
                 ->OrderBy('begin_dt', 'asc')
@@ -977,7 +983,7 @@ class IndexController extends CommonController
         $examModel = new Exam();
         try {
 
-            //查找exam_screening
+            //查找exam_screening  todo 这里查看考站有问题，需王涛确定修改
             $stations = $examModel->where('exam.id','=',$exam_id)
                 ->leftjoin('exam_gradation', function ($join) {
                     $join->on('exam_gradation.exam_id', '=', 'exam.id');
@@ -986,17 +992,17 @@ class IndexController extends CommonController
                 })->leftjoin('exam_draft', function ($join) {
                     $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
                 })->groupBy('exam_draft.station_id')->get();
-            /*
-            $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
-            //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
-            if($mode==1){
-                $rooms=ExamFlowRoom::where('exam_id',$exam_id)->where('effected',1)->select('room_id')->get();
-                $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
 
-            } else{
-                $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
-            }
-            */
+//            $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
+//            //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
+//            if($mode==1){
+//                $rooms=ExamFlowRoom::where('exam_id',$exam_id)->where('effected',1)->select('room_id')->get();
+//                $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
+//
+//            } else{
+//                $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
+//            }
+
             //dd($stations);
             $countStation=[];
             foreach($stations as $item){
