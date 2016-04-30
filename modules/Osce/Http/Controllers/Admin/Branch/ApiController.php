@@ -996,6 +996,9 @@ class ApiController extends CommonController
                         if(!ExamMonitor::create($examMonitorData)){
                             throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-105);
                         }
+
+
+
                         //向exam_result（考试结果记录表）插入数据
                         $examResultData = [
                             'student_id'        => $studentId,
