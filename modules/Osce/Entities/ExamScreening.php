@@ -228,28 +228,6 @@ class ExamScreening extends CommonModel
                 }
             }
         }
-//        $this->validate($request, [
-//            'student_id' => 'required|integer',
-//            'station_id' => 'required|integer',
-//
-//        ], [
-//            'student_id.required' => '考生编号信息必须',
-//            'station_id.required' => '考站编号信息必须'
-//        ]);
-//        $studentId = Input::get('student_id');
-//        $stationId = Input::get('station_id');
-//        $nowTime = time();
-//        $ExamQueueModel = new ExamQueue();
-//        $EndResult = $ExamQueueModel->EndExamAlterStatus($studentId, $stationId, $nowTime);
-//        if ($EndResult) {
-//            return response()->json(
-//                $this->success_data($nowTime, 1, '结束考试成功')
-//            );
-//        }
-//        return response()->json(
-//            $this->fail(new \Exception('请再次核对考生信息后再试!!!'))
-//        );
-//
     }
 
     //查找学生考试队列exam_queue

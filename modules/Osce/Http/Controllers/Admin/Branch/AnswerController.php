@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
@@ -61,12 +62,8 @@ class AnswerController extends CommonController
         if(\Session::get('systemTimeStart')){
             //如果存在，先删除开始时间
             \Session::pull('systemTimeStart');//删除session
-            \Session::put('systemTimeStart',time());
-            $systemTimeStart=time();
-        }else{
-            $systemTimeStart=time();
         }
-
+        $systemTimeStart=time();
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
@@ -157,11 +154,13 @@ class AnswerController extends CommonController
             'examPaperFormalId'   => 'required|integer',//正式试卷id
 
         ]);
-
+        $systemTimeEnd = time();
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
-
-        $systemTimeEnd  =time();//考试结束时间
-        $actualLength = $systemTimeEnd-$systemTimeStart;//考试用时
+        if(empty($systemTimeStart)){
+            $actualLength = 0;//考试用时
+        }else{
+            $actualLength  = $systemTimeEnd-$systemTimeStart;
+        }
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
             'actualLength' =>$actualLength, //考试用时
@@ -247,6 +246,11 @@ class AnswerController extends CommonController
             $answerModel->saveAnswer($data,$resultData);
 
             \Session::pull('systemTimeStart');//删除session
+
+            //向pad端推送消息
+            $redis = Redis::connection('message');
+            $time = date('Y-m-d H:i:s', time());
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$time,'student_id'=>$data['studentId']],108,'理论考试结束')));
 
             return response()->json(
                 $this->success_data([],1,'success')

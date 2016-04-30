@@ -145,11 +145,17 @@
                         clearInterval(statusTimer);
                         $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                                 {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
-                                    if(obj.code=='1'){
-                                        location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
-                                    }else{
-                                        layer.confirm(obj.message);
-                                    }
+                                    $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId},function(res){
+                                        if(res.code==1){
+                                            location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                                        }else{
+                                            layer.confirm(obj.message);
+                                        }
+                                    })
+
+
+
+
                                 });
                     }
                 }
