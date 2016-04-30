@@ -47,43 +47,42 @@ class ExamControl extends Model
         $examModel = new Exam();
         //考试名称
         $exam = $examModel->where('status','=',1)->first();
+        if(!empty($exam)){
+            //统计该场考试的考站数量
+            $stationCount = count($examModel->leftJoin('exam_draft_flow', function($join){
+                $join -> on('exam.id', '=', 'exam_draft_flow.exam_id');
+            })->leftJoin('exam_draft', function($join){//考试;
+                $join -> on('exam_draft_flow.id', '=','exam_draft.exam_draft_flow_id');
+            })->leftJoin('station', function($join){//考试;
+                $join -> on('exam_draft.station_id', '=','station.id');
+            })->select('station.id')->groupBy('station.id')->where('exam.status','=',1)->get());
 
-        //统计该场考试的考站数量
-        $stationCount = count($examModel->leftJoin('exam_draft_flow', function($join){
-            $join -> on('exam.id', '=', 'exam_draft_flow.exam_id');
-        })->leftJoin('exam_draft', function($join){//考试;
-            $join -> on('exam_draft_flow.id', '=','exam_draft.exam_draft_flow_id');
-        })->leftJoin('station', function($join){//考试;
-            $join -> on('exam_draft.station_id', '=','station.id');
-        })->select('station.id')->groupBy('station.id')->where('exam.status','=',1)->get());
+            //统计学生数量
+            $studentCount = count($examModel->leftJoin('exam_queue', function($join){
+                $join -> on('exam.id', '=', 'exam_queue.exam_id');
+            })->select('exam_queue.student_id')->where('exam.status','=',1)->groupBy('exam_queue.student_id')->get());
 
+            //统计正在考试数量
+            $doExamCount = count($examModel->leftJoin('exam_queue', function($join){
+                $join -> on('exam.id', '=', 'exam_queue.exam_id');
+            })->select('exam_queue.id')->where('exam.status','=',1)
+                ->where('exam_queue.status','=',2)
+                ->get());
 
-        //统计学生数量
-        $studentCount = count($examModel->leftJoin('exam_queue', function($join){
-            $join -> on('exam.id', '=', 'exam_queue.exam_id');
-        })->select('exam_queue.student_id')->where('exam.status','=',1)->groupBy('exam_queue.student_id')->get());
+            /*        //统计已完成考试数量
+                    $endExamCount = count($examModel->leftJoin('exam_screening', function($join){
+                        $join -> on('exam.id', '=', 'exam_screening.exam_id');
+                    })->leftJoin('exam_screening_student', function($join){
+                        $join -> on('exam_screening_student.exam_screening_id', '=', 'exam_screening.id');
+                    })->select('exam_screening_student.id')->where('exam.status','=',1)
+                        ->where('exam_screening_student.is_end','=',1)
+                        ->get());*/
 
-        //统计正在考试数量
-        $doExamCount = count($examModel->leftJoin('exam_queue', function($join){
-            $join -> on('exam.id', '=', 'exam_queue.exam_id');
-        })->select('exam_queue.id')->where('exam.status','=',1)
-            ->where('exam_queue.status','=',2)
-            ->get());
-
-/*        //统计已完成考试数量
-        $endExamCount = count($examModel->leftJoin('exam_screening', function($join){
-            $join -> on('exam.id', '=', 'exam_screening.exam_id');
-        })->leftJoin('exam_screening_student', function($join){
-            $join -> on('exam_screening_student.exam_screening_id', '=', 'exam_screening.id');
-        })->select('exam_screening_student.id')->where('exam.status','=',1)
-            ->where('exam_screening_student.is_end','=',1)
-            ->get());*/
-
-        //统计已完成考试数量
-        $endExamCount =count(ExamQueue::where('exam_id',$exam->id)->whereIn('status',[3,4])->groupBy('student_id')->get());
-        //正在考试列表
-        $examScreeningStudentModel = new ExamScreeningStudent();
-        $examInfo = $examScreeningStudentModel->leftJoin('student', function($join){//学生表
+            //统计已完成考试数量
+            $endExamCount =count(ExamQueue::where('exam_id',$exam->id)->whereIn('status',[3,4])->groupBy('student_id')->get());
+            //正在考试列表
+            $examScreeningStudentModel = new ExamScreeningStudent();
+            $examInfo = $examScreeningStudentModel->leftJoin('student', function($join){//学生表
                 $join -> on('student.id', '=', 'exam_screening_student.student_id');
             })->leftJoin('exam', function($join){//考试;
                 $join -> on('exam.id', '=','student.exam_id');
@@ -94,58 +93,60 @@ class ExamControl extends Model
             })->leftJoin('station_teacher', function($join){//考站-老师关系表
                 $join -> on('station.id', '=', 'station_teacher.station_id');
             })->groupBy('student.id')->select(
-            'exam.id as examId',//考试id
-            'student.id as studentId',//考生id
-            'student.name',//考生姓名
-            'student.code',//学号
-            'student.exam_sequence',//准考证号
-            'student.idcard',//身份证号码
-            'exam_screening_student.status',//考试状态
-            'station.id as stationId',//考站id
-            'station.name as stationName',//考站名称
-            'station.type as stationType',//考站类型
-            'station_teacher.user_id as userId',//老师id
-            'exam_screening_student.id as examScreeningStudentId',//考试场次-学生关系id
-            'exam_screening_student.is_end',//考试场次终止
-            'exam_screening_student.exam_screening_id'//考试场次编号
+                'exam.id as examId',//考试id
+                'student.id as studentId',//考生id
+                'student.name',//考生姓名
+                'student.code',//学号
+                'student.exam_sequence',//准考证号
+                'student.idcard',//身份证号码
+                'exam_screening_student.status',//考试状态
+                'station.id as stationId',//考站id
+                'station.name as stationName',//考站名称
+                'station.type as stationType',//考站类型
+                'station_teacher.user_id as userId',//老师id
+                'exam_screening_student.id as examScreeningStudentId',//考试场次-学生关系id
+                'exam_screening_student.is_end',//考试场次终止
+                'exam_screening_student.exam_screening_id'//考试场次编号
             )->where('exam.status','=',1)
-            ->where('exam_queue.status','=',2) //status=2正在考试
-            ->get();
+                ->where('exam_queue.status','=',2) //status=2正在考试
+                ->get();
 
 
-        if(!empty($examInfo)&&count($examInfo)>0){
-            foreach($examInfo as $key=>$val){
-                //获取该考生剩余考站数量
-                $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['exam_screening_id']);
-                $examInfo[$key]['remainStationCount']=$remainExamQueueData['remainStationCount'];
+            if(!empty($examInfo)&&count($examInfo)>0){
+                foreach($examInfo as $key=>$val){
+                    //获取该考生剩余考站数量
+                    $remainExamQueueData = $this->getRemainExamQueueData($val['examId'],$val['studentId'],$val['exam_screening_id']);
+                    $examInfo[$key]['remainStationCount']=$remainExamQueueData['remainStationCount'];
 
-                //查询正在考的这次考试是否有标记
-                $examMonitorModel = new ExamMonitor();
-                $examMonitorInfo= $examMonitorModel->where('station_id','=',$val['stationId'])
-                                                    ->where('exam_id','=',$val['examId'])
-                                                    ->where('student_id','=',$val['studentId'])
-                                                    ->orderBy('id','desc')
-                                                    ->first();
-                if(!empty($examMonitorInfo)){
-                    $examInfo[$key]['type'] = $examMonitorInfo['type'];
-                    $examInfo[$key]['description'] = $examMonitorInfo['description'];
+                    //查询正在考的这次考试是否有标记
+                    $examMonitorModel = new ExamMonitor();
+                    $examMonitorInfo= $examMonitorModel->where('station_id','=',$val['stationId'])
+                        ->where('exam_id','=',$val['examId'])
+                        ->where('student_id','=',$val['studentId'])
+                        ->orderBy('id','desc')
+                        ->first();
+                    if(!empty($examMonitorInfo)){
+                        $examInfo[$key]['type'] = $examMonitorInfo['type'];
+                        $examInfo[$key]['description'] = $examMonitorInfo['description'];
 
-                }else{
+                    }else{
 
-                    $examInfo[$key]['type'] = -1;
-                    $examInfo[$key]['description'] = -1;
+                        $examInfo[$key]['type'] = -1;
+                        $examInfo[$key]['description'] = -1;
+                    }
                 }
             }
+
+            return array(
+                'examName'      =>$exam,     //考试名称
+                'examInfo'      => $examInfo,    //正在考试列表
+                'stationCount' =>$stationCount, //统计考站数量
+                'studentCount' =>$studentCount, //统计学生数量
+                'doExamCount'  =>$doExamCount,  //统计正在考试数量
+                'endExamCount' =>$endExamCount, //统计已完成考试数量
+            );
         }
 
-        return array(
-            'examName'      =>$exam,     //考试名称
-            'examInfo'      => $examInfo,    //正在考试列表
-            'stationCount' =>$stationCount, //统计考站数量
-            'studentCount' =>$studentCount, //统计学生数量
-            'doExamCount'  =>$doExamCount,  //统计正在考试数量
-            'endExamCount' =>$endExamCount, //统计已完成考试数量
-        );
     }
 
     /**获取该考生该场考试所有的考站数量和考试队列信息
