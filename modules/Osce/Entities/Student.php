@@ -650,6 +650,10 @@ class Student extends CommonModel
         if ($num === 0 || $num < 0) {
             return array();
         }
+        
+        
+        
+        
 
         /*$builder = $this->leftjoin('exam_order', function ($join) {
             $join->on('student.id', '=', 'exam_order.student_id');
@@ -662,6 +666,7 @@ class Student extends CommonModel
         $endStudentList = ExamQueue::where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->whereIn('status', [0,2,1])->get();
 
         if(count($endStudentList)){
+
             $studentList = ExamQueue::where('status',3)->where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)
                                     ->groupBy('student_id')->get()->pluck('student_id')->toArray();
 
