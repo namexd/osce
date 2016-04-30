@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
@@ -248,6 +249,11 @@ class AnswerController extends CommonController
 
             \Session::pull('systemTimeStart');//删除session
 
+            //向pad端推送消息
+            $redis = Redis::connection('message');
+            $time = date('Y-m-d H:i:s', time());
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$time,'student_id'=>$data['studentId']],108,'理论考试结束')));
+            
             return response()->json(
                 $this->success_data([],1,'success')
             );

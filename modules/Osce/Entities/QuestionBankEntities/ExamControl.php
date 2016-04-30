@@ -110,8 +110,6 @@ class ExamControl extends Model
             )->where('exam.status','=',1)
                 ->where('exam_queue.status','=',2) //status=2正在考试
                 ->get();
-
-
             if(!empty($examInfo)&&count($examInfo)>0){
                 foreach($examInfo as $key=>$val){
                     //获取该考生剩余考站数量
