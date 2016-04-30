@@ -194,12 +194,14 @@ class ExamScreening extends CommonModel
         if (is_null($exam)) {
             throw new \Exception('没有找到考试');
         }
+
         //获取到当考试场次id
         $ExamScreening = $this->getExamingScreening($exam->id);
         if (is_null($ExamScreening)) {
             $ExamScreening = $this->getNearestScreening($exam->id);
 
         }
+
         //根据考试场次id查询计划表所有考试学生
         $examPianModel = new ExamPlan();
         $exampianStudent = $examPianModel->getexampianStudent($ExamScreening->id,$exam->id);
@@ -211,7 +213,7 @@ class ExamScreening extends CommonModel
             ->count();
 
         //获取考试场次已考试完成的人数
-        $examFinishStudent = ExamScreeningStudent::whereIn('is_end', '=', [1,2])
+        $examFinishStudent = ExamScreeningStudent::whereIn('is_end', [1,2])
             ->where('exam_screening_id', '=', $ExamScreening->id)
             ->lists('student_id')
             ->unique()

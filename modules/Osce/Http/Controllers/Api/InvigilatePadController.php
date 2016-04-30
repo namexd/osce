@@ -54,6 +54,7 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
+       
         $examScreeningModel = new ExamScreening();
         $result = $examScreeningModel->getExamCheck();
         dd($result);
