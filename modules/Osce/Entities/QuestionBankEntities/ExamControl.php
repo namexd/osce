@@ -57,69 +57,58 @@ class ExamControl extends Model
                 $join -> on('exam_draft.station_id', '=','station.id');
             })->select('station.id')->groupBy('station.id')->where('exam.status','=',1)->get());
 
-
             $examScreeningStudentModel = new ExamScreeningStudent();
-
             //统计学生数量
-         /*   $studentCount = count($examModel->leftJoin('exam_queue', function($join){
-                $join -> on('exam.id', '=', 'exam_queue.exam_id');
-            })->select('exam_queue.student_id')->where('exam.status','=',1)->groupBy('exam_queue.student_id')->get());*/
-
             $studentCount = $examScreeningStudentModel->leftJoin('student', function($join){//学生表
                 $join -> on('student.id', '=', 'exam_screening_student.student_id');
-            })->leftJoin('exam', function($join){//考试;
+            })->leftJoin('exam', function($join){
                 $join -> on('exam.id', '=','student.exam_id');
-            })->leftJoin('exam_queue', function($join){//考试队列
+            })->leftJoin('exam_queue', function($join){
                 $join -> on('exam_queue.student_id', '=', 'student.id');
-            })->leftJoin('station', function($join){//考站
+            })->leftJoin('station', function($join){
                 $join -> on('exam_queue.station_id', '=', 'station.id');
-            })->leftJoin('station_teacher', function($join){//考站-老师关系表
+            })->leftJoin('station_teacher', function($join){
                 $join -> on('station.id', '=', 'station_teacher.station_id');
             })->groupBy('student.id')->where('exam.status',1)->count();
 
             //统计正在考试数量
-         /*   $doExamCount = count($examModel->leftJoin('exam_queue', function($join){
-                $join -> on('exam.id', '=', 'exam_queue.exam_id');
-            })->select('exam_queue.id')->where('exam.status','=',1)
-                ->where('exam_queue.status','=',2)
-                ->get());*/
             $doExamCount = $examScreeningStudentModel->leftJoin('student', function($join){//学生表
                 $join -> on('student.id', '=', 'exam_screening_student.student_id');
-            })->leftJoin('exam', function($join){//考试;
+            })->leftJoin('exam', function($join){
                 $join -> on('exam.id', '=','student.exam_id');
-            })->leftJoin('exam_queue', function($join){//考试队列
+            })->leftJoin('exam_queue', function($join){
                 $join -> on('exam_queue.student_id', '=', 'student.id');
-            })->leftJoin('station', function($join){//考站
+            })->leftJoin('station', function($join){
                 $join -> on('exam_queue.station_id', '=', 'station.id');
-            })->leftJoin('station_teacher', function($join){//考站-老师关系表
+            })->leftJoin('station_teacher', function($join){
                 $join -> on('station.id', '=', 'station_teacher.station_id');
             })->groupBy('student.id')->where('exam.status',1)->where('exam_queue.status',2)->count();
 
 
             //统计已完成考试数量
-            $endExamCount = $examScreeningStudentModel->leftJoin('student', function($join){//学生表
+            $endExamCount = $examScreeningStudentModel->leftJoin('student', function($join){
                 $join -> on('student.id', '=', 'exam_screening_student.student_id');
-            })->leftJoin('exam', function($join){//考试;
+            })->leftJoin('exam', function($join){
                 $join -> on('exam.id', '=','student.exam_id');
-            })->leftJoin('exam_queue', function($join){//考试队列
+            })->leftJoin('exam_queue', function($join){
                 $join -> on('exam_queue.student_id', '=', 'student.id');
-            })->leftJoin('station', function($join){//考站
+            })->leftJoin('station', function($join){
                 $join -> on('exam_queue.station_id', '=', 'station.id');
-            })->leftJoin('station_teacher', function($join){//考站-老师关系表
+            })->leftJoin('station_teacher', function($join){
                 $join -> on('station.id', '=', 'station_teacher.station_id');
             })->groupBy('student.id')->where('exam.status',1)->where('exam_screening_student.is_end',1)->count();
 
 
             //正在考试列表
-            $examInfo = $examScreeningStudentModel->leftJoin('student', function($join){//学生表
+            $examInfo = $examScreeningStudentModel->leftJoin('student', function($join){
                 $join -> on('student.id', '=', 'exam_screening_student.student_id');
-            })->leftJoin('exam', function($join){//考试;
+            })->leftJoin('exam', function($join){
                 $join -> on('exam.id', '=','student.exam_id');
-            })->leftJoin('exam_queue', function($join){//考试队列
+            })->leftJoin('exam_queue', function($join){
                 $join -> on('exam_queue.student_id', '=', 'student.id');
-            })->leftJoin('station', function($join){//考站
+            })->leftJoin('station', function($join){
                 $join -> on('exam_queue.station_id', '=', 'station.id');
-            })->leftJoin('station_teacher', function($join){//考站-老师关系表
+            })->leftJoin('station_teacher', function($join){
                 $join -> on('station.id', '=', 'station_teacher.station_id');
             })->groupBy('student.id')->select(
                 'exam.id as examId',//考试id
