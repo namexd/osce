@@ -62,12 +62,8 @@ class AnswerController extends CommonController
         if(\Session::get('systemTimeStart')){
             //如果存在，先删除开始时间
             \Session::pull('systemTimeStart');//删除session
-            \Session::put('systemTimeStart',time());
-            $systemTimeStart=time();
-        }else{
-            $systemTimeStart=time();
         }
-
+        $systemTimeStart=time();
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
@@ -158,11 +154,13 @@ class AnswerController extends CommonController
             'examPaperFormalId'   => 'required|integer',//正式试卷id
 
         ]);
-
+        $systemTimeEnd = time();
         $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
-
-        $systemTimeEnd  =time();//考试结束时间
-        $actualLength = $systemTimeEnd-$systemTimeStart;//考试用时
+        if(empty($systemTimeStart)){
+            $actualLength = 0;//考试用时
+        }else{
+            $actualLength  = $systemTimeEnd-$systemTimeStart;
+        }
         $data =array(
             'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
             'actualLength' =>$actualLength, //考试用时
