@@ -155,7 +155,7 @@
                 }
             })
         },3000);
-        
+
         function countDown(time,id){
             var day_elem = $(id).find('.day');
             var end_time = new Date(time).getTime(),//月份是实际月份-1
