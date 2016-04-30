@@ -254,9 +254,6 @@ class InvitationController extends CommonController
                         throw new \Exception($stationType->name . '站没有安排考官！请安排考官！重试！');
                     }
                 } else {
-                    if (empty($item['teacher'])) {
-                        throw new \Exception($stationType->name . '站没有安排考官！请安排考官！重试！');
-                    }
                     if (empty($item['sp_teacher'])) {
                         throw new \Exception($stationType->name . '站没有安排sp老师！请安排考官！重试！');
                     }
