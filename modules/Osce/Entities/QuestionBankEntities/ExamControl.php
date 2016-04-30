@@ -190,17 +190,44 @@ class ExamControl extends Model
             if (!empty($examQueue)){
                 //①更新考试队列中的考试监控标记(exam_queue)
                 foreach ($examQueue as $val) {
+                    $examMonitor = ExamMonitor::where('exam_id',$val->exam_id)->where('student_id',$val->student_id)->where('exam_screening_id',$val->exam_screening_id)->first();
+                    if(empty($examMonitor)){
+                        //③向监控标记学生替考记录表插入数据
+                        $examMonitorData = array(
+                            'station_id'  =>$val->station_id,
+                            'exam_id'      =>$val->exam_id,
+                            'student_id'  =>$val->student_id,
+                            'type'         =>$data['type'],
+                            'description' =>$data['description'],
+                            'exam_screening_id'=>$val->exam_screening_id,
+
+                        );
+                        if(!ExamMonitor::create($examMonitorData)){
+                            throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-104);
+                        }
+                    }
+                }
+            }else{
+                throw new \Exception(' 没有该考生的考试队列信息！',-105);
+            }
+
+            //获取该考生剩余还没考的考站信息
+            $remainExamQueueData = $this->getRemainExamQueueData($data['examId'],$data['studentId'],$data['examScreeningId']);
+            if(!empty($remainExamQueueData['remainExamQueueInfo'])&&count($remainExamQueueData['remainExamQueueInfo'])>0){
+                //如果还有没考的考试信息，结束剩余未考考试，并将分数记为0
+                foreach($remainExamQueueData['remainExamQueueInfo'] as $k=>$v){
                     //更新exam_queue表（考试队列）
                     $examQueueData= array(
                         'status'=>3,
                         'blocking'=>1,
                         'controlMark'=>1
                     );
-                    if(!ExamQueue::where('id',$val->id)->update($examQueueData)){
+                    if(!ExamQueue::where('id',$v->id)->update($examQueueData)){
                         throw new \Exception(' 更新考试队列表失败！',-101);
                     }
+
                     //②更新exam_screening_student表（考试场次-学生关系表）
-                    $result = ExamScreeningStudent::where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
+                    $result = ExamScreeningStudent::where('exam_screening_id',$v->exam_screening_id)->where('student_id',$v->student_id)->first();
                     if(!empty($result)){
                         $examScreeningStudentData = array(
                             'is_end'=>1,
@@ -213,30 +240,6 @@ class ExamControl extends Model
                     }else{
                         throw new \Exception('没有该考生对应的场次！',-103);
                     }
-
-                    //③向监控标记学生替考记录表插入数据
-                    $examMonitorData = array(
-                        'station_id'  =>$val->station_id,
-                        'exam_id'      =>$val->exam_id,
-                        'student_id'  =>$val->student_id,
-                        'type'         =>$data['type'],
-                        'description' =>$data['description'],
-                        'exam_screening_id'=>$val->exam_screening_id,
-
-                    );
-                    if(!ExamMonitor::create($examMonitorData)){
-                        throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-104);
-                    }
-                }
-            }else{
-
-                throw new \Exception(' 没有该考生的考试队列信息！',-105);
-            }
-            //获取该考生剩余还没考的考站信息
-            $remainExamQueueData = $this->getRemainExamQueueData($data['examId'],$data['studentId'],$data['examScreeningId']);
-            if(!empty($remainExamQueueData['remainExamQueueInfo'])&&count($remainExamQueueData['remainExamQueueInfo'])>0){
-                //如果还有没考的考试信息，结束剩余未考考试，并将分数记为0
-                foreach($remainExamQueueData['remainExamQueueInfo'] as $k=>$v){
                     //④ 向考试结果记录表(exam_result)插入数据未考考试分数
                     $examResultData=array(
                         'student_id'=>$v['studentId'],
