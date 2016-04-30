@@ -46,7 +46,7 @@ class ExamControl extends Model
         $DB = \DB::connection('osce_mis');
         $examModel = new Exam();
         //考试名称
-        $examName = $examModel->select('name')->where('status','=',1)->first();
+        $exam = $examModel->where('status','=',1)->first();
 
         //统计该场考试的考站数量
         $stationCount = count($examModel->leftJoin('exam_draft_flow', function($join){
@@ -70,15 +70,17 @@ class ExamControl extends Model
             ->where('exam_queue.status','=',2)
             ->get());
 
-        //统计已完成考试数量
+/*        //统计已完成考试数量
         $endExamCount = count($examModel->leftJoin('exam_screening', function($join){
             $join -> on('exam.id', '=', 'exam_screening.exam_id');
         })->leftJoin('exam_screening_student', function($join){
             $join -> on('exam_screening_student.exam_screening_id', '=', 'exam_screening.id');
         })->select('exam_screening_student.id')->where('exam.status','=',1)
             ->where('exam_screening_student.is_end','=',1)
-            ->get());
+            ->get());*/
 
+        //统计已完成考试数量
+        $endExamCount = count(ExamQueue::where('exam_id',$exam->id)->whereIn('status',[3,4])->groupBy('student_id')->get());
         //正在考试列表
         $examScreeningStudentModel = new ExamScreeningStudent();
         $examInfo = $examScreeningStudentModel->leftJoin('student', function($join){//学生表
@@ -137,7 +139,7 @@ class ExamControl extends Model
         }
 
         return array(
-            'examName'      =>$examName,     //考试名称
+            'examName'      =>$exam,     //考试名称
             'examInfo'      => $examInfo,    //正在考试列表
             'stationCount' =>$stationCount, //统计考站数量
             'studentCount' =>$studentCount, //统计学生数量
