@@ -253,7 +253,7 @@ class AnswerController extends CommonController
             $redis = Redis::connection('message');
             $time = date('Y-m-d H:i:s', time());
             $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$time,'student_id'=>$data['studentId']],108,'理论考试结束')));
-            
+
             return response()->json(
                 $this->success_data([],1,'success')
             );
