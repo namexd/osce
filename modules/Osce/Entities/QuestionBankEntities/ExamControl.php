@@ -80,8 +80,7 @@ class ExamControl extends Model
             ->get());*/
 
         //统计已完成考试数量
-        $endExamCount =ExamQueue::where('exam_id',$exam->id)->whereIn('status',[3,4])->groupBy('student_id')->get();
-        dd($endExamCount);
+        $endExamCount =count(ExamQueue::where('exam_id',$exam->id)->whereIn('status',[3,4])->groupBy('student_id')->get());
         //正在考试列表
         $examScreeningStudentModel = new ExamScreeningStudent();
         $examInfo = $examScreeningStudentModel->leftJoin('student', function($join){//学生表
