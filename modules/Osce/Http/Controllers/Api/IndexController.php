@@ -959,6 +959,20 @@ class IndexController extends CommonController
             return \Response::json(array('code' => 2));     //没有对应的开考场次 —— 考试场次没有(1、0)
         }
         $screen_id    = $examScreening->id;
+
+
+        //拿到oder表里的考试场次
+        $examOderexamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
+        if(!in_array($screen_id,$examOderexamScreeningId)){
+            //拿到当前考试所有的考试场次
+            $screen_id = ExamOrder::where('exam_id','=',$exam_id)
+                ->where('status','=',0)
+                ->OrderBy('begin_dt', 'asc')
+                ->first();
+            $screen_id = $screen_id->exam_screening_id;
+        }
+
+
         $studentModel = new Student();
         $examModel = new Exam();
         try {
@@ -994,7 +1008,6 @@ class IndexController extends CommonController
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
 
             $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列(exam_order表)
-            //dd($list->toArray());
             $data = [];
             foreach($list as $itm){
                 $data[] = [
