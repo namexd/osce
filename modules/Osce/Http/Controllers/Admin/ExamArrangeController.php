@@ -649,7 +649,7 @@ class ExamArrangeController extends CommonController
 
     /**
      * 考官安排着陆页
-     * @url GET /osce/admin/exam-arrange/invigilate-arrange
+     * @url GET /osce/admin/exam-arrange/invigilate-arrange-index
      * @access public
      *
      * @param Request $request post请求<br><br>
@@ -663,7 +663,7 @@ class ExamArrangeController extends CommonController
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getInvigilateArrange(Request $request)
+    public function getInvigilateArrangeIndex(Request $request)
     {
         //验证
         $this->validate($request, [
