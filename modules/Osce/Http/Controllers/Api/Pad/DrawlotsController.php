@@ -45,6 +45,7 @@ use DB;
 use Modules\Osce\Repositories\Common;
 use Illuminate\Support\Facades\Redis;
 
+
 class DrawlotsController extends CommonController
 {
     /**
@@ -601,6 +602,7 @@ class DrawlotsController extends CommonController
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
 
+
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             Common::valueIsNull($exam, -333);
@@ -655,6 +657,9 @@ class DrawlotsController extends CommonController
 //            $station = $examinee->getStation();
 
             $station->station_type = $station->type;
+            if($teacher = Teacher::find('$id')){
+                $station->teacher_type = $teacher->type;
+            }
 
             //$redis = Redis::connection('message');
             //$redis->publish('watch_message', json_encode($this->success_data($station)));
@@ -820,7 +825,6 @@ class DrawlotsController extends CommonController
         try {
             //获取当前老师的考场对象
             $room = $this->getRoomId($id, $exam->id);
-
             //获得考场的id
             $room_id = $room->room_id;
             //获得当前考场考站的实例列表
@@ -833,8 +837,8 @@ class DrawlotsController extends CommonController
 //                $roomStations[$thisStationRoomdId][] = $station;
 //            }
             $stationIds = $this->getStationAndRoom($id, $exam->id)->pluck('station_id');
-            $stations = Station::whereIn('id', $stationIds)->get();
 
+            $stations = Station::whereIn('id', $stationIds)->get();
 
             return array($room_id, $stations);
         } catch (\Exception $ex) {
@@ -1036,12 +1040,10 @@ class DrawlotsController extends CommonController
         $stationList = StationTeacher::where('exam_id', '=', $exam->id)
             ->where('user_id', '=', $teacher_id)
             ->get()->pluck('station_id')->toArray();
-
         //拿到老师在该场次里支持的考站
-        $arr = array_intersect($stationLists, $stationList);
+        $arr = array_intersect($stationList, $stationLists);
 
         $stationId = array_pop($arr);
-
         if (is_null($stationId)) {
             throw new \Exception('没有对应的考站！');
         }
