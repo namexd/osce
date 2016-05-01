@@ -50,6 +50,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('arrangement/begin',['uses'=>'AutomaticPlanArrangementController@postBegin','as'=>'osce.admin.arrangement.postBegin']);
 		Route::get('arrangement/index',['uses'=>'AutomaticPlanArrangementController@getIndex','as'=>'osce.admin.arrangement.getIndex']);
 		Route::post('arrangement/store',['uses'=>'AutomaticPlanArrangementController@postStore','as'=>'osce.admin.arrangement.postStore']);
+		Route::get('arrangement/export',['uses'=>'AutomaticPlanArrangementController@getExport','as'=>'osce.admin.arrangement.getExport']); //导出excel
 
 
 
@@ -516,8 +517,21 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(\Illuminate\Http\Request $request) {
-	$a = [];
-	dd(empty($a));
+//	$a = \Modules\Osce\Entities\ExamPlan::
+//	students()
+//		->exam('74')
+//		->select(
+//			'student.name',
+//			'student.mobile',
+//			'exam_plan.begin_dt',
+//			'exam_plan.end_dt',
+//			'exam_plan.student_id'
+//		)
+//		->get()
+//		->groupBy('student_id');
+	$a = date('Y-m-d H:i:s');
+	$b = date('H:i:s', strtotime($a));
+	dd($a, $b);
 });
 
 Route::get('redis', function(){

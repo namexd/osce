@@ -14,16 +14,24 @@ use Modules\Osce\Entities\AutomaticPlanArrangement\ExamPlaceEntity;
 use Modules\Osce\Entities\AutomaticPlanArrangement\Exam;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamPlanRecord;
+use Modules\Osce\Entities\SmartArrange\Export\StudentArrange;
+use Modules\Osce\Entities\SmartArrange\Export\UserListExport;
 use Modules\Osce\Entities\SmartArrange\SmartArrange;
 use Modules\Osce\Entities\SmartArrange\SmartArrangeRepository;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Auth;
 use Modules\Osce\Repositories\Common;
-use Illuminate\Container\Container as App;
 
 class AutomaticPlanArrangementController extends CommonController
 {
+    private $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     /**
      * TODO 此方法暂时未使用
      * 智能排考的着陆页
@@ -101,14 +109,25 @@ class AutomaticPlanArrangementController extends CommonController
         ExamPlan::where('exam_id', $examId)->delete();
         try {
             $smartArrangeRepository->store($exam);
-        //获取操作者
-//        $user = Auth::user();
-
-
-
-//            $examPlan->storePlan($examId, $user);
 
             return redirect()->route('osce.admin.exam.getIntelligence', ['id' => $examId]);
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
+    /**
+     * 导出excel
+     * @author Jiangzhiheng
+     * @time 2016-05-01 09-47
+     */
+    public function getExport(SmartArrangeRepository $smartArrangeRepository, UserListExport $export, StudentArrange $arrange)
+    {
+        try {
+            $id = $this->request->input('exam_id', null);
+            Common::valueIsNull($id, 501, '没有考试');
+            $smartArrangeRepository->export($id, $export, $arrange);
+            return true;
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
