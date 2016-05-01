@@ -1058,6 +1058,7 @@ class DrawlotsController extends CommonController
 //        $station    =   $stationTeacher ->  station;
         $stationPlan = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft.station_id', '=', $stationId)
+            ->whereIn('exam_draft.station_id',$stationLists)
             ->where('exam_draft_flow.exam_id', '=', $examId)
             ->first();
         $room = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
