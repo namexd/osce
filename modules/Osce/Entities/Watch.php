@@ -271,7 +271,7 @@ class Watch extends CommonModel implements MachineInterface
 */
 
         ->rightjoin('exam_screening_student',function($examQueue){
-            $examQueue->on('exam_screening_id.watch_id','=','watch.id');
+            $examQueue->on('exam_screening_student.watch_id','=','watch.id');
         })->leftjoin('student',function($examQueue){
             $examQueue->on('student.id','=','exam_screening_student.student_id');
         })->leftjoin('exam_order',function($join){
