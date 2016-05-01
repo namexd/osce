@@ -125,7 +125,7 @@
             })
 
         });
-        countDown("{{$systemTimeEnd}}","#colockbox1");
+        countDown("{{$systemTimeEnd}}","#colockbox1","{{$systemTimeStart}}");
         //被终止考试状态改变请求
         var statusTimer = setInterval(function(){
             var examPaperFormalId=$('#examPaperFormalId').val();
@@ -162,10 +162,19 @@
             })
         },3000);
 
-        function countDown(time,id){
+        function countDown(time,id,beginTime){
             var day_elem = $(id).find('.day');
-            var end_time = new Date(time).getTime(),//月份是实际月份-1
-                    sys_second = (end_time-new Date().getTime())/1000;
+            var begin_time = new Date(beginTime).getTime();
+            var end_time = new Date(time).getTime();//月份是实际月份-1
+            var current_time = new Date().getTime();
+            var diff_time = current_time - begin_time;
+            var sys_second = (end_time-new Date().getTime())/1000;
+            if(diff_time > 0){
+                sys_second -= diff_time;
+            }else{
+                sys_second += diff_time;
+            }
+            //console.log(end_time);
             var timer = setInterval(function(){
                 if (sys_second > 1) {
                     sys_second -= 1;
