@@ -174,7 +174,6 @@ class ExamController extends CommonController
      */
     public function postAddExam(Request $request, Exam $model, ExamArrangeRepository $examArrangeRepository)
     {
-//        dd($request->all());
         $this   ->  validate($request, [
             'name'          =>  'required',
             'time'          =>  'required',
@@ -194,8 +193,13 @@ class ExamController extends CommonController
         try{
             //处理考试场次时间
             $timeData = $model->handleScreeningTime($examScreeningData, $user);
-            $sequenceCate = $request->input('sequence_cate_1', null);
-//            dd($sequenceCate);
+            $order = $request->input('order', null);
+            if (1 == $order) {
+                $sequenceCate = $request->input('sequence_cate', null);
+            } else {
+                $sequenceCate = $request->input('sequence_cate_1', null);
+            }
+
             //获取相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'code'           => 100,
