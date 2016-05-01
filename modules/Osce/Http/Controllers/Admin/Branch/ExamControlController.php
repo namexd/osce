@@ -40,7 +40,6 @@ class ExamControlController extends CommonController
 
     public function getExamlist()
     {
-        echo 1;
         $examControlModel = new ExamControl();
         $data = $examControlModel->getDoingExamList();
         return view('osce::admin.testMonitor.monitor_test', [
@@ -100,7 +99,18 @@ class ExamControlController extends CommonController
             $redis = Redis::connection('message');
 
             $time = date('Y-m-d H:i:s', time());
-            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$time,'student_id'=>$data['studentId'],'exam_screening_id'=>$data['examScreeningId']],106,'考试终止成功')));
+            //终止考试的情况下
+            if($data['description']==1&&$data['type']=-1) {
+                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 107, '考试终止成功')));
+            }elseif($data['description']==2||$data['description']==3||$data['description']==4&&$data['type']=-1){
+                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 106, '考试终止成功')));
+            }elseif($data['description']=-1&& $data['type'] = 1){
+                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 106, '考试终止成功')));
+            }elseif($data['description']=-1&& $data['type'] = 2){
+                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 107, '考试终止成功')));
+            }
+
+
 
             $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
                 ->where('student_id','=',$data['studentId'])->first();
