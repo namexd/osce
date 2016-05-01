@@ -96,13 +96,10 @@ class Answer extends Model
             //保存考试用时
             $examPaperFormalModel = new ExamPaperFormal();
             $examPaperFormalData = array(
-                'actual_length'=>$data['actualLength']
+                'actual_length'=>$data['actualLength'],
             );
-            if(empty($examPaperFormalData['actual_length'])){
-                $examPaperFormalData['actual_length'] = 0;
-            }
-            $result = $examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->where('student_id','=',$data['studentId'])->update($examPaperFormalData);
-            if(!$result){
+
+            if(!$examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->update($examPaperFormalData)){
                 throw new \Exception(' 保存考试用时失败！');
             }
             //保存考生答案
