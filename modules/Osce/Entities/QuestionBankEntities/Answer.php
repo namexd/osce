@@ -97,7 +97,6 @@ class Answer extends Model
             $examPaperFormalModel = new ExamPaperFormal();
             $examPaperFormalData = array(
                 'actual_length'=>$data['actualLength'],
-                'end_dt' =>$data['end_dt']
             );
 
             if(!$examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->update($examPaperFormalData)){

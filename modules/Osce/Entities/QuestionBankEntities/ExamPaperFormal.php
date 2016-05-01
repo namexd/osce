@@ -19,7 +19,7 @@ class ExamPaperFormal extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['id', 'exam_paper_id', 'length','name','total_score','student_id','begin_dt','end_dt'];
+    protected $fillable = ['id', 'exam_paper_id', 'length','name','total_score','student_id','begin_dt'];
 
     /**
      * 与正式试题分类表的关系

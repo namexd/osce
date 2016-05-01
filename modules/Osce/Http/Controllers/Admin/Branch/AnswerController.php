@@ -159,12 +159,11 @@ class AnswerController extends CommonController
         $examQuestionFormalInfo = $request->input('examQuestionFormalInfo');
         //查询考试的开始时间
         $begin_dt = ExamPaperFormal::where('id',$examPaperFormalId)->first()->begin_dt;
-        $end_dt = time();
-        $actualLength = strtotime($begin_dt) - $end_dt ;
+        //考试使用时间
+        $actualLength = strtotime($begin_dt) - time() ;
         $data =array(
             'examPaperFormalId' =>$examPaperFormalId,
             'actualLength' =>$actualLength,
-            'end_dt' =>date('Y-m-d H:i:s',$end_dt),
             'examQuestionFormalInfo'=>$examQuestionFormalInfo,//正式试题信息
             'studentId' =>$studentId,
         );
@@ -238,7 +237,7 @@ class AnswerController extends CommonController
             'examPaperFormalId' =>$examPaperFormalId,
             'time'=>$actualLength,
             'begin_dt'=>$begin_dt,//考试开始时间
-            'end_dt'=>date('Y-m-d H:i:s',$end_dt),//考试结束时间
+            'end_dt'=>date('Y-m-d H:i:s',time()),//考试结束时间
         );
 
         //保存考生答案和记录该考生成绩
