@@ -41,7 +41,16 @@
     <script src="{{ asset('osce/admin/plugins/js/plugins/fancybox/jquery.fancybox.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $(".wizard").steps();
+            $(".wizard").steps({
+                enableAllSteps: true, //所有按钮都可以点击
+            });
+            for(var i=0;i<$(".steps li").length;i++){//给按钮增加初始类名
+                if(!$($(".steps li")[i]).hasClass("current")){
+                    $($(".steps li")[i]).addClass("done");
+                }
+            }
+
+
             //图片点击显示大图
             $('.fancybox').fancybox({
                 openEffect: 'none',
