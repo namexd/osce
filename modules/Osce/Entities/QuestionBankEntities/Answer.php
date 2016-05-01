@@ -153,9 +153,9 @@ class Answer extends Model
                         throw new \Exception(' 保存考生成绩失败！',-103);
                     }
                 }
-            }else{
+            }/*else{
                 throw new \Exception(' 没有对应的考生数据！',-104);
-            }
+            }*/
             $DB->commit();
             return true;
         }catch (\Exception $ex){
