@@ -212,6 +212,7 @@ class IndexController extends CommonController
         }
 
         //查询 正在考试的考试 是否是当前考试
+
         $examStatus = Exam::where('status','=',1)->first();
         if($examStatus){
             if($examStatus->id != $exam_id){
