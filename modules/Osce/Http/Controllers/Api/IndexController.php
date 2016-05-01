@@ -1185,6 +1185,10 @@ class IndexController extends CommonController
         //查询学生当前状态
         $status = ExamOrder::where('student_id', $studentId)->where('exam_id', $exam_id)
                            ->where('exam_screening_id',$screen_id)->select('status')->first()->status;
+        $studentMsg=ExamQueue::where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->where('student_id', $studentId)->first();
+        if(!is_null($studentMsg)){//学生已经来了
+            return \Response::json(array('code' => 55));
+        }
         if ($status == 2) {
             return \Response::json(array('code' => 3));//该学生考试已结束
 
