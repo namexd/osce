@@ -779,7 +779,7 @@ class ExamQueue extends CommonModel
             //获取考生正在进行考试的队列信息
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)
-                ->where('status', 2)
+                ->where('station_id', $stationId)
                 ->first();
             if (empty($queue)) {
                 throw new \Exception('没有找到符合要求的学生', 2200);
