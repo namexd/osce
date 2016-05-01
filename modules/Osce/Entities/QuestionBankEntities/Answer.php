@@ -170,16 +170,17 @@ class Answer extends Model
      * @access public
      * @param $examId 考试id
      * @param $studentId 学生id
+     * @param $stationId 考站id
      * @author xumin <xumin@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function saveStatus($examId,$studentId){
+    public function saveStatus($examId,$studentId,$stationId){
         $DB = \DB::connection('osce_mis');
         $DB->beginTransaction();
          try{
             //获取该考生对应的队列信息
-            $quene = ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status',2)->first();
+            $quene = ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('station_id',$stationId)->first();
             if(!empty($quene)){
                 //获取当前的服务器时间
                 $date = date('Y-m-d H:i:s');

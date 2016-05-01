@@ -338,11 +338,13 @@ class AnswerController extends CommonController
             $this->validate($request,[
                 'examId'       => 'required|integer',
                 'studentId'    => 'required|integer',
+                'stationId'    => 'required|integer',
             ]);
             $examId = $request->input('examId');
             $studentId = $request->input('studentId');
+            $stationId = $request->input('stationId');
             $answerModel = new Answer();
-            $exam_screening_id = $answerModel->saveStatus($examId,$studentId);
+            $exam_screening_id = $answerModel->saveStatus($examId,$studentId,$stationId);
             //向pad端推送消息
             $redis = Redis::connection('message');
             $time = date('Y-m-d H:i:s', time());
