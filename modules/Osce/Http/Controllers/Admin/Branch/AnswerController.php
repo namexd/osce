@@ -118,7 +118,7 @@ class AnswerController extends CommonController
                 }
             }
         }
-        dd(date('Y/m/d H:i:s',$systemTimeStart).'and'.date('Y/m/d H:i:s',$systemTimeEnd));
+        echo (date('Y/m/d H:i:s',$systemTimeStart).'and'.date('Y/m/d H:i:s',$systemTimeEnd));
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -160,7 +160,7 @@ class AnswerController extends CommonController
         //查询考试的开始时间
         $begin_dt = ExamPaperFormal::where('id',$examPaperFormalId)->first()->begin_dt;
         //考试使用时间
-        $actualLength = strtotime($begin_dt) - time() ;
+        $actualLength = time() - strtotime($begin_dt);
         $data =array(
             'examPaperFormalId' =>$examPaperFormalId,
             'actualLength' =>$actualLength,
