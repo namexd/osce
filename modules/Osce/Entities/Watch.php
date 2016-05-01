@@ -226,15 +226,10 @@ class Watch extends CommonModel implements MachineInterface
 
     //查询使用中的腕表数据
     public function getWatchAboutData($status,$type,$nfc_code,$examId){
-        $exam_id=Exam::where('status',1)->first();
-        if(is_null($exam_id)){
-            throw new \Exception('暂时没有考试');
-        }else{
-            $exam_id=$exam_id->id;
-        }
+
         $examScreen = new ExamScreening();
-        $roomMsg = $examScreen->getExamingScreening($exam_id);
-        $roomMsg_two = $examScreen->getNearestScreening($exam_id);
+        $roomMsg = $examScreen->getExamingScreening($examId);
+        $roomMsg_two = $examScreen->getNearestScreening($examId);
         if ($roomMsg) {
             $exam_screening_id = $roomMsg->id;
         } elseif ($roomMsg_two) {
