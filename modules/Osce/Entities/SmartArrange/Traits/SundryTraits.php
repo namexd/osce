@@ -38,6 +38,7 @@ trait SundryTraits
             //如果是数组，先将时间字符串变成时间戳，然后排序，并取最后（最大的数）;
             if (is_array($value->all())) {
                 $flowTime += $value->pluck('mins')->sort()->pop();
+                $flowTime += config('osce.sys_param.mins');
                 //否则就直接加上这个值
             } else {
                 $flowTime += $value->mins;

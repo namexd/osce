@@ -74,7 +74,6 @@ abstract class AbstractEntity
                     foreach ($entities as &$item) {
                         $item->mins = $min;
                     }
-
                 return $entities;
             default:
                 throw new \Exception('系统错误，请重试！', -20);
@@ -150,7 +149,6 @@ abstract class AbstractEntity
                 $array[] = $item->pop();
             }
         }
-
         return collect($array);
     }
 

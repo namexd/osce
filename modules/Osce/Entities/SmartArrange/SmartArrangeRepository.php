@@ -9,7 +9,6 @@
 namespace Modules\Osce\Entities\SmartArrange;
 
 
-use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\SmartArrange\Student\StudentFromDB;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
@@ -93,7 +92,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
                     $this->model->screenPlan($screen);
                 }
                 if (count($this->model->getStudents()) != 0 || count($this->model->getWaitStudents()) != 0) {
-                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
+//                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
                     throw new \Exception('人数太多，所设时间无法完成考试', -99);
                 }
             }
@@ -216,5 +215,22 @@ class SmartArrangeRepository extends AbstractSmartArrange
             $connection->rollBack();
             throw $ex;
         }
+    }
+
+    /**
+     * 将学生的排考情况导出
+     * @param $export
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-05-01 09:45
+     */
+    public function export($id, $export, $arrange)
+    {
+        $data = $export->objToArray($arrange->getData($id));
+
+        return $export->sheet('StudentList', function ($sheet) use ($data){
+            $sheet->setWidth(config('osce.smart_arrange.width'));
+            $sheet->rows($data);
+        })->export('xlsx');
     }
 }

@@ -97,5 +97,7 @@ return [
 	],
 	'sys_param' => include 'sysparam.php',
 
+	'smart_arrange' => include 'smartarrange.php',
+
 	'debug'		=>	env('debug',false),
 ];

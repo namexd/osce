@@ -187,7 +187,21 @@ class IndexController extends CommonController
             return \Response::json(array('code'=>111)); //当前腕表不存在
         }
         $id = $watchInfo->id;       //获取腕表id
+        $examScreen = new ExamScreening();
+        $roomMsg = $examScreen->getExamingScreening($exam_id);
+        $roomMsg_two = $examScreen->getNearestScreening($exam_id);
 
+        // TODO 这里应该判断该场次是否被安排开始。待测试修改    周强  2016-4-30
+
+        if ($roomMsg) {
+            $exam_screening_id = $roomMsg->id;
+            return $exam_screening_id;
+        } elseif ($roomMsg_two) {
+            $exam_screening_id = $roomMsg_two->id;
+            return $exam_screening_id;
+        } else {
+            throw new \Exception('没有找到对应的场次');
+        }
         /** 判断腕表是否已绑定并且没有解绑 **/
         //取腕表最后一次使用记录
         $watchLog = WatchLog::where('watch_id', '=', intval($id))->orderBy('created_at', 'desc')->first();
@@ -198,7 +212,7 @@ class IndexController extends CommonController
         }
 
         //查询 正在考试的考试 是否是当前考试
-        $examStatus = Exam::where('status','=',1)->first();
+        $examStatus = Exam::where('status','=',1)->where('exam_screening_id',$exam_screening_id)->first();
         if($examStatus){
             if($examStatus->id != $exam_id){
                 return \Response::json(array('code'=>6));   //正在考试 的考试 不是当前考试（当前考试未开考，另外有其他的考试正在考）
@@ -206,14 +220,14 @@ class IndexController extends CommonController
         }
 
         //查询学生是否参加当前考试
-        $studentExam= Student::where('idcard','=',$id_card)->where('exam_id','=',$exam_id)->first();
+        $studentExam= Student::where('idcard','=',$id_card)->where('exam_screening_id',$exam_screening_id)->where('exam_id','=',$exam_id)->first();
         if(is_null($studentExam)){
             return \Response::json(array('code' => 3)); //没有参加当前考试
         }
         $student_id = $studentExam->id;     //获取学生id
 
         //查询该学生是否在 当前考试的排考计划中
-        $planId     = ExamPlan::where('student_id','=',$student_id)->where('exam_id','=',$exam_id)->select('id')->first();
+        $planId     = ExamPlan::where('student_id','=',$student_id)->where('exam_screening_id',$exam_screening_id)->where('exam_id','=',$exam_id)->select('id')->first();
         if(is_null($planId)){
             return \Response::json(array('code' =>4));  //未安排当前考试
         }
