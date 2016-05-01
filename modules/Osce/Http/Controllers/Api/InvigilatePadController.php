@@ -1327,17 +1327,17 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description,$userId){
+    public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description,$userId,$exam_screening_id){
         $data = array();
         $data = [
             'station_id'        => $station_id,
             'exam_id'           => $exam_id,
             'student_id'        => $student_id,
             'created_user_id'   => $userId,
-            'type'              => 2,
-            'description'       => $description
+            'type'              => $type,
+            'description'       => $description,
+            'exam_screening_id'=>$exam_screening_id
         ];
-
         ExamMonitor::create($data);
     }
     /**
@@ -1390,8 +1390,11 @@ class InvigilatePadController extends CommonController
             $student = new Student();
             $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
             $status = $this->checkType($exameeStatus->status);
-
+/*
             $station_id = ExamQueue::where('exam_id','=',$exam_id)->first();
+            $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号*/
+
+            $station_id = ExamQueue::where('exam_id','=',$exam_id)->where('student_id',$student_id)->where('status',2)->first();
             $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
             if(!$screen_id){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
@@ -1409,7 +1412,7 @@ class InvigilatePadController extends CommonController
                     $watchModel->unwrapRecord($data);
 
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId,$station_id->exam_screening_id);
                     return \Response::json([
                         'code' => 200,
                     ]);   //解绑成功
@@ -1444,7 +1447,7 @@ class InvigilatePadController extends CommonController
                     $examScreening  =  new ExamScreening();
                     $examScreening  -> getExamCheck();
                     //解绑上报
-                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId);
+                    $this->getWatchUnbundlingReportLog($station_id->station_id,$exam_id,$student_id,$type,$description,$userId,$station_id->exam_screening_id);
                     $connection->commit();
 
                     return \Response::json([
