@@ -212,20 +212,18 @@ class ExamControl extends Model
             $examQueue = ExamQueue::where('student_id', $data['studentId'])
                 ->where('exam_id',$data['examId'])
                 ->whereNotIn('status',[3,4])->get();
-
             if (!empty($examQueue)){
                 //更新考试队列中的考试监控标记(exam_queue)
                 foreach ($examQueue as $val) {
                     $examMonitor = ExamMonitor::where('exam_id',$val->exam_id)->where('student_id',$val->student_id)->where('exam_screening_id',$val->exam_screening_id)->first();
                     if(empty($examMonitor)){
-                        //③向监控标记学生替考记录表插入数据
+                        //向监控标记学生替考记录表插入数据
                         $examMonitorData = array(
                             'station_id'  =>$val->station_id,
                             'exam_id'      =>$val->exam_id,
                             'student_id'  =>$val->student_id,
                             'type'         =>$data['type'],
-                            'description' =>$data['description'],
-                            'exam_screening_id'=>$val->exam_screening_id,
+                            'description' =>$data['description'], 'exam_screening_id'=>$val->exam_screening_id,
 
                         );
                         if(!ExamMonitor::create($examMonitorData)){
@@ -243,12 +241,46 @@ class ExamControl extends Model
                             throw new \Exception(' 更新考试学生排序表失败！',-102);
                         }
                     }
-                }
-            }/*else{
-                throw new \Exception(' 没有该考生的考试队列信息！',-105);
-            }*/
+                    if($val->status!=3){
+                        //更新exam_queue表（考试队列）
+                        $examQueueData= array(
+                            'status'=>3,
+                            'blocking'=>1,
+                            'controlMark'=>1
+                        );
+                        if(!ExamQueue::where('id',$val->id)->update($examQueueData)){
+                            throw new \Exception(' 更新考试队列表失败！',-103);
+                        }
+                    }
+                    //更新exam_screening_student表（考试场次-学生关系表）
+                    $result = ExamScreeningStudent::where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
+                    if(!empty($result)&&$result->is_end!=1){
+                        $examScreeningStudentData = array(
+                            'is_end'=>1,
+                            'status' => $data['status'],
+                            'description' => $data['description']
+                        );
+                        if(!ExamScreeningStudent::where('id',$result->id)->update($examScreeningStudentData)){
+                            throw new \Exception(' 更新考试场次-学生关系表失败！',-104);
+                        }
+                    }
 
-            //获取该考生剩余还没考的考站信息
+                    // 向考试结果记录表(exam_result)插入数据未考考试分数
+                    $examResultData=array(
+                        'student_id'=>$val['studentId'],
+                        'exam_screening_id'=>$val['exam_screening_id'],
+                        'station_id'=>$val['station_id'],
+                        'time'=>0,
+                        'score'=>0,
+                        'teacher_id'=>$data['userId'],
+                    );
+                    if(!ExamResult::create($examResultData)){
+                        throw new \Exception(' 插入考试结果记录表失败！',-105);
+                    }
+                }
+            }
+
+/*            //获取该考生剩余还没考的考站信息
             $remainExamQueueData = $this->getRemainExamQueueData($data['examId'],$data['studentId'],$data['examScreeningId']);
             if(!empty($remainExamQueueData['remainExamQueueInfo'])&&count($remainExamQueueData['remainExamQueueInfo'])>0){
                 //如果还有没考的考试信息，结束剩余未考考试，并将分数记为0
@@ -276,9 +308,7 @@ class ExamControl extends Model
                         if(!ExamScreeningStudent::where('id',$result->id)->update($examScreeningStudentData)){
                             throw new \Exception(' 更新考试场次-学生关系表失败！',-104);
                         }
-                    }/*else{
-                        throw new \Exception('没有该考生对应的场次！',-103);
-                    }*/
+                    }
 
                     // 向考试结果记录表(exam_result)插入数据未考考试分数
                     $examResultData=array(
@@ -295,6 +325,7 @@ class ExamControl extends Model
 
                 }
             }
+*/
             $DB->commit();
             return true;
         }catch (\Exception $ex){
