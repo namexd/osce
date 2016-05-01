@@ -229,7 +229,8 @@ class ExamControl extends Model
                     $examOrder = ExamOrder::where('exam_id',$val->exam_id)->where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
                     if(!empty($examOrder)){
                         $examOrderData = array(
-                            'status'=>2 //已解绑
+                            'status'=>2, //已解绑
+                            'updated_at'=>date("Y-m-d H:i:s",time())
                         );
                         if(!ExamOrder::where('id',$examOrder->id)->update($examOrderData)){
                             throw new \Exception(' 更新考试学生排序表失败！',-102);
