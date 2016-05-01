@@ -220,7 +220,7 @@ class IndexController extends CommonController
         }
 
         //查询学生是否参加当前考试
-        $studentExam= Student::where('idcard','=',$id_card)->where('exam_screening_id',$exam_screening_id)->where('exam_id','=',$exam_id)->first();
+        $studentExam= Student::where('idcard','=',$id_card)->where('exam_id','=',$exam_id)->first();
         if(is_null($studentExam)){
             return \Response::json(array('code' => 3)); //没有参加当前考试
         }
