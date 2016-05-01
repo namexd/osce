@@ -320,33 +320,35 @@ class ExamControl extends Model
                 throw new \Exception('结束考生考试失败！');
             }
 
-                  $emamPlanMsg=ExamPlan::where('exam_id',$data['examId'])->where('exam_screening_id',$screen_id)->where('student_id',$data['studentId'])->first();
-                  $gardaMsg=ExamGradation::where('exam_id',$data['examId'])->where('order',$emamPlanMsg->gradation_order)->first();
-                  $msg=ExamDraftFlow::leftJoin('exam_draft','exam_draft.exam_draft_flow_id','=','exam_draft_flow.id')
-                                ->where('exam_draft_flow.exam_screening_id',$screen_id)
-                      ->where('exam_draft_flow.exam_gradation_id',$gardaMsg->id)
-                      ->where('exam_draft_flow.exam_id',$data['examId'])
-                      ->where('exam_draft.room_id',$emamPlanMsg->room_id)
-                      ->select(['exam_draft.station_id'])
-                      ->first();
-                    $teacher_id=StationTeacher::where('station_id',$msg->station_id)->where('exam_id',$data['examId'])->first();
-                  //将该考生的场次下成绩记为0
-                    //⑤ 向考试结果记录表(exam_result)插入数据
-                  $examResultData=array(
-                        'student_id'=>$data['studentId'],
-                        'exam_screening_id'=>$screen_id,
-                        'time'=>0,
-                        'score'=>0,
-                        'begin_dt'=>date('Y-m-d H:i:s',time()),
-                        'end_dt'=>date('Y-m-d H:i:s',time()),
-                        'station_id'=>$msg->station_id,
-                        'teacher_id'=>$teacher_id->user_id,
-                        'operation'=>0,'skilled'=>0,'patient'=>0,'affinity'=>0,
-                    );
-                    if(!ExamResult::create($examResultData)){
-                        throw new \Exception(' 插入考试结果记录表失败！');
-                    }
-
+                  $emamPlanMsg=ExamPlan::where('exam_id',$data['examId'])->where('exam_screening_id',$screen_id)->where('student_id',$data['studentId'])->get();
+                  if(!is_null($emamPlanMsg)) {
+                      foreach ($emamPlanMsg as $val) {
+                          $gardaMsg = ExamGradation::where('exam_id', $data['examId'])->where('order', $val->gradation_order)->first();
+                          $msg = ExamDraftFlow::leftJoin('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+                              ->where('exam_draft_flow.exam_gradation_id', $gardaMsg->id)
+                              ->where('exam_draft_flow.exam_id', $data['examId'])
+                              ->where('exam_draft.room_id', $val->room_id)
+                              ->select(['exam_draft.station_id'])
+                              ->first();
+                          $teacher_id = StationTeacher::where('station_id', $msg->station_id)->where('exam_id', $data['examId'])->first();
+                          //将该考生的场次下成绩记为0
+                          //⑤ 向考试结果记录表(exam_result)插入数据
+                          $examResultData = array(
+                              'student_id' => $data['studentId'],
+                              'exam_screening_id' => $screen_id,
+                              'time' => 0,
+                              'score' => 0,
+                              'begin_dt' => date('Y-m-d H:i:s', time()),
+                              'end_dt' => date('Y-m-d H:i:s', time()),
+                              'station_id' => $msg->station_id,
+                              'teacher_id' => $teacher_id->user_id,
+                              'operation' => 0, 'skilled' => 0, 'patient' => 0, 'affinity' => 0,
+                          );
+                          if (!ExamResult::create($examResultData)) {
+                              throw new \Exception(' 插入考试结果记录表失败！');
+                          }
+                      }
+                  }
    /*                 //④向监控标记学生替考记录表（exam_monitor）中插入数据
                     if(!empty($val['station_id'])){
                         $examMonitorData=array(
