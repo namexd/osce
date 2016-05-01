@@ -276,7 +276,9 @@ class Watch extends CommonModel implements MachineInterface
             $examQueue->on('student.id','=','exam_screening_student.student_id');
         })->leftjoin('exam_order',function($join){
             $join->on('exam_order.student_id','=','exam_screening_student.student_id');
-        })->groupBy('watch_log.student_id')
+        })->leftjoin('exam_queue',function($join){
+                $join->on('exam_queue.student_id','=','exam_screening_student.student_id');
+            })->groupBy('watch_log.student_id')
             ->where('exam_screening_student.exam_screening_id',$exam_screening_id)
             ->where('exam_queue.exam_screening_id',$exam_screening_id)
             ->where('exam_order.exam_screening_id',$exam_screening_id)
