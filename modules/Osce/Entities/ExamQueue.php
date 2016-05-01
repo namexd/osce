@@ -56,8 +56,8 @@ class ExamQueue extends CommonModel
 
 
     protected $statuValues = [
-        0 => '抽完签',
-        1 => '候考',
+        0 => '绑定腕表',
+        1 => '抽签',
         2 => '正在考试',
         3 => '结束考试',
         4 => '缺考',

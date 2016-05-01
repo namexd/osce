@@ -1334,9 +1334,10 @@ class InvigilatePadController extends CommonController
             'exam_id'           => $exam_id,
             'student_id'        => $student_id,
             'created_user_id'   => $userId,
-            'type'              => $type,
+            'type'              => 2,
             'description'       => $description
         ];
+
         ExamMonitor::create($data);
     }
     /**

@@ -245,12 +245,6 @@ class AnswerController extends CommonController
         $answerModel = new Answer();
         try{
             $answerModel->saveAnswer($data,$resultData);
-
-            //向pad端推送消息
-            $redis = Redis::connection('message');
-            $time = date('Y-m-d H:i:s', time());
-            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$time,'student_id'=>$data['studentId']],108,'理论考试结束')));
-
             return response()->json(
                 $this->success_data([],1,'success')
             );
@@ -348,7 +342,12 @@ class AnswerController extends CommonController
             $examId = $request->input('examId');
             $studentId = $request->input('studentId');
             $answerModel = new Answer();
-            $answerModel->saveStatus($examId,$studentId);
+            $exam_screening_id = $answerModel->saveStatus($examId,$studentId);
+            //向pad端推送消息
+            $redis = Redis::connection('message');
+            $time = date('Y-m-d H:i:s', time());
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$time,'student_id'=>$studentId,'exam_screening_id'=>$exam_screening_id],108,'理论考试结束')));
+
             return response()->json(
                 $this->success_data([],1,'success')
             );
