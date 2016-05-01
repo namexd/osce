@@ -40,6 +40,7 @@ class ExamControlController extends CommonController
 
     public function getExamlist()
     {
+        echo 1;
         $examControlModel = new ExamControl();
         $data = $examControlModel->getDoingExamList();
         return view('osce::admin.testMonitor.monitor_test', [
