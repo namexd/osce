@@ -22,7 +22,7 @@ class UserListExport extends NewExcelFile
     public function objToArray(Collection $collection)
     {
         if ($collection->isEmpty()) {
-            throw new \Exception('当前考试安排没有保存！');
+            throw new \Exception('当前考试安排没有保存！，无法导出xlxs文件！');
         }
 
         $data[] = config('osce.smart_arrange.title');

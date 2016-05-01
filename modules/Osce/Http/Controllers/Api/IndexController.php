@@ -212,7 +212,7 @@ class IndexController extends CommonController
         }
 
         //查询 正在考试的考试 是否是当前考试
-        $examStatus = Exam::where('status','=',1)->where('exam_screening_id',$exam_screening_id)->first();
+        $examStatus = Exam::where('status','=',1)->first();
         if($examStatus){
             if($examStatus->id != $exam_id){
                 return \Response::json(array('code'=>6));   //正在考试 的考试 不是当前考试（当前考试未开考，另外有其他的考试正在考）
@@ -220,7 +220,7 @@ class IndexController extends CommonController
         }
 
         //查询学生是否参加当前考试
-        $studentExam= Student::where('idcard','=',$id_card)->where('exam_screening_id',$exam_screening_id)->where('exam_id','=',$exam_id)->first();
+        $studentExam= Student::where('idcard','=',$id_card)->where('exam_id','=',$exam_id)->first();
         if(is_null($studentExam)){
             return \Response::json(array('code' => 3)); //没有参加当前考试
         }
