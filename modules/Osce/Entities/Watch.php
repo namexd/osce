@@ -254,7 +254,7 @@ class Watch extends CommonModel implements MachineInterface
             ->where('exam_screening_student.is_signin','=',1)
             ->where('watch_log.action','=','绑定')
             ->where('exam_queue.exam_id','=',$examId)
-            ->where('exam_queue.exam_screening_id',$exam_screening_id)
+
             ->leftjoin('watch_log',function($watchLog){
             $watchLog->on('watch_log.watch_id','=','watch.id');
         })->leftjoin('exam_queue',function($examQueue){
@@ -264,6 +264,8 @@ class Watch extends CommonModel implements MachineInterface
         })->rightjoin('exam_screening_student',function($join){
             $join->on('exam_screening_student.student_id','=','watch_log.student_id');
         })->groupBy('watch_log.student_id')
+            ->where('exam_screening_student.exam_screening_id',$exam_screening_id)
+            ->where('exam_queue.exam_screening_id',$exam_screening_id)
             ->select('watch.id','watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')
             ->orderBy('watch_log.id','desc')->get();
 //        dd($builder->toArray());
