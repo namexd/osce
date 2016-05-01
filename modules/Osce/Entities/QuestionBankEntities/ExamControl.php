@@ -309,7 +309,7 @@ class ExamControl extends Model
                 'exam_screening_id'=>$screen_id,
                 'student_id'=>$data['studentId'],
                 'is_end'=>1,
-                'status'=>3,
+                'status'=>1,
                 'description'=>1
             );
             //保存考试场次-学生关系表（exam_screening_student）
@@ -330,22 +330,25 @@ class ExamControl extends Model
                               ->where('exam_draft.room_id', $val->room_id)
                               ->select(['exam_draft.station_id'])
                               ->first();
-                          $teacher_id = StationTeacher::where('station_id', $msg->station_id)->where('exam_id', $data['examId'])->first();
-                          //将该考生的场次下成绩记为0
-                          //⑤ 向考试结果记录表(exam_result)插入数据
-                          $examResultData = array(
-                              'student_id' => $data['studentId'],
-                              'exam_screening_id' => $screen_id,
-                              'time' => 0,
-                              'score' => 0,
-                              'begin_dt' => date('Y-m-d H:i:s', time()),
-                              'end_dt' => date('Y-m-d H:i:s', time()),
-                              'station_id' => $msg->station_id,
-                              'teacher_id' => $teacher_id->user_id,
-                              'operation' => 0, 'skilled' => 0, 'patient' => 0, 'affinity' => 0,
-                          );
-                          if (!ExamResult::create($examResultData)) {
-                              throw new \Exception(' 插入考试结果记录表失败！');
+                          $queueMsg = ExamQueue::where('exam_id', $data['examId'])->where('exam_screening_id', $screen_id)->where('student_id', $data['studentId'])->where('room_id', $val->room_id)->first();
+                          if (is_null($queueMsg)) {//排除已考的
+                              $teacher_id = StationTeacher::where('station_id', $msg->station_id)->where('exam_id', $data['examId'])->first();
+                              //将该考生的场次下成绩记为0
+                              //⑤ 向考试结果记录表(exam_result)插入数据
+                              $examResultData = array(
+                                  'student_id' => $data['studentId'],
+                                  'exam_screening_id' => $screen_id,
+                                  'time' => 0,
+                                  'score' => 0,
+                                  'begin_dt' => date('Y-m-d H:i:s', time()),
+                                  'end_dt' => date('Y-m-d H:i:s', time()),
+                                  'station_id' => $msg->station_id,
+                                  'teacher_id' => $teacher_id->user_id,
+                                  'operation' => 0, 'skilled' => 0, 'patient' => 0, 'affinity' => 0,
+                              );
+                              if (!ExamResult::create($examResultData)) {
+                                  throw new \Exception(' 插入考试结果记录表失败！');
+                              }
                           }
                       }
                   }
