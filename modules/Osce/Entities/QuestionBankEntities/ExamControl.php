@@ -50,13 +50,13 @@ class ExamControl extends Model
         $exam = $examModel->where('status','=',1)->first();
         if(!empty($exam)){
             //统计该场考试的考站数量
-            $stationCount = count($examModel->leftJoin('exam_draft_flow', function($join){
+            $stationCount = $examModel->leftJoin('exam_draft_flow', function($join){
                 $join -> on('exam.id', '=', 'exam_draft_flow.exam_id');
             })->leftJoin('exam_draft', function($join){//考试;
                 $join -> on('exam_draft_flow.id', '=','exam_draft.exam_draft_flow_id');
             })->leftJoin('station', function($join){//考试;
                 $join -> on('exam_draft.station_id', '=','station.id');
-            })->select('station.id')->groupBy('station.id')->where('exam.status','=',1)->get());
+            })->select('station.id')->groupBy('station.id')->where('exam.status','=',1)->count();
 
             $examScreeningStudentModel = new ExamScreeningStudent();
             //统计学生数量
