@@ -56,7 +56,9 @@ class ExamControl extends Model
                 $join -> on('exam_draft_flow.id', '=','exam_draft.exam_draft_flow_id');
             })->leftJoin('station', function($join){//考试;
                 $join -> on('exam_draft.station_id', '=','station.id');
-            })->select('station.id')->groupBy('station.id')->where('exam.status','=',1)->count();
+            })->select('station.id')->groupBy('station.id')->where('exam.status','=',1)->get();
+
+            $stationCount = count($stationCount);
 
             $examScreeningStudentModel = new ExamScreeningStudent();
             //统计学生数量
@@ -70,7 +72,9 @@ class ExamControl extends Model
                 $join -> on('exam_queue.station_id', '=', 'station.id');
             })->leftJoin('station_teacher', function($join){
                 $join -> on('station.id', '=', 'station_teacher.station_id');
-            })->groupBy('student.id')->where('exam.status',1)->count();
+            })->groupBy('student.id')->where('exam.status',1)->get();
+
+            $studentCount = count($studentCount);
 
             //统计正在考试数量
             $doExamCount = $examScreeningStudentModel->leftJoin('student', function($join){//学生表
@@ -83,7 +87,9 @@ class ExamControl extends Model
                 $join -> on('exam_queue.station_id', '=', 'station.id');
             })->leftJoin('station_teacher', function($join){
                 $join -> on('station.id', '=', 'station_teacher.station_id');
-            })->groupBy('student.id')->where('exam.status',1)->where('exam_queue.status',2)->count();
+            })->groupBy('student.id')->where('exam.status',1)->where('exam_queue.status',2)->get();
+
+            $doExamCount = count($doExamCount);
 
 
             //统计已完成考试数量
@@ -97,7 +103,9 @@ class ExamControl extends Model
                 $join -> on('exam_queue.station_id', '=', 'station.id');
             })->leftJoin('station_teacher', function($join){
                 $join -> on('station.id', '=', 'station_teacher.station_id');
-            })->groupBy('student.id')->where('exam.status',1)->where('exam_screening_student.is_end',1)->count();
+            })->groupBy('student.id')->where('exam.status',1)->where('exam_screening_student.is_end',1)->get();
+
+            $endExamCount = count($endExamCount);
 
 
             //正在考试列表
