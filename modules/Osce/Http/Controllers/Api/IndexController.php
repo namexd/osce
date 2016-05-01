@@ -195,10 +195,8 @@ class IndexController extends CommonController
 
         if ($roomMsg) {
             $exam_screening_id = $roomMsg->id;
-            return $exam_screening_id;
         } elseif ($roomMsg_two) {
             $exam_screening_id = $roomMsg_two->id;
-            return $exam_screening_id;
         } else {
             throw new \Exception('没有找到对应的场次');
         }
