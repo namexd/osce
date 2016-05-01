@@ -227,10 +227,9 @@ class ExamControl extends Model
 
                     //更新exam_order表（考试学生排序）
                     $examOrder = ExamOrder::where('exam_id',$val->exam_id)->where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
-                    if(!empty($examOrder)){
+                    if(!empty($examOrder)&&$examOrder->status!=2){
                         $examOrderData = array(
                             'status'=>2, //已解绑
-                            'updated_at'=>date("Y-m-d H:i:s",time())
                         );
                         if(!ExamOrder::where('id',$examOrder->id)->update($examOrderData)){
                             throw new \Exception(' 更新考试学生排序表失败！',-102);
@@ -246,20 +245,21 @@ class ExamControl extends Model
             if(!empty($remainExamQueueData['remainExamQueueInfo'])&&count($remainExamQueueData['remainExamQueueInfo'])>0){
                 //如果还有没考的考试信息，结束剩余未考考试，并将分数记为0
                 foreach($remainExamQueueData['remainExamQueueInfo'] as $k=>$v){
-
-                    //更新exam_queue表（考试队列）
-                    $examQueueData= array(
-                        'status'=>3,
-                        'blocking'=>1,
-                        'controlMark'=>1
-                    );
-                    if(!ExamQueue::where('id',$v->id)->update($examQueueData)){
-                        throw new \Exception(' 更新考试队列表失败！',-103);
+                    if($v->status!=3){
+                        //更新exam_queue表（考试队列）
+                        $examQueueData= array(
+                            'status'=>3,
+                            'blocking'=>1,
+                            'controlMark'=>1
+                        );
+                        if(!ExamQueue::where('id',$v->id)->update($examQueueData)){
+                            throw new \Exception(' 更新考试队列表失败！',-103);
+                        }
                     }
 
                     //更新exam_screening_student表（考试场次-学生关系表）
                     $result = ExamScreeningStudent::where('exam_screening_id',$v->exam_screening_id)->where('student_id',$v->student_id)->first();
-                    if(!empty($result)){
+                    if(!empty($result)&&$result->is_end!=1){
                         $examScreeningStudentData = array(
                             'is_end'=>1,
                             'status' => $data['status'],

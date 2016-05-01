@@ -978,7 +978,7 @@ class ApiController extends CommonController
 
                         //更新exam_screening_student表（考试场次-学生关系表）
                         $result = ExamScreeningStudent::where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
-                        if(!empty($result)){
+                        if(!empty($result)&&$result->is_end!=1){
                             if(!ExamScreeningStudent::where('id',$result->id)->update($examScreeningStudentData)){
                                 throw new \Exception(' 更新考试场次-学生关系表失败！',-103);
                             }
@@ -988,7 +988,7 @@ class ApiController extends CommonController
 
                         //更新exam_order表（考试学生排序）
                         $examOrder = ExamOrder::where('exam_id',$val->exam_id)->where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
-                        if(!empty($examOrder)){
+                        if(!empty($examOrder)&&$examOrder->status!=2){
                             $examOrderData = array(
                                 'status'=>2 //已解绑
                             );
