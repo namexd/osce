@@ -9,8 +9,6 @@
 
 namespace Modules\Osce\Entities;
 
-
-use Modules\Osce\Entities\AutomaticPlanArrangement\Exam;
 use Modules\Osce\Entities\MachineInterface;
 use DB;
 
