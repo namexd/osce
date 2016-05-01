@@ -920,6 +920,7 @@ class ApiController extends CommonController
      * @date 2016-04-05 17:54
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
+    // todo 在点击替考警告终止考试的时候队列表会新增一条数据，且未能把该学生这场考试的队列结束（即状态改为3），待徐敏查证修改，周强  2016-4-30
     public function postAlertExamReplace (Request $request) {
         $this->validate($request, [
             'mode'              => 'required|in:1,2',

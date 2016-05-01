@@ -83,7 +83,10 @@ class ExamQueue extends CommonModel
     //获取候考教室
     protected function getWaitRoom($exam_id)
     {
-        //获取到该考试场次下所有的房间
+        //获取到该考试阶段下场次下所有的房间
+
+
+
         $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft_flow.exam_id', '=',$exam_id)
             ->groupBy('exam_draft.room_id')
@@ -853,6 +856,9 @@ class ExamQueue extends CommonModel
      */
     public function getWaitStudentRoom($room_id = '', $exam_id = '')
     {
+
+       $screen_id =  $this->getExamScreeningId($exam_id);
+
         $builder = $this->leftJoin('exam_draft_flow',
             function ($join) {
                 $join->on('exam_draft_flow.exam_id', '=', 'exam_queue.exam_id');
@@ -866,6 +872,7 @@ class ExamQueue extends CommonModel
             ->where('exam_queue.room_id', '=', $room_id)
             ->where('exam_draft.room_id', '=', $room_id)
             ->where('exam_queue.exam_id', '=', $exam_id)
+            ->where('exam_queue.exam_screening_id', '=', $screen_id)
             ->where('exam_draft_flow.exam_id', '=', $exam_id)
             ->where('exam_queue.status', '=', 0)
             ->orderBy('exam_queue.begin_dt', 'asc')
@@ -1030,5 +1037,39 @@ class ExamQueue extends CommonModel
     {
         $builder = $this->where('exam_id', '=', $examing)->where('student_id', '=', $studentId)->first();
         return $builder;
+    }
+
+
+    //获取场次id
+    private function getExamScreeningId($exam_id)
+    {
+
+
+        $screenModel    =   new ExamScreening();
+        $examScreening  =   $screenModel ->getExamingScreening($exam_id);
+
+        if(is_null($examScreening))
+        {
+            $examScreening = $screenModel->getNearestScreening($exam_id);
+        }
+
+        if (!$examScreening) {
+            return \Response::json(array('code' => 2));     //没有对应的开考场次 —— 考试场次没有(1、0)
+        }
+        $screen_id    = $examScreening->id;
+
+
+        //拿到oder表里的考试场次 todo 周强 2016-4-30
+        $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
+        if(!in_array($screen_id,$OderExamScreeningId)){
+            $screen_id = ExamOrder::where('exam_id','=',$exam_id)
+                ->where('status','=',1)
+                ->OrderBy('begin_dt', 'asc')
+                ->first();
+            $screen_id = $screen_id->exam_screening_id;
+        }
+        return $screen_id;
+
+
     }
 }

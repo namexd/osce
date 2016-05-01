@@ -54,6 +54,7 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
+       
         $examScreeningModel = new ExamScreening();
         $result = $examScreeningModel->getExamCheck();
         dd($result);
@@ -1022,6 +1023,7 @@ class InvigilatePadController extends CommonController
             $type = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
             $nfc_code = $request->get('nfc_code');
             $examing = Exam::where('status','=',1)->first();
+           
             //查询使用中的腕表数据
             $watchModel = new Watch();
             $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
@@ -1047,7 +1049,7 @@ class InvigilatePadController extends CommonController
 //                    }
 
                 }
-                //dd($watchData);
+            
                 return response()->json(
                     $this->success_data($watchData,200,'success')
                 );
