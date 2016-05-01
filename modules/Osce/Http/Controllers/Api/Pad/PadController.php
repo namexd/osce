@@ -380,7 +380,7 @@ class PadController extends  CommonController{
 
         $this->validate($request, [
             'student_id' => 'required|integer',
-            'station_id' => 'sometimes|integer',
+            'station_id' => 'required|integer',
             'user_id' => 'required|integer'
         ]);
 

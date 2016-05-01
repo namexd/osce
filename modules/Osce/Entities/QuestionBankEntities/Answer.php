@@ -190,16 +190,15 @@ class Answer extends Model
                     'end_dt' =>$date,
                     'blocking' =>1
                 );
-                
                  if(!ExamQueue::where('id',$quene->id)->update($data)){
-                     throw new \Exception('状态更新失败',-102);
+                     throw new \Exception('状态更新失败',-101);
                  }
              }else{
                  throw new \Exception('没有该考生的队列信息',-101);
              }
 
             $DB->commit();
-            return true;
+            return $quene->exam_screening_id;
         }catch (\Exception $ex){
             $DB->rollback();
             throw $ex;

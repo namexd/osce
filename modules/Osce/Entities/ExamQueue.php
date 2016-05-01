@@ -56,8 +56,8 @@ class ExamQueue extends CommonModel
 
 
     protected $statuValues = [
-        0 => '抽完签',
-        1 => '候考',
+        0 => '绑定腕表',
+        1 => '抽签',
         2 => '正在考试',
         3 => '结束考试',
         4 => '缺考',
@@ -779,7 +779,7 @@ class ExamQueue extends CommonModel
             //获取考生正在进行考试的队列信息
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)
-                ->where('status', 2)
+                ->where('station_id', $stationId)
                 ->first();
             if (empty($queue)) {
                 throw new \Exception('没有找到符合要求的学生', 2200);
