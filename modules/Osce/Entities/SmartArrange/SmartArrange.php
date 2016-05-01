@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities\SmartArrange;
 
 
 use Modules\Osce\Entities\ExamPlanRecord;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\SmartArrange\Student\StudentInterface;
 use Modules\Osce\Entities\SmartArrange\Traits\SQLTraits;
@@ -181,12 +182,11 @@ class SmartArrange
          * 先初始化流程总时间
          */
         $flowTime = $this->flowTime();
-
         /*
          * 判断场次是否够一个完整的流程
          */
-        if (($endDt - $beginDt - $flowTime) < 0) {
-            throw new \Exception('这场考试安排的场次时间太短，无法考完预定科目！');
+        if (($endDt - $beginDt - $flowTime * 60) < 0) {
+            throw new \Exception('开始时间为:' . ExamScreening::find($screen->id)->begin_dt . '的场次时间太短，当前方案不可行！');
         }
 
         //将考生放入侯考区
