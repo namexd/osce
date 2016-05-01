@@ -230,7 +230,7 @@ class Watch extends CommonModel implements MachineInterface
         if(is_null($exam_id)){
             throw new \Exception('暂时没有考试');
         }else{
-            $exam_id->$exam_id->id;
+            $exam_id=$exam_id->id;
         }
         $examScreen = new ExamScreening();
         $roomMsg = $examScreen->getExamingScreening($exam_id);
