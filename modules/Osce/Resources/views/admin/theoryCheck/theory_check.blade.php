@@ -115,7 +115,7 @@
                             if(res.code==1){
                                 location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
                             }else{
-                                layer.confirm(obj.message);
+                                layer.confirm(res.message);
                             }
                         })
 

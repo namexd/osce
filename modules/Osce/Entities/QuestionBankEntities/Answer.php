@@ -181,7 +181,6 @@ class Answer extends Model
             //获取该考生对应的队列信息
             $quene = ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status',2)->first();
             if(!empty($quene)){
-
                 //获取当前的服务器时间
                 $date = date('Y-m-d H:i:s');
                 //修改状态
@@ -194,9 +193,8 @@ class Answer extends Model
                      throw new \Exception('状态更新失败',-101);
                  }
              }else{
-                 throw new \Exception('没有该考生的队列信息',-101);
+                 throw new \Exception('没有该考生的队列信息',-102);
              }
-
             $DB->commit();
             return $quene->exam_screening_id;
         }catch (\Exception $ex){
