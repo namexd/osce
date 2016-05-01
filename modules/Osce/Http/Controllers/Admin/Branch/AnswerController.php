@@ -57,28 +57,23 @@ class AnswerController extends CommonController
         $ExamPaperFormal = new ExamPaperFormal;
         //生成正式的试卷并且 返回id
         $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo,$studentId);
-
-        //将开始时间存入session中
-        if(\Session::get('systemTimeStart')){
-            //如果存在，先删除开始时间
-            \Session::pull('systemTimeStart');//删除session
-        }
-        $systemTimeStart=time();
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
         $examPaperFormalData ='';
         if($examPaperFormalList) {
+            $systemTimeStart=time();
             $examPaperFormalData = array(
                 'id' => $examPaperFormalList->id,//正式试卷id
                 'name' => $examPaperFormalList->name,//正式试卷名称
                 'length' => $examPaperFormalList->length,//正式试卷考试时间
                 'totalScore' => $examPaperFormalList->total_score,//正式试卷总分
             );
-          $systemTimeEnd =$systemTimeStart+$examPaperFormalData['length']*60; //结束时间
-        }else{
-
-            $systemTimeEnd = $systemTimeStart;
+            $data = array(
+                'begin_dt' =>date('Y-m-d H:i:s',$systemTimeStart)
+            );
+            ExamPaperFormal::where('id',$examPaperFormalList->id)->update($data);
+            $systemTimeEnd =$systemTimeStart+$examPaperFormalData['length']*60; //结束时间
         }
         $examCategoryFormalData=[];//正式试题信息(根据试题类型进行分类)
         $categoryData=[];
@@ -154,18 +149,24 @@ class AnswerController extends CommonController
             'examPaperFormalId'   => 'required|integer',//正式试卷id
 
         ]);
-        $systemTimeEnd = time();
-        $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
-        if(empty($systemTimeStart)){
-            $actualLength = 0;//考试用时
-        }else{
-            $actualLength  = $systemTimeEnd-$systemTimeStart;
-        }
+
+        $examId = $request->input('examId');
+        $studentId = $request->input('studentId');
+        $stationId = $request->input('stationId');
+        $teacherId = $request->input('teacherId');
+        $examPaperFormalId = $request->input('examPaperFormalId');
+
+        $examQuestionFormalInfo = $request->input('examQuestionFormalInfo');
+        //查询考试的开始时间
+        $begin_dt = ExamPaperFormal::where('id',$examPaperFormalId)->first()->begin_dt;
+        $end_dt = time();
+        $actualLength = strtotime($begin_dt) - $end_dt ;
         $data =array(
-            'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-            'actualLength' =>$actualLength, //考试用时
-            'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
-            'studentId' =>$request->input('studentId'),//学生Id
+            'examPaperFormalId' =>$examPaperFormalId,
+            'actualLength' =>$actualLength,
+            'end_dt' =>date('Y-m-d H:i:s',$end_dt),
+            'examQuestionFormalInfo'=>$examQuestionFormalInfo,//正式试题信息
+            'studentId' =>$studentId,
         );
 
  /*       //提交过来的数据格式
@@ -230,22 +231,20 @@ class AnswerController extends CommonController
         }
 
         $resultData = array(
-            'examId' =>$request->input('examId'), //考试id
-            'studentId' =>$request->input('studentId'),//学生Id
-            'stationId' => $request->input('stationId'),//考站id
-            'teacherId'=>$request->input('teacherId'),//评分人编号
-            'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-            'time'=>$actualLength,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
-            'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
-            'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
+            'examId' =>$examId,
+            'studentId' =>$studentId,
+            'stationId' => $stationId,
+            'teacherId'=>$teacherId,
+            'examPaperFormalId' =>$examPaperFormalId,
+            'time'=>$actualLength,
+            'begin_dt'=>$begin_dt,//考试开始时间
+            'end_dt'=>date('Y-m-d H:i:s',$end_dt),//考试结束时间
         );
-        //保存考生答案和记录该考生成绩
 
+        //保存考生答案和记录该考生成绩
         $answerModel = new Answer();
         try{
             $answerModel->saveAnswer($data,$resultData);
-
-            \Session::pull('systemTimeStart');//删除session
 
             //向pad端推送消息
             $redis = Redis::connection('message');
