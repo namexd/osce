@@ -45,6 +45,7 @@ use DB;
 use Modules\Osce\Repositories\Common;
 use Illuminate\Support\Facades\Redis;
 
+
 class DrawlotsController extends CommonController
 {
     /**
@@ -601,6 +602,7 @@ class DrawlotsController extends CommonController
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
 
+
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             Common::valueIsNull($exam, -333);
@@ -655,6 +657,9 @@ class DrawlotsController extends CommonController
 //            $station = $examinee->getStation();
 
             $station->station_type = $station->type;
+            if($teacher = Teacher::find('$id')){
+                $station->teacher_type = $teacher->type;
+            }
 
             //$redis = Redis::connection('message');
             //$redis->publish('watch_message', json_encode($this->success_data($station)));
@@ -735,6 +740,7 @@ class DrawlotsController extends CommonController
             $examScreeingId = $this->getexamScreeing($exam);
             //判断如果是以考场分组
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
+                //TODO 这里如果两个阶段有相同考场可能会拿到第二阶段的考场信息；待测试修改。  周强  2016-4-30
                 //获取当前小组信息
                 list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
                 //从队列表中通过考场ID得到对应的考生信息
@@ -748,6 +754,7 @@ class DrawlotsController extends CommonController
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id', $student->id)
                     ->where('room_id', $roomId)
+                    ->where('exam_screening_id', $examScreeingId)
                     ->where('exam_id', $examId)
                     ->where('status', 0)
                     ->orderBy('begin_dt', 'asc')
@@ -820,7 +827,6 @@ class DrawlotsController extends CommonController
         try {
             //获取当前老师的考场对象
             $room = $this->getRoomId($id, $exam->id);
-
             //获得考场的id
             $room_id = $room->room_id;
             //获得当前考场考站的实例列表
@@ -833,8 +839,8 @@ class DrawlotsController extends CommonController
 //                $roomStations[$thisStationRoomdId][] = $station;
 //            }
             $stationIds = $this->getStationAndRoom($id, $exam->id)->pluck('station_id');
-            $stations = Station::whereIn('id', $stationIds)->get();
 
+            $stations = Station::whereIn('id', $stationIds)->get();
 
             return array($room_id, $stations);
         } catch (\Exception $ex) {
@@ -894,7 +900,7 @@ class DrawlotsController extends CommonController
                 ->orderBy('begin_dt', 'asc')
                 ->get()->pluck('room_id');
 
-            //判断当前考站在计划表中的顺序
+            //判断当前考场在计划表中的顺序
             $stationIdKey = $examPlanStationIds->search($roomId);
             if ($stationIdKey === false) {
                 throw new \Exception('该名考生不在计划中！', 3800);
@@ -1027,6 +1033,7 @@ class DrawlotsController extends CommonController
 //            ->where('station_teacher.exam_id', $examId)
             ->get();
         */
+
         $exam = Exam::doingExam();
         $exam_screening_id = $this->getexamScreeing($exam);
         //拿到当前场次下的考站集合
@@ -1036,12 +1043,10 @@ class DrawlotsController extends CommonController
         $stationList = StationTeacher::where('exam_id', '=', $exam->id)
             ->where('user_id', '=', $teacher_id)
             ->get()->pluck('station_id')->toArray();
-
         //拿到老师在该场次里支持的考站
-        $arr = array_intersect($stationLists, $stationList);
+        $arr = array_intersect($stationList, $stationLists);
 
         $stationId = array_pop($arr);
-
         if (is_null($stationId)) {
             throw new \Exception('没有对应的考站！');
         }
@@ -1082,9 +1087,14 @@ class DrawlotsController extends CommonController
      */
     private function getexamScreeing($exam)
     {
+
+
         $examScreen = new ExamScreening();
         $roomMsg = $examScreen->getExamingScreening($exam->id);
         $roomMsg_two = $examScreen->getNearestScreening($exam->id);
+
+        // TODO 这里应该判断该场次是否被安排开始。待测试修改    周强  2016-4-30
+
         if ($roomMsg) {
             $exam_screening_id = $roomMsg->id;
             return $exam_screening_id;
@@ -1094,8 +1104,17 @@ class DrawlotsController extends CommonController
         } else {
             throw new \Exception('没有找到对应的场次');
         }
+
     }
 
+
+    /**
+     * @param $teacher_id
+     * @param $examId
+     * @return mixed
+     * @author zhouqaing
+     * @time
+     */
     private function getTeacherStation($exam_screening_id,$exam,$userId)
     {
 

@@ -83,7 +83,10 @@ class ExamQueue extends CommonModel
     //获取候考教室
     protected function getWaitRoom($exam_id)
     {
-        //获取到该考试场次下所有的房间
+        //获取到该考试阶段下场次下所有的房间
+
+
+
         $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft_flow.exam_id', '=',$exam_id)
             ->groupBy('exam_draft.room_id')
@@ -773,22 +776,14 @@ class ExamQueue extends CommonModel
 
             //拿到$examScreeningId和$studentId
             $examScreeningId = $examScreening->exam_screening_id;
-            //得到queue实例
-            if (is_null($stationId)) {
-                $queue = ExamQueue::where('student_id', $studentId)
-                    ->where('exam_screening_id', $examScreeningId)
-                    ->where('status', 2)
-                    ->first();
-            } else {
-                $queue = ExamQueue::where('student_id', $studentId)
-                    ->where('station_id', $stationId)
-                    ->where('exam_screening_id', $examScreeningId)
-                    ->first();
-            }
-            if (is_null($queue)) {
+            //获取考生正在进行考试的队列信息
+            $queue = ExamQueue::where('student_id', $studentId)
+                ->where('exam_screening_id', $examScreeningId)
+                ->where('status', 2)
+                ->first();
+            if (empty($queue)) {
                 throw new \Exception('没有找到符合要求的学生', 2200);
             }
-
             return $queue;
         } catch (\Exception $ex) {
             throw $ex;
@@ -861,6 +856,9 @@ class ExamQueue extends CommonModel
      */
     public function getWaitStudentRoom($room_id = '', $exam_id = '')
     {
+
+       $screen_id =  $this->getExamScreeningId($exam_id);
+
         $builder = $this->leftJoin('exam_draft_flow',
             function ($join) {
                 $join->on('exam_draft_flow.exam_id', '=', 'exam_queue.exam_id');
@@ -874,6 +872,7 @@ class ExamQueue extends CommonModel
             ->where('exam_queue.room_id', '=', $room_id)
             ->where('exam_draft.room_id', '=', $room_id)
             ->where('exam_queue.exam_id', '=', $exam_id)
+            ->where('exam_queue.exam_screening_id', '=', $screen_id)
             ->where('exam_draft_flow.exam_id', '=', $exam_id)
             ->where('exam_queue.status', '=', 0)
             ->orderBy('exam_queue.begin_dt', 'asc')
@@ -918,70 +917,15 @@ class ExamQueue extends CommonModel
 
             //找到对应的方法找到queue实例
             $queue = ExamQueue::findQueueIdByStudentId($studentId, $stationId);
-
-            /*   //拿到阶段序号
-               $gradationOrder = ExamScreening::find($queue->exam_screening_id);
-
-
-               //拿到阶段id
-               $examGradationId = ExamGradation::where('exam_id',$queue->exam_id)->where('order',$gradationOrder)->first();
-
-               if(!empty($examGradationId)){
-                   $examDraftFlowData = ExamDraftFlow::where('exam_id',$queue->exam_id)->where('exam_gradation_id',$examGradationId->id)->where('optional',0)->first();
-                   //如果有选考，更新所有状态
-                   if(!empty($examDraftFlowData)){
-                       //拿到属于该场考试该阶段的所有场次id
-                       $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
-                       $data = array(
-                           'status' =>3,
-                           'end_dt' =>$date,
-                           'blocking' =>1,
-                       );
-                       //更新属于该阶段的所有考生状态
-                       $result = ExamQueue::where('student_id', $studentId)
-                           ->whereIn('exam_screening_id', $examscreeningId)
-                           ->update($data);
-                       if (!$result) {
-                           throw new \Exception('状态修改失败！请重试', 2000);
-                       }
-                   }
-               }*/
-
-            /*
-             * 判断status状态
-             * 如果是2的话，就说明是第一次访问，修改状态
-             * 如果是3，就是明是重复访问，返回已经修改过的值
-             */
-            if ($queue->status == 2) {
-                //修改状态
-                $queue->status = 3;
-                $queue->end_dt = $date;
-                $result = $queue->save();
-                if (!$result) {
-                    throw new \Exception('状态修改失败！请重试', 2000);
-                } else {
-                    /*
-                     * 将考试结束的时间写进锚点表里
-                     */
-//                    CommonController::storeAnchor($queue->station_id, $queue->student_id, $queue->exam_id,
-//                        $teacherId, [strtotime($date)]);
-
-                    //将该学生的阻塞状态变成1
-                    /*if (!ExamQueue::where('exam_id', $queue->exam_id)
-                        ->where('student_id', $studentId)
-                        ->update(['blocking' => 1])
-                    ) {
-                        throw new \Exception('阻塞状态修改失败！请重试', -2);
-                    }*/
-                }
-                $connection->commit();
-                return $queue;
-            } elseif ($queue->status == 3) { //通过传入的station_id进行多次点击结束考试的适配
-                return $queue;
-            } else {
-                throw new \Exception('系统错误，请重试', -888);
+            $data = array(
+                'end_dt' =>$date,
+                'status'=>3
+            );
+            if(!ExamQueue::where('id',$queue->id)->update($data)){
+                throw new \Exception('状态修改失败！请重试', -101);
             }
-
+            $connection->commit();
+            return $queue;
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
@@ -1093,5 +1037,39 @@ class ExamQueue extends CommonModel
     {
         $builder = $this->where('exam_id', '=', $examing)->where('student_id', '=', $studentId)->first();
         return $builder;
+    }
+
+
+    //获取场次id
+    private function getExamScreeningId($exam_id)
+    {
+
+
+        $screenModel    =   new ExamScreening();
+        $examScreening  =   $screenModel ->getExamingScreening($exam_id);
+
+        if(is_null($examScreening))
+        {
+            $examScreening = $screenModel->getNearestScreening($exam_id);
+        }
+
+        if (!$examScreening) {
+            return \Response::json(array('code' => 2));     //没有对应的开考场次 —— 考试场次没有(1、0)
+        }
+        $screen_id    = $examScreening->id;
+
+
+        //拿到oder表里的考试场次 todo 周强 2016-4-30
+        $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
+        if(!in_array($screen_id,$OderExamScreeningId)){
+            $screen_id = ExamOrder::where('exam_id','=',$exam_id)
+                ->where('status','=',1)
+                ->OrderBy('begin_dt', 'asc')
+                ->first();
+            $screen_id = $screen_id->exam_screening_id;
+        }
+        return $screen_id;
+
+
     }
 }

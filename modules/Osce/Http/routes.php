@@ -208,7 +208,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('exam/exam-waiting-area', ['uses'=>'ExamController@postExamRemind','as'=>'osce.admin.exam.postExamRemind']);//待考区说明
 
 		//考试安排
-		Route::get('exam-arrange/invigilate-arrange', ['uses'=>'ExamArrangeController@getInvigilateArrange','as'=>'osce.admin.exam-arrange.getInvigilateArrange']);	//考官安排
+		Route::get('exam-arrange/invigilate-arrange-index', ['uses'=>'ExamArrangeController@getInvigilateArrangeIndex','as'=>'osce.admin.exam-arrange.getInvigilateArrangeIndex']);	//考官安排
 		Route::post('exam-arrange/invigilate-arrange',['uses'=>'ExamArrangeController@postInvigilateArrange','as'=>'osce.admin.exam-arrange.postInvigilateArrange']);	//考官安排
 		Route::post('exam-arrange/arrange-save',['uses'=>'ExamArrangeController@postArrangeSave','as'=>'osce.admin.exam-arrange.postArrangeSave']);	//考官安排
 		Route::get('exam-arrange/exam-teacher-arrange',['uses'=>'ExamArrangeController@getExamTeacherArrange','as'=>'osce.admin.exam-arrange.getExamTeacherArrange']);	//考官安排

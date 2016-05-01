@@ -391,20 +391,9 @@ class PadController extends  CommonController{
         $studentId = $request->input('student_id');
         $stationId = $request->input('station_id', null);
         $teacherId = $request->input('user_id');
-
         $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-
         //拿到阶段序号
         $gradationOrder =ExamScreening::find($queue->exam_screening_id);
-
-
-
-        //将该条信息的首位置零
-//            $queue->stick = 0;
-//            if (!$queue->save()) {
-//                throw new \Exception('结束考试失败', -10);
-//            }
-
 
         //考试结束后，调用向腕表推送消息的方法
         $examScreeningStudentModel = new ExamScreeningStudent();

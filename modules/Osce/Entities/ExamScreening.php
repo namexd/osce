@@ -194,25 +194,30 @@ class ExamScreening extends CommonModel
         if (is_null($exam)) {
             throw new \Exception('没有找到考试');
         }
+
         //获取到当考试场次id
         $ExamScreening = $this->getExamingScreening($exam->id);
         if (is_null($ExamScreening)) {
             $ExamScreening = $this->getNearestScreening($exam->id);
+
         }
+
         //根据考试场次id查询计划表所有考试学生
         $examPianModel = new ExamPlan();
-        $exampianStudent = $examPianModel->getexampianStudent($ExamScreening->id);
+        $exampianStudent = $examPianModel->getexampianStudent($ExamScreening->id,$exam->id);
         //获取考试场次迟到的人数
         $examAbsentStudent = ExamAbsent::where('exam_screening_id', '=', $ExamScreening->id)
-            ->groupBy('student_id') 
-            ->get()
-            ->count();
-        //获取考试场次已考试完成的人数
-        $examFinishStudent = ExamScreeningStudent::where('is_end', '=', 1)
-            ->where('exam_screening_id', '=', $ExamScreening->id)
-            ->get()
+            ->where('exam_id','=',$exam->id)
+            ->lists('student_id')
+            ->unique()
             ->count();
 
+        //获取考试场次已考试完成的人数
+        $examFinishStudent = ExamScreeningStudent::whereIn('is_end', [1,2])
+            ->where('exam_screening_id', '=', $ExamScreening->id)
+            ->lists('student_id')
+            ->unique()
+            ->count();
         if ($examAbsentStudent + $examFinishStudent >= $exampianStudent) {
             $ExamScreening->status = 2;
             if (!$ExamScreening->save()) {
@@ -225,30 +230,6 @@ class ExamScreening extends CommonModel
                 }
             }
         }
-
-
-//        $this->validate($request, [
-//            'student_id' => 'required|integer',
-//            'station_id' => 'required|integer',
-//
-//        ], [
-//            'student_id.required' => '考生编号信息必须',
-//            'station_id.required' => '考站编号信息必须'
-//        ]);
-//        $studentId = Input::get('student_id');
-//        $stationId = Input::get('station_id');
-//        $nowTime = time();
-//        $ExamQueueModel = new ExamQueue();
-//        $EndResult = $ExamQueueModel->EndExamAlterStatus($studentId, $stationId, $nowTime);
-//        if ($EndResult) {
-//            return response()->json(
-//                $this->success_data($nowTime, 1, '结束考试成功')
-//            );
-//        }
-//        return response()->json(
-//            $this->fail(new \Exception('请再次核对考生信息后再试!!!'))
-//        );
-//
     }
 
     //查找学生考试队列exam_queue

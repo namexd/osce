@@ -54,37 +54,11 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
-        $info = array('coffee', 'brown', 'caffeine');
+       
+        $examScreeningModel = new ExamScreening();
+        $result = $examScreeningModel->getExamCheck();
+        dd($result);
 
-// 列出所有变量
-        list($drink, $color, $power) = $info;
-        echo "$drink is $color and $power makes it special.\n";
-
-// 列出他们的其中一个
-        list($drink, , $power) = $info;
-        echo "$drink has $power.\n";
-
-// 或者让我们跳到仅第三个
-        list( , , $power) = $info;
-        echo "I need $power!\n";
-
-// list() 不能对字符串起作用
-        list($bar) = "abcde";
-        var_dump($bar); // NULL
-//        $examScreeningModel = new ExamScreening();
-//        $result = $examScreeningModel->getExamCheck();
-//        $numbers = array('1','2','3','4','5');
-////        srand((float)microtime()*1000000);
-//        shuffle($numbers);
-//
-//        while (list(,$number) = each($numbers)) {
-//            echo $number."<br/>";
-//        }
-//
-        for ($i = 2; $i <= 5; $i++)
-        {
-            print "value is now " . $i . "<br>";
-        }
     }
 
 
@@ -767,7 +741,7 @@ class InvigilatePadController extends CommonController
      */
     public function getStartExam(Request $request)
     {
-       // try {
+        try {
             $this->validate($request, [
                 'student_id' => 'required|integer',
                 'station_id' => 'required|integer'
@@ -872,10 +846,10 @@ class InvigilatePadController extends CommonController
             return response()->json(
                 $this->fail(new \Exception('开始考试失败,请再次核对考生信息后再试!!!'))
             );
-//        } catch (\Exception $ex) {
-//            \Log::alert($ex->getMessage() . '');
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            \Log::alert($ex->getMessage() . '');
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -1049,6 +1023,7 @@ class InvigilatePadController extends CommonController
             $type = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
             $nfc_code = $request->get('nfc_code');
             $examing = Exam::where('status','=',1)->first();
+           
             //查询使用中的腕表数据
             $watchModel = new Watch();
             $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
@@ -1074,7 +1049,7 @@ class InvigilatePadController extends CommonController
 //                    }
 
                 }
-                //dd($watchData);
+            
                 return response()->json(
                     $this->success_data($watchData,200,'success')
                 );

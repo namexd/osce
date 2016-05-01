@@ -1,3 +1,4 @@
+
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
@@ -34,31 +35,19 @@
     <!--[if IE]>
     <script src="{{asset('osce/admin/js/html5shiv.min.js')}}"></script>
     <![endif]-->
-    <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/jquery.classyled.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/raphael.js') }}"></script>
+    {{--<script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/jquery.classyled.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/raphael.js') }}"></script>--}}
     <script src="{{ asset('osce/admin/plugins/js/plugins/staps/jquery.stepschange.js') }}"></script>
     <script src="{{ asset('osce/admin/plugins/js/plugins/fancybox/jquery.fancybox.js') }}"></script>
     <script>
         $(document).ready(function() {
             $(".wizard").steps();
-            //            图片点击显示大图
+            //图片点击显示大图
             $('.fancybox').fancybox({
                 openEffect: 'none',
                 closeEffect: 'none'
             });
-            //阻止F5刷新
-//            document.onkeydown = function (e) {
-//                var ev = window.event || e;
-//                var code = ev.keyCode || ev.which;
-//                if (code == 116) {
-//                    ev.keyCode ? ev.keyCode = 0 : ev.which = 0;
-//                    cancelBubble = true;
-//                    return false;
-//                }
-//            };
-//            window.onbeforeunload=function(){
-//                window.event.returnValue='刷新页面或者跳转页面会丢失当前数据！'
-//            };
+
             $(".check_label").change(function(){
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
@@ -85,14 +74,7 @@
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
                 var answer = $(this).children("input").val();
                 Set_answer(examCategoryFormalId,exam_question_id,answer);//保存成绩
-//                if($(this).children("input").checked=="true"){
-//                    $(this).children(".radio_icon").removeClass("check");
-//                }else{
-//                    $(this).parent().siblings(".answerBox").find(".radio_icon").removeClass("check");
-//                    $(this).children(".radio_icon").addClass("check");
-//                }
                 if($(this).children(".radio_icon").hasClass("check")){
-//                    $(this).children(".radio_icon").removeClass("check");
                 }else{
                     $(this).parent().siblings(".answerBox").find(".radio_icon").removeClass("check");
                     $(this).children(".radio_icon").addClass("check");
@@ -128,7 +110,7 @@
                 var examId = $(".allData").attr("examId");
                 $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                         {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
-                    if(obj.code=='1'){
+                    if(obj.code==1){
                         $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId},function(res){
                             if(res.code==1){
                                 location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
@@ -144,7 +126,7 @@
             })
 
         });
-        countDown("{{$systemTimeEnd}}","#colockbox1");
+        countDown("{{$systemTimeEnd}}","#colockbox1","{{$systemTimeStart}}");
         //被终止考试状态改变请求
         var statusTimer = setInterval(function(){
             var examPaperFormalId=$('#examPaperFormalId').val();
@@ -164,27 +146,39 @@
                         clearInterval(statusTimer);
                         $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                                 {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
-                                    if(obj.code=='1'){
-                                        $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId},function(res){
-                                            if(res.code==1){
-                                                location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
-                                            }else{
-                                                layer.confirm(obj.message);
-                                            }
-                                        })
+                                    $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId},function(res){
+                                        if(res.code==1){
+                                            location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                                        }else{
+                                            layer.confirm(obj.message);
+                                        }
+                                    })
 
-                                    }else{
-                                        layer.confirm(obj.message);
-                                    }
+
+
+
                                 });
                     }
                 }
             })
         },3000);
-        function countDown(time,id){
+
+        function countDown(time,id,beginTime){
+
             var day_elem = $(id).find('.day');
-            var end_time = new Date(time).getTime(),//月份是实际月份-1
-                    sys_second = (end_time-new Date().getTime())/1000;
+            var begin_time = new Date(beginTime).getTime();
+            var end_time = new Date(time).getTime();//月份是实际月份-1
+            var current_time = new Date();
+            current_time = current_time.getTime();
+            var diff_time = current_time - begin_time;
+            var sys_second = (end_time-current_time)/1000;
+            sys_second += diff_time/1000;
+            /*if(diff_time > 0){
+                sys_second += diff_time;
+            }else{
+                sys_second -= diff_time;
+            }*/
+            //console.log(end_time);
             var timer = setInterval(function(){
                 if (sys_second > 1) {
                     sys_second -= 1;
@@ -203,21 +197,13 @@
                     var userId = $(".allData").attr("userId");
                     var studentId = $(".allData").attr("studentId");
                     var examId = $(".allData").attr("examId");
-
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                             {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
-                                alert(obj.code);
-                        // if(obj.code == 1){
-                        //     $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId},function(res){
-                        //         if(res.code == 1){
-                        //             location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
-                        //         }else{
-                        //             layer.confirm(obj.message);
-                        //         }
-                        //     })
-                        // }else{
-                        //     layer.confirm(obj.message);
-                        // }
+                                if(obj.code=='1'){
+                                    location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                                }else{
+                                    layer.confirm(obj.message);
+                                }
                     })
                 }
             }, 1000);

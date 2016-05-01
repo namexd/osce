@@ -293,6 +293,10 @@ class StudentWatchController extends CommonController
         $examResultScreening = ExamResult::where('student_id', '=', $examQueue->student_id)
             ->select('exam_screening_id')->get()->toArray();
 
+
+            //  todo 这里判断有待完善，zhouqiang 2016-4-30；
+
+
         if (count($ExamFinishStatus) >= count($studentExamScreeningIdArr)) {
 
             //判断已考完的场次是否和队列里考完的场次相等
