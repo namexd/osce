@@ -1,3 +1,4 @@
+
 @extends('osce::admin.layouts.admin_index')
 
 @section('only_css')
@@ -34,8 +35,8 @@
     <!--[if IE]>
     <script src="{{asset('osce/admin/js/html5shiv.min.js')}}"></script>
     <![endif]-->
-    <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/jquery.classyled.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/raphael.js') }}"></script>
+    {{--<script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/jquery.classyled.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('osce/admin/js/countdown/js/raphael.js') }}"></script>--}}
     <script src="{{ asset('osce/admin/plugins/js/plugins/staps/jquery.stepschange.js') }}"></script>
     <script src="{{ asset('osce/admin/plugins/js/plugins/fancybox/jquery.fancybox.js') }}"></script>
     <script>
@@ -163,17 +164,20 @@
         },3000);
 
         function countDown(time,id,beginTime){
+
             var day_elem = $(id).find('.day');
             var begin_time = new Date(beginTime).getTime();
             var end_time = new Date(time).getTime();//月份是实际月份-1
-            var current_time = new Date().getTime();
+            var current_time = new Date();
+            current_time = current_time.getTime();
             var diff_time = current_time - begin_time;
-            var sys_second = (end_time-new Date().getTime())/1000;
-            if(diff_time > 0){
-                sys_second -= diff_time;
-            }else{
+            var sys_second = (end_time-current_time)/1000;
+            sys_second += diff_time/1000;
+            /*if(diff_time > 0){
                 sys_second += diff_time;
-            }
+            }else{
+                sys_second -= diff_time;
+            }*/
             //console.log(end_time);
             var timer = setInterval(function(){
                 if (sys_second > 1) {
