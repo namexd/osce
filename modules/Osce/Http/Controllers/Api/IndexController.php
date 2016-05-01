@@ -225,8 +225,11 @@ class IndexController extends CommonController
         }
         $student_id = $studentExam->id;     //获取学生id
 
+        \DB::connection('osce_mis')->enableQueryLog();
         //查询该学生是否在 当前考试的排考计划中
         $planId     = ExamPlan::where('student_id','=',$student_id)->where('exam_screening_id',$exam_screening_id)->where('exam_id','=',$exam_id)->select('id')->first();
+        $queries = \DB::connection('osce_mis')->getQueryLog();
+        dd($queries);
         if(is_null($planId)){
             return \Response::json(array('code' =>4));  //未安排当前考试
         }
