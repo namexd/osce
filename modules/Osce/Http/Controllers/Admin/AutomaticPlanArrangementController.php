@@ -22,23 +22,38 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Auth;
 use Modules\Osce\Repositories\Common;
+use Response;
 
 class AutomaticPlanArrangementController extends CommonController
 {
+    /*
+     * 保存请求对象的实例
+     */
     private $request;
 
+    /**
+     * AutomaticPlanArrangementController constructor.
+     * @param Request $request
+     */
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
     /**
-     * TODO 此方法暂时未使用
-     * 智能排考的着陆页
+     * TODO 此方法暂时没启用
+     * @url
+     * @access public
+     *
      * @param Request $request
-     * @author Jiangzhiheng
-     * @time 2016-02-22 18：01
-     * @return \Illuminate\Http\JsonResponse
+     *  请求字段：
+     *
+     * @return mixed
+     *
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
     function getIndex(Request $request)
     {
@@ -65,19 +80,26 @@ class AutomaticPlanArrangementController extends CommonController
     }
 
     /**
-     * 开始排考
-     * @author Jiangzhiheng
-     * @time 2016-02-19 09:34
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * 考试排考
+     * @url osce/admin/arrangement/begin
+     * @access public
+     * @param SmartArrangeRepository $smartArrangeRepository
+     * 请求字段：
+     * 考试id exam_id
+     * @return response
+     * @throws \Exception
+     * @version 3.6
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-01
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    function postBegin(Request $request, SmartArrangeRepository $smartArrangeRepository)
+    function postBegin(SmartArrangeRepository $smartArrangeRepository)
     {
-        $this->validate($request, [
+        $this->validate($this->request, [
             'exam_id' => 'required|integer'
         ]);
 
-        $examId = $request->input('exam_id');
+        $examId = $this->request->input('exam_id');
         
         try {
             set_time_limit(0);
@@ -91,19 +113,28 @@ class AutomaticPlanArrangementController extends CommonController
     }
 
     /**
-     * 智能排考的保存
-     * @param Request $request request的实例
-     * @param ExamPlan $examPlan examPlan的实例
-     * @return $this
-     * @author Jiangzhiheng
+     * 保存排考
+     * @url osce/admin/arrangement/store
+     * @access public
+     * @param Request $request
+     * @param SmartArrangeRepository $smartArrangeRepository
+     * 请求字段：
+     * 考试id exam_id
+     * @return response
+     * @throws \Exception
+     * @version 3.6
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-02-23 17:30
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    function postStore(Request $request, SmartArrangeRepository $smartArrangeRepository)
+    function postStore(SmartArrangeRepository $smartArrangeRepository)
     {
-        $this->validate($request, [
+        $this->validate($this->request, [
             'exam_id' => 'required|integer'
         ]);
-        $examId = $request->input('exam_id');
+
+        $examId = $this->request->input('exam_id');
+
         $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
 
         ExamPlan::where('exam_id', $examId)->delete();
@@ -117,12 +148,27 @@ class AutomaticPlanArrangementController extends CommonController
     }
 
     /**
-     * 导出excel
-     * @author Jiangzhiheng
-     * @time 2016-05-01 09-47
+     *
+     * @url osce/admin/arrangement/export
+     * @access public
+     * @param SmartArrangeRepository $smartArrangeRepository
+     * @param UserListExport $export
+     * @param StudentArrange $arrange
+     * 请求字段：
+     * 考试id exam_id
+     * @return bool
+     * @throws \Exception
+     * @version 3.6
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-01 16：48
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExport(SmartArrangeRepository $smartArrangeRepository, UserListExport $export, StudentArrange $arrange)
     {
+        $this->validate($this->request, [
+            'exam_id' => 'required|integer'
+        ]);
+
         try {
             $id = $this->request->input('exam_id', null);
             Common::valueIsNull($id, 501, '没有考试');
