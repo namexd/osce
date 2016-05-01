@@ -160,8 +160,11 @@ class ExamScreening extends CommonModel
 
     public function getNearestScreening($exam_id)
     {
+        $exam=Exam::doingExam();
+        $screenId=ExamPlan::where('exam_id',$exam->id)->get()->pluck('exam_screening_id')->toArray();
         return $this->where('exam_id', '=', $exam_id)
             ->where('status', '=', 0)
+            ->whereIn('id',$screenId)
             ->OrderBy('begin_dt', 'asc')
             ->first();
     }
@@ -173,6 +176,8 @@ class ExamScreening extends CommonModel
             ->OrderBy('begin_dt', 'asc')
             ->first();
     }
+
+
 
     /**
      *  结束考试
