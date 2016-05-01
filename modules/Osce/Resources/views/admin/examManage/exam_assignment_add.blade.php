@@ -65,7 +65,7 @@ input.laydate-icon{
                                            <div class="col-sm-12" id="checkbox_div">
                                                 <label class="check_label checkbox_input col-sm-2 control-label checkbox_two" style="height: 34px;line-height: 28px;width:20.2%">
                                                     <div class="check_icon check_margin" checkbox=0></div>
-                                                    <input type="checkbox" name="gradation_order" value="0">
+                                                    <input type="checkbox" name="order" value="0">
                                                     <span class="check_name" style="display: inline-block;float:right;line-height: 29px;">考生分阶段考试</span>
                                                 </label>
                                                 <div class="col-sm-9 check_div">
