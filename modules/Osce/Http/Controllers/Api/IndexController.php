@@ -212,10 +212,8 @@ class IndexController extends CommonController
         }
 
         //查询 正在考试的考试 是否是当前考试
-        dump(1);
+
         $examStatus = Exam::where('status','=',1)->first();
-        dump(2);
-        dd($examStatus);
         if($examStatus){
             if($examStatus->id != $exam_id){
                 return \Response::json(array('code'=>6));   //正在考试 的考试 不是当前考试（当前考试未开考，另外有其他的考试正在考）
