@@ -521,6 +521,7 @@ class DrawlotsController extends CommonController
             if ($exam->sequence_mode == 1) {
                 //从队列表中通过考场ID得到对应的当前组的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations, $exam_screening_id);
+                \Log::alert('EndError', [$examQueue, $watchLog->student_id, $room_id,$exam_screening_id,$stations]);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
                     $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
                     throw new \Exception('该考生不在当前考生小组中', 7200);
@@ -1063,6 +1064,7 @@ class DrawlotsController extends CommonController
             ->first();
         $room = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft.room_id', '=', $stationPlan->room_id)
+            ->whereIn('exam_draft.station_id',$stationLists)
             ->where('exam_draft_flow.exam_id', '=', $examId)
             ->get();
 
