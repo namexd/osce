@@ -244,7 +244,6 @@ class ExamQueue extends CommonModel
                     )
                     ->orderBy('exam_queue.next_num', 'asc')
                     ->orderBy('exam_queue.begin_dt', 'asc')
-                    ->orderBy('exam_queue.updated_at', 'asc')
                     ->groupBy('student.id')
                     ->take(count($stations))
                     ->get();
@@ -270,7 +269,6 @@ class ExamQueue extends CommonModel
                     )
                     ->orderBy('exam_queue.next_num', 'asc')
                     ->orderBy('exam_queue.begin_dt', 'asc')
-                    ->orderBy('exam_queue.updated_at', 'asc')
                     ->groupBy('student.id')
                     ->take(count($stations))
                     ->get();
@@ -316,7 +314,6 @@ class ExamQueue extends CommonModel
                 )
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->orderBy('exam_queue.updated_at', 'asc')
                 ->take(1)
                 ->get();
         } else {
@@ -340,7 +337,6 @@ class ExamQueue extends CommonModel
                 )
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->orderBy('exam_queue.updated_at', 'asc')
                 ->take(1)
                 ->get();
         }
@@ -373,7 +369,6 @@ class ExamQueue extends CommonModel
                 ->take(count($station))
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->orderBy('exam_queue.updated_at', 'asc')
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -403,7 +398,6 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->orderBy('exam_queue.updated_at', 'asc')
                 ->skip(1)//TODO 可能要改
                 ->take(1)
                 ->select(
