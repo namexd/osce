@@ -199,20 +199,16 @@ class ExamScreening extends CommonModel
         if (is_null($exam)) {
             throw new \Exception('没有找到考试');
         }
-        //拿到考试里完成的考站
-        $examScreeningId = ExamScreening::where('exam_id','=',$exam->id)
-            ->where('status','=',2)
-            ->lists('id')
-            ->unique()
-            ->count();
-
-        //拿到计划表里所有场次id
-        $planExamScreeningId = ExamPlan::where('exam_id','=',$exam->id)
-            ->lists('exam_screening_id')
-            ->unique()
-            ->count();
-
-
+        //判断结束空场次
+        $senseExamScreening = ExamScreening::where('exam_id','=',$exam->id)->get();
+        foreach ($senseExamScreening as $value){
+            if(!ExamPlan::where('exam_screening_id','=',$value->id)->first()){
+                $value->status =2;
+                if(!$value ->save()){
+                    throw new \Exception('空场次结束失败', -5);
+                }
+            }
+        }
         //获取到当考试场次id
         $ExamScreening = $this->getExamingScreening($exam->id);
         if (is_null($ExamScreening)) {
@@ -239,24 +235,18 @@ class ExamScreening extends CommonModel
             ->lists('student_id')
             ->unique()
             ->count();
-
         if ($examAbsentStudent + $examFinishStudent >= $exampianStudent) {
             $ExamScreening->status = 2;
             if (!$ExamScreening->save()) {
                 throw new \Exception('场次结束失败', -5);
             }
-            if($examScreeningId ==$planExamScreeningId ){
+
+            if ($exam->examScreening()->where('status', '=', 0)->count() == 0) {
                 $exam->status = 2;
                 if (!$exam->save()) {
                     throw new \Exception('考试结束失败', -6);
                 }
             }
-//            if ($exam->examScreening()->where('status', '=', 0)->count() == 0) {
-//                $exam->status = 2;
-//                if (!$exam->save()) {
-//                    throw new \Exception('考试结束失败', -6);
-//                }
-//            }
         }
     }
 
