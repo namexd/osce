@@ -482,9 +482,10 @@ class DrawlotsController extends CommonController
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
                 throw new \Exception('没有找到对应的腕表信息！', 3100);
             }
-
+            $exam=Exam::doingExam();
+            $screeingId=$this->getexamScreeing($exam);
             //获取腕表记录实例
-            $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('is_end', 0)->orderBy('created_at',
+            $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$screeingId)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
             if (!$watchLog) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
@@ -521,6 +522,7 @@ class DrawlotsController extends CommonController
             if ($exam->sequence_mode == 1) {
                 //从队列表中通过考场ID得到对应的当前组的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations, $exam_screening_id);
+                
                 \Log::alert('EndError', [$examQueue, $watchLog->student_id, $room_id,$exam_screening_id,$stations]);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
                     $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
@@ -540,6 +542,7 @@ class DrawlotsController extends CommonController
             //如果考生走错了房间
             if (ExamQueue::where('room_id', '=', $roomId)
                 ->where('student_id', '=', $watchLog->student_id)
+                ->where('exam_screening_id',$screeingId)
                 ->where('exam_id', '=', $examId)->get()
                 ->isEmpty()
             ) {
