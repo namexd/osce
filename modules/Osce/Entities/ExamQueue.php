@@ -769,7 +769,9 @@ class ExamQueue extends CommonModel
             }
 
             //拿到$examScreeningId和$studentId
+
             $examScreeningId = $examScreening->exam_screening_id;
+
             //获取考生正在进行考试的队列信息
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)

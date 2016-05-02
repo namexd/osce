@@ -480,7 +480,6 @@ class Student extends CommonModel
         }elseif($roomMsg_two){
             $exam_screening_id=$roomMsg_two->id;
         }
-
         $queueing = $nextTester = Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
         })->leftjoin('station_teacher', function ($join) {

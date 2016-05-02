@@ -199,6 +199,19 @@ class ExamScreening extends CommonModel
         if (is_null($exam)) {
             throw new \Exception('没有找到考试');
         }
+        //拿到考试里完成的考站
+        $examScreeningId = ExamScreening::where('exam_id','=',$exam->id)
+            ->where('status','=',2)
+            ->lists('id')
+            ->unique()
+            ->count();
+
+        //拿到计划表里所有场次id
+        $planExamScreeningId = ExamPlan::where('exam_id','=',$exam->id)
+            ->lists('exam_screening_id')
+            ->unique()
+            ->count();
+
 
         //获取到当考试场次id
         $ExamScreening = $this->getExamingScreening($exam->id);
@@ -206,10 +219,13 @@ class ExamScreening extends CommonModel
             $ExamScreening = $this->getNearestScreening($exam->id);
 
         }
-
+        if(is_null($ExamScreening)){
+            throw new \Exception('所有考试场次已结束，请进行下一场考试',-7);
+        }
         //根据考试场次id查询计划表所有考试学生
         $examPianModel = new ExamPlan();
         $exampianStudent = $examPianModel->getexampianStudent($ExamScreening->id,$exam->id);
+
         //获取考试场次迟到的人数
         $examAbsentStudent = ExamAbsent::where('exam_screening_id', '=', $ExamScreening->id)
             ->where('exam_id','=',$exam->id)
@@ -223,17 +239,24 @@ class ExamScreening extends CommonModel
             ->lists('student_id')
             ->unique()
             ->count();
+
         if ($examAbsentStudent + $examFinishStudent >= $exampianStudent) {
             $ExamScreening->status = 2;
             if (!$ExamScreening->save()) {
                 throw new \Exception('场次结束失败', -5);
             }
-            if ($exam->examScreening()->where('status', '=', 0)->count() == 0) {
+            if($examScreeningId ==$planExamScreeningId ){
                 $exam->status = 2;
                 if (!$exam->save()) {
                     throw new \Exception('考试结束失败', -6);
                 }
             }
+//            if ($exam->examScreening()->where('status', '=', 0)->count() == 0) {
+//                $exam->status = 2;
+//                if (!$exam->save()) {
+//                    throw new \Exception('考试结束失败', -6);
+//                }
+//            }
         }
     }
 

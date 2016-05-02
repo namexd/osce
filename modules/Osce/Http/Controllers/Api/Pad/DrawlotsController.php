@@ -507,7 +507,7 @@ class DrawlotsController extends CommonController
             $examId = $exam->id;
             list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
 
-            //获取当前老师对应的考站id     todo 2016-5-2 zhouqiang 
+            //获取当前老师对应的考站id     todo 2016-5-2 zhouqiang
             $stationId = $this->getTeacherStation($exam_screening_id,$exam,$teacherId);
             /*
              * 判断当前考生是否是在当前的学生组中
@@ -567,6 +567,7 @@ class DrawlotsController extends CommonController
             //推送当前学生
             $request['station_id'] = $result->id;
             $request['teacher_id'] = $teacherId;
+
             $inv = new InvigilatePadController();
             $studentMsg = $inv->getAuthentication_arr($request);//当前考生推送
             if ($studentMsg) {
@@ -607,13 +608,11 @@ class DrawlotsController extends CommonController
             $exam_screening_id = $this->getexamScreeing($exam);
             //拿到当前老师支持的考站
             $stationId = $this->getTeacherStation($exam_screening_id,$exam,$id);
-
             $station = Station::where('id', $stationId)->first();
             //拿到房间
             $room = $this->getRoomId($id, $exam->id);
 
             //判断其考站或考场是否在该次考试中使用
-
             $check = $this->checkEffected($exam, $room, $station);
 
             Common::valueIsNull($check, -785, '当前考站或考场没有安排在此考试中');
@@ -654,7 +653,7 @@ class DrawlotsController extends CommonController
 //            $station = $examinee->getStation();
 
             $station->station_type = $station->type;
-            if($teacher = Teacher::find('$id')){
+            if($teacher = Teacher::where('id','=',$id)->first()){
                 $station->teacher_type = $teacher->type;
             }
 
@@ -824,6 +823,7 @@ class DrawlotsController extends CommonController
         try {
             //获取当前老师的考场对象
             $room = $this->getRoomId($id, $exam->id);
+
             //获得考场的id
             $room_id = $room->room_id;
             //获得当前考场考站的实例列表
