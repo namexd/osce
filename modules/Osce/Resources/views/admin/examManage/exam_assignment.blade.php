@@ -46,7 +46,7 @@
                 <th>考试组成</th>
                 <th>考试人数</th>
                 <th>排考状态</th>
-                <th style="width:12%;">操作</th>
+                <th style="width:12%;min-width:190px;">操作</th>
             </tr>
             </thead>
             <tbody>
