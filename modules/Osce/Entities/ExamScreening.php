@@ -199,16 +199,7 @@ class ExamScreening extends CommonModel
         if (is_null($exam)) {
             throw new \Exception('没有找到考试');
         }
-        //判断结束空场次
-        $senseExamScreening = ExamScreening::where('exam_id','=',$exam->id)->get();
-        foreach ($senseExamScreening as $value){
-            if(!ExamPlan::where('exam_screening_id','=',$value->id)->first()){
-                $value->status =2;
-                if(!$value ->save()){
-                    throw new \Exception('空场次结束失败', -5);
-                }
-            }
-        }
+
         //获取到当考试场次id
         $ExamScreening = $this->getExamingScreening($exam->id);
         if (is_null($ExamScreening)) {
@@ -240,7 +231,16 @@ class ExamScreening extends CommonModel
             if (!$ExamScreening->save()) {
                 throw new \Exception('场次结束失败', -5);
             }
-
+            //判断结束空场次
+            $senseExamScreening = ExamScreening::where('exam_id','=',$exam->id)->get();
+            foreach ($senseExamScreening as $value){
+                if(!ExamPlan::where('exam_screening_id','=',$value->id)->first()){
+                    $value->status =2;
+                    if(!$value ->save()){
+                        throw new \Exception('空场次结束失败', -7);
+                    }
+                }
+            }
             if ($exam->examScreening()->where('status', '=', 0)->count() == 0) {
                 $exam->status = 2;
                 if (!$exam->save()) {
