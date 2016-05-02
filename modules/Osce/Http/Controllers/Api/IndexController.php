@@ -395,17 +395,16 @@ class IndexController extends CommonController
                 $examScreening  = $examScreeningModel -> getNearestScreening($exam_id);
             }
             $exam_screen_id = $examScreening->id;       //获取场次id
-
-
+            
             //判断该场次是否被排考安排考试 //拿到oder表里的场次 todo 周强 2016-4-30
 
-            $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
-            if(!in_array($exam_screen_id,$OderExamScreeningId)){
-                $screen_id = ExamOrder::where('exam_id','=',$exam_id)
-                    ->where('status','=',1)
-                    ->first();
-                $exam_screen_id = $screen_id->exam_screening_id;
-            }
+//            $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
+//            if(!in_array($exam_screen_id,$OderExamScreeningId)){
+//                $screen_id = ExamOrder::where('exam_id','=',$exam_id)
+//                    ->where('status','=',1)
+//                    ->first();
+//                $exam_screen_id = $screen_id->exam_screening_id;
+//            }
 
 
             //不存在考试场次，直接解绑
