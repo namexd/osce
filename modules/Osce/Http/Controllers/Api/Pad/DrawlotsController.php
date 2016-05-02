@@ -483,9 +483,9 @@ class DrawlotsController extends CommonController
                 throw new \Exception('没有找到对应的腕表信息！', 3100);
             }
             $exam=Exam::doingExam();
-            $screeingId=$this->getexamScreeing($exam);
+            $exam_screening_id=$this->getexamScreeing($exam);
             //获取腕表记录实例
-            $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$screeingId)->where('is_end', 0)->orderBy('created_at',
+            $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$exam_screening_id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
             if (!$watchLog) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
@@ -507,15 +507,8 @@ class DrawlotsController extends CommonController
             $examId = $exam->id;
             list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
 
-            //获取当前老师对应的考站id
-            $station = StationTeacher::where('exam_id', '=', $exam->id)
-                ->where('user_id', '=', $teacherId)
-                ->first();
-            if (is_null($station)) {
-                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data([], 7100, '你没有参加此次考试!')));
-                throw new \Exception('你没有参加此次考试', 7100);
-            }
-            $exam_screening_id = $this->getexamScreeing($exam);
+            //获取当前老师对应的考站id     todo 2016-5-2 zhouqiang 
+            $stationId = $this->getTeacherStation($exam_screening_id,$exam,$teacherId);
             /*
              * 判断当前考生是否是在当前的学生组中
              */
@@ -529,7 +522,7 @@ class DrawlotsController extends CommonController
                     throw new \Exception('该考生不在当前考生小组中', 7200);
                 }
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId, $exam_screening_id);
+                $examQueue = ExamQueue::examineeByStationId($stationId, $examId, $exam_screening_id);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
                     $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data([], 7201, '该考生不在当前考生小组中!')));
                     throw new \Exception('该考生不在当前考生小组中', 7201);
@@ -542,7 +535,7 @@ class DrawlotsController extends CommonController
             //如果考生走错了房间
             if (ExamQueue::where('room_id', '=', $roomId)
                 ->where('student_id', '=', $watchLog->student_id)
-                ->where('exam_screening_id',$screeingId)
+                ->where('exam_screening_id',$exam_screening_id)
                 ->where('exam_id', '=', $examId)->get()
                 ->isEmpty()
             ) {
