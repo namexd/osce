@@ -138,7 +138,7 @@ class ExamMonitorController  extends CommonController
                     $examOrder = ExamOrder::where('exam_id', '=', $examId)->where('exam_screening_id', '=', $screen_id)
                         ->select(['begin_dt', 'student_id'])->orderBy('begin_dt', 'DESC')->first();
                     if($examOrder->student_id == $studentId){
-                      
+                      echo 33333333;
                         //检查考试是否可以结束
                         $examScreening  = new ExamScreening();
                         $examScreening  ->getExamCheck();
