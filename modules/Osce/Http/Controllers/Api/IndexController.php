@@ -318,8 +318,12 @@ class IndexController extends CommonController
             ExamOrder::where('exam_id', $exam_id)->where('student_id', $student_id)->where('exam_screening_id', '=', $exam_screen_id)->update(['status' => 1]);
             Exam::where('id', $exam_id)->update(['status' => 1]);  //更改考试状态（把考试状态改为正在考试）
 
-            return \Response::json(array('code' => 1));
+            // 绑定腕表成功后给腕表推送消息
+            $studentWatchController = new StudentWatchController();
+            $request['nfc_code'] = $code;
+            $studentWatchController->getStudentExamReminder($request);
 
+            return \Response::json(array('code' => 1));
         } else {
             return \Response::json(array('code' => 0));
         }
