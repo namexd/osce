@@ -29,6 +29,17 @@ class LoginPullDownController extends CommonController
         });
     }
 
+    /**
+     * 获取考试下拉菜单
+     * @url osce/api/exam-list
+     * @access public
+     * @param PadLoginRepository $padLogin
+     * @return mixed
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-03
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function getExamList(PadLoginRepository $padLogin)
     {
         try {
@@ -43,6 +54,19 @@ class LoginPullDownController extends CommonController
         }
     }
 
+    /**
+     * 获取room下拉菜单
+     * @url osce/api/room-list
+     * @access public
+     * @param Request $request
+     * @param PadLoginRepository $padLogin
+     * 请求字段：考试id： exam_id
+     * @return mixed
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function getRoomList(Request $request, PadLoginRepository $padLogin)
     {
         $this->validate($request,
@@ -52,9 +76,9 @@ class LoginPullDownController extends CommonController
 
         try {
             $data = $padLogin->roomList($request->input('exam_id'));
-            //将数据处理完毕后给android
-            
 
+            //将数据处理完毕后给android
+            return response()->json($this->success_data($data));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
