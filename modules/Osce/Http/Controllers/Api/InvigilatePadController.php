@@ -1223,6 +1223,8 @@ class InvigilatePadController extends CommonController
             }
 
             $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$examScreening->id);
+            $status = $this->checkType($exameeStatus->status);
+
             //不存在考试场次，直接解绑
             if(!$examScreening){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
@@ -1238,9 +1240,17 @@ class InvigilatePadController extends CommonController
                     //将解绑记录添加到腕表使用历史表中
                     $watchModel = new WatchLog();
                     $watchModel->unwrapRecord($data);
+                    //解绑成功
                     return \Response::json([
                         'code' => 200,
-                    ]);   //解绑成功
+                        'data' => [
+                            'name'  => $studentInfo->name,
+                            'idnum' => $studentInfo->idnum,
+                            'idcard'=> $studentInfo->idcard,
+                            'status'=> $status
+                        ]
+                    ]);
+
                 }else{
                     throw new \Exception('解绑失败');
                 }
@@ -1262,6 +1272,7 @@ class InvigilatePadController extends CommonController
                 ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);
                 //腕表状态 更改为 解绑状态（status=0）
                 $result = Watch::where('id',$id)->update(['status'=>0]);
+
                 if($result){
                     $action='解绑';
                     $updated_at = date('Y-m-d H:i:s',time());
@@ -1281,6 +1292,12 @@ class InvigilatePadController extends CommonController
 
                     return \Response::json([
                         'code' => 200,
+                        'data' => [
+                            'name'  => $studentInfo->name,
+                            'idnum' => $studentInfo->idnum,
+                            'idcard'=> $studentInfo->idcard,
+                            'status'=> $status
+                        ]
 
                     ]);
                 }else{
@@ -1292,9 +1309,11 @@ class InvigilatePadController extends CommonController
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
 
-
                 $action = '解绑';
-                $result = ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>0]);
+                //更改 （状态改为 未绑定：status=0）
+                $result = ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
+                    ->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>0]);
+
                 if($result){
                     //腕表解绑，添加腕表解绑记录
                     $updated_at =date('Y-m-d H:i:s',time());
@@ -1315,14 +1334,24 @@ class InvigilatePadController extends CommonController
 
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                     $examScreening   =   new ExamScreening();
+
+                    //检查考试是否可以结束
                     $examScreening  ->getExamCheck();
                     //检查考试是否可以结束
                     $connection->commit();
                 }
+
                 return \Response::json([
                     'code' => 200,
+                    'data' => [
+                        'name'  => $studentInfo->name,
+                        'idnum' => $studentInfo->idnum,
+                        'idcard'=> $studentInfo->idcard,
+                        'status'=> $status
+                    ]
 
                 ]);
+
             }else{
                 throw new \Exception('解绑失败');
             }
