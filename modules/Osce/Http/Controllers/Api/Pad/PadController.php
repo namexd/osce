@@ -413,7 +413,8 @@ class PadController extends  CommonController{
 
         $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
         //考试完成推送
-        $draw=new DrawlotsController();
+        $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
+//        $draw=new DrawlotsController();
         $request['id']=$teacherId;
         $draw->getExaminee_arr($request);//当前组推送(可以获得)
         $draw->getNextExaminee_arr($request);//下一组

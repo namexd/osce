@@ -873,7 +873,8 @@ class ApiController extends CommonController
         $request['station_id']=$stationId;
         $request['teacher_id']=$teacherId;
         $request['exam_id']=$examId;
-        $draw=new DrawlotsController();
+        $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
+//        $draw = new DrawlotsController($request, \Re);
         $request['id']=$teacherId;
         $draw->getExaminee_arr($request);//当前组推送(可以获得)
         $draw->getNextExaminee_arr($request);

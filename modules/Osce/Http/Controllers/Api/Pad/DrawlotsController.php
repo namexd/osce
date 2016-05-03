@@ -1058,7 +1058,7 @@ class DrawlotsController extends CommonController
             return new \Modules\Osce\Entities\Drawlots\Station();
         });
         $stationModel = \App::make('StationModel');
-        $stationIds = $stationModel->site($examId, $roomId, $examScreeingId)->toArray();
+        $stationIds = $stationModel->site($examId, $roomId, $examScreeingId);
         //$stationIds为还没有被使用的考站
         $stationIds = array_diff($stationIds->pluck('station_id')->toArray(), $stationIdeds);
         if (empty($stationIds)) {
