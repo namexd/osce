@@ -382,11 +382,6 @@ class IndexController extends CommonController
             $student_id  = $watchLog->student_id;
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
 
-            //获取学生在考试队列中（exam_queue）的考试状态
-            $student      = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id, $exam_id);
-            $status       = $this->checkType($exameeStatus);
-
             //修改场次状态
             //根据考试id获取当前考试的场次id
             $examScreeningModel = new ExamScreening();
@@ -396,6 +391,12 @@ class IndexController extends CommonController
                 $examScreening  = $examScreeningModel -> getNearestScreening($exam_id);
             }
             $exam_screen_id = $examScreening->id;       //获取场次id
+            //获取学生的考试状态
+            $student      = new Student();
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_screen_id);
+            $status       = $this->checkType($exameeStatus->status);
+
+           
             
             //判断该场次是否被排考安排考试 //拿到oder表里的场次 todo 周强 2016-4-30
 
