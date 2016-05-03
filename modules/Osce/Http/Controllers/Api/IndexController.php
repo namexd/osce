@@ -381,6 +381,7 @@ class IndexController extends CommonController
             //获取学生信息
             $student_id  = $watchLog->student_id;
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
+
             //修改场次状态
             $examScreeningModel = new ExamScreening();
             $examScreening      = $examScreeningModel -> getExamingScreening($exam_id);

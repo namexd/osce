@@ -88,7 +88,7 @@
                                 </div>
                             </div>
                             <div class="hr-line-dashed chooseLine"></div>
-                            <div class="form-group choose">
+                            <div class="clearfix choose">
                                 <label class="col-sm-2 control-label"><span class="dot" style="color: #ed5565;">*</span>选项</label>
                                 <div class="col-sm-10">
                                     <div class="ibox float-e-margins">
