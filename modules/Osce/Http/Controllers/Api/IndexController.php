@@ -1214,7 +1214,7 @@ class IndexController extends CommonController
                             ->select('begin_dt')->orderBy('begin_dt', 'DESC')->first()->begin_dt;
 
         //将此学生 在最后一个学生的基础上 再推后10分钟
-        $lastDt = strtotime($beginDt) + 10;
+        $lastDt = strtotime($beginDt) + 10*60;
         $time   = date('Y-m-d H:i:s', $lastDt);
         //修改该学生考试开始时间
         $result = ExamOrder::where('exam_id', $exam_id)->where('student_id', $studentId)->where('exam_screening_id',$screen_id)
