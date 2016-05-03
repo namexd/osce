@@ -53,11 +53,11 @@ class DrawlotsController extends CommonController
 
     private $redis;
 
-    public function __construct(Request $request, \Redis $redis)
-    {
-        $this->request = $request;
-//        $this->redis = $redis->connection('message');
-    }
+//    public function __construct(Request $request, \Redis $redis)
+//    {
+//        $this->request = $request;
+////        $this->redis = $redis->connection('message');
+//    }
 
     /**
      *根据老师的id获取对应的考场(接口)
