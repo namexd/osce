@@ -9,12 +9,14 @@ namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamAbsent;
 use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\StationVcr;
@@ -93,7 +95,7 @@ class ExamControl extends Model
 
 
             //统计已完成考试数量
-            $endExamCount = $examScreeningStudentModel->leftJoin('student', function($join){
+           /* $endExamCount = $examScreeningStudentModel->leftJoin('student', function($join){
                 $join -> on('student.id', '=', 'exam_screening_student.student_id');
             })->leftJoin('exam', function($join){
                 $join -> on('exam.id', '=','student.exam_id');
@@ -105,9 +107,29 @@ class ExamControl extends Model
                 $join -> on('station.id', '=', 'station_teacher.station_id');
             })->groupBy('student.id')->where('exam.status',1)->where('exam_screening_student.is_end',1)->get();
 
-            $endExamCount = count($endExamCount);
+            $endExamCount = count($endExamCount);*/
 
+            //获去排考记录中该场考试所对应的学生信息
+            $examPlan = ExamPlan::where('exam_id',$exam->id)->groupBy('student_id')->get()->toArray();
+            //查询每个考生所所对应的场次数量
+            $endExamCount = 0;
 
+            foreach($examPlan as $key=>$val){
+                //$examPlan[$key]['count'] = ExamPlan::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->lists('exam_screening_id')->unique()->count();
+                $count = count(ExamPlan::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->select('exam_screening_id')->groupBy('exam_screening_id')->get());
+
+                //查询已完成数量
+                $finishCount = count(ExamScreeningStudent::leftJoin('exam_screening', function($join){
+                    $join -> on('exam_screening_student.exam_screening_id', '=', 'exam_screening.id');
+                })->where('exam_screening_student.student_id',$val['student_id'])
+                    ->where('exam_screening.exam_id',$val['exam_id'])
+                    ->where('exam_screening_student.is_end',1)->get());
+                //查询迟到数量
+                $examAbsentCount = count(ExamAbsent::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->select('exam_screening_id')->groupBy('exam_screening_id')->get());
+                if($finishCount+$examAbsentCount>=$count){
+                    $endExamCount++;
+                }
+            }
             //正在考试列表
             $examInfo = $examScreeningStudentModel->leftJoin('student', function($join){
                 $join -> on('student.id', '=', 'exam_screening_student.student_id');
