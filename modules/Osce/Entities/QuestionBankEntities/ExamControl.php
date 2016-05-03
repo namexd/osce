@@ -109,7 +109,7 @@ class ExamControl extends Model
 
             $endExamCount = count($endExamCount);*/
 
-            //获去排考记录中该场考试所对应的学生信息
+            //获取排考记录中该场考试所对应的学生信息
             $examPlan = ExamPlan::where('exam_id',$exam->id)->groupBy('student_id')->get()->toArray();
             //查询每个考生所所对应的场次数量
             $endExamCount = 0;
