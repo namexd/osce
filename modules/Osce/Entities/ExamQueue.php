@@ -671,6 +671,7 @@ class ExamQueue extends CommonModel
             if ($examObj->isEmpty()) {
                 //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
                 $examPlan = ExamPlan::where('exam_id', '=', $examId)
+                    ->where('exam_screening_id', $examScreeningId)
                     ->where('student_id', '=', $studentId)
                     ->orderBy('begin_dt', 'asc')->get();
 

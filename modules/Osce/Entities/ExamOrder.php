@@ -22,6 +22,7 @@ class ExamOrder extends  CommonModel{
         2 => '已解绑',
         3 => '缺考',
         4 => '跳过',
+        5 => '替考',
     ];
 
     public function userInfo()
