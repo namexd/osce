@@ -1036,7 +1036,7 @@ class InvigilatePadController extends CommonController
             $watchModel = new Watch();
             $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
 
-            if(count($watchData) > 0){
+            if(!empty($watchData)&&count($watchData) > 0){
                 $watchData = $watchData->toArray();
 
                 foreach($watchData as $k=>$v){
