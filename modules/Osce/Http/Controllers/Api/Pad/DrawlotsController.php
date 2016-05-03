@@ -53,11 +53,11 @@ class DrawlotsController extends CommonController
 
     private $redis;
 
-//    public function __construct(Request $request, \Redis $redis)
-//    {
-//        $this->request = $request;
-////        $this->redis = $redis->connection('message');
-//    }
+    public function __construct(Request $request, \Redis $redis)
+    {
+        $this->request = $request;
+//        $this->redis = $redis->connection('message');
+    }
 
     /**
      *根据老师的id获取对应的考场(接口)
@@ -1046,14 +1046,19 @@ class DrawlotsController extends CommonController
 
         }
 
-        $stationIds = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-            ->where('exam_draft_flow.exam_id', '=', $examId)
-            ->where('exam_draft.room_id', $roomId)
-            ->whereIn('exam_draft_flow.exam_gradation_id', $gradationOrderId)
-            ->select(
-                'exam_draft.station_id as station_id'
-            )
-            ->get();
+//        $stationIds = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+//            ->where('exam_draft_flow.exam_id', '=', $examId)
+//            ->where('exam_draft.room_id', $roomId)
+//            ->whereIn('exam_draft_flow.exam_gradation_id', $gradationOrderId)
+//            ->select(
+//                'exam_draft.station_id as station_id'
+//            )
+//            ->get();
+        \App::bind('StationModel', function () {
+            return new \Modules\Osce\Entities\Drawlots\Station();
+        });
+        $stationModel = \App::make('StationModel');
+        $stationIds = $stationModel->site($examId, $roomId, $examScreeingId)->toArray();
         //$stationIds为还没有被使用的考站
         $stationIds = array_diff($stationIds->pluck('station_id')->toArray(), $stationIdeds);
         if (empty($stationIds)) {
