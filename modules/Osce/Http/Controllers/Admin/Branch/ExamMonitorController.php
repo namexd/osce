@@ -106,12 +106,11 @@ class ExamMonitorController  extends CommonController
             $examControlModel = new ExamControl();
             $result = $examControlModel->stopExamLate($data, $screen_id);
             if ($result == true) {
-                echo  11212;
+         
                 $result=$this->getAbsentStudent($studentId, $examId, $screen_id); //插入缺考记录 学生已缺考
 
                 return response()->json(true);
             } else {
-                echo  333333;
                 return response()->json($result);
             }
         } catch (\Exception $ex) {
@@ -139,7 +138,7 @@ class ExamMonitorController  extends CommonController
                     $examOrder = ExamOrder::where('exam_id', '=', $examId)->where('exam_screening_id', '=', $screen_id)
                         ->select(['begin_dt', 'student_id'])->orderBy('begin_dt', 'DESC')->first();
                     if($examOrder->student_id == $studentId){
-                        echo 4444444;
+                      
                         //检查考试是否可以结束
                         $examScreening  = new ExamScreening();
                         $examScreening  ->getExamCheck();

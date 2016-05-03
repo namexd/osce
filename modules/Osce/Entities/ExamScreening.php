@@ -239,6 +239,7 @@ class ExamScreening extends CommonModel
             ->lists('student_id')
             ->unique()
             ->count();
+            dd($examAbsentStudent,$examFinishStudent,$exampianStudent);
         if ($examAbsentStudent + $examFinishStudent >= $exampianStudent) {
             $ExamScreening->status = 2;
             if (!$ExamScreening->save()) {
