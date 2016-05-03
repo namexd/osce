@@ -55,9 +55,16 @@ class InvigilatePadController extends CommonController
     public function getTestIndex()
     {
        
+        $exam = Exam::doingExam();
+        
         $examScreeningModel = new ExamScreening();
-        $result = $examScreeningModel->getExamCheck();
-        dd($result);
+        //获取到当考试场次id
+        $ExamScreening = $examScreeningModel->getExamingScreening($exam->id);
+        if (is_null($ExamScreening)) {
+            $ExamScreening = $examScreeningModel->getNearestScreening($exam->id);
+
+        }
+        dd($ExamScreening);
 
     }
 

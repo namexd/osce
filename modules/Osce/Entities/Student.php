@@ -649,10 +649,6 @@ class Student extends CommonModel
         if ($num === 0 || $num < 0) {
             return array();
         }
-        
-        
-        
-        
 
         /*$builder = $this->leftjoin('exam_order', function ($join) {
             $join->on('student.id', '=', 'exam_order.student_id');
