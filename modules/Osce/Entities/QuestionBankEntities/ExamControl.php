@@ -113,19 +113,16 @@ class ExamControl extends Model
             $examPlan = ExamPlan::where('exam_id',$exam->id)->groupBy('student_id')->get()->toArray();
             //查询每个考生所所对应的场次数量
             $endExamCount = 0;
-
             foreach($examPlan as $key=>$val){
-                //$examPlan[$key]['count'] = ExamPlan::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->lists('exam_screening_id')->unique()->count();
-                $count = count(ExamPlan::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->select('exam_screening_id')->groupBy('exam_screening_id')->get());
-
+                $count = ExamPlan::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->lists('exam_screening_id')->unique()->count();
                 //查询已完成数量
-                $finishCount = count(ExamScreeningStudent::leftJoin('exam_screening', function($join){
+                $finishCount = ExamScreeningStudent::leftJoin('exam_screening', function($join){
                     $join -> on('exam_screening_student.exam_screening_id', '=', 'exam_screening.id');
                 })->where('exam_screening_student.student_id',$val['student_id'])
                     ->where('exam_screening.exam_id',$val['exam_id'])
-                    ->where('exam_screening_student.is_end',1)->get());
+                    ->where('exam_screening_student.is_end',1)->lists('exam_screening_student.exam_screening_id')->unique()->count();
                 //查询迟到数量
-                $examAbsentCount = count(ExamAbsent::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->select('exam_screening_id')->groupBy('exam_screening_id')->get());
+                $examAbsentCount = ExamAbsent::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->lists('exam_screening_id')->unique()->count();
                 if($finishCount+$examAbsentCount>=$count){
                     $endExamCount++;
                 }
