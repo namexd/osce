@@ -359,8 +359,8 @@ class ExamControl extends Model
 
     public function stopExamLate($data,$screen_id){
 
-//        $DB = DB::connection('osce_mis');
-//        $DB->beginTransaction();
+        $DB = DB::connection('osce_mis');
+        $DB->beginTransaction();
         try{
             //迟到学生未进对了
             //③ 更新考试场次-学生关系表(exam_screening_student)
@@ -425,7 +425,7 @@ class ExamControl extends Model
                         }
                     }*/
 
-//            $DB->commit();
+            $DB->commit();
             return true;
         }catch (\Exception $ex){
 //            $DB->rollback();
