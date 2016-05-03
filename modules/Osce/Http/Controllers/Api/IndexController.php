@@ -357,7 +357,7 @@ class IndexController extends CommonController
         //开启事务
         $connection = \DB::connection('osce_mis');
         $connection ->beginTransaction();
-        try{
+//        try{
             //判断腕表是否存在
             $watchModel = new Watch();
             $watchInfo  = $watchModel->where('watch.code', '=', $code)->first();
@@ -510,12 +510,12 @@ class IndexController extends CommonController
                 throw new \Exception('解绑失败');
             }
 
-        }
-        catch(\Exception $ex)
-        {
-            $connection->rollBack();
-            return \Response::json(array('code'=>0));
-        }
+//        }
+//        catch(\Exception $ex)
+//        {
+//            $connection->rollBack();
+//            return \Response::json(array('code'=>0));
+//        }
     }
 
     /**
