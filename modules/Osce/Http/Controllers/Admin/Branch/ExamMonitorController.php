@@ -111,6 +111,7 @@ class ExamMonitorController  extends CommonController
 
                 return response()->json(true);
             } else {
+                echo 222222;
                 return response()->json($result);
             }
         } catch (\Exception $ex) {
@@ -143,6 +144,7 @@ class ExamMonitorController  extends CommonController
                         $examScreening  = new ExamScreening();
                         $examScreening  ->getExamCheck();
                     }
+                    echo  5555555;
                     return true;//缺考记录插入成功
                 }
                 return false;//缺考记录插入失败
