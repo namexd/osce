@@ -28,4 +28,9 @@ class ExamOrder extends  CommonModel{
     {
         return $this->hasOne('\App\Entities\User', 'id', 'user_id');
     }
+
+    public function exam()
+    {
+        return $this->belongsTo('\Modules\Osce\Entities\Exam');
+    }
 }

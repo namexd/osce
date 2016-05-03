@@ -54,6 +54,13 @@ class ExamQueue extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Exam', 'id', 'exam_id');
     }
 
+    public function scopeUsedStations($query, $screenId, $roomId)
+    {
+        return $query->where($this->table . '.exam_screening_id', $screenId)
+            ->where($this->table . '.room_id', $roomId)
+            ->whereNotIn('status', [0, 3]);
+
+    }
 
     protected $statuValues = [
         0 => '绑定腕表',

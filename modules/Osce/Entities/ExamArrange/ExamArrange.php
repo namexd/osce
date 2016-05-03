@@ -88,9 +88,4 @@ class ExamArrange
         }
     }
     
-    
-  
-    
-    
-    
 }

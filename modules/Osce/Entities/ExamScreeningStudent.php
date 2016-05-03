@@ -27,6 +27,16 @@ class ExamScreeningStudent extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Student','id','student_id');
     }
 
+    public function scopeWatch($query)
+    {
+        return $query->join('watch', 'watch.id', '=', 'exam_screening_student.watch_id');
+    }
+
+    public function scopeIsEnd($query, $value)
+    {
+        return $query->where($this->table . 'is_end', '=' ,$value);
+    }
+
     /**
      * 根据场次id 查询 相应的student
      * @access public

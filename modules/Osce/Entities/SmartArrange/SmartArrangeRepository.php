@@ -95,6 +95,8 @@ class SmartArrangeRepository extends AbstractSmartArrange
 //                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
                     throw new \Exception('人数太多，所设时间无法完成考试', -99);
                 }
+                
+                $this->checkUnnecessaryScreen($exam, $key);
             }
             return $this->output($exam);
         } catch (\Exception $ex) {
