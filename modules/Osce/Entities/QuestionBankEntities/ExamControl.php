@@ -364,16 +364,27 @@ class ExamControl extends Model
         try{
             //迟到学生未进对了
             //③ 更新考试场次-学生关系表(exam_screening_student)
-            $examScreeningStudentData = array(
-                'exam_screening_id'=>$screen_id,
-                'student_id'=>$data['studentId'],
-                'is_end'=>1,
-                'status'=>1,
-                'description'=>1
-            );
-            //保存考试场次-学生关系表（exam_screening_student）
-            $examScreeningStudentModel = new ExamScreeningStudent();
-            $result = $examScreeningStudentModel->create($examScreeningStudentData);
+            //检查examScreeningStudent表是否有这条数据
+
+            $ScreeningStudentResult  = ExamScreeningStudent::where('exam_screening_id','=',$screen_id)
+                ->where('student_id','=',$data['studentId'])
+                ->first();
+            //检查学生是否绑定腕表，没有就添加有就修改
+            if(is_null($ScreeningStudentResult)){
+                $examScreeningStudentData = array(
+                    'exam_screening_id'=>$screen_id,
+                    'student_id'=>$data['studentId'],
+                    'is_end'=>1,
+                    'status'=>1,
+                    'description'=>1
+                );
+                //保存考试场次-学生关系表（exam_screening_student）
+                $examScreeningStudentModel = new ExamScreeningStudent();
+                $result = $examScreeningStudentModel->create($examScreeningStudentData);
+            }else{
+                $ScreeningStudentResult->is_end = 1;
+                $result = $ScreeningStudentResult->save();
+            }
 
             if (!$result) {
                 throw new \Exception('结束考生考试失败！');

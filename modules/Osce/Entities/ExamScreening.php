@@ -227,11 +227,11 @@ class ExamScreening extends CommonModel
         $exampianStudent = $examPianModel->getexampianStudent($ExamScreening->id,$exam->id);
 
         //获取考试场次迟到的人数
-        $examAbsentStudent = ExamAbsent::where('exam_screening_id', '=', $ExamScreening->id)
-            ->where('exam_id','=',$exam->id)
-            ->lists('student_id')
-            ->unique()
-            ->count();
+//        $examAbsentStudent = ExamAbsent::where('exam_screening_id', '=', $ExamScreening->id)
+//            ->where('exam_id','=',$exam->id)
+//            ->lists('student_id')
+//            ->unique()
+//            ->count();
 
         //获取考试场次已考试完成的人数
         $examFinishStudent = ExamScreeningStudent::where('is_end', 1)
@@ -239,7 +239,7 @@ class ExamScreening extends CommonModel
             ->lists('student_id')
             ->unique()
             ->count();
-        if ($examAbsentStudent + $examFinishStudent >= $exampianStudent) {
+        if ($examFinishStudent >= $exampianStudent) {
             $ExamScreening->status = 2;
             if (!$ExamScreening->save()) {
                 throw new \Exception('场次结束失败', -5);
