@@ -251,7 +251,6 @@ class ExamQueue extends CommonModel
                     )
                     ->orderBy('exam_queue.next_num', 'asc')
                     ->orderBy('exam_queue.begin_dt', 'asc')
-                    ->orderBy('exam_queue.updated_at', 'asc')
                     ->groupBy('student.id')
                     ->take(count($stations))
                     ->get();
@@ -277,7 +276,6 @@ class ExamQueue extends CommonModel
                     )
                     ->orderBy('exam_queue.next_num', 'asc')
                     ->orderBy('exam_queue.begin_dt', 'asc')
-                    ->orderBy('exam_queue.updated_at', 'asc')
                     ->groupBy('student.id')
                     ->take(count($stations))
                     ->get();
@@ -323,7 +321,6 @@ class ExamQueue extends CommonModel
                 )
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->orderBy('exam_queue.updated_at', 'asc')
                 ->take(1)
                 ->get();
         } else {
@@ -347,7 +344,6 @@ class ExamQueue extends CommonModel
                 )
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->orderBy('exam_queue.updated_at', 'asc')
                 ->take(1)
                 ->get();
         }
@@ -380,7 +376,6 @@ class ExamQueue extends CommonModel
                 ->take(count($station))
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->orderBy('exam_queue.updated_at', 'asc')
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -410,7 +405,6 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
-                ->orderBy('exam_queue.updated_at', 'asc')
                 ->skip(1)//TODO 可能要改
                 ->take(1)
                 ->select(
@@ -684,6 +678,7 @@ class ExamQueue extends CommonModel
             if ($examObj->isEmpty()) {
                 //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
                 $examPlan = ExamPlan::where('exam_id', '=', $examId)
+                    ->where('exam_screening_id', $examScreeningId)
                     ->where('student_id', '=', $studentId)
                     ->orderBy('begin_dt', 'asc')->get();
 
@@ -782,7 +777,9 @@ class ExamQueue extends CommonModel
             }
 
             //拿到$examScreeningId和$studentId
+
             $examScreeningId = $examScreening->exam_screening_id;
+
             //获取考生正在进行考试的队列信息
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)

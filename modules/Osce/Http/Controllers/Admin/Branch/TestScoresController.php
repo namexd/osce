@@ -271,13 +271,36 @@ class TestScoresController  extends CommonController
      */
     public function getSubjectLists(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examid = $request->examid;
+        //获取该场考试对应的试卷信息
         $datalist = ExamResult::where('exam_paper_exam_station.exam_id','=',$examid)->leftjoin('exam_paper_exam_station',function($join){
             $join->on('exam_paper_exam_station.station_id','=','exam_result.station_id');
         })->leftjoin('exam_paper',function($join){
             $join->on('exam_paper.id','=','exam_paper_exam_station.exam_paper_id');
-        })->groupBy('exam_paper.id')->select('exam_paper.id','exam_paper.name')->get();
-        //dd($datalist->toArray());
-        return $this->success_data(['datalist'=>$datalist]);
+        })->groupBy('exam_paper.id')->select('exam_paper.id','exam_paper.name')->get()->toArray();
+        //获取该场考试对应科目信息
+        $subjectlist = ExamResult::leftjoin('station',function($join){
+            $join->on('exam_result.station_id','=','station.id');
+        })->leftjoin('subject',function($join){
+            $join->on('station.subject_id','=','subject.id');
+        })->leftjoin('exam_screening',function($join){
+            $join->on('exam_result.exam_screening_id','=','exam_screening.id');
+        })->where('exam_screening.exam_id',$examid)->select('subject.id','subject.title as name')->groupBy('subject.id')->get()->toArray();
+        $arr = array();
+        if(!empty($subjectlist)){
+            $key = 0;
+            foreach($subjectlist as $k=>$v){
+                if(!empty($v['id'])){
+                    $arr[$key] = $v;
+                    $key++;
+                }
+            }
+        }
+        if(!empty($datalist)){
+            foreach($datalist as $k=>$v){
+               array_push($arr,$v);
+            }
+        }
+        return $this->success_data(['datalist'=>$arr]);
 
     }
 
@@ -291,6 +314,10 @@ class TestScoresController  extends CommonController
      * @date   2016-3-2 17:22:53 .com Inc. All Rights Reserved
      */
     public function getTeacherDataList(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $this->validate($request,[
+            'examid'       => 'required|integer',//考试id
+            'subjectid'    => 'required|integer',//考核项目id
+        ]);
         $examid = $request->examid;
         $paperid = $request->subjectid;
         $datalist = $TestScoreRepositories->getTeacherData($examid,$paperid);

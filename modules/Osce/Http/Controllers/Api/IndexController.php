@@ -318,8 +318,12 @@ class IndexController extends CommonController
             ExamOrder::where('exam_id', $exam_id)->where('student_id', $student_id)->where('exam_screening_id', '=', $exam_screen_id)->update(['status' => 1]);
             Exam::where('id', $exam_id)->update(['status' => 1]);  //更改考试状态（把考试状态改为正在考试）
 
-            return \Response::json(array('code' => 1));
+            // 绑定腕表成功后给腕表推送消息
+            $studentWatchController = new StudentWatchController();
+            $request['nfc_code'] = $code;
+            $studentWatchController->getStudentExamReminder($request);
 
+            return \Response::json(array('code' => 1));
         } else {
             return \Response::json(array('code' => 0));
         }
@@ -357,7 +361,7 @@ class IndexController extends CommonController
         //开启事务
         $connection = \DB::connection('osce_mis');
         $connection ->beginTransaction();
-        try{
+//        try{
             //判断腕表是否存在
             $watchModel = new Watch();
             $watchInfo  = $watchModel->where('watch.code', '=', $code)->first();
@@ -366,7 +370,7 @@ class IndexController extends CommonController
             }
             $id = $watchInfo->id;       //获取腕表id
 
-            //腕表使用记录查询学生id
+            //根据腕表id查询腕表使用记录中对应的学生id
             $watchLog = WatchLog::where('watch_id', '=', $id)->where('action', '=', '绑定')
                                 ->select('student_id')->orderBy('id','DESC')->first();
             //1、腕表绑定的学生不存在（直接解绑，反馈学生不存在）
@@ -382,12 +386,8 @@ class IndexController extends CommonController
             $student_id  = $watchLog->student_id;
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
 
-            //获取学生的考试状态
-            $student      = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id, $exam_id);
-            $status       = $this->checkType($exameeStatus->status);
-
             //修改场次状态
+            //根据考试id获取当前考试的场次id
             $examScreeningModel = new ExamScreening();
             $examScreening      = $examScreeningModel -> getExamingScreening($exam_id);
             if(is_null($examScreening))
@@ -395,17 +395,22 @@ class IndexController extends CommonController
                 $examScreening  = $examScreeningModel -> getNearestScreening($exam_id);
             }
             $exam_screen_id = $examScreening->id;       //获取场次id
+            //获取学生的考试状态
+            $student      = new Student();
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
+            $status       = $this->checkType($exameeStatus->status);
 
-
+           
+            
             //判断该场次是否被排考安排考试 //拿到oder表里的场次 todo 周强 2016-4-30
 
-            $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
-            if(!in_array($exam_screen_id,$OderExamScreeningId)){
-                $screen_id = ExamOrder::where('exam_id','=',$exam_id)
-                    ->where('status','=',1)
-                    ->first();
-                $exam_screen_id = $screen_id->exam_screening_id;
-            }
+//            $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
+//            if(!in_array($exam_screen_id,$OderExamScreeningId)){
+//                $screen_id = ExamOrder::where('exam_id','=',$exam_id)
+//                    ->where('status','=',1)
+//                    ->first();
+//                $exam_screen_id = $screen_id->exam_screening_id;
+//            }
 
 
             //不存在考试场次，直接解绑
@@ -486,6 +491,7 @@ class IndexController extends CommonController
                     //更改状态（2 为上报弃考）
                     ExamScreeningStudent::where('watch_id', '=', $id)->where('student_id', '=', $student_id)
                                         ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
+
                     //中途解绑（更改队列，往后推）
                     ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
 
@@ -508,12 +514,12 @@ class IndexController extends CommonController
                 throw new \Exception('解绑失败');
             }
 
-        }
-        catch(\Exception $ex)
-        {
-            $connection->rollBack();
-            return \Response::json(array('code'=>0));
-        }
+//        }
+//        catch(\Exception $ex)
+//        {
+//            $connection->rollBack();
+//            return \Response::json(array('code'=>0));
+//        }
     }
 
     /**
@@ -1214,7 +1220,7 @@ class IndexController extends CommonController
                             ->select('begin_dt')->orderBy('begin_dt', 'DESC')->first()->begin_dt;
 
         //将此学生 在最后一个学生的基础上 再推后10分钟
-        $lastDt = strtotime($beginDt) + 10;
+        $lastDt = strtotime($beginDt) + 10*60;
         $time   = date('Y-m-d H:i:s', $lastDt);
         //修改该学生考试开始时间
         $result = ExamOrder::where('exam_id', $exam_id)->where('student_id', $studentId)->where('exam_screening_id',$screen_id)

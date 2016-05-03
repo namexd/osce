@@ -501,9 +501,10 @@ class DrawlotsController extends CommonController
                     json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
                 throw new \Exception('没有找到对应的腕表信息！', 3100);
             }
-
+            $exam=Exam::doingExam();
+            $exam_screening_id=$this->getexamScreeing($exam);
             //获取腕表记录实例
-            $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('is_end', 0)->orderBy('created_at',
+            $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$exam_screening_id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
             if (!$watchLog) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -528,29 +529,23 @@ class DrawlotsController extends CommonController
             $examId = $exam->id;
             list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
 
-            //获取当前老师对应的考站id
-            $station = StationTeacher::where('exam_id', '=', $exam->id)
-                ->where('user_id', '=', $teacherId)
-                ->first();
-            if (is_null($station)) {
-                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-                    json_encode($this->success_data([], 7100, '你没有参加此次考试!')));
-                throw new \Exception('你没有参加此次考试', 7100);
-            }
-            $exam_screening_id = $this->getexamScreeing($exam);
+            //获取当前老师对应的考站id     todo 2016-5-2 zhouqiang
+            $stationId = $this->getTeacherStation($exam_screening_id,$exam,$teacherId);
             /*
              * 判断当前考生是否是在当前的学生组中
              */
             if ($exam->sequence_mode == 1) {
                 //从队列表中通过考场ID得到对应的当前组的考生信息
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations, $exam_screening_id);
+                
+                    \Log::alert('EndError', [$examQueue, $watchLog->student_id, $room_id,$exam_screening_id,$stations]);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
                     $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                         json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
                     throw new \Exception('该考生不在当前考生小组中', 7200);
                 }
             } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($station->station_id, $examId, $exam_screening_id);
+                $examQueue = ExamQueue::examineeByStationId($stationId, $examId, $exam_screening_id);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
                     $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                         json_encode($this->success_data([], 7201, '该考生不在当前考生小组中!')));
@@ -565,6 +560,7 @@ class DrawlotsController extends CommonController
             //如果考生走错了房间
             if (ExamQueue::where('room_id', '=', $roomId)
                 ->where('student_id', '=', $watchLog->student_id)
+                ->where('exam_screening_id',$exam_screening_id)
                 ->where('exam_id', '=', $examId)->get()
                 ->isEmpty()
             ) {
@@ -598,6 +594,8 @@ class DrawlotsController extends CommonController
             //推送当前学生
             $request['station_id'] = $result->id;
             $request['teacher_id'] = $teacherId;
+            $request['student_id'] = $student->id;
+
             $inv = new InvigilatePadController();
             $studentMsg = $inv->getAuthentication_arr($request);//当前考生推送
             if ($studentMsg) {
@@ -664,7 +662,7 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-        try {
+//        try {
             //获取当前登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
@@ -677,13 +675,11 @@ class DrawlotsController extends CommonController
             $exam_screening_id = $this->getexamScreeing($exam);
             //拿到当前老师支持的考站
             $stationId = $this->getTeacherStation($exam_screening_id, $exam, $id);
-
             $station = Station::where('id', $stationId)->first();
             //拿到房间
             $room = $this->getRoomId($id, $exam->id);
 
             //判断其考站或考场是否在该次考试中使用
-
             $check = $this->checkEffected($exam, $room, $station);
 
             Common::valueIsNull($check, -785, '当前考站或考场没有安排在此考试中');
@@ -725,7 +721,8 @@ class DrawlotsController extends CommonController
 //            $station = $examinee->getStation();
 
             $station->station_type = $station->type;
-            if ($teacher = Teacher::find('$id')) {
+            
+            if($teacher = Teacher::where('id','=',$id)->first()){
                 $station->teacher_type = $teacher->type;
             }
 
@@ -767,9 +764,9 @@ class DrawlotsController extends CommonController
             }*/
 
             return response()->json($this->success_data($station));
-        } catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-        }
+//        } catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//        }
     }
 
     /**
@@ -818,6 +815,7 @@ class DrawlotsController extends CommonController
 
                 //随机获取一个考站的id
                 $ranStationId = $this->ranStationSelect($roomId, $examId, $studentids, $examScreeingId);
+                \Log::alert($ranStationId);
 
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id', $student->id)
@@ -895,6 +893,7 @@ class DrawlotsController extends CommonController
         try {
             //获取当前老师的考场对象
             $room = $this->getRoomId($id, $exam->id);
+
             //获得考场的id
             $room_id = $room->room_id;
             //获得当前考场考站的实例列表
@@ -1114,7 +1113,9 @@ class DrawlotsController extends CommonController
             ->get()->pluck('station_id')->toArray();
         //拿到老师在该场次里支持的考站
         $arr = array_intersect($stationList, $stationLists);
-
+        if(count($arr)>1){
+            throw new \Exception('考站取出有错！！',-4100);
+        }
         $stationId = array_pop($arr);
         if (is_null($stationId)) {
             throw new \Exception('没有对应的考站！');
@@ -1133,6 +1134,7 @@ class DrawlotsController extends CommonController
             ->first();
         $room = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft.room_id', '=', $stationPlan->room_id)
+            ->whereIn('exam_draft.station_id',$stationLists)
             ->where('exam_draft_flow.exam_id', '=', $examId)
             ->get();
 
@@ -1200,7 +1202,9 @@ class DrawlotsController extends CommonController
 
         //拿到老师在该场次里支持的考站
         $arr = array_intersect($stationLists, $stationList);
-
+        if(count($arr)>1){
+            throw new \Exception('考站取出有错！！',-4100);
+        }
         $stationId = array_pop($arr);
 
         if (is_null($stationId)) {

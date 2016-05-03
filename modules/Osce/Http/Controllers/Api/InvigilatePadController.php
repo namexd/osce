@@ -55,9 +55,16 @@ class InvigilatePadController extends CommonController
     public function getTestIndex()
     {
        
+        $exam = Exam::doingExam();
+        
         $examScreeningModel = new ExamScreening();
-        $result = $examScreeningModel->getExamCheck();
-        dd($result);
+        //获取到当考试场次id
+        $ExamScreening = $examScreeningModel->getExamingScreening($exam->id);
+        if (is_null($ExamScreening)) {
+            $ExamScreening = $examScreeningModel->getNearestScreening($exam->id);
+
+        }
+        dd($ExamScreening);
 
     }
 
@@ -156,9 +163,10 @@ class InvigilatePadController extends CommonController
             $redis = Redis::connection('message');
             $stationId = (int)$request->input('station_id');
             $teacher_id = (int)$request->input('teacher_id');
+            $student_id = $request['student_id'];
             $exam = Exam::doingExam();
             $studentModel = new  Student();
-            $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
+            $studentData = $studentModel->studentList($stationId, $exam,$student_id);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 
@@ -210,12 +218,14 @@ class InvigilatePadController extends CommonController
             $redis = Redis::connection('message');
             $stationId = $request['station_id'];
             $teacher_id = $request['teacher_id'];
+            $student_id = $request['student_id'];
+        
             $exam = Exam::doingExam();
         
         
         
             $studentModel = new  Student();
-            $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
+            $studentData = $studentModel->studentList($stationId, $exam,$student_id);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 //                dump($this->success_data($studentData['nextTester']));
@@ -798,8 +808,6 @@ class InvigilatePadController extends CommonController
 
             $AlterResult = $ExamQueueModel->AlterTimeStatus($studentId, $stationId, $nowTime,$teacherId,$examscreeningId);
 
-
-
             if ($AlterResult) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId,'exam_screening_id'=>@$examQueue->exam_screening_id], 105, '开始考试成功')));
 
@@ -1028,7 +1036,7 @@ class InvigilatePadController extends CommonController
             $watchModel = new Watch();
             $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
 
-            if(count($watchData) > 0){
+            if(!empty($watchData)&&count($watchData) > 0){
                 $watchData = $watchData->toArray();
 
                 foreach($watchData as $k=>$v){
@@ -1189,9 +1197,14 @@ class InvigilatePadController extends CommonController
         $connection ->beginTransaction();
 
         try{
-            $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
-            $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
-            if(!$student_id){    //如果学生不存在
+
+            //获取腕表id
+            $id = Watch::where('code',$code)->select('id')->first()->id;
+            //根据腕表id查询腕表使用记录中对应的学生id
+            $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();
+
+            //如果腕表绑定的学生不存在，直接解绑
+            if(!$student_id){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
                     return \Response::json(array('code'=>2));       //该腕表绑定的学生不存在
@@ -1199,17 +1212,22 @@ class InvigilatePadController extends CommonController
                     return \Response::json(array('code'=>0));       //解绑失败
                 }
             }
+
+            //获取学生id
             $student_id=$student_id->student_id;
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
-            //获取学生的考试状态
-            $student = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
-            $status = $this->checkType($exameeStatus->status);
-            $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
-            if(!$screen_id){
+            //根据考试id获取所对应的场次id
+            $examScreening = ExamScreening::getExamingScreening($exam_id);
+            if(is_null($examScreening))
+            {
+                $examScreening  = ExamScreening::getNearestScreening($exam_id);
+            }
+            //如果不存在考试场次，直接解绑
+            if(empty($examScreening)){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
+                    //腕表解绑，添加腕表解绑记录
                     $action = '解绑';
                     $updated_at = date('Y-m-d H:i:s',time());
                     $data = array(
@@ -1221,24 +1239,46 @@ class InvigilatePadController extends CommonController
                     //将解绑记录添加到腕表使用历史表中
                     $watchModel = new WatchLog();
                     $watchModel->unwrapRecord($data);
+                    //解绑成功
                     return \Response::json([
                         'code' => 200,
-                    ]);   //解绑成功
+                        'data' => [
+                            'name'  => $studentInfo->name,
+                            'idnum' => $studentInfo->idnum,
+                            'idcard'=> $studentInfo->idcard,
+                        ]
+                    ]);
+
                 }else{
                     throw new \Exception('解绑失败');
                 }
             }
-            $exam_screen_id = $screen_id->exam_screening_id;
-            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
-            $ExamFlowModel = new  ExamFlow();
-            $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
-            if($ExamFinishStatus==$studentExamSum){ //如果考试流程结束
-                if($status != 0){
+
+            $exam_screen_id = $examScreening->id;       //获取场次id
+            //获取学生的考试状态
+            $student = new Student();
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
+            $status = $this->checkType($exameeStatus->status);
+            //查询考试流程 是否结束
+            $ExamFinishStatus = ExamQueue::whereNotIn('status',[3,4])->where('student_id', $student_id)
+                ->where('exam_screening_id',$exam_screen_id)
+                ->where('exam_id',$exam_id)
+                ->count();
+
+            //如果考试流程结束
+            if($ExamFinishStatus == 0)
+            {
+                if($exameeStatus->status != 0){
+                    //更改考试场次终止状态
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
                 }
-                ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);//更改考生排序状态
+                //更改 （状态改为 已解绑：status=2）
+                ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->where('exam_screening_id', $exam_screen_id)->update(['status'=>2]);
+                //腕表状态 更改为 解绑状态（status=0）
                 $result = Watch::where('id',$id)->update(['status'=>0]);
+
                 if($result){
+                    //解绑成功，添加腕表解绑记录
                     $action='解绑';
                     $updated_at = date('Y-m-d H:i:s',time());
                     $data = array(
@@ -1249,8 +1289,6 @@ class InvigilatePadController extends CommonController
                     );
                     $watchModel=new WatchLog();
                     $watchModel->unwrapRecord($data);
-
-
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                     $examScreening  =  new ExamScreening();
                     $examScreening  -> getExamCheck();
@@ -1258,6 +1296,12 @@ class InvigilatePadController extends CommonController
 
                     return \Response::json([
                         'code' => 200,
+                        'data' => [
+                            'name'  => $studentInfo->name,
+                            'idnum' => $studentInfo->idnum,
+                            'idcard'=> $studentInfo->idcard,
+                            'status'=> $status
+                        ]
 
                     ]);
                 }else{
@@ -1268,9 +1312,14 @@ class InvigilatePadController extends CommonController
             //如果考试流程未结束 还是解绑,把考试排序的状态改为0
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
+                //解绑成功
                 $action = '解绑';
-                $result = ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>0]);
+                //更改 （状态改为 未绑定：status=0）
+                $result = ExamOrder::where('student_id', $student_id)->where('exam_id', $exam_id)
+                    ->where('exam_screening_id',$exam_screen_id)->update(['status'=>0]);
                 if($result){
+
+                    //腕表解绑，添加腕表解绑记录
                     $updated_at =date('Y-m-d H:i:s',time());
                     $data = array(
                         'watch_id'       =>$id,
@@ -1280,28 +1329,32 @@ class InvigilatePadController extends CommonController
                     );
                     $watchModel = new WatchLog();
                     $watchModel->unwrapRecord($data);
+                    //更改状态（中途解绑解绑，换腕表）
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
 
-                    //获取学生当前状态
-                    $studentStatus = ExamQueue::where('student_id','=',$student_id)->where('exam_id','=',$exam_id)->first();
-                    if(count($studentStatus) > 0){
-                        if(in_array($studentStatus->status,[0,1])){
-                            $dataArr = [
-                                'status' => 3
-                            ];
-                            ExamQueue::where('student_id','=',$student_id)->where('exam_id','=',$exam_id)->update($dataArr);
-                        }
-                    }
+                    //中途解绑（更改队列，往后推）
+                    ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
+
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                     $examScreening   =   new ExamScreening();
+
+                    //检查考试是否可以结束
                     $examScreening  ->getExamCheck();
                     //检查考试是否可以结束
                     $connection->commit();
                 }
+
                 return \Response::json([
                     'code' => 200,
+                    'data' => [
+                        'name'  => $studentInfo->name,
+                        'idnum' => $studentInfo->idnum,
+                        'idcard'=> $studentInfo->idcard,
+                        'status'=> $status
+                    ]
 
                 ]);
+
             }else{
                 throw new \Exception('解绑失败');
             }
