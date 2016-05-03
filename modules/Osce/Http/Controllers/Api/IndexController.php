@@ -393,7 +393,7 @@ class IndexController extends CommonController
             $exam_screen_id = $examScreening->id;       //获取场次id
             //获取学生的考试状态
             $student      = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_screen_id);
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
             $status       = $this->checkType($exameeStatus->status);
 
            
@@ -487,6 +487,7 @@ class IndexController extends CommonController
                     //更改状态（2 为上报弃考）
                     ExamScreeningStudent::where('watch_id', '=', $id)->where('student_id', '=', $student_id)
                                         ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
+
                     //中途解绑（更改队列，往后推）
                     ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
 
