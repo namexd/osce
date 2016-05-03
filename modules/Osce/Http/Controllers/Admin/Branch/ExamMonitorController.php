@@ -97,7 +97,7 @@ class ExamMonitorController  extends CommonController
             } else {
                 throw new \Exception('没有对应的考试场次');
             }
-            $result=$this->getAbsentStudent($studentId, $examId, $screen_id); //插入缺考记录 学生已缺考
+
             $data=array(
                 'examId' =>$request->input('examId'), //考试编号
                 'studentId' =>$request->input('studentId'), //考生编号
@@ -106,8 +106,12 @@ class ExamMonitorController  extends CommonController
             $examControlModel = new ExamControl();
             $result = $examControlModel->stopExamLate($data, $screen_id);
             if ($result == true) {
+         
+                $result=$this->getAbsentStudent($studentId, $examId, $screen_id); //插入缺考记录 学生已缺考
+
                 return response()->json(true);
             } else {
+                echo 222222;
                 return response()->json($result);
             }
         } catch (\Exception $ex) {
@@ -135,10 +139,12 @@ class ExamMonitorController  extends CommonController
                     $examOrder = ExamOrder::where('exam_id', '=', $examId)->where('exam_screening_id', '=', $screen_id)
                         ->select(['begin_dt', 'student_id'])->orderBy('begin_dt', 'DESC')->first();
                     if($examOrder->student_id == $studentId){
+                      echo 33333333;
                         //检查考试是否可以结束
                         $examScreening  = new ExamScreening();
                         $examScreening  ->getExamCheck();
                     }
+                    echo  $studentId,$examOrder->student_id ;
                     return true;//缺考记录插入成功
                 }
                 return false;//缺考记录插入失败
