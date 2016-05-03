@@ -673,6 +673,7 @@ class ExamQueue extends CommonModel
             //先查看exam_queue表中是否已经有了数据，防止脏数据
             $examObj = ExamQueue::where('exam_id', $examId)
                 ->where('student_id', $studentId)
+                ->where('exam_screening_id', $examScreeningId)
                 ->orderBy('begin_dt', 'asc')->get();
 
             if ($examObj->isEmpty()) {
