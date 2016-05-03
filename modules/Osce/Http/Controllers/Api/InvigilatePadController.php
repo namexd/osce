@@ -163,9 +163,10 @@ class InvigilatePadController extends CommonController
             $redis = Redis::connection('message');
             $stationId = (int)$request->input('station_id');
             $teacher_id = (int)$request->input('teacher_id');
+            $student_id = $request['student_id'];
             $exam = Exam::doingExam();
             $studentModel = new  Student();
-            $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
+            $studentData = $studentModel->studentList($stationId, $exam,$student_id);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 
@@ -217,12 +218,14 @@ class InvigilatePadController extends CommonController
             $redis = Redis::connection('message');
             $stationId = $request['station_id'];
             $teacher_id = $request['teacher_id'];
+            $student_id = $request['student_id'];
+        
             $exam = Exam::doingExam();
         
         
         
             $studentModel = new  Student();
-            $studentData = $studentModel->studentList($stationId, $exam,$teacher_id);
+            $studentData = $studentModel->studentList($stationId, $exam,$student_id);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 //                dump($this->success_data($studentData['nextTester']));

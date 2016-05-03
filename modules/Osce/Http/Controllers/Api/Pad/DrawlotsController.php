@@ -567,6 +567,7 @@ class DrawlotsController extends CommonController
             //推送当前学生
             $request['station_id'] = $result->id;
             $request['teacher_id'] = $teacherId;
+            $request['student_id'] = $student->id;
 
             $inv = new InvigilatePadController();
             $studentMsg = $inv->getAuthentication_arr($request);//当前考生推送
@@ -746,6 +747,7 @@ class DrawlotsController extends CommonController
 
                 //随机获取一个考站的id
                 $ranStationId = $this->ranStationSelect($roomId, $examId, $studentids, $examScreeingId);
+                \Log::alert($ranStationId);
 
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id', $student->id)

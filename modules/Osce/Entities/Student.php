@@ -464,7 +464,7 @@ class Student extends CommonModel
      * @return bool
      */
 
-    public function studentList($stationId, $exam, $teacher_id)
+    public function studentList($stationId, $exam, $student_id)
 
     {
 //        $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
@@ -488,6 +488,7 @@ class Student extends CommonModel
             ->where('exam_queue.station_id', '=', $stationId)
             ->where('exam_queue.exam_id', '=', $exam->id)
             ->where('station_teacher.exam_id', $exam->id)
+            ->where('exam_queue.student_id', $student_id)
             ->where('exam_queue.exam_screening_id', $exam_screening_id)
             ->where('exam_queue.status', '=', 2)
             ->first();
@@ -500,9 +501,10 @@ class Student extends CommonModel
             })
                 ->where('exam_queue.station_id', '=', $stationId)
                 ->where('exam_queue.exam_id', '=', $exam->id)
+                ->where('exam_queue.student_id', $student_id)
                 ->where('station_teacher.exam_id', $exam->id)
                 ->where('exam_queue.status', 1)
-                ->where('exam_queue.blocking', 1)
+//                ->where('exam_queue.blocking', 1)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->orderBy('exam_queue.next_num', 'asc')
@@ -527,6 +529,7 @@ class Student extends CommonModel
             })
                 ->where('exam_queue.station_id', '=', $stationId)
                 ->where('exam_queue.exam_id', '=', $exam->id)
+                ->where('exam_queue.student_id', $student_id)
                 ->where('station_teacher.exam_id', $exam->id)
                 ->where('exam_queue.status', '=', 2)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
@@ -859,9 +862,9 @@ class Student extends CommonModel
     }
 
     //获取考生的详细信息
-    public function getExameeStatus($studentId)
+    public function getExameeStatus($studentId,$exam_screen_id)
     {
-        $builder = $this->where('student.id', '=', $studentId)->leftjoin('exam_screening_student', function ($join) {
+        $builder = $this->where('student.id', '=', $studentId)->where('exam_queue.exam_screening_id','=',$exam_screen_id)->leftjoin('exam_screening_student', function ($join) {
             $join->on('exam_screening_student.student_id', '=', 'student.id');
         })->leftjoin('exam_screening', function ($examScreening) {
             $examScreening->on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
