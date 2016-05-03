@@ -659,7 +659,7 @@ class Exam extends CommonModel
             $time = time();     //默认为今天
         }
         $today = strtotime(date('Y-m-d', $time));    //当天凌晨
-
+            
         $result = $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
                                 or unix_timestamp(date_format(end_dt, "%Y-%m-%d")) = ?
                                 or (unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) < ?
@@ -667,8 +667,6 @@ class Exam extends CommonModel
             [$today, $today, $today, $today])
             ->with('examPlan')
             ->get();
-
-
         return $result;
     }
 

@@ -164,10 +164,11 @@ class ExamScreening extends CommonModel
         $todayEnd = date('Y-m-d 23:59:59');
 
         $exam=Exam::doingExam();
-        $screenId=ExamPlan::where('exam_id',$exam->id)->get()->pluck('exam_screening_id')->toArray();
+        $screenId=ExamPlan::where('exam_id',$exam->id)
+            ->get()
+            ->pluck('exam_screening_id')
+            ->toArray();
         return $this->where('exam_id', '=', $exam_id)
-            ->whereRaw("UNIX_TIMESTAMP($this->begin_dt) > UNIX_TIMESTAMP('$todayStart')
-             AND UNIX_TIMESTAMP($this->begin_dt) < UNIX_TIMESTAMP('$todayEnd')")
             ->where('status', '=', 0)
             ->whereIn('id',$screenId)
             ->OrderBy('begin_dt', 'asc')
@@ -179,8 +180,6 @@ class ExamScreening extends CommonModel
         $todayStart = date('Y-m-d 00:00:00');
         $todayEnd = date('Y-m-d 23:59:59');
         return $this->where('exam_id', '=', $exam_id)
-            ->whereRaw("UNIX_TIMESTAMP($this->begin_dt) > UNIX_TIMESTAMP('$todayStart')
-              AND UNIX_TIMESTAMP($this->begin_dt) < UNIX_TIMESTAMP('$todayEnd')")
             ->where('status', '=', 1) //等候考试
             ->OrderBy('begin_dt', 'asc')
             ->first();
