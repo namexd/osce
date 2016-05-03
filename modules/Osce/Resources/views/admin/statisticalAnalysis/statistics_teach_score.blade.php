@@ -41,7 +41,7 @@
                             @endforeach
                         @endif
                     </select>
-                    <label for="" class="pull-left exam-name" style="margin-left: 20px;">试卷名称：</label>
+                    <label for="" class="pull-left exam-name" style="margin-left: 20px;">考核项目：</label>
                     <select name="name" class="input-sm form-control student_select min1024" style="width: 250px;height: 34px">
 
                     </select>
