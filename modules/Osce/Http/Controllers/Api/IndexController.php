@@ -366,7 +366,7 @@ class IndexController extends CommonController
             }
             $id = $watchInfo->id;       //获取腕表id
 
-            //腕表使用记录查询学生id
+            //根据腕表id查询腕表使用记录中对应的学生id
             $watchLog = WatchLog::where('watch_id', '=', $id)->where('action', '=', '绑定')
                                 ->select('student_id')->orderBy('id','DESC')->first();
             //1、腕表绑定的学生不存在（直接解绑，反馈学生不存在）
@@ -383,6 +383,7 @@ class IndexController extends CommonController
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
 
             //修改场次状态
+            //根据考试id获取当前考试的场次id
             $examScreeningModel = new ExamScreening();
             $examScreening      = $examScreeningModel -> getExamingScreening($exam_id);
             if(is_null($examScreening))
@@ -392,7 +393,7 @@ class IndexController extends CommonController
             $exam_screen_id = $examScreening->id;       //获取场次id
             //获取学生的考试状态
             $student      = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_screen_id);
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
             $status       = $this->checkType($exameeStatus->status);
 
            
@@ -486,6 +487,7 @@ class IndexController extends CommonController
                     //更改状态（2 为上报弃考）
                     ExamScreeningStudent::where('watch_id', '=', $id)->where('student_id', '=', $student_id)
                                         ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
+
                     //中途解绑（更改队列，往后推）
                     ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
 
