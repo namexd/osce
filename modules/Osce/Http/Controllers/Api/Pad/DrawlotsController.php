@@ -1044,7 +1044,9 @@ class DrawlotsController extends CommonController
             ->get()->pluck('station_id')->toArray();
         //拿到老师在该场次里支持的考站
         $arr = array_intersect($stationList, $stationLists);
-
+        if(count($arr)>1){
+            throw new \Exception('考站取出有错！！',-4100);
+        }
         $stationId = array_pop($arr);
         if (is_null($stationId)) {
             throw new \Exception('没有对应的考站！');
@@ -1130,7 +1132,9 @@ class DrawlotsController extends CommonController
 
         //拿到老师在该场次里支持的考站
         $arr = array_intersect($stationLists, $stationList);
-
+        if(count($arr)>1){
+            throw new \Exception('考站取出有错！！',-4100);
+        }
         $stationId = array_pop($arr);
 
         if (is_null($stationId)) {
