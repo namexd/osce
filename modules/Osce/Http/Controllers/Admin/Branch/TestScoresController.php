@@ -277,7 +277,7 @@ class TestScoresController  extends CommonController
         })->leftjoin('exam_paper',function($join){
             $join->on('exam_paper.id','=','exam_paper_exam_station.exam_paper_id');
         })->groupBy('exam_paper.id')->select('exam_paper.id','exam_paper.name')->get()->toArray();
-
+        //获取该场考试对应科目信息
         $subjectlist = ExamResult::leftjoin('station',function($join){
             $join->on('exam_result.station_id','=','station.id');
         })->leftjoin('subject',function($join){
@@ -300,8 +300,6 @@ class TestScoresController  extends CommonController
                array_push($arr,$v);
             }
         }
-        //获取该场考试对应的科目信息
-        //dd($datalist->toArray());
         return $this->success_data(['datalist'=>$arr]);
 
     }
