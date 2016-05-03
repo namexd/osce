@@ -1197,9 +1197,14 @@ class InvigilatePadController extends CommonController
         $connection ->beginTransaction();
 
         try{
-            $id = Watch::where('code',$code)->select('id')->first()->id;    //获取腕表id
-            $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();//腕表使用记录查询学生id
-            if(!$student_id){    //如果学生不存在
+
+            //获取腕表id
+            $id = Watch::where('code',$code)->select('id')->first()->id;
+            //根据腕表id查询腕表使用记录中对应的学生id
+            $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();
+
+            //如果腕表绑定的学生不存在，直接解绑
+            if(!$student_id){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
                     return \Response::json(array('code'=>2));       //该腕表绑定的学生不存在
@@ -1207,28 +1212,22 @@ class InvigilatePadController extends CommonController
                     return \Response::json(array('code'=>0));       //解绑失败
                 }
             }
+
+            //获取学生id
             $student_id=$student_id->student_id;
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
-            //获取学生的考试状态
-            $student = new Student();
-
             //根据考试id获取所对应的场次id
-
             $examScreening = ExamScreening::getExamingScreening($exam_id);
-
             if(is_null($examScreening))
             {
                 $examScreening  = ExamScreening::getNearestScreening($exam_id);
             }
-
-            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$examScreening->id);
-            $status = $this->checkType($exameeStatus->status);
-
-            //不存在考试场次，直接解绑
-            if(!$examScreening){
+            //如果不存在考试场次，直接解绑
+            if(empty($examScreening)){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
+                    //腕表解绑，添加腕表解绑记录
                     $action = '解绑';
                     $updated_at = date('Y-m-d H:i:s',time());
                     $data = array(
@@ -1247,7 +1246,6 @@ class InvigilatePadController extends CommonController
                             'name'  => $studentInfo->name,
                             'idnum' => $studentInfo->idnum,
                             'idcard'=> $studentInfo->idcard,
-                            'status'=> $status
                         ]
                     ]);
 
@@ -1255,10 +1253,16 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('解绑失败');
                 }
             }
-            $exam_screen_id = $examScreening->id;
+
+            $exam_screen_id = $examScreening->id;       //获取场次id
+            //获取学生的考试状态
+            $student = new Student();
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
+            $status = $this->checkType($exameeStatus->status);
             //查询考试流程 是否结束
-            $ExamFinishStatus = ExamQueue::whereNotIn('status',[3,4])->where('student_id', '=', $student_id)
-                ->where('exam_screening_id', '=', $exam_screen_id)
+            $ExamFinishStatus = ExamQueue::whereNotIn('status',[3,4])->where('student_id', $student_id)
+                ->where('exam_screening_id',$exam_screen_id)
+                ->where('exam_id',$exam_id)
                 ->count();
 
             //如果考试流程结束
@@ -1269,11 +1273,12 @@ class InvigilatePadController extends CommonController
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态
                 }
                 //更改 （状态改为 已解绑：status=2）
-                ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->update(['status'=>2]);
+                ExamOrder::where('student_id',$student_id)->where('exam_id',$exam_id)->where('exam_screening_id', $exam_screen_id)->update(['status'=>2]);
                 //腕表状态 更改为 解绑状态（status=0）
                 $result = Watch::where('id',$id)->update(['status'=>0]);
 
                 if($result){
+                    //解绑成功，添加腕表解绑记录
                     $action='解绑';
                     $updated_at = date('Y-m-d H:i:s',time());
                     $data = array(
@@ -1284,7 +1289,6 @@ class InvigilatePadController extends CommonController
                     );
                     $watchModel=new WatchLog();
                     $watchModel->unwrapRecord($data);
-
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                     $examScreening  =  new ExamScreening();
                     $examScreening  -> getExamCheck();
@@ -1308,13 +1312,13 @@ class InvigilatePadController extends CommonController
             //如果考试流程未结束 还是解绑,把考试排序的状态改为0
             $result=Watch::where('id',$id)->update(['status'=>0]);
             if($result){
-
+                //解绑成功
                 $action = '解绑';
                 //更改 （状态改为 未绑定：status=0）
-                $result = ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
-                    ->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>0]);
-
+                $result = ExamOrder::where('student_id', $student_id)->where('exam_id', $exam_id)
+                    ->where('exam_screening_id',$exam_screen_id)->update(['status'=>0]);
                 if($result){
+
                     //腕表解绑，添加腕表解绑记录
                     $updated_at =date('Y-m-d H:i:s',time());
                     $data = array(
@@ -1325,8 +1329,7 @@ class InvigilatePadController extends CommonController
                     );
                     $watchModel = new WatchLog();
                     $watchModel->unwrapRecord($data);
-
-                    //更改状态
+                    //更改状态（中途解绑解绑，换腕表）
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>2]);
 
                     //中途解绑（更改队列，往后推）
