@@ -642,6 +642,10 @@ class Student extends CommonModel
 
     public function getStudentQueue($exam_id, $screen_id, $countStation)
     {
+
+        $todayStart = date('Y-m-d 00:00:00');
+        $todayEnd = date('Y-m-d 23:59:59');
+
         $buondNum = ExamOrder::where('exam_id', '=', $exam_id)->where('status','=',1)
                              ->where('exam_screening_id', '=', $screen_id)->get();
         $buondNum = count($buondNum);
@@ -649,10 +653,6 @@ class Student extends CommonModel
         if ($num === 0 || $num < 0) {
             return array();
         }
-        
-        
-        
-        
 
         /*$builder = $this->leftjoin('exam_order', function ($join) {
             $join->on('student.id', '=', 'exam_order.student_id');
