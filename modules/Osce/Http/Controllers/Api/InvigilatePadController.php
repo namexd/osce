@@ -1209,10 +1209,19 @@ class InvigilatePadController extends CommonController
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
             //获取学生的考试状态
             $student = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
-            $status = $this->checkType($exameeStatus->status);
-            $screen_id = ExamOrder::where('exam_id','=',$exam_id)->where('student_id','=',$student_id)->first();  //考试场次编号
-            if(!$screen_id){
+
+            //根据考试id获取所对应的场次id
+
+            $examScreening = ExamScreening::getExamingScreening($exam_id);
+
+            if(is_null($examScreening))
+            {
+                $examScreening  = ExamScreening::getNearestScreening($exam_id);
+            }
+
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$examScreening->id);
+            $status = $this->checkType($exameeStatus->status);//返回exam_queue中的状态
+            if(!$examScreening){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
                     $action = '解绑';
@@ -1233,10 +1242,15 @@ class InvigilatePadController extends CommonController
                     throw new \Exception('解绑失败');
                 }
             }
-            $exam_screen_id = $screen_id->exam_screening_id;
-            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->count();
+            $exam_screen_id = $examScreening->id;
+            //获取该考生考试队列中已完成的数量
+            $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=', $student_id)->where('exam_id',$exam_id)->count();
+
+
+
             $ExamFlowModel = new  ExamFlow();
             $studentExamSum = $ExamFlowModel->studentExamSum($exam_id);
+
             if($ExamFinishStatus==$studentExamSum){ //如果考试流程结束
                 if($status != 0){
                     ExamScreeningStudent::where('watch_id',$id)->where('student_id',$student_id)->where('exam_screening_id',$exam_screen_id)->update(['is_end'=>1]);//更改考试场次终止状态

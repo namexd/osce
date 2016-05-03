@@ -366,7 +366,7 @@ class IndexController extends CommonController
             }
             $id = $watchInfo->id;       //获取腕表id
 
-            //腕表使用记录查询学生id
+            //根据腕表id查询腕表使用记录中对应的学生id
             $watchLog = WatchLog::where('watch_id', '=', $id)->where('action', '=', '绑定')
                                 ->select('student_id')->orderBy('id','DESC')->first();
             //1、腕表绑定的学生不存在（直接解绑，反馈学生不存在）
@@ -388,6 +388,7 @@ class IndexController extends CommonController
             $status       = $this->checkType($exameeStatus);
 
             //修改场次状态
+            //根据考试id获取当前考试的场次id
             $examScreeningModel = new ExamScreening();
             $examScreening      = $examScreeningModel -> getExamingScreening($exam_id);
             if(is_null($examScreening))

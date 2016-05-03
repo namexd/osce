@@ -859,9 +859,21 @@ class Student extends CommonModel
     }
 
     //获取考生的详细信息
-    public function getExameeStatus($studentId)
+    /**
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $studentId 学生id
+     * @param $exam_id 考试Id
+     * @param $exam_screening_id 当前场次Id
+     * @return mixed
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExameeStatus($studentId,$exam_id,$exam_screening_id)
     {
-        $builder = $this->where('student.id', '=', $studentId)->leftjoin('exam_screening_student', function ($join) {
+        $builder = $this->where('student.id', $studentId)->where('exam_queue.exam_id',$exam_id)->where('exam_queue.exam_screening_id',$exam_screening_id)->leftjoin('exam_screening_student', function ($join) {
             $join->on('exam_screening_student.student_id', '=', 'student.id');
         })->leftjoin('exam_screening', function ($examScreening) {
             $examScreening->on('exam_screening.id', '=', 'exam_screening_student.exam_screening_id');
