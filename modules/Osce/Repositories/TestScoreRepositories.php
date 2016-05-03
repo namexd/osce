@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Repositories;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Repositories\BaseRepository;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
@@ -328,8 +329,8 @@ class TestScoreRepositories  extends BaseRepository
     /**
      * 考生成绩分析-老师列表数据
      * @access public
-     * @param $ExamId
-     * @param int $qualified
+     * @param $ExamId 考试id
+     * @param int $qualified 考核项目id
      * @return mixed
      * @author weihuiguo <weihuiguo@misrobot.com>
      * @date    2016-3-2 17:26:32
@@ -338,7 +339,9 @@ class TestScoreRepositories  extends BaseRepository
     public function getTeacherData($examid,$subjectid){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        if(intval($subjectid)){
+
+        $examPaper = ExamPaper::where('id',$subjectid)->first();
+        if(!empty($examPaper)){
             $examlist = $ExamResult->where('exam_paper.id','=',$subjectid)->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
                 $join->on('exam_screening.id','=','exam_result.exam_screening_id');
             })->leftjoin('station',function($join){
@@ -376,7 +379,6 @@ class TestScoreRepositories  extends BaseRepository
                 $DB->raw('min(exam_result.score) as minScore')
             )->groupBy('student.grade_class')->get();
         }
-
         //dd($examlist->toArray());
         return $examlist;
     }

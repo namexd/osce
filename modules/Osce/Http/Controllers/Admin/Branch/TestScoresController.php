@@ -314,6 +314,10 @@ class TestScoresController  extends CommonController
      * @date   2016-3-2 17:22:53 .com Inc. All Rights Reserved
      */
     public function getTeacherDataList(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $this->validate($request,[
+            'examid'       => 'required|integer',//考试id
+            'subjectid'    => 'required|integer',//考核项目id
+        ]);
         $examid = $request->examid;
         $paperid = $request->subjectid;
         $datalist = $TestScoreRepositories->getTeacherData($examid,$paperid);
