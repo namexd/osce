@@ -382,10 +382,10 @@ class IndexController extends CommonController
             $student_id  = $watchLog->student_id;
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
 
-            //获取学生的考试状态
+            //获取学生在考试队列中（exam_queue）的考试状态
             $student      = new Student();
             $exameeStatus = $student->getExameeStatus($studentInfo->id, $exam_id);
-            $status       = $this->checkType($exameeStatus->status);
+            $status       = $this->checkType($exameeStatus);
 
             //修改场次状态
             $examScreeningModel = new ExamScreening();
