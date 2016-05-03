@@ -144,7 +144,7 @@ class ExamMonitorController  extends CommonController
                         $examScreening  = new ExamScreening();
                         $examScreening  ->getExamCheck();
                     }
-                    echo  5555555;
+                    echo  $studentId,$examOrder->student_id ;
                     return true;//缺考记录插入成功
                 }
                 return false;//缺考记录插入失败
