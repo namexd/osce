@@ -111,7 +111,6 @@ class ExamMonitorController  extends CommonController
 
                 return response()->json(true);
             } else {
-                echo 222222;
                 return response()->json($result);
             }
         } catch (\Exception $ex) {

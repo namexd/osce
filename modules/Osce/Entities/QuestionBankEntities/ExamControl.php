@@ -425,10 +425,10 @@ class ExamControl extends Model
                         }
                     }*/
 
-//            $DB->commit();
+            $DB->commit();
             return true;
         }catch (\Exception $ex){
-            $DB->rollback();
+//            $DB->rollback();
             throw $ex;
         }
     }
