@@ -361,7 +361,7 @@ class IndexController extends CommonController
         //开启事务
         $connection = \DB::connection('osce_mis');
         $connection ->beginTransaction();
-//        try{
+        try{
             //判断腕表是否存在
             $watchModel = new Watch();
             $watchInfo  = $watchModel->where('watch.code', '=', $code)->first();
@@ -435,7 +435,7 @@ class IndexController extends CommonController
                 }
             }
 
-            //查询考试流程 是否结束   todo 改为查看当前场次学生是否考完  todo 周强 2016-4-30
+            //查询考试流程 是否结束
             $ExamFinishStatus = ExamQueue::whereNotIn('status', [3,4])->where('student_id', '=', $student_id)
                                          ->where('exam_screening_id', '=', $exam_screen_id)
                                          ->count();
@@ -450,9 +450,17 @@ class IndexController extends CommonController
                 }
 
                 //更改 （状态改为 已解绑：status=2）
-                ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
-                         ->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>2]);
+                $ExamOrder =ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
+                         ->where('exam_screening_id', '=', $exam_screen_id)->get();
+                if($ExamOrder->status != 5){
+                    foreach ($ExamOrder as $value){
+                        $value ->status =2;
+                        if(!$value->save()){
+                            throw new \Exception('解绑腕表修状态失败');
 
+                        }
+                    }
+                }
                 //腕表状态 更改为 解绑状态（status=0）
                 $result = Watch::where('id',$id)->update(['status'=>0]);
                 if($result){
@@ -476,50 +484,51 @@ class IndexController extends CommonController
                 }else{
                     throw new \Exception('解绑失败');
                 }
-            }
-
-            //如果考试流程未结束 还是解绑,把考试排序的状态改为0
-            $result = Watch::where('id', '=', $id)->update(['status'=>0]);
-
-            if($result){
-                //更改 （状态改为 未绑定：status=0）
-                $result = ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
-                        ->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>0]);
-                if($result){
-                    //腕表解绑，添加腕表解绑记录
-                    $this->watchUnbundling($id, $student_id);
-                    //更改状态（2 为上报弃考）
-                    ExamScreeningStudent::where('watch_id', '=', $id)->where('student_id', '=', $student_id)
-                                        ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
-
-                    //中途解绑（更改队列，往后推）
-                    ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
-
-                    //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
-                    $examScreening = new ExamScreening();
-                    $examScreening ->getExamCheck();
-                    //检查考试是否可以结束
-                    $connection->commit();
-                }
-                return \Response::json([
-                    'code' => 1,
-                    'data' => [
-                        'name'  => $studentInfo->name,
-                        'idnum' => $studentInfo->idnum,
-                        'idcard'=> $studentInfo->idcard,
-                        'status'=> $status
-                    ]
-                ]);
             }else{
-                throw new \Exception('解绑失败');
+                //如果考试流程未结束 还是解绑,把考试排序的状态改为0
+                $result = Watch::where('id', '=', $id)->update(['status'=>0]);
+
+                if($result){
+                    //更改 （状态改为 未绑定：status=0）
+                    $result = ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
+                        ->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>0]);
+
+                    if($result){
+                        //腕表解绑，添加腕表解绑记录
+                        $this->watchUnbundling($id, $student_id);
+                        //更改状态（2 为上报换腕表）
+                        ExamScreeningStudent::where('watch_id', '=', $id)->where('student_id', '=', $student_id)
+                            ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
+
+                        //中途解绑（更改队列，往后推）
+                        ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
+
+                        //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
+                        $examScreening = new ExamScreening();
+                        $examScreening ->getExamCheck();
+                        //检查考试是否可以结束
+                        $connection->commit();
+                    }
+                    return \Response::json([
+                        'code' => 1,
+                        'data' => [
+                            'name'  => $studentInfo->name,
+                            'idnum' => $studentInfo->idnum,
+                            'idcard'=> $studentInfo->idcard,
+                            'status'=> $status
+                        ]
+                    ]);
+                }else{
+                    throw new \Exception('解绑失败');
+                }
             }
 
-//        }
-//        catch(\Exception $ex)
-//        {
-//            $connection->rollBack();
-//            return \Response::json(array('code'=>0));
-//        }
+        }
+        catch(\Exception $ex)
+        {
+            $connection->rollBack();
+            return \Response::json(array('code'=>0));
+        }
     }
 
     /**
