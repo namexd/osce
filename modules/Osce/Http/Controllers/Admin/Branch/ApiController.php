@@ -934,7 +934,7 @@ class ApiController extends CommonController
         $examScreeningId = $request->input('exam_screening_id');
         $stationId       = $request->input('station_id');
 //        \Log::alert('ReplaceData', [$mode,$stationId,$examScreeningId,$stationId]);
-//        try {
+        try {
 
             $examQueueModel = new ExamQueue();
             $examQueue = $examQueueModel->where('student_id', $studentId)
@@ -994,7 +994,7 @@ class ApiController extends CommonController
                     $result = ExamScreeningStudent::where('exam_screening_id',$examScreeningId)->where('student_id',$studentId)->first();
 
                     if(!empty($result)&&$result->is_end!=1){
-                        $result->is_end =1;
+//                        $result->is_end =1;
                         $result->status =2;
                         if(!$result->save()){
                             throw new \Exception(' 更新考试场次-学生关系表失败！',-103);
@@ -1027,10 +1027,10 @@ class ApiController extends CommonController
                     );
                 }
             }
-//        }catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//
-//        }
+        }catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
+        }
 
     }
 }

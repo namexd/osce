@@ -487,6 +487,9 @@ class DrawlotsController extends CommonController
             'room_id' => 'required|integer',
             'teacher_id' => 'required|integer'
         ]);
+
+
+        \Log::alert('抽签请求',$request->all());
         try {
             $examId = $request->input('exam_id', null);
             //获取uid和room_id
@@ -596,6 +599,7 @@ class DrawlotsController extends CommonController
 
             $inv = new InvigilatePadController();
             $studentMsg = $inv->getAuthentication_arr($request);//当前考生推送
+            \Log::alert('抽签推送',[$studentMsg]);
             if ($studentMsg) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data($studentMsg, 102, '验证完成')));
