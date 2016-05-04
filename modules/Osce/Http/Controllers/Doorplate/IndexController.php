@@ -10,6 +10,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamFlow;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\PadLogin\PadLogin;
@@ -98,7 +99,7 @@ class IndexController extends CommonController
             $request['data'] = count($data);
             $request['screen_id'] = $screenId;
         }else{
-            throw new \Exception('该房间下暂时没有考试信息');
+            throw new \Exception('本场次该房间下暂时没有考试信息');
         }
         return view('osce::doorplate.doorplate_msg ', [
             'data'      =>$data,'msg'=>$cont,
@@ -229,9 +230,11 @@ class IndexController extends CommonController
             if(!$data->isEmpty()) {
                 $ExamStationStatus = new ExamStationStatus();
                 $status = $ExamStationStatus->getExamMsg($exam_id, $exam_screening_id, $data);//1都准备好 2 有考试 3考完
-                $endList = ExamQueue::where('room_id', $room_id)->where('exam_screening_id', $exam_screening_id)
-                    ->where('exam_id', $exam_id)->where('status', '<', 3)->get();
-                if (is_null($endList)) {//该场次下该房间学生已考完
+                $planList=ExamPlan::where('room_id', $room_id)->where('exam_screening_id', $exam_screening_id)
+                    ->where('exam_id', $exam_id)->get()->pluck('student_id')->toArray();//获取该房间该场次下安排的所有学生
+                $endList = ExamScreeningStudent::where('exam_screening_id', $exam_screening_id)
+                    ->whereIN('student_id',$planList)->where('is_end',1)->count();//该场次下对应结束考试的学生数量
+                if (count($planList)==$endList) {//该场次下该房间学生已考完
                     $status = 3;
                 }
                 return $status;
