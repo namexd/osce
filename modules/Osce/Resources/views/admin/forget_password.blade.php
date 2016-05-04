@@ -17,6 +17,7 @@
 	<script type="text/javascript" src="{{asset('osce/admin/plugins/js/jquery-2.1.1.min.js')}}" ></script>
 	<link rel="stylesheet" type="text/txt" src="{{asset('osce/common/css/bootstrapValidator.css')}}"/>
 	<script type="text/javascript" src="{{asset('osce/common/js/bootstrapValidator.js')}}"> </script>
+	<script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
 	<script type="text/javascript">
 		$(function(){
     		$('#loginForm').bootstrapValidator({
@@ -50,7 +51,7 @@
                         }
                     }
                 },
-	            re_password: {
+	            password_confirmation: {
 	                validators: {
 	                    notEmpty: {
 	                        message: '密码不能为空'
@@ -68,6 +69,7 @@
             }
 		});
 
+    	
     	/**
     	 * 发送短息验证
     	 * @author mao
@@ -77,23 +79,45 @@
     	 */
     	function sendMessage() {
     		$('#valid').one('click', function() {
-    			//设置时间
-	    		var count = 60,
-	    			$that = $(this);
+    			if($('#mobile').val() == '') {
+    				layer.alert('请输入手机号');
+    				sendMessage();
+    				return;
+    			}
+    			var url = '{{route('osce.wechat.user.getResetPasswordVerify')}}?mobile='+$('#mobile').val();
 
-	    		$that.attr('disabled','disabled');  //不可点
-	    		var self = setInterval(function() {
-	    			$that.text(count + 's');
-	    			count --;
+    			$.ajax({
+    				type:'get',
+    				url:url,
+    				success:function(data) {
+	    				if(data.code == 1) {
+	    					//设置时间
+				    		var count = 60,
+				    			$that = $(this);
 
-	    			//时间到重绑定，状态更新
-	    			if(count < 0) {
-	    				clearInterval(self);
-	    				$that.removeAttr('disabled');
-	    				$that.text('发送验证码');
+				    		$that.attr('disabled','disabled');  //不可点
+				    		var self = setInterval(function() {
+				    			$that.text(count + 's');
+				    			count --;
+
+				    			//时间到重绑定，状态更新
+				    			if(count < 0) {
+				    				clearInterval(self);
+				    				$that.removeAttr('disabled');
+				    				$that.text('发送验证码');
+				    				sendMessage();
+				    			}
+				    		}, 1000);
+	    				} else {
+	    					layer.msg(data.message,{skin:'msg-error',icon:1});
+	    					sendMessage();
+	    				}
+	    			},
+	    			error:function(data) {
+	    				layer.msg(data,{skin:'msg-error',icon:1});
 	    				sendMessage();
 	    			}
-	    		}, 1000);
+    		    });
 	    	})
     	}
     	//初始化
@@ -143,6 +167,21 @@
 		.btn:visited{background-color: #1dc5a3!important;}
 		.btn:hover{background-color: #1dc5a3!important;}
 		.btn:focus{background-color: #1dc5a3!important;}
+		
+		/*layer alert*/
+		.layui-layer-title{
+		    background: #fff!important;
+		    color: #ed5565!important;
+		    font-size: 16px!important;
+		}
+		.layui-layer-btn {
+		    background: #fff !important;
+		    border-top: 1px #fff solid !important;
+		}
+		.layui-layer-btn .layui-layer-btn0 {
+		    border-color: #ed5565;
+		    background-color: #ed5565;
+		}
 	</style>
 </head>
 <body>
@@ -152,20 +191,20 @@
 					<strong>忘记密码</strong>
 					<a href="{{( is_null(session('referer'))? route('osce.wechat.user.getWebLogin'): session('referer') )}}">返回></a>
 				</div>
-				<form class="m-t" role="form" id="loginForm" method="post" action="{{ route('osce.admin.postIndex') }}">
+				<form class="m-t" role="form" id="loginForm" action="{{route('osce.wechat.user.postResetPassword')}}" method="post" >
 					<div class="form-group">
-						<input type="text" class="form-control" id="username" name="username"  placeholder="手机号码">
+						<input type="text" class="form-control" id="mobile" name="mobile"  placeholder="手机号码">
 					</div>
 					<div class="form-group">
-						<input type="password" class="form-control" id="password" name="valid" placeholder="请输入验证码" style="width: 60%;float: left;">
-						<a class="btn btn-primary" id="valid" name="valid" href="javascript:void(0);" style="margin-left:3%;width: 37%;float: left;margin-top: 0;margin-bottom: 0;">发送验证码</a>
+						<input type="password" class="form-control" id="password" name="verify" placeholder="请输入验证码" style="width: 60%;float: left;">
+						<a class="btn btn-primary" id="valid" href="javascript:void(0);" style="margin-left:3%;width: 37%;float: left;margin-top: 0;margin-bottom: 0;">发送验证码</a>
 						<div class="clearfix"></div>
 					</div>
 					<div class="form-group">
 						<input type="password" class="form-control" id="username" name="password"  placeholder="请输入新密码">
 					</div>
 					<div class="form-group">
-						<input type="password" class="form-control" id="password" name="re_password" placeholder="请重复新密码">
+						<input type="password" class="form-control" id="password" name="password_confirmation" placeholder="请重复新密码">
 					</div>
 					<button type="submit" class="btn btn-primary block full-width m-b">
 						提交审核
