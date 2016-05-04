@@ -10,12 +10,30 @@ namespace Modules\Osce\Http\Controllers\Billboard;
 
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Billboard\BillboardRepository;
 use Modules\Osce\Http\Controllers\CommonController;
 
 class BillboardController extends CommonController
 {
-    public function getIndex(Request $request)
+    /**
+     * 着陆页
+     * @url osce/billboard/index
+     * @access public
+     * @param Request $request
+     * @param BillboardRepository $billboardRepository
+     * @请求字段：
+     * 考试id:exam_id
+     * @return mixed
+     * @version 3.6
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-04
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getIndex(Request $request, BillboardRepository $billboardRepository)
     {
-        return view('osce::admin.billboard.index', ['exam_id' => $request->input('exam_id')]);
+        $data = $billboardRepository->getData($request->input('exam_id'));
+        return view('osce::billboard.index', ['data' => $data]);
     }
+
+    
 }

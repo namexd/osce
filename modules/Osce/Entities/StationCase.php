@@ -23,4 +23,9 @@ class StationCase extends CommonModel
     public function station(){
         return $this->belongsTo('\Modules\Osce\Entities\Station','station_id','id');
     }
+
+    public function cases()
+    {
+        return $this->belongsTo('\Modules\Osce\Entities\CaseModel', 'case_id', 'id');
+    }
 }
