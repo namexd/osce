@@ -536,7 +536,7 @@ class DrawlotsController extends CommonController
              */
             if ($exam->sequence_mode == 1) {
                 //从队列表中通过考场ID得到对应的当前组的考生信息
-                $examQueue = ExamQueue::getStudentExamineeId($room_id, $examId, $exam_screening_id);
+                $examQueue = ExamQueue::getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
                     $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                         json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
@@ -627,6 +627,7 @@ class DrawlotsController extends CommonController
             'uid' => 'sometimes|string',
             'exam_id' => 'required|integer'
         ]);
+        \Log::alert('uid', [$this->request->input('uid')]);
         try {
             //写入具体的数据
             $huaxiDrawlots->setParams($this->request->all());
