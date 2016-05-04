@@ -953,7 +953,7 @@ class ExamQueue extends CommonModel
 
         return $this->where('exam_id', '=', $exam_id)->where('exam_screening_id', '=', $screeningId)
                     ->where('status', '=', 0)->groupBy($mode)
-//                    ->orderBy('begin_dt', 'asc')->orderBy('id', 'asc')
+                    ->orderBy('begin_dt', 'asc')->orderBy('id', 'asc')
                     ->paginate($pageSize);
     }
 
