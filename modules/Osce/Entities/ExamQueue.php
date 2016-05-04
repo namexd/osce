@@ -54,6 +54,13 @@ class ExamQueue extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Exam', 'id', 'exam_id');
     }
 
+    public function scopeUsedStations($query, $screenId, $roomId)
+    {
+        return $query->where($this->table . '.exam_screening_id', $screenId)
+            ->where($this->table . '.room_id', $roomId)
+            ->whereNotIn('status', [0, 3]);
+
+    }
 
     protected $statuValues = [
         0 => '绑定腕表',
@@ -666,11 +673,13 @@ class ExamQueue extends CommonModel
             //先查看exam_queue表中是否已经有了数据，防止脏数据
             $examObj = ExamQueue::where('exam_id', $examId)
                 ->where('student_id', $studentId)
+                ->where('exam_screening_id', $examScreeningId)
                 ->orderBy('begin_dt', 'asc')->get();
 
             if ($examObj->isEmpty()) {
                 //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
                 $examPlan = ExamPlan::where('exam_id', '=', $examId)
+                    ->where('exam_screening_id', $examScreeningId)
                     ->where('student_id', '=', $studentId)
                     ->orderBy('begin_dt', 'asc')->get();
 

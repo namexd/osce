@@ -17,6 +17,7 @@ use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamStation;
+use Modules\Osce\Entities\PadLogin\PadLoginRepository;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
@@ -412,7 +413,8 @@ class PadController extends  CommonController{
 
         $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
         //考试完成推送
-        $draw=new DrawlotsController();
+        $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
+//        $draw=new DrawlotsController();
         $request['id']=$teacherId;
         $draw->getExaminee_arr($request);//当前组推送(可以获得)
         $draw->getNextExaminee_arr($request);//下一组
@@ -589,32 +591,39 @@ class PadController extends  CommonController{
     public function getRoomDatas($exam, $status = false){
         $rooms   = [];
         $roomIds = [];
-        if($exam->sequence_mode == 2){
-            //根据考试获取 对应考站
-            $examStation = ExamStation::where('exam_id','=',$exam->id)->get();
-            if(count($examStation)){
-                foreach ($examStation as $item) {
-                    //获取考站对应的考场
-                    $roomStation = RoomStation::where('station_id','=',$item->station_id)->first();
-                    $rooms[] = $roomStation->room;
-                    $roomIds[] = $roomStation->room_id;
-                }
-            }
-        }else{
-            $examRooms = ExamRoom::where('exam_id','=',$exam->id)->get();
-            foreach($examRooms as $examRoom){
-                $rooms[] = $examRoom->room;
-                $roomIds[] = $examRoom->room_id;
-            }
-        }
-        $rooms = array_unique($rooms);
-        $roomIds = array_unique($roomIds);
+//        if($exam->sequence_mode == 2){
+//            //根据考试获取 对应考站
+//            $examStation = ExamStation::where('exam_id','=',$exam->id)->get();
+//            if(count($examStation)){
+//                foreach ($examStation as $item) {
+//                    //获取考站对应的考场
+//                    $roomStation = RoomStation::where('station_id','=',$item->station_id)->first();
+//                    $rooms[] = $roomStation->room;
+//                    $roomIds[] = $roomStation->room_id;
+//                }
+//            }
+//        }else{
+//            $examRooms = ExamRoom::where('exam_id','=',$exam->id)->get();
+//            foreach($examRooms as $examRoom){
+//                $rooms[] = $examRoom->room;
+//                $roomIds[] = $examRoom->room_id;
+//            }
+//        }
+//        $rooms = array_unique($rooms);
+//        $roomIds = array_unique($roomIds);
+//
+//        if($status){
+//            return $roomIds;
+//        }else{
+//            return $rooms;
+//        }
+        \App::bind('PadLoginRepository', function () {
+            return new PadLoginRepository(\App::make('PadLogin'));
+        });
 
-        if($status){
-            return $roomIds;
-        }else{
-            return $rooms;
-        }
+        $padLogin = \App::make('PadLoginRepository');
+
+        return $padLogin->roomList($exam->id, $status);
     }
 
     /**

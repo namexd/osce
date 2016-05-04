@@ -329,9 +329,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('station-list',['uses'=>'DrawlotsController@getStationList','as'=>'osce.pad.getStationList']);  //登陆之后给予考站信息
 		Route::get('change-status',['uses'=>'PadController@getChangeStatus','as'=>'osce.admin.PadController.getChangeStatus']);
 		Route::get('next-student',['uses'=>'DrawlotsController@nextStudent','as'=>'osce.pad.nextStudent']);  //下一个考生
+		Route::post('drawlots',['uses'=>'DrawlotsController@postDrawlots','as'=>'osce.pad.postDrawlots']);  //下一个考生
 	});
-
-
 });
 
 
@@ -434,7 +433,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/end-exam', 	['uses'=>'InvigilatePadController@getEndExam','as'=>'osce.api.invigilatepad.getEndExam']);
 		Route::get('invigilatepad/test-index', 	['uses'=>'InvigilatePadController@getTestIndex','as'=>'osce.api.invigilatepad.getTestIndex']);
 
-
+		Route::get('exam-list', ['uses' => 'LoginPullDownController@getExamList', 'as' => 'osce.api.LoginPullDown.getExamList']);
+		Route::get('room-list', ['uses' => 'LoginPullDownController@getRoomList', 'as' => 'osce.api.LoginPullDown.getRoomList']);
 
 		//pad的上传
 		Route::post('upload-image',['uses'=>'InvigilatePadController@postTestAttachImage','as'=>'osce.pad.InvigilatePad.postTestAttachImage']);
@@ -516,22 +516,9 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 //TODO:测试用
 
-Route::get('test/test', function(\Illuminate\Http\Request $request) {
-//	$a = \Modules\Osce\Entities\ExamPlan::
-//	students()
-//		->exam('74')
-//		->select(
-//			'student.name',
-//			'student.mobile',
-//			'exam_plan.begin_dt',
-//			'exam_plan.end_dt',
-//			'exam_plan.student_id'
-//		)
-//		->get()
-//		->groupBy('student_id');
-	$a = date('Y-m-d H:i:s');
-	$b = date('H:i:s', strtotime($a));
-	dd($a, $b);
+Route::get('test/test', function(Redis $redis) {
+	return view('osce::Drawlots');
+
 });
 
 Route::get('redis', function(){
