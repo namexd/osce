@@ -98,7 +98,7 @@ class AutomaticPlanArrangementController extends CommonController
         $this->validate($this->request, [
             'exam_id' => 'required|integer'
         ]);
-
+        
         $examId = $this->request->input('exam_id');
         
         try {

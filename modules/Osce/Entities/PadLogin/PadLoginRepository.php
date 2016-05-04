@@ -37,7 +37,7 @@ class PadLoginRepository
         $endTime = $time->endTime(time());
 
         //处理数据，去掉时间，只保留id和name
-        return $this->cleanFields($this->padLogin->screenBegin($beginTime, $endTime));
+        return $this->cleanFields($this->padLogin->screenBegin($beginTime, $endTime)->unique());
     }
 
     /**
