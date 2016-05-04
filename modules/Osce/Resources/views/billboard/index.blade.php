@@ -5,6 +5,6 @@
   <title>welcome</title>
 </head>
 <body>
-  {{$exam_id}}
+  {{$data}}
 </body>
 </html>

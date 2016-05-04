@@ -17,12 +17,12 @@ use Modules\Osce\Http\Controllers\CommonController;
 class BillboardLoginController extends CommonController
 {
     /**
-     *
-     * @url
+     * 登陆的着陆页
+     * @url osce/billboard-login/index
      * @access public
      * @param PadLoginRepository $padLoginRepository
      * @return mixed
-     * @version
+     * @version 3.6
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-04
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
@@ -34,12 +34,12 @@ class BillboardLoginController extends CommonController
         });
 
         $examList = $padLoginRepository->examList(\App::make('TimeInterface'));
-        return view('osce::admin.billboard_login', ['exam' => $examList]);
+        return view('osce::billboard.billboard_login', ['exam' => $examList]);
     }
 
     /**
-     *
-     * @url
+     * 登陆的着陆处理逻辑
+     * @url osce/billboard-login/index
      * @access public
      * @param Request $request
      * @请求字段：
