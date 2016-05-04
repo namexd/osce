@@ -933,7 +933,7 @@ class ApiController extends CommonController
         $studentId       = $request->input('student_id');
         $examScreeningId = $request->input('exam_screening_id');
         $stationId       = $request->input('station_id');
-        try {
+//        try {
 
             $examQueueModel = new ExamQueue();
             $examQueue = $examQueueModel->where('student_id', $studentId)
@@ -1026,10 +1026,10 @@ class ApiController extends CommonController
                     );
                 }
             }
-        }catch (\Exception $ex) {
-            return response()->json($this->fail($ex));
-
-        }
+//        }catch (\Exception $ex) {
+//            return response()->json($this->fail($ex));
+//
+//        }
 
     }
 }
