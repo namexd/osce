@@ -536,11 +536,13 @@ class DrawlotsController extends CommonController
              */
             if ($exam->sequence_mode == 1) {
                 //从队列表中通过考场ID得到对应的当前组的考生信息
-                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations, $exam_screening_id);
-                
-                    \Log::alert('EndError', [$examQueue, $watchLog->student_id, $room_id,$exam_screening_id,$stations]);
+                $examQueue = ExamQueue::getStudentExamineeId($room_id, $examId, $exam_screening_id);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
+                    
+                    \Log::alert('', [$examQueue->pluck('student_id'),$watchLog->student_id]);
+                    
                     $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
+                    
                         json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
                     throw new \Exception('该考生不在当前考生小组中', 7200);
                 }
@@ -587,7 +589,7 @@ class DrawlotsController extends CommonController
 //            }
 
             //判断时间
-            $this->judgeTime($watchLog->student_id);
+            $this->judgeTime($watchLog->student_id,$exam_screening_id);
             $connection->commit();
             $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($result, 1, '抽签成功!')));
@@ -921,13 +923,16 @@ class DrawlotsController extends CommonController
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    private function judgeTime($uid)
+    private function judgeTime($uid, $screenId)
     {
         //获取当前时间
         $date = date('Y-m-d H:i;s');
 
         //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
-        $studentObj = ExamQueue::where('student_id', $uid)->where('status', 1)->first();
+        $studentObj = ExamQueue::where('student_id', $uid)
+            ->whereExamScreeningId($screenId)
+            ->where('status', 1)
+            ->first();
 
         if (!$studentObj) {
             throw new \Exception('当前没有符合条件的队列！', -1000);
@@ -936,7 +941,10 @@ class DrawlotsController extends CommonController
         $studentEndTime = $studentObj->end_dt;
         if (strtotime($date) > strtotime($studentBeginTime)) {
             $diff = strtotime($date) - strtotime($studentBeginTime);
-            $studentObjs = ExamQueue::where('student_id', $uid)->where('status', '<', 2)->get();
+            $studentObjs = ExamQueue::where('student_id', $uid)
+                ->whereExamScreeningId($screenId)
+                ->where('status', '<', 2)
+                ->get();
             foreach ($studentObjs as $studentObj) {
                 $studentObj->begin_dt = date('Y-m-d H:i:s', strtotime($studentBeginTime) + $diff);
                 $studentObj->end_dt = date('Y-m-d H:i:s', strtotime($studentEndTime) + $diff);
