@@ -85,13 +85,20 @@
 			}
 		})
 	</script>
+	<style>
+		.logo {margin: 10px 0;}
+		.logo a {
+			float: right;
+			display: inline-block;
+		}
+	</style>
 </head>
 <body>
 		<div class="middle-box loginscreen animated fadeInDown">
 			<div style="background:#fff;margin-top:60px;padding:20px;border-top:3px solid #1dc5a3;">
 				<div class="logo">
 					<h3>忘记密码</h3>
-					<a href="javascript:void(0)" style="float: right;">返回></a>
+					<a href="javascript:void(0)">返回></a>
 				</div>
 				<form class="m-t" role="form" id="loginForm" method="post" action="{{ route('osce.admin.postIndex') }}">
 					<div class="form-group">
