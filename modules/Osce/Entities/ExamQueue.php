@@ -77,7 +77,6 @@ class ExamQueue extends CommonModel
 
     public function getStudent($mode, $exam_id)
     {
-//        $exam = Exam::find($exam_id);
         if ($mode == 1) {
             return $this->getWaitRoom($exam_id);
 
