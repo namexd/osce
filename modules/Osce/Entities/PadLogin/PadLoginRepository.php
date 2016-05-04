@@ -79,7 +79,7 @@ class PadLoginRepository
         $array = [];
         foreach ($collection as $key => $item) {
             foreach ($fields as $field) {
-                $array[$key][] = $item->$field;
+                $array[$key][$field] = $item->$field;
             }
         }
         return $array;
@@ -105,6 +105,7 @@ class PadLoginRepository
             foreach ($this->padLogin->roomList($examId) as $item) {
                 $room[] = $item->room;
             }
+            
             return $this->getFields(collect($room), ['id', 'name']);
         }
     }
