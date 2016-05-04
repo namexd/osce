@@ -41,7 +41,7 @@ class IndexController extends CommonController
 
         $roomList=[];
         if(!is_null($examList)){
-            $roomList=$padLog->roomList(key($examList));
+            $roomList=$padLog->roomList($examList[0]['exam_id']);
         }
 
         return view('osce::doorplate.login ', [
