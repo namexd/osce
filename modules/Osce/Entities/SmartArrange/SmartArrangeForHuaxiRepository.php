@@ -8,14 +8,16 @@
 
 namespace Modules\Osce\Entities\SmartArrange;
 
+
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\SmartArrange\Student\StudentFromDB;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
 use Modules\Osce\Entities\ExamPlanRecord;
+use Modules\Osce\Entities\SmartArrange\Traits\CheckTraitsForHuaxi;
 
-class SmartArrangeRepository extends AbstractSmartArrange
+class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
 {
-    use SundryTraits;
+    use SundryTraits,CheckTraitsForHuaxi;
 
     private $_S_Count;
 

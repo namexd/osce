@@ -197,20 +197,15 @@ class ExamQueue extends CommonModel
         return $this->paginate(config('msc.page_size'));
     }
 
-    static public function getStudentExamineeId($room_id, $examId, $exam_screening_id){
+    static public function getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id){
         //先判定该学生是否抽过签
-        $queueing = ExamQueue::where('exam_queue.room_id', $room_id)
-            ->whereIn('exam_queue.status',[1,2])
-            ->where('exam_queue.exam_id', $examId)
-            ->where('exam_queue.exam_screening_id', $exam_screening_id)
-            ->get();
-        if(is_null($queueing)){
-            $queueing = ExamQueue::where('exam_queue.status', '=', 0)
+     
+            $queueing = ExamQueue::where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
+                ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->groupBy('exam_queue.student_id')
                 ->get();
-        }
         return $queueing;
     }
 
