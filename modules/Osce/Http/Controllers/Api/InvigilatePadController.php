@@ -1217,12 +1217,15 @@ class InvigilatePadController extends CommonController
             $student_id=$student_id->student_id;
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
+
             //根据考试id获取所对应的场次id
-            $examScreening = ExamScreening::getExamingScreening($exam_id);
+            $examScreeningModel = new ExamScreening();
+            $examScreening = $examScreeningModel->getExamingScreening($exam_id);
             if(is_null($examScreening))
             {
-                $examScreening  = ExamScreening::getNearestScreening($exam_id);
+                $examScreening  = $examScreeningModel->getNearestScreening($exam_id);
             }
+            
             //如果不存在考试场次，直接解绑
             if(empty($examScreening)){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
