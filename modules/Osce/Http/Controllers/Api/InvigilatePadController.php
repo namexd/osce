@@ -1066,9 +1066,7 @@ class InvigilatePadController extends CommonController
             }
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
-
         }
-
 
     }
     /**
@@ -1204,12 +1202,12 @@ class InvigilatePadController extends CommonController
             $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();
 
             //如果腕表绑定的学生不存在，直接解绑
-            if(!$student_id){
+            if(is_null($student_id)){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
-                    return \Response::json(array('code'=>2));       //该腕表绑定的学生不存在
+                    return \Response::json(array('code'=>2,'message'=>'绑定的学生不存在'));       //该腕表绑定的学生不存在
                 }else{
-                    return \Response::json(array('code'=>0));       //解绑失败
+                    return \Response::json(array('code'=>0));           //解绑失败
                 }
             }
 
@@ -1219,11 +1217,11 @@ class InvigilatePadController extends CommonController
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
 
             //根据考试id获取所对应的场次id
-            $examScreeningModel = new ExamScreening();
-            $examScreening = $examScreeningModel->getExamingScreening($exam_id);
+            $ExamScreening = new ExamScreening();
+            $examScreening = $ExamScreening->getExamingScreening($exam_id);
             if(is_null($examScreening))
             {
-                $examScreening  = $examScreeningModel->getNearestScreening($exam_id);
+                $examScreening  = $ExamScreening->getNearestScreening($exam_id);
             }
 
             //如果不存在考试场次，直接解绑
@@ -1261,7 +1259,7 @@ class InvigilatePadController extends CommonController
             //获取学生的考试状态
             $student = new Student();
             $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
-            $status = $this->checkType($exameeStatus->status);
+            $status = $this->checkType($exameeStatus);
             //查询考试流程 是否结束
             $ExamFinishStatus = ExamQueue::whereNotIn('status',[3,4])->where('student_id', $student_id)
                 ->where('exam_screening_id',$exam_screen_id)
