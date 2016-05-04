@@ -199,13 +199,13 @@ class ExamQueue extends CommonModel
 
     static public function getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id){
         //先判定该学生是否抽过签
+     
             $queueing = ExamQueue::where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->groupBy('exam_queue.student_id')
                 ->get();
-
         return $queueing;
     }
 

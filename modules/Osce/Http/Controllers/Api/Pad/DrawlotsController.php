@@ -793,6 +793,7 @@ class DrawlotsController extends CommonController
             //得知当前学生是否已经抽签
             $temp = ExamQueue::where('student_id', $student->id)
                 ->where('exam_id', $examId)
+                ->where('room_id', $roomId)
                 ->where('exam_screening_id', $ExamScreening->id)
                 ->whereIn('status', [1, 2])
                 ->first();
