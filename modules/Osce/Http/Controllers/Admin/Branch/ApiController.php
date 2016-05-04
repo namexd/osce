@@ -933,6 +933,7 @@ class ApiController extends CommonController
         $studentId       = $request->input('student_id');
         $examScreeningId = $request->input('exam_screening_id');
         $stationId       = $request->input('station_id');
+        \Log::alert('ReplaceData', [$mode,$stationId,$examScreeningId,$stationId]);
 //        try {
 
             $examQueueModel = new ExamQueue();
