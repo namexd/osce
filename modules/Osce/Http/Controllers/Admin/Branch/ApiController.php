@@ -697,7 +697,7 @@ class ApiController extends CommonController
             }
 
             $count = ExamQueue::where('serialnumber', '=', $serialnumber)
-                ->where('status', '=', 3)
+                ->where('status', '=', 3)   
                 ->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreening->id)
                 ->count();

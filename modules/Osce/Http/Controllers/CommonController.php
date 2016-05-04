@@ -94,6 +94,7 @@ abstract class CommonController extends Controller
                 'message' => '错误信息:' . '当前系统错误，请重试！',
             ];
         } else {
+           
             return [
                 'code' => $code,
                 'message' => '错误信息:' . $ex->getMessage(),

@@ -779,14 +779,8 @@ class ExamQueue extends CommonModel
             if (is_null($examScreening)) {
                 $examScreening = $examScreeningModel->getNearestScreening($examId->id);
                 $examScreening->status = 1;
-                //场次开考（场次状态变为1）
-                if (!$examScreening->save()) {
-                    throw new \Exception('场次开考失败！');
-                }
             }
             $exam_screen_id = $examScreening->id;
-
-
             //通过学生id找到对应的examScreeningStudent实例
             $examScreening = ExamScreeningStudent::where('student_id', $studentId)->where('exam_screening_id', '=', $exam_screen_id)->first();
 
@@ -802,6 +796,7 @@ class ExamQueue extends CommonModel
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)
                 ->where('station_id', $stationId)
+                ->whereIn('status', [1,2])
                 ->first();
             if (empty($queue)) {
                 throw new \Exception('没有找到符合要求的学生', 2200);
@@ -939,11 +934,9 @@ class ExamQueue extends CommonModel
 
             //找到对应的方法找到queue实例
             $queue = ExamQueue::findQueueIdByStudentId($studentId, $stationId);
-            $data = array(
-                'end_dt' =>$date,
-                'status'=>3
-            );
-            if(!ExamQueue::where('id',$queue->id)->update($data)){
+            $queue->end_dt =  $date;
+            $queue->status =  3;
+            if(!$queue->save()){
                 throw new \Exception('状态修改失败！请重试', -101);
             }
             $connection->commit();
