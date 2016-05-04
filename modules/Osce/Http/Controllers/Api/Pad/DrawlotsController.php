@@ -608,7 +608,7 @@ class DrawlotsController extends CommonController
 
         } catch (\Exception $ex) {
             $connection->rollBack();
-
+            \Log::alert('抽签错误返回',[$ex->getMessage(),$ex->getCode()]);
             return response()->json($this->fail($ex));
         }
     }
