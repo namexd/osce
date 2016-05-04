@@ -555,4 +555,18 @@ Route::post('test/test',function(\Illuminate\Http\Request $request) {
 	$smartArrangeRepository->plan($exam);
 	return view('osce::admin.login');
 });
+/*
+ * 电子门牌
+ * */
+Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers','middleware' => [],], function()
+{
+	Route::group(['prefix'=>'doorplate','namespace'=>'Doorplate'],function(){
 
+		Route::get('doorplate-start',	['uses'=>'IndexController@doorStart','as'=>'osce.doorplate.doorplatestart']); //启动入口
+		Route::get('today-exam',	['uses'=>'IndexController@getExamMsg','as'=>'osce.doorplate.getdoorplatemsg']);   //信息展示
+		Route::get('current-set',	['uses'=>'IndexController@getExaminee','as'=>'osce.doorplate.getexaminee']);   //当前组
+		Route::get('next-set',	['uses'=>'IndexController@getNextExaminee','as'=>'osce.doorplate.getnextexaminee']);   //下一组
+		Route::get('door-status',	['uses'=>'IndexController@getStatusStatus','as'=>'osce.doorplate.getstatusstatus']);   //状态
+	});
+
+});
