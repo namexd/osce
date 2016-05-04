@@ -1259,7 +1259,7 @@ class InvigilatePadController extends CommonController
             //获取学生的考试状态
             $student = new Student();
             $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
-            $status = $this->checkType($exameeStatus);
+            $status = $this->checkType($exameeStatus->status);
             //查询考试流程 是否结束
             $ExamFinishStatus = ExamQueue::whereNotIn('status',[3,4])->where('student_id', $student_id)
                 ->where('exam_screening_id',$exam_screen_id)
@@ -1440,9 +1440,17 @@ class InvigilatePadController extends CommonController
             $student_id=$student_id->student_id;
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
+            //根据考试id获取所对应的场次id
+            $ExamScreening = new ExamScreening();
+            $examScreening = $ExamScreening->getExamingScreening($exam_id);
+            if(is_null($examScreening))
+            {
+                $examScreening  = $ExamScreening->getNearestScreening($exam_id);
+            }
+            $screen_id = $examScreening->id;
             //获取学生的考试状态
             $student = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id, $screen_id);
             $status = $this->checkType($exameeStatus->status);
 /*
             $station_id = ExamQueue::where('exam_id','=',$exam_id)->first();
