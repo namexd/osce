@@ -106,9 +106,14 @@
         <input type="password" class="form-control" id="password" name="password" placeholder="密码">
       </div>
       <div>
+        <h3 class="tt">
         考试列表
-        <select>
+        </h3>
+        <select class="form-control">
           <option value="">请选择</option>
+          @foreach($exam as $item)
+            <option value="{{$item['exam_id']}}">{{$item['name']}}</option>
+          @endforeach
         </select>
       </div>
       <input type="hidden" name="grant_type" id="grant_type" value="password">

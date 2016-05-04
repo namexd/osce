@@ -8,8 +8,9 @@
 
 namespace Modules\Osce\Entities\SmartArrange;
 
-use Modules\Osce\Entities\SmartArrange\Traits\CheckTraits;
+use Modules\Osce\Entities\SmartArrange\Traits\CheckTraitsForHuaxi;
 use Modules\Osce\Entities\SmartArrange\Traits\SQLTraits;
+use Modules\Osce\Entities\SmartArrange\Traits\CheckTraits;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\ExamPlan;
@@ -18,7 +19,7 @@ use Modules\Osce\Entities\ExamOrder;
 
 abstract class AbstractSmartArrange implements SmartArrangeInterface
 {
-    use CheckTraits, SQLTraits;
+    use CheckTraitsForHuaxi, SQLTraits;
 
     protected $model;
 
