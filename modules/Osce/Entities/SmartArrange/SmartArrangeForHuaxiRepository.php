@@ -13,10 +13,11 @@ use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\SmartArrange\Student\StudentFromDB;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
 use Modules\Osce\Entities\ExamPlanRecord;
+use Modules\Osce\Entities\SmartArrange\Traits\CheckTraitsForHuaxi;
 
 class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
 {
-    use SundryTraits;
+    use SundryTraits,CheckTraitsForHuaxi;
 
     private $_S_Count;
 
