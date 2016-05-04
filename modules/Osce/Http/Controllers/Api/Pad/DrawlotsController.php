@@ -627,6 +627,7 @@ class DrawlotsController extends CommonController
             'uid' => 'sometimes|string',
             'exam_id' => 'required|integer'
         ]);
+        \Log::alert('uid', [$this->request->input('uid')]);
         try {
             //写入具体的数据
             $huaxiDrawlots->setParams($this->request->all());
