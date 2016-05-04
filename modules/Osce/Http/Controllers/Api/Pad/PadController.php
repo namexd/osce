@@ -378,13 +378,13 @@ class PadController extends  CommonController{
      */
     public function getChangeStatus(Request $request)
     {
+        \Log::alert('ChangeStatusData', $request->all());
 
         $this->validate($request, [
             'student_id' => 'required|integer',
             'station_id' => 'required|integer',
             'user_id' => 'required|integer'
         ]);
-        \Log::alert('ChangeStatusData', $request->all());
 
         try {
         //获取当前的服务器时间
