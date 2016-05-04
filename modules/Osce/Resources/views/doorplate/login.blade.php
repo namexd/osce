@@ -107,7 +107,9 @@
 				}
 
 			})
-
+			$('#roomId').change(function(){
+				$('.pnotice').css('display','none')
+			})
 			function jufe(){
 				$('.exam').addClass('hide');
 				$('.room').addClass('hide');

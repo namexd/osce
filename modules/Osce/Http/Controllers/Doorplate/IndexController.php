@@ -147,6 +147,12 @@ class IndexController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExaminee(Request $request){
+        $this->validate($request,[
+            'exam_id' =>'required',
+            'room_id' =>'required',
+            'data' =>'required',
+            'screen_id' =>'required',
+        ]);
         $room_id=$request->get('room_id');
         $exam_id=$request->get('exam_id');
         $stations=$request->get('data');
@@ -175,6 +181,12 @@ class IndexController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getNextExaminee(Request $request){
+        $this->validate($request,[
+            'exam_id' =>'required',
+            'room_id' =>'required',
+            'data' =>'required',
+            'screen_id' =>'required',
+        ]);
         $room_id=$request->get('room_id');
         $exam_id=$request->get('exam_id');
         $stations=$request->get('data');
@@ -203,6 +215,11 @@ class IndexController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStatusStatus(Request $request){
+        $this->validate($request,[
+            'exam_id' =>'required',
+            'room_id' =>'required',
+            'screen_id' =>'required',
+        ]);
         $room_id=$request->get('room_id');
         $exam_id=$request->get('exam_id');
         $exam_screening_id=$request->get('screen_id');
