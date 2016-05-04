@@ -115,7 +115,7 @@
                             <input type="checkbox" name="message_type[]" value="1" data-bv-field="message_type[]">
                             <span class="check_name">记住密码</span>
                         </label>
-						<a style="float:right" href="{{route('osce.wechat.user.getForgetPassword')}}">
+						<a style="float:right" href="{{route('osce.admin.user.getForgetPassword')}}">
 							<small class="txt">忘记密码？</small>
 						</a>
 					</div>

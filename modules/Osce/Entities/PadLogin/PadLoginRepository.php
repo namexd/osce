@@ -37,7 +37,7 @@ class PadLoginRepository
         $endTime = $time->endTime(time());
 
         //处理数据，去掉时间，只保留id和name
-        return $this->cleanFields($this->padLogin->screenBegin($beginTime, $endTime));
+        return $this->cleanFields($this->padLogin->screenBegin($beginTime, $endTime)->unique());
     }
 
     /**
@@ -79,7 +79,7 @@ class PadLoginRepository
         $array = [];
         foreach ($collection as $key => $item) {
             foreach ($fields as $field) {
-                $array[$key][] = $item->$field;
+                $array[$key][$field] = $item->$field;
             }
         }
         return $array;
@@ -105,6 +105,7 @@ class PadLoginRepository
             foreach ($this->padLogin->roomList($examId) as $item) {
                 $room[] = $item->room;
             }
+            
             return $this->getFields(collect($room), ['id', 'name']);
         }
     }

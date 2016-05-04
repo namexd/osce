@@ -61,8 +61,8 @@
 						<option value=''>请选择考场</option>
 						@if(!empty(@$roomList))
 							@foreach(@$roomList as $val)
-								<option value="{{ $val[0] }}" >
-									{{ $val[1] }}
+								<option value="{{ $val['id'] }}" >
+									{{ $val['name'] }}
 								</option>
 							@endforeach
 						@endif
@@ -94,8 +94,7 @@
 						success: function(msg){
 							if(msg){
 								$(msg.data).each(function(i,k){
-									m=eval(k)
-									opstr += '<option value="'+ m[0]+'">'+m[1]+'</option>　';
+									opstr += '<option value="'+ k.id+'">'+ k.name+'</option>　';
 								});
 								$('#roomId').html(opstr);
 							}
