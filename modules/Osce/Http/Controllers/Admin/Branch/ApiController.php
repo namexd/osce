@@ -933,7 +933,7 @@ class ApiController extends CommonController
         $studentId       = $request->input('student_id');
         $examScreeningId = $request->input('exam_screening_id');
         $stationId       = $request->input('station_id');
-        \Log::alert('ReplaceData', [$mode,$stationId,$examScreeningId,$stationId]);
+//        \Log::alert('ReplaceData', [$mode,$stationId,$examScreeningId,$stationId]);
 //        try {
 
             $examQueueModel = new ExamQueue();
@@ -977,12 +977,12 @@ class ApiController extends CommonController
                         $examResultData = [
                             'student_id'        => $studentId,
                             'exam_screening_id' => $examScreeningId,
-                            'station_id'        => $val->station_id,
+                            'station_id'        => $stationId,
                             'begin_dt'          => date('Y-m-d H:i:s', time()),
                             'end_dt'            => date('Y-m-d H:i:s', time()),
                             'score'             => 0,
                             'score_dt'          => date('Y-m-d H:i:s', time()),
-//                            'create_user_id'    => Auth::user()->id,
+                            'create_user_id'    => Auth::user()->id,
                         ];
                         if(!ExamResult::create($examResultData)){
                             throw new \Exception(' 向考试结果记录表插入数据失败！',-106);
@@ -991,7 +991,7 @@ class ApiController extends CommonController
                     }
 
                     //更新exam_screening_student表（考试场次-学生关系表）
-                    $result = ExamScreeningStudent::where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
+                    $result = ExamScreeningStudent::where('exam_screening_id',$examScreeningId)->where('student_id',$studentId)->first();
 
                     if(!empty($result)&&$result->is_end!=1){
                         $result->is_end =1;
@@ -1002,7 +1002,7 @@ class ApiController extends CommonController
                     }
 
                     //更新exam_order表（考试学生排序）
-                    $examOrder = ExamOrder::where('exam_id',$val->exam_id)->where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
+                    $examOrder = ExamOrder::where('exam_id',$val->exam_id)->where('exam_screening_id',$examScreeningId)->where('student_id',$examScreeningId)->first();
                     if(!empty($examOrder)&&$examOrder->status!=2){
                         $examOrder->status = 5; //为替考结束考试
                         if(!$examOrder->save()){
