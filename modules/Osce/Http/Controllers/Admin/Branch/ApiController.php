@@ -1002,7 +1002,7 @@ class ApiController extends CommonController
                     }
 
                     //更新exam_order表（考试学生排序）
-                    $examOrder = ExamOrder::where('exam_id',$val->exam_id)->where('exam_screening_id',$examScreeningId)->where('student_id',$examScreeningId)->first();
+                    $examOrder = ExamOrder::where('exam_id',$examId)->where('exam_screening_id',$examScreeningId)->where('student_id',$studentId)->first();
                     if(!empty($examOrder)&&$examOrder->status!=2){
                         $examOrder->status = 5; //为替考结束考试
                         if(!$examOrder->save()){
