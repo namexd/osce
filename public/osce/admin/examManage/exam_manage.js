@@ -4922,7 +4922,7 @@ function station_assignment(){
 
         $elem.find('.exam-item').select2({
             placeholder:'请选择',
-            tags: true,
+            tags: false,
             ajax: {
                 type:'get',
                 url: pars.exam_item,
@@ -4992,7 +4992,7 @@ function station_assignment(){
         //考站列表获取
         $elem.find('.exam-station').select2({
             placeholder:'请选择',
-            tags: true,
+            tags: false,
             ajax: {
                 type:'get',
                 url: pars.station_list,
@@ -5111,7 +5111,7 @@ function station_assignment(){
         //所属考场
         $elem.find('.station-belong').select2({
             placeholder:'请选择',
-            tags: true,
+            tags: false,
             ajax: {
                 type:'get',
                 url: pars.room_list,
