@@ -215,9 +215,9 @@ abstract class CommonController extends Controller
      */
     public function checkType($status){
         if(!is_null($status)){
-            if($status->status < 2){
+            if($status < 2){
                 $name = '等待中';
-            }elseif($status->status == 2){
+            }elseif($status == 2){
                 $name = '考试中';
             }else{
                 $name = '已结束';
