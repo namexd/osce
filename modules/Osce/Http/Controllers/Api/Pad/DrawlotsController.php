@@ -56,7 +56,7 @@ class DrawlotsController extends CommonController
     public function __construct(Request $request, \Redis $redis)
     {
         $this->request = $request;
-        $this->redis = $redis->connection('message');
+        $this->redis = $redis::connection('message');
     }
 
     /**
