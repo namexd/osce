@@ -538,11 +538,7 @@ class DrawlotsController extends CommonController
                 //从队列表中通过考场ID得到对应的当前组的考生信息
                 $examQueue = ExamQueue::getStudentExamineeId($room_id, $examId, $exam_screening_id);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
-                    
-                    \Log::alert('', [$examQueue->pluck('student_id'),$watchLog->student_id]);
-                    
                     $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-                    
                         json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
                     throw new \Exception('该考生不在当前考生小组中', 7200);
                 }

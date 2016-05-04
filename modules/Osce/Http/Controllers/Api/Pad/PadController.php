@@ -393,25 +393,18 @@ class PadController extends  CommonController{
         $stationId = $request->input('station_id', null);
         $teacherId = $request->input('user_id');
         $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-        //拿到阶段序号
-        $gradationOrder =ExamScreening::find($queue->exam_screening_id);
 
         //考试结束后，调用向腕表推送消息的方法
         $examScreeningStudentModel = new ExamScreeningStudent();
         $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
             ->where('student_id','=',$queue->student_id)->first();
-
         $watchModel = new Watch();
         $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
-
-
-        //拿到属于该场考试该阶段的所有场次id
-        $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
 
         $studentWatchController = new StudentWatchController();
         $request['nfc_code'] = $watchData->code;
 
-        $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
+        $studentWatchController->getStudentExamReminder($request,$stationId ,$queue->exam_screening_id);
         //考试完成推送
         $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
 //        $draw=new DrawlotsController();
