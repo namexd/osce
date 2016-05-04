@@ -8,6 +8,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//忘记密码
 		Route::get('user/forget-password',['uses'=>'UserController@getForgetPassword','as'=>'osce.admin.user.getForgetPassword']);
 		Route::post('user/reset-password',['uses'=>'UserController@postResetPassword','as'=>'osce.admin.user.postResetPassword']);	//重置密码（提交数据）
+
+		//告示牌登陆
+		Route::get('billboard-login', ['uses' => 'BillboardLoginController@getIndex', 'as' => 'osce.admin.billboard.getIndex']);
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
 		//登录注册
