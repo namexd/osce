@@ -384,6 +384,7 @@ class PadController extends  CommonController{
             'station_id' => 'required|integer',
             'user_id' => 'required|integer'
         ]);
+        \Log::alert('ChangeStatusData', $request->all());
 
         try {
         //获取当前的服务器时间
@@ -393,7 +394,6 @@ class PadController extends  CommonController{
         $stationId = $request->input('station_id', null);
         $teacherId = $request->input('user_id');
         $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-            \Log::alert('ChangeStatusData', [$studentId,$stationId,$teacherId]);
 
         //考试结束后，调用向腕表推送消息的方法
         $examScreeningStudentModel = new ExamScreeningStudent();
