@@ -400,22 +400,27 @@ class PadController extends  CommonController{
             ->where('student_id','=',$queue->student_id)->first();
         $watchModel = new Watch();
         $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+        try{
+            $studentWatchController = new StudentWatchController();
+            $request['nfc_code'] = $watchData->code;
+            $studentWatchController->getStudentExamReminder($request,$stationId ,$queue->exam_screening_id);
+        }catch (\Exception $ex){
+            \Log::alert('EndErrorWatch', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+        }
+      try{
+          //考试完成推送
+          $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
+          $request['id']=$teacherId;
+          $draw->getExaminee_arr($request);//当前组推送(可以获得)
+          $draw->getNextExaminee_arr($request);//下一组
 
-        $studentWatchController = new StudentWatchController();
-        $request['nfc_code'] = $watchData->code;
-
-        $studentWatchController->getStudentExamReminder($request,$stationId ,$queue->exam_screening_id);
-        //考试完成推送
-        $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
-//        $draw=new DrawlotsController();
-        $request['id']=$teacherId;
-        $draw->getExaminee_arr($request);//当前组推送(可以获得)
-        $draw->getNextExaminee_arr($request);//下一组
-
+      }catch (\Exception $ex){
+          \Log::alert('EndErrorExamineeandNext', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+      }
         return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
 
         } catch (\Exception $ex) {
-            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+            \Log::alert('ChangeStatus', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }

@@ -56,7 +56,7 @@ class DrawlotsController extends CommonController
     public function __construct(Request $request, \Redis $redis)
     {
         $this->request = $request;
-        $this->redis = $redis->connection('message');
+        $this->redis = $redis::connection('message');
     }
 
     /**
@@ -661,7 +661,7 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-//        try {
+        try {
             //获取当前登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
@@ -763,9 +763,9 @@ class DrawlotsController extends CommonController
             }*/
 
             return response()->json($this->success_data($station));
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -804,16 +804,9 @@ class DrawlotsController extends CommonController
             $examScreeingId = $this->getexamScreeing($exam);
             //判断如果是以考场分组
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
-                //TODO 这里如果两个阶段有相同考场可能会拿到第二阶段的考场信息；待测试修改。  周强  2016-4-30
-                //获取当前小组信息
-                list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
-                //从队列表中通过考场ID得到对应的考生信息
-                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations, $examScreeingId);
-                $studentids = $examQueue->pluck('student_id')->toArray();
-
 
                 //随机获取一个考站的id
-                $ranStationId = $this->ranStationSelect($roomId, $examId, $studentids, $examScreeingId);
+                $ranStationId = $this->ranStationSelect($roomId, $examId, $examScreeingId);
                 \Log::alert($ranStationId);
 
                 //将这个值保存在队列表中
@@ -821,7 +814,6 @@ class DrawlotsController extends CommonController
                     ->where('room_id', $roomId)
                     ->where('exam_screening_id', $examScreeingId)
                     ->where('exam_id', $examId)
-                    ->where('status', 0)
                     ->orderBy('begin_dt', 'asc')
                     ->first()
                 ) {
@@ -1011,7 +1003,7 @@ class DrawlotsController extends CommonController
      * @author Jiangzhiheng
      * @time 2016-03-01
      */
-    private function ranStationSelect($roomId, $examId, $studentids, $examScreeingId)
+    private function ranStationSelect($roomId, $examId, $examScreeingId)
     {
         /*
          * 从ExamQueue表中将房间和学生对应的列表查出

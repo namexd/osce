@@ -203,7 +203,7 @@ class ExamQueue extends CommonModel
             ->whereIn('exam_queue.status',[1,2])
             ->where('exam_queue.exam_id', $examId)
             ->where('exam_queue.exam_screening_id', $exam_screening_id)
-            ->first();
+            ->get();
         if(is_null($queueing)){
             $queueing = ExamQueue::where('exam_queue.status', '=', 0)
                 ->where('exam_queue.exam_id', $examId)
