@@ -102,8 +102,8 @@ class IndexController extends CommonController
         }
         return view('osce::doorplate.doorplate_msg ', [
             'data'      =>$data,'msg'=>$cont,
-            'current'=>json_decode($this->getExaminee($request)),
-            'next'=>json_decode($this->getNextExaminee($request)),
+            'current'=>$this->getExaminee($request),
+            'next'=>$this->getNextExaminee($request),
             'status'=>$this->getStatusStatus($request),
             'room_id'=>$room_id,'exam_id'=>$exam_id,
             'screen_id'=>$screenId
@@ -147,6 +147,12 @@ class IndexController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExaminee(Request $request){
+        $this->validate($request,[
+            'exam_id' =>'required',
+            'room_id' =>'required',
+            'data' =>'required',
+            'screen_id' =>'required',
+        ]);
         $room_id=$request->get('room_id');
         $exam_id=$request->get('exam_id');
         $stations=$request->get('data');
@@ -160,7 +166,7 @@ class IndexController extends CommonController
             } else {
                 throw new \Exception('考试模式不存在！', -703);
             }
-            return json_encode($examQueue);
+            return $examQueue;
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
@@ -175,6 +181,12 @@ class IndexController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getNextExaminee(Request $request){
+        $this->validate($request,[
+            'exam_id' =>'required',
+            'room_id' =>'required',
+            'data' =>'required',
+            'screen_id' =>'required',
+        ]);
         $room_id=$request->get('room_id');
         $exam_id=$request->get('exam_id');
         $stations=$request->get('data');
@@ -189,7 +201,7 @@ class IndexController extends CommonController
             throw new \Exception('考试模式不存在！', -703);
         }
 
-        return json_encode($examQueue);
+        return $examQueue;
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
@@ -203,6 +215,11 @@ class IndexController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getStatusStatus(Request $request){
+        $this->validate($request,[
+            'exam_id' =>'required',
+            'room_id' =>'required',
+            'screen_id' =>'required',
+        ]);
         $room_id=$request->get('room_id');
         $exam_id=$request->get('exam_id');
         $exam_screening_id=$request->get('screen_id');

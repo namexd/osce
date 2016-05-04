@@ -166,6 +166,6 @@ if(!empty($errorsInfo)){
                     }
                 }
             });
-        },3000)
+        },5000)
     </script>
 @stop
