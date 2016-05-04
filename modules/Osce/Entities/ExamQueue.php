@@ -848,8 +848,8 @@ class ExamQueue extends CommonModel
         if (count($builder) != 0) {
             foreach ($builder as &$item) {
                 //获取同一个人，在一场考试队列中是否有更早的考试
-                $result = $this->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)->where('status', '=', 0)
-                               ->where('exam_screening_id', '=', $screeningId)
+                $result = $this->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)
+                               ->where('status', '=', 0)->where('exam_screening_id', '=', $screeningId)
                                ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
                 if ($result) {
                     $item->name = '';
@@ -897,8 +897,8 @@ class ExamQueue extends CommonModel
         if (count($builder) != 0) {
             foreach ($builder as &$item) {
                 //获取同一个人，在一场考试队列中是否有更早的考试
-                $result = $this->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)->where('status', '=', 0)
-                               ->where('exam_screening_id', '=', $screen_id)
+                $result = $this->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)
+                               ->where('status', '=', 0)->where('exam_screening_id', '=', $screen_id)
                                ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
                 if ($result) {
                     $item->name = '';
@@ -952,7 +952,9 @@ class ExamQueue extends CommonModel
 //        return $this->where('exam_id', $exam_id)->groupBy($mode)->paginate($pageSize);
 
         return $this->where('exam_id', '=', $exam_id)->where('exam_screening_id', '=', $screeningId)
-                    ->where('status', '=', 0)->groupBy($mode)->paginate($pageSize);
+                    ->where('status', '=', 0)->groupBy($mode)
+                    ->orderBy('begin_dt', 'asc')->orderBy('id', 'asc')
+                    ->paginate($pageSize);
     }
 
     /**
@@ -972,13 +974,19 @@ class ExamQueue extends CommonModel
             $station_id = $examFlowStation->station_id;
             $ExamQueue = new ExamQueue();
             $students = $ExamQueue->getWaitStudentStation($station_id, $exam_id, $screeningId);
-            foreach ($students as $ExamQueue) {
-                foreach ($ExamQueue->student as $student) {
-                    if ($ExamQueue->name == '') {
+
+            if($students->isEmpty()){
+                $data[$stationName]['name']    = $stationName;
+                $data[$stationName]['student'] = collect([]);
+            }else{
+                foreach ($students as $student) {
+//                foreach ($ExamQueue->student as $student) {
+                    if ($student->name == '') {
                         $student->name = '';
                     }
                     $data[$stationName]['name'] = $stationName;
                     $data[$stationName]['student'][] = $student;
+//                }
                 }
             }
         }
@@ -1013,13 +1021,13 @@ class ExamQueue extends CommonModel
                 $data[$roomName]['student'] = collect([]);
             }else{
                 foreach ($students as $student) {
-//                foreach ($examQueue->student as $student) {
-                    if ($student->name == '') {
-                        $student->name = '';
-                    }
-                    $data[$roomName]['name']      = $roomName;
-                    $data[$roomName]['student'][] = $student;
-//                }
+//                    foreach ($examQueue->student as $student) {
+                        if ($student->name == '') {
+                            $student->name = '';
+                        }
+                        $data[$roomName]['name']      = $roomName;
+                        $data[$roomName]['student'][] = $student;
+//                    }
                 }
 
             }
