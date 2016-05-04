@@ -1223,7 +1223,7 @@ class InvigilatePadController extends CommonController
             {
                 $examScreening  = $ExamScreening->getNearestScreening($exam_id);
             }
-            
+
             //如果不存在考试场次，直接解绑
             if(empty($examScreening)){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
