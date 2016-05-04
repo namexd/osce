@@ -60,32 +60,38 @@ trait CheckTraits
      */
     function checkUnnecessaryScreen($exam, $order)
     {
-        $screen = ExamScreening::join('exam_gradation', 'exam_gradation.order', '=', 'exam_screening.gradation_order')
-            ->where('exam_screening.exam_id', $exam->id)
-            ->where('exam_gradation.exam_id', $exam->id)
-            ->where('exam_gradation.order', $order)
-            ->get()
-            ->groupBy('exam_screening_id');
+        try {
+            $screen = ExamScreening::join('exam_gradation', 'exam_gradation.order', '=',
+                'exam_screening.gradation_order')
+                ->where('exam_screening.exam_id', $exam->id)
+                ->where('exam_gradation.exam_id', $exam->id)
+                ->where('exam_gradation.order', $order)
+                ->select('exam_screening.id as id')
+                ->get()
+                ->groupBy('id');
 
-        $temp = ExamPlanRecord::whereExamId($exam->id)
-            ->whereGradationOrder($order)
-            ->get()
-            ->groupBy('exam_screening_id');
+            $temp = ExamPlanRecord::whereExamId($exam->id)
+                ->whereGradationOrder($order)
+                ->get()
+                ->groupBy('exam_screening_id');
 
 
-        if ($screen->count() != $temp->count()) {
-            $key1 = $screen->keys();
-            $key2 = $temp->keys();
-            $diffKey = $key1->diff($key2);
-            $message = '开始时间为';
-            foreach ($diffKey as $item) {
-                $message .= ExamScreening::find($item)->begin_dt;
-                $message .= ',';
+            if ($screen->count() != $temp->count()) {
+                $key1 = $screen->keys()->toArray();
+                $key2 = $temp->keys()->toArray();
+                $diffKey = array_diff($key1, $key2);
+                $message = '开始时间为';
+                foreach ($diffKey as $item) {
+                    $message .= ExamScreening::find($item)->begin_dt;
+                    $message .= ',';
+                }
+                $message .= '没有人次考试';
+                throw new \Exception($message);
             }
-            $message .= '没有人次考试';
-            throw new \Exception($message);
-        }
 
-        return true;
+            return true;
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 }

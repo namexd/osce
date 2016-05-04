@@ -396,4 +396,30 @@ class ExamDraft extends CommonModel
 
         return $result;
     }
+
+    /**
+     * 当前考试信息
+     * @method GET
+     * @access public
+     * @param examId 考试id
+     * @param stationId 考试对应的考站id
+     * @param $screenId 考试对应场次id
+     * @author wt <wangtao@misrobot.com>
+     * @date 2016-5-3
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamMsg($exam_id,$room_id,$screenId){
+            return $this->leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->leftJoin('exam_gradation', 'exam_gradation.id', '=', 'exam_draft_flow.exam_gradation_id')
+            ->leftJoin('exam_screening', 'exam_screening.gradation_order', '=', 'exam_gradation.order')
+
+            ->where('exam_draft_flow.exam_id', '=', $exam_id)
+            ->where('exam_gradation.exam_id', '=', $exam_id)
+            ->where('exam_screening.exam_id', '=', $exam_id)
+            ->where('exam_screening.id', '=', $screenId)
+            ->where('exam_draft.room_id', '=', $room_id)
+            ->select(['exam_draft_flow.name','exam_screening.id','exam_draft.station_id','exam_draft.subject_id'])
+            ->get();
+
+    }
 }

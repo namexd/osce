@@ -25,7 +25,7 @@ class HuaxiDrawlotsRepository extends AbstractDrawlots
         parent::__construct();
 
         \App::bind('StudentInterface', function () {
-            return new TestStudent();
+            return new Student();
         });
         \App::bind('StationData', function () {
             return new Station();
@@ -111,6 +111,9 @@ class HuaxiDrawlotsRepository extends AbstractDrawlots
 
             //将数据写入数据表
             $this->draw->writeExamQueue($obj);
+
+            //处理队列表的时间
+            $this->draw->judgeTime($this->student->student_id, $screen);
             $connection->commit();
             return $this->draw->assembly($obj->station->name);
         } catch (\Exception $ex) {
