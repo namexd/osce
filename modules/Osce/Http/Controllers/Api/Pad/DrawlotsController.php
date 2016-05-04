@@ -56,7 +56,7 @@ class DrawlotsController extends CommonController
     public function __construct(Request $request, \Redis $redis)
     {
         $this->request = $request;
-//        $this->redis = $redis->connection('message');
+        $this->redis = $redis->connection('message');
     }
 
     /**
@@ -613,6 +613,7 @@ class DrawlotsController extends CommonController
 
     /**
      * 重写的抽签方法
+     * url osce/pad/drawlots
      * @access public
      * @param HuaxiDrawlotsRepository $huaxiDrawlots
      * @version
@@ -633,12 +634,11 @@ class DrawlotsController extends CommonController
             $huaxiDrawlots->setParams($this->request->all());
 
             //获得抽签数据
-            //蒋同学，未发现数据库事务相关业务代码
             $data = $huaxiDrawlots->distribute();
 
             //将数据推送给pad端
-//            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-//                json_encode($this->success_data($data, 1, '抽签成功！')));
+            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
+                json_encode($this->success_data($data, 1, '抽签成功！')));
 
             return response()->json($this->success_data($data));
         } catch (\Exception $ex) {
@@ -924,7 +924,7 @@ class DrawlotsController extends CommonController
     private function judgeTime($uid)
     {
         //获取当前时间
-        $date = date('Y-m-d H:i;s');
+        $date = date('Y-m-d H:i:s');
 
         //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
         $studentObj = ExamQueue::where('student_id', $uid)->where('status', 1)->first();
