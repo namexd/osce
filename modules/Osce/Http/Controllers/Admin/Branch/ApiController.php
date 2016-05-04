@@ -977,12 +977,12 @@ class ApiController extends CommonController
                         $examResultData = [
                             'student_id'        => $studentId,
                             'exam_screening_id' => $examScreeningId,
-                            'station_id'        => $stationId,
+                            'station_id'        => $val->station_id,
                             'begin_dt'          => date('Y-m-d H:i:s', time()),
                             'end_dt'            => date('Y-m-d H:i:s', time()),
                             'score'             => 0,
                             'score_dt'          => date('Y-m-d H:i:s', time()),
-                            'create_user_id'    => Auth::user()->id,
+//                            'create_user_id'    => Auth::user()->id,
                         ];
                         if(!ExamResult::create($examResultData)){
                             throw new \Exception(' 向考试结果记录表插入数据失败！',-106);
