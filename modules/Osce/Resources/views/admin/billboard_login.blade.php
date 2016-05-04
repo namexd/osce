@@ -92,7 +92,7 @@
     <div class="logo">
       <img src="{{asset('osce/images/logo.png')}}" width="100%"/>
     </div>
-    <form class="m-t" role="form" id="loginForm" method="post" action="{{ route('osce.admin.postIndex') }}">
+    <form class="m-t" role="form" id="loginForm" method="post" action="{{ route('osce.billboard.login.postIndex') }}">
       <h3 class="tt">
         用户名
       </h3>
@@ -109,7 +109,7 @@
         <h3 class="tt">
         考试列表
         </h3>
-        <select class="form-control">
+        <select class="form-control" name="exam_id">
           <option value="">请选择</option>
           @foreach($exam as $item)
             <option value="{{$item['exam_id']}}">{{$item['name']}}</option>
