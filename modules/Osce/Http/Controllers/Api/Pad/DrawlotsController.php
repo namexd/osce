@@ -499,6 +499,7 @@ class DrawlotsController extends CommonController
             $redis = Redis::connection('message');
             //根据uid查到对应的腕表编号
             $watch = Watch::where('code', $uid)->first();
+            \Log::alert('抽签拿到的腕表id',[$watch->id]);
             if (is_null($watch)) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
