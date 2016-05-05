@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+
   <style>
     #area{
       font-family: 黑体;
@@ -86,7 +87,6 @@
   </script>
 </head>
 <body>
-
 <div id="area">
   <input type="hidden" id="exam_id" value="{{$data['exam_id']}}">
   <input type="hidden" id="station_id" value="{{$data['station_id']}}">
@@ -116,6 +116,5 @@
     <img src="{{asset('osce/images/u4.png')}}" width="135px" height="53px" align="right">
   </div>
 </div>
-
 </body>
 </html>

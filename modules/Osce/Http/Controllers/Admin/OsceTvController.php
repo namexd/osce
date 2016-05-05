@@ -90,6 +90,7 @@ class OsceTvController extends  CommonController{
                         'total'     => ceil($pagination->total()/$pageSize),
                         'page_size' => $pageSize,
                         'page'      => $pagination->currentPage(),
+                        'a'      => $pagination->total(),
                     ],
                     1, '获取数据成功'
                 )

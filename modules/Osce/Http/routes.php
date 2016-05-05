@@ -524,11 +524,10 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(Redis $redis) {
-	return view('osce::Drawlots');
-//	dd(json_encode([
-//		'code' => -999,
-//		'message' => '抽签失败',
-//	]));
+//	return view('osce::Drawlots');
+	$a = collect(['aa' => 1, 'bb' => 2, 'cc' => 3]);
+	$b = $a->except(['aa', 'bb']);
+	dd($b);
 
 });
 
@@ -586,7 +585,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('index', ['uses' => 'BillboardLoginController@getIndex', 'as' => 'osce.billboard.login.getIndex']);
 		Route::post('index', ['uses' => 'BillboardLoginController@postIndex', 'as' => 'osce.billboard.login.postIndex']);
 	});
-	Route::group(['prefix' => 'billboard', 'namespace' => 'Billboard'], function () {
+	Route::group(['prefix' => 'billboard', 'namespace' => 'Billboard', 'middleware' => 'billboard'], function () {
 		//告示牌主页
 		Route::get('index', ['uses' => 'BillboardController@getIndex', 'as' => 'osce.billboard.getIndex']);
 		//学生接口
