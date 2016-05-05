@@ -499,6 +499,7 @@ class DrawlotsController extends CommonController
             $redis = Redis::connection('message');
             //根据uid查到对应的腕表编号
             $watch = Watch::where('code', $uid)->first();
+            \Log::alert('抽签拿到的腕表id',[$watch->id]);
             if (is_null($watch)) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
@@ -512,7 +513,7 @@ class DrawlotsController extends CommonController
             //获取腕表记录实例
             $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$exam_screening_id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
-            \Log::alert('抽签拿到的学生id',[$watchLog->student_id]);
+
             if (!$watchLog) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
@@ -573,7 +574,7 @@ class DrawlotsController extends CommonController
                     json_encode($this->success_data([], 3400, '当前考生走错了考场!')));
                 throw new \Exception('当前考生走错了考场！', 3400);
             }
-
+            \Log::alert('抽签拿到的学生id',[$watchLog->student_id]);
             //使用抽签的方法进行抽签操作
             $result = $this->drawlots($student, $roomId, $teacherId, $exam);
 //            $model = new Drawlots($student, $teacherId, $exam, $roomId);

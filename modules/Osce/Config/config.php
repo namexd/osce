@@ -12,7 +12,7 @@ return [
 	'batch_num' => 10,
 	'wait_student_num' => 4,
 
-	'topticOptionMaxNumer'	=>	15,
+	'topticOptionMaxNumer'	=>	50,
 	'page'	=> [
 		'size'	=> 4
 	],
