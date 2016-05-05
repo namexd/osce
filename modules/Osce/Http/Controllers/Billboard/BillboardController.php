@@ -31,9 +31,43 @@ class BillboardController extends CommonController
      */
     public function getIndex(Request $request, BillboardRepository $billboardRepository)
     {
-        $data = $billboardRepository->getData($request->input('exam_id'));
-        return view('osce::billboard.index', ['data' => $data]);
+        try {
+            $data = $billboardRepository->getData($request->input('exam_id'));
+        
+            return view('osce::billboard.index', ['data' => $data]);
+
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
+    /**
+     * 获取学生数据
+     * @url osce/billboard/student
+     * @access public
+     * @param Request $request
+     * @param BillboardRepository $billboardRepository
+     * @请求字段：
+     * @return mixed
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-05
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudent(Request $request, BillboardRepository $billboardRepository)
+    {
+        $this->validate($request, [
+            'exam_id' => 'required|integer',
+            'station_id' => 'required|integer'
+        ]);
+
+        try {
+            $data = $billboardRepository->getStudent($request->input('exam_id'), $request->input('station_id'));
+
+            return response()->json($this->success_data($data));
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
+    }
     
 }

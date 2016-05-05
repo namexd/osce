@@ -378,7 +378,7 @@ class PadController extends  CommonController{
      */
     public function getChangeStatus(Request $request)
     {
-        \Log::alert('ChangeStatusData', $request->all());
+
 
         $this->validate($request, [
             'student_id' => 'required|integer',
@@ -394,6 +394,7 @@ class PadController extends  CommonController{
         $stationId = $request->input('station_id', null);
         $teacherId = $request->input('user_id');
         $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
+            \Log::alert('ChangeStatusData', $request->all());
 
         //考试结束后，调用向腕表推送消息的方法
         $examScreeningStudentModel = new ExamScreeningStudent();
@@ -406,7 +407,7 @@ class PadController extends  CommonController{
             $request['nfc_code'] = $watchData->code;
             $studentWatchController->getStudentExamReminder($request,$stationId ,$queue->exam_screening_id);
         }catch (\Exception $ex){
-            \Log::alert('EndErrorWatch', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+            \Log::alert('结束考试调腕表错误', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
         }
       try{
           //考试完成推送
@@ -416,12 +417,12 @@ class PadController extends  CommonController{
           $draw->getNextExaminee_arr($request);//下一组
 
       }catch (\Exception $ex){
-          \Log::alert('EndErrorExamineeandNext', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+          \Log::alert('结束考试调当前组或下一组错误', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
       }
         return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
 
         } catch (\Exception $ex) {
-            \Log::alert('ChangeStatus', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+            \Log::alert('结束考试错误', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
             return response()->json($this->fail($ex));
         }
     }

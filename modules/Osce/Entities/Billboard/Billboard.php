@@ -10,6 +10,7 @@ namespace Modules\Osce\Entities\Billboard;
 
 
 use Modules\Osce\Entities\ExamDraft;
+use Modules\Osce\Entities\ExamQueue;
 
 class Billboard
 {
@@ -41,8 +42,18 @@ class Billboard
                 'station.name as station_name',
                 'subject.mins as mins',
                 'subject.id as subject_id',
-                'cases.name as case_name'
+                'cases.name as case_name',
+                'cases.description as case_description'
             )
+            ->first();
+    }
+
+    public function getQueue($examId, $stationId)
+    {
+        return ExamQueue::whereExamId($examId)
+            ->whereStationId($stationId)
+            ->whereStatus(1)
+            ->orderBy('begin_dt', 'asc')
             ->first();
     }
 }

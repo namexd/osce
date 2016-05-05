@@ -499,6 +499,7 @@ class DrawlotsController extends CommonController
             $redis = Redis::connection('message');
             //根据uid查到对应的腕表编号
             $watch = Watch::where('code', $uid)->first();
+            \Log::alert('抽签拿到的腕表id',[$watch->id]);
             if (is_null($watch)) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
@@ -506,9 +507,13 @@ class DrawlotsController extends CommonController
             }
             $exam=Exam::doingExam();
             $exam_screening_id=$this->getexamScreeing($exam);
+
+            \Log::alert('抽签拿到的场次id',[$exam_screening_id]);
+
             //获取腕表记录实例
             $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$exam_screening_id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
+
             if (!$watchLog) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
@@ -569,7 +574,7 @@ class DrawlotsController extends CommonController
                     json_encode($this->success_data([], 3400, '当前考生走错了考场!')));
                 throw new \Exception('当前考生走错了考场！', 3400);
             }
-
+            \Log::alert('抽签拿到的学生id',[$watchLog->student_id]);
             //使用抽签的方法进行抽签操作
             $result = $this->drawlots($student, $roomId, $teacherId, $exam);
 //            $model = new Drawlots($student, $teacherId, $exam, $roomId);
@@ -589,6 +594,7 @@ class DrawlotsController extends CommonController
 
             //判断时间
             $this->judgeTime($watchLog->student_id,$exam_screening_id);
+
             $connection->commit();
             $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($result, 1, '抽签成功!')));
@@ -766,7 +772,7 @@ class DrawlotsController extends CommonController
 
                 $this->getStation($request);
             }*/
-
+                \Log::alert('老师登陆获得信息',[$station]);
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -813,7 +819,7 @@ class DrawlotsController extends CommonController
 
                 //随机获取一个考站的id
                 $ranStationId = $this->ranStationSelect($roomId, $examId, $examScreeingId);
-                \Log::alert($ranStationId);
+                \Log::alert('考场模式抽签分配的考站,和拿到的考场id',[$ranStationId,$roomId]);
 
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id', $student->id)
@@ -828,7 +834,8 @@ class DrawlotsController extends CommonController
                 if ($examQueue->status != 0) {
                     throw new \Exception('该考生数据错误！', 3650);
                 }
-
+                \Log::alert('抽签改变的学生信息，队列id，学生id，学生状态前',[$examQueue->id,$examQueue->student_id,$examQueue->status]);
+                
                 $examQueue->status = 1;
                 $examQueue->station_id = $ranStationId;
                 if (!$examQueue->save()) {
@@ -918,17 +925,16 @@ class DrawlotsController extends CommonController
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    private function judgeTime($uid, $screenId)
+    private function judgeTime($studentId, $screenId)
     {
         //获取当前时间
         $date = date('Y-m-d H:i:s');
 
         //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
-        $studentObj = ExamQueue::where('student_id', $uid)
+        $studentObj = ExamQueue::where('student_id', $studentId)
             ->whereExamScreeningId($screenId)
-            ->where('status', 1)
+            ->whereIn('status', [1,2])
             ->first();
-
         if (!$studentObj) {
             throw new \Exception('当前没有符合条件的队列！', -1000);
         }
@@ -936,7 +942,7 @@ class DrawlotsController extends CommonController
         $studentEndTime = $studentObj->end_dt;
         if (strtotime($date) > strtotime($studentBeginTime)) {
             $diff = strtotime($date) - strtotime($studentBeginTime);
-            $studentObjs = ExamQueue::where('student_id', $uid)
+            $studentObjs = ExamQueue::where('student_id', $studentId)
                 ->whereExamScreeningId($screenId)
                 ->where('status', '<', 2)
                 ->get();

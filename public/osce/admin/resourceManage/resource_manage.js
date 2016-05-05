@@ -1749,7 +1749,7 @@ function course_module(){
                 '<td>'+
                 '<select class="form-control" name="score['+parent+']['+child+']">';
                 /*TODO: Zhoufuxiang 2016-2-26*/
-                for(var a=1; a<=15; a++){
+                for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                     html += '<option value="'+a+'">'+a+'</option>';
                 }
         html += '</select>'+

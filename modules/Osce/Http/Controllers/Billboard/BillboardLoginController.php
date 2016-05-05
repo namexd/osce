@@ -64,11 +64,11 @@ class BillboardLoginController extends CommonController
         //获取参数
         $username = $request->input('username');
         $password = $request->input('password');
+
         try {
             $user = \Auth::attempt(['username' => $username, 'password' => $password]);
-
             if ($user) {
-                return redirect()->route('osce.billboard.getIndex', ['exam_id' => $request->get('exam_id')]);
+                return redirect()->route('osce.billboard.getIndex', ['exam_id' => $request->input('exam_id')]);
             } else {
                 throw new \Exception('账号密码错误');
             }
