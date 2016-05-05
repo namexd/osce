@@ -67,9 +67,8 @@ class BillboardLoginController extends CommonController
 
         try {
             $user = \Auth::attempt(['username' => $username, 'password' => $password]);
-
             if ($user) {
-                return redirect()->route('osce.billboard.getIndex', ['exam_id' => $request->get('exam_id')]);
+                return redirect()->route('osce.billboard.getIndex', ['exam_id' => $request->input('exam_id')]);
             } else {
                 throw new \Exception('账号密码错误');
             }
