@@ -549,6 +549,7 @@ class ExamQueue extends CommonModel
 
                     //获取标准考试时间
                     $stationTime = $this->stationTime($item->station_id, $exam->id);
+                    \Log::alert('获取到的标准时间',[$stationTime]);
 
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         if ($item->status == 2) {
@@ -577,6 +578,8 @@ class ExamQueue extends CommonModel
                         }
                         $ExamTime->begin_dt = date('Y-m-d H:i:s', $nowTime);
                         $ExamTime->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
+
+                        \Log::alert('改变的时间',[$ExamTime->begin_dt,$ExamTime->end_dt]);
                         if (!$ExamTime->save()) {
                             throw new \Exception('队列时间更新失败', -100);
                         }
