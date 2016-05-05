@@ -22,46 +22,50 @@ class HuaxiDrawlotsRepository extends AbstractDrawlots
 
     public function __construct()
     {
-        parent::__construct();
+        try {
+            parent::__construct();
 
-        \App::bind('StudentInterface', function () {
-            return new Student();
-        });
-        \App::bind('StationData', function () {
-            return new Station();
-        });
-        \App::bind('Screening', function () {
-            return new Screening();
-        });
+            \App::bind('StudentInterface', function () {
+                return new Student();
+            });
+            \App::bind('StationData', function () {
+                return new Station();
+            });
+            \App::bind('Screening', function () {
+                return new Screening();
+            });
 
-        $this->studentObj = \App::make('StudentInterface');
-        $this->station = \App::make('StationData');
-        $this->screen = \App::make('Screening');
+            $this->studentObj = \App::make('StudentInterface');
+            $this->station = \App::make('StationData');
+            $this->screen = \App::make('Screening');
 
-        $this->student = $this->studentObj->getStudent($this->params['uid']);
+            $this->student = $this->studentObj->getStudent($this->params['uid']);
 
-        \App::bind('GoWrong', function () {
-            return new GoWrong();
-        });
+            \App::bind('GoWrong', function () {
+                return new GoWrong();
+            });
 
-        \App::bind('EndExam', function () {
-            return new EndExam();
-        });
+            \App::bind('EndExam', function () {
+                return new EndExam();
+            });
 
-        \App::bind('NotEndPrepare', function () {
-            return new NotEndPrepare(\App::make('StationData'));
-        });
+            \App::bind('NotEndPrepare', function () {
+                return new NotEndPrepare(\App::make('StationData'));
+            });
 
-        \App::bind('InExaminee', function () {
-            return new InExaminee(\App::make('StationData'));
-        });
+            \App::bind('InExaminee', function () {
+                return new InExaminee(\App::make('StationData'));
+            });
 
-        $this->validator = [
-            \App::make('GoWrong'),
-            \App::make('EndExam'),
-            \App::make('NotEndPrepare'),
-            \App::make('InExaminee')
-        ];
+            $this->validator = [
+                \App::make('GoWrong'),
+                \App::make('EndExam'),
+                \App::make('NotEndPrepare'),
+                \App::make('InExaminee')
+            ];
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     /**

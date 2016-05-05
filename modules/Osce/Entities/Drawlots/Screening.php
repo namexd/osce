@@ -23,13 +23,17 @@ class Screening
      */
     public function screening($examId)
     {
-        return ExamScreening::join('exam_order', 'exam_order.exam_screening_id', '=', 'exam_screening.id')
-            ->where('exam_screening.exam_id', $examId)
-            ->where('exam_screening.status', 1)  //等候考试
-            ->orderBy('exam_screening.begin_dt', 'asc')
-            ->select(
-                'exam_screening.id as id'
-            )
-            ->first();
+        try {
+            return ExamScreening::join('exam_order', 'exam_order.exam_screening_id', '=', 'exam_screening.id')
+                ->where('exam_screening.exam_id', $examId)
+                ->where('exam_screening.status', 1)//等候考试
+                ->orderBy('exam_screening.begin_dt', 'asc')
+                ->select(
+                    'exam_screening.id as id'
+                )
+                ->first();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 }
