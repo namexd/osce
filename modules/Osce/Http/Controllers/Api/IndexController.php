@@ -500,10 +500,12 @@ class IndexController extends CommonController
                         $this->watchUnbundling($id, $student_id);
                         //更改状态（2 为上报换腕表）
                         ExamScreeningStudent::where('watch_id', '=', $id)->where('student_id', '=', $student_id)
-                            ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
+                                            ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
 
                         //中途解绑（更改队列，往后推）
-                        ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
+                        $queueRes = ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
+                        //插入日志
+                        \Log::alert('中途解绑（更改队列，往后推）',[$queueRes]);
 
                         //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                         $examScreening = new ExamScreening();
