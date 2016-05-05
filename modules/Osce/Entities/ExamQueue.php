@@ -621,16 +621,15 @@ class ExamQueue extends CommonModel
                     $stationTime = $paper->length;
                 }
             } else {
-
-                $ExamDraft = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                $ExamDraft = ExamDraft::join('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
                     ->where('exam_draft_flow.exam_id', '=', $exam_id)
                     ->where('exam_draft.station_id', '=', $station->id)
                     ->first();
                 if (!is_null($ExamDraft)) {
-
                     $subject = Subject::where('id', $ExamDraft->subject_id)->first();
-                    if (!is_null($subject)) {
 
+                    if (!is_null($subject)) {
+                        \Log::alert('科目',[$subject]);
                         $stationTime = $subject->mins;
                     }
                 }
