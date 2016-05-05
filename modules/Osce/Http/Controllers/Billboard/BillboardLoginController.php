@@ -64,6 +64,7 @@ class BillboardLoginController extends CommonController
         //获取参数
         $username = $request->input('username');
         $password = $request->input('password');
+
         try {
             $user = \Auth::attempt(['username' => $username, 'password' => $password]);
 

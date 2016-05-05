@@ -12,6 +12,7 @@ use DB;
 use Auth;
 use Illuminate\Container\Container as App;
 use Modules\Osce\Entities\ExamArrange\ExamArrangeRepository;
+use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
 
 class Exam extends CommonModel
 {
@@ -835,9 +836,12 @@ class Exam extends CommonModel
             $examScreeningObj = $examScreening->select('id')->get();
             $examScreeningIds = $examScreeningObj->pluck('id');
 
-            $examResult       = ExamResult::whereIn('exam_screening_id', $examScreeningIds)->select('id')->get();
-            $examResultIds    = $examResult->pluck('id');
+            $examResults      = ExamResult::whereIn('exam_screening_id', $examScreeningIds)->select('id')->get();
+            $examResultIds    = $examResults->pluck('id');
 
+            //清除腕表使用记录，修改腕表使用状态
+            WatchLog::where('id','>',0)->delete();
+            Watch::where('id','>',0)->update(['status'=>0]);
             //删除考试得分
             $examScores = ExamScore::whereIn('exam_result_id', $examResultIds)->get();
             if (!$examScores->isEmpty()) {
@@ -846,9 +850,25 @@ class Exam extends CommonModel
                 }
             }
             //如果该考试已经完成，删除考试结果记录
-            if (!$examResult->isEmpty()) {
-                foreach ($examResult as $valueR) {
+            if (!$examResults->isEmpty()) {
+                foreach ($examResults as $valueR)
+                {
+                    //删除考核点对应的图片、语音
+                    $examAttachs = TestAttach::where('test_result_id', '=', $valueR->id)->get();
+                    if(!$examAttachs->isEmpty()){
+                        foreach ($examAttachs as $examAttach) {
+                            $examAttach->delete();
+                        }
+                    }
+                    //再删除对应考试结果数据
                     $valueR->delete();
+                }
+            }
+            //删除替考记录
+            $examMonitors = ExamMonitor::where('exam_id', '=', $id)->get();
+            if(!$examMonitors->isEmpty()){
+                foreach ($examMonitors as $examMonitor) {
+                    $examMonitor->delete();
                 }
             }
 

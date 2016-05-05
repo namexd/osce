@@ -54,6 +54,11 @@ class ExamQueue extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Exam', 'id', 'exam_id');
     }
 
+    public function student()
+    {
+        return $this->hasOne('\Modules\Osce\Entities\Student', 'id', 'student_id');
+    }
+
     public function scopeUsedStations($query, $screenId, $roomId)
     {
         return $query->where($this->table . '.exam_screening_id', $screenId)
@@ -69,11 +74,6 @@ class ExamQueue extends CommonModel
         3 => '结束考试',
         4 => '缺考',
     ];
-
-    public function student()
-    {
-        return $this->hasMany('\Modules\Osce\Entities\Student', 'id', 'student_id');
-    }
 
     public function getStudent($mode, $exam_id)
     {

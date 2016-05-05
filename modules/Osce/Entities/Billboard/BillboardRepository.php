@@ -41,4 +41,21 @@ class BillboardRepository
 
         return $data;
     }
+
+    /**
+     * 获取考生数据
+     * @access public
+     * @param $examId
+     * @param $stationId
+     * @请求字段：
+     * @return mixed
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-05
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudent($examId, $stationId)
+    {
+        return $this->billboard->getQueue($examId, $stationId)->student;
+    }
 }
