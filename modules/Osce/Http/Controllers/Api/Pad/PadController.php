@@ -378,6 +378,7 @@ class PadController extends  CommonController{
      */
     public function getChangeStatus(Request $request)
     {
+        \Log::alert('ChangeStatusData', $request->all());
 
         $this->validate($request, [
             'student_id' => 'required|integer',
@@ -393,7 +394,6 @@ class PadController extends  CommonController{
         $stationId = $request->input('station_id', null);
         $teacherId = $request->input('user_id');
         $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-            \Log::alert('ChangeStatusData', [$studentId,$stationId,$teacherId]);
 
         //考试结束后，调用向腕表推送消息的方法
         $examScreeningStudentModel = new ExamScreeningStudent();
