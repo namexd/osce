@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities\Billboard;
 
 
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Repositories\Common;
 
 class BillboardRepository
@@ -38,7 +39,7 @@ class BillboardRepository
 
         //利用老师id和考试id找出数据
         $data = $this->billboard->getData($examId, $userId);
-
+        
         return $data;
     }
 
@@ -57,5 +58,6 @@ class BillboardRepository
     public function getStudent($examId, $stationId)
     {
         return $this->billboard->getQueue($examId, $stationId)->student;
+//        return Student::find(183);
     }
 }
