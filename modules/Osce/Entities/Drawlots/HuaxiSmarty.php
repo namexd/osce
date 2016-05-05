@@ -134,7 +134,6 @@ class HuaxiSmarty
          * 获取开始时间和结束时间
          */
         $studentBeginTime = $tempStudent->begin_dt;
-        $studentEndTime = $tempStudent->end_dt;
 
         /**
          * 判断时间
@@ -147,8 +146,8 @@ class HuaxiSmarty
                 ->where('status', '<', 2)
                 ->get();
             foreach ($studentObjs as $studentObj) {
-                $studentObj->begin_dt = date('Y-m-d H:i:s', strtotime($studentBeginTime) + $diff);
-                $studentObj->end_dt = date('Y-m-d H:i:s', strtotime($studentEndTime) + $diff);
+                $studentObj->begin_dt = date('Y-m-d H:i:s', strtotime($studentObj->begin_dt) + $diff);
+                $studentObj->end_dt = date('Y-m-d H:i:s', strtotime($studentObj->end_dt) + $diff);
                 if (!$studentObj->save()) {
                     throw new \Exception('抽签失败！', -1001);
                 }
