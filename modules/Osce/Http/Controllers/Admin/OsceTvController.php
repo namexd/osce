@@ -68,7 +68,7 @@ class OsceTvController extends  CommonController{
             }
             $ExamQueue  = new ExamQueue();
             //获取对应场次
-            $screeningId = $ExamQueue->getExamScreeningId($exam_id);;
+            $screeningId = $ExamQueue->getExamScreeningId($exam_id);
 
 //            $pagination = $ExamQueue->getPageSize($exam_id, $pageSize);
             //根据排序方式 获取数据
@@ -76,7 +76,7 @@ class OsceTvController extends  CommonController{
                 case 1: $pagination = $ExamQueue->getPageSize($exam_id, $screeningId, $pageSize, 'room_id');
                         $students   = $ExamQueue->getWaitRoomStudents($exam_id, $screeningId, $pageSize);
                         break;
-                case 2: $pagination = $ExamQueue->getPageSize($exam_id, $screeningId);
+                case 2: $pagination = $ExamQueue->getPageSize($exam_id, $screeningId, $pageSize);
                         $students   = $ExamQueue->getWaitStationStudents($exam_id, $screeningId, $pageSize);
                         break;
                 default:
@@ -90,7 +90,8 @@ class OsceTvController extends  CommonController{
                         'total'     => ceil($pagination->total()/$pageSize),
                         'page_size' => $pageSize,
                         'page'      => $pagination->currentPage(),
-                        'a'      => $pagination->total(),
+                        'a'         => $pagination->total(),
+                        'screenId'  => $screeningId,
                     ],
                     1, '获取数据成功'
                 )
