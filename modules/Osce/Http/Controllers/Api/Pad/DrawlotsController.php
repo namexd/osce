@@ -932,9 +932,8 @@ class DrawlotsController extends CommonController
         //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
         $studentObj = ExamQueue::where('student_id', $studentId)
             ->whereExamScreeningId($screenId)
-            ->where('status', 1)
+            ->whereIn('status', [1,2])
             ->first();
-
         if (!$studentObj) {
             throw new \Exception('当前没有符合条件的队列！', -1000);
         }
