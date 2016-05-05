@@ -34,7 +34,7 @@ class ExamScreeningStudent extends CommonModel
 
     public function scopeIsEnd($query, $value)
     {
-        return $query->where($this->table . 'is_end', '=' ,$value);
+        return $query->where($this->table . '.is_end', '=' ,$value);
     }
 
     /**
