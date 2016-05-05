@@ -939,7 +939,6 @@ class DrawlotsController extends CommonController
             throw new \Exception('当前没有符合条件的队列！', -1000);
         }
         $studentBeginTime = $studentObj->begin_dt;
-        $studentEndTime = $studentObj->end_dt;
         if (strtotime($date) > strtotime($studentBeginTime)) {
             $diff = strtotime($date) - strtotime($studentBeginTime);
             $studentObjs = ExamQueue::where('student_id', $studentId)
@@ -947,8 +946,8 @@ class DrawlotsController extends CommonController
                 ->where('status', '<', 2)
                 ->get();
             foreach ($studentObjs as $studentObj) {
-                $studentObj->begin_dt = date('Y-m-d H:i:s', strtotime($studentBeginTime) + $diff);
-                $studentObj->end_dt = date('Y-m-d H:i:s', strtotime($studentEndTime) + $diff);
+                $studentObj->begin_dt = date('Y-m-d H:i:s', strtotime($studentObj->begin_dt) + $diff);
+                $studentObj->end_dt = date('Y-m-d H:i:s', strtotime($studentObj->end_dt) + $diff);
                 \Log::info('drawlots_time', ['begin_dt' => $studentObj->begin_dt, 'end_dt' => $studentObj->end_dt]);
                 if (!$studentObj->save()) {
                     throw new \Exception('抽签失败！', -1001);

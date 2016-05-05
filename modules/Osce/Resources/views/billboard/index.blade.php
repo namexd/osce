@@ -10,19 +10,19 @@
       border: 1px solid;
     }
     #top{
-      background-color:#666 ;
+      background-color:#364150 ;
       color: #fff;
       width: 100%;
       height: 32px;
-      line-height: 30px;
+      line-height: 32px;
     }
-    #top_left{
-      padding-left: 30px;
+    #top_title{
       float: left;
+      margin-left: 10px;
     }
-    #top_right{
-      float: right;
-      padding-right: 10px;
+    #top_img{
+      margin-left: 10px;
+      float: left;
     }
     #body{
       width: 100%;
@@ -31,8 +31,20 @@
     #body div{
       height: 20%;
       padding-top: 20px;
-      padding-left: 60px;
+      margin-left: 60px;
       font-size: 25px;
+    }
+    #exam_station{
+      display: block;
+      font-size: 35px;
+      margin-right: 60px;
+      text-align: center;
+    }
+    #time{
+      color: red;
+    }
+    #student{
+      font-size: 30px;
     }
     #bottom{
       margin-top: 35px;
@@ -79,12 +91,11 @@
   <input type="hidden" id="exam_id" value="{{$data['exam_id']}}">
   <input type="hidden" id="station_id" value="{{$data['station_id']}}">
   <div id="top">
-    <div id="top_left">2015年度OSCE考试第3期</div>
-    <div id="top_right"><img src="{{asset('osce/images/u24.png')}}" width="22px" height="22px" align="center"></div>
+    <div id="top_img"><img src="{{asset('osce/images/uuz.png')}}" width="9px" height="14px" align="center"></div>
+    <div id="top_title">2015年度OSCE考试第3期</div>
   </div>
   <div id="body">
     <div class="title">
-      <span>考站：</span>
       <span id="exam_station">{{$data['station_name']}}</span>
     </div>
     <div class="title">
@@ -93,7 +104,7 @@
     </div>
     <div class="title">
       <span>时间：</span>
-      <span id="time">{{$data['mins']}}分钟，时间到请停止考试，根据腕表提示完成考试</span>
+      <span id="time">{{$data['mins']}}分钟</span><span>，时间到请停止考试</span>
     </div>
     <div class="title">
       <span>病例：</span>
