@@ -1699,7 +1699,7 @@ function course_module(){
                 '</td>'+
                 '<td>'+
                 '<select style="display:none;" class="form-control" name="score['+index+'][total]">';
-                for(var a=1; a<=15; a++){
+                for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                     html += '<option value="'+a+'">'+a+'</option>';
                 }
         html +=  '</select>'+
@@ -2204,7 +2204,7 @@ function course_module(){
                                        '<select class="form-control" style="display:none;" name="score['+index+'][total]">'+
                                        '<option value="'+res[i].score+'">'+res[i].score+'</option>';
                                        /*TODO: Zhoufuxiang 2016-2-26*/
-                                       for(var a=1; a<=15; a++){
+                                       for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                                            html += '<option value="'+a+'">'+a+'</option>';
                                        }
                                html += '</select>'+
@@ -2243,7 +2243,7 @@ function course_module(){
                                                '<select class="form-control" name="score['+index+']['+res[j].sort.substr(res[j].sort.indexOf('-')+1, 3)+']">';
                                                 /*TODO: Zhoufuxiang 2016-2-26*/
                                                //'<option value="'+res[j].score+'">'+res[j].score+'</option>';
-                                               for(var a=1; a<=15; a++){
+                                               for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                                                    html += '<option value="'+a+'"'+((res[j].score==a)?" selected ":"")+'>'+a+'</option>';
                                                }
                                        html += '</select>'+
