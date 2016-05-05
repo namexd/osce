@@ -40,7 +40,8 @@ class Billboard
                 'station.id as station_id',
                 'station.name as station_name',
                 'subject.mins as mins',
-                'subject.id as subject_id'
+                'subject.id as subject_id',
+                'cases.name as case_name'
             )
             ->first();
     }
