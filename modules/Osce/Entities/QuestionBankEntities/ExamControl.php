@@ -121,6 +121,7 @@ class ExamControl extends Model
                 })->where('exam_screening_student.student_id',$val['student_id'])
                     ->where('exam_screening.exam_id',$val['exam_id'])
                     ->where('exam_screening_student.is_end',1)->lists('exam_screening_student.exam_screening_id')->unique()->count();
+
                 //查询迟到数量
                 $examAbsentCount = ExamAbsent::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->lists('exam_screening_id')->unique()->count();
                 if($finishCount+$examAbsentCount>=$count){
