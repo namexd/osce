@@ -41,33 +41,43 @@
   </style>
   <script src="{{asset('osce/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
   <script>
-    {{--$(function(){--}}
-      {{--show();--}}
-      {{--setInterval(show,5000);--}}
-    {{--});--}}
-    {{--function show(){--}}
-      {{--$.ajax({--}}
-        {{--url:"{{route('')}}",//请求的地址--}}
-        {{--type:"get",//请求方式--}}
-        {{--async:true,//设置是否异步--}}
-        {{--dataType:"json",//指定响应回来的数据--}}
-        {{--success:function(data){//成功后调用--}}
-          {{--var data =eval("("+data+")");--}}
-          {{--$("#exam_station").html(data.exam_station);--}}
-          {{--$("#student").html(data.student);--}}
-{{--//          $("#time").html(data.mins+"分钟，时间到请停止考试，根据腕表提示完成考试");--}}
-{{--//          $("#case").html(data.case);--}}
-        {{--},--}}
-        {{--error:function(){//请求发生错误时调用--}}
+    $(function(){
+      show();
+      setInterval(show,5000);
+    });
+    function show(){
+      var exam_id = $('#exam_id').val();
+      var station_id = $('#station_id').val();
 
-        {{--}--}}
-      {{--})--}}
-    {{--}--}}
+      $.ajax({
+        url:"{{route('osce.billboard.getStudent')}}",//请求的地址
+        data: {exam_id: exam_id, station_id: station_id},
+        type:"get",//请求方式
+        async:true,//设置是否异步
+        dataType:"json",//指定响应回来的数据
+        success: function(data){//成功后调用
+//          var data =eval("("+data+")");
+//          $("#exam_station").html(data.exam_station);
+          if (data.code != 1) {
+            $("#student").html("当前没有考生");
+          } else {
+            $("#student").html(data.data.name);
+          }
+
+
+        },
+        error: function(data){//请求发生错误时调用
+
+        }
+      })
+    }
   </script>
 </head>
 <body>
 
 <div id="area">
+  <input type="hidden" id="exam_id" value="{{$data['exam_id']}}">
+  <input type="hidden" id="station_id" value="{{$data['station_id']}}">
   <div id="top">
     <div id="top_left">2015年度OSCE考试第3期</div>
     <div id="top_right"><img src="{{asset('osce/images/u24.png')}}" width="22px" height="22px" align="center"></div>

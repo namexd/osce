@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities\Billboard;
 
 
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Repositories\Common;
 
 class BillboardRepository
@@ -57,5 +58,6 @@ class BillboardRepository
     public function getStudent($examId, $stationId)
     {
         return $this->billboard->getQueue($examId, $stationId)->student;
+//        return Student::find(183);
     }
 }
