@@ -26,6 +26,7 @@ use Modules\Osce\Entities\TestResult;
 use Modules\Osce\Http\Controllers\CommonController;
 use Auth;
 use Modules\Osce\Repositories\Common;
+use Modules\Osce\Entities\ExamPlan;
 
 class StudentExamQueryController extends CommonController
 {
@@ -395,10 +396,15 @@ class StudentExamQueryController extends CommonController
             $studentData = $studentModel->getStudentByExamAndSubject($examId, $subjectId);
             $subjectData = [];
             //根据考生id查出该考试在本考试的总成绩
-            foreach ($studentData as $student) {
+            foreach ($studentData as $student)
+            {
+                //获取该考生在该场考试所对应的所有场次id
+                $studentExamScreeningIdArr = ExamPlan::where('exam_id', '=', $examId)
+                                            ->where('student_id','=',$student->student_id)
+                                            ->select('exam_screening_id')->get()->toArray();
                 //调用查看总成绩的方法
                 $tesresultModel = new TestResult();
-                $StudentScores = $tesresultModel->AcquireExam($student->student_id);
+                $StudentScores = $tesresultModel->AcquireExam($student->student_id, $studentExamScreeningIdArr);
 //                $item[$studentId->student_name] = $StudentScores;
                 $subjectData[] = [
                     'student_name' => $student->student_name,

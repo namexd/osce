@@ -148,6 +148,7 @@ class WatchLog extends CommonModel{
             'student.name',
             'student.idcard',
             'student.exam_sequence',
+            'student.photo',
             'exam_queue.status',
             'watch.code as nfc_code',
             'watch.nfc_code as code',
@@ -155,7 +156,7 @@ class WatchLog extends CommonModel{
             'watch.factory',
             'watch.sp',
             'watch_log.student_id'
-        )->first();
+        )->orderBy('watch_log.created_at','desc')->first();
 
         return $builder;
     }

@@ -8,10 +8,9 @@
 
 namespace Modules\Osce\Entities\SmartArrange;
 
-
 use Modules\Osce\Entities\ExamPlan;
+use Modules\Osce\Entities\SmartArrange\Student\StudentFromDB;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
-use Modules\Osce\Entities\SmartArrange\Student\StudentFromDatabase;
 use Modules\Osce\Entities\ExamPlanRecord;
 
 class SmartArrangeRepository extends AbstractSmartArrange
@@ -20,16 +19,17 @@ class SmartArrangeRepository extends AbstractSmartArrange
 
     private $_S_Count;
 
-    /**
-     * 返回SmartArrange的类名
-     * @return string
-     * @author Jiangzhiheng
-     * @time 2016-04-13 11:45
-     */
-    function model()
+    public function __construct()
     {
-        // TODO: Implement model() method.
-        return 'Modules\Osce\Entities\SmartArrange\SmartArrange';
+        \App::bind('student', function () {
+            return new StudentFromDB();
+        });
+
+        \App::bind('SmartArrange', function () {
+            return new SmartArrange(\App::make('student'));
+        });
+
+        $this->model = \App::make('SmartArrange');
     }
 
     /**
@@ -43,12 +43,8 @@ class SmartArrangeRepository extends AbstractSmartArrange
     function plan($exam)
     {
         try {
-            //将考试初始化进去
-            $this->model->exam = $exam;
-
-
-            $this->checkDataBase($this->model->exam); //检查临时表中是否有数据，如果有，就删除之
-
+            $this->model->setExam($exam); //将考试实例注入
+            $this->checkDataBase($exam); //检查临时表中是否有数据，如果有，就删除之
             /*
              * 将阶段遍历，在每个阶段中进行排考
              */
@@ -58,20 +54,17 @@ class SmartArrangeRepository extends AbstractSmartArrange
             }
             foreach ($gradations as $key => $gradation) {
                 //获取当前考试的状态
-                //$type = is_null($gradation->sequence_mode) ? $exam->sequence_mode : $gradation->sequence_mode;
                 $type = is_null($gradation->sequence_cate) ? $exam->sequence_cate : $gradation->sequence_cate;
 
                 //将排序模式注入
                 $this->model->setCate(CateFactory::getCate($exam, $type));
-                
                 //初始化学生
-                $this->_S_Count = $this->model->setStudents(new StudentFromDatabase());
+                $this->_S_Count = $this->model->setStudents(new StudentFromDB());
                 /*
                  * 做排考的前期准备
                  * 检查各项数据是否存在
                  */
                 $this->checkStudentIsZero($this->model->getStudents()); //检查当前考试是否有学生
-
                 //$key就是order的值
                 $screens = $this->getScreenByOrder($key, $exam);
                 //循环遍历$screen，对每个时段进行排考
@@ -84,22 +77,18 @@ class SmartArrangeRepository extends AbstractSmartArrange
                     if ($this->_S_Count == $studentsCount) {
                         break;
                     }
-
                     //将考试实体初始化进去
                     $this->model->setEntity($exam, $screen);
 
                     $screen = $this->setFlowsnumToScreen($exam, $screen); //将该场次有多少流程写入场次对象
-
+                    $screen->gradation_order = $key;
                     $this->model->screenPlan($screen);
                 }
-                //判断是否需要报错
-//                    $examPlanNull = ExamPlanRecord::whereNull('end_dt')->where('exam_id',
-//                    $exam->id)->first();  //通过查询数据表中是否有没有写入end_dt的数据
-
                 if (count($this->model->getStudents()) != 0 || count($this->model->getWaitStudents()) != 0) {
 //                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
                     throw new \Exception('人数太多，所设时间无法完成考试', -99);
                 }
+                $this->checkUnnecessaryScreen($exam, $key);
             }
             return $this->output($exam);
         } catch (\Exception $ex) {
@@ -150,7 +139,6 @@ class SmartArrangeRepository extends AbstractSmartArrange
                         }
 
                         $student = $record->student;
-
                         $timeData[$screeningId][$entityId]['name'] = $name;
                         $timeData[$screeningId][$entityId]['child'][$batch]['start'] = strtotime($record->begin_dt);
                         $timeData[$screeningId][$entityId]['child'][$batch]['end'] = strtotime($record->end_dt);
@@ -163,14 +151,21 @@ class SmartArrangeRepository extends AbstractSmartArrange
         }
         return $timeData;
     }
-    
+
+    /**
+     * 将数据保存
+     * @param $exam
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-11 17:20
+     */
     function store($exam)
     {
         // TODO: Implement store() method.
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
         try {
-            $this->model->changeEffect($exam);
+            $this->changeEffect($exam);
 
             $data = ExamPlanRecord::where('exam_id', $exam->id)->get();
 
@@ -202,17 +197,34 @@ class SmartArrangeRepository extends AbstractSmartArrange
             }
 
             //将考试使用了的实体的effected都变成1
-            $this->model->changeEffect($exam, $attributes);
+            $this->changeEffect($exam, $attributes);
 
             //将数据写入stationStatus
-            $this->model->stationStatus($exam);
+            $this->stationStatus($exam);
 
             //将数据保存到examOrder
-            $this->model->saveStudentOrder($exam);
+            $this->saveStudentOrder($exam);
             $connection->commit();
         } catch (\Exception $ex) {
             $connection->rollBack();
             throw $ex;
         }
+    }
+
+    /**
+     * 将学生的排考情况导出
+     * @param $export
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-05-01 09:45
+     */
+    public function export($id, $export, $arrange)
+    {
+        $data = $export->objToArray($arrange->getData($id));
+
+        return $export->sheet('StudentList', function ($sheet) use ($data){
+            $sheet->setWidth(config('osce.smart_arrange.width'));
+            $sheet->rows($data);
+        })->export('xlsx');
     }
 }

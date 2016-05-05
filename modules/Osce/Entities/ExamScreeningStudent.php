@@ -20,11 +20,21 @@ class ExamScreeningStudent extends CommonModel
     public $incrementing = true;
     protected $guarded = [];
     protected $hidden = [];
-    protected $fillable = ['exam_screening_id', 'student_id', 'is_notity', 'is_signin', 'signin_dt', 'watch_id', 'create_user_id'];
+    protected $fillable = ['exam_screening_id', 'student_id', 'is_notity', 'is_signin', 'signin_dt', 'watch_id', 'create_user_id','is_end','status','description'];
 
     public function student()
     {
         return $this->hasOne('\Modules\Osce\Entities\Student','id','student_id');
+    }
+
+    public function scopeWatch($query)
+    {
+        return $query->join('watch', 'watch.id', '=', 'exam_screening_student.watch_id');
+    }
+
+    public function scopeIsEnd($query, $value)
+    {
+        return $query->where($this->table . 'is_end', '=' ,$value);
     }
 
     /**

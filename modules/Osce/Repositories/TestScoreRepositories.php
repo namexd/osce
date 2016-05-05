@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Repositories;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 use Modules\Osce\Repositories\BaseRepository;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamResult;
@@ -328,8 +329,8 @@ class TestScoreRepositories  extends BaseRepository
     /**
      * 考生成绩分析-老师列表数据
      * @access public
-     * @param $ExamId
-     * @param int $qualified
+     * @param $ExamId 考试id
+     * @param int $qualified 考核项目id
      * @return mixed
      * @author weihuiguo <weihuiguo@misrobot.com>
      * @date    2016-3-2 17:26:32
@@ -338,26 +339,47 @@ class TestScoreRepositories  extends BaseRepository
     public function getTeacherData($examid,$subjectid){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        $examlist = $ExamResult->where('subject.id','=',$subjectid)->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
-            $join->on('exam_screening.id','=','exam_result.exam_screening_id');
-        })->leftjoin('station',function($join){
-            $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('subject',function($join){
-            $join->on('subject.id','=','station.subject_id');
-        })->leftjoin('student',function($join){
-            $join->on('student.id','=','exam_result.student_id');
-        })->select(
-            'student.teacher_name',
-            'student.grade_class',
-            'subject.id as subid',
-            'exam_screening.exam_id as exam_id',
-            'exam_result.id as rid',
-            $DB->raw('count(student.id) as stuNum'),
-            $DB->raw('avg(exam_result.score) as avgScore'),
-            $DB->raw('max(exam_result.score) as maxScore'),
-            $DB->raw('min(exam_result.score) as minScore')
-        )->groupBy('student.grade_class')->get();
-        //dd($examlist);
+
+        $examPaper = ExamPaper::where('id',$subjectid)->first();
+        if(!empty($examPaper)){
+            $examlist = $ExamResult->where('exam_paper.id','=',$subjectid)->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
+                $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+            })->leftjoin('station',function($join){
+                $join->on('station.id','=','exam_result.station_id');
+            })->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            })->leftjoin('student',function($join){
+                $join->on('student.id','=','exam_result.student_id');
+            })->select(
+                'student.teacher_name',
+                'student.grade_class',
+                'exam_paper.id as pid',
+                'exam_screening.exam_id as exam_id',
+                'exam_result.id as rid',
+                $DB->raw('count(student.id) as stuNum'),
+                $DB->raw('avg(exam_result.score) as avgScore'),
+                $DB->raw('max(exam_result.score) as maxScore'),
+                $DB->raw('min(exam_result.score) as minScore')
+            )->groupBy('student.grade_class')->get();
+        }else{
+            $examlist = $ExamResult->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
+                $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+            })->leftjoin('station',function($join){
+                $join->on('station.id','=','exam_result.station_id');
+            })->leftjoin('student',function($join){
+                $join->on('student.id','=','exam_result.student_id');
+            })->select(
+                'student.teacher_name',
+                'student.grade_class',
+                'exam_screening.exam_id as exam_id',
+                'exam_result.id as rid',
+                $DB->raw('count(student.id) as stuNum'),
+                $DB->raw('avg(exam_result.score) as avgScore'),
+                $DB->raw('max(exam_result.score) as maxScore'),
+                $DB->raw('min(exam_result.score) as minScore')
+            )->groupBy('student.grade_class')->get();
+        }
+        //dd($examlist->toArray());
         return $examlist;
     }
     /**
@@ -374,21 +396,35 @@ class TestScoreRepositories  extends BaseRepository
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
         if($classId){
-            $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->where('subject.id','=',$subid)->select(
-                'exam.name',
-                $DB->raw('avg(exam_result.score) as avgScore'),
-                'exam.id',
-                'exam_result.id as rid',
-                'subject.id as sid'
-            );
+            if(intval($subid)){
+                $ExamResult = $ExamResult->where('exam_paper.id','=',$subid)->where('student.grade_class','=',$classId)->select(
+                    'exam.name',
+                    $DB->raw('avg(exam_result.score) as avgScore'),
+                    'exam.id',
+                    'exam_result.id as rid',
+                    'exam_paper.id as pid'
+                );
+            }else{
+                $ExamResult = $ExamResult->where('student.grade_class','=',$classId)->select(
+                    'exam.name',
+                    $DB->raw('avg(exam_result.score) as avgScore'),
+                    'exam.id',
+                    'exam_result.id as rid'
+                );
+            }
+
         }else{
-            $ExamResult = $ExamResult->where('subject.id','=',$subid)->select(
+            if(intval($subid)){
+                $ExamResult = $ExamResult->where('exam_paper.id','=',$subid);
+            }
+            $ExamResult = $ExamResult->select(
                 $DB->raw('avg(exam_result.score) as avgScore'),
                 'exam.id'
             );
         }
+
         $ExamResult = $ExamResult->where('exam.id','=',$examid);
-        $examlist = $ExamResult->leftjoin('exam_screening',function($join){
+        $ExamResult = $ExamResult->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
             $join->on('exam.id','=','exam_screening.exam_id');
@@ -396,9 +432,15 @@ class TestScoreRepositories  extends BaseRepository
             $join->on('student.id','=','exam_result.student_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('subject',function($join){
-            $join->on('subject.id','=','station.subject_id');
-        })->groupBy('student.teacher_name')->get();
+        });
+        if(intval($subid)){
+
+            $ExamResult = $ExamResult->where('exam_paper.id','=',$subid)->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            });
+        }
+
+        $examlist = $ExamResult->groupBy('student.teacher_name')->get();
         return $examlist;
     }
 
@@ -416,15 +458,23 @@ class TestScoreRepositories  extends BaseRepository
 
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();
-        $examlist = $ExamResult->where('exam.id','=',intval($examID))->where('subject.id','=',$subID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
+        if(intval($subID)){
+            $ExamResult = $ExamResult->where('exam_paper.id','=',$subID);
+        }
+        $ExamResult = $ExamResult->where('exam.id','=',intval($examID))->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
             $join->on('exam_screening.id','=','exam_result.exam_screening_id');
         })->leftjoin('exam',function($join){
             $join->on('exam.id','=','exam_screening.exam_id');
         })->leftjoin('station',function($join){
             $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('subject',function($join){
-            $join->on('subject.id','=','station.subject_id');
-        })->leftjoin('student',function($join){
+        });
+        if(intval($subID)){
+            $ExamResult = $ExamResult->where('exam_paper.id','=',$subID)->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            });
+        }
+
+        $examlist = $ExamResult->leftjoin('student',function($join){
             $join->on('student.id','=','exam_result.student_id');
         })->leftjoin('teacher',function($join){
             $join->on('teacher.id','=','exam_result.teacher_id');
@@ -475,25 +525,43 @@ class TestScoreRepositories  extends BaseRepository
     public function getExamDetails($examID,$classID,$subjectID){
         $DB = \DB::connection('osce_mis');
         $ExamResult = new ExamResult();//
-        //dd($classID);
-        $examlist = $ExamResult->where('subject.id','=',$subjectID)->where('exam.id','=',$examID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
-            $join->on('exam_screening.id','=','exam_result.exam_screening_id');
-        })->leftjoin('exam',function($join){
-            $join->on('exam.id','=','exam_screening.exam_id');
-        })->leftjoin('student',function($join){
-            $join->on('student.id','=','exam_result.student_id');
-        })->leftjoin('station',function($join){
-            $join->on('station.id','=','exam_result.station_id');
-        })->leftjoin('subject',function($join){
-            $join->on('subject.id','=','station.subject_id');
-        })->select(
-            'exam.name',
-            'exam_result.begin_dt',
-            'exam_result.end_dt',
-            'student.grade_class',
-            'subject.title',
-            'subject.id'
-        )->first();
+
+        if(intval($subjectID)){
+            $examlist = $ExamResult->where('exam_paper.id','=',$subjectID)->where('exam.id','=',$examID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
+                $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+            })->leftjoin('exam',function($join){
+                $join->on('exam.id','=','exam_screening.exam_id');
+            })->leftjoin('student',function($join){
+                $join->on('student.id','=','exam_result.student_id');
+            })->leftjoin('station',function($join){
+                $join->on('station.id','=','exam_result.station_id');
+            })->leftjoin('exam_paper',function($join){
+                $join->on('exam_paper.id','=','station.paper_id');
+            })->select(
+                'exam.name',
+                'exam_result.begin_dt',
+                'exam_result.end_dt',
+                'student.grade_class',
+                'exam_paper.name as paper_name',
+                'exam_paper.id'
+            )->first();
+        }else{
+            $examlist = $ExamResult->where('exam.id','=',$examID)->where('student.grade_class','=',$classID)->leftjoin('exam_screening',function($join){
+                $join->on('exam_screening.id','=','exam_result.exam_screening_id');
+            })->leftjoin('exam',function($join){
+                $join->on('exam.id','=','exam_screening.exam_id');
+            })->leftjoin('student',function($join){
+                $join->on('student.id','=','exam_result.student_id');
+            })->leftjoin('station',function($join){
+                $join->on('station.id','=','exam_result.station_id');
+            })->select(
+                'exam.name',
+                'exam_result.begin_dt',
+                'exam_result.end_dt',
+                'student.grade_class'
+            )->first();
+        }
+
         //dd($examlist);
         return $examlist;
     }

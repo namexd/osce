@@ -125,7 +125,6 @@ class Teacher extends CommonModel
 //            $builder = $builder->leftJoin('cases',function($join){
 //                $join    ->  on('cases.id','=', 'teacher.case_id');
 //            })->whereIn($this->table.'.id', $teacher_id);
-
             if (is_array($teacher_id)) {
                 $builder = $builder->whereIn($this->table.'.id', $teacher_id);
             }else{

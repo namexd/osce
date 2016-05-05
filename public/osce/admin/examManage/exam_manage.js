@@ -1137,24 +1137,28 @@ function exam_assignment_add(){
         var $that = $(this);
 
         if($that.val() == 2) {
-            var value = $('#gradation_order').val(),
-                html = '';
+            if($('#gradation_order').val() < 20) {
+                var value = $('#gradation_order').val(),
+                    html = '';
 
-            for(var i = 1; i <= value; i++) {
-                html += '<tr>'+
-                            '<td>阶段'+i+'</td>'+
-                            '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
-                                    '<option value="3">轮循</option>'+
-                                    '<option value="2">顺序</option>'+
-                                    '<option value="1">随机</option>'+
-                                '</select>'+
-                            '</td>'+
-                        '</tr>';
+                for(var i = 1; i <= value; i++) {
+                    html += '<tr>'+
+                                '<td>阶段'+i+'</td>'+
+                                '<td>'+
+                                    '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
+                                        '<option value="3">轮循</option>'+
+                                        '<option value="2">顺序</option>'+
+                                        '<option value="1">随机</option>'+
+                                    '</select>'+
+                                '</td>'+
+                            '</tr>';
+                }
+                $('.grading-un-normal table tbody').html(html);
+                $('.grading-un-normal').show();
+                $('.grading-normal').hide();
+            } else {
+                $('.grading').find('select option[value="1"]').attr('selected',true);
             }
-            $('.grading-un-normal table tbody').html(html);
-            $('.grading-un-normal').show();
-            $('.grading-normal').hide();
         } else {
              $('.grading-un-normal').hide();
              $('.grading-normal').show();
@@ -1172,7 +1176,7 @@ function exam_assignment_add(){
             html = '',
             value = $('#gradation_order').val();
 
-        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2) {
+        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2 && $('#gradation_order').val() < 20) {
             for(var i = 1; i <= value; i++) {
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
@@ -1565,24 +1569,28 @@ function exam_basic_info(){
         var $that = $(this);
 
         if($that.val() == 2) {
-            var value = $('#gradation_order').val(),
-                html = '';
+            if($('#gradation_order').val() < 20) {
+                var value = $('#gradation_order').val(),
+                    html = '';
 
-            for(var i = 1; i <= value; i++) {
-                html += '<tr>'+
-                            '<td>阶段'+i+'</td>'+
-                            '<td>'+
-                                '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
-                                    '<option value="3">轮循</option>'+
-                                    '<option value="2">顺序</option>'+
-                                    '<option value="1">随机</option>'+
-                                '</select>'+
-                            '</td>'+
-                        '</tr>';
+                for(var i = 1; i <= value; i++) {
+                    html += '<tr>'+
+                                '<td>阶段'+i+'</td>'+
+                                '<td>'+
+                                    '<select class="form-control" style="width:200px;" name="sequence_cate['+i+']" >'+
+                                        '<option value="3">轮循</option>'+
+                                        '<option value="2">顺序</option>'+
+                                        '<option value="1">随机</option>'+
+                                    '</select>'+
+                                '</td>'+
+                            '</tr>';
+                }
+                $('.grading-un-normal table tbody').html(html);
+                $('.grading-un-normal').show();
+                $('.grading-normal').hide();
+            } else {
+                $('.grading').find('select option[value="1"]').attr('selected',true);
             }
-            $('.grading-un-normal table tbody').html(html);
-            $('.grading-un-normal').show();
-            $('.grading-normal').hide();
         } else {
              $('.grading-un-normal').hide();
              $('.grading-normal').show();
@@ -1600,7 +1608,7 @@ function exam_basic_info(){
             html = '',
             value = $('#gradation_order').val();
 
-        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2) {
+        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2 && $('#gradation_order').val() < 20) {
             for(var i = 1; i <= value; i++) {
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
@@ -1860,7 +1868,7 @@ function timePicker(background){
      * @type {Object}
      */
     var option = {
-        elem: '.end', //需显示日期的元素选择器
+        elem: '#end', //需显示日期的元素选择器
         event: 'click', //触发事件
         format: 'YYYY-MM-DD hh:mm', //日期格式
         istime: true, //是否开启时间选择
@@ -1927,6 +1935,7 @@ function timePicker(background){
         var thisElement = $(this).parent();
         if(!thisElement.prev().prev().length){
             option.max = (thisElement.next().find('input').val()).split(' ')[0];
+            option.min = laydate.now();  //修复开始时间默认选择问题
         }else{
             option.min = (thisElement.prev().find('input[type="text"]').val()).split(' ')[0];
             option.max = '2099-12-31 23:59:59';
@@ -1943,6 +1952,7 @@ function timePicker(background){
         if(!(option.min < option.max)&&option.max!=='') {
             option.min = option.max;
         }
+
         //数据绑定
         laydate(option);
     });
@@ -3415,6 +3425,33 @@ function smart_assignment(){
 
     });
 
+    /**
+     * 下载保存表
+     * @author Jiangzhiheng
+     * version 3.6
+     * @date 2016-05-01
+     */
+    // $('#export').click(function () {
+    //     //考试id
+    //     var exam_id = (location.href).split('=')[1];
+    //
+    //     //ajax传递
+    //     $.ajax({
+    //         type:'get',
+    //         url:pars.export,
+    //         data:{exam_id:exam_id},
+    //         success:function (res) {
+    //
+    //         },
+    //         error:function(data){
+    //             layer.msg(data, {skin:'msg-error',icon:1}, function (its) {
+    //                 layer.close(its);
+    //             })
+    //         }
+    //     })
+    //
+    // });
+
 
 
     //var testData={"code":1,"message":"success","data":{"1":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[]},"2":{"begin":"1452557715","end":1452558615,"items":[]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452556815","end":1452557715,"items":[{"id":3,"name":"\u6d4b\u8bd5\u5b66\u751f6665","exam_id":1,"user_id":54,"idcard":"51068119592467","mobile":"13699450870","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":2,"name":"\u6d4b\u8bd5\u5b66\u751f5910","exam_id":1,"user_id":52,"idcard":"51068119021099","mobile":"13699451304","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"}]},"2":{"begin":"1452557715","end":1452558615,"items":[{"id":1,"name":"\u6d4b\u8bd5\u5b66\u751f2959","exam_id":1,"user_id":50,"idcard":"51068119352986","mobile":"13699450075","code":"","avator":"","create_user_id":1,"created_at":"-0001-11-30 00:00:00","updated_at":"-0001-11-30 00:00:00"},{"id":4,"name":"\u6d4b\u8bd5\u5b66\u751f3870","exam_id":1,"user_id":56,"idcard":"51068119920106","mobile":"13699450386","code":null,"avator":null,"create_user_id":1,"created_at":null,"updated_at":null}]},"3":{"begin":"1452558615","end":1452559515,"items":[]},"4":{"begin":"1452559515","end":1452560415,"items":[]},"5":{"begin":"1452560415","end":1452561315,"items":[]},"6":{"begin":"1452561315","end":1452562215,"items":[]},"7":{"begin":"1452562215","end":1452563115,"items":[]},"8":{"begin":"1452563115","end":1452564015,"items":[]}}}},"2":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452564015","end":1452564915,"items":[]},"2":{"begin":"1452564915","end":1452565815,"items":[]},"3":{"begin":"1452565815","end":1452566715,"items":[]},"4":{"begin":"1452566715","end":1452567615,"items":[]},"5":{"begin":"1452567615","end":1452568515,"items":[]},"6":{"begin":"1452568515","end":1452569415,"items":[]},"7":{"begin":"1452569415","end":1452570315,"items":[]},"8":{"begin":"1452570315","end":1452571215,"items":[]}}}},"4":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452571215","end":1452572115,"items":[]},"2":{"begin":"1452572115","end":1452573015,"items":[]},"3":{"begin":"1452573015","end":1452573915,"items":[]},"4":{"begin":"1452573915","end":1452574815,"items":[]},"5":{"begin":"1452574815","end":1452575715,"items":[]},"6":{"begin":"1452575715","end":1452576615,"items":[]},"7":{"begin":"1452576615","end":1452577515,"items":[]},"8":{"begin":"1452577515","end":1452578415,"items":[]}}}},"5":{"1":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"2":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}},"3":{"name":"\u6d4b\u8bd5\u6559\u5ba4001","child":{"1":{"begin":"1452578415","end":1452579315,"items":[]},"2":{"begin":"1452579315","end":1452580215,"items":[]},"3":{"begin":"1452580215","end":1452581115,"items":[]},"4":{"begin":"1452581115","end":1452582015,"items":[]},"5":{"begin":"1452582015","end":1452582915,"items":[]},"6":{"begin":"1452582915","end":1452583815,"items":[]},"7":{"begin":"1452583815","end":1452584715,"items":[]},"8":{"begin":"1452584715","end":1452585615,"items":[]},"9":{"begin":"1452585615","end":1452586515,"items":[]},"10":{"begin":"1452586515","end":1452587415,"items":[]}}}}}}
@@ -4885,7 +4922,7 @@ function station_assignment(){
 
         $elem.find('.exam-item').select2({
             placeholder:'请选择',
-            tags: true,
+            tags: false,
             ajax: {
                 type:'get',
                 url: pars.exam_item,
@@ -4955,7 +4992,7 @@ function station_assignment(){
         //考站列表获取
         $elem.find('.exam-station').select2({
             placeholder:'请选择',
-            tags: true,
+            tags: false,
             ajax: {
                 type:'get',
                 url: pars.station_list,
@@ -5074,7 +5111,7 @@ function station_assignment(){
         //所属考场
         $elem.find('.station-belong').select2({
             placeholder:'请选择',
-            tags: true,
+            tags: false,
             ajax: {
                 type:'get',
                 url: pars.room_list,

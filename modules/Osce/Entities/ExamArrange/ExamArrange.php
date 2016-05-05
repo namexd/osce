@@ -28,7 +28,7 @@ class ExamArrange
 
         $FlowId = $ExamDraftFlowData->pluck('id');
 
-        //删除小站
+        //删除小站 
         if(ExamDraft::whereIn('exam_draft_flow_id',$FlowId)->delete()){
             foreach ($ExamDraftFlowData as $item){
                 if(!$item -> delete()){
@@ -87,10 +87,5 @@ class ExamArrange
             throw $ex;
         }
     }
-    
-    
-  
-    
-    
     
 }

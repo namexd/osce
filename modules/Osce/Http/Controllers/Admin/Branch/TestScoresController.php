@@ -9,6 +9,8 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
+use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Repositories\TestScoreRepositories;
@@ -269,8 +271,37 @@ class TestScoresController  extends CommonController
      */
     public function getSubjectLists(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examid = $request->examid;
-        $datalist = $TestScoreRepositories->getSubjectlist($examid);
-        return $this->success_data(['datalist'=>$datalist]);
+        //获取该场考试对应的试卷信息
+        $datalist = ExamResult::where('exam_paper_exam_station.exam_id','=',$examid)->leftjoin('exam_paper_exam_station',function($join){
+            $join->on('exam_paper_exam_station.station_id','=','exam_result.station_id');
+        })->leftjoin('exam_paper',function($join){
+            $join->on('exam_paper.id','=','exam_paper_exam_station.exam_paper_id');
+        })->groupBy('exam_paper.id')->select('exam_paper.id','exam_paper.name')->get()->toArray();
+        //获取该场考试对应科目信息
+        $subjectlist = ExamResult::leftjoin('station',function($join){
+            $join->on('exam_result.station_id','=','station.id');
+        })->leftjoin('subject',function($join){
+            $join->on('station.subject_id','=','subject.id');
+        })->leftjoin('exam_screening',function($join){
+            $join->on('exam_result.exam_screening_id','=','exam_screening.id');
+        })->where('exam_screening.exam_id',$examid)->select('subject.id','subject.title as name')->groupBy('subject.id')->get()->toArray();
+        $arr = array();
+        if(!empty($subjectlist)){
+            $key = 0;
+            foreach($subjectlist as $k=>$v){
+                if(!empty($v['id'])){
+                    $arr[$key] = $v;
+                    $key++;
+                }
+            }
+        }
+        if(!empty($datalist)){
+            foreach($datalist as $k=>$v){
+               array_push($arr,$v);
+            }
+        }
+        return $this->success_data(['datalist'=>$arr]);
+
     }
 
     /**
@@ -283,9 +314,13 @@ class TestScoresController  extends CommonController
      * @date   2016-3-2 17:22:53 .com Inc. All Rights Reserved
      */
     public function getTeacherDataList(Request $request,TestScoreRepositories $TestScoreRepositories){
+        $this->validate($request,[
+            'examid'       => 'required|integer',//考试id
+            'subjectid'    => 'required|integer',//考核项目id
+        ]);
         $examid = $request->examid;
-        $subjectid = $request->subjectid;
-        $datalist = $TestScoreRepositories->getTeacherData($examid,$subjectid);
+        $paperid = $request->subjectid;
+        $datalist = $TestScoreRepositories->getTeacherData($examid,$paperid);
         $teacherStr = '';
         $avgStr = '';
         $maxScore = '';
@@ -318,6 +353,7 @@ class TestScoresController  extends CommonController
             'maxScore' => trim($maxScore,','),
             'minScore' => trim($minScore,',')
         ];
+        //dd($data);
         return $this->success_data(['data'=>$data]);
     }
 
@@ -332,12 +368,12 @@ class TestScoresController  extends CommonController
      */
     public function getGradeScoreList(Request $request,TestScoreRepositories $TestScoreRepositories){
         $classId = $request->classid;
-        $subid = $request->subid;
+        $paperid= $request->subid;    //试卷id
         $examid = $request->examid;
         //获取当前班级历史记录
-        $datalist = $TestScoreRepositories->getGradeScore($classId,$subid,$examid)->toArray();
+        $datalist = $TestScoreRepositories->getGradeScore($classId,$paperid,$examid)->toArray();
         //获取当前考试记录
-        $curent = $TestScoreRepositories->getGradeScore('',$subid,$examid)->toArray();
+        $curent = $TestScoreRepositories->getGradeScore('',$paperid,$examid)->toArray();
 
         $classData = '';
         $allData = '';
@@ -381,18 +417,18 @@ class TestScoresController  extends CommonController
      */
     public function getGradeDetail(Request $request,TestScoreRepositories $TestScoreRepositories,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $examID = $request->examid;
-        $subjectID = $request->subid;
+        $paperID = $request->subid;
         $classid = $request->classid;
 
         //dd($request->all());
         //班级成绩明细简介
-        $data = $TestScoreRepositories->getExamDetails($examID,$classid,$subjectID);
+        $data = $TestScoreRepositories->getExamDetails($examID,$classid,$paperID);
         if($data){
             $data->time = date('Y-m-d H:i',strtotime($data->begin_dt)).' ~ '.date('H:i',strtotime($data->end_dt));
         }
 
         //列表数据
-       $datalist = $TestScoreRepositories->getGradeDetailList($examID,$subjectID,$classid);
+       $datalist = $TestScoreRepositories->getGradeDetailList($examID,$paperID,$classid);
         foreach($datalist as $k=>$v){
             $datalist[$k]['time'] = $subjectStatisticsRepositories->timeTransformation($v->time);
         }

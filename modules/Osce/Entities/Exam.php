@@ -228,6 +228,10 @@ class Exam extends CommonModel
                 throw new \Exception('删除考试学生表失败，请重试！');
             }
 
+            //删除考场安排 相关信息
+            $examDraftFlow = new ExamDraftFlow();
+            $examDraftFlow ->delDraftDatas($id);
+
             //删除考试考场关联表
             $examScreenings = $examScreening->get();
             if (!$examScreenings->isEmpty()) {
@@ -237,10 +241,6 @@ class Exam extends CommonModel
                     }
                 }
             }
-
-            //删除考场安排 相关信息
-            $examDraftFlow = new ExamDraftFlow();
-            $examDraftFlow ->delDraftDatas($id);
 
             //删除考试阶段 相关信息
             $examGradations = ExamGradation::where('exam_id', '=', $id)->get();
@@ -659,7 +659,7 @@ class Exam extends CommonModel
             $time = time();     //默认为今天
         }
         $today = strtotime(date('Y-m-d', $time));    //当天凌晨
-
+            
         $result = $this->whereRaw('unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) = ?
                                 or unix_timestamp(date_format(end_dt, "%Y-%m-%d")) = ?
                                 or (unix_timestamp(date_format(begin_dt, "%Y-%m-%d")) < ?
@@ -667,8 +667,6 @@ class Exam extends CommonModel
             [$today, $today, $today, $today])
             ->with('examPlan')
             ->get();
-
-
         return $result;
     }
 
@@ -854,6 +852,17 @@ class Exam extends CommonModel
                 }
             }
 
+            //更改考试-场次-考站状态表 的状态
+            $stationVideos = StationVideo::where('exam_id', '=', $id)->get();
+            if(!$stationVideos->isEmpty()){
+                foreach ($stationVideos as $stationVideo)
+                {
+                    if(!$stationVideo->delete()){
+                        throw new \Exception('删除考试-锚点失败！');
+                    }
+                }
+            }
+
             //修改考试考场学生表 (删除)
             foreach ($examScreeningObj as $item)
             {
@@ -865,6 +874,18 @@ class Exam extends CommonModel
                     }
                 }
             }
+
+            //更改考试-场次-考站状态表 的状态
+            $examStationStatus = ExamStationStatus::where('exam_id', '=', $id)->get();
+            if(!$examStationStatus->isEmpty()){
+                foreach ($examStationStatus as $item) {
+                    $item->status = 0;
+                    if(!$item->save()){
+                        throw new \Exception('修改考试-场次-考站状态失败！');
+                    }
+                }
+            }
+
             //更改考试场次状态
             $examScreenings = $examScreening->get();
             if (!$examScreenings->isEmpty()) {

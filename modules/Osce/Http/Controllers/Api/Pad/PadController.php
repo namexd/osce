@@ -17,6 +17,7 @@ use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamStation;
+use Modules\Osce\Entities\PadLogin\PadLoginRepository;
 use Modules\Osce\Entities\RoomStation;
 use Modules\Osce\Entities\RoomVcr;
 use Modules\Osce\Entities\Room;
@@ -377,57 +378,52 @@ class PadController extends  CommonController{
      */
     public function getChangeStatus(Request $request)
     {
+        \Log::alert('ChangeStatusData', $request->all());
 
         $this->validate($request, [
             'student_id' => 'required|integer',
-            'station_id' => 'sometimes|integer',
+            'station_id' => 'required|integer',
             'user_id' => 'required|integer'
         ]);
 
-//        try {
+        try {
         //获取当前的服务器时间
         $date = date('Y-m-d H:i:s');
         //通过考生的腕表id来找到对应的队列id
         $studentId = $request->input('student_id');
         $stationId = $request->input('station_id', null);
         $teacherId = $request->input('user_id');
-
         $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-
-        //拿到阶段序号
-        $gradationOrder =ExamScreening::find($queue->exam_screening_id);
-
-
-
-        //将该条信息的首位置零
-//            $queue->stick = 0;
-//            if (!$queue->save()) {
-//                throw new \Exception('结束考试失败', -10);
-//            }
 
         //考试结束后，调用向腕表推送消息的方法
         $examScreeningStudentModel = new ExamScreeningStudent();
         $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
             ->where('student_id','=',$queue->student_id)->first();
-
         $watchModel = new Watch();
         $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+        try{
+            $studentWatchController = new StudentWatchController();
+            $request['nfc_code'] = $watchData->code;
+            $studentWatchController->getStudentExamReminder($request,$stationId ,$queue->exam_screening_id);
+        }catch (\Exception $ex){
+            \Log::alert('EndErrorWatch', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+        }
+      try{
+          //考试完成推送
+          $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
+          $request['id']=$teacherId;
+          $draw->getExaminee_arr($request);//当前组推送(可以获得)
+          $draw->getNextExaminee_arr($request);//下一组
 
-
-        //拿到属于该场考试该阶段的所有场次id
-        $examscreeningId = ExamScreening::where('exam_id','=',$queue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
-
-        $studentWatchController = new StudentWatchController();
-        $request['nfc_code'] = $watchData->code;
-
-        $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
-
+      }catch (\Exception $ex){
+          \Log::alert('EndErrorExamineeandNext', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+      }
         return response()->json($this->success_data(['end_time'=>$date,'exam_screening_id'=>$queue->exam_screening_id,'student_id'=>$studentId],1,'结束考试成功'));
 
-//        } catch (\Exception $ex) {
-//            \Log::alert('EndError', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            \Log::alert('ChangeStatus', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -594,32 +590,39 @@ class PadController extends  CommonController{
     public function getRoomDatas($exam, $status = false){
         $rooms   = [];
         $roomIds = [];
-        if($exam->sequence_mode == 2){
-            //根据考试获取 对应考站
-            $examStation = ExamStation::where('exam_id','=',$exam->id)->get();
-            if(count($examStation)){
-                foreach ($examStation as $item) {
-                    //获取考站对应的考场
-                    $roomStation = RoomStation::where('station_id','=',$item->station_id)->first();
-                    $rooms[] = $roomStation->room;
-                    $roomIds[] = $roomStation->room_id;
-                }
-            }
-        }else{
-            $examRooms = ExamRoom::where('exam_id','=',$exam->id)->get();
-            foreach($examRooms as $examRoom){
-                $rooms[] = $examRoom->room;
-                $roomIds[] = $examRoom->room_id;
-            }
-        }
-        $rooms = array_unique($rooms);
-        $roomIds = array_unique($roomIds);
+//        if($exam->sequence_mode == 2){
+//            //根据考试获取 对应考站
+//            $examStation = ExamStation::where('exam_id','=',$exam->id)->get();
+//            if(count($examStation)){
+//                foreach ($examStation as $item) {
+//                    //获取考站对应的考场
+//                    $roomStation = RoomStation::where('station_id','=',$item->station_id)->first();
+//                    $rooms[] = $roomStation->room;
+//                    $roomIds[] = $roomStation->room_id;
+//                }
+//            }
+//        }else{
+//            $examRooms = ExamRoom::where('exam_id','=',$exam->id)->get();
+//            foreach($examRooms as $examRoom){
+//                $rooms[] = $examRoom->room;
+//                $roomIds[] = $examRoom->room_id;
+//            }
+//        }
+//        $rooms = array_unique($rooms);
+//        $roomIds = array_unique($roomIds);
+//
+//        if($status){
+//            return $roomIds;
+//        }else{
+//            return $rooms;
+//        }
+        \App::bind('PadLoginRepository', function () {
+            return new PadLoginRepository(\App::make('PadLogin'));
+        });
 
-        if($status){
-            return $roomIds;
-        }else{
-            return $rooms;
-        }
+        $padLogin = \App::make('PadLoginRepository');
+
+        return $padLogin->roomList($exam->id, $status);
     }
 
     /**
@@ -643,6 +646,14 @@ class PadController extends  CommonController{
         }
 
         return $vcrs;
+    }
+
+    /**
+     * 获取剩余时间
+     */
+    public function getSurplusTime()
+    {
+
     }
 
 }

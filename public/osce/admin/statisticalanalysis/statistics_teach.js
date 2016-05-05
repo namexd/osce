@@ -65,9 +65,16 @@ function statistics_teach_score(){
             cache:false,
             async:false,
             success:function(res){
-                $(res.data.datalist).each(function(){
-                    $(".student_select").append('<option value="'+this.id+'">'+this.title+'</option>');
-                });
+                if(res.data.datalist){
+                    $(res.data.datalist).each(function(){
+                        $(".student_select").append('<option value="'+this.id+'">'+this.name+'</option>');
+                        console.log(this.title+'-option-'+this.id)
+                    });
+                }else{
+                    $('.exam-name').hide();
+                    $('.student_select').hide();
+                }
+
             }
         })
     }
@@ -76,6 +83,7 @@ function statistics_teach_score(){
     $(".exam_select").change(function(){
         var id = $(this).val();
         select(id);
+        console.log(id+'-id')
     });
     //默认加载最近一次考试
     var $examId = $(".exam_select").children().first().val();
@@ -113,7 +121,7 @@ function statistics_teach_score(){
                 var subname = $('.student_select option:selected').html();
                 if(avgStr){echartsSubject(teacherStr,avgStr,maxScore,minScore);}
                 $(res.data.data.datalist).each(function(i){
-                    var jumpUrl = '/osce/admin/testscores/grade-score-list?examid='+this.exam_id+'&classid='+this.grade_class+'&subname='+subname+'&subid='+this.subid+'&classid='+this.grade_class;
+                    var jumpUrl = '/osce/admin/testscores/grade-score-list?examid='+this.exam_id+'&classid='+this.grade_class+'&subname='+subname+'&subid='+this.pid+'&classid='+this.grade_class;
                     $(".subjectBody").append('<tr>' +
                         '<td>'+(i+1)+'</td>' +
                         '<td>'+this.teacher_name+'</td>' +
@@ -126,7 +134,7 @@ function statistics_teach_score(){
                         '<a href='+jumpUrl+'>' +
                         '<span class="read state1 detail"><i class="fa fa-cog fa-2x"></i></span>' +
                         '</a>' +
-                        '<span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="'+this.exam_id+'" resultid="'+this.rid+'" subid="'+this.subid+'" classid="'+this.grade_class+'" ></i></span>' +
+                        '<span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="'+this.exam_id+'" resultid="'+this.rid+'" subid="'+this.pid+'" classid="'+this.grade_class+'" ></i></span>' +
                         '</td>' +
                         '</tr>')
                 })

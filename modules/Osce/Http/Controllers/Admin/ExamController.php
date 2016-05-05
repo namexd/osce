@@ -76,10 +76,10 @@ class ExamController extends CommonController
      * @url       GET /osce/admin/exam/exam-list
      * @access    public
      * @param Request $request get请求<br><br>
-     *                         <b>get请求字段：</b>
-     *                         string        keyword         关键字
-     *                         string        order_name      排序字段名 枚举 e.g 1:设备名称 2:预约人 3:是否复位状态自检 4:是否复位设备
-     *                         string        order_by        排序方式 枚举 e.g:desc,asc
+     * <b>get请求字段：</b>
+     * string        keyword         关键字
+     * string        order_name      排序字段名 枚举 e.g 1:设备名称 2:预约人 3:是否复位状态自检 4:是否复位设备
+     * string        order_by        排序方式 枚举 e.g:desc,asc
      * @param Exam $exam
      * @return view
      * @throws \Exception
@@ -174,7 +174,6 @@ class ExamController extends CommonController
      */
     public function postAddExam(Request $request, Exam $model, ExamArrangeRepository $examArrangeRepository)
     {
-//        dd($request->all());
         $this   ->  validate($request, [
             'name'          =>  'required',
             'time'          =>  'required',
@@ -194,8 +193,13 @@ class ExamController extends CommonController
         try{
             //处理考试场次时间
             $timeData = $model->handleScreeningTime($examScreeningData, $user);
-            $sequenceCate = $request->input('sequence_cate_1', null);
-//            dd($sequenceCate);
+            $order = $request->input('order', null);
+            if (1 == $order) {
+                $sequenceCate = $request->input('sequence_cate', null);
+            } else {
+                $sequenceCate = $request->input('sequence_cate_1', null);
+            }
+
             //获取相应信息,将$request中的数据分配到各个数组中,待插入各表
             $examData = [
                 'code'           => 100,
@@ -293,6 +297,7 @@ class ExamController extends CommonController
      */
     public function postEditExam(Request $request, Exam $examModel, ExamArrangeRepository $examArrangeRepository)
     {
+//        dd($request->all());
         //验证,略过
         $this->validate($request, [
             'exam_id'   => 'required',
@@ -319,8 +324,9 @@ class ExamController extends CommonController
             $timeData = $examModel->handleScreeningTime($examScreeningData, $user);
             $sequenceCate = $request->input('sequence_cate', null);
             $gradationOrder = $request->input('gradation_order', null);
+            $sc = $request->input('sc', null);
 
-            if ($gradationOrder == 1) {
+            if ($gradationOrder == 1 || $sc == 1) {
                 $sequenceCate = $request->input('sequence_cate_1', null);
                 if (is_array($sequenceCate)) {
                     $sequenceCate = head($sequenceCate);

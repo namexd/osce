@@ -10,7 +10,9 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
 use Modules\Osce\Entities\Station;
@@ -42,7 +44,6 @@ use Modules\Osce\Http\Controllers\Admin\Branch\AnswerController;
 use Modules\Osce\Entities\StationTeacher;
 use Illuminate\Support\Facades\Redis;
 use Modules\Osce\Http\Controllers\Api\StudentWatchController;
-
 class ApiController extends CommonController
 {
     private $name;
@@ -430,7 +431,7 @@ class ApiController extends CommonController
             //获取当前登录账户的角色名称
             $questionBankRepositories = new QuestionBankRepositories();
             $roleType = $questionBankRepositories->getExamLoginUserRoleType();
-           // dd($roleType);
+            //dd($roleType);
             if($roleType == 1){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($roleType == 2){
@@ -533,18 +534,29 @@ class ApiController extends CommonController
     public function getExamPaperId(Request $request)
     {
         $this->validate($request, [
-            'examId' => 'sometimes|integer',
-            'stationId' => 'sometimes|integer',
+            'stationId' => 'required|int',
         ]);
-        $examId = $request->input('examId');//考试id
+
         $stationId = $request->input('stationId');//考站id
+
+ /*
         //根据考试id和考站id查询对应的试卷id
         $examPaperExamStationModel = new ExamPaperExamStation();
         $data = $examPaperExamStationModel->where('exam_id','=',$examId)->where('station_id','=',$stationId)->first();
+
         if(!empty($data)){
             $examPaperId = $data['exam_paper_id'];
             return response()->json($examPaperId);
         }else{
+            return response()->json(false);
+        }*/
+
+        $stationInfo = Station::where('id',$stationId)->where('type',3)->first();
+        if(!empty($stationInfo)){
+
+            return response()->json($stationInfo['paper_id']);
+        }else{
+
             return response()->json(false);
         }
     }
@@ -565,26 +577,18 @@ class ApiController extends CommonController
         //dd($examingDO);
         if(count($examingDO) > 0){
             $studentModel = new Student();
-            $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
-            //dd($userInfo);
-            $Student = new Student();
-            $examid = $Student->getExamings($user->id);
-            $examId = array();
-            foreach($examid as $exam){
-                $examId[] = $exam->exam_id;
-            }
 
+            $userInfo = $studentModel->getStudentExamInfo($user->id,$examingDO->id);
             //在队列表中查找与考试相关的数据
             $examquen = new ExamQueue();
-            $examing = $examquen->getExamingData($examId,@$userInfo->id);
+            $examing = $examquen->getExamingData($examingDO->id,@$userInfo->id);
 
             if(count($examing) > 0){
                 $examing = $examing->toArray();
             }
 
 
-
-
+            //dd($examing);
             //整理考试数据
             $examData = array();
             $StationTeacher = new StationTeacher();
@@ -592,23 +596,23 @@ class ApiController extends CommonController
 
 
             foreach($examing as $key=>$v){
-                    if(!$v['station_id']){
-                        $station_id = RoomStation::where('room_id','=',$v['room_id'])->first()->station_id;
-                    }
-                    $station = !empty($v['station_id'])?$v['station_id']:@$station_id;
+//                    if(!$v['station_id']){
+//                        $station_id = ExamStation::where('exam_id','=',$v['id'])->first()->station_id;
+//                    }
+                    $station = $v['station_id'];
                     $stationTeacher = $StationTeacher->where('station_id','=',$station)->first();
                     $examPaper = $ExamPaperExamStation->where('exam_id','=',$v['id'])->first();
                     $examData[$key]['station_id'] = $station;
                     $examData[$key]['teacher_id'] = @$stationTeacher->user_id;
                     $examData[$key]['student_id'] = @$userInfo->id;
-                    $examData[$key]['paper_id'] = @$examPaper->exam_paper_id;
+                    $examData[$key]['paper_id'] = $examPaper->exam_paper_id;
                     $examData[$key]['exam_id'] = $v['id'];
                     $examData[$key]['exam_name'] = $v['name'];
                     $examData[$key]['status'] = $v['status'];
 
             }
         }
-
+        //dd($examData);
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
             'examData' => @$examData
@@ -693,7 +697,7 @@ class ApiController extends CommonController
             }
 
             $count = ExamQueue::where('serialnumber', '=', $serialnumber)
-                ->where('status', '=', 3)
+                ->where('status', '=', 3)   
                 ->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreening->id)
                 ->count();
@@ -869,7 +873,8 @@ class ApiController extends CommonController
         $request['station_id']=$stationId;
         $request['teacher_id']=$teacherId;
         $request['exam_id']=$examId;
-        $draw=new DrawlotsController();
+        $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
+//        $draw = new DrawlotsController($request, \Re);
         $request['id']=$teacherId;
         $draw->getExaminee_arr($request);//当前组推送(可以获得)
         $draw->getNextExaminee_arr($request);
@@ -923,108 +928,109 @@ class ApiController extends CommonController
             'student_id'        => 'required|integer',
             'exam_screening_id' => 'required|integer',
         ]);
-
         $mode            = $request->input('mode');
         $examId          = $request->input('exam_id');
         $studentId       = $request->input('student_id');
         $examScreeningId = $request->input('exam_screening_id');
-
+        $stationId       = $request->input('station_id');
+//        \Log::alert('ReplaceData', [$mode,$stationId,$examScreeningId,$stationId]);
         try {
 
-            $examScreeningStudentModel = new ExamScreeningStudent();
-            $examScreeningStudent = $examScreeningStudentModel->where('exam_screening_id', '=', $examScreeningId)
-                ->where('student_id', '=', $studentId)
-                ->first();
-            if (is_null($examScreeningStudent)) {
-
-                throw new \Exception(' 找不到该考试场次的学生信息！',-101);
-            }
-
             $examQueueModel = new ExamQueue();
-            $unExamStationIds = $examQueueModel->where('student_id', '=', $studentId)
-                ->where('exam_screening_id', '=', $examScreeningId)
-                ->where('status', '=', 0)->get()->pluck('station_id');
-
-            if ($mode == 1) {
-                //如果选择否，只是做标记
-                //标记替考
-                $examMonitorModel = new ExamMonitor();
-                if (!empty($unExamStationIds)) {
-                    foreach ($unExamStationIds as $unExamStationId) {
+            $examQueue = $examQueueModel->where('student_id', $studentId)
+                ->where('exam_id',$examId)
+                ->where('exam_screening_id','=',$examScreeningId)
+                ->whereNotIn('status',[3,4])->get();
+            if (!empty($examQueue)) {
+                if ($mode == 1) {
+                    //如果选择否，只是做标记
+                    //向监控标记学生替考记录表插入数据
+                    $examMonitorModel = new ExamMonitor();
+                    foreach ($examQueue as $val) {
                         $examMonitorData = array(
-                            'station_id'  =>$unExamStationId,
-                            'exam_id'      =>$examId,
-                            'student_id'  =>$studentId,
+                            'station_id'  =>$val->station_id,
+                            'exam_id'      =>$val->exam_id,
+                            'student_id'  =>$val->student_id,
                             'type'         =>1,
+                            'exam_screening_id'=>$val->exam_screening_id,
                         );
-                        $result = $examMonitorModel->create($examMonitorData);
-                        if(!$result){
-
-                            throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-102);
+                        if(!$examMonitorModel->create($examMonitorData)){
+                            throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-101);
                         }
                     }
-                }
-                $retval['title'] = '标记替考成功';
-                return response()->json(
-                    $this->success_data($retval,1,'success')
-                );
-            } else {
-                //如果选择是，终止这场考试
-                $data = [
-                    'is_end' => 1,
-                    'status' => 2,
-                ];
-                $examScreeningStudentModel->where('id', '=', $examScreeningStudent->id)->update($data);
-                if (!empty($unExamStationIds)) {
-                    $examQueueModel->where('student_id', '=', $studentId)
-                        ->where('exam_screening_id', '=', $examScreeningId)
-                        ->where('status', '=', 0)->update(['status'=>3]);//status=0,已经绑定腕表
+                    $retval['title'] = '标记替考成功';
+                    return response()->json(
+                        $this->success_data($retval,1,'success')
+                    );
+                } else {
 
-                    $examResultModel = new ExamResult();
-                    $stationTeacherModel = new StationTeacher();
-                    foreach ($unExamStationIds as $unExamStationId) {
-                        $teacher = $stationTeacherModel->leftJoin('teacher', function($join){
-                            $join -> on('teacher.id', '=', 'station_teacher.user_id');
-                        })->where('station_teacher.station_id', '=', $unExamStationId)
-                            ->where('station_teacher.exam_id', '=', $examId)
-                            ->select([
-                                'teacher.id as teacherId',
-                            ])->first();
+                    //如果选择是，终止这场考试
+                    foreach ($examQueue as $val) {
+                        //更新exam_queue表（考试队列）
+                        $val->status = 3;
+                        $val->blocking = 1;
+                        if(!$val->save()){
+                            throw new \Exception(' 更新考试队列表失败！',-102);
+                        }
 
-                        $data = [
+                        //向exam_result（考试结果记录表）插入数据
+                        $examResultData = [
                             'student_id'        => $studentId,
                             'exam_screening_id' => $examScreeningId,
-                            'station_id'        => $unExamStationId,
+                            'station_id'        => $val->station_id,
                             'begin_dt'          => date('Y-m-d H:i:s', time()),
                             'end_dt'            => date('Y-m-d H:i:s', time()),
                             'score'             => 0,
                             'score_dt'          => date('Y-m-d H:i:s', time()),
-                            'create_user_id'    => Auth::user()->id,
-                            'teacher_id'        => $teacher['teacherId'],
+//                            'create_user_id'    => Auth::user()->id,
                         ];
-
-                        $result = $examResultModel->create($data);
-                        if(!$result){
-
-                            throw new \Exception(' 向考试结果记录表插入数据失败！',-103);
+                        if(!ExamResult::create($examResultData)){
+                            throw new \Exception(' 向考试结果记录表插入数据失败！',-106);
                         }
 
                     }
+
+                    //更新exam_screening_student表（考试场次-学生关系表）
+                    $result = ExamScreeningStudent::where('exam_screening_id',$examScreeningId)->where('student_id',$studentId)->first();
+
+                    if(!empty($result)&&$result->is_end!=1){
+//                        $result->is_end =1;
+                        $result->status =2;
+                        if(!$result->save()){
+                            throw new \Exception(' 更新考试场次-学生关系表失败！',-103);
+                        }
+                    }
+
+                    //更新exam_order表（考试学生排序）
+                    $examOrder = ExamOrder::where('exam_id',$examId)->where('exam_screening_id',$examScreeningId)->where('student_id',$studentId)->first();
+                    if(!empty($examOrder)&&$examOrder->status!=2){
+                        $examOrder->status = 5; //为替考结束考试
+                        if(!$examOrder->save()){
+                            throw new \Exception(' 更新考试学生排序表失败！',-104);
+                        }
+                    }
+
+                    //向监控标记学生替考记录表插入数据
+                    $examMonitorData = array(
+                        'station_id'  =>$stationId,
+                        'exam_id'      =>$examId,
+                        'student_id'  =>$studentId,
+                        'description' =>3,
+                        'exam_screening_id'=>$examScreeningId,
+                    );
+                    if(!ExamMonitor::create($examMonitorData)){
+                        throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-105);
+                    }
+                    $retval['title'] = '确定替考成功';
+                    return response()->json(
+                        $this->success_data($retval,1,'success')
+                    );
                 }
-
-                $retval['title'] = '确定替考成功';
-
-
-                return response()->json(
-                    $this->success_data($retval,1,'success')
-                );
             }
         }catch (\Exception $ex) {
             return response()->json($this->fail($ex));
 
         }
-
-
 
     }
 }

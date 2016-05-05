@@ -26,7 +26,10 @@
         </div>
         <div class="ibox-content">
             <span class="student_name">{{@$classId}}</span>
-            <span class="marl_10 student_subject">{{@$subname}}</span>
+            @if(!empty(@$subname))
+                <span class="marl_10 student_subject">{{@$subname}}</span>
+                @endif
+
             <span>历史成绩分析</span>
             <button class="btn btn-sm btn-primary marl_10 right" id="back">返回</button>
         </div>
@@ -59,7 +62,7 @@
                                     <td>{{@$v['avgScore']}}</td>
                                     <td>{{@$v['AllavgScore']}}</td>
                                     <td>
-                                        <span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="{{@$v['id']}}" resultid="{{@$classId}}" subid="{{@$v['sid']}}"></i></span>
+                                        <span class="read state1 detail cursor"><i class="fa fa-search fa-2x" examid="{{@$v['id']}}" resultid="{{@$classId}}" subid="{{@$v['pid']}}"></i></span>
                                     </td>
                                 </tr>
                             @endforeach

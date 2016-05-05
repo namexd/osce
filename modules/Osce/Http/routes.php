@@ -5,6 +5,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('login/index', ['uses' => 'LoginController@postIndex', 'as' => 'osce.admin.postIndex']);
 		//退出登录
 		Route::get('user/logout',['uses'=>'UserController@getLogout','as'=>'osce.admin.user.getLogout']);
+		//忘记密码
+		Route::get('user/forget-password',['uses'=>'UserController@getForgetPassword','as'=>'osce.admin.user.getForgetPassword']);
+		Route::post('user/reset-password',['uses'=>'UserController@postResetPassword','as'=>'osce.admin.user.postResetPassword']);	//重置密码（提交数据）
+
+
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
 		//登录注册
@@ -26,6 +31,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	Route::get('admin/index/set-exam', ['uses'=>'Admin\IndexController@getSetExam','as'=>'osce.admin.index.getSetExam']);	//设置开考
 	Route::get('/index', 'OsceController@index');
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
+
+		//发送信息
+		Route::get('message/send-message', ['uses'=>'MessageController@getSendMessage', 'as'=>'osce.admin.message.getSendMessage']);	//从数据库读取信息，再发送信息（短信、邮件、微信）
 		//房间
         Route::controller('room','RoomController');
         Route::get('room/room-list', ['uses'=>'RoomController@getRoomList','as'=>'osce.admin.room.getRoomList']);  //列表的着陆页
@@ -47,8 +55,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('arrangement/begin',['uses'=>'AutomaticPlanArrangementController@postBegin','as'=>'osce.admin.arrangement.postBegin']);
 		Route::get('arrangement/index',['uses'=>'AutomaticPlanArrangementController@getIndex','as'=>'osce.admin.arrangement.getIndex']);
 		Route::post('arrangement/store',['uses'=>'AutomaticPlanArrangementController@postStore','as'=>'osce.admin.arrangement.postStore']);
+		Route::get('arrangement/export',['uses'=>'AutomaticPlanArrangementController@getExport','as'=>'osce.admin.arrangement.getExport']); //导出excel
 
 
+//		Route::get('billboard', ['middleware' => 'Modules\Osce\Http\Middleware\BillboardLoginMiddleware', 'uses' => 'BillboardLoginController@getIndex', 'as' => 'osce.billboard.getIndex']);
 
 	});
 
@@ -151,7 +161,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//考场
 		Route::post('room/delete',['uses'=>'RoomController@postDelete','as'=>'osce.admin.room.postDelete']);
-//		Route::get('room/room-list',['uses'=>'RoomController@getRoomList','as'=>'osce.admin.room.getRoomList']);	//(前面已存在)
 		Route::post('room/name-unique',['uses'=>'RoomController@postNameUnique','as'=>'osce.admin.room.postNameUnique']);	//判断名称是否存在
 
 		//用户管理
@@ -205,7 +214,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('exam/exam-waiting-area', ['uses'=>'ExamController@postExamRemind','as'=>'osce.admin.exam.postExamRemind']);//待考区说明
 
 		//考试安排
-		Route::get('exam-arrange/invigilate-arrange', ['uses'=>'ExamArrangeController@getInvigilateArrange','as'=>'osce.admin.exam-arrange.getInvigilateArrange']);	//考官安排
+		Route::get('exam-arrange/invigilate-arrange-index', ['uses'=>'ExamArrangeController@getInvigilateArrangeIndex','as'=>'osce.admin.exam-arrange.getInvigilateArrangeIndex']);	//考官安排
 		Route::post('exam-arrange/invigilate-arrange',['uses'=>'ExamArrangeController@postInvigilateArrange','as'=>'osce.admin.exam-arrange.postInvigilateArrange']);	//考官安排
 		Route::post('exam-arrange/arrange-save',['uses'=>'ExamArrangeController@postArrangeSave','as'=>'osce.admin.exam-arrange.postArrangeSave']);	//考官安排
 		Route::get('exam-arrange/exam-teacher-arrange',['uses'=>'ExamArrangeController@getExamTeacherArrange','as'=>'osce.admin.exam-arrange.getExamTeacherArrange']);	//考官安排
@@ -326,9 +335,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('station-list',['uses'=>'DrawlotsController@getStationList','as'=>'osce.pad.getStationList']);  //登陆之后给予考站信息
 		Route::get('change-status',['uses'=>'PadController@getChangeStatus','as'=>'osce.admin.PadController.getChangeStatus']);
 		Route::get('next-student',['uses'=>'DrawlotsController@nextStudent','as'=>'osce.pad.nextStudent']);  //下一个考生
+		Route::post('drawlots',['uses'=>'DrawlotsController@postDrawlots','as'=>'osce.pad.postDrawlots']);  //下一个考生
 	});
-
-
 });
 
 
@@ -431,7 +439,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/end-exam', 	['uses'=>'InvigilatePadController@getEndExam','as'=>'osce.api.invigilatepad.getEndExam']);
 		Route::get('invigilatepad/test-index', 	['uses'=>'InvigilatePadController@getTestIndex','as'=>'osce.api.invigilatepad.getTestIndex']);
 
-
+		Route::get('exam-list', ['uses' => 'LoginPullDownController@getExamList', 'as' => 'osce.api.LoginPullDown.getExamList']);
+		Route::get('room-list', ['uses' => 'LoginPullDownController@getRoomList', 'as' => 'osce.api.LoginPullDown.getRoomList']);
 
 		//pad的上传
 		Route::post('upload-image',['uses'=>'InvigilatePadController@postTestAttachImage','as'=>'osce.pad.InvigilatePad.postTestAttachImage']);
@@ -452,6 +461,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/watch-unbundling', 	['uses'=>'InvigilatePadController@getWatchUnbundling','as'=>'osce.api.invigilatepad.getWatchUnbundling']);
 		//解绑腕表
 		Route::get('invigilatepad/watch-unbundling-report', 	['uses'=>'InvigilatePadController@getWatchUnbundlingReport','as'=>'osce.api.invigilatepad.getWatchUnbundlingReport']);
+		//考生现场照片采集
+		Route::get('invigilatepad/live-photo-upload', 	['uses'=>'InvigilatePadController@postLivePhotoUpload','as'=>'osce.api.invigilatepad.postLivePhotoUpload']);
 	});
 });
 
@@ -511,7 +522,13 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 //TODO:测试用
 
-Route::get('test/test', function(\Illuminate\Http\Request $request) {
+Route::get('test/test', function(Redis $redis) {
+	return view('osce::Drawlots');
+//	dd(json_encode([
+//		'code' => -999,
+//		'message' => '抽签失败',
+//	]));
+
 });
 
 Route::get('redis', function(){
@@ -548,4 +565,30 @@ Route::post('test/test',function(\Illuminate\Http\Request $request) {
 	$smartArrangeRepository->plan($exam);
 	return view('osce::admin.login');
 });
+/*
+ * 电子门牌
+ * */
+Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers','middleware' => [],], function()
+{
+	Route::group(['prefix'=>'doorplate','namespace'=>'Doorplate'],function(){
 
+		Route::get('doorplate-start',	['uses'=>'IndexController@doorStart','as'=>'osce.doorplate.doorplatestart']); //启动入口
+		Route::get('today-exam',	['uses'=>'IndexController@getExamMsg','as'=>'osce.doorplate.getdoorplatemsg']);   //信息展示
+		Route::get('current-set',	['uses'=>'IndexController@getExaminee','as'=>'osce.doorplate.getexaminee']);   //当前组
+		Route::get('next-set',	['uses'=>'IndexController@getNextExaminee','as'=>'osce.doorplate.getnextexaminee']);   //下一组
+		Route::get('door-status',	['uses'=>'IndexController@getStatusStatus','as'=>'osce.doorplate.getstatusstatus']);   //状态
+	});
+
+});
+
+Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
+		//告示牌登陆
+	Route::group(['prefix' => 'billboard-login', 'namespace' => 'Billboard'], function () {
+		Route::get('index', ['uses' => 'BillboardLoginController@getIndex', 'as' => 'osce.billboard.login.getIndex']);
+		Route::post('index', ['uses' => 'BillboardLoginController@postIndex', 'as' => 'osce.billboard.login.postIndex']);
+	});
+	Route::group(['prefix' => 'billboard', 'namespace' => 'Billboard', 'middleware' => 'billboard'], function () {
+		//告示牌主页
+		Route::get('index', ['uses' => 'BillboardController@getIndex', 'as' => 'osce.billboard.getIndex']);
+	});
+});

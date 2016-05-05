@@ -86,22 +86,23 @@ class StationTeacher extends CommonModel
                     $stationType = Station::find($item['station_id']);
                     if ($stationType->type != 2)
                     {
-                        if ($item['teacher'] == "" || $item['teacher'] == "")
+                        if ($item['teacher'] == "" )
                         {
-                            throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
+                            throw new \Exception($stationType->name.'还有考试没有安排考官，请安排！！重试！！');
                         }
-                        if ($item['teacher'] == null || $item['teacher'] == null)
+                        if ($item['teacher'] == null)
                         {
-                            throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
+                            throw new \Exception($stationType->name.'还有考试没有安排考官，请安排！！重试！！');
                         }
                     } else {
-                        if ($item['teacher'] == "" && $item['sp_teacher'] == "" || $item['teacher'] == "" || $item['sp_teacher'] == "") {
-                            throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
+                        if ( $item['sp_teacher'] == "" ) {
+                            throw new \Exception($stationType->name.'还有没有安排SP考官，请安排！！重试！！');
                         }
-                        if ($item['teacher'] == null && $item['sp_teacher'] == null || $item['teacher'] == null || $item['sp_teacher'] == null) {
-                            throw new \Exception('还有考试没有安排考官，请安排！！重试！！');
+                        if ( $item['sp_teacher'] == null ) {
+                            throw new \Exception($stationType->name.'还有没有安排SP考官，请安排！！重试！！');
                         }
                     }
+                    
                     /****************
                     $teacherIDs = [];
                     $subjectId = [];
@@ -269,7 +270,7 @@ class StationTeacher extends CommonModel
 
             //查询是否存在
             $teacher = $this->where('exam_id', '=', $exam_id)->where('station_id', '=', $station_id)
-                            ->where('user_id', '=', $teacherId)->first();
+                            ->where('user_id', '=', $teacherId)->where('exam_screening_id','=',$screeningId)->first();
             //1、不存在，则添加
             if (is_null($teacher)){
                 $stationTeacherData = [

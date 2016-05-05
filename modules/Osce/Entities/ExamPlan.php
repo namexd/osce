@@ -64,6 +64,16 @@ class ExamPlan extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Station', 'id', 'station_id');
     }
 
+    public function scopeExam($query, $id)
+    {
+        return $query->where($this->table . '.exam_id', $id);
+    }
+
+    public function scopeStudents($query)
+    {
+        return $query->Join('student', 'exam_plan.student_id', '=', 'student.id');
+    }
+
 
     /**
      *  智能排考
@@ -880,11 +890,12 @@ class ExamPlan extends CommonModel
         }
     }
 
-    public function getexampianStudent($ExamScreeningId)
+    public function getexampianStudent($ExamScreeningId,$examId)
     {
         return $this->where('exam_screening_id', '=', $ExamScreeningId)
-            ->groupBy('student_id')
-            ->get()
+            ->where('exam_id','=',$examId)
+            ->lists('student_id')
+            ->unique()
             ->count();
     }
 

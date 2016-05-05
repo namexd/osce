@@ -9,7 +9,6 @@
 
 namespace Modules\Osce\Entities;
 
-
 use Modules\Osce\Entities\MachineInterface;
 use DB;
 
@@ -225,6 +224,17 @@ class Watch extends CommonModel implements MachineInterface
 
     //查询使用中的腕表数据
     public function getWatchAboutData($status,$type,$nfc_code,$examId){
+
+        $examScreen = new ExamScreening();
+        $roomMsg = $examScreen->getExamingScreening($examId);
+        $roomMsg_two = $examScreen->getNearestScreening($examId);
+        if ($roomMsg) {
+            $exam_screening_id = $roomMsg->id;
+        } elseif ($roomMsg_two) {
+            $exam_screening_id = $roomMsg_two->id;
+        } else {
+            throw new \Exception('没有找到对应的场次');
+        }
         if($type === 0){
             $builder = $this->whereIn('exam_queue.status',[0,1]);
         }elseif($type == 1){
@@ -239,17 +249,67 @@ class Watch extends CommonModel implements MachineInterface
             $builder = $builder->where('watch.code','=',$nfc_code);
         }
 
+        /* $builder = $builder->where('watch.status','=',$status)
+             ->where('exam_screening_student.is_end','=',0)
+             ->where('exam_screening_student.is_signin','=',1)
+             //->where('watch_log.action','=','绑定')
+             ->where('exam_queue.exam_id','=',$examId)
 
-        $builder = $builder->where('watch.status','=',$status)->where('exam_screening_student.is_end','=',0)->where('exam_screening_student.is_signin','=',1)->where('watch_log.action','=','绑定')->where('exam_queue.exam_id','=',$examId)->leftjoin('watch_log',function($watchLog){
-            $watchLog->on('watch_log.watch_id','=','watch.id');
-        })->leftjoin('exam_queue',function($examQueue){
-            $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
+             ->leftjoin('watch_log',function($watchLog){
+             $watchLog->on('watch_log.watch_id','=','watch.id');
+         })->leftjoin('exam_queue',function($examQueue){
+             $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
+         })->leftjoin('student',function($examQueue){
+             $examQueue->on('student.id','=','watch_log.student_id');
+         })->rightjoin('exam_screening_student',function($join){
+             $join->on('exam_screening_student.student_id','=','watch_log.student_id');
+         })->groupBy('watch_log.student_id')
+             ->where('exam_screening_student.exam_screening_id',$exam_screening_id)
+             ->where('exam_queue.exam_screening_id',$exam_screening_id)
+             ->select('watch.id','watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')
+             ->orderBy('watch_log.id','desc')->get();
+ */
+        $builder = $builder ->leftjoin('watch_log',function($watchLog){
+                $watchLog->on('watch_log.watch_id','=','watch.id');
+            })->leftjoin('exam_queue',function($examQueue){
+                $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
+            })->leftjoin('student',function($examQueue){
+                $examQueue->on('student.id','=','watch_log.student_id');
+            })->rightjoin('exam_screening_student',function($join){
+                $join->on('exam_screening_student.student_id','=','watch_log.student_id');
+            })->groupBy('watch_log.student_id')
+            ->where('watch.status','=',$status)
+            ->where('exam_screening_student.is_end','=',0)
+            ->where('exam_screening_student.is_signin','=',1)
+            ->where('watch_log.action','=','绑定')
+            ->where('exam_queue.exam_id','=',$examId)
+            ->where('student.exam_id','=',$examId)
+            ->where('exam_screening_student.exam_screening_id',$exam_screening_id)
+            ->where('exam_queue.exam_screening_id',$exam_screening_id)
+            ->select('watch.id','watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')
+            ->orderBy('watch_log.id','desc')->get();
+        /*->rightjoin('exam_screening_student',function($examQueue){
+            $examQueue->on('exam_screening_student.watch_id','=','watch.id');
         })->leftjoin('student',function($examQueue){
-            $examQueue->on('student.id','=','watch_log.student_id');
-        })->rightjoin('exam_screening_student',function($join){
-            $join->on('exam_screening_student.student_id','=','watch_log.student_id');
-        })->groupBy('watch_log.student_id')->select('watch.id','watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')->orderBy('watch_log.id','desc')->get();
-        //dd($builder->toArray());
+            $examQueue->on('student.id','=','exam_screening_student.student_id');
+        })->leftjoin('exam_order',function($join){
+            $join->on('exam_order.student_id','=','exam_screening_student.student_id');
+        })->leftjoin('exam_queue',function($join){
+                $join->on('exam_queue.student_id','=','exam_screening_student.student_id');
+            })->groupBy('exam_screening_student.student_id')
+            ->where('exam_screening_student.exam_screening_id',$exam_screening_id)
+            ->where('exam_queue.exam_screening_id',$exam_screening_id)
+            ->where('exam_order.exam_screening_id',$exam_screening_id)
+            ->where('exam_order.exam_id',$examId)
+            ->where('exam_order.status',1)
+            ->select('watch.id','watch.code as nfc_code','watch.nfc_code as code','student.name','exam_queue.status')
+            ->orderBy('exam_order.id','desc')->get();*/
+
+//        dd($builder->toArray());
+
+
+
+
         return $builder;
     }
 

@@ -17,6 +17,50 @@ abstract class AbstractEntity
 {
     use SQLTraits, SundryTraits;
 
+    /**
+     * 用于新模式的分配实体时间
+     * @param $entities
+     * @param $sameTime
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-29 14:56
+     */
+    function entityMinsFuture($entities, $sameTime)
+    {
+        //获得考试实体们对应的mins
+        switch ($sameTime) {
+            case 0:
+
+                return $entities;
+            case 1:
+                $array = [];
+                //按照order分组
+                $entities = $entities->groupBy('order');
+                foreach ($entities as $entity) {
+                    $mins = $entity->pluck('mins')->toArray();
+                    $min = $this->mins($mins);
+                    foreach ($entity as $item) {
+                        $item->mins = $min;
+                        $array[] = $item;
+                    }
+                }
+                return collect($array);
+            default:
+                throw new \Exception('系统错误，请重试！', -20);
+                break;
+        }
+    }
+
+    /**
+     * 用于旧模式的分配实体时间
+     * @param $entities
+     * @param $sameTime
+     * @return mixed
+     * @throws \Exception
+     * @author Jiangzhiheng
+     * @time 2016-04-29 14：57
+     */
     function entityMins($entities, $sameTime)
     {
         //获得考试实体们对应的mins
@@ -25,12 +69,11 @@ abstract class AbstractEntity
 
                 return $entities;
             case 1:
-                $mins = $entities->pluck('mins')->toArray();
-                $min = $this->mins($mins);
-                foreach ($entities as &$entity) {
-                    $entity->mins = $min;
-                }
-
+                    $mins = $entities->pluck('mins')->toArray();
+                    $min = $this->mins($mins);
+                    foreach ($entities as &$item) {
+                        $item->mins = $min;
+                    }
                 return $entities;
             default:
                 throw new \Exception('系统错误，请重试！', -20);
@@ -48,16 +91,6 @@ abstract class AbstractEntity
     function entityTime($entities)
     {
         foreach ($entities as &$entity) {
-//            switch ($entity->station_type) {
-//                case 2:
-//                    $entity->mins = $this->getTheoryMins($entity)->length;
-//                    break;
-//                case 1 || 3:
-//
-//                    break;
-//                default:
-//                    throw new \Exception('系统异常！', -85);
-//            }
             $entity->mins = is_null($entity->length) ? $entity->mins : $entity->length;
         }
 
@@ -116,7 +149,34 @@ abstract class AbstractEntity
                 $array[] = $item->pop();
             }
         }
-
         return collect($array);
+    }
+
+    /**
+     * 将每个大站的第一个序号写进每个实体
+     * @author Jiangzhiheng
+     * @time 2016-04-26 19:23
+     */
+    protected function setMinSerialnumber($entities)
+    {
+        $entities = $entities->groupBy('order');
+        $arrays = [];
+        foreach ($entities as $key => $entity) {
+            foreach ($entity as $k => $item) {
+                if ($item->optional == 0) {
+                    $item->min_serialnumber = true;
+                } else {
+                    if ($k == 0) {
+                        $item->min_serialnumber = true;
+                    } else {
+                        $item->min_serialnumber = false;
+                    }
+                }
+
+                $arrays[] = $item;
+            }
+        }
+
+        return collect($arrays);
     }
 }

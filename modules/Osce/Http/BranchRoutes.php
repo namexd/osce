@@ -64,7 +64,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('exam/exam-addlabel', ['uses'=>'ExamLabelController@addExamQuestionLabel','as'=>'osce.admin.ExamLabelController.addExamQuestionLabel']);
         Route::post('exam/exam-addlabel', ['uses'=>'ExamLabelController@postAddExamQuestionLabel','as'=>'osce.admin.ExamLabelController.postAddExamQuestionLabel']);
         //新增试卷编辑验证标签
-        Route::get('exam/exam-addverify', ['uses'=>'ExamLabelController@examAddLabelVerify','as'=>'osce.admin.ExamLabelController.examAddLabelVerify']);
+        Route::get('exam/exam-addverify', ['uses'=>'ExamLabelCstatusontroller@examAddLabelVerify','as'=>'osce.admin.ExamLabelController.examAddLabelVerify']);
         //编辑试卷标签验证
         Route::get('exam/exam-editverify', ['uses'=>'ExamLabelController@examEditLabelVerify','as'=>'osce.admin.ExamLabelController.examEditLabelVerify']);
         //答卷查询
@@ -160,7 +160,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //考生登录成功页面
         Route::get('api/student-exam-index',['uses'=>'ApiController@getStudentExamIndex','as'=>'osce.admin.ApiController.getStudentExamIndex']);
 
-        //获取考试id
+        //获取对应的试卷id
         Route::get('api/get-exampaperid',['uses'=>'ApiController@getExamPaperId','as'=>'osce.admin.ApiController.getExamPaperId']);
 
         //获取当前考站所在流程考试是否已经结束
@@ -208,6 +208,12 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('exam-control/getvcrslist',['uses'=>'ExamControlController@getVcrsList','as'=>'osce.admin.ExamControlController.getVcrsList']);
         //迟到弃考
         Route::get('exam-control/poststopexamlate',['uses'=>'ExamMonitorController@postStopExam','as'=>'osce.admin.ExamMonitorController.postStopExam']);
+        //倒计时接口
+        Route::get('exam-control/getTime',['uses'=>'ExamControlController@getTime','as'=>'osce.admin.ExamControlController.getTime']);
+
+
+
+
 
 
 

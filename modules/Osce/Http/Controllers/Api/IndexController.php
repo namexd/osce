@@ -31,7 +31,7 @@ class IndexController extends CommonController
 {
 
     /**
-     *检测腕表是否存在
+     * 检测腕表是否存在
      * @method GET 接口
      * @url /api/1.0/private/osce/watch/watch-status
      * @access public
@@ -93,6 +93,65 @@ class IndexController extends CommonController
     }
 
     /**
+     * 查询腕表状态
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author Zhoufuxiang  2016-04-27
+     */
+    public function getWatchStatus2(Request $request)
+    {
+        $this->validate($request,[
+            'code' =>'required'
+        ]);
+        $code   = $request->get('code');
+        $watch  = Watch::where('code', '=', $code)->first();
+        //1、没有查询到对应的腕表信息（腕表不存在）
+        if (is_null($watch)) {
+            return \Response::json(array('code' => 3));     //数据库无腕表
+        }
+        $id       = $watch->id;           //获取腕表ID
+        $status   = $watch->status;       //获取腕表状态
+        //查询使用记录
+        $watchLog = WatchLog::where('watch_id', '=', $id)->orderBy('id','DESC')->first();
+        //组合反馈数据
+        $data = [
+            'student_id'=> '',
+            'status'    => $status
+        ];
+        //根据腕表状态 反馈信息
+        switch ($status)
+        {
+            //1为腕表状态是使用中
+            case 1: if(is_null($watchLog)){
+                        $code    = 4;
+                        $message = '该腕表已绑定';          //该腕表已绑定，无腕表绑定记录
+                    }else{
+
+                        //根据学生ID，查询学生信息
+                        $studentCode = Student::where('id', '=', $watchLog->student_id)->select('code')->first();
+                        $studentCode = is_null($studentCode) ? '' : $studentCode;
+                        //腕表绑定中返回绑定的学生信息
+                        $data['code']       = $studentCode;
+                        $data['student_id'] = $watchLog->student_id;
+                        $code       = 1;
+                        $message    = '该腕表已绑定';     //该腕表已绑定
+                    }
+                    break;
+
+            case 0:     $code = 0;
+                        $message = '未绑定';             //腕表未绑定
+                    break;
+
+            default:    $code = 2;
+                        $message = '该腕表已损坏';
+        }
+        //反馈信息
+        return response()->json(
+            $this->success_data($data, $code, $message)
+        );
+    }
+
+    /**
      *绑定腕表
      * @method GET 接口
      * @url /api/1.0/private/osce/watch/bound-watch
@@ -128,7 +187,19 @@ class IndexController extends CommonController
             return \Response::json(array('code'=>111)); //当前腕表不存在
         }
         $id = $watchInfo->id;       //获取腕表id
+        $examScreen = new ExamScreening();
+        $roomMsg = $examScreen->getExamingScreening($exam_id);
+        $roomMsg_two = $examScreen->getNearestScreening($exam_id);
 
+        // TODO 这里应该判断该场次是否被安排开始。待测试修改    周强  2016-4-30
+
+        if ($roomMsg) {
+            $exam_screening_id = $roomMsg->id;
+        } elseif ($roomMsg_two) {
+            $exam_screening_id = $roomMsg_two->id;
+        } else {
+            throw new \Exception('没有找到对应的场次');
+        }
         /** 判断腕表是否已绑定并且没有解绑 **/
         //取腕表最后一次使用记录
         $watchLog = WatchLog::where('watch_id', '=', intval($id))->orderBy('created_at', 'desc')->first();
@@ -139,6 +210,7 @@ class IndexController extends CommonController
         }
 
         //查询 正在考试的考试 是否是当前考试
+
         $examStatus = Exam::where('status','=',1)->first();
         if($examStatus){
             if($examStatus->id != $exam_id){
@@ -153,13 +225,14 @@ class IndexController extends CommonController
         }
         $student_id = $studentExam->id;     //获取学生id
 
+
         //查询该学生是否在 当前考试的排考计划中
-        $planId     = ExamPlan::where('student_id','=',$student_id)->where('exam_id','=',$exam_id)->select('id')->first();
+        $planId     = ExamPlan::where('student_id','=',$student_id)->where('exam_screening_id',$exam_screening_id)->where('exam_id','=',$exam_id)->select('id')->first();
         if(is_null($planId)){
             return \Response::json(array('code' =>4));  //未安排当前考试
         }
 
-        //获取考试队列中的考生列表
+        //获取考试队列中(exam_order)的考生列表
         $students   = $this->getStudentList($request);
         $idcards    = [];
         $students   = json_decode($students->content());
@@ -245,8 +318,12 @@ class IndexController extends CommonController
             ExamOrder::where('exam_id', $exam_id)->where('student_id', $student_id)->where('exam_screening_id', '=', $exam_screen_id)->update(['status' => 1]);
             Exam::where('id', $exam_id)->update(['status' => 1]);  //更改考试状态（把考试状态改为正在考试）
 
-            return \Response::json(array('code' => 1));
+            // 绑定腕表成功后给腕表推送消息
+            $studentWatchController = new StudentWatchController();
+            $request['nfc_code'] = $code;
+            $studentWatchController->getStudentExamReminder($request);
 
+            return \Response::json(array('code' => 1));
         } else {
             return \Response::json(array('code' => 0));
         }
@@ -293,7 +370,7 @@ class IndexController extends CommonController
             }
             $id = $watchInfo->id;       //获取腕表id
 
-            //腕表使用记录查询学生id
+            //根据腕表id查询腕表使用记录中对应的学生id
             $watchLog = WatchLog::where('watch_id', '=', $id)->where('action', '=', '绑定')
                                 ->select('student_id')->orderBy('id','DESC')->first();
             //1、腕表绑定的学生不存在（直接解绑，反馈学生不存在）
@@ -309,25 +386,32 @@ class IndexController extends CommonController
             $student_id  = $watchLog->student_id;
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
 
-            //获取学生的考试状态
-            $student      = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id, $exam_id);
-            $status       = $this->checkType($exameeStatus->status);
-
             //修改场次状态
+            //根据考试id获取当前考试的场次id
             $examScreeningModel = new ExamScreening();
             $examScreening      = $examScreeningModel -> getExamingScreening($exam_id);
             if(is_null($examScreening))
             {
                 $examScreening  = $examScreeningModel -> getNearestScreening($exam_id);
-                $examScreening  ->status = 1;
-                //场次开考（场次状态变为1）
-                if(!$examScreening -> save())
-                {
-                    throw new \Exception('场次开考失败！');
-                }
             }
             $exam_screen_id = $examScreening->id;       //获取场次id
+            //获取学生的考试状态
+            $student      = new Student();
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
+            $status       = $this->checkType($exameeStatus->status);
+
+           
+            
+            //判断该场次是否被排考安排考试 //拿到oder表里的场次 todo 周强 2016-4-30
+
+//            $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
+//            if(!in_array($exam_screen_id,$OderExamScreeningId)){
+//                $screen_id = ExamOrder::where('exam_id','=',$exam_id)
+//                    ->where('status','=',1)
+//                    ->first();
+//                $exam_screen_id = $screen_id->exam_screening_id;
+//            }
+
 
             //不存在考试场次，直接解绑
             if(!$exam_screen_id){
@@ -366,8 +450,18 @@ class IndexController extends CommonController
                 }
 
                 //更改 （状态改为 已解绑：status=2）
-                ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
-                         ->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>2]);
+                $ExamOrder =ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
+                         ->where('exam_screening_id', '=', $exam_screen_id)->get();
+
+
+                    foreach ($ExamOrder as $value){
+                        if($value->status !=5){
+                            $value ->status =2;
+                            if(!$value->save()){
+                                throw new \Exception('解绑腕表修状态失败');
+                            }
+                        }
+                    }
 
                 //腕表状态 更改为 解绑状态（status=0）
                 $result = Watch::where('id',$id)->update(['status'=>0]);
@@ -392,40 +486,43 @@ class IndexController extends CommonController
                 }else{
                     throw new \Exception('解绑失败');
                 }
-            }
-
-            //如果考试流程未结束 还是解绑,把考试排序的状态改为0
-            $result = Watch::where('id', '=', $id)->update(['status'=>0]);
-            if($result){
-                //更改 （状态改为 未绑定：status=0）
-                $result = ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
-                        ->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>0]);
-                if($result){
-                    //腕表解绑，添加腕表解绑记录
-                    $this->watchUnbundling($id, $student_id);
-                    //更改状态（2 为上报弃考）
-                    ExamScreeningStudent::where('watch_id', '=', $id)->where('student_id', '=', $student_id)
-                                        ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
-                    //中途解绑（更改队列，往后推）
-                    ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
-
-                    //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
-                    $examScreening = new ExamScreening();
-                    $examScreening ->getExamCheck();
-                    //检查考试是否可以结束
-                    $connection->commit();
-                }
-                return \Response::json([
-                    'code' => 1,
-                    'data' => [
-                        'name'  => $studentInfo->name,
-                        'idnum' => $studentInfo->idnum,
-                        'idcard'=> $studentInfo->idcard,
-                        'status'=> $status
-                    ]
-                ]);
             }else{
-                throw new \Exception('解绑失败');
+                //如果考试流程未结束 还是解绑,把考试排序的状态改为0
+                $result = Watch::where('id', '=', $id)->update(['status'=>0]);
+
+                if($result){
+                    //更改 （状态改为 未绑定：status=0）
+                    $result = ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
+                        ->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>0]);
+
+                    if($result){
+                        //腕表解绑，添加腕表解绑记录
+                        $this->watchUnbundling($id, $student_id);
+                        //更改状态（2 为上报换腕表）
+                        ExamScreeningStudent::where('watch_id', '=', $id)->where('student_id', '=', $student_id)
+                            ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
+
+                        //中途解绑（更改队列，往后推）
+                        ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
+
+                        //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
+                        $examScreening = new ExamScreening();
+                        $examScreening ->getExamCheck();
+                        //检查考试是否可以结束
+                        $connection->commit();
+                    }
+                    return \Response::json([
+                        'code' => 1,
+                        'data' => [
+                            'name'  => $studentInfo->name,
+                            'idnum' => $studentInfo->idnum,
+                            'idcard'=> $studentInfo->idcard,
+                            'status'=> $status
+                        ]
+                    ]);
+                }else{
+                    throw new \Exception('解绑失败');
+                }
             }
 
         }
@@ -900,29 +997,44 @@ class IndexController extends CommonController
             return \Response::json(array('code' => 2));     //没有对应的开考场次 —— 考试场次没有(1、0)
         }
         $screen_id    = $examScreening->id;
+
+
+        //拿到oder表里的考试场次 todo 周强 2016-4-30
+        $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
+        if(!in_array($screen_id,$OderExamScreeningId)){
+            $screen_id = ExamOrder::where('exam_id','=',$exam_id)
+                ->where('status','=',0)
+                ->OrderBy('begin_dt', 'asc')
+                ->first();
+            $screen_id = $screen_id->exam_screening_id;
+        }
+
+
         $studentModel = new Student();
+        $examModel = new Exam();
         try {
 
-            //查找exam_screening
-            $stations = $screenModel->where('exam_screening.exam_id','=',$exam_id)
+            //查找exam_screening  todo 这里查看考站有问题，需王涛确定修改
+            $stations = $examModel->where('exam.id','=',$exam_id)
                 ->leftjoin('exam_gradation', function ($join) {
-                    $join->on('exam_gradation.exam_id', '=', 'exam_screening.exam_id');
+                    $join->on('exam_gradation.exam_id', '=', 'exam.id');
                 })->leftjoin('exam_draft_flow', function ($join) {
                     $join->on('exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id');
                 })->leftjoin('exam_draft', function ($join) {
                     $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
                 })->groupBy('exam_draft.station_id')->get();
-            /*
-            $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
-            //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
-            if($mode==1){
-                $rooms=ExamFlowRoom::where('exam_id',$exam_id)->where('effected',1)->select('room_id')->get();
-                $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
 
-            } else{
-                $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
-            }
-            */
+//            $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
+//            //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
+//            if($mode==1){
+//                $rooms=ExamFlowRoom::where('exam_id',$exam_id)->where('effected',1)->select('room_id')->get();
+//                $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
+//
+//            } else{
+//                $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
+//            }
+
+            //dd($stations);
             $countStation=[];
             foreach($stations as $item){
                 $countStation[]=$item->station_id;
@@ -932,8 +1044,7 @@ class IndexController extends CommonController
             $batch        = config('osce.batch_num');       //默认为2
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
 
-            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列
-
+            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列(exam_order表)
             $data = [];
             foreach($list as $itm){
                 $data[] = [
@@ -1105,10 +1216,11 @@ class IndexController extends CommonController
         //查询学生当前状态
         $status = ExamOrder::where('student_id', $studentId)->where('exam_id', $exam_id)
                            ->where('exam_screening_id',$screen_id)->select('status')->first()->status;
-        if ($status == 4) {
-            return $this->getAbsentStudent($studentId, $exam_id,$screen_id); //插入缺考记录 学生已缺考
-
-        } elseif ($status == 2) {
+        $studentMsg=ExamQueue::where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->where('student_id', $studentId)->first();
+        if(!is_null($studentMsg)){//学生已经来了
+            return \Response::json(array('code' => 55));
+        }
+        if ($status == 2) {
             return \Response::json(array('code' => 3));//该学生考试已结束
 
         } elseif ($status == 1) {
@@ -1119,10 +1231,10 @@ class IndexController extends CommonController
                             ->select('begin_dt')->orderBy('begin_dt', 'DESC')->first()->begin_dt;
 
         //将此学生 在最后一个学生的基础上 再推后10分钟
-        $lastDt = strtotime($beginDt) + 10;
+        $lastDt = strtotime($beginDt) + 10*60;
         $time   = date('Y-m-d H:i:s', $lastDt);
         //修改该学生考试开始时间
-        $result = ExamOrder::where('exam_id', $exam_id)->where('student_id', $studentId)
+        $result = ExamOrder::where('exam_id', $exam_id)->where('student_id', $studentId)->where('exam_screening_id',$screen_id)
                            ->update(['begin_dt' => $time, 'status' => 4]);
         if ($result) {
             return \Response::json(array('code' => 1));

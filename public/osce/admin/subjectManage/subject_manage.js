@@ -190,7 +190,13 @@ function subject_manage(){
 function subject_manage_add(){
     $(function(){
         //调select2插件
-        $(".tag").select2({});
+        $(".tag").select2({
+            language:{
+                noResults: function (term) {
+                    return '未找到';
+                }
+            }
+        });
         //新增选项
         var strToInt = {
             A:'B',

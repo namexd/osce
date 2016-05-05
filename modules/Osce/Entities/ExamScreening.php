@@ -160,19 +160,42 @@ class ExamScreening extends CommonModel
 
     public function getNearestScreening($exam_id)
     {
-        return $this->where('exam_id', '=', $exam_id)
-            ->where('status', '=', 0)
-            ->OrderBy('begin_dt', 'asc')
-            ->first();
+        $todayStart = date('Y-m-d 00:00:00');
+        $todayEnd   = date('Y-m-d 23:59:59');
+
+        $exam     = Exam::doingExam();
+        if($exam->id != $exam_id){
+            throw new \Exception('开考考试不对！');
+        }
+        $screenId = ExamPlan::where('exam_id', '=', $exam->id)->groupBy('exam_screening_id')->get()
+                            ->pluck('exam_screening_id')->toArray();
+
+        $result = $this->where('exam_id', '=', $exam_id)
+                ->whereRaw("UNIX_TIMESTAMP(begin_dt) > UNIX_TIMESTAMP('$todayStart')
+                          AND UNIX_TIMESTAMP(end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+                ->where('status', '=', 0)
+                ->whereIn('id', $screenId)
+                ->OrderBy('begin_dt', 'asc')
+                ->first();
+
+        return $result;
     }
 
     public function getExamingScreening($exam_id)
     {
-        return $this->where('exam_id', '=', $exam_id)
-            ->where('status', '=', 1) //等候考试
-            ->OrderBy('begin_dt', 'asc')
-            ->first();
+        $todayStart = date('Y-m-d 00:00:00');
+        $todayEnd   = date('Y-m-d 23:59:59');
+
+        $result     = $this->where('exam_id', '=', $exam_id)
+                    ->whereRaw("UNIX_TIMESTAMP(begin_dt) > UNIX_TIMESTAMP('$todayStart')
+                              AND UNIX_TIMESTAMP(end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+                    ->where('status', '=', 1)       //等候考试
+                    ->OrderBy('begin_dt', 'asc')
+                    ->first();
+        return $result;
     }
+
+
 
     /**
      *  结束考试
@@ -190,33 +213,51 @@ class ExamScreening extends CommonModel
     public function getExamCheck()
     {
         //取得考试实例
-        $exam = Exam::where('status', '=', 1)->orderBy('begin_dt', 'desc')->first();
+        $exam = Exam::doingExam();
         if (is_null($exam)) {
             throw new \Exception('没有找到考试');
         }
+
         //获取到当考试场次id
         $ExamScreening = $this->getExamingScreening($exam->id);
         if (is_null($ExamScreening)) {
             $ExamScreening = $this->getNearestScreening($exam->id);
+
+        }
+        if(is_null($ExamScreening)){
+            throw new \Exception('所有考试场次已结束，请进行下一场考试',-7);
         }
         //根据考试场次id查询计划表所有考试学生
         $examPianModel = new ExamPlan();
-        $exampianStudent = $examPianModel->getexampianStudent($ExamScreening->id);
-        //获取考试场次迟到的人数
-        $examAbsentStudent = ExamAbsent::where('exam_screening_id', '=', $ExamScreening->id)
-            ->groupBy('student_id')
-            ->get()
-            ->count();
-        //获取考试场次已考试完成的人数
-        $examFinishStudent = ExamScreeningStudent::where('is_end', '=', 1)
-            ->where('exam_screening_id', '=', $ExamScreening->id)
-            ->get()
-            ->count();
+        $exampianStudent = $examPianModel->getexampianStudent($ExamScreening->id,$exam->id);
 
-        if ($examAbsentStudent + $examFinishStudent >= $exampianStudent) {
+        //获取考试场次迟到的人数
+//        $examAbsentStudent = ExamAbsent::where('exam_screening_id', '=', $ExamScreening->id)
+//            ->where('exam_id','=',$exam->id)
+//            ->lists('student_id')
+//            ->unique()
+//            ->count();
+
+        //获取考试场次已考试完成的人数
+        $examFinishStudent = ExamScreeningStudent::where('is_end', 1)
+            ->where('exam_screening_id', '=', $ExamScreening->id)
+            ->lists('student_id')
+            ->unique()
+            ->count();
+        if ($examFinishStudent >= $exampianStudent) {
             $ExamScreening->status = 2;
             if (!$ExamScreening->save()) {
                 throw new \Exception('场次结束失败', -5);
+            }
+            //判断结束空场次
+            $senseExamScreening = ExamScreening::where('exam_id','=',$exam->id)->get();
+            foreach ($senseExamScreening as $value){
+                if(!ExamPlan::where('exam_screening_id','=',$value->id)->first()){
+                    $value->status =2;
+                    if(!$value ->save()){
+                        throw new \Exception('空场次结束失败', -7);
+                    }
+                }
             }
             if ($exam->examScreening()->where('status', '=', 0)->count() == 0) {
                 $exam->status = 2;
@@ -225,30 +266,6 @@ class ExamScreening extends CommonModel
                 }
             }
         }
-
-
-//        $this->validate($request, [
-//            'student_id' => 'required|integer',
-//            'station_id' => 'required|integer',
-//
-//        ], [
-//            'student_id.required' => '考生编号信息必须',
-//            'station_id.required' => '考站编号信息必须'
-//        ]);
-//        $studentId = Input::get('student_id');
-//        $stationId = Input::get('station_id');
-//        $nowTime = time();
-//        $ExamQueueModel = new ExamQueue();
-//        $EndResult = $ExamQueueModel->EndExamAlterStatus($studentId, $stationId, $nowTime);
-//        if ($EndResult) {
-//            return response()->json(
-//                $this->success_data($nowTime, 1, '结束考试成功')
-//            );
-//        }
-//        return response()->json(
-//            $this->fail(new \Exception('请再次核对考生信息后再试!!!'))
-//        );
-//
     }
 
     //查找学生考试队列exam_queue

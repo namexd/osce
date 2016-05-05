@@ -19,4 +19,9 @@ class ExamPaperStation extends CommonModel
     protected $guarded      = [];
     protected $hidden       = [];
     protected $fillable     = ['exam_id', 'exam_paper_id', 'station_id'];
+
+    public function paper()
+    {
+        return $this->hasOne('Modules\Osce\Entities\ExamPaper', 'id', 'exam_paper_id');
+    }
 }

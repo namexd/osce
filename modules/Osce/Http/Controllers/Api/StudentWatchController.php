@@ -9,9 +9,12 @@
 namespace Modules\Osce\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestResult;
@@ -19,6 +22,7 @@ use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\ExamStationStatus;
 use Illuminate\Support\Facades\Redis;
+use Modules\Osce\Entities\ExamPlan;
 
 class StudentWatchController extends CommonController
 {
@@ -39,7 +43,7 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder(Request $request, $stationId = null,$examscreeningId = [])
+    public function getStudentExamReminder(Request $request, $stationId = null, $examscreeningId = [])
     {
         $this->validate($request, [
             'nfc_code' => 'required|string'
@@ -48,27 +52,42 @@ class StudentWatchController extends CommonController
         $watchNfcCode = $request->input('nfc_code');
 
         $data = [
-            'title'        => '',
+            'title' => '',
             'willStudents' => '',
-            'estTime'      => '',
+            'estTime' => '',
             'willRoomName' => '',
-            'roomName'     => '',
+            'roomName' => '',
             'nextExamName' => '',
-            'surplus'      => '',
-            'score'        => '',
+            'surplus' => '',
+            'score' => '',
         ];
-
         $redis = Redis::connection('message');
+
+        //通过学生id拿到nfc_code;todo 待确定是否只要学生id，推送腕表信息
+//        $watchNfcCode =$this->getStudentWatchNfcCode($studentId);
+//        if(empty($watchNfcCode)){
+//            $data['title'] = '未找到腕表';
+//            $data['code'] = -2;
+//            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
+//                'nfc_code' => $watchNfcCode,
+//                'data' => $data,
+//                'message' => 'error',
+//            ]));
+//            return response()->json(
+//                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
+//            );
+//
+//        }
 
         //根据腕表nfc_code找到腕表
         $watch = Watch::where('code', '=', $watchNfcCode)->first();
         if (is_null($watch)) {
             $data['title'] = '未找到腕表';
             $data['code'] = -2;
-            $redis->publish(md5($_SERVER['SERVER_NAME']).'watch_message', json_encode([
+            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
                 'nfc_code' => $watchNfcCode,
-                'data'     => $data,
-                'message'  => 'error',
+                'data' => $data,
+                'message' => 'error',
             ]));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
@@ -79,10 +98,10 @@ class StudentWatchController extends CommonController
         if ($watch->status == 0) {
             $data['title'] = '腕表未绑定';
             $data['code'] = -1; // -1 腕表未绑定
-            $redis->publish(md5($_SERVER['SERVER_NAME']).'watch_message', json_encode([
+            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
                 'nfc_code' => $watchNfcCode,
-                'data'     => $data,
-                'message'  => 'error'
+                'data' => $data,
+                'message' => 'error'
             ]));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
@@ -91,16 +110,16 @@ class StudentWatchController extends CommonController
 
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)
-                                            ->where('is_end', '=', 0)
-                                            ->orderBy('signin_dt', 'desc')
-                                            ->first();
+            ->where('is_end', '=', 0)
+            ->orderBy('signin_dt', 'desc')
+            ->first();
         if (is_null($watchStudent)) {
             $data['title'] = '没有找到腕表对应的考试信息';
             $data['code'] = -3;
-            $redis->publish(md5($_SERVER['SERVER_NAME']).'watch_message', json_encode([
-                'nfc_code' => $watchNfcCode,
-                'data'     => $data,
-                'message'  => 'error']
+            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
+                    'nfc_code' => $watchNfcCode,
+                    'data' => $data,
+                    'message' => 'error']
             ));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
@@ -110,20 +129,17 @@ class StudentWatchController extends CommonController
         //得到学生id
         $studentId = $watchStudent->student_id;
 
-        //根据考生id找到当前的考试
-        //$examInfo = Student::where('id', '=', $studentId)->select('exam_id')->first();
-        //$examId = $examInfo->exam_id;
-
         //根据考生id得到该场考试该阶段的所有队列列表
         $examQueueModel = new ExamQueue();
-        $examQueueCollect = $examQueueModel->StudentExamQueue($studentId,$examscreeningId);
+        $examQueueCollect = $examQueueModel->StudentExamQueue($studentId, $examscreeningId);
+     
         if (is_null($examQueueCollect)) {
             $data['title'] = '未找到学生队列信息';
             $data['code'] = -4;
-            $redis->publish(md5($_SERVER['SERVER_NAME']).'watch_message', json_encode([
+            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
                 'nfc_code' => $watchNfcCode,
-                'data'     => $data,
-                'message'  => 'error'
+                'data' => $data,
+                'message' => 'error'
             ]));
             return response()->json(
                 ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
@@ -132,10 +148,10 @@ class StudentWatchController extends CommonController
 
         //判断考试的状态
         $data = $this->nowQueue($examQueueCollect, $stationId);
-        $redis->publish(md5($_SERVER['SERVER_NAME']).'watch_message', json_encode([
+        $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
             'nfc_code' => $watchNfcCode,
-            'data'     => $data,
-            'message'  => 'success'
+            'data' => $data,
+            'message' => 'success'
         ]));
         return response()->json(
             $this->success_data($data, 1)
@@ -151,7 +167,7 @@ class StudentWatchController extends CommonController
      */
     public function nowQueue($examQueueCollect, $stationId)
     {
-        
+
         $statusArray = $examQueueCollect->pluck('status')->toArray();
         if (in_array(1, $statusArray)) {//候考
             return $this->getStatusOneExam($examQueueCollect);
@@ -165,7 +181,7 @@ class StudentWatchController extends CommonController
             return $this->getStatusThreeExam($examQueueCollect, $stationId);
         }
 
-        return $this->getStatusWaitExam($examQueueCollect, $stationId);
+        return $this->getStatusWaitExam($examQueueCollect, $stationId);     //刚绑定腕表
     }
 
     //判断腕表提醒状态为1时
@@ -186,8 +202,8 @@ class StudentWatchController extends CommonController
         $station = $item->station;
         $room = $item->room;
         $data = [
-            'code'     => 3, // 抽签完成状态（对应界面：请到XX考站）
-            'title'    => '请进入以下考站考试',
+            'code' => 3, // 抽签完成状态（对应界面：请到XX考站）
+            'title' => '请进入以下考站考试',
             'roomName' => $room->name . '-' . $station->name,
         ];
 
@@ -216,8 +232,8 @@ class StudentWatchController extends CommonController
             //$endStudentExam = ExamQueue::endStudentQueueExam($item->student_id);
         };
         $data = [
-            'code'    => 4, // 考试状态（对应界面：当前考试剩余时间）
-            'title'   => '当前考站剩余时间',
+            'code' => 4, // 考试状态（对应界面：当前考试剩余时间）
+            'title' => '当前考站剩余时间',
             'surplus' => $surplus,
         ];
 
@@ -250,25 +266,8 @@ class StudentWatchController extends CommonController
                 throw new \Exception('没有发现该考生相关排考计划');
             }
         } else {
-
-            //调用状态为1的方法
+            //调用状态为0的方法
             $data = $this->getStatusWaitExam($examQueueCollect, $stationId);
-
-            if ($data['willStudents'] == 0) {
-                if (!is_null($nextExamQueue->station)) {
-                    $data = [
-                        'code'         => 5, // 考试结束，但还有考试（对应界面：请前往下一教室430）
-                        'title'        => '当前考场考试已完成，请进入下一个考场',
-                        'nextExamName' => $nextExamQueue->room->name . '-' . $nextExamQueue->station->name,
-                    ];
-                } else {
-                    $data = [
-                        'code'         => 5, // 考试结束，但还有考试（对应界面：请前往下一教室430）
-                        'title'        => '当前考场考试已完成，请进入下一个考场',
-                        'nextExamName' => $nextExamQueue->room->name,
-                    ];
-                }
-            }
         }
 
         return $data;
@@ -277,20 +276,35 @@ class StudentWatchController extends CommonController
 
     private function getExamComplete($examQueue)
     {
-        //根据考试获取到考试流程
-        $ExamFlowModel = new  ExamFlow();
-        $studentExamSum = $ExamFlowModel->studentExamSum($examQueue->exam_id);
-        //查询出学生当前已完成的考试
-        $ExamFinishStatus = ExamQueue::where('status', '=', 3)->where('student_id', '=',
-            $examQueue->student_id)->count();
-        if ($ExamFinishStatus >= $studentExamSum) {
-            //查询出考试结果
-            $examResult = ExamResult::where('student_id', '=', $examQueue->student_id)->count();
-            if ($examResult >= $ExamFinishStatus) {
+        //查询出学生当前已完成的考试已完成的场次
+        $ExamFinishStatus = ExamQueue::where('status', '=', 3)
+            ->where('student_id', '=', $examQueue->student_id)
+            ->where('student_id', '=', $examQueue->exam_id)
+            ->groupBy('exam_screening_id')
+            ->select('exam_screening_id')
+            ->get()->toArray();
+
+        //获取计划表里所有的场次
+        $studentExamScreeningIdArr = ExamPlan::where('exam_id', '=', $examQueue->exam_id)
+            ->where('student_id', '=', $examQueue->student_id)->groupBy('exam_screening_id')
+            ->select('exam_screening_id')->get()->toArray();
+
+        //查询出考试结果里面所有的场次
+        $examResultScreening = ExamResult::where('student_id', '=', $examQueue->student_id)
+            ->select('exam_screening_id')->get()->toArray();
+
+
+            //  todo 这里判断有待完善，zhouqiang 2016-4-30；
+
+
+        if (count($ExamFinishStatus) >= count($studentExamScreeningIdArr)) {
+
+            //判断已考完的场次是否和队列里考完的场次相等
+            if (count($examResultScreening) >= count($ExamFinishStatus)) {
                 $testresultModel = new TestResult();
-                $score = $testresultModel->AcquireExam($examQueue->student_id);
+                $score = $testresultModel->AcquireExam($examQueue->student_id, $examResultScreening);
                 $data = [
-                    'code'  => 6, // 考试结束全部考完（对应界面：显示考试完成，显示总成绩）
+                    'code' => 6, // 考试结束全部考完（对应界面：显示考试完成，显示总成绩）
                     'title' => '考试完成，最终总成绩',
                     'score' => $score,
                 ];
@@ -298,7 +312,7 @@ class StudentWatchController extends CommonController
                 return $data;
             } else {
                 $data = [
-                    'code'  => -1,
+                    'code' => -1,
                     'title' => '当前考试已完成',
                 ];
 
@@ -307,7 +321,7 @@ class StudentWatchController extends CommonController
 
         } else {
             $data = [
-                'code'  => -1,
+                'code' => -1,
                 'title' => '还有考试未完成',
             ];
 
@@ -325,93 +339,39 @@ class StudentWatchController extends CommonController
         });
 
         $item = array_shift($items);
-    
-
         // 判断老师是否准备完成
-        $examStationStatusModel = new ExamStationStatus();
 
-        $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
-            ->where('exam_screening_id', '=', $item->exam_screening_id)
-            ->where('station_id', '=', $stationId)
-            ->first();
-        if ($instance->status == 0) {
-            return [
-                'code'  => 0, // 0，等待状态（对应界面：Prepare_fragment）
-                'title' => '等待老师准备中',
-                'willStudents' => '',
-            ];
-        }
-        //判断前面是否有人考试
-        if (empty($item->station_id)) {
-            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
-                                    ->where('exam_id', '=', $item->exam_id)
-                                    ->whereBetween('status', [1, 2])
-                                    ->count();
+        if (empty($this->getTeacherPrepareStatus($item))) {
+
+            $data = $this->getStudentWaitMessage($item);
+
+
         } else {
-            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
-                                    ->where('exam_id', '=', $item->exam_id)
-                                    ->where('station_id', '=', $item->station_id)
-                                    ->whereBetween('status', [1, 2])
-                                    ->count();
+            $data = $this->getTeacherPrepareStatus($item);
         }
-
-        //判断前面等待人数
-        $studentnum = $this->getwillStudent($item);
-        if ($examStudent == 0) {
-            $willStudents = $studentnum;
-        } else {
-            $willStudents = $studentnum + 1;
-        }
-
-        //判断预计考试时间
-        $examtimes = date('H:i', (strtotime($item->begin_dt)));
-
-        //判断进入如的考场教室名字
-        $examRoomName = $item->room->name;
-        if ($willStudents > 0) {
-            $data = [
-                'code'         => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-                'title'        => '考生等待信息',
-                'willStudents' => $willStudents,
-                'estTime'      => $examtimes,
-                'willRoomName' => $examRoomName,
-
-            ];
-        } else {
-            if (is_null($item->station_id)) {
-                $data = [
-                    'code'         => 2, // 引导状态（对应界面：请前往教室420）
-                    'title'        => '请进入以下考场考试',
-                    'willStudents' => '',
-                    'estTime'      => '',
-                    'willRoomName' => '',
-                    'roomName'     => $examRoomName,
-                ];
-            } else {
-                $data = [
-                    'code'         => 2, // // 引导状态（对应界面：请前往教室420）
-                    'title'        => '请进入以下考站考试',
-                    'willStudents' => '',
-                    'estTime'      => '',
-                    'willRoomName' => '',
-                    'roomName'     => $examRoomName . '-' . $item->station->name,
-                ];
-            }
-
-        }
-
         return $data;
     }
 
     private function getWillStudent($item)
     {
         $studentNum = 0;
-        $willStudents = ExamQueue::where('room_id', '=', $item->room_id)
-                                ->where('exam_screening_id', '=', $item->exam_screening_id)
-                                ->where('station_id', '=', $item->station_id)
-                                ->where('status', '=', 0)
-                                ->orderBy('begin_dt', 'asc')
-                                ->get();
+        if(is_null($item->station_id)){
+
+            $willStudents = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_screening_id', '=', $item->exam_screening_id)
+                ->where('status', '=', 0)
+                ->orderBy('begin_dt', 'asc')
+                ->get();
+        }else{
+            $willStudents = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_screening_id', '=', $item->exam_screening_id)
+                ->where('station_id', '=', $item->station_id)
+                ->where('status', '=', 0)
+                ->orderBy('begin_dt', 'asc')
+                ->get();
+        }
+
+
         foreach ($willStudents as $key => $willStudent) {
             if ($willStudent->student_id == $item->student_id) {
                 $studentNum = $key;
@@ -461,6 +421,154 @@ class StudentWatchController extends CommonController
                 $this->success_data($data, -2, '没有找到对应的nfc_code')
             );
         }
+    }
+
+
+    private function getTeacherPrepareStatus($item)
+    {
+
+        $examStationStatusModel = new ExamStationStatus();
+        //判断考试的排考模式
+        $data = [];
+        if (is_null($item->station_id)) {
+
+            //先拿到该考场里所有的考站id
+            $stationId = $this->getStationData($item);
+            //考场模式就看该场考试考场老师是否都准备完成
+            $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
+                ->where('exam_screening_id', '=', $item->exam_screening_id)
+                ->where('status', '=', 0)
+                ->whereIn('station_id', $stationId)
+                ->first();
+            if ($instance) {
+                $data = [
+                    'code' => 0, // 0，等待状态（对应界面：Prepare_fragment）
+                    'title' => '该考场还有老师在准备中',
+                    'willStudents' => '',
+                ];
+            }
+
+        } else {
+            //考站模式就看该考站里的老师是否准备完成
+            $instance = $examStationStatusModel->where('exam_id', '=', $item->exam_id)
+                ->where('exam_screening_id', '=', $item->exam_screening_id)
+                ->where('station_id', '=', $item->station_id)
+                ->first();
+            if ($instance->status == 0) {
+                $data = [
+                    'code' => 0, // 0，等待状态（对应界面：Prepare_fragment）
+                    'title' => '等待老师准备中',
+                    'willStudents' => '',
+                ];
+            }
+
+        }
+
+        return $data;
+    }
+
+
+    private function getStudentWaitMessage($item)
+    {
+
+
+        //判断前面是否有人考试,分考场和考站模式
+        if (empty($item->station_id)) {
+
+           $stationId =  $this->getStationData($item);
+            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_id', '=', $item->exam_id)
+                ->whereIn('station_id', $stationId)
+                ->where('status','=',3)
+                ->count();
+        } else {
+            $examStudent = ExamQueue::where('room_id', '=', $item->room_id)
+                ->where('exam_id', '=', $item->exam_id)
+                ->where('station_id', '=', $item->station_id)
+                ->whereBetween('status', [1, 2])
+                ->count();
+        }
+        //判断前面等待人数
+        $studentnum = $this->getwillStudent($item);
+        if ($examStudent == 0) {
+            $willStudents = $studentnum + 1;
+        } else {
+            $willStudents = $studentnum;
+        }
+
+        //判断预计考试时间
+        $examtimes = date('H:i', (strtotime($item->begin_dt)));
+
+        //判断进入如的考场教室名字
+        $examRoomName = $item->room->name;
+        if ($willStudents > 0) {
+            $data = [
+                'code' => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                'title' => '考生等待信息',
+                'willStudents' => $willStudents,
+                'estTime' => $examtimes,
+                'willRoomName' => $examRoomName,
+
+            ];
+        } else {
+            if (is_null($item->station_id)) {
+                $data = [
+                    'code' => 2, // 引导状态（对应界面：请前往教室420）
+                    'title' => '请进入以下考场考试',
+                    'willStudents' => '',
+                    'estTime' => '',
+                    'willRoomName' => '',
+                    'roomName' => $examRoomName,
+                ];
+            } else {
+                $data = [
+                    'code' => 2, // // 引导状态（对应界面：请前往教室420）
+                    'title' => '请进入以下考站考试',
+                    'willStudents' => '',
+                    'estTime' => '',
+                    'willRoomName' => '',
+                    'roomName' => $examRoomName . '-' . $item->station->name,
+                ];
+            }
+
+        }
+
+        return $data;
+    }
+
+    //获取考场下所有的考站
+    private function getStationData($item)
+    {
+        //先拿到该考场里所有的考站id
+        $stationId = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft.room_id', '=', $item->room_id)
+            ->where('exam_draft_flow.exam_id', '=', $item->exam_id)
+            ->get()->pluck('station_id');
+        return $stationId;
+    }
+
+
+
+    private  function getStudentWatchNfcCode($studentId)
+    {
+        //拿到正在进行的考试
+        $nfc_Code = '';
+        $exam = Exam::doingExam();
+        $examScreeningModel = new ExamScreening();
+        $examScreening = $examScreeningModel->getExamingScreening($exam->id);
+        if (is_null($examScreening)) {
+            $examScreening = $examScreeningModel->getNearestScreening($exam->id);
+        }
+        $exam_screen_id = $examScreening->id;
+
+        $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id',$exam_screen_id)
+            ->where('student_id', '=', $studentId)->first();
+        if (!is_null($examScreeningStudentData)) {
+            //拿到腕表的nfc_code
+            $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
+            $nfc_Code = $watchData->code;
+        }
+        return $nfc_Code;
     }
 
 }

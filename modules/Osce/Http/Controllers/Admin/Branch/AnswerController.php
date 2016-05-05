@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
@@ -35,20 +36,20 @@ class AnswerController extends CommonController
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
         $this->validate($request,[
-            'id'       => 'required|integer',
-            'examId'    => 'required|integer',
-            'stationId'    => 'required|integer',
-            'userId'    => 'required|integer',
-            'studentId'    => 'required|integer',
+            'id'       => 'required|integer',//试卷id
+            'examId'    => 'required|integer',//考试id
+            'stationId'    => 'required|integer',//考站id
+            'userId'    => 'required|integer',//老师id
+            'studentId'    => 'required|integer',//学生id
 
         ]);
 
       //admin/answer/formalpaper-list?stationId=21&userId=140&studentId=222&id=12&examId=4
-        $ExamPaperId = $request->input('id');//试卷id  132
-        $examId = $request->input('examId');//考试id  421
-        $stationId = $request->input('stationId');//考站id 20
-        $userId = $request->input('userId');//老师id
-        $studentId = $request->input('studentId');//学生id
+        $ExamPaperId = $request->input('id');
+        $examId = $request->input('examId');
+        $stationId = $request->input('stationId');
+        $userId = $request->input('userId');
+        $studentId = $request->input('studentId');
 
         //获取试卷信息
         $ExamPaperInfo = $questionBankRepositories->GenerateExamPaper($ExamPaperId);
@@ -56,28 +57,23 @@ class AnswerController extends CommonController
         $ExamPaperFormal = new ExamPaperFormal;
         //生成正式的试卷并且 返回id
         $ExamPaperFormalId = $ExamPaperFormal->CreateExamPaper($ExamPaperInfo,$studentId);
-
-        //将开始时间存入session中
-        if(\Session::get('systemTimeStart')){
-            $systemTimeStart =\Session::get('systemTimeStart');
-        }else{
-            $systemTimeStart=time();
-            \Session::put('systemTimeStart',$systemTimeStart);
-        }
-
         //获取正式试卷表信息
         $examPaperFormalModel = new ExamPaperFormal();
         $examPaperFormalList = $examPaperFormalModel->where('id','=',$ExamPaperFormalId)->first();
         $examPaperFormalData ='';
-        $systemTimeEnd =0;
         if($examPaperFormalList) {
+            $systemTimeStart=time();
             $examPaperFormalData = array(
                 'id' => $examPaperFormalList->id,//正式试卷id
                 'name' => $examPaperFormalList->name,//正式试卷名称
                 'length' => $examPaperFormalList->length,//正式试卷考试时间
                 'totalScore' => $examPaperFormalList->total_score,//正式试卷总分
             );
-          $systemTimeEnd =$systemTimeStart+$examPaperFormalData['length']*60; //结束时间
+            $data = array(
+                'begin_dt' =>date('Y-m-d H:i:s',$systemTimeStart)
+            );
+            ExamPaperFormal::where('id',$examPaperFormalList->id)->update($data);
+            $systemTimeEnd =$systemTimeStart+$examPaperFormalData['length']*60; //结束时间
         }
         $examCategoryFormalData=[];//正式试题信息(根据试题类型进行分类)
         $categoryData=[];
@@ -122,8 +118,8 @@ class AnswerController extends CommonController
                 }
             }
         }
-        //echo date('Y/m/d H:i:s',$systemTimeStart).'and'.date('Y/m/d H:i:s',$systemTimeEnd);
-
+        //echo (date('Y/m/d H:i:s',$systemTimeStart).'and'.date('Y/m/d H:i:s',$systemTimeEnd));
+        //echo 12313232;
         return view('osce::admin.theoryCheck.theory_check', [
             'examCategoryFormalData'      =>$examCategoryFormalData,//正式试题信息
             'examPaperFormalData'         =>$examPaperFormalData,//正式试卷信息
@@ -147,24 +143,30 @@ class AnswerController extends CommonController
     public function postSaveAnswer(Request $request)
     {
         $this->validate($request,[
-            'examId'    => 'required|integer', //考试id
-            'studentId'    => 'required|integer',//学生id
-            'stationId'    => 'required|integer',//考站id
-            'teacherId'    => 'required|integer', //老师id
-            'examPaperFormalId'       => 'required|integer',//正式试卷id
-
-
+            'examId'               => 'required|integer', //考试id
+            'studentId'            => 'required|integer',//学生id
+            'stationId'            => 'required|integer',//考站id
+            'teacherId'            => 'required|integer', //老师id
+            'examPaperFormalId'   => 'required|integer',//正式试卷id
 
         ]);
 
-        $systemTimeStart = \Session::get('systemTimeStart');//取出存入的系统开始时间
-        $systemTimeEnd  =time();//考试结束时间
-        $actualLength = $systemTimeEnd-$systemTimeStart;//考试用时
+        $examId = $request->input('examId');
+        $studentId = $request->input('studentId');
+        $stationId = $request->input('stationId');
+        $teacherId = $request->input('teacherId');
+        $examPaperFormalId = $request->input('examPaperFormalId');
+
+        $examQuestionFormalInfo = $request->input('examQuestionFormalInfo');
+        //查询考试的开始时间
+        $begin_dt = ExamPaperFormal::where('id',$examPaperFormalId)->first()->begin_dt;
+        //考试使用时间
+        $actualLength = time() - strtotime($begin_dt);
         $data =array(
-            'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-            'actualLength' =>$actualLength, //考试用时
-            'examQuestionFormalInfo'=>$request->input('examQuestionFormalInfo'),//正式试题信息
-            'studentId' =>$request->input('studentId'),//学生Id
+            'examPaperFormalId' =>$examPaperFormalId,
+            'actualLength' =>$actualLength,
+            'examQuestionFormalInfo'=>$examQuestionFormalInfo,//正式试题信息
+            'studentId' =>$studentId,
         );
 
  /*       //提交过来的数据格式
@@ -229,28 +231,25 @@ class AnswerController extends CommonController
         }
 
         $resultData = array(
-            'examId' =>$request->input('examId'), //考试id
-            'studentId' =>$request->input('studentId'),//学生Id
-            'stationId' => $request->input('stationId'),//考站id
-            'teacherId'=>$request->input('teacherId'),//评分人编号
-            'examPaperFormalId' =>$request->input('examPaperFormalId'), //正式试卷id
-            'time'=>$actualLength,//考试用时gmstrftime('%H:%M:%S',($item->examMins)*60)
-            'begin_dt'=>date('Y-m-d H:i:s',$systemTimeStart),//考试开始时间
-            'end_dt'=>date('Y-m-d H:i:s',$systemTimeEnd),//考试结束时间
+            'examId' =>$examId,
+            'studentId' =>$studentId,
+            'stationId' => $stationId,
+            'teacherId'=>$teacherId,
+            'examPaperFormalId' =>$examPaperFormalId,
+            'time'=>$actualLength,
+            'begin_dt'=>$begin_dt,//考试开始时间
+            'end_dt'=>date('Y-m-d H:i:s',time()),//考试结束时间
         );
-        //保存考生答案和记录该考生成绩
 
+        //保存考生答案和记录该考生成绩
         $answerModel = new Answer();
         try{
             $answerModel->saveAnswer($data,$resultData);
-            \Session::pull('systemTimeStart');//删除session
-
             return response()->json(
-
                 $this->success_data([],1,'success')
             );
+            return response()->json(true);
         }catch (\Exception $ex) {
-
             return response()->json($this->fail($ex));
 
         }
@@ -313,7 +312,6 @@ class AnswerController extends CommonController
                                 ->where('exam_id','=',$examId)
                                 ->where('student_id','=',$studentId)
                                 ->where('station_id','=',$stationId)->first();
-        //dd(data);
 
         if(!empty($data)){
             $controlMark = $data['controlMark'];
@@ -324,7 +322,7 @@ class AnswerController extends CommonController
 
     }
 
-    /**改变队列中的状态
+    /**更新该考生在队列中的状态为已完成
      * @method
      * @url /osce/
      * @access public
@@ -335,24 +333,28 @@ class AnswerController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function postSaveStatus(Request $request){
-        $this->validate($request,[
-            'examId'       => 'required|integer',
-            'studentId'    => 'required|integer',
-        ]);
-        $examId = $request->input('examId');
-        $studentId = $request->input('studentId');
-        //得到queue实例
-        $queue = ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status', 2)->first();
-        if(!empty($queue)){
-            //获取当前的服务器时间
-            $date = date('Y-m-d H:i:s');
-            //修改状态
-            $data = array(
-                'status' =>3,
-                'end_dt' =>$date,
-                'blocking' =>1
+
+        try{
+            $this->validate($request,[
+                'examId'       => 'required|integer',
+                'studentId'    => 'required|integer',
+                'stationId'    => 'required|integer',
+            ]);
+            $examId = $request->input('examId');
+            $studentId = $request->input('studentId');
+            $stationId = $request->input('stationId');
+            $answerModel = new Answer();
+            $exam_screening_id = $answerModel->saveStatus($examId,$studentId,$stationId);
+            //向pad端推送消息
+            $redis = Redis::connection('message');
+            $time = date('Y-m-d H:i:s', time());
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$time,'student_id'=>$studentId,'exam_screening_id'=>$exam_screening_id],108,'理论考试结束')));
+            return response()->json(
+                $this->success_data([],1,'success')
             );
-            ExamQueue::where('id', $queue->id)->update($data);
+        }catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+
         }
     }
 

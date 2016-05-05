@@ -8,8 +8,7 @@
 
 namespace Modules\Osce\Entities\SmartArrange\Traits;
 
-use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
-
+use Modules\Osce\Entities\Station;
 trait SundryTraits
 {
     /**
@@ -39,6 +38,7 @@ trait SundryTraits
             //如果是数组，先将时间字符串变成时间戳，然后排序，并取最后（最大的数）;
             if (is_array($value->all())) {
                 $flowTime += $value->pluck('mins')->sort()->pop();
+                $flowTime += config('osce.sys_param.mins');
                 //否则就直接加上这个值
             } else {
                 $flowTime += $value->mins;
@@ -103,12 +103,62 @@ trait SundryTraits
             $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
 
             $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
-
+            $temp = $this->thisNotSerial($screen, $entity->serialnumber);
             //求取差集
-            return array_diff($prevSerial->toArray(), $thisSerial->toArray());
+            return array_diff($prevSerial->toArray(), $thisSerial->toArray(), $temp->toArray());
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    /**
+     * 轮询模式下需要的学生
+     * @param $screen
+     * @param $entity
+     * @param $last
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-26 20:24
+     */
+    function pollStudents($screen, $entity, $last)
+    {
+        if ($entity->serialnumber - 1 <= 0) {
+            $prevSerial = $this->thisSerial($screen, $last);
+            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
+            $thisNotSerial = $this->thisNotSerial($screen, $entity->serialnumber);
+            $a = array_diff(array_unique($prevSerial->toArray()), array_unique($thisSerial->toArray()), array_unique($thisNotSerial->toArray()));
+            return $a;
+        } else {
+            $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
+            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
+            //求取差集
+            return array_diff(array_unique($prevSerial->toArray()), array_unique($thisSerial->toArray()));
+        }
+    }
+
+    /**
+     * 获取当前场次下的流程个数
+     * @param $entities
+     * @return mixed
+     * @author Jiangzhiheng
+     * @time 2016-04-08 14:40
+     */
+    function flowNum($entities)
+    {
+        return $entities->groupBy('serialnumber')->count();
+    }
+
+    /**
+     * 返回考场对应的考站的考试时间数组
+     * @param $roomStation
+     * @return array
+     * @author Jiangzhiheng
+     * @time 2016-04-08 18:01
+     */
+    function stationMins($roomStation)
+    {
+        $stationIds = $roomStation->pluck('station_id');
+        return Station::whereIn('station_id', $stationIds)->lists('mins')->toArray();
     }
 
 }

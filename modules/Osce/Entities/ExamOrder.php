@@ -22,10 +22,16 @@ class ExamOrder extends  CommonModel{
         2 => '已解绑',
         3 => '缺考',
         4 => '跳过',
+        5 => '替考',
     ];
 
     public function userInfo()
     {
         return $this->hasOne('\App\Entities\User', 'id', 'user_id');
+    }
+
+    public function exam()
+    {
+        return $this->belongsTo('\Modules\Osce\Entities\Exam');
     }
 }

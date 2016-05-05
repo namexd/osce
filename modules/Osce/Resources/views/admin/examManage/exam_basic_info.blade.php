@@ -56,7 +56,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="{{route('osce.admin.exam.getEditExam',['id'=>$id])}}">基础信息</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getChooseExamArrange',['id'=>$id])}}">考场安排</a></li>
-                        <li class=""><a href="{{route('osce.admin.exam-arrange.getInvigilateArrange',['id'=>$id])}}">考官安排</a></li>
+                        <li class=""><a href="{{route('osce.admin.exam-arrange.getInvigilateArrangeIndex',['id'=>$id])}}">考官安排</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamineeManage',['id'=>$id])}}">考生管理</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getIntelligence',['id'=>$id])}}">智能排考</a></li>
                         <li class=""><a href="{{route('osce.admin.exam.getExamRemind',['id'=>$id])}}">待考区说明</a></li>
@@ -107,10 +107,10 @@
                                      </div>
                                  </div>
 
-                                 <div class="row grading" @if(is_null($examGradation->first()->sequence_cate)) style="display: none;" @else style="display: block;" @endif>
+                                 <div class="row grading" @if(!is_null($examData->sequence_cate) && $examData->gradation->count() <= 1) style="display: none;" @else style="display: block;" @endif>
                                     <div class="col-md-1">&nbsp;</div>
                                     <div class="col-md-11">
-                                        <select class="form-control" style="width:250px;margin-left: 70px;" name="" >
+                                        <select class="form-control" style="width:250px;margin-left: 70px;" name="sc" >
                                             <option @if(is_null($examGradation->first()->sequence_cate)) selected = "selected" @endif value="1" >统一设置各阶段考试顺序</option>
                                             <option @if(!is_null($examGradation->first()->sequence_cate)) selected = "selected" @endif value="2" >单独设置各阶段考试顺序</option>
                                         </select>
