@@ -146,7 +146,8 @@
 @stop
 
 @section('content')
-    <input type="hidden" id="parameter" value="{'pagename':'course_module','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinicalList':'{{route('osce.admin.topic.getSubjectCases')}}','goodList':'{{route('osce.admin.topic.getSubjectSupply')}}','clinical_add':'{{route('osce.admin.case.getCreateCase')}}'}" />
+    <?php $topticOptionMaxNumer = config('osce.topticOptionMaxNumer'); ?>
+    <input type="hidden" id="parameter" value="{'pagename':'course_module','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinicalList':'{{route('osce.admin.topic.getSubjectCases')}}','goodList':'{{route('osce.admin.topic.getSubjectSupply')}}','clinical_add':'{{route('osce.admin.case.getCreateCase')}}','topticOptionMaxNumer':'{{$topticOptionMaxNumer}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
 
     <div class="ibox float-e-margins">
@@ -320,7 +321,7 @@
                                                     </td>
                                                     <td>
                                                         <select {!! $data->pid==0? 'style="display:none;"':''!!} class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
-                                                            @for($i=1; $i<=($data->score>15?$data->score:15); $i++)
+                                                            @for($i=1; $i<=(($data->score>$topticOptionMaxNumer)?$data->score:$topticOptionMaxNumer); $i++)
                                                             <option value="{{$i}}" {{$data->score==$i? 'selected="selected"':''}}>{{$i}}</option>
                                                             @endfor
                                                         </select>

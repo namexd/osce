@@ -498,7 +498,7 @@ class ExamQueue extends CommonModel
                 $lateTime = 0;
             }
 
-
+            \Log::alert('开始考试改变学生的队列',[$examQueue->id,$examQueue->student_id,$examQueue->status]);
             //修改队列状态
             $examQueue->status = 2;
             $examQueue->begin_dt = date('Y-m-d H:i:s', $nowTime);
@@ -777,6 +777,7 @@ class ExamQueue extends CommonModel
             //通过学生id找到对应的examScreeningStudent实例
             $examScreening = ExamScreeningStudent::where('student_id', $studentId)->where('exam_screening_id', '=', $exam_screen_id)->first();
 
+            \Log::alert('结束考试场次信息',[$exam_screen_id,$examScreening->id]);
             if (is_null($examScreening)) {
                 throw new \Exception('没找到对应的学生编号', 2100);
             }
@@ -794,6 +795,9 @@ class ExamQueue extends CommonModel
             if (empty($queue)) {
                 throw new \Exception('没有找到符合要求的学生', 2200);
             }
+
+
+            \Log::alert('结束考试改变学生的队列',[$queue->id,$queue->student_id,$queue->status]);
             return $queue;
         } catch (\Exception $ex) {
             throw $ex;
