@@ -579,7 +579,7 @@ class ExamQueue extends CommonModel
                         $ExamTime->begin_dt = date('Y-m-d H:i:s', $nowTime);
                         $ExamTime->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
 
-                        \Log::alert('改变的时间',[$ExamTime->begin_dt,$ExamTime->end_dt]);
+                        \Log::alert('改变的时间',[$ExamTime->begin_dt,$ExamTime->end_dt,$ExamTime->id]);
                         if (!$ExamTime->save()) {
                             throw new \Exception('队列时间更新失败', -100);
                         }
@@ -625,6 +625,7 @@ class ExamQueue extends CommonModel
                     ->where('exam_draft_flow.exam_id', '=', $exam_id)
                     ->where('exam_draft.station_id', '=', $station->id)
                     ->first();
+                \Log::alert('subject', [$ExamDraft]);
                 if (!is_null($ExamDraft)) {
                     $subject = Subject::where('id', $ExamDraft->subject_id)->first();
 
