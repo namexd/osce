@@ -524,6 +524,7 @@ class ExamQueue extends CommonModel
                 if (is_null($nowQueue)) {
                     throw new \Exception('进入考试失败', -103);
                 }
+                $stationTime = $this->stationTime($nowQueue->station_id, $exam->id);
 
                 //拿到状态为三的队列
                 $endQueue = ExamQueue::where('exam_id', '=', $exam->id)
@@ -531,6 +532,8 @@ class ExamQueue extends CommonModel
                     ->whereIn('exam_screening_id', $examscreeningId)
                     ->where('status', '=', 3)
                     ->get();
+
+
 
                 foreach ($studentTimes as $key => $item) {
                     foreach ($endQueue as $endQueueTime) {
@@ -548,13 +551,16 @@ class ExamQueue extends CommonModel
                       }*/
 
                     //获取标准考试时间
-                    $stationTime = $this->stationTime($item->station_id, $exam->id);
-                    \Log::alert('获取到的标准时间',[$stationTime]);
 
+//                    if(is_null($item->station_id)){
+//                        $stationTime = false;
+//                    }else{
+//                        $stationTime = $this->stationTime($item->station_id, $exam->id);
+//
+//                    }
+                    \Log::alert('获取到的标准时间',[$stationTime]);
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         if ($item->status == 2) {
-
-
                             $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
                             $item->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
                         } else {
@@ -576,6 +582,7 @@ class ExamQueue extends CommonModel
                         if (is_null($ExamTime)) {
                             throw new \Exception('没有找到对应的队列信息', -102);
                         }
+
                         $ExamTime->begin_dt = date('Y-m-d H:i:s', $nowTime);
                         $ExamTime->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
 
@@ -613,6 +620,7 @@ class ExamQueue extends CommonModel
     {
         $stationTime = 0;
         $station = Station::where('id', $station_id)->first();
+
         if (!empty($station)) {
             if ($station->type == 3) {
                 //理论站
