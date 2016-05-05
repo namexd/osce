@@ -501,12 +501,12 @@ class ExamQueue extends CommonModel
             \Log::alert('开始考试改变学生的队列',[$examQueue->id,$examQueue->student_id,$examQueue->status]);
             //修改队列状态
             $examQueue->status = 2;
-            $examQueue->begin_dt = date('Y-m-d H:i:s', $nowTime);
+            $examQueue->begin_dt = date('Y-m-d H:i:s', $nowTime);  //???
 
             //$examQueue->stick=null;
             if ($examQueue->save()) {
                 $studentTimes = ExamQueue::where('student_id', '=', $studentId)
-                    ->whereIn('exam_queue.status', [0, 1, 2])
+                    ->whereIn('exam_queue.status', [0, 1, 2]) //只查状态为2的
                     ->whereIn('exam_screening_id', $examscreeningId)
                     ->orderBy('begin_dt', 'asc')
                     ->get();
@@ -543,10 +543,12 @@ class ExamQueue extends CommonModel
                           $stationTime = $this->getRoomStationMaxTime($item->room_id);
                       }*/
 
+                    //获取标准考试时间
+                    $stationTime = $this->stationTime($item->station_id, $exam->id);
+
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         if ($item->status == 2) {
-                            //获取标准考试时间
-                            $stationTime = $this->stationTime($item->station_id, $exam->id);
+
 
                             $item->begin_dt = date('Y-m-d H:i:s', $nowTime);
                             $item->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
@@ -569,10 +571,6 @@ class ExamQueue extends CommonModel
                         if (is_null($ExamTime)) {
                             throw new \Exception('没有找到对应的队列信息', -102);
                         }
-
-                        //获取标准考试时间
-                        $stationTime = $this->stationTime($ExamTime->station_id, $exam->id);
-
                         $ExamTime->begin_dt = date('Y-m-d H:i:s', $nowTime);
                         $ExamTime->end_dt = date('Y-m-d H:i:s', $nowTime + $stationTime * 60);
                         if (!$ExamTime->save()) {
