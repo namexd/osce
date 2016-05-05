@@ -766,7 +766,7 @@ class DrawlotsController extends CommonController
 
                 $this->getStation($request);
             }*/
-
+                \Log::alert('老师登陆获得信息',[$station]);
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -813,7 +813,7 @@ class DrawlotsController extends CommonController
 
                 //随机获取一个考站的id
                 $ranStationId = $this->ranStationSelect($roomId, $examId, $examScreeingId);
-                \Log::alert($ranStationId);
+                \Log::alert('考场模式抽签分配的考站,和拿到的考场id',[$ranStationId,$roomId]);
 
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id', $student->id)
@@ -828,7 +828,8 @@ class DrawlotsController extends CommonController
                 if ($examQueue->status != 0) {
                     throw new \Exception('该考生数据错误！', 3650);
                 }
-
+                \Log::alert('抽签改变的学生信息，队列id，学生id，学生状态前',[$examQueue->id,$examQueue->student_id,$examQueue->status]);
+                
                 $examQueue->status = 1;
                 $examQueue->station_id = $ranStationId;
                 if (!$examQueue->save()) {
