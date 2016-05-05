@@ -1019,24 +1019,25 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getUseingWatchData(Request $request){
+    public function getUseingWatchData(Request $request)
+    {
         try{
             $this->validate($request, [
-                'status' => 'required|integer',
-                'type' => 'sometimes|integer',
-                'nfc_code' => 'sometimes|string'
+                'status'    => 'required|integer',
+                'type'      => 'sometimes|integer',
+                'nfc_code'  => 'sometimes|string'
             ]);
 
-            $status = $request->get('status');  //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
-            $type = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
+            $status   = $request->get('status');    //腕表的使用状态 1 => '使用中',0 => '未使用',2 => '报废',3 => '维修'
+            $type     = $request->get('type');      //考试状态 考试中（1），等待中（0），已结束（2）
             $nfc_code = $request->get('nfc_code');
-            $examing = Exam::where('status','=',1)->first();
+            $examing  = Exam::where('status','=',1)->first();
            
             //查询使用中的腕表数据
             $watchModel = new Watch();
-            $watchData = $watchModel->getWatchAboutData($status,$type,$nfc_code,$examing->id);
+            $watchData = $watchModel->getWatchAboutData($status, $type, $nfc_code, $examing->id);
 
-            if(!empty($watchData)&&count($watchData) > 0){
+            if(!empty($watchData) && count($watchData) > 0){
                 $watchData = $watchData->toArray();
 
                 foreach($watchData as $k=>$v){
@@ -1055,20 +1056,19 @@ class InvigilatePadController extends CommonController
 //
 //                        }
 //                    }
-
                 }
             
                 return response()->json(
                     $this->success_data($watchData,200,'success')
                 );
+
             }else{
                 throw new \Exception('没有找到相关设备信息', -2);
             }
+
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
-
         }
-
 
     }
     /**
@@ -1184,7 +1184,8 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWatchUnbundling(Request $request){
+    public function getWatchUnbundling(Request $request)
+    {
         $this->validate($request,[
             'code'      =>'required',//腕表设备编码
             'exam_id'   =>'required', //考试id
@@ -1204,12 +1205,12 @@ class InvigilatePadController extends CommonController
             $student_id = WatchLog::where('watch_id',$id)->where('action','绑定')->select('student_id')->orderBy('id','DESC')->first();
 
             //如果腕表绑定的学生不存在，直接解绑
-            if(!$student_id){
+            if(is_null($student_id)){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
                 if($result){
-                    return \Response::json(array('code'=>2));       //该腕表绑定的学生不存在
+                    return \Response::json(array('code'=>2,'message'=>'绑定的学生不存在'));       //该腕表绑定的学生不存在
                 }else{
-                    return \Response::json(array('code'=>0));       //解绑失败
+                    return \Response::json(array('code'=>0));           //解绑失败
                 }
             }
 
@@ -1217,12 +1218,15 @@ class InvigilatePadController extends CommonController
             $student_id=$student_id->student_id;
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
+
             //根据考试id获取所对应的场次id
-            $examScreening = ExamScreening::getExamingScreening($exam_id);
+            $ExamScreening = new ExamScreening();
+            $examScreening = $ExamScreening->getExamingScreening($exam_id);
             if(is_null($examScreening))
             {
-                $examScreening  = ExamScreening::getNearestScreening($exam_id);
+                $examScreening  = $ExamScreening->getNearestScreening($exam_id);
             }
+
             //如果不存在考试场次，直接解绑
             if(empty($examScreening)){
                 $result = Watch::where('id',$id)->update(['status'=>0]);//解绑
@@ -1439,9 +1443,17 @@ class InvigilatePadController extends CommonController
             $student_id=$student_id->student_id;
             //获取学生信息
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
+            //根据考试id获取所对应的场次id
+            $ExamScreening = new ExamScreening();
+            $examScreening = $ExamScreening->getExamingScreening($exam_id);
+            if(is_null($examScreening))
+            {
+                $examScreening  = $ExamScreening->getNearestScreening($exam_id);
+            }
+            $screen_id = $examScreening->id;
             //获取学生的考试状态
             $student = new Student();
-            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id);
+            $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id, $screen_id);
             $status = $this->checkType($exameeStatus->status);
 /*
             $station_id = ExamQueue::where('exam_id','=',$exam_id)->first();

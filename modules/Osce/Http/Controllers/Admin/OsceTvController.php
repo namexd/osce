@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Pad;
 use Modules\Osce\Http\Controllers\CommonController;
 
@@ -33,18 +34,19 @@ class OsceTvController extends  CommonController{
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getWaitDetail(Request $request){
+    public function getWaitDetail(Request $request)
+    {
           $this->validate($request,[
               'exam_id'  => 'required|integer'
           ]);
-          $exam_id=$request->get('exam_id');
-          $exams=Exam::where('id',$exam_id)->select()->first();
+          $exam_id = $request->get('exam_id');
+          $exams   = Exam::where('id', '=', $exam_id)->first();
+          $mode    = $exams->sequence_mode;
 
-          $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
-          $examQueModel= new ExamQueue();
-          $list=$examQueModel->getStudent($mode,$exam_id);
+          $examQueModel = new ExamQueue();
+          $list = $examQueModel->getStudent($mode,$exam_id);
+
           return view('osce::admin.examManage.exam_remind')->with(['list'=>$list,'exams'=>$exams]);
-//        return view('osce::admin.examManage.exam_remind');
     }
 
 
@@ -57,7 +59,7 @@ class OsceTvController extends  CommonController{
             ]);
             $exam_id = $request->get('exam_id');
             $page    = $request->get('page');
-            $pageSize= 4;
+            $pageSize= config('osce.page.size');
             $exam    = Exam::where('id', '=', $exam_id)->select('sequence_mode')->first();
             if($exam){
                 $mode = $exam->sequence_mode;
@@ -65,12 +67,20 @@ class OsceTvController extends  CommonController{
                 throw new \Exception('没找到当前考试！');
             }
             $ExamQueue  = new ExamQueue();
-            $pagination = $ExamQueue->getPageSize($exam_id, $pageSize);
+            //获取对应场次
+            $screeningId = $ExamQueue->getExamScreeningId($exam_id);;
+
+//            $pagination = $ExamQueue->getPageSize($exam_id, $pageSize);
             //根据排序方式 获取数据
-            if ($mode == 1) {
-                $students   = $ExamQueue->getWaitRoomStudents($exam_id, $pageSize);
-            } elseif ($mode == 2) {
-                $students   = $ExamQueue->getWaitStationStudents($exam_id, $pageSize);
+            switch ($mode){
+                case 1: $pagination = $ExamQueue->getPageSize($exam_id, $screeningId, $pageSize, 'room_id');
+                        $students   = $ExamQueue->getWaitRoomStudents($exam_id, $screeningId, $pageSize);
+                        break;
+                case 2: $pagination = $ExamQueue->getPageSize($exam_id, $screeningId);
+                        $students   = $ExamQueue->getWaitStationStudents($exam_id, $screeningId, $pageSize);
+                        break;
+                default:
+                        throw new \Exception('考试模式不对！');
             }
 
             return response()->json(
@@ -79,7 +89,7 @@ class OsceTvController extends  CommonController{
                         'rows'      => $students,
                         'total'     => ceil($pagination->total()/$pageSize),
                         'page_size' => $pageSize,
-                        'page'      => $pagination->currentPage()
+                        'page'      => $pagination->currentPage(),
                     ],
                     1, '获取数据成功'
                 )

@@ -13,6 +13,9 @@ return [
 	'wait_student_num' => 4,
 
 	'topticOptionMaxNumer'	=>	15,
+	'page'	=> [
+		'size'	=> 4
+	],
 
 	'importForCnToEn'=>[
 		// 中英文 字段名对照

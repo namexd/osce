@@ -54,6 +54,13 @@ class ExamQueue extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Exam', 'id', 'exam_id');
     }
 
+    public function scopeUsedStations($query, $screenId, $roomId)
+    {
+        return $query->where($this->table . '.exam_screening_id', $screenId)
+            ->where($this->table . '.room_id', $roomId)
+            ->whereNotIn('status', [0, 3]);
+
+    }
 
     protected $statuValues = [
         0 => '绑定腕表',
@@ -70,34 +77,32 @@ class ExamQueue extends CommonModel
 
     public function getStudent($mode, $exam_id)
     {
-//        $exam = Exam::find($exam_id);
-        if ($mode == 1) {
-            return $this->getWaitRoom($exam_id);
-
-        } elseif ($mode == 2) {
-            return $this->getWaitStation($exam_id);
+        switch ($mode){
+            case 1: return $this->getWaitRoom($exam_id);
+                    break;
+            case 2: return $this->getWaitStation($exam_id);
+                    break;
+            default: throw new \Exception('没有对应的考试模式');
         }
-
     }
 
     //获取候考教室
     protected function getWaitRoom($exam_id)
     {
+        $exam_id = intval($exam_id);
+        $pageSize= config('osce.page.size')? : 4;
         //获取到该考试阶段下场次下所有的房间
-
-
-
-        $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-            ->where('exam_draft_flow.exam_id', '=',$exam_id)
-            ->groupBy('exam_draft.room_id')
-            ->paginate(config('osce.page.size'));
+        $examRoomList = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                                 ->where('exam_draft_flow.exam_id', '=', $exam_id)
+                                 ->groupBy('exam_draft.room_id')
+                                 ->paginate($pageSize);
         $data = [];
-        foreach ($examRoomList as $examFlowRoom) {
-            $roomName = $examFlowRoom->room->name;
-            $room_id = $examFlowRoom->room_id;
-//            $students = $examFlowRoom->queueStudent()->where('exam_id', '=', $exam->id)->get();
+        foreach ($examRoomList as $examFlowRoom)
+        {
+            $roomName  = $examFlowRoom->room->name;
+            $room_id   = $examFlowRoom->room_id;
             $ExamQueue = new ExamQueue();
-            $students = $ExamQueue->getWaitStudentRoom($room_id, $exam_id);
+            $students  = $ExamQueue->getWaitStudentRoom($room_id, $exam_id);
 
             foreach ($students as $examQueue) {
                 foreach ($examQueue->student as $student) {
@@ -112,19 +117,19 @@ class ExamQueue extends CommonModel
     //获取候考考站
     protected function getWaitStation($exam_id)
     {
-        $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-            ->where('exam_draft_flow.exam_id', '=',$exam_id)
-            ->groupBy('exam_draft.station_id')
-            ->paginate(config('osce.page.size'));
-//        $examFlowStationList = ExamFlowStation::where('exam_id', '=', $exam_id)->paginate(config('osce.page_size'));
+        $examRoomList = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                        ->where('exam_draft_flow.exam_id', '=',$exam_id)
+                        ->groupBy('exam_draft.station_id')
+                        ->paginate(config('osce.page.size'));
         $data = [];
-        foreach ($examRoomList as $examFlowStation) {
+        foreach ($examRoomList as $examFlowStation)
+        {
             $stationName = $examFlowStation->station->name;
-            $station_id = $examFlowStation->station_id;
-            $ExamQueue = new ExamQueue();
-            $students = $ExamQueue->getWaitStudentStation($station_id, $exam_id);
-//            $students = $examFlowStation->queueStation()->where('exam_id', '=', $exam->id)->get();
-            foreach ($students as $ExamQueue) {
+            $station_id  = $examFlowStation->station_id;
+            $ExamQueue   = new ExamQueue();
+            $students    = $ExamQueue->getWaitStudentStation($station_id, $exam_id);
+            foreach ($students as $ExamQueue)
+            {
                 foreach ($ExamQueue->student as $student) {
                     $data[$stationName][] = $student;
                 }
@@ -191,6 +196,18 @@ class ExamQueue extends CommonModel
     {
         return $this->paginate(config('msc.page_size'));
     }
+
+    static public function getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id){
+        //先判定该学生是否抽过签
+            $queueing = ExamQueue::where('exam_queue.status', '<', 3)
+                ->where('exam_queue.exam_id', $examId)
+                ->where('exam_queue.room_id', $room_id)
+                ->where('exam_queue.exam_screening_id', $exam_screening_id)
+                ->groupBy('exam_queue.student_id')
+                ->get();
+        return $queueing;
+    }
+
 
     /**
      * 鏍规嵁room_id鏉ヨ幏鍙栧搴旂殑鑰冪敓鍒楄〃
@@ -666,11 +683,13 @@ class ExamQueue extends CommonModel
             //先查看exam_queue表中是否已经有了数据，防止脏数据
             $examObj = ExamQueue::where('exam_id', $examId)
                 ->where('student_id', $studentId)
+                ->where('exam_screening_id', $examScreeningId)
                 ->orderBy('begin_dt', 'asc')->get();
 
             if ($examObj->isEmpty()) {
                 //通过$examId, $studentId还有$examScreeningId在plan表中找到对应的数据
                 $examPlan = ExamPlan::where('exam_id', '=', $examId)
+                    ->where('exam_screening_id', $examScreeningId)
                     ->where('student_id', '=', $studentId)
                     ->orderBy('begin_dt', 'asc')->get();
 
@@ -753,14 +772,8 @@ class ExamQueue extends CommonModel
             if (is_null($examScreening)) {
                 $examScreening = $examScreeningModel->getNearestScreening($examId->id);
                 $examScreening->status = 1;
-                //场次开考（场次状态变为1）
-                if (!$examScreening->save()) {
-                    throw new \Exception('场次开考失败！');
-                }
             }
             $exam_screen_id = $examScreening->id;
-
-
             //通过学生id找到对应的examScreeningStudent实例
             $examScreening = ExamScreeningStudent::where('student_id', $studentId)->where('exam_screening_id', '=', $exam_screen_id)->first();
 
@@ -776,6 +789,7 @@ class ExamQueue extends CommonModel
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)
                 ->where('station_id', $stationId)
+                ->whereIn('status', [0,1,2])
                 ->first();
             if (empty($queue)) {
                 throw new \Exception('没有找到符合要求的学生', 2200);
@@ -807,32 +821,35 @@ class ExamQueue extends CommonModel
     $join->on('exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id');
     })
      */
-    public function getWaitStudentStation($station_id = '', $exam_id = '')
+    public function getWaitStudentStation($station_id = '', $exam_id = '', $screeningId)
     {
-        $builder = $this->leftJoin('exam_draft_flow',
+        $builder = $this->leftJoin('student',
             function ($join) {
-                $join->on('exam_draft_flow.exam_id', '=', 'exam_queue.exam_id');
-            })
-            ->leftJoin('exam_draft', function ($join) {
-                $join->on('exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id');
-            })
-            ->leftJoin('student', function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
             })
+//            ->leftJoin('exam_draft_flow', function ($join) {
+//                $join->on('exam_draft_flow.exam_id', '=', 'exam_queue.exam_id');
+//            })
+//            ->leftJoin('exam_draft', function ($join) {
+//                $join->on('exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id');
+//            })
+//            ->where('exam_draft.station_id', '=', $station_id)
+//            ->where('exam_draft_flow.exam_id', '=', $exam_id)
+            ->where('exam_queue.exam_screening_id', '=', $screeningId)
             ->where('exam_queue.station_id', '=', $station_id)
-            ->where('exam_draft.station_id', '=', $station_id)
-            ->where('exam_draft_flow.exam_id', '=', $exam_id)
             ->where('exam_queue.exam_id', '=', $exam_id)
             ->where('exam_queue.status', '=', 0)
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->orderBy('student.id', 'asc')
             ->select(['student.name as name', 'exam_queue.student_id', 'exam_queue.begin_dt'])
             ->distinct()->take(4)->get();
+
         if (count($builder) != 0) {
             foreach ($builder as &$item) {
                 //获取同一个人，在一场考试队列中是否有更早的考试
-                $result = $this->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)->where('status', '=', 0)
-                    ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
+                $result = $this->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)
+                               ->where('status', '=', 0)->where('exam_screening_id', '=', $screeningId)
+                               ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
                 if ($result) {
                     $item->name = '';
                 }
@@ -852,36 +869,36 @@ class ExamQueue extends CommonModel
      */
     public function getWaitStudentRoom($room_id = '', $exam_id = '')
     {
+        //获取当前正在考试的考试场次
+        $screen_id =  $this->getExamScreeningId($exam_id);
 
-       $screen_id =  $this->getExamScreeningId($exam_id);
-
-        $builder = $this->leftJoin('exam_draft_flow',
-            function ($join) {
-                $join->on('exam_draft_flow.exam_id', '=', 'exam_queue.exam_id');
-            })
-            ->leftJoin('student', function ($join) {
+        $builder = $this->leftJoin('student', function ($join) {
                 $join->on('student.id', '=', 'exam_queue.student_id');
             })
-            ->leftJoin('exam_draft', function ($join) {
-                $join->on('exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id');
-            })
+//            ->leftJoin('exam_draft_flow',
+//            function ($join) {
+//                $join->on('exam_draft_flow.exam_id', '=', 'exam_queue.exam_id');
+//            })
+//            ->leftJoin('exam_draft', function ($join) {
+//                $join->on('exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id');
+//            })
+//            ->where('exam_draft.room_id', '=', $room_id)
+//            ->where('exam_draft_flow.exam_id', '=', $exam_id)
             ->where('exam_queue.room_id', '=', $room_id)
-            ->where('exam_draft.room_id', '=', $room_id)
             ->where('exam_queue.exam_id', '=', $exam_id)
             ->where('exam_queue.exam_screening_id', '=', $screen_id)
-            ->where('exam_draft_flow.exam_id', '=', $exam_id)
             ->where('exam_queue.status', '=', 0)
             ->orderBy('exam_queue.begin_dt', 'asc')
             ->orderBy('student.id', 'asc')
             ->select(['student.name as name', 'exam_queue.student_id', 'exam_queue.begin_dt'])
             ->distinct()->take(4)->get();
 
-
         if (count($builder) != 0) {
             foreach ($builder as &$item) {
                 //获取同一个人，在一场考试队列中是否有更早的考试
-                $result = $this->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)->where('status', '=', 0)
-                    ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
+                $result = $this->where('exam_id', '=', $exam_id)->where('student_id', '=', $item->student_id)
+                               ->where('status', '=', 0)->where('exam_screening_id', '=', $screen_id)
+                               ->whereRaw('unix_timestamp(begin_dt) < ?', [strtotime($item->begin_dt)])->first();
                 if ($result) {
                     $item->name = '';
                 }
@@ -913,11 +930,9 @@ class ExamQueue extends CommonModel
 
             //找到对应的方法找到queue实例
             $queue = ExamQueue::findQueueIdByStudentId($studentId, $stationId);
-            $data = array(
-                'end_dt' =>$date,
-                'status'=>3
-            );
-            if(!ExamQueue::where('id',$queue->id)->update($data)){
+            $queue->end_dt =  $date;
+            $queue->status =  3;
+            if(!$queue->save()){
                 throw new \Exception('状态修改失败！请重试', -101);
             }
             $connection->commit();
@@ -931,33 +946,46 @@ class ExamQueue extends CommonModel
     /**
      * 获取 考站/考场 分页
      */
-    public function getPageSize($exam_id, $pageSize = 4)
+    public function getPageSize($exam_id, $screeningId, $pageSize = 4, $mode = 'station_id')
     {
-        return $this->where('exam_id', $exam_id)->groupBy('station_id')->paginate($pageSize);
+//        return $this->where('exam_id', $exam_id)->groupBy($mode)->paginate($pageSize);
+
+        return $this->where('exam_id', '=', $exam_id)->where('exam_screening_id', '=', $screeningId)
+                    ->where('status', '=', 0)->groupBy($mode)
+                    ->orderBy('begin_dt', 'asc')->orderBy('id', 'asc')
+                    ->paginate($pageSize);
     }
 
     /**
      * 获取候考考站对应学生列表
      */
-    public function getWaitStationStudents($exam_id, $pageSize = 4)
+    public function getWaitStationStudents($exam_id, $screeningId, $pageSize = 4)
     {
-        $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-            ->where('exam_draft_flow.exam_id', '=',$exam_id)
-            ->groupBy('exam_draft.station_id')
-            ->paginate($pageSize);
+        $examRoomList = $this->getPageSize($exam_id, $screeningId, $pageSize);
+//        $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+//                        ->where('exam_draft_flow.exam_id', '=', $exam_id)
+//                        ->groupBy('exam_draft.station_id')
+//                        ->paginate($pageSize);
+
         $data = [];
         foreach ($examRoomList as $examFlowStation) {
             $stationName = $examFlowStation->station->name;
             $station_id = $examFlowStation->station_id;
             $ExamQueue = new ExamQueue();
-            $students = $ExamQueue->getWaitStudentStation($station_id, $exam_id);
-            foreach ($students as $ExamQueue) {
-                foreach ($ExamQueue->student as $student) {
-                    if ($ExamQueue->name == '') {
+            $students = $ExamQueue->getWaitStudentStation($station_id, $exam_id, $screeningId);
+
+            if($students->isEmpty()){
+                $data[$stationName]['name']    = $stationName;
+                $data[$stationName]['student'] = collect([]);
+            }else{
+                foreach ($students as $student) {
+//                foreach ($ExamQueue->student as $student) {
+                    if ($student->name == '') {
                         $student->name = '';
                     }
                     $data[$stationName]['name'] = $stationName;
                     $data[$stationName]['student'][] = $student;
+//                }
                 }
             }
         }
@@ -969,29 +997,41 @@ class ExamQueue extends CommonModel
     /**
      * 获取候考考场对应学生列表
      */
-    public function getWaitRoomStudents($exam_id, $pageSize = 4)
+    public function getWaitRoomStudents($exam_id, $screeningId, $pageSize = 4)
     {
         //获取到该考试下所有的房间
-        $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-            ->where('exam_draft_flow.exam_id', '=',$exam_id)
-            ->groupBy('exam_draft.room_id')
-            ->paginate($pageSize);
+        $examRoomList = $this->getPageSize($exam_id, $screeningId, $pageSize, 'room_id');
+
+//        $examRoomList = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+//                        ->where('exam_draft_flow.exam_id', '=', $exam_id)
+//                        ->groupBy('exam_draft.room_id')
+//                        ->paginate($pageSize);
+
         $data = [];
-        foreach ($examRoomList as $examFlowRoom) {
+        foreach ($examRoomList as $examFlowRoom)
+        {
             $roomName = $examFlowRoom->room->name;
-            $room_id = $examFlowRoom->room_id;
-            $ExamQueue = new ExamQueue();
+            $room_id  = $examFlowRoom->room_id;
+            $ExamQueue= new ExamQueue();
             $students = $ExamQueue->getWaitStudentRoom($room_id, $exam_id);
-            foreach ($students as $examQueue) {
-                foreach ($examQueue->student as $student) {
-                    if ($examQueue->name == '') {
-                        $student->name = '';
-                    }
-                    $data[$roomName]['name'] = $roomName;
-                    $data[$roomName]['student'][] = $student;
+
+            if($students->isEmpty()){
+                $data[$roomName]['name']    = $roomName;
+                $data[$roomName]['student'] = collect([]);
+            }else{
+                foreach ($students as $student) {
+//                    foreach ($examQueue->student as $student) {
+                        if ($student->name == '') {
+                            $student->name = '';
+                        }
+                        $data[$roomName]['name']      = $roomName;
+                        $data[$roomName]['student'][] = $student;
+//                    }
                 }
+
             }
         }
+
         $data = array_values($data);
 
         return $data;
@@ -1028,8 +1068,7 @@ class ExamQueue extends CommonModel
     }
 
     //查看学生当前状态
-    public function
-    getExamineeStatus($examing, $studentId)
+    public function getExamineeStatus($examing, $studentId)
     {
         $builder = $this->where('exam_id', '=', $examing)->where('student_id', '=', $studentId)->first();
         return $builder;
@@ -1037,35 +1076,37 @@ class ExamQueue extends CommonModel
 
 
     //获取场次id
-    private function getExamScreeningId($exam_id)
+    public function getExamScreeningId($exam_id)
     {
+        try{
+            $screenModel    =   new ExamScreening();
+            $examScreening  =   $screenModel ->getExamingScreening($exam_id);
+
+            if(is_null($examScreening))
+            {
+                $examScreening = $screenModel->getNearestScreening($exam_id);
+            }
+            if (is_null($examScreening)) {
+                return null;
+//            return \Response::json(array('code' => 2));     //没有对应的开考场次 —— 考试场次没有(1、0)
+            }
+            $screen_id    = $examScreening->id;
 
 
-        $screenModel    =   new ExamScreening();
-        $examScreening  =   $screenModel ->getExamingScreening($exam_id);
-
-        if(is_null($examScreening))
+            //拿到oder表里的考试场次 todo 周强 2016-4-30
+            $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
+            if(!in_array($screen_id,$OderExamScreeningId)){
+                $screen_id = ExamOrder::where('exam_id','=',$exam_id)
+                    ->where('status','=',1)
+                    ->OrderBy('begin_dt', 'asc')
+                    ->first();
+                $screen_id = $screen_id->exam_screening_id;
+            }
+            return $screen_id;
+        }
+        catch (\Exception $ex)
         {
-            $examScreening = $screenModel->getNearestScreening($exam_id);
+            $screen_id = null;
         }
-
-        if (!$examScreening) {
-            return \Response::json(array('code' => 2));     //没有对应的开考场次 —— 考试场次没有(1、0)
-        }
-        $screen_id    = $examScreening->id;
-
-
-        //拿到oder表里的考试场次 todo 周强 2016-4-30
-        $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
-        if(!in_array($screen_id,$OderExamScreeningId)){
-            $screen_id = ExamOrder::where('exam_id','=',$exam_id)
-                ->where('status','=',1)
-                ->OrderBy('begin_dt', 'asc')
-                ->first();
-            $screen_id = $screen_id->exam_screening_id;
-        }
-        return $screen_id;
-
-
     }
 }

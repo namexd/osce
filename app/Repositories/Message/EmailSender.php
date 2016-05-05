@@ -15,7 +15,7 @@ class EmailSender implements Message{
         $this->config = $config;
     }
 
-    public function send($accept,$content,$title=null,$module=null,$sender=0,$pid=0) {
+    public function send($accept, $content, $title = null, $module = null, $sender = 0, $pid = 0) {
         try {
             if (is_array($accept)) {
                 foreach ($accept as $item) {

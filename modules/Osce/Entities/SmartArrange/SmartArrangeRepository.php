@@ -8,7 +8,6 @@
 
 namespace Modules\Osce\Entities\SmartArrange;
 
-
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\SmartArrange\Student\StudentFromDB;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
@@ -45,9 +44,7 @@ class SmartArrangeRepository extends AbstractSmartArrange
     {
         try {
             $this->model->setExam($exam); //将考试实例注入
-
             $this->checkDataBase($exam); //检查临时表中是否有数据，如果有，就删除之
-
             /*
              * 将阶段遍历，在每个阶段中进行排考
              */
@@ -61,7 +58,6 @@ class SmartArrangeRepository extends AbstractSmartArrange
 
                 //将排序模式注入
                 $this->model->setCate(CateFactory::getCate($exam, $type));
-                
                 //初始化学生
                 $this->_S_Count = $this->model->setStudents(new StudentFromDB());
                 /*
@@ -69,7 +65,6 @@ class SmartArrangeRepository extends AbstractSmartArrange
                  * 检查各项数据是否存在
                  */
                 $this->checkStudentIsZero($this->model->getStudents()); //检查当前考试是否有学生
-
                 //$key就是order的值
                 $screens = $this->getScreenByOrder($key, $exam);
                 //循环遍历$screen，对每个时段进行排考
@@ -82,19 +77,18 @@ class SmartArrangeRepository extends AbstractSmartArrange
                     if ($this->_S_Count == $studentsCount) {
                         break;
                     }
-
                     //将考试实体初始化进去
                     $this->model->setEntity($exam, $screen);
 
                     $screen = $this->setFlowsnumToScreen($exam, $screen); //将该场次有多少流程写入场次对象
                     $screen->gradation_order = $key;
-
                     $this->model->screenPlan($screen);
                 }
                 if (count($this->model->getStudents()) != 0 || count($this->model->getWaitStudents()) != 0) {
 //                    dd(count($this->model->getStudents()), count($this->model->getWaitStudents()), $key);
                     throw new \Exception('人数太多，所设时间无法完成考试', -99);
                 }
+                $this->checkUnnecessaryScreen($exam, $key);
             }
             return $this->output($exam);
         } catch (\Exception $ex) {

@@ -697,7 +697,7 @@ class ApiController extends CommonController
             }
 
             $count = ExamQueue::where('serialnumber', '=', $serialnumber)
-                ->where('status', '=', 3)
+                ->where('status', '=', 3)   
                 ->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreening->id)
                 ->count();
@@ -873,7 +873,8 @@ class ApiController extends CommonController
         $request['station_id']=$stationId;
         $request['teacher_id']=$teacherId;
         $request['exam_id']=$examId;
-        $draw=new DrawlotsController();
+        $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
+//        $draw = new DrawlotsController($request, \Re);
         $request['id']=$teacherId;
         $draw->getExaminee_arr($request);//当前组推送(可以获得)
         $draw->getNextExaminee_arr($request);
@@ -920,7 +921,6 @@ class ApiController extends CommonController
      * @date 2016-04-05 17:54
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    // todo 在点击替考警告终止考试的时候队列表会新增一条数据，且未能把该学生这场考试的队列结束（即状态改为3），待徐敏查证修改，周强  2016-4-30
     public function postAlertExamReplace (Request $request) {
         $this->validate($request, [
             'mode'              => 'required|in:1,2',
@@ -932,11 +932,14 @@ class ApiController extends CommonController
         $examId          = $request->input('exam_id');
         $studentId       = $request->input('student_id');
         $examScreeningId = $request->input('exam_screening_id');
+        $stationId       = $request->input('station_id');
+//        \Log::alert('ReplaceData', [$mode,$stationId,$examScreeningId,$stationId]);
         try {
 
             $examQueueModel = new ExamQueue();
             $examQueue = $examQueueModel->where('student_id', $studentId)
                 ->where('exam_id',$examId)
+                ->where('exam_screening_id','=',$examScreeningId)
                 ->whereNotIn('status',[3,4])->get();
             if (!empty($examQueue)) {
                 if ($mode == 1) {
@@ -960,53 +963,14 @@ class ApiController extends CommonController
                         $this->success_data($retval,1,'success')
                     );
                 } else {
+
                     //如果选择是，终止这场考试
                     foreach ($examQueue as $val) {
                         //更新exam_queue表（考试队列）
-                        $examQueueData= array(
-                            'status'=>3,
-                            'blocking'=>1
-                        );
-                        if(!ExamQueue::where('id',$val->id)->update($examQueueData)){
+                        $val->status = 3;
+                        $val->blocking = 1;
+                        if(!$val->save()){
                             throw new \Exception(' 更新考试队列表失败！',-102);
-                        }
-
-                        $examScreeningStudentData = [
-                            'is_end'=>1,
-                            'status' => 2,
-                        ];
-
-                        //更新exam_screening_student表（考试场次-学生关系表）
-                        $result = ExamScreeningStudent::where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
-                        if(!empty($result)&&$result->is_end!=1){
-                            if(!ExamScreeningStudent::where('id',$result->id)->update($examScreeningStudentData)){
-                                throw new \Exception(' 更新考试场次-学生关系表失败！',-103);
-                            }
-                        }/*else{
-                            throw new \Exception('没有该考生对应的场次！',-104);
-                        }*/
-
-                        //更新exam_order表（考试学生排序）
-                        $examOrder = ExamOrder::where('exam_id',$val->exam_id)->where('exam_screening_id',$val->exam_screening_id)->where('student_id',$val->student_id)->first();
-                        if(!empty($examOrder)&&$examOrder->status!=2){
-                            $examOrderData = array(
-                                'status'=>2 //已解绑
-                            );
-                            if(!ExamOrder::where('id',$examOrder->id)->update($examOrderData)){
-                                throw new \Exception(' 更新考试学生排序表失败！',-104);
-                            }
-                        }
-
-                        //向监控标记学生替考记录表插入数据
-                        $examMonitorData = array(
-                            'station_id'  =>$val->station_id,
-                            'exam_id'      =>$val->exam_id,
-                            'student_id'  =>$val->student_id,
-                            'description' =>3,
-                            'exam_screening_id'=>$val->exam_screening_id,
-                        );
-                        if(!ExamMonitor::create($examMonitorData)){
-                            throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-105);
                         }
 
                         //向exam_result（考试结果记录表）插入数据
@@ -1018,22 +982,51 @@ class ApiController extends CommonController
                             'end_dt'            => date('Y-m-d H:i:s', time()),
                             'score'             => 0,
                             'score_dt'          => date('Y-m-d H:i:s', time()),
-                            'create_user_id'    => Auth::user()->id,
+//                            'create_user_id'    => Auth::user()->id,
                         ];
                         if(!ExamResult::create($examResultData)){
                             throw new \Exception(' 向考试结果记录表插入数据失败！',-106);
                         }
 
                     }
+
+                    //更新exam_screening_student表（考试场次-学生关系表）
+                    $result = ExamScreeningStudent::where('exam_screening_id',$examScreeningId)->where('student_id',$studentId)->first();
+
+                    if(!empty($result)&&$result->is_end!=1){
+//                        $result->is_end =1;
+                        $result->status =2;
+                        if(!$result->save()){
+                            throw new \Exception(' 更新考试场次-学生关系表失败！',-103);
+                        }
+                    }
+
+                    //更新exam_order表（考试学生排序）
+                    $examOrder = ExamOrder::where('exam_id',$examId)->where('exam_screening_id',$examScreeningId)->where('student_id',$studentId)->first();
+                    if(!empty($examOrder)&&$examOrder->status!=2){
+                        $examOrder->status = 5; //为替考结束考试
+                        if(!$examOrder->save()){
+                            throw new \Exception(' 更新考试学生排序表失败！',-104);
+                        }
+                    }
+
+                    //向监控标记学生替考记录表插入数据
+                    $examMonitorData = array(
+                        'station_id'  =>$stationId,
+                        'exam_id'      =>$examId,
+                        'student_id'  =>$studentId,
+                        'description' =>3,
+                        'exam_screening_id'=>$examScreeningId,
+                    );
+                    if(!ExamMonitor::create($examMonitorData)){
+                        throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-105);
+                    }
                     $retval['title'] = '确定替考成功';
                     return response()->json(
                         $this->success_data($retval,1,'success')
                     );
                 }
-            }/*else{
-                throw new \Exception(' 找不到该考生的考试队列信息！',-107);
-            }*/
-
+            }
         }catch (\Exception $ex) {
             return response()->json($this->fail($ex));
 

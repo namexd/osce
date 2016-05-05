@@ -17,6 +17,7 @@ use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\SmartArrange\Export\StudentArrange;
 use Modules\Osce\Entities\SmartArrange\Export\UserListExport;
 use Modules\Osce\Entities\SmartArrange\SmartArrange;
+use Modules\Osce\Entities\SmartArrange\SmartArrangeForHuaxiRepository;
 use Modules\Osce\Entities\SmartArrange\SmartArrangeRepository;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
@@ -83,7 +84,7 @@ class AutomaticPlanArrangementController extends CommonController
      * 考试排考
      * @url osce/admin/arrangement/begin
      * @access public
-     * @param SmartArrangeRepository $smartArrangeRepository
+     * @param SmartArrangeForHuaxiRepository $smartArrangeRepository
      * 请求字段：
      * 考试id exam_id
      * @return response
@@ -93,12 +94,12 @@ class AutomaticPlanArrangementController extends CommonController
      * @time 2016-05-01
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    function postBegin(SmartArrangeRepository $smartArrangeRepository)
+    function postBegin(SmartArrangeForHuaxiRepository $smartArrangeRepository)
     {
         $this->validate($this->request, [
             'exam_id' => 'required|integer'
         ]);
-
+        
         $examId = $this->request->input('exam_id');
         
         try {

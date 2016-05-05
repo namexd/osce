@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use App\Entities\SysRoles;
 use App\Entities\SysUserRole;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Staff;
 use Modules\Osce\Entities\Teacher;
@@ -460,4 +461,88 @@ class UserController extends CommonController
         }
 
     }
+
+    /**
+     * PC端忘记密码 表单
+     * @url GET /osce/admin/user/forget-password
+     * @access public
+     *
+     * @return view
+     *
+     * @version 3.4
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date 2015-05-04 16:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getForgetPassword(Request $request)
+    {
+        return view('osce::admin.forget_password');
+    }
+
+    /**
+     * 重置密码处理
+     * @url /osce/admin/user/reset-password
+     * @access public
+     *
+     * @param Request $request
+     * <b>post 请求字段：</b>
+     * * string        mobile        电话(必须的)
+     * * string        verify        验证码(必须的)
+     * * string        password      密码(必须的)
+     * * string        repassword    重复密码(必须的)
+     *
+     * @return redirect
+     *
+     * @version 3.4
+     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date 2016-05-04 17:00
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postResetPassword(UserRepository $user,Request $request)
+    {
+        $this->validate($request, [
+            'mobile' => 'required',
+            'verify' => 'required',
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required',
+        ], [
+            'mobile.required' => '请输入手机号',
+            'verify.required' => '请输入验证码',
+            'password.required' => '请输入密码',
+            'password_confirmation.required' => '请输入确认密码',
+            'password.confirmed' => '您输入的两次密码信息不一致，请重新输入',
+        ]);
+        //获取参数
+        $data = [
+            'mobile' => $request->get('mobile'),
+            'code'   => $request->get('verify'),
+        ];
+        $password = $request->get('password');
+
+        try {
+            //检验验证码
+            $verfiyJudge = $user->getRegCheckMobileVerfiy($data);
+            if (empty($verfiyJudge)) {
+                throw new \Exception('验证码错误');
+            }
+
+            $password = bcrypt($password);  //密码转换
+            $user = User::where('mobile', '=', $data['mobile'])->first(); //查询用户
+            if (empty($user)) {
+                throw new \Exception('用户不存在');
+            }
+            //修改密码
+            $user->password = $password;
+            if (!$user->save()) {
+                throw new \Exception('修改密码失败');
+            }
+
+//            $referer = session('referer');
+            return redirect()->route('osce.admin.getIndex')->withErrors(['code'=>1,'msg'=>'密码修改成功！']);
+
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
 }

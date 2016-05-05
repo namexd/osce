@@ -37,5 +37,6 @@ class Kernel extends HttpKernel
         'oauth-client' => \LucaDegasperi\OAuth2Server\Middleware\OAuthClientOwnerMiddleware::class,
         'check-authorization-params' => \LucaDegasperi\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware::class,
         'teacher-guest' => \App\Http\Middleware\TeacherRedirectIfAuthenticated::class,
+        'billboard' => \Modules\Osce\Http\Middleware\BillboardLoginMiddleware::class
     ];
 }

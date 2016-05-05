@@ -94,6 +94,7 @@ abstract class CommonController extends Controller
                 'message' => '错误信息:' . '当前系统错误，请重试！',
             ];
         } else {
+           
             return [
                 'code' => $code,
                 'message' => '错误信息:' . $ex->getMessage(),
@@ -215,9 +216,9 @@ abstract class CommonController extends Controller
      */
     public function checkType($status){
         if(!is_null($status)){
-            if($status->status < 2){
+            if($status < 2){
                 $name = '等待中';
-            }elseif($status->status == 2){
+            }elseif($status == 2){
                 $name = '考试中';
             }else{
                 $name = '已结束';
