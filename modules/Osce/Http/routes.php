@@ -1,3 +1,4 @@
+
 <?php
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
@@ -547,8 +548,6 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 		return '请传入参数id，id对应考试ID';
 	}
 
-	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
-	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
 	$exam = new \Modules\Osce\Entities\Exam();
 
 	if($exam->emptyData($exam_id)){
