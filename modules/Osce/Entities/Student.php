@@ -463,24 +463,27 @@ class Student extends CommonModel
      * @param $watch_id
      * @return bool
      */
-
     public function studentList($stationId, $exam, $student_id)
 
     {
-//        $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
-//            ->where('exam_draft.station_id',$stationId)
-//            ->where('exam_draft_flow.exam_id',$exam->id)
-//            ->first();
         //当前场次
-        $examScreen=new ExamScreening();
+        $examScreen = new ExamScreening();
         $roomMsg = $examScreen->getExamingScreening($exam->id);
         $roomMsg_two = $examScreen->getNearestScreening($exam->id);
+
+        $exam_screening_id = null;
+
         if($roomMsg){
             $exam_screening_id=$roomMsg->id;
         }elseif($roomMsg_two){
             $exam_screening_id=$roomMsg_two->id;
         }
-        $queueing = $nextTester = Student::leftjoin('exam_queue', function ($join) {
+
+        if (is_null($exam_screening_id)) {
+            throw new \Exception('未找到当前考试场次');
+        }
+
+        $queueing = Student::leftjoin('exam_queue', function ($join) {
             $join->on('student.id', '=', 'exam_queue.student_id');
         })->leftjoin('station_teacher', function ($join) {
             $join->on('exam_queue.station_id', '=', 'station_teacher.station_id');
@@ -492,6 +495,7 @@ class Student extends CommonModel
             ->where('exam_queue.exam_screening_id', $exam_screening_id)
             ->where('exam_queue.status', '=', 2)
             ->first();
+
         if (is_null($queueing)) {//没有正在考试的
             // 查询当前考生信息
             $nextTester = Student::leftjoin('exam_queue', function ($join) {

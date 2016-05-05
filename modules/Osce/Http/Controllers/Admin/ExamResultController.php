@@ -282,13 +282,13 @@ class ExamResultController extends CommonController{
                 'student_id' => 'required|integer',
                 'station_id' => 'required|integer'
             ]);
-
             //获取数据
             $examId = $request->input('exam_id');
             $studentId = $request->input('student_id');
             $stationId = $request->input('station_id');
             //根据考试id拿到场次id临时修改
             $examScreeningId = ExamScreening::where('exam_id','=',$examId)->select('id')->get()->pluck('id');
+
             //更据考站id查询到
             $stationVcr = StationVcr::where('station_id','=',$stationId)->first();
             if(is_null($stationVcr)){
