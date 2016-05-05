@@ -589,8 +589,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	Route::group(['prefix' => 'billboard', 'namespace' => 'Billboard', 'middleware' => 'billboard'], function () {
 		//告示牌主页
 		Route::get('index', ['uses' => 'BillboardController@getIndex', 'as' => 'osce.billboard.getIndex']);
-	});
-	Route::group(['prefix' => 'billboard', 'namespace' => 'Billboard'], function () {
 		//学生接口
 		Route::get('billboard/student', ['uses' => 'BillboardController@getStudent', 'as' => 'osce.billboard.getStudent']);
 	});
