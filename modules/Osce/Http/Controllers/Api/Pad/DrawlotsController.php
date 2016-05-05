@@ -506,9 +506,13 @@ class DrawlotsController extends CommonController
             }
             $exam=Exam::doingExam();
             $exam_screening_id=$this->getexamScreeing($exam);
+
+            \Log::alert('抽签拿到的场次id',[$exam_screening_id]);
+
             //获取腕表记录实例
             $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$exam_screening_id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
+            \Log::alert('抽签拿到的学生id',[$watchLog->student_id]);
             if (!$watchLog) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
@@ -589,6 +593,7 @@ class DrawlotsController extends CommonController
 
             //判断时间
             $this->judgeTime($watchLog->student_id,$exam_screening_id);
+
             $connection->commit();
             $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($result, 1, '抽签成功!')));
@@ -919,13 +924,13 @@ class DrawlotsController extends CommonController
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    private function judgeTime($uid, $screenId)
+    private function judgeTime($studentId, $screenId)
     {
         //获取当前时间
         $date = date('Y-m-d H:i:s');
 
         //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
-        $studentObj = ExamQueue::where('student_id', $uid)
+        $studentObj = ExamQueue::where('student_id', $studentId)
             ->whereExamScreeningId($screenId)
             ->where('status', 1)
             ->first();
@@ -937,7 +942,7 @@ class DrawlotsController extends CommonController
         $studentEndTime = $studentObj->end_dt;
         if (strtotime($date) > strtotime($studentBeginTime)) {
             $diff = strtotime($date) - strtotime($studentBeginTime);
-            $studentObjs = ExamQueue::where('student_id', $uid)
+            $studentObjs = ExamQueue::where('student_id', $studentId)
                 ->whereExamScreeningId($screenId)
                 ->where('status', '<', 2)
                 ->get();
