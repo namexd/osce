@@ -33,7 +33,9 @@ class BillboardController extends CommonController
     {
         try {
             $data = $billboardRepository->getData($request->input('exam_id'));
+        
             return view('osce::billboard.index', ['data' => $data]);
+
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

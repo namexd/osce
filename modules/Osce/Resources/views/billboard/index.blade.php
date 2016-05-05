@@ -98,10 +98,11 @@
     <div class="title">
       <span>病例：</span>
       <span id="case">{{$data['case_name']}}</span>
+      <div id="description">{{$data['case_description']}}</div>
     </div>
   </div>
   <div id="bottom">
-    <img src="{{asset('osce/images/u4.png')}}"width="135px" height="53px" align="right">
+    <img src="{{asset('osce/images/u4.png')}}" width="135px" height="53px" align="right">
   </div>
 </div>
 

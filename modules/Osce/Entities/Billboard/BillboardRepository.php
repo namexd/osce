@@ -39,7 +39,7 @@ class BillboardRepository
 
         //利用老师id和考试id找出数据
         $data = $this->billboard->getData($examId, $userId);
-
+        
         return $data;
     }
 
