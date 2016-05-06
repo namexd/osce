@@ -962,6 +962,14 @@ class ExamQueue extends CommonModel
 
     /**
      * 获取 考站/考场 分页
+     * @param $exam_id
+     * @param $screeningId
+     * @param int $pageSize
+     * @param string $mode
+     * @return mixed
+     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-05-05
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getPageSize($exam_id, $screeningId, $pageSize = 4, $mode = 'station_id')
     {
@@ -973,11 +981,18 @@ class ExamQueue extends CommonModel
 
     /**
      * 获取候考考站对应学生列表
+     * @param $exam_id
+     * @param $screeningId
+     * @param int $pageSize
+     * @return array
+     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-05-05
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getWaitStationStudents($exam_id, $screeningId, $pageSize = 4)
     {
         $examRoomLists = $this->getPageSize($exam_id, $screeningId, $pageSize);
-//        $examRoomList = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+//        $examRoomLists = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
 //                        ->where('exam_draft_flow.exam_id', '=', $exam_id)
 //                        ->groupBy('exam_draft.station_id')
 //                        ->paginate($pageSize);
@@ -1018,7 +1033,7 @@ class ExamQueue extends CommonModel
         //获取到该考试下所有的房间
         $examRoomLists = $this->getPageSize($exam_id, $screeningId, $pageSize, 'room_id');
 
-//        $examRoomList = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+//        $examRoomLists = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
 //                        ->where('exam_draft_flow.exam_id', '=', $exam_id)
 //                        ->groupBy('exam_draft.room_id')
 //                        ->paginate($pageSize);
