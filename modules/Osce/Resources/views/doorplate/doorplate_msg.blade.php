@@ -3,17 +3,25 @@
 @section('only_css')
     <style>
      .box{
-         width: 80%;
+         width: 100%;
+         min-width: 500px;
          height: 500px;
          margin: auto;
      }
     .top{
-        background:#999;
-        height: 35px;
-        line-height: 35px;
-        padding-left: 30px;
+        background:#364150;
+        height: 70px;
+        line-height: 70px;
+        font-size: 20px;
         width: 100%;
         position: relative;
+    }
+    #top_img{
+        position: absolute;
+        top:0;
+        left: 10px;
+        width: 50px;
+        height: 50px;
     }
     #ret{
         position: absolute;
@@ -35,14 +43,28 @@
     .red{
         background: red;
     }
-    .blue{background: deepskyblue}
-    .status{
-        width: 50px;
-        height: 50px;
-        margin-top: 150px;
+    .blue{background: deepskyblue;}
+    #status_box{
+        width: 200px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 20px;
+        position: absolute;
+        top: 0px;
+        right: 107px;
     }
-     p{margin-top: 45px}
-    .white{color: white}
+    .status{
+        width: 30px;
+        height: 30px;
+        border-radius: 30px;
+
+    }
+     p{margin-top: 45px;}
+    .white{color: white;}
+    .fl{float: left;margin-top: 150px;}
+    .m5{margin-left: 15px;}
+    .f_red{color: red;}
+    #bottom{margin-right: 175px}
     </style>
 @stop
 <?php
@@ -58,12 +80,10 @@ if(!empty($errorsInfo)){
 
 @section('content')
  <div class="box">
-    <h3 class="top white">{{$msg['exam_name']}}
-        <a href="{{ route('osce.doorplate.doorplatestart')}}" id="ret">
-            <span class="state1 abandon">
-                <i class="fa fa-cog fa-2x"></i>
-            </span>
-        </a>
+
+    <h3 class="top white center">{{$msg['exam_name']}}
+        <a href="{{ route('osce.doorplate.doorplatestart')}}" id="top_img"><img src="{{asset('osce/images/uuz.png')}}" width="9px" height="14px" align="center"></a>
+
     </h3>
         <div class="exam_msg">
             <dl>
@@ -76,7 +96,7 @@ if(!empty($errorsInfo)){
                 @endif
             </dl>
             <p>
-                考试时间：{{$msg['mins']}}分钟，时间到请停止考试，根据腕表提示完成考试
+                考试时间：<span class="f_red">{{$msg['mins']}}</span>分钟，时间到请停止考试，根据腕表提示完成考试
             </p>
             <p>
                 <span>当前考生：</span>
@@ -106,9 +126,13 @@ if(!empty($errorsInfo)){
 
         </div>
      <div id="status_box">
-         <div class="status @if($status==1) green @elseif($status==2) red @else blue @endif"></div>
+         <div class="status fl @if($status==1) green @elseif($status==2) red @else blue @endif"></div>
+         <div class="fl m5" style="font-family: 黑体;color:@if($status==1) green @elseif($status==2) red @else blue @endif ">@if($status==1) 准备完成 @elseif($status==2) 考试中 @else 考试完成 @endif</div>
      </div>
 </div>
+ <div id="bottom">
+     <img src="{{asset('osce/images/u4.png')}}" width="135px" height="53px" align="right">
+ </div>
 @stop{{-- 内容主体区域 --}}
 
 @section('only_js')
@@ -158,11 +182,12 @@ if(!empty($errorsInfo)){
                 data: {'room_id':{{$room_id}},'exam_id':{{$exam_id}},'screen_id':{{$screen_id}}},
                 success: function(e){
                     if(e==1){
-                        $('#status_box').html('<div class="status green"></div>');
+                        $('#status_box').html('<div class="status fl green"></div> <div class="fl m5" style="font-family: 黑体;color:green ">准备完成 </div>');
+
                     }else if(e==2){
-                        $('#status_box').html('<div class="status red"></div>');
+                        $('#status_box').html('<div class="status fl red"></div> <div class="fl m5" style="font-family: 黑体;color: red ">考试中 </div>');
                     }else{
-                        $('#status_box').html('<div class="status blue"></div>');
+                        $('#status_box').html('<div class="status fl blue"></div> <div class="fl m5" style="font-family: 黑体;color: blue "> 考试完成</div>');
                     }
                 }
             });
