@@ -965,10 +965,8 @@ class ExamQueue extends CommonModel
      */
     public function getPageSize($exam_id, $screeningId, $pageSize = 4, $mode = 'station_id')
     {
-//        return $this->where('exam_id', $exam_id)->groupBy($mode)->paginate($pageSize);
-
         return $this->where('exam_id', '=', $exam_id)->where('exam_screening_id', '=', $screeningId)
-                    ->where('status', '=', 0)->groupBy("$mode")
+                    ->where('status', '=', 0)->groupBy($mode)
                     ->orderBy('begin_dt', 'asc')->orderBy('id', 'asc')
                     ->paginate($pageSize);
     }
@@ -978,31 +976,32 @@ class ExamQueue extends CommonModel
      */
     public function getWaitStationStudents($exam_id, $screeningId, $pageSize = 4)
     {
-        $examRoomList = $this->getPageSize($exam_id, $screeningId, $pageSize);
-//        $examRoomList = ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+        $examRoomLists = $this->getPageSize($exam_id, $screeningId, $pageSize);
+//        $examRoomList = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
 //                        ->where('exam_draft_flow.exam_id', '=', $exam_id)
 //                        ->groupBy('exam_draft.station_id')
 //                        ->paginate($pageSize);
 
         $data = [];
-        foreach ($examRoomList as $examFlowStation) {
-            $stationName = $examFlowStation->station->name;
-            $station_id = $examFlowStation->station_id;
+        foreach ($examRoomLists as $examRoomList)
+        {
+            $stationName = $examRoomList->station->name;
+            $station_id = $examRoomList->station_id;
             $ExamQueue = new ExamQueue();
             $students = $ExamQueue->getWaitStudentStation($station_id, $exam_id, $screeningId);
 
-            if($students->isEmpty()){
-                $data[$stationName]['name']    = $stationName;
-                $data[$stationName]['student'] = collect([]);
-            }else{
+            if($students->isEmpty())
+            {
+                $data[$station_id]['name']    = $stationName;
+                $data[$station_id]['student'] = collect([]);
+            }else
+            {
                 foreach ($students as $student) {
-//                foreach ($ExamQueue->student as $student) {
                     if ($student->name == '') {
                         $student->name = '';
                     }
-                    $data[$stationName]['name'] = $stationName;
-                    $data[$stationName]['student'][] = $student;
-//                }
+                    $data[$station_id]['name'] = $stationName;
+                    $data[$station_id]['student'][] = $student;
                 }
             }
         }
@@ -1017,7 +1016,7 @@ class ExamQueue extends CommonModel
     public function getWaitRoomStudents($exam_id, $screeningId, $pageSize = 4)
     {
         //获取到该考试下所有的房间
-        $examRoomList = $this->getPageSize($exam_id, $screeningId, $pageSize, 'room_id');
+        $examRoomLists = $this->getPageSize($exam_id, $screeningId, $pageSize, 'room_id');
 
 //        $examRoomList = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
 //                        ->where('exam_draft_flow.exam_id', '=', $exam_id)
@@ -1025,25 +1024,24 @@ class ExamQueue extends CommonModel
 //                        ->paginate($pageSize);
 
         $data = [];
-        foreach ($examRoomList as $examFlowRoom)
+        foreach ($examRoomLists as $examRoomList)
         {
-            $roomName = $examFlowRoom->room->name;
-            $room_id  = $examFlowRoom->room_id;
+            $roomName = $examRoomList->room->name;
+            $room_id  = $examRoomList->room_id;
             $ExamQueue= new ExamQueue();
             $students = $ExamQueue->getWaitStudentRoom($room_id, $exam_id, $screeningId);
 
             if($students->isEmpty()){
-                $data[$roomName]['name']    = $roomName;
-                $data[$roomName]['student'] = collect([]);
-            }else{
+                $data[$room_id]['name']    = $roomName;
+                $data[$room_id]['student'] = collect([]);
+            }else
+            {
                 foreach ($students as $student) {
-//                    foreach ($examQueue->student as $student) {
-                        if ($student->name == '') {
-                            $student->name = '';
-                        }
-                        $data[$roomName]['name']      = $roomName;
-                        $data[$roomName]['student'][] = $student;
-//                    }
+                    if ($student->name == '') {
+                        $student->name = '';
+                    }
+                    $data[$room_id]['name']      = $roomName;
+                    $data[$room_id]['student'][] = $student;
                 }
 
             }
