@@ -17,16 +17,20 @@ class Student implements StudentInterface
 {
     public function getStudent($nfc)
     {
-        return ExamScreeningStudent::watch()
-            ->where('watch.status', 1)
-            ->where('watch.code', $nfc)
-            ->isEnd(0)
-            ->select(
-                'exam_screening_student.student_id as student_id',
-                'exam_screening_student.exam_screening_id as exam_screening_id',
-                'exam_screening_student.watch_id as watch_id'
-            )
-            ->first();
+        try {
+            return ExamScreeningStudent::watch()
+                ->where('watch.status', 1)
+                ->where('watch.code', $nfc)
+                ->isEnd(0)
+                ->select(
+                    'exam_screening_student.student_id as student_id',
+                    'exam_screening_student.exam_screening_id as exam_screening_id',
+                    'exam_screening_student.watch_id as watch_id'
+                )
+                ->first();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
 

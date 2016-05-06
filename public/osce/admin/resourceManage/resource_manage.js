@@ -1699,7 +1699,7 @@ function course_module(){
                 '</td>'+
                 '<td>'+
                 '<select style="display:none;" class="form-control" name="score['+index+'][total]">';
-                for(var a=1; a<=15; a++){
+                for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                     html += '<option value="'+a+'">'+a+'</option>';
                 }
         html +=  '</select>'+
@@ -1749,7 +1749,7 @@ function course_module(){
                 '<td>'+
                 '<select class="form-control" name="score['+parent+']['+child+']">';
                 /*TODO: Zhoufuxiang 2016-2-26*/
-                for(var a=1; a<=15; a++){
+                for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                     html += '<option value="'+a+'">'+a+'</option>';
                 }
         html += '</select>'+
@@ -1833,6 +1833,8 @@ function course_module(){
                 $(elem).attr('class','pid-'+update_P);
                 $(elem).find('td').eq(0).text(update_P+'-'+key);
                 $(elem).find('td').eq(2).find('select').attr('name','score['+update_P+']['+key+']');
+                $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+update_P+']['+key+']');
+                $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+update_P+']['+key+']');
             }else{
                 update_P = $(elem).attr('parent');
                 $(elem).attr('class','pid-'+update_P);
@@ -1861,12 +1863,13 @@ function course_module(){
             var parent = 1;
             $(classElement).remove();
             //更新计数序号
-            $('tbody tr').each(function(key,elem){
+            $('#judgement tbody tr').each(function(key,elem){
                 if($(elem).attr('child')==undefined){
                     $(elem).attr('parent',parent);
                     $(elem).find('td').eq(0).text(parent);
                     $(elem).attr('class','pid-'+parent);
                     $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
+                    $(elem).find('td').eq(1).find('input').attr('name','content['+parent+'][title]');
                     parent += 1;
                 }else{
                     var child = $(elem).attr('child'),
@@ -1874,6 +1877,8 @@ function course_module(){
                     $(elem).find('td').eq(0).text(parent_p+'-'+child);
                     $(elem).attr('class','pid-'+parent_p);
                     $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
+                    $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+parent_p+']['+child+']');
+                    $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+parent_p+']['+child+']');
                     child += 1;
                 }
             });
@@ -2204,7 +2209,7 @@ function course_module(){
                                        '<select class="form-control" style="display:none;" name="score['+index+'][total]">'+
                                        '<option value="'+res[i].score+'">'+res[i].score+'</option>';
                                        /*TODO: Zhoufuxiang 2016-2-26*/
-                                       for(var a=1; a<=15; a++){
+                                       for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                                            html += '<option value="'+a+'">'+a+'</option>';
                                        }
                                html += '</select>'+
@@ -2243,7 +2248,7 @@ function course_module(){
                                                '<select class="form-control" name="score['+index+']['+res[j].sort.substr(res[j].sort.indexOf('-')+1, 3)+']">';
                                                 /*TODO: Zhoufuxiang 2016-2-26*/
                                                //'<option value="'+res[j].score+'">'+res[j].score+'</option>';
-                                               for(var a=1; a<=15; a++){
+                                               for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                                                    html += '<option value="'+a+'"'+((res[j].score==a)?" selected ":"")+'>'+a+'</option>';
                                                }
                                        html += '</select>'+

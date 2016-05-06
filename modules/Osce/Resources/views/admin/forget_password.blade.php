@@ -189,14 +189,14 @@
 			<div style="background:#fff;margin-top:60px;padding:20px;border-top:3px solid #1dc5a3;">
 				<div class="logo">
 					<strong>忘记密码</strong>
-					<a href="{{( is_null(session('referer'))? route('osce.wechat.user.getWebLogin'): session('referer') )}}">返回></a>
+					<a href="{{route('osce.admin.getIndex')}}">返回></a>
 				</div>
-				<form class="m-t" role="form" id="loginForm" action="{{route('osce.wechat.user.postResetPassword')}}" method="post" >
+				<form class="m-t" role="form" id="loginForm" action="{{route('osce.admin.user.postResetPassword')}}" method="post" >
 					<div class="form-group">
 						<input type="text" class="form-control" id="mobile" name="mobile"  placeholder="手机号码">
 					</div>
 					<div class="form-group">
-						<input type="password" class="form-control" id="password" name="verify" placeholder="请输入验证码" style="width: 60%;float: left;">
+						<input type="password" class="form-control" name="verify" placeholder="请输入验证码" style="width: 60%;float: left;">
 						<a class="btn btn-primary" id="valid" href="javascript:void(0);" style="margin-left:3%;width: 37%;float: left;margin-top: 0;margin-bottom: 0;">发送验证码</a>
 						<div class="clearfix"></div>
 					</div>

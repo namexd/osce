@@ -46,8 +46,7 @@ class PadLogin
             })
             ->orderBy('begin_dt', 'asc')
             ->distinct()
-            ->get()
-            ->keyBy('exam_id');
+            ->get();
     }
 
     /**

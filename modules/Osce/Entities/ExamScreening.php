@@ -161,33 +161,38 @@ class ExamScreening extends CommonModel
     public function getNearestScreening($exam_id)
     {
         $todayStart = date('Y-m-d 00:00:00');
-        $todayEnd = date('Y-m-d 23:59:59');
+        $todayEnd   = date('Y-m-d 23:59:59');
 
-        $exam=Exam::doingExam();
-        $screenId=ExamPlan::where('exam_id',$exam->id)
-            ->get()
-            ->pluck('exam_screening_id')
-            ->toArray();
-        return $this->where('exam_id', '=', $exam_id)
-            ->whereRaw("UNIX_TIMESTAMP(begin_dt) > UNIX_TIMESTAMP('$todayStart')
-                AND UNIX_TIMESTAMP(end_dt) < UNIX_TIMESTAMP('$todayEnd')")
-            ->where('status', '=', 0)
-            ->whereIn('id',$screenId)
-            ->OrderBy('begin_dt', 'asc')
-            ->first();
+        $exam     = Exam::doingExam();
+        if($exam->id != $exam_id){
+            throw new \Exception('开考考试不对！');
+        }
+        $screenId = ExamPlan::where('exam_id', '=', $exam->id)->groupBy('exam_screening_id')->get()
+                            ->pluck('exam_screening_id')->toArray();
+
+        $result = $this->where('exam_id', '=', $exam_id)
+                ->whereRaw("UNIX_TIMESTAMP(begin_dt) > UNIX_TIMESTAMP('$todayStart')
+                          AND UNIX_TIMESTAMP(end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+                ->where('status', '=', 0)
+                ->whereIn('id', $screenId)
+                ->OrderBy('begin_dt', 'asc')
+                ->first();
+
+        return $result;
     }
 
     public function getExamingScreening($exam_id)
     {
         $todayStart = date('Y-m-d 00:00:00');
-        $todayEnd = date('Y-m-d 23:59:59');
-        return $this->where('exam_id', '=', $exam_id)
-            ->whereRaw("UNIX_TIMESTAMP(begin_dt) > UNIX_TIMESTAMP('$todayStart')
-                AND UNIX_TIMESTAMP(end_dt) < UNIX_TIMESTAMP('$todayEnd')")
-            ->where('status', '=', 1) //等候考试
-            ->OrderBy('begin_dt', 'asc')
-            ->first();
+        $todayEnd   = date('Y-m-d 23:59:59');
 
+        $result     = $this->where('exam_id', '=', $exam_id)
+                    ->whereRaw("UNIX_TIMESTAMP(begin_dt) > UNIX_TIMESTAMP('$todayStart')
+                              AND UNIX_TIMESTAMP(end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+                    ->where('status', '=', 1)       //等候考试
+                    ->OrderBy('begin_dt', 'asc')
+                    ->first();
+        return $result;
     }
 
 

@@ -1,3 +1,4 @@
+
 <?php
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
@@ -5,6 +6,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('login/index', ['uses' => 'LoginController@postIndex', 'as' => 'osce.admin.postIndex']);
 		//退出登录
 		Route::get('user/logout',['uses'=>'UserController@getLogout','as'=>'osce.admin.user.getLogout']);
+		//忘记密码
+		Route::get('user/forget-password',['uses'=>'UserController@getForgetPassword','as'=>'osce.admin.user.getForgetPassword']);
+		Route::post('user/reset-password',['uses'=>'UserController@postResetPassword','as'=>'osce.admin.user.postResetPassword']);	//重置密码（提交数据）
+
+
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
 		//登录注册
@@ -53,6 +59,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('arrangement/export',['uses'=>'AutomaticPlanArrangementController@getExport','as'=>'osce.admin.arrangement.getExport']); //导出excel
 
 
+//		Route::get('billboard', ['middleware' => 'Modules\Osce\Http\Middleware\BillboardLoginMiddleware', 'uses' => 'BillboardLoginController@getIndex', 'as' => 'osce.billboard.getIndex']);
 
 	});
 
@@ -517,7 +524,10 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(Redis $redis) {
-	return view('osce::Drawlots');
+//	return view('osce::Drawlots');
+	$a = collect(['aa' => 1, 'bb' => 2, 'cc' => 3]);
+	$b = $a->except(['aa', 'bb']);
+	dd($b);
 
 });
 
@@ -537,8 +547,6 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 		return '请传入参数id，id对应考试ID';
 	}
 
-	$result1 = \Modules\Osce\Entities\WatchLog::where('id','>',0)->delete();
-	$result2 = \Modules\Osce\Entities\Watch::where('id','>',0)->update(['status'=>0]);
 	$exam = new \Modules\Osce\Entities\Exam();
 
 	if($exam->emptyData($exam_id)){
@@ -569,4 +577,21 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('door-status',	['uses'=>'IndexController@getStatusStatus','as'=>'osce.doorplate.getstatusstatus']);   //状态
 	});
 
+});
+
+Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
+		//告示牌登陆
+	Route::group(['prefix' => 'billboard-login', 'namespace' => 'Billboard'], function () {
+		Route::get('index', ['uses' => 'BillboardLoginController@getIndex', 'as' => 'osce.billboard.login.getIndex']);
+		Route::post('index', ['uses' => 'BillboardLoginController@postIndex', 'as' => 'osce.billboard.login.postIndex']);
+	});
+	Route::group(['prefix' => 'billboard', 'namespace' => 'Billboard', 'middleware' => 'billboard'], function () {
+		//告示牌主页
+		Route::get('index', ['uses' => 'BillboardController@getIndex', 'as' => 'osce.billboard.getIndex']);
+		//学生接口
+		Route::get('student', ['uses' => 'BillboardController@getStudent', 'as' => 'osce.billboard.getStudent']);
+	});
+//	Route::group(['prefix' => 'billboard', 'namespace' => 'Billboard'], function () {
+//
+//	});
 });

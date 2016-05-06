@@ -15,6 +15,6 @@ class TestStudent implements StudentInterface
 {
     public function getStudent($nfc)
     {
-        return ExamQueue::whereStudentId(7359)->first();
+        return ExamQueue::whereStudentId(5560)->first();
     }
 }

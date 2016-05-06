@@ -56,7 +56,7 @@ class DrawlotsController extends CommonController
     public function __construct(Request $request, \Redis $redis)
     {
         $this->request = $request;
-//        $this->redis = $redis->connection('message');
+        $this->redis = $redis::connection('message');
     }
 
     /**
@@ -487,6 +487,9 @@ class DrawlotsController extends CommonController
             'room_id' => 'required|integer',
             'teacher_id' => 'required|integer'
         ]);
+
+
+        \Log::alert('抽签请求',$request->all());
         try {
             $examId = $request->input('exam_id', null);
             //获取uid和room_id
@@ -496,6 +499,7 @@ class DrawlotsController extends CommonController
             $redis = Redis::connection('message');
             //根据uid查到对应的腕表编号
             $watch = Watch::where('code', $uid)->first();
+            \Log::alert('抽签拿到的腕表id',[$watch->id]);
             if (is_null($watch)) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
@@ -503,9 +507,13 @@ class DrawlotsController extends CommonController
             }
             $exam=Exam::doingExam();
             $exam_screening_id=$this->getexamScreeing($exam);
+
+            \Log::alert('抽签拿到的场次id',[$exam_screening_id]);
+
             //获取腕表记录实例
             $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$exam_screening_id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
+
             if (!$watchLog) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
@@ -536,9 +544,7 @@ class DrawlotsController extends CommonController
              */
             if ($exam->sequence_mode == 1) {
                 //从队列表中通过考场ID得到对应的当前组的考生信息
-                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations, $exam_screening_id);
-                
-                    \Log::alert('EndError', [$examQueue, $watchLog->student_id, $room_id,$exam_screening_id,$stations]);
+                $examQueue = ExamQueue::getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
                     $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                         json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
@@ -568,7 +574,7 @@ class DrawlotsController extends CommonController
                     json_encode($this->success_data([], 3400, '当前考生走错了考场!')));
                 throw new \Exception('当前考生走错了考场！', 3400);
             }
-
+            \Log::alert('抽签拿到的学生id',[$watchLog->student_id]);
             //使用抽签的方法进行抽签操作
             $result = $this->drawlots($student, $roomId, $teacherId, $exam);
 //            $model = new Drawlots($student, $teacherId, $exam, $roomId);
@@ -587,7 +593,8 @@ class DrawlotsController extends CommonController
 //            }
 
             //判断时间
-            $this->judgeTime($watchLog->student_id);
+            $this->judgeTime($watchLog->student_id,$exam_screening_id);
+
             $connection->commit();
             $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($result, 1, '抽签成功!')));
@@ -598,6 +605,7 @@ class DrawlotsController extends CommonController
 
             $inv = new InvigilatePadController();
             $studentMsg = $inv->getAuthentication_arr($request);//当前考生推送
+            \Log::alert('抽签推送',[$studentMsg]);
             if ($studentMsg) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data($studentMsg, 102, '验证完成')));
@@ -606,13 +614,14 @@ class DrawlotsController extends CommonController
 
         } catch (\Exception $ex) {
             $connection->rollBack();
-
+            \Log::alert('抽签错误返回',[$ex->getMessage(),$ex->getCode()]);
             return response()->json($this->fail($ex));
         }
     }
 
     /**
      * 重写的抽签方法
+     * url osce/pad/drawlots
      * @access public
      * @param HuaxiDrawlotsRepository $huaxiDrawlots
      * @version
@@ -628,20 +637,21 @@ class DrawlotsController extends CommonController
             'uid' => 'sometimes|string',
             'exam_id' => 'required|integer'
         ]);
+        \Log::alert('uid', [$this->request->input('uid')]);
         try {
             //写入具体的数据
             $huaxiDrawlots->setParams($this->request->all());
 
             //获得抽签数据
-            //蒋同学，未发现数据库事务相关业务代码
             $data = $huaxiDrawlots->distribute();
 
             //将数据推送给pad端
-//            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-//                json_encode($this->success_data($data, 1, '抽签成功！')));
+            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
+                json_encode($this->success_data($data, 1, '抽签成功！')));
 
             return response()->json($this->success_data($data));
         } catch (\Exception $ex) {
+            \log::alert('draw_error', ['file' => $ex->getFile(), 'line' => $ex->getLine(), 'code' => $ex->getCode(), 'message' => $ex->getMessage()]);
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->fail($ex)));
             return response()->json($this->fail($ex));
@@ -662,7 +672,7 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-//        try {
+        try {
             //获取当前登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
@@ -762,11 +772,11 @@ class DrawlotsController extends CommonController
 
                 $this->getStation($request);
             }*/
-
+                \Log::alert('老师登陆获得信息',[$station]);
             return response()->json($this->success_data($station));
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -793,6 +803,7 @@ class DrawlotsController extends CommonController
             //得知当前学生是否已经抽签
             $temp = ExamQueue::where('student_id', $student->id)
                 ->where('exam_id', $examId)
+                ->where('room_id', $roomId)
                 ->where('exam_screening_id', $ExamScreening->id)
                 ->whereIn('status', [1, 2])
                 ->first();
@@ -805,24 +816,16 @@ class DrawlotsController extends CommonController
             $examScreeingId = $this->getexamScreeing($exam);
             //判断如果是以考场分组
             if (Exam::findOrFail($examId)->sequence_mode == 1) {
-                //TODO 这里如果两个阶段有相同考场可能会拿到第二阶段的考场信息；待测试修改。  周强  2016-4-30
-                //获取当前小组信息
-                list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
-                //从队列表中通过考场ID得到对应的考生信息
-                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId, $stations, $examScreeingId);
-                $studentids = $examQueue->pluck('student_id')->toArray();
-
 
                 //随机获取一个考站的id
-                $ranStationId = $this->ranStationSelect($roomId, $examId, $studentids, $examScreeingId);
-                \Log::alert($ranStationId);
+                $ranStationId = $this->ranStationSelect($roomId, $examId, $examScreeingId);
+                \Log::alert('考场模式抽签分配的考站,和拿到的考场id',[$ranStationId,$roomId]);
 
                 //将这个值保存在队列表中
                 if (!$examQueue = ExamQueue::where('student_id', $student->id)
                     ->where('room_id', $roomId)
                     ->where('exam_screening_id', $examScreeingId)
                     ->where('exam_id', $examId)
-                    ->where('status', 0)
                     ->orderBy('begin_dt', 'asc')
                     ->first()
                 ) {
@@ -831,7 +834,8 @@ class DrawlotsController extends CommonController
                 if ($examQueue->status != 0) {
                     throw new \Exception('该考生数据错误！', 3650);
                 }
-
+                \Log::alert('抽签改变的学生信息，队列id，学生id，学生状态前',[$examQueue->id,$examQueue->student_id,$examQueue->status]);
+                
                 $examQueue->status = 1;
                 $examQueue->station_id = $ranStationId;
                 if (!$examQueue->save()) {
@@ -921,25 +925,29 @@ class DrawlotsController extends CommonController
      * @throws \Exception
      * @author Jiangzhiheng
      */
-    private function judgeTime($uid)
+    private function judgeTime($studentId, $screenId)
     {
         //获取当前时间
-        $date = date('Y-m-d H:i;s');
+        $date = date('Y-m-d H:i:s');
 
         //将当前时间与队列表的时间比较，如果比队列表的时间早，就用队列表的时间，否则就整体延后
-        $studentObj = ExamQueue::where('student_id', $uid)->where('status', 1)->first();
-
+        $studentObj = ExamQueue::where('student_id', $studentId)
+            ->whereExamScreeningId($screenId)
+            ->whereIn('status', [1,2])
+            ->first();
         if (!$studentObj) {
             throw new \Exception('当前没有符合条件的队列！', -1000);
         }
         $studentBeginTime = $studentObj->begin_dt;
-        $studentEndTime = $studentObj->end_dt;
         if (strtotime($date) > strtotime($studentBeginTime)) {
             $diff = strtotime($date) - strtotime($studentBeginTime);
-            $studentObjs = ExamQueue::where('student_id', $uid)->where('status', '<', 2)->get();
+            $studentObjs = ExamQueue::where('student_id', $studentId)
+                ->whereExamScreeningId($screenId)
+                ->where('status', '<', 2)
+                ->get();
             foreach ($studentObjs as $studentObj) {
-                $studentObj->begin_dt = date('Y-m-d H:i:s', strtotime($studentBeginTime) + $diff);
-                $studentObj->end_dt = date('Y-m-d H:i:s', strtotime($studentEndTime) + $diff);
+                $studentObj->begin_dt = date('Y-m-d H:i:s', strtotime($studentObj->begin_dt) + $diff);
+                $studentObj->end_dt = date('Y-m-d H:i:s', strtotime($studentObj->end_dt) + $diff);
                 \Log::info('drawlots_time', ['begin_dt' => $studentObj->begin_dt, 'end_dt' => $studentObj->end_dt]);
                 if (!$studentObj->save()) {
                     throw new \Exception('抽签失败！', -1001);
@@ -1006,7 +1014,7 @@ class DrawlotsController extends CommonController
      * @author Jiangzhiheng
      * @time 2016-03-01
      */
-    private function ranStationSelect($roomId, $examId, $studentids, $examScreeingId)
+    private function ranStationSelect($roomId, $examId, $examScreeingId)
     {
         /*
          * 从ExamQueue表中将房间和学生对应的列表查出

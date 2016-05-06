@@ -56,8 +56,8 @@ return [
             'driver'    => 'mysql',
 			'host'      => env('DB_HOST_MSC', 'localhost'),
             'database'  => env('DB_DATABASE_MSC', 'msc_mis'),
-            'username'  => env('DB_USERNAME_MSC', 'luohaihua'),
-            'password'  => env('DB_PASSWORD_MSC', 'luohaihua'),
+            'username'  => env('DB_USERNAME_MSC', 'root'),
+            'password'  => env('DB_PASSWORD_MSC', ''),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -68,8 +68,8 @@ return [
 
             'host'      => env('DB_HOST_SYS', 'localhost'),
             'database'  => env('DB_DATABASE_SYS', 'sys_mis'),
-            'username'  => env('DB_USERNAME_MSC', 'luohaihua'),
-            'password'  => env('DB_PASSWORD_MSC', 'luohaihua'),
+            'username'  => env('DB_USERNAME_MSC', 'root'),
+            'password'  => env('DB_PASSWORD_MSC', ''),
 
 //            'host'      => env('DB_HOST_SYS', '139.196.49.64'),
 //            'database'  => env('DB_DATABASE_SYS', 'wj_dev_sys_mis'),
@@ -86,8 +86,8 @@ return [
 
             'host'      => env('DB_HOST_OSCE', 'localhost'),
             'database'  => env('DB_DATABASE_OSCE', 'osce_mis'),
-            'username'  => env('DB_USERNAME_OSCE', 'luohaihua'),
-            'password'  => env('DB_PASSWORD_OSCE', 'luohaihua'),
+            'username'  => env('DB_USERNAME_OSCE', 'root'),
+            'password'  => env('DB_PASSWORD_OSCE', ''),
 
 //            'host'      => env('DB_HOST_OSCE', '139.196.49.64'),
 //            'database'  => env('DB_DATABASE_OSCE', 'wj_dev_osce_mis'),

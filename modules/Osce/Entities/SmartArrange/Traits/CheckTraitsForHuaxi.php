@@ -11,7 +11,7 @@ namespace Modules\Osce\Entities\SmartArrange\Traits;
 use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\ExamScreening;
 
-trait CheckTraits
+trait CheckTraitsForHuaxi
 {
     function checkStudentIsZero($students)
     {

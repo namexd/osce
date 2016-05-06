@@ -317,6 +317,18 @@ class IndexController extends CommonController
             //更改考生状态（1：已绑定腕表）
             ExamOrder::where('exam_id', $exam_id)->where('student_id', $student_id)->where('exam_screening_id', '=', $exam_screen_id)->update(['status' => 1]);
             Exam::where('id', $exam_id)->update(['status' => 1]);  //更改考试状态（把考试状态改为正在考试）
+            //推送当前组和下一组
+//            try{
+//                //考试完成推送
+//                $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
+//                $request['id']=$teacherId;
+//                $draw->getExaminee_arr($request);//当前组推送(可以获得)
+//                $draw->getNextExaminee_arr($request);//下一组
+//
+//            }catch (\Exception $ex){
+//                \Log::alert('结束考试调当前组或下一组错误', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+//            }
+//
 
             // 绑定腕表成功后给腕表推送消息
             $studentWatchController = new StudentWatchController();
@@ -361,7 +373,7 @@ class IndexController extends CommonController
         //开启事务
         $connection = \DB::connection('osce_mis');
         $connection ->beginTransaction();
-//        try{
+        try{
             //判断腕表是否存在
             $watchModel = new Watch();
             $watchInfo  = $watchModel->where('watch.code', '=', $code)->first();
@@ -500,10 +512,12 @@ class IndexController extends CommonController
                         $this->watchUnbundling($id, $student_id);
                         //更改状态（2 为上报换腕表）
                         ExamScreeningStudent::where('watch_id', '=', $id)->where('student_id', '=', $student_id)
-                            ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
+                                            ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
 
                         //中途解绑（更改队列，往后推）
-                        ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
+                        $queueRes = ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
+                        //插入日志
+                        \Log::alert('中途解绑（更改队列，往后推）',[$queueRes]);
 
                         //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                         $examScreening = new ExamScreening();
@@ -525,12 +539,12 @@ class IndexController extends CommonController
                 }
             }
 
-//        }
-//        catch(\Exception $ex)
-//        {
-//            $connection->rollBack();
-//            return \Response::json(array('code'=>0));
-//        }
+        }
+        catch(\Exception $ex)
+        {
+            $connection->rollBack();
+            return \Response::json(array('code'=>0));
+        }
     }
 
     /**
