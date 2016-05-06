@@ -1068,13 +1068,13 @@ function exam_assignment_add(){
      * @date    2016-04-06
      */
     //考生分阶段考试
-    $(".checkbox_two").click(function(){
-        if ($(this).find("input").is(':checked')) {
-            $(this).find(".check_icon ").addClass("check");
-            $(this).find("input").attr("checked","checked")
-            $(this).parent().find(".check_div input").removeAttr('readonly');
-            $(this).find(".check_icon ").attr("checkbox","1");
-            $(this).find("input").val("1");
+    $(".check_margin").click(function(){
+        if ($(this).parent().find("input").is(':checked')) {
+            $(this).parent().find(".check_icon ").addClass("check");
+            $(this).parent().find("input").attr("checked","checked")
+            $(this).parent().parent().find(".check_div input").removeAttr('readonly');
+            $(this).parent().find(".check_icon ").attr("checkbox","1");
+            $(this).parent().find("input").val("1");
             $(".checkbox_num").val("1");
 
             //分阶段操作
@@ -1101,11 +1101,11 @@ function exam_assignment_add(){
             //显示阶段
             $('#exam_add').find('.check_select select').show();
         } else {
-            $(this).find(".check_icon").removeClass("check");
-            $(this).parent().find(".check_div input").attr('readonly','readonly');
-            $(this).find(".check_icon ").attr("checkbox","0");
-            $(this).find("input").removeAttr("checked","checked");
-            $(this).find("input").val("0");
+            $(this).removeClass("check");
+            $(this).parent().parent().find(".check_div input").attr('readonly','readonly');
+            $(this).attr("checkbox","0");
+            $(this).parent().find("input").removeAttr("checked","checked");
+            $(this).parent().find("input").val("0");
 
             //分阶段操作
             $('.grading').hide();
@@ -1176,7 +1176,7 @@ function exam_assignment_add(){
             html = '',
             value = $('#gradation_order').val();
 
-        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2 && $('#gradation_order').val() < 20) {
+        if($('.check_margin').parent().find("input").is(':checked')&&$('.grading select').val() == 2 && $('#gradation_order').val() < 20) {
             for(var i = 1; i <= value; i++) {
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
@@ -1202,7 +1202,7 @@ function exam_assignment_add(){
     $('#add-new').click(function(){
         //计数器标志
         var index = $('#exam_add').find('tbody').attr('index'),
-            stage_show = $('.checkbox_two').find("input").is(':checked');   //阶段显示判断
+            stage_show = $('.check_margin').parent().find("input").is(':checked');   //阶段显示判断
 
         index = parseInt(index) + 1;
 
@@ -1494,13 +1494,13 @@ function exam_basic_info(){
      * @date    2016-04-06
      */
     //考生分阶段考试
-    $(".checkbox_two").click(function(){
-        if ($(this).find("input").is(':checked')) {
-            $(this).find(".check_icon ").addClass("check");
-            $(this).find(".check_icon ").attr("checkbox","1")
-            $(this).parent().find(".check_div input").removeAttr('readonly');
-            $(this).find("input").attr("checked","checked");
-            $(this).find("input").val("1");
+    $(".check_margin").click(function(){
+        if ($(this).parent().find("input").is(':checked')) {
+            $(this).parent().parent().find(".check_icon ").addClass("check");
+            $(this).parent().find(".check_icon ").attr("checkbox","1")
+            $(this).parent().parent().find(".check_div input").removeAttr('readonly');
+            $(this).parent().find("input").attr("checked","checked");
+            $(this).parent().find("input").val("1");
             $(".checkbox_num").val("1");
 
             //分阶段操作
@@ -1529,11 +1529,11 @@ function exam_basic_info(){
             //显示阶段
             $('#add-basic').find('.check_select select').show();
         } else {
-            $(this).find(".check_icon").removeClass("check");
-            $(this).find(".check_icon ").attr("checkbox","0");
-            $(this).parent().find(".check_div input").attr('readonly','readonly');
-            $(this).find("input").removeAttr("checked","checked");
-            $(this).find("input").val("0");
+            $(this).removeClass("check");
+            $(this).attr("checkbox","0");
+            $(this).parent().parent().find(".check_div input").attr('readonly','readonly');
+            $(this).parent().find("input").removeAttr("checked","checked");
+            $(this).parent().find("input").val("0");
 
             //分阶段操作
             $('.grading').hide();
@@ -1608,7 +1608,7 @@ function exam_basic_info(){
             html = '',
             value = $('#gradation_order').val();
 
-        if($('.checkbox_two').find("input").is(':checked')&&$('.grading select').val() == 2 && $('#gradation_order').val() < 20) {
+        if($('.check_margin').parent().find("input").is(':checked')&&$('.grading select').val() == 2 && $('#gradation_order').val() < 20) {
             for(var i = 1; i <= value; i++) {
                 html += '<tr>'+
                             '<td>阶段'+i+'</td>'+
@@ -1634,7 +1634,7 @@ function exam_basic_info(){
     $('#add-new').click(function(){
         //计数器标志
         var index = $('#add-basic').find('tbody').attr('index'),
-            stage_show = $('.checkbox_two').find("input").is(':checked');   //阶段显示判断;
+            stage_show = $('.check_margin').parent().find("input").is(':checked');   //阶段显示判断;
 
         index = parseInt(index) + 1;
 
