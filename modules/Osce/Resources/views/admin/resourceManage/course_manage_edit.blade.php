@@ -236,7 +236,7 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <input id="check_special" type="checkbox" onclick="display()" {{($item->specialScores->isEmpty())?'':'checked'}}>
+                            <input id="check_special" type="checkbox" onclick="display()" {{($item->specialScores->isEmpty())?'':'checked=checked'}}>
                             <label class="col-sm-2 control-label">特殊评分项</label>
                             <div class="col-sm-10" id="col_special" style="display: block;">
                                 <div class="ibox float-e-margins">
@@ -255,7 +255,7 @@
                                                 <th width="10%">操作</th>
                                             </tr>
                                             </thead>
-                                            <tbody index="0">
+                                            <tbody index="{{$item->specialScores->count()}}">
                                             @forelse($item->specialScores as $key => $specialScore)
                                                 <tr>
                                                     <td>

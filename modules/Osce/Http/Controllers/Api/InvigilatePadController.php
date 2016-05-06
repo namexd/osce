@@ -32,6 +32,7 @@ use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\SubjectSpecialScore;
 use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\Teacher;
@@ -310,17 +311,21 @@ class InvigilatePadController extends CommonController
                 $standardItemModel = new StandardItem();
                 $standardItemList  = $standardItemModel->getSubjectStandards($ExamDraft->subject_id);
                 if (empty($standardItemList)) {
-
                     throw new \Exception('数据查询失败',-103);
                 }
-            }
-            else
+                //查询特殊评分项
+                $SubjectSpecialScore = new SubjectSpecialScore();
+                $specialScoreList  = $SubjectSpecialScore->getSubjectSpecialScore($ExamDraft->subject_id);
+                
+            }else
             {
                 throw new \Exception('请检查考试安排数据',-104);
             }
+            
             return response()->json(
-                $this->success_data($standardItemList, 1, '数据传送成功')
+                $this->success_data(['normal'=>$standardItemList, 'special'=>$specialScoreList], 1, '数据传送成功')
             );
+            
         }catch (\Exception $ex){
             return response()->json($this->fail($ex));
         }
