@@ -117,7 +117,7 @@
                                     nowPage = 1;
                                 }
                                 getExamInfo(nowPage);
-                            },10000);
+                            },5000);
 
                         }
                     }

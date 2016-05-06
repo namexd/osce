@@ -41,7 +41,7 @@ class IndexController extends CommonController
         $examList=$padLog->examList(new Time());
 
         $roomList=[];
-        if(!is_null($examList)){
+        if(count($examList)){
             $roomList=$padLog->roomList($examList[0]['exam_id']);
         }
 
