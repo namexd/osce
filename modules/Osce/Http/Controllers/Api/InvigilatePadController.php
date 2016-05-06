@@ -169,7 +169,7 @@ class InvigilatePadController extends CommonController
             $studentData = $studentModel->studentList($stationId, $exam,$student_id);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
-
+                \Log::alert('推送当前学生',[$studentData['nextTester']]);
                 $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
                 return response()->json(
                     $this->success_data($studentData['nextTester'], 102, '验证完成')

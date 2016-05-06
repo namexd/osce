@@ -162,8 +162,8 @@ class InvigilatorController extends CommonController
         $this   ->  validate($request,[
             'name'          =>  'required',
             'idcard'        =>  'required',
-            'mobile'        =>  'required',
             'email'         =>  'required',
+            'mobile'        =>  'required',
             'code'          =>  'required',
 //            'subject'       =>  'required',
             'images_path'   =>  'required',
