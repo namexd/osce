@@ -826,6 +826,8 @@ class ApiController extends CommonController
                     $this->success_data([], -3, '未查到相应腕表信息')
                 );
             }
+            
+            // todo  准备好后调用腕表接口
 
             $studentWatchController = new StudentWatchController();
             foreach ($watchNfcCodes as $watchNfcCode) {

@@ -14,6 +14,8 @@ use Modules\Osce\Entities\Drawlots\Validator\EndExam;
 use Modules\Osce\Entities\Drawlots\Validator\GoWrong;
 use Modules\Osce\Entities\Drawlots\Validator\InExaminee;
 use Modules\Osce\Entities\Drawlots\Validator\NotEndPrepare;
+use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\Drawlots\Student as StudentObj;
 use Modules\Osce\Repositories\Common;
 
 class DrawlotsRepository extends AbstractDrawlots
@@ -25,6 +27,8 @@ class DrawlotsRepository extends AbstractDrawlots
     protected $studentObj = null;
 
     protected $station = null;
+
+    protected $stationId = null;
 
     protected $screen = null;
 
@@ -41,7 +45,7 @@ class DrawlotsRepository extends AbstractDrawlots
 //            $this->draw = $draw;
 
             \App::bind('StudentInterface', function () {
-                return new Student();
+                return new StudentObj();
             });
             \App::bind('StationData', function () {
                 return new Station();
@@ -134,7 +138,7 @@ class DrawlotsRepository extends AbstractDrawlots
             $this->fieldValidator($obj);
 
             //获取随机的stationId
-            $this->draw->ramdonId($accessStations);
+            $this->stationId =  $this->draw->ramdonId($accessStations);
 
             //将数据写入数据表
             $this->draw->writeExamQueue($obj);
@@ -168,5 +172,29 @@ class DrawlotsRepository extends AbstractDrawlots
         }
 
         return true;
+    }
+
+    /**
+     * 获取推送的学生
+     * @access public
+     * @param Student $student
+     * @param array $params
+     * @请求字段：
+     * @return mixed
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-07
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function pushStudent()
+    {
+        $params['exam_id'] = $this->params['exam_id'];
+        $params['station_id'] = $this->stationId;
+        $params['student_id'] = $this->student->student_id;
+        return $this->draw->pushStudent($params);
+//        if ($this->student) {
+//            $this->student->avator = asset($this->student->avator);
+//        }
+//        return $this->student;
     }
 }

@@ -33,6 +33,4 @@ class Student implements StudentInterface
             throw $ex;
         }
     }
-
-
 }

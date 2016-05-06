@@ -237,7 +237,7 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <input type="checkbox" onclick="display()">
+                            <input id="check_special"  type="checkbox" onclick="display()">
                             <label class="col-sm-2 control-label">特殊评分项</label>
                             <div class="col-sm-10" id="col_special" style="display: none;">
                                 <div class="ibox float-e-margins">

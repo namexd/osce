@@ -9,7 +9,9 @@
 namespace Modules\Osce\Entities\Drawlots;
 
 
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Repositories\Common;
 
 class HuaxiSmarty
@@ -100,10 +102,35 @@ class HuaxiSmarty
      */
     public function getObj($studentId, $screenId)
     {
-        //蒋同学，未见此处定义，如果是内置方法，请给我一个合理的解释
         return ExamQueue::whereStudentId($studentId)
             ->whereExamScreeningId($screenId)
             ->orderBy('begin_dt', 'asc')
             ->first();
+    }
+
+    /**
+     * 推送学生的数据
+     * @access public
+     * @param Student $student
+     * @param array $params
+     * @return mixed
+     * @throws \Exception
+     * @version 3.6
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-07
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function pushStudent(array $params)
+    {
+        $student = new Student();
+        $exam = Exam::doingExam($params['exam_id']);
+        $studentData = $student->studentList($params['station_id'], $exam, $params['student_id']);
+        if ($studentData['nextTester']) {
+            $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+
+            return $studentData['nextTester'];
+        } else {
+            throw new \Exception('当前没有学生');
+        }
     }
 }
