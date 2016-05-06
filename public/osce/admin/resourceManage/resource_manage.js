@@ -2493,6 +2493,26 @@ function course_module(){
 
 
     /**************************************************************zhoufuxiang <zhoufuxiang@misrobot.com> 2016-05-07************************************************************************************/
+    /**
+     * 特殊评分checkbox
+     * @author mao
+     * @version 3.4
+     * @date    2016-05-09
+     */
+    $('.check_icon').click(function() {
+        var $that = $(this);
+
+        if($that.hasClass('check')) {
+            $that.removeClass('check');
+            $that.siblings('input').val(0);
+            $(".col_special").hide();
+        } else {
+            $that.addClass('check');
+            $that.siblings('input').val(1);
+            $(".col_special").show();
+        }
+    })
+
 
     /**
      * 新增特殊评分项
@@ -2519,62 +2539,7 @@ function course_module(){
 
         $('#special-score').find('tbody').append(html);
         $('#special-score').find('tbody').attr('index',index);
-        //启动select2
-        // $('#special-score .js-example-basic-single').select2({
-        //     tags:true,
-        //     ajax: {
-        //         url: pars.goodList,
-        //         dataType: 'json',
-        //         delay: 250,
-        //         processResults: function (res) {
-        //             if(res.code == 1){
-        //                 var data = res.data,
-        //                     str = [];
-        //
-        //                 for(var i in data) {
-        //                     str.push({id:data[i].name,text:data[i].name});
-        //                 }
-        //
-        //                 return{
-        //                     results:str
-        //                 }
-        //             }
-        //         },
-        //         templateResult: formatRepo,
-        //         templateSelection: formatRepoSelection
-        //     }
-        // })
-
-
     });
-
-    /**
-     * 编辑初始化
-     */
-    $('#special-score .js-example-basic-single').select2({
-        tags:true,
-        ajax: {
-            url: pars.goodList,
-            dataType: 'json',
-            delay: 250,
-            processResults: function (res) {
-                if(res.code == 1){
-                    var data = res.data,
-                        str = [];
-
-                    for(var i in data) {
-                        str.push({id:data[i].name,text:data[i].name});
-                    }
-
-                    return{
-                        results:str
-                    }
-                }
-            },
-            templateResult: formatRepo,
-            templateSelection: formatRepoSelection
-        }
-    })
 
     /**
      * 删除特殊评分项
