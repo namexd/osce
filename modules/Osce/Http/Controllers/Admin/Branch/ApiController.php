@@ -842,7 +842,7 @@ class ApiController extends CommonController
                     $watchReminder->getWatchPublish($studentId, $stationId, $roomId);
                 }
             } catch (\Exception $ex) {
-                \Log::debug('准备考试按钮', [$studentId, $stationId, $roomId, $ex->toArray()]);
+                \Log::debug('准备考试按钮', [$studentId, $stationId, $roomId, $ex]);
             }
         } else {
             // 考站排 一个学生
