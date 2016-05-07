@@ -64,9 +64,9 @@ class DrawlotsRepository extends AbstractDrawlots
 //            $this->station = $stationData;
 //            $this->screen = $screening;
 
-            \App::bind('GoWrong', function () {
-                return new GoWrong();
-            });
+//            \App::bind('GoWrong', function () {
+//                return new GoWrong();
+//            });
 
             \App::bind('EndExam', function () {
                 return new EndExam();
@@ -81,7 +81,7 @@ class DrawlotsRepository extends AbstractDrawlots
             });
 
             $this->validator = [
-                \App::make('GoWrong'),
+//                \App::make('GoWrong'),
                 \App::make('EndExam'),
                 \App::make('NotEndPrepare'),
                 \App::make('InExaminee')
