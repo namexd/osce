@@ -84,9 +84,10 @@ class HuaxiSmarty
      * @time 2016-05-02
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getObj($studentId, $screenId)
+    public function getObj($studentId, $screenId, $roomId)
     {
         return ExamQueue::whereStudentId($studentId)
+            ->where('room_id', $roomId)
             ->whereExamScreeningId($screenId)
             ->orderBy('begin_dt', 'asc')
             ->first();

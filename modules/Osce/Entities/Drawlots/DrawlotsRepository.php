@@ -137,7 +137,7 @@ class DrawlotsRepository extends AbstractDrawlots
             Common::objIsEmpty($accessStations, -5, '数据错误');
 
             //获取对象模型
-            $obj = $this->draw->getObj($this->student->student_id, $screen->id);
+            $obj = $this->draw->getObj($this->student->student_id, $screen->id, $this->params['room_id']);
             $this->roomId = $obj->roomId;
             Common::valueIsNull($obj, -6, '数据错误');
             $this->fieldValidator($obj);

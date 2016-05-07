@@ -83,7 +83,7 @@ class TestResult extends CommonModel
 
                 //保存考试，特殊评分项 实际扣分详情 TODO: Zhoufuxiang
                 $this->getSaveSpecialScore($specialScoreData, $ExamResultId);
-                \Log::debug('特殊评分项',$specialScoreData);
+                \Log::debug('特殊评分项',[$specialScoreData]);
                 //保存语音 图片
                 $this->getSaveExamAttach($data['student_id'], $ExamResultId, $score);
 
