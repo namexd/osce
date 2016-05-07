@@ -7,6 +7,7 @@
  */
 
 namespace Modules\Osce\Repositories;
+use Illuminate\Support\Facades\Redis;
 use Modules\Osce\Entities\Drawlots\DrawlotsRepository;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
