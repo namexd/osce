@@ -394,12 +394,16 @@ class PadController extends  CommonController{
         $studentId = $request->input('student_id');
         $stationId = $request->input('station_id', null);
         $teacherId = $request->input('user_id');
-
+            \Log::alert('ChangeStatusData', $request->all());
         $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
         //推送给腕表
-        $watchReminder->getWatchPublish($queue->student_id, $queue->station_id, $queue->room_id);
-        \Log::alert('ChangeStatusData', $request->all());
+            try{
+                $watchReminder->getWatchPublish($queue->student_id, $queue->station_id, $queue->room_id);
 
+            }catch (\Exception $ex){
+                \Log::debug('结束考试推送腕表',[$studentId, $stationId, $teacherId,$ex->getFile()]);
+            }
+            
 //        //考试结束后，调用向腕表推送消息的方法
 //        $examScreeningStudentModel = new ExamScreeningStudent();
 //        $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
