@@ -11,6 +11,8 @@ use Modules\Osce\Entities\Drawlots\DrawlotsRepository;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStationStatus;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
+use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Repositories\BaseRepository;
 use Modules\Osce\Entities\Exam;
@@ -258,9 +260,32 @@ class WatchReminderRepositories  extends BaseRepository
                                 ->orderBy('begin_dt','asc')
                                 ->take($stationNum)
                                 ->get();
-        $data = [];
-        $data['title'] = '';
-        $data['code'] = 200;
+
+
+        //获取前面还有多少人
+        $studentFront = ExamQueue::where('exam_id','=',$exam->id)
+            ->where('exam_screening_id','=',$this->examScreening->id)
+            ->where('room_id','=',$this->room->id)
+            ->where('status',0)
+            ->where('student_id','<',$this->student->id)
+            ->orderBy('begin_dt','asc')
+            ->count();
+        if($studentFront <= $stationNum){
+            \Log::info('腕表推送出现等待推送中有前面学生小于考站数量的情况');
+        }else{
+            $willStudents = $studentFront;
+        }
+
+        //获取将要去的考场
+        $room = Room::find($this->nowQueue->room_id);
+        $data = [
+            'code' => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+            'title' => '考生等待信息',
+            'willStudents' => $willStudents,
+            'estTime' => $this->nowQueue->begin_dt,
+            'willRoomName' => $room->name,
+
+        ];
 
         foreach($studentQueueList as $queueList){
             //根据学生获取NFC _code
@@ -307,6 +332,18 @@ class WatchReminderRepositories  extends BaseRepository
 
         //获取当前场次老师是否准备好，判断是否通知去考场
         $ScreenStatus = $this->getScreenStatus();
+
+        //获取将要去的考场
+        $room = Room::find($this->nowQueue->room_id);
+        $data = [
+            'code' => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+            'title' => '您将开始进行考试',
+            'willStudents' => '',
+            'estTime' => '',
+            'willRoomName' => $room->name,
+
+        ];
+
         //推送消息
         if($ScreenStatus){
 
@@ -340,8 +377,14 @@ class WatchReminderRepositories  extends BaseRepository
         $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch')->first()->pluck('code');
         //根据考试和学生对象获取当前学生所属考站
         $studentStationName = Station::where('id','=',$this->nowQueue->station_id)->first()->pluck('name');
-        $data = [];
-        $data['title'] = '';
+        $data = [
+            'code' => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+            'title' => '您将开始进行考试',
+            'willStudents' => '',
+            'estTime' => '',
+            'willRoomName' => $studentStationName,
+
+        ];
 
         $this->publishmessage($code,$data,'success');
         return response()->json(
@@ -354,19 +397,29 @@ class WatchReminderRepositories  extends BaseRepository
      */
     public function getStartExam(){
         //根据当前学生获取NFC——code
-
+        $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch')->first()->pluck('code');
         //根据考试和学生对象获取当前队列
-
+        $nowQueue = $this->nowQueue;
         //计算当前考试时长
+        //1.理论考试
+        if($this->station->type == 1){
+            $time = ExamPaperExamStation::where('exam_id','=',$this->exam->id)->where('station_id','=',$this->station->id)->first()->pluck('length');
+        }else{
+            //技能或SP
+            $time = $this->station->mins;
+        }
+        $data = [
+            'code' => 1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+            'title' => '您将开始进行考试',
+            'willStudents' => '',
+            'estTime' => $time,
+            'willRoomName' => '',
 
-        $data = [];
-        $data['title'] = '';
-        $data['code'] = '';
-        $data['time'] = '';
+        ];
 
-        $this->publishmessage($watchNfcCode,$data,$message);
+        $this->publishmessage($code,$data,'success');
         return response()->json(
-            ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
+            ['nfc_code' => $code, 'data' => $data, 'message' => 'error']
         );
     }
 
