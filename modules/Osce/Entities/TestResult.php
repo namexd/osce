@@ -45,29 +45,52 @@ class TestResult extends CommonModel
         return $this->hasMany('\Modules\Osce\Entities\ExamScore','exam_result_id','id');
     }
 
-    public function addTestResult($data,$score)
+    /**
+     * 保存成绩
+     * @param $data
+     * @param $score
+     * @param $specialScore
+     * @return static
+     * @throws \Exception
+     */
+    public function addTestResult($data,$score, $specialScore)
     {
         $connection = DB::connection($this->connection);
-        $connection->beginTransaction();
+        $connection ->beginTransaction();
         try {
             //判断成绩是否已提交过
             $ExamResult= $this->getRemoveScore($data);
-
+            //获取考试成绩打分详情（解析json为数组）
             $scoreData = $this->getExamResult($score);
-            //拿到总成绩
-            $total  =   array_pluck($scoreData,'score');
-            $total  =   array_sum($total);
-            $data['score']  =   $total;
 
-            if ($testResult = $this->create($data)) {
+            //获取考试成绩特殊评分项扣分详情（解析json为数组）
+            $specialScoreData = $this->getSpecialScore($specialScore);
+            //拿到特殊评分项总成绩
+            $specialTotal  =   array_pluck($scoreData, 'score');
+            $specialTotal  =   array_sum($specialTotal);
+
+            //拿到总成绩
+            $total  =   array_pluck($scoreData, 'score');
+            $total  =   array_sum($total);
+            $data['score']  =   $total-$specialTotal;       //总成绩=考核点总得分-特殊评分项总扣除分
+
+            if ($testResult = $this->create($data))
+            {
                 //保存成绩评分
-                $ExamResultId = $testResult->id;
-                 $this->getSaveExamEvaluate($scoreData, $ExamResultId);
-                 $this->getSaveExamAttach($data['student_id'], $ExamResultId, $score);
+                $ExamResultId = $testResult->id;        //获取ID
+                //保存考试，考核点分数详情
+                $this->getSaveExamEvaluate($scoreData, $ExamResultId);
+
+                //保存考试，特殊评分项 实际扣分详情 TODO: Zhoufuxiang
+                $this->getSaveSpecialScore($specialScoreData, $ExamResultId);
+
+                //保存语音 图片
+                $this->getSaveExamAttach($data['student_id'], $ExamResultId, $score);
 
             } else {
                 throw new \Exception('成绩提交失败',-1000);
             }
+
             $connection->commit();
             return $testResult;
 
@@ -78,7 +101,8 @@ class TestResult extends CommonModel
     }
 
     //upload_document_id 音频 图片id集合去修改
-    private function getSaveExamAttach($studentId,$ExamResultId,$score){
+    private function getSaveExamAttach($studentId,$ExamResultId,$score)
+    {
         try{
             $list = [];
             $arr = json_decode($score, true);
@@ -117,6 +141,28 @@ class TestResult extends CommonModel
             if(!$examScore)
             {
                 throw new \Exception('保存分数详情失败',-1300);
+            }
+        }
+    }
+
+    /**
+     * 保存考试，特殊评分项 实际扣分详情
+     * @param $specialScoreDatas
+     * @param $ExamResultId
+     * @throws \Exception
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-05-07 16:44
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    private function  getSaveSpecialScore($specialScoreDatas, $ExamResultId)
+    {
+        foreach ($specialScoreDatas as &$item) {
+            $item['exam_result_id'] = $ExamResultId;
+            $examSpecialScore       = ExamSpecialScore::create($item);
+            if(!$examSpecialScore)
+            {
+                throw new \Exception('保存特殊评分项 实际扣分详情失败',-1511);
             }
         }
     }
@@ -178,14 +224,14 @@ class TestResult extends CommonModel
 
 
 
-    //获取考试成绩打分详情
+    //获取考试成绩打分详情（解析json为数组）
     private function  getExamResult($score)
     {
         $list = [];
         $arr = json_decode($score, true);
         foreach ($arr as $item) {
-            foreach ($item['test_term'] as $str) {
-
+            foreach ($item['test_term'] as $str)
+            {
                 $list [] = [
                     'subject_id'        => $str['subject_id'],
                     'standard_item_id'  => $str['id'],
@@ -194,7 +240,30 @@ class TestResult extends CommonModel
             }
         }
         return $list;
+    }
 
+    /**
+     * 获取考试成绩特殊评分项扣分详情（解析json为数组）
+     * @param $specialScores
+     * @return array
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-05-07 16:44
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    private function getSpecialScore($specialScores)
+    {
+        $list = [];
+        $arr = json_decode($specialScores, true);
+        foreach ($arr as $item)
+        {
+            $list [] = [
+                'subject_id'        => $item['subject_id'],
+                'special_score_id'  => $item['id'],
+                'score'             => $item['subtract'],
+            ];
+        }
+        return $list;
     }
 
 

@@ -739,7 +739,15 @@ class InvigilatorController extends CommonController
 
         //存在ID，为编辑时验证
         if(empty($id)){
-            $user = User::where('username', '=', $mobile)->orWhere('mobile', '=', $mobile)->get();
+            $user = User::where('username', '=', $mobile)->first();
+            if(is_null($user)){
+                $user = User::where('mobile', '=', $mobile)->first();
+                //存在，则手机号已经被别人使用（但手机号并未注册账号）
+                if(!is_null($user)){
+                    return json_encode(['valid' =>false]);
+                }
+            }
+
         }else{
             $user = User::where('id', '<>', $id)
                 ->where(function ($query) use ($mobile){

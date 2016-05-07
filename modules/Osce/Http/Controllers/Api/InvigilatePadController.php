@@ -281,11 +281,11 @@ class InvigilatePadController extends CommonController
             {
                 $screening  =   $ExamScreening->getNearestScreening($examId);
             }
-
             if(is_null($screening))
             {
                 throw new \Exception('没有对应的考试');
             }
+
             $exam_gradation =   ExamGradation::where('exam_id','=',$examId)->where('order','=',$screening->gradation_order)->first();
             if(is_null($exam_gradation))
             {
@@ -296,11 +296,11 @@ class InvigilatePadController extends CommonController
             $ExamDraft  =   ExamDraft:: leftJoin('exam_draft_flow','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
                 ->  where('exam_draft_flow.exam_id','=',$examId)
                 ->  where('exam_draft_flow.exam_gradation_id','=',$exam_gradation_id)
-                ->  where('exam_draft.station_id','=',$stationId)
+                ->  where('exam_draft.station_id', '=', $stationId)
                 ->  with('station')
                 ->  first();
 
-
+            $datas = [];
             if(!empty($ExamDraft)&&!empty($ExamDraft->subject_id))
             {
                 if($ExamDraft->station->type==3)
@@ -316,15 +316,21 @@ class InvigilatePadController extends CommonController
                 //查询特殊评分项
                 $SubjectSpecialScore = new SubjectSpecialScore();
                 $specialScoreList  = $SubjectSpecialScore->getSubjectSpecialScore($ExamDraft->subject_id);
-                
+
+                //返回数据组合 TODO: zhoufuxiang
+                $datas = $this->dataCombine($standardItemList, $specialScoreList);
+
             }else
             {
                 throw new \Exception('请检查考试安排数据',-104);
             }
             
             return response()->json(
-                $this->success_data(['normal'=>$standardItemList, 'special'=>$specialScoreList], 1, '数据传送成功')
+                $this->success_data($standardItemList, 1, '数据传送成功')
             );
+//            return response()->json(
+//                $this->success_data($datas, 1, '数据传送成功')
+//            );
             
         }catch (\Exception $ex){
             return response()->json($this->fail($ex));
@@ -354,6 +360,7 @@ class InvigilatePadController extends CommonController
 
             $this->validate($request, [
                 'score'             => 'required',
+                'special'           => 'sometimes',
                 'student_id'        => 'required',
                 'station_id'        => 'required',
                 'exam_screening_id' => 'required',
@@ -361,15 +368,16 @@ class InvigilatePadController extends CommonController
             ], [
                 'score.required'    => '请检查评分标准分值',//json的格式
             ]);
-            $score     = Input::get('score');
-            $stationId = Input::get('station_id');
-            $studentId = Input::get('student_id');
+            $score        = Input::get('score');
+            $specialScore = Input::get('special');      //特殊评分项（扣分json数据）TODO: zhoufuxiang
+            $stationId    = Input::get('station_id');
+            $studentId    = Input::get('student_id');
             $examScreeningId = Input::get('exam_screening_id');
             //到队列表里查询出学生的开始和结束时间
             $studentExamTime = ExamQueue::where('station_id', '=', $stationId)
-                ->where('exam_screening_id', '=', $examScreeningId)
-                ->where('student_id', '=', $studentId)
-                ->first();
+                                        ->where('exam_screening_id', '=', $examScreeningId)
+                                        ->where('student_id', '=', $studentId)
+                                        ->first();
             if (is_null($studentExamTime)) {
                 throw new \Exception('没有查询到该学生队列', -100);
             }
@@ -406,27 +414,30 @@ class InvigilatePadController extends CommonController
             //获取该考生在该场考试所对应的所有场次id
             $studentExamScreeningIdArr = ExamPlan::where('exam_id','=',$ExamId->exam_id)->where('student_id','=',$data['student_id'])->select('exam_screening_id')->get()->toArray();
 
+            /*********保存考试成绩**********/
             $TestResultModel  = new TestResult();
-            $result = $TestResultModel->addTestResult($data, $score);
-
-            if ($ExamFinishStatus == $studentExamSum) {
+            $result = $TestResultModel->addTestResult($data, $score, $specialScore);
+            if (!$result) {
+                throw new \Exception('成绩保存失败');
+            }
+            if ($ExamFinishStatus == $studentExamSum)
+            {
                 //todo 调用zhoufuxiang接口......
                 try {
                     $examResultModel = new ExamResult();
 
                     $examResultModel->examResultPush($data['student_id'], $data['exam_screening_id'], $data['station_id'], $studentExamScreeningIdArr);
  
-                } catch (\Exception $mssge) {
+                } catch (\Exception $mssge)
+                {
                     \Log::alert($mssge->getMessage() . ';' . $data['student_id'] . '成绩推送失败');
                 }
             }
 
-//                \Log::alert(json_encode($result));
+//            \Log::alert(json_encode($result));
 
-            if ($result) {
-                //修改exam_attach表里的结果id
-                return response()->json($this->success_data([], 1, '成绩提交成功'));
-            }
+            //修改exam_attach表里的结果id
+            return response()->json($this->success_data([], 1, '成绩提交成功'));
 
         } catch (\Exception $ex) {
 
@@ -1621,5 +1632,32 @@ class InvigilatePadController extends CommonController
         return json_encode(
             $this->success_data($data,$status,$info)
         );
+    }
+
+    /**
+     * 数据组合
+     * @param $standardItems
+     * @param $specialScores
+     * @return array
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-05-07 20:13
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function dataCombine($standardItems, $specialScores)
+    {
+        $data = [];
+        foreach ($standardItems as $standardItem) {
+            $standardItem->tag = 'normal';
+            $data[] = $standardItem;
+        }
+        if(!$specialScores->isEmpty()){
+            foreach ($specialScores as $specialScore) {
+                $specialScore->tag = 'special';
+                $data[] = $specialScore;
+            }
+        }
+
+        return $data;
     }
 }
