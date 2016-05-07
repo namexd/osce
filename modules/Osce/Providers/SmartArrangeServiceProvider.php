@@ -43,7 +43,7 @@ class SmartArrangeServiceProvider extends ServiceProvider
         });
 
         //使用singleton绑定单例
-        $this->app->singleton('Modules\Osce\Entities\SmartArrange\SmartArrangeForHuaxiRepository', function () {
+        $this->app->bind('Modules\Osce\Entities\SmartArrange\SmartArrangeForHuaxiRepository', function () {
             return new SmartArrangeForHuaxiRepository(\App::make('SmartArrange'));
         });
     }
