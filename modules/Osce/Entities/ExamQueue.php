@@ -207,7 +207,10 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.exam_id', $examId)
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
+                ->orderBy('exam_queue.next_num', 'asc')
+                ->orderBy('exam_queue.begin_dt', 'asc')
                 ->groupBy('exam_queue.student_id')
+                ->take(count($stations))
                 ->get();
         return $queueing;
     }
@@ -532,9 +535,6 @@ class ExamQueue extends CommonModel
                     ->whereIn('exam_screening_id', $examscreeningId)
                     ->where('status', '=', 3)
                     ->get();
-
-
-
                 foreach ($studentTimes as $key => $item) {
                     foreach ($endQueue as $endQueueTime) {
                         if (strtotime($endQueueTime->begin_dt) > strtotime($item->begin_dt)) {
@@ -549,15 +549,6 @@ class ExamQueue extends CommonModel
                           //这是已考场安排的需拿到room_id
                           $stationTime = $this->getRoomStationMaxTime($item->room_id);
                       }*/
-
-                    //获取标准考试时间
-
-//                    if(is_null($item->station_id)){
-//                        $stationTime = false;
-//                    }else{
-//                        $stationTime = $this->stationTime($item->station_id, $exam->id);
-//
-//                    }
                     \Log::alert('获取到的标准时间',[$stationTime]);
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         if ($item->status == 2) {

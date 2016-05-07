@@ -393,27 +393,26 @@ class PadController extends  CommonController{
         $studentId = $request->input('student_id');
         $stationId = $request->input('station_id', null);
         $teacherId = $request->input('user_id');
+
         $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
+
             \Log::alert('ChangeStatusData', $request->all());
 
-        //考试结束后，调用向腕表推送消息的方法
-        $examScreeningStudentModel = new ExamScreeningStudent();
-        $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
-            ->where('student_id','=',$queue->student_id)->first();
-        //判定学生这只腕表是否已解绑，如果解绑了就查询学生是否又绑定了新的腕表 ，如果都没有就结束考试
-
-
-            
-
-        $watchModel = new Watch();
-        $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
-        try{
-            $studentWatchController = new StudentWatchController();
-            $request['nfc_code'] = $watchData->code;
-            $studentWatchController->getStudentExamReminder($request,$stationId ,$queue->exam_screening_id);
-        }catch (\Exception $ex){
-            \Log::alert('结束考试调腕表错误', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
-        }
+//        //考试结束后，调用向腕表推送消息的方法
+//        $examScreeningStudentModel = new ExamScreeningStudent();
+//        $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
+//            ->where('student_id','=',$queue->student_id)->first();
+//        $watchModel = new Watch();
+//        $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
+//        try{
+//
+//            //todo 调用腕表接口 判定学生这只腕表是否已解绑，如果解绑了就查询学生是否又绑定了新的腕表 ，如果都没有就结束考试
+//            $studentWatchController = new StudentWatchController();
+//            $request['nfc_code'] = $watchData->code;
+//            $studentWatchController->getStudentExamReminder($request,$stationId ,$queue->exam_screening_id);
+//        }catch (\Exception $ex){
+//            \Log::alert('结束考试调腕表错误', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+//        }
       try{
           //考试完成推送
           $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
