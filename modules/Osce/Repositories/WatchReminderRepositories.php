@@ -451,12 +451,12 @@ class WatchReminderRepositories  extends BaseRepository
         $watchNfcCode= ExamScreeningStudent::leftJoin('watch','exam_screening_student.watch_id','=','watch.id')
                               ->where('exam_screening_student.exam_screening_id',$screen->id)
                               ->where('exam_screening_student.student_id',$student->id)
-                              ->select(['watch.nfc_code'])
+                              ->select(['watch.code'])
                               ->first();//获取学生对应的nfc_code
         if(is_null($watchNfcCode)){
             throw new \Exception('未找到对应的腕表nfc_code');
         }
-        $this->publishmessage($watchNfcCode->nfc_code,$data,$data['title']);
+        $this->publishmessage($watchNfcCode->code,$data,$data['title']);
         return response()->json(
             ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
         );
