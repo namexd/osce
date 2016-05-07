@@ -208,14 +208,13 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.exam_id', $examId)
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
-                ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.next_num', 'asc')
                 ->groupBy('exam_queue.student_id')
                 ->take(count($stations))
                 ->get();
         return $queueing;
     }
-
 
     /**
      * 鏍规嵁room_id鏉ヨ幏鍙栧搴旂殑鑰冪敓鍒楄〃
