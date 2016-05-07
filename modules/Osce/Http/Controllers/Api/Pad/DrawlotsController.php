@@ -10,7 +10,7 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 
 use Illuminate\Http\Request;
-use Modules\Osce\Entities\Drawlots\HuaxiDrawlotsRepository;
+use Modules\Osce\Entities\Drawlots\DrawlotsRepository;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
@@ -53,7 +53,7 @@ class DrawlotsController extends CommonController
 
     private $redis;
 
-    public function __construct(Request $request, \Redis $redis)
+    public function __construct(Request $request, Redis $redis)
     {
         $this->request = $request;
         $this->redis = $redis::connection('message');
@@ -623,21 +623,21 @@ class DrawlotsController extends CommonController
      * 重写的抽签方法
      * url osce/pad/drawlots
      * @access public
-     * @param HuaxiDrawlotsRepository $huaxiDrawlots
+     * @param DrawlotsRepository $huaxiDrawlots
      * @version
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-02
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postDrawlots(HuaxiDrawlotsRepository $huaxiDrawlots)
+    public function postDrawlots(DrawlotsRepository $huaxiDrawlots)
     {
         //验证
         $this->validate($this->request, [
             'room_id' => 'required|integer',
-            'uid' => 'sometimes|string',
+            'uid' => 'required|string',
             'exam_id' => 'required|integer'
         ]);
-        \Log::alert('uid', [$this->request->input('uid')]);
+        \Log::debug('uid', [$this->request->input('uid')]);
         try {
             //写入具体的数据
             $huaxiDrawlots->setParams($this->request->all());
