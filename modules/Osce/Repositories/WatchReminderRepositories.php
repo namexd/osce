@@ -91,7 +91,7 @@ class WatchReminderRepositories  extends BaseRepository
         $this->setInitializeData($exam,$student,$room,$station);
         //判断考试模式
         if($exam->sequence_mode==1){//考场模式
-            $this->getRoomExamReminder($exam,$student,$this->$examScreening);
+            $this->getRoomExamReminder($exam,$student,$this->nowQueue->exam_screening_id);
         }
         else
         {//考站模式
@@ -205,10 +205,6 @@ class WatchReminderRepositories  extends BaseRepository
      * @createDate：
      */
     public function getSutentNowQueue($queueList){
-        if(!$queueList){
-            return false;
-        }
-
         //获取当前队列
         //获取是否有一条正在进行的考试
         $queue  =   $queueList->where('status',2);
