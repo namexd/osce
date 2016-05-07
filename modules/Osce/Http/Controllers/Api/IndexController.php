@@ -1264,7 +1264,7 @@ class IndexController extends CommonController
             $queue=new ExamQueue();
             $list=$queue->getStudentScreenRoomResultList($code);
             if(count($list)){
-                return \Response::json(array('code' => 122,'data'=>$list));
+                return \Response::json(array('code' => 1,'data'=>$list));
             }else{
                 return \Response::json(array('code' => -122,'data'=>[]));
             }
