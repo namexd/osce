@@ -2507,13 +2507,13 @@ function course_module(){
         index = parseInt(index) + 1;
         html = '<tr>'+
             '<td>'+
-            '<input class="form-control js-example-basic-single" name="special_score['+index+'][name]" style="width: 481px;" />'+
+            '<input class="form-control js-example-basic-single" name="special_score['+index+'][title]" style="width: 100%;" />'+
             '</td>'+
             '<td>'+
-            '<input class="form-control" type="number" value="1" name="special_score['+index+'][score]" placeholder="请输入分数" />'+
+            '<input class="form-control" type="number" value="10" name="special_score['+index+'][score]" placeholder="请输入分数" />'+
             '</td>'+
             '<td>'+
-            '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+            '<a href="javascript:void(0)"><span class="read state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
             '</td>'+
             '</tr>';
 
@@ -2579,7 +2579,7 @@ function course_module(){
     /**
      * 删除特殊评分项
      * @author zhoufuxiang
-     * @version 3.3
+     * @version 3.4
      * @date    2016-05-07
      */
     $('#special-score').on('click', '.fa-trash-o', function() {
