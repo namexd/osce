@@ -1281,5 +1281,36 @@ class IndexController extends CommonController
 
         return $result;
     }
+    /**
+     * 腕表解绑，学生本次考试所有考场成绩提交情况
+     * @param $id
+     * @param $student_id
+     * @return object
+     * code 122 返回学生考场列表
+     *      -122 学生所以考场考完
+     *     -1111 捕获异常信息
+     * @author wt <wangtao@misrobot.com>
+     * @date   2016-05-7
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function studentExamRoomResult(Request $request){
+        $this->validate($request,[
+            'code'  => 'required',
+        ]);
+        try{
+            $code=$request->get('code');
+            $queue=new ExamQueue();
+            $list=$queue->getStudentScreenRoomResultList($code);
+            if(count($list)){
+                return \Response::json(array('code' => 122,'data'=>$list));
+            }else{
+                return \Response::json(array('code' => -122,'data'=>[]));
+            }
+
+        } catch (\Exception $ex) {
+            return response()->json(['code'=>-1111,'data'=>[$this->fail($ex)]]);
+        }
+
+    }
 
 }

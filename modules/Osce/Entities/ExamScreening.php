@@ -273,4 +273,27 @@ class ExamScreening extends CommonModel
         return $this->hasMany('Modules\Osce\Entities\ExamQueue', 'exam_screening_id', 'id');
     }
 
+    /**
+     * 获取当前考试场次
+     * @param $exam_id
+     * @return object
+     *
+     * @author wt <wangtao@misrobot.com>
+     * @date   2016-05-7
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getScreenID($exam_id){
+        $screenObject=$this->getExamingScreening($exam_id);
+        if(!is_null($screenObject)){//获取当前场次
+            $screenId=$screenObject->id;
+        }else{
+            $screenObject=$this->getNearestScreening($exam_id);
+            if(is_null($screenObject)){
+                throw new \Exception('今天没有正在进行的考试场次');
+            }
+            $screenId=$screenObject->id;
+        }
+        return $screenId;
+    }
+
 }

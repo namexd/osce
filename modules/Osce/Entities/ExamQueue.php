@@ -1139,4 +1139,57 @@ class ExamQueue extends CommonModel
             $screen_id = null;
         }
     }
+
+    /**
+     * 腕表解绑，获取学生本次考试所有考场考试情况列表
+     * @param $code
+     * @return object
+     *
+     * @author wt <wangtao@misrobot.com>
+     * @date   2016-05-7
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+    public function getStudentScreenRoomResultList($code){
+        $screenStudent=new ExamScreeningStudent();
+        $screen= new ExamScreening();
+        $exam=Exam::doingExam();//当前考试id
+        $screenId=$screen->getScreenID($exam->id);//获取当前场次id
+        $studentMsg=$screenStudent->getStudentByWatchCode($code,$screenId);//获取腕表对应的学生信息
+
+        if(is_null($studentMsg)){
+            throw new \Exception('找不到对应的学生id');
+        }
+        $student_id=$studentMsg->student_id;
+        $studentMsgList=$this->where('exam_screening_id',$screenId)
+             ->where('exam_id',$exam->id)
+             ->where('student_id',$student_id)
+             ->select(['id','exam_screening_id','room_id','student_id','status','exam_id'])
+             ->orderBy('begin_dt')->get();//获取学生信息列表
+        if(!is_null($studentMsgList)){
+            $flag=false;
+           
+            foreach($studentMsgList as $key=>$val){//数据整理
+                $room=$val->room;
+                $studentMsgList[$key]['room_name']=$room->name;
+                if($val->status<3){
+                    $flag=true;
+                    $studentMsgList[$key]['result']='未上传';
+                }else{
+                   
+                    $studentMsgList[$key]['result']='已上传';
+                }
+            }
+            $list=$studentMsgList->toArray();
+            foreach ($list as $key=>$val){//去除不返回数据
+                unset($list[$key]['room']);
+            }
+            if(!$flag){//本次所有考场考试考完解绑
+                return [];
+            }else{
+                return $list;
+            }
+
+        }
+    }
 }
