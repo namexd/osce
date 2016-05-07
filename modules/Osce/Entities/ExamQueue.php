@@ -323,7 +323,7 @@ class ExamQueue extends CommonModel
                 {
                     $data[]=    $item;
                 }
-                dd($data);
+                
                 return collect($data);//$queueing->merge($temp);
             } else {
                 \Log::error('needNumTooBig', [$queueing->count()]);
