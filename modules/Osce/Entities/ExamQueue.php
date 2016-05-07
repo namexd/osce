@@ -230,7 +230,6 @@ class ExamQueue extends CommonModel
     static public function examineeByRoomId($room_id, $examId, $stations, $exam_screening_id)
     {
         try {
-
 //                $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
 //                    ->leftJoin('exam_gradation','exam_gradation.id','=','exam_draft_flow.exam_gradation_id')
 //                ->where('exam_draft.room_id',$room_id)
