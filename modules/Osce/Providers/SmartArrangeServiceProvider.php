@@ -39,7 +39,7 @@ class SmartArrangeServiceProvider extends ServiceProvider
         });
 
         \App::bind('SmartArrange', function () {
-            return new SmartArrange(\App::make('student'));
+            return new SmartArrange(\App::make('Modules\Osce\Entities\SmartArrange\Student\StudentInterface'));
         });
 
         //使用singleton绑定单例
