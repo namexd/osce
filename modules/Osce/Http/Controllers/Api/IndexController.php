@@ -1248,7 +1248,7 @@ class IndexController extends CommonController
      * @param $id
      * @param $student_id
      * @return object
-     * code 122 返回学生考场列表
+     * code 1 返回学生考场列表
      *      -122 学生所以考场考完
      *     -1111 捕获异常信息
      * @author wt <wangtao@misrobot.com>
