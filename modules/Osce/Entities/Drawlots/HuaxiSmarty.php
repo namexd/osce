@@ -38,23 +38,7 @@ class HuaxiSmarty
         return $this->stationId = $stations->random();
     }
 
-    /**
-     * 将信息写入exam_queue
-     * @access public
-     * @param $obj ExamQueue's object
-     * @return mixed
-     * @throws \Exception
-     * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
-     * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function writeExamQueue($obj)
-    {
-        $obj->station_id = $this->stationId;
-        $obj->status = 1;
-        return $obj->save();
-    }
+
 
     /**
      * 拼装返回成功字符串

@@ -142,7 +142,7 @@ class DrawlotsRepository extends AbstractDrawlots
             $this->stationId = $this->draw->ramdonId($accessStations);
             \Log::debug('1', [$this->stationId]);
             //将数据写入数据表
-            $this->draw->writeExamQueue($obj);
+            $this->writeExamQueue($obj, $this->stationId);
 
             //处理队列表的时间
             $this->judgeTime($this->student->student_id, $screen);

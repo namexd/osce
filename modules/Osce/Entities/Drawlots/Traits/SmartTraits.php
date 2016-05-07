@@ -62,4 +62,23 @@ trait SmartTraits
 
         return true;
     }
+
+    /**
+     * 将信息写入exam_queue
+     * @access public
+     * @param $obj ExamQueue's object
+     * @return mixed
+     * @throws \Exception
+     * @version 3.6
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-02
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function writeExamQueue($obj, $stationId, $status = 1)
+    {
+        $obj->station_id = $stationId;
+        $obj->status = $status;
+        $obj->blocking = 0;
+        return $obj->save();
+    }
 }
