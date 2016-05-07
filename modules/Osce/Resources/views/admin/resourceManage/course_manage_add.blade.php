@@ -230,6 +230,36 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">特殊评分项</label>
+                            <div class="col-sm-10">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5></h5>
+                                        <div class="ibox-tools">
+                                            <button type="button" class="btn btn-outline btn-default" id="add-special-score">新增特殊评分项</button>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <table class="table table-bordered" id="special-score">
+                                            <thead>
+                                            <tr>
+                                                <th width="481">名称</th>
+                                                <th>分数</th>
+                                                <th width="160">操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody index="0">
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">物品准备</label>
                             <div class="col-sm-10">
                                 <div class="ibox float-e-margins">
