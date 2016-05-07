@@ -141,7 +141,19 @@
                 }
             }
         });
-    })
+        var div=document.getElementById('check_special');
+        if(true==div.checked){
+            $("#col_special").style(display());
+        }
+    });
+    function display() {
+        /**
+         * 特殊评分项的开关
+         * @author gaodapeng
+         * @date   2016/5/7
+         */
+            $("#col_special").fadeToggle();
+    }
 </script> 
 @stop
 
@@ -236,9 +248,9 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <input id="check_special" type="checkbox" onclick="display()" {{($item->specialScores->isEmpty())?'':'checked'}}>
+                            <input type="checkbox" id="check_special" onclick="display()" {{($item->specialScores->isEmpty())?'':'checked'}}>
                             <label class="col-sm-2 control-label">特殊评分项</label>
-                            <div class="col-sm-10" id="col_special" style="display: block;">
+                            <div class="col-sm-10" id="col_special" style="display: none;">
                                 <div class="ibox float-e-margins">
                                     <div class="ibox-title">
                                         <h5></h5>
