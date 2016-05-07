@@ -124,7 +124,7 @@ class HuaxiSmarty
     {
         $exam = Exam::doingExam($params['exam_id']);
         $studentData = $student->studentList($params['station_id'], $exam, $params['student_id']);
-        \Log::debug('123', $studentData['nextTester']);
+        \Log::debug('123', [$studentData['nextTester']]);
         if ($studentData['nextTester']) {
             $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 
