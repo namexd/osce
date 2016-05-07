@@ -317,20 +317,9 @@ class IndexController extends CommonController
             //更改考生状态（1：已绑定腕表）
             ExamOrder::where('exam_id', $exam_id)->where('student_id', $student_id)->where('exam_screening_id', '=', $exam_screen_id)->update(['status' => 1]);
             Exam::where('id', $exam_id)->update(['status' => 1]);  //更改考试状态（把考试状态改为正在考试）
-            //推送当前组和下一组
-//            try{
-//                //考试完成推送
-//                $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
-//                $request['id']=$teacherId;
-//                $draw->getExaminee_arr($request);//当前组推送(可以获得)
-//                $draw->getNextExaminee_arr($request);//下一组
-//
-//            }catch (\Exception $ex){
-//                \Log::alert('结束考试调当前组或下一组错误', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
-//            }
-//
 
-            // 绑定腕表成功后给腕表推送消息
+
+            //todo 绑定腕表调腕表接口
             $studentWatchController = new StudentWatchController();
             $request['nfc_code'] = $code;
             $studentWatchController->getStudentExamReminder($request);
@@ -412,19 +401,6 @@ class IndexController extends CommonController
             $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
             $status       = $this->checkType($exameeStatus->status);
 
-           
-            
-            //判断该场次是否被排考安排考试 //拿到oder表里的场次 todo 周强 2016-4-30
-
-//            $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
-//            if(!in_array($exam_screen_id,$OderExamScreeningId)){
-//                $screen_id = ExamOrder::where('exam_id','=',$exam_id)
-//                    ->where('status','=',1)
-//                    ->first();
-//                $exam_screen_id = $screen_id->exam_screening_id;
-//            }
-
-
             //不存在考试场次，直接解绑
             if(!$exam_screen_id){
                 $result = Watch::where('id', '=', $id)->update(['status'=>0]);    //解绑
@@ -499,8 +475,9 @@ class IndexController extends CommonController
                     throw new \Exception('解绑失败');
                 }
             }else{
-                //如果考试流程未结束 还是解绑,把考试排序的状态改为0
+                //如果考试流程未结束 还是解绑,把考试排序的状态改为0   中途解绑
                 $result = Watch::where('id', '=', $id)->update(['status'=>0]);
+                // todo 解绑腕表调腕表接口 传入参数
 
                 if($result){
                     //更改 （状态改为 未绑定：status=0）
@@ -1011,24 +988,11 @@ class IndexController extends CommonController
             return \Response::json(array('code' => 2));     //没有对应的开考场次 —— 考试场次没有(1、0)
         }
         $screen_id    = $examScreening->id;
-
-
-        //拿到oder表里的考试场次 todo 周强 2016-4-30
-        $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
-        if(!in_array($screen_id,$OderExamScreeningId)){
-            $screen_id = ExamOrder::where('exam_id','=',$exam_id)
-                ->where('status','=',0)
-                ->OrderBy('begin_dt', 'asc')
-                ->first();
-            $screen_id = $screen_id->exam_screening_id;
-        }
-
-
         $studentModel = new Student();
         $examModel = new Exam();
         try {
 
-            //查找exam_screening  todo 这里查看考站有问题，需王涛确定修改
+            //查找exam_screening
             $stations = $examModel->where('exam.id','=',$exam_id)
                 ->leftjoin('exam_gradation', function ($join) {
                     $join->on('exam_gradation.exam_id', '=', 'exam.id');
@@ -1047,8 +1011,6 @@ class IndexController extends CommonController
 //            } else{
 //                $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
 //            }
-
-            //dd($stations);
             $countStation=[];
             foreach($stations as $item){
                 $countStation[]=$item->station_id;
@@ -1280,6 +1242,37 @@ class IndexController extends CommonController
         $result = $watchModel ->unwrapRecord($data);
 
         return $result;
+    }
+    /**
+     * 腕表解绑，学生本次考试所有考场成绩提交情况
+     * @param $id
+     * @param $student_id
+     * @return object
+     * code 122 返回学生考场列表
+     *      -122 学生所以考场考完
+     *     -1111 捕获异常信息
+     * @author wt <wangtao@misrobot.com>
+     * @date   2016-05-7
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function studentExamRoomResult(Request $request){
+        $this->validate($request,[
+            'code'  => 'required',
+        ]);
+        try{
+            $code=$request->get('code');
+            $queue=new ExamQueue();
+            $list=$queue->getStudentScreenRoomResultList($code);
+            if(count($list)){
+                return \Response::json(array('code' => 1,'data'=>$list));
+            }else{
+                return \Response::json(array('code' => -122,'data'=>[]));
+            }
+
+        } catch (\Exception $ex) {
+            return response()->json(['code'=>-1111,'data'=>[$this->fail($ex)]]);
+        }
+
     }
 
 }

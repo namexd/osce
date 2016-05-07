@@ -482,7 +482,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 		Route::get('student-details', 	['uses'=>'IndexController@getStudentDetails']);
 		Route::get('student-list', 	['uses'=>'IndexController@getStudentList']);
 		Route::get('skip-last', 	['uses'=>'IndexController@getSkipLast']);
-
+		Route::get('student-reslut', 	['uses'=>'IndexController@studentExamRoomResult']);
 		Route::get('add',['uses'=>'IndexController@getAddWatch']);
 		Route::get('update',['uses'=>'IndexController@getUpdateWatch']);
 		Route::get('delete',['uses'=>'IndexController@getDeleteWatch']);
@@ -527,9 +527,8 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 Route::get('test/test', function(Redis $redis) {
 //	return view('osce::Drawlots');
-	$a = collect(['aa' => 1, 'bb' => 2, 'cc' => 3]);
-	$b = $a->except(['aa', 'bb']);
-	dd($b);
+	$a = [1,2,3,4,5,6];
+	dd(array_pop($a));
 
 });
 

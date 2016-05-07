@@ -14,6 +14,8 @@ use Modules\Osce\Entities\Drawlots\Validator\EndExam;
 use Modules\Osce\Entities\Drawlots\Validator\GoWrong;
 use Modules\Osce\Entities\Drawlots\Validator\InExaminee;
 use Modules\Osce\Entities\Drawlots\Validator\NotEndPrepare;
+use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\Drawlots\Student as StudentObj;
 use Modules\Osce\Repositories\Common;
 
 class DrawlotsRepository extends AbstractDrawlots
@@ -25,6 +27,8 @@ class DrawlotsRepository extends AbstractDrawlots
     protected $studentObj = null;
 
     protected $station = null;
+
+    protected $stationId = null;
 
     protected $screen = null;
 
@@ -38,9 +42,10 @@ class DrawlotsRepository extends AbstractDrawlots
             });
 
             $this->draw = \App::make('DrawInterface');
+//            $this->draw = $draw;
 
             \App::bind('StudentInterface', function () {
-                return new Student();
+                return new StudentObj();
             });
             \App::bind('StationData', function () {
                 return new Station();
@@ -52,8 +57,9 @@ class DrawlotsRepository extends AbstractDrawlots
             $this->studentObj = \App::make('StudentInterface');
             $this->station = \App::make('StationData');
             $this->screen = \App::make('Screening');
-
-            $this->student = $this->studentObj->getStudent($this->params['uid']);
+//            $this->studentObj = $student;
+//            $this->station = $stationData;
+//            $this->screen = $screening;
 
             \App::bind('GoWrong', function () {
                 return new GoWrong();
@@ -77,9 +83,15 @@ class DrawlotsRepository extends AbstractDrawlots
                 \App::make('NotEndPrepare'),
                 \App::make('InExaminee')
             ];
+
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    public function setValidator(array $validator)
+    {
+        $this->validator = $validator;
     }
 
     /**
@@ -95,11 +107,13 @@ class DrawlotsRepository extends AbstractDrawlots
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
         try {
+            $this->student = $this->studentObj->getStudent($this->params['uid']);
             Common::valueIsNull($this->student, -2, '当前学生信息错误');
 
             //如果该学生已经抽签了，就直接返回实例
             $obj = $this->draw->isDraw($this->student->student_id);
             if (!is_null($obj)) {
+                $this->stationId = $obj->station_id;
                 return $this->draw->assembly($obj->station->name);
             }
 
@@ -125,8 +139,8 @@ class DrawlotsRepository extends AbstractDrawlots
             $this->fieldValidator($obj);
 
             //获取随机的stationId
-            $this->draw->ramdonId($accessStations);
-
+            $this->stationId = $this->draw->ramdonId($accessStations);
+            \Log::debug('1', [$this->stationId]);
             //将数据写入数据表
             $this->draw->writeExamQueue($obj);
 
@@ -161,8 +175,34 @@ class DrawlotsRepository extends AbstractDrawlots
         return true;
     }
 
+
     public function getStationNum($examId, $roomId, $screenId)
     {
         return $this->station->site($examId, $roomId, $screenId);
+    }
+
+    /**
+     * 获取推送的学生
+     * @access public
+     * @return mixed
+     * @internal param Student $student
+     * @internal param array $params @请求字段：* @请求字段：
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-07
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function pushStudent()
+    {
+        $params['exam_id'] = $this->params['exam_id'];
+        $params['station_id'] = $this->stationId;
+        $params['student_id'] = $this->student->student_id;
+        \Log::debug('1234', $params);
+        return $this->draw->pushStudent(new Student(), $params);
+//        if ($this->student) {
+//            $this->student->avator = asset($this->student->avator);
+//        }
+//        return $this->student;
+
     }
 }

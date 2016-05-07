@@ -32,6 +32,7 @@ class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
         });
 
         $this->model = \App::make('SmartArrange');
+//        $this->model = $smartArrange;
     }
 
     /**
@@ -61,7 +62,7 @@ class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
                 //将排序模式注入
                 $this->model->setCate(CateFactory::getCate($exam, $type));
                 //初始化学生
-                $this->_S_Count = $this->model->setStudents(new StudentFromDB());
+                $this->_S_Count = $this->model->setStudents();
                 /*
                  * 做排考的前期准备
                  * 检查各项数据是否存在

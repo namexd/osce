@@ -140,8 +140,15 @@
                 }
             }
         });
-    })
-
+    });
+    function display() {
+        /**
+         * 特殊评分项的开关
+         * @author gaodapeng
+         * @date   2016/5/7
+         */
+        $("#col_special").fadeToggle();
+    }
 </script>
 @stop
 
@@ -230,8 +237,9 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
+                            <input id="check_special"  type="checkbox" onclick="display()">
                             <label class="col-sm-2 control-label">特殊评分项</label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-10" id="col_special" style="display: none;">
                                 <div class="ibox float-e-margins">
                                     <div class="ibox-title">
                                         <h5></h5>
@@ -243,9 +251,9 @@
                                         <table class="table table-bordered" id="special-score">
                                             <thead>
                                             <tr>
-                                                <th width="481">名称</th>
+                                                <th width="70%">名称</th>
                                                 <th>分数</th>
-                                                <th width="160">操作</th>
+                                                <th width="10%">操作</th>
                                             </tr>
                                             </thead>
                                             <tbody index="0">

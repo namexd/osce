@@ -162,7 +162,6 @@ class DrawlotsController extends CommonController
             foreach ($examQueue as $key => $val) {
                 $examQueue[$key]->student_avator = asset($examQueue[$key]->student_avator);
             }
-            // $redis->publish('pad_message', json_encode($this->success_data($examQueue,103,'获取成功')));//信息推送
             return response()->json($this->success_data($examQueue));
         } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
@@ -545,6 +544,8 @@ class DrawlotsController extends CommonController
             if ($exam->sequence_mode == 1) {
                 //从队列表中通过考场ID得到对应的当前组的考生信息
                 $examQueue = ExamQueue::getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id);
+                
+                
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
                     $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                         json_encode($this->success_data([], 7200, '该考生不在当前考生小组中!')));
@@ -596,6 +597,7 @@ class DrawlotsController extends CommonController
             $this->judgeTime($watchLog->student_id,$exam_screening_id);
 
             $connection->commit();
+            
             $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($result, 1, '抽签成功!')));
             //推送当前学生
@@ -606,10 +608,14 @@ class DrawlotsController extends CommonController
             $inv = new InvigilatePadController();
             $studentMsg = $inv->getAuthentication_arr($request);//当前考生推送
             \Log::alert('抽签推送',[$studentMsg]);
+            
+            
             if ($studentMsg) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data($studentMsg, 102, '验证完成')));
             }
+            
+            
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
@@ -637,7 +643,8 @@ class DrawlotsController extends CommonController
             'uid' => 'required|string',
             'exam_id' => 'required|integer'
         ]);
-        \Log::debug('uid', [$this->request->input('uid')]);
+//        \Log::debug('uid', [$this->request->input('uid')]);
+        \Log::debug('params', $this->request->all());
         try {
             //写入具体的数据
             $huaxiDrawlots->setParams($this->request->all());
@@ -645,15 +652,18 @@ class DrawlotsController extends CommonController
             //获得抽签数据
             $data = $huaxiDrawlots->distribute();
 
+
+            $student = $huaxiDrawlots->pushStudent();
+
             //将数据推送给pad端
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-                json_encode($this->success_data($data, 1, '抽签成功！')));
-
+                json_encode($this->success_data($student, 102, '抽签成功！')));
+            \Log::debug('student123', [$student]);
             return response()->json($this->success_data($data));
         } catch (\Exception $ex) {
             \log::alert('draw_error', ['file' => $ex->getFile(), 'line' => $ex->getLine(), 'code' => $ex->getCode(), 'message' => $ex->getMessage()]);
-            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-                json_encode($this->fail($ex)));
+//            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
+//                json_encode($this->fail($ex)));
             return response()->json($this->fail($ex));
         }
     }

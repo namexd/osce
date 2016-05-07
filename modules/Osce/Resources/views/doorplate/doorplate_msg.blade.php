@@ -11,8 +11,8 @@
      }
     .top{
         background:#364150;
-        height: 35px;
-        line-height: 35px;
+        height: 60px;
+        line-height: 60px;
         font-size: 20px;
         width: 100%;
         position: relative;
@@ -123,8 +123,10 @@ if(!empty($errorsInfo)){
 
         </div>
      <div id="status_box">
+         @if($status!=4)
          <div class="status fl @if($status==1) green @elseif($status==2) red @else blue @endif"></div>
          <div class="fl m5" style="font-family: 黑体;color:@if($status==1) green @elseif($status==2) red @else deepskyblue @endif ">@if($status==1) 准备完成 @elseif($status==2) 考试中 @else 考试完成 @endif</div>
+         @endif
      </div>
 </div>
  <div id="bottom">
@@ -183,7 +185,7 @@ if(!empty($errorsInfo)){
 
                     }else if(e==2){
                         $('#status_box').html('<div class="status fl red"></div> <div class="fl m5" style="font-family: 黑体;color: red ">考试中 </div>');
-                    }else{
+                    }else if(e==3){
                         $('#status_box').html('<div class="status fl blue"></div> <div class="fl m5" style="font-family: 黑体;color: deepskyblue "> 考试完成</div>');
                     }
                 }

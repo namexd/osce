@@ -16,7 +16,7 @@ abstract class AbstractDrawlots
 
     protected $params = null;
 
-    public function setParams($params)
+    public function setParams(array $params)
     {
         $this->params = $params;
     }

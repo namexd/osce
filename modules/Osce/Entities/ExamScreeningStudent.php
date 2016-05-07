@@ -94,6 +94,19 @@ class ExamScreeningStudent extends CommonModel
         return $this->hasOne('Modules\Osce\Entities\ExamScreening', 'id', 'exam_screening_id');
     }
 
-
-
+    /**
+     * 根据watch code 返回学生id
+     * @param $code  腕表code
+     * @param $screenId 场次id
+     * @return object
+     *
+     * @author wt <wangtao@misrobot.com>
+     * @date   2016-05-7
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentByWatchCode($code,$screenId){
+      return  $this->leftJoin('watch', function ($join) {
+            $join->on($this->table.'.watch_id', '=', 'watch.id');
+        })->where('watch.code',$code)->where($this->table.'.exam_screening_id',$screenId)->first();
+    }
 }
