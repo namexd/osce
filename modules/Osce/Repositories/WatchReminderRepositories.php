@@ -81,6 +81,7 @@ class WatchReminderRepositories  extends BaseRepository
         $this->student  =   $student;
         $this->room     =   $room;
         $this->$station =   $station;
+        $this->redis    =   Redis::connection('message');;
         $examScreeningModel     =   new ExamScreening();
         $examScreening          =   $examScreeningModel  ->getExamingScreening($exam->id);
         if(is_null($examScreening))
@@ -456,7 +457,7 @@ class WatchReminderRepositories  extends BaseRepository
      * 推送
      */
     private function publishmessage($watchNfcCode,$data,$message){
-        $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
+        $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
             'nfc_code' => $watchNfcCode,
             'data' => $data,
             'message' => $message,
