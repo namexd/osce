@@ -34,7 +34,7 @@ class SmartArrangeServiceProvider extends ServiceProvider
     public function register()
     {
         //binding接口以便于依赖注入
-        \App::bind('student', function () {
+        \App::bind('Modules\Osce\Entities\SmartArrange\Student\StudentInterface', function () {
             return new StudentFromDB();
         });
 
