@@ -651,8 +651,8 @@ class DrawlotsController extends CommonController
             $data = $huaxiDrawlots->distribute();
 
 
-            $student = $huaxiDrawlots->pushStudent(new Student());
-            
+            $student = $huaxiDrawlots->pushStudent();
+
             //将数据推送给pad端
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($student, 1, '抽签成功！')));

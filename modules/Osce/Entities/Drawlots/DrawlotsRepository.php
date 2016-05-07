@@ -185,11 +185,15 @@ class DrawlotsRepository extends AbstractDrawlots
      * @time 2016-05-07
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function pushStudent(Student $student)
+    public function pushStudent()
     {
-        $params['exam_id'] = $this->params['exam_id'];
-        $params['station_id'] = $this->stationId;
-        $params['student_id'] = $this->student->student_id;
-        return $this->draw->pushStudent($student, $params);
+//        $params['exam_id'] = $this->params['exam_id'];
+//        $params['station_id'] = $this->stationId;
+//        $params['student_id'] = $this->student->student_id;
+//        return $this->draw->pushStudent($student, $params);
+        if ($this->student) {
+            $this->student->avator = asset($this->student->avator);
+        }
+        return $this->student;
     }
 }
