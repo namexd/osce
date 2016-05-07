@@ -464,8 +464,8 @@ class Student extends CommonModel
      * @return bool
      */
     public function studentList($stationId, $exam, $student_id)
-
     {
+        \Log::debug('pa', [$stationId, $student_id]);
         //当前场次
         $examScreen = new ExamScreening();
         $roomMsg = $examScreen->getExamingScreening($exam->id);
