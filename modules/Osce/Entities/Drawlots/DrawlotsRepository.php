@@ -176,12 +176,28 @@ class DrawlotsRepository extends AbstractDrawlots
     }
 
     /**
+     * 获取考场下有多少考站
+     * @access public
+     * @param $examId
+     * @param $roomId
+     * @param $screenId
+     * @return mixed
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-07
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStationNum($examId, $roomId, $screenId)
+    {
+        return $this->station->site($examId, $roomId, $screenId);
+    }
+
+    /**
      * 获取推送的学生
      * @access public
-     * @param Student $student
-     * @param array $params
-     * @请求字段：
      * @return mixed
+     * @internal param Student $student
+     * @internal param array $params @请求字段：* @请求字段：
      * @version
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-07
@@ -198,5 +214,6 @@ class DrawlotsRepository extends AbstractDrawlots
 //            $this->student->avator = asset($this->student->avator);
 //        }
 //        return $this->student;
+
     }
 }
