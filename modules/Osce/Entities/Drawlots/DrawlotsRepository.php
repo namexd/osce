@@ -9,21 +9,35 @@
 namespace Modules\Osce\Entities\Drawlots;
 
 
-use Modules\Osce\Entities\Drawlots\Validator\CheckTraits;
+
 use Modules\Osce\Entities\Drawlots\Validator\EndExam;
 use Modules\Osce\Entities\Drawlots\Validator\GoWrong;
 use Modules\Osce\Entities\Drawlots\Validator\InExaminee;
 use Modules\Osce\Entities\Drawlots\Validator\NotEndPrepare;
 use Modules\Osce\Repositories\Common;
 
-class HuaxiDrawlotsRepository extends AbstractDrawlots
+class DrawlotsRepository extends AbstractDrawlots
 {
-    use CheckTraits;
+    protected $draw = null;
 
+    protected $student = null;
+
+    protected $studentObj = null;
+
+    protected $station = null;
+
+    protected $screen = null;
+
+    protected $validator = null;
+    
     public function __construct()
     {
         try {
-            parent::__construct();
+            \App::bind('DrawInterface', function () {
+                return new HuaxiSmarty();
+            });
+
+            $this->draw = \App::make('DrawInterface');
 
             \App::bind('StudentInterface', function () {
                 return new Student();
@@ -117,7 +131,7 @@ class HuaxiDrawlotsRepository extends AbstractDrawlots
             $this->draw->writeExamQueue($obj);
 
             //处理队列表的时间
-            $this->draw->judgeTime($this->student->student_id, $screen);
+            $this->judgeTime($this->student->student_id, $screen);
             $connection->commit();
             return $this->draw->assembly($obj->station->name);
         } catch (\Exception $ex) {

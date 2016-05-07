@@ -162,8 +162,8 @@ class InvigilatorController extends CommonController
         $this   ->  validate($request,[
             'name'          =>  'required',
             'idcard'        =>  'required',
-            'mobile'        =>  'required',
             'email'         =>  'required',
+            'mobile'        =>  'required',
             'code'          =>  'required',
 //            'subject'       =>  'required',
             'images_path'   =>  'required',
@@ -727,7 +727,7 @@ class InvigilatorController extends CommonController
 
     /**
      * 查询老师是否已经存在(监,巡考老师,sp老师) 接口
-     * @api GET /osce/admin/invigilator/postSelectTeacher
+     * @api GET /osce/admin/invigilator/select-teacher
      *
      */
     public function postSelectTeacher(Request $request){
@@ -739,7 +739,7 @@ class InvigilatorController extends CommonController
 
         //存在ID，为编辑时验证
         if(empty($id)){
-            $user = User::where('username', $mobile)->orWhere('mobile', $mobile)->get();
+            $user = User::where('username', '=', $mobile)->orWhere('mobile', '=', $mobile)->get();
         }else{
             $user = User::where('id', '<>', $id)
                 ->where(function ($query) use ($mobile){
@@ -748,9 +748,9 @@ class InvigilatorController extends CommonController
                 })
                 ->get();
         }
-        if($user){
+        if(!$user->isEmpty()){
             foreach ($user as $item) {
-                $result = Teacher::where('id', $item->id)->first();
+                $result = Teacher::where('id', '=', $item->id)->first();
                 if($result){
                     return json_encode(['valid' =>false]);
                 }

@@ -8,32 +8,13 @@
 
 namespace Modules\Osce\Entities\Drawlots;
 
-
+use Modules\Osce\Entities\Drawlots\Traits\SmartTraits;
+use Modules\Osce\Entities\Drawlots\Validator\CheckTraits;
 abstract class AbstractDrawlots
 {
+    use CheckTraits, SmartTraits;
+
     protected $params = null;
-
-    protected $draw = null;
-
-    protected $student = null;
-
-    protected $studentObj = null;
-
-    protected $station = null;
-
-    protected $screen = null;
-
-    protected $validator = null;
-
-    public function __construct()
-    {
-        \App::bind('DrawInterface', function () {
-            return new HuaxiSmarty();
-        });
-
-        $this->draw = \App::make('DrawInterface');
-
-    }
 
     public function setParams($params)
     {

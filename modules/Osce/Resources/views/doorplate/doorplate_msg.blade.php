@@ -2,16 +2,17 @@
 
 @section('only_css')
     <style>
+
      .box{
          width: 100%;
-         min-width: 500px;
+
          height: 500px;
          margin: auto;
      }
     .top{
         background:#364150;
-        height: 70px;
-        line-height: 70px;
+        height: 35px;
+        line-height: 35px;
         font-size: 20px;
         width: 100%;
         position: relative;
@@ -20,14 +21,10 @@
         position: absolute;
         top:0;
         left: 10px;
-        width: 50px;
-        height: 50px;
+        width: 35px;
+        height: 35px;
     }
-    #ret{
-        position: absolute;
-        top:0;
-        right: 15px;
-    }
+
     .f20{
         font-size: 20px;
     }
@@ -127,7 +124,7 @@ if(!empty($errorsInfo)){
         </div>
      <div id="status_box">
          <div class="status fl @if($status==1) green @elseif($status==2) red @else blue @endif"></div>
-         <div class="fl m5" style="font-family: 黑体;color:@if($status==1) green @elseif($status==2) red @else blue @endif ">@if($status==1) 准备完成 @elseif($status==2) 考试中 @else 考试完成 @endif</div>
+         <div class="fl m5" style="font-family: 黑体;color:@if($status==1) green @elseif($status==2) red @else deepskyblue @endif ">@if($status==1) 准备完成 @elseif($status==2) 考试中 @else 考试完成 @endif</div>
      </div>
 </div>
  <div id="bottom">
@@ -187,7 +184,7 @@ if(!empty($errorsInfo)){
                     }else if(e==2){
                         $('#status_box').html('<div class="status fl red"></div> <div class="fl m5" style="font-family: 黑体;color: red ">考试中 </div>');
                     }else{
-                        $('#status_box').html('<div class="status fl blue"></div> <div class="fl m5" style="font-family: 黑体;color: blue "> 考试完成</div>');
+                        $('#status_box').html('<div class="status fl blue"></div> <div class="fl m5" style="font-family: 黑体;color: deepskyblue "> 考试完成</div>');
                     }
                 }
             });
