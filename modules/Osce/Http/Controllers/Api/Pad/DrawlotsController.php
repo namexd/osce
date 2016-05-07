@@ -642,6 +642,7 @@ class DrawlotsController extends CommonController
             //写入具体的数据
             $huaxiDrawlots->setParams($this->request->all());
 
+
             //获得抽签数据
             $data = $huaxiDrawlots->distribute();
 

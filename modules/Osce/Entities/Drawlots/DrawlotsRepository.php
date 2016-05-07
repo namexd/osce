@@ -38,6 +38,7 @@ class DrawlotsRepository extends AbstractDrawlots
             });
 
             $this->draw = \App::make('DrawInterface');
+//            $this->draw = $draw;
 
             \App::bind('StudentInterface', function () {
                 return new Student();
@@ -52,8 +53,12 @@ class DrawlotsRepository extends AbstractDrawlots
             $this->studentObj = \App::make('StudentInterface');
             $this->station = \App::make('StationData');
             $this->screen = \App::make('Screening');
+//            $this->studentObj = $student;
+//            $this->station = $stationData;
+//            $this->screen = $screening;
 
             $this->student = $this->studentObj->getStudent($this->params['uid']);
+            \Log::debug('student', [$this->student]);
 
             \App::bind('GoWrong', function () {
                 return new GoWrong();
@@ -77,9 +82,15 @@ class DrawlotsRepository extends AbstractDrawlots
                 \App::make('NotEndPrepare'),
                 \App::make('InExaminee')
             ];
+
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    public function setValidator(array $validator)
+    {
+        $this->validator = $validator;
     }
 
     /**

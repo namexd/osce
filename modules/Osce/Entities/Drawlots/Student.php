@@ -21,7 +21,7 @@ class Student implements StudentInterface
             return ExamScreeningStudent::watch()
                 ->where('watch.status', 1)
                 ->where('watch.code', $nfc)
-                ->whereIsEnd(0)
+                ->where('exam_screening_student.is_end', 0)
                 ->select(
                     'exam_screening_student.student_id as student_id',
                     'exam_screening_student.exam_screening_id as exam_screening_id',
