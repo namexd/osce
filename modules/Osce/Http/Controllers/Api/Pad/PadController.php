@@ -400,7 +400,8 @@ class PadController extends  CommonController{
         $examScreeningStudentModel = new ExamScreeningStudent();
         $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
             ->where('student_id','=',$queue->student_id)->first();
-        //判定学生这只腕表是否已解绑，如果解绑了就查询学生是否又绑定了新的腕表，如果都没有就结束考试
+        //判定学生这只腕表是否已解绑，如果解绑了就查询学生是否又绑定了新的腕表 ，如果都没有就结束考试
+
 
             
 
