@@ -201,7 +201,8 @@ class ExamQueue extends CommonModel
         return $this->paginate(config('msc.page_size'));
     }
 
-    static public function getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id){
+    static public function
+    getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id){
         //先判定该学生是否抽过签
             $queueing = ExamQueue::where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)

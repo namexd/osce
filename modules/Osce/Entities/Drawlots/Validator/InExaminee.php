@@ -27,8 +27,7 @@ class InExaminee implements DrawValidatorInterface
     {
         // TODO: Implement validate() method.
         $stations = $this->station->site($examId, $roomId, $screenId);
-
-        $examinee = ExamQueue::examineeByRoomId($roomId, $examId, count($stations), $screenId);
+        $examinee = ExamQueue::examineeByRoomId($roomId, $examId, $stations, $screenId);
         if ($examinee->pluck('student_id')->search($studentId) === false) {
             throw new \Exception('当前考生目前不应该抽签', -30);
         }

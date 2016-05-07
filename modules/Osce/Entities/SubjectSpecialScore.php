@@ -25,4 +25,8 @@ class SubjectSpecialScore extends CommonModel
         return $this->hasOne('\Modules\Osce\Entities\Subject', 'id', 'subject_id');
     }
 
+    public function getSubjectSpecialScore($suject_id){
+        $result = $this->where('subject_id', '=', $suject_id)->get();
+        return $result;
+    }
 }

@@ -138,8 +138,8 @@ class DrawlotsRepository extends AbstractDrawlots
             $this->fieldValidator($obj);
 
             //获取随机的stationId
-            $this->stationId =  $this->draw->ramdonId($accessStations);
-
+            $this->stationId = $this->draw->ramdonId($accessStations);
+            \Log::debug('1', [$this->stationId]);
             //将数据写入数据表
             $this->draw->writeExamQueue($obj);
 
@@ -188,13 +188,14 @@ class DrawlotsRepository extends AbstractDrawlots
      */
     public function pushStudent()
     {
-//        $params['exam_id'] = $this->params['exam_id'];
-//        $params['station_id'] = $this->stationId;
-//        $params['student_id'] = $this->student->student_id;
-//        return $this->draw->pushStudent($student, $params);
-        if ($this->student) {
-            $this->student->avator = asset($this->student->avator);
-        }
-        return $this->student;
+        $params['exam_id'] = $this->params['exam_id'];
+        $params['station_id'] = $this->stationId;
+        $params['student_id'] = $this->student->student_id;
+        \Log::debug('1234', $params);
+        return $this->draw->pushStudent(new Student(), $params);
+//        if ($this->student) {
+//            $this->student->avator = asset($this->student->avator);
+//        }
+//        return $this->student;
     }
 }
