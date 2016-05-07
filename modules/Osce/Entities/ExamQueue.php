@@ -1167,7 +1167,7 @@ class ExamQueue extends CommonModel
                     $flag=true;
                     $studentMsgList[$key]['result']='未上传';
                 }else{
-                   
+                    $studentMsgList[$key]['status']=3;//c++判断已上传成数量绩标识
                     $studentMsgList[$key]['result']='已上传';
                 }
             }

@@ -10,6 +10,7 @@ namespace Modules\Osce\Repositories;
 use Modules\Osce\Entities\Drawlots\DrawlotsRepository;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Repositories\BaseRepository;
@@ -375,25 +376,25 @@ class WatchReminderRepositories  extends BaseRepository
      * 结束考试
      */
     public function endExam(){
-        //获取初始化的当前队列
-
-        //获取当前同组学生清单
-
-        foreach(){
-            //根据学生获取NFC _code
-        }
-
-        //获取当前场次老考试是否已结束
-
+        //获取当前学生
+         $student=$this->student;
+        //获取当前场次
+        $screen=$this->examScreening;
         //推送消息
-
         $data = [];
-        $data['title'] = '';
-        $data['code'] = '';
-
-        $this->publishmessage($watchNfcCode,$data,$message);
+        $data['title'] = '考试已完成,请及时归还腕表';
+        $data['code'] = '6';
+        $watchNfcCode= ExamScreeningStudent::leftJoin('watch','exam_screening_student.watch_id','=','watch.id')
+                              ->where('exam_screening_student.exam_screening_id',$screen->id)
+                              ->where('exam_screening_student.student_id',$student->id)
+                              ->select(['watch.nfc_code'])
+                              ->first();//获取学生对应的nfc_code
+        if(is_null($watchNfcCode)){
+            throw new \Exception('未找到对应的腕表nfc_code');
+        }
+        $this->publishmessage($watchNfcCode->nfc_code,$data,$data['title']);
         return response()->json(
-            ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
+            ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
         );
     }
 
