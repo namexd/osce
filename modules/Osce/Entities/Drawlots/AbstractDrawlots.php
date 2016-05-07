@@ -8,10 +8,11 @@
 
 namespace Modules\Osce\Entities\Drawlots;
 
+use Modules\Osce\Entities\Drawlots\Traits\SmartTraits;
 use Modules\Osce\Entities\Drawlots\Validator\CheckTraits;
 abstract class AbstractDrawlots
 {
-    use CheckTraits;
+    use CheckTraits, SmartTraits;
 
     protected $params = null;
 
