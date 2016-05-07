@@ -15,6 +15,7 @@ use Modules\Osce\Entities\Drawlots\Validator\GoWrong;
 use Modules\Osce\Entities\Drawlots\Validator\InExaminee;
 use Modules\Osce\Entities\Drawlots\Validator\NotEndPrepare;
 use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\Drawlots\Student as StudentObj;
 use Modules\Osce\Repositories\Common;
 
 class DrawlotsRepository extends AbstractDrawlots
@@ -44,7 +45,7 @@ class DrawlotsRepository extends AbstractDrawlots
 //            $this->draw = $draw;
 
             \App::bind('StudentInterface', function () {
-                return new Student();
+                return new StudentObj();
             });
             \App::bind('StationData', function () {
                 return new Station();
