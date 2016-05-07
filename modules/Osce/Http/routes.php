@@ -527,9 +527,8 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 Route::get('test/test', function(Redis $redis) {
 //	return view('osce::Drawlots');
-	$a = collect(['aa' => 1, 'bb' => 2, 'cc' => 3]);
-	$b = $a->except(['aa', 'bb']);
-	dd($b);
+	$a = [1,2,3,4,5,6];
+	dd(array_pop($a));
 
 });
 
