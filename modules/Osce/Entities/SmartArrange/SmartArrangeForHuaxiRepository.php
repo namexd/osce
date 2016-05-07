@@ -21,18 +21,18 @@ class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
 
     private $_S_Count;
 
-    public function __construct(SmartArrange $smartArrange)
+    public function __construct()
     {
-//        \App::bind('student', function () {
-//            return new StudentFromDB();
-//        });
-//
-//        \App::bind('SmartArrange', function () {
-//            return new SmartArrange(\App::make('student'));
-//        });
+        \App::bind('student', function () {
+            return new StudentFromDB();
+        });
 
-//        $this->model = \App::make('SmartArrange');
-        $this->model = $smartArrange;
+        \App::bind('SmartArrange', function () {
+            return new SmartArrange(\App::make('student'));
+        });
+
+        $this->model = \App::make('SmartArrange');
+//        $this->model = $smartArrange;
     }
 
     /**
