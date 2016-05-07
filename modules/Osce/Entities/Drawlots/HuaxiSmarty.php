@@ -120,9 +120,8 @@ class HuaxiSmarty
      * @time 2016-05-07
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function pushStudent(array $params)
+    public function pushStudent($student, array $params)
     {
-        $student = new Student();
         $exam = Exam::doingExam($params['exam_id']);
         $studentData = $student->studentList($params['station_id'], $exam, $params['student_id']);
         \Log::debug('123', $studentData['nextTester']);
