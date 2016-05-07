@@ -59,6 +59,8 @@ class ExamStationStatus extends CommonModel
                     return 1;
                 }elseif($flag&&$tag){//准备和没准备都有
                     return 2;
+                }else{
+                    return 4;
                 }
 
 
