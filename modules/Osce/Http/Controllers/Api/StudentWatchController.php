@@ -78,7 +78,6 @@ class StudentWatchController extends CommonController
 //            );
 //
 //        }
-
         //根据腕表nfc_code找到腕表
         $watch = Watch::where('code', '=', $watchNfcCode)->first();
         if (is_null($watch)) {
