@@ -45,6 +45,7 @@ use Auth;
 use DB;
 use Modules\Osce\Repositories\Common;
 use Illuminate\Support\Facades\Redis;
+use Modules\Osce\Repositories\WatchReminderRepositories;
 
 
 class DrawlotsController extends CommonController
@@ -116,7 +117,7 @@ class DrawlotsController extends CommonController
             'exam_id' => 'sometimes|integer'
         ]);
 
-//        try {
+        try {
             //首先得到登陆者id
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
@@ -163,9 +164,9 @@ class DrawlotsController extends CommonController
                 $examQueue[$key]->student_avator = asset($examQueue[$key]->student_avator);
             }
             return response()->json($this->success_data($examQueue));
-//        } catch (\Exception $ex) {
-//            return response()->json($this->fail($ex));
-//        }
+        } catch (\Exception $ex) {
+            return response()->json($this->fail($ex));
+        }
     }
 
     /**
@@ -600,6 +601,11 @@ class DrawlotsController extends CommonController
             
             $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($result, 1, '抽签成功!')));
+
+            //todo 绑定腕表调腕表接口
+            $watch = new WatchReminderRepositories();
+            $watch->getWatchPublish($student->id,$result->id ,$roomId);
+
             //推送当前学生
             $request['station_id'] = $result->id;
             $request['teacher_id'] = $teacherId;
@@ -635,7 +641,7 @@ class DrawlotsController extends CommonController
      * @time 2016-05-02
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postDrawlots(DrawlotsRepository $huaxiDrawlots)
+    public function postDrawlots(DrawlotsRepository $huaxiDrawlots, WatchReminderRepositories $watchReminder)
     {
         //验证
         $this->validate($this->request, [
@@ -654,10 +660,18 @@ class DrawlotsController extends CommonController
 
 
             $student = $huaxiDrawlots->pushStudent();
-
+            $params = $huaxiDrawlots->getParams();
+            \Log::debug('params', $params);
+            //将数据推送给腕表
+            try {
+                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
+            } catch (\Exception $ex) {
+                throw new \Exception('推送给腕表出错', -80);
+            }
             //将数据推送给pad端
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($student, 102, '抽签成功！')));
+
             \Log::debug('student123', [$student]);
             return response()->json($this->success_data($data));
         } catch (\Exception $ex) {

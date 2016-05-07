@@ -28,6 +28,7 @@ use Modules\Osce\Entities\Vcr;
 use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Http\Controllers\Api\StudentWatchController;
+use Modules\Osce\Repositories\WatchReminderRepositories;
 
 class PadController extends  CommonController{
     /**
@@ -376,7 +377,7 @@ class PadController extends  CommonController{
      * @return \Illuminate\Http\JsonResponse
      * @author Jiangzhiheng
      */
-    public function getChangeStatus(Request $request)
+    public function getChangeStatus(Request $request, WatchReminderRepositories $watchReminder)
     {
 
 
@@ -395,8 +396,9 @@ class PadController extends  CommonController{
         $teacherId = $request->input('user_id');
 
         $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-
-            \Log::alert('ChangeStatusData', $request->all());
+        //推送给腕表
+        $watchReminder->getWatchPublish($queue->student_id, $queue->station_id, $queue->room_id);
+        \Log::alert('ChangeStatusData', $request->all());
 
 //        //考试结束后，调用向腕表推送消息的方法
 //        $examScreeningStudentModel = new ExamScreeningStudent();

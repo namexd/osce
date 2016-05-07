@@ -488,7 +488,7 @@ class WatchReminderRepositories  extends BaseRepository
         }
     }
 
-   public  function getWatchPublish($studentId,$stationId,$roomId){
+   public  function getWatchPublish($studentId, $stationId, $roomId){
 
        $exam = Exam::doingExam();  //拿到考试实例
        $student = null;

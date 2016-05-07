@@ -25,6 +25,7 @@ use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Watch;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
+use Modules\Osce\Repositories\WatchReminderRepositories;
 
 
 class IndexController extends CommonController
@@ -320,9 +321,13 @@ class IndexController extends CommonController
 
 
             //todo 绑定腕表调腕表接口
-            $studentWatchController = new StudentWatchController();
-            $request['nfc_code'] = $code;
-            $studentWatchController->getStudentExamReminder($request);
+            $watch = new WatchReminderRepositories();
+            try{
+                $watch->getWatchPublish($student_id,$stationId =null,$roomId =null);
+
+            }catch (\Exception $ex){
+                \Log::debug('绑定腕表调腕表接口出错',[$student_id,$ex->all()]);
+            }
 
             return \Response::json(array('code' => 1));
         } else {
@@ -453,6 +458,15 @@ class IndexController extends CommonController
 
                 //腕表状态 更改为 解绑状态（status=0）
                 $result = Watch::where('id',$id)->update(['status'=>0]);
+
+                //todo 绑定腕表调腕表接口
+                $watch = new WatchReminderRepositories();
+                try {
+                    $watch->getWatchPublish($student_id, $stationId = null, $roomId = null);
+                } catch (\Exception $ex) {
+                    \Log::debug('解绑腕表接口推送失败', $student_id, $stationId = null, $roomId = null);
+                }
+
                 if($result){
                     //腕表解绑，添加腕表解绑记录
                     $this->watchUnbundling($id, $student_id);
@@ -477,7 +491,14 @@ class IndexController extends CommonController
             }else{
                 //如果考试流程未结束 还是解绑,把考试排序的状态改为0   中途解绑
                 $result = Watch::where('id', '=', $id)->update(['status'=>0]);
-                // todo 解绑腕表调腕表接口 传入参数
+
+                //todo 绑定腕表调腕表接口
+                $watch = new WatchReminderRepositories();
+                try {
+                    $watch->getWatchPublish($student_id, $stationId = null, $roomId = null);
+                } catch (\Exception $ex) {
+                    \Log::debug('解绑腕表接口推送失败', $student_id, $stationId = null, $roomId = null);
+                }
 
                 if($result){
                     //更改 （状态改为 未绑定：status=0）

@@ -21,7 +21,7 @@ class GoWrong implements DrawValidatorInterface
         $temp = ExamQueue::whereStatus(0)
             ->whereStudentId($studentId)
             ->whereExamScreeningId($screenId)
-            ->whereBlock(0)
+            ->whereBlocking(0)
             ->orderBy('next_num', 'asc')
             ->orderBy('begin_dt', 'asc')
             ->first();

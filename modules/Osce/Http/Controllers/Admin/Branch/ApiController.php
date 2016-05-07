@@ -44,6 +44,8 @@ use Modules\Osce\Http\Controllers\Admin\Branch\AnswerController;
 use Modules\Osce\Entities\StationTeacher;
 use Illuminate\Support\Facades\Redis;
 use Modules\Osce\Http\Controllers\Api\StudentWatchController;
+use Modules\Osce\Repositories\WatchReminderRepositories;
+
 class ApiController extends CommonController
 {
     private $name;
@@ -748,7 +750,7 @@ class ApiController extends CommonController
      * @date 2016-04-06 15:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getReadyExam (Request $request) {
+    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder) {
 
         $this->validate($request, [
             'exam_id'           => 'required|integer',
@@ -829,10 +831,18 @@ class ApiController extends CommonController
             
             // todo  准备好后调用腕表接口
 
-            $studentWatchController = new StudentWatchController();
-            foreach ($watchNfcCodes as $watchNfcCode) {
-                $request['nfc_code'] = $watchNfcCode;
-                $studentWatchController->getStudentExamReminder($request, $stationId);
+//            $studentWatchController = new StudentWatchController();
+//            foreach ($watchNfcCodes as $watchNfcCode) {
+//                $request['nfc_code'] = $watchNfcCode;
+////                $studentWatchController->getStudentExamReminder($request, $stationId);
+//
+//            }
+            try {
+                foreach ($studentIds as $studentId) {
+                    $watchReminder->getWatchPublish($studentId, $stationId, $roomId);
+                }
+            } catch (\Exception $ex) {
+                \Log::debug('准备考试按钮', [$studentId, $stationId, $roomId, $ex->toArray()]);
             }
         } else {
             // 考站排 一个学生
@@ -863,9 +873,15 @@ class ApiController extends CommonController
                 );
             }
 
-            $studentWatchController = new StudentWatchController();
-            $request['nfc_code'] = $watch['nfc_code'];
-            $studentWatchController->getStudentExamReminder($request, $stationId);
+//            $studentWatchController = new StudentWatchController();
+//            $request['nfc_code'] = $watch['nfc_code'];
+//            $studentWatchController->getStudentExamReminder($request, $stationId);
+
+            try {
+            $watchReminder->getWatchPublish($examQenens->student_id, $stationId, $roomId);
+            } catch (\Exception $ex) {
+                \Log::debug('准备考试按钮2', [$examQenens->student_id, $stationId, $roomId, $ex->toArray()]);
+            }
         }
 
 
@@ -892,9 +908,15 @@ class ApiController extends CommonController
                 $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id', '=', $examQueue->exam_screening_id)
                     ->where('student_id', '=', $examQueue->student_id)->first();
                 $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
-                $studentWatchController = new StudentWatchController();
-                $request['nfc_code'] = $watchData->nfc_code;
-                $studentWatchController->getStudentExamReminder($request, $stationId);
+                //TODO 废弃旧方法
+//                $studentWatchController = new StudentWatchController();
+//                $request['nfc_code'] = $watchData->nfc_code;
+//                $studentWatchController->getStudentExamReminder($request, $stationId);
+                try {
+                    $watchReminder->getWatchPublish($examQueue->student_id, $stationId, $roomId);
+                } catch (\Exception $ex) {
+                    \Log::debug('准备考试按钮3', [$examQueue->student_id, $stationId, $roomId, $ex->toArray()]);
+                }
             }
         }
 
