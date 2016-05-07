@@ -323,8 +323,11 @@ class InvigilatePadController extends CommonController
             }
             
             return response()->json(
-                $this->success_data(['normal'=>$standardItemList, 'special'=>$specialScoreList], 1, '数据传送成功')
+                $this->success_data($standardItemList, 1, '数据传送成功')
             );
+//            return response()->json(
+//                $this->success_data(['normal'=>$standardItemList, 'special'=>$specialScoreList], 1, '数据传送成功')
+//            );
             
         }catch (\Exception $ex){
             return response()->json($this->fail($ex));
