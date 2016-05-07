@@ -673,7 +673,7 @@ class Student extends CommonModel
 
             $studentList = ExamQueue::where('status',3)->where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)
                                     ->groupBy('student_id')->get()->pluck('student_id')->toArray();
-            //检查学生是否
+            //检查学生是否已真的结束考试
             $studentList   = ExamScreeningStudent::where('exam_screening_id',$screen_id)
                                 ->whereIn('student_id',$studentList)
                                 ->where('is_end','=',1)
@@ -681,7 +681,6 @@ class Student extends CommonModel
                                 ->groupBy('student_id')
                                 ->pluck('student_id')
                                 ->toArray();
-
             $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
                 $join->on('student.id', '=', 'exam_order.student_id');
             })->where('exam_order.exam_id', '=', $exam_id)
@@ -692,12 +691,7 @@ class Student extends CommonModel
             });
 
             if (count($studentList)) {
-
-//                $num = ExamQueue::where('status','<>',3)->where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)
-//                    ->count();
-
                     $builder = $builder->whereNotIn('exam_order.student_id', $studentList);
-
             }
         }else {
             $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
