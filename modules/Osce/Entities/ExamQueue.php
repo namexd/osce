@@ -313,8 +313,8 @@ class ExamQueue extends CommonModel
                     ->groupBy('student.id')
                     ->take(count($stations) - $queueing->count())
                     ->get();
-                dd($queueing, $temp->all(), $queueing->merge($temp->all()));
-                return $queueing->merge($temp->all());
+                dd($queueing, $temp->all(), $queueing->merge($temp));
+                return $queueing->merge($temp);
             } else {
                 \Log::error('needNumTooBig', [$queueing->count()]);
                 return $queueing->take(count($stations));
