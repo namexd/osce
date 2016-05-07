@@ -42,6 +42,10 @@ class Subject extends CommonModel
     {
         return $this->belongsToMany('Modules\Osce\Entities\CaseModel','subject_cases','subject_id','case_id','id');
     }
+    public function specialScores()
+    {
+        return $this->hasMany('Modules\Osce\Entities\SubjectSpecialScore','subject_id', 'id');
+    }
     public function supplys()
     {
         return $this->belongsToMany('Modules\Osce\Entities\Supply','subject_supply','subject_id','supply_id','id');
@@ -85,22 +89,28 @@ class Subject extends CommonModel
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function addSubject($data, $points, $cases, $goods, $user_id)
+    public function addSubject($data, $points, $cases, $speScore, $goods, $user_id)
     {
         $connection = DB::connection($this->connection);
-        $connection->beginTransaction();
+        $connection ->beginTransaction();
 
         try {
-            if ($subject = $this->create($data)) {          //创建考试项目
-
+            $subject = $this->create($data);          //创建考试项目
+            if ($subject)
+            {
                 //TODO:Zhoufuxiang 2016-4-12
-                if (!$this->addStandard($subject, $points)){
+                if (!$this->addStandard($subject, $points))
+                {
                     throw new \Exception('保存评分标准失败');
                 }
 
                 //添加考试项目——病例关系
                 if(!$this->addSubjectCases($subject->id, $cases, $user_id)){
                     throw new \Exception('创建考试项目——病例关系失败');
+                }
+                //添加考试项目——特殊评分项关系
+                if(!$this->addSubjectSpecialScore($subject->id, $speScore, $user_id)){
+                    throw new \Exception('创建考试项目——特殊评分项关系失败');
                 }
                 //添加考试项目——用物关系
                 if(!empty($goods)){
@@ -109,17 +119,16 @@ class Subject extends CommonModel
                     }
                 }
 
-            } else {
+            }else
+            {
                 throw new \Exception('新增考核标准失败');
             }
+
             $connection->commit();
-//            $a=$this->where('id','=',$subject->id)->with('cases')->with('supplys')->with(['standards'=>function($q){
-//                $q->with('standardItem');
-//            }])->first();
-//            dd($a);
             return $subject;
 
-        } catch (\Exception $ex) {
+        } catch (\Exception $ex)
+        {
             $connection->rollBack();
             throw $ex;
         }
@@ -185,7 +194,7 @@ class Subject extends CommonModel
      * @date 2016-01-03 18:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function editTopic($id, $data, $points, $cases, $goods)
+    public function editTopic($id, $data, $points, $cases, $speScore, $goods)
     {
         $subject = $this->findOrFail($id);
         $connection = DB::connection($this->connection);
@@ -210,6 +219,10 @@ class Subject extends CommonModel
                 //添加考试项目——病例关系
                 if(!$this->addSubjectCases($subject->id, $cases, $user->id, $id)){
                     throw new \Exception('编辑考试项目——病例关系失败');
+                }
+                //添加考试项目——特殊评分项关系 TODO:Zhoufuxiang 2016-05-07
+                if(!$this->addSubjectSpecialScore($subject->id, $speScore, $user->id)){
+                    throw new \Exception('编辑考试项目——特殊评分项关系失败');
                 }
                 //编辑考试项目——用物关系
                 if(!$this->editSubjectGoods($subject->id, $goods, $user->id)){
@@ -465,6 +478,47 @@ class Subject extends CommonModel
 
         return true;
     }
+
+    /**
+     * 添加考试项目——特殊评分项关系
+     * @param  $subject_id
+     * @param  $speScores
+     * @param  $user_id
+     * @return bool
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @data   2016-05-7
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function addSubjectSpecialScore($subject_id, $speScores, $user_id)
+    {
+        //查询原有的考试项目——特殊评分项（存在则全删除）
+        $subjectSpeScores = SubjectSpecialScore::where('subject_id', '=', $subject_id)->get();
+        if(!$subjectSpeScores->isEmpty()){
+            foreach ($subjectSpeScores as $subjectSpeScore) {
+                $subjectSpeScore->delete();
+            }
+        }
+        //再重新添加新的考试项目——特殊评分项
+        if(!empty($speScores)){
+            foreach ($speScores as $speScore)
+            {
+                //添加考试项目——特殊评分项关系
+                $data = [
+                    'subject_id'        => $subject_id,
+                    'title'             => $speScore['title'],
+                    'score'             => $speScore['score'],
+                    'created_user_id'   => $user_id
+                ];
+                if(!SubjectSpecialScore::create($data)){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 
     /**
      * 添加考试项目——用物关系

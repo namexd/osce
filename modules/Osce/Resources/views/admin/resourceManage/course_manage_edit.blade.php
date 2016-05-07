@@ -236,6 +236,48 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
+                            <input id="check_special" type="checkbox" onclick="display()" {{($item->specialScores->isEmpty())?'':'checked'}}>
+                            <label class="col-sm-2 control-label">特殊评分项</label>
+                            <div class="col-sm-10" id="col_special" style="display: block;">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5></h5>
+                                        <div class="ibox-tools">
+                                            <button type="button" class="btn btn-outline btn-default" id="add-special-score">新增特殊评分项</button>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <table class="table table-bordered" id="special-score">
+                                            <thead>
+                                            <tr>
+                                                <th width="70%">名称</th>
+                                                <th>分数</th>
+                                                <th width="10%">操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody index="0">
+                                            @forelse($item->specialScores as $key => $specialScore)
+                                                <tr>
+                                                    <td>
+                                                        <input class="form-control" name="special_score[{{$key+1}}][title]" value="{{$specialScore->title}}"  style="width: 100%;" />
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control"name="special_score[{{$key+1}}][score]" value="{{$specialScore->score}}" >
+                                                    </td>
+                                                    <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
+                                                </tr>
+                                            @empty
+                                            @endforelse
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">物品准备</label>
                             <div class="col-sm-10">
                                 <div class="ibox float-e-margins">

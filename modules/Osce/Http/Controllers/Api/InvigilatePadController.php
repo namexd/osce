@@ -767,37 +767,14 @@ class InvigilatePadController extends CommonController
             $stationId = $request->get('station_id');
             $teacherId =$request->get('user_id');
             $type =$request->get('type');
-            //开始考试时创建成绩
-//            $ExamResultData=[
-//                'student_id'=>$studentId,
-//                'exam_screening_id'=>Null,
-//                'station_id'=>$stationId,
-//                'begin_dt'=>$date,
-//                'end_dt'=>Null,
-//                'score'=>0,
-//                'score_dt'=>Null,
-//                'create_user_id'=>Null,
-//                'teacher_id'=>Null,
-//                'evaluate'=>Null,
-//                'operation'=>0,
-//                'skilled'=>0,
-//                'patient'=>0,
-//                'affinity'=>0,
-//
-//            ];
-//           if(!ExamResult::create($ExamResultData)){
-//               throw new \Exception('成绩创建失败',-106);
             $exam = Exam::where('status', '=', 1)->first();
             $examQueue = ExamQueue::where('exam_id',$exam->id)
                 ->where('student_id', '=', $studentId)
                 ->where('station_id', '=', $stationId)
                 ->whereIn('status', [0,1,2])
                 ->first();
-                
             //拿到阶段序号
             $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
-
-
             //拿到属于该场考试，该场阶段所对应的所有场次id
             $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get();
             if(!is_null($examscreeningId)){
@@ -811,7 +788,9 @@ class InvigilatePadController extends CommonController
             if ($AlterResult) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId,'exam_screening_id'=>@$examQueue->exam_screening_id], 105, '开始考试成功')));
 
-                //调用向腕表推送消息的方法
+                // todo 调用向腕表推送消息的方法
+                
+                
 
                 $exam = Exam::where('status', '=', 1)->first();
                 $examQueue = ExamQueue::where('exam_id',$exam->id)

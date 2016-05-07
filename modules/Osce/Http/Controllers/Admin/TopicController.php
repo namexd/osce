@@ -98,44 +98,53 @@ class TopicController extends CommonController
      *
      * @return redirect
      *
-     * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
-     * @date 2016-01-02 21:35
+     * @version 3.4
+     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date 2016-03-30 21:35
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
     public function postAddTopic(Request $request)
     {
         $this->validate($request, [
-            'title'     => 'required|unique:osce_mis.subject,title',    //名称
-            'mins'      => 'required',    //时间限制
-            'cases'     => 'required',    //病例
-            'total'     => 'required',    //总分
-            'desc'      => 'sometimes',    //描述
-            'goods'     => 'sometimes',    //所需用物
-//            'stem'      => 'required',    //题干
-//            'equipments'=> 'required',    //所需设备
-            'content'   => 'required',    //评分标准
-            'score'     => 'required',    //考核点、考核项分数
-            'description'=>'required',    //考核项下的评分标准
+            'title'         => 'required|unique:osce_mis.subject,title',    //名称
+            'mins'          => 'required',      //时间限制
+            'cases'         => 'required',      //病例
+            'total'         => 'required',      //总分
+            'desc'          => 'sometimes',     //描述
+            'special_score' => 'sometimes',     //特殊评分项
+            'goods'         => 'sometimes',     //所需用物
+            'content'       => 'required',      //评分标准
+            'score'         => 'required',      //考核点、考核项分数
+            'description'   => 'required',      //考核项下的评分标准
         ], [
-            'title.required'    => '名称必填',
-            'title.unique'      => '该科目已存在',
-            'cases.required'    => '请选择病例',
-            'total.required'    => '总分必填',
-            'mins.required'     => '必须填写时间限制',
-            'content.required'  => '必须新增评分点',
-            'score.required'    => '分数必填',
-            'description.required'   => '请添加考核项',
+            'title.required'        => '名称必填',
+            'title.unique'          => '该科目已存在',
+            'cases.required'        => '请选择病例',
+            'total.required'        => '总分必填',
+            'mins.required'         => '必须填写时间限制',
+            'content.required'      => '必须新增评分点',
+            'score.required'        => '分数必填',
+            'description.required'  => '请添加考核项',
         ]);
 
         $content = $request->get('content');        //评分标准（所有内容）
         $score   = $request->get('score');          //考核点、考核项对应的分数
         $answer  = $request->get('description');    //考核项下面的评分标准
+        $cases   = $request->input('cases');        //病例
+        $goods   = $request->input('goods');        //用物
+        $speScore= $request->get('special_score');  //特殊评分项
 
         try {
+            $user = \Auth::user();
+            if(empty($user)){
+                throw new \Exception('未找到当前操作人信息');
+            }
+
+            //处理评分标准数据（数据组合）
             $formData = SubjectItem::builderItemData($content, $score, $answer);
             $totalData = 0;
+            //获取评分标准中考核点分数总和
             foreach ($score as $index => $socrdata) {
                 foreach ($socrdata as $key => $socre) {
                     if ($key == 'total') {
@@ -145,23 +154,13 @@ class TopicController extends CommonController
                 }
             }
 
-            $user = \Auth::user();
-            if(empty($user)){
-                throw new \Exception('未找到当前操作人信息');
-            }
-            
-            $cases= $request->input('cases');           //病例
-            $goods= $request->input('goods');           //用物
-
             $data = [
-                'title'      => e($request->get('title')),
-                'mins'       => $request->get('mins'),              //时间限制
-                'score'      => intval($request->get('total')),     //总分
-                'description'=> e($request->get('desc')),           //描述
-                'stem'       => e($request->input('stem')),         //题干
-                'goods'      => '',                                 //所需物品
-                'equipments' => e($request->input('equipments')),   //所需设备
-                'created_user_id' => $user->id
+                'title'             => e($request->get('title')),          //考试项目名称
+                'mins'              => $request->get('mins'),              //时间限制
+                'score'             => intval($request->get('total')),     //总分
+                'description'       => e($request->get('desc')),           //描述
+                'stem'              => e($request->input('stem')),         //题干
+                'created_user_id'   => $user->id
             ];
 
             //判断总分与考核项分数是否正确
@@ -178,7 +177,7 @@ class TopicController extends CommonController
 
             $subjectModel = new Subject();
             //添加考试项目
-            $result = $subjectModel->addSubject($data, $formData, $cases, $goods, $user->id);
+            $result = $subjectModel->addSubject($data, $formData, $cases, $speScore, $goods, $user->id);
             if (!$result) {
                 throw new \Exception('新增失败！');
             }
@@ -223,17 +222,16 @@ class TopicController extends CommonController
     {
         $this->validate($request, [
             'id' => 'required',
-            'title'     => 'required',    //名称
-            'mins'      => 'required',    //时间限制
-            'cases'     => 'required',    //病例
-            'total'     => 'required',    //总分
-            'desc'      => 'sometimes',    //描述
-            'goods'     => 'sometimes',   //所需用物
-//            'stem'      => 'required',    //题干
-//            'equipments'=> 'required',    //所需设备
-            'content'   => 'required',    //评分标准
-            'score'     => 'required',    //考核点、考核项分数
-            'description'=>'required',    //考核项下的评分标准
+            'title'         => 'required',      //名称
+            'mins'          => 'required',      //时间限制
+            'cases'         => 'required',      //病例
+            'total'         => 'required',      //总分
+            'desc'          => 'sometimes',     //描述
+            'special_score' => 'sometimes',     //特殊评分项
+            'goods'         => 'sometimes',     //所需用物
+            'content'       => 'required',      //评分标准
+            'score'         => 'required',      //考核点、考核项分数
+            'description'   =>'required',       //考核项下的评分标准
         ], [
             'id.required' => '课题ID必须填写',
             'title.required'    => '名称必填',
@@ -241,7 +239,6 @@ class TopicController extends CommonController
             'cases.required'    => '请选择病例',
             'total.required'    => '总分必填',
             'content.required'  => '必须新增评分点',
-            
             'score.required'    => '分数必填',
             'description.required'   => '请添加考核项',
         ]);
@@ -251,9 +248,6 @@ class TopicController extends CommonController
             'title'       => e($request->get('title')),
             'mins'        => $request->get('mins'),
             'description' => $request->get('desc'),
-            'stem'        => $request->input('stem'),
-            'equipments'  => $request->input('equipments'),
-            'goods'       => '',
             'score'       => $request->input('total')
         ];
         $id      = intval($request->get('id'));
@@ -262,9 +256,11 @@ class TopicController extends CommonController
         $answer  = $request->get('description');    //考核项下面的评分标准
         $cases   = $request->input('cases');        //病例
         $goods   = $request->input('goods');        //用物
+        $speScore= $request->get('special_score');  //特殊评分项
 
         $subjectModel = new Subject();
         try {
+            //处理评分标准数据（数据组合）
             $formData = SubjectItem::builderItemData($content, $score, $answer);
             $totalData = 0;
             foreach ($score as $index => $socrdata) {
@@ -280,15 +276,14 @@ class TopicController extends CommonController
                 throw new \Exception('考核项分数之和与总分不相等！');
             }
 
-            if ($subjectModel->editTopic($id, $data, $formData, $cases, $goods)) {
-
-                return redirect()->route('osce.admin.topic.getList');
-            } else {
-
+            if (!$subjectModel->editTopic($id, $data, $formData, $cases, $speScore, $goods)) {
                 throw new \Exception('编辑失败');
             }
 
-        } catch (\Exception $ex) {
+            return redirect()->route('osce.admin.topic.getList');
+
+        } catch (\Exception $ex)
+        {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
@@ -317,7 +312,7 @@ class TopicController extends CommonController
         ]);
 
         $id = $request->get('id');
-        $subject = Subject::where('id','=',$id)->with('cases')->with('supplys')
+        $subject = Subject::where('id','=',$id)->with('cases')->with('supplys')->with('specialScores')
                     ->with(['standards'=>function($q){
                         $q->with('standardItem');
                     }])->first();

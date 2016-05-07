@@ -207,7 +207,10 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.exam_id', $examId)
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
+                ->orderBy('exam_queue.next_num', 'asc')
+                ->orderBy('exam_queue.begin_dt', 'asc')
                 ->groupBy('exam_queue.student_id')
+                ->take(count($stations))
                 ->get();
         return $queueing;
     }
@@ -532,9 +535,6 @@ class ExamQueue extends CommonModel
                     ->whereIn('exam_screening_id', $examscreeningId)
                     ->where('status', '=', 3)
                     ->get();
-
-
-
                 foreach ($studentTimes as $key => $item) {
                     foreach ($endQueue as $endQueueTime) {
                         if (strtotime($endQueueTime->begin_dt) > strtotime($item->begin_dt)) {
@@ -549,15 +549,6 @@ class ExamQueue extends CommonModel
                           //这是已考场安排的需拿到room_id
                           $stationTime = $this->getRoomStationMaxTime($item->room_id);
                       }*/
-
-                    //获取标准考试时间
-
-//                    if(is_null($item->station_id)){
-//                        $stationTime = false;
-//                    }else{
-//                        $stationTime = $this->stationTime($item->station_id, $exam->id);
-//
-//                    }
                     \Log::alert('获取到的标准时间',[$stationTime]);
                     if ($nowTime > strtotime($item->begin_dt) + (config('osce.begin_dt_buffer') * 60)) {
                         if ($item->status == 2) {
@@ -1137,6 +1128,59 @@ class ExamQueue extends CommonModel
         catch (\Exception $ex)
         {
             $screen_id = null;
+        }
+    }
+
+    /**
+     * 腕表解绑，获取学生本次考试所有考场考试情况列表
+     * @param $code
+     * @return object
+     *
+     * @author wt <wangtao@misrobot.com>
+     * @date   2016-05-7
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+
+    public function getStudentScreenRoomResultList($code){
+        $screenStudent=new ExamScreeningStudent();
+        $screen= new ExamScreening();
+        $exam=Exam::doingExam();//当前考试id
+        $screenId=$screen->getScreenID($exam->id);//获取当前场次id
+        $studentMsg=$screenStudent->getStudentByWatchCode($code,$screenId);//获取腕表对应的学生信息
+
+        if(is_null($studentMsg)){
+            throw new \Exception('找不到对应的学生id');
+        }
+        $student_id=$studentMsg->student_id;
+        $studentMsgList=$this->where('exam_screening_id',$screenId)
+             ->where('exam_id',$exam->id)
+             ->where('student_id',$student_id)
+             ->select(['id','exam_screening_id','room_id','student_id','status','exam_id'])
+             ->orderBy('begin_dt')->get();//获取学生信息列表
+        if(!is_null($studentMsgList)){
+            $flag=false;
+           
+            foreach($studentMsgList as $key=>$val){//数据整理
+                $room=$val->room;
+                $studentMsgList[$key]['room_name']=$room->name;
+                if($val->status<3){
+                    $flag=true;
+                    $studentMsgList[$key]['result']='未上传';
+                }else{
+                   
+                    $studentMsgList[$key]['result']='已上传';
+                }
+            }
+            $list=$studentMsgList->toArray();
+            foreach ($list as $key=>$val){//去除不返回数据
+                unset($list[$key]['room']);
+            }
+            if(!$flag){//本次所有考场考试考完解绑
+                return [];
+            }else{
+                return $list;
+            }
+
         }
     }
 }
