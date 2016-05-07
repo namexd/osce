@@ -1833,6 +1833,8 @@ function course_module(){
                 $(elem).attr('class','pid-'+update_P);
                 $(elem).find('td').eq(0).text(update_P+'-'+key);
                 $(elem).find('td').eq(2).find('select').attr('name','score['+update_P+']['+key+']');
+                $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+update_P+']['+key+']');
+                $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+update_P+']['+key+']');
             }else{
                 update_P = $(elem).attr('parent');
                 $(elem).attr('class','pid-'+update_P);
@@ -1861,12 +1863,13 @@ function course_module(){
             var parent = 1;
             $(classElement).remove();
             //更新计数序号
-            $('tbody tr').each(function(key,elem){
+            $('#judgement tbody tr').each(function(key,elem){
                 if($(elem).attr('child')==undefined){
                     $(elem).attr('parent',parent);
                     $(elem).find('td').eq(0).text(parent);
                     $(elem).attr('class','pid-'+parent);
                     $(elem).find('td').eq(2).find('select').attr('name','score['+parent+'][total]');
+                    $(elem).find('td').eq(1).find('input').attr('name','content['+parent+'][title]');
                     parent += 1;
                 }else{
                     var child = $(elem).attr('child'),
@@ -1874,6 +1877,8 @@ function course_module(){
                     $(elem).find('td').eq(0).text(parent_p+'-'+child);
                     $(elem).attr('class','pid-'+parent_p);
                     $(elem).find('td').eq(2).find('select').attr('name','score['+parent_p+']['+child+']');
+                    $(elem).find('td').eq(1).find('input').eq(0).attr('name','content['+parent_p+']['+child+']');
+                    $(elem).find('td').eq(1).find('input').eq(1).attr('name','description['+parent_p+']['+child+']');
                     child += 1;
                 }
             });

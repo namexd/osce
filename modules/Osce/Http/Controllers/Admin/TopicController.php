@@ -241,6 +241,7 @@ class TopicController extends CommonController
             'cases.required'    => '请选择病例',
             'total.required'    => '总分必填',
             'content.required'  => '必须新增评分点',
+            
             'score.required'    => '分数必填',
             'description.required'   => '请添加考核项',
         ]);
