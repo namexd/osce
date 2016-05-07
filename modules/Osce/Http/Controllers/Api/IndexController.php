@@ -317,20 +317,9 @@ class IndexController extends CommonController
             //更改考生状态（1：已绑定腕表）
             ExamOrder::where('exam_id', $exam_id)->where('student_id', $student_id)->where('exam_screening_id', '=', $exam_screen_id)->update(['status' => 1]);
             Exam::where('id', $exam_id)->update(['status' => 1]);  //更改考试状态（把考试状态改为正在考试）
-            //推送当前组和下一组
-//            try{
-//                //考试完成推送
-//                $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
-//                $request['id']=$teacherId;
-//                $draw->getExaminee_arr($request);//当前组推送(可以获得)
-//                $draw->getNextExaminee_arr($request);//下一组
-//
-//            }catch (\Exception $ex){
-//                \Log::alert('结束考试调当前组或下一组错误', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
-//            }
-//
 
-            // 绑定腕表成功后给腕表推送消息
+
+            //todo 绑定腕表调腕表接口
             $studentWatchController = new StudentWatchController();
             $request['nfc_code'] = $code;
             $studentWatchController->getStudentExamReminder($request);
@@ -488,6 +477,7 @@ class IndexController extends CommonController
             }else{
                 //如果考试流程未结束 还是解绑,把考试排序的状态改为0   中途解绑
                 $result = Watch::where('id', '=', $id)->update(['status'=>0]);
+                // todo 解绑腕表调腕表接口 传入参数
 
                 if($result){
                     //更改 （状态改为 未绑定：status=0）
