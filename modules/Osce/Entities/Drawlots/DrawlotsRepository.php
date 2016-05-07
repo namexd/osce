@@ -113,6 +113,7 @@ class DrawlotsRepository extends AbstractDrawlots
             //如果该学生已经抽签了，就直接返回实例
             $obj = $this->draw->isDraw($this->student->student_id);
             if (!is_null($obj)) {
+                $this->stationId = $obj->station_id;
                 return $this->draw->assembly($obj->station->name);
             }
 

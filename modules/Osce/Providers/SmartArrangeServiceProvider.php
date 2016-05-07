@@ -34,16 +34,16 @@ class SmartArrangeServiceProvider extends ServiceProvider
     public function register()
     {
         //binding接口以便于依赖注入
-        \App::bind('student', function () {
+        \App::bind('Modules\Osce\Entities\SmartArrange\Student\StudentInterface', function () {
             return new StudentFromDB();
         });
 
         \App::bind('SmartArrange', function () {
-            return new SmartArrange(\App::make('student'));
+            return new SmartArrange(\App::make('Modules\Osce\Entities\SmartArrange\Student\StudentInterface'));
         });
 
         //使用singleton绑定单例
-        $this->app->singleton('Modules\Osce\Entities\SmartArrange\SmartArrangeForHuaxiRepository', function () {
+        $this->app->bind('Modules\Osce\Entities\SmartArrange\SmartArrangeForHuaxiRepository', function () {
             return new SmartArrangeForHuaxiRepository(\App::make('SmartArrange'));
         });
     }
