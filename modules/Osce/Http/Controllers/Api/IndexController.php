@@ -326,7 +326,7 @@ class IndexController extends CommonController
                 $watch->getWatchPublish($student_id,$stationId =null,$roomId =null);
 
             }catch (\Exception $ex){
-                \Log::debug('绑定腕表调腕表接口出错',[$student_id,$ex->all()]);
+                \Log::debug('绑定腕表调腕表接口出错',[$student_id,$ex->getMessage(),$ex->getFile()]);
             }
 
             return \Response::json(array('code' => 1));
@@ -459,15 +459,19 @@ class IndexController extends CommonController
                 //腕表状态 更改为 解绑状态（status=0）
                 $result = Watch::where('id',$id)->update(['status'=>0]);
 
-                //todo 绑定腕表调腕表接口
-                $watch = new WatchReminderRepositories();
-                try {
-                    $watch->getWatchPublish($student_id, $stationId = null, $roomId = null);
-                } catch (\Exception $ex) {
-                    \Log::debug('解绑腕表接口推送失败', $student_id, $stationId = null, $roomId = null);
-                }
+              
 
                 if($result){
+
+                    //todo 解绑腕表调腕表接口
+                    $watch = new WatchReminderRepositories();
+                    try {
+                        $watch->getWatchPublish($student_id, $exameeStatus->station_id, $roomId =$exameeStatus->room_id);
+                    } catch (\Exception $ex) {
+                        \Log::debug('解绑腕表接口推送失败', [$student_id, $exameeStatus->station_id, $roomId =$exameeStatus->room_id]);
+                    }
+                    
+                    
                     //腕表解绑，添加腕表解绑记录
                     $this->watchUnbundling($id, $student_id);
 
@@ -492,15 +496,17 @@ class IndexController extends CommonController
                 //如果考试流程未结束 还是解绑,把考试排序的状态改为0   中途解绑
                 $result = Watch::where('id', '=', $id)->update(['status'=>0]);
 
-                //todo 绑定腕表调腕表接口
-                $watch = new WatchReminderRepositories();
-                try {
-                    $watch->getWatchPublish($student_id, $stationId = null, $roomId = null);
-                } catch (\Exception $ex) {
-                    \Log::debug('解绑腕表接口推送失败', $student_id, $stationId = null, $roomId = null);
-                }
-
                 if($result){
+
+
+                    //todo 解绑腕表调腕表接口
+                    $watch = new WatchReminderRepositories();
+                    try {
+                        $watch->getWatchPublish($student_id, $exameeStatus->station_id, $roomId =$exameeStatus->room_id);
+                    } catch (\Exception $ex) {
+                        \Log::debug('解绑腕表接口推送失败', [$student_id, $exameeStatus->station_id, $roomId =$exameeStatus->room_id]);
+                    }
+                    
                     //更改 （状态改为 未绑定：status=0）
                     $result = ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
                         ->where('exam_screening_id', '=', $exam_screen_id)->update(['status'=>0]);
