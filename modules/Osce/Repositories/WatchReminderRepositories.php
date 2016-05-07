@@ -14,6 +14,7 @@ use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Entities\Room;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Repositories\BaseRepository;
 use Modules\Osce\Entities\Exam;
@@ -48,34 +49,7 @@ class WatchReminderRepositories  extends BaseRepository
     //当前场次
     protected $examScreening;
 
-    /**
-     *判断考试模式
-     * @method GET
-     * @url /osce/api/student-watch/student-exam-reminder
-     * @access public
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * string     nfc_code    腕表nfc_code
-     *
-     * @return json
-     *
-     * @version 1.0
-     * @author weihuiguo <weihuiguo@misrobot.com>
-     * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     */
-    public function getStudentExamReminder($exam,$student,$room,$station){
-        //初始化
-        $this->setInitializeData($exam,$student,$room,$station);
-        //判断考试模式
-        if($exam->sequence_mode==1){//考场模式
-            $this->getRoomExamReminder($exam,$student);
-        }
-        else
-        {//考站模式
-            $this->getStationExamReminder();
-        }
-    }
+
     public function setInitializeData($exam,$student,$room,$station){
         $this->exam     =   $exam;
         $this->student  =   $student;
@@ -97,6 +71,36 @@ class WatchReminderRepositories  extends BaseRepository
     }
 
     /**
+     *判断考试模式
+     * @method GET
+     * @url /osce/api/student-watch/student-exam-reminder
+     * @access public
+     * @param Request $request get请求<br><br>
+     * <b>get请求字段：</b>
+     * * string     nfc_code    腕表nfc_code
+     *
+     * @return json
+     *
+     * @version 1.0
+     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStudentExamReminder($exam,$student,$room,$station){
+        //初始化
+        $this->setInitializeData($exam,$student,$room,$station);
+        //判断考试模式
+        if($exam->sequence_mode==1){//考场模式
+            $this->getRoomExamReminder($exam,$student,$this->nowQueue->exam_screening_id);
+        }
+        else
+        {//考站模式
+            $this->getStationExamReminder();
+        }
+    }
+
+
+    /**
         考站模式
      */
     public function getStationExamReminder(){
@@ -106,9 +110,9 @@ class WatchReminderRepositories  extends BaseRepository
     /**
     考场模式
      */
-    public function getRoomExamReminder($exam,$student){
+    public function getRoomExamReminder($exam,$student,$examScreening){
         //根据exam、student对象查找队列数据
-        $queueList  =   $this->getExamStudentQueueList($exam,$student);
+        $queueList  =   $this->getExamStudentQueueList($exam,$student,$examScreening);
         //根据队列获取学生当前队列
         $queue  =   $this->getSutentNowQueue($queueList);
         //根据当前队列获取当前状态,
@@ -184,8 +188,10 @@ class WatchReminderRepositories  extends BaseRepository
      * @author：
      * @createDate：
      */
-    public function getExamStudentQueueList($exam,$student){
-        $StudentQueueList = ExamQueue::where('exam_id','=',$exam->id)->where('student_id','=',$student->id)->get();
+    public function getExamStudentQueueList($exam,$student,$examScreening){
+        $StudentQueueList = ExamQueue::where('exam_id','=',$exam->id)
+                            ->where('exam_screening_id','=',$examScreening->id)
+                            ->where('student_id','=',$student->id)->get();
         if($StudentQueueList){
             return $StudentQueueList;
         }else{
@@ -199,10 +205,6 @@ class WatchReminderRepositories  extends BaseRepository
      * @createDate：
      */
     public function getSutentNowQueue($queueList){
-        if(!$queueList){
-            return false;
-        }
-
         //获取当前队列
         //获取是否有一条正在进行的考试
         $queue  =   $queueList->where('status',2);
@@ -237,6 +239,18 @@ class WatchReminderRepositories  extends BaseRepository
 
         //初始化当前队列
         $this->nowQueue =   $queue->first();
+
+        //当初始化不能准确获取考站实例的时候补充初始化考站
+        if(is_null($this->station))
+        {
+            $this->station  =   $this->nowQueue ->station;
+        }
+        //当初始化不能准确获取考场实例的时候补充初始化考场
+        if(is_null($this->room))
+        {
+            $this->room     =   $this->nowQueue ->room;
+        }
+
         return $this->nowQueue;
 
         //throw new \Exception('队列数据异常，找不到相应的各种状态数据');
@@ -477,4 +491,27 @@ class WatchReminderRepositories  extends BaseRepository
             return false;
         }
     }
+
+   public  function getWatchPublish($studentId,$stationId,$roomId){
+
+       $exam = Exam::doingExam();  //拿到考试实例
+       $student = null;
+       $station = null;
+       $room = null;
+       if(!is_null($studentId)){
+           $student = Student::find($studentId); //拿到考生实例
+       }
+       if(!is_null($stationId)){
+           $station = Station::find($stationId);//拿到考站实例
+//           Common::valueIsNull($station, -1, '获取考站实例失败');
+       }
+
+       if(!is_null($roomId)){
+           $room = Room::find($roomId);//拿到考场实例
+       }
+        $this->getStudentExamReminder($exam,$student,$station,$room);
+
+   }
+
+
 }
