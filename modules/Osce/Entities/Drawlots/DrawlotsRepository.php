@@ -57,9 +57,6 @@ class DrawlotsRepository extends AbstractDrawlots
 //            $this->station = $stationData;
 //            $this->screen = $screening;
 
-            $this->student = $this->studentObj->getStudent($this->params['uid']);
-            \Log::debug('student', [$this->student]);
-
             \App::bind('GoWrong', function () {
                 return new GoWrong();
             });
@@ -106,6 +103,7 @@ class DrawlotsRepository extends AbstractDrawlots
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
         try {
+            $this->student = $this->studentObj->getStudent($this->params['uid']);
             Common::valueIsNull($this->student, -2, '当前学生信息错误');
 
             //如果该学生已经抽签了，就直接返回实例
