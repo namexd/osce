@@ -25,7 +25,7 @@ class GoWrong implements DrawValidatorInterface
             ->orderBy('next_num', 'asc')
             ->orderBy('begin_dt', 'asc')
             ->first();
-
+        \Log::debug('room', $temp->toArray());
         if ($temp->room_id != $roomId) {
             $room = Room::find($temp->room_id);
             Common::valueIsNull($room, -11, '数据错误，请重试');

@@ -666,7 +666,7 @@ class DrawlotsController extends CommonController
             try {
                 $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
             } catch (\Exception $ex) {
-                throw new \Exception('推送给腕表出错', -80);
+                \Log::info('抽签中推送腕表失败', $params);
             }
             //将数据推送给pad端
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',

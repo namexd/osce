@@ -55,7 +55,7 @@ class WatchReminderRepositories  extends BaseRepository
         $this->exam     =   $exam;
         $this->student  =   $student;
         $this->room     =   $room;
-        $this->$station =   $station;
+        $this->station =   $station;
         $this->redis    =   Redis::connection('message');;
         $examScreeningModel     =   new ExamScreening();
         $examScreening          =   $examScreeningModel  ->getExamingScreening($exam->id);
