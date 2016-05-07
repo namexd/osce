@@ -236,7 +236,7 @@ class ExamQueue extends CommonModel
 //                ->where('exam_draft_flow.exam_id',$examId)
 //                ->where('exam_gradation.exam_id',$examId)
 //                ->first();
-
+            \Log::debug('examineeByRoomId', [$room_id, $examId, $stations, $exam_screening_id]);
             $queueing = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
                 ->whereIn('exam_queue.status', [1, 2])
