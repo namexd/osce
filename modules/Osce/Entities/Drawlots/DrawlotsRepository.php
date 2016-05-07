@@ -160,4 +160,9 @@ class DrawlotsRepository extends AbstractDrawlots
 
         return true;
     }
+
+    public function getStationNum($examId, $roomId, $screenId)
+    {
+        return $this->station->site($examId, $roomId, $screenId);
+    }
 }
