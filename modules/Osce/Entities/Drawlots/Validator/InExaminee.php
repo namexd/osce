@@ -27,8 +27,8 @@ class InExaminee implements DrawValidatorInterface
     {
         // TODO: Implement validate() method.
         $stations = $this->station->site($examId, $roomId, $screenId);
-        \Log::debug('stations', [$stations->count()]);
-        $examinee = ExamQueue::examineeByRoomId($roomId, $examId, count($stations), $screenId);
+        \Log::debug('stations');
+        $examinee = ExamQueue::examineeByRoomId($roomId, $examId, $stations, $screenId);
         \Log::debug('studentIn', [$examinee->pluck('student_id'), $studentId]);
         if ($examinee->pluck('student_id')->search($studentId) === false) {
             throw new \Exception('当前考生目前不应该抽签', -30);
