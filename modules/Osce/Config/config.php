@@ -13,6 +13,9 @@ return [
 	'wait_student_num' => 4,
 
 	'topticOptionMaxNumer'	=>	50,
+	
+	'url'=>md5($_SERVER['HTTP_HOST']),
+	
 	'page'	=> [
 		'size'	=> 4
 	],

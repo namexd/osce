@@ -998,24 +998,11 @@ class IndexController extends CommonController
             return \Response::json(array('code' => 2));     //没有对应的开考场次 —— 考试场次没有(1、0)
         }
         $screen_id    = $examScreening->id;
-
-
-        //拿到oder表里的考试场次 todo 周强 2016-4-30
-        $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
-        if(!in_array($screen_id,$OderExamScreeningId)){
-            $screen_id = ExamOrder::where('exam_id','=',$exam_id)
-                ->where('status','=',0)
-                ->OrderBy('begin_dt', 'asc')
-                ->first();
-            $screen_id = $screen_id->exam_screening_id;
-        }
-
-
         $studentModel = new Student();
         $examModel = new Exam();
         try {
 
-            //查找exam_screening  todo 这里查看考站有问题，需王涛确定修改
+            //查找exam_screening
             $stations = $examModel->where('exam.id','=',$exam_id)
                 ->leftjoin('exam_gradation', function ($join) {
                     $join->on('exam_gradation.exam_id', '=', 'exam.id');
@@ -1034,8 +1021,6 @@ class IndexController extends CommonController
 //            } else{
 //                $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
 //            }
-
-            //dd($stations);
             $countStation=[];
             foreach($stations as $item){
                 $countStation[]=$item->station_id;
@@ -1267,6 +1252,37 @@ class IndexController extends CommonController
         $result = $watchModel ->unwrapRecord($data);
 
         return $result;
+    }
+    /**
+     * 腕表解绑，学生本次考试所有考场成绩提交情况
+     * @param $id
+     * @param $student_id
+     * @return object
+     * code 122 返回学生考场列表
+     *      -122 学生所以考场考完
+     *     -1111 捕获异常信息
+     * @author wt <wangtao@misrobot.com>
+     * @date   2016-05-7
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function studentExamRoomResult(Request $request){
+        $this->validate($request,[
+            'code'  => 'required',
+        ]);
+        try{
+            $code=$request->get('code');
+            $queue=new ExamQueue();
+            $list=$queue->getStudentScreenRoomResultList($code);
+            if(count($list)){
+                return \Response::json(array('code' => 122,'data'=>$list));
+            }else{
+                return \Response::json(array('code' => -122,'data'=>[]));
+            }
+
+        } catch (\Exception $ex) {
+            return response()->json(['code'=>-1111,'data'=>[$this->fail($ex)]]);
+        }
+
     }
 
 }
