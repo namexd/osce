@@ -259,7 +259,7 @@ class ExamQueue extends CommonModel
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->groupBy('student.id')
                 ->get();
-            \Log::debug('num', [$queueing->count, count($stations)]);
+            \Log::debug('num', [$queueing->count(), count($stations)]);
             if ($queueing->count() == count($stations)) {//没有正在考试的
 //                return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
 //                    ->where('exam_queue.room_id', $room_id)
