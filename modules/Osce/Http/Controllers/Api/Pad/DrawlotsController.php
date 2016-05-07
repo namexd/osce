@@ -647,13 +647,15 @@ class DrawlotsController extends CommonController
             //写入具体的数据
             $huaxiDrawlots->setParams($this->request->all());
 
-
             //获得抽签数据
             $data = $huaxiDrawlots->distribute();
 
+
+            $student = $huaxiDrawlots->pushStudent(new Student());
+            
             //将数据推送给pad端
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-                json_encode($this->success_data($data, 1, '抽签成功！')));
+                json_encode($this->success_data($student, 1, '抽签成功！')));
 
             return response()->json($this->success_data($data));
         } catch (\Exception $ex) {
