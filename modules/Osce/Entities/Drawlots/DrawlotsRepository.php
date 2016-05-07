@@ -15,6 +15,7 @@ use Modules\Osce\Entities\Drawlots\Validator\GoWrong;
 use Modules\Osce\Entities\Drawlots\Validator\InExaminee;
 use Modules\Osce\Entities\Drawlots\Validator\NotEndPrepare;
 use Modules\Osce\Entities\Student;
+use Modules\Osce\Entities\Drawlots\Student as StudentObj;
 use Modules\Osce\Repositories\Common;
 
 class DrawlotsRepository extends AbstractDrawlots
@@ -44,7 +45,7 @@ class DrawlotsRepository extends AbstractDrawlots
 //            $this->draw = $draw;
 
             \App::bind('StudentInterface', function () {
-                return new Student();
+                return new StudentObj();
             });
             \App::bind('StationData', function () {
                 return new Station();
@@ -185,11 +186,15 @@ class DrawlotsRepository extends AbstractDrawlots
      * @time 2016-05-07
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function pushStudent(Student $student)
+    public function pushStudent()
     {
-        $params['exam_id'] = $this->params['exam_id'];
-        $params['station_id'] = $this->stationId;
-        $params['student_id'] = $this->student->student_id;
-        return $this->draw->pushStudent($student, $params);
+//        $params['exam_id'] = $this->params['exam_id'];
+//        $params['station_id'] = $this->stationId;
+//        $params['student_id'] = $this->student->student_id;
+//        return $this->draw->pushStudent($student, $params);
+        if ($this->student) {
+            $this->student->avator = asset($this->student->avator);
+        }
+        return $this->student;
     }
 }
