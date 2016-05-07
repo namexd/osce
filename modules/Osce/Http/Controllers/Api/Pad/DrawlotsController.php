@@ -662,8 +662,8 @@ class DrawlotsController extends CommonController
             return response()->json($this->success_data($data));
         } catch (\Exception $ex) {
             \log::alert('draw_error', ['file' => $ex->getFile(), 'line' => $ex->getLine(), 'code' => $ex->getCode(), 'message' => $ex->getMessage()]);
-            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-                json_encode($this->fail($ex)));
+//            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
+//                json_encode($this->fail($ex)));
             return response()->json($this->fail($ex));
         }
     }
