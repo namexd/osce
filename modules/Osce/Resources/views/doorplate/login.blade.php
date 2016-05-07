@@ -34,6 +34,7 @@
 		}
 		.red{color: #F53E3F}
 		.white{color: #ffffff;}
+		.bot{margin-top: 50px;text-align: center;font-family: 黑体;color:#CACACA}
 	</style>
 
 	<?php
@@ -86,7 +87,7 @@
 			启　动
 		</button>
 	</form>
-
+	<p class="bot"><i class="">敏行医学版权所有﹫2015-2015</i></p>
 </div>
 
 <script>
