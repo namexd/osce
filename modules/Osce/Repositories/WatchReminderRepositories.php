@@ -240,8 +240,16 @@ class WatchReminderRepositories  extends BaseRepository
         //初始化当前队列
         $this->nowQueue =   $queue->first();
 
-
-
+        //当初始化不能准确获取考站实例的时候补充初始化考站
+        if(is_null($this->station))
+        {
+            $this->station  =   $this->nowQueue ->station;
+        }
+        //当初始化不能准确获取考场实例的时候补充初始化考场
+        if(is_null($this->room))
+        {
+            $this->room     =   $this->nowQueue ->room;
+        }
 
         return $this->nowQueue;
 
