@@ -18,6 +18,7 @@ class Student implements StudentInterface
     public function getStudent($nfc)
     {
         try {
+            \Log::debug('nfc', [$nfc]);
             return ExamScreeningStudent::watch()
                 ->where('watch.status', 1)
                 ->where('watch.code', $nfc)
