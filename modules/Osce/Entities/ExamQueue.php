@@ -311,8 +311,9 @@ class ExamQueue extends CommonModel
                     ->orderBy('exam_queue.next_num', 'asc')
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
-                    ->take(count($stations)-$queueing->count())
+                    ->take(count($stations) - $queueing->count())
                     ->get();
+                dd($temp);
                 return $queueing->merge($temp->all());
             } else {
                 \Log::error('needNumTooBig', [$queueing->count()]);
