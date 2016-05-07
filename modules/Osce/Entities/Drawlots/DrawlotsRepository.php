@@ -175,7 +175,18 @@ class DrawlotsRepository extends AbstractDrawlots
         return true;
     }
 
-
+    /**
+     * 获取考场下有多少考站
+     * @access public
+     * @param $examId
+     * @param $roomId
+     * @param $screenId
+     * @return mixed
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-07
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function getStationNum($examId, $roomId, $screenId)
     {
         return $this->station->site($examId, $roomId, $screenId);
