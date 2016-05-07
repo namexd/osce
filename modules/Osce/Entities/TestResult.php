@@ -157,12 +157,15 @@ class TestResult extends CommonModel
      */
     private function  getSaveSpecialScore($specialScoreDatas, $ExamResultId)
     {
-        foreach ($specialScoreDatas as &$item) {
-            $item['exam_result_id'] = $ExamResultId;
-            $examSpecialScore       = ExamSpecialScore::create($item);
-            if(!$examSpecialScore)
-            {
-                throw new \Exception('保存特殊评分项 实际扣分详情失败',-1511);
+        if(count($specialScoreDatas)>0)
+        {
+            foreach ($specialScoreDatas as &$item) {
+                $item['exam_result_id'] = $ExamResultId;
+                $examSpecialScore       = ExamSpecialScore::create($item);
+                if(!$examSpecialScore)
+                {
+                    throw new \Exception('保存特殊评分项 实际扣分详情失败',-1511);
+                }
             }
         }
     }
