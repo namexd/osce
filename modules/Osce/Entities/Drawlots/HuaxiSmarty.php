@@ -9,6 +9,7 @@
 namespace Modules\Osce\Entities\Drawlots;
 
 
+use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Repositories\Common;
@@ -122,7 +123,8 @@ class HuaxiSmarty
     public function pushStudent(array $params)
     {
         $student = new Student();
-        $studentData = $student->studentList($params['station_id'], $params['exam_id'], $params['student_id']);
+        $exam = Exam::doingExam($params['exam_id']);
+        $studentData = $student->studentList($params['station_id'], $exam, $params['student_id']);
         if ($studentData['nextTester']) {
             $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 
