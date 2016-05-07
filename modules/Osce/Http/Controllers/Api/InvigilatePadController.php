@@ -41,6 +41,7 @@ use Modules\Osce\Entities\Watch;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use DB;
+use Modules\Osce\Repositories\WatchReminderRepositories;
 use Storage;
 use Auth;
 use Redis;
@@ -757,7 +758,7 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStartExam(Request $request)
+    public function getStartExam(Request $request,WatchReminderRepositories $watchReminder)
     {
         try {
             $this->validate($request, [
@@ -797,7 +798,12 @@ class InvigilatePadController extends CommonController
                 $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId,'exam_screening_id'=>@$examQueue->exam_screening_id], 105, '开始考试成功')));
 
                 // todo 调用向腕表推送消息的方法
-                
+                try{
+                    $watch = new WatchReminderRepositories();
+
+                }catch (\Exception $ex){
+                    \Log::alert('调用腕表出错');
+                }
                 
 
                 $exam = Exam::where('status', '=', 1)->first();
