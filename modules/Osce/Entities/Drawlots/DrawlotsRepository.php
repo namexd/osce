@@ -138,8 +138,8 @@ class DrawlotsRepository extends AbstractDrawlots
             $this->fieldValidator($obj);
 
             //获取随机的stationId
-            $this->stationId =  $this->draw->ramdonId($accessStations);
-
+            $this->stationId = $this->draw->ramdonId($accessStations);
+            \Log::debug('1', $this->stationId);
             //将数据写入数据表
             $this->draw->writeExamQueue($obj);
 
