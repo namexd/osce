@@ -11,8 +11,8 @@
      }
     .top{
         background:#364150;
-        height: 35px;
-        line-height: 35px;
+        height: 60px;
+        line-height: 60px;
         font-size: 20px;
         width: 100%;
         position: relative;
