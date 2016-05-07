@@ -658,7 +658,7 @@ class DrawlotsController extends CommonController
             //将数据推送给pad端
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($student, 1, '抽签成功！')));
-//            \Log::debug('student123', [$student]);
+            \Log::debug('student123', [$student]);
             return response()->json($this->success_data($data));
         } catch (\Exception $ex) {
             \log::alert('draw_error', ['file' => $ex->getFile(), 'line' => $ex->getLine(), 'code' => $ex->getCode(), 'message' => $ex->getMessage()]);
