@@ -527,8 +527,11 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 Route::get('test/test', function(Redis $redis) {
 //	return view('osce::Drawlots');
-	$a = [1,2,3,4,5,6];
-	dd(array_pop($a));
+//	$a = collect([1,2,3]);
+//	$b = collect([2,3,4]);
+	$a = \Modules\Osce\Entities\Exam::where('id', 2)->get();
+	$b = \Modules\Osce\Entities\Exam::where('id', 3)->get();
+	dd($a->merge($b->all()));
 
 });
 

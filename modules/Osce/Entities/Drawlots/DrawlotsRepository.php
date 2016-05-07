@@ -17,6 +17,7 @@ use Modules\Osce\Entities\Drawlots\Validator\NotEndPrepare;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Drawlots\Student as StudentObj;
 use Modules\Osce\Repositories\Common;
+use Modules\Osce\Repositories\WatchReminderRepositories;
 
 class DrawlotsRepository extends AbstractDrawlots
 {
@@ -33,6 +34,8 @@ class DrawlotsRepository extends AbstractDrawlots
     protected $screen = null;
 
     protected $validator = null;
+
+    protected $roomId = null;
     
     public function __construct()
     {
@@ -113,6 +116,7 @@ class DrawlotsRepository extends AbstractDrawlots
             //如果该学生已经抽签了，就直接返回实例
             $obj = $this->draw->isDraw($this->student->student_id);
             if (!is_null($obj)) {
+                $this->stationId = $obj->station_id;
                 return $this->draw->assembly($obj->station->name);
             }
 
@@ -134,14 +138,15 @@ class DrawlotsRepository extends AbstractDrawlots
 
             //获取对象模型
             $obj = $this->draw->getObj($this->student->student_id, $screen->id);
+            $this->roomId = $obj->roomId;
             Common::valueIsNull($obj, -6, '数据错误');
             $this->fieldValidator($obj);
 
             //获取随机的stationId
-            $this->stationId =  $this->draw->ramdonId($accessStations);
-
+            $this->stationId = $this->draw->ramdonId($accessStations);
+            \Log::debug('1', [$this->stationId]);
             //将数据写入数据表
-            $this->draw->writeExamQueue($obj);
+            $this->writeExamQueue($obj, $this->stationId);
 
             //处理队列表的时间
             $this->judgeTime($this->student->student_id, $screen);
@@ -175,13 +180,27 @@ class DrawlotsRepository extends AbstractDrawlots
     }
 
     /**
-     * 获取推送的学生
+     * 获取考场下有多少考站
      * @access public
-     * @param Student $student
-     * @param array $params
-     * @请求字段：
+     * @param $examId
+     * @param $roomId
+     * @param $screenId
      * @return mixed
      * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-07
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getStationNum($examId, $roomId, $screenId)
+    {
+        return $this->station->site($examId, $roomId, $screenId);
+    }
+
+    /**
+     * 获取推送的学生
+     * @access public
+     * @return mixed
+     * @version 3.6
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-07
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
@@ -191,10 +210,19 @@ class DrawlotsRepository extends AbstractDrawlots
         $params['exam_id'] = $this->params['exam_id'];
         $params['station_id'] = $this->stationId;
         $params['student_id'] = $this->student->student_id;
-        return $this->draw->pushStudent($params);
+        return $this->draw->pushStudent(new Student(), $params);
 //        if ($this->student) {
 //            $this->student->avator = asset($this->student->avator);
 //        }
 //        return $this->student;
+    }
+
+    public function getParams()
+    {
+        return [
+            'student_id' => $this->student->student_id,
+            'station_id' => $this->stationId,
+            'room_id' => $this->roomId
+        ];
     }
 }

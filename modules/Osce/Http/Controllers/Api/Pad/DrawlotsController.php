@@ -45,6 +45,7 @@ use Auth;
 use DB;
 use Modules\Osce\Repositories\Common;
 use Illuminate\Support\Facades\Redis;
+use Modules\Osce\Repositories\WatchReminderRepositories;
 
 
 class DrawlotsController extends CommonController
@@ -543,7 +544,7 @@ class DrawlotsController extends CommonController
              */
             if ($exam->sequence_mode == 1) {
                 //从队列表中通过考场ID得到对应的当前组的考生信息
-                $examQueue = ExamQueue::getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id);
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId,$stations, $exam_screening_id);
                 
                 
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
@@ -600,6 +601,11 @@ class DrawlotsController extends CommonController
             
             $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($result, 1, '抽签成功!')));
+
+            //todo 绑定腕表调腕表接口
+            $watch = new WatchReminderRepositories();
+            $watch->getWatchPublish($student->id,$result->id ,$roomId);
+
             //推送当前学生
             $request['station_id'] = $result->id;
             $request['teacher_id'] = $teacherId;
@@ -635,7 +641,7 @@ class DrawlotsController extends CommonController
      * @time 2016-05-02
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postDrawlots(DrawlotsRepository $huaxiDrawlots)
+    public function postDrawlots(DrawlotsRepository $huaxiDrawlots, WatchReminderRepositories $watchReminder)
     {
         //验证
         $this->validate($this->request, [
@@ -654,16 +660,24 @@ class DrawlotsController extends CommonController
 
 
             $student = $huaxiDrawlots->pushStudent();
-
+            $params = $huaxiDrawlots->getParams();
+            \Log::debug('params', $params);
+            //将数据推送给腕表
+            try {
+                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
+            } catch (\Exception $ex) {
+                throw new \Exception('推送给腕表出错', -80);
+            }
             //将数据推送给pad端
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-                json_encode($this->success_data($student, 1, '抽签成功！')));
-//            \Log::debug('student123', [$student]);
+                json_encode($this->success_data($student, 102, '抽签成功！')));
+
+            \Log::debug('student123', [$student]);
             return response()->json($this->success_data($data));
         } catch (\Exception $ex) {
             \log::alert('draw_error', ['file' => $ex->getFile(), 'line' => $ex->getLine(), 'code' => $ex->getCode(), 'message' => $ex->getMessage()]);
-            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-                json_encode($this->fail($ex)));
+//            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
+//                json_encode($this->fail($ex)));
             return response()->json($this->fail($ex));
         }
     }
@@ -848,6 +862,7 @@ class DrawlotsController extends CommonController
                 
                 $examQueue->status = 1;
                 $examQueue->station_id = $ranStationId;
+                $examQueue->blocking = 0;
                 if (!$examQueue->save()) {
                     throw new \Exception('抽签失败！请重试！', 3700);
                 };
@@ -882,6 +897,7 @@ class DrawlotsController extends CommonController
 
                 //将队列状态变更为1
                 $tempObj->status = 1;
+                $examQueue->blocking = 0;
                 if (!$tempObj->save()) {
                     throw new \Exception('当前抽签失败！', 3901);
                 }

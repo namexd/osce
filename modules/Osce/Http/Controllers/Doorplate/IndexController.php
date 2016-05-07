@@ -76,17 +76,7 @@ class IndexController extends CommonController
          if($exam->status==2){
              throw new \Exception('该考试已结束');
          }
-        $screenObject=$screen->getExamingScreening($exam_id);
-        if(!is_null($screenObject)){//获取当前场次
-            $screenId=$screenObject->id;
-        }else{
-            $screenObject=$screen->getNearestScreening($exam_id);
-            if(is_null($screenObject)){
-                throw new \Exception('今天没有正在进行的考试场次');
-            }
-            $screenId=$screenObject->id;
-        }
-
+        $screenId= $screen->getScreenID($exam_id);//获取当前场次id
         $ExamDraft=new ExamDraft();
         $data=$ExamDraft->getExamMsg($exam_id,$room_id,$screenId);//room下考站
         $cont = [];
@@ -229,7 +219,7 @@ class IndexController extends CommonController
             $data=$ExamDraft->getExamMsg($exam_id,$room_id,$exam_screening_id);//room下考站
             if(!$data->isEmpty()) {
                 $ExamStationStatus = new ExamStationStatus();
-                $status = $ExamStationStatus->getExamMsg($exam_id, $exam_screening_id, $data);//1都准备好 2 有考试 3考完
+                $status = $ExamStationStatus->getExamMsg($exam_id, $exam_screening_id, $data);//1都准备好 2 有考试 3考完 4都未准备(还没轮到开始)
                 $planList=ExamPlan::where('room_id', $room_id)->where('exam_screening_id', $exam_screening_id)
                     ->where('exam_id', $exam_id)->get()->pluck('student_id')->toArray();//获取该房间该场次下安排的所有学生
                 $endList = ExamScreeningStudent::where('exam_screening_id', $exam_screening_id)

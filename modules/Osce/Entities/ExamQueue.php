@@ -204,12 +204,13 @@ class ExamQueue extends CommonModel
     static public function
     getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id){
         //先判定该学生是否抽过签
+
             $queueing = ExamQueue::where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
                 ->where('exam_queue.room_id', $room_id)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
-                ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.next_num', 'asc')
                 ->groupBy('exam_queue.student_id')
                 ->take(count($stations))
                 ->get();
@@ -229,31 +230,71 @@ class ExamQueue extends CommonModel
     static public function examineeByRoomId($room_id, $examId, $stations, $exam_screening_id)
     {
         try {
-
 //                $ExamDraftFlow=ExamDraftFlow::leftJoin('exam_draft','exam_draft_flow.id','=','exam_draft.exam_draft_flow_id')
 //                    ->leftJoin('exam_gradation','exam_gradation.id','=','exam_draft_flow.exam_gradation_id')
 //                ->where('exam_draft.room_id',$room_id)
 //                ->where('exam_draft_flow.exam_id',$examId)
 //                ->where('exam_gradation.exam_id',$examId)
 //                ->first();
-
+            \Log::debug('examineeByRoomId', [$room_id, $examId, $stations, $exam_screening_id]);
             $queueing = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                 ->where('exam_queue.room_id', $room_id)
-                ->where('exam_queue.status', '=', 2)
+                ->whereIn('exam_queue.status', [1, 2])
                 ->where('student.exam_id', $examId)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
-                //->where('exam_queue.blocking', 0)
+                ->where('exam_queue.blocking', 0)
+                ->select(
+                    'student.id as student_id',
+                    'student.name as student_name',
+                    'student.user_id as student_user_id',
+                    'student.idcard as student_idcard',
+                    'student.mobile as student_mobile',
+                    'student.code as student_code',
+                    'student.avator as student_avator',
+                    'student.description as student_description',
+                    'exam_queue.id as exam_queue_id',
+                    'exam_queue.room_id as room_id',
+                    'exam_queue.station_id as station_id'
+                )
+                ->orderBy('exam_queue.next_num', 'asc')
                 ->groupBy('student.id')
-                ->first();
-            if (is_null($queueing)) {//没有正在考试的
-
-                return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+                ->get();
+            \Log::debug('num', [$queueing->count(), count($stations)]);
+            if ($queueing->count() == count($stations)) {//没有正在考试的
+//                return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
+//                    ->where('exam_queue.room_id', $room_id)
+//                    ->where('exam_queue.status', '<', 3)
+//                    ->where('exam_queue.exam_id', '=', $examId)
+//                    ->where('student.exam_id', $examId)
+//                    ->where('exam_queue.exam_screening_id', $exam_screening_id)
+//                    //->where('exam_queue.blocking', 1)
+//                    ->select(
+//                        'student.id as student_id',
+//                        'student.name as student_name',
+//                        'student.user_id as student_user_id',
+//                        'student.idcard as student_idcard',
+//                        'student.mobile as student_mobile',
+//                        'student.code as student_code',
+//                        'student.avator as student_avator',
+//                        'student.description as student_description',
+//                        'exam_queue.id as exam_queue_id',
+//                        'exam_queue.room_id as room_id',
+//                        'exam_queue.station_id as station_id'
+//                    )
+//                    ->orderBy('exam_queue.next_num', 'asc')
+//                    ->orderBy('exam_queue.begin_dt', 'asc')
+//                    ->groupBy('student.id')
+//                    ->take(count($stations))
+//                    ->get();
+                return $queueing;
+            } elseif ($queueing->count() < count($stations)) {//不正常中断存在在考试的学生
+                $temp = ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
                     ->where('exam_queue.room_id', $room_id)
+                    ->where('exam_queue.blocking', 1)
                     ->where('exam_queue.status', '<', 3)
                     ->where('exam_queue.exam_id', '=', $examId)
-                    ->where('student.exam_id', $examId)
                     ->where('exam_queue.exam_screening_id', $exam_screening_id)
-                    //->where('exam_queue.blocking', 1)
+                    ->where('student.exam_id', $examId)
                     ->select(
                         'student.id as student_id',
                         'student.name as student_name',
@@ -270,36 +311,24 @@ class ExamQueue extends CommonModel
                     ->orderBy('exam_queue.next_num', 'asc')
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->groupBy('student.id')
-                    ->take(count($stations))
+                    ->take(count($stations) - $queueing->count())
                     ->get();
-            } else {//不正常中断存在在考试的学生
-                return ExamQueue::leftJoin('student', 'student.id', '=', 'exam_queue.student_id')
-                    ->where('exam_queue.room_id', $room_id)
-                    ->where('exam_queue.status', '<', 3)
-                    ->where('exam_queue.exam_id', '=', $examId)
-                    ->where('exam_queue.exam_screening_id', $exam_screening_id)
-                    ->where('student.exam_id', $examId)
-                    ->select(
-                        'student.id as student_id',
-                        'student.name as student_name',
-                        'student.user_id as student_user_id',
-                        'student.idcard as student_idcard',
-                        'student.mobile as student_mobile',
-                        'student.code as student_code',
-                        'student.avator as student_avator',
-                        'student.description as student_description',
-                        'exam_queue.id as exam_queue_id',
-                        'exam_queue.room_id as room_id',
-                        'exam_queue.station_id as station_id'
-                    )
-                    ->orderBy('exam_queue.next_num', 'asc')
-                    ->orderBy('exam_queue.begin_dt', 'asc')
-                    ->groupBy('student.id')
-                    ->take(count($stations))
-                    ->get();
+                //dd($queueing, $temp->all(), $queueing->merge($temp));
+                $data   =   [];
+                foreach ($queueing as $item)
+                {
+                    $data[]=    $item;
+                }
+                foreach ($temp as $item)
+                {
+                    $data[]=    $item;
+                }
+                
+                return collect($data);//$queueing->merge($temp);
+            } else {
+                \Log::error('needNumTooBig', [$queueing->count()]);
+                return $queueing->take(count($stations));
             }
-
-
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -941,6 +970,7 @@ class ExamQueue extends CommonModel
             $queue = ExamQueue::findQueueIdByStudentId($studentId, $stationId);
             $queue->end_dt =  $date;
             $queue->status =  3;
+            $queue->blocking = 1;
             if(!$queue->save()){
                 throw new \Exception('状态修改失败！请重试', -101);
             }
@@ -1168,7 +1198,7 @@ class ExamQueue extends CommonModel
                     $flag=true;
                     $studentMsgList[$key]['result']='未上传';
                 }else{
-                   
+                    $studentMsgList[$key]['status']=3;//c++判断已上传成数量绩标识
                     $studentMsgList[$key]['result']='已上传';
                 }
             }
