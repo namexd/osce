@@ -60,7 +60,7 @@ class SmartArrange
     //当前考试场次的流程个数
     private $flowNum;
 
-    public function __construct($student)
+    public function __construct(StudentInterface $student)
     {
         return $this->student = $student;
     }
@@ -93,9 +93,9 @@ class SmartArrange
      * @author Jiangzhiheng
      * @time 2016-04-08 11:10
      */
-    public function setStudents(StudentInterface $student)
+    public function setStudents()
     {
-        $this->_S = $student->get($this->exam);
+        $this->_S = $this->student->get($this->exam);
         $this->_S = $this->upset($this->_S);
         $this->_S_Count = count($this->_S);
         return $this->_S_Count;

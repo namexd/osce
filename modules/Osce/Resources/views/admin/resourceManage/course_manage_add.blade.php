@@ -141,7 +141,21 @@
             }
         });
     })
-
+    function display() {
+        /**
+         * 特殊评分项的开关
+         * @author gaodapeng
+         * @date   2016/5/7
+         */
+        var check_value=document.getElementById('check_special');
+        var div=document.getElementById('col_special');
+        //通过checkbox的check值判断
+        if (true==check_value.checked){
+            div.style.display='block';
+        }else{
+            div.style.display='none';
+        }
+    }
 </script>
 @stop
 
@@ -228,6 +242,37 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <input id="check_special" type="checkbox" name="same_time" value="0" onclick="display()" checked="checked">
+                            <label class="col-sm-2 control-label">特殊评分项</label>
+                            <div class="col-sm-10" id="col_special">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5></h5>
+                                        <div class="ibox-tools">
+                                            <button type="button" class="btn btn-outline btn-default" id="add-special-score">新增特殊评分项</button>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <table class="table table-bordered" id="special-score">
+                                            <thead>
+                                            <tr>
+                                                <th width="481">名称</th>
+                                                <th>分数</th>
+                                                <th width="160">操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody index="0">
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">物品准备</label>

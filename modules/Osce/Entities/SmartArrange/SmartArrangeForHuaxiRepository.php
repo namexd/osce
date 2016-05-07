@@ -21,17 +21,18 @@ class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
 
     private $_S_Count;
 
-    public function __construct()
+    public function __construct(SmartArrange $smartArrange)
     {
-        \App::bind('student', function () {
-            return new StudentFromDB();
-        });
+//        \App::bind('student', function () {
+//            return new StudentFromDB();
+//        });
+//
+//        \App::bind('SmartArrange', function () {
+//            return new SmartArrange(\App::make('student'));
+//        });
 
-        \App::bind('SmartArrange', function () {
-            return new SmartArrange(\App::make('student'));
-        });
-
-        $this->model = \App::make('SmartArrange');
+//        $this->model = \App::make('SmartArrange');
+        $this->model = $smartArrange;
     }
 
     /**
@@ -61,7 +62,7 @@ class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
                 //将排序模式注入
                 $this->model->setCate(CateFactory::getCate($exam, $type));
                 //初始化学生
-                $this->_S_Count = $this->model->setStudents(new StudentFromDB());
+                $this->_S_Count = $this->model->setStudents();
                 /*
                  * 做排考的前期准备
                  * 检查各项数据是否存在

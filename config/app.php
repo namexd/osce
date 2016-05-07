@@ -164,6 +164,8 @@ return [
 
 //        Barryvdh\Debugbar\ServiceProvider::class,
 
+        Modules\Osce\Providers\SmartArrangeServiceProvider::class
+
 
     ],
 

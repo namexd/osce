@@ -9,7 +9,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//忘记密码
 		Route::get('user/forget-password',['uses'=>'UserController@getForgetPassword','as'=>'osce.admin.user.getForgetPassword']);
 		Route::post('user/reset-password',['uses'=>'UserController@postResetPassword','as'=>'osce.admin.user.postResetPassword']);	//重置密码（提交数据）
-
+		//修改密码(临时)
+		Route::get('update/index',['uses'=>'UpdateController@getIndex','as' => 'osce.admin.getUpdate']);
+		Route::post('update/index',['uses'=>'UpdateController@postIndex','as'=>'osce.admin.postUpdate']);
 
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
@@ -525,9 +527,8 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 Route::get('test/test', function(Redis $redis) {
 //	return view('osce::Drawlots');
-	$a = collect(['aa' => 1, 'bb' => 2, 'cc' => 3]);
-	$b = $a->except(['aa', 'bb']);
-	dd($b);
+	$a = [1,2,3,4,5,6];
+	dd(array_pop($a));
 
 });
 

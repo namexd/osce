@@ -2492,6 +2492,109 @@ function course_module(){
         });
 
 
+    /**************************************************************zhoufuxiang <zhoufuxiang@misrobot.com> 2016-05-07************************************************************************************/
+
+    /**
+     * 新增特殊评分项
+     * @author zhoufuxiang
+     * @version 3.4
+     * @date    2016-05-07
+     */
+    $('#add-special-score').click(function() {
+        var html = '',
+            index = $('#special-score').find('tbody').attr('index');
+
+        index = parseInt(index) + 1;
+        html = '<tr>'+
+            '<td>'+
+            '<input class="form-control js-example-basic-single" name="special_score['+index+'][name]" style="width: 481px;" />'+
+            '</td>'+
+            '<td>'+
+            '<input class="form-control" type="number" value="1" name="special_score['+index+'][score]" placeholder="请输入分数" />'+
+            '</td>'+
+            '<td>'+
+            '<a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>'+
+            '</td>'+
+            '</tr>';
+
+        $('#special-score').find('tbody').append(html);
+        $('#special-score').find('tbody').attr('index',index);
+        //启动select2
+        // $('#special-score .js-example-basic-single').select2({
+        //     tags:true,
+        //     ajax: {
+        //         url: pars.goodList,
+        //         dataType: 'json',
+        //         delay: 250,
+        //         processResults: function (res) {
+        //             if(res.code == 1){
+        //                 var data = res.data,
+        //                     str = [];
+        //
+        //                 for(var i in data) {
+        //                     str.push({id:data[i].name,text:data[i].name});
+        //                 }
+        //
+        //                 return{
+        //                     results:str
+        //                 }
+        //             }
+        //         },
+        //         templateResult: formatRepo,
+        //         templateSelection: formatRepoSelection
+        //     }
+        // })
+
+
+    });
+
+    /**
+     * 编辑初始化
+     */
+    $('#special-score .js-example-basic-single').select2({
+        tags:true,
+        ajax: {
+            url: pars.goodList,
+            dataType: 'json',
+            delay: 250,
+            processResults: function (res) {
+                if(res.code == 1){
+                    var data = res.data,
+                        str = [];
+
+                    for(var i in data) {
+                        str.push({id:data[i].name,text:data[i].name});
+                    }
+
+                    return{
+                        results:str
+                    }
+                }
+            },
+            templateResult: formatRepo,
+            templateSelection: formatRepoSelection
+        }
+    })
+
+    /**
+     * 删除特殊评分项
+     * @author zhoufuxiang
+     * @version 3.3
+     * @date    2016-05-07
+     */
+    $('#special-score').on('click', '.fa-trash-o', function() {
+        var $that = $(this).parent().parent().parent().parent();
+        layer.confirm('确认删除？', {
+            title:"删除",
+            btn: ['确定','取消'] //按钮
+        }, function(its){
+            $that.remove();
+            layer.close(its);
+        });
+    });
+
+    /**************************************************************zhoufuxiang <zhoufuxiang@misrobot.com> 2016-05-07************************************************************************************/
+
 
 }
 

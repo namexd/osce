@@ -412,19 +412,6 @@ class IndexController extends CommonController
             $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
             $status       = $this->checkType($exameeStatus->status);
 
-           
-            
-            //判断该场次是否被排考安排考试 //拿到oder表里的场次 todo 周强 2016-4-30
-
-//            $OderExamScreeningId = ExamOrder::where('exam_id','=',$exam_id)->groupBy('exam_screening_id')->get()->pluck('exam_screening_id')->toArray();
-//            if(!in_array($exam_screen_id,$OderExamScreeningId)){
-//                $screen_id = ExamOrder::where('exam_id','=',$exam_id)
-//                    ->where('status','=',1)
-//                    ->first();
-//                $exam_screen_id = $screen_id->exam_screening_id;
-//            }
-
-
             //不存在考试场次，直接解绑
             if(!$exam_screen_id){
                 $result = Watch::where('id', '=', $id)->update(['status'=>0]);    //解绑
@@ -499,7 +486,7 @@ class IndexController extends CommonController
                     throw new \Exception('解绑失败');
                 }
             }else{
-                //如果考试流程未结束 还是解绑,把考试排序的状态改为0
+                //如果考试流程未结束 还是解绑,把考试排序的状态改为0   中途解绑
                 $result = Watch::where('id', '=', $id)->update(['status'=>0]);
 
                 if($result){
