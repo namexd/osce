@@ -30,7 +30,7 @@ class HuaxiSmarty
     public function ramdonId($stations)
     {
         if ($stations->isEmpty()) {
-            throw new \Exception('当前数据有问题');
+            throw new \Exception('当前数据有问题', -60);
         }
 
         return $this->stationId = $stations->random();
