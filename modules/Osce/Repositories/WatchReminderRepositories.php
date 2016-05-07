@@ -258,19 +258,23 @@ class WatchReminderRepositories  extends BaseRepository
                                 ->orderBy('begin_dt','asc')
                                 ->take($stationNum)
                                 ->get();
-        foreach($studentQueueList as $queueList){
-            //根据学生获取NFC _code
-            $studentCode[] = WatchLog::where('student_id','=',$queueList->student_id)
-                            ->leftjoin('watch')->select('code')->first();
-        }
-
         $data = [];
         $data['title'] = '';
-        $data['code'] = '';
+        $data['code'] = 200;
 
-        $this->publishmessage($watchNfcCode,$data,$message);
+        foreach($studentQueueList as $queueList){
+            //根据学生获取NFC _code
+            $studentCode = WatchLog::where('student_id','=',$queueList->student_id)
+                            ->leftjoin('watch')->select('code')->first()->pluck('code');
+            $array[] = $studentCode;
+            $this->publishmessage($studentCode,$data,'success');
+        }
+
+
+
+
         return response()->json(
-            ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
+            ['nfc_code' => $array, 'data' => $data, 'message' => 'success']
         );
     }
 
@@ -279,25 +283,52 @@ class WatchReminderRepositories  extends BaseRepository
      */
     public function getGOtoRoon(){
         //获取初始化的当前队列
+        $queue = $this->nowQueue;
+
+        $exam = $this->exam;
+
+        //当前房间的考站数量
+        $drawlots = new DrawlotsRepository();
+        $stationNum = count($drawlots->getStationNum($this->exam->id, $this->room->id, $this->examScreening->id));
 
         //获取当前同组学生清单
-
-        foreach(){
+        $studentQueueList = ExamQueue::where('exam_id','=',$exam->id)
+            ->where('exam_screening_id','=',$this->examScreening->id)
+            ->where('room_id','=',$this->room->id)
+            ->where('status',0)
+            ->orderBy('begin_dt','asc')
+            ->take($stationNum)
+            ->get();
+        foreach($studentQueueList as $queueList){
             //根据学生获取NFC _code
+            $studentCode[] = WatchLog::where('student_id','=',$queueList->student_id)
+                ->leftjoin('watch')->select('code')->first()->pluck('code');
         }
 
         //获取当前场次老师是否准备好，判断是否通知去考场
-
+        $ScreenStatus = $this->getScreenStatus();
         //推送消息
+        if($ScreenStatus){
 
-        $data = [];
-        $data['title'] = '';
-        $data['code'] = '';
+                $data = [];
+                $data['title'] = '';
+                foreach($studentCode as $code){
+                    $this->publishmessage($code,$data,'success');
+                }
 
-        $this->publishmessage($watchNfcCode,$data,$message);
-        return response()->json(
-            ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
-        );
+                return response()->json(
+                    ['nfc_code' => $studentCode, 'data' => $data, 'message' => 'success']
+                );
+
+        }else{
+            return response()->json(
+                ['nfc_code' => '', 'data' => '', 'message' => 'error']
+            );
+        }
+
+
+
+
     }
 
 
@@ -306,16 +337,15 @@ class WatchReminderRepositories  extends BaseRepository
      */
     public function getchoose(){
         //根据当前学生获取NFC——code
-
+        $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch')->first()->pluck('code');
         //根据考试和学生对象获取当前学生所属考站
-
+        $studentStationName = Station::where('id','=',$this->nowQueue->station_id)->first()->pluck('name');
         $data = [];
         $data['title'] = '';
-        $data['code'] = '';
 
-        $this->publishmessage($watchNfcCode,$data,$message);
+        $this->publishmessage($code,$data,'success');
         return response()->json(
-            ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
+            ['nfc_code' => $code, 'data' => $data, 'message' => 'success']
         );
     }
 
@@ -377,5 +407,19 @@ class WatchReminderRepositories  extends BaseRepository
             'data' => $data,
             'message' => $message,
         ]));
+    }
+
+    /**
+     * 判断当前场次下的考站是否完全准备好
+     */
+    public function getScreenStatus(){
+        //当前场次下的考站数量
+        $stationNum = ExamStationStatus::where('exam_screening_id','=',$this->examScreening->id)
+                                        ->where('status','=',0)->get();
+        if($stationNum->isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

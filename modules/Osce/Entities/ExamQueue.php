@@ -204,6 +204,7 @@ class ExamQueue extends CommonModel
     static public function
     getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id){
         //先判定该学生是否抽过签
+
             $queueing = ExamQueue::where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
                 ->where('exam_queue.room_id', $room_id)
@@ -215,6 +216,7 @@ class ExamQueue extends CommonModel
                 ->get();
         return $queueing;
     }
+
 
     /**
      * 鏍规嵁room_id鏉ヨ幏鍙栧搴旂殑鑰冪敓鍒楄〃
@@ -957,7 +959,7 @@ class ExamQueue extends CommonModel
             $queue = ExamQueue::findQueueIdByStudentId($studentId, $stationId);
             $queue->end_dt =  $date;
             $queue->status =  3;
-            $queue->block = 1;
+            $queue->blocking = 1;
             if(!$queue->save()){
                 throw new \Exception('状态修改失败！请重试', -101);
             }

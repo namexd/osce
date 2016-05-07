@@ -543,7 +543,7 @@ class DrawlotsController extends CommonController
              */
             if ($exam->sequence_mode == 1) {
                 //从队列表中通过考场ID得到对应的当前组的考生信息
-                $examQueue = ExamQueue::getStudentExamineeId($room_id, $examId,$stations, $exam_screening_id);
+                $examQueue = ExamQueue::examineeByRoomId($room_id, $examId,$stations, $exam_screening_id);
                 
                 
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
@@ -848,6 +848,7 @@ class DrawlotsController extends CommonController
                 
                 $examQueue->status = 1;
                 $examQueue->station_id = $ranStationId;
+                $examQueue->blocking = 0;
                 if (!$examQueue->save()) {
                     throw new \Exception('抽签失败！请重试！', 3700);
                 };
@@ -882,6 +883,7 @@ class DrawlotsController extends CommonController
 
                 //将队列状态变更为1
                 $tempObj->status = 1;
+                $examQueue->blocking = 0;
                 if (!$tempObj->save()) {
                     throw new \Exception('当前抽签失败！', 3901);
                 }
