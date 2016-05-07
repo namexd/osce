@@ -482,7 +482,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 		Route::get('student-details', 	['uses'=>'IndexController@getStudentDetails']);
 		Route::get('student-list', 	['uses'=>'IndexController@getStudentList']);
 		Route::get('skip-last', 	['uses'=>'IndexController@getSkipLast']);
-
+		Route::get('student-reslut', 	['uses'=>'IndexController@studentExamRoomResult']);
 		Route::get('add',['uses'=>'IndexController@getAddWatch']);
 		Route::get('update',['uses'=>'IndexController@getUpdateWatch']);
 		Route::get('delete',['uses'=>'IndexController@getDeleteWatch']);
