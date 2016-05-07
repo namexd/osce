@@ -267,7 +267,7 @@
                                                 <th width="10%">操作</th>
                                             </tr>
                                             </thead>
-                                            <tbody index="0">
+                                            <tbody index="{{$item->specialScores->count()}}">
                                             @forelse($item->specialScores as $key => $specialScore)
                                                 <tr>
                                                     <td>
