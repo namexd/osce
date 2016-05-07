@@ -124,7 +124,6 @@ class HuaxiSmarty
     {
         $student = new Student();
         $exam = Exam::doingExam($params['exam_id']);
-        \Log::debug('pa', $params);
         $studentData = $student->studentList($params['station_id'], $exam, $params['student_id']);
         \Log::debug('123', $studentData['nextTester']);
         if ($studentData['nextTester']) {

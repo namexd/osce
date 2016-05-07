@@ -191,7 +191,7 @@ class DrawlotsRepository extends AbstractDrawlots
         $params['exam_id'] = $this->params['exam_id'];
         $params['station_id'] = $this->stationId;
         $params['student_id'] = $this->student->student_id;
-        return $this->draw->pushStudent($params);
+        return $this->draw->pushStudent(new Student(), $params);
 //        if ($this->student) {
 //            $this->student->avator = asset($this->student->avator);
 //        }
