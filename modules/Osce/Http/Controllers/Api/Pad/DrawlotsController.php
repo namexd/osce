@@ -614,6 +614,8 @@ class DrawlotsController extends CommonController
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data($studentMsg, 102, '验证完成')));
             }
+            
+            
             return response()->json($this->success_data($result));
 
         } catch (\Exception $ex) {
