@@ -974,6 +974,16 @@ class ExamQueue extends CommonModel
             if(!$queue->save()){
                 throw new \Exception('状态修改失败！请重试', -101);
             }
+
+            //更改考站的准备状态
+            $examStationStatus = ExamStationStatus::where('station_id', $queue->station_id)
+                ->where('exam_id', $queue->exam_id)
+                ->where('exam_screening_id', $queue->exam_screening_id)
+                ->first();
+            $examStationStatus->status = 0;
+            if (!$examStationStatus->save()) {
+                throw new \Exception('考站准备状态失败！', -102);
+            }
             $connection->commit();
             return $queue;
         } catch (\Exception $ex) {

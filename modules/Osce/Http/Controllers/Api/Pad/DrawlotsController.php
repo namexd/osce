@@ -513,7 +513,6 @@ class DrawlotsController extends CommonController
             //获取腕表记录实例
             $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$exam_screening_id)->where('is_end', 0)->orderBy('created_at',
                 'desc')->first();
-
             if (!$watchLog) {
                 $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                     json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
@@ -603,8 +602,14 @@ class DrawlotsController extends CommonController
                 json_encode($this->success_data($result, 1, '抽签成功!')));
 
             //todo 绑定腕表调腕表接口
-            $watch = new WatchReminderRepositories();
-            $watch->getWatchPublish($student->id,$result->id ,$roomId);
+            try {
+                $studentWatchController = new StudentWatchController();
+                $this->request['nfc_code'] = $this->request->input('uid');
+                $studentWatchController->getStudentExamReminder($this->request);
+//                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
+            } catch (\Exception $ex) {
+                \Log::info('抽签中推送腕表失败', $this->request->input('uid'));
+            }
 
             //推送当前学生
             $request['station_id'] = $result->id;
@@ -664,9 +669,12 @@ class DrawlotsController extends CommonController
             \Log::info('推送给腕表的数据', $params);
             //将数据推送给腕表
             try {
-                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
+                $studentWatchController = new StudentWatchController();
+                $this->request['nfc_code'] = $this->request->input('uid');
+                $studentWatchController->getStudentExamReminder($this->request);
+//                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
             } catch (\Exception $ex) {
-                \Log::info('抽签中推送腕表失败', $params);
+                \Log::info('抽签中推送腕表失败', $this->request->input('uid'));
             }
             //将数据推送给pad端
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',

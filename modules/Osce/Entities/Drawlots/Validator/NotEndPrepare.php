@@ -40,7 +40,7 @@ class NotEndPrepare implements DrawValidatorInterface
                 ->count() > 0) {
                 throw new \Exception('上场考试未完成，请稍后签到', -13);
             }
-        } else {
+        } elseif ($ready < count($stationIds)) {
             throw new \Exception('上场考试未完成，请稍后签到', -14);
         }
 

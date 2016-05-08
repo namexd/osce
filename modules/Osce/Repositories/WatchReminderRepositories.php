@@ -92,7 +92,7 @@ class WatchReminderRepositories  extends BaseRepository
         $this->setInitializeData($exam,$student,$room,$station);
         //判断考试模式
         if($exam->sequence_mode==1){//考场模式
-            $this->getRoomExamReminder($exam,$student,$this->nowQueue->exam_screening_id);
+            $this->getRoomExamReminder($exam,$student,$this->examScreening);
         }
         else
         {//考站模式
@@ -209,7 +209,7 @@ class WatchReminderRepositories  extends BaseRepository
         //获取当前队列
         //获取是否有一条正在进行的考试
         $queue  =   $queueList->where('status',2);
-        if($queue->isEmpty())
+        if(!$queue->isEmpty())
         {
             //初始化当前队列
             $this->nowQueue =   $queue->first();
@@ -220,7 +220,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         //获取是否有一条已经抽签的考试
         $queue  =   $queueList->where('status',1);
-        if($queue->isEmpty())
+        if(!$queue->isEmpty())
         {
             //初始化当前队列
             $this->nowQueue =   $queue->first();
@@ -235,7 +235,7 @@ class WatchReminderRepositories  extends BaseRepository
             return false;
         }else{
             //不是，待考
-            $queue = $queue->sortBy('begin_dt','asc');
+            $queue = $queueList->where('status',0)->sortBy('begin_dt','asc');
         }
 
         //初始化当前队列
