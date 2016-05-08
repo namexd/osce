@@ -52,7 +52,7 @@ class HuaxiSmarty
      */
     public function assembly($name)
     {
-        return ['抽签成功，请到' . $name . '考站进行考试'];
+        return ['请到' . $name . '考站进行考试'];
     }
 
     /**
