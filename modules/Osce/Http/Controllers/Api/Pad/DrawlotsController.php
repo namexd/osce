@@ -649,8 +649,7 @@ class DrawlotsController extends CommonController
             'uid' => 'required|string',
             'exam_id' => 'required|integer'
         ]);
-//        \Log::debug('uid', [$this->request->input('uid')]);
-        \Log::debug('params', $this->request->all());
+        \Log::info('drawlots_params', $this->request->all());
         try {
             //写入具体的数据
             $huaxiDrawlots->setParams($this->request->all());
@@ -661,7 +660,7 @@ class DrawlotsController extends CommonController
 
             $student = $huaxiDrawlots->pushStudent();
             $params = $huaxiDrawlots->getParams();
-            \Log::debug('params', $params);
+            \Log::info('推送给腕表的数据', $params);
             //将数据推送给腕表
             try {
                 $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
@@ -669,11 +668,9 @@ class DrawlotsController extends CommonController
                 \Log::info('抽签中推送腕表失败', $params);
             }
             //将数据推送给pad端
-            \Log::alert('抽签推送学生',$this->success_data($data));
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($student, 102, '抽签成功！')));
 
-            \Log::debug('student123', [$student]);
             return response()->json($this->success_data($data));
         } catch (\Exception $ex) {
             \log::alert('draw_error', ['file' => $ex->getFile(), 'line' => $ex->getLine(), 'code' => $ex->getCode(), 'message' => $ex->getMessage()]);
