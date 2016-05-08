@@ -26,7 +26,6 @@ class PadLogin
      */
     public function screenBegin($beginDt, $endDt)
     {
-        dd($beginDt, $endDt);
         return ExamOrder::join('exam_screening', 'exam_screening.id', '=', 'exam_order.exam_screening_id')
             ->join('exam', 'exam.id', '=', 'exam_screening.exam_id')
             ->select(
