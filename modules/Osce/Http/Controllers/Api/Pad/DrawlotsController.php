@@ -663,9 +663,12 @@ class DrawlotsController extends CommonController
             \Log::info('推送给腕表的数据', $params);
             //将数据推送给腕表
             try {
-                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
+                $studentWatchController = new StudentWatchController();
+                $this->request['nfc_code'] = $this->request->input('uid');
+                $studentWatchController->getStudentExamReminder($this->request);
+//                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
             } catch (\Exception $ex) {
-                \Log::info('抽签中推送腕表失败', $params);
+                \Log::info('抽签中推送腕表失败', $this->request->input('uid'));
             }
             //将数据推送给pad端
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',

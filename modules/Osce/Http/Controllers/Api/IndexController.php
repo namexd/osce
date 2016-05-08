@@ -268,8 +268,8 @@ class IndexController extends CommonController
 
 
         //修改腕表状态
-        $result = Watch::where('id', $id)->update(['status' => 1]);
-        if ($result)
+        $Watch = Watch::where('id', $id)->update(['status' => 1]);
+        if ($Watch)
         {
             $action     = '绑定';
             $updated_at = date('Y-m-d H:i:s', time());
@@ -321,12 +321,11 @@ class IndexController extends CommonController
 
 
             //todo 绑定腕表调腕表接口
-            $watch = new WatchReminderRepositories();
+     
             try{
-
-                
-                $watch->getWatchPublish($student_id,$stationId =null,$roomId =null);
-
+                $studentWatchController = new StudentWatchController();
+                $request['nfc_code'] = $Watch->code;
+                $studentWatchController->getStudentExamReminder($request);
             }catch (\Exception $ex){
                 \Log::debug('绑定腕表调腕表接口出错',[$student_id,$ex->getMessage(),$ex->getFile()]);
             }
@@ -466,9 +465,10 @@ class IndexController extends CommonController
                 if($result){
 
                     //todo 解绑腕表调腕表接口
-                    $watch = new WatchReminderRepositories();
                     try {
-                        $watch->getWatchPublish($student_id, $exameeStatus->station_id, $roomId =$exameeStatus->room_id);
+                        $studentWatchController = new StudentWatchController();
+                        $request['nfc_code'] = $result->code;
+                        $studentWatchController->getStudentExamReminder($request);
                     } catch (\Exception $ex) {
                         \Log::debug('解绑腕表接口推送失败', [$student_id, $exameeStatus->station_id, $roomId =$exameeStatus->room_id]);
                     }
@@ -502,9 +502,10 @@ class IndexController extends CommonController
 
 
                     //todo 解绑腕表调腕表接口
-                    $watch = new WatchReminderRepositories();
                     try {
-                        $watch->getWatchPublish($student_id, $exameeStatus->station_id, $roomId =$exameeStatus->room_id);
+                        $studentWatchController = new StudentWatchController();
+                        $request['nfc_code'] = $result->code;
+                        $studentWatchController->getStudentExamReminder($request);
                     } catch (\Exception $ex) {
                         \Log::debug('解绑腕表接口推送失败', [$student_id, $exameeStatus->station_id, $roomId =$exameeStatus->room_id]);
                     }

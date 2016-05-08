@@ -806,35 +806,45 @@ class InvigilatePadController extends CommonController
                 $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId,'exam_screening_id'=>@$examQueue->exam_screening_id], 105, '开始考试成功')));
 
                 // todo 调用向腕表推送消息的方法
+//                try{
+//                    $watch = new WatchReminderRepositories();
+//                    $watch ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
+//                }catch (\Exception $ex){
+//                    \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
+//                }
+                
+                
+                
                 try{
-                    $watch = new WatchReminderRepositories();
-                    $watch ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
+                    $exam = Exam::where('status', '=', 1)->first();
+                    $examQueue = ExamQueue::where('exam_id',$exam->id)
+                        ->where('student_id', '=', $studentId)
+                        ->where('station_id', '=', $stationId)
+                        ->where('status','=',2)
+                        ->first();
+
+                    $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$examQueue->exam_screening_id)
+                        ->where('student_id','=',$examQueue->student_id)->first();
+
+                    $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
+
+                    $studentWatchController = new StudentWatchController();
+                    $request['nfc_code'] = $watchData->code;
+
+                    //拿到阶段序号
+                    $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
+
+                    //拿到属于该场考试，该场阶段所对应的所有场次id
+                    $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+
+                    $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
+
                 }catch (\Exception $ex){
                     \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
                 }
-//                $exam = Exam::where('status', '=', 1)->first();
-//                $examQueue = ExamQueue::where('exam_id',$exam->id)
-//                    ->where('student_id', '=', $studentId)
-//                    ->where('station_id', '=', $stationId)
-//                    ->where('status','=',2)
-//                    ->first();
-//
-//                $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$examQueue->exam_screening_id)
-//                    ->where('student_id','=',$examQueue->student_id)->first();
-//
-//                $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
-//
-//                $studentWatchController = new StudentWatchController();
-//                $request['nfc_code'] = $watchData->code;
-
-//                //拿到阶段序号
-//                $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
-//
-//                //拿到属于该场考试，该场阶段所对应的所有场次id
-//                $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
-//
-//                $studentWatchController->getStudentExamReminder($request,$stationId ,$examscreeningId);
-
+                
+                
+                
                 $studentModel = new Student();
                 $exam = Exam::doingExam();
                 $publishMessage = $studentModel->getStudentInfo($stationId ,$exam,$teacherId);
