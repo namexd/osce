@@ -27,6 +27,9 @@ abstract class CommonController extends Controller
      */
     public function success_data($data = [], $code = 1, $message = 'success')
     {
+        if(!is_array($data)){
+            $data = [$data];
+        }
         return [
             'code' => $code,
             'message' => $message,
