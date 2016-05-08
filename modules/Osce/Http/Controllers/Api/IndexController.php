@@ -323,6 +323,8 @@ class IndexController extends CommonController
             //todo 绑定腕表调腕表接口
             $watch = new WatchReminderRepositories();
             try{
+
+                
                 $watch->getWatchPublish($student_id,$stationId =null,$roomId =null);
 
             }catch (\Exception $ex){
