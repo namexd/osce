@@ -529,9 +529,13 @@ Route::get('test/test', function(Redis $redis) {
 //	return view('osce::Drawlots');
 //	$a = collect([1,2,3]);
 //	$b = collect([2,3,4]);
-	$a = \Modules\Osce\Entities\Exam::where('id', 2)->get();
-	$b = \Modules\Osce\Entities\Exam::where('id', 3)->get();
-	dd($a->merge($b->all()));
+	$a = [
+		'code' => 1,
+		'message' => 'sucess',
+		'data' => ['成功，应该去XXX']
+	];
+
+	dd(json_encode($a));
 
 });
 
