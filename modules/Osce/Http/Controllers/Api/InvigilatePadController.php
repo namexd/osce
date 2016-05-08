@@ -326,12 +326,12 @@ class InvigilatePadController extends CommonController
                 throw new \Exception('请检查考试安排数据',-104);
             }
             
-//            return response()->json(
-//                $this->success_data($standardItemList, 1, '数据传送成功')
-//            );
             return response()->json(
-                $this->success_data($datas, 1, '数据传送成功')
+                $this->success_data($standardItemList, 1, '数据传送成功')
             );
+//            return response()->json(
+//                $this->success_data($datas, 1, '数据传送成功')
+//            );
             
         }catch (\Exception $ex){
             return response()->json($this->fail($ex));
