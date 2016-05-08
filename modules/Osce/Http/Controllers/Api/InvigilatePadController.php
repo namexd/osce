@@ -810,7 +810,7 @@ class InvigilatePadController extends CommonController
                     $watch = new WatchReminderRepositories();
                     $watch ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
                 }catch (\Exception $ex){
-                    \Log::alert('调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
+                    \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
                 }
 //                $exam = Exam::where('status', '=', 1)->first();
 //                $examQueue = ExamQueue::where('exam_id',$exam->id)

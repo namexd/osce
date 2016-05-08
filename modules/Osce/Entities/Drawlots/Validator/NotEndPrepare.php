@@ -33,13 +33,15 @@ class NotEndPrepare implements DrawValidatorInterface
             ->whereStatus(1)
             ->count();
 
-        if ($ready <= count($stationIds)) {
+        if ($ready == count($stationIds)) {
             if (ExamQueue::where('status', 2)
                 ->where('exam_screening_id', $screenId)
                 ->where('room_id', $roomId)
-                ->count() == count($stationIds)) {
+                ->count() > 0) {
                 throw new \Exception('上场考试未完成，请稍后签到', -13);
             }
+        } else {
+            throw new \Exception('上场考试未完成，请稍后签到', -14);
         }
 
 
