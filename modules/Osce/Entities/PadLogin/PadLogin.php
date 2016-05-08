@@ -42,7 +42,7 @@ class PadLogin
                     ->where('exam_screening.end_dt', '>=', $beginDt);
             })->orWhere(function ($query) use($beginDt, $endDt) {
                 $query->where('exam_screening.begin_dt', '<=', $beginDt)
-                    ->where('exam_screening.end_dt', '=>', $endDt);
+                    ->where('exam_screening.end_dt', '>=', $endDt);
             })
             ->orderBy('begin_dt', 'asc')
             ->distinct()
