@@ -697,7 +697,6 @@ class DrawlotsController extends CommonController
      */
     public function getStationList(Request $request)
     {
-        \Log::info('考试信息',[]);
         $this->validate($request, [
             'id' => 'required|integer',
             'exam_id' => 'sometimes|integer'
