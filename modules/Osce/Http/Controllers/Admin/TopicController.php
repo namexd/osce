@@ -134,6 +134,10 @@ class TopicController extends CommonController
         $cases   = $request->input('cases');        //病例
         $goods   = $request->input('goods');        //用物
         $speScore= $request->get('special_score');  //特殊评分项
+        $speflag = $request->get('special_score_flag');  //特殊评分项标记
+        if($speflag == 0){
+            $speScore = [];
+        }
 
         try {
             $user = \Auth::user();
@@ -257,6 +261,10 @@ class TopicController extends CommonController
         $cases   = $request->input('cases');        //病例
         $goods   = $request->input('goods');        //用物
         $speScore= $request->get('special_score');  //特殊评分项
+        $speflag = $request->get('special_score_flag');  //特殊评分项标记
+        if($speflag == 0){
+            $speScore = [];
+        }
 
         $subjectModel = new Subject();
         try {
