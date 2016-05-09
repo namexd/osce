@@ -19,7 +19,7 @@ trait CheckTraits
             case 'idcard':  $this->checkIdCard($examId, $data, $key);
                 break;
             case 'mobile':
-                if (!preg_match('/^1[3|5|7|8]{1}[0-9]{9}$/', $data)) {
+                if (!preg_match('/^1[3|5|7|8]{1}[0-9]{9}$/', trim($data))) {
                     throw new \Exception('第' . ($key) . '行手机号不符规格，请修改后重试！');
                 }
                 break;
@@ -71,7 +71,10 @@ trait CheckTraits
     public function checkIdCard($examId, $idCard, $key)
     {
         //1、验证身份证的正确性
-        if (!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', $idCard) || !preg_match('/^((s?[A-Za-z])|([A-Za-z]{2}))d{6}((([0-9aA]))|([0-9aA]))$/', $idCard)) {
+//        if (!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', $idCard) || !preg_match('/^((s?[A-Za-z])|([A-Za-z]{2}))d{6}((([0-9aA]))|([0-9aA]))$/', $idCard)) {
+//            throw new \Exception('第' . ($key) . '行身份证号不符规格，请修改后重试！');
+//        }
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $idCard)) {
             throw new \Exception('第' . ($key) . '行身份证号不符规格，请修改后重试！');
         }
 
