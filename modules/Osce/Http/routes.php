@@ -1,4 +1,3 @@
-
 <?php
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
