@@ -707,9 +707,10 @@ class DrawlotsController extends CommonController
             $id = $request->input('id');
             $examId = $request->input('exam_id', null);
 
-
+            \Log::debug('考试信息',[$examId]);
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
+
             Common::valueIsNull($exam, -333);
             //获取当前考试场次
             $exam_screening_id = $this->getexamScreeing($exam);
