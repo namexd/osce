@@ -72,7 +72,7 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
                 }
 
                 //验证
-                $this->model->check($studentData, $key + 2);
+                $this->model->check($examId, $studentData, $key + 2);
 
                 $user = User::where('username', $studentData['mobile'])->select('id')->first();
                 if ($user) {
