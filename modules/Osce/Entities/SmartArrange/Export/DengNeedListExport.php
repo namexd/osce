@@ -28,10 +28,10 @@ class DengNeedListExport extends NewExcelFile
         //第一行为行头
         $data[] = ['学号', '姓名', '考试时间'];
 
-        //设定数组的索引
-        $k = 1;
-//        dd($collection);
-        //遍历集合,拼装数组
+        /*
+         * 遍历集合,拼装数组
+         * 如果是在一个场次下,当前学生出现了就不让他再出现了
+         */
         foreach ($collection as $item) {
             $tempArray = [];
             foreach ($item as $j => $value) {
