@@ -1040,8 +1040,8 @@ class IndexController extends CommonController
             $countStation = array_unique($countStation);
             $batch        = config('osce.batch_num');       //默认为2
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
-
-            $list = $studentModel->getStudentQueue($exam_id, $screen_id, $countStation); //获取考生队列(exam_order表)
+            //获取 待绑定腕表的考生队列(exam_order表)
+            $list = $studentModel->getStudentQueue($exam_id, $screen_id, $countStation);
             $data = [];
             foreach($list as $itm){
                 $data[] = [

@@ -649,13 +649,21 @@ class Student extends CommonModel
 //            ->get();
 //    }
 
+    /**
+     * 获取考生队列
+     * @param $exam_id
+     * @param $screen_id
+     * @param $countStation
+     * @return array
+     */
     public function getStudentQueue($exam_id, $screen_id, $countStation)
     {
-        $buondNum = ExamOrder::where('exam_id', '=', $exam_id)->where('status','=',1)
+        //查询 该考试、该场次下，已绑定腕表的学生数量
+        $buondNum = ExamOrder::where('exam_id', '=', $exam_id)->where('status', '=', 1)
                              ->where('exam_screening_id', '=', $screen_id)->get();
         $buondNum = count($buondNum);
         $num      = $countStation - $buondNum;
-        if ($num === 0 || $num < 0) {
+        if($num === 0 || $num < 0){
             return array();
         }
 
@@ -667,74 +675,64 @@ class Student extends CommonModel
         $builder = $builder->where(function ($query) {
             $query->whereIn('exam_order.status',[0,4]);
         });*/
-        $endStudentList = ExamQueue::where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)->whereIn('status', [0,2,1])->get();
 
-        if(count($endStudentList)){
+        //查询待考、考试中的学生列表
+        $endStudentList = ExamQueue::where('exam_id', '=', $exam_id)
+                                   ->where('exam_screening_id', '=', $screen_id)
+                                   ->whereIn('status', [0,2,1])->get();
 
-            $studentList = ExamQueue::where('status',3)->where('exam_id',$exam_id)->where('exam_screening_id',$screen_id)
-                                    ->groupBy('student_id')->get()->pluck('student_id')->toArray();
-            //检查学生是否已真的结束考试
-            $studentList   = ExamScreeningStudent::where('exam_screening_id',$screen_id)
-                                ->whereIn('student_id',$studentList)
-                                ->where('is_end','=',1)
-                                ->get()
-                                ->groupBy('student_id')
-                                ->pluck('student_id')
-                                ->toArray();
-            $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
-                $join->on('student.id', '=', 'exam_order.student_id');
-            })->where('exam_order.exam_id', '=', $exam_id)
+        if(count($endStudentList))
+        {
+            //查询 该考试、场次下，队列中考试结束的学生列表
+            $studentList = ExamQueue::where('status', '=', 3)->where('exam_id', '=', $exam_id)
+                                    ->where('exam_screening_id', '=', $screen_id)
+                                    ->groupBy('student_id')->get()
+                                    ->pluck('student_id')->toArray();
+            //检查上述学生列表中，学生是否已真的结束考试（筛选出真正结束考试了的学生）
+            $studentList = ExamScreeningStudent::where('exam_screening_id', '=', $screen_id)
+                                ->whereIn('student_id', $studentList)
+                                ->where('is_end', '=', 1)
+                                ->groupBy('student_id')->get()
+                                ->pluck('student_id')->toArray();
+
+            $builder = $this->leftjoin('exam_order', function ($join) {     //TODO wt 未绑定时队列表没数据
+                    $join->on('student.id', '=', 'exam_order.student_id');
+                })
+                ->where('exam_order.exam_id', '=', $exam_id)
                 ->where('student.exam_id', '=', $exam_id)
                 ->where('exam_order.exam_screening_id', '=', $screen_id);
             $builder = $builder->where(function ($query) {
-                $query->whereIn('exam_order.status', [0,2,4]);
-            });
+                    $query->whereIn('exam_order.status', [0,2,4]);
+                });
 
             if (count($studentList)) {
-                    $builder = $builder->whereNotIn('exam_order.student_id', $studentList);
+                $builder = $builder->whereNotIn('exam_order.student_id', $studentList);
             }
-        }else {
-            $builder = $this->leftjoin('exam_order', function ($join) {//TODO wt 未绑定时队列表没数据
-                $join->on('student.id', '=', 'exam_order.student_id');
-            })->where('exam_order.exam_id', '=', $exam_id)
+
+        }else
+        {
+            $builder = $this->leftjoin('exam_order', function ($join) {     //TODO wt 未绑定时队列表没数据
+                    $join->on('student.id', '=', 'exam_order.student_id');
+                })
+                ->where('exam_order.exam_id', '=', $exam_id)
                 ->where('student.exam_id', '=', $exam_id)
                 ->where('exam_order.exam_screening_id', '=', $screen_id);
             $builder = $builder->where(function ($query) {
-                $query->whereIn('exam_order.status', [0,4]);
-            });
-        /*    //\DB::connection('osce_mis')->enableQueryLog();
-//        //查询本场考试中 已考试过的 学生 ，用于剔除//TODO .
-            $students = $this->leftjoin('exam_queue',function($exam_queue){
-                $exam_queue->on('exam_queue.student_id','=','student.id');
-            })->whereIn('exam_queue.status', [2,3,4])
-
-                ->where('exam_queue.exam_screening_id', '=', $screen_id)
-                //->where('exam_screening_student.is_end', '=', 1)
-                ->select(['exam_queue.student_id'])->get();
-
-            $studentIds = [];   //用于保存已经考试的学生ID
-            if (count($students)) {
-                foreach ($students as $index => $student) {
-                    array_push($studentIds, $student->student_id);
-                }
-            }
-            //dump($studentIds);
-//        //剔除 已经考试过的学生
-            if (count($studentIds)) {
-                $builder = $builder->whereNotIn('exam_order.student_id', $studentIds);
-            }*/
+                    $query->whereIn('exam_order.status', [0,4]);
+                });
         }
-//        $builder = $builder->whereRaw('unix_timestamp(exam_order.begin_dt) > ?',[strtotime(date('Y-m-d H:i:s'))])->select([
-        $builder =$builder->select([
-            'student.id as id',
-            'student.name as name',
-            'student.idcard as idcard',
-            'student.code as code',
-            'student.mobile as mobile',
-            'exam_order.status as status',
-            'exam_order.exam_screening_id as exam_screening_id',
-        ])->orderBy('student.id')->paginate(100);
-       // $queries = \DB::connection('osce_mis')->getQueryLog();
+
+        $builder = $builder->select([
+                'student.id as id',
+                'student.name as name',
+                'student.idcard as idcard',
+                'student.code as code',
+                'student.mobile as mobile',
+                'exam_order.status as status',
+                'exam_order.exam_screening_id as exam_screening_id',
+            ])
+            ->orderBy('student.id')->paginate(100);
+
         return $builder;
     }
 
