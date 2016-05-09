@@ -38,7 +38,7 @@ class DengNeedListExport extends NewExcelFile
                     $data[] = [
                         $value->code,
                         $value->name,
-                        $value->begin_dt
+                        date('m-d H:i', strtotime($value->begin_dt))
                     ];
                 } else {
                     $data[] = [
