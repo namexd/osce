@@ -34,11 +34,13 @@ class DengNeedListExport extends NewExcelFile
          */
         foreach ($collection as $item) {
             $tempArray = [];
+            $temp = null;
             foreach ($item as $j => $value) {
                 if (array_key_exists($value->student_id, $tempArray)) {
                     continue;
                 }
-                if (0 == $j) {
+
+                if ($temp != $value->begin_dt) {
                     $tempArray[$value->student_id] = [
                         $value->code,
                         $value->name,
@@ -51,7 +53,7 @@ class DengNeedListExport extends NewExcelFile
                         ' '
                     ];
                 }
-
+                $temp = $value->begin_dt;
             }
             $data = array_merge($data, $tempArray);
         }
