@@ -99,9 +99,9 @@ class AutomaticPlanArrangementController extends CommonController
         $this->validate($this->request, [
             'exam_id' => 'required|integer'
         ]);
-        
+
         $examId = $this->request->input('exam_id');
-        
+
         try {
             set_time_limit(0);
             $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
@@ -164,8 +164,11 @@ class AutomaticPlanArrangementController extends CommonController
      * @time 2016-05-01 16：48
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExport(SmartArrangeRepository $smartArrangeRepository, UserListExport $export, StudentArrange $arrange)
-    {
+    public function getExport(
+        SmartArrangeRepository $smartArrangeRepository,
+        UserListExport $export,
+        StudentArrange $arrange
+    ) {
         $this->validate($this->request, [
             'exam_id' => 'required|integer'
         ]);
