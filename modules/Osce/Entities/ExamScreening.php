@@ -166,9 +166,11 @@ class ExamScreening extends CommonModel
         $exam     = Exam::doingExam($exam_id);
 
 
+
         if($exam->id != $exam_id){
             throw new \Exception('开考考试不对！');
         }
+        \Log::debug('获取最近场次调试',[$exam_id,$exam]);
         $screenId = ExamPlan::where('exam_id', '=', $exam->id)->groupBy('exam_screening_id')->get()
                             ->pluck('exam_screening_id')->toArray();
 
