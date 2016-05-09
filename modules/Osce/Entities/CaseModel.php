@@ -92,26 +92,29 @@ class CaseModel extends CommonModel
     public function updateCase($id, $formData)
     {
         $connection = DB::connection($this->connection);
-        $connection->beginTransaction();
+        $connection ->beginTransaction();
         try {
-        $case = CaseModel::where('name', str_replace(' ','',$formData['name']))->where('id','<>',$id)->first();
+            $case = CaseModel::where('name', str_replace(' ','',$formData['name']))->where('id','<>',$id)->first();
 
-
-        if (!is_null($case)) {
-            throw new \Exception('已经有此病例名！');
-        }
+            if (!is_null($case)) {
+                throw new \Exception('已经有此病例名！');
+            }
             //查询是否和考试项目关联
             $subjectCases = SubjectCases::where('case_id','=',$id)->first();
             if($subjectCases){
                 $subjectName = Subject::where('id','=',$subjectCases->subject_id)->first();
-                throw new \Exception($case->name.'病例 已与 '.$subjectName->name.'考试项目 相关联，不能修改！');
+                if(is_null($subjectName)){
+                    throw new \Exception('考试项目数据有误！');
+                }
+                throw new \Exception('该病例 已与 '.$subjectName->title.'考试项目 相关联，不能修改！');
             }
-        if (!$result = $this->where('id',$id)->update($formData)) {
-            throw new \Exception('更新失败！');
-        }
 
-        $connection->commit();
-        return $result;
+            if (!$result = $this->where('id',$id)->update($formData)) {
+                throw new \Exception('更新失败！');
+            }
+
+            $connection->commit();
+            return $result;
 
         } catch (\Exception $ex) {
             $connection->rollBack();
