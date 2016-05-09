@@ -261,12 +261,6 @@ class IndexController extends CommonController
         }
         $exam_screen_id = $examScreening->id;
 
-        //获取考试场次Id
-//        $screen_id      = ExamOrder::where('exam_id',$exam_id)
-//                        ->where('student_id',$student_id)->select('exam_screening_id')->first();
-//        $exam_screen_id = $screen_id->exam_screening_id;
-
-
         //修改腕表状态
         $Watch = Watch::where('id', $id)->update(['status' => 1]);
         if ($Watch)
@@ -579,12 +573,13 @@ class IndexController extends CommonController
 
         $idCard = $request->get('id_card');
         $examId = $request->get('exam_id');
-
-        $studentInfo = Student::where('idcard',$idCard)->where('exam_id',$examId)->select(['id','idcard','code','exam_sequence','name'])->first();
+        //查询该学生、该场考试的考试信息
+        $studentInfo = Student::where('idcard', '=', $idCard)->where('exam_id', '=', $examId)
+                              ->select(['id', 'idcard', 'code', 'exam_sequence', 'name'])->first();
 
         if(is_null($studentInfo)){
             return response()->json(
-                $this->success_rows(2,'未找到学生相关信息')
+                $this->success_rows(2, '未找到学生相关信息')
             );
         }
         //返回的数据
@@ -594,24 +589,19 @@ class IndexController extends CommonController
             'exam_sequence' => $studentInfo->exam_sequence, //准考证
             'student_name'  => $studentInfo->name,          //学生姓名
         ];
-
-        $action = WatchLog::where('student_id', $studentInfo->id)->select('action')->orderBy('id','DESC')->first();
+        //查询该学生最后一条腕表使用信息
+        $action = WatchLog::where('student_id', '=', $studentInfo->id)->select('action')->orderBy('id','DESC')->first();
         if(!is_null($action)){
             if($action->action == '绑定') {
                 return response()->json(
-                    $this->success_data($data, 1, '已绑定腕表'));
-            }else{
-                return response()->json(
-                    $this->success_data($data, 0, '未绑定腕表')
+                    $this->success_data($data, 1, '已绑定腕表')
                 );
             }
-
-        }else{
-            return response()->json(
-                $this->success_data($data, 0, '未绑定腕表')
-            );
         }
 
+        return response()->json(
+            $this->success_data($data, 0, '未绑定腕表')
+        );
     }
 
     /**
@@ -995,7 +985,7 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author zhouchong <zhouchong@misrobot.com> zhoufuxiang
      * @date ${DATE} ${TIME}
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
@@ -1005,52 +995,53 @@ class IndexController extends CommonController
         $this->validate($request, [
             'exam_id' => 'required|integer'
         ]);
-        $exam_id = $request->get('exam_id');
-        $screenModel    =   new ExamScreening();
-        $examScreening  =   $screenModel ->getExamingScreening($exam_id);
+        $exam_id = $request->get('exam_id');    //考试ID
 
-        if(is_null($examScreening))
-        {
+        $screenModel   = new ExamScreening();
+        $examScreening = $screenModel ->getExamingScreening($exam_id);
+        if(is_null($examScreening)){
             $examScreening = $screenModel->getNearestScreening($exam_id);
         }
-
-        if (!$examScreening) {
-            return \Response::json(array('code' => 2));     //没有对应的开考场次 —— 考试场次没有(1、0)
+        if(is_null($examScreening)) {
+            return \Response::json(array('code' => 2)); //没有对应的开考场次 —— 考试场次没有(1、0)
         }
-        $screen_id    = $examScreening->id;
+        $screen_id    = $examScreening->id;             //获取场次ID
+
         $studentModel = new Student();
-        $examModel = new Exam();
+        $examModel    = new Exam();
         try {
 
-            //查找exam_screening
-            $stations = $examModel->where('exam.id','=',$exam_id)
-                ->leftjoin('exam_gradation', function ($join) {
-                    $join->on('exam_gradation.exam_id', '=', 'exam.id');
-                })->leftjoin('exam_draft_flow', function ($join) {
-                    $join->on('exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id');
-                })->leftjoin('exam_draft', function ($join) {
-                    $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
-                })->groupBy('exam_draft.station_id')->get();
+            //查找考站 TODO: Zhoufuxiang 2016-05-07
+            $stations = ExamDraftFlow::leftJoin('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+                                     ->where('exam_draft_flow.exam_id', '=', $exam_id)
+                                     ->groupBy('exam_draft.station_id')->select('station_id')->get();
 
-//            $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
-//            //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
-//            if($mode==1){
-//                $rooms=ExamFlowRoom::where('exam_id',$exam_id)->where('effected',1)->select('room_id')->get();
-//                $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();
-//
-//            } else{
-//                $stations = ExamFlowStation::where('exam_id', $exam_id)->where('effected',1)->select('station_id')->get();
-//            }
-            $countStation=[];
-            foreach($stations as $item){
-                $countStation[]=$item->station_id;
+//            $stations = $examModel->where('exam.id', '=', $exam_id)
+//                    ->leftjoin('exam_gradation', function ($join) {
+//                        $join->on('exam_gradation.exam_id', '=', 'exam.id');
+//                    })
+//                    ->leftjoin('exam_draft_flow', function ($join) {
+//                        $join->on('exam_draft_flow.exam_gradation_id', '=', 'exam_gradation.id');
+//                    })
+//                    ->leftjoin('exam_draft', function ($join) {
+//                        $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
+//                    })
+//                    ->groupBy('exam_draft.station_id')->get();
+
+            $countStation = [];
+            if(!$stations->isEmpty()){
+                foreach($stations as $item){
+                    $countStation[] = $item->station_id;
+                }
+            }else{
+                throw new \Exception('该考试没有进行考场安排');
             }
 
             $countStation = array_unique($countStation);
             $batch        = config('osce.batch_num');       //默认为2
             $countStation = count($countStation)*$batch;    //可以绑定的学生数量 考站数乘以倍数
 
-            $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation); //获取考生队列(exam_order表)
+            $list = $studentModel->getStudentQueue($exam_id, $screen_id, $countStation); //获取考生队列(exam_order表)
             $data = [];
             foreach($list as $itm){
                 $data[] = [
@@ -1065,35 +1056,9 @@ class IndexController extends CommonController
                 $this->success_data($data, 1, 'count:'.$count)
             );
 
-//            }elseif($mode==2){
-//                $stations=ExamFlowStation::where('exam_id',$exam_id)->select('station_id')->get();
-//                $countStation=[];
-//                foreach($stations as $item){
-//                    $countStation[]=$item->station_id;
-//                }
-//                $countStation=array_unique($countStation);
-//                $batch=config('osce.batch_num');
-//                $countStation=count($countStation)*$batch;
-//                $list = $studentModel->getStudentQueue($exam_id, $screen_id,$countStation);
-//                $data=[];
-//                foreach($list as $itm){
-//                    $data[]=[
-//                        'name' => $itm->name,
-//                        'idcard' => $itm->idcard,
-//                        'code' => $itm->code,
-//                        'exam_screening_id' => $itm->exam_screening_id,
-//                    ];
-//                }
-//                $count = count($list);
-//                return response()->json(
-//                    $this->success_data($data, 1, 'count:'.$count)
-//                );
-//            }
-
-        } catch (\Exception $ex) {
-            return response()->json(
-                $this->fail($ex)
-            );
+        } catch (\Exception $ex)
+        {
+            return response()->json( $this->fail($ex) );
         }
     }
 
