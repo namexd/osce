@@ -23,15 +23,17 @@ class DengStudent
     public function getData($id)
     {
         return $this->examPlan
+            ->screening()
             ->students()
             ->exam($id)
             ->select(
                 'student.name',
                 'student.code',
-                'exam_plan.begin_dt',
+                'exam_screening.begin_dt',
                 'exam_plan.student_id'
             )
-            ->orderBy('exam_plan.begin_dt', 'asc')
+            ->orderBy('exam_screening.begin_dt', 'asc')
+            ->distinct()
             ->get()
             ->groupBy('begin_dt');
     }
