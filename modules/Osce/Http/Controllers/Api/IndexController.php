@@ -992,6 +992,7 @@ class IndexController extends CommonController
 
     public function getStudentList(Request $request)
     {
+        \Log::info('腕表c程序请求带绑定学生列表请求的参数',$request->all());
         $this->validate($request, [
             'exam_id' => 'required|integer'
         ]);
