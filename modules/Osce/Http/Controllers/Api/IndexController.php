@@ -579,7 +579,7 @@ class IndexController extends CommonController
 
         if(is_null($studentInfo)){
             return response()->json(
-                $this->success_rows([], 2, '未找到学生相关信息')
+                $this->success_rows(2, '未找到学生相关信息')
             );
         }
         //返回的数据
