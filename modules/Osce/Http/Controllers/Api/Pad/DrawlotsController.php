@@ -806,7 +806,7 @@ class DrawlotsController extends CommonController
                 \Log::alert('老师登陆获得信息',[$station]);
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
-            \Log::debug('考试信息',[$ex]);
+            \Log::info('考试信息',[$ex]);
             return response()->json($this->fail($ex));
         }
     }
