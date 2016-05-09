@@ -67,12 +67,11 @@ trait CheckTraits
      * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
      * @date   2016-5-09 16:30
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     *
      */
     public function checkIdCard($examId, $idCard, $key)
     {
         //1、验证身份证的正确性
-        if (!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', $idCard)) {
+        if (!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', $idCard) || !preg_match('/^((s?[A-Za-z])|([A-Za-z]{2}))d{6}((([0-9aA]))|([0-9aA]))$/', $idCard)) {
             throw new \Exception('第' . ($key) . '行身份证号不符规格，请修改后重试！');
         }
 
