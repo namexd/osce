@@ -389,12 +389,14 @@ class ExamController extends CommonController
             $exam_id = intval($request->input('id'));            //获取id
             $keyword = trim(e($request->input('keyword')));            //获取搜索关键字
 
+            //模板下载路径
+            $tempUrl = '/download/student.xlsx';
             //从模型得到数据
             $data = $student->selectExamStudent($exam_id, $keyword);
 
             $status=Exam::where('id','=',$exam_id)->select()->first()->status;
             //展示页面
-            return view('osce::admin.examManage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword,'status'=>$status]);
+            return view('osce::admin.examManage.examinee_manage', ['id' => $exam_id ,'data' => $data,'keyword'=>$keyword,'status'=>$status, 'tempUrl'=>$tempUrl]);
 
         } catch (\Exception $ex) {
             return redirect()->back()->withError($ex);
