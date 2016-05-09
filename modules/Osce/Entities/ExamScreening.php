@@ -163,7 +163,9 @@ class ExamScreening extends CommonModel
         $todayStart = date('Y-m-d 00:00:00');
         $todayEnd   = date('Y-m-d 23:59:59');
 
-        $exam     = Exam::doingExam();
+        $exam     = Exam::doingExam($exam_id);
+        echo $exam_id;
+        dd($exam);
         if($exam->id != $exam_id){
             throw new \Exception('开考考试不对！');
         }
