@@ -220,7 +220,8 @@ class SmartArrangeRepository extends AbstractSmartArrange
      */
     public function export($id, $export, $arrange)
     {
-        dd(1);
+        echo '';
+        exit();
         $data = $export->objToArray($arrange->getData($id));
         \Log::debug($data);
         return $export->sheet('StudentList', function ($sheet) use ($data){
