@@ -45,7 +45,8 @@ class PadLogin
                     ->where('exam_screening.end_dt', '>=', $endDt);
             })
             ->orderBy('begin_dt', 'asc')
-            ->distinct()
+            ->groupBy('exam_id')
+            //->distinct()
             ->get();
     }
 
