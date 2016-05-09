@@ -220,8 +220,10 @@ class SmartArrangeRepository extends AbstractSmartArrange
      */
     public function export($id, $export, $arrange)
     {
+        echo '';
+        exit();
         $data = $export->objToArray($arrange->getData($id));
-
+        \Log::debug($data);
         return $export->sheet('StudentList', function ($sheet) use ($data){
             $sheet->setWidth(config('osce.smart_arrange.width'));
             $sheet->rows($data);

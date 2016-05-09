@@ -12,7 +12,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//修改密码(临时)
 		Route::get('update/index',['uses'=>'UpdateController@getIndex','as' => 'osce.admin.getUpdate']);
 		Route::post('update/index',['uses'=>'UpdateController@postIndex','as'=>'osce.admin.postUpdate']);
-
+		Route::get('test/index',['uses'=>'TestController@getIndex','as'=>'osce.admin.test']);
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
 		//登录注册
