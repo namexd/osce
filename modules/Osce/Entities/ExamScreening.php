@@ -164,8 +164,7 @@ class ExamScreening extends CommonModel
         $todayEnd   = date('Y-m-d 23:59:59');
 
         $exam     = Exam::doingExam($exam_id);
-        echo $exam_id;
-        dd($exam);
+        \Log::debug('获取最近场次调试',[$exam_id,$exam]);
         if($exam->id != $exam_id){
             throw new \Exception('开考考试不对！');
         }
