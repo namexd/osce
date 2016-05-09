@@ -1060,6 +1060,7 @@ class IndexController extends CommonController
 
         } catch (\Exception $ex)
         {
+            \Log::debug('腕表c程序请求带绑定学生列表报错',[$ex]);
             return response()->json( $this->fail($ex) );
         }
     }
