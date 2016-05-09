@@ -122,9 +122,9 @@ class AddAllExaminee
 
     public function check($examId, array $data, $key = 0)
     {
-        $this->regularCheck($examId, $data['idcard'], 'idcard', $key);   //身份证验证
-        $this->regularCheck($examId, $data['mobile'], 'mobile', $key);   //手机号
-        $this->regularCheck($examId, $data['exam_sequence'], 'exam_sequence', $key); //准考证号
+        $this->regularCheck($examId, trim($data['idcard']), 'idcard', $key);   //身份证验证
+        $this->regularCheck($examId, trim($data['mobile']), 'mobile', $key);   //手机号
+        $this->regularCheck($examId, trim($data['exam_sequence']), 'exam_sequence', $key); //准考证号
     }
 
     
