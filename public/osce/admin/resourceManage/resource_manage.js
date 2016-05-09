@@ -1884,7 +1884,7 @@ function course_module(){
             });
 
             //父类计数更新
-            $('#judgement tbody').attr('index',parseInt($('tbody').attr('index'))-1)
+            $('#judgement tbody').attr('index',parseInt($('#judgement tbody').attr('index'))-1);
 
         }else{
             //子类删除
