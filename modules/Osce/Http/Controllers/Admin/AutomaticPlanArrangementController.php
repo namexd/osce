@@ -14,6 +14,8 @@ use Modules\Osce\Entities\AutomaticPlanArrangement\ExamPlaceEntity;
 use Modules\Osce\Entities\AutomaticPlanArrangement\Exam;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamPlanRecord;
+use Modules\Osce\Entities\SmartArrange\Export\DengNeedListExport;
+use Modules\Osce\Entities\SmartArrange\Export\DengStudent;
 use Modules\Osce\Entities\SmartArrange\Export\StudentArrange;
 use Modules\Osce\Entities\SmartArrange\Export\UserListExport;
 use Modules\Osce\Entities\SmartArrange\SmartArrange;
@@ -166,8 +168,8 @@ class AutomaticPlanArrangementController extends CommonController
      */
     public function getExport(
         SmartArrangeRepository $smartArrangeRepository,
-        UserListExport $export,
-        StudentArrange $arrange
+        DengNeedListExport $export,
+        DengStudent $arrange
     ) {
         $this->validate($this->request, [
             'exam_id' => 'required|integer'
