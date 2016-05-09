@@ -308,7 +308,8 @@
                                             <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;color:#333;">
                                                 导入<input type="file" name="topic" id="file0" multiple="multiple" />
                                             </a>
-                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
+                                            {{--<a href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>--}}
+                                            <a href="{{$tempUrl}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
                                         </div>
                                     </div>
                                     <div class="ibox-content">
