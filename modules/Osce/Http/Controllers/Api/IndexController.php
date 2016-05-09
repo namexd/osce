@@ -1052,6 +1052,7 @@ class IndexController extends CommonController
                 ];
             }
             $count = count($list);
+            \Log::debug('腕表c程序请求带绑定学生列表',[$data]);
             return response()->json(
                 $this->success_data($data, 1, 'count:'.$count)
             );
