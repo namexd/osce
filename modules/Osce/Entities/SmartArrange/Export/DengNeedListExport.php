@@ -33,15 +33,19 @@ class DengNeedListExport extends NewExcelFile
 //        dd($collection);
         //遍历集合,拼装数组
         foreach ($collection as $item) {
+            $tempArray = [];
             foreach ($item as $j => $value) {
+                if (array_key_exists($value->student_id, $tempArray)) {
+                    continue;
+                }
                 if (0 == $j) {
-                    $data[] = [
+                    $tempArray[$value->student_id] = [
                         $value->code,
                         $value->name,
                         date('m-d H:i', strtotime($value->begin_dt))
                     ];
                 } else {
-                    $data[] = [
+                    $tempArray[$value->student_id] = [
                         $value->code,
                         $value->name,
                         ' '
@@ -49,8 +53,8 @@ class DengNeedListExport extends NewExcelFile
                 }
 
             }
+            $data = array_merge($data, $tempArray);
         }
-//        dd($data);
         return $data;
     }
 }
