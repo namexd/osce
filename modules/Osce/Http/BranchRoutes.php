@@ -212,6 +212,11 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('exam-control/getTime',['uses'=>'ExamControlController@getTime','as'=>'osce.admin.ExamControlController.getTime']);
 
 
+        //服务容器测试
+        Route::get('test-launch',['uses'=>'TestlunchController@launch','as'=>'osce.admin.TestlunchController.launch']);
+
+
+
 
 
 
