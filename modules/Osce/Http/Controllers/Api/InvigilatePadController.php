@@ -155,12 +155,10 @@ class InvigilatePadController extends CommonController
     {
         $this->validate($request, [
             'station_id' => 'required|integer',
-            'teacher_id' => 'required|integer',
-            'student_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
         ], [
             'station_id.required' => '考站编号必须',
-            'teacher_id.required' => '老师编号必须',
-            'student_id.required' => '学生编号必须',
+            'teacher_id.required' => '老师编号必须'
         ]);
 
         try {

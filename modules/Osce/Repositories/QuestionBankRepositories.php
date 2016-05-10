@@ -557,14 +557,7 @@ class QuestionBankRepositories  extends BaseRepository
             if(empty($station_id)){
                 throw new \Exception('你没有相关需要监考的考站');
             }
-            $examQueue = ExamQueue::where('exam_id',$ExamInfo->id)
-                ->where('station_id',$station_id)
-                ->where('exam_screening_id',$exam_screen_id)
-                ->whereIn('status',[1,2])->first();
-            if(!empty($examQueue)){
-               $StudentId = $examQueue->student_id;
-            }
-            return  ['StationId'=>$station_id,'ExamId'=>$ExamInfo->id,'ExamName'=>$ExamInfo->name,'StudentId'=>$StudentId];
+            return  ['StationId'=>$station_id,'ExamId'=>$ExamInfo->id,'ExamName'=>$ExamInfo->name];
         }catch (\Exception $ex){
             throw $ex;
         }
