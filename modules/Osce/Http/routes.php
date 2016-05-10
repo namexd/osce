@@ -526,7 +526,6 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 Route::get('test/test', function(Redis $redis) {
 
-
 });
 
 Route::get('redis', function(){
