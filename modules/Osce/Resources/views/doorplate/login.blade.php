@@ -56,7 +56,7 @@
 			@if(!empty(@$examList))
 
 				@foreach(@$examList as $val)
-					<option value="{{ $val['exam_id'] }}" selected="selected" >
+					<option value="{{ $val['exam_id'] }}" >
 						{{ $val['name'] }}
 					</option>
 				@endforeach
@@ -95,7 +95,7 @@
 	var m='';
 	$('#examId').change(function(){
 		var examId= $.trim($(this).val())
-		var opstr='<option value="1">请选择考场</option>';
+		var opstr='<option value="">请选择考场</option>';
 		if(examId!=''){
 
 			$.ajax({

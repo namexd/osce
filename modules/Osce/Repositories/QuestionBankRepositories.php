@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Repositories;
 use Auth;
+use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\StationTeacher;
@@ -527,14 +528,8 @@ class QuestionBankRepositories  extends BaseRepository
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function GetExamInfo($userId){
-        $Exam = new Exam;
-        //获取本次考试的id
-        $ExamInfo = $Exam->where('status','=',1)->select('id')->first();
-        if(empty($ExamInfo->id)){
-            throw new \Exception(' 没有在进行的考试');
-        }
-        //根据监考老师的id和考试id，获取对应的考站id
         try{
+
             $Exam = new Exam;
             //获取本次考试的id
             $ExamInfo = $Exam->where('status','=',1)->select('id','name')->first();
@@ -564,9 +559,8 @@ class QuestionBankRepositories  extends BaseRepository
             }
             return  ['StationId'=>$station_id,'ExamId'=>$ExamInfo->id,'ExamName'=>$ExamInfo->name];
         }catch (\Exception $ex){
-            return $ex->getMessage();
+            throw $ex;
         }
-
     }
     /**
      * 判断 $array 是否包含 $arr
