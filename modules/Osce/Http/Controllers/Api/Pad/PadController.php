@@ -386,6 +386,7 @@ class PadController extends  CommonController{
             'station_id' => 'required|integer',
             'user_id' => 'required|integer'
         ]);
+        \Log::alert('ChangeStatusData', $request->all());
 
         try {
         //获取当前的服务器时间

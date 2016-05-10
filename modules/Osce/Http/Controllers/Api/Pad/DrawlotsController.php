@@ -603,9 +603,9 @@ class DrawlotsController extends CommonController
 
             //todo 绑定腕表调腕表接口
             try {
-                $studentWatchController = new StudentWatchController();
-                $this->request['nfc_code'] = $this->request->input('uid');
-                $studentWatchController->getStudentExamReminder($this->request);
+//                $studentWatchController = new StudentWatchController();
+//                $this->request['nfc_code'] = $this->request->input('uid');
+//                $studentWatchController->getStudentExamReminder($this->request);
 //                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
             } catch (\Exception $ex) {
                 \Log::info('抽签中推送腕表失败', $this->request->input('uid'));
@@ -670,10 +670,10 @@ class DrawlotsController extends CommonController
             \Log::info('推送给pad的数据', [$student]);
             //将数据推送给腕表
             try {
-                $studentWatchController = new StudentWatchController();
-                $this->request['nfc_code'] = $this->request->input('uid');
-                $studentWatchController->getStudentExamReminder($this->request);
-//                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
+//                $studentWatchController = new StudentWatchController();
+//                $this->request['nfc_code'] = $this->request->input('uid');
+//                $studentWatchController->getStudentExamReminder($this->request);
+                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
             } catch (\Exception $ex) {
                 \Log::info('抽签中推送腕表失败', $this->request->input('uid'));
             }

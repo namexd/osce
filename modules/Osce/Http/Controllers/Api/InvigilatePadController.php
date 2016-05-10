@@ -56,17 +56,12 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
-       
-        $exam = Exam::doingExam();
-        
-        $examScreeningModel = new ExamScreening();
-        //获取到当考试场次id
-        $ExamScreening = $examScreeningModel->getExamingScreening($exam->id);
-        if (is_null($ExamScreening)) {
-            $ExamScreening = $examScreeningModel->getNearestScreening($exam->id);
 
-        }
-        dd($ExamScreening);
+        $studentId =7509;
+        $stationId ='';
+        $roomId = '';
+        $watch = new WatchReminderRepositories();
+        $watch ->getWatchPublish($studentId,$stationId,$roomId);
 
     }
 
