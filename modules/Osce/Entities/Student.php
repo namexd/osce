@@ -1058,19 +1058,19 @@ class Student extends CommonModel
         {
             $timeData[] =   date('Y年m月d日H时i分',strtotime($time));
         }
-        $smsContent = view('osce::admin.systemManage.student_inform',['notice'=>$notice->shift(),'timeData'=>$timeData])->render();
+        $smsContent = view('osce::admin.systemManage.student_inform',['notice'=>$notice->first(),'timeData'=>$timeData])->render();
 
-        $this->linshi($smsContent);
+        $smsContent =   $this->linshi($smsContent);
 
         try
         {
 
-            //AppCommon::sendSms($to,$smsContent,$this   ->  getEmsConfig());
-            $path   =   public_path('osce').'/sms.txt';
-            $f     =   fopen($path,'a');
-            fwrite($f,$smsContent);
-            fwrite($f,"\r\n");
-            fclose($f);
+            AppCommon::sendSms($to,$smsContent,$this   ->  getEmsConfig());
+//            $path   =   public_path('osce').'/sms.txt';
+//            $f     =   fopen($path,'a');
+//            fwrite($f,$smsContent);
+//            fwrite($f,"\r\n");
+//            fclose($f);
             //dd($path);
         }
         catch(\Exception $ex)
@@ -1099,30 +1099,30 @@ class Student extends CommonModel
 
     private function linshi($smsContent){
         $ze =[
-            "2016年5月18日08时44分",
-            "2016年5月18日09时28分",
-            "2016年5月18日10时12分",
-            "2016年5月18日10时56分",
-            "2016年5月18日11时40分",
-            "2016年5月18日13时44分",
-            "2016年5月18日14时28分",
-            "2016年5月18日15时12分",
-            "2016年5月18日15时56分",
-            "2016年5月18日16时40分",
-            "2016年5月18日17时24分",
+            "2016年05月18日08时44分",
+            "2016年05月18日09时28分",
+            "2016年05月18日10时12分",
+            "2016年05月18日10时56分",
+            "2016年05月18日11时40分",
+            "2016年05月18日13时44分",
+            "2016年05月18日14时28分",
+            "2016年05月18日15时12分",
+            "2016年05月18日15时56分",
+            "2016年05月18日16时40分",
+            "2016年05月18日17时24分",
         ];
         $re=[
-            "2016年5月18日08时32分",
-            "2016年5月18日09时04分",
-            "2016年5月18日09时36分",
-            "2016年5月18日10时08分",
-            "2016年5月18日10时40分",
-            "2016年5月18日13时32分",
-            "2016年5月18日14时04分",
-            "2016年5月18日14时36分",
-            "2016年5月18日15时08分",
-            "2016年5月18日15时40分",
-            "2016年5月18日16时12分",
+            "2016年05月18日08时32分",
+            "2016年05月18日09时04分",
+            "2016年05月18日09时36分",
+            "2016年05月18日10时08分",
+            "2016年05月18日10时40分",
+            "2016年05月18日13时32分",
+            "2016年05月18日14时04分",
+            "2016年05月18日14时36分",
+            "2016年05月18日15时08分",
+            "2016年05月18日15时40分",
+            "2016年05月18日16时12分",
         ];
         //$str    =   '2016年5月18日09时28分';
         //dd(preg_replace($str,$ze,));
@@ -1218,10 +1218,10 @@ class Student extends CommonModel
             try {
                 $list   =   ExamOrder::where('exam_id','=',$examId)->with('student')->with('exam')->get();
                 $studentList    =   $list->groupBy('student_id');
-                foreach ($list as $value){
-
+                foreach ($studentList as $studentId=>$value){
+                    $studentOrder    =   $value->first();
                     if($sendType['student']['wechat'] == 1){
-                        $this->sendWechat($studentList[$value->student->id],$value->student->openid, $url);
+                        $this->sendWechat($value, $studentOrder->student->mobile, $url);
                     }
 
 //                    $str    =   '今天上午不慎将系统调试过程的短信发送给大家，造成误解，请大家谅解，正式的考试时间通知将在稍后发出。【敏行医学】';
@@ -1229,7 +1229,7 @@ class Student extends CommonModel
 //                    $sender->send($value->student->mobile,$str);
 
                     if($sendType['student']['sms'] == 1){
-                        $this->sendSms($studentList[$value->student->id], $value->student->mobile, $url);
+                        $this->sendSms($value, $studentOrder->student->mobile, $url);
                     }
 
 //                    if($sendType['student']['mail'] == 1){
