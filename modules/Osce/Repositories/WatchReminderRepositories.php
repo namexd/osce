@@ -322,14 +322,14 @@ class WatchReminderRepositories  extends BaseRepository
         {
             if($big)
             {
-                if($item->$find==$value)
+                if($item->$find===$value)
                 {
                     $data[]=$item;
                 }
             }
             else
             {
-                if($item->$find===$value)
+                if($item->$find==$value)
                 {
                     $data[]=$item;
                 }
