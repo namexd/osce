@@ -782,7 +782,7 @@ class ExamQueue extends CommonModel
                     };
                 }
             }
-
+      
         } catch (\Exception $ex) {
             throw $ex;
         }

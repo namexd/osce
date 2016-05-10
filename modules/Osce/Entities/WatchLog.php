@@ -44,6 +44,7 @@ class WatchLog extends CommonModel{
         $examQue = new ExamQueue();
         //创建考试队列
         $examQue ->createExamQueue($exam_id, $student_id, $nowTime, $exam_screen_id);
+        
         //将context 序列化
         if($data['context']){
             $data['context'] = serialize($data['context']);
