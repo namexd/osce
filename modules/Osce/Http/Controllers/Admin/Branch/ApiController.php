@@ -837,8 +837,23 @@ class ApiController extends CommonController
                 $examStationStatusModel->where('exam_id',$examId)->whereIn('station_id',$stationArr)->update(['status'=>2]);
             }else{
                 $examStationStatus->status = 1;
-                $examStationStatus->save();
+                if($examStationStatus->save()){
+                    // todo  准备好后调用腕表接口
+
+                    try {
+
+                        \Log::alert('老师准备的学生id',$studentIds);
+
+                        foreach($studentIds as $studentId){
+                            $watchReminder->getWatchPublish($studentId, $stationId, $roomId);
+                        }
+                    } catch (\Exception $ex) {
+                        \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
+                    }
+                }
+
             }
+
         }
         $request['station_id']=$stationId;
         $request['teacher_id']=$teacherId;
@@ -860,18 +875,7 @@ class ApiController extends CommonController
 //                $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id', '=', $examQueue->exam_screening_id)
 //                    ->where('student_id', '=', $examQueue->student_id)->first();
 //                $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
-                // todo  准备好后调用腕表接口
 
-                try {
-
-                    \Log::alert('老师准备的学生id',$studentIds);
-
-                    foreach($studentIds as $studentId){
-                        $watchReminder->getWatchPublish($studentId, $stationId, $roomId);
-                    }
-                } catch (\Exception $ex) {
-                    \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
-                }
         }
         return response()->json(
             $this->success_data([], 1, '当前考站准备完成成功')
