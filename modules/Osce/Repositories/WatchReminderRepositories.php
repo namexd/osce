@@ -515,7 +515,9 @@ class WatchReminderRepositories  extends BaseRepository
             }
         }else{
             if(count($stationStatus)< $stationNum){ //判定房间考站是不是有空
+                \Log::alert('学生前面人数',[$studentFront,$stationNum ,count($stationStatus),$this->student->name]);
                 if($studentFront == 0){ //判定当前学生是不是第一个
+
                     $data = $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
                 }else{
                     $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
