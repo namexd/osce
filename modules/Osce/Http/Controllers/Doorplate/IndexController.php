@@ -90,11 +90,11 @@ class IndexController extends CommonController
             $request['screen_id'] = $screenId;
         }else{
             throw new \Exception('本场次该房间下暂时没有考试信息');
-        }
+        };
         return view('osce::doorplate.doorplate_msg ', [
             'data'      =>$data,'msg'=>$cont,
-            'current'=>$this->getExaminee($request),
-            'next'=>$this->getNextExaminee($request),
+            'current'=>is_null($this->getExaminee($request)->first())?[]:$this->getExaminee($request),
+            'next'=>is_null($this->getNextExaminee($request)->first())?[]:$this->getNextExaminee($request),
             'status'=>$this->getStatusStatus($request),
             'room_id'=>$room_id,'exam_id'=>$exam_id,
             'screen_id'=>$screenId
@@ -152,8 +152,15 @@ class IndexController extends CommonController
         try {
             if ($exam->sequence_mode == 1) {
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $exam_id, $this->takeArr($stations), $exam_screening_id);
-            } elseif ($exam->sequence_mode == 2) {
-
+            } elseif ($exam->sequence_mode == 2) {//考站模式
+                $ExamDraft=new ExamDraft();
+                $data=$ExamDraft->getExamMsg($exam_id,$room_id,$exam_screening_id);//room下考站
+                $examQueue = collect();
+                if(!$data->isEmpty()) {
+                    foreach ($data as $v) {
+                        $examQueue->push(ExamQueue::examineeByStationId($v->station_id, $exam_id, $exam_screening_id));
+                    }
+                }
             } else {
                 throw new \Exception('考试模式不存在！', -703);
             }
@@ -186,8 +193,15 @@ class IndexController extends CommonController
         try {
         if ($exam->sequence_mode == 1) {
             $examQueue = ExamQueue::nextExamineeByRoomId($room_id, $exam_id, $this->takeArr($stations), $exam_screening_id);
-        } elseif ($exam->sequence_mode == 2) {
-
+        } elseif ($exam->sequence_mode == 2) {//考站模式
+            $ExamDraft=new ExamDraft();
+            $data=$ExamDraft->getExamMsg($exam_id,$room_id,$exam_screening_id);//room下考站
+            $examQueue = collect();
+            if(!$data->isEmpty()) {
+                foreach ($data as $v) {
+                    $examQueue->push(ExamQueue::nextExamineeByStationId($v->station_id, $exam_id, $exam_screening_id));
+                }
+            }
         } else {
             throw new \Exception('考试模式不存在！', -703);
         }
