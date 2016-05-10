@@ -312,7 +312,7 @@ class WatchReminderRepositories  extends BaseRepository
         //throw new \Exception('队列数据异常，找不到相应的各种状态数据');
     }
 
-    private function queueWhere(CellCollection $collection,$find,$value,$big=false){
+    private function queueWhere($collection,$find,$value,$big=false){
         $data   =   [];
         foreach ($collection as $item)
         {
