@@ -537,9 +537,11 @@ class ApiController extends CommonController
     {
         $this->validate($request, [
             'stationId' => 'required|int',
+           // 'examId' => 'required|int',
         ]);
 
         $stationId = $request->input('stationId');//考站id
+        //$examId = $request->input('examId');//考试id
 
  /*
         //根据考试id和考站id查询对应的试卷id
@@ -554,9 +556,9 @@ class ApiController extends CommonController
         }*/
 
         $stationInfo = Station::where('id',$stationId)->where('type',3)->first();
-        if(!empty($stationInfo)){
+        if(!empty($stationInfo)&&!empty($stationInfo->paper_id)){
 
-            return response()->json($stationInfo['paper_id']);
+            return response()->json($stationInfo->paper_id);
         }else{
 
             return response()->json(false);

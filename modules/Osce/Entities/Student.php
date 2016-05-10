@@ -463,7 +463,7 @@ class Student extends CommonModel
      * @param $watch_id
      * @return bool
      */
-    public function studentList($stationId, $exam, $student_id)
+    public function studentList($stationId, $exam, $student_id = '')
     {
         
         //当前场次
