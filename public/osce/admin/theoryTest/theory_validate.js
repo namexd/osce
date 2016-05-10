@@ -19,6 +19,7 @@ function theory_validate(){
         var stationId = $(".allData").attr("data");
         var teacherId = $(".allData").attr("userId");
         var examId = $(".allData").attr("examId");
+        var studentId = $(".allData").attr("studentId");
         var timer = setInterval(function(){
             $.ajax({
                 url:'/osce/admin/api/exam-paper-status?station_id='+stationId+'&exam_id='+examId,
@@ -31,7 +32,7 @@ function theory_validate(){
                         clearInterval(timer);
                     } else {
                         $.ajax({
-                            url:'/osce/api/invigilatepad/authentication?station_id='+stationId+'&teacher_id='+teacherId,
+                            url:'/osce/api/invigilatepad/authentication?station_id='+stationId+'&teacher_id='+teacherId+'&student_id='+studentId,
                             type:'get',
                             cache:false,
                             dateType:'json',

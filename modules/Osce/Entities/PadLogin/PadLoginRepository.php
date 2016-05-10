@@ -36,14 +36,14 @@ class PadLoginRepository
         //获取服务器今天的开始时间
         $endTime = $time->endTime(time());
 
-        //获取集合
-        $collection = $this->padLogin->screenBegin($beginTime, $endTime);
-
-        //去重
-        $collection = $this->padLogin->wipeEqual($collection);
+//        //获取集合
+//        $collection = $this->padLogin->screenBegin($beginTime, $endTime);
+//
+//        //去重
+//        $collection = $this->padLogin->wipeEqual($collection);
         
         //处理数据，去掉时间，只保留id和name
-        return $this->cleanFields($collection);
+        return $this->cleanFields($this->padLogin->screenBegin($beginTime, $endTime)->unique('exam_id'));
     }
 
     /**

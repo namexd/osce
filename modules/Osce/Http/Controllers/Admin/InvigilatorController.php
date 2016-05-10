@@ -741,7 +741,7 @@ class InvigilatorController extends CommonController
 
     /**
      * 查询老师是否已经存在(监,巡考老师,sp老师) 接口
-     * @api GET /osce/admin/invigilator/select-teacher
+     * @api POST /osce/admin/invigilator/select-teacher
      *
      */
     public function postSelectTeacher(Request $request){
@@ -769,15 +769,17 @@ class InvigilatorController extends CommonController
                             ->orWhere('mobile', $mobile);
                 })
                 ->get();
-        }
-        if(!$user->isEmpty()){
-            foreach ($user as $item) {
-                $result = Teacher::where('id', '=', $item->id)->first();
-                if($result){
-                    return json_encode(['valid' =>false]);
+
+            if(!$user->isEmpty()){
+                foreach ($user as $item) {
+                    $result = Teacher::where('id', '=', $item->id)->first();
+                    if($result){
+                        return json_encode(['valid' =>false]);
+                    }
                 }
             }
         }
+
         return json_encode(['valid' =>true]);
     }
 
