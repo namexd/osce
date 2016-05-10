@@ -464,7 +464,7 @@ class WatchReminderRepositories  extends BaseRepository
         $studentFront = ExamQueue::where('exam_id','=',$exam->id)
             ->where('exam_screening_id','=',$this->examScreening->id)
             ->where('room_id','=',$this->room->id)
-            ->whereIn('status',0)
+            ->where('status','=',0)
             ->whereRaw("UNIX_TIMESTAMP(begin_dt) < UNIX_TIMESTAMP('$time')")
             ->orderBy('begin_dt','asc')
             ->count();
