@@ -464,19 +464,28 @@ class WatchReminderRepositories  extends BaseRepository
         $studentFront = ExamQueue::where('exam_id','=',$exam->id)
             ->where('exam_screening_id','=',$this->examScreening->id)
             ->where('room_id','=',$this->room->id)
-            ->whereIn('status',[0,1,2])
+            ->whereIn('status',0)
             ->whereRaw("UNIX_TIMESTAMP(begin_dt) < UNIX_TIMESTAMP('$time')")
             ->orderBy('begin_dt','asc')
             ->count();
+
+        //获取当前队列是否有考试中的人
+        $studentDoingNum = ExamQueue::where('exam_id','=',$exam->id)
+            ->where('exam_screening_id','=',$this->examScreening->id)
+            ->where('room_id','=',$this->room->id)
+            ->whereIn('status',[1,2])
+            ->orderBy('begin_dt','asc')
+            ->first();
+
         $willStudents = 0;
         if($studentFront < $stationNum){
             \Log::info('腕表推送出现等待推送中有前面学生小于考站数量的情况');
         }else{
             $willStudents = $studentFront;
         }
-
-
-
+        if(!is_null($studentDoingNum)){
+            $willStudents = $studentFront+1;
+        }
         //根据当前学生获取NFC——code
         $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch',function($watch){
             $watch->on('watch.id','=','watch_log.watch_id');
@@ -528,7 +537,7 @@ class WatchReminderRepositories  extends BaseRepository
 
 
             }else{
-                \Log::alert('学生前面人数',[$studentFront,$stationNum ,count($stationStatus),$this->student->name]);
+                \Log::alert('学生前面人数',[$studentFront,$stationNum ,count($stationStatus),$this->student->name,$this->nowQueue->begin_dt]);
                 $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
                 $data['willStudents'] =$willStudents;
                 $data['willRoomName'] =$room->name;
