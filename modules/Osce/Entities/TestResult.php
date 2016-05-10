@@ -59,7 +59,7 @@ class TestResult extends CommonModel
         foreach($scoreJsonOb as $option)
         {
             \Log::info('PAD提交过来的分数json对象',[$option]);
-            if($option->tag=='normal')
+            if($option['tag']=='normal')
             {
                 $score[]    =   $option;
             }
@@ -77,7 +77,7 @@ class TestResult extends CommonModel
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
-        $score  =   json_decode($score);
+        $score  =   json_decode($score,true);
         $groupData   =   $this->groupResultScore($score);
 
         $score          =   $groupData['score'];
@@ -258,6 +258,7 @@ class TestResult extends CommonModel
         $list = [];
         //$arr = json_decode($score, true);//todo:罗海华 2016-05-10 调试 提交成绩变更
         $arr    =   $score;
+        \Log::debug('成绩打分项',$arr);
         foreach ($arr as $item) {
             foreach ($item['test_term'] as $str)
             {
