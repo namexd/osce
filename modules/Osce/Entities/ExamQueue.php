@@ -617,6 +617,13 @@ class ExamQueue extends CommonModel
                 throw new \Exception('队列状态更新失败', -101);
 
             }
+            //更新exam_station_status（考试-场次-考站状态表）status为3
+            $examStationStatus = ExamStationStatus::where('exam_id',$exam->id)->where('exam_screening_id',$examscreeningId)->where('station_id',$stationId)->first();
+            if(!empty($examStationStatus)){
+                $examStationStatus->status = 3;
+                $examStationStatus->save();
+            }
+
             // 调用锚点方法
 //            CommonController::storeAnchor($stationId, $studentId, $exam->id, $teacherId, [$nowTime]);
             $connection->commit();
@@ -782,7 +789,7 @@ class ExamQueue extends CommonModel
                     };
                 }
             }
-
+      
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -824,7 +831,7 @@ class ExamQueue extends CommonModel
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)
                 ->where('station_id', $stationId)
-                ->whereIn('status', [0,1,2])
+//                ->whereIn('status', [0,1,2])
                 ->first();
             if (empty($queue)) {
                 throw new \Exception('没有找到符合要求的学生', 2200);
@@ -980,7 +987,7 @@ class ExamQueue extends CommonModel
                 ->where('exam_id', $queue->exam_id)
                 ->where('exam_screening_id', $queue->exam_screening_id)
                 ->first();
-            $examStationStatus->status = 0;
+            $examStationStatus->status = 4;
             if (!$examStationStatus->save()) {
                 throw new \Exception('考站准备状态失败！', -102);
             }

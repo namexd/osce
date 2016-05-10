@@ -30,6 +30,7 @@ class DengStudent
                 'student.name',
                 'student.code',
                 'exam_screening.begin_dt as exam_screening_begin_dt',
+                'exam_screening.id as exam_screening_id',
                 'exam_plan.student_id',
                 'exam_plan.begin_dt'
             )

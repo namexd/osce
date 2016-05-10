@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamStation;
@@ -468,19 +469,17 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
+
         try {
             $user = Auth::user();
-
             // 检查用户是否登录
             if (is_null($user)) {
                 throw new \Exception('用户未登录', 1000);
             }
-
             //检验登录的老师是否是监考老师
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('你不是监考老师', 1001);
             }
-
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
             if (is_array($ExamInfo)) {
@@ -491,7 +490,6 @@ class ApiController extends CommonController
                 if($station->type != 3) {
                     throw new \Exception('你不是理论考试的监考老师', 1002);
                 }
-
                 $data = array(
                     'status'=>1,
                     'name'      => $ExamInfo['ExamName'],
@@ -499,13 +497,12 @@ class ApiController extends CommonController
                     'examId'    => $ExamInfo['ExamId'],
                     'userId'    => $user->id,
                 );
-            } else {
+            }else {
                 $data = array(
                     'status'=>0,
                     'info'=>$ExamInfo
                 );
             }
-           
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
@@ -537,9 +534,11 @@ class ApiController extends CommonController
     {
         $this->validate($request, [
             'stationId' => 'required|int',
+           // 'examId' => 'required|int',
         ]);
 
         $stationId = $request->input('stationId');//考站id
+        //$examId = $request->input('examId');//考试id
 
  /*
         //根据考试id和考站id查询对应的试卷id
@@ -554,9 +553,9 @@ class ApiController extends CommonController
         }*/
 
         $stationInfo = Station::where('id',$stationId)->where('type',3)->first();
-        if(!empty($stationInfo)){
+        if(!empty($stationInfo)&&!empty($stationInfo->paper_id)){
 
-            return response()->json($stationInfo['paper_id']);
+            return response()->json($stationInfo->paper_id);
         }else{
 
             return response()->json(false);
@@ -645,8 +644,8 @@ class ApiController extends CommonController
             'station_id' => 'required|integer',// 考站ID
         ]);
 
-        $examId = $request->get('examId');
-        $stationId = $request->get('stationId');
+        $examId = $request->get('exam_id');
+        $stationId = $request->get('station_id');
 
         try {
             $examScreeningModel = new ExamScreening();
@@ -657,9 +656,6 @@ class ApiController extends CommonController
                 //获取最近一场考试
                 $examScreening = $examScreeningModel->getNearestScreening($examId);
             }
-
-            //$exam = $examScreening->ExamInfo;
-
 
             $unExamQueues = ExamQueue::where('status', '<>', 3)
                 ->where('exam_id', '=', $examId)
@@ -676,52 +672,6 @@ class ApiController extends CommonController
                     $this->success_data('', 2, '已考完')
                 );
             }
-
-            /*
-            if ($exam->sequence_mode == 1) {
-                //若果是考场模式
-                //room_station
-                $roomStation = RoomStation::where('station_id', '=', $stationId)->first();
-
-                $roomId = $roomStation->room_id;
-
-                $flowRoom = ExamFlowRoom::where('room_id', '=', $roomId)
-                    ->where('exam_id', '=', $examId)
-                    ->first();
-                $serialnumber = $flowRoom->serialnumber;
-
-            } else {
-                //若果是考站
-                $flowStation = ExamFlowStation::where('station_id', '=', $stationId)
-                    ->where('exam_id', '=', $examId)
-                    ->first();
-                $serialnumber = $flowStation->serialnumber;
-            }
-
-            $count = ExamQueue::where('serialnumber', '=', $serialnumber)
-                ->where('status', '=', 3)   
-                ->where('exam_id', '=', $examId)
-                ->where('exam_screening_id', '=', $examScreening->id)
-                ->count();
-    
-            $screeningTotal = ExamPlan::where('exam_id', '=', $examId)
-                ->where('exam_screening_id', '=', $examScreening->id)
-                ->groupBy('student_id')->count();
-            $absentTotal = ExamAbsent::where('exam_id', '=', $examId)
-                ->where('exam_screening_id', '=', $examScreening->id)
-                ->count();
-
-            //如果  场次人数 <= 当前流程已考人数+缺考人数 为 未考完；反之  已考完
-            if ($screeningTotal <= $count + $absentTotal) {
-                return response()->json(
-                    $this->success_data('', 1, '未考完')
-                );
-            } else {
-                return response()->json(
-                    $this->success_data('', 2, '已考完')
-                );
-            }
-            */
         } catch (\Exception $ex) {
             return response()->json(
                 $this->fail(new \Exception('查询是否考完失败', -2))
@@ -888,11 +838,25 @@ class ApiController extends CommonController
                 \Log::debug('准备考试按钮2', [$examQenens->student_id, $stationId, $roomId]);
             }
         }
-
-
-        $examStationStatus->status = 1;
-        $examStationStatus->save();
-
+        //查询该考试该考场下的所有考站信息
+        $stationArr = ExamDraft::leftJoin('exam_draft_flow', function($join){
+            $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
+        })->where('exam_draft_flow.exam_id',$examId)
+            ->where('exam_draft.room_id',$roomId)->select('exam_draft.station_id')->get()->toArray();
+        if(!empty($stationArr)){
+            //查询exam_station_status表（考试-场次-考站状态表）中该考试该考场下status是否全为1，如果是，修改其状态值为2
+            $examStationStatusData = $examStationStatusModel
+                ->where('exam_id',$examId)
+                ->where('status','<>',1)
+                ->whereIn('station_id',$stationArr)
+                ->first();
+            if(empty($examStationStatusData)){
+                $examStationStatusModel->where('exam_id',$examId)->whereIn('station_id',$stationArr)->update(['status'=>2]);
+            }else{
+                $examStationStatus->status = 1;
+                $examStationStatus->save();
+            }
+        }
         $request['station_id']=$stationId;
         $request['teacher_id']=$teacherId;
         $request['exam_id']=$examId;

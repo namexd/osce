@@ -315,7 +315,7 @@ class IndexController extends CommonController
 
 
             //todo 绑定腕表调腕表接口
-     
+
             try{
                 $studentWatchController = new WatchReminderRepositories();
                 //$request['nfc_code'] = $Watch->code;
