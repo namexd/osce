@@ -56,7 +56,7 @@
 			@if(!empty(@$examList))
 
 				@foreach(@$examList as $val)
-					<option value="{{ $val['exam_id'] }}" selected="selected" >
+					<option value="{{ $val['exam_id'] }}" >
 						{{ $val['name'] }}
 					</option>
 				@endforeach
