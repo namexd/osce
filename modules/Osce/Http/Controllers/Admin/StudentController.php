@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\ExamPlan;
@@ -90,15 +91,16 @@ class StudentController extends CommonController
         
         try{
             //更据考试id拿到所有学生通知数据
-            $studentOpenid =$student->getStudentsOpendIds($examId);
-            if(empty($studentOpenid)){
-                throw new \Exception('没有学生信息');
-            }
-            if(!$student->sendMsg($studentOpenid)){
+//            $studentOpenid =$student->getStudentsOpendIds($examId);
+//            if(empty($studentOpenid)){
+//                throw new \Exception('没有学生信息');
+//            }
+            if(!$student->sendMsg($examId)){
                 throw new \Exception('发送通知失败');
             }
+            //$list   =   ExamOrder::where('exam_id','=',$examId)->with('student')->take(2)->get();
+            //dd($list);
 
-            
             return response()->json(
                 $this->success_data([], 1, 'success')
             );
