@@ -255,7 +255,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         //获取当前队列
         //获取是否有一条正在进行的考试
-        $queue  =   $queueList->where('status',2)->where('station_id',$this->station->id);
+        $queue  =   $queueList->where('status',2);
 
         if(!$queue->isEmpty())
         {
@@ -265,7 +265,7 @@ class WatchReminderRepositories  extends BaseRepository
         }
 
         //获取是否有一条已经抽签的考试
-        $queue  =   $queueList->where('status',1)->where('station_id',$this->station->id);
+        $queue  =   $queueList->where('status',1);
 
         \Log::debug('状态为1的队列',[$queue]);
         if(!$queue->isEmpty())
