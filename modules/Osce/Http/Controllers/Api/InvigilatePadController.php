@@ -57,9 +57,9 @@ class InvigilatePadController extends CommonController
     public function getTestIndex()
     {
 
-        $studentId =7509;
-        $stationId ='';
-        $roomId = '';
+        $studentId =132;
+        $stationId =25;
+        $roomId = 6;
         $watch = new WatchReminderRepositories();
         $watch ->getWatchPublish($studentId,$stationId,$roomId);
 
@@ -802,8 +802,8 @@ class InvigilatePadController extends CommonController
 
                 // todo 调用向腕表推送消息的方法
                 try{
-                    $watch = new WatchReminderRepositories();
-                    $watch ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
+
+                    $watchReminder ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
                 }catch (\Exception $ex){
                     \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
                 }
