@@ -29,7 +29,7 @@
             </div>
         @else
             <input type="hidden" id="parameter" value="{'pagename':'theory_validate','paperUrl':'{{ route('osce.admin.ApiController.getExamPaperId') }}','examUrl':'{{ route('osce.admin.AnswerController.formalPaperList') }}'}" />
-            <input type="hidden" class="allData" data="{{ $data['stationId'] }}" userId="{{ $data['userId'] }}" examId="{{ $data['examId'] }}">
+            <input type="hidden" class="allData" data="{{ $data['stationId'] }}" userId="{{ $data['userId'] }}" examId="{{ $data['examId'] }}" studentId="{{ $data['studentId'] }}">
             <div class="wrapper wrapper-content animated fadeInRight">
                 <div class="row table-head-style1 ">
                     <div class="col-xs-6 col-md-2">

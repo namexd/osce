@@ -469,19 +469,17 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
+
         try {
             $user = Auth::user();
-
             // 检查用户是否登录
             if (is_null($user)) {
                 throw new \Exception('用户未登录', 1000);
             }
-
             //检验登录的老师是否是监考老师
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('你不是监考老师', 1001);
             }
-
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
             if (is_array($ExamInfo)) {
@@ -492,13 +490,13 @@ class ApiController extends CommonController
                 if($station->type != 3) {
                     throw new \Exception('你不是理论考试的监考老师', 1002);
                 }
-
                 $data = array(
                     'status'=>1,
                     'name'      => $ExamInfo['ExamName'],
                     'stationId' => $ExamInfo['StationId'],
                     'examId'    => $ExamInfo['ExamId'],
                     'userId'    => $user->id,
+                    'studentId'    => $ExamInfo['StudentId'],
                 );
             } else {
                 $data = array(
@@ -506,7 +504,7 @@ class ApiController extends CommonController
                     'info'=>$ExamInfo
                 );
             }
-           
+
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);

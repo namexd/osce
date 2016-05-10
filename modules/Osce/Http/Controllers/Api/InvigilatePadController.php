@@ -155,10 +155,12 @@ class InvigilatePadController extends CommonController
     {
         $this->validate($request, [
             'station_id' => 'required|integer',
-            'teacher_id' => 'required|integer'
+            'teacher_id' => 'required|integer',
+            'student_id' => 'required|integer',
         ], [
             'station_id.required' => '考站编号必须',
-            'teacher_id.required' => '老师编号必须'
+            'teacher_id.required' => '老师编号必须',
+            'student_id.required' => '学生编号必须',
         ]);
 
         try {
@@ -168,8 +170,7 @@ class InvigilatePadController extends CommonController
             $student_id = $request['student_id'];
             $exam = Exam::doingExam();
             $studentModel = new  Student();
-            //$studentData = $studentModel->studentList($stationId, $exam,$student_id);
-            $studentData = $studentModel->studentList($stationId, $exam);
+            $studentData = $studentModel->studentList($stationId, $exam,$student_id);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
                 \Log::alert('推送当前学生',[$studentData['nextTester']]);
