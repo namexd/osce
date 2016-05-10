@@ -831,7 +831,7 @@ class ExamQueue extends CommonModel
             $queue = ExamQueue::where('student_id', $studentId)
                 ->where('exam_screening_id', $examScreeningId)
                 ->where('station_id', $stationId)
-                ->whereIn('status', [0,1,2])
+//                ->whereIn('status', [0,1,2])
                 ->first();
             if (empty($queue)) {
                 throw new \Exception('没有找到符合要求的学生', 2200);
