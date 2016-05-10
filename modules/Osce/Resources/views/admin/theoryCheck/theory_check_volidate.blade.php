@@ -36,7 +36,7 @@
                         <h5 class="title-label">理论考试</h5>
                     </div>
                     <div class="col-xs-6 col-md-2" style="float: right;">
-                        <a href="javascript:;" class="btn btn-primary" style="float: right;">&nbsp;&nbsp;退出&nbsp;&nbsp;</a>
+                        <a href="{{ route('osce.admin.user.getLogout') }}" class="btn btn-primary" style="float: right;">&nbsp;&nbsp;退出&nbsp;&nbsp;</a>
                     </div>
                 </div>
         {{--学生信息展示--}}
