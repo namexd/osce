@@ -9,8 +9,10 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Repositories\TestScoreRepositories;
@@ -271,20 +273,36 @@ class TestScoresController  extends CommonController
      */
     public function getSubjectLists(Request $request,TestScoreRepositories $TestScoreRepositories){
         $examid = $request->examid;
-        //获取该场考试对应的试卷信息
-        $datalist = ExamResult::where('exam_paper_exam_station.exam_id','=',$examid)->leftjoin('exam_paper_exam_station',function($join){
+
+/*        $datalist = ExamResult::where('exam_paper_exam_station.exam_id','=',$examid)->leftjoin('exam_paper_exam_station',function($join){
             $join->on('exam_paper_exam_station.station_id','=','exam_result.station_id');
         })->leftjoin('exam_paper',function($join){
             $join->on('exam_paper.id','=','exam_paper_exam_station.exam_paper_id');
-        })->groupBy('exam_paper.id')->select('exam_paper.id','exam_paper.name')->get()->toArray();
-        //获取该场考试对应科目信息
-        $subjectlist = ExamResult::leftjoin('station',function($join){
+        })->groupBy('exam_paper.id')->select('exam_paper.id','exam_paper.name')->get()->toArray();*/
+
+        //获取该场考试对应的试卷信息
+        $datalist = ExamPaperExamStation::leftjoin('exam_paper',function($join){
+            $join->on('exam_paper_exam_station.exam_paper_id','=','exam_paper.id');
+        })->where('exam_paper_exam_station.exam_id',$examid)
+            ->select('exam_paper.id','exam_paper.name')->groupBy('exam_paper.id')->get()->toArray();
+
+
+    /*    $subjectlist = ExamResult::leftjoin('station',function($join){
             $join->on('exam_result.station_id','=','station.id');
         })->leftjoin('subject',function($join){
             $join->on('station.subject_id','=','subject.id');
         })->leftjoin('exam_screening',function($join){
             $join->on('exam_result.exam_screening_id','=','exam_screening.id');
-        })->where('exam_screening.exam_id',$examid)->select('subject.id','subject.title as name')->groupBy('subject.id')->get()->toArray();
+        })->where('exam_screening.exam_id',$examid)->select('subject.id','subject.title as name')->groupBy('subject.id')->get()->toArray();*/
+
+        //获取该场考试对应科目信息
+        $subjectlist = ExamDraft::leftjoin('exam_draft_flow',function($join){
+            $join->on('exam_draft.exam_draft_flow_id','=','exam_draft_flow.id');
+        })->leftjoin('station',function($join){
+            $join->on('exam_draft.station_id','=','station.id');
+        })->leftjoin('subject',function($join){
+            $join->on('station.subject_id','=','subject.id');
+        })->where('exam_draft_flow.exam_id',$examid)->select('subject.id','subject.title as name')->groupBy('subject.id')->get()->toArray();
         $arr = array();
         if(!empty($subjectlist)){
             $key = 0;
@@ -301,7 +319,6 @@ class TestScoresController  extends CommonController
             }
         }
         return $this->success_data(['datalist'=>$arr]);
-
     }
 
     /**
