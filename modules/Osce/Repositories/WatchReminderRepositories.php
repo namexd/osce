@@ -294,6 +294,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         if(is_null($this->station))
         {
+            \Log::debug('当前队列',[$this->nowQueue]);
             $this->station  =   $this->nowQueue ->station;   //??????  todo 需确定后修改；
         }
         //当初始化不能准确获取考场实例的时候补充初始化考场
