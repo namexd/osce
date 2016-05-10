@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Repositories;
 use Illuminate\Support\Facades\Redis;
+use Maatwebsite\Excel\Collections\CellCollection;
 use Modules\Osce\Entities\Drawlots\DrawlotsRepository;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamQueue;
@@ -255,7 +256,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         //获取当前队列
         //获取是否有一条正在进行的考试
-        $queue  =   $queueList->where('status',2);
+        $queue  =   $this->queueWhere($queueList,'status',2);
 
         if(!$queue->isEmpty())
         {
@@ -265,7 +266,7 @@ class WatchReminderRepositories  extends BaseRepository
         }
 
         //获取是否有一条已经抽签的考试
-        $queue  =   $queueList->where('status',1);
+        $queue  =   $this->queueWhere($queueList,'status',1);
 
         \Log::debug('状态为1的队列',[$queue]);
         if(!$queue->isEmpty())
@@ -275,7 +276,7 @@ class WatchReminderRepositories  extends BaseRepository
         }
 
         //获取已经考完的队列集合
-        $queue  =   $queueList->where('status',3);
+        $queue  =   $this->queueWhere($queueList,'status',3);
 
 
         //判断是否考完
@@ -286,7 +287,8 @@ class WatchReminderRepositories  extends BaseRepository
         }else{
             //不是，待考
             \Log::info('学生队列',[$queueList]);
-            $queue = $queueList->where('status',0);
+
+            $queue = $this->queueWhere($queueList,'status',0);
             \Log::info('学生状态为0的队列',[$queue]);
 
         }
@@ -308,6 +310,28 @@ class WatchReminderRepositories  extends BaseRepository
         return $this->nowQueue;
 
         //throw new \Exception('队列数据异常，找不到相应的各种状态数据');
+    }
+
+    private function queueWhere(CellCollection $collection,$find,$value,$big=false){
+        $data   =   [];
+        foreach ($collection as $item)
+        {
+            if($big)
+            {
+                if($item->$find==$value)
+                {
+                    $data[]=$item;
+                }
+            }
+            else
+            {
+                if($item->$find===$value)
+                {
+                    $data[]=$item;
+                }
+            }
+        }
+        return collect($data);
     }
     /**
      * 待考
