@@ -168,7 +168,8 @@ class InvigilatePadController extends CommonController
             $student_id = $request['student_id'];
             $exam = Exam::doingExam();
             $studentModel = new  Student();
-            $studentData = $studentModel->studentList($stationId, $exam,$student_id);
+            //$studentData = $studentModel->studentList($stationId, $exam,$student_id);
+            $studentData = $studentModel->studentList($stationId, $exam);
             if ($studentData['nextTester']) {
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
                 \Log::alert('推送当前学生',[$studentData['nextTester']]);
