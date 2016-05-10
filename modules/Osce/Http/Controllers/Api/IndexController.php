@@ -317,9 +317,9 @@ class IndexController extends CommonController
             //todo 绑定腕表调腕表接口
      
             try{
-                $studentWatchController = new StudentWatchController();
+                $studentWatchController = new WatchReminderRepositories();
                 $request['nfc_code'] = $Watch->code;
-                $studentWatchController->getStudentExamReminder($request);
+                $studentWatchController->getWatchPublish($exam_id,$student_id,'','');
             }catch (\Exception $ex){
                 \Log::debug('绑定腕表调腕表接口出错',[$student_id,$ex->getMessage(),$ex->getFile()]);
             }
