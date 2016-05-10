@@ -128,11 +128,14 @@ class WatchReminderRepositories  extends BaseRepository
 
         //根据exam、student对象查找队列数据
         $queueList  =   $this->getExamStudentQueueList($exam,$student,$examScreening);
-        
+
+        \Log::alert('当前学生所有队列',[$queueList]);
         //根据队列获取学生当前队列
         $queue  =   $this->getSutentNowQueue($queueList);
+        \Log::alert('学生当前队列',[$queue]);
         //根据当前队列获取当前状态,
         $status = $this->getNoticeStauts($queue,$queueList);
+        \Log::alert('学生队列状态',[$status]);
 
         //并且根据当前状态选择相应操作
         switch ($status){
@@ -248,7 +251,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         //获取当前队列
         //获取是否有一条正在进行的考试
-        $queue  =   $queueList->where('status',2);
+        $queue  =   $queueList->where('status',2)->where('station_id',$this->station->id);
 
         if(!$queue->isEmpty())
         {
@@ -257,10 +260,10 @@ class WatchReminderRepositories  extends BaseRepository
 
         }
 
-
-
         //获取是否有一条已经抽签的考试
-        $queue  =   $queueList->where('status',1);
+        $queue  =   $queueList->where('status',1)->where('station_id',$this->station->id);
+
+        \Log::debug('状态为1的队列',[$queue]);
         if(!$queue->isEmpty())
         {
             //初始化当前队列
@@ -713,7 +716,7 @@ class WatchReminderRepositories  extends BaseRepository
        if(!is_null($roomId)){
            $room = Room::find($roomId);//拿到考场实例
        }
-
+        \Log::debug('传送给腕表的数据',[$exam,$student,$room,$station]);
         $this->getStudentExamReminder($exam,$student,$room,$station);
 
    }

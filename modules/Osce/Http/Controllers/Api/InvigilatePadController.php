@@ -57,9 +57,9 @@ class InvigilatePadController extends CommonController
     public function getTestIndex()
     {
 
-        $studentId =7509;
-        $stationId ='';
-        $roomId = '';
+        $studentId =132;
+        $stationId =25;
+        $roomId = 6;
         $watch = new WatchReminderRepositories();
         $watch ->getWatchPublish($studentId,$stationId,$roomId);
 
