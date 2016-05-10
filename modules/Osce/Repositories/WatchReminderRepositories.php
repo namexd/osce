@@ -286,11 +286,15 @@ class WatchReminderRepositories  extends BaseRepository
         }else{
             //不是，待考
             \Log::info('学生队列',[$queueList]);
-            $queue = $queueList->where('status',0);
+            $queue = $queueList->where('status','=',0);
+
         }
         //初始化当前队列
-        $this->nowQueue =   $queue->first();
-
+        if(count($queue) == 1){
+            $this->nowQueue =$queue;
+        }else{
+            $this->nowQueue =   $queue->first();
+        }
         //当初始化不能准确获取考站实例的时候补充初始化考站
 
         if(is_null($this->station))
