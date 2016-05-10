@@ -314,6 +314,7 @@ class WatchReminderRepositories  extends BaseRepository
 
     private function queueWhere($collection,$find,$value,$big=false){
         $data   =   [];
+        \Log::alert('传入参数',[$collection]);
         foreach ($collection as $item)
         {
             if($big)
