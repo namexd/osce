@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamStation;
@@ -882,11 +883,25 @@ class ApiController extends CommonController
                 \Log::debug('准备考试按钮2', [$examQenens->student_id, $stationId, $roomId]);
             }
         }
-
-
-        $examStationStatus->status = 1;
-        $examStationStatus->save();
-
+        //查询该考试该考场下的所有考站信息
+        $stationArr = ExamDraft::leftJoin('exam_draft_flow', function($join){
+            $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
+        })->where('exam_draft_flow.exam_id',$examId)
+            ->where('exam_draft.room_id',$roomId)->select('exam_draft.station_id')->get()->toArray();
+        if(!empty($stationArr)){
+            //查询exam_station_status表（考试-场次-考站状态表）中该考试该考场下status是否全为1，如果是，修改其状态值为2
+            $examStationStatusData = $examStationStatusModel
+                ->where('exam_id',$examId)
+                ->where('status','<>',1)
+                ->whereIn('station_id',$stationArr)
+                ->first();
+            if(empty($examStationStatusData)){
+                $examStationStatusModel->where('exam_id',$examId)->whereIn('station_id',$stationArr)->update(['status'=>2]);
+            }else{
+                $examStationStatus->status = 1;
+                $examStationStatus->save();
+            }
+        }
         $request['station_id']=$stationId;
         $request['teacher_id']=$teacherId;
         $request['exam_id']=$examId;
