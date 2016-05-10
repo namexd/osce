@@ -779,24 +779,6 @@ class ApiController extends CommonController
                 );
             }
             
-            // todo  准备好后调用腕表接口
-
-            try {
-                \Log::alert('老师准备的学生id',$studentIds);
-
-                foreach($studentIds as $studentId){
-                    $watchReminder->getWatchPublish($studentId, $stationId, $roomId);
-                }
-
-//                $studentWatchController = new StudentWatchController();
-//                foreach ($watchNfcCodes as $watchNfcCode) {
-//                    $request['nfc_code'] = $watchNfcCode;
-//                    $studentWatchController->getStudentExamReminder($request, $stationId);
-//
-//                }
-            } catch (\Exception $ex) {
-                \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
-            }
 
 
         } else {
@@ -870,27 +852,27 @@ class ApiController extends CommonController
         $msg=$inv->getAuthentication_arr($request);//当前考生推送(如果有)
         if($msg) {
             //调用向腕表推送消息的方法
-            $examQueue = ExamQueue::where('student_id', '=', $msg->student_id)
-                ->where('station_id', '=', $stationId)
-                ->whereIn('status', [0, 2])
-                ->first();
-            if ($examQueue) {
-                $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id', '=', $examQueue->exam_screening_id)
-                    ->where('student_id', '=', $examQueue->student_id)->first();
-                $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
-                //TODO 废弃旧方法
-                try {
-                    \Log::alert('老师准备的学生id  2',$examQueue->student_id);
-//                    $studentWatchController = new StudentWatchController();
-//                    $request['nfc_code'] = $watchData->nfc_code;
-//                    $studentWatchController->getStudentExamReminder($request, $stationId);
-                    $watchReminder->getWatchPublish($examQueue->student_id, $stationId, $roomId);
-                } catch (\Exception $ex) {
-                    \Log::debug('准备考试按钮3', [$examQueue->student_id, $stationId, $roomId]);
-                }
-            }
-        }
+//            $examQueue = ExamQueue::where('student_id', '=', $msg->student_id)
+//                ->where('station_id', '=', $stationId)
+//                ->whereIn('status', [0, 2])
+//                ->first();
+//            if ($examQueue) {
+//                $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id', '=', $examQueue->exam_screening_id)
+//                    ->where('student_id', '=', $examQueue->student_id)->first();
+//                $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
+                // todo  准备好后调用腕表接口
 
+                try {
+
+                    \Log::alert('老师准备的学生id',$studentIds);
+
+                    foreach($studentIds as $studentId){
+                        $watchReminder->getWatchPublish($studentId, $stationId, $roomId);
+                    }
+                } catch (\Exception $ex) {
+                    \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
+                }
+        }
         return response()->json(
             $this->success_data([], 1, '当前考站准备完成成功')
         );
