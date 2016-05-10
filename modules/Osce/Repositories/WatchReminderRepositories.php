@@ -582,6 +582,9 @@ class WatchReminderRepositories  extends BaseRepository
 //        }
         //dd($time);
         $surplus = strtotime($this->nowQueue->end_dt) - time();
+        if($surplus <=0){
+            $surplus =0;
+        }
 
         $data = [
             'code' => 4, //  // 侯考状态（对应界面：考试中还剩多少时间）
@@ -623,6 +626,9 @@ class WatchReminderRepositories  extends BaseRepository
             'title' =>'',
         ];
 
+        $data['code']=7;
+        $data['score']='';
+        $data['title']='场次考试已完成,请归还腕表';
 
         if($this->exam->real_push == 1 && $this->exam->status == 2 ){
             $TestResultModel = new TestResult();
@@ -631,17 +637,14 @@ class WatchReminderRepositories  extends BaseRepository
             $data['code']=6;
             $data['score']=$score;
             $data['title']='考试完成，总成绩为';
-        }else{
+        }elseif($this->exam->status == 2){
             $data['code']=6;
             $data['score']='';
             $data['title']='考试完成';
         }
 
-        if($screen -> status == 2){
-            $data['code']=7;
-            $data['score']='';
-            $data['title']='场次考试已完成,请归还腕表';
-        }
+
+
 
         $watchNfcCode= ExamScreeningStudent::leftJoin('watch','exam_screening_student.watch_id','=','watch.id')
                               ->where('exam_screening_student.exam_screening_id',$screen->id)
