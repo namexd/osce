@@ -133,8 +133,9 @@ class WatchReminderRepositories  extends BaseRepository
         \Log::alert('当前学生所有队列',[$queueList]);
         //根据队列获取学生当前队列
         $queue  =   $this->getSutentNowQueue($queueList);
-        \Log::alert('学生当前队列',[$queue]);
+        \Log::alert('学生当前队列',[$queue,]);
         //根据当前队列获取当前状态,
+
         $status = $this->getNoticeStauts($queue,$queueList);
         \Log::alert('学生队列状态',[$status]);
 
@@ -261,6 +262,7 @@ class WatchReminderRepositories  extends BaseRepository
         if(!$queue->isEmpty())
         {
             //初始化当前队列
+            \Log::debug('状态为2的队列',[$queue]);
             return $this->nowQueue =   $queue->first();
 
         }
