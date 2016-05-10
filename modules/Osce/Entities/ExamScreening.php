@@ -293,7 +293,7 @@ class ExamScreening extends CommonModel
         }else{
             $screenObject=$this->getNearestScreening($exam_id);
             if(is_null($screenObject)){
-                throw new \Exception('今天没有正在进行的考试场次');
+                throw new \Exception('当前没有正在进行的考试场次');
             }
             $screenId=$screenObject->id;
         }
