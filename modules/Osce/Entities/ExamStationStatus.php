@@ -50,8 +50,7 @@ class ExamStationStatus extends CommonModel
                 foreach($msg as $val){
                     if($val->status==0){//未准备
                         $flag=true;
-                    }
-                    if($val->status==1){//已准备
+                    }else{//已准备
                         $tag=true;
                     }
                 }
