@@ -429,7 +429,7 @@ class ApiController extends CommonController
                 return redirect()->back()->withErrors('你没有权限！');
             }
             */
-
+            \Log::debug('获考试信息',[]);
             //获取当前登录账户的角色名称
             $questionBankRepositories = new QuestionBankRepositories();
             $roleType = $questionBankRepositories->getExamLoginUserRoleType();

@@ -167,17 +167,18 @@ class CaseController extends CommonController
             'id' => 'required|integer',
             'name' => 'required'
         ],[
-            'id.required'     =>  '病例id不能为空',
+            'id.required'       =>  '病例id不能为空',
             'name.required'     =>  '病例名称不能为空'
         ]);
 
         try {
-        $id = $request->input('id');
-        $formData = $request->only('name', 'description');
+            $id = $request->input('id');
+            $formData = $request->only('name', 'description');
 
-        $caseModel->updateCase($id, $formData);
+            $caseModel->updateCase($id, $formData);
 
-        return redirect()->route('osce.admin.case.getCaseList');
+            return redirect()->route('osce.admin.case.getCaseList');
+
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }

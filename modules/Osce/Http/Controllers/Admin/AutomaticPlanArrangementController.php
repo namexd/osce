@@ -14,6 +14,8 @@ use Modules\Osce\Entities\AutomaticPlanArrangement\ExamPlaceEntity;
 use Modules\Osce\Entities\AutomaticPlanArrangement\Exam;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamPlanRecord;
+use Modules\Osce\Entities\SmartArrange\Export\DengNeedListExport;
+use Modules\Osce\Entities\SmartArrange\Export\DengStudent;
 use Modules\Osce\Entities\SmartArrange\Export\StudentArrange;
 use Modules\Osce\Entities\SmartArrange\Export\UserListExport;
 use Modules\Osce\Entities\SmartArrange\SmartArrange;
@@ -99,9 +101,9 @@ class AutomaticPlanArrangementController extends CommonController
         $this->validate($this->request, [
             'exam_id' => 'required|integer'
         ]);
-        
+
         $examId = $this->request->input('exam_id');
-        
+
         try {
             set_time_limit(0);
             $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
@@ -164,8 +166,11 @@ class AutomaticPlanArrangementController extends CommonController
      * @time 2016-05-01 16：48
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getExport(SmartArrangeRepository $smartArrangeRepository, UserListExport $export, StudentArrange $arrange)
-    {
+    public function getExport(
+        SmartArrangeRepository $smartArrangeRepository,
+        DengNeedListExport $export,
+        DengStudent $arrange
+    ) {
         $this->validate($this->request, [
             'exam_id' => 'required|integer'
         ]);

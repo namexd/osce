@@ -711,6 +711,7 @@ class DrawlotsController extends CommonController
 
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
+
             Common::valueIsNull($exam, -333);
             //获取当前考试场次
             $exam_screening_id = $this->getexamScreeing($exam);
@@ -806,6 +807,7 @@ class DrawlotsController extends CommonController
                 \Log::alert('老师登陆获得信息',[$station]);
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
+
             return response()->json($this->fail($ex));
         }
     }

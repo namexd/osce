@@ -48,10 +48,17 @@ class InvigilatorController extends CommonController
      *
      */
     public function getSpInvigilatorList(Request $request){
-       $Invigilator    =   new Teacher();
+       $Invigilator =   new Teacher();
         $list       =   $Invigilator    ->  getSpInvigilatorInfo();
         $isSpValues =   $Invigilator    ->  getIsSpValues();
-        return view('osce::admin.resourceManage.staff_manage_invigilator_sp',['list'=>$list,'isSpValues'=>$isSpValues]);
+        //模板下载路径
+        $tempUrl = '/download/teacher.xlsx';
+        return view('osce::admin.resourceManage.staff_manage_invigilator_sp',
+        [
+            'list'       => $list,
+            'isSpValues' => $isSpValues,
+            'tempUrl'    => $tempUrl,
+        ]);
     }
 
     /**
@@ -75,8 +82,15 @@ class InvigilatorController extends CommonController
 //        return view('osce::admin.index')->withErrors(['msg'=>'保存成功','code'=>[1]]);
         $Invigilator = new Teacher();
         $list        = $Invigilator -> getInvigilatorList((empty($type) || $type==1)?1:3);
+        //模板下载路径
+        $tempUrl = '/download/teacher.xlsx';
 
-        return view('osce::admin.resourceManage.staff_manage_invigilator',['list'=>$list,'type'=>(empty($type) || $type==1)?1:3]);
+        return view('osce::admin.resourceManage.staff_manage_invigilator',
+        [
+            'list'      => $list,
+            'type'      => (empty($type) || $type==1)?1:3,
+            'tempUrl'   => $tempUrl,
+        ]);
     }
 
     /**

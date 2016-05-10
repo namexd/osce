@@ -762,7 +762,8 @@ class Exam extends CommonModel
     {
         try {
             if (is_null($examId)) {
-                $exam = Exam::where('status', 1)->get();
+                $exam = Exam::where('status','=',1)->get();
+                \Log::debug('考试信息',[$exam]);
                 if ($exam->count() != 1) {
                     throw new \Exception('获取当前考试信息失败！', -9999);
                 } else {

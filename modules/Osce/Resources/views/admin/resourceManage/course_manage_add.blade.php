@@ -141,14 +141,6 @@
             }
         });
     });
-    function display() {
-        /**
-         * 特殊评分项的开关
-         * @author gaodapeng
-         * @date   2016/5/7
-         */
-        $("#col_special").fadeToggle();
-    }
 </script>
 @stop
 
@@ -237,29 +229,38 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <input id="check_special"  type="checkbox" onclick="display()">
-                            <label class="col-sm-2 control-label">特殊评分项</label>
-                            <div class="col-sm-10" id="col_special" style="display: none;">
-                                <div class="ibox float-e-margins">
-                                    <div class="ibox-title">
-                                        <h5></h5>
-                                        <div class="ibox-tools">
-                                            <button type="button" class="btn btn-outline btn-default" id="add-special-score">新增特殊评分项</button>
+                            <div class="col-sm-12" id="checkbox_div">
+                                <label class="check_label checkbox_input checkbox_one" style="height: 15px;line-height: 28px;margin-left: 13.7%;">
+                                     <div class="check_icon" style="display: inline-block;margin:5px 0 0 5px;float:left;"></div>
+                                     <input type="checkbox" name="special_score_flag" value="0">
+                                     <span class="check_name" style="display: inline-block;float:left;">特殊评分项</span>
+                                </label>
+                            </div>
+                            
+                            <div class="col_special" style="display: none;">
+                                <label class="col-sm-2 control-label">&nbsp;</label>
+                                <div class="col-sm-10" id="col_special">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+                                            <h5></h5>
+                                            <div class="ibox-tools">
+                                                <button type="button" class="btn btn-outline btn-default" id="add-special-score">新增特殊评分项</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="ibox-content">
-                                        <table class="table table-bordered" id="special-score">
-                                            <thead>
-                                            <tr>
-                                                <th width="70%">名称</th>
-                                                <th>分数</th>
-                                                <th width="10%">操作</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody index="0">
-                                            </tbody>
-                                        </table>
+                                        <div class="ibox-content">
+                                            <table class="table table-bordered" id="special-score">
+                                                <thead>
+                                                <tr>
+                                                    <th width="70%">名称</th>
+                                                    <th>分数</th>
+                                                    <th width="10%">操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody index="0">
+                                                </tbody>
+                                            </table>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -307,7 +308,8 @@
                                             <a href="javascript:void(0)" class="btn btn-outline btn-default" id="file1" style="height:34px;padding:5px;color:#333;">
                                                 导入<input type="file" name="topic" id="file0" multiple="multiple" />
                                             </a>
-                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
+                                            {{--<a href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>--}}
+                                            <a href="{{$tempUrl}}" class="btn btn-outline btn-default" style="float: right;color:#333;">下载模板</a>
                                         </div>
                                     </div>
                                     <div class="ibox-content">

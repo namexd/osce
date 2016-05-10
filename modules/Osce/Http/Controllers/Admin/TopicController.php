@@ -81,7 +81,9 @@ class TopicController extends CommonController
     {
         //获得上次的时间限制
         $time = session('time');
-        return view('osce::admin.resourceManage.course_manage_add', ['time'=>$time]);
+        //模板下载路径
+        $tempUrl = '/download/topic.xlsx';
+        return view('osce::admin.resourceManage.course_manage_add', ['time'=>$time, 'tempUrl'=>$tempUrl]);
     }
 
     /**
@@ -134,6 +136,10 @@ class TopicController extends CommonController
         $cases   = $request->input('cases');        //病例
         $goods   = $request->input('goods');        //用物
         $speScore= $request->get('special_score');  //特殊评分项
+        $speflag = $request->get('special_score_flag');  //特殊评分项标记
+        if($speflag == 0){
+            $speScore = [];
+        }
 
         try {
             $user = \Auth::user();
@@ -257,6 +263,10 @@ class TopicController extends CommonController
         $cases   = $request->input('cases');        //病例
         $goods   = $request->input('goods');        //用物
         $speScore= $request->get('special_score');  //特殊评分项
+        $speflag = $request->get('special_score_flag');  //特殊评分项标记
+        if($speflag == 0){
+            $speScore = [];
+        }
 
         $subjectModel = new Subject();
         try {
@@ -342,12 +352,14 @@ class TopicController extends CommonController
 
         //获取考试项目——用物关系数据
         $subjectSupplys = SubjectSupply::where('subject_id','=',$id)->with('supply')->get();
+        //模板下载路径
+        $tempUrl = '/download/topic.xlsx';
 
         return view('osce::admin.resourceManage.course_manage_edit',
-            [
-                'item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,
-                'subjectSupplys' => $subjectSupplys
-            ]);
+        [
+            'item' => $subject, 'list' => $items, 'prointNum' => $prointNum, 'optionNum' => $optionNum,
+            'subjectSupplys' => $subjectSupplys, 'tempUrl' => $tempUrl
+        ]);
     }
 
     /**

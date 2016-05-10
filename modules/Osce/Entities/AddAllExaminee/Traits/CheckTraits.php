@@ -9,31 +9,29 @@
 namespace Modules\Osce\Entities\AddAllExaminee\Traits;
 
 
+use Modules\Osce\Entities\Student;
+
 trait CheckTraits
 {
-    public function regularCheck($data, $type = 'id_cord', $key = 0)
+    public function regularCheck($examId, $data, $type = 'idcard', $key = 0)
     {
         switch ($type) {
-            case 'id_cord':
-                if (!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', $data)) {
-                    throw new \Exception('第' . ($key + 2) . '行身份证号不符规格，请修改后重试！');
-                }
+            case 'idcard':  $this->checkIdCard($examId, trim($data), $key);
                 break;
             case 'mobile':
-                if (!preg_match('/^1[3|5|7|8]{1}[0-9]{9}$/', $data)) {
-                    throw new \Exception('第' . ($key + 2) . '行手机号不符规格，请修改后重试！');
+                if (!preg_match('/^1[3|5|7|8]{1}[0-9]{9}$/', trim($data))) {
+                    throw new \Exception('第' . ($key) . '行手机号不符规格，请修改后重试！');
                 }
                 break;
             case 'exam_sequence':
                 if (empty(trim($data))) {
-                    throw new \Exception('第' . ($key + 2) . '行准考证号不能为空，请修改后重试！');
+                    throw new \Exception('第' . ($key) . '行准考证号不能为空，请修改后重试！');
                 }
                 break;
             default:
                 throw new \Exception('系统错误，请联系管理员');
                 break;
         }
-
         return true;
     }
 
@@ -56,5 +54,35 @@ trait CheckTraits
         }
 
         return $data;
+    }
+
+    /**
+     * 身份证号验证
+     * @param $examId
+     * @param $idCard
+     * @param $key
+     * @return bool
+     * @throws \Exception
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-5-09 16:30
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function checkIdCard($examId, $idCard, $key)
+    {
+        //1、验证身份证的正确性
+//        if (!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', $idCard) || !preg_match('/^((s?[A-Za-z])|([A-Za-z]{2}))d{6}((([0-9aA]))|([0-9aA]))$/', $idCard)) {
+//            throw new \Exception('第' . ($key) . '行身份证号不符规格，请修改后重试！');
+//        }
+        if (!preg_match('/^[a-zA-Z0-9]+$/', trim($idCard))) {
+            throw new \Exception('第' . ($key) . '行身份证号不符规格，请修改后重试！');
+        }
+
+        //2、查询同一场考试中，身份证号是否已经存在
+        $result = Student::where('exam_id', '=', $examId)->where('idcard','=', trim($idCard))->first();
+        if(!is_null($result)){
+            throw new \Exception('第' . ($key) . '行身份证号已经存在，请修改后重试！');
+        }
+        return true;
     }
 }

@@ -141,19 +141,7 @@
                 }
             }
         });
-        var div=document.getElementById('check_special');
-        if(true==div.checked){
-            $("#col_special").style(display());
-        }
     });
-    function display() {
-        /**
-         * 特殊评分项的开关
-         * @author gaodapeng
-         * @date   2016/5/7
-         */
-            $("#col_special").fadeToggle();
-    }
 </script> 
 @stop
 
@@ -248,41 +236,50 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <input type="checkbox" id="check_special" onclick="display()" {{($item->specialScores->isEmpty())?'':'checked'}}>
-                            <label class="col-sm-2 control-label">特殊评分项</label>
-                            <div class="col-sm-10" id="col_special" style="display: none;">
-                                <div class="ibox float-e-margins">
-                                    <div class="ibox-title">
-                                        <h5></h5>
-                                        <div class="ibox-tools">
-                                            <button type="button" class="btn btn-outline btn-default" id="add-special-score">新增特殊评分项</button>
-                                        </div>
-                                    </div>
-                                    <div class="ibox-content">
-                                        <table class="table table-bordered" id="special-score">
-                                            <thead>
-                                            <tr>
-                                                <th width="70%">名称</th>
-                                                <th>分数</th>
-                                                <th width="10%">操作</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody index="{{$item->specialScores->count()}}">
-                                            @forelse($item->specialScores as $key => $specialScore)
-                                                <tr>
-                                                    <td>
-                                                        <input class="form-control" name="special_score[{{$key+1}}][title]" value="{{$specialScore->title}}"  style="width: 100%;" />
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control"name="special_score[{{$key+1}}][score]" value="{{$specialScore->score}}" >
-                                                    </td>
-                                                    <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
-                                                </tr>
-                                            @empty
-                                            @endforelse
-                                            </tbody>
-                                        </table>
+                            <div class="col-sm-12" id="checkbox_div">
+                                <label class="check_label checkbox_input checkbox_one" style="height: 15px;line-height: 28px;margin-left: 13.7%;">
+                                     <div class="check_icon {{($item->specialScores->isEmpty())?'':'check'}}" style="display: inline-block;margin:5px 0 0 5px;float:left;"></div>
+                                     <input type="checkbox" name="special_score_flag" value="{{($item->specialScores->isEmpty())?0:1}}">
+                                     <span class="check_name" style="display: inline-block;float:left;">特殊评分项</span>
+                                </label>
+                            </div>
 
+                            <div class="col_special"  style="display: {{($item->specialScores->isEmpty())?'none;':'block;'}};">
+                                <label class="col-sm-2 control-label">&nbsp;</label>
+                                <div class="col-sm-10" id="col_special">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title">
+                                            <h5></h5>
+                                            <div class="ibox-tools">
+                                                <button type="button" class="btn btn-outline btn-default" id="add-special-score">新增特殊评分项</button>
+                                            </div>
+                                        </div>
+                                        <div class="ibox-content">
+                                            <table class="table table-bordered" id="special-score">
+                                                <thead>
+                                                <tr>
+                                                    <th width="70%">名称</th>
+                                                    <th>分数</th>
+                                                    <th width="10%">操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody index="{{$item->specialScores->count()}}">
+                                                @forelse($item->specialScores as $key => $specialScore)
+                                                    <tr>
+                                                        <td>
+                                                            <input class="form-control" name="special_score[{{$key+1}}][title]" value="{{$specialScore->title}}"  style="width: 100%;" />
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control"name="special_score[{{$key+1}}][score]" value="{{$specialScore->score}}" >
+                                                        </td>
+                                                        <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
+                                                    </tr>
+                                                @empty
+                                                @endforelse
+                                                </tbody>
+                                            </table>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -340,6 +337,7 @@
                                         <h5></h5>
                                         <div class="ibox-tools">
                                             <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;display:none;">下载模板</a>
+                                            <a  href="{{$tempUrl}}" class="btn btn-outline btn-default" style="float: right;color:#333;display:none;">下载模板</a>
                                             <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
                                         </div>
                                     </div>
