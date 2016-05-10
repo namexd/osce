@@ -356,7 +356,7 @@ class InvigilatePadController extends CommonController
 
             $this->validate($request, [
                 'score'             => 'required',
-                'special'           => 'sometimes',
+                //'special'           => 'sometimes',
                 'student_id'        => 'required',
                 'station_id'        => 'required',
                 'exam_screening_id' => 'required',
@@ -365,7 +365,7 @@ class InvigilatePadController extends CommonController
                 'score.required'    => '请检查评分标准分值',//json的格式
             ]);
             $score        = Input::get('score');
-            $specialScore = Input::get('special');      //特殊评分项（扣分json数据）TODO: zhoufuxiang
+            //$specialScore = Input::get('special');      //特殊评分项（扣分json数据）TODO: zhoufuxiang
             $stationId    = Input::get('station_id');
             $studentId    = Input::get('student_id');
             $examScreeningId = Input::get('exam_screening_id');
@@ -412,7 +412,7 @@ class InvigilatePadController extends CommonController
 
             /*********保存考试成绩**********/
             $TestResultModel  = new TestResult();
-            $result = $TestResultModel->addTestResult($data, $score, $specialScore);
+            $result = $TestResultModel->addTestResult($data, $score);
             if (!$result) {
                 throw new \Exception('成绩保存失败');
             }

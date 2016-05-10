@@ -53,10 +53,26 @@ class TestResult extends CommonModel
      * @return static
      * @throws \Exception
      */
-    public function addTestResult($data,$score, $specialScore)
+    private function groupResultScore($scoreJsonOb){
+        foreach($scoreJsonOb as $option)
+        {
+            \Log::info('PAD提交过来的分数json对象',[$option]);
+            exit();
+            if($option)
+            {
+
+            }
+        }
+    }
+    public function addTestResult($data,$score)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
+        $score  =   json_decode($score);
+        foreach()
+        {
+
+        }
         try {
             //判断成绩是否已提交过
             $ExamResult= $this->getRemoveScore($data);
