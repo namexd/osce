@@ -801,12 +801,12 @@ class InvigilatePadController extends CommonController
                 $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId,'exam_screening_id'=>@$examQueue->exam_screening_id], 105, '开始考试成功')));
 
                 // todo 调用向腕表推送消息的方法
-//                try{
-//                    $watch = new WatchReminderRepositories();
-//                    $watch ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
-//                }catch (\Exception $ex){
-//                    \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
-//                }
+                try{
+                    $watch = new WatchReminderRepositories();
+                    $watch ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
+                }catch (\Exception $ex){
+                    \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
+                }
                 
                 
                 

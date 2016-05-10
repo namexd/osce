@@ -342,6 +342,7 @@ class TestScoreRepositories  extends BaseRepository
 
         $examPaper = ExamPaper::where('id',$subjectid)->first();
         if(!empty($examPaper)){
+            //传过来的值是试卷id
             $examlist = $ExamResult->where('exam_paper.id','=',$subjectid)->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
                 $join->on('exam_screening.id','=','exam_result.exam_screening_id');
             })->leftjoin('station',function($join){
@@ -362,10 +363,13 @@ class TestScoreRepositories  extends BaseRepository
                 $DB->raw('min(exam_result.score) as minScore')
             )->groupBy('student.grade_class')->get();
         }else{
-            $examlist = $ExamResult->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
+            //传过来的值为科目id
+            $examlist = $ExamResult->where('exam_screening.exam_id','=',$examid)->where('subject.id',$subjectid)->leftjoin('exam_screening',function($join){
                 $join->on('exam_screening.id','=','exam_result.exam_screening_id');
             })->leftjoin('station',function($join){
                 $join->on('station.id','=','exam_result.station_id');
+            })->leftjoin('subject',function($join){
+                $join->on('subject.id','=','station.subject_id');
             })->leftjoin('student',function($join){
                 $join->on('student.id','=','exam_result.student_id');
             })->select(

@@ -100,7 +100,9 @@ if(!empty($errorsInfo)){
                   <span class="current-set">
                     @if(!empty($current))
                         @foreach($current as $v)
+                        @if(!empty($v->student_name))
                         <span>{{$v->student_name}}</span>　
+                        @endif
                         @endforeach
                     @else
                         暂时没有考生
@@ -113,11 +115,13 @@ if(!empty($errorsInfo)){
                 <span class="next-set">
                 @if(!empty($next))
                         @foreach($next as $v)
+                            @if(!empty($v->student_name))
                             <span>{{$v->student_name}}</span>　
+                            @endif
                         @endforeach
-                    @else
+                 @else
                         暂时没有考生
-                    @endif
+                 @endif
                 </span>
             </p>
 
@@ -146,9 +150,10 @@ if(!empty($errorsInfo)){
                 url: "{{route('osce.doorplate.getexaminee')}}",
                 data: {'room_id':{{$room_id}},'exam_id':{{$exam_id}},'data':{{count($data)}},'screen_id':{{$screen_id}}},
                 success: function(msg){
-                    if(msg){
-                        $(msg).each(function(i,k){
 
+                    if(msg[0]){
+                        $(msg).each(function(i,k){
+                            if(k.student_name)
                             opstr += '<span>'+k.student_name+'</span>　';
                         });
                         $('.current-set').html(opstr);
@@ -163,9 +168,9 @@ if(!empty($errorsInfo)){
                 url: "{{route('osce.doorplate.getnextexaminee')}}",
                 data: {'room_id':{{$room_id}},'exam_id':{{$exam_id}},'data':{{count($data)}},'screen_id':{{$screen_id}}},
                 success: function(msg){
-                    if(msg){
+                    if(msg[0]){
                         $(msg).each(function(i,k){
-
+                            if(k.student_name)
                             opst += '<span>'+k.student_name+'</span>　';
                         });
                         $('.next-set').html(opst);

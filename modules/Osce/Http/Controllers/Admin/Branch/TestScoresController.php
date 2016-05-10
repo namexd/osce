@@ -9,8 +9,10 @@
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Repositories\TestScoreRepositories;
@@ -270,6 +272,7 @@ class TestScoresController  extends CommonController
      * @date    2016-3-2 17:00:10 .com Inc. All Rights Reserved
      */
     public function getSubjectLists(Request $request,TestScoreRepositories $TestScoreRepositories){
+
         $examid = $request->examid;
         //获取该场考试对应的试卷信息
         $datalist = ExamResult::where('exam_paper_exam_station.exam_id','=',$examid)->leftjoin('exam_paper_exam_station',function($join){
@@ -277,6 +280,7 @@ class TestScoresController  extends CommonController
         })->leftjoin('exam_paper',function($join){
             $join->on('exam_paper.id','=','exam_paper_exam_station.exam_paper_id');
         })->groupBy('exam_paper.id')->select('exam_paper.id','exam_paper.name')->get()->toArray();
+
         //获取该场考试对应科目信息
         $subjectlist = ExamResult::leftjoin('station',function($join){
             $join->on('exam_result.station_id','=','station.id');
@@ -301,7 +305,6 @@ class TestScoresController  extends CommonController
             }
         }
         return $this->success_data(['datalist'=>$arr]);
-
     }
 
     /**
