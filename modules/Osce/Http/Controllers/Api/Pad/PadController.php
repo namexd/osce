@@ -386,6 +386,7 @@ class PadController extends  CommonController{
             'station_id' => 'required|integer',
             'user_id' => 'required|integer'
         ]);
+        \Log::alert('ChangeStatusData', $request->all());
 
         try {
         //获取当前的服务器时间
@@ -396,28 +397,28 @@ class PadController extends  CommonController{
         $teacherId = $request->input('user_id');
             \Log::alert('ChangeStatusData', $request->all());
         $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
-//        //推送给腕表
-//            try{
-//                $watchReminder->getWatchPublish($queue->student_id, $queue->station_id, $queue->room_id);
+        //推送给腕表
+            try{
+                $watchReminder->getWatchPublish($queue->student_id, $queue->station_id, $queue->room_id);
+
+            }catch (\Exception $ex){
+                \Log::debug('结束考试推送腕表',[$studentId, $stationId, $teacherId,$ex->getFile()]);
+            }
+//        try{
+//        //考试结束后，调用向腕表推送消息的方法
+//        $examScreeningStudentModel = new ExamScreeningStudent();
+//        $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
+//            ->where('student_id','=',$queue->student_id)->first();
+//        $watchModel = new Watch();
+//        $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
 //
-//            }catch (\Exception $ex){
-//                \Log::debug('结束考试推送腕表',[$studentId, $stationId, $teacherId,$ex->getFile()]);
-//            }
-        try{
-        //考试结束后，调用向腕表推送消息的方法
-        $examScreeningStudentModel = new ExamScreeningStudent();
-        $examScreeningStudentData = $examScreeningStudentModel->where('exam_screening_id','=',$queue->exam_screening_id)
-            ->where('student_id','=',$queue->student_id)->first();
-        $watchModel = new Watch();
-        $watchData = $watchModel->where('id','=',$examScreeningStudentData->watch_id)->first();
-            
-            //todo 调用腕表接口 判定学生这只腕表是否已解绑，如果解绑了就查询学生是否又绑定了新的腕表 ，如果都没有就结束考试
-            $studentWatchController = new StudentWatchController();
-            $request['nfc_code'] = $watchData->code;
-            $studentWatchController->getStudentExamReminder($request,$stationId ,$queue->exam_screening_id);
-        }catch (\Exception $ex){
-            \Log::alert('结束考试调腕表错误', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
-        }
+//            //todo 调用腕表接口 判定学生这只腕表是否已解绑，如果解绑了就查询学生是否又绑定了新的腕表 ，如果都没有就结束考试
+//            $studentWatchController = new StudentWatchController();
+//            $request['nfc_code'] = $watchData->code;
+//            $studentWatchController->getStudentExamReminder($request,$stationId ,$queue->exam_screening_id);
+//        }catch (\Exception $ex){
+//            \Log::alert('结束考试调腕表错误', [$ex->getFile(), $ex->getLine(), $ex->getMessage()]);
+//        }
 
       try{
           //考试完成推送

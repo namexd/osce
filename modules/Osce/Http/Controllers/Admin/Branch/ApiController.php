@@ -782,15 +782,22 @@ class ApiController extends CommonController
             // todo  准备好后调用腕表接口
 
             try {
-                $studentWatchController = new StudentWatchController();
-                foreach ($watchNfcCodes as $watchNfcCode) {
-                    $request['nfc_code'] = $watchNfcCode;
-                    $studentWatchController->getStudentExamReminder($request, $stationId);
 
+                foreach($studentIds as $studentId){
+                    $watchReminder->getWatchPublish($studentId, $stationId, $roomId);
                 }
+
+//                $studentWatchController = new StudentWatchController();
+//                foreach ($watchNfcCodes as $watchNfcCode) {
+//                    $request['nfc_code'] = $watchNfcCode;
+//                    $studentWatchController->getStudentExamReminder($request, $stationId);
+//
+//                }
             } catch (\Exception $ex) {
                 \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
             }
+
+
         } else {
             // 考站排 一个学生
             $examQenens = $examQenenModel->where('exam_id', '=', $examId)
@@ -823,9 +830,10 @@ class ApiController extends CommonController
 
 
             try {
-                $studentWatchController = new StudentWatchController();
-                $request['nfc_code'] = $watch['nfc_code'];
-                $studentWatchController->getStudentExamReminder($request, $stationId);
+//                $studentWatchController = new StudentWatchController();
+//                $request['nfc_code'] = $watch['nfc_code'];
+//                $studentWatchController->getStudentExamReminder($request, $stationId);
+                $watchReminder->getWatchPublish($examQenens->student_id, $stationId, $roomId);
             } catch (\Exception $ex) {
                 \Log::debug('准备考试按钮2', [$examQenens->student_id, $stationId, $roomId]);
             }
@@ -871,9 +879,10 @@ class ApiController extends CommonController
                 $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
                 //TODO 废弃旧方法
                 try {
-                    $studentWatchController = new StudentWatchController();
-                    $request['nfc_code'] = $watchData->nfc_code;
-                    $studentWatchController->getStudentExamReminder($request, $stationId);
+//                    $studentWatchController = new StudentWatchController();
+//                    $request['nfc_code'] = $watchData->nfc_code;
+//                    $studentWatchController->getStudentExamReminder($request, $stationId);
+                    $watchReminder->getWatchPublish($examQueue->student_id, $stationId, $roomId);
                 } catch (\Exception $ex) {
                     \Log::debug('准备考试按钮3', [$examQueue->student_id, $stationId, $roomId]);
                 }
