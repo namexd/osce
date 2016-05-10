@@ -141,13 +141,13 @@ class AutomaticPlanArrangementController extends CommonController
         $exam = \Modules\Osce\Entities\Exam::doingExam($examId);
 
         ExamPlan::where('exam_id', $examId)->delete();
-        try {
+//        try {
             $smartArrangeRepository->store($exam);
 
             return redirect()->route('osce.admin.exam.getIntelligence', ['id' => $examId]);
-        } catch (\Exception $ex) {
-            return redirect()->back()->withErrors($ex->getMessage());
-        }
+//        } catch (\Exception $ex) {
+//            return redirect()->back()->withErrors($ex->getMessage());
+//        }
     }
 
     /**
