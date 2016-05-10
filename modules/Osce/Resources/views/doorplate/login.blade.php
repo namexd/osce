@@ -95,7 +95,7 @@
 	var m='';
 	$('#examId').change(function(){
 		var examId= $.trim($(this).val())
-		var opstr='<option value="1">请选择考场</option>';
+		var opstr='<option value="">请选择考场</option>';
 		if(examId!=''){
 
 			$.ajax({
