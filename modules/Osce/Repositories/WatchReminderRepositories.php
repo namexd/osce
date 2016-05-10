@@ -127,6 +127,26 @@ class WatchReminderRepositories  extends BaseRepository
      */
     public function getRoomExamReminder($exam,$student,$examScreening){
 
+
+        //查看腕表是否绑定
+        $watchStatus = $this->getWatchStatus();
+        if($watchStatus->status = 0){
+            $data = [
+                'code' => -1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                'willStudents' => '',
+                'estTime' => '',
+                'willRoomName' => '',
+                'roomName' =>'',
+                'nextExamName' =>'',
+                'surplus' =>'',
+                'score' =>'',
+                'title' =>'腕表未绑定',
+            ];
+            $this->publishmessage($watchStatus->code,$data,'success');
+            return response()->json(
+                ['nfc_code' => $watchStatus->code, 'data' => $data]);
+        }
+        
         //根据exam、student对象查找队列数据
         $queueList  =   $this->getExamStudentQueueList($exam,$student,$examScreening);
 
@@ -171,6 +191,16 @@ class WatchReminderRepositories  extends BaseRepository
         }
 
 
+    }
+
+
+
+    private  function getWatchStatus(){
+        //根据当前学生获取NFC——code
+        $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch',function($watch){
+            $watch->on('watch.id','=','watch_log.watch_id');
+        })->first();
+        return  $code;
     }
 
     public function getNoticeStauts($queue,$queueList)
