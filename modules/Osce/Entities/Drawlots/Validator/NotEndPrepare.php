@@ -30,7 +30,7 @@ class NotEndPrepare implements DrawValidatorInterface
         $stations = $this->station->site($examId, $roomId, $screenId);
         $stationIds = $stations->pluck('station_id')->toArray();
 
-        /*
+
         $ready = ExamStationStatus::whereIn('station_id', $stationIds)
             ->whereExamScreeningId($screenId)
             ->whereStatus(1)
@@ -45,16 +45,16 @@ class NotEndPrepare implements DrawValidatorInterface
             }
         } elseif ($ready < count($stationIds)) {
             throw new \Exception('上场考试未完成，请稍后签到', -14);
-        } */
+        }
 
         //直接去exam_station_status表中寻找同场次有没有状态值为4的
-        if (ExamStationStatus::whereIn('station_id', $stationIds)
-            ->whereExamScreeningId($screenId)
-            ->whereStatus(4)
-            ->first()
-        ) {
-            throw new \Exception('上场考试未完成，请稍后签到', -13);
-        }
+//        if (ExamStationStatus::whereIn('station_id', $stationIds)
+//            ->whereExamScreeningId($screenId)
+//            ->whereStatus(4)
+//            ->first()
+//        ) {
+//            throw new \Exception('上场考试未完成，请稍后签到', -13);
+//        }
 
         return true;
     }
