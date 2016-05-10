@@ -645,8 +645,8 @@ class ApiController extends CommonController
             'station_id' => 'required|integer',// 考站ID
         ]);
 
-        $examId = $request->get('examId');
-        $stationId = $request->get('stationId');
+        $examId = $request->get('exam_id');
+        $stationId = $request->get('station_id');
 
         try {
             $examScreeningModel = new ExamScreening();
@@ -657,9 +657,6 @@ class ApiController extends CommonController
                 //获取最近一场考试
                 $examScreening = $examScreeningModel->getNearestScreening($examId);
             }
-
-            //$exam = $examScreening->ExamInfo;
-
 
             $unExamQueues = ExamQueue::where('status', '<>', 3)
                 ->where('exam_id', '=', $examId)
@@ -676,52 +673,6 @@ class ApiController extends CommonController
                     $this->success_data('', 2, '已考完')
                 );
             }
-
-            /*
-            if ($exam->sequence_mode == 1) {
-                //若果是考场模式
-                //room_station
-                $roomStation = RoomStation::where('station_id', '=', $stationId)->first();
-
-                $roomId = $roomStation->room_id;
-
-                $flowRoom = ExamFlowRoom::where('room_id', '=', $roomId)
-                    ->where('exam_id', '=', $examId)
-                    ->first();
-                $serialnumber = $flowRoom->serialnumber;
-
-            } else {
-                //若果是考站
-                $flowStation = ExamFlowStation::where('station_id', '=', $stationId)
-                    ->where('exam_id', '=', $examId)
-                    ->first();
-                $serialnumber = $flowStation->serialnumber;
-            }
-
-            $count = ExamQueue::where('serialnumber', '=', $serialnumber)
-                ->where('status', '=', 3)   
-                ->where('exam_id', '=', $examId)
-                ->where('exam_screening_id', '=', $examScreening->id)
-                ->count();
-    
-            $screeningTotal = ExamPlan::where('exam_id', '=', $examId)
-                ->where('exam_screening_id', '=', $examScreening->id)
-                ->groupBy('student_id')->count();
-            $absentTotal = ExamAbsent::where('exam_id', '=', $examId)
-                ->where('exam_screening_id', '=', $examScreening->id)
-                ->count();
-
-            //如果  场次人数 <= 当前流程已考人数+缺考人数 为 未考完；反之  已考完
-            if ($screeningTotal <= $count + $absentTotal) {
-                return response()->json(
-                    $this->success_data('', 1, '未考完')
-                );
-            } else {
-                return response()->json(
-                    $this->success_data('', 2, '已考完')
-                );
-            }
-            */
         } catch (\Exception $ex) {
             return response()->json(
                 $this->fail(new \Exception('查询是否考完失败', -2))
