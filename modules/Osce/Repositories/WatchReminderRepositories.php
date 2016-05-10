@@ -142,6 +142,7 @@ class WatchReminderRepositories  extends BaseRepository
             //待考
             case 0:
                     $this->getWaitings();
+
                     break;
             //通知去考场
             case 1:
@@ -150,14 +151,17 @@ class WatchReminderRepositories  extends BaseRepository
             //抽签
             case 2:
                     $this->getchoose();
+
                     break;
             //开始考试
             case 3:
                     $this-> getStartExam();
+
                     break;
             //结束考试
             case 4:
                     $this->endExam();
+
                     break;
             default:
                     throw new \Exception('未定义的腕表状态');
@@ -415,6 +419,7 @@ class WatchReminderRepositories  extends BaseRepository
              ->where('status','=',3)
              ->first();
 
+
         //判定当前房间下考站是否都有空（同进同出）
         $stationStatus = ExamQueue::where('exam_id','=',$exam->id)
             ->where('exam_screening_id','=',$this->examScreening->id)
@@ -432,7 +437,6 @@ class WatchReminderRepositories  extends BaseRepository
             ->whereRaw("UNIX_TIMESTAMP(begin_dt) < UNIX_TIMESTAMP('$time')")
             ->orderBy('begin_dt','asc')
             ->count();
-
         $willStudents = 0;
         if($studentFront < $stationNum){
             \Log::info('腕表推送出现等待推送中有前面学生小于考站数量的情况');
@@ -459,31 +463,14 @@ class WatchReminderRepositories  extends BaseRepository
 
         //获取当前场次老师是否准备好，判断是否通知去考场
 //        $ScreenStatus = $this->getScreenStatus();
-
-
-        //判断当前考生当前考试场次的老师是否准备好
-        if(1){
-            //提示当前同组考生
-        }else{
-            //没有准备好
-        }
         //获取将要去的考场
         $room = Room::find($this->nowQueue->room_id);
+        $roomInfo = $this->getStudentNextExam();
         if($this->exam->same_time == 1){ //判断考试是否要求学生同进同出
             if($stationStatus->isEmpty()){
                 //判断学生当前在队列的位置
                 if($studentFront < $stationNum){
-                    if(!is_null($studentFinishExam)){
-                        $data['code'] =5;  // 侯考状态（对应界面：请前往下一教室）
-                        $data['roomName'] =$room->name;
-                        $data['title'] ='上一场考试已完成,请进入下一考场'.$room->name;
-
-                    }else{
-                        $data['code'] =2;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-                        $data['willRoomName'] =$room->name;
-                        $data['title'] ='请进入考场'.$room->name;
-                    }
-
+                   $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
                 }else{
                     $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
                     $data['willStudents'] =$willStudents;
@@ -491,22 +478,13 @@ class WatchReminderRepositories  extends BaseRepository
                     $data['title'] ='前面还有多少考生';
                 }
 
+            }else{
+                $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
             }
-
         }else{
             if(count($stationStatus)< $stationNum){ //判定房间考站是不是有空
-
                 if($studentFront == 0){ //判定当前学生是不是第一个
-                    if(!is_null($studentFinishExam)){
-                        $data['code'] =5;  // 侯考状态（对应界面：请前往下一教室）
-                        $data['roomName'] =$room->name;
-                        $data['title'] ='上一场考试已完成,请进入下一考场'.$room->name;
-                    }else{
-                        $data['code'] =2;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-                        $data['willRoomName'] =$room->name;
-                        $data['title'] ='请进入考场'.$room->name;
-                    }
-
+                    $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
                 }else{
                     $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
                     $data['willStudents'] =$willStudents;
@@ -530,6 +508,29 @@ class WatchReminderRepositories  extends BaseRepository
             ['nfc_code' => $code->code, 'data' => $data, 'message' => 'success']
         );
     }
+    //获取下一场考试信息
+    private function getStudentNextExam(){
+        $NextQueue = ExamQueue::leftJion('room','room.id','exam_queue.room_id')
+            ->where('exam_queue.exam_id','=',$this->exam->id)
+            ->where('exam_queue.exam_screening_id','=',$this->examScreening->id)
+            ->where('exam_queue.status','=',0)
+            ->oderBy('exam_queue.begin_dt','asc')
+            ->first();
+        return $NextQueue;
+    }
+    //判断考生是否有完成的考试 是否提示去下一场
+    private  function getStudentFinishExam($studentFinishExam,$roomInfo,$room){
+        if(!is_null($studentFinishExam)){
+            $data['code'] =5;  // 侯考状态（对应界面：请前往下一教室）
+            $data['roomName'] =$roomInfo->name;
+            $data['title'] ='上一场考试已完成,请进入下一考场'.$roomInfo->name;
+        }else{
+            $data['code'] =2;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+            $data['willRoomName'] =$room->name;
+            $data['title'] ='请进入考场'.$room->name;
+        }
+    }
+
 
 
     /**
