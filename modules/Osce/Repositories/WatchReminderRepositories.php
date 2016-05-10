@@ -277,6 +277,7 @@ class WatchReminderRepositories  extends BaseRepository
         //获取已经考完的队列集合
         $queue  =   $queueList->where('status',3);
 
+
         //判断是否考完
         if(count($queueList) == count($queue)){
             //如果是，返回 false
@@ -284,7 +285,7 @@ class WatchReminderRepositories  extends BaseRepository
             return false;
         }else{
             //不是，待考
-
+            \Log::info('学生队列',[$queueList]);
             $queue = $queueList->where('status',0);
         }
         //初始化当前队列
