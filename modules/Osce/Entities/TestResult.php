@@ -293,13 +293,19 @@ class TestResult extends CommonModel
         {
             foreach ($arr as $item)
             {
+                \Log::info('特殊评分项解析元素',[$item]);
                 $list [] = [
-                    'subject_id'        => $item['subject_id'],
-                    'special_score_id'  => $item['id'],
-                    'score'             => $item['subtract'],
+//                    'subject_id'        => $item['subject_id'],
+//                    'special_score_id'  => $item['id'],
+//                    'score'             => $item['subtract'],
+                    'subject_id'        =>  $item   -> subject_id,
+                    'special_score_id'  =>  $item   -> id,
+                    'score'             =>  $item   -> subtract
                 ];
             }
         }
+
+        \Log::debug('特殊评分项结果',[$list]);
         return $list;
     }
 
