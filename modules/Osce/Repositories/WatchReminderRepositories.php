@@ -457,6 +457,13 @@ class WatchReminderRepositories  extends BaseRepository
         //获取当前场次老师是否准备好，判断是否通知去考场
 //        $ScreenStatus = $this->getScreenStatus();
 
+
+        //判断当前考生当前考试场次的老师是否准备好
+        if(1){
+            //提示当前同组考生
+        }else{
+            //没有准备好
+        }
         //获取将要去的考场
         $room = Room::find($this->nowQueue->room_id);
         if($this->exam->same_time == 1){ //判断考试是否要求学生同进同出
