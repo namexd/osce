@@ -166,6 +166,17 @@ abstract class AbstractSmartArrange implements SmartArrangeInterface
         }
     }
 
+    /**
+     * 新的保存order数据
+     * @access public
+     * @param $exam
+     * @return mixed
+     * @throws \Exception
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-10
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function newSaveStudentOrder($exam)
     {
         /*
@@ -208,7 +219,7 @@ abstract class AbstractSmartArrange implements SmartArrangeInterface
             //将数据写入数据表中
 
             return ExamOrder::insert($studentOrderData);
-            
+
         } catch (\Exception $ex) {
             throw $ex;
         }
