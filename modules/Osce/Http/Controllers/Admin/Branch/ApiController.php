@@ -782,6 +782,7 @@ class ApiController extends CommonController
             // todo  准备好后调用腕表接口
 
             try {
+                \Log::alert('老师准备的学生id',$studentIds);
 
                 foreach($studentIds as $studentId){
                     $watchReminder->getWatchPublish($studentId, $stationId, $roomId);
@@ -879,6 +880,7 @@ class ApiController extends CommonController
                 $watchData = Watch::where('id', '=', $examScreeningStudentData->watch_id)->first();
                 //TODO 废弃旧方法
                 try {
+                    \Log::alert('老师准备的学生id  2',$examQueue->student_id);
 //                    $studentWatchController = new StudentWatchController();
 //                    $request['nfc_code'] = $watchData->nfc_code;
 //                    $studentWatchController->getStudentExamReminder($request, $stationId);
