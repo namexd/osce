@@ -528,6 +528,7 @@ class WatchReminderRepositories  extends BaseRepository
 
 
             }else{
+                \Log::alert('学生前面人数',[$studentFront,$stationNum ,count($stationStatus),$this->student->name]);
                 $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
                 $data['willStudents'] =$willStudents;
                 $data['willRoomName'] =$room->name;
