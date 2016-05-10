@@ -299,7 +299,7 @@ class TestResult extends CommonModel
                 $list [] = [
                     'subject_id'        => $item['subject_id'],
                     'special_score_id'  => $item['id'],
-                    'score'             => $item['subtract'],
+                    'score'             => $item['score'],
 //                    'subject_id'        =>  $item   -> subject_id,
 //                    'special_score_id'  =>  $item   -> id,
 //                    'score'             =>  $item   -> subtract
