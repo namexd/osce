@@ -69,4 +69,28 @@ class PadLogin
             ->distinct()
             ->get();
     }
+
+    /**
+     * 为集合做唯一处理
+     * @access public
+     * @param $collection
+     * @param string $field
+     * @return mixed
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-08
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function wipeEqual($collection, $field = 'exam_id')
+    {
+        $array = [];
+
+        foreach ($collection as $item) {
+            if (!is_null($item)) {
+                $array[$item->$field] = $item;
+            }
+        }
+
+        return collect($array)->values();
+    }
 }

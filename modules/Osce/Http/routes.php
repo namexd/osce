@@ -530,12 +530,13 @@ Route::get('test/test', function(Redis $redis) {
 //	$a = collect([1,2,3]);
 //	$b = collect([2,3,4]);
 	$a = [
-		'code' => 1,
-		'message' => 'sucess',
-		'data' => ['成功，应该去XXX']
+		'1' => 123,
+		'3' => 234
 	];
 
-	dd(json_encode($a));
+	$b = collect($a);
+
+	dd($b->values());
 
 });
 
