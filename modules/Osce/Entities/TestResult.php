@@ -103,10 +103,12 @@ class TestResult extends CommonModel
             {
                 //保存成绩评分
                 $ExamResultId = $testResult->id;        //获取ID
+                \Log::debug('保存考试数据',[$scoreData,$ExamResultId]);
                 //保存考试，考核点分数详情
                 $this->getSaveExamEvaluate($scoreData, $ExamResultId);
 
                 //保存考试，特殊评分项 实际扣分详情 TODO: Zhoufuxiang
+                \Log::info('特殊评分项保存前记录',[$specialScoreData,$ExamResultId]);
                 $this->getSaveSpecialScore($specialScoreData, $ExamResultId);
                 \Log::debug('特殊评分项',[$specialScoreData]);
                 //保存语音 图片
