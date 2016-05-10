@@ -268,6 +268,7 @@ class WatchReminderRepositories  extends BaseRepository
         }
 
         //获取是否有一条已经抽签的考试
+        \Log::info('获取状态为1队列前数据监视',[$queueList]);
         $queue  =   $this->queueWhere($queueList,'status',1);
 
         \Log::debug('状态为1的队列',[$queue]);
@@ -279,7 +280,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         //获取已经考完的队列集合
         $queue  =   $this->queueWhere($queueList,'status',3);
-
+        \Log::debug('状态为3的队列',[$queue]);
 
         //判断是否考完
         if(count($queueList) == count($queue)){
