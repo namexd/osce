@@ -496,15 +496,13 @@ class ApiController extends CommonController
                     'stationId' => $ExamInfo['StationId'],
                     'examId'    => $ExamInfo['ExamId'],
                     'userId'    => $user->id,
-                    'studentId'    => $ExamInfo['StudentId'],
                 );
-            } else {
+            }else {
                 $data = array(
                     'status'=>0,
                     'info'=>$ExamInfo
                 );
             }
-
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
