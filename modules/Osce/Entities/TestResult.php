@@ -54,22 +54,34 @@ class TestResult extends CommonModel
      * @throws \Exception
      */
     private function groupResultScore($scoreJsonOb){
+        $score      =   [];
+        $special    =   [];
         foreach($scoreJsonOb as $option)
         {
             \Log::info('PAD提交过来的分数json对象',[$option]);
-            exit();
-            if($option)
+            if($option->tag=='normal')
             {
-
+                $score[]    =   $option;
+            }
+            else
+            {
+                $special[]  =   $option;
             }
         }
+        return [
+            'score'     =>  $score,
+            'special'   =>  $special,
+        ];
     }
     public function addTestResult($data,$score)
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         $score  =   json_decode($score);
-        $specialScore   =   [];
+        $groupData   =   $this->groupResultScore($score);
+
+        $score          =   $groupData['score'];
+        $specialScore   =   $groupData['special'];
         try {
             //判断成绩是否已提交过
             $ExamResult= $this->getRemoveScore($data);
@@ -244,7 +256,8 @@ class TestResult extends CommonModel
     private function  getExamResult($score)
     {
         $list = [];
-        $arr = json_decode($score, true);
+        //$arr = json_decode($score, true);//todo:罗海华 2016-05-10 调试 提交成绩变更
+        $arr    =   $score;
         foreach ($arr as $item) {
             foreach ($item['test_term'] as $str)
             {
@@ -270,7 +283,8 @@ class TestResult extends CommonModel
     private function getSpecialScore($specialScores)
     {
         $list = [];
-        $arr = json_decode($specialScores, true);
+        //$arr = json_decode($specialScores, true);//todo:罗海华 2016-05-10 调试 提交成绩变更
+        $arr    =   $specialScores;
         \Log::debug('特殊评分项解析',[$arr]);
         if(!empty($arr))
         {
