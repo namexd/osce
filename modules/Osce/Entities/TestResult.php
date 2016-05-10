@@ -69,6 +69,7 @@ class TestResult extends CommonModel
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         $score  =   json_decode($score);
+        $data   =   $this->groupResultScore($score);
         $specialScore   =   [];
         try {
             //判断成绩是否已提交过
