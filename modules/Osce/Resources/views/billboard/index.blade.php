@@ -5,8 +5,8 @@
   <style>
     #area{
       font-family: 黑体;
-      width: 683px;
-      height: 513px;
+      width: 1050px;
+      height: 1680px;
       border: 1px solid;
     }
     #top{
@@ -30,9 +30,9 @@
     }
     #body div{
       height: 20%;
-      padding-top: 20px;
+      padding-top: 80px;
       margin-left: 60px;
-      font-size: 25px;
+      font-size: 35px;
     }
     #exam_station{
       display: block;
@@ -46,10 +46,14 @@
     #student{
       font-size: 30px;
     }
-    #bottom{
-      margin-top: 35px;
-      height: 10%;
-      width: 100%;
+    #pic{
+      position: absolute;
+      bottom: 0;
+      right:0;
+    }
+    #background{
+      position: absolute;
+      bottom: 0;
     }
   </style>
   <script src="{{asset('osce/admin/plugins/js/jquery-2.1.1.min.js')}}"></script>
@@ -90,10 +94,10 @@
 <div id="area">
   <input type="hidden" id="exam_id" value="{{$data['exam_id']}}">
   <input type="hidden" id="station_id" value="{{$data['station_id']}}">
-  <div id="top">
-    <div id="top_img"><img src="{{asset('osce/images/uuz.png')}}" width="9px" height="14px" align="center"></div>
-    <div id="top_title">2015年度OSCE考试第3期</div>
-  </div>
+  {{--<div id="top">--}}
+    {{--<div id="top_img"><img src="{{asset('osce/images/uuz.png')}}" width="9px" height="14px" align="center"></div>--}}
+    {{--<div id="top_title">2015年度OSCE考试第3期</div>--}}
+  {{--</div>--}}
   <div id="body">
     <div class="title">
       <span id="exam_station">{{$data['station_name']}}</span>
@@ -109,11 +113,15 @@
     <div class="title">
       <span>病例：</span>
       <span id="case">{{$data['case_name']}}</span>
-      <div id="description">{{$data['case_description']}}</div>
+      <div id="description" style="margin-left: 126px;min-height: 60px;">{{$data['case_description']}}</div>
     </div>
+
   </div>
-  <div id="bottom">
+  <div id="pic">
     <img src="{{asset('osce/images/u4.png')}}" width="135px" height="53px" align="right">
+  </div>
+  <div id="background">
+    <img src="{{asset('osce/images/bg_02.png')}}" align="bottom">
   </div>
 </div>
 </body>
