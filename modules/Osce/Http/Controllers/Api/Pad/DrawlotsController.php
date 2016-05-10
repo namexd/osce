@@ -667,6 +667,7 @@ class DrawlotsController extends CommonController
             //获取推送给腕表时需要的参数
             $params = $huaxiDrawlots->getParams();
             \Log::info('推送给腕表的数据', $params);
+            \Log::info('推送给pad的数据', $student);
             //将数据推送给腕表
             try {
                 $studentWatchController = new StudentWatchController();
