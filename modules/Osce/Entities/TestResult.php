@@ -300,6 +300,8 @@ class TestResult extends CommonModel
                 ];
             }
         }
+
+        \Log::debug('特殊评分项结果',[$list]);
         return $list;
     }
 
