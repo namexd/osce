@@ -151,7 +151,7 @@ if(!empty($errorsInfo)){
                 data: {'room_id':{{$room_id}},'exam_id':{{$exam_id}},'data':{{count($data)}},'screen_id':{{$screen_id}}},
                 success: function(msg){
 
-                    if(msg[0].student_name){
+                    if(msg[0]){
                         $(msg).each(function(i,k){
                             if(k.student_name)
                             opstr += '<span>'+k.student_name+'</span>　';
@@ -168,7 +168,7 @@ if(!empty($errorsInfo)){
                 url: "{{route('osce.doorplate.getnextexaminee')}}",
                 data: {'room_id':{{$room_id}},'exam_id':{{$exam_id}},'data':{{count($data)}},'screen_id':{{$screen_id}}},
                 success: function(msg){
-                    if(msg[0].student_name){
+                    if(msg[0]){
                         $(msg).each(function(i,k){
                             if(k.student_name)
                             opst += '<span>'+k.student_name+'</span>　';
