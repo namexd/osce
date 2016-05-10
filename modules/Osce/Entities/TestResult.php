@@ -294,14 +294,17 @@ class TestResult extends CommonModel
             foreach ($arr as $item)
             {
                 \Log::info('特殊评分项解析元素',[$item]);
+                //$item   =   json_decode($item,true);
+                \Log::info('特殊评分项解析json元素',$item);
                 $list [] = [
-//                    'subject_id'        => $item['subject_id'],
-//                    'special_score_id'  => $item['id'],
-//                    'score'             => $item['subtract'],
-                    'subject_id'        =>  $item   -> subject_id,
-                    'special_score_id'  =>  $item   -> id,
-                    'score'             =>  $item   -> subtract
+                    'subject_id'        => $item['subject_id'],
+                    'special_score_id'  => $item['id'],
+                    'score'             => $item['subtract'],
+//                    'subject_id'        =>  $item   -> subject_id,
+//                    'special_score_id'  =>  $item   -> id,
+//                    'score'             =>  $item   -> subtract
                 ];
+
             }
         }
 
