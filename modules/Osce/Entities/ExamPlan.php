@@ -74,6 +74,11 @@ class ExamPlan extends CommonModel
         return $query->Join('student', 'exam_plan.student_id', '=', 'student.id');
     }
 
+    public function scopeScreening($query)
+    {
+        return $query->join('exam_screening', $this->table . '.exam_screening_id', '=', 'exam_screening.id');
+    }
+
 
     /**
      *  智能排考
