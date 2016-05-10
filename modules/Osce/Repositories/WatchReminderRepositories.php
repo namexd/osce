@@ -286,7 +286,7 @@ class WatchReminderRepositories  extends BaseRepository
         }else{
             //不是，待考
             \Log::info('学生队列',[$queueList]);
-            $queue = $queueList->where('status','=',0);
+            $queue = $queueList->where('status',0);
             \Log::info('学生状态为0的队列',[$queue]);
 
         }
