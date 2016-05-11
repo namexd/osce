@@ -200,11 +200,11 @@ class TestResult extends CommonModel
         foreach($score as $priont)
         {
             \Log::info('提交普通成绩校验-提交的考核点数据',[$priont]);
-            $scoreList[$priont['id']] =   $priont;
+            $scoreList[$priont['standard_item_id']] =   $priont;
             foreach($priont['test_term'] as $option)
             {
                 \Log::info('提交普通成绩校验-提交的考核项数据',[$option]);
-                $scoreList[$option['id']] =   $option;
+                $scoreList[$option['standard_item_id']] =   $option;
             }
         }
 
