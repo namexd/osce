@@ -558,7 +558,6 @@ class WatchReminderRepositories  extends BaseRepository
                         $data['willRoomName'] =$room->name;
                         $data['title'] ='前面还有多少考生';
                     }
-
                 }
 
             }else{
@@ -615,7 +614,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         if(!is_null($studentFinishExam)){
             $data['code'] =5;  // 侯考状态（对应界面：请前往下一教室）
-            $data['roomName'] =$roomInfo->name;
+            $data['nextExamName'] =$roomInfo->name;
             $data['title'] ='上一场考试已完成,请进入下一考场'.$roomInfo->name;
         }else{
             $data['code'] =2;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
