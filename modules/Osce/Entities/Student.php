@@ -578,7 +578,7 @@ class Student extends CommonModel
     }
 
     /**
-     * 考生身份验证
+     * 获取学生信息
      * @param $watch_id
      * @return bool
      */
