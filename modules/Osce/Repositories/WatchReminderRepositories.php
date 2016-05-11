@@ -619,8 +619,8 @@ class WatchReminderRepositories  extends BaseRepository
             'code' => 3, // 抽签状态（对应界面：请到XX考站）
             'willStudents' => '',
             'estTime' => '',
-            'willRoomName' => $studentStationName,
-            'roomName' =>'',
+            'willRoomName' => '',
+            'roomName' =>$studentStationName,
             'nextExamName' =>'',
             'surplus' =>'',
             'score' =>'',
