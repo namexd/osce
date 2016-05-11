@@ -32,11 +32,11 @@
       height: 20%;
       padding-top: 80px;
       margin-left: 60px;
-      font-size: 35px;
+      font-size: 60px;
     }
     #exam_station{
       display: block;
-      font-size: 35px;
+      font-size: 60px;
       margin-right: 60px;
       text-align: center;
     }
@@ -44,7 +44,7 @@
       color: red;
     }
     #student{
-      font-size: 30px;
+      font-size: 60px;
     }
     #pic{
       position: absolute;
@@ -113,7 +113,7 @@
     <div class="title">
       <span>病例：</span>
       <span id="case">{{$data['case_name']}}</span>
-      <div id="description" style="margin-left: 126px;min-height: 60px;">{{$data['case_description']}}</div>
+      <div id="description" style="margin-left: 126px;min-height: 60px;">{{$data['case_description']}}   指定响应回来的数据指定响应回来的数据指定响应回来的数据指定响应回来的数据指定响应回来的数据指定响应回来的数据指定响应回来的数据指定响应回来的数据指定响应回来的数据指定响应回来的数据指定响应回来的数据指定响应回来的数据指定响应回来的数据</div>
     </div>
 
   </div>

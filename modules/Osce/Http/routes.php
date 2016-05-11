@@ -337,7 +337,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('station-list',['uses'=>'DrawlotsController@getStationList','as'=>'osce.pad.getStationList']);  //登陆之后给予考站信息
 		Route::get('change-status',['uses'=>'PadController@getChangeStatus','as'=>'osce.admin.PadController.getChangeStatus']);
 		Route::get('next-student',['uses'=>'DrawlotsController@nextStudent','as'=>'osce.pad.nextStudent']);  //下一个考生
-		Route::post('drawlots',['uses'=>'DrawlotsController@postDrawlots','as'=>'osce.pad.postDrawlots']);  //下一个考生
+		Route::post('drawlots',['uses'=>'DrawlotsController@postDrawlots','as'=>'osce.pad.postDrawlots']);  //新抽签方法
 	});
 });
 
