@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities;
 use App\Entities\SysRoles;
 use App\Entities\SysUserRole;
 use Modules\Osce\Repositories\Common;
+use App\Repositories\Common as AppComm;
 use App\Entities\User;
 use Auth;
 use DB;
@@ -1046,18 +1047,87 @@ class Student extends CommonModel
 
     /**
      * 学生短信通知方式
-     * @author zhouqing
+     * @author zhouqiang
      * @time 2016-04-21
      */
-    public function sendSms($notice, $to, $url)
+    public function sendSms($notice,$to,$url)
     {
-        $sender = \App::make('messages.sms');
-//        $content = [];
-    
-        $content = view('osce::admin.systemManage.student_inform',$notice)->render();
-        foreach ($to as $mobile) {
-            $sender->send($mobile, $content. ' 【敏行医学】');
+        $timeArray  =   $notice->pluck('begin_dt');
+        $timeData   =   [];
+        foreach($timeArray as $time)
+        {
+            $timeData[] =   date('Y年m月d日H时i分',strtotime($time));
         }
+        $smsContent = view('osce::admin.systemManage.student_inform',['notice'=>$notice->first(),'timeData'=>$timeData])->render();
+
+        $smsContent =   $this->linshi($smsContent);
+
+        try
+        {
+
+            AppCommon::sendSms($to,$smsContent,$this   ->  getEmsConfig());
+//            $path   =   public_path('osce').'/sms.txt';
+//            $f     =   fopen($path,'a');
+//            fwrite($f,$smsContent);
+//            fwrite($f,"\r\n");
+//            fclose($f);
+            //dd($path);
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+        return true;
+    }
+
+    /**
+     * 获取短信发送认证信息
+     * @access private
+     * @return array
+     *
+     * @version 3.6
+     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @date 2015-12-29 17:09
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     *
+     */
+    private function getEmsConfig(){
+        return [
+
+        ];
+    }
+
+    private function linshi($smsContent){
+        $ze =[
+            "2016年05月18日08时44分",
+            "2016年05月18日09时28分",
+            "2016年05月18日10时12分",
+            "2016年05月18日10时56分",
+            "2016年05月18日11时40分",
+            "2016年05月18日13时44分",
+            "2016年05月18日14时28分",
+            "2016年05月18日15时12分",
+            "2016年05月18日15时56分",
+            "2016年05月18日16时40分",
+            "2016年05月18日17时24分",
+        ];
+        $re=[
+            "2016年05月18日08时32分",
+            "2016年05月18日09时04分",
+            "2016年05月18日09时36分",
+            "2016年05月18日10时08分",
+            "2016年05月18日10时40分",
+            "2016年05月18日13时32分",
+            "2016年05月18日14时04分",
+            "2016年05月18日14时36分",
+            "2016年05月18日15时08分",
+            "2016年05月18日15时40分",
+            "2016年05月18日16时12分",
+        ];
+        //$str    =   '2016年5月18日09时28分';
+        //dd(preg_replace($str,$ze,));
+        $smsContent    =   str_replace($ze,$re,$smsContent);
+        return $smsContent;
     }
 
     /**
@@ -1135,7 +1205,7 @@ class Student extends CommonModel
      * @author zhouqing
      * @time 2016-04-21
      */
-    public function sendMsg($studentOpenid ,$url='')
+    public function sendMsg($examId ,$url='')
     {
         try {
 
@@ -1146,34 +1216,34 @@ class Student extends CommonModel
             }
             
             try {
+                $list   =   ExamOrder::where('exam_id','=',$examId)->with('student')->with('exam')->get();
+                $studentList    =   $list->groupBy('student_id');
+                foreach ($studentList as $studentId=>$value){
+                    $studentOrder    =   $value->first();
+                    if($sendType['student']['wechat'] == 1){
+                        $this->sendWechat($value, $studentOrder->student->mobile, $url);
+                    }
 
-            foreach ($studentOpenid as $value){
+//                    $str    =   '今天上午不慎将系统调试过程的短信发送给大家，造成误解，请大家谅解，正式的考试时间通知将在稍后发出。【敏行医学】';
+//                    $sender=\App::make('messages.sms');
+//                    $sender->send($value->student->mobile,$str);
 
+                    if($sendType['student']['sms'] == 1){
+                        $this->sendSms($value, $studentOrder->student->mobile, $url);
+                    }
 
-                if($sendType['student']['wechat'] == 1){
-
-                    $this->sendWechat($value,array_pluck($studentOpenid,'openid'), $url);
+//                    if($sendType['student']['mail'] == 1){
+//                        $this->sendEmail($studentList[$value->student->id], $value->student->email, $url);
+//                    }
+//
+//                    if($sendType['student']['mail'] == 1){
+//                        $this->sendPm($studentList[$value->student->id], $value->student->id, $url);
+//                    }
                 }
-
-                if($sendType['student']['sms'] == 1){
-                    $this->sendSms($value, array_pluck($studentOpenid,'mobile'), $url);
-                }
-
-                if($sendType['student']['mail'] == 1){
-                    $this->sendEmail($value, array_pluck($studentOpenid,'email'), $url);
-
-                }
-
-                if($sendType['student']['mail'] == 1){
-                    $this->sendPm($value, array_pluck($studentOpenid,'id'), $url);
-
-                }
-            }
 
                 return true;
-
             } catch (\Exception $ex) {
-
+                dd($ex);
             }
 
         } catch (\Exception $ex) {
