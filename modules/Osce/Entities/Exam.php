@@ -829,6 +829,8 @@ class Exam extends CommonModel
      */
     public function emptyData($id)
     {
+        $connection = DB::connection($this->connection);
+        $connection ->beginTransaction();
         try {
             //获得当前exam的实例
             $examObj = $this->findOrFail($id);
@@ -840,14 +842,40 @@ class Exam extends CommonModel
             $examResults      = ExamResult::whereIn('exam_screening_id', $examScreeningIds)->select('id')->get();
             $examResultIds    = $examResults->pluck('id');
 
-            //清除腕表使用记录，修改腕表使用状态
-            WatchLog::where('id','>',0)->delete();
-            Watch::where('id','>',0)->update(['status'=>0]);
+            //清除腕表使用记录
+            $watchLog = WatchLog::where('id','>',0)->get();
+            if(!$watchLog->isEmpty())
+            {
+                $watchLog = WatchLog::where('id','>',0)->delete();
+                if(!$watchLog){
+                    throw new \Exception('删除腕表使用记录失败！');
+                }
+            }
+            //修改腕表使用状态
+            $watchStatus = Watch::where('id','>',0)->get();
+            if(!$watchStatus->isEmpty())
+            {
+                $watchStatus = Watch::where('id','>',0)->update(['status'=>0]);
+                if(!$watchStatus){
+                    throw new \Exception('修改腕表状态失败！');
+                }
+            }
             //删除考试得分
             $examScores = ExamScore::whereIn('exam_result_id', $examResultIds)->get();
             if (!$examScores->isEmpty()) {
                 foreach ($examScores as $valueS) {
-                    $valueS->delete();
+                    if(!$valueS->delete()){
+                        throw new \Exception('删除考试得分失败！');
+                    }
+                }
+            }
+            //删除考试特殊评分项扣分
+            $examSpecialScore = ExamSpecialScore::whereIn('exam_result_id', $examResultIds)->get();
+            if (!$examSpecialScore->isEmpty()) {
+                foreach ($examSpecialScore as $valueSs) {
+                    if(!$valueSs->delete()){
+                        throw new \Exception('删除考试特殊评分项扣分失败！');
+                    }
                 }
             }
             //如果该考试已经完成，删除考试结果记录
@@ -915,18 +943,44 @@ class Exam extends CommonModel
                 }
             }
             //删除缺考
-            ExamAbsent::where('exam_id', '=', $id)->delete();
+            $examAbsent = ExamAbsent::where('exam_id', '=', $id)->get();
+            if(!$examAbsent->isEmpty()){
+                $examAbsent = ExamAbsent::where('exam_id', '=', $id)->delete();
+                if(!$examAbsent){
+                    throw new \Exception('删除缺考失败！');
+                }
+
+            }
             //删除考试队列
-            ExamQueue::where('exam_id', '=', $id)->delete();
+            $examQueue = ExamQueue::where('exam_id', '=', $id)->get();
+            if(!$examQueue->isEmpty())
+            {
+                $examQueue = ExamQueue::where('exam_id', '=', $id)->delete();
+                if(!$examQueue){
+                    throw new \Exception('删除考试队列失败！');
+                }
+            }
             //更改考生排序状态  TODO:（ExamOrder表中数据是在智能排考时添加进去的）
-            ExamOrder::where('exam_id', '=', $id)->update(['status' => 0]);     //TODO 更改状态为0（0为未绑定腕表）
+            $examOrder = ExamOrder::where('exam_id', '=', $id)->where('status', '<>', 0)->get();
+            if(!$examOrder->isEmpty())
+            {
+                $examOrder = ExamOrder::where('exam_id', '=', $id)->update(['status' => 0]);     //TODO 更改状态为0（0为未绑定腕表）
+                if(!$examOrder){
+                    throw new \Exception('修改考生排序状态 失败！');
+                }
+            }
             //更改考试状态
             $result = $this->where('id', '=', $id)->update(['status' => 0]);    //TODO 更改状态为0（0为未开考）
+            if(!$result){
+                throw new \Exception('修改考试状态 失败！');
+            }
 
-            return $result;
+            $connection->commit();
+            return true;
 
         } catch (\Exception $ex) {
-            return false;
+            $connection->rollBack();
+            return $ex->getMessage();
         }
     }
 
