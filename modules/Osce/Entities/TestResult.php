@@ -177,7 +177,7 @@ class TestResult extends CommonModel
         {
             throw new \Exception('找不到当前考站下的考试项目');
         }
-        $standard       =   $subject     ->  standards   ->  frist();
+        $standard       =   $subject     ->  standards   ->  first();
         if(is_null($standard))
         {
             throw new \Exception('找不到当前项目下的评分表');
