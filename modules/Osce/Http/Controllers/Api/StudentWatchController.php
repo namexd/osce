@@ -56,7 +56,7 @@ class StudentWatchController extends CommonController
 
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)
-            ->where('is_end', '=', 0)
+            ->whereIn('is_end', [0,1])
             ->orderBy('signin_dt', 'desc')
             ->first();
 
