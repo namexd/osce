@@ -616,7 +616,11 @@ class WatchReminderRepositories extends BaseRepository
         $code = $this->getWatchStatus();
         //根据考试和学生对象获取当前学生所属考站
         \Log::info('抽签获得的考站id',[$this->nowQueue->station_id]);
-        $studentStationName = Station::where('id', '=', $this->nowQueue->station_id)->first()->pluck('name');
+        if(is_null($this->nowQueue->station_id)){
+           \Log::alert('抽签失败',[$this->nowQueue]);
+            throw  new \Exception('抽签失败',-100);
+        }
+        $studentStationName = $this->nowQueue->station->name;
         \Log::info('抽签获取到的考站名',[$studentStationName]);
         $data = [
             'code' => 3, // 抽签状态（对应界面：请到XX考站）
