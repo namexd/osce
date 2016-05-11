@@ -207,6 +207,7 @@ class TestResult extends CommonModel
         \Log::info('提交普通成绩校验-评分表详情提交数据',[$score,$scoreList]);
         foreach($standardItems as $item)
         {
+            \Log::info('标准评分点数据',[$item]);
             if(!array_key_exists($item->id,$scoreList))
             {
                 if($item->id==0)
@@ -230,6 +231,7 @@ class TestResult extends CommonModel
                     }
                     else
                     {
+                        \Log::info('标准评分项数据(父级)',[$item->parent]);
                         throw new \Exception('考核点'.$item->parent->sort.'-'.$item->sort.'分数不合法,提交失败');
                     }
                 }
@@ -242,6 +244,7 @@ class TestResult extends CommonModel
                     }
                     else
                     {
+                        \Log::info('上限，标准评分项数据(父级)',[$item->parent]);
                         throw new \Exception('考核点'.$item->parent->sort.'-'.$item->sort.'分数不合法,提交失败');
                     }
                 }
