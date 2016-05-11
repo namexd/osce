@@ -178,7 +178,7 @@ class TestResult extends CommonModel
         {
             throw new \Exception('找不到考站安排');
         }
-
+        \Log::info('根据考站安排获取到的考试项目',[$ExamDraftInfo->subject]);
         return $ExamDraftInfo->subject;
     }
     //根据考试项目检查普通评分数据
@@ -188,6 +188,7 @@ class TestResult extends CommonModel
             throw new \Exception('找不到当前考站下的考试项目');
         }
         $standard       =   $subject     ->  standards   ->  first();
+        \Log::info('检查普通数据时查找到的当前评分表名',[$standard]);
         if(is_null($standard))
         {
             throw new \Exception('找不到当前项目下的评分表');
