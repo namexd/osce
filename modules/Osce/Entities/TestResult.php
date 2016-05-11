@@ -164,7 +164,7 @@ class TestResult extends CommonModel
             ->where('exam_draft.station_id', '=', $stationId)
             ->select(['exam_draft.id','exam_draft_flow.name','exam_screening.id','exam_draft.station_id','exam_draft.subject_id'])
             ->with('subject')
-            ->frist();
+            ->first();
         if(is_null($ExamDraftInfo))
         {
             throw new \Exception('找不到考站安排');
