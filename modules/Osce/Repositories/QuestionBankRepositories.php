@@ -544,16 +544,28 @@ class QuestionBankRepositories  extends BaseRepository
             {
                 $examScreening  = $examScreeningModel -> getNearestScreening($ExamInfo->id);
             }
-            $exam_screen_id = $examScreening->id;       //获取场次id
-            //根据监考老师的id和考试id，获取对应的考站id
-            $builder = $Exam->leftJoin('station_teacher', function($join){
-                $join -> on('station_teacher.exam_id', '=', 'exam.id');
-            })->groupBy('station_teacher.user_id')
-                ->where('exam.id',$ExamInfo->id)
-                ->where('station_teacher.user_id',$userId->id)
-                ->where('station_teacher.exam_screening_id',$exam_screen_id)
-                ->select('station_teacher.station_id');
-            $station_id = $builder->pluck('station_id');
+
+            if(!empty($exam_screen_id)){
+                $exam_screen_id = $examScreening->id;       //获取场次id
+                //根据监考老师的id和考试id，获取对应的考站id
+                $builder = $Exam->leftJoin('station_teacher', function($join){
+                    $join -> on('station_teacher.exam_id', '=', 'exam.id');
+                })->groupBy('station_teacher.user_id')
+                    ->where('exam.id',$ExamInfo->id)
+                    ->where('station_teacher.user_id',$userId->id)
+                    ->where('station_teacher.exam_screening_id',$exam_screen_id)
+                    ->select('station_teacher.station_id');
+                $station_id = $builder->pluck('station_id');
+            }else{
+                //根据监考老师的id和考试id，获取对应的考站id
+                $builder = $Exam->leftJoin('station_teacher', function($join){
+                    $join -> on('station_teacher.exam_id', '=', 'exam.id');
+                })->groupBy('station_teacher.user_id')
+                    ->where('exam.id',$ExamInfo->id)
+                    ->where('station_teacher.user_id',$userId->id)
+                    ->select('station_teacher.station_id');
+                $station_id = $builder->pluck('station_id');
+            }
             if(empty($station_id)){
                 throw new \Exception('你没有相关需要监考的考站');
             }
