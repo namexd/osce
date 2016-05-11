@@ -400,7 +400,7 @@ class InvigilatePadController extends CommonController
     public function postSaveExamResult(Request $request)
     {
         try {
-
+            \Log::info('提交成绩记录',$request->all());
             $this->validate($request, [
                 'score'             => 'required',
                 //'special'           => 'sometimes',
@@ -473,6 +473,7 @@ class InvigilatePadController extends CommonController
 
             /*********保存考试成绩**********/
             $TestResultModel  = new TestResult();
+
             $result = $TestResultModel->addTestResult($data, $score);
             if (!$result) {
                 throw new \Exception('成绩保存失败');
