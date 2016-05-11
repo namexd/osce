@@ -78,9 +78,8 @@ if(!empty($errorsInfo)){
 @section('content')
  <div class="box">
 
-    <h3 class="top white center">{{$msg['exam_name']}}
-        <a href="{{ route('osce.doorplate.doorplatestart')}}" id="top_img"><img src="{{asset('osce/images/uuz.png')}}" width="9px" height="14px" align="center"></a>
-
+    <h3 class="top white center">
+        {{$msg['exam_name']}}
     </h3>
         <div class="exam_msg">
             <dl>
