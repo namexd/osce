@@ -665,7 +665,7 @@ class DrawlotsController extends CommonController
             //获取推送给腕表时需要的参数
             $params = $huaxiDrawlots->getParams();
             \Log::info('推送给腕表的数据', $params);
-            \Log::info('推送给pad的数据', [$student]);
+
             //将数据推送给腕表
             try {
 //                $studentWatchController = new StudentWatchController();
@@ -676,6 +676,7 @@ class DrawlotsController extends CommonController
                 \Log::info('抽签中推送腕表失败', $this->request->input('uid'));
             }
             //将数据推送给pad端
+            \Log::info('推送给pad的数据', [$student, 'channel' => md5($_SERVER['HTTP_HOST']) . 'pad_message']);
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($student, 102, '抽签成功！')));
 
