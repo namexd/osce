@@ -410,17 +410,6 @@ class WatchReminderRepositories extends BaseRepository
         $drawlots = new DrawlotsRepository();
         $stationNum = count($drawlots->getStationNum($this->exam->id, $queue->room_id, $this->examScreening->id));
         \Log::alert('当前房间考站的数量', [$stationNum]);
-
-        //获取当前同组学生清单
-//        $studentQueueList = ExamQueue::where('exam_id','=',$exam->id)
-//            ->where('exam_screening_id','=',$this->examScreening->id)
-//            ->where('room_id','=',$this->room->id)
-//            ->where('status',0)
-//            ->orderBy('begin_dt','asc')
-//            ->take($stationNum)
-//            ->get();
-
-
         //查询当前学生是否已考过一个考场
         $studentFinishExam = $this->getStudentFinishRoom();
         //判定当前房间下考站是否都有空（同进同出）
@@ -626,7 +615,13 @@ class WatchReminderRepositories extends BaseRepository
         //根据当前学生获取NFC——code
         $code = $this->getWatchStatus();
         //根据考试和学生对象获取当前学生所属考站
-        $studentStationName = Station::where('id', '=', $this->nowQueue->station_id)->first()->pluck('name');
+        \Log::info('抽签获得的考站id',[$this->nowQueue->station_id]);
+        if(is_null($this->nowQueue->station_id)){
+           \Log::alert('抽签失败',[$this->nowQueue]);
+            throw  new \Exception('抽签失败',-100);
+        }
+        $studentStationName = $this->nowQueue->station->name;
+        \Log::info('抽签获取到的考站名',[$studentStationName]);
         $data = [
             'code' => 3, // 抽签状态（对应界面：请到XX考站）
             'willStudents' => '',
