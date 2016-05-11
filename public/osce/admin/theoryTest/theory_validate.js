@@ -31,7 +31,7 @@ function theory_validate(){
                         clearInterval(timer);
                     } else {
                         $.ajax({
-                            url:'/osce/api/invigilatepad/authentication?station_id='+stationId+'&teacher_id='+teacherId,
+                            url:'/osce/api/invigilatepad/authenticationtwo?station_id='+stationId+'&teacher_id='+teacherId,
                             type:'get',
                             cache:false,
                             dateType:'json',
