@@ -146,7 +146,6 @@ class WatchReminderRepositories  extends BaseRepository
             return response()->json(
                 ['nfc_code' => $watchStatus->code, 'data' => $data]);
         }
-        
         //根据exam、student对象查找队列数据
         $queueList  =   $this->getExamStudentQueueList($exam,$student,$examScreening);
 
@@ -419,20 +418,14 @@ class WatchReminderRepositories  extends BaseRepository
             'score' =>'',
             'title' =>'准备中....',
         ];
-
-        foreach($studentQueueList as $queueList){
             //根据学生获取NFC _code
-            $studentCode = WatchLog::where('student_id','=',$queueList->student_id)
-                            ->leftjoin('watch',function($watch){
-                                $watch->on('watch.id','=','watch_log.watch_id');
-                            })->select('code')->first();
+            $studentCode = $this->getWatchStatus();
 
-            $array[] = $studentCode->code;
-            $this->publishmessage($studentCode,$data,'success');
-        }
+
+            $this->publishmessage($studentCode->code,$data,'success');
 
         return response()->json(
-            ['nfc_code' => $array, 'data' => $data, 'message' => 'success']
+            ['nfc_code' => $studentCode->code, 'data' => $data, 'message' => 'success']
         );
     }
 
