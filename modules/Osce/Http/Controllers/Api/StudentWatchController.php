@@ -56,18 +56,22 @@ class StudentWatchController extends CommonController
 
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)
-            ->whereIn('is_end', [0,1])
+            ->where('is_end', 0)
             ->orderBy('signin_dt', 'desc')
             ->first();
-
-        //得到学生id
-        $studentId = $watchStudent->student_id;
-        $examId = Student::find($studentId);
-
+            if(!is_null($watchStudent)){
+                //得到学生id
+                $studentId = $watchStudent->student_id;
+                $examId = Student::find($studentId)->exam_id;
+            }else{
+                $studentId ='';
+                $examId ='';
+            }
+        
         //调用新的腕表方法
         $watch = new WatchReminderRepositories();
         try{
-           $watchStudentData = $watch ->getWatchPublish($examId->exam_id,$studentId, '', '');
+           $watchStudentData = $watch ->getWatchPublish($examId,$studentId,$watchNfcCode);
             
 //            return response()->json(
 //                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']

@@ -20,6 +20,7 @@ use Modules\Osce\Entities\QuestionBankEntities\ExamPaperExamStation;
 use Modules\Osce\Entities\Room;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestResult;
+use Modules\Osce\Entities\Watch;
 use Modules\Osce\Entities\WatchLog;
 use Modules\Osce\Repositories\BaseRepository;
 use Modules\Osce\Entities\Exam;
@@ -54,12 +55,14 @@ class WatchReminderRepositories extends BaseRepository
     protected $nowRoom;
     //当前场次
     protected $examScreening;
+    //腕表code
+    protected $code;
 
 
-    public function setInitializeData($exam, $student, $room, $station)
+    public function setInitializeData($exam, $student, $room, $station,$code)
     {
-
         $this->exam = $exam;
+        $this->code = $code;
         $this->student = $student;
         $this->room = $room;
         $this->station = $station;
@@ -93,11 +96,11 @@ class WatchReminderRepositories extends BaseRepository
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder($exam, $student, $room, $station)
+    public function getStudentExamReminder($exam, $student, $room, $station,$code)
     {
         try {
             //初始化
-            $this->setInitializeData($exam, $student, $room, $station);
+            $this->setInitializeData($exam, $student, $room, $station,$code);
             //dd($station);
             //判断考试模式
             if ($exam->sequence_mode == 1) {//考场模式
@@ -196,11 +199,15 @@ class WatchReminderRepositories extends BaseRepository
     private function getWatchStatus()
     {
         //根据当前学生获取NFC——code
-        $code = ExamScreeningStudent::leftJoin('watch', 'exam_screening_student.watch_id', '=', 'watch.id')
-            ->where('exam_screening_student.exam_screening_id', $this->examScreening->id)
-            ->where('exam_screening_student.student_id', $this->student->id)
-            ->select(['watch.code', 'watch.status'])
-            ->first();
+        if(is_null($this->code)){
+            $code = ExamScreeningStudent::leftJoin('watch', 'exam_screening_student.watch_id', '=', 'watch.id')
+                ->where('exam_screening_student.exam_screening_id', $this->examScreening->id)
+                ->where('exam_screening_student.student_id', $this->student->id)
+                ->select(['watch.code', 'watch.status'])
+                ->first();
+        }else{
+            $code =  Watch::where('code','=',$this->code)->first();
+        }
         return $code;
     }
 
@@ -789,14 +796,13 @@ class WatchReminderRepositories extends BaseRepository
         }
     }
 
-    public function getWatchPublish($examId,$studentId, $stationId, $roomId)
+    public function getWatchPublish($examId=null,$studentId=null, $stationId=null, $roomId=null,$code=null)
     {
-        \Log::info('测试数据',[1212]);
+
         $exam = Exam::doingExam($examId);  //拿到考试实例
         $student = null;
         $station = null;
         $room = null;
-        \Log::info('测试数据',[32342]);
         if (!is_null($studentId)) {
             $student = Student::find($studentId); //拿到考生实例
         }
@@ -809,7 +815,7 @@ class WatchReminderRepositories extends BaseRepository
             $room = Room::find($roomId);//拿到考场实例
         }
         \Log::debug('传送给腕表的数据', [$exam, $student, $room, $station]);
-        $this->getStudentExamReminder($exam, $student, $room, $station);
+        $this->getStudentExamReminder($exam, $student, $room, $station ,$code);
 
 //       return response()->json(
 //           ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
