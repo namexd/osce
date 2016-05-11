@@ -106,6 +106,7 @@ class TestResult extends CommonModel
             //todo:增加提交数据校验  20160512 01:02 luohaihua
             //获取当前考试当前场次当前考站下的考试项目
             $subject    =   $this->getSuject($examScreening->exam_id,$examScreening->id,$data['station_id']);
+
             //校验普通分数
             $this->checkScore($subject,$scoreData);
             //校验特殊分数
@@ -151,12 +152,19 @@ class TestResult extends CommonModel
     private function getSuject($examId,$examScreeningId,$stationId){
         //获取提交场次
         $ExamScreening  =   ExamScreening::find($examScreeningId);
+        \Log::debug('根据条件获取场次',[$ExamScreening]);
         if(is_null($ExamScreening))
         {
             throw new \Exception('场次不存在');
         }
         //获取提交阶段
         $gradation  =   ExamGradation::where('order','=',$ExamScreening->gradation_order)->where('exam_id','=',$examId)->first();
+        \Log::debug('根据条件获取阶段',[$gradation]);
+        if(is_null($gradation))
+        {
+            \Log::alert('找不到当前阶段');
+            throw new \Exception('找不到当前阶段');
+        }
         //获取当前考试当前阶段考站安排
         $ExamDraftInfo   =   ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
             ->where('exam_draft_flow.exam_id', '=', $examId)
@@ -165,10 +173,12 @@ class TestResult extends CommonModel
             ->select(['exam_draft.id','exam_draft_flow.name','exam_draft.station_id','exam_draft.subject_id'])
             ->with('subject')
             ->first();
+        \Log::info('根据条件获取到的考站安排情况',[$ExamDraftInfo]);
         if(is_null($ExamDraftInfo))
         {
             throw new \Exception('找不到考站安排');
         }
+
         return $ExamDraftInfo->subject;
     }
     //根据考试项目检查普通评分数据
