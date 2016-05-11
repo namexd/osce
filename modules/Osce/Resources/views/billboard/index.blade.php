@@ -9,10 +9,10 @@
     }
     #area{
       font-family: 微软雅黑;
-      color: #2A2E36;
       width: 1050px;
       height: 1680px;
       font-size: 60px;
+      color: #676a6c;
     }
     #body{
       padding-top: 100px;
@@ -96,7 +96,7 @@
     </div>
   </div>
   <div id="pic">
-    <img src="{{asset('osce/images/u4.png')}}" width="138px" height="55px" align="right">
+    <img src="{{asset('osce/images/u4.png')}}" width="100%" height="100%" align="right">
   </div>
   <div id="background">
     <img src="{{asset('osce/images/bg_02.png')}}" align="bottom">
