@@ -529,6 +529,7 @@ class WatchReminderRepositories  extends BaseRepository
         //获取将要去的考场
         $room = Room::find($this->nowQueue->room_id);
         $roomInfo = $this->getStudentNextExam();
+        $examtimes = date('H:i', (strtotime($this->nowQueue->begin_dt)));
         if($this->exam->same_time == 1){ //判断考试是否要求学生同进同出
             if($stationStatus->isEmpty()){
                 //判断学生当前在队列的位置
@@ -537,6 +538,7 @@ class WatchReminderRepositories  extends BaseRepository
 
                 }else{
                     $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                    $data['estTime'] =$examtimes;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
                     $data['willStudents'] =$willStudents;
                     $data['willRoomName'] =$room->name;
                     $data['title'] ='前面还有多少考生';
@@ -553,6 +555,7 @@ class WatchReminderRepositories  extends BaseRepository
                     $data = $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
                 }else{
                     $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                    $data['estTime'] =$examtimes;
                     $data['willStudents'] =$willStudents;
                     $data['willRoomName'] =$room->name;
                     $data['title'] ='前面还有多少考生';
@@ -562,6 +565,7 @@ class WatchReminderRepositories  extends BaseRepository
             }else{
                 \Log::alert('学生前面人数',[$studentFront,$stationNum ,count($stationStatus),$this->student->name,$this->nowQueue->begin_dt]);
                 $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                $data['estTime'] =$examtimes;
                 $data['willStudents'] =$willStudents;
                 $data['willRoomName'] =$room->name;
                 $data['title'] ='前面还有多少考生';
