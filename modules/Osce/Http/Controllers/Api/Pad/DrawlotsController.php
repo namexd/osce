@@ -455,8 +455,6 @@ class DrawlotsController extends CommonController
                 $this->fail($ex)
             );
         }
-
-
     }
 
     /**
