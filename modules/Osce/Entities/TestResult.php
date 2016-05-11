@@ -97,8 +97,7 @@ class TestResult extends CommonModel
             //拿到总成绩
             $total  =   array_pluck($scoreData, 'score');
             $total  =   array_sum($total);
-            $data['score']  =   $total;       //总成绩
-//            $data['score']  =   $total-$specialTotal;       //总成绩=考核点总得分-特殊评分项总扣除分
+            $data['score']  =   $total-$specialTotal;       //总成绩=考核点总得分-特殊评分项总扣除分
 
             if ($testResult = $this->create($data))
             {
