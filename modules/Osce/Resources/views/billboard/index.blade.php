@@ -14,6 +14,7 @@
       font-size: 60px;
     }
     #body{
+      padding-top: 100px;
       width: 100%;
       height: 80%;
     }
