@@ -272,6 +272,7 @@ class TestResult extends CommonModel
         {
             foreach($specialScoreData as $item)
             {
+                \Log::info('特殊评分项详情',[$item]);
                 $specialScores[$item['id']]=$item;
             }
             \Log::info('提交特殊评分项查询数据',[$specials,$subject]);
