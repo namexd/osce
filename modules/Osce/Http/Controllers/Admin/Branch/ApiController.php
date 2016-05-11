@@ -859,7 +859,7 @@ class ApiController extends CommonController
                         \Log::alert('老师准备的学生id',$studentIds);
 
                         foreach($studentIds as $studentId){
-                            $watchReminder->getWatchPublish($examId,$studentId, $stationId, '');
+                            $watchReminder->getWatchPublish($examId,$studentId, $stationId);
                         }
                     } catch (\Exception $ex) {
                         \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);

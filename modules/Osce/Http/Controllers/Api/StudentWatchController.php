@@ -67,11 +67,12 @@ class StudentWatchController extends CommonController
                 $studentId ='';
                 $examId ='';
             }
-        
+        \Log::alert('刷新腕表code',[$watchNfcCode]);
         //调用新的腕表方法
         $watch = new WatchReminderRepositories();
         try{
            $watchStudentData = $watch ->getWatchPublish($examId,$studentId,$watchNfcCode);
+            
             
 //            return response()->json(
 //                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']

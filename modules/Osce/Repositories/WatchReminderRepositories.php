@@ -796,13 +796,14 @@ class WatchReminderRepositories extends BaseRepository
         }
     }
 
-    public function getWatchPublish($examId=null,$studentId=null, $stationId=null, $roomId=null,$code=null)
+    public function getWatchPublish($examId=null,$studentId=null, $stationId=null, $roomId=null,$code='')
     {
 
         $exam = Exam::doingExam($examId);  //拿到考试实例
         $student = null;
         $station = null;
         $room = null;
+        $codes = $code;
         if (!is_null($studentId)) {
             $student = Student::find($studentId); //拿到考生实例
         }
@@ -814,8 +815,8 @@ class WatchReminderRepositories extends BaseRepository
         if (!is_null($roomId)) {
             $room = Room::find($roomId);//拿到考场实例
         }
-        \Log::debug('传送给腕表的数据', [$exam, $student, $room, $station,$code]);
-        $this->getStudentExamReminder($exam, $student, $room, $station ,$code);
+        \Log::debug('传送给腕表的数据', [$exam, $student, $room, $station,$codes]);
+        $this->getStudentExamReminder($exam, $student, $room, $station ,$codes);
 
 //       return response()->json(
 //           ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
