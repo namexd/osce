@@ -9,6 +9,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin\Branch'], function () {
         //TODO 唐俊
+        Route::get('test-launch',['uses'=>'TestlunchController@launch','as'=>'osce.admin.TestlunchController.launch']);
+
         Route::get('subject-statistics/subject-grade-list',['uses'=>'SubjectStatisticsController@SubjectGradeList','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeList']);
         //考生科目统计
         Route::get('testscores/test-score-list',['uses'=>'TestScoresController@TestScoreList','as'=>'osce.admin.TestScoresController.TestScoreList']);
@@ -210,10 +212,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         Route::get('exam-control/poststopexamlate',['uses'=>'ExamMonitorController@postStopExam','as'=>'osce.admin.ExamMonitorController.postStopExam']);
         //倒计时接口
         Route::get('exam-control/getTime',['uses'=>'ExamControlController@getTime','as'=>'osce.admin.ExamControlController.getTime']);
-
-
-        //服务容器测试
-        Route::get('test-launch',['uses'=>'TestlunchController@launch','as'=>'osce.admin.TestlunchController.launch']);
 
 
 
