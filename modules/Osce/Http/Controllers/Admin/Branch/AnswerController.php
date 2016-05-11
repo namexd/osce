@@ -352,8 +352,7 @@ class AnswerController extends CommonController
             }catch (\Exception $ex){
                 \Log::debug('理论考试结束调用腕表出错',[$examId,$studentId,$stationId]);
             }
-
-
+            
             //向pad端推送消息
             $redis = Redis::connection('message');
             $time = date('Y-m-d H:i:s', time());

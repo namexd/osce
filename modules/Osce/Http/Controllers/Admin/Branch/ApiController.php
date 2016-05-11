@@ -839,7 +839,7 @@ class ApiController extends CommonController
         $stationArr = ExamDraft::leftJoin('exam_draft_flow', function($join){
             $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
         })->where('exam_draft_flow.exam_id',$examId)
-            ->where('exam_draft.room_id',$roomId)->select('exam_draft.station_id')->get()->toArray();
+            ->where('exam_draft.room_id',$roomId)->select('exam_draft.station_id')->get()->pluck('station_id')->toArray();
         if(!empty($stationArr)){
             //查询exam_station_status表（考试-场次-考站状态表）中该考试该考场下status是否全为1，如果是，修改其状态值为2
             $examStationStatusData = $examStationStatusModel
