@@ -59,24 +59,24 @@ class WatchReminderRepositories extends BaseRepository
     protected $code;
 
 
-    public function setInitializeData($exam, $student, $room, $station,$code)
+    public function setInitializeData($exam, $student, $room, $station)
     {
         $this->exam = $exam;
-        $this->code = $code;
         $this->student = $student;
         $this->room = $room;
         $this->station = $station;
         $this->redis = Redis::connection('message');;
-        $examScreeningModel = new ExamScreening();
-        $examScreening = $examScreeningModel->getExamingScreening($exam->id);
 
-        if (is_null($examScreening)) {
-            $examScreening = $examScreeningModel->getNearestScreening($exam->id);
-        }
-        if (is_null($examScreening)) {
-            throw new \Exception('没有找当前的考试场次');
-        }
-        $this->examScreening = $examScreening;
+            $examScreeningModel = new ExamScreening();
+            $examScreening = $examScreeningModel->getExamingScreening($exam->id);
+
+            if (is_null($examScreening)) {
+                $examScreening = $examScreeningModel->getNearestScreening($exam->id);
+            }
+            if (is_null($examScreening)) {
+                throw new \Exception('没有找当前的考试场次');
+            }
+            $this->examScreening = $examScreening;
         return $this;
     }
 
@@ -96,11 +96,11 @@ class WatchReminderRepositories extends BaseRepository
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder($exam, $student, $room, $station,$code)
+    public function getStudentExamReminder($exam, $student, $room, $station)
     {
         try {
             //初始化
-            $this->setInitializeData($exam, $student, $room, $station,$code);
+            $this->setInitializeData($exam, $student, $room, $station);
             //dd($station);
             //判断考试模式
             if ($exam->sequence_mode == 1) {//考场模式
@@ -796,14 +796,13 @@ class WatchReminderRepositories extends BaseRepository
         }
     }
 
-    public function getWatchPublish($examId=null,$studentId=null, $stationId=null, $roomId=null,$code='')
+    public function getWatchPublish($examId=null,$studentId=null, $stationId=null, $roomId=null)
     {
 
         $exam = Exam::doingExam($examId);  //拿到考试实例
         $student = null;
         $station = null;
         $room = null;
-        $codes = $code;
         if (!is_null($studentId)) {
             $student = Student::find($studentId); //拿到考生实例
         }
@@ -815,8 +814,8 @@ class WatchReminderRepositories extends BaseRepository
         if (!is_null($roomId)) {
             $room = Room::find($roomId);//拿到考场实例
         }
-        \Log::debug('传送给腕表的数据', [$exam, $student, $room, $station,$codes]);
-        $this->getStudentExamReminder($exam, $student, $room, $station ,$codes);
+        \Log::debug('传送给腕表的数据', [$exam, $student, $room, $station]);
+        $this->getStudentExamReminder($exam, $student, $room, $station );
 
 //       return response()->json(
 //           ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
