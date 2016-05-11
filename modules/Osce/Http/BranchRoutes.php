@@ -7,10 +7,15 @@
  */
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 
+    Route::group(['prefix' => 'admin', 'namespace' => 'Admin\Rongqi'], function () {
+        //TODO 徐敏
+        Route::get('test-rongqi', ['uses' => 'UseContainerController@start', 'as' => 'osce.admin.UseContainerController.start']);
+    });
+
+
+
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin\Branch'], function () {
         //TODO 唐俊
-        Route::get('test-launch',['uses'=>'TestlunchController@launch','as'=>'osce.admin.TestlunchController.launch']);
-
         Route::get('subject-statistics/subject-grade-list',['uses'=>'SubjectStatisticsController@SubjectGradeList','as'=>'osce.admin.SubjectStatisticsController.SubjectGradeList']);
         //考生科目统计
         Route::get('testscores/test-score-list',['uses'=>'TestScoresController@TestScoreList','as'=>'osce.admin.TestScoresController.TestScoreList']);
