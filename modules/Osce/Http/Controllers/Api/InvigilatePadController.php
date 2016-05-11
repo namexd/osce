@@ -400,7 +400,7 @@ class InvigilatePadController extends CommonController
     public function postSaveExamResult(Request $request)
     {
         try {
-
+            \Log::info('提交成绩记录',$request->all());
             $this->validate($request, [
                 'score'             => 'required',
                 //'special'           => 'sometimes',
