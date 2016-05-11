@@ -8,7 +8,8 @@
       padding: 0;
     }
     #area{
-      font-family: 黑体;
+      font-family: 微软雅黑;
+      color: #2A2E36;
       width: 1050px;
       height: 1680px;
       font-size: 60px;
