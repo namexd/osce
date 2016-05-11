@@ -1674,6 +1674,45 @@ function course_module(){
             return false;
         }
 
+
+        //特殊项验证
+        var special_name = null,
+            special_score = true;
+        if($('#checkbox_div').find('.check_icon').hasClass('check')) {
+            $('#col_special tbody').find('tr').each(function(key,elem){
+                special_name = true;
+                var reg = new RegExp("^[0-9]*$");
+                if(!reg.test($(elem).find('input').eq(1).val())){
+                    special_score = false;
+                    return false;
+                };
+                if($(elem).find('input').eq(1).val() < 1){
+                    special_score = false;
+                    return false;
+                }
+                if($(elem).find('input').val()==''||$(elem).find('input').val()==null){
+                    special_name = false;
+                    return false;
+                }
+                
+            });
+
+            if(special_name==false){
+                layer.alert('名称/分数不能为空！');
+                return false;
+            }
+            if(special_name==null){
+                layer.alert('请新特殊评分项！');
+                return false;
+            }
+
+            //检查分数
+            if(special_score == false) {
+                layer.alert('分数必须正整数');
+                return false;
+            }
+        }
+
     });
 
 
@@ -2505,10 +2544,12 @@ function course_module(){
         if($that.hasClass('check')) {
             $that.removeClass('check');
             $that.siblings('input').val(0);
+            $that.siblings('input').removeAttr('checked');
             $(".col_special").hide();
         } else {
             $that.addClass('check');
             $that.siblings('input').val(1);
+            $that.siblings('input').attr('checked','checked');
             $(".col_special").show();
         }
     })

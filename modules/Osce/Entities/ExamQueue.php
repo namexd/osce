@@ -243,6 +243,7 @@ class ExamQueue extends CommonModel
                 ->where('student.exam_id', $examId)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->where('exam_queue.blocking', 0)
+//                ->where('exam_queue.locks', '<>', $room_id)
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -257,6 +258,7 @@ class ExamQueue extends CommonModel
                     'exam_queue.station_id as station_id'
                 )
                 ->orderBy('exam_queue.next_num', 'asc')
+                ->orderBy('exam_queue.begin_dt', 'asc')
                 ->groupBy('student.id')
                 ->get();
             \Log::debug('num', [$queueing->count(), count($stations)]);
@@ -295,6 +297,7 @@ class ExamQueue extends CommonModel
                     ->where('exam_queue.exam_id', '=', $examId)
                     ->where('exam_queue.exam_screening_id', $exam_screening_id)
                     ->where('student.exam_id', $examId)
+//                    ->where('exam_queue.locks', '<>', $room_id)
                     ->select(
                         'student.id as student_id',
                         'student.name as student_name',

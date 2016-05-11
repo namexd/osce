@@ -526,7 +526,8 @@ class ExamController extends CommonController
             } else {
                 throw new \Exception('新增考试失败');
             }
-        } catch(\Exception $ex) {
+        }catch(\Exception $ex)
+        {
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }

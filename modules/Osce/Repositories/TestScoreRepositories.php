@@ -364,7 +364,7 @@ class TestScoreRepositories  extends BaseRepository
             )->groupBy('student.grade_class')->get();
         }else{
             //传过来的值为科目id
-            $examlist = $ExamResult->where('exam_screening.exam_id','=',$examid)->where('subject.id',$subjectid)->leftjoin('exam_screening',function($join){
+            $examlist = $ExamResult->where('subject.id',$subjectid)->where('exam_screening.exam_id','=',$examid)->leftjoin('exam_screening',function($join){
                 $join->on('exam_screening.id','=','exam_result.exam_screening_id');
             })->leftjoin('station',function($join){
                 $join->on('station.id','=','exam_result.station_id');

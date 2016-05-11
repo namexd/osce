@@ -26,7 +26,7 @@
       margin-left: 100px;
       margin-right: 100px;
     }
-    #exam_station{
+    #exam_station {
       display: block;
       margin-right: 100px;
       text-align: center;
