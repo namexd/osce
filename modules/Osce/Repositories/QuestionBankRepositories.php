@@ -533,8 +533,8 @@ class QuestionBankRepositories  extends BaseRepository
             $Exam = new Exam;
             //获取本次考试的id
             $ExamInfo = $Exam->where('status','=',1)->select('id','name')->first();
-            if(empty($ExamInfo->id)){
-                throw new \Exception(' 没有在进行的考试');
+            if(empty($ExamInfo)){
+                throw new \Exception(' 没有在进行的考试',-100);
             }
 
             //获取当前正在考试的场次id
@@ -552,10 +552,10 @@ class QuestionBankRepositories  extends BaseRepository
                 ->where('exam.id',$ExamInfo->id)
                 ->where('station_teacher.user_id',$userId->id)
                 ->where('station_teacher.exam_screening_id',$exam_screen_id)
-                ->select('station_teacher.station_id')->get();
+                ->select('station_teacher.station_id');
             $station_id = $builder->pluck('station_id');
-            if(count($station_id)<1){
-                throw new \Exception('你没有相关需要监考的考站',-100);
+            if(empty($station_id)){
+                throw new \Exception('你没有相关需要监考的考站',-101);
             }
             return  ['StationId'=>$station_id,'ExamId'=>$ExamInfo->id,'ExamName'=>$ExamInfo->name];
         }catch (\Exception $ex){
