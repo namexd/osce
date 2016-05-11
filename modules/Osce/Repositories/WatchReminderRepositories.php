@@ -228,24 +228,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         //是否当前队列是否为待考
         if($queue->status == 0){
-            //拿到所有的考站
-            $stationLists = ExamStationStatus::where('exam_screening_id', $this->examScreening->id)
-                ->get()->pluck('station_id')->toArray();
-
-            $stationIds =  ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-                ->where('exam_draft.room_id', '=', $this->room->id)
-                ->whereIn('exam_draft.station_id',$stationLists)
-                ->where('exam_draft_flow.exam_id', '=',$this->exam->id)
-                ->get()
-                ->pluck('station_id')
-                ->toArray();
-            //dd($stationIds ,$this->room->id);
-            //判断房间是否准备好
-            $exam_station_station = ExamStationStatus::where('exam_id','=',$queue->exam_id)
-                ->whereIn('station_id',$stationIds)
-                ->where('exam_screening_id','=',$queue->exam_screening_id)
-                ->where('status','=',0)
-                ->count();
+            $exam_station_station = $this->getTeacherStatus();
             if($exam_station_station  <= 0)
             {
                 //准备好了，通知去考场
@@ -260,9 +243,32 @@ class WatchReminderRepositories  extends BaseRepository
         }
 
 
-
-
     }
+
+    //判断老师是否准备完成
+    private function getTeacherStatus(){
+        //拿到所有的考站
+        $stationLists = ExamStationStatus::where('exam_screening_id', $this->examScreening->id)
+            ->get()->pluck('station_id')->toArray();
+
+        $stationIds =  ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft.room_id', '=', $this->room->id)
+            ->whereIn('exam_draft.station_id',$stationLists)
+            ->where('exam_draft_flow.exam_id', '=',$this->exam->id)
+            ->get()
+            ->pluck('station_id')
+            ->toArray();
+        //dd($stationIds ,$this->room->id);
+        //判断房间是否准备好
+        $exam_station_station = ExamStationStatus::where('exam_id','=',$this->nowQueue->exam_id)
+            ->whereIn('station_id',$stationIds)
+            ->where('exam_screening_id','=',$this->nowQueue->exam_screening_id)
+            ->where('status','=',0)
+            ->count();
+        return  $exam_station_station;
+    }
+
+
     /**
      * @content：根据exam、student对象查找队列数据
      * @author：
@@ -537,11 +543,21 @@ class WatchReminderRepositories  extends BaseRepository
                   $data = $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
 
                 }else{
-                    $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-                    $data['estTime'] =$examtimes;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-                    $data['willStudents'] =$willStudents;
-                    $data['willRoomName'] =$room->name;
-                    $data['title'] ='前面还有多少考生';
+                    if($studentFront == 0){
+                        $exam_station_station = $this->getTeacherStatus();
+                        if($exam_station_station == 0){ //老师准备好
+                            $data = $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
+                        }else{ //老师没有准备好
+                            $data['code'] =0;  // 侯考状态（对应界面：准备中）
+                            $data['title'] ='准备中.......';
+                        }
+                    }else{
+                        $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                        $data['estTime'] =$examtimes;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                        $data['willStudents'] =$willStudents;
+                        $data['willRoomName'] =$room->name;
+                        $data['title'] ='前面还有多少考生';
+                    }
                 }
 
             }else{
@@ -598,7 +614,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         if(!is_null($studentFinishExam)){
             $data['code'] =5;  // 侯考状态（对应界面：请前往下一教室）
-            $data['roomName'] =$roomInfo->name;
+            $data['nextExamName'] =$roomInfo->name;
             $data['title'] ='上一场考试已完成,请进入下一考场'.$roomInfo->name;
         }else{
             $data['code'] =2;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
