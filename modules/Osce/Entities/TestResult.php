@@ -162,7 +162,7 @@ class TestResult extends CommonModel
             ->where('exam_draft_flow.exam_id', '=', $examId)
             ->where('exam_draft_flow.exam_gradation_id', '=', $gradation->id)
             ->where('exam_draft.station_id', '=', $stationId)
-            ->select(['exam_draft.id','exam_draft_flow.name','exam_screening.id','exam_draft.station_id','exam_draft.subject_id'])
+            ->select(['exam_draft.id','exam_draft_flow.name','exam_draft.station_id','exam_draft.subject_id'])
             ->with('subject')
             ->first();
         if(is_null($ExamDraftInfo))
