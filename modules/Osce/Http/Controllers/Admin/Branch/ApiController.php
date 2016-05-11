@@ -916,7 +916,7 @@ class ApiController extends CommonController
      * @date 2016-04-05 17:54
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postAlertExamReplace (Request $request) {
+    public function postAlertExamReplace (Request $request,WatchReminderRepositories $watchReminder) {
         $this->validate($request, [
             'mode'              => 'required|in:1,2',
             'exam_id'           => 'required|integer',
@@ -1016,6 +1016,13 @@ class ApiController extends CommonController
                     if(!ExamMonitor::create($examMonitorData)){
                         throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-105);
                     }
+                    try{
+                        $watchReminder ->getWatchPublish($examId,$studentId, $stationId);
+
+                    }catch (\Exception $ex){
+                        \Log::debug('监控调用腕表出错',[$examId,$studentId, $stationId]);
+                    }
+
                     $retval['title'] = '确定替考成功';
                     return response()->json(
                         $this->success_data($retval,1,'success')

@@ -57,6 +57,18 @@ class WatchReminderRepositories extends BaseRepository
     protected $examScreening;
     //腕表code
     protected $code;
+    //封装data数组
+    protected $data =[
+        'code' => '',
+        'willStudents' => '',
+        'estTime' => '',
+        'willRoomName' => '',
+        'roomName' => '',
+        'nextExamName' => '',
+        'surplus' => '',
+        'score' => '',
+        'title' => '',
+    ];
 
 
     public function setInitializeData($exam, $student, $room, $station)
@@ -136,13 +148,6 @@ class WatchReminderRepositories extends BaseRepository
         if ($watchStatus->status == 0) {
             $data = [
                 'code' => -1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-                'willStudents' => '',
-                'estTime' => '',
-                'willRoomName' => '',
-                'roomName' => '',
-                'nextExamName' => '',
-                'surplus' => '',
-                'score' => '',
                 'title' => '腕表未绑定',
             ];
             $this->publishmessage($watchStatus->code, $data, 'success');
@@ -458,7 +463,7 @@ class WatchReminderRepositories extends BaseRepository
         } else {
             if (count($stationStatus) < $stationNum) { //判定房间考站是不是有空
                 \Log::alert('学生前面人数', [$studentFront, $stationNum, count($stationStatus), $this->student->name]);
-                if ($studentFront == 0) { //判定当前学生是不是第一个
+                if ($studentFront == 0 || $willStudents ==0) { //判定当前学生是不是第一个
 
                     $data = $this->getStudentFinishExam($studentFinishExam, $roomInfo, $room);
                 } else {
@@ -488,7 +493,14 @@ class WatchReminderRepositories extends BaseRepository
         );
     }
 
-    //获取当前队列是否有考试中的人
+
+    /**
+     *获取当前队列是否有考试中的人
+     * @param WatchReminderRepositories
+     * @return object
+     * @internal param $room_id
+     * @author zhouqiang
+     */
     private function getNowQueueExam()
     {
         //获取考站数量
@@ -515,7 +527,14 @@ class WatchReminderRepositories extends BaseRepository
         return $willStudents;
     }
 
-    // 获取前面还有多少人 即当前学生在队列的位置 即学生前面人数
+
+    /**
+     *获取前面还有多少人 即当前学生在队列的位置 即学生前面人数
+     * @param WatchReminderRepositories
+     * @return  int
+     * @internal param $room_id
+     * @author zhouqiang
+     */
     private function getStudentFrontNum()
     {
         $time = $this->nowQueue->begin_dt;
@@ -529,7 +548,14 @@ class WatchReminderRepositories extends BaseRepository
         return $studentFront;
     }
 
-    // 判断老师是否准备好，和学生是否是当前第一个
+
+    /**
+     * 判断老师是否准备好，和学生是否是当前第一个
+     * @param WatchReminderRepositories
+     * @return  array
+     * @internal
+     * @author zhouqiang
+     */
 
     private function getTeacherReady()
     {
@@ -545,7 +571,7 @@ class WatchReminderRepositories extends BaseRepository
         // todo 调用学生前面等待人数方法
         $willStudents = $this->getNowQueueExam();
 
-        if ($studentFront == 0) {
+        if ($studentFront == 0 || $willStudents ==0) {
 
             $exam_station_station = $this->getTeacherStatus();
 
@@ -567,7 +593,15 @@ class WatchReminderRepositories extends BaseRepository
     }
 
 
-    //查询当前学生是否已考过一个考场
+
+    /**
+     * 查询当前学生是否已考过一个考场
+     * @param WatchReminderRepositories
+     * @return  object
+     * @internal
+     * @author zhouqiang
+     */
+
     private function getStudentFinishRoom()
     {
         $studentFinishExam = ExamQueue::where('exam_id', '=', $this->exam->id)
@@ -579,7 +613,16 @@ class WatchReminderRepositories extends BaseRepository
     }
 
 
-    //获取下一场考试信息
+
+
+    /**
+     * 获取下一场考试信息
+     * @param WatchReminderRepositories
+     * @return  object
+     * @internal
+     * @author zhouqiang
+     */
+
     private function getStudentNextExam()
     {
         $NextQueue = ExamQueue::leftjoin('room', function ($join) {
@@ -595,7 +638,14 @@ class WatchReminderRepositories extends BaseRepository
         return $NextQueue;
     }
 
-    //判断考生是否有完成的考试 是否提示去下一场
+
+    /**
+     * 判断考生是否有完成的考试 是否提示去下一场
+     * @param WatchReminderRepositories
+     * @return  array
+     * @internal
+     * @author zhouqiang
+     */
     private function getStudentFinishExam($studentFinishExam, $roomInfo, $room)
     {
 
@@ -612,11 +662,13 @@ class WatchReminderRepositories extends BaseRepository
         return $data;
     }
 
-    //
-
 
     /**
      * 抽签
+     * @param WatchReminderRepositories
+     * @return  redis
+     * @internal
+     * @author zhouqiang
      */
     public function getchoose()
     {

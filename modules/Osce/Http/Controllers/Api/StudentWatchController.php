@@ -63,6 +63,7 @@ class StudentWatchController extends CommonController
         \Log::alert('刷新腕表code', [$watchNfcCode]);
         //调用新的腕表方法
         $watchReminder = new WatchReminderRepositories();
+        
         try {
             if ($watch->status == 0) {
                 $data = [
