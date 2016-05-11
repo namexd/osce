@@ -577,10 +577,17 @@ class Student extends CommonModel
         ];
     }
 
-    /**
-     * 获取学生信息
-     * @param $watch_id
-     * @return bool
+    /**获取学生信息
+     * @method
+     * @url /osce/
+     * @access public
+     * @param $stationId
+     * @param $exam
+     * @return array
+     * @throws \Exception
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function studentListtwo($stationId, $exam)
     {
