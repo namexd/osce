@@ -130,7 +130,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         //查看腕表是否绑定
         $watchStatus = $this->getWatchStatus();
-        if($watchStatus->status = 0){
+        if($watchStatus->status == 0){
             $data = [
                 'code' => -1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
                 'willStudents' => '',
