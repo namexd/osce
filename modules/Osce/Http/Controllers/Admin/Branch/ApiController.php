@@ -830,7 +830,7 @@ class ApiController extends CommonController
 //                $studentWatchController = new StudentWatchController();
 //                $request['nfc_code'] = $watch['nfc_code'];
 //                $studentWatchController->getStudentExamReminder($request, $stationId);
-                $watchReminder->getWatchPublish($examQenens->student_id, $stationId, $roomId);
+                $watchReminder->getWatchPublish($examId,$examQenens->student_id, $stationId, $roomId);
             } catch (\Exception $ex) {
                 \Log::debug('准备考试按钮2', [$examQenens->student_id, $stationId, $roomId]);
             }
@@ -859,7 +859,7 @@ class ApiController extends CommonController
                         \Log::alert('老师准备的学生id',$studentIds);
 
                         foreach($studentIds as $studentId){
-                            $watchReminder->getWatchPublish($studentId, $stationId, '');
+                            $watchReminder->getWatchPublish($examId,$studentId, $stationId, '');
                         }
                     } catch (\Exception $ex) {
                         \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
