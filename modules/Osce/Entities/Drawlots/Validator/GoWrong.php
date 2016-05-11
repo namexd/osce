@@ -24,6 +24,7 @@ class GoWrong implements DrawValidatorInterface
             ->whereBlocking(1)
             ->orderBy('begin_dt', 'asc')
             ->first();
+        \Log::debug('GoWrong', [$studentId, $screenId, $roomId, $examId]);
         \Log::debug('room', [$temp]);
         if ($temp->room_id != $roomId) {
             $room = Room::find($temp->room_id);
