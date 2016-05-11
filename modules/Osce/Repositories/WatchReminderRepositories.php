@@ -167,10 +167,6 @@ class WatchReminderRepositories extends BaseRepository
 
         $status = $this->getNoticeStauts($queue, $queueList);
         \Log::alert('学生队列状态', [$status]);
-
-        // 初始化房间考站数量
-        $drawlots = new DrawlotsRepository();
-        $this->stationNum = count($drawlots->getStationNum($this->exam->id, $queue->room_id, $this->examScreening->id));
         //并且根据当前状态选择相应操作
         switch ($status) {
             //待考
@@ -389,6 +385,11 @@ class WatchReminderRepositories extends BaseRepository
      */
     public function getWaitings()
     {
+
+        // 初始化房间考站数量
+        $drawlots = new DrawlotsRepository();
+        $this->stationNum = count($drawlots->getStationNum($this->exam->id, $this->nowQueue->room_id, $this->examScreening->id));
+
         // todo 调用学生提示信息提示方法
         $data = $this->getStudentWatchInfo();
         //根据学生获取NFC _code
