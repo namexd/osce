@@ -733,6 +733,10 @@ class DrawlotsController extends CommonController
 
             if ($station->type == 3) {//理论站
                 $paper = ExamPaper::where('id', $station->paper_id)->first();
+                if (is_null($paper)) {
+                    throw new \Exception('当前考站的考卷已经被删，请重新设置' . $station->name);
+                }
+
                 $station->mins = $paper->length;
             } else {
                 $ExamDraft = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=',
@@ -807,7 +811,7 @@ class DrawlotsController extends CommonController
                 \Log::alert('老师登陆获得信息',[$station]);
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
-
+            \Log::info('');
             return response()->json($this->fail($ex));
         }
     }
