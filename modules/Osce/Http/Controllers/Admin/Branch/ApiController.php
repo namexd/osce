@@ -477,14 +477,6 @@ class ApiController extends CommonController
             throw new \Exception(' 没有在进行的考试',-100);
         }
 
-        //获取当前正在考试的场次id
-        $examScreeningModel = new ExamScreening();
-        $examScreening      = $examScreeningModel -> getExamingScreening($ExamInfo->id);
-        if(is_null($examScreening))
-        {
-            $examScreening  = $examScreeningModel -> getNearestScreening($ExamInfo->id);
-        }
-        $exam_screen_id = $examScreening->id;       //获取场次id
 
         try {
             $user = Auth::user();
@@ -520,7 +512,6 @@ class ApiController extends CommonController
         }
         catch(\Exception $ex)
         {
-            echo $exam_screen_id;
             if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
             }elseif($ex->getCode() === 1001 || $ex->getCode() === 1002)
