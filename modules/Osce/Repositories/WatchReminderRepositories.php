@@ -383,14 +383,14 @@ class WatchReminderRepositories  extends BaseRepository
         $drawlots = new DrawlotsRepository();
         $stationNum = count($drawlots->getStationNum($this->exam->id, $this->room->id, $this->examScreening->id));
 
-        //获取当前同组学生清单
-        $studentQueueList = ExamQueue::where('exam_id','=',$exam->id)
-                                ->where('exam_screening_id','=',$this->examScreening->id)
-                                ->where('room_id','=',$this->room->id)
-                                ->where('status',0)
-                                ->orderBy('begin_dt','asc')
-                                ->take($stationNum)
-                                ->get();
+//        //获取当前同组学生清单
+//        $studentQueueList = ExamQueue::where('exam_id','=',$exam->id)
+//                                ->where('exam_screening_id','=',$this->examScreening->id)
+//                                ->where('room_id','=',$this->room->id)
+//                                ->where('status',0)
+//                                ->orderBy('begin_dt','asc')
+//                                ->take($stationNum)
+//                                ->get();
 
         //获取前面还有多少人
         $studentFront = ExamQueue::where('exam_id','=',$exam->id)
