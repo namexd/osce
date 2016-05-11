@@ -91,7 +91,7 @@ class TestResult extends CommonModel
             //获取考试成绩特殊评分项扣分详情（解析json为数组）
             $specialScoreData = $this->getSpecialScore($specialScore);
             //拿到特殊评分项总成绩
-            $specialTotal  =   array_pluck($scoreData, 'score');
+            $specialTotal  =   array_pluck($specialScoreData, 'score');
             $specialTotal  =   array_sum($specialTotal);
 
             //拿到总成绩
