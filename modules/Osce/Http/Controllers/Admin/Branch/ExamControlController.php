@@ -181,29 +181,39 @@ class ExamControlController extends CommonController
         try{
 
             $this->validate($request,[
-                'exam_id' =>'required|integer', //考试id
-                'student_id'=>'required|integer' //学生id
+                'exam_id'       => 'required|integer',  //考试id
+                'student_id'    => 'required|integer'   //学生id
             ]);
 
             $exam_id    = $request->input('exam_id');
             $student_id = $request->input('student_id');
 
             $examQueue = ExamQueue::where('exam_id',$exam_id)->where('student_id',$student_id)->where('status',2)->first();
-            if(!empty($examQueue)){
-                //考试时间
-                $examTime =strtotime($examQueue->end_dt)-strtotime($examQueue->begin_dt);
-                $time = time();//系统的当前时间
-                $remainTime = 0;
-                if($time-strtotime($examQueue->begin_dt) < $examTime){
-                    //考试时间还没用完
-                    $remainTime =$examTime - ($time-strtotime($examQueue->begin_dt));
+            if(!is_null($examQueue))
+            {
+                //获取系统的当前时间
+                $time = time();
+                //获取剩余时间 （剩余时间 = 考试结束时间-当前时间）
+                $remainTime = strtotime($examQueue->end_dt) - $time;
+                if($remainTime <= 0){
+                    $remainTime = 0;
                 }
-            }else{
+//                //考试时间
+//                $examTime =strtotime($examQueue->end_dt)-strtotime($examQueue->begin_dt);
+//                $remainTime = 0;
+//                if($time-strtotime($examQueue->begin_dt) < $examTime){
+//                    //考试时间还没用完
+//                    $remainTime =$examTime - ($time-strtotime($examQueue->begin_dt));
+//                }
+            }else
+            {
                 throw new \Exception('没有该考生正在考试的队列信息！',-101);
             }
+            //返回数据
             return response()->json(
-                $this->success_data(['remainTime'=>$remainTime],1,'success')
+                $this->success_data(['remainTime' => $remainTime], 1, 'success')
             );
+
         }catch (\Exception $ex){
             return response()->json($this->fail($ex));
         }
