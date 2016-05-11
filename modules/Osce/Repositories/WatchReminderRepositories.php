@@ -264,7 +264,7 @@ class WatchReminderRepositories  extends BaseRepository
         $exam_station_station = ExamStationStatus::where('exam_id','=',$this->nowQueue->exam_id)
             ->whereIn('station_id',$stationIds)
             ->where('exam_screening_id','=',$this->nowQueue->exam_screening_id)
-            ->where('status','=',0)
+            ->whereIn('status',[0,4])
             ->count();
         return  $exam_station_station;
     }
