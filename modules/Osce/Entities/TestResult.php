@@ -78,7 +78,19 @@ class TestResult extends CommonModel
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         $score  =   json_decode($score,true);
-        $groupData   =   $this->groupResultScore($score);
+        if($score==false)
+        {
+            throw new \Exception('提交的数据格式不合法');
+        }
+        $groupData      =   $this->groupResultScore($score);
+
+        $examScreening  =   ExamScreening::find($data['exam_screening_id']);
+        if(is_null($examScreening))
+        {
+            throw new \Exception('找不到提交的场次');
+        }
+
+
 
         $score          =   $groupData['score'];
         $specialScore   =   $groupData['special'];
@@ -90,6 +102,13 @@ class TestResult extends CommonModel
 
             //获取考试成绩特殊评分项扣分详情（解析json为数组）
             $specialScoreData = $this->getSpecialScore($specialScore);
+            //获取当前考试当前场次当前考站下的考试项目
+            $subject    =   $this->getSuject($examScreening->exam_id,$examScreening->id,$data['station_id']);
+            //校验普通分数
+            $this->checkScore($subject,$scoreData);
+            //校验特殊分数
+            $this->checkSpecialScore($subject,$specialScoreData);
+
             //拿到特殊评分项总成绩
             $specialTotal  =   array_pluck($scoreData, 'score');
             $specialTotal  =   array_sum($specialTotal);
@@ -127,6 +146,141 @@ class TestResult extends CommonModel
         }
     }
 
+    private function getSuject($examId,$examScreeningId,$stationId){
+        //获取提交场次
+        $ExamScreening  =   ExamScreening::find($examScreeningId);
+        if(is_null($ExamScreening))
+        {
+            throw new \Exception('场次不存在');
+        }
+        //获取提交阶段
+        $gradation  =   ExamGradation::where('order','=',$ExamScreening->gradation_order)->where('exam_id','=',$examId)->first();
+        //获取当前考试当前阶段考站安排
+        $ExamDraftInfo   =   ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft_flow.exam_id', '=', $examId)
+            ->where('exam_draft_flow.exam_gradation_id', '=', $gradation->id)
+            ->where('exam_draft.station_id', '=', $stationId)
+            ->select(['exam_draft.id','exam_draft_flow.name','exam_screening.id','exam_draft.station_id','exam_draft.subject_id'])
+            ->with('subject')
+            ->frist();
+        if(is_null($ExamDraftInfo))
+        {
+            throw new \Exception('找不到考站安排');
+        }
+        return $ExamDraftInfo->subject;
+    }
+    //根据考试项目检查普通评分数据
+    private function checkScore($subject,$score){
+        if(is_null($subject))
+        {
+            throw new \Exception('找不到当前考站下的考试项目');
+        }
+        $standard       =   $subject     ->  standards   ->  frist();
+        if(is_null($standard))
+        {
+            throw new \Exception('找不到当前项目下的评分表');
+        }
+        $standardItems  =   $standard   ->  standardItem;
+
+        $scoreList  =   [];
+
+        foreach($score as $priont)
+        {
+            $scoreList[$priont->id] =   $priont;
+            foreach($priont['test_term'] as $option)
+            {
+                $scoreList[$option->id] =   $option;
+            }
+        }
+        \Log::info('提交普通成绩校验-评分表详情清单',[$standardItems,$subject]);
+        \Log::info('提交普通成绩校验-评分表详情提交数据',[$score,$scoreList]);
+        foreach($standardItems as $item)
+        {
+            if(!array_key_exists($item->id,$scoreList))
+            {
+                if($item->id==0)
+                {
+                    throw new \Exception('没有找到考核点'.$item->sort.'的相关成绩,提交失败');
+                }
+                else
+                {
+                    throw new \Exception('没有找到考核点'.$item->parent->sort.'-'.$item->sort.'的相关成绩,提交失败');
+                }
+            }
+            else
+            {
+                $thisScore=$scoreList[$item->id];
+                //当前分数小于0检查
+                if(intval($thisScore['score'])<0)
+                {
+                    if($item->id==0)
+                    {
+                        throw new \Exception('考核点'.$item->sort.'分数不合法,提交失败');
+                    }
+                    else
+                    {
+                        throw new \Exception('考核点'.$item->parent->sort.'-'.$item->sort.'分数不合法,提交失败');
+                    }
+                }
+                //当前分数大于上限检查
+                if(intval($thisScore['score'])>intval($item->score))
+                {
+                    if($item->id==0)
+                    {
+                        throw new \Exception('考核点'.$item->sort.'分数不合法,提交失败');
+                    }
+                    else
+                    {
+                        throw new \Exception('考核点'.$item->parent->sort.'-'.$item->sort.'分数不合法,提交失败');
+                    }
+                }
+            }
+        }
+    }
+    //根据考试项目检查普通特殊评分数据
+    private function checkSpecialScore($subject,$specialScoreData){
+        if(is_null($subject))
+        {
+            throw new \Exception('找不到当前考站下的考试项目');
+        }
+        $specialScores  =   [];
+        //获取标准特殊评分项清单
+        $specials   =   $subject->specials;
+        //当有提交有特殊评分项时
+        if(count($specialScoreData))
+        {
+            foreach($specialScoreData as $item)
+            {
+                $specialScores[$item['id']]=$item;
+            }
+            \Log::info('提交特殊评分项查询数据',[$specials,$subject]);
+            \Log::info('提交特殊评分项校验提交数据',[$specialScoreData]);
+            foreach($specials as $special)
+            {
+                if(!array_key_exists($special->id,$specialScores))
+                {
+                    throw new \Exception('传入了非法的特殊评分项');
+                }
+
+                $score  =   $specialScores[$special->id]['score'];
+                if(intval($score)<0)
+                {
+                    throw new \Exception('特殊评分项分数不合法,提交失败');
+                }
+                if(intval($score)>intval($special->score))
+                {
+                    throw new \Exception('特殊评分项分数不合法,提交失败');
+                }
+            }
+        }
+        else
+        {
+            if(count($specials))
+            {
+                throw new \Exception('提交失败,没有找到特殊评分项成绩');
+            }
+        }
+    }
     //upload_document_id 音频 图片id集合去修改
     private function getSaveExamAttach($studentId,$ExamResultId,$score)
     {
