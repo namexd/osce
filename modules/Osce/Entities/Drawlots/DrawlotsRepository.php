@@ -64,9 +64,9 @@ class DrawlotsRepository extends AbstractDrawlots
 //            $this->station = $stationData;
 //            $this->screen = $screening;
 
-//            \App::bind('GoWrong', function () {
-//                return new GoWrong();
-//            });
+            \App::bind('GoWrong', function () {
+                return new GoWrong();
+            });
 
             \App::bind('EndExam', function () {
                 return new EndExam();
@@ -81,7 +81,7 @@ class DrawlotsRepository extends AbstractDrawlots
             });
 
             $this->validator = [
-//                \App::make('GoWrong'),
+                \App::make('GoWrong'),
                 \App::make('EndExam'),
                 \App::make('NotEndPrepare'),
                 \App::make('InExaminee')
@@ -110,7 +110,11 @@ class DrawlotsRepository extends AbstractDrawlots
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
         try {
-            $this->student = $this->studentObj->getStudent($this->params['uid']);
+            //获取当前的screen
+            $screen = $this->screen->screening($this->params['exam_id']);
+            Common::valueIsNull($screen, -3, '获取场次失败');
+
+            $this->student = $this->studentObj->getStudent($screen->id, $this->params['uid']);
             Common::valueIsNull($this->student, -2, '当前学生信息错误');
 
             //如果该学生已经抽签了，就直接返回实例
@@ -120,25 +124,23 @@ class DrawlotsRepository extends AbstractDrawlots
                 return $this->draw->assembly($obj->station->name);
             }
 
-            //获取当前的screen
-            $screen = $this->screen->screening($this->params['exam_id']);
-            Common::valueIsNull($screen, -3, '数据错误');
+
 
             //验证
             $this->process($this->student->student_id, $this->params['exam_id'], $screen->id, $this->params['room_id']);
 
             //获取当前考场下有多少个考站
             $stations = $this->station->site($this->params['exam_id'], $this->params['room_id'], $screen->id);
-            Common::objIsEmpty($stations, -4, '数据错误');
+            Common::objIsEmpty($stations, -4, '获取考站失败');
 
             //获取当前能去的考场
             $accessStations = $this->station->accessStation($stations->pluck('station_id'), $screen->id,
                 $this->params['room_id']);
-            Common::objIsEmpty($accessStations, -5, '数据错误');
+            Common::objIsEmpty($accessStations, -5, '获取能去的考站失败');
 
             //获取对象模型
             $obj = $this->draw->getObj($this->student->student_id, $screen->id, $this->params['room_id']);
-            Common::valueIsNull($obj, -6, '数据错误');
+            Common::valueIsNull($obj, -6, '获取当前用户失败');
             $this->fieldValidator($obj);
 
             //获取随机的stationId
