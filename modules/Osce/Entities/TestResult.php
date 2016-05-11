@@ -207,9 +207,14 @@ class TestResult extends CommonModel
         \Log::info('提交普通成绩校验-评分表详情提交数据',[$score,$scoreList]);
         foreach($standardItems as $item)
         {
+            if($item->pid==0)
+            {
+                continue;
+            }
             \Log::info('标准评分点数据',[$item]);
             if(!array_key_exists($item->id,$scoreList))
             {
+                \Log::info('提交的考核点不对',[]);
                 if($item->id==0)
                 {
                     throw new \Exception('没有找到考核点'.$item->sort.'的相关成绩,提交失败');
