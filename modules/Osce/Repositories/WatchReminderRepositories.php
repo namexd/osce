@@ -598,7 +598,7 @@ class WatchReminderRepositories  extends BaseRepository
             $data['title'] ='上一场考试已完成,请进入下一考场'.$roomInfo->name;
         }else{
             $data['code'] =2;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-            $data['willRoomName'] =$room->name;
+            $data['roomName'] =$room->name;
             $data['title'] ='请进入考场'.$room->name;
         }
         return $data;
