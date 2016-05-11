@@ -12,6 +12,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('update/index',['uses'=>'UpdateController@getIndex','as' => 'osce.admin.getUpdate']);
 		Route::post('update/index',['uses'=>'UpdateController@postIndex','as'=>'osce.admin.postUpdate']);
 		Route::get('test/index',['uses'=>'TestController@getIndex','as'=>'osce.admin.test']);
+		Route::get('showlog/index',['uses'=>'ShowLogController@ShowLog','as'=>'osce.admin.showLog']);
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
 		//登录注册
