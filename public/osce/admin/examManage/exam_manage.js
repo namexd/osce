@@ -1069,7 +1069,7 @@ function exam_assignment_add(){
      */
     //考生分阶段考试
     $(".check_margin").click(function(){
-        if ($(this).parent().find("input").is(':checked')) {
+        if ($(this).parent().find("input").val() != 1) {
             $(this).parent().find(".check_icon ").addClass("check");
             $(this).parent().find("input").attr("checked","checked")
             $(this).parent().parent().find(".check_div input").removeAttr('readonly');
@@ -1202,7 +1202,8 @@ function exam_assignment_add(){
     $('#add-new').click(function(){
         //计数器标志
         var index = $('#exam_add').find('tbody').attr('index'),
-            stage_show = $('.check_margin').parent().find("input").is(':checked');   //阶段显示判断
+            stage_show = ($('.check_margin').parent().find("input").val() == 1);   //阶段显示判断
+
 
         index = parseInt(index) + 1;
 
@@ -1495,7 +1496,7 @@ function exam_basic_info(){
      */
     //考生分阶段考试
     $(".check_margin").click(function(){
-        if ($(this).parent().find("input").is(':checked')) {
+        if ($(this).parent().find("input").val() != 1) {
             $(this).parent().parent().find(".check_icon ").addClass("check");
             $(this).parent().find(".check_icon ").attr("checkbox","1")
             $(this).parent().parent().find(".check_div input").removeAttr('readonly');
@@ -1634,7 +1635,7 @@ function exam_basic_info(){
     $('#add-new').click(function(){
         //计数器标志
         var index = $('#add-basic').find('tbody').attr('index'),
-            stage_show = $('.check_margin').parent().find("input").is(':checked');   //阶段显示判断;
+            stage_show = ($('.check_margin').parent().find("input").val() == 1);   //阶段显示判断;
 
         index = parseInt(index) + 1;
 
