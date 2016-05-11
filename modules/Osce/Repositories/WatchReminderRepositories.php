@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redis;
 use Maatwebsite\Excel\Collections\CellCollection;
 use Modules\Osce\Entities\Drawlots\DrawlotsRepository;
 use Modules\Osce\Entities\ExamDraft;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
@@ -429,7 +430,7 @@ class WatchReminderRepositories extends BaseRepository
      * @author zhouqiang
      */
 
-    private  function  getStudentWatchInfo()
+    private function getStudentWatchInfo()
     {
         //查询当前学生是否已考过一个考场
         $studentFinishExam = $this->getStudentFinishRoom();
@@ -451,29 +452,33 @@ class WatchReminderRepositories extends BaseRepository
         $roomInfo = $this->getStudentNextExam();
         $examtimes = date('H:i', (strtotime($this->nowQueue->begin_dt)));
         if ($this->exam->same_time == 1) { //判断考试是否要求学生同进同出
-            if ($stationStatus->isEmpty()) {
+            if ($stationStatus->isEmpty()) {//判断前面是否还有人在考试中
                 //判断学生当前在队列的位置
-                if ($studentFront < $this->stationNum) {
-                    \Log::alert('判断学生是否进入这个方法1111',[$studentFront,$this->stationNum]);
+                if ($studentFront < $this->stationNum) { // 判断前面考生人数是否够考站考试
+                    \Log::alert('判断学生前面人数不够考试时', [$studentFront, $this->stationNum]);
                     // todo 通知学生去的地方
-                    $data = $this->getStudentFinishExam($studentFinishExam, $roomInfo, $this->room);
-                    \Log::info('判断学生应该去的考场2', $data);
-
+                    $data = $this->getStudentFinishExam($studentFinishExam, $roomInfo, $this->room); // todo 这个方法里应该判定里面有没有在考试的情况
                 } else {
-                        \Log::alert('判断学生是否进入这个方法',[$studentFront]);
+
+                    \Log::alert('判断学生前面人数够考试时', [$studentFront]);
 
                     //  todo 调用提示学生是去什么考场还是等待信息方法
+
                     $data = $this->getTeacherReady();
                 }
             } else {
-//                $data = $this->getStudentFinishExam($studentFinishExam, $roomInfo, $room);
-                //  todo 调用提示学生是去什么考场还是等待信息方法
-                $data = $this->getTeacherReady();
+                //如果有考试的就提示等待
+                $data['code'] = 1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                $data['estTime'] = $examtimes;
+                $data['willStudents'] = $willStudents;
+                $data['willRoomName'] = $room->name;
+                $data['title'] = '前面还有多少考生';
+//                $data = $this->getTeacherReady();
             }
         } else {
             if (count($stationStatus) < $this->stationNum) { //判定房间考站是不是有空
                 \Log::alert('学生前面人数', [$studentFront, $this->stationNum, count($stationStatus), $this->student->name]);
-                if ($studentFront == 0 || $willStudents ==0) { //判定当前学生是不是第一个
+                if ($studentFront == 0 || $willStudents == 0) { //判定当前学生是不是第一个
                     // todo 通知学生去的地方
                     $data = $this->getStudentFinishExam($studentFinishExam, $roomInfo, $room);
                 } else {
@@ -514,6 +519,9 @@ class WatchReminderRepositories extends BaseRepository
         $studentFront = $this->getStudentFrontNum();
         $willStudents = 0;
         if ($studentFront < $this->stationNum) {
+            if (!is_null($studentDoingNum)) {
+                $willStudents = $studentFront + 1;
+            }
             \Log::info('腕表推送出现等待推送中有前面学生小于考站数量的情况');
         } else {
             $willStudents = $studentFront;
@@ -545,6 +553,30 @@ class WatchReminderRepositories extends BaseRepository
         return $studentFront;
     }
 
+    //判定学生是不是刚绑定腕表
+    private  function getDoExamStudent()
+    {
+        $studentDoingNum = ExamQueue::where('exam_id', '=', $this->exam->id)
+            ->where('exam_screening_id', '=', $this->examScreening->id)
+            ->where('room_id', '=', $this->nowQueue->room_id)
+            ->whereIn('status', [1, 2])
+            ->orderBy('begin_dt', 'asc')
+            ->first();
+        return $studentDoingNum;
+    }
+
+    //查询计划表里前面的人数
+    private function getPlanStudentFront(){
+        $time = $this->nowQueue->begin_dt;
+        $studentFront = ExamPlan::where('exam_id', '=', $this->exam->id)
+            ->where('exam_screening_id', '=', $this->examScreening->id)
+            ->where('room_id', '=', $this->nowQueue->room_id)
+            ->where('status', '=', 0)
+            ->whereRaw("UNIX_TIMESTAMP(begin_dt) < UNIX_TIMESTAMP('$time')")
+            ->orderBy('begin_dt', 'asc')
+            ->count();
+        return $studentFront;
+    }
 
     /**
      * 判断老师是否准备好，和学生是否是当前第一个
@@ -567,11 +599,11 @@ class WatchReminderRepositories extends BaseRepository
 
         // todo 调用学生前面等待人数方法
         $willStudents = $this->getNowQueueExam();
-
+        \Log::alert('学生前面的人数',[$studentFront ,$willStudents]);
         if ($studentFront == 0 || $willStudents ==0) {
             // todo 通知学生去的考场
             $data = $this->getStudentFinishExam($studentFinishExam, $roomInfo, $this->room);
-            \Log::info('判断学生应该去的考场2', $data);
+            \Log::info('判断学生应该去的考场834', $data);
         } else {
             $data['code'] = 1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
             $data['estTime'] = $examtimes;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
