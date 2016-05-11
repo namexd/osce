@@ -511,6 +511,16 @@ class WatchReminderRepositories extends BaseRepository
     private function getStudentFrontNum()
     {
         $time = $this->nowQueue->begin_dt;
+        $student = ExamQueue::where('exam_id', '=', $this->exam->id)
+            ->where('exam_screening_id', '=', $this->examScreening->id)
+            ->where('room_id', '=', $this->room->id)
+            ->where('status', '=', 0)
+            ->whereRaw("UNIX_TIMESTAMP(begin_dt) < UNIX_TIMESTAMP('$time')")
+            ->orderBy('begin_dt', 'asc')
+            ->get();
+
+        \Log::info('学生前面的人数',[$student]);
+            
         $studentFront = ExamQueue::where('exam_id', '=', $this->exam->id)
             ->where('exam_screening_id', '=', $this->examScreening->id)
             ->where('room_id', '=', $this->room->id)
