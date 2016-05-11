@@ -196,9 +196,11 @@ class WatchReminderRepositories  extends BaseRepository
 
     private  function getWatchStatus(){
         //根据当前学生获取NFC——code
-        $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch',function($watch){
-            $watch->on('watch.id','=','watch_log.watch_id');
-        })->first();
+        $code = ExamScreeningStudent::leftJoin('watch','exam_screening_student.watch_id','=','watch.id')
+            ->where('exam_screening_student.exam_screening_id',$this->examScreening->id)
+            ->where('exam_screening_student.student_id',$this->student->id)
+            ->select(['watch.code'])
+            ->first();
         return  $code;
     }
 
@@ -510,9 +512,7 @@ class WatchReminderRepositories  extends BaseRepository
             $willStudents = $studentFront+1;
         }
         //根据当前学生获取NFC——code
-        $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch',function($watch){
-            $watch->on('watch.id','=','watch_log.watch_id');
-        })->first();
+        $code = $this-> getWatchStatus();
 
 //        foreach($studentQueueList as $queueList){
 //            //根据学生获取NFC _code
@@ -612,9 +612,7 @@ class WatchReminderRepositories  extends BaseRepository
      */
     public function getchoose(){
         //根据当前学生获取NFC——code
-        $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch',function($watch){
-            $watch->on('watch.id','=','watch_log.watch_id');
-        })->first();
+        $code =  $this->getWatchStatus();
         //根据考试和学生对象获取当前学生所属考站
         $studentStationName = Station::where('id','=',$this->nowQueue->station_id)->first()->pluck('name');
         $data = [
@@ -639,9 +637,7 @@ class WatchReminderRepositories  extends BaseRepository
      */
     public function getStartExam(){
         //根据当前学生获取NFC——code
-        $code = WatchLog::where('watch_log.student_id','=',$this->student->id)->leftjoin('watch',function($watch){
-            $watch->on('watch.id','=','watch_log.watch_id');
-        })->select('watch.code')->first();
+        $code =  $this->getWatchStatus();
 
         //根据考试和学生对象获取当前队列
 //        $nowQueue = $this->nowQueue;
