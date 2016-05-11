@@ -343,6 +343,10 @@ class WatchReminderRepositories extends BaseRepository
         if (is_null($this->room)) {
             $this->room = $this->nowQueue->room;
         }
+        
+        if($this->room->id != $this->nowQueue->room_id){
+            $this->room = $this->nowQueue->room;
+        }
 
         return $this->nowQueue;
 
