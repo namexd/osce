@@ -58,23 +58,13 @@ class ExamControl extends Model
                 $join -> on('exam_draft_flow.id', '=','exam_draft.exam_draft_flow_id');
             })->leftJoin('station', function($join){//考试;
                 $join -> on('exam_draft.station_id', '=','station.id');
-            })->select('station.id')->groupBy('station.id')->where('exam.status','=',1)->get();
+            })->select('station.id')->groupBy('station.id')->where('exam.id',$exam->id)->get();
 
             $stationCount = count($stationCount);
 
             $examScreeningStudentModel = new ExamScreeningStudent();
             //统计学生数量
-            $studentCount = $examScreeningStudentModel->leftJoin('student', function($join){//学生表
-                $join -> on('student.id', '=', 'exam_screening_student.student_id');
-            })->leftJoin('exam', function($join){
-                $join -> on('exam.id', '=','student.exam_id');
-            })->leftJoin('exam_queue', function($join){
-                $join -> on('exam_queue.student_id', '=', 'student.id');
-            })->leftJoin('station', function($join){
-                $join -> on('exam_queue.station_id', '=', 'station.id');
-            })->leftJoin('station_teacher', function($join){
-                $join -> on('station.id', '=', 'station_teacher.station_id');
-            })->groupBy('student.id')->where('exam.status',1)->get();
+            $studentCount = Student::where('exam_id',$exam->id)->groupBy('student.id')->get();
 
             $studentCount = count($studentCount);
 
@@ -89,7 +79,7 @@ class ExamControl extends Model
                 $join -> on('exam_queue.station_id', '=', 'station.id');
             })->leftJoin('station_teacher', function($join){
                 $join -> on('station.id', '=', 'station_teacher.station_id');
-            })->groupBy('student.id')->where('exam.status',1)->where('exam_queue.status',2)->get();
+            })->groupBy('student.id')->where('exam.id',$exam->id)->where('exam_queue.status',2)->get();
 
             $doExamCount = count($doExamCount);
             //获取排考记录中该场考试所对应的学生信息
