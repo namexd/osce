@@ -506,14 +506,12 @@ class ApiController extends CommonController
         {
             if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }
-            if($ex->getCode() === 1001 || $ex->getCode() === 1002)
+            }elseif($ex->getCode() === 1001 || $ex->getCode() === 1002)
             {
                 //return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
                 Auth::logout();
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }
-            if ($ex->getCode() === -100) {
+            }else{
                 $data = array(
                     'status'=>0,
                     'info'=>$ex->getMessage()
@@ -522,6 +520,7 @@ class ApiController extends CommonController
                     'data' => $data,
                 ]);
             }
+
 
         }
     }
