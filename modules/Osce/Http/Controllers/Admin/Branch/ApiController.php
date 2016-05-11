@@ -470,6 +470,22 @@ class ApiController extends CommonController
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
 
+        $Exam = new Exam;
+        //获取本次考试的id
+        $ExamInfo = $Exam->where('status','=',1)->select('id','name')->first();
+        if(empty($ExamInfo)){
+            throw new \Exception(' 没有在进行的考试',-100);
+        }
+
+        //获取当前正在考试的场次id
+        $examScreeningModel = new ExamScreening();
+        $examScreening      = $examScreeningModel -> getExamingScreening($ExamInfo->id);
+        if(is_null($examScreening))
+        {
+            $examScreening  = $examScreeningModel -> getNearestScreening($ExamInfo->id);
+        }
+        $exam_screen_id = $examScreening->id;       //获取场次id
+
         try {
             $user = Auth::user();
             // 检查用户是否登录
@@ -504,6 +520,7 @@ class ApiController extends CommonController
         }
         catch(\Exception $ex)
         {
+            echo $exam_screen_id;
             if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
             }elseif($ex->getCode() === 1001 || $ex->getCode() === 1002)
