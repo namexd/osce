@@ -130,7 +130,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         //查看腕表是否绑定
         $watchStatus = $this->getWatchStatus();
-        if($watchStatus->status = 0){
+        if($watchStatus->status == 0){
             $data = [
                 'code' => -1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
                 'willStudents' => '',
@@ -199,7 +199,7 @@ class WatchReminderRepositories  extends BaseRepository
         $code = ExamScreeningStudent::leftJoin('watch','exam_screening_student.watch_id','=','watch.id')
             ->where('exam_screening_student.exam_screening_id',$this->examScreening->id)
             ->where('exam_screening_student.student_id',$this->student->id)
-            ->select(['watch.code'])
+            ->select(['watch.code','watch.status'])
             ->first();
         return  $code;
     }
@@ -228,24 +228,7 @@ class WatchReminderRepositories  extends BaseRepository
 
         //是否当前队列是否为待考
         if($queue->status == 0){
-            //拿到所有的考站
-            $stationLists = ExamStationStatus::where('exam_screening_id', $this->examScreening->id)
-                ->get()->pluck('station_id')->toArray();
-
-            $stationIds =  ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-                ->where('exam_draft.room_id', '=', $this->room->id)
-                ->whereIn('exam_draft.station_id',$stationLists)
-                ->where('exam_draft_flow.exam_id', '=',$this->exam->id)
-                ->get()
-                ->pluck('station_id')
-                ->toArray();
-            //dd($stationIds ,$this->room->id);
-            //判断房间是否准备好
-            $exam_station_station = ExamStationStatus::where('exam_id','=',$queue->exam_id)
-                ->whereIn('station_id',$stationIds)
-                ->where('exam_screening_id','=',$queue->exam_screening_id)
-                ->where('status','=',0)
-                ->count();
+            $exam_station_station = $this->getTeacherStatus();
             if($exam_station_station  <= 0)
             {
                 //准备好了，通知去考场
@@ -260,9 +243,32 @@ class WatchReminderRepositories  extends BaseRepository
         }
 
 
-
-
     }
+
+    //判断老师是否准备完成
+    private function getTeacherStatus(){
+        //拿到所有的考站
+        $stationLists = ExamStationStatus::where('exam_screening_id', $this->examScreening->id)
+            ->get()->pluck('station_id')->toArray();
+
+        $stationIds =  ExamDraft::  leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft.room_id', '=', $this->room->id)
+            ->whereIn('exam_draft.station_id',$stationLists)
+            ->where('exam_draft_flow.exam_id', '=',$this->exam->id)
+            ->get()
+            ->pluck('station_id')
+            ->toArray();
+        //dd($stationIds ,$this->room->id);
+        //判断房间是否准备好
+        $exam_station_station = ExamStationStatus::where('exam_id','=',$this->nowQueue->exam_id)
+            ->whereIn('station_id',$stationIds)
+            ->where('exam_screening_id','=',$this->nowQueue->exam_screening_id)
+            ->where('status','=',0)
+            ->count();
+        return  $exam_station_station;
+    }
+
+
     /**
      * @content：根据exam、student对象查找队列数据
      * @author：
@@ -383,14 +389,14 @@ class WatchReminderRepositories  extends BaseRepository
         $drawlots = new DrawlotsRepository();
         $stationNum = count($drawlots->getStationNum($this->exam->id, $this->room->id, $this->examScreening->id));
 
-        //获取当前同组学生清单
-        $studentQueueList = ExamQueue::where('exam_id','=',$exam->id)
-                                ->where('exam_screening_id','=',$this->examScreening->id)
-                                ->where('room_id','=',$this->room->id)
-                                ->where('status',0)
-                                ->orderBy('begin_dt','asc')
-                                ->take($stationNum)
-                                ->get();
+//        //获取当前同组学生清单
+//        $studentQueueList = ExamQueue::where('exam_id','=',$exam->id)
+//                                ->where('exam_screening_id','=',$this->examScreening->id)
+//                                ->where('room_id','=',$this->room->id)
+//                                ->where('status',0)
+//                                ->orderBy('begin_dt','asc')
+//                                ->take($stationNum)
+//                                ->get();
 
         //获取前面还有多少人
         $studentFront = ExamQueue::where('exam_id','=',$exam->id)
@@ -529,6 +535,7 @@ class WatchReminderRepositories  extends BaseRepository
         //获取将要去的考场
         $room = Room::find($this->nowQueue->room_id);
         $roomInfo = $this->getStudentNextExam();
+        $examtimes = date('H:i', (strtotime($this->nowQueue->begin_dt)));
         if($this->exam->same_time == 1){ //判断考试是否要求学生同进同出
             if($stationStatus->isEmpty()){
                 //判断学生当前在队列的位置
@@ -536,10 +543,21 @@ class WatchReminderRepositories  extends BaseRepository
                   $data = $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
 
                 }else{
-                    $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-                    $data['willStudents'] =$willStudents;
-                    $data['willRoomName'] =$room->name;
-                    $data['title'] ='前面还有多少考生';
+                    if($studentFront == 0){
+                        $exam_station_station = $this->getTeacherStatus();
+                        if($exam_station_station == 0){ //老师准备好
+                            $data = $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
+                        }else{ //老师没有准备好
+                            $data['code'] =0;  // 侯考状态（对应界面：准备中）
+                            $data['title'] ='准备中.......';
+                        }
+                    }else{
+                        $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                        $data['estTime'] =$examtimes;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                        $data['willStudents'] =$willStudents;
+                        $data['willRoomName'] =$room->name;
+                        $data['title'] ='前面还有多少考生';
+                    }
                 }
 
             }else{
@@ -553,6 +571,7 @@ class WatchReminderRepositories  extends BaseRepository
                     $data = $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
                 }else{
                     $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                    $data['estTime'] =$examtimes;
                     $data['willStudents'] =$willStudents;
                     $data['willRoomName'] =$room->name;
                     $data['title'] ='前面还有多少考生';
@@ -562,6 +581,7 @@ class WatchReminderRepositories  extends BaseRepository
             }else{
                 \Log::alert('学生前面人数',[$studentFront,$stationNum ,count($stationStatus),$this->student->name,$this->nowQueue->begin_dt]);
                 $data['code'] =1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
+                $data['estTime'] =$examtimes;
                 $data['willStudents'] =$willStudents;
                 $data['willRoomName'] =$room->name;
                 $data['title'] ='前面还有多少考生';
@@ -594,11 +614,11 @@ class WatchReminderRepositories  extends BaseRepository
 
         if(!is_null($studentFinishExam)){
             $data['code'] =5;  // 侯考状态（对应界面：请前往下一教室）
-            $data['roomName'] =$roomInfo->name;
+            $data['nextExamName'] =$roomInfo->name;
             $data['title'] ='上一场考试已完成,请进入下一考场'.$roomInfo->name;
         }else{
             $data['code'] =2;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-            $data['willRoomName'] =$room->name;
+            $data['roomName'] =$room->name;
             $data['title'] ='请进入考场'.$room->name;
         }
         return $data;
@@ -619,8 +639,8 @@ class WatchReminderRepositories  extends BaseRepository
             'code' => 3, // 抽签状态（对应界面：请到XX考站）
             'willStudents' => '',
             'estTime' => '',
-            'willRoomName' => $studentStationName,
-            'roomName' =>'',
+            'willRoomName' => '',
+            'roomName' =>$studentStationName,
             'nextExamName' =>'',
             'surplus' =>'',
             'score' =>'',
@@ -712,7 +732,7 @@ class WatchReminderRepositories  extends BaseRepository
             'title' =>'',
         ];
 
-        $data['code']=7;
+        $data['code']=6;
         $data['score']='';
         $data['title']='场次考试已完成,请归还腕表';
 
@@ -792,6 +812,10 @@ class WatchReminderRepositories  extends BaseRepository
        }
         \Log::debug('传送给腕表的数据',[$exam,$student,$room,$station]);
         $this->getStudentExamReminder($exam,$student,$room,$station);
+
+//       return response()->json(
+//           ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
+//       );
 
    }
 

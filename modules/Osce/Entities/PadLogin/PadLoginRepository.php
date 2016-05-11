@@ -31,10 +31,10 @@ class PadLoginRepository
     public function examList(TimeInterface $time)
     {
         //获取服务器今天的开始时间
-        $beginTime = $time->beginTime(time());
+        $beginTime = $time->beginTime();
 
-        //获取服务器今天的开始时间
-        $endTime = $time->endTime(time());
+        //获取服务器今天的几首时间
+        $endTime = $time->endTime();
 
 //        //获取集合
 //        $collection = $this->padLogin->screenBegin($beginTime, $endTime);

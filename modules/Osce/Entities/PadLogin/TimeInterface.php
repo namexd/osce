@@ -21,7 +21,7 @@ interface TimeInterface
      * @time 2016-05-02
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function beginTime($currentTime);
+    public function beginTime();
 
     /**
      * 服务器今天的结束时间
@@ -33,5 +33,5 @@ interface TimeInterface
      * @time 2016-05-02
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function endTime($currentTime);
+    public function endTime();
 }

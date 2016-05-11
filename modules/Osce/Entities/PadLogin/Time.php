@@ -9,6 +9,8 @@
 namespace Modules\Osce\Entities\PadLogin;
 
 
+use Carbon\Carbon;
+
 class Time implements TimeInterface
 {
     /**
@@ -21,10 +23,11 @@ class Time implements TimeInterface
      * @time 2016-05-02
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function beginTime($currentTime)
+    public function beginTime()
     {
-        $temp = date('Y-m-d', $currentTime);
-        return date('Y-m-d H:i:s', strtotime($temp));
+//        $temp = date('Y-m-d', $currentTime);
+//        return date('Y-m-d H:i:s', strtotime($temp));
+        return Carbon::today()->toDateTimeString();
     }
 
     /**
@@ -36,9 +39,10 @@ class Time implements TimeInterface
      * @time 2016-05-02
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function endTime($currentTime)
+    public function endTime()
     {
-        $temp = date('Y-m-d', $currentTime + 86400);
-        return date('Y-m-d H:i:s', strtotime($temp) - 1);
+//        $temp = date('Y-m-d', $currentTime + 86400);
+//        return date('Y-m-d H:i:s', strtotime($temp) - 1);
+        return Carbon::tomorrow()->subSecond()->toDateTimeString();
     }
 }

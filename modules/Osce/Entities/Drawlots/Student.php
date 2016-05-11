@@ -15,13 +15,14 @@ use Modules\Osce\Entities\ExamScreeningStudent;
 
 class Student implements StudentInterface
 {
-    public function getStudent($nfc)
+    public function getStudent($examScreeningId, $nfc)
     {
         try {
             \Log::debug('nfc', [$nfc]);
             return ExamScreeningStudent::watch()
                 ->where('watch.status', 1)
                 ->where('watch.code', $nfc)
+                ->where('exam_screening_id', $examScreeningId)
                 ->where('exam_screening_student.is_end', 0)
                 ->select(
                     'exam_screening_student.student_id as student_id',
