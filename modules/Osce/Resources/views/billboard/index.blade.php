@@ -54,7 +54,6 @@
     function show(){
       var exam_id = $('#exam_id').val();
       var station_id = $('#station_id').val();
-
       $.ajax({
         url:"{{route('osce.billboard.getStudent')}}",
         data: {exam_id: exam_id, station_id: station_id},
