@@ -110,6 +110,7 @@ class TestResult extends CommonModel
             //校验普通分数
             $this->checkScore($subject,$scoreData);
             //校验特殊分数
+            \Log::debug('开始校验特殊评分项',[$specialScoreData]);
             $this->checkSpecialScore($subject,$specialScoreData);
 
             //拿到特殊评分项总成绩
@@ -246,6 +247,7 @@ class TestResult extends CommonModel
                 }
             }
         }
+        \Log::info('普通数据校验完成',[]);
     }
 
     //根据考试项目检查普通特殊评分数据
