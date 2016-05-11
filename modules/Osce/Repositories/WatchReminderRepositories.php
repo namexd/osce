@@ -454,7 +454,7 @@ class WatchReminderRepositories extends BaseRepository
             if ($stationStatus->isEmpty()) {
                 //判断学生当前在队列的位置
                 if ($studentFront < $this->stationNum) {
-
+                    \Log::alert('判断学生是否进入这个方法1111',[$studentFront,$this->stationNum]);
                     // todo 通知学生去的地方
                     $data = $this->getStudentFinishExam($studentFinishExam, $roomInfo, $this->room);
                     \Log::info('判断学生应该去的考场2', $data);
