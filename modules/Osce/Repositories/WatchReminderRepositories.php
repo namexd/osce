@@ -59,6 +59,7 @@ class WatchReminderRepositories  extends BaseRepository
         $this->exam     =   $exam;
         $this->student  =   $student;
         $this->room     =   $room;
+
         $this->station =   $station;
         $this->redis    =   Redis::connection('message');;
         $examScreeningModel     =   new ExamScreening();
@@ -263,8 +264,9 @@ class WatchReminderRepositories  extends BaseRepository
         $exam_station_station = ExamStationStatus::where('exam_id','=',$this->nowQueue->exam_id)
             ->whereIn('station_id',$stationIds)
             ->where('exam_screening_id','=',$this->nowQueue->exam_screening_id)
-            ->where('status','=',0)
+            ->whereIn('status',[0,4])
             ->count();
+        \Log::alert('老师准备的数量',[$exam_station_station]);
         return  $exam_station_station;
     }
 
@@ -277,6 +279,7 @@ class WatchReminderRepositories  extends BaseRepository
     public function getExamStudentQueueList($exam,$student,$examScreening){
         $StudentQueueList = ExamQueue::where('exam_id','=',$exam->id)
                             ->where('exam_screening_id','=',$examScreening->id)
+                            ->whereIn('status',[0,1,2])
                             ->where('student_id','=',$student->id)->orderBy('begin_dt','asc')->get();
         if($StudentQueueList){
             return $StudentQueueList;
@@ -461,8 +464,8 @@ class WatchReminderRepositories  extends BaseRepository
 
         //当前房间的考站数量
         $drawlots = new DrawlotsRepository();
-        $stationNum = count($drawlots->getStationNum($this->exam->id, $this->room->id, $this->examScreening->id));
-
+        $stationNum = count($drawlots->getStationNum($this->exam->id, $queue->room_id, $this->examScreening->id));
+        \Log::alert('当前房间考站的数量',[$stationNum]);
 
         //获取当前同组学生清单
 //        $studentQueueList = ExamQueue::where('exam_id','=',$exam->id)
@@ -499,7 +502,7 @@ class WatchReminderRepositories  extends BaseRepository
             ->whereRaw("UNIX_TIMESTAMP(begin_dt) < UNIX_TIMESTAMP('$time')")
             ->orderBy('begin_dt','asc')
             ->count();
-
+        \Log::alert('学生前面的人数',[$studentFront]);
         //获取当前队列是否有考试中的人
         $studentDoingNum = ExamQueue::where('exam_id','=',$exam->id)
             ->where('exam_screening_id','=',$this->examScreening->id)
@@ -541,12 +544,15 @@ class WatchReminderRepositories  extends BaseRepository
                 //判断学生当前在队列的位置
                 if($studentFront < $stationNum){
                   $data = $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
+                    \Log::alert('判断学生应该去的考场',$data);
 
                 }else{
                     if($studentFront == 0){
+
                         $exam_station_station = $this->getTeacherStatus();
                         if($exam_station_station == 0){ //老师准备好
                             $data = $this->getStudentFinishExam($studentFinishExam,$roomInfo,$room);
+                            \Log::alert('判断学生应该去的考场2',$data);
                         }else{ //老师没有准备好
                             $data['code'] =0;  // 侯考状态（对应界面：准备中）
                             $data['title'] ='准备中.......';
@@ -601,11 +607,12 @@ class WatchReminderRepositories  extends BaseRepository
             $join->on('room.id', '=', 'exam_queue.room_id');
              })
             ->where('exam_queue.exam_id','=',$this->exam->id)
+            ->where('exam_queue.student_id','=',$this->student->id)
             ->where('exam_queue.exam_screening_id','=',$this->examScreening->id)
             ->where('exam_queue.status','=',0)
             ->orderBy('exam_queue.begin_dt','asc')
             ->first();
-
+        \Log::alert('获取到的学生的下一场',[$NextQueue->name]);
         return $NextQueue;
     }
     //判断考生是否有完成的考试 是否提示去下一场
