@@ -712,7 +712,7 @@ class WatchReminderRepositories  extends BaseRepository
             'title' =>'',
         ];
 
-        $data['code']=7;
+        $data['code']=6;
         $data['score']='';
         $data['title']='场次考试已完成,请归还腕表';
 
@@ -792,6 +792,10 @@ class WatchReminderRepositories  extends BaseRepository
        }
         \Log::debug('传送给腕表的数据',[$exam,$student,$room,$station]);
         $this->getStudentExamReminder($exam,$student,$room,$station);
+
+//       return response()->json(
+//           ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
+//       );
 
    }
 
