@@ -194,18 +194,18 @@ class TestResult extends CommonModel
             throw new \Exception('找不到当前项目下的评分表');
         }
         $standardItems  =   $standard   ->  standardItem;
-
+        \Log::info('提交普通成绩校验-评分表详情清单',[$standardItems,$subject]);
         $scoreList  =   [];
 
         foreach($score as $priont)
         {
-            $scoreList[$priont->id] =   $priont;
+            $scoreList[$priont['id']] =   $priont;
             foreach($priont['test_term'] as $option)
             {
-                $scoreList[$option->id] =   $option;
+                $scoreList[$option['id']] =   $option;
             }
         }
-        \Log::info('提交普通成绩校验-评分表详情清单',[$standardItems,$subject]);
+
         \Log::info('提交普通成绩校验-评分表详情提交数据',[$score,$scoreList]);
         foreach($standardItems as $item)
         {
