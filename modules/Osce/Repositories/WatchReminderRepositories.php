@@ -264,8 +264,9 @@ class WatchReminderRepositories  extends BaseRepository
         $exam_station_station = ExamStationStatus::where('exam_id','=',$this->nowQueue->exam_id)
             ->whereIn('station_id',$stationIds)
             ->where('exam_screening_id','=',$this->nowQueue->exam_screening_id)
-            ->where('status','=',0)
+            ->whereIn('status',[0,4])
             ->count();
+        \Log::alert('老师准备的数量',[$exam_station_station]);
         return  $exam_station_station;
     }
 
@@ -278,7 +279,7 @@ class WatchReminderRepositories  extends BaseRepository
     public function getExamStudentQueueList($exam,$student,$examScreening){
         $StudentQueueList = ExamQueue::where('exam_id','=',$exam->id)
                             ->where('exam_screening_id','=',$examScreening->id)
-                            ->where('status','=',0)
+                            ->whereIn('status',[0,1,2])
                             ->where('student_id','=',$student->id)->orderBy('begin_dt','asc')->get();
         if($StudentQueueList){
             return $StudentQueueList;
