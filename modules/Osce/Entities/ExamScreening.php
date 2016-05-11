@@ -165,8 +165,6 @@ class ExamScreening extends CommonModel
 
         $exam     = Exam::doingExam($exam_id);
 
-
-
         if($exam->id != $exam_id){
             throw new \Exception('开考考试不对！');
         }
@@ -175,7 +173,7 @@ class ExamScreening extends CommonModel
                             ->pluck('exam_screening_id')->toArray();
 
         $result = $this->where('exam_id', '=', $exam_id)
-                ->whereRaw("UNIX_TIMESTAMP(begin_dt) > UNIX_TIMESTAMP('$todayStart')
+                ->whereRaw("UNIX_TIMESTAMP(begin_dt) >= UNIX_TIMESTAMP('$todayStart')
                           AND UNIX_TIMESTAMP(end_dt) < UNIX_TIMESTAMP('$todayEnd')")
                 ->where('status', '=', 0)
                 ->whereIn('id', $screenId)
@@ -191,7 +189,7 @@ class ExamScreening extends CommonModel
         $todayEnd   = date('Y-m-d 23:59:59');
 
         $result     = $this->where('exam_id', '=', $exam_id)
-                    ->whereRaw("UNIX_TIMESTAMP(begin_dt) > UNIX_TIMESTAMP('$todayStart')
+                    ->whereRaw("UNIX_TIMESTAMP(begin_dt) >= UNIX_TIMESTAMP('$todayStart')
                               AND UNIX_TIMESTAMP(end_dt) < UNIX_TIMESTAMP('$todayEnd')")
                     ->where('status', '=', 1)       //等候考试
                     ->OrderBy('begin_dt', 'asc')

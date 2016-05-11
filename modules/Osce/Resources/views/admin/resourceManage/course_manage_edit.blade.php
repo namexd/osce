@@ -239,7 +239,7 @@
                             <div class="col-sm-12" id="checkbox_div">
                                 <label class="check_label checkbox_input checkbox_one" style="height: 15px;line-height: 28px;margin-left: 13.7%;">
                                      <div class="check_icon {{($item->specialScores->isEmpty())?'':'check'}}" style="display: inline-block;margin:5px 0 0 5px;float:left;"></div>
-                                     <input type="checkbox" name="special_score_flag" value="{{($item->specialScores->isEmpty())?0:1}}">
+                                     <input type="checkbox" name="special_score_flag" value="{{($item->specialScores->isEmpty())?0:1}}"  checked="checked">
                                      <span class="check_name" style="display: inline-block;float:left;">特殊评分项</span>
                                 </label>
                             </div>
@@ -314,7 +314,7 @@
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" type="number" value="{{round($subjectSupply->num)}}" name="goods[{{$key+1}}][number]">
+                                                        <input class="form-control" value="{{round($subjectSupply->num)}}" name="goods[{{$key+1}}][number]">
                                                     </td>
                                                     <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
                                                 </tr>

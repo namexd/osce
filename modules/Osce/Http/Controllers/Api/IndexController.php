@@ -193,7 +193,6 @@ class IndexController extends CommonController
         $roomMsg_two = $examScreen->getNearestScreening($exam_id);
 
         // TODO 这里应该判断该场次是否被安排开始。待测试修改    周强  2016-4-30
-
         if ($roomMsg) {
             $exam_screening_id = $roomMsg->id;
         } elseif ($roomMsg_two) {
@@ -246,18 +245,18 @@ class IndexController extends CommonController
             return \Response::json(array('code'=>5));   //未在考试队列 请等待
         }
 
-        //修改场次状态
-        $examScreeningModel = new ExamScreening();
-        $examScreening      = $examScreeningModel -> getExamingScreening($exam_id);
-        if(is_null($examScreening))
+        //修改场次状态 TODO: Zhoufuxiang 216-05-11
+        $examScreening = ExamScreening::find($exam_screening_id);
+        if(!is_null($examScreening))
         {
-            $examScreening  = $examScreeningModel -> getNearestScreening($exam_id);
             $examScreening  ->status = 1;
             //场次开考（场次状态变为1）
             if(!$examScreening -> save())
             {
                 throw new \Exception('场次开考失败！');
             }
+        }else{
+            throw new \Exception('获取场次失败！');
         }
         $exam_screen_id = $examScreening->id;
 

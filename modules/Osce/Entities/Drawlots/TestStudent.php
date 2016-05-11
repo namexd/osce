@@ -13,7 +13,7 @@ use Modules\Osce\Entities\ExamQueue;
 
 class TestStudent implements StudentInterface
 {
-    public function getStudent($nfc)
+    public function getStudent($examScreeningId, $nfc)
     {
         return ExamQueue::whereStudentId(5560)->first();
     }

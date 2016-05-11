@@ -477,6 +477,8 @@ class ApiController extends CommonController
                 throw new \Exception('用户未登录', 1000);
             }
             //检验登录的老师是否是监考老师
+
+
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('你不是监考老师', 1001);
             }
@@ -845,7 +847,7 @@ class ApiController extends CommonController
                         \Log::alert('老师准备的学生id',$studentIds);
 
                         foreach($studentIds as $studentId){
-                            $watchReminder->getWatchPublish($studentId, $stationId, $roomId);
+                            $watchReminder->getWatchPublish($studentId, $stationId, '');
                         }
                     } catch (\Exception $ex) {
                         \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
