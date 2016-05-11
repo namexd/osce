@@ -196,12 +196,14 @@ class TestResult extends CommonModel
         $standardItems  =   $standard   ->  standardItem;
         \Log::info('提交普通成绩校验-评分表详情清单',[$standardItems,$subject]);
         $scoreList  =   [];
-
+        \Log::info('提交普通成绩校验-提交的数据',[$score]);
         foreach($score as $priont)
         {
+            \Log::info('提交普通成绩校验-提交的考核点数据',[$priont]);
             $scoreList[$priont['id']] =   $priont;
             foreach($priont['test_term'] as $option)
             {
+                \Log::info('提交普通成绩校验-提交的考核项数据',[$option]);
                 $scoreList[$option['id']] =   $option;
             }
         }
