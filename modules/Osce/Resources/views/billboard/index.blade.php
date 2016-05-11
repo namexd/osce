@@ -8,10 +8,11 @@
       padding: 0;
     }
     #area{
-      font-family: 黑体;
+      font-family: 微软雅黑;
       width: 1050px;
       height: 1680px;
       font-size: 60px;
+      color: #676a6c;
     }
     #body{
       padding-top: 100px;
@@ -80,22 +81,22 @@
       <span id="exam_station">{{$data['station_name']}}</span>
     </div>
     <div class="title">
-      <span>考生：</span>
+      <span>考生:</span>
       <span id="student"></span>
     </div>
     <div class="title">
-      <span>时间：</span>
+      <span>时间:</span>
       <span id="time">{{$data['mins']}}分钟</span><span>，时间到请停止考试</span>
     </div>
     <div class="title">
-      <span>病例：</span>
-      <span id="case">{{$data['case_name']}}</span>
+      <span>病例:</span>
+      {{--<span id="case">{{$data['case_name']}}</span>--}}
     </div>
     <div id="description">{{$data['case_description']}}
     </div>
   </div>
   <div id="pic">
-    <img src="{{asset('osce/images/u4.png')}}" width="138px" height="55px" align="right">
+    <img src="{{asset('osce/images/u4.png')}}" width="100%" height="100%" align="right">
   </div>
   <div id="background">
     <img src="{{asset('osce/images/bg_02.png')}}" align="bottom">

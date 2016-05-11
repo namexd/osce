@@ -24,7 +24,11 @@ class GoWrong implements DrawValidatorInterface
             ->whereBlocking(1)
             ->orderBy('begin_dt', 'asc')
             ->first();
-        \Log::debug('room', $temp->toArray());
+        \Log::debug('GoWrong', [$studentId, $screenId, $roomId, $examId]);
+        \Log::debug('room', [$temp]);
+        if (is_null($temp)) {
+            throw new \Exception('当前学生信息错误');
+        }
         if ($temp->room_id != $roomId) {
             $room = Room::find($temp->room_id);
             Common::valueIsNull($room, -11, '数据错误，请重试');

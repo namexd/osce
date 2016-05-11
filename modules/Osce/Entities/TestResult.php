@@ -112,7 +112,7 @@ class TestResult extends CommonModel
             $this->checkSpecialScore($subject,$specialScoreData);
 
             //拿到特殊评分项总成绩
-            $specialTotal  =   array_pluck($scoreData, 'score');
+            $specialTotal  =   array_pluck($specialScoreData, 'score');
             $specialTotal  =   array_sum($specialTotal);
 
             //拿到总成绩

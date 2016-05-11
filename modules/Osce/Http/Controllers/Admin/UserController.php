@@ -170,11 +170,34 @@ class UserController extends CommonController
                 throw new \Exception('此为当前登录人的账号，无法删除自己！');
             }
             //删除对应的系统管理员角色 TODO: Zhoufuxiang 216-04-13
-            $sysUserRoles = SysUserRole::where('user_id','=',$id)->where('role_id','=',$role_id)->get();
-            foreach ($sysUserRoles as $sysUserRole) {
-                if(!$sysUserRole->delete()){
-                    throw new \Exception('删除该用户管理员角色失败！');
-                }
+            \DB::connection('sys_mis')->transaction(function () use ($id, $role_id)
+            {
+                //1、
+//                $userInfo = User::where('id', '=', $id)->first();
+//                if(is_null($userInfo))
+//                {
+//                    throw new \Exception('没找到对应用户', 223);
+//                }
+//                foreach ($userInfo->roles as $item)
+//                {
+//                    $pivot = $item->pivot;
+//                    if($item->pivot->role_id == $role_id){
+//                        //删除（没有主键的删除方法）
+//                        if (!$pivot->delete()) {
+//                            throw new \Exception('删除用户对应角色失败', 21323);
+//                        }
+//                    }
+//                }
+                //2、
+                $delUserRoles = SysUserRole::where('user_id', '=', $id)->where('role_id','=', $role_id)->delete();
+            });
+
+//            $sysUserRoles = SysUserRole::where('user_id', '=', $id)->where('role_id','=',$role_id)->get();
+//            foreach ($sysUserRoles as $sysUserRole)
+//            {
+//                //if(!$sysUserRole->delete()){
+//                //    throw new \Exception('删除该用户管理员角色失败！');
+//                //}
 //            $noAdminRole = [
 //                config('config.teacherRoleId'),
 //                config('config.examineeRoleId'),
@@ -191,7 +214,7 @@ class UserController extends CommonController
 //                return $this->success_data('删除成功！');
 //            } else {
 //                throw new \Exception('删除失败！');
-            }
+//            }
 
 //            $user = User::find($id);
 //            if (!$user->delete()) {

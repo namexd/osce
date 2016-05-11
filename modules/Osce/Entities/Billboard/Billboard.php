@@ -52,7 +52,7 @@ class Billboard
     {
         return ExamQueue::whereExamId($examId)
             ->whereStationId($stationId)
-            ->whereStatus(1)
+            ->whereIn('status', [1, 2])
             ->orderBy('begin_dt', 'asc')
             ->first();
     }

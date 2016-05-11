@@ -182,6 +182,53 @@ class InvigilatePadController extends CommonController
         }
     }
 
+    /**获取学生信息
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAuthenticationtwo(Request $request)
+    {
+        $this->validate($request, [
+            'station_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
+        ], [
+            'station_id.required' => '考站编号必须',
+            'teacher_id.required' => '老师编号必须'
+        ]);
+
+        try {
+            $redis = Redis::connection('message');
+            $stationId = (int)$request->input('station_id');
+            $exam = Exam::doingExam();
+            $studentModel = new  Student();
+            $studentData = $studentModel->studentListtwo($stationId, $exam);
+            if ($studentData['nextTester']) {
+                $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+                \Log::alert('推送当前学生',[$studentData['nextTester']]);
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
+                return response()->json(
+                    $this->success_data($studentData['nextTester'], 102, '验证完成')
+                );
+            } else {
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
+                throw new \Exception('学生信息查询失败', -2);
+            }
+        } catch (\Exception $ex) {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
+    }
+
+
+
+
     /**
      * 身份验证推送
      * @method GET
@@ -369,6 +416,20 @@ class InvigilatePadController extends CommonController
             $stationId    = Input::get('station_id');
             $studentId    = Input::get('student_id');
             $examScreeningId = Input::get('exam_screening_id');
+
+            //重新获取场次ID，TODO: Zhoufuxiang 2016-05-11
+            $exam = Exam::doingExam();
+            $ExamScreening = new ExamScreening();
+            $examScreening = $ExamScreening->getExamingScreening($exam->id);
+            if(is_null($examScreening)){
+                $examScreening = $ExamScreening->getNearestScreening($exam->id);
+                if(is_null($examScreening)){
+                    throw new \Exception('没有对应场次', -313);
+                }
+            }
+            $examScreeningId = $examScreening->id;
+            \Log::alert('考站：'.$stationId . ';学生：' . $studentId . ';场次：' . $examScreeningId . '成绩推送313');
+
             //到队列表里查询出学生的开始和结束时间
             $studentExamTime = ExamQueue::where('station_id', '=', $stationId)
                                         ->where('exam_screening_id', '=', $examScreeningId)
@@ -804,7 +865,7 @@ class InvigilatePadController extends CommonController
                 // todo 调用向腕表推送消息的方法
                 try{
 
-                    $watchReminder ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
+                    $watchReminder ->getWatchPublish($exam->id,$studentId,$stationId,$examQueue->room_id);
                 }catch (\Exception $ex){
                     \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
                 }

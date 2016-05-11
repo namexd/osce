@@ -12,6 +12,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('update/index',['uses'=>'UpdateController@getIndex','as' => 'osce.admin.getUpdate']);
 		Route::post('update/index',['uses'=>'UpdateController@postIndex','as'=>'osce.admin.postUpdate']);
 		Route::get('test/index',['uses'=>'TestController@getIndex','as'=>'osce.admin.test']);
+		Route::get('showlog/index',['uses'=>'ShowLogController@ShowLog','as'=>'osce.admin.showLog']);
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
 		//登录注册
@@ -432,6 +433,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//pad监考
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.api.invigilatepad.getAuthentication']);
+
+		Route::get('invigilatepad/authenticationtwo', 	['uses'=>'InvigilatePadController@getAuthenticationtwo','as'=>'osce.api.invigilatepad.getAuthenticationtwo']);
+
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.api.invigilatepad.getExamGrade']);
 		Route::post('invigilatepad/save-exam-result', 	['uses'=>'InvigilatePadController@postSaveExamResult','as'=>'osce.api.invigilatepad.postSaveExamResult']);
 		Route::post('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@postSaveExamEvaluate','as'=>'osce.api.invigilatepad.postSaveExamEvaluate']);
@@ -525,8 +529,8 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(Redis $redis) {
-	$a = \Carbon\Carbon::today();
-	dd($a->toDateString());
+	$a = \Carbon\Carbon::tomorrow();
+	dd($a->subSecond()->timestamp);
 });
 
 Route::get('redis', function(){

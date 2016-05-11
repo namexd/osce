@@ -25,6 +25,7 @@ use Modules\Osce\Entities\ExamAbsent;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Repositories\Common;
 
+use Modules\Osce\Repositories\WatchReminderRepositories;
 use Redis;
 
 class ExamMonitorController  extends CommonController
@@ -78,7 +79,7 @@ class ExamMonitorController  extends CommonController
      * @date 2016-04-11 11:39
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postStopExam(Request $request)
+    public function postStopExam(Request $request,WatchReminderRepositories $watchReminder)
     {
         $this->validate($request,[
             'examId'       => 'required|integer',//考试编号
@@ -106,6 +107,14 @@ class ExamMonitorController  extends CommonController
             $examControlModel = new ExamControl();
             $result = $examControlModel->stopExamLate($data, $screen_id);
             if ($result == true) {
+
+                // todo 调用腕表方法
+                try{
+                    $watchReminder ->getWatchPublish($examId,$studentId);
+
+                }catch (\Exception $ex){
+                    \Log::debug('弃考调用腕表出错',[$examId,$studentId]);
+                }
          
                 $result=$this->getAbsentStudent($studentId, $examId, $screen_id); //插入缺考记录 学生已缺考
 

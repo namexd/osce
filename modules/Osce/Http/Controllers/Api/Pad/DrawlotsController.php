@@ -653,6 +653,7 @@ class DrawlotsController extends CommonController
             'exam_id' => 'required|integer'
         ]);
         \Log::info('drawlots_params', $this->request->all());
+        $exam_id = $this->request->input('exam_id');
         try {
             //写入具体的数据
             $huaxiDrawlots->setParams($this->request->all());
@@ -665,17 +666,18 @@ class DrawlotsController extends CommonController
             //获取推送给腕表时需要的参数
             $params = $huaxiDrawlots->getParams();
             \Log::info('推送给腕表的数据', $params);
-            \Log::info('推送给pad的数据', [$student]);
+
             //将数据推送给腕表
             try {
 //                $studentWatchController = new StudentWatchController();
 //                $this->request['nfc_code'] = $this->request->input('uid');
 //                $studentWatchController->getStudentExamReminder($this->request);
-                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
+                $watchReminder->getWatchPublish($exam_id,$params['student_id'], $params['station_id'], $params['room_id']);
             } catch (\Exception $ex) {
                 \Log::info('抽签中推送腕表失败', $this->request->input('uid'));
             }
             //将数据推送给pad端
+            \Log::info('推送给pad的数据', [$student, 'channel' => md5($_SERVER['HTTP_HOST']) . 'pad_message']);
             $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
                 json_encode($this->success_data($student, 102, '抽签成功！')));
 
@@ -732,6 +734,10 @@ class DrawlotsController extends CommonController
 
             if ($station->type == 3) {//理论站
                 $paper = ExamPaper::where('id', $station->paper_id)->first();
+                if (is_null($paper)) {
+                    throw new \Exception('当前考站的考卷已经被删，请重新设置' . $station->name);
+                }
+
                 $station->mins = $paper->length;
             } else {
                 $ExamDraft = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=',
@@ -806,7 +812,7 @@ class DrawlotsController extends CommonController
                 \Log::alert('老师登陆获得信息',[$station]);
             return response()->json($this->success_data($station));
         } catch (\Exception $ex) {
-
+            \Log::info('');
             return response()->json($this->fail($ex));
         }
     }

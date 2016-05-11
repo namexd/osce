@@ -470,6 +470,14 @@ class ApiController extends CommonController
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
 
+        $Exam = new Exam;
+        //获取本次考试的id
+        $ExamInfo = $Exam->where('status','=',1)->select('id','name')->first();
+        if(empty($ExamInfo)){
+            throw new \Exception(' 没有在进行的考试',-100);
+        }
+
+
         try {
             $user = Auth::user();
             // 检查用户是否登录
@@ -477,32 +485,27 @@ class ApiController extends CommonController
                 throw new \Exception('用户未登录', 1000);
             }
             //检验登录的老师是否是监考老师
+
+
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('你不是监考老师', 1001);
             }
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
-            if (is_array($ExamInfo)) {
-                // 还要判断监考老师的类型是不是理论站的监考老师-station_teacher
-                $stationModel = new Station();
-                $station = $stationModel->where('id', '=', $ExamInfo['StationId'])->first();
+            // 还要判断监考老师的类型是不是理论站的监考老师-station_teacher
+            $stationModel = new Station();
+            $station = $stationModel->where('id', '=', $ExamInfo['StationId'])->first();
 
-                if($station->type != 3) {
-                    throw new \Exception('你不是理论考试的监考老师', 1002);
-                }
-                $data = array(
-                    'status'=>1,
-                    'name'      => $ExamInfo['ExamName'],
-                    'stationId' => $ExamInfo['StationId'],
-                    'examId'    => $ExamInfo['ExamId'],
-                    'userId'    => $user->id,
-                );
-            }else {
-                $data = array(
-                    'status'=>0,
-                    'info'=>$ExamInfo
-                );
+            if($station->type != 3) {
+                throw new \Exception('你不是理论考试的监考老师', 1002);
             }
+            $data = array(
+                'status'=>1,
+                'name'      => $ExamInfo['ExamName'],
+                'stationId' => $ExamInfo['StationId'],
+                'examId'    => $ExamInfo['ExamId'],
+                'userId'    => $user->id,
+            );
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
@@ -518,6 +521,17 @@ class ApiController extends CommonController
                 Auth::logout();
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
             }
+            if($ex->getCode() === -100 || $ex->getCode() === -101){
+                $data = array(
+                    'status'=>0,
+                    'info'=>$ex->getMessage()
+                );
+                return view('osce::admin.theoryCheck.theory_check_volidate', [
+                    'data' => $data,
+                ]);
+            }
+
+
         }
     }
 
@@ -816,7 +830,7 @@ class ApiController extends CommonController
 //                $studentWatchController = new StudentWatchController();
 //                $request['nfc_code'] = $watch['nfc_code'];
 //                $studentWatchController->getStudentExamReminder($request, $stationId);
-                $watchReminder->getWatchPublish($examQenens->student_id, $stationId, $roomId);
+                $watchReminder->getWatchPublish($examId,$examQenens->student_id, $stationId, $roomId);
             } catch (\Exception $ex) {
                 \Log::debug('准备考试按钮2', [$examQenens->student_id, $stationId, $roomId]);
             }
@@ -845,7 +859,7 @@ class ApiController extends CommonController
                         \Log::alert('老师准备的学生id',$studentIds);
 
                         foreach($studentIds as $studentId){
-                            $watchReminder->getWatchPublish($studentId, $stationId, $roomId);
+                            $watchReminder->getWatchPublish($examId,$studentId, $stationId);
                         }
                     } catch (\Exception $ex) {
                         \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
@@ -902,7 +916,7 @@ class ApiController extends CommonController
      * @date 2016-04-05 17:54
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postAlertExamReplace (Request $request) {
+    public function postAlertExamReplace (Request $request,WatchReminderRepositories $watchReminder) {
         $this->validate($request, [
             'mode'              => 'required|in:1,2',
             'exam_id'           => 'required|integer',
@@ -1002,6 +1016,13 @@ class ApiController extends CommonController
                     if(!ExamMonitor::create($examMonitorData)){
                         throw new \Exception(' 向监控标记学生替考记录表插入数据失败！',-105);
                     }
+                    try{
+                        $watchReminder ->getWatchPublish($examId,$studentId, $stationId);
+
+                    }catch (\Exception $ex){
+                        \Log::debug('监控调用腕表出错',[$examId,$studentId, $stationId]);
+                    }
+
                     $retval['title'] = '确定替考成功';
                     return response()->json(
                         $this->success_data($retval,1,'success')
