@@ -318,7 +318,7 @@ class IndexController extends CommonController
             try{
                 $studentWatchController = new WatchReminderRepositories();
                 //$request['nfc_code'] = $Watch->code;
-                $studentWatchController->getWatchPublish($student_id,'','');
+                $studentWatchController->getWatchPublish($exam_id,$student_id,'','');
             }catch (\Exception $ex){
                 \Log::debug('绑定腕表调腕表接口出错',[$student_id,$ex]);
             }
@@ -471,8 +471,7 @@ class IndexController extends CommonController
 
                     try{
                         $studentWatchController = new WatchReminderRepositories();
-                        //$request['nfc_code'] = $Watch->code;
-                        $studentWatchController->getWatchPublish($student_id,$exameeStatus->station_id,$exameeStatus->room_id);
+                        $studentWatchController->getWatchPublish( $exam_id,$student_id,$exameeStatus->station_id,$exameeStatus->room_id);
                     }catch (\Exception $ex){
                         \Log::debug('解绑腕表接口推送失败',[$student_id,$ex]);
                     }
@@ -509,7 +508,7 @@ class IndexController extends CommonController
                     try{
                         $studentWatchController = new WatchReminderRepositories();
                         //$request['nfc_code'] = $Watch->code;
-                        $studentWatchController->getWatchPublish($student_id,$exameeStatus->station_id,$exameeStatus->room_id);
+                        $studentWatchController->getWatchPublish($exam_id,$student_id,$exameeStatus->station_id,$exameeStatus->room_id);
                     }catch (\Exception $ex){
                         \Log::debug('解绑腕表接口推送失败',[$student_id,$ex]);
                     }

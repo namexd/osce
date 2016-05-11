@@ -37,17 +37,45 @@ class ShowLogController extends CommonController
        }
        $name =$request->input('name','laravel-');
        $date = $request->input('date',date('Y-m-d'));
+       $date = date('Y-m-d',strtotime($date));
        $path = dirname(__FILE__).'/../../../../../storage/logs/';
        $filename = $path.$name.$date.'.log';
-
+       $beginHour = $request->input('begin_hour',date('H'));
+       $endHour = $request->input('end_hour',date('H'));
+       if($endHour > 23 || $endHour < 0){
+           $endHour = date('H');
+       }
+       if($beginHour > 23 || $beginHour < 0){
+           $beginHour = date('H');
+       }
+       if($beginHour > $endHour)
+       {
+           $beginHour = $endHour;
+       }
        if(!file_exists($filename)){
            echo $name.$date.'.log'.'no exist';
        }
        else{
-           $content = file_get_contents($filename);
-           $content = str_replace(array("\r\n","\n"),'<br>',$content);
-           $content .= '<br> log over';
-           echo $content;
+
+           $file = fopen($filename,"r");
+
+           while(! feof($file))
+           {
+               $content = fgets($file);
+               $content = str_replace(array("\r\n","\n"),'<br>',$content);
+               $pos = strpos($content,'['.$date);
+               if($pos !== false ){
+                   $hour = substr($content,$pos+12,2);
+
+                   if(is_numeric($hour) && $hour >= $beginHour && $hour <=$endHour){
+                       echo $content;
+                   }
+
+               }
+           }
+           echo '<br> log over';
+           fclose($file);
+
        }
        exit();
    }

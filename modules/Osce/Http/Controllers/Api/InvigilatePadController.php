@@ -864,7 +864,7 @@ class InvigilatePadController extends CommonController
                 // todo 调用向腕表推送消息的方法
                 try{
 
-                    $watchReminder ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
+                    $watchReminder ->getWatchPublish($exam->id,$studentId,$stationId,$examQueue->room_id);
                 }catch (\Exception $ex){
                     \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
                 }
