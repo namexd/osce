@@ -31,7 +31,7 @@
     .exam_msg{
         width: 90%;
         margin: auto;
-        font-size: 25px;
+        font-size: 60px;
         margin-top: 50px;
     }
     .green{
@@ -61,7 +61,7 @@
     .fl{float: left;margin-top: 150px;}
     .m5{margin-left: 15px;}
     .f_red{color: red;}
-    #bottom{position:absolute;bottom:20%;right: 175px}
+    #bottom{position:absolute;bottom:10%;right: 175px}
     </style>
 @stop
 <?php
