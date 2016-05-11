@@ -9,6 +9,7 @@
 namespace Modules\Osce\Repositories;
 
 
+use Modules\Osce\Entities\Student;
 use App\Entities\SysUserRole;
 use App\Entities\SysRoles;
 use App\Entities\User;
@@ -487,7 +488,7 @@ class Common
                 throw new \Exception('没有对应的角色，请去新增对应角色，或者查看角色配置！');
             }
 
-            $mobile = $userData['mobile'];
+            $mobile = trim($userData['mobile']);
             //根据条件：查找用户是否有账号和密码
             $user   = User::where('username', '=', $mobile)->first();
 
@@ -495,7 +496,7 @@ class Common
                 //设置密码
                 $password = (config('osce.debug') == true)? '123456': Common::getRandStr(6);
                 //注册用户
-                $userData['username'] = $userData['mobile'];
+                $userData['username'] = $mobile;
                 unset($userData['mobile']);
                 $user = Common::registerUser($userData, $password);
                 //给用户发送短信
@@ -560,5 +561,52 @@ class Common
         return $sysUserRole;
     }
 
+    /**
+     * 身份证号验证
+     * @param $examId
+     * @param $data
+     * @return bool
+     * @throws \Exception
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-5-11 10:10
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public static function checkIdCard($examId, $data)
+    {
+        $idCard = trim($data['idcard']);
+        $mobile = trim($data['mobile']);
+        //1、验证身份证的正确性
+//        if (!preg_match('/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/', $idCard) || !preg_match('/^((s?[A-Za-z])|([A-Za-z]{2}))d{6}((([0-9aA]))|([0-9aA]))$/', $idCard)) {
+//            throw new \Exception('第' . ($key) . '行身份证号不符规格，请修改后重试！');
+//        }
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $idCard)) {
+            throw new \Exception('身份证号不符规格，请修改后重试！');
+        }
+
+        //2、查询同一场考试中，身份证号是否已经存在
+        $result = Student::where('exam_id', '=', $examId)->where('idcard','=', $idCard)->first();
+        if(!is_null($result)){
+            throw new \Exception('身份证号已经存在，请修改后重试！');
+        }
+        //3、查询用户表中身份证号是否重复
+          //(1)、查询同组数据中，是否已存在对应用户
+        $user = User::where('username', '=', $mobile)->select(['id', 'idcard'])->first();
+        if(!is_null($user))
+        {
+            //查询其余人是否已经使用该身份证号
+            $result = User::where('id', '<>', $user->id)->where('idcard', '=', $idCard)->first();
+            if(!is_null($result)){
+                throw new \Exception('身份证号已经存在，请修改后重试！');
+            }
+        }else
+        {
+            $user = User::where('idcard', '=', $idCard)->first();
+            if(!is_null($user)){
+                throw new \Exception('身份证号已经存在，请修改后重试！');
+            }
+        }
+        return true;
+    }
 
 }
