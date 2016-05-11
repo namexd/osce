@@ -797,6 +797,7 @@ class WatchReminderRepositories extends BaseRepository
         $student = null;
         $station = null;
         $room = null;
+        \Log::info('测试数据',[32342]);
         if (!is_null($studentId)) {
             $student = Student::find($studentId); //拿到考生实例
         }
