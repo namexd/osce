@@ -23,6 +23,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\ExamStationStatus;
 use Illuminate\Support\Facades\Redis;
 use Modules\Osce\Entities\ExamPlan;
+use Modules\Osce\Repositories\WatchReminderRepositories;
 
 class StudentWatchController extends CommonController
 {
@@ -50,111 +51,58 @@ class StudentWatchController extends CommonController
         ]);
 
         $watchNfcCode = $request->input('nfc_code');
-
-        $data = [
-            'title' => '',
-            'willStudents' => '',
-            'estTime' => '',
-            'willRoomName' => '',
-            'roomName' => '',
-            'nextExamName' => '',
-            'surplus' => '',
-            'score' => '',
-        ];
-        $redis = Redis::connection('message');
-
-        //通过学生id拿到nfc_code;todo 待确定是否只要学生id，推送腕表信息
-//        $watchNfcCode =$this->getStudentWatchNfcCode($studentId);
-//        if(empty($watchNfcCode)){
-//            $data['title'] = '未找到腕表';
-//            $data['code'] = -2;
-//            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
-//                'nfc_code' => $watchNfcCode,
-//                'data' => $data,
-//                'message' => 'error',
-//            ]));
-//            return response()->json(
-//                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
-//            );
-//
-//        }
         //根据腕表nfc_code找到腕表
         $watch = Watch::where('code', '=', $watchNfcCode)->first();
-        if (is_null($watch)) {
-            $data['title'] = '未找到腕表';
-            $data['code'] = -2;
-            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
-                'nfc_code' => $watchNfcCode,
-                'data' => $data,
-                'message' => 'error',
-            ]));
-            return response()->json(
-                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
-            );
-        }
-
-        //判定腕表是否绑定
-        if ($watch->status == 0) {
-            $data['title'] = '腕表未绑定';
-            $data['code'] = -1; // -1 腕表未绑定
-            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
-                'nfc_code' => $watchNfcCode,
-                'data' => $data,
-                'message' => 'error'
-            ]));
-            return response()->json(
-                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
-            );
-        }
 
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)
             ->where('is_end', '=', 0)
             ->orderBy('signin_dt', 'desc')
             ->first();
-        if (is_null($watchStudent)) {
-            $data['title'] = '没有找到腕表对应的考试信息';
-            $data['code'] = -3;
-            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
-                    'nfc_code' => $watchNfcCode,
-                    'data' => $data,
-                    'message' => 'error']
-            ));
-            return response()->json(
-                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
-            );
-        }
 
         //得到学生id
         $studentId = $watchStudent->student_id;
 
-        //根据考生id得到该场考试该阶段的所有队列列表
-        $examQueueModel = new ExamQueue();
-        $examQueueCollect = $examQueueModel->StudentExamQueue($studentId, $examscreeningId);
-     
-        if (is_null($examQueueCollect)) {
-            $data['title'] = '未找到学生队列信息';
-            $data['code'] = -4;
-            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
-                'nfc_code' => $watchNfcCode,
-                'data' => $data,
-                'message' => 'error'
-            ]));
-            return response()->json(
-                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
-            );
+        //调用新的腕表方法
+        $watch = new WatchReminderRepositories();
+        try{
+           $watchStudentData = $watch ->getWatchPublish($studentId, '', '');
+            
+//            return response()->json(
+//                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
+//            );
+        }catch (\Exception $ex){
+            \Log::alert('刷新腕表调用腕表出错',[$studentId]);
         }
 
-        //判断考试的状态
-        $data = $this->nowQueue($examQueueCollect, $stationId);
-        $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
-            'nfc_code' => $watchNfcCode,
-            'data' => $data,
-            'message' => 'success'
-        ]));
-        return response()->json(
-            $this->success_data($data, 1)
-        );
+//
+//        //根据考生id得到该场考试该阶段的所有队列列表
+//        $examQueueModel = new ExamQueue();
+//        $examQueueCollect = $examQueueModel->StudentExamQueue($studentId, $examscreeningId);
+//
+//        if (is_null($examQueueCollect)) {
+//            $data['title'] = '未找到学生队列信息';
+//            $data['code'] = -4;
+//            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
+//                'nfc_code' => $watchNfcCode,
+//                'data' => $data,
+//                'message' => 'error'
+//            ]));
+//            return response()->json(
+//                ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'error']
+//            );
+//        }
+//
+//        //判断考试的状态
+//        $data = $this->nowQueue($examQueueCollect, $stationId);
+//        $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
+//            'nfc_code' => $watchNfcCode,
+//            'data' => $data,
+//            'message' => 'success'
+//        ]));
+//        return response()->json(
+//            $this->success_data($data, 1)
+//        );
     }
 
     /**
@@ -421,6 +369,12 @@ class StudentWatchController extends CommonController
             );
         }
     }
+
+
+
+
+
+
 
 
     private function getTeacherPrepareStatus($item)
