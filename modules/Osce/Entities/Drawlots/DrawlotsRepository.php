@@ -110,7 +110,11 @@ class DrawlotsRepository extends AbstractDrawlots
         $connection = \DB::connection('osce_mis');
         $connection->beginTransaction();
         try {
-            $this->student = $this->studentObj->getStudent($this->params['uid']);
+            //获取当前的screen
+            $screen = $this->screen->screening($this->params['exam_id']);
+            Common::valueIsNull($screen, -3, '获取场次失败');
+
+            $this->student = $this->studentObj->getStudent($screen->id, $this->params['uid']);
             Common::valueIsNull($this->student, -2, '当前学生信息错误');
 
             //如果该学生已经抽签了，就直接返回实例
@@ -120,9 +124,7 @@ class DrawlotsRepository extends AbstractDrawlots
                 return $this->draw->assembly($obj->station->name);
             }
 
-            //获取当前的screen
-            $screen = $this->screen->screening($this->params['exam_id']);
-            Common::valueIsNull($screen, -3, '获取场次失败');
+
 
             //验证
             $this->process($this->student->student_id, $this->params['exam_id'], $screen->id, $this->params['room_id']);
