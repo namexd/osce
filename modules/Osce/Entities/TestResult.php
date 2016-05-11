@@ -102,6 +102,8 @@ class TestResult extends CommonModel
 
             //获取考试成绩特殊评分项扣分详情（解析json为数组）
             $specialScoreData = $this->getSpecialScore($specialScore);
+
+            //todo:增加提交数据校验  20160512 01:02 luohaihua
             //获取当前考试当前场次当前考站下的考试项目
             $subject    =   $this->getSuject($examScreening->exam_id,$examScreening->id,$data['station_id']);
             //校验普通分数
@@ -237,6 +239,7 @@ class TestResult extends CommonModel
             }
         }
     }
+
     //根据考试项目检查普通特殊评分数据
     private function checkSpecialScore($subject,$specialScoreData){
         if(is_null($subject))
@@ -371,7 +374,7 @@ class TestResult extends CommonModel
                     throw new \Exception('舍弃考试成绩失败',-1200);
                 }
             }
-
+            return true;
         }catch (\Exception $ex){
             throw $ex;
         }
