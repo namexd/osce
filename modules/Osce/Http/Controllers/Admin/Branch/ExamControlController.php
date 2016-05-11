@@ -18,6 +18,7 @@ use Modules\Osce\Entities\Watch;
 use Modules\Osce\Http\Controllers\Api\StudentWatchController;
 use Modules\Osce\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
+use Modules\Osce\Repositories\WatchReminderRepositories;
 
 
 /**考试监控
@@ -59,7 +60,7 @@ class ExamControlController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postStopExam(Request $request)
+    public function postStopExam(Request $request,WatchReminderRepositories $watchReminder)
     {
 
         $this->validate($request,[
@@ -114,18 +115,29 @@ class ExamControlController extends CommonController
 
             $examScreeningStudentData = ExamScreeningStudent::where('exam_screening_id','=',$data['examScreeningId'])
                 ->where('student_id','=',$data['studentId'])->first();
+            
             if(!empty($examScreeningStudentData)){
-                //向watch端推送消息
-                $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
-                $request['nfc_code'] = $watchData->code;
-                //拿到阶段序号
-                $gradationOrder = ExamScreening::find($data['examScreeningId']);
-                //拿到该阶段所对应的所有场次id
-                $examscreeningId = ExamScreening::where('exam_id','=',$data['examId'])->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
-                $studentWatchController = new StudentWatchController();
-                $studentWatchController->getStudentExamReminder($request,$data['stationId'],$examscreeningId);
+                
+                //todo 调用腕表信息
+                try{
+                    $watchReminder ->getWatchPublish($data['examId'],$data['studentId'], $data['stationId']);
 
+                }catch (\Exception $ex){
+                    \Log::debug('终止考试调用腕表出错',[$data['examId'],$data['studentId'], $data['stationId']]);
+                }
+                
+                
+//                //向watch端推送消息
+//                $watchData = Watch::where('id','=',$examScreeningStudentData->watch_id)->first();
+//                $request['nfc_code'] = $watchData->code;
+//                //拿到阶段序号
+//                $gradationOrder = ExamScreening::find($data['examScreeningId']);
+//                //拿到该阶段所对应的所有场次id
+//                $examscreeningId = ExamScreening::where('exam_id','=',$data['examId'])->where('gradation_order','=',$gradationOrder->gradation_order)->get()->pluck('id');
+//                $studentWatchController = new StudentWatchController();
+//                $studentWatchController->getStudentExamReminder($request,$data['stationId'],$examscreeningId);
             }
+            
             return response()->json(
                 $this->success_data([],1,'success')
             );
