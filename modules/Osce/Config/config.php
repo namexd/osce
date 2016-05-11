@@ -11,6 +11,7 @@ return [
 	'begin_dt_buffer' => 10,
 	'batch_num' => 10,
 	'wait_student_num' => 4,
+	'sms_signature' => '【华西临床技能中心】',
 
 	'topticOptionMaxNumer'	=>	50,
 	

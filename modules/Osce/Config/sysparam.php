@@ -20,11 +20,11 @@
     ],
 
 
-    /*
+   /*
     * 学生通知方式保存
     */
     'student' => [
-        'wechat' => 1,
+        'wechat' => 0,
         'sms' => 1,
         'mail' => 0,
         'user_pm' => 0,

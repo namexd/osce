@@ -525,17 +525,6 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(Redis $redis) {
-//	return view('osce::Drawlots');
-//	$a = collect([1,2,3]);
-//	$b = collect([2,3,4]);
-	$a = [
-		'1' => 123,
-		'3' => 234
-	];
-
-	$b = collect($a);
-
-	dd($b->values());
 
 });
 

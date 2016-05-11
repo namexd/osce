@@ -50,6 +50,10 @@ class Subject extends CommonModel
     {
         return $this->belongsToMany('Modules\Osce\Entities\Supply','subject_supply','subject_id','supply_id','id');
     }
+
+    public function specials(){
+        return $this->hasMany('Modules\Osce\Entities\SubjectSpecialScore','subject_id','id');
+    }
     /**
      * 获取课题列表（考核点的盒子的列表）
      * @access public
@@ -340,13 +344,22 @@ class Subject extends CommonModel
             Common::delRelation($subject, 'cases',     '删除与病例的关联失败', -600);
             Common::delRelation($subject, 'supplys',   '删除与用物的关联失败', -601);
             Common::delRelation($subject, 'standards', '删除与评分标准的关联失败', -602);
+
+            //Common::delRelation($subject, 'standards', '删除与特殊评分项的关联失败', -602);
             //删除考试项目对应的评分标准
             $Standard = new Standard();
             $Standard ->delStandard($subject);
+            if(count($subject->specials))
+            {
+                if(!$subject->specials()->delete())
+                {
+                    throw new \Exception('删除关联特殊评分项失败');
+                }
+            }
 
             //删除考试项目
             if (!$subject->delete()) {
-                throw new \Exception('删除考试项目失败');
+                throw new \Exception('删除考试项目失败',-603);
             }
 
             $connection->commit();
@@ -355,6 +368,7 @@ class Subject extends CommonModel
         } catch (\Exception $ex) {
 
             $connection->rollBack();
+            \Log::debug('删除科目',[$ex]);
             if ($ex->getCode() == 23000) {
                 throw new \Exception('该科目已经被使用了,不能删除');
             } else {

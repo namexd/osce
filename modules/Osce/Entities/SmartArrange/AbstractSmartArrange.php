@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Entities\SmartArrange;
 
+use Modules\Osce\Entities\SmartArrange\Export\DengStudent;
 use Modules\Osce\Entities\SmartArrange\Traits\CheckTraitsForHuaxi;
 use Modules\Osce\Entities\SmartArrange\Traits\SQLTraits;
 use Modules\Osce\Entities\SmartArrange\Traits\CheckTraits;
@@ -160,6 +161,65 @@ abstract class AbstractSmartArrange implements SmartArrangeInterface
 
 
             }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * 新的保存order数据
+     * @access public
+     * @param $exam
+     * @return mixed
+     * @throws \Exception
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-10
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function newSaveStudentOrder($exam)
+    {
+        /*
+         * 获取列表
+         */
+        $dengStudent = new DengStudent(new ExamPlan());
+        $planList = $dengStudent->getData($exam->id);
+        try {
+            //删除exam_order表
+            if (ExamOrder::where('exam_id', '=', $exam->id)->delete() === false) {
+                throw new \Exception('弃用旧安排失败');
+            }
+
+            //处理数据
+            $studentOrderData = [];
+            foreach ($planList as $item) { //item是每一个场次
+                $tempArray = [];
+                //在场次里循环遍历，将每一个学生的第一次出现写入
+                foreach ($item as $value) {
+                    //如果学生已经出现过了，continue
+                    if (array_key_exists($value->student_id, $tempArray)) {
+                        continue;
+                    }
+
+                    //如果不是，存入表中
+                    $tempArray[$value->student_id] = [
+                        'exam_id' => $exam->id,
+                        'exam_screening_id' => $value->exam_screening_id,
+                        'student_id' => $value->student_id,
+                        'begin_dt' => $value->begin_dt,
+                        'status' => 0,
+                        'created_user_id' => \Auth::id(),
+                    ];
+                }
+
+                //合并数组
+                $studentOrderData = array_merge($studentOrderData, $tempArray);
+            }
+
+            //将数据写入数据表中
+
+            return ExamOrder::insert($studentOrderData);
+
         } catch (\Exception $ex) {
             throw $ex;
         }

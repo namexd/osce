@@ -1,2 +1,1 @@
-
-{{$student_name}},你好！！你有一场考试要参加，考试名称为《{{$exam_name}}》，考试开始时间为《{{$student_begin_dt}}》,请你准时参加。
+{{$notice->student->name}},请于{{implode('、',$timeData)}}到{{$notice->exam->address}}参加{{$notice->exam->name}}。请着白大褂，佩戴胸牌，自备口罩帽子，不得缺席，不得擅自调换考试顺序。您带上身份证，提前20分钟到场。考试安排表张贴在临床教学楼320办公室外。

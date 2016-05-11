@@ -53,7 +53,9 @@ class Message extends CommonModel
                                     $wechatNum++;
                                     break;
                     case 'msg'    :                                             //1、发送短信（调用发送短信方法）
-                    default       : $this->sendShortMsg($to, $content);         //默认发送短信
+                    default       :
+                                    $content    .=  config('osce.sms_signature','【华西临床技能中心】');
+                                    $this->sendShortMsg($to, $content);         //默认发送短信
                                     $msgNum++;
                 }
 

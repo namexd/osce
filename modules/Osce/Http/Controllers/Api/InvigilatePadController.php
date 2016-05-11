@@ -56,17 +56,12 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex()
     {
-       
-        $exam = Exam::doingExam();
-        
-        $examScreeningModel = new ExamScreening();
-        //获取到当考试场次id
-        $ExamScreening = $examScreeningModel->getExamingScreening($exam->id);
-        if (is_null($ExamScreening)) {
-            $ExamScreening = $examScreeningModel->getNearestScreening($exam->id);
 
-        }
-        dd($ExamScreening);
+        $studentId =132;
+        $stationId =25;
+        $roomId = 6;
+        $watch = new WatchReminderRepositories();
+        $watch ->getWatchPublish($studentId,$stationId,$roomId);
 
     }
 
@@ -361,7 +356,7 @@ class InvigilatePadController extends CommonController
 
             $this->validate($request, [
                 'score'             => 'required',
-                'special'           => 'sometimes',
+                //'special'           => 'sometimes',
                 'student_id'        => 'required',
                 'station_id'        => 'required',
                 'exam_screening_id' => 'required',
@@ -370,7 +365,7 @@ class InvigilatePadController extends CommonController
                 'score.required'    => '请检查评分标准分值',//json的格式
             ]);
             $score        = Input::get('score');
-            $specialScore = Input::get('special');      //特殊评分项（扣分json数据）TODO: zhoufuxiang
+            //$specialScore = Input::get('special');      //特殊评分项（扣分json数据）TODO: zhoufuxiang
             $stationId    = Input::get('station_id');
             $studentId    = Input::get('student_id');
             $examScreeningId = Input::get('exam_screening_id');
@@ -417,7 +412,7 @@ class InvigilatePadController extends CommonController
 
             /*********保存考试成绩**********/
             $TestResultModel  = new TestResult();
-            $result = $TestResultModel->addTestResult($data, $score, $specialScore);
+            $result = $TestResultModel->addTestResult($data, $score);
             if (!$result) {
                 throw new \Exception('成绩保存失败');
             }
@@ -807,8 +802,8 @@ class InvigilatePadController extends CommonController
 
                 // todo 调用向腕表推送消息的方法
                 try{
-                    $watch = new WatchReminderRepositories();
-                    $watch ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
+
+                    $watchReminder ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
                 }catch (\Exception $ex){
                     \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
                 }
