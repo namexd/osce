@@ -308,6 +308,9 @@ class Student extends CommonModel
                 throw new \Exception('未找到当前操作人信息');
             }
 
+            //身份证号验证
+            Common::checkIdCard($exam_id, $userData);
+
             //处理考生用户信息（基本信息、角色分配）
             $user = Common::handleUser($userData, $role_id);
 //            $user = $this->handleUser($userData);

@@ -146,7 +146,6 @@ class WatchReminderRepositories  extends BaseRepository
             return response()->json(
                 ['nfc_code' => $watchStatus->code, 'data' => $data]);
         }
-        
         //根据exam、student对象查找队列数据
         $queueList  =   $this->getExamStudentQueueList($exam,$student,$examScreening);
 
@@ -197,9 +196,11 @@ class WatchReminderRepositories  extends BaseRepository
 
     private  function getWatchStatus(){
         //根据当前学生获取NFC——code
-        $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch',function($watch){
-            $watch->on('watch.id','=','watch_log.watch_id');
-        })->first();
+        $code = ExamScreeningStudent::leftJoin('watch','exam_screening_student.watch_id','=','watch.id')
+            ->where('exam_screening_student.exam_screening_id',$this->examScreening->id)
+            ->where('exam_screening_student.student_id',$this->student->id)
+            ->select(['watch.code'])
+            ->first();
         return  $code;
     }
 
@@ -419,20 +420,14 @@ class WatchReminderRepositories  extends BaseRepository
             'score' =>'',
             'title' =>'准备中....',
         ];
-
-        foreach($studentQueueList as $queueList){
             //根据学生获取NFC _code
-            $studentCode = WatchLog::where('student_id','=',$queueList->student_id)
-                            ->leftjoin('watch',function($watch){
-                                $watch->on('watch.id','=','watch_log.watch_id');
-                            })->select('code')->first();
+            $studentCode = $this->getWatchStatus();
 
-            $array[] = $studentCode->code;
-            $this->publishmessage($studentCode,$data,'success');
-        }
+
+            $this->publishmessage($studentCode->code,$data,'success');
 
         return response()->json(
-            ['nfc_code' => $array, 'data' => $data, 'message' => 'success']
+            ['nfc_code' => $studentCode->code, 'data' => $data, 'message' => 'success']
         );
     }
 
@@ -517,9 +512,7 @@ class WatchReminderRepositories  extends BaseRepository
             $willStudents = $studentFront+1;
         }
         //根据当前学生获取NFC——code
-        $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch',function($watch){
-            $watch->on('watch.id','=','watch_log.watch_id');
-        })->first();
+        $code = $this-> getWatchStatus();
 
 //        foreach($studentQueueList as $queueList){
 //            //根据学生获取NFC _code
@@ -605,7 +598,7 @@ class WatchReminderRepositories  extends BaseRepository
             $data['title'] ='上一场考试已完成,请进入下一考场'.$roomInfo->name;
         }else{
             $data['code'] =2;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-            $data['willRoomName'] =$room->name;
+            $data['roomName'] =$room->name;
             $data['title'] ='请进入考场'.$room->name;
         }
         return $data;
@@ -619,17 +612,15 @@ class WatchReminderRepositories  extends BaseRepository
      */
     public function getchoose(){
         //根据当前学生获取NFC——code
-        $code = WatchLog::where('student_id','=',$this->student->id)->leftjoin('watch',function($watch){
-            $watch->on('watch.id','=','watch_log.watch_id');
-        })->first();
+        $code =  $this->getWatchStatus();
         //根据考试和学生对象获取当前学生所属考站
         $studentStationName = Station::where('id','=',$this->nowQueue->station_id)->first()->pluck('name');
         $data = [
             'code' => 3, // 抽签状态（对应界面：请到XX考站）
             'willStudents' => '',
             'estTime' => '',
-            'willRoomName' => $studentStationName,
-            'roomName' =>'',
+            'willRoomName' => '',
+            'roomName' =>$studentStationName,
             'nextExamName' =>'',
             'surplus' =>'',
             'score' =>'',
@@ -646,9 +637,7 @@ class WatchReminderRepositories  extends BaseRepository
      */
     public function getStartExam(){
         //根据当前学生获取NFC——code
-        $code = WatchLog::where('watch_log.student_id','=',$this->student->id)->leftjoin('watch',function($watch){
-            $watch->on('watch.id','=','watch_log.watch_id');
-        })->select('watch.code')->first();
+        $code =  $this->getWatchStatus();
 
         //根据考试和学生对象获取当前队列
 //        $nowQueue = $this->nowQueue;
@@ -723,7 +712,7 @@ class WatchReminderRepositories  extends BaseRepository
             'title' =>'',
         ];
 
-        $data['code']=7;
+        $data['code']=6;
         $data['score']='';
         $data['title']='场次考试已完成,请归还腕表';
 
@@ -760,12 +749,15 @@ class WatchReminderRepositories  extends BaseRepository
      * 推送
      */
     private function publishmessage($watchNfcCode,$data,$message){
-        \Log::debug('腕表推送结果调试记录',[$message,$data,$watchNfcCode]);
+        \Log::debug('腕表推送结果调试记录',[$message,$data,$watchNfcCode,md5($_SERVER['HTTP_HOST']) . 'watch_message']);
         $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
             'nfc_code' => $watchNfcCode,
             'data' => $data,
             'message' => $message,
         ]));
+        return response()->json(
+            ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
+        );
     }
 
     /**
@@ -800,6 +792,10 @@ class WatchReminderRepositories  extends BaseRepository
        }
         \Log::debug('传送给腕表的数据',[$exam,$student,$room,$station]);
         $this->getStudentExamReminder($exam,$student,$room,$station);
+
+//       return response()->json(
+//           ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
+//       );
 
    }
 
