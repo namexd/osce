@@ -416,6 +416,20 @@ class InvigilatePadController extends CommonController
             $stationId    = Input::get('station_id');
             $studentId    = Input::get('student_id');
             $examScreeningId = Input::get('exam_screening_id');
+
+            //重新获取场次ID，TODO: Zhoufuxiang 2016-05-11
+            $exam = Exam::doingExam();
+            $ExamScreening = new ExamScreening();
+            $examScreening = $ExamScreening->getExamingScreening($exam->id);
+            if(is_null($examScreening)){
+                $examScreening = $ExamScreening->getNearestScreening($exam->id);
+                if(is_null($examScreening)){
+                    throw new \Exception('没有对应场次', -313);
+                }
+            }
+            $examScreeningId = $examScreening->id;
+            \Log::alert('考站：'.$stationId . ';学生：' . $studentId . ';场次：' . $examScreeningId . '成绩推送313');
+
             //到队列表里查询出学生的开始和结束时间
             $studentExamTime = ExamQueue::where('station_id', '=', $stationId)
                                         ->where('exam_screening_id', '=', $examScreeningId)

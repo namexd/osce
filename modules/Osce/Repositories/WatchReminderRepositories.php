@@ -343,6 +343,10 @@ class WatchReminderRepositories extends BaseRepository
         if (is_null($this->room)) {
             $this->room = $this->nowQueue->room;
         }
+        
+        if($this->room->id != $this->nowQueue->room_id){
+            $this->room = $this->nowQueue->room;
+        }
 
         return $this->nowQueue;
 
@@ -489,7 +493,7 @@ class WatchReminderRepositories extends BaseRepository
 
         $studentDoingNum = ExamQueue::where('exam_id', '=', $this->exam->id)
             ->where('exam_screening_id', '=', $this->examScreening->id)
-            ->where('room_id', '=', $this->room->id)
+            ->where('room_id', '=', $this->nowQueue->room_id)
             ->whereIn('status', [1, 2])
             ->orderBy('begin_dt', 'asc')
             ->first();
@@ -513,7 +517,7 @@ class WatchReminderRepositories extends BaseRepository
         $time = $this->nowQueue->begin_dt;
         $studentFront = ExamQueue::where('exam_id', '=', $this->exam->id)
             ->where('exam_screening_id', '=', $this->examScreening->id)
-            ->where('room_id', '=', $this->room->id)
+            ->where('room_id', '=', $this->nowQueue->room_id)
             ->where('status', '=', 0)
             ->whereRaw("UNIX_TIMESTAMP(begin_dt) < UNIX_TIMESTAMP('$time')")
             ->orderBy('begin_dt', 'asc')
