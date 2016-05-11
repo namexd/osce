@@ -11,5 +11,5 @@ namespace Modules\Osce\Entities\Drawlots;
 
 interface StudentInterface
 {
-    public function getStudent($nfc);
+    public function getStudent($examId, $nfc);
 }
