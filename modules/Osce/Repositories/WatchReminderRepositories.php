@@ -279,7 +279,7 @@ class WatchReminderRepositories  extends BaseRepository
     public function getExamStudentQueueList($exam,$student,$examScreening){
         $StudentQueueList = ExamQueue::where('exam_id','=',$exam->id)
                             ->where('exam_screening_id','=',$examScreening->id)
-                            ->whereIn('status','=',[0,1,2])
+                            ->whereIn('status',[0,1,2])
                             ->where('student_id','=',$student->id)->orderBy('begin_dt','asc')->get();
         if($StudentQueueList){
             return $StudentQueueList;
