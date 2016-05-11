@@ -484,27 +484,20 @@ class ApiController extends CommonController
             }
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
-            if (is_array($ExamInfo)) {
-                // 还要判断监考老师的类型是不是理论站的监考老师-station_teacher
-                $stationModel = new Station();
-                $station = $stationModel->where('id', '=', $ExamInfo['StationId'])->first();
+            // 还要判断监考老师的类型是不是理论站的监考老师-station_teacher
+            $stationModel = new Station();
+            $station = $stationModel->where('id', '=', $ExamInfo['StationId'])->first();
 
-                if($station->type != 3) {
-                    throw new \Exception('你不是理论考试的监考老师', 1002);
-                }
-                $data = array(
-                    'status'=>1,
-                    'name'      => $ExamInfo['ExamName'],
-                    'stationId' => $ExamInfo['StationId'],
-                    'examId'    => $ExamInfo['ExamId'],
-                    'userId'    => $user->id,
-                );
-            }else {
-                $data = array(
-                    'status'=>0,
-                    'info'=>$ExamInfo
-                );
+            if($station->type != 3) {
+                throw new \Exception('你不是理论考试的监考老师', 1002);
             }
+            $data = array(
+                'status'=>1,
+                'name'      => $ExamInfo['ExamName'],
+                'stationId' => $ExamInfo['StationId'],
+                'examId'    => $ExamInfo['ExamId'],
+                'userId'    => $user->id,
+            );
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
@@ -520,6 +513,16 @@ class ApiController extends CommonController
                 Auth::logout();
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
             }
+            if ($ex->getCode() === -100) {
+                $data = array(
+                    'status'=>0,
+                    'info'=>$ex->getMessage()
+                );
+                return view('osce::admin.theoryCheck.theory_check_volidate', [
+                    'data' => $data,
+                ]);
+            }
+
         }
     }
 
