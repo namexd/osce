@@ -406,7 +406,11 @@ class WatchReminderRepositories extends BaseRepository
      */
     public function getGOtoRoon()
     {
-       // todo 调用学生提示信息提示方法
+        // 初始化房间考站数量
+        $drawlots = new DrawlotsRepository();
+        $this->stationNum = count($drawlots->getStationNum($this->exam->id, $this->nowQueue->room_id, $this->examScreening->id));
+
+        // todo 调用学生提示信息提示方法
         $data = $this->getStudentWatchInfo();
         //根据当前学生获取NFC——code
         $code = $this->getWatchStatus();
