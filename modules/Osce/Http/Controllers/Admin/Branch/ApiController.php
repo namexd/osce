@@ -470,6 +470,22 @@ class ApiController extends CommonController
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
 
+        $Exam = new Exam;
+        //获取本次考试的id
+        $ExamInfo = $Exam->where('status','=',1)->select('id','name')->first();
+        if(empty($ExamInfo)){
+            throw new \Exception(' 没有在进行的考试',-100);
+        }
+
+        //获取当前正在考试的场次id
+        $examScreeningModel = new ExamScreening();
+        $examScreening      = $examScreeningModel -> getExamingScreening($ExamInfo->id);
+        if(is_null($examScreening))
+        {
+            $examScreening  = $examScreeningModel -> getNearestScreening($ExamInfo->id);
+        }
+        $exam_screen_id = $examScreening->id;       //获取场次id
+
         try {
             $user = Auth::user();
             // 检查用户是否登录
@@ -484,42 +500,45 @@ class ApiController extends CommonController
             }
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
-            if (is_array($ExamInfo)) {
-                // 还要判断监考老师的类型是不是理论站的监考老师-station_teacher
-                $stationModel = new Station();
-                $station = $stationModel->where('id', '=', $ExamInfo['StationId'])->first();
+            // 还要判断监考老师的类型是不是理论站的监考老师-station_teacher
+            $stationModel = new Station();
+            $station = $stationModel->where('id', '=', $ExamInfo['StationId'])->first();
 
-                if($station->type != 3) {
-                    throw new \Exception('你不是理论考试的监考老师', 1002);
-                }
-                $data = array(
-                    'status'=>1,
-                    'name'      => $ExamInfo['ExamName'],
-                    'stationId' => $ExamInfo['StationId'],
-                    'examId'    => $ExamInfo['ExamId'],
-                    'userId'    => $user->id,
-                );
-            }else {
-                $data = array(
-                    'status'=>0,
-                    'info'=>$ExamInfo
-                );
+            if($station->type != 3) {
+                throw new \Exception('你不是理论考试的监考老师', 1002);
             }
+            $data = array(
+                'status'=>1,
+                'name'      => $ExamInfo['ExamName'],
+                'stationId' => $ExamInfo['StationId'],
+                'examId'    => $ExamInfo['ExamId'],
+                'userId'    => $user->id,
+            );
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
         }
         catch(\Exception $ex)
         {
+            echo $exam_screen_id;
             if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }
-            if($ex->getCode() === 1001 || $ex->getCode() === 1002)
+            }elseif($ex->getCode() === 1001 || $ex->getCode() === 1002)
             {
                 //return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
                 Auth::logout();
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
+            }else{
+                $data = array(
+                    'status'=>0,
+                    'info'=>$ex->getMessage()
+                );
+                return view('osce::admin.theoryCheck.theory_check_volidate', [
+                    'data' => $data,
+                ]);
             }
+
+
         }
     }
 
