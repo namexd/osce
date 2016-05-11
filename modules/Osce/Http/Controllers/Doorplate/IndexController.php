@@ -20,7 +20,7 @@ use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Http\Controllers\Api\LoginPullDownController;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\PadLogin\Time;
-use Modules\Osce\Entities\ExamPaper;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 
 class IndexController extends CommonController
 {
