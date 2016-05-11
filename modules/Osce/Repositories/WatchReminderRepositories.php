@@ -199,7 +199,7 @@ class WatchReminderRepositories  extends BaseRepository
         $code = ExamScreeningStudent::leftJoin('watch','exam_screening_student.watch_id','=','watch.id')
             ->where('exam_screening_student.exam_screening_id',$this->examScreening->id)
             ->where('exam_screening_student.student_id',$this->student->id)
-            ->select(['watch.code'])
+            ->select(['watch.code','watch.status'])
             ->first();
         return  $code;
     }
