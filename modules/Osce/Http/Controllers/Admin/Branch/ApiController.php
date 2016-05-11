@@ -470,6 +470,14 @@ class ApiController extends CommonController
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
 
+        $Exam = new Exam;
+        //获取本次考试的id
+        $ExamInfo = $Exam->where('status','=',1)->select('id','name')->first();
+        if(empty($ExamInfo)){
+            throw new \Exception(' 没有在进行的考试',-100);
+        }
+
+
         try {
             $user = Auth::user();
             // 检查用户是否登录
@@ -506,12 +514,14 @@ class ApiController extends CommonController
         {
             if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }elseif($ex->getCode() === 1001 || $ex->getCode() === 1002)
+            }
+            if($ex->getCode() === 1001 || $ex->getCode() === 1002)
             {
                 //return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
                 Auth::logout();
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }else{
+            }
+            if($ex->getCode() === -100 || $ex->getCode() === -101){
                 $data = array(
                     'status'=>0,
                     'info'=>$ex->getMessage()
