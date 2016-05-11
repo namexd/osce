@@ -460,6 +460,8 @@ class WatchReminderRepositories extends BaseRepository
                     \Log::info('判断学生应该去的考场2', $data);
 
                 } else {
+                        \Log::alert('判断学生是否进入这个方法',[$studentFront]);
+
                     //  todo 调用提示学生是去什么考场还是等待信息方法
                     $data = $this->getTeacherReady();
                 }
