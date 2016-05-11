@@ -749,12 +749,15 @@ class WatchReminderRepositories  extends BaseRepository
      * 推送
      */
     private function publishmessage($watchNfcCode,$data,$message){
-        \Log::debug('腕表推送结果调试记录',[$message,$data,$watchNfcCode]);
+        \Log::debug('腕表推送结果调试记录',[$message,$data,$watchNfcCode,md5($_SERVER['HTTP_HOST']) . 'watch_message']);
         $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
             'nfc_code' => $watchNfcCode,
             'data' => $data,
             'message' => $message,
         ]));
+        return response()->json(
+            ['nfc_code' => $watchNfcCode, 'data' => $data, 'message' => 'success']
+        );
     }
 
     /**
