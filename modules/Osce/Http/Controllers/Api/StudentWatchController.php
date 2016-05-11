@@ -59,14 +59,7 @@ class StudentWatchController extends CommonController
             ->where('is_end', 0)
             ->orderBy('signin_dt', 'desc')
             ->first();
-        if (!is_null($watchStudent)) {
-            //得到学生id
-            $studentId = $watchStudent->student_id;
-            $examId = Student::find($studentId)->exam_id;
-        } else {
-            $studentId = '';
-            $examId = '';
-        }
+
         \Log::alert('刷新腕表code', [$watchNfcCode]);
         //调用新的腕表方法
         $watchReminder = new WatchReminderRepositories();
@@ -82,7 +75,15 @@ class StudentWatchController extends CommonController
                     'message' => 'success'
                 ]));
             } else {
-                $watchReminder->getWatchPublish($examId, $studentId);
+                if (!is_null($watchStudent)) {
+                    //得到学生id
+                    $studentId = $watchStudent->student_id;
+                    $examId = Student::find($studentId)->exam_id;
+                    $watchReminder->getWatchPublish($examId, $studentId);
+                }else{
+                    throw  new \Exception('未找到腕表对应的学生信息');
+                }
+
             }
         } catch (\Exception $ex) {
             \Log::alert('刷新腕表调用腕表出错', [$studentId]);

@@ -199,15 +199,12 @@ class WatchReminderRepositories extends BaseRepository
     private function getWatchStatus()
     {
         //根据当前学生获取NFC——code
-        if(is_null($this->code)){
+    
             $code = ExamScreeningStudent::leftJoin('watch', 'exam_screening_student.watch_id', '=', 'watch.id')
                 ->where('exam_screening_student.exam_screening_id', $this->examScreening->id)
                 ->where('exam_screening_student.student_id', $this->student->id)
                 ->select(['watch.code', 'watch.status'])
                 ->first();
-        }else{
-            $code =  Watch::where('code','=',$this->code)->first();
-        }
         return $code;
     }
 
