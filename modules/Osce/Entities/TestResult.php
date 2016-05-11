@@ -91,14 +91,13 @@ class TestResult extends CommonModel
             //获取考试成绩特殊评分项扣分详情（解析json为数组）
             $specialScoreData = $this->getSpecialScore($specialScore);
             //拿到特殊评分项总成绩
-            $specialTotal  =   array_pluck($scoreData, 'score');
+            $specialTotal  =   array_pluck($specialScoreData, 'score');
             $specialTotal  =   array_sum($specialTotal);
 
             //拿到总成绩
             $total  =   array_pluck($scoreData, 'score');
             $total  =   array_sum($total);
-            $data['score']  =   $total;       //总成绩
-//            $data['score']  =   $total-$specialTotal;       //总成绩=考核点总得分-特殊评分项总扣除分
+            $data['score']  =   $total-$specialTotal;       //总成绩=考核点总得分-特殊评分项总扣除分
 
             if ($testResult = $this->create($data))
             {
