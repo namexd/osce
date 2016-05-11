@@ -130,6 +130,7 @@ class WatchReminderRepositories extends BaseRepository
 
         //查看腕表是否绑定
         $watchStatus = $this->getWatchStatus();
+        \Log::info('腕表状态',[$watchStatus->status ]);
         if ($watchStatus->status == 0) {
             $data = [
                 'code' => -1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
@@ -343,7 +344,7 @@ class WatchReminderRepositories extends BaseRepository
         if (is_null($this->room)) {
             $this->room = $this->nowQueue->room;
         }
-        
+
         if($this->room->id != $this->nowQueue->room_id){
             $this->room = $this->nowQueue->room;
         }
