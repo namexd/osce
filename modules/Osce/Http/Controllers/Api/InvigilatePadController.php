@@ -182,6 +182,53 @@ class InvigilatePadController extends CommonController
         }
     }
 
+    /**获取学生信息
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAuthenticationtwo(Request $request)
+    {
+        $this->validate($request, [
+            'station_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
+        ], [
+            'station_id.required' => '考站编号必须',
+            'teacher_id.required' => '老师编号必须'
+        ]);
+
+        try {
+            $redis = Redis::connection('message');
+            $stationId = (int)$request->input('station_id');
+            $exam = Exam::doingExam();
+            $studentModel = new  Student();
+            $studentData = $studentModel->studentListtwo($stationId, $exam);
+            if ($studentData['nextTester']) {
+                $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+                \Log::alert('推送当前学生',[$studentData['nextTester']]);
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
+                return response()->json(
+                    $this->success_data($studentData['nextTester'], 102, '验证完成')
+                );
+            } else {
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
+                throw new \Exception('学生信息查询失败', -2);
+            }
+        } catch (\Exception $ex) {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
+    }
+
+
+
+
     /**
      * 身份验证推送
      * @method GET
