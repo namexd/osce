@@ -388,7 +388,6 @@ class ExamMonitorController  extends CommonController
                         $join->on('exam_screening_student.exam_screening_id', '=', 'exam_screening.id');
                     })->where('is_end', '<>', 1)->where('exam_screening.exam_id', $exam_id)->groupBy('exam_screening_student.student_id')->get()->pluck('student_id')->toArray();
                     if (count($studentIds)) {//多阶段有未结束的学生
-                        dd($studentIds);
                         return $builder->where('exam_screening_student.is_end', 1)
                             ->whereNotIn('student_id', $studentIds)
                             ->where('student.exam_id', $exam_id)->groupBy('student_id')
