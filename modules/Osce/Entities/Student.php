@@ -851,7 +851,7 @@ class Student extends CommonModel
                 'exam_order.status as status',
                 'exam_order.exam_screening_id as exam_screening_id',
             ])
-            ->orderBy('student.id')->paginate(100);
+            ->orderBy('exam_order.begin_dt','asc')->paginate(100);
 
         return $builder;
     }
