@@ -1956,6 +1956,7 @@ function timePicker(background){
 
         //数据绑定
         laydate(option);
+        laydate.skin('molv');
     });
 
     /**

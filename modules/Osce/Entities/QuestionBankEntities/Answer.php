@@ -197,7 +197,7 @@ class Answer extends Model
                      throw new \Exception('状态更新失败',-101);
                  }
 
-                $examScreeningModel = new ExamScreening();
+            /*    $examScreeningModel = new ExamScreening();
                 //获取正在考试的场次信息
                 $examScreening = $examScreeningModel->getExamingScreening($examId);
                 if (is_null($examScreening)) {
@@ -211,7 +211,7 @@ class Answer extends Model
                     if (!$examStationStatus->save()) {
                         throw new \Exception('考站准备状态失败！', -102);
                     }
-                }
+                }*/
              }else{
                  throw new \Exception('没有该考生的队列信息',-103);
              }

@@ -212,6 +212,10 @@ class WatchReminderRepositories extends BaseRepository
                 ->where('exam_screening_student.student_id', $this->student->id)
                 ->select(['watch.code', 'watch.status'])
                 ->first();
+        if(is_null($code)){
+            \Log::debug('获取学生腕表信息出错',[$this->student->id]);
+            throw  new \Exception('获取学生腕表信息失败');
+        }
         return $code;
     }
 

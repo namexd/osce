@@ -44,10 +44,10 @@ trait CheckTraits
      */
     public function checkExaminee($examId, array $data, $user, $studentModel, $key = 0)
     {
-        $code = $studentModel->where('code', $data['code'])->where('user_id', '<>', $user->id)->first();
-        if (!is_null($code)) {
-            throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该学号已经有别人使用！');
-        }
+//        $code = $studentModel->where('code', $data['code'])->where('user_id', '<>', $user->id)->first();
+//        if (!is_null($code)) {
+//            throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该学号已经有别人使用！');
+//        }
 
         $student = $studentModel->where('user_id', $user->id)->where('exam_id', $examId)->first();
         if ($student) {
