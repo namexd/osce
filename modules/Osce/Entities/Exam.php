@@ -843,20 +843,30 @@ class Exam extends CommonModel
             $examResultIds    = $examResults->pluck('id');
 
             //清除腕表使用记录
-            $watchLog = WatchLog::where('id','>',0)->delete();
-            if(!$watchLog){
-                throw new \Exception('删除腕表使用记录失败！');
+            $watchLog = WatchLog::where('id','>',0)->get();
+            if(!$watchLog->isEmpty())
+            {
+                $watchLog = WatchLog::where('id','>',0)->delete();
+                if(!$watchLog){
+                    throw new \Exception('删除腕表使用记录失败！');
+                }
             }
             //修改腕表使用状态
-            $watchStatus = Watch::where('id','>',0)->update(['status'=>0]);
-            if(!$watchStatus){
-                throw new \Exception('修改腕表状态失败！');
+            $watchStatus = Watch::where('id','>',0)->get();
+            if(!$watchStatus->isEmpty())
+            {
+                $watchStatus = Watch::where('id','>',0)->update(['status'=>0]);
+                if(!$watchStatus){
+                    throw new \Exception('修改腕表状态失败！');
+                }
             }
             //删除考试得分
             $examScores = ExamScore::whereIn('exam_result_id', $examResultIds)->get();
             if (!$examScores->isEmpty()) {
                 foreach ($examScores as $valueS) {
-                    $valueS->delete();
+                    if(!$valueS->delete()){
+                        throw new \Exception('删除考试得分失败！');
+                    }
                 }
             }
             //如果该考试已经完成，删除考试结果记录
