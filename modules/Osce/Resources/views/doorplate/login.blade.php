@@ -117,7 +117,7 @@
 					}
 				},
 				error:function(e,code,msg){
-					$('#error1').css('display','block').text('系统错误,请重试');
+					$('#error1').css('display','block').text(code+'-'+msg);
 				}
 			});
 
