@@ -88,11 +88,11 @@ class ExamControl extends Model
             $endExamCount = 0;
             foreach($examPlan as $key=>$val){
                 //查询考生所对应的场次数量
-                $count = count(ExamPlan::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->groupBy('exam_screening_id')->get());
+                $count = count(ExamPlan::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->groupBy('exam_screening_id')->get()->toArray());
                 //查询考生已完成的场次数量
-                $finishCount = count(ExamScreeningStudent::where('student_id',$val['student_id'])->where('is_end',1)->groupBy('exam_screening_id')->get());
+                $finishCount = count(ExamScreeningStudent::where('student_id',$val['student_id'])->where('is_end',1)->groupBy('exam_screening_id')->get()->toArray());
                 //查询考试迟到的场次数量
-                $examAbsentCount = count(ExamAbsent::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->groupBy('exam_screening_id')->get());
+                $examAbsentCount = count(ExamAbsent::where('exam_id',$val['exam_id'])->where('student_id',$val['student_id'])->groupBy('exam_screening_id')->get()->toArray());
                 if($finishCount+$examAbsentCount>=$count){
                     $endExamCount++;
                 }
