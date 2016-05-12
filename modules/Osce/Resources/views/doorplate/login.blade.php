@@ -85,6 +85,7 @@
 		@empty
 		@endforelse
 		<div class="pnotice" id="error" style="display: none;color: red">数据加载中...</div>
+		<div class="pnotice" id="error1" style="display: none;color: red"></div>
 		<button type="submit"  class="btn btn-primary block full-width m-b sub">
 			启　动
 		</button>
@@ -96,8 +97,7 @@
 
 	var m='';
 	$('#examId').change(function(){
-		$('#error').css('display','none');
-		$('#error').text('数据加载中...');
+		$('#error1').css('display','none');
 		var examId= $.trim($(this).val())
 		var opstr='<option value="">请选择考场</option>';
 		if(examId!=''){
@@ -117,7 +117,7 @@
 					}
 				},
 				error:function(e,code,msg){
-					$('#error').css('display','block').text('系统错误,请重试');
+					$('#error1').css('display','block').text('系统错误,请重试');
 				}
 			});
 
