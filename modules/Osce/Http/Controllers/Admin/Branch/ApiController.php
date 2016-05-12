@@ -844,7 +844,17 @@ class ApiController extends CommonController
         $stationArr = $draw->getStationNum($examId, $roomId, $examScreeningId);
         if(!$stationArr->isEmpty()){
             //查询exam_station_status表（考试-场次-考站状态表）中该考试该考场下status是否全为1，如果是，修改其状态值为2
-            $examStationStatus->status = 1;
+
+            //如果已经有状态为2了，那么就让他为2
+            if ($examStationStatusModel->where('exam_id', $examId)
+            ->where('status', 2)
+            ->whereIn('station_id', $stationArr)
+            ->first()) {
+                $examStationStatus->status = 2;
+            } else {
+                $examStationStatus->status = 1;
+            }
+
             if($examStationStatus->save()){
                 // todo  准备好后调用腕表接口
 
@@ -856,8 +866,12 @@ class ApiController extends CommonController
                         $watchReminder->getWatchPublish($examId,$studentId, $stationId);
                     }
                 } catch (\Exception $ex) {
+
                     \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
                 }
+            } else {
+                //TODO 与安卓商量如果报错，就不刷新页面
+                throw new \Exception('网络故障', -112);
             }
             $examStationStatusData = $examStationStatusModel
                 ->where('exam_id',$examId)
