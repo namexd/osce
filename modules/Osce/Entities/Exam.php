@@ -869,6 +869,15 @@ class Exam extends CommonModel
                     }
                 }
             }
+            //删除考试特殊评分项扣分
+            $examSpecialScore = ExamSpecialScore::whereIn('exam_result_id', $examResultIds)->get();
+            if (!$examSpecialScore->isEmpty()) {
+                foreach ($examSpecialScore as $valueSs) {
+                    if(!$valueSs->delete()){
+                        throw new \Exception('删除考试特殊评分项扣分失败！');
+                    }
+                }
+            }
             //如果该考试已经完成，删除考试结果记录
             if (!$examResults->isEmpty()) {
                 foreach ($examResults as $valueR)
