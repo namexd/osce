@@ -674,7 +674,7 @@ class DrawlotsController extends CommonController
 //                $studentWatchController->getStudentExamReminder($this->request);
                 $watchReminder->getWatchPublish($exam_id,$params['student_id'], $params['station_id'], $params['room_id']);
             } catch (\Exception $ex) {
-                \Log::info('抽签中推送腕表失败', $this->request->input('uid'));
+                \Log::info('抽签中推送腕表失败', [$this->request->input('uid')]);
             }
             //将数据推送给pad端
             \Log::info('推送给pad的数据', [$student, 'channel' => md5($_SERVER['HTTP_HOST']) . 'pad_message']);
