@@ -1108,7 +1108,7 @@ class InvigilatePadController extends CommonController
            
             //查询使用中的腕表数据
             $watchModel = new Watch();
-            $watchData = $watchModel->getWatchAboutData($status, $type, $nfc_code, $examing->id);
+            $watchData  = $watchModel->getWatchAboutData($status, $type, $nfc_code, $examing->id);
 
             if(!empty($watchData) && count($watchData) > 0){
                 $watchData = $watchData->toArray();
