@@ -214,7 +214,7 @@ class DrawlotsController extends CommonController
             //获取当前考试场次
             $exam_screening_id = $this->getexamScreeing($exam);
             //拿到当前老师支持的考站
-            $stationId = $this->getTeacherStation($exam_screening_id, $exam, $userId);
+            $stationId = $this->getTeacherStation($exam_screening_id, $exam, $userId,true);
             //拿到考场id和考站集合
             list($room_id, $stations) = $this->getRoomIdAndStation($userId, $exam);
 
@@ -351,7 +351,7 @@ class DrawlotsController extends CommonController
             //获取当前考试场次
             $exam_screening_id = $this->getexamScreeing($exam);
             //拿到当前老师支持的考站
-            $stationId = $this->getTeacherStation($exam_screening_id, $exam, $id);
+            $stationId = $this->getTeacherStation($exam_screening_id, $exam, $id,true);
             //拿到考场id和考站集合
             list($room_id, $stations) = $this->getRoomIdAndStation($id, $exam);
             //判断当前考试的排考模式下学生的队列
@@ -536,7 +536,7 @@ class DrawlotsController extends CommonController
             list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
 
             //获取当前老师对应的考站id     todo 2016-5-2 zhouqiang
-            $stationId = $this->getTeacherStation($exam_screening_id,$exam,$teacherId);
+            $stationId = $this->getTeacherStation($exam_screening_id,$exam,$teacherId,true);
             /*
              * 判断当前考生是否是在当前的学生组中
              */
@@ -1275,7 +1275,7 @@ class DrawlotsController extends CommonController
      * @author zhouqaing
      * @time
      */
-    private function getTeacherStation($exam_screening_id, $exam, $userId)
+    private function getTeacherStation($exam_screening_id, $exam, $userId,$type=false)
     {
 
         $redis = Redis::connection('message');
@@ -1295,8 +1295,10 @@ class DrawlotsController extends CommonController
         $stationId = array_pop($arr);
 
         if (is_null($stationId)) {
-            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-                json_encode($this->success_data([], 4000, '当前老师没有考试')));
+            if($type) {//默认不推
+                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
+                    json_encode($this->success_data([], 4000, '当前老师没有考试')));
+            }
             throw new \Exception('当前老师没有考试！', 4000);
         }
 
