@@ -49,14 +49,12 @@
                     $($(".steps li")[i]).addClass("done");
                 }
             }
-
-
             //图片点击显示大图
             $('.fancybox').fancybox({
                 openEffect: 'none',
                 closeEffect: 'none'
             });
-
+            $(".actions").prepend($('.btnBox'));
             $(".check_label").change(function(){
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
@@ -109,10 +107,8 @@
                 localStorage.setItem("Storage_answer",JSON.stringify(Storage_answer_list));//设置本地存储
             }
             $(".actions").find("a[href='#finish']").click(function(){
-                layer.confirm('确认提交答题？',{btn: ['取消','确认']},
-                        function(){return},
-                        function(){
-                            //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
+                layer.confirm('确认提交答题？',{btn: ['确认','取消']},
+                        function(){   //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                             clearInterval(statusTimer);
                             var examPaperFormalId=$('#examPaperFormalId').val();
                             var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
@@ -134,7 +130,8 @@
                                         }else{
                                             layer.confirm(obj.message);
                                         }
-                                    })
+                                    })},
+                        function(){
                         })
             })
         });
@@ -239,12 +236,17 @@
     <input type="hidden" class="allData" stationId="{{ $stationId }}" userId="{{ $userId }}" studentId="{{ $studentId }}" examId="{{ $examId }}">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
-            <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">理论考试</h5>
+            <div class="col-xs-6 col-md-6">
+                <h5 class="title-label">{{$examPaperFormalData["name"]}}&nbsp;(
+                    <span>考试时间：</span>
+                    <span class="checkTime">{{$examPaperFormalData["length"]}}分钟</span>
+                    <span style="margin-left: 1em;">总分：</span>
+                    <span class="score">{{$examPaperFormalData["totalScore"]}}分</span>
+                    <input type="hidden" id="examPaperFormalId" value="{{$examPaperFormalData["id"]}}">)</h5>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="display: none;">
                 <div class="ibox float-e-margins" style="margin-bottom: 0;">
                     <div class="ibox-content text-center p-md">
                         <h2>{{$examPaperFormalData["name"]}}</h2>
@@ -273,71 +275,75 @@
                                                 <div class="subjectBox   mart_10 " exam_question_id="{{@$val["id"]}}">
                                                     <span class="font16 subjectContent">{{ @$val["name"]}}</span>
                                                 </div>
-                                                <div class="picBox">
-                                                    @if(!empty($val['image']))
-                                                        @foreach($val['image'] as $item)
-                                                            <a href="{{$item}}" class="fancybox">
-                                                                <img src="{{$item}}" alt="image" class="pic" style="height: 150px;width: 150px;">
-                                                            </a>
+
+                                                <div class="col-sm-6 col-md-6">
+                                                    @if(@$val["examQuestionTypeId"]==1)
+                                                        @foreach(@$val["content"] as $k=> $val2 )
+                                                            <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
+                                                                <label class="radio_label mart_10 check_top">
+                                                                    <div class="radio_icon left" ></div>
+                                                                    <input type="radio" name="{{@$val["serialNumber"]}}" value="{{@$k}}">
+                                                                    <span class="marl_10 answer">{{@$val2}}</span>
+                                                                </label>
+                                                            </div>
                                                         @endforeach
                                                     @endif
-                                                </div>
-                                                @if(@$val["examQuestionTypeId"]==1)
-                                                    @foreach(@$val["content"] as $k=> $val2 )
+                                                    @if(@$val["examQuestionTypeId"]==2||@$val["examQuestionTypeId"]==3)
+                                                        @foreach(@$val["content"] as $k=> $val2 )
+                                                            <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
+                                                                <label class="check_label checkbox_input mart_10 check_top" style="">
+                                                                    <div class="check_icon check_other"></div>
+                                                                    <input type="checkbox" name="{{@$val["serialNumber"]}}" value="{{@$k}}">
+                                                                    <span class="check_name">{{@$val2}}</span>
+                                                                </label>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                    @if(@$val["examQuestionTypeId"]==4)
+                                                        {{--@foreach($val["content"] as $k=> $val2 )--}}
                                                         <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
-                                                            <label class="radio_label mart_20 check_top">
-                                                                <div class="radio_icon left" ></div>
-                                                                <input type="radio" name="{{@$val["serialNumber"]}}" value="{{@$k}}">
-                                                                <span class="marl_10 answer">{{@$val2}}</span>
-                                                            </label>
-                                                        </div>
-                                                    @endforeach
-                                                @endif
-                                                @if(@$val["examQuestionTypeId"]==2||@$val["examQuestionTypeId"]==3)
-                                                    @foreach(@$val["content"] as $k=> $val2 )
-                                                        <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
-                                                            <label class="check_label checkbox_input mart_20 check_top" style="">
-                                                                <div class="check_icon check_other"></div>
-                                                                <input type="checkbox" name="{{@$val["serialNumber"]}}" value="{{@$k}}">
-                                                                <span class="check_name">{{@$val2}}</span>
-                                                            </label>
-                                                        </div>
-                                                    @endforeach
-                                                @endif
-                                                @if(@$val["examQuestionTypeId"]==4)
-                                                    {{--@foreach($val["content"] as $k=> $val2 )--}}
-                                                        <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
-                                                            <label class="radio_label mart_20 check_top">
+                                                            <label class="radio_label mart_10 check_top">
                                                                 <div class="radio_icon left" ></div>
                                                                 <input type="radio" name="{{@$val["serialNumber"]}}" value="0">
                                                                 <span class="marl_10 answer">
                                                                     {{--@if($val2==0)--}}
-                                                                        {{--错误--}}
+                                                                    {{--错误--}}
                                                                     {{--@elseif($val2==1)--}}
-                                                                        {{--正确--}}
+                                                                    {{--正确--}}
                                                                     {{--@endif--}}
                                                                     错误
                                                                 </span>
                                                             </label>
                                                         </div>
                                                         <div class="answerBox" examCategoryFormalId="{{@$val["examQuestionTypeId"]}}">
-                                                            <label for="" class="radio_label mart_20 check_top">
+                                                            <label for="" class="radio_label mart_10 check_top">
                                                                 <div class="radio_icon left" ></div>
                                                                 <input type="radio" name="{{@$val["serialNumber"]}}" value="1">
                                                                 <span class="marl_10 answer">正确</span>
                                                             </label>
                                                         </div>
-                                                    {{--@endforeach--}}
-                                                @endif
+                                                        {{--@endforeach--}}
+                                                    @endif
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="picBox">
+                                                        @if(!empty($val['image']))
+                                                            @foreach($val['image'] as $item)
+                                                                <a href="{{$item}}" class="fancybox">
+                                                                    <img src="{{$item}}" alt="image" class="pic" style="height: 150px;width: 150px;">
+                                                                </a>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
                                 @endif
-
                             </div>
                         </div>
 
-                        <div class="btnBox" style="margin:0 auto; padding:70px 0; text-align: center; width: 400px;">
+                        <div class="btnBox left" style="margin:0 auto; text-align: center; width: 400px;padding-left:400px;">
                             <span class="marl_10 left" style="height: 29px; line-height: 29px;">剩余时间：</span>
                             <div class="colockbox" id="colockbox1">
                                 <span class="hour" id="hour">00</span><span class="left">:</span>

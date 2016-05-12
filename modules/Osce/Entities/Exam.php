@@ -821,10 +821,6 @@ class Exam extends CommonModel
         }
     }
 
-    public function xiBai($exam_id){
-        dd('@@');
-        return $this->emptyData($exam_id);
-    }
     /**
      * 重置考试数据
      * @param   $id         //考试ID
@@ -833,6 +829,7 @@ class Exam extends CommonModel
      */
     public function emptyData($id)
     {
+        dump($id);
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try {
@@ -859,7 +856,7 @@ class Exam extends CommonModel
                 }
             }
             //修改腕表使用状态
-            $watchStatus = Watch::where('id','>',0)->where('status', '<>', 0)->get();
+            $watchStatus = Watch::where('status', '<>', 0)->get();
             if(!$watchStatus->isEmpty())
             {
                 foreach ($watchStatus as $watchStatu) {
@@ -1000,7 +997,7 @@ class Exam extends CommonModel
             }
 
             $connection->commit();
-            return true;
+            return 11111;
 
         } catch (\Exception $ex)
         {
