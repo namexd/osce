@@ -337,7 +337,7 @@ class ExamMonitorController  extends CommonController
                 break;
             case 2://替考
 
-                $list=$builder->where('exam_screening_student.status',2)
+                $list=$builder->where('exam_screening_student.description',3)
                     ->where('student.exam_id',$exam_id)->groupBy('student_id')
                     ->paginate(config('osce.page_size'));
                 if(empty($list->toArray()['data'])){return [];}
@@ -364,7 +364,7 @@ class ExamMonitorController  extends CommonController
                 return $list;
                 break;
             case 3://弃考
-                return $builder->where('exam_screening_student.status',1)
+                return $builder->where('exam_screening_student.description',1)
                                ->where('student.exam_id',$exam_id)->groupBy('student_id')
                                ->paginate(config('osce.page_size'));
                 break;

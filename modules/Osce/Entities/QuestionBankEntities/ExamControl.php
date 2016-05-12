@@ -98,6 +98,8 @@ class ExamControl extends Model
                 }
             }
             //正在考试列表
+//            $a = \DB::connection('osce_mis');
+//            $a->enableQueryLog();
             $examInfo = $examScreeningStudentModel->leftJoin('student', function($join){
                 $join -> on('student.id', '=', 'exam_screening_student.student_id');
             })->leftJoin('exam', function($join){
@@ -108,7 +110,7 @@ class ExamControl extends Model
                 $join -> on('exam_queue.station_id', '=', 'station.id');
             })->leftJoin('station_teacher', function($join){
                 $join -> on('station.id', '=', 'station_teacher.station_id');
-            })->groupBy('student.id')->select(
+            })->select(
                 'exam.id as examId',//考试id
                 'student.id as studentId',//考生id
                 'student.name',//考生姓名
@@ -125,7 +127,10 @@ class ExamControl extends Model
                 'exam_screening_student.exam_screening_id'//考试场次编号
             )->where('exam.status',1)
                 ->where('exam_queue.status',2) //status=2正在考试
+                ->groupBy('student.id')
                 ->get();
+//            $b = $a->getQueryLog();
+
             if(!empty($examInfo)&&count($examInfo)>0){
                 foreach($examInfo as $key=>$val){
                     //获取该考生剩余考站数量
@@ -429,6 +434,8 @@ class ExamControl extends Model
      */
     public function getRemainExamQueueData($examId,$studentId,$examScreeningId){
         $examQueueModel = new ExamQueue();
+
+
         $examQueueInfo = $examQueueModel->select('exam_id','exam_screening_id','student_id','station_id')
             ->where('exam_id','=',$examId)
             ->where('student_id','=',$studentId)

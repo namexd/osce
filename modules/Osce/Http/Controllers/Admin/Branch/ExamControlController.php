@@ -72,7 +72,6 @@ class ExamControlController extends CommonController
             'examScreeningStudentId'    => 'required|integer',//考试场次-学生关系id
             'status'    => 'required|integer', //1确认弃考 2确认替考 3终止考试
         ]);
-
         $data=array(
             'examId' =>$request->input('examId'), //考试编号
             'studentId' =>$request->input('studentId'), //考生编号
