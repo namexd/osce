@@ -165,6 +165,7 @@ class ExamScreening extends CommonModel
 
         $exam     = Exam::doingExam($exam_id);
 
+
         if($exam->id != $exam_id){
             throw new \Exception('开考考试不对！');
         }
