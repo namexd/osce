@@ -344,7 +344,7 @@ class ExamMonitorController  extends CommonController
                 $list=$list->toArray()['data'];
                 foreach($list as $key=>$v) { //替考学生
                     //查询标记替考的考站
-                    $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('exam_id',$exam_id)->where('exam_screening_id',$ExamScreening->id)->where('type',1)->get()->toArray();//上报停考信息
+                    $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('exam_id',$exam_id)->where('exam_screening_id',$ExamScreening->id)->where('description',3)->get()->toArray();//上报停考信息
                     $station_name = '';//单个学生对于的考站名称
                     if(!empty($replaceList)){
                         foreach($replaceList as $val){
