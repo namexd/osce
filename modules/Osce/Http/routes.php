@@ -13,6 +13,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('update/index',['uses'=>'UpdateController@postIndex','as'=>'osce.admin.postUpdate']);
 		Route::get('test/index',['uses'=>'TestController@getIndex','as'=>'osce.admin.test']);
 		Route::get('showlog/index',['uses'=>'ShowLogController@ShowLog','as'=>'osce.admin.showLog']);
+		Route::get('checkdatabase',['uses'=>'ShowLogController@CheckDatabase','as'=>'osce.admin.checkdatabase']);
+
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
 		//登录注册
@@ -529,8 +531,10 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(Redis $redis) {
-	$a = \Carbon\Carbon::tomorrow();
-	dd($a->subSecond()->timestamp);
+	$a = 1111;
+//	dd($a['1']);
+	dd($a['1']);
+	
 });
 
 Route::get('redis', function(){
@@ -552,7 +556,7 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 	$Exam = new \Modules\Osce\Entities\Exam();
 
 	$result = $Exam->emptyData($exam_id);
-	if($result === true){
+	if($result === 11111){
 		return '成功-' . mt_rand(1000,9999);
 	}
 

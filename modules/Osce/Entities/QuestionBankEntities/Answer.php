@@ -99,6 +99,7 @@ class Answer extends Model
             $examPaperFormalModel = new ExamPaperFormal();
             $examPaperFormalData = array(
                 'actual_length'=>$data['actualLength'],
+                'updated_at'=>date('Y-m-d H:i:s',time())
             );
 
             if(!$examPaperFormalModel->where('id','=',$data['examPaperFormalId'])->update($examPaperFormalData)){

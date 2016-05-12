@@ -158,13 +158,14 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
         //理论考试登录界面
         Route::get('api/loginauth-view',['uses'=>'ApiController@LoginAuthView','as'=>'osce.admin.ApiController.LoginAuthView','middleware'=>['teacher-guest']]);
 
+        //理论考试老师登录后退出
+        Route::get('api/loginauth-logout',['uses'=>'ApiController@logout','as'=>'osce.admin.ApiController.logout']);
+
         //理论考试登录数据交互
         Route::post('api/loginauth-info',['uses'=>'ApiController@LoginAuth','as'=>'osce.admin.ApiController.LoginAuthInfo']);
 
-        //监考老师登录页面
+        //监考老师登录成功页面
         Route::get('api/loginauth-wait',['uses'=>'ApiController@LoginAuthWait','as'=>'osce.admin.ApiController.LoginAuthWait']);
-
-        Route::get('api/loginauth-logout',['uses'=>'ApiController@logout','as'=>'osce.admin.ApiController.logout']);
 
         //考生登录成功页面
         Route::get('api/student-exam-index',['uses'=>'ApiController@getStudentExamIndex','as'=>'osce.admin.ApiController.getStudentExamIndex']);
