@@ -9,6 +9,7 @@
          height: 500px;
          margin: auto;
      }
+
     .top{
         background:#364150;
         height: 60px;
@@ -43,17 +44,17 @@
     .blue{background: deepskyblue;}
     #status_box{
         width: 200px;
-        height: 30px;
-        line-height: 30px;
+        height: 50px;
+        line-height: 50px;
         font-size: 20px;
         position: absolute;
         top: 0px;
-        right: 107px;
+        right: 50px;
     }
     .status{
-        width: 30px;
-        height: 30px;
-        border-radius: 30px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
 
     }
      p{margin-top: 45px;}
@@ -61,7 +62,12 @@
     .fl{float: left;margin-top: 150px;}
     .m5{margin-left: 15px;}
     .f_red{color: red;}
-    #bottom{position:absolute;bottom:4%;right: 175px}
+    #bottom{position:absolute;bottom:10px;right: 30px}
+     #background{
+         position: absolute;
+         bottom: 0;
+
+     }
     </style>
 @stop
 <?php
@@ -134,7 +140,10 @@ if(!empty($errorsInfo)){
      </div>
 </div>
  <div id="bottom">
-     <img src="{{asset('osce/images/u4.png')}}" width="135px" height="53px" align="right">
+     <img src="{{asset('osce/images/u4.png')}}" width="100%" height="100%" align="right">
+ </div>
+ <div id="background">
+     <img src="{{asset('osce/images/bg_02.png')}}" align="bottom">
  </div>
 @stop{{-- 内容主体区域 --}}
 
