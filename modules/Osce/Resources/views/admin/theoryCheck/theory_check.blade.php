@@ -118,6 +118,7 @@
                             var examId = $(".allData").attr("examId");
                             $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                                     {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
+                                        console.log(examQuestionFormalInfo);
                                         if(obj.code==1){
                                             $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId,stationId:stationId},function(res){
                                                 if(res.code==1){
