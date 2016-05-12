@@ -67,12 +67,12 @@ class InvigilatePadController extends CommonController
 
         return '失败-' . mt_rand(1000,9999).', 错误信息: '.$result;
     }
-        
-//        $studentId =132;
-//        $stationId =25;
-//        $roomId = 6;
+//        $examId =19;
+//        $studentId =438;
+//        $stationId ='';
+//        $roomId = '';
 //        $watch = new WatchReminderRepositories();
-//        $watch ->getWatchPublish($studentId,$stationId,$roomId);
+//        $watch ->getWatchPublish($examId,$studentId,$stationId,$roomId);
 
     }
 
