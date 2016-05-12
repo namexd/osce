@@ -223,7 +223,6 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorFinishList () {
-
         $data=$this->getExamMonitorListByStatus(4);
         if(count($data)){
             $data=$data->toArray();
@@ -343,7 +342,7 @@ class ExamMonitorController  extends CommonController
                     ->where('student.exam_id',$exam_id)
                     ->where('exam_order.exam_id',$exam_id)
                     ->where('exam_order.status',4)->groupBy('student_id')
-                    ->paginate(config('osce.page_size'));
+                    ->paginate(config('osce.page_size',10));
 
 
                 break;
@@ -351,7 +350,7 @@ class ExamMonitorController  extends CommonController
 
                 $list=$builder->where('exam_screening_student.description',3)
                     ->where('student.exam_id',$exam_id)->groupBy('student_id')
-                    ->paginate(config('osce.page_size'));
+                    ->paginate(config('osce.page_size',10));
                 if(empty($list->toArray()['data'])){return [];}
                 $list=$list->toArray()['data'];
                 foreach($list as $key=>$v) { //替考学生
@@ -378,7 +377,7 @@ class ExamMonitorController  extends CommonController
             case 3://弃考
                 return $builder->where('exam_screening_student.description',1)
                                ->where('student.exam_id',$exam_id)->groupBy('student_id')
-                               ->paginate(config('osce.page_size'));
+                               ->paginate(config('osce.page_size',10));
                 break;
             case 4://已完成
 
@@ -389,11 +388,11 @@ class ExamMonitorController  extends CommonController
                     return $builder->where('exam_screening_student.is_end', 1)
                         ->whereNotIn('student_id',$studentIds)
                         ->where('student.exam_id', $exam_id)->groupBy('student_id')
-                        ->paginate(config('osce.page_size'));
+                        ->paginate(config('osce.page_size',10));
                 }else {
                     return $builder->where('exam_screening_student.is_end', 1)
                         ->where('student.exam_id', $exam_id)->groupBy('student_id')
-                        ->paginate(config('osce.page_size'));
+                        ->paginate(config('osce.page_size',10));
                 }
                 break;
             default:
