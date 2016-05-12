@@ -504,11 +504,11 @@ class ApiController extends CommonController
                 $ExamScreeningModel =  new ExamScreening();
                 $examscreeningId = $ExamScreeningModel->getScreenID($ExamInfo['ExamId']);
                 //拿到考场id
-                $roomId = ExamDraft::getExamRoom($ExamInfo['ExamId'],$examscreeningId ,$ExamInfo['StationId']);
+                $exam_draft_room = ExamDraft::getExamRoom($ExamInfo['ExamId'],$examscreeningId ,$ExamInfo['StationId']);
 
                 $examStationStatusModel  =  new ExamStationStatus();
 
-                $stationIds = $drawlots->getStationNum($ExamInfo['ExamId'],$roomId->room_id ,$examscreeningId);
+                $stationIds = $drawlots->getStationNum($ExamInfo['ExamId'],$exam_draft_room->room_id ,$examscreeningId);
                 //拿到场次下房间里该老师支持的考站
                 $station_id = array_intersect($ExamInfo['StationId'], $stationIds);
                 //改变老师支持该考站的准备状态
@@ -755,6 +755,10 @@ class ApiController extends CommonController
         $examScreeningId = $request->input('exam_screening_id');
         $teacherId       = $request->input('teacher_id');
         $roomId          = $request->input('room_id');
+
+        //重新获取当前进行的场次 (传过来的场次ID，并不是当前正在进行的考试场次) TODO: Zhoufuxiang216-05-14
+        $examScreeningId = Common::getExamScreening($examId)->id;
+
         // 查询当前老师对应考站准备完成信息
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
