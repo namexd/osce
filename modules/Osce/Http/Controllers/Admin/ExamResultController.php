@@ -109,28 +109,36 @@ class ExamResultController extends CommonController{
         $name      = $request->get('name');
 
         //存在考试ID，根据考试ID查询对应的考站
-        if(!empty($examId)){
-            $examInfo = Exam::where('id', $examId)->select('sequence_mode')->first();
-            if($examInfo->sequence_mode == 1){
-                $examRoomIds = ExamRoom::where('exam_id', $examId)->select('room_id')->get()->pluck('room_id');
-                $examStationIds = RoomStation::whereIn('room_id', $examRoomIds)->select('station_id')->get()->pluck('station_id');
-            }else{
-                $examStationIds = ExamStation::where('exam_id', $examId)->select('station_id')->get()->pluck('station_id');
+        if(!empty($examId))
+        {
+            $stations = [];
+            //拿到考试下所有的考站
+            $stationIds = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                                   ->where('exam_draft_flow.exam_id', '=', $examId)
+                                   ->select('exam_draft.station_id as station_id')
+                                   ->groupBy('exam_draft.station_id')->get();
+            if(!$stationIds->isEmpty())
+            {
+                foreach($stationIds as $station){
+                    $stations[] = $station->station;
+                }
             }
-            $stations  = Station::whereIn('id',$examStationIds)->get();
-        }else{
+
+        }else
+        {
             $stations  = Station::select()->get();
         }
 
-        $exams      = Exam::select()->get();
-        $examResult = new ExamResult();
-        $examResults= $examResult->getResultList($examId,$stationId,$name);
-        foreach($examResults as $item){
-//            date_default_timezone_set("UTC");
-//            $item->time = date('H:i:s',$item->time);
-//            date_default_timezone_set("PRC");
-            $item->time = Common::handleTime($item->time);
+        $exams       = Exam::select()->get();
+        $examResult  = new ExamResult();
+        $examResults = $examResult->getResultList($examId,$stationId,$name);
+        //修改时间显示（时分秒：00:00:00）
+        if(!$examResults->isEmpty()){
+            foreach($examResults as $item){
+                $item->time = Common::handleTime($item->time);
+            }
         }
+        //渲染视图
         return view('osce::admin.examManage.score_query')->with(
             [
                 'examResults'=> $examResults, 'exams'    => $exams,
