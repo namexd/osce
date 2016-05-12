@@ -653,6 +653,7 @@ class DrawlotsController extends CommonController
             'exam_id' => 'required|integer'
         ]);
         \Log::info('drawlots_params', $this->request->all());
+        $exam_id = $this->request->input('exam_id');
         try {
             //写入具体的数据
             $huaxiDrawlots->setParams($this->request->all());
@@ -671,7 +672,7 @@ class DrawlotsController extends CommonController
 //                $studentWatchController = new StudentWatchController();
 //                $this->request['nfc_code'] = $this->request->input('uid');
 //                $studentWatchController->getStudentExamReminder($this->request);
-                $watchReminder->getWatchPublish($params['student_id'], $params['station_id'], $params['room_id']);
+                $watchReminder->getWatchPublish($exam_id,$params['student_id'], $params['station_id'], $params['room_id']);
             } catch (\Exception $ex) {
                 \Log::info('抽签中推送腕表失败', $this->request->input('uid'));
             }

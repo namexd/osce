@@ -433,6 +433,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//pad监考
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.api.invigilatepad.getAuthentication']);
+
+		Route::get('invigilatepad/authenticationtwo', 	['uses'=>'InvigilatePadController@getAuthenticationtwo','as'=>'osce.api.invigilatepad.getAuthenticationtwo']);
+
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.api.invigilatepad.getExamGrade']);
 		Route::post('invigilatepad/save-exam-result', 	['uses'=>'InvigilatePadController@postSaveExamResult','as'=>'osce.api.invigilatepad.postSaveExamResult']);
 		Route::post('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@postSaveExamEvaluate','as'=>'osce.api.invigilatepad.postSaveExamEvaluate']);
@@ -551,11 +554,12 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 
 	$exam = new \Modules\Osce\Entities\Exam();
 
-	if($exam->emptyData($exam_id)){
+	$result = $exam->emptyData($exam_id);
+	if($result === true){
 		return '成功-' . mt_rand(1000,9999);
 	}
 
-	return '失败-' . mt_rand(1000,9999);
+	return '失败-' . mt_rand(1000,9999).': '.$result;
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 	$examId = $request->input('exam_id');
