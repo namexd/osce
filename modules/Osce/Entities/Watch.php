@@ -325,7 +325,7 @@ class Watch extends CommonModel implements MachineInterface
              ->where('watch.code','=',$ncfCode)
              ->where('exam_queue.exam_id','=',$examId)
              ->where('exam_queue.exam_screening_id',$screenId)
-             ->where('exam_screening_student.exam_screening_id',$screenId)
+             ->where('exam_screening_student.exam_screening_id',$screenId)->select(['exam_queue.status'])
              ->get()->pluck('status')->toArray();
         return $builder;
     }
