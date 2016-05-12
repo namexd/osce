@@ -87,7 +87,7 @@
 			启　动
 		</button>
 	</form>
-	<p class="bot"><i class="">敏行医学版权所有﹫2015-2015</i></p>
+	<p class="bot"><i class="">敏行医学版权所有</i></p>
 </div>
 
 <script>
