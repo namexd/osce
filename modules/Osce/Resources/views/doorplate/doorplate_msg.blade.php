@@ -61,7 +61,7 @@
     .fl{float: left;margin-top: 150px;}
     .m5{margin-left: 15px;}
     .f_red{color: red;}
-    #bottom{position:absolute;bottom:10%;right: 175px}
+    #bottom{position:absolute;bottom:4%;right: 175px}
     </style>
 @stop
 <?php
