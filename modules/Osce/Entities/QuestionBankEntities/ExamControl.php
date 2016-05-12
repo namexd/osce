@@ -432,7 +432,7 @@ class ExamControl extends Model
         $examQueueInfo = $examQueueModel->select('exam_id','exam_screening_id','student_id','station_id')
             ->where('exam_id','=',$examId)
             ->where('student_id','=',$studentId)
-            ->where('exam_screening_id','<>',$examScreeningId)
+            ->where('exam_screening_id',$examScreeningId)
             ->whereNotIn('status',[2,3,4])
             ->get();
         return array(
