@@ -943,19 +943,31 @@ class Exam extends CommonModel
                 }
             }
             //删除缺考
-            $examAbsent = ExamAbsent::where('exam_id', '=', $id)->delete();
-            if(!$examAbsent){
-                throw new \Exception('删除缺考失败！');
+            $examAbsent = ExamAbsent::where('exam_id', '=', $id)->get();
+            if(!$examAbsent->isEmpty()){
+                $examAbsent = ExamAbsent::where('exam_id', '=', $id)->delete();
+                if(!$examAbsent){
+                    throw new \Exception('删除缺考失败！');
+                }
+
             }
             //删除考试队列
-            $examQueue = ExamQueue::where('exam_id', '=', $id)->delete();
-            if(!$examQueue){
-                throw new \Exception('删除考试队列失败！');
+            $examQueue = ExamQueue::where('exam_id', '=', $id)->get();
+            if(!$examQueue->isEmpty())
+            {
+                $examQueue = ExamQueue::where('exam_id', '=', $id)->delete();
+                if(!$examQueue){
+                    throw new \Exception('删除考试队列失败！');
+                }
             }
             //更改考生排序状态  TODO:（ExamOrder表中数据是在智能排考时添加进去的）
-            $examOrder = ExamOrder::where('exam_id', '=', $id)->update(['status' => 0]);     //TODO 更改状态为0（0为未绑定腕表）
-            if(!$examOrder){
-                throw new \Exception('修改考生排序状态 失败！');
+            $examOrder = ExamOrder::where('exam_id', '=', $id)->where('status', '<>', 0)->get();
+            if(!$examOrder->isEmpty())
+            {
+                $examOrder = ExamOrder::where('exam_id', '=', $id)->update(['status' => 0]);     //TODO 更改状态为0（0为未绑定腕表）
+                if(!$examOrder){
+                    throw new \Exception('修改考生排序状态 失败！');
+                }
             }
             //更改考试状态
             $result = $this->where('id', '=', $id)->update(['status' => 0]);    //TODO 更改状态为0（0为未开考）
