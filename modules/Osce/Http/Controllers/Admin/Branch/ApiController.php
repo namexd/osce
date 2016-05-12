@@ -35,6 +35,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
+use Modules\Osce\Repositories\Common;
 use Modules\Osce\Repositories\QuestionBankRepositories;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
@@ -755,6 +756,7 @@ class ApiController extends CommonController
         $examQenenModel = new ExamQueue();
         $watchLogModel = new WatchLog();
 
+
         if ($examSequenceMode == 1) {
             // 考场排 多个学生
             $studentIds = $examQenenModel->where('exam_id', '=', $examId)
@@ -765,7 +767,10 @@ class ApiController extends CommonController
                 ->pluck('student_id')->toArray();   // 获取学生ID数组
 
             \Log::alert('老师准备时拿到的学生信息',[$studentIds]);
-            if (empty($studentIds)) {
+            if (empty($studentIds))
+            {
+                \Log::alert('未查到相应考试队列信息',[$studentIds, $request->all(),'screeningId' => Common::getExamScreening($examId)->id]);
+
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')
                 );
@@ -800,7 +805,10 @@ class ApiController extends CommonController
                 ->orderBy('begin_dt', 'asc')
                 ->first();
 
-            if (is_null($examQenens)) {
+            if (is_null($examQenens))
+            {
+                \Log::alert('未查到相应考试队列信息',[$examQenens, $request->all()]);
+
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')
                 );
