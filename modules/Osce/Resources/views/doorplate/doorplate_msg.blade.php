@@ -84,12 +84,13 @@ if(!empty($errorsInfo)){
         <div class="exam_msg">
             <dl>
                 <dt class="center">{{$msg['name']}}</dt>
-                @if(!empty($data))
+                {{--@if(!empty($data))
                 @foreach($data as $v)
                 <dd class="">{{$v->name}}</dd>
 
                 @endforeach
-                @endif
+                @endif--}}
+                <dd class="">{{$room_name}}</dd>
             </dl>
             <p>
                 考试时间：<span class="f_red">{{$msg['mins']}}</span>分钟，时间到请停止考试，根据腕表提示完成考试
