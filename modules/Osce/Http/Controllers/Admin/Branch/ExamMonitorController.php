@@ -266,12 +266,24 @@ class ExamMonitorController  extends CommonController
         //获取数据
         $examId = $request->input('exam_id');
         $studentId = $request->input('student_id');
-        $stationId= ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->get();//一个学生的所有考站
+        $stationId= ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->groupBy('station_id')->get();//一个学生的所有考站
         if(count($stationId)) {
             foreach($stationId as $key=>$val){//获取对应考站的视频信息
                 $stationId[$key]['name']=Station::where('id',$val->station_id)->pluck('name');
-                $type=ExamMonitor::where('station_id',$val->station_id)->where('exam_id',$examId)->where('student_id',$studentId)->select('type')->first();//对应考站弃考替考类型
-                $stationId[$key]['type']=empty($type)?'正常':($type->type==1?'替考':'弃考');
+                $type=ExamMonitor::where('station_id',$val->station_id)->where('exam_id',$examId)->where('student_id',$studentId)->select('description')->first();//对应考站弃考替考类型
+                if(empty($type)){
+                    $stationId[$key]['type']='正常';
+                }else{
+                    if($type->description==1){
+                        $stationId[$key]['type']='弃考';
+                    }
+                    if($type->description==3){
+                        $stationId[$key]['type']='替考';
+                    }
+                    if($type->description==2){
+                        $stationId[$key]['type']='作弊';
+                    }
+                }
                 $queueMsg=ExamQueue::where('station_id',$val->station_id)->where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->first();//考站考试时间
                 if(!empty($queueMsg)){
                     $time=strtotime($queueMsg->end_dt)-strtotime($queueMsg->begin_dt);
