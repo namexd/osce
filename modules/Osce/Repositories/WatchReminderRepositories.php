@@ -167,10 +167,6 @@ class WatchReminderRepositories extends BaseRepository
 
         $status = $this->getNoticeStauts($queue, $queueList);
         \Log::alert('学生队列状态', [$status]);
-
-        // 初始化房间考站数量
-        $drawlots = new DrawlotsRepository();
-        $this->stationNum = count($drawlots->getStationNum($this->exam->id, $queue->room_id, $this->examScreening->id));
         //并且根据当前状态选择相应操作
         switch ($status) {
             //待考
@@ -290,7 +286,6 @@ class WatchReminderRepositories extends BaseRepository
     {
         $StudentQueueList = ExamQueue::where('exam_id', '=', $exam->id)
             ->where('exam_screening_id', '=', $examScreening->id)
-            ->whereIn('status', [0, 1, 2])
             ->where('student_id', '=', $student->id)->orderBy('begin_dt', 'asc')->get();
         if ($StudentQueueList) {
             return $StudentQueueList;
@@ -390,6 +385,11 @@ class WatchReminderRepositories extends BaseRepository
      */
     public function getWaitings()
     {
+
+        // 初始化房间考站数量
+        $drawlots = new DrawlotsRepository();
+        $this->stationNum = count($drawlots->getStationNum($this->exam->id, $this->nowQueue->room_id, $this->examScreening->id));
+
         // todo 调用学生提示信息提示方法
         $data = $this->getStudentWatchInfo();
         //根据学生获取NFC _code
@@ -406,7 +406,11 @@ class WatchReminderRepositories extends BaseRepository
      */
     public function getGOtoRoon()
     {
-       // todo 调用学生提示信息提示方法
+        // 初始化房间考站数量
+        $drawlots = new DrawlotsRepository();
+        $this->stationNum = count($drawlots->getStationNum($this->exam->id, $this->nowQueue->room_id, $this->examScreening->id));
+
+        // todo 调用学生提示信息提示方法
         $data = $this->getStudentWatchInfo();
         //根据当前学生获取NFC——code
         $code = $this->getWatchStatus();
@@ -456,11 +460,13 @@ class WatchReminderRepositories extends BaseRepository
                     \Log::info('判断学生应该去的考场2', $data);
 
                 } else {
-                    //获取判断老师状态
+                    //  todo 调用提示学生是去什么考场还是等待信息方法
                     $data = $this->getTeacherReady();
                 }
             } else {
-                $data = $this->getStudentFinishExam($studentFinishExam, $roomInfo, $room);
+//                $data = $this->getStudentFinishExam($studentFinishExam, $roomInfo, $room);
+                //  todo 调用提示学生是去什么考场还是等待信息方法
+                $data = $this->getTeacherReady();
             }
         } else {
             if (count($stationStatus) < $this->stationNum) { //判定房间考站是不是有空
