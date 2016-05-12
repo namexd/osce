@@ -769,7 +769,7 @@ class ApiController extends CommonController
             \Log::alert('老师准备时拿到的学生信息',[$studentIds]);
             if (empty($studentIds))
             {
-                \Log::alert('未查到相应考试队列信息',[$studentIds, $request->all(),'screeningId' => Common::getScreeningId($examId)]);
+                \Log::alert('未查到相应考试队列信息',[$studentIds, $request->all(),'screeningId' => Common::getExamScreening($examId)->id]);
 
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')

@@ -633,7 +633,7 @@ class Common
      * @date   2016-05-13
      * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
      */
-    public static function getScreeningId($exam_id)
+    public static function getExamScreening($exam_id)
     {
         $ExamScreening = new ExamScreening();
         $screenObject  = $ExamScreening->getExamingScreening($exam_id);
@@ -646,7 +646,7 @@ class Common
             }
         }
 
-        return $screenObject->id;
+        return $screenObject;
     }
 
     /**
