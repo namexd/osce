@@ -108,28 +108,11 @@ class ExamResultController extends CommonController{
         $stationId = $request->get('station_id');
         $name      = $request->get('name');
 
-        //存在考试ID，根据考试ID查询对应的考站
-        if(!empty($examId))
-        {
-            $stations = [];
-            //拿到考试下所有的考站
-            $stationIds = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
-                                   ->where('exam_draft_flow.exam_id', '=', $examId)
-                                   ->select('exam_draft.station_id as station_id')
-                                   ->groupBy('exam_draft.station_id')->get();
-            if(!$stationIds->isEmpty())
-            {
-                foreach($stationIds as $station){
-                    $stations[] = $station->station;
-                }
-            }
+        $ExamDraft = new ExamDraft();
+        //查询考站，(存在考试ID, 根据考试ID查询)
+        $stations  = $ExamDraft->getExamStations($examId);
+        $exams     = Exam::all();
 
-        }else
-        {
-            $stations  = Station::select()->get();
-        }
-
-        $exams       = Exam::select()->get();
         $examResult  = new ExamResult();
         $examResults = $examResult->getResultList($examId,$stationId,$name);
         //修改时间显示（时分秒：00:00:00）
