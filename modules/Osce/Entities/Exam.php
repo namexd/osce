@@ -925,7 +925,7 @@ class Exam extends CommonModel
             }
 
             //更改考试-场次-考站状态表 的状态
-            $examStationStatus = ExamStationStatus::where('exam_id', '=', $id)->get();
+            $examStationStatus = ExamStationStatus::where('exam_id', '=', $id)->where('status', '<>', 0)->get();
             if(!$examStationStatus->isEmpty()){
                 foreach ($examStationStatus as $item) {
                     $item->status = 0;
@@ -936,7 +936,7 @@ class Exam extends CommonModel
             }
 
             //更改考试场次状态
-            $examScreenings = $examScreening->get();
+            $examScreenings = $examScreening->where('status', '<>', 0)->get();
             if (!$examScreenings->isEmpty()) {
                 foreach ($examScreenings as $screening) {
                     $screening->update(['status' => 0]);       //TODO 更改状态为0
@@ -970,9 +970,12 @@ class Exam extends CommonModel
                 }
             }
             //更改考试状态
-            $result = $this->where('id', '=', $id)->update(['status' => 0]);    //TODO 更改状态为0（0为未开考）
-            if(!$result){
-                throw new \Exception('修改考试状态 失败！');
+            if($examObj->status != 0)
+            {
+                $result = $this->where('id', '=', $id)->update(['status' => 0]);    //TODO 更改状态为0（0为未开考）
+                if(!$result){
+                    throw new \Exception('修改考试状态 失败！');
+                }
             }
 
             $connection->commit();
