@@ -550,7 +550,6 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 	}
 
 	$Exam = new \Modules\Osce\Entities\Exam();
-	dd($Exam->xiBai($exam_id));
 
 	$result = $Exam->emptyData($exam_id);
 	if($result === true){
