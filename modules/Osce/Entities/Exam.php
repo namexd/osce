@@ -1103,6 +1103,9 @@ class Exam extends CommonModel
         if (count($result) != 0) {
             foreach ($result as $value)
             {
+                $examDraftFlows = ExamDraftFlow::whereExamScreeningId($value['id'])->get();
+                ExamDraft::whereIn('exam_draft_flow_id', $examDraftFlows->pluck('id')->toArray())->delete();
+                ExamDraftFlow::whereExamScreeningId($value['id'])->delete();
                 if (!$res = ExamScreening::where('id', '=', $value['id'])->delete()) {
                     throw new \Exception('删除考试场次信息失败');
                 } else {
