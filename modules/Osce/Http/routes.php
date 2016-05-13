@@ -529,8 +529,10 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(Redis $redis) {
-	$a = \Carbon\Carbon::tomorrow();
-	dd($a->subSecond()->timestamp);
+	$a = 1111;
+//	dd($a['1']);
+	dd($a['1']);
+	
 });
 
 Route::get('redis', function(){

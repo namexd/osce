@@ -822,6 +822,7 @@ class Exam extends CommonModel
     }
 
     public function xiBai($exam_id){
+        dd('@@');
         return $this->emptyData($exam_id);
     }
     /**

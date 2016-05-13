@@ -603,7 +603,7 @@ class WatchReminderRepositories extends BaseRepository
         if ($studentFront == 0 || $willStudents ==0) {
             // todo 通知学生去的考场
             $data = $this->getStudentFinishExam($studentFinishExam, $roomInfo, $this->room);
-            \Log::info('判断学生应该去的考场834', $data);
+            \Log::info('判断学生应该去的考场834', [$data]);
         } else {
             $data['code'] = 1;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
             $data['estTime'] = $examtimes;  // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
