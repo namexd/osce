@@ -390,10 +390,13 @@ class TestResult extends CommonModel
                 if(count($examResult->examScore))
                 {
                     //拿到考试结果id去exam_score中删除数据
-                    if(!$examResult->examScore->delete())
-                    {
-                        throw new \Exception('舍弃考试评分详情失败',-1100);
+                    if(!$examResult->examScore->isEmpty()){
+                        if(!$examResult->examScore->delete())
+                        {
+                            throw new \Exception('舍弃考试评分详情失败',-1100);
+                        }
                     }
+
                 }
                 //删除特殊评分项的评分
                 if(!$examResult->examSpecialScore->isEmpty()){
