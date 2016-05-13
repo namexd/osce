@@ -54,7 +54,7 @@
                 openEffect: 'none',
                 closeEffect: 'none'
             });
-            $(".actions").append($('.btnBox'));
+            $(".actions").prepend($('.btnBox'));
             $(".check_label").change(function(){
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
                 var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
@@ -107,10 +107,8 @@
                 localStorage.setItem("Storage_answer",JSON.stringify(Storage_answer_list));//设置本地存储
             }
             $(".actions").find("a[href='#finish']").click(function(){
-                layer.confirm('确认提交答题？',{btn: ['取消','确认']},
-                        function(){return},
-                        function(){
-                            //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
+                layer.confirm('确认提交答题？',{btn: ['确认','取消']},
+                        function(){   //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
                             clearInterval(statusTimer);
                             var examPaperFormalId=$('#examPaperFormalId').val();
                             var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
@@ -132,7 +130,8 @@
                                         }else{
                                             layer.confirm(obj.message);
                                         }
-                                    })
+                                    })},
+                        function(){
                         })
             })
         });
@@ -237,7 +236,7 @@
     <input type="hidden" class="allData" stationId="{{ $stationId }}" userId="{{ $userId }}" studentId="{{ $studentId }}" examId="{{ $examId }}">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
-            <div class="col-xs-6 col-md-2">
+            <div class="col-xs-6 col-md-6">
                 <h5 class="title-label">{{$examPaperFormalData["name"]}}&nbsp;(
                     <span>考试时间：</span>
                     <span class="checkTime">{{$examPaperFormalData["length"]}}分钟</span>
@@ -344,7 +343,7 @@
                             </div>
                         </div>
 
-                        <div class="btnBox" style="margin:0 auto; text-align: center; width: 650px;display: none">
+                        <div class="btnBox left" style="margin:0 auto; text-align: center; width: 400px;padding-left:400px;">
                             <span class="marl_10 left" style="height: 29px; line-height: 29px;">剩余时间：</span>
                             <div class="colockbox" id="colockbox1">
                                 <span class="hour" id="hour">00</span><span class="left">:</span>

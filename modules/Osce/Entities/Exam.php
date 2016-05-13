@@ -859,7 +859,7 @@ class Exam extends CommonModel
                 }
             }
             //修改腕表使用状态
-            $watchStatus = Watch::where('id','>',0)->where('status', '<>', 0)->get();
+            $watchStatus = Watch::where('status', '<>', 0)->get();
             if(!$watchStatus->isEmpty())
             {
                 foreach ($watchStatus as $watchStatu) {
@@ -1000,7 +1000,7 @@ class Exam extends CommonModel
             }
 
             $connection->commit();
-            return true;
+            return 11111;
 
         } catch (\Exception $ex)
         {
