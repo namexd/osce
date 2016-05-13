@@ -552,7 +552,6 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 	$exam = new \Modules\Osce\Entities\Exam();
 
 	$result = $exam->emptyData($exam_id);
-	dd($result);
 	if($result === true){
 		return '成功-' . mt_rand(1000,9999);
 	}
