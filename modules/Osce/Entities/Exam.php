@@ -833,7 +833,7 @@ class Exam extends CommonModel
         $connection ->beginTransaction();
 //        try {
             //获得当前exam的实例
-            $examObj = $this->findOrFail($id);
+            $examObj = $this->doingExam($id);
             //获取与考场相关的流程
             $examScreening    = ExamScreening::where('exam_id', '=', $id);
             $examScreeningObj = $examScreening->select('id')->get();
@@ -852,7 +852,7 @@ class Exam extends CommonModel
                 }
             }
             //修改腕表使用状态
-            $watchStatus = Watch::where('id','>',0)->get();
+            $watchStatus = Watch::where('id','>',0)->where('status', '<>', 0)->get();
             if(!$watchStatus->isEmpty())
             {
                 $watchStatus = Watch::where('id','>',0)->update(['status'=>0]);
@@ -886,18 +886,24 @@ class Exam extends CommonModel
                     $examAttachs = TestAttach::where('test_result_id', '=', $valueR->id)->get();
                     if(!$examAttachs->isEmpty()){
                         foreach ($examAttachs as $examAttach) {
-                            $examAttach->delete();
+                            if(!$examAttach->delete()){
+                                throw new \Exception('删除考核点对应的图片、语音失败！');
+                            }
                         }
                     }
                     //再删除对应考试结果数据
-                    $valueR->delete();
+                    if(!$valueR->delete()){
+                        throw new \Exception('删除对应考试结果数据失败！');
+                    }
                 }
             }
             //删除替考记录
             $examMonitors = ExamMonitor::where('exam_id', '=', $id)->get();
             if(!$examMonitors->isEmpty()){
                 foreach ($examMonitors as $examMonitor) {
-                    $examMonitor->delete();
+                    if(!$examMonitor->delete()){
+                        throw new \Exception('删除替考记录失败！');
+                    }
                 }
             }
 
