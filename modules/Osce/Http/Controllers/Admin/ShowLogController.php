@@ -26,59 +26,115 @@ use Modules\Osce\Repositories\Common as OsceCommon;
 
 class ShowLogController extends CommonController
 {
-   public function ShowLog(Request $request){
+    public function ShowLog(Request $request){
 
-       header('Content-type:text/html;charset=utf-8');
-       #设置执行时间不限时
-       set_time_limit(0);
-       if(env('ShowlogFlag',false) == false)
-       {
-           dd('浏览器显示日志开关未打开');
-       }
-       $name =$request->input('name','laravel-');
-       $date = $request->input('date',date('Y-m-d'));
-       $date = date('Y-m-d',strtotime($date));
-       $path = dirname(__FILE__).'/../../../../../storage/logs/';
-       $filename = $path.$name.$date.'.log';
-       $beginHour = $request->input('begin_hour',date('H'));
-       $endHour = $request->input('end_hour',date('H'));
-       if($endHour > 23 || $endHour < 0){
-           $endHour = date('H');
-       }
-       if($beginHour > 23 || $beginHour < 0){
-           $beginHour = date('H');
-       }
-       if($beginHour > $endHour)
-       {
-           $beginHour = $endHour;
-       }
-       if(!file_exists($filename)){
-           echo $name.$date.'.log'.'no exist';
-       }
-       else{
+        header('Content-type:text/html;charset=utf-8');
+        #设置执行时间不限时
+        set_time_limit(0);
+        if(env('ShowlogFlag',false) == false)
+        {
+            dd('浏览器显示日志开关未打开');
+        }
+        $name =$request->input('name','laravel-');
+        $date = $request->input('date',date('Y-m-d'));
+        $date = date('Y-m-d',strtotime($date));
+        $path = dirname(__FILE__).'/../../../../../storage/logs/';
+        $filename = $path.$name.$date.'.log';
+        $beginHour = $request->input('begin_hour',date('H'));
+        $endHour = $request->input('end_hour',date('H'));
+        if($endHour > 23 || $endHour < 0){
+            $endHour = date('H');
+        }
+        if($beginHour > 23 || $beginHour < 0){
+            $beginHour = date('H');
+        }
+        if($beginHour > $endHour)
+        {
+            $beginHour = $endHour;
+        }
+        if(!file_exists($filename)){
+            echo $name.$date.'.log'.'no exist';
+        }
+        else{
 
-           $file = fopen($filename,"r");
+            $file = fopen($filename,"r");
 
-           while(! feof($file))
-           {
-               $content = fgets($file);
-               $content = str_replace(array("\r\n","\n"),'<br>',$content);
-               $pos = strpos($content,'['.$date);
-               if($pos !== false ){
-                   $hour = substr($content,$pos+12,2);
+            while(! feof($file))
+            {
+                $content = fgets($file);
+                $content = str_replace(array("\r\n","\n"),'<br>',$content);
+                $pos = strpos($content,'['.$date);
+                if($pos !== false ){
+                    $hour = substr($content,$pos+12,2);
 
-                   if(is_numeric($hour) && $hour >= $beginHour && $hour <=$endHour){
-                       echo $content;
-                   }
+                    if(is_numeric($hour) && $hour >= $beginHour && $hour <=$endHour){
+                        echo $content;
+                    }
 
-               }
-           }
-           echo '<br> log over';
-           fclose($file);
+                }
+            }
+            echo '<br> log over';
+            fclose($file);
 
-       }
-       exit();
-   }
+        }
+        exit();
+    }
+    public function CheckDatabase(){
+        $sqlConn = array('osce_mis','sys_mis');
+        $envcfg = array();
+
+        $tableNames = array();
+        foreach($sqlConn as $val){
+
+            $cfg =env($val,'[]');
+            eval("\$envcfg['$val'] = $cfg;");
+
+            $tables = \DB::connection($val)->select('show tables');
+            $dbname = '';
+            foreach($tables as $table){
+                if(is_object($table)) {
+                    $table = (array)$table;
+                }
+                if('' == $dbname){
+                    $dbname = array_keys($table)[0];
+                }
+                if(isset($table[$dbname])){
+                    $tableNames[$val][] = $table[$dbname];
+                }
+            }
+            //echo "['".implode("','",$tableNames)."']";
+        }
+        $checkResult = 0;
+        $message = '';
+        $hasEnvCfg = true;
+        foreach($sqlConn as $val){
+            if(isset($envcfg[$val]) && count($envcfg[$val]) > 0){
+                if(isset($tableNames[$val])){
+                    foreach($envcfg[$val] as $table){
+                        if(!in_array($table,$tableNames[$val])){
+                            $message .= 'missing table ['.$table. '] in database ' .$val.'<br>';
+                            $checkResult++;
+                        }
+                    }
+                }
+                else{
+                    $message .= 'missing table ['.$table. '] in database ' .$val.'<br>';
+                    $checkResult++;
+                }
+            }
+            else{
+                $message .= 'missing env config ['.$val. ']<br>';
+                $hasEnvCfg = false;
+            }
+        }
+        if($checkResult > 0){
+            $message .= 'checkover! but have '.$checkResult.' tables missing'.'<br>';
+        }
+        elseif($hasEnvCfg){
+            $message .= 'checkover! no error found!<br>';
+        }
+        echo $message;
+    }
     public function ShowLogTest(Request $request){
 
         header('Content-type:text/html;charset=utf-8');
