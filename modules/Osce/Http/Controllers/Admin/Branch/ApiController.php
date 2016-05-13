@@ -479,8 +479,6 @@ class ApiController extends CommonController
                 throw new \Exception('您还没有登录，请先登录', 1000);
             }
             //检验登录的老师是否是监考老师
-
-
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('您不是监考老师', 1001);
             }
