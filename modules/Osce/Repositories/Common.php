@@ -9,12 +9,26 @@
 namespace Modules\Osce\Repositories;
 
 
+use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamAbsent;
+use Modules\Osce\Entities\ExamOrder;
+use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
+use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\ExamSpecialScore;
+use Modules\Osce\Entities\ExamStationStatus;
+use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
+use Modules\Osce\Entities\StationVideo;
 use Modules\Osce\Entities\Student;
 use App\Entities\SysUserRole;
 use App\Entities\SysRoles;
 use App\Entities\User;
 use DB;
+use Modules\Osce\Entities\TestAttach;
+use Modules\Osce\Entities\Watch;
+use Modules\Osce\Entities\WatchLog;
 
 class Common
 {
@@ -635,4 +649,187 @@ class Common
         return $screenObject->id;
     }
 
+    /**
+     * 清空考试 对应考试数据（不包括排考数据）
+     * @param $id
+     * @return int|string
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-04-14 15:13
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public static function emptyExamData($id)
+    {
+        $connection = DB::connection('osce_mis');
+        $connection ->beginTransaction();
+        try {
+            $Exam = new Exam();
+            //获得当前exam的实例
+            $examObj = $Exam->doingExam($id);
+            if(is_null($examObj)){
+                throw new \Exception('没有找到对应考试！');
+            }
+            //获取与考场相关的流程
+            $examScreening    = ExamScreening::where('exam_id', '=', $id);
+            $examScreeningObj = $examScreening->select('id')->get();
+            $examScreeningIds = $examScreeningObj->pluck('id');
+            //获取考试结果信息
+            $examResults      = ExamResult::whereIn('exam_screening_id', $examScreeningIds)->select('id')->get();
+            $examResultIds    = $examResults->pluck('id');
+
+            //清除腕表使用记录
+            $watchLog = WatchLog::where('id','>',0)->get();
+            if(!$watchLog->isEmpty())
+            {
+                $watchLog = WatchLog::where('id','>',0)->delete();
+                if(!$watchLog){
+                    throw new \Exception('删除腕表使用记录失败！');
+                }
+            }
+            //修改腕表使用状态
+            $watchStatus = Watch::where('status', '<>', 0)->get();
+            if(!$watchStatus->isEmpty())
+            {
+                foreach ($watchStatus as $watchStatu) {
+                    $watchStatu->status = 0;
+                    if(!$watchStatu->save()){
+                        throw new \Exception('修改腕表状态失败！');
+                    }
+                }
+            }
+            //删除考试得分
+            $examScores = ExamScore::whereIn('exam_result_id', $examResultIds)->get();
+            if (!$examScores->isEmpty()) {
+                foreach ($examScores as $valueS) {
+                    if(!$valueS->delete()){
+                        throw new \Exception('删除考试得分失败！');
+                    }
+                }
+            }
+            //删除考试特殊评分项扣分
+            $examSpecialScore = ExamSpecialScore::whereIn('exam_result_id', $examResultIds)->get();
+            if (!$examSpecialScore->isEmpty()) {
+                foreach ($examSpecialScore as $valueSs) {
+                    if(!$valueSs->delete()){
+                        throw new \Exception('删除考试特殊评分项扣分失败！');
+                    }
+                }
+            }
+            //如果该考试已经完成，删除考试结果记录
+            if (!$examResults->isEmpty()) {
+                foreach ($examResults as $valueR)
+                {
+                    //删除考核点对应的图片、语音
+                    $examAttachs = TestAttach::where('test_result_id', '=', $valueR->id)->get();
+                    if(!$examAttachs->isEmpty()){
+                        foreach ($examAttachs as $examAttach) {
+                            if(!$examAttach->delete()){
+                                throw new \Exception('删除考核点对应的图片、语音失败！');
+                            }
+                        }
+                    }
+                    //再删除对应考试结果数据
+                    if(!$valueR->delete()){
+                        throw new \Exception('删除对应考试结果数据失败！');
+                    }
+                }
+            }
+            //删除替考记录
+            $examMonitors = ExamMonitor::where('exam_id', '=', $id)->get();
+            if(!$examMonitors->isEmpty()){
+                foreach ($examMonitors as $examMonitor) {
+                    if(!$examMonitor->delete()){
+                        throw new \Exception('删除替考记录失败！');
+                    }
+                }
+            }
+            //更改考试-场次-考站状态表 的状态
+            $stationVideos = StationVideo::where('exam_id', '=', $id)->get();
+            if(!$stationVideos->isEmpty()){
+                foreach ($stationVideos as $stationVideo)
+                {
+                    if(!$stationVideo->delete()){
+                        throw new \Exception('删除考试-锚点失败！');
+                    }
+                }
+            }
+            //修改考试考场学生表 (删除)
+            foreach ($examScreeningObj as $item)
+            {
+                $examScreeningStudent = ExamScreeningStudent::where('exam_screening_id', '=', $item->id)->get();
+                foreach ($examScreeningStudent as $value)
+                {
+                    if (!$value->delete()) {
+                        throw new \Exception('删除考试场次学生失败！');
+                    }
+                }
+            }
+            //更改考试-场次-考站状态表 的状态
+            $examStationStatus = ExamStationStatus::where('exam_id', '=', $id)->where('status', '<>', 0)->get();
+            if(!$examStationStatus->isEmpty()){
+                foreach ($examStationStatus as $item) {
+                    $item->status = 0;
+                    if(!$item->save()){
+                        throw new \Exception('修改考试-场次-考站状态失败！');
+                    }
+                }
+            }
+            //更改考试场次状态
+            $examScreenings = $examScreening->where('status', '<>', 0)->get();
+            if (!$examScreenings->isEmpty()) {
+                foreach ($examScreenings as $screening) {
+                    $screening->update(['status' => 0]);       //TODO 更改状态为0
+                }
+            }
+            //删除缺考
+            $examAbsent = ExamAbsent::where('exam_id', '=', $id)->get();
+            if(!$examAbsent->isEmpty()){
+                foreach ($examAbsent as $examAbsen) {
+                    if(!$examAbsen->delete()){
+                        throw new \Exception('删除缺考失败！');
+                    }
+                }
+            }
+            //删除考试队列
+            $examQueue = ExamQueue::where('exam_id', '=', $id)->get();
+            if(!$examQueue->isEmpty())
+            {
+                foreach ($examQueue as $examQueu) {
+                    if(!$examQueu->delete()){
+                        throw new \Exception('删除考试队列失败！');
+                    }
+                }
+            }
+            //更改考生排序状态  TODO:（ExamOrder表中数据是在智能排考时添加进去的）
+            $examOrder = ExamOrder::where('exam_id', '=', $id)->where('status', '<>', 0)->get();
+            if(!$examOrder->isEmpty())
+            {
+                //TODO 更改状态为0（0为未绑定腕表）
+                foreach ($examOrder as $examOrde) {
+                    $examOrde->status = 0;
+                    if(!$examOrde->save()){
+                        throw new \Exception('修改考生排序状态 失败！');
+                    }
+                }
+            }
+            //更改考试状态
+            if($examObj->status != 0)
+            {
+                //TODO 更改状态为0（0为未开考）
+                $examObj->status = 0;
+//                $result = $this->where('id', '=', $id)->update(['status' => 0]);
+                if(!$examObj->save()){
+                    throw new \Exception('修改考试状态 失败！');
+                }
+            }
+
+            $connection->commit();
+            return 11111;
+
+        } catch (\Exception $ex)
+        {
+            $connection->rollBack();
+            return $ex->getMessage();
+        }
+    }
 }
