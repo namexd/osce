@@ -556,7 +556,7 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 		return '成功-' . mt_rand(1000,9999);
 	}
 
-	return '失败-' . mt_rand(1000,9999).': '.$result;
+	return '失败-' . mt_rand(1000,9999).', 错误信息: '.$result;
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 	$examId = $request->input('exam_id');

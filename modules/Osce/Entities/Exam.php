@@ -861,10 +861,6 @@ class Exam extends CommonModel
                         throw new \Exception('修改腕表状态失败！');
                     }
                 }
-//                $watchStatus = Watch::where('id','>',0)->where('status', '<>', 0)->update(['status'=>0]);
-//                if(!$watchStatus){
-//                    throw new \Exception('修改腕表状态失败！');
-//                }
             }
             //删除考试得分
             $examScores = ExamScore::whereIn('exam_result_id', $examResultIds)->get();
@@ -962,10 +958,6 @@ class Exam extends CommonModel
                         throw new \Exception('删除缺考失败！');
                     }
                 }
-//                $examAbsent = ExamAbsent::where('exam_id', '=', $id)->delete();
-//                if(!$examAbsent){
-//                    throw new \Exception('删除缺考失败！');
-//                }
             }
             //删除考试队列
             $examQueue = ExamQueue::where('exam_id', '=', $id)->get();
@@ -976,10 +968,6 @@ class Exam extends CommonModel
                         throw new \Exception('删除考试队列失败！');
                     }
                 }
-//                $examQueue = ExamQueue::where('exam_id', '=', $id)->delete();
-//                if(!$examQueue){
-//                    throw new \Exception('删除考试队列失败！');
-//                }
             }
             //更改考生排序状态  TODO:（ExamOrder表中数据是在智能排考时添加进去的）
             $examOrder = ExamOrder::where('exam_id', '=', $id)->where('status', '<>', 0)->get();
@@ -992,10 +980,6 @@ class Exam extends CommonModel
                         throw new \Exception('修改考生排序状态 失败！');
                     }
                 }
-//                $examOrder = ExamOrder::where('exam_id', '=', $id)->where('status', '<>', 0)->update(['status' => 0]);
-//                if(!$examOrder){
-//                    throw new \Exception('修改考生排序状态 失败！');
-//                }
             }
             //更改考试状态
             if($examObj->status != 0)
