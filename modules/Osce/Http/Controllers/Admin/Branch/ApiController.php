@@ -713,7 +713,7 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder, DrawlotsRepository $draw) {
-
+        \Log::alert('老师准备传入所有的参数',$request->all());
         $this->validate($request, [
             'exam_id'           => 'required|integer',
             'station_id'        => 'required|integer',
@@ -729,7 +729,7 @@ class ApiController extends CommonController
         $roomId          = $request->input('room_id');
         
         
-        \Log::alert('老师准备传入所有的参数',$request->all());
+
         // 查询当前老师对应考站准备完成信息
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
