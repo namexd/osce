@@ -97,6 +97,7 @@
 
 	var m='';
 	$('#examId').change(function(){
+		$('.pnotice').css('display','none');
 		$('#error1').css('display','none');
 		var examId= $.trim($(this).val())
 		var opstr='<option value="">请选择考场</option>';
@@ -127,7 +128,7 @@
 
 	})
 	$('#roomId').change(function(){
-		$('.pnotice').css('display','none')
+		$('.pnotice').css('display','none');
 	})
 	function jufe(){
 		$('.exam').addClass('hide');
