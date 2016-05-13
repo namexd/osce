@@ -841,7 +841,7 @@ class Exam extends CommonModel
             $examScreening    = ExamScreening::where('exam_id', '=', $id);
             $examScreeningObj = $examScreening->select('id')->get();
             $examScreeningIds = $examScreeningObj->pluck('id');
-
+            //获取考试结果信息
             $examResults      = ExamResult::whereIn('exam_screening_id', $examScreeningIds)->select('id')->get();
             $examResultIds    = $examResults->pluck('id');
 
