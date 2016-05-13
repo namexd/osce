@@ -45,4 +45,28 @@ class ExamMidwayRepository
     {
         return ExamQueue::whereStudentId($studentId)->whereExamId($examId)->whereStatus(1)->orderBy('begin_dt', 'asc')->first();
     }
+
+    /**
+     * 是否要把状态变更为2
+     * @access public
+     * @param $examId
+     * @param array $stationIds
+     * @return bool
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-13
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function isChangeToTwo($examId, array $stationIds)
+    {
+        $count = ExamStationStatus::whereIn('station_id', $stationIds)
+            ->whereExamId($examId)
+            ->whereStatus(1)
+            ->count();
+        if ($count == count($stationIds)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

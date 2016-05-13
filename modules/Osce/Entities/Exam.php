@@ -1000,7 +1000,7 @@ class Exam extends CommonModel
             }
 
             $connection->commit();
-            return true;
+            return 11111;
 
         } catch (\Exception $ex)
         {

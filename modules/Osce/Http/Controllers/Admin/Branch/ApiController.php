@@ -635,11 +635,8 @@ class ApiController extends CommonController
         $screen = $drawlots->getScreening($examingDO->id);
         $stations = $drawlots->getStationNum($examingDO->id, $queue->room_id, $screen->id);
         //判断当前已经有多少个考站已经是1了
-        $status = ExamStationStatus::whereIn('station_id', $stations->pluck('station_id')->toArray())
-            ->where('exam_id', $examingDO->id)
-            ->where('status', 1)
-            ->count;
-        if (count($stations) == $status) {
+        $bool = $examMidway->isChangeToTwo($examingDO->id, $stations->pluck('station_id')->toArray());
+        if ($bool) {
             $examMidway->beginTheoryStatus($examingDO->id, $stations->pluck('station_id')->toArray(), 2);
         }
 
@@ -782,7 +779,7 @@ class ApiController extends CommonController
                 ->pluck('student_id')
                 ->toArray();
 
-            if (is_null($studentIds)) {
+            if (empty($studentIds)) {
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')
                 );
@@ -860,6 +857,21 @@ class ApiController extends CommonController
         $stationArr = $draw->getStationNum($examId, $roomId, $examScreeningId);
         if(!$stationArr->isEmpty()){
             //查询exam_station_status表（考试-场次-考站状态表）中该考试该考场下status是否全为1，如果是，修改其状态值为2
+            $examStationStatus->status = 1;
+            if($examStationStatus->save()){
+                // todo  准备好后调用腕表接口
+
+                try {
+
+                    \Log::alert('老师准备的学生id',$studentIds);
+
+                    foreach($studentIds as $studentId){
+                        $watchReminder->getWatchPublish($examId,$studentId, $stationId);
+                    }
+                } catch (\Exception $ex) {
+                    \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
+                }
+            }
             $examStationStatusData = $examStationStatusModel
                 ->where('exam_id',$examId)
                 ->where('status','=',1)
@@ -867,25 +879,7 @@ class ApiController extends CommonController
                 ->count();
             if($examStationStatusData == $stationArr->count()){
                 $examStationStatusModel->where('exam_id',$examId)->whereIn('station_id',$stationArr)->update(['status'=>2]);
-            }else{
-                $examStationStatus->status = 1;
-                if($examStationStatus->save()){
-                    // todo  准备好后调用腕表接口
-
-                    try {
-
-                        \Log::alert('老师准备的学生id',$studentIds);
-
-                        foreach($studentIds as $studentId){
-                            $watchReminder->getWatchPublish($examId,$studentId, $stationId);
-                        }
-                    } catch (\Exception $ex) {
-                        \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
-                    }
-                }
-
             }
-
         }
         $request['station_id']=$stationId;
         $request['teacher_id']=$teacherId;
