@@ -831,7 +831,7 @@ class Exam extends CommonModel
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
-        try {
+//        try {
             //获得当前exam的实例
             $examObj = $this->findOrFail($id);
             //获取与考场相关的流程
@@ -981,10 +981,10 @@ class Exam extends CommonModel
             $connection->commit();
             return true;
 
-        } catch (\Exception $ex) {
-            $connection->rollBack();
-            return $ex->getMessage();
-        }
+//        } catch (\Exception $ex) {
+//            $connection->rollBack();
+//            return $ex->getMessage();
+//        }
     }
 
     /**
