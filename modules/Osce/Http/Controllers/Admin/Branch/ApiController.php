@@ -506,10 +506,18 @@ class ApiController extends CommonController
         }
         catch(\Exception $ex)
         {
-           /* if ($ex->getCode() === 1000) {
+            if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
+            }else{
+                $data = array(
+                    'status'=>0,
+                    'info'=>$ex->getMessage()
+                );
+                return view('osce::admin.theoryCheck.theory_check_volidate', [
+                    'data' => $data,
+                ]);
             }
-            if($ex->getCode() === 1001 || $ex->getCode() === 1002)
+            /*if($ex->getCode() === 1001 || $ex->getCode() === 1002)
             {
                 Auth::logout();
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
@@ -523,13 +531,7 @@ class ApiController extends CommonController
                     'data' => $data,
                 ]);
             }*/
-            $data = array(
-                'status'=>0,
-                'info'=>$ex->getMessage()
-            );
-            return view('osce::admin.theoryCheck.theory_check_volidate', [
-                'data' => $data,
-            ]);
+
         }
     }
 
