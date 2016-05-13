@@ -549,7 +549,7 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 		return '请传入参数id，id对应考试ID';
 	}
 	$Exam = new \Modules\Osce\Entities\Exam();
-	$result = $Exam->emptyData($exam_id);
+	$result = $Exam->xiBai($exam_id);
 
 //	$exam = new \Modules\Osce\Entities\Exam();
 //

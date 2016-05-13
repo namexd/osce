@@ -821,6 +821,9 @@ class Exam extends CommonModel
         }
     }
 
+    public function xiBai($exam_id){
+        return $this->emptyData($exam_id);
+    }
     /**
      * 重置考试数据
      * @param   $id         //考试ID
