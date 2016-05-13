@@ -28,9 +28,9 @@ class ExamStationStatus extends CommonModel
     protected $fillable     = ['exam_id', 'exam_screening_id', 'station_id', 'status'];
 
     /**
-     * ╩Ях║©╪у╬в╢л╛
-     * @method GET ╫с©з
-     * @param $stations ╥©╪Доб©╪у╬╪╞╨о
+     * О©╫О©╫х║О©╫О©╫у╬в╢л╛
+     * @method GET О©╫с©О©╫
+     * @param $stations О©╫О©╫О©╫О©╫О©╫б©О©╫у╬О©╫О©╫О©╫О©╫
      * @author wt <wangtao@misrobot.com>
      * @date 2016-5-3
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
@@ -48,15 +48,15 @@ class ExamStationStatus extends CommonModel
             $tag=false;
             if(count($msg)){
                 foreach($msg as $val){
-                    if($val->status==0){//н╢в╪╠╦
+                    if($val->status==0){//н╢в╪О©╫О©╫
                         $flag=true;
-                    }else{//ряв╪╠╦
+                    }else{//О©╫О©╫в╪О©╫О©╫
                         $tag=true;
                     }
                 }
-                if(!$flag&&$tag){//╤╪в╪╠╦╨цакflag=false $tag=true
+                if(!$flag&&$tag){//О©╫О©╫в╪О©╫О©╫О©╫О©╫О©╫О©╫flag=false $tag=true
                     return 1;
-                }elseif($flag&&$tag){//в╪╠╦╨мц╩в╪╠╦╤╪сп
+                }elseif($flag&&$tag){//в╪О©╫О©╫О©╫О©╫ц╩в╪О©╫О©╫О©╫О©╫О©╫О©╫
                     return 2;
                 }else{
                     return 4;
@@ -66,7 +66,43 @@ class ExamStationStatus extends CommonModel
             }
         }
 
+    }
 
+    //Ф■╧Е▐≤Х─┐Г╚≥Г └Е┤├Е╓┤Г┼╤Ф─│
+
+    public function  getStationStatus($examId,$stationId,$exam_screening_id,$type=1)
+    {
+        if($type == 1){
+            $StationStatus =$this->where('exam_id',$examId)
+                ->where('exam_screening_id',$exam_screening_id)
+                ->where('station_id','=',$stationId)
+                ->first();
+            if(is_null($StationStatus)){
+                throw new \Exception('Ф╡║Ф°┴Ф┴╬Е┬╟Е╞╧Е╨■Г └Е┤├Е╓┤Х─┐Г╚≥Д©║Ф│╞');
+            }else{
+                $StationStatus ->status = 1;
+                if(!$StationStatus->save()){
+                    throw new \Exception('Ф■╧Е▐≤Х─┐Г╚≥Е┤├Е╓┤Д©║Ф│╞Е╓╠Х╢╔');
+                }
+            }
+        }else{
+            $StationStatus =$this->where('exam_id',$examId)
+                ->where('exam_screening_id',$exam_screening_id)
+                ->whereIn('station_id',$stationId)
+                ->get();
+            if(!$StationStatus->isEmpty()){
+                foreach ($StationStatus as $val){
+                    $val->status =2;
+                    if(!$val->save()){
+                        throw new \Exception('Ф■╧Е▐≤Х─┐Г╚≥Е┤├Е╓┤Д©║Ф│╞Е╓╠Х╢╔');
+                    }
+                }
+
+            }
+
+        }
+
+        
     }
 
 }

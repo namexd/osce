@@ -422,4 +422,30 @@ class ExamDraft extends CommonModel
             ->get();
 
     }
+
+    static public  function  getExamRoom($examId,$examscreeningId ,array $stationId){
+        //拿到实例
+        $examscreening = ExamScreening::find($examscreeningId);
+        //拿到阶段id
+        $examgradationId = ExamGradation::where('exam_id','=',$examId)->where('order','=',$examscreening->gradation_order)->first();
+
+        //拿到阶段考站id
+        $stationGradationId = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft_flow.exam_gradation_id','=',$examgradationId->id)
+            ->get()
+            ->pluck('exam_draft.station_id');
+         //拿到老师支持的考站和阶段考站id的交集
+        $station_id = array_intersect($stationId, $stationGradationId);
+         
+         $roomId =ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+             ->where('exam_draft_flow.exam_gradation_id','=',$examgradationId->id)
+             ->whereIn('exam_draft.station_id',$station_id)
+             ->first();
+         if(is_null($roomId)){
+             throw  new \Exception('获取老师所对应的考场失败');
+         }
+             
+        return $roomId;
+
+    }
 }

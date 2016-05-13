@@ -407,7 +407,7 @@ class ApiController extends CommonController
      * @date    2016年3月16日09:49:31
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function LoginAuth(Request $request){
+    public function LoginAuth(Request $request, ExamMidwayRepository $examMidway){
         $this->validate($request,[
             'username'  =>  'required',
             'password'  =>  'required',
@@ -417,7 +417,6 @@ class ApiController extends CommonController
         $password = $request->get('password');
         if (\Auth::attempt(['username' => $username, 'password' => $password]))
         {
-
 
             /*
             //获取当前登录账户的角色名称
@@ -470,7 +469,7 @@ class ApiController extends CommonController
      * @date 2016-03-29 11:05
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
+    public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories, ExamMidwayRepository $examMidway, DrawlotsRepository $drawlots){
 
         try {
             $user = Auth::user();
@@ -482,6 +481,7 @@ class ApiController extends CommonController
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('您不是监考老师', 1001);
             }
+
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
             // 还要判断监考老师的类型是不是理论站的监考老师-station_teacher
@@ -498,6 +498,32 @@ class ApiController extends CommonController
                 'examId'    => $ExamInfo['ExamId'],
                 'userId'    => $user->id,
             );
+            try{
+                //拿到场次id
+                $ExamScreeningModel =  new ExamScreening();
+                $examscreeningId = $ExamScreeningModel->getScreenID($ExamInfo['ExamId']);
+                //拿到考场id
+                $roomId = ExamDraft::getExamRoom($ExamInfo['ExamId'],$examscreeningId ,$ExamInfo['StationId']);
+
+                $examStationStatusModel  =  new ExamStationStatus();
+
+                $stationIds = $drawlots->getStationNum($ExamInfo['ExamId'],$roomId->room_id ,$examscreeningId);
+                //拿到场次下房间里该老师支持的考站
+                $station_id = array_intersect($ExamInfo['StationId'], $stationIds);
+                //改变老师支持该考站的准备状态
+
+                $StationStatus = $examStationStatusModel->getStationStatus($data['examId'],$station_id,$examscreeningId);
+
+                if ($examMidway->isChangeToTwo($data['examId'],$stationIds)) {
+                    //就把所有考站改为2
+                    $StationStatus = $examStationStatusModel->getStationStatus($data['examId'],$stationIds,$examscreeningId,$type =2);
+                }
+            }catch (\Exception $ex){
+                \Log::debug('理论考试老师登陆改变准备状态出错',[$data,]);
+            }
+          
+
+
             return view('osce::admin.theoryCheck.theory_check_volidate', [
                 'data' => $data,
             ]);
@@ -729,7 +755,7 @@ class ApiController extends CommonController
         $roomId          = $request->input('room_id');
         
         
-
+       
         // 查询当前老师对应考站准备完成信息
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
