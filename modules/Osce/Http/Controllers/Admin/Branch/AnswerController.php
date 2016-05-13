@@ -153,6 +153,7 @@ class AnswerController extends CommonController
 
         ]);
 
+
         $examId = $request->input('examId');
         $studentId = $request->input('studentId');
         $stationId = $request->input('stationId');
@@ -248,7 +249,7 @@ class AnswerController extends CommonController
         try{
             $answerModel->saveAnswer($data,$resultData);
 
-         /*   //添加改变考站准备状态 todo zhouqiang 2016/5/11
+            //添加改变考站准备状态 todo zhouqiang 2016/5/11
             $examStationStatusData = ExamStationStatus::where('exam_id','=',$examId)->where('station_id','=',$stationId)->first();
             if(!is_null($examStationStatusData)){
                 $examStationStatusData->status =1;
@@ -257,7 +258,7 @@ class AnswerController extends CommonController
                 }
             }else{
                 throw  new \Exception('没有查询到对应的准备考站信息');
-            }*/
+            }
 
             return response()->json(
                 $this->success_data([],1,'success')

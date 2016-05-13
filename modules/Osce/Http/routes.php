@@ -560,26 +560,13 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 
 	return '失败-' . mt_rand(1000,9999).', 错误信息: '.$result;
 });
-Route::get('test/test',function(\Illuminate\Http\Request $request) {
-	$exam_id = $request->get('id');
-	if(empty($exam_id)){
-		return '请传入参数id，id对应考试ID';
-	}
-
-	$Exam = new \Modules\Osce\Entities\Exam();
-
-	$result = $Exam->emptyData($exam_id);
-	if($result === 11111){
-		return '成功-' . mt_rand(1000,9999);
-	}
-
-	return '失败-' . mt_rand(1000,9999).', 错误信息: '.$result;
-//	$examId = $request->input('exam_id');
-//	$exam = \Modules\Osce\Entities\Exam::doingExam($examId);
-//	$app = new \Illuminate\Container\Container;
-//	$smartArrangeRepository = new \Modules\Osce\Entities\SmartArrange\SmartArrangeRepository($app);
-//	$smartArrangeRepository->plan($exam);
-//	return view('osce::admin.login');
+Route::post('test/test',function(\Illuminate\Http\Request $request) {
+	$examId = $request->input('exam_id');
+	$exam = \Modules\Osce\Entities\Exam::doingExam($examId);
+	$app = new \Illuminate\Container\Container;
+	$smartArrangeRepository = new \Modules\Osce\Entities\SmartArrange\SmartArrangeRepository($app);
+	$smartArrangeRepository->plan($exam);
+	return view('osce::admin.login');
 });
 /*
  * 电子门牌
