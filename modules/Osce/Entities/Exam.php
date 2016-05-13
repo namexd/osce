@@ -834,6 +834,7 @@ class Exam extends CommonModel
         try {
             //获得当前exam的实例
             $examObj = $this->doingExam($id);
+            dump($examObj);
             //获取与考场相关的流程
             $examScreening    = ExamScreening::where('exam_id', '=', $id);
             $examScreeningObj = $examScreening->select('id')->get();
@@ -877,6 +878,7 @@ class Exam extends CommonModel
             }
             //删除考试特殊评分项扣分
             $examSpecialScore = ExamSpecialScore::whereIn('exam_result_id', $examResultIds)->get();
+            dump($examSpecialScore);
             if (!$examSpecialScore->isEmpty()) {
                 foreach ($examSpecialScore as $valueSs) {
                     if(!$valueSs->delete()){
@@ -957,29 +959,45 @@ class Exam extends CommonModel
             //删除缺考
             $examAbsent = ExamAbsent::where('exam_id', '=', $id)->get();
             if(!$examAbsent->isEmpty()){
-                $examAbsent = ExamAbsent::where('exam_id', '=', $id)->delete();
-                if(!$examAbsent){
-                    throw new \Exception('删除缺考失败！');
+                foreach ($examAbsent as $examAbsen) {
+                    if(!$examAbsen->delete()){
+                        throw new \Exception('删除缺考失败！');
+                    }
                 }
-
+//                $examAbsent = ExamAbsent::where('exam_id', '=', $id)->delete();
+//                if(!$examAbsent){
+//                    throw new \Exception('删除缺考失败！');
+//                }
             }
             //删除考试队列
             $examQueue = ExamQueue::where('exam_id', '=', $id)->get();
             if(!$examQueue->isEmpty())
             {
-                $examQueue = ExamQueue::where('exam_id', '=', $id)->delete();
-                if(!$examQueue){
-                    throw new \Exception('删除考试队列失败！');
+                foreach ($examQueue as $examQueu) {
+                    if(!$examQueu->delete()){
+                        throw new \Exception('删除考试队列失败！');
+                    }
                 }
+//                $examQueue = ExamQueue::where('exam_id', '=', $id)->delete();
+//                if(!$examQueue){
+//                    throw new \Exception('删除考试队列失败！');
+//                }
             }
             //更改考生排序状态  TODO:（ExamOrder表中数据是在智能排考时添加进去的）
             $examOrder = ExamOrder::where('exam_id', '=', $id)->where('status', '<>', 0)->get();
             if(!$examOrder->isEmpty())
             {
-                $examOrder = ExamOrder::where('exam_id', '=', $id)->update(['status' => 0]);     //TODO 更改状态为0（0为未绑定腕表）
-                if(!$examOrder){
-                    throw new \Exception('修改考生排序状态 失败！');
+                //TODO 更改状态为0（0为未绑定腕表）
+                foreach ($examOrder as $examOrde) {
+                    $examOrde->status = 0;
+                    if(!$examOrde->save()){
+                        throw new \Exception('修改考生排序状态 失败！');
+                    }
                 }
+//                $examOrder = ExamOrder::where('exam_id', '=', $id)->where('status', '<>', 0)->update(['status' => 0]);
+//                if(!$examOrder){
+//                    throw new \Exception('修改考生排序状态 失败！');
+//                }
             }
             //更改考试状态
             if($examObj->status != 0)
@@ -995,7 +1013,8 @@ class Exam extends CommonModel
             $connection->commit();
             return true;
 
-        } catch (\Exception $ex) {
+        } catch (\Exception $ex)
+        {
             $connection->rollBack();
             return $ex->getMessage();
         }
