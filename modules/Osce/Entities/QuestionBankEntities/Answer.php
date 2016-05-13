@@ -197,7 +197,7 @@ class Answer extends Model
                  }
 
                 $examScreeningModel = new ExamScreening();
-                //获取正在进行的考试
+                //获取正在考试的场次信息
                 $examScreening = $examScreeningModel->getExamingScreening($examId);
                 if (is_null($examScreening)) {
                     //获取最近一场考试

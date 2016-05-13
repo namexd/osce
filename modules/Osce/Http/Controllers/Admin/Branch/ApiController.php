@@ -531,6 +531,15 @@ class ApiController extends CommonController
         }
     }
 
+    /**理论考试退出
+     * @method
+     * @url /osce/
+     * @access public
+     * @return \Illuminate\Http\RedirectResponse
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
     public function logout(){
         Auth::logout();
         return redirect()->route('osce.admin.ApiController.LoginAuthView');
