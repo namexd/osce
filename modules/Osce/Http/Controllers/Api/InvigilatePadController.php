@@ -1173,13 +1173,22 @@ class InvigilatePadController extends CommonController
             $watchData = $watchModel->getWatchExamStatus($ncfCode,$examing->id);
 
             if(count($watchData) > 0){
-                if($watchData->status < 2){
+
+                if(in_array(2,$watchData)){
+                    $status = 1;
+                }elseif(count(array_intersect([0,1],$watchData))>0){
+                    $status = 0;
+                }else{
+                    $status = 2;
+                }
+
+                /*if($watchData->status < 2){
                     $status = 0;
                 }elseif($watchData->status == 2){
                     $status = 1;
                 }else{
                     $status = 2;
-                }
+                }*/
                 return response()->json(
                     $this->success_data($status,200,'success')
                 );
