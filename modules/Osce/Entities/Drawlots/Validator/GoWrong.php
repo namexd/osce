@@ -33,7 +33,7 @@ class GoWrong implements DrawValidatorInterface
             $room = Room::find($temp->room_id);
             Common::valueIsNull($room, -11, '数据错误，请重试');
 
-            throw new \Exception('您走错考场，请到' . $room->name . '考场进行考试');
+            throw new \Exception('请到' . $room->name . '考场进行考试');
         }
 
         return true;
