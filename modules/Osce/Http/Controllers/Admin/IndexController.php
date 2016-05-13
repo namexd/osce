@@ -44,7 +44,7 @@ class IndexController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      *
      */
-    public function getSetExam(Request $request, Exam $exam)
+    public function getSetExam(Request $request)
     {
         try{
             $this->validate($request,[
