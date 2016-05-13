@@ -110,7 +110,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content text-center">
-                        <div class="font20" style="padding: 30% 20px;" id="examinfo">等待学生进入考试</div>
+                        <div class="font20" style="padding: 17% 20px;" id="examinfo">等待学生进入考试</div>
                     </div>
                 </div>
             </div>
