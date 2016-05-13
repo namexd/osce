@@ -35,6 +35,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
+use Modules\Osce\Repositories\Common;
 use Modules\Osce\Repositories\QuestionBankRepositories;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
@@ -738,8 +739,9 @@ class ApiController extends CommonController
      * @date 2016-04-06 15:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder, DrawlotsRepository $draw) {
-        \Log::alert('老师准备传入所有的参数',$request->all());
+    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder, DrawlotsRepository $draw)
+    {
+        \Log::alert('老师准备传入所有的参数', $request->all());
         $this->validate($request, [
             'exam_id'           => 'required|integer',
             'station_id'        => 'required|integer',
@@ -753,9 +755,6 @@ class ApiController extends CommonController
         $examScreeningId = $request->input('exam_screening_id');
         $teacherId       = $request->input('teacher_id');
         $roomId          = $request->input('room_id');
-        
-        
-       
         // 查询当前老师对应考站准备完成信息
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
@@ -777,37 +776,39 @@ class ApiController extends CommonController
                 $this->success_data([], -4, '未查询到当前考试信息')
             );
         }
-
+        //获取考试模式（1、考场、2、考站）
         $examSequenceMode = $exam->sequence_mode;
-
         $examQenenModel = new ExamQueue();
         $watchLogModel = new WatchLog();
+
+
         if ($examSequenceMode == 1) {
             // 考场排 多个学生
             $studentIds = $examQenenModel->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreeningId)
                 ->where('room_id', '=', $roomId)
-                ->where('status', '<', 3) // 确保可以多次点击
+                ->where('status', '<', 3)           // 确保可以多次点击（0:绑定腕表,1:抽签,2:正在考试）
                 ->get()
-                ->pluck('student_id')
-                ->toArray();
+                ->pluck('student_id')->toArray();   // 获取学生ID数组
+
             \Log::alert('老师准备时拿到的学生信息',[$studentIds]);
-            if (empty($studentIds)) {
+            if (empty($studentIds))
+            {
+                \Log::alert('未查到相应考试队列信息',[$studentIds, $request->all(),'screeningId' => Common::getExamScreening($examId)->id]);
+
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')
                 );
             }
 
             $watches = $watchLogModel->leftJoin('watch', function($join){
-                $join->on('watch_log.watch_id', '=', 'watch.id');
-            })->whereIn('watch_log.student_id', $studentIds)
-                ->where('watch.status', '=', 1)
-                ->get();
-
-
+                    $join->on('watch_log.watch_id', '=', 'watch.id');
+                })
+                ->whereIn('watch_log.student_id', $studentIds)
+                ->where('watch.status', '=', 1)->get();
 
             $watchNfcCodes = [];
-            if (!empty($watches)) {
+            if (!$watches->isEmpty()) {
                 foreach ($watches as $item) {
                     $watchNfcCodes[] = $item['code'];
                 }
@@ -818,19 +819,21 @@ class ApiController extends CommonController
                     $this->success_data([], -3, '未查到相应腕表信息')
                 );
             }
-            
 
-
-        } else {
+        } else
+        {
             // 考站排 一个学生
             $examQenens = $examQenenModel->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreeningId)
                 ->where('station_id', '=', $stationId)
-                ->where('status', '<', 3) // 确保可以多次点击
+                ->where('status', '<', 3)       // 确保可以多次点击
                 ->orderBy('begin_dt', 'asc')
                 ->first();
 
-            if (is_null($examQenens)) {
+            if (is_null($examQenens))
+            {
+                \Log::alert('未查到相应考试队列信息',[$examQenens, $request->all()]);
+
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')
                 );

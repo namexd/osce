@@ -228,7 +228,7 @@ class Watch extends CommonModel implements MachineInterface
     {
         //获取考试场次ID TODO: Zhoufuxiang 216-05-13
         $ExamScreening = new ExamScreening();
-        $exam_screening_id = Common::getScreeningId($examId);
+        $exam_screening_id = Common::getExamScreening($examId)->id;
 
         //考试状态 考试中（1），等待中（0），已结束（2）
         if($type === 0){
@@ -325,7 +325,7 @@ class Watch extends CommonModel implements MachineInterface
              ->where('watch.code','=',$ncfCode)
              ->where('exam_queue.exam_id','=',$examId)
              ->where('exam_queue.exam_screening_id',$screenId)
-             ->where('exam_screening_student.exam_screening_id',$screenId)
+             ->where('exam_screening_student.exam_screening_id',$screenId)->select(['exam_queue.status'])
              ->get()->pluck('status')->toArray();
         return $builder;
     }
