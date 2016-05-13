@@ -834,6 +834,9 @@ class Exam extends CommonModel
         try {
             //获得当前exam的实例
             $examObj = $this->doingExam($id);
+            if(is_null($examObj)){
+                throw new \Exception('没有找到对应考试！');
+            }
             //获取与考场相关的流程
             $examScreening    = ExamScreening::where('exam_id', '=', $id);
             $examScreeningObj = $examScreening->select('id')->get();
