@@ -153,6 +153,7 @@ class AnswerController extends CommonController
 
         ]);
 
+
         $examId = $request->input('examId');
         $studentId = $request->input('studentId');
         $stationId = $request->input('stationId');
@@ -262,7 +263,6 @@ class AnswerController extends CommonController
             return response()->json(
                 $this->success_data([],1,'success')
             );
-            return response()->json(true);
         }catch (\Exception $ex) {
             return response()->json($this->fail($ex));
 

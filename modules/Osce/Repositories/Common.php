@@ -9,6 +9,7 @@
 namespace Modules\Osce\Repositories;
 
 
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\Student;
 use App\Entities\SysUserRole;
 use App\Entities\SysRoles;
@@ -607,6 +608,31 @@ class Common
             }
         }
         return true;
+    }
+
+    /**
+     * 获取当前考试场次
+     * @param $exam_id
+     * @return $screening_id
+     *
+     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-05-13
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public static function getScreeningId($exam_id)
+    {
+        $ExamScreening = new ExamScreening();
+        $screenObject  = $ExamScreening->getExamingScreening($exam_id);
+        //获取当前场次
+        if(is_null($screenObject))
+        {
+            $screenObject = $ExamScreening->getNearestScreening($exam_id);
+            if(is_null($screenObject)){
+                throw new \Exception('当前没有正在进行的考试场次');
+            }
+        }
+
+        return $screenObject->id;
     }
 
 }

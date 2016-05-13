@@ -10,7 +10,9 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\Drawlots\DrawlotsRepository;
 use Modules\Osce\Entities\ExamDraft;
+use Modules\Osce\Entities\ExamMidway\ExamMidwayRepository;
 use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamStation;
@@ -469,17 +471,18 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
+
         try {
             $user = Auth::user();
             // 检查用户是否登录
             if (is_null($user)) {
-                throw new \Exception('用户未登录', 1000);
+                throw new \Exception('您还没有登录，请先登录', 1000);
             }
             //检验登录的老师是否是监考老师
 
 
             if (!$questionBankRepositories->LoginAuth()) {
-                throw new \Exception('你不是监考老师', 1001);
+                throw new \Exception('您不是监考老师', 1001);
             }
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
@@ -488,7 +491,7 @@ class ApiController extends CommonController
             $station = $stationModel->where('id', '=', $ExamInfo['StationId'])->first();
 
             if($station->type != 3) {
-                throw new \Exception('你不是理论考试的监考老师', 1002);
+                throw new \Exception('您不是理论考试的监考老师', 1002);
             }
             $data = array(
                 'status'=>1,
@@ -505,10 +508,17 @@ class ApiController extends CommonController
         {
             if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
+            }else{
+                $data = array(
+                    'status'=>0,
+                    'info'=>$ex->getMessage()
+                );
+                return view('osce::admin.theoryCheck.theory_check_volidate', [
+                    'data' => $data,
+                ]);
             }
-            if($ex->getCode() === 1001 || $ex->getCode() === 1002)
+            /*if($ex->getCode() === 1001 || $ex->getCode() === 1002)
             {
-                //return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
                 Auth::logout();
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
             }
@@ -520,10 +530,23 @@ class ApiController extends CommonController
                 return view('osce::admin.theoryCheck.theory_check_volidate', [
                     'data' => $data,
                 ]);
-            }
-
+            }*/
 
         }
+    }
+
+    /**理论考试退出
+     * @method
+     * @url /osce/
+     * @access public
+     * @return \Illuminate\Http\RedirectResponse
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function logout(){
+        Auth::logout();
+        return redirect()->route('osce.admin.ApiController.LoginAuthView');
     }
 
     /**刷完腕表后，获取该考生对应的试卷id
@@ -539,30 +562,12 @@ class ApiController extends CommonController
     {
         $this->validate($request, [
             'stationId' => 'required|int',
-           // 'examId' => 'required|int',
         ]);
-
         $stationId = $request->input('stationId');//考站id
-        //$examId = $request->input('examId');//考试id
-
- /*
-        //根据考试id和考站id查询对应的试卷id
-        $examPaperExamStationModel = new ExamPaperExamStation();
-        $data = $examPaperExamStationModel->where('exam_id','=',$examId)->where('station_id','=',$stationId)->first();
-
-        if(!empty($data)){
-            $examPaperId = $data['exam_paper_id'];
-            return response()->json($examPaperId);
-        }else{
-            return response()->json(false);
-        }*/
-
         $stationInfo = Station::where('id',$stationId)->where('type',3)->first();
         if(!empty($stationInfo)&&!empty($stationInfo->paper_id)){
-
             return response()->json($stationInfo->paper_id);
         }else{
-
             return response()->json(false);
         }
     }
@@ -572,11 +577,11 @@ class ApiController extends CommonController
      * @url api/student-exam-index
      * @access public
      * @param Request $request
-     * @author xumin <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@misrobot.com>
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamIndex(){
+    public function getStudentExamIndex(ExamMidwayRepository $examMidway, DrawlotsRepository $drawlots){
         $user = Auth::user();
         //查找当前正在进行的考试--之后会改
         $examingDO = Exam::where('status','=',1)->first();
@@ -618,6 +623,25 @@ class ApiController extends CommonController
 
             }
         }
+        //获取考生当前是在哪个考站考试
+        $queue = $examMidway->getQueueByStudent($userInfo->id, $examingDO->id);
+        //检查此考站是否是理论考站
+        if (Station::find($queue->station_id)->type != 3) {
+            throw new \Exception('学生当前不应该考这个考站', -111);
+        }
+        //修改exam_station_status表状态
+        $examMidway->beginTheoryStatus($examingDO->id, [$queue->station_id], 1);
+        /*
+         * 判断是否要把1改成2
+         */
+        $screen = $drawlots->getScreening($examingDO->id);
+        $stations = $drawlots->getStationNum($examingDO->id, $queue->room_id, $screen->id);
+        //判断当前已经有多少个考站已经是1了
+        $bool = $examMidway->isChangeToTwo($examingDO->id, $stations->pluck('station_id')->toArray());
+        if ($bool) {
+            $examMidway->beginTheoryStatus($examingDO->id, $stations->pluck('station_id')->toArray(), 2);
+        }
+
         //dd($examData);
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
@@ -705,7 +729,7 @@ class ApiController extends CommonController
      * @date 2016-04-06 15:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder) {
+    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder, DrawlotsRepository $draw) {
 
         $this->validate($request, [
             'exam_id'           => 'required|integer',
@@ -757,7 +781,7 @@ class ApiController extends CommonController
                 ->pluck('student_id')
                 ->toArray();
 
-            if (is_null($studentIds)) {
+            if (empty($studentIds)) {
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')
                 );
@@ -827,38 +851,37 @@ class ApiController extends CommonController
             }
         }
         //查询该考试该考场下的所有考站信息
-        $stationArr = ExamDraft::leftJoin('exam_draft_flow', function($join){
-            $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
-        })->where('exam_draft_flow.exam_id',$examId)
-            ->where('exam_draft.room_id',$roomId)->select('exam_draft.station_id')->get()->pluck('station_id')->toArray();
-        if(!empty($stationArr)){
+//        $stationArr = ExamDraft::leftJoin('exam_draft_flow', function($join){
+//            $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
+//        })->where('exam_draft_flow.exam_id',$examId)
+//            ->where('exam_draft.room_id',$roomId)->select('exam_draft.station_id')->get()->pluck('station_id')->toArray();
+        $examScreeningId = $draw->getScreening($examId)->id;
+        $stationArr = $draw->getStationNum($examId, $roomId, $examScreeningId);
+        if(!$stationArr->isEmpty()){
             //查询exam_station_status表（考试-场次-考站状态表）中该考试该考场下status是否全为1，如果是，修改其状态值为2
+            $examStationStatus->status = 1;
+            if($examStationStatus->save()){
+                // todo  准备好后调用腕表接口
+
+                try {
+
+                    \Log::alert('老师准备的学生id',$studentIds);
+
+                    foreach($studentIds as $studentId){
+                        $watchReminder->getWatchPublish($examId,$studentId, $stationId);
+                    }
+                } catch (\Exception $ex) {
+                    \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
+                }
+            }
             $examStationStatusData = $examStationStatusModel
                 ->where('exam_id',$examId)
-                ->where('status','<>',1)
+                ->where('status','=',1)
                 ->whereIn('station_id',$stationArr)
-                ->first();
-            if(empty($examStationStatusData)){
+                ->count();
+            if($examStationStatusData == $stationArr->count()){
                 $examStationStatusModel->where('exam_id',$examId)->whereIn('station_id',$stationArr)->update(['status'=>2]);
-            }else{
-                $examStationStatus->status = 1;
-                if($examStationStatus->save()){
-                    // todo  准备好后调用腕表接口
-
-                    try {
-
-                        \Log::alert('老师准备的学生id',$studentIds);
-
-                        foreach($studentIds as $studentId){
-                            $watchReminder->getWatchPublish($examId,$studentId, $stationId);
-                        }
-                    } catch (\Exception $ex) {
-                        \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
-                    }
-                }
-
             }
-
         }
         $request['station_id']=$stationId;
         $request['teacher_id']=$teacherId;
