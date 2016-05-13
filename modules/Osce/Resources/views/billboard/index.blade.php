@@ -7,26 +7,30 @@
       margin: 0;
       padding: 0;
     }
-    #area{
-      font-family: 微软雅黑;
+    body{
       width: 1050px;
       height: 1680px;
+    }
+    #area{
+      font-family: 微软雅黑;
+      width: 100%;
+      height: 100%;
       font-size: 60px;
       color: #676a6c;
     }
     #body{
-      padding-top: 100px;
+      padding-top: 60px;
       width: 100%;
       height: 80%;
     }
     .title{
-      height: 15%;
+      height: 10%;
       margin-left: 100px;
     }
     #description{
+      display: block;
+      width: 900px;
       min-height: 60px;
-      margin-left: 100px;
-      margin-right: 100px;
     }
     #exam_station {
       display: block;
@@ -51,6 +55,8 @@
     $(function(){
       show();
       setInterval(show,5000);
+      var text = $('#description').text();
+      $('#description').html(text);
     });
     function show(){
       var exam_id = $('#exam_id').val();
@@ -89,11 +95,12 @@
       <span id="time">{{$data['mins']}}分钟</span><span>，时间到请停止考试</span>
     </div>
     <div class="title">
-      <span>病例:</span>
+      <span>病例简介:</span>
+      <span id="description">{{$data['case_description']}}</span>
       {{--<span id="case">{{$data['case_name']}}</span>--}}
     </div>
-    <div id="description">{{$data['case_description']}}
-    </div>
+    {{--<div id="description">{{$data['case_description']}}
+    </div>--}}
   </div>
   <div id="pic">
     <img src="{{asset('osce/images/u4.png')}}" width="100%" height="100%" align="right">

@@ -479,8 +479,6 @@ class ApiController extends CommonController
                 throw new \Exception('您还没有登录，请先登录', 1000);
             }
             //检验登录的老师是否是监考老师
-
-
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('您不是监考老师', 1001);
             }
@@ -506,15 +504,9 @@ class ApiController extends CommonController
         }
         catch(\Exception $ex)
         {
-           /* if ($ex->getCode() === 1000) {
+            if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }
-            if($ex->getCode() === 1001 || $ex->getCode() === 1002)
-            {
-                Auth::logout();
-                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }
-            if($ex->getCode() === -100 || $ex->getCode() === -101){
+            }else{
                 $data = array(
                     'status'=>0,
                     'info'=>$ex->getMessage()
@@ -522,14 +514,7 @@ class ApiController extends CommonController
                 return view('osce::admin.theoryCheck.theory_check_volidate', [
                     'data' => $data,
                 ]);
-            }*/
-            $data = array(
-                'status'=>0,
-                'info'=>$ex->getMessage()
-            );
-            return view('osce::admin.theoryCheck.theory_check_volidate', [
-                'data' => $data,
-            ]);
+            }
         }
     }
 

@@ -821,10 +821,6 @@ class Exam extends CommonModel
         }
     }
 
-    public function xiBai($exam_id){
-        dd('@@');
-        return $this->emptyData($exam_id);
-    }
     /**
      * 重置考试数据
      * @param   $id         //考试ID
@@ -833,6 +829,7 @@ class Exam extends CommonModel
      */
     public function emptyData($id)
     {
+        dump($id);
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try {
@@ -850,25 +847,25 @@ class Exam extends CommonModel
             $examResultIds    = $examResults->pluck('id');
 
             //清除腕表使用记录
-            $watchLog = WatchLog::where('id','>',0)->get();
-            if(!$watchLog->isEmpty())
-            {
-                $watchLog = WatchLog::where('id','>',0)->delete();
-                if(!$watchLog){
-                    throw new \Exception('删除腕表使用记录失败！');
-                }
-            }
-            //修改腕表使用状态
-            $watchStatus = Watch::where('status', '<>', 0)->get();
-            if(!$watchStatus->isEmpty())
-            {
-                foreach ($watchStatus as $watchStatu) {
-                    $watchStatu->status = 0;
-                    if(!$watchStatu->save()){
-                        throw new \Exception('修改腕表状态失败！');
-                    }
-                }
-            }
+//            $watchLog = WatchLog::where('id','>',0)->get();
+//            if(!$watchLog->isEmpty())
+//            {
+//                $watchLog = WatchLog::where('id','>',0)->delete();
+//                if(!$watchLog){
+//                    throw new \Exception('删除腕表使用记录失败！');
+//                }
+//            }
+//            //修改腕表使用状态
+//            $watchStatus = Watch::where('status', '<>', 0)->get();
+//            if(!$watchStatus->isEmpty())
+//            {
+//                foreach ($watchStatus as $watchStatu) {
+//                    $watchStatu->status = 0;
+//                    if(!$watchStatu->save()){
+//                        throw new \Exception('修改腕表状态失败！');
+//                    }
+//                }
+//            }
             //删除考试得分
             $examScores = ExamScore::whereIn('exam_result_id', $examResultIds)->get();
             if (!$examScores->isEmpty()) {
@@ -1106,6 +1103,9 @@ class Exam extends CommonModel
         if (count($result) != 0) {
             foreach ($result as $value)
             {
+                $examDraftFlows = ExamDraftFlow::whereExamScreeningId($value['id'])->get();
+                ExamDraft::whereIn('exam_draft_flow_id', $examDraftFlows->pluck('id')->toArray())->delete();
+                ExamDraftFlow::whereExamScreeningId($value['id'])->delete();
                 if (!$res = ExamScreening::where('id', '=', $value['id'])->delete()) {
                     throw new \Exception('删除考试场次信息失败');
                 } else {

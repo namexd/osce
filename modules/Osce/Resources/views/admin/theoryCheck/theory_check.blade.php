@@ -57,7 +57,7 @@
             $(".actions").prepend($('.btnBox'));
             $(".check_label").change(function(){
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
-                var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
+                var exam_question_id= $(this).parent().parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
                 var answer="";//答案
                 if($(this).children(".check_icon").hasClass("check")){
                     $(this).children(".check_icon").removeClass("check");
@@ -78,7 +78,7 @@
 
             $(".radio_label").click(function(){//单选按钮
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
-                var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
+                var exam_question_id= $(this).parent().parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
                 var answer = $(this).children("input").val();
                 Set_answer(examCategoryFormalId,exam_question_id,answer);//保存成绩
                 if($(this).children(".radio_icon").hasClass("check")){
@@ -116,6 +116,7 @@
                             var userId = $(".allData").attr("userId");
                             var studentId = $(".allData").attr("studentId");
                             var examId = $(".allData").attr("examId");
+                            //console.log(examQuestionFormalInfo);return false;
                             $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                                     {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
                                         if(obj.code==1){
