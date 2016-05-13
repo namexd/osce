@@ -66,7 +66,6 @@ class StudentWatchController extends CommonController
                     'message' => 'success'
                 ]));
             }
-
         //拿到考试实例
         $exam = Exam::where('status','=',1)->first();
         if(!is_null($exam)){
@@ -79,31 +78,17 @@ class StudentWatchController extends CommonController
                 ->where('exam_screening_id','=',$examscreeningId)
                 ->orderBy('signin_dt', 'desc')
                 ->first();
+            //调用新的腕表方法
+            $watchReminder = new WatchReminderRepositories();
+            if (!is_null($watchStudent)) {
+                //得到学生id
+                $studentId = $watchStudent->student_id;
+                $examId = Student::find($studentId)->exam_id;
+                $watchReminder->getWatchPublish($examId, $studentId);
+            }else{
+                throw  new \Exception('未找到腕表对应的学生信息');
+            }
         }
-        //调用新的腕表方法
-        $watchReminder = new WatchReminderRepositories();
-
-//            if ($watch->status == 0) {
-//                $data = [
-//                    'code' => -1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
-//                    'title' => '腕表未绑定',
-//                ];
-//                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
-//                    'nfc_code' => $watchNfcCode,
-//                    'data' => $data,
-//                    'message' => 'success'
-//                ]));
-//            } else {
-                if (!is_null($watchStudent)) {
-                    //得到学生id
-                    $studentId = $watchStudent->student_id;
-                    $examId = Student::find($studentId)->exam_id;
-                    $watchReminder->getWatchPublish($examId, $studentId);
-                }else{
-                    throw  new \Exception('未找到腕表对应的学生信息');
-                }
-
-//            }
         } catch (\Exception $ex) {
             \Log::alert('刷新腕表调用腕表出错', [$studentId]);
         }
