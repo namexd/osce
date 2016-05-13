@@ -71,9 +71,6 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
                     continue;
                 }
 
-                //验证
-                $this->model->check($examId, $studentData, $key + 2);
-
                 $user = User::where('username', $studentData['mobile'])->select('id')->first();
                 if ($user) {
                     $student = $studentModel->where('user_id', $user->id)->where('exam_id', $examId)->first();
@@ -86,6 +83,9 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
                     $exiNum++;
                     continue;
                 }
+
+                //验证(身份证、手机号、准考证号)
+                $this->model->check($examId, $studentData, $key + 2);
 
                 //用户数据
                 $userData = [
