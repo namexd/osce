@@ -45,6 +45,10 @@ class TestResult extends CommonModel
         return $this->hasMany('\Modules\Osce\Entities\ExamScore','exam_result_id','id');
     }
 
+    public function examSpecialScore(){
+        return $this->hasMany('\Modules\Osce\Entities\ExamSpecialScore','exam_result_id', 'id');
+    }
+
     /**
      * 保存成绩
      * @param $data
@@ -386,9 +390,16 @@ class TestResult extends CommonModel
                 if(count($examResult->examScore))
                 {
                     //拿到考试结果id去exam_score中删除数据
-                    if(!$examResult->examScore()->delete())
+                    if(!$examResult->examScore->delete())
                     {
                         throw new \Exception('舍弃考试评分详情失败',-1100);
+                    }
+                }
+                //删除特殊评分项的评分
+                if(!$examResult->examSpecialScore->isEmpty()){
+                    if(!$examResult->examSpecialScore->delete())
+                    {
+                        throw new \Exception('舍弃考试特殊评分项成绩失败',-11010);
                     }
                 }
 

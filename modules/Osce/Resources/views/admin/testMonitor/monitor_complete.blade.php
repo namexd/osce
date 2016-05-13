@@ -83,7 +83,7 @@
                                 <td>{{$val['idcard']}}</td>
                                 <td>{{$val['mobile']}}</td>
                                 <td>{{----}}
-                                    <a href="{{route('osce.admin.ExamMonitorController.getExamMonitorHeadInfo')}}?exam_id={{$val['exam_id']}}&student_id={{$val['student_id']}}">
+                                    <a href="{{route('osce.admin.ExamMonitorController.getExamMonitorHeadInfo')}}?exam_id={{$val['exam_id']}}&student_id={{$val['id']}}">
                                         <span class="state1 abandon">
                                             <i class="fa fa-video-camera fa-2x"></i>
                                         </span>
@@ -98,7 +98,8 @@
 
                 </div>
             </div>
-            <br/>
+            {{--<br/>
+            @if(count($msg))
             <div class="pull-left">
                 共{{$msg->total()}}条
             </div>
@@ -109,7 +110,8 @@
                     </ul>
                 </nav>
             </div>
-        </div>
+            @endif
+        </div>--}}
     </div>
 @stop{{-- 内容主体区域 --}}
 
