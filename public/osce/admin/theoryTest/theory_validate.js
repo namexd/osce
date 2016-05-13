@@ -27,7 +27,7 @@ function theory_validate(){
                 dateType:'json',
                 success:function(res){
                     if (res.code == 2) {
-                        $('#examinfo').html('该场次已考完');
+                        $('#examinfo').html('等待学生进入考试');
                         //clearInterval(timer);
                     } else {
                         $.ajax({
