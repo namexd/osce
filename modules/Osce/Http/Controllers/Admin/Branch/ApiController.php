@@ -497,10 +497,11 @@ class ApiController extends CommonController
             if($station->type != 3) {
                 throw new \Exception('您不是理论考试的监考老师', 1002);
             }
+
             $data = array(
                 'status'=>1,
                 'name'      => $ExamInfo['ExamName'],
-                'stationId' => $ExamInfo['StationId'][0],
+                'stationId' => $ExamInfo['StationId'][0],   //???????
                 'examId'    => $ExamInfo['ExamId'],
                 'userId'    => $user->id,
             );

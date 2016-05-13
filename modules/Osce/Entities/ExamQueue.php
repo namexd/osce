@@ -1248,9 +1248,8 @@ class ExamQueue extends CommonModel
         $studentQueue = $this->where('exam_id', '=', $exam_id)
             ->where('exam_screening_id', '=', $examScreening->id)
             ->where('student_id', '=',$student_id)
-            ->where('status', '=', 0)
+            ->whereIn('status', [0,1,2])
             ->orderBy('begin_dt', 'asc')
-
             ->get();
         $data = [];
         foreach ($studentQueue as $item){

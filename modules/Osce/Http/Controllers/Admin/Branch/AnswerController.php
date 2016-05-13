@@ -359,9 +359,13 @@ class AnswerController extends CommonController
             $stationId = $request->input('stationId');
             $answerModel = new Answer();
             $exam_screening_id = $answerModel->saveStatus($examId,$studentId,$stationId);
-
             try{
-                $watchReminder->getWatchPublish($examId,$studentId,$stationId);
+                $examQueue = new ExamQueue();
+                $data =  $examQueue-> getStudentWatchMovement($examId,$studentId,$exam_screening_id);
+                foreach ($data as $value){
+                    $watchReminder->getWatchPublish($examId,$value);
+                }
+
             }catch (\Exception $ex){
                 \Log::debug('理论考试结束调用腕表出错',[$examId,$studentId,$stationId]);
             }
