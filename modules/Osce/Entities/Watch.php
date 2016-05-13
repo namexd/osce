@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities;
 
 use Modules\Osce\Entities\MachineInterface;
 use DB;
+use Modules\Osce\Repositories\Common;
 
 class Watch extends CommonModel implements MachineInterface
 {
@@ -223,18 +224,13 @@ class Watch extends CommonModel implements MachineInterface
     }
 
     //查询使用中的腕表数据
-    public function getWatchAboutData($status,$type,$nfc_code,$examId){
+    public function getWatchAboutData($status,$type,$nfc_code,$examId)
+    {
+        //获取考试场次ID TODO: Zhoufuxiang 216-05-13
+        $ExamScreening = new ExamScreening();
+        $exam_screening_id = Common::getScreeningId($examId);
 
-        $examScreen = new ExamScreening();
-        $roomMsg = $examScreen->getExamingScreening($examId);
-        $roomMsg_two = $examScreen->getNearestScreening($examId);
-        if ($roomMsg) {
-            $exam_screening_id = $roomMsg->id;
-        } elseif ($roomMsg_two) {
-            $exam_screening_id = $roomMsg_two->id;
-        } else {
-            throw new \Exception('没有找到对应的场次');
-        }
+        //考试状态 考试中（1），等待中（0），已结束（2）
         if($type === 0){
             $builder = $this->whereIn('exam_queue.status',[0,1]);
         }elseif($type == 1){
