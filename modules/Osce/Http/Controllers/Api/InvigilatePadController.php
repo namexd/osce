@@ -57,16 +57,12 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex(Request $request)
     {
-        $exam_id = $request->get('id');
-
-        $ExamModel = new Exam();
-        $result = $ExamModel->emptyData($exam_id);
-        if($result === 11111){
-            return '成功-' . mt_rand(1000,9999);
-        }else{
-
-        return '失败-' . mt_rand(1000,9999).', 错误信息: '.$result;
-    }
+        $exam_id = 10;
+        $student_id =353;
+        $examScreening =23;
+        $examQueue = new ExamQueue();
+        $data =  $examQueue-> getStudentWatchMovement($exam_id,$student_id,$examScreening);
+        dd($data);
 //        $examId =19;
 //        $studentId =438;
 //        $stationId ='';

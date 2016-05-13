@@ -314,11 +314,15 @@ class IndexController extends CommonController
 
 
             //todo 绑定腕表调腕表接口
-
+            $examQueue = new ExamQueue();
             try{
-                $studentWatchController = new WatchReminderRepositories();
-                //$request['nfc_code'] = $Watch->code;
-                $studentWatchController->getWatchPublish($exam_id,$student_id,'','');
+                $data =  $examQueue-> getStudentWatchMovement($exam_id,$student_id,$examScreening);
+
+                foreach ($data as $value){
+                    $studentWatchController = new WatchReminderRepositories();
+
+                    $studentWatchController->getWatchPublish($exam_id,$value,'','');
+                }
             }catch (\Exception $ex){
                 \Log::debug('绑定腕表调腕表接口出错',[$student_id,$ex]);
             }
@@ -330,7 +334,7 @@ class IndexController extends CommonController
 
     }
 
-
+    
 
 
     /**

@@ -72,6 +72,7 @@ class ExamStationStatus extends CommonModel
 
     public function  getStationStatus($examId,$stationId,$exam_screening_id,$type=1)
     {
+
         if($type == 1){
             $StationStatus =$this->where('exam_id',$examId)
                 ->where('exam_screening_id',$exam_screening_id)

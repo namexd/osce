@@ -262,7 +262,7 @@ class ExamScreening extends CommonModel
                     }
                 }
             }
-            if ($exam->examScreening()->where('status', '=', 0)->count() == 0) {
+            if ($exam->examScreening()->whereIn('status', [0,1])->count() == 0) {
                 $exam->status = 2;
                 if (!$exam->save()) {
                     throw new \Exception('考试结束失败', -6);
