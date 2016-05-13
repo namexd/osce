@@ -470,25 +470,17 @@ class ApiController extends CommonController
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
 
-        $Exam = new Exam;
-        //获取本次考试的id
-        $ExamInfo = $Exam->where('status','=',1)->select('id','name')->first();
-        if(empty($ExamInfo)){
-            throw new \Exception(' 没有在进行的考试',-100);
-        }
-
-
         try {
             $user = Auth::user();
             // 检查用户是否登录
             if (is_null($user)) {
-                throw new \Exception('用户未登录', 1000);
+                throw new \Exception('您还没有登录，请先登录', 1000);
             }
             //检验登录的老师是否是监考老师
 
 
             if (!$questionBankRepositories->LoginAuth()) {
-                throw new \Exception('你不是监考老师', 1001);
+                throw new \Exception('您不是监考老师', 1001);
             }
             //根据监考老师的id，获取对应的考站id
             $ExamInfo = $questionBankRepositories->GetExamInfo($user);
@@ -497,7 +489,7 @@ class ApiController extends CommonController
             $station = $stationModel->where('id', '=', $ExamInfo['StationId'])->first();
 
             if($station->type != 3) {
-                throw new \Exception('你不是理论考试的监考老师', 1002);
+                throw new \Exception('您不是理论考试的监考老师', 1002);
             }
             $data = array(
                 'status'=>1,
@@ -512,12 +504,11 @@ class ApiController extends CommonController
         }
         catch(\Exception $ex)
         {
-            if ($ex->getCode() === 1000) {
+           /* if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
             }
             if($ex->getCode() === 1001 || $ex->getCode() === 1002)
             {
-                //return redirect()->route('osce.admin.index')->withErrors($ex->getMessage());
                 Auth::logout();
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
             }
@@ -529,10 +520,29 @@ class ApiController extends CommonController
                 return view('osce::admin.theoryCheck.theory_check_volidate', [
                     'data' => $data,
                 ]);
-            }
-
-
+            }*/
+            $data = array(
+                'status'=>0,
+                'info'=>$ex->getMessage()
+            );
+            return view('osce::admin.theoryCheck.theory_check_volidate', [
+                'data' => $data,
+            ]);
         }
+    }
+
+    /**理论考试退出
+     * @method
+     * @url /osce/
+     * @access public
+     * @return \Illuminate\Http\RedirectResponse
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function logout(){
+        Auth::logout();
+        return redirect()->route('osce.admin.ApiController.LoginAuthView');
     }
 
     /**刷完腕表后，获取该考生对应的试卷id
