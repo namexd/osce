@@ -832,7 +832,6 @@ class Exam extends CommonModel
      */
     public function emptyData($id)
     {
-        dd('ceshi');
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
         try {
