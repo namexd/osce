@@ -11,7 +11,9 @@ use DB;
 use Mockery\CountValidator\Exception;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
+use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamScreeningStudent;
+use Modules\Osce\Entities\ExamStationStatus;
 
 /**考生答题时，正式试卷模型
  * Class Answer
@@ -164,7 +166,7 @@ class Answer extends Model
         }
     }
 
-    /**改变该考生在考试队列中的状态为已完成
+    /**更新状态
      * @method
      * @url /osce/
      * @access public
@@ -193,8 +195,24 @@ class Answer extends Model
                  if(!ExamQueue::where('id',$quene->id)->update($data)){
                      throw new \Exception('状态更新失败',-101);
                  }
+
+                $examScreeningModel = new ExamScreening();
+                //获取正在考试的场次信息
+                $examScreening = $examScreeningModel->getExamingScreening($examId);
+                if (is_null($examScreening)) {
+                    //获取最近一场考试
+                    $examScreening = $examScreeningModel->getNearestScreening($examId);
+                }
+                //更改考试-场次-考站状态表
+                $examStationStatus = ExamStationStatus::where('station_id',$stationId)->where('exam_id',$examId)->where('exam_screening_id',$examScreening->id)->first();
+                if(!empty($examStationStatus)){
+                    $examStationStatus->status = 4;
+                    if (!$examStationStatus->save()) {
+                        throw new \Exception('考站准备状态失败！', -102);
+                    }
+                }
              }else{
-                 throw new \Exception('没有该考生的队列信息',-102);
+                 throw new \Exception('没有该考生的队列信息',-103);
              }
             $DB->commit();
             return $quene->exam_screening_id;

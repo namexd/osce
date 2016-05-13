@@ -20,6 +20,7 @@ use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamGradation;
+use Modules\Osce\Entities\ExamMidway\ExamMidwayRepository;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
@@ -181,6 +182,53 @@ class InvigilatePadController extends CommonController
             );
         }
     }
+
+    /**获取学生信息
+     * @method
+     * @url /osce/
+     * @access public
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author xumin <xumin@misrobot.com>
+     * @date
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getAuthenticationtwo(Request $request)
+    {
+        $this->validate($request, [
+            'station_id' => 'required|integer',
+            'teacher_id' => 'required|integer'
+        ], [
+            'station_id.required' => '考站编号必须',
+            'teacher_id.required' => '老师编号必须'
+        ]);
+
+        try {
+            $redis = Redis::connection('message');
+            $stationId = (int)$request->input('station_id');
+            $exam = Exam::doingExam();
+            $studentModel = new  Student();
+            $studentData = $studentModel->studentListtwo($stationId, $exam);
+            if ($studentData['nextTester']) {
+                $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
+                \Log::alert('推送当前学生',[$studentData['nextTester']]);
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
+                return response()->json(
+                    $this->success_data($studentData['nextTester'], 102, '验证完成')
+                );
+            } else {
+                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
+                throw new \Exception('学生信息查询失败', -2);
+            }
+        } catch (\Exception $ex) {
+            return response()->json(
+                $this->fail($ex)
+            );
+        }
+    }
+
+
+
 
     /**
      * 身份验证推送
@@ -353,7 +401,7 @@ class InvigilatePadController extends CommonController
     public function postSaveExamResult(Request $request)
     {
         try {
-
+            \Log::info('提交成绩记录',$request->all());
             $this->validate($request, [
                 'score'             => 'required',
                 //'special'           => 'sometimes',
@@ -369,6 +417,20 @@ class InvigilatePadController extends CommonController
             $stationId    = Input::get('station_id');
             $studentId    = Input::get('student_id');
             $examScreeningId = Input::get('exam_screening_id');
+
+            //重新获取场次ID，TODO: Zhoufuxiang 2016-05-11
+            $exam = Exam::doingExam();
+            $ExamScreening = new ExamScreening();
+            $examScreening = $ExamScreening->getExamingScreening($exam->id);
+            if(is_null($examScreening)){
+                $examScreening = $ExamScreening->getNearestScreening($exam->id);
+                if(is_null($examScreening)){
+                    throw new \Exception('没有对应场次', -313);
+                }
+            }
+            $examScreeningId = $examScreening->id;
+            \Log::alert('考站：'.$stationId . ';学生：' . $studentId . ';场次：' . $examScreeningId . '成绩推送313');
+
             //到队列表里查询出学生的开始和结束时间
             $studentExamTime = ExamQueue::where('station_id', '=', $stationId)
                                         ->where('exam_screening_id', '=', $examScreeningId)
@@ -412,6 +474,7 @@ class InvigilatePadController extends CommonController
 
             /*********保存考试成绩**********/
             $TestResultModel  = new TestResult();
+
             $result = $TestResultModel->addTestResult($data, $score);
             if (!$result) {
                 throw new \Exception('成绩保存失败');
@@ -761,7 +824,7 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStartExam(Request $request,WatchReminderRepositories $watchReminder)
+    public function getStartExam(Request $request,WatchReminderRepositories $watchReminder, ExamMidwayRepository $examMidway)
     {
         try {
             $this->validate($request, [
@@ -803,7 +866,7 @@ class InvigilatePadController extends CommonController
                 // todo 调用向腕表推送消息的方法
                 try{
 
-                    $watchReminder ->getWatchPublish($studentId,$stationId,$examQueue->room_id);
+                    $watchReminder ->getWatchPublish($exam->id,$studentId,$stationId,$examQueue->room_id);
                 }catch (\Exception $ex){
                     \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
                 }
@@ -837,7 +900,8 @@ class InvigilatePadController extends CommonController
                 }catch (\Exception $ex){
                     \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
                 }
-                
+
+
                 
                 
                 $studentModel = new Student();
@@ -846,10 +910,15 @@ class InvigilatePadController extends CommonController
 
                 $station=Station::where('id',$stationId)->first();
 
+                //将exam_station_status表的状态改成3
+                $examMidway->beginTheoryStatus($exam->id, $stationId);
+
                 if($station->type==3) {//理论考试
                     $publishMessage->avator = asset($publishMessage->avator);
                     $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
                 }
+                
+                
 
                 return response()->json(
                     $this->success_data(['start_time'=>$date,'student_id'=>$studentId], 1, '开始考试成功')
@@ -1039,7 +1108,7 @@ class InvigilatePadController extends CommonController
            
             //查询使用中的腕表数据
             $watchModel = new Watch();
-            $watchData = $watchModel->getWatchAboutData($status, $type, $nfc_code, $examing->id);
+            $watchData  = $watchModel->getWatchAboutData($status, $type, $nfc_code, $examing->id);
 
             if(!empty($watchData) && count($watchData) > 0){
                 $watchData = $watchData->toArray();

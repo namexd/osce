@@ -12,6 +12,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('update/index',['uses'=>'UpdateController@getIndex','as' => 'osce.admin.getUpdate']);
 		Route::post('update/index',['uses'=>'UpdateController@postIndex','as'=>'osce.admin.postUpdate']);
 		Route::get('test/index',['uses'=>'TestController@getIndex','as'=>'osce.admin.test']);
+		Route::get('showlog/index',['uses'=>'ShowLogController@ShowLog','as'=>'osce.admin.showLog']);
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
 		//登录注册
@@ -432,6 +433,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//pad监考
 		Route::get('invigilatepad/authentication', 	['uses'=>'InvigilatePadController@getAuthentication','as'=>'osce.api.invigilatepad.getAuthentication']);
+
+		Route::get('invigilatepad/authenticationtwo', 	['uses'=>'InvigilatePadController@getAuthenticationtwo','as'=>'osce.api.invigilatepad.getAuthenticationtwo']);
+
 		Route::get('invigilatepad/exam-grade', 	['uses'=>'InvigilatePadController@getExamGrade','as'=>'osce.api.invigilatepad.getExamGrade']);
 		Route::post('invigilatepad/save-exam-result', 	['uses'=>'InvigilatePadController@postSaveExamResult','as'=>'osce.api.invigilatepad.postSaveExamResult']);
 		Route::post('invigilatepad/save-exam-evaluate', 	['uses'=>'InvigilatePadController@postSaveExamEvaluate','as'=>'osce.api.invigilatepad.postSaveExamEvaluate']);
@@ -525,8 +529,10 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(Redis $redis) {
-	$a = \Carbon\Carbon::tomorrow();
-	dd($a->subSecond()->timestamp);
+	$a = 1111;
+//	dd($a['1']);
+	dd($a['1']);
+	
 });
 
 Route::get('redis', function(){
@@ -545,13 +551,14 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 		return '请传入参数id，id对应考试ID';
 	}
 
-	$exam = new \Modules\Osce\Entities\Exam();
+	$Exam = new \Modules\Osce\Entities\Exam();
 
-	if($exam->emptyData($exam_id)){
+	$result = $Exam->emptyData($exam_id);
+	if($result === 11111){
 		return '成功-' . mt_rand(1000,9999);
 	}
 
-	return '失败-' . mt_rand(1000,9999);
+	return '失败-' . mt_rand(1000,9999).', 错误信息: '.$result;
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 	$examId = $request->input('exam_id');

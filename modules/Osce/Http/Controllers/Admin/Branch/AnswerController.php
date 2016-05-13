@@ -12,11 +12,13 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamStationStatus;
 use Modules\Osce\Entities\QuestionBankEntities\Answer;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\QuestionBankRepositories;
 use Illuminate\Http\Request;
+use Modules\Osce\Repositories\WatchReminderRepositories;
 
 /**理论考试-考试答题控制器
  * Class Answer
@@ -151,6 +153,7 @@ class AnswerController extends CommonController
 
         ]);
 
+
         $examId = $request->input('examId');
         $studentId = $request->input('studentId');
         $stationId = $request->input('stationId');
@@ -245,10 +248,21 @@ class AnswerController extends CommonController
         $answerModel = new Answer();
         try{
             $answerModel->saveAnswer($data,$resultData);
+
+            //添加改变考站准备状态 todo zhouqiang 2016/5/11
+            $examStationStatusData = ExamStationStatus::where('exam_id','=',$examId)->where('station_id','=',$stationId)->first();
+            if(!is_null($examStationStatusData)){
+                $examStationStatusData->status =1;
+                if(!$examStationStatusData->save()){
+                    throw  new \Exception('改变考站准备状态失败');
+                }
+            }else{
+                throw  new \Exception('没有查询到对应的准备考站信息');
+            }
+
             return response()->json(
                 $this->success_data([],1,'success')
             );
-            return response()->json(true);
         }catch (\Exception $ex) {
             return response()->json($this->fail($ex));
 
@@ -332,7 +346,7 @@ class AnswerController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function postSaveStatus(Request $request){
+    public function postSaveStatus(Request $request,WatchReminderRepositories $watchReminder){
 
         try{
             $this->validate($request,[
@@ -345,6 +359,13 @@ class AnswerController extends CommonController
             $stationId = $request->input('stationId');
             $answerModel = new Answer();
             $exam_screening_id = $answerModel->saveStatus($examId,$studentId,$stationId);
+
+            try{
+                $watchReminder->getWatchPublish($examId,$studentId,$stationId);
+            }catch (\Exception $ex){
+                \Log::debug('理论考试结束调用腕表出错',[$examId,$studentId,$stationId]);
+            }
+            
             //向pad端推送消息
             $redis = Redis::connection('message');
             $time = date('Y-m-d H:i:s', time());

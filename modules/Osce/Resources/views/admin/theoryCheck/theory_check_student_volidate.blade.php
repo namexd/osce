@@ -40,7 +40,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content text-left" style="border-top: none;">
-                        <div class="font20 padt_20 goCenter">当前考生</div>
+                        <div class="font20 goCenter">当前考生</div>
                         <div class="p-md cBorder mart_10 overflow goCenter">
                             <div class="col-sm-6">
                                 <div style="padding: 40px 60px;">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="ibox-content mart_20 text-left">
-                        <div class="font20 padt_20 goCenter">待考考试</div>
+                        <div class="font20 goCenter">待考考试</div>
                         <div class="goCenter mart_15">
                             @if(!empty(@$examData))
                                 @foreach($examData as $k=>$v)

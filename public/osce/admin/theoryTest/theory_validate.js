@@ -27,11 +27,11 @@ function theory_validate(){
                 dateType:'json',
                 success:function(res){
                     if (res.code == 2) {
-                        $('#examinfo').html('理论考试已结束');
-                        clearInterval(timer);
+                        $('#examinfo').html('等待学生进入考试');
+                        //clearInterval(timer);
                     } else {
                         $.ajax({
-                            url:'/osce/api/invigilatepad/authentication?station_id='+stationId+'&teacher_id='+teacherId,
+                            url:'/osce/api/invigilatepad/authenticationtwo?station_id='+stationId+'&teacher_id='+teacherId,
                             type:'get',
                             cache:false,
                             dateType:'json',

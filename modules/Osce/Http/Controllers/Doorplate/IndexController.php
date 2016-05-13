@@ -12,15 +12,17 @@ use Modules\Osce\Entities\ExamDraftFlow;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\PadLogin\PadLogin;
 use Modules\Osce\Entities\PadLogin\PadLoginRepository;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\ExamStationStatus;
+use Modules\Osce\Entities\Room;
 use Modules\Osce\Http\Controllers\Api\LoginPullDownController;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\PadLogin\Time;
-use Modules\Osce\Entities\ExamPaper;
+use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
 
 class IndexController extends CommonController
 {
@@ -98,7 +100,8 @@ class IndexController extends CommonController
             'next'=>is_null($this->getNextExaminee($request)->first())?[]:$this->getNextExaminee($request),
             'status'=>$this->getStatusStatus($request),
             'room_id'=>$room_id,'exam_id'=>$exam_id,
-            'screen_id'=>$screenId
+            'screen_id'=>$screenId,'room_name'=>Room::where('id',$room_id)->first()->name
+
         ]);
         } catch (\Exception $ex) {
            return redirect()->back()->withErrors($ex->getMessage());

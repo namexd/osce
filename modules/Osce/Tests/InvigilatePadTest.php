@@ -13,7 +13,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\App;
 class InvigilatePadTest extends TestCase
 {
-  public function  testInvigilatePad(){
+    public function  testInvigilatePad(){
 //      $standard_id =   1;
 //      $subject_id =2;
 //      $data    =   [
@@ -24,13 +24,15 @@ class InvigilatePadTest extends TestCase
 //      ];
 //      $respone =   $this->action('post','\Modules\Osce\Http\Controllers\api\InvigilatePadController@postSaveExamEvaluate','',$data);
 //      $this    ->  assertRedirectedToRoute('osce.api.invigilatepad.postSaveExamEvaluate');
-  }
-    public function testSaveExamResult(){
+    }
+
+    public function testSaveExamResult()
+    {
         $standard_item_id =[20,21,23];
-        $subject_id =2;
+        $subject_id = 2;
         $student_id = 1;
-        $station_id =5;
-        $exam_screening_id=65;
+        $station_id = 5;
+        $exam_screening_id = 65;
         $teacher_id    =  51;
         $Nowtime =date('Y-m-d H:i:s',time());
 
@@ -53,9 +55,9 @@ class InvigilatePadTest extends TestCase
             'teacher_id'        => $teacher_id,
         ];
 
-       $this->action('post','\Modules\Osce\Http\Controllers\Api\InvigilatePadController@postSaveExamResult','',$data);
+        $this->action('post','\Modules\Osce\Http\Controllers\Api\InvigilatePadController@postSaveExamResult','',$data);
 
-        $this    ->  assertRedirectedToRoute('osce.api.invigilatepad.postSaveExamResult');
+        $this->assertRedirectedToRoute('osce.api.invigilatepad.postSaveExamResult');
 
     }
 

@@ -533,29 +533,29 @@ class QuestionBankRepositories  extends BaseRepository
             $Exam = new Exam;
             //获取本次考试的id
             $ExamInfo = $Exam->where('status','=',1)->select('id','name')->first();
-            if(empty($ExamInfo->id)){
-                throw new \Exception(' 没有在进行的考试');
+            if(empty($ExamInfo)){
+                throw new \Exception(' 没有在进行的考试',-100);
             }
 
-            //获取当前正在考试的场次id
+          /*  //获取当前正在考试的场次id
             $examScreeningModel = new ExamScreening();
             $examScreening      = $examScreeningModel -> getExamingScreening($ExamInfo->id);
             if(is_null($examScreening))
             {
                 $examScreening  = $examScreeningModel -> getNearestScreening($ExamInfo->id);
             }
-            $exam_screen_id = $examScreening->id;       //获取场次id
+            $exam_screen_id = $examScreening->id;       //获取场次id*/
             //根据监考老师的id和考试id，获取对应的考站id
             $builder = $Exam->leftJoin('station_teacher', function($join){
                 $join -> on('station_teacher.exam_id', '=', 'exam.id');
             })->groupBy('station_teacher.user_id')
                 ->where('exam.id',$ExamInfo->id)
                 ->where('station_teacher.user_id',$userId->id)
-                ->where('station_teacher.exam_screening_id',$exam_screen_id)
+               // ->where('station_teacher.exam_screening_id',$exam_screen_id)
                 ->select('station_teacher.station_id');
             $station_id = $builder->pluck('station_id');
             if(empty($station_id)){
-                throw new \Exception('你没有相关需要监考的考站');
+                throw new \Exception('您没有相关需要监考的考站',-101);
             }
             return  ['StationId'=>$station_id,'ExamId'=>$ExamInfo->id,'ExamName'=>$ExamInfo->name];
         }catch (\Exception $ex){
