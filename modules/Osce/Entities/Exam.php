@@ -831,7 +831,7 @@ class Exam extends CommonModel
     {
         $connection = DB::connection($this->connection);
         $connection ->beginTransaction();
-//        try {
+        try {
             //获得当前exam的实例
             $examObj = $this->doingExam($id);
             //获取与考场相关的流程
@@ -855,10 +855,16 @@ class Exam extends CommonModel
             $watchStatus = Watch::where('id','>',0)->where('status', '<>', 0)->get();
             if(!$watchStatus->isEmpty())
             {
-                $watchStatus = Watch::where('id','>',0)->update(['status'=>0]);
-                if(!$watchStatus){
-                    throw new \Exception('修改腕表状态失败！');
+                foreach ($watchStatus as $watchStatu) {
+                    $watchStatu->status = 0;
+                    if(!$watchStatu->save()){
+                        throw new \Exception('修改腕表状态失败！');
+                    }
                 }
+//                $watchStatus = Watch::where('id','>',0)->where('status', '<>', 0)->update(['status'=>0]);
+//                if(!$watchStatus){
+//                    throw new \Exception('修改腕表状态失败！');
+//                }
             }
             //删除考试得分
             $examScores = ExamScore::whereIn('exam_result_id', $examResultIds)->get();
@@ -978,8 +984,10 @@ class Exam extends CommonModel
             //更改考试状态
             if($examObj->status != 0)
             {
-                $result = $this->where('id', '=', $id)->update(['status' => 0]);    //TODO 更改状态为0（0为未开考）
-                if(!$result){
+                //TODO 更改状态为0（0为未开考）
+                $examObj->status = 0;
+//                $result = $this->where('id', '=', $id)->update(['status' => 0]);
+                if(!$examObj->save()){
                     throw new \Exception('修改考试状态 失败！');
                 }
             }
@@ -987,10 +995,10 @@ class Exam extends CommonModel
             $connection->commit();
             return true;
 
-//        } catch (\Exception $ex) {
-//            $connection->rollBack();
-//            return $ex->getMessage();
-//        }
+        } catch (\Exception $ex) {
+            $connection->rollBack();
+            return $ex->getMessage();
+        }
     }
 
     /**
