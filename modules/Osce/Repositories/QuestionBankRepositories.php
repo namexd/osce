@@ -555,7 +555,7 @@ class QuestionBankRepositories  extends BaseRepository
                 ->select('station_teacher.station_id');
             $station_id = $builder->pluck('station_id');
             if(empty($station_id)){
-                throw new \Exception('你没有相关需要监考的考站',-101);
+                throw new \Exception('您没有相关需要监考的考站',-101);
             }
             return  ['StationId'=>$station_id,'ExamId'=>$ExamInfo->id,'ExamName'=>$ExamInfo->name];
         }catch (\Exception $ex){

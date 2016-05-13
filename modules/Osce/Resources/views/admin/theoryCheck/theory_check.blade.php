@@ -109,32 +109,34 @@
                 localStorage.setItem("Storage_answer",JSON.stringify(Storage_answer_list));//设置本地存储
             }
             $(".actions").find("a[href='#finish']").click(function(){
-                //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
-                clearInterval(statusTimer);
-                var examPaperFormalId=$('#examPaperFormalId').val();
-                var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
-                var stationId = $(".allData").attr("stationId");
-                var userId = $(".allData").attr("userId");
-                var studentId = $(".allData").attr("studentId");
-                var examId = $(".allData").attr("examId");
-                $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
-                        {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
-                            if(obj.code==1){
-                                $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId,stationId:stationId},function(res){
-                                    if(res.code==1){
-                                        location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
-                                    }else{
-                                        layer.confirm(res.message);
-                                    }
-                                })
+                layer.confirm('确认提交答题？',{btn: ['取消','确认']},
+                        function(){return},
+                        function(){
+                            //var postnew=localStorage.getItem("Storage_answer")+"{{$examPaperFormalData["id"]}}";
+                            clearInterval(statusTimer);
+                            var examPaperFormalId=$('#examPaperFormalId').val();
+                            var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
+                            var stationId = $(".allData").attr("stationId");
+                            var userId = $(".allData").attr("userId");
+                            var studentId = $(".allData").attr("studentId");
+                            var examId = $(".allData").attr("examId");
+                            $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
+                                    {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
+                                        if(obj.code==1){
+                                            $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId,stationId:stationId},function(res){
+                                                if(res.code==1){
+                                                    location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
+                                                }else{
+                                                    layer.confirm(res.message);
+                                                }
+                                            })
 
-                            }else{
-                                layer.confirm(obj.message);
-                            }
-
-                })
+                                        }else{
+                                            layer.confirm(obj.message);
+                                        }
+                                    })
+                        })
             })
-
         });
         countDown("{{$systemTimeEnd}}","#colockbox1","{{$systemTimeStart}}");
         //被终止考试状态改变请求
