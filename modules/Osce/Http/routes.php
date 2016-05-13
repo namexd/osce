@@ -529,10 +529,9 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(Redis $redis) {
-	$stationArr = \Modules\Osce\Entities\ExamDraft::leftJoin('exam_draft_flow', function($join){
-		$join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
-	})->where('exam_draft_flow.exam_id',4)
-		->where('exam_draft.room_id',4)->select('exam_draft.station_id')->get()->pluck('station_id')->toArray();
+	$a = 1111;
+//	dd($a['1']);
+	dd($a['1']);
 	
 });
 

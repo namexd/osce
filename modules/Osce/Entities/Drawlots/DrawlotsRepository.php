@@ -197,6 +197,22 @@ class DrawlotsRepository extends AbstractDrawlots
     }
 
     /**
+     * 获取当前的screen
+     * @access public
+     * @param $examId
+     * @请求字段：
+     * @return mixed
+     * @version
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-13
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getScreening($examId)
+    {
+        return $this->screen->screening($examId);
+    }
+
+    /**
      * 获取推送的学生
      * @access public
      * @return mixed

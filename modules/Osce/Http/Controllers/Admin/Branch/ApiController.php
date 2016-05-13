@@ -10,7 +10,9 @@ namespace Modules\Osce\Http\Controllers\Admin\Branch;
 
 use App\Entities\User;
 use Illuminate\Support\Facades\Auth;
+use Modules\Osce\Entities\Drawlots\DrawlotsRepository;
 use Modules\Osce\Entities\ExamDraft;
+use Modules\Osce\Entities\ExamMidway\ExamMidwayRepository;
 use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamStation;
@@ -585,7 +587,7 @@ class ApiController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamIndex(){
+    public function getStudentExamIndex(ExamMidwayRepository $examMidway, DrawlotsRepository $drawlots){
         $user = Auth::user();
         //查找当前正在进行的考试--之后会改
         $examingDO = Exam::where('status','=',1)->first();
@@ -627,6 +629,28 @@ class ApiController extends CommonController
 
             }
         }
+        //获取考生当前是在哪个考站考试
+        $queue = $examMidway->getQueueByStudent($userInfo->id, $examingDO->id);
+        //检查此考站是否是理论考站
+        if (Station::find($queue->station_id)->type != 3) {
+            throw new \Exception('学生当前不应该考这个考站', -111);
+        }
+        //修改exam_station_status表状态
+        $examMidway->beginTheoryStatus($examingDO->id, [$queue->station_id], 1);
+        /*
+         * 判断是否要把1改成2
+         */
+        $screen = $drawlots->getScreening($examingDO->id);
+        $stations = $drawlots->getStationNum($examingDO->id, $queue->room_id, $screen->id);
+        //判断当前已经有多少个考站已经是1了
+        $status = ExamStationStatus::whereIn('station_id', $stations->pluck('station_id')->toArray())
+            ->where('exam_id', $examingDO->id)
+            ->where('status', 1)
+            ->count;
+        if (count($stations) == $status) {
+            $examMidway->beginTheoryStatus($examingDO->id, $stations->pluck('station_id')->toArray(), 2);
+        }
+
         //dd($examData);
         return view('osce::admin.theoryCheck.theory_check_student_volidate', [
             'userInfo'   => @$userInfo,
@@ -714,7 +738,7 @@ class ApiController extends CommonController
      * @date 2016-04-06 15:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder) {
+    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder, DrawlotsRepository $draw) {
 
         $this->validate($request, [
             'exam_id'           => 'required|integer',
@@ -836,18 +860,20 @@ class ApiController extends CommonController
             }
         }
         //查询该考试该考场下的所有考站信息
-        $stationArr = ExamDraft::leftJoin('exam_draft_flow', function($join){
-            $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
-        })->where('exam_draft_flow.exam_id',$examId)
-            ->where('exam_draft.room_id',$roomId)->select('exam_draft.station_id')->get()->pluck('station_id')->toArray();
-        if(!empty($stationArr)){
+//        $stationArr = ExamDraft::leftJoin('exam_draft_flow', function($join){
+//            $join->on('exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id');
+//        })->where('exam_draft_flow.exam_id',$examId)
+//            ->where('exam_draft.room_id',$roomId)->select('exam_draft.station_id')->get()->pluck('station_id')->toArray();
+        $examScreeningId = $draw->getScreening($examId);
+        $stationArr = $draw->getStationNum($examId, $roomId, $examScreeningId);
+        if(!$stationArr->isEmpty()){
             //查询exam_station_status表（考试-场次-考站状态表）中该考试该考场下status是否全为1，如果是，修改其状态值为2
             $examStationStatusData = $examStationStatusModel
                 ->where('exam_id',$examId)
-                ->where('status','<>',1)
+                ->where('status','=',1)
                 ->whereIn('station_id',$stationArr)
-                ->first();
-            if(empty($examStationStatusData)){
+                ->count();
+            if($examStationStatusData == $stationArr->count()){
                 $examStationStatusModel->where('exam_id',$examId)->whereIn('station_id',$stationArr)->update(['status'=>2]);
             }else{
                 $examStationStatus->status = 1;
