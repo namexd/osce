@@ -517,21 +517,6 @@ class ApiController extends CommonController
                     'data' => $data,
                 ]);
             }
-            /*if($ex->getCode() === 1001 || $ex->getCode() === 1002)
-            {
-                Auth::logout();
-                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }
-            if($ex->getCode() === -100 || $ex->getCode() === -101){
-                $data = array(
-                    'status'=>0,
-                    'info'=>$ex->getMessage()
-                );
-                return view('osce::admin.theoryCheck.theory_check_volidate', [
-                    'data' => $data,
-                ]);
-            }*/
-
         }
     }
 
