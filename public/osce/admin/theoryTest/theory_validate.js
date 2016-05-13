@@ -27,8 +27,8 @@ function theory_validate(){
                 dateType:'json',
                 success:function(res){
                     if (res.code == 2) {
-                        $('#examinfo').html('理论考试已结束');
-                        clearInterval(timer);
+                        $('#examinfo').html('该场次已考完');
+                        //clearInterval(timer);
                     } else {
                         $.ajax({
                             url:'/osce/api/invigilatepad/authenticationtwo?station_id='+stationId+'&teacher_id='+teacherId,

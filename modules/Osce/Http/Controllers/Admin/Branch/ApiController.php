@@ -469,15 +469,6 @@ class ApiController extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories){
-
-        $Exam = new Exam;
-        //获取本次考试的id
-        $ExamInfo = $Exam->where('status','=',1)->select('id','name')->first();
-        if(empty($ExamInfo)){
-            throw new \Exception(' 没有在进行的考试',-100);
-        }
-
-
         try {
             $user = Auth::user();
             // 检查用户是否登录
