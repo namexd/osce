@@ -730,6 +730,9 @@ class ApiController extends CommonController
         $teacherId       = $request->input('teacher_id');
         $roomId          = $request->input('room_id');
 
+        //重新获取当前进行的场次 (传过来的场次ID，并不是当前正在进行的考试场次) TODO: Zhoufuxiang216-05-14
+        $examScreeningId = Common::getExamScreening($examId)->id;
+
         // 查询当前老师对应考站准备完成信息
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
