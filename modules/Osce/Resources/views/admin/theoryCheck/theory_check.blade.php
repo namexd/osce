@@ -17,7 +17,7 @@
 
         .colockbox{width:250px;height:30px;overflow: hidden; color:#000;}
         .colockbox span{
-            float:left;display:block;
+            float:left;display:inline-block;
             width:30px;height:29px;
             line-height:29px;font-size:20px;
             font-weight:bold;text-align:center;
@@ -343,8 +343,8 @@
                             </div>
                         </div>
 
-                        <div class="btnBox left" style="margin:0 auto; text-align: center; width: 400px;padding-left:400px;">
-                            <span class="marl_10 left" style="height: 29px; line-height: 29px;">剩余时间：</span>
+                        <div class="btnBox left" style="margin:0 auto; text-align: center; width: 800px;padding-left:400px;">
+                            <span class="marl_10 left" style="display:inline-block; height: 29px; width:100px; line-height: 29px;">剩余时间：</span>
                             <div class="colockbox" id="colockbox1">
                                 <span class="hour" id="hour">00</span><span class="left">:</span>
                                 <span class="minute" id="minute">00</span><span class="left">:</span>
