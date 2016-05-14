@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Api\Pad;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Modules\Osce\Entities\Drawlots\DrawlotsRepository;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamDraft;
@@ -666,7 +667,6 @@ class DrawlotsController extends CommonController
             //获取推送给腕表时需要的参数
             $params = $huaxiDrawlots->getParams();
             \Log::info('推送给腕表的数据', $params);
-
             //将数据推送给腕表
             try {
 //                $studentWatchController = new StudentWatchController();
@@ -674,7 +674,7 @@ class DrawlotsController extends CommonController
 //                $studentWatchController->getStudentExamReminder($this->request);
                 $watchReminder->getWatchPublish($exam_id,$params['student_id'], $params['station_id'], $params['room_id']);
             } catch (\Exception $ex) {
-                \Log::info('抽签中推送腕表失败', $this->request->input('uid'));
+                \Log::info('抽签中推送腕表失败', [$this->request->input('uid')]);
             }
             //将数据推送给pad端
             \Log::info('推送给pad的数据', [$student, 'channel' => md5($_SERVER['HTTP_HOST']) . 'pad_message']);
@@ -686,6 +686,40 @@ class DrawlotsController extends CommonController
             \log::alert('draw_error', ['file' => $ex->getFile(), 'line' => $ex->getLine(), 'code' => $ex->getCode(), 'message' => $ex->getMessage()]);
 //            $this->redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
 //                json_encode($this->fail($ex)));
+            return response()->json($this->fail($ex));
+        }
+    }
+
+    /**
+     * 手动刷新返回以抽签实例
+     * @url osce/pad/push-student
+     * @access public
+     * @param DrawlotsRepository $drawlotsRepository
+     * @请求字段：
+     * 考站id station_id
+     * 考试id exam_id
+     * @return mixed
+     * @version 3.6
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-14
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function postPushStudent(DrawlotsRepository $drawlotsRepository)
+    {
+        //验证
+        $this->validate($this->request, [
+            'station_id' => 'required',
+            'exam_id' => 'required'
+        ]);
+
+        try {
+            //获取对应的数据
+            $data = $drawlotsRepository->getDrawlotsQueue($this->request->input('exam_id'),
+                $this->request->input('station_id'));
+            
+            //返回数据
+            return response()->json($this->success_data($data));
+        } catch (\Exception $ex) {
             return response()->json($this->fail($ex));
         }
     }

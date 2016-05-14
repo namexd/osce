@@ -13,6 +13,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('update/index',['uses'=>'UpdateController@postIndex','as'=>'osce.admin.postUpdate']);
 		Route::get('test/index',['uses'=>'TestController@getIndex','as'=>'osce.admin.test']);
 		Route::get('showlog/index',['uses'=>'ShowLogController@ShowLog','as'=>'osce.admin.showLog']);
+		Route::get('checkdatabase',['uses'=>'ShowLogController@CheckDatabase','as'=>'osce.admin.checkdatabase']);
+
 	});
 	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
 		//登录注册
@@ -339,6 +341,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('change-status',['uses'=>'PadController@getChangeStatus','as'=>'osce.admin.PadController.getChangeStatus']);
 		Route::get('next-student',['uses'=>'DrawlotsController@nextStudent','as'=>'osce.pad.nextStudent']);  //下一个考生
 		Route::post('drawlots',['uses'=>'DrawlotsController@postDrawlots','as'=>'osce.pad.postDrawlots']);  //新抽签方法
+		Route::post('push-student', ['uses'=>'DrawlotsController@postPushStudent','as'=>'osce.pad.postPushStudent']);
 	});
 });
 
@@ -529,8 +532,10 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 //TODO:测试用
 
 Route::get('test/test', function(Redis $redis) {
-	$a = \Carbon\Carbon::tomorrow();
-	dd($a->subSecond()->timestamp);
+	$a = 1111;
+//	dd($a['1']);
+	dd($a['1']);
+	
 });
 
 Route::get('redis', function(){
@@ -549,13 +554,14 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 		return '请传入参数id，id对应考试ID';
 	}
 
-	$exam = new \Modules\Osce\Entities\Exam();
+	$Exam = new \Modules\Osce\Entities\Exam();
 
-	if($exam->emptyData($exam_id)){
+	$result = $Exam->emptyData($exam_id);
+	if($result === 11111){
 		return '成功-' . mt_rand(1000,9999);
 	}
 
-	return '失败-' . mt_rand(1000,9999);
+	return '失败-' . mt_rand(1000,9999).', 错误信息: '.$result;
 });
 Route::post('test/test',function(\Illuminate\Http\Request $request) {
 	$examId = $request->input('exam_id');

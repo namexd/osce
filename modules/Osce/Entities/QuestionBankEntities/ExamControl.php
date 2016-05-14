@@ -196,6 +196,7 @@ class ExamControl extends Model
     public function stopExam($data){
         $DB = DB::connection('osce_mis');
         $DB->beginTransaction();
+
         try{
             //获取该考生的考试队列信息
             $examQueue = ExamQueue::where('student_id', $data['studentId'])
@@ -256,7 +257,7 @@ class ExamControl extends Model
 
                     // 向考试结果记录表(exam_result)插入数据未考考试分数
                     $examResultData=array(
-                        'student_id'=>$val['studentId'],
+                        'student_id'=>$data['studentId'],
                         'exam_screening_id'=>$val['exam_screening_id'],
                         'station_id'=>$val['station_id'],
                         'time'=>0,

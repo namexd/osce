@@ -106,7 +106,9 @@ function score_query() {
                     var result = [];
                     //数据结构
                     for(var i in data){
-                        result.push({id:data[i][0].id,name:data[i][0].name});
+                        //二维数组
+                        //result.push({id:data[i][0].id,name:data[i][0].name});
+                        result.push({id:data[i].id,name:data[i].name});
                     }
 
                     //数据去重
@@ -119,7 +121,7 @@ function score_query() {
                     }
 
                     //写入dom
-                    var html = '<option value="">全部考站</option>';
+                    var html = '<option value="">全部 考站</option>';
                     for(var i in current){
                         html += '<option value="'+current[i].id+'">'+current[i].name+'</option>';
                     }
@@ -1956,6 +1958,7 @@ function timePicker(background){
 
         //数据绑定
         laydate(option);
+        laydate.skin('molv');
     });
 
     /**

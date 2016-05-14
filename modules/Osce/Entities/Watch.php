@@ -11,6 +11,7 @@ namespace Modules\Osce\Entities;
 
 use Modules\Osce\Entities\MachineInterface;
 use DB;
+use Modules\Osce\Repositories\Common;
 
 class Watch extends CommonModel implements MachineInterface
 {
@@ -223,18 +224,13 @@ class Watch extends CommonModel implements MachineInterface
     }
 
     //查询使用中的腕表数据
-    public function getWatchAboutData($status,$type,$nfc_code,$examId){
+    public function getWatchAboutData($status,$type,$nfc_code,$examId)
+    {
+        //获取考试场次ID TODO: Zhoufuxiang 216-05-13
+        $ExamScreening = new ExamScreening();
+        $exam_screening_id = Common::getScreeningId($examId);
 
-        $examScreen = new ExamScreening();
-        $roomMsg = $examScreen->getExamingScreening($examId);
-        $roomMsg_two = $examScreen->getNearestScreening($examId);
-        if ($roomMsg) {
-            $exam_screening_id = $roomMsg->id;
-        } elseif ($roomMsg_two) {
-            $exam_screening_id = $roomMsg_two->id;
-        } else {
-            throw new \Exception('没有找到对应的场次');
-        }
+        //考试状态 考试中（1），等待中（0），已结束（2）
         if($type === 0){
             $builder = $this->whereIn('exam_queue.status',[0,1]);
         }elseif($type == 1){
@@ -315,14 +311,22 @@ class Watch extends CommonModel implements MachineInterface
 
     //查询某个腕表的考试状态
     public function getWatchExamStatus($ncfCode,$examId){
-        $builder = $this->where('watch.code','=',$ncfCode)->where('exam_queue.exam_id','=',$examId)->where('exam_screening_student.is_end','=',0)->leftjoin('watch_log',function($watchLog){
+        /*$builder = $this->where('watch.code','=',$ncfCode)->where('exam_queue.exam_id','=',$examId)->where('exam_screening_student.is_end','=',0)->leftjoin('watch_log',function($watchLog){
             $watchLog->on('watch_log.watch_id','=','watch.id');
         })->leftjoin('exam_queue',function($examQueue){
             $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
         })->rightjoin('exam_screening_student',function($join){
             $join->on('exam_screening_student.student_id','=','watch_log.student_id');
-        })->select('exam_queue.status')->first();
-
+        })->select('exam_queue.status')->first();*/
+        $screen=new ExamScreening();
+        $screenId=$screen->getScreenID($examId);
+        $builder= $this->leftJoin('exam_screening_student','exam_screening_student.watch_id','=','watch.id')
+             ->leftJoin('exam_queue','exam_queue.student_id','=','exam_screening_student.student_id')
+             ->where('watch.code','=',$ncfCode)
+             ->where('exam_queue.exam_id','=',$examId)
+             ->where('exam_queue.exam_screening_id',$screenId)
+             ->where('exam_screening_student.exam_screening_id',$screenId)
+             ->get()->pluck('status')->toArray();
         return $builder;
     }
 }

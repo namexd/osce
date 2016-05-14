@@ -259,6 +259,7 @@ class ExamQueue extends CommonModel
                 )
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.id', 'asc')
                 ->groupBy('student.id')
                 ->get();
             \Log::debug('num', [$queueing->count(), count($stations)]);
@@ -313,6 +314,7 @@ class ExamQueue extends CommonModel
                     )
                     ->orderBy('exam_queue.next_num', 'asc')
                     ->orderBy('exam_queue.begin_dt', 'asc')
+                    ->orderBy('exam_queue.id', 'asc')
                     ->groupBy('student.id')
                     ->take(count($stations) - $queueing->count())
                     ->get();
@@ -371,6 +373,7 @@ class ExamQueue extends CommonModel
                 )
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.id', 'asc')
                 ->take(1)
                 ->get();
         } else {
@@ -394,6 +397,7 @@ class ExamQueue extends CommonModel
                 )
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.id', 'asc')
                 ->take(1)
                 ->get();
         }
@@ -421,11 +425,12 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
-                //->where('exam_queue.blocking', 1)
+                ->where('exam_queue.blocking', 1)
                 ->skip(count($station))
                 ->take(count($station))
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.id', 'asc')
                 ->select(
                     'student.id as student_id',
                     'student.name as student_name',
@@ -451,10 +456,11 @@ class ExamQueue extends CommonModel
                 ->where('exam_queue.station_id', $stationId)
                 ->where('exam_queue.status', '<', 3)
                 ->where('exam_queue.exam_id', $examId)
-                //->where('exam_queue.blocking', 1)
+                ->where('exam_queue.blocking', 1)
                 ->where('exam_queue.exam_screening_id', $exam_screening_id)
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
+                ->orderBy('exam_queue.id', 'asc')
                 ->skip(1)//TODO 可能要改
                 ->take(1)
                 ->select(

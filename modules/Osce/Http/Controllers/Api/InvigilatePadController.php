@@ -20,6 +20,7 @@ use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamFlow;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamGradation;
+use Modules\Osce\Entities\ExamMidway\ExamMidwayRepository;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
@@ -54,14 +55,24 @@ class InvigilatePadController extends CommonController
 
 //    测试
 // url    /osce/api/invigilatepad/test-index
-    public function getTestIndex()
+    public function getTestIndex(Request $request)
     {
+        $exam_id = $request->get('id');
 
-        $studentId =132;
-        $stationId =25;
-        $roomId = 6;
-        $watch = new WatchReminderRepositories();
-        $watch ->getWatchPublish($studentId,$stationId,$roomId);
+        $ExamModel = new Exam();
+        $result = $ExamModel->emptyData($exam_id);
+        if($result === 11111){
+            return '成功-' . mt_rand(1000,9999);
+        }else{
+
+        return '失败-' . mt_rand(1000,9999).', 错误信息: '.$result;
+    }
+        
+//        $studentId =132;
+//        $stationId =25;
+//        $roomId = 6;
+//        $watch = new WatchReminderRepositories();
+//        $watch ->getWatchPublish($studentId,$stationId,$roomId);
 
     }
 
@@ -823,7 +834,7 @@ class InvigilatePadController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStartExam(Request $request,WatchReminderRepositories $watchReminder)
+    public function getStartExam(Request $request,WatchReminderRepositories $watchReminder, ExamMidwayRepository $examMidway)
     {
         try {
             $this->validate($request, [
@@ -899,7 +910,8 @@ class InvigilatePadController extends CommonController
                 }catch (\Exception $ex){
                     \Log::alert('开始考试调用腕表出错',[$studentId,$stationId,$examQueue->room_id]);
                 }
-                
+
+
                 
                 
                 $studentModel = new Student();
@@ -908,10 +920,15 @@ class InvigilatePadController extends CommonController
 
                 $station=Station::where('id',$stationId)->first();
 
+                //将exam_station_status表的状态改成3
+                $examMidway->beginTheoryStatus($exam->id, $stationId);
+
                 if($station->type==3) {//理论考试
                     $publishMessage->avator = asset($publishMessage->avator);
                     $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
                 }
+                
+                
 
                 return response()->json(
                     $this->success_data(['start_time'=>$date,'student_id'=>$studentId], 1, '开始考试成功')
@@ -1101,7 +1118,7 @@ class InvigilatePadController extends CommonController
            
             //查询使用中的腕表数据
             $watchModel = new Watch();
-            $watchData = $watchModel->getWatchAboutData($status, $type, $nfc_code, $examing->id);
+            $watchData  = $watchModel->getWatchAboutData($status, $type, $nfc_code, $examing->id);
 
             if(!empty($watchData) && count($watchData) > 0){
                 $watchData = $watchData->toArray();
@@ -1166,13 +1183,22 @@ class InvigilatePadController extends CommonController
             $watchData = $watchModel->getWatchExamStatus($ncfCode,$examing->id);
 
             if(count($watchData) > 0){
-                if($watchData->status < 2){
+
+                if(in_array(2,$watchData)){
+                    $status = 1;
+                }elseif(count(array_intersect([0,1],$watchData))>0){
+                    $status = 0;
+                }else{
+                    $status = 2;
+                }
+
+                /*if($watchData->status < 2){
                     $status = 0;
                 }elseif($watchData->status == 2){
                     $status = 1;
                 }else{
                     $status = 2;
-                }
+                }*/
                 return response()->json(
                     $this->success_data($status,200,'success')
                 );

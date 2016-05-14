@@ -6,6 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="cache-control" content="no-cache">
 	<title>OSCE考试智能管理系统</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -83,32 +84,39 @@
 			<div class="pnotice" style="display: block;color: red">{{$errorItem}}</div>
 		@empty
 		@endforelse
+		<div class="pnotice" id="error" style="display: none;color: red">数据加载中...</div>
 		<button type="submit"  class="btn btn-primary block full-width m-b sub">
 			启　动
 		</button>
 	</form>
-	<p class="bot"><i class="">敏行医学版权所有﹫2015-2015</i></p>
+	<p class="bot"><i class="">敏行医学版权所有</i></p>
 </div>
 
 <script>
 
 	var m='';
 	$('#examId').change(function(){
+		$('#error').css('display','none');
 		var examId= $.trim($(this).val())
 		var opstr='<option value="">请选择考场</option>';
 		if(examId!=''){
+			$('#error').css('display','block');
 
 			$.ajax({
 				type: "GET",
 				url: "{{route('osce.api.LoginPullDown.getRoomList')}}",
 				data: {'exam_id':examId},
 				success: function(msg){
+					$('#error').css('display','none');
 					if(msg){
 						$(msg.data).each(function(i,k){
 							opstr += '<option value="'+ k.id+'">'+ k.name+'</option>　';
 						});
 						$('#roomId').html(opstr);
 					}
+				},
+				error:function(){
+					$('#error').css('display','block').text('系统错误,请重试');
 				}
 			});
 

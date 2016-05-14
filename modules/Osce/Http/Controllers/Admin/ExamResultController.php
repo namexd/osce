@@ -9,6 +9,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamRoom;
 use Modules\Osce\Entities\ExamScore;
@@ -347,17 +348,26 @@ class ExamResultController extends CommonController{
         $data=[];
         $exam_id=$request->get('exam_id');
         if($exam_id){
-            $stations=ExamStation::where('exam_id',$exam_id)->select()->get();
-            foreach($stations as $station){
+            //拿到考试下所有的考站
+            $stationIds = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+            ->where('exam_draft_flow.exam_id', '=', $exam_id)
+            ->select(
+                'exam_draft.station_id as station_id'
+            )
+            ->get();
+            foreach($stationIds as $station){
                 $data[]=$station->station;
             }
         }else{
-            $stations=ExamStation::select()->get();
-            foreach($stations as $station){
+            $stationIds = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
+                ->select(
+                    'exam_draft.station_id as station_id'
+                )
+                ->get();
+            foreach($stationIds as $station){
                 $data[]=$station->station;
             }
         }
-
         return response()->json(
             $this->success_data($data,1,'success')
         );
