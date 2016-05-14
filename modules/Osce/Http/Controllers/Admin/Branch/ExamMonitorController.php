@@ -51,15 +51,15 @@ class ExamMonitorController  extends CommonController
     public function getExamMonitorLateList () {
         $data=$this->getExamMonitorListByStatus(1);
         if(count($data)){
-            $data=$data->toArray();
+            $list=$data->toArray();
         }else{
-            $data['data']=[];
+            $list['data']=[];
         }
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
         //dd($data['data']);
         return view('osce::admin.testMonitor.monitor_late', [
-            'list'      =>$data['data'],'data'=>$topMsg
+            'list'      =>$list['data'],'data'=>$topMsg,'msg'=>$data
         ]);
     }
     /**
@@ -198,11 +198,12 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorQuitList () {
-        $data=$this->getExamMonitorListByStatus(3)->toArray();
+        $data=$this->getExamMonitorListByStatus(3);
+
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
         return view('osce::admin.testMonitor.monitor_abandom', [
-            'list'      =>$data['data'],'data'=>$topMsg]);
+            'list'      =>$data->toArray()['data'],'data'=>$topMsg,'msg'=>$data]);
     }
 
     /**
@@ -225,15 +226,15 @@ class ExamMonitorController  extends CommonController
     public function getExamMonitorFinishList () {
         $data=$this->getExamMonitorListByStatus(4);
         if(count($data)){
-            $data=$data->toArray();
+            $list=$data->toArray();
         }else{
-            $data['data']=[];
+            $list['data']=[];
         }
         $examControlModel = new ExamControl();
         $topMsg = $examControlModel->getDoingExamList();
 
         return view('osce::admin.testMonitor.monitor_complete ', [
-            'data'      =>$topMsg,'list'=>$data['data']
+            'data'      =>$topMsg,'list'=>$list['data'],'msg'=>$data
 
         ]);
 
@@ -350,9 +351,9 @@ class ExamMonitorController  extends CommonController
 
                 $list=$builder->where('exam_screening_student.description',3)
                     ->where('student.exam_id',$exam_id)->groupBy('student_id')
-                    ->paginate(config('osce.page_size',10));
-                if(empty($list->toArray()['data'])){return [];}
-                $list=$list->toArray()['data'];
+                    ->get();
+                if(empty($list->toArray())){return [];}
+                $list=$list->toArray();
                 foreach($list as $key=>$v) { //替考学生
                     //查询标记替考的考站
                     $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('exam_id',$exam_id)->where('exam_screening_id',$ExamScreening->id)->where('description',3)->get()->toArray();//上报停考信息

@@ -97,6 +97,7 @@
 	var m='';
 	$('#examId').change(function(){
 		$('#error').css('display','none');
+		$('#error').text('数据加载中...');
 		var examId= $.trim($(this).val())
 		var opstr='<option value="">请选择考场</option>';
 		if(examId!=''){
@@ -115,7 +116,7 @@
 						$('#roomId').html(opstr);
 					}
 				},
-				error:function(){
+				error:function(e,code,msg){
 					$('#error').css('display','block').text('系统错误,请重试');
 				}
 			});

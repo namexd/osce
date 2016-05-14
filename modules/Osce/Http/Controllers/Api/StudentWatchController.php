@@ -49,29 +49,12 @@ class StudentWatchController extends CommonController
         $this->validate($request, [
             'nfc_code' => 'required|string'
         ]);
-
         $watchNfcCode = $request->input('nfc_code');
+        try {
+            $redis = Redis::connection('message');
         //根据腕表nfc_code找到腕表
         $watch = Watch::where('code', '=', $watchNfcCode)->first();
-        $redis = Redis::connection('message');
-        //拿到考试实例
-        $exam = Exam::doingExam();
-        //拿到场次id
-        $ExamScreeningModel =  new ExamScreening();
-        $examscreeningId = $ExamScreeningModel->getScreenID($exam);
-
-        //  根据腕表id找到对应的考试场次和学生
-        $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)
-            ->where('is_end', 0)
-            ->where('exam_screening_id','=',$examscreeningId)
-            ->orderBy('signin_dt', 'desc')
-            ->first();
-
-        \Log::alert('刷新腕表code', [$watchNfcCode]);
-        //调用新的腕表方法
-        $watchReminder = new WatchReminderRepositories();
-        
-        try {
+            \Log::alert('刷新腕表code', [$watchNfcCode]);
             if ($watch->status == 0) {
                 $data = [
                     'code' => -1, // 侯考状态（对应界面：前面还有多少考生，估计等待时间）
@@ -82,17 +65,30 @@ class StudentWatchController extends CommonController
                     'data' => $data,
                     'message' => 'success'
                 ]));
-            } else {
-                if (!is_null($watchStudent)) {
-                    //得到学生id
-                    $studentId = $watchStudent->student_id;
-                    $examId = Student::find($studentId)->exam_id;
-                    $watchReminder->getWatchPublish($examId, $studentId);
-                }else{
-                    throw  new \Exception('未找到腕表对应的学生信息');
-                }
-
             }
+        //拿到考试实例
+        $exam = Exam::where('status','=',1)->first();
+        if(!is_null($exam)){
+            //拿到场次id
+            $ExamScreeningModel =  new ExamScreening();
+            $examscreeningId = $ExamScreeningModel->getScreenID($exam->id);
+            //  根据腕表id找到对应的考试场次和学生
+            $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)
+                ->where('is_end', 0)
+                ->where('exam_screening_id','=',$examscreeningId)
+                ->orderBy('signin_dt', 'desc')
+                ->first();
+            //调用新的腕表方法
+            $watchReminder = new WatchReminderRepositories();
+            if (!is_null($watchStudent)) {
+                //得到学生id
+                $studentId = $watchStudent->student_id;
+                $examId = Student::find($studentId)->exam_id;
+                $watchReminder->getWatchPublish($examId, $studentId);
+            }else{
+                throw  new \Exception('未找到腕表对应的学生信息');
+            }
+        }
         } catch (\Exception $ex) {
             \Log::alert('刷新腕表调用腕表出错', [$studentId]);
         }
