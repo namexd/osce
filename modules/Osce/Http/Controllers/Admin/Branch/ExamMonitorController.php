@@ -223,7 +223,6 @@ class ExamMonitorController  extends CommonController
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getExamMonitorFinishList () {
-
         $data=$this->getExamMonitorListByStatus(4);
         if(count($data)){
             $data=$data->toArray();
@@ -266,12 +265,24 @@ class ExamMonitorController  extends CommonController
         //获取数据
         $examId = $request->input('exam_id');
         $studentId = $request->input('student_id');
-        $stationId= ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->get();//一个学生的所有考站
+        $stationId= ExamQueue::where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->groupBy('station_id')->get();//一个学生的所有考站
         if(count($stationId)) {
             foreach($stationId as $key=>$val){//获取对应考站的视频信息
                 $stationId[$key]['name']=Station::where('id',$val->station_id)->pluck('name');
-                $type=ExamMonitor::where('station_id',$val->station_id)->where('exam_id',$examId)->where('student_id',$studentId)->select('type')->first();//对应考站弃考替考类型
-                $stationId[$key]['type']=empty($type)?'正常':($type->type==1?'替考':'弃考');
+                $type=ExamMonitor::where('station_id',$val->station_id)->where('exam_id',$examId)->where('student_id',$studentId)->select('description')->first();//对应考站弃考替考类型
+                if(empty($type)){
+                    $stationId[$key]['type']='正常';
+                }else{
+                    if($type->description==1){
+                        $stationId[$key]['type']='弃考';
+                    }
+                    if($type->description==3){
+                        $stationId[$key]['type']='替考';
+                    }
+                    if($type->description==2){
+                        $stationId[$key]['type']='作弊';
+                    }
+                }
                 $queueMsg=ExamQueue::where('station_id',$val->station_id)->where('exam_id',$examId)->where('student_id',$studentId)->where('status',3)->first();//考站考试时间
                 if(!empty($queueMsg)){
                     $time=strtotime($queueMsg->end_dt)-strtotime($queueMsg->begin_dt);
@@ -331,7 +342,7 @@ class ExamMonitorController  extends CommonController
                     ->where('student.exam_id',$exam_id)
                     ->where('exam_order.exam_id',$exam_id)
                     ->where('exam_order.status',4)->groupBy('student_id')
-                    ->paginate(config('osce.page_size'));
+                    ->paginate(config('osce.page_size',10));
 
 
                 break;
@@ -339,12 +350,12 @@ class ExamMonitorController  extends CommonController
 
                 $list=$builder->where('exam_screening_student.description',3)
                     ->where('student.exam_id',$exam_id)->groupBy('student_id')
-                    ->paginate(config('osce.page_size'));
+                    ->paginate(config('osce.page_size',10));
                 if(empty($list->toArray()['data'])){return [];}
                 $list=$list->toArray()['data'];
                 foreach($list as $key=>$v) { //替考学生
                     //查询标记替考的考站
-                    $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('exam_id',$exam_id)->where('exam_screening_id',$ExamScreening->id)->where('type',1)->get()->toArray();//上报停考信息
+                    $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('exam_id',$exam_id)->where('exam_screening_id',$ExamScreening->id)->where('description',3)->get()->toArray();//上报停考信息
                     $station_name = '';//单个学生对于的考站名称
                     if(!empty($replaceList)){
                         foreach($replaceList as $val){
@@ -366,7 +377,7 @@ class ExamMonitorController  extends CommonController
             case 3://弃考
                 return $builder->where('exam_screening_student.description',1)
                                ->where('student.exam_id',$exam_id)->groupBy('student_id')
-                               ->paginate(config('osce.page_size'));
+                               ->paginate(config('osce.page_size',10));
                 break;
             case 4://已完成
 
@@ -377,11 +388,11 @@ class ExamMonitorController  extends CommonController
                     return $builder->where('exam_screening_student.is_end', 1)
                         ->whereNotIn('student_id',$studentIds)
                         ->where('student.exam_id', $exam_id)->groupBy('student_id')
-                        ->paginate(config('osce.page_size'));
+                        ->paginate(config('osce.page_size',10));
                 }else {
                     return $builder->where('exam_screening_student.is_end', 1)
                         ->where('student.exam_id', $exam_id)->groupBy('student_id')
-                        ->paginate(config('osce.page_size'));
+                        ->paginate(config('osce.page_size',10));
                 }
                 break;
             default:
