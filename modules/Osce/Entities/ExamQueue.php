@@ -1241,7 +1241,7 @@ class ExamQueue extends CommonModel
         }
     }
 
-    public function getStudentWatchMovement($exam_id,$student_id,$examScreening)
+    public function getStudentWatchMovement($exam_id,$student_id,$examScreening,$beginTime =null)
     {
 
         //拿到当前学生队列信息
@@ -1252,20 +1252,40 @@ class ExamQueue extends CommonModel
             ->orderBy('begin_dt', 'asc')
             ->get();
         $data = [];
-        foreach ($studentQueue as $item){
-            $time =  $item ->begin_dt;
-            $studentFront = $this->where('exam_id', '=', $exam_id)
-                ->where('exam_screening_id', '=', $examScreening->id)
-                 ->where('room_id','=',$item->room_id)
-                ->where('status', '=', 0)
-                ->whereRaw("UNIX_TIMESTAMP(begin_dt) >= UNIX_TIMESTAMP('$time')")
-                ->orderBy('begin_dt', 'asc')
-                ->get();
-            foreach ($studentFront as $value)
-            $data[] = [
-                $value->student_id,
-            ];
+
+        if(!empty($beginTime)){
+            foreach ($studentQueue as $item){
+                $time = $beginTime;
+                $studentFront = $this->where('exam_id', '=', $exam_id)
+                    ->where('exam_screening_id', '=', $examScreening->id)
+                    ->where('room_id','=',$item->room_id)
+                    ->where('status', '=', 0)
+                    ->whereRaw("UNIX_TIMESTAMP(begin_dt) != UNIX_TIMESTAMP('$time')")
+                    ->orderBy('begin_dt', 'asc')
+                    ->get();
+                foreach ($studentFront as $value)
+                    $data[] = [
+                        $value->student_id,
+                    ];
+            }
+        }else{
+            foreach ($studentQueue as $item){
+                $time =  $item ->begin_dt;
+                $studentFront = $this->where('exam_id', '=', $exam_id)
+                    ->where('exam_screening_id', '=', $examScreening->id)
+                    ->where('room_id','=',$item->room_id)
+                    ->where('status', '=', 0)
+                    ->whereRaw("UNIX_TIMESTAMP(begin_dt) >= UNIX_TIMESTAMP('$time')")
+                    ->orderBy('begin_dt', 'asc')
+                    ->get();
+                foreach ($studentFront as $value)
+                    $data[] = [
+                        $value->student_id,
+                    ];
+            }
         }
+
+
         return $data;
     }
 

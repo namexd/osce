@@ -361,7 +361,7 @@ class AnswerController extends CommonController
             $exam_screening_id = $answerModel->saveStatus($examId,$studentId,$stationId);
             try{
                 $examQueue = new ExamQueue();
-                $data =  $examQueue-> getStudentWatchMovement($examId,$studentId,$exam_screening_id);
+                $data =  $examQueue-> getStudentWatchMovement($examId,$studentId,$exam_screening_id->exam_screening_id,$exam_screening_id->begin_dt);
                 foreach ($data as $value){
                     $watchReminder->getWatchPublish($examId,$value);
                 }
@@ -373,7 +373,7 @@ class AnswerController extends CommonController
             //向pad端推送消息
             $redis = Redis::connection('message');
             $time = date('Y-m-d H:i:s', time());
-            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$time,'student_id'=>$studentId,'exam_screening_id'=>$exam_screening_id],108,'理论考试结束')));
+            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$time,'student_id'=>$studentId,'exam_screening_id'=>$exam_screening_id->exam_screening_id],108,'理论考试结束')));
             return response()->json(
                 $this->success_data([],1,'success')
             );

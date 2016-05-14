@@ -57,19 +57,18 @@ class InvigilatePadController extends CommonController
 // url    /osce/api/invigilatepad/test-index
     public function getTestIndex(Request $request)
     {
-        $exam_id = 10;
-        $student_id =353;
-        $examScreening =23;
-        $examQueue = new ExamQueue();
-        $data =  $examQueue-> getStudentWatchMovement($exam_id,$student_id,$examScreening);
-        dd($data);
-//        $examId =19;
-//        $studentId =438;
-//        $stationId ='';
-//        $roomId = '';
-//        $watch = new WatchReminderRepositories();
-//        $watch ->getWatchPublish($examId,$studentId,$stationId,$roomId);
 
+//        $time ='2016-05-12 16:02:54';
+//        $studentFront = ExamQueue::where('exam_id', '=', 10)
+//            ->where('exam_screening_id', '=', 23)
+//            ->where('room_id','=',6)
+//            ->where('status', '=', 0)
+//            ->whereRaw("UNIX_TIMESTAMP(begin_dt) > UNIX_TIMESTAMP('$time')
+//         AND UNIX_TIMESTAMP(begin_dt) < UNIX_TIMESTAMP('$time')")
+//            ->orderBy('begin_dt', 'asc')
+//            ->get();
+//        dd($studentFront);
+        
     }
 
 
