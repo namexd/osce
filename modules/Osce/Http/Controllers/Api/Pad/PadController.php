@@ -380,7 +380,7 @@ class PadController extends  CommonController{
     public function getChangeStatus(Request $request, WatchReminderRepositories $watchReminder)
     {
 
-
+        \Log::alert('ChangeStatusData', $request->all());
         $this->validate($request, [
             'student_id' => 'required|integer',
             'station_id' => 'required|integer',

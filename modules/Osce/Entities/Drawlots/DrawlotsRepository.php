@@ -258,7 +258,7 @@ class DrawlotsRepository extends AbstractDrawlots
     {
         try {
             //获取队列id
-            $queue = $this->station->getDrawlots($examId, $stationId);
+            $queue = $this->studentObj->getDrawlots($examId, $stationId);
 
             //通过队列里的学生id，返回值
             if (!is_null($queue)) {

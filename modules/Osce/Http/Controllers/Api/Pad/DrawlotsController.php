@@ -716,7 +716,7 @@ class DrawlotsController extends CommonController
             //获取对应的数据
             $data = $drawlotsRepository->getDrawlotsQueue($this->request->input('exam_id'),
                 $this->request->input('station_id'));
-
+            
             //返回数据
             return response()->json($this->success_data($data));
         } catch (\Exception $ex) {
