@@ -18,7 +18,6 @@ class Student implements StudentInterface
     public function getStudent($examScreeningId, $nfc)
     {
         try {
-            \Log::debug('nfc', [$nfc]);
             return ExamScreeningStudent::watch()
                 ->where('watch.status', 1)
                 ->where('watch.code', $nfc)
@@ -33,5 +32,25 @@ class Student implements StudentInterface
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    /**
+     * 获取当前考站已经抽签的考生队列
+     * @access public
+     * @param $examId
+     * @param $stationId
+     * @return mixed
+     * @version 3.6
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-14
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDrawlots($examId, $stationId)
+    {
+        return ExamQueue::whereExamId($examId)
+            ->whereStationId($stationId)
+            ->whereStatus(1)
+            ->orderBy('begin_dt', 'asc')
+            ->first();
     }
 }
