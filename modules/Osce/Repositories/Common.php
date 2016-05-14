@@ -467,7 +467,11 @@ class Common
      * @date   2016-03-22 11:00
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public static function handleTime($time){
+    public static function handleTime($time)
+    {
+//        date_default_timezone_set("UTC");
+//        $item->time = date('H:i:s',$item->time);
+//        date_default_timezone_set("PRC");
         $h = floor($time / 3600);
         $m = floor(($time%3600)/60);
         $s = $time % 60;
