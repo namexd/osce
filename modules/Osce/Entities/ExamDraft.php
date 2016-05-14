@@ -446,6 +446,35 @@ class ExamDraft extends CommonModel
          }
              
         return $roomId;
+    }
 
+    /**
+     * 获取考站组
+     * @param string $exam_id
+     * @return array
+     *
+     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @date   2016-04-14 21:12
+     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getExamStations($exam_id = '')
+    {
+        $stations = [];
+        //拿到考试下所有的考站
+        $stationIds = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id');
+        //根据考试ID筛选
+        if(!empty($exam_id)){
+            $stationIds = $stationIds->where('exam_draft_flow.exam_id', '=', $exam_id);
+        }
+        $stationIds = $stationIds->select('exam_draft.station_id')->groupBy('exam_draft.station_id')->get();
+
+        if(!$stationIds->isEmpty())
+        {
+            foreach($stationIds as $station){
+                $stations[] = $station->station;
+            }
+        }
+
+        return $stations;
     }
 }
