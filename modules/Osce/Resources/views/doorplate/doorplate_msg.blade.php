@@ -62,7 +62,7 @@
     .fl{float: left;margin-top: 150px;}
     .m5{margin-left: 15px;}
     .f_red{color: red;}
-    #bottom{position:absolute;bottom:10px;right: 30px}
+    #bottom{position:absolute;bottom:10px;right: 30px;height: 57px;width: 240px;}
      #background{
          position: absolute;
          bottom: 0;
