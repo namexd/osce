@@ -99,6 +99,7 @@
                 </div>
             </div>
             <br/>
+            @if(count($msg))
             <div class="pull-left">
                 共{{$msg->total()}}条
             </div>
@@ -109,6 +110,7 @@
                     </ul>
                 </nav>
             </div>
+            @endif
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}

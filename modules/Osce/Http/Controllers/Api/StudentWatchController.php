@@ -90,7 +90,7 @@ class StudentWatchController extends CommonController
             }
         }
         } catch (\Exception $ex) {
-            \Log::alert('刷新腕表调用腕表出错', [$studentId]);
+            \Log::alert('刷新腕表调用腕表出错', [$watchNfcCode]);
         }
 
 //

@@ -225,6 +225,7 @@ class ExamMonitorController  extends CommonController
      */
     public function getExamMonitorFinishList () {
         $data=$this->getExamMonitorListByStatus(4);
+
         if(count($data)){
             $list=$data->toArray();
         }else{
@@ -381,19 +382,23 @@ class ExamMonitorController  extends CommonController
                                ->paginate(config('osce.page_size',10));
                 break;
             case 4://已完成
-
-                $studentIds=ExamScreeningStudent::leftJoin('student', function($join){//弃考 已完成页面数据对象
-                    $join -> on('exam_screening_student.student_id', '=', 'student.id');
-                })->where('is_end','<>',1)->where('student.exam_id',$exam_id)->groupBy('student_id')->get()->pluck('student_id')->toArray();
-                if(count($studentIds)){//多阶段有未结束的学生
-                    return $builder->where('exam_screening_student.is_end', 1)
-                        ->whereNotIn('student_id',$studentIds)
-                        ->where('student.exam_id', $exam_id)->groupBy('student_id')
-                        ->paginate(config('osce.page_size',10));
-                }else {
-                    return $builder->where('exam_screening_student.is_end', 1)
-                        ->where('student.exam_id', $exam_id)->groupBy('student_id')
-                        ->paginate(config('osce.page_size',10));
+                $sce=ExamScreening::where('status',0)->where('exam_id',$exam_id)->first();//得到有没有在等后的场次
+                if(is_null($sce)) {//没有
+                    $studentIds = ExamScreening::leftJoin('exam_screening_student', function ($join) {//没完的成学生
+                        $join->on('exam_screening_student.exam_screening_id', '=', 'exam_screening.id');
+                    })->where('is_end', '<>', 1)->where('exam_screening.exam_id', $exam_id)->groupBy('exam_screening_student.student_id')->get()->pluck('student_id')->toArray();
+                    if (count($studentIds)) {//多阶段有未结束的学生
+                        return $builder->where('exam_screening_student.is_end', 1)
+                            ->whereNotIn('student_id', $studentIds)
+                            ->where('student.exam_id', $exam_id)->groupBy('student_id')
+                            ->paginate(config('osce.page_size', 10));
+                    } else {
+                        return $builder->where('exam_screening_student.is_end', 1)
+                            ->where('student.exam_id', $exam_id)->groupBy('student_id')
+                            ->paginate(config('osce.page_size', 10));
+                    }
+                }else{
+                    return [];
                 }
                 break;
             default:
