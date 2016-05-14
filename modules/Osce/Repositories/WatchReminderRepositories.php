@@ -895,6 +895,7 @@ class WatchReminderRepositories extends BaseRepository
         if (!is_null($roomId)) {
             $room = Room::find($roomId);//拿到考场实例
         }
+  
         \Log::debug('传送给腕表的数据', [$exam, $student, $room, $station]);
         $this->getStudentExamReminder($exam, $student, $room, $station );
 

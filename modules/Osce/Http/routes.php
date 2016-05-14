@@ -554,9 +554,10 @@ Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 		return '请传入参数id，id对应考试ID';
 	}
 
-	$Exam = new \Modules\Osce\Entities\Exam();
-
-	$result = $Exam->emptyData($exam_id);
+	$result = \Modules\Osce\Repositories\Common::emptyExamData($exam_id);
+//	$Exam = new \Modules\Osce\Entities\Exam();
+//
+//	$result = $Exam->emptyData($exam_id);
 	if($result === 11111){
 		return '成功-' . mt_rand(1000,9999);
 	}

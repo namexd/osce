@@ -712,8 +712,9 @@ class ApiController extends CommonController
      * @date 2016-04-06 15:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder, DrawlotsRepository $draw) {
-
+    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder, DrawlotsRepository $draw)
+    {
+        \Log::alert('老师准备传入所有的参数', $request->all());
         $this->validate($request, [
             'exam_id'           => 'required|integer',
             'station_id'        => 'required|integer',
@@ -727,9 +728,7 @@ class ApiController extends CommonController
         $examScreeningId = $request->input('exam_screening_id');
         $teacherId       = $request->input('teacher_id');
         $roomId          = $request->input('room_id');
-        
-        
-        \Log::alert('老师准备传入所有的参数',$request->all());
+
         // 查询当前老师对应考站准备完成信息
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
@@ -751,20 +750,20 @@ class ApiController extends CommonController
                 $this->success_data([], -4, '未查询到当前考试信息')
             );
         }
-
+        //获取考试模式（1、考场、2、考站）
         $examSequenceMode = $exam->sequence_mode;
-
         $examQenenModel = new ExamQueue();
         $watchLogModel = new WatchLog();
+
         if ($examSequenceMode == 1) {
             // 考场排 多个学生
             $studentIds = $examQenenModel->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreeningId)
                 ->where('room_id', '=', $roomId)
-                ->where('status', '<', 3) // 确保可以多次点击
+                ->where('status', '<', 3)           // 确保可以多次点击（0:绑定腕表,1:抽签,2:正在考试）
                 ->get()
-                ->pluck('student_id')
-                ->toArray();
+                ->pluck('student_id')->toArray();   // 获取学生ID数组
+
             \Log::alert('老师准备时拿到的学生信息',[$studentIds]);
             if (empty($studentIds)) {
                 return response()->json(
@@ -773,15 +772,13 @@ class ApiController extends CommonController
             }
 
             $watches = $watchLogModel->leftJoin('watch', function($join){
-                $join->on('watch_log.watch_id', '=', 'watch.id');
-            })->whereIn('watch_log.student_id', $studentIds)
-                ->where('watch.status', '=', 1)
-                ->get();
-
-
+                    $join->on('watch_log.watch_id', '=', 'watch.id');
+                })
+                ->whereIn('watch_log.student_id', $studentIds)
+                ->where('watch.status', '=', 1)->get();
 
             $watchNfcCodes = [];
-            if (!empty($watches)) {
+            if (!$watches->isEmpty()) {
                 foreach ($watches as $item) {
                     $watchNfcCodes[] = $item['code'];
                 }
@@ -792,15 +789,14 @@ class ApiController extends CommonController
                     $this->success_data([], -3, '未查到相应腕表信息')
                 );
             }
-            
 
-
-        } else {
+        } else
+        {
             // 考站排 一个学生
             $examQenens = $examQenenModel->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreeningId)
                 ->where('station_id', '=', $stationId)
-                ->where('status', '<', 3) // 确保可以多次点击
+                ->where('status', '<', 3)       // 确保可以多次点击
                 ->orderBy('begin_dt', 'asc')
                 ->first();
 

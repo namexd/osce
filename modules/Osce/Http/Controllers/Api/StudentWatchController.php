@@ -44,7 +44,7 @@ class StudentWatchController extends CommonController
      * @date
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getStudentExamReminder(Request $request, $stationId = null, $examscreeningId = [])
+    public function getStudentExamReminder(Request $request, $stationId = null)
     {
         $this->validate($request, [
             'nfc_code' => 'required|string'
@@ -54,9 +54,16 @@ class StudentWatchController extends CommonController
         //根据腕表nfc_code找到腕表
         $watch = Watch::where('code', '=', $watchNfcCode)->first();
         $redis = Redis::connection('message');
+        //拿到考试实例
+        $exam = Exam::doingExam();
+        //拿到场次id
+        $ExamScreeningModel =  new ExamScreening();
+        $examscreeningId = $ExamScreeningModel->getScreenID($exam);
+
         //  根据腕表id找到对应的考试场次和学生
         $watchStudent = ExamScreeningStudent::where('watch_id', '=', $watch->id)
             ->where('is_end', 0)
+            ->where('exam_screening_id','=',$examscreeningId)
             ->orderBy('signin_dt', 'desc')
             ->first();
 

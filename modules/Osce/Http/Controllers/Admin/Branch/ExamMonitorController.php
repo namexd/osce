@@ -337,14 +337,14 @@ class ExamMonitorController  extends CommonController
                 break;
             case 2://替考
 
-                $list=$builder->where('exam_screening_student.status',2)
+                $list=$builder->where('exam_screening_student.description',3)
                     ->where('student.exam_id',$exam_id)->groupBy('student_id')
                     ->paginate(config('osce.page_size'));
                 if(empty($list->toArray()['data'])){return [];}
                 $list=$list->toArray()['data'];
                 foreach($list as $key=>$v) { //替考学生
                     //查询标记替考的考站
-                    $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('exam_id',$exam_id)->where('exam_screening_id',$ExamScreening->id)->where('type',1)->get()->toArray();//上报停考信息
+                    $replaceList=ExamMonitor::where('student_id',$v['student_id'])->where('exam_id',$exam_id)->where('exam_screening_id',$ExamScreening->id)->where('description',3)->get()->toArray();//上报停考信息
                     $station_name = '';//单个学生对于的考站名称
                     if(!empty($replaceList)){
                         foreach($replaceList as $val){
@@ -364,7 +364,7 @@ class ExamMonitorController  extends CommonController
                 return $list;
                 break;
             case 3://弃考
-                return $builder->where('exam_screening_student.status',1)
+                return $builder->where('exam_screening_student.description',1)
                                ->where('student.exam_id',$exam_id)->groupBy('student_id')
                                ->paginate(config('osce.page_size'));
                 break;
