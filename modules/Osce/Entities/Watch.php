@@ -228,7 +228,7 @@ class Watch extends CommonModel implements MachineInterface
     {
         //获取考试场次ID TODO: Zhoufuxiang 216-05-13
         $ExamScreening = new ExamScreening();
-        $exam_screening_id = Common::getScreeningId($examId);
+        $exam_screening_id = Common::getExamScreening($examId)->id;
 
         //考试状态 考试中（1），等待中（0），已结束（2）
         if($type === 0){
@@ -311,14 +311,22 @@ class Watch extends CommonModel implements MachineInterface
 
     //查询某个腕表的考试状态
     public function getWatchExamStatus($ncfCode,$examId){
-        $builder = $this->where('watch.code','=',$ncfCode)->where('exam_queue.exam_id','=',$examId)->where('exam_screening_student.is_end','=',0)->leftjoin('watch_log',function($watchLog){
+        /*$builder = $this->where('watch.code','=',$ncfCode)->where('exam_queue.exam_id','=',$examId)->where('exam_screening_student.is_end','=',0)->leftjoin('watch_log',function($watchLog){
             $watchLog->on('watch_log.watch_id','=','watch.id');
         })->leftjoin('exam_queue',function($examQueue){
             $examQueue->on('exam_queue.student_id','=','watch_log.student_id');
         })->rightjoin('exam_screening_student',function($join){
             $join->on('exam_screening_student.student_id','=','watch_log.student_id');
-        })->select('exam_queue.status')->first();
-
+        })->select('exam_queue.status')->first();*/
+        $screen=new ExamScreening();
+        $screenId=$screen->getScreenID($examId);
+        $builder= $this->leftJoin('exam_screening_student','exam_screening_student.watch_id','=','watch.id')
+             ->leftJoin('exam_queue','exam_queue.student_id','=','exam_screening_student.student_id')
+             ->where('watch.code','=',$ncfCode)
+             ->where('exam_queue.exam_id','=',$examId)
+             ->where('exam_queue.exam_screening_id',$screenId)
+             ->where('exam_screening_student.exam_screening_id',$screenId)->select(['exam_queue.status'])
+             ->get()->pluck('status')->toArray();
         return $builder;
     }
 }

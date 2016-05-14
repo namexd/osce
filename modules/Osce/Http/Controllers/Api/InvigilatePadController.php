@@ -55,14 +55,24 @@ class InvigilatePadController extends CommonController
 
 //    测试
 // url    /osce/api/invigilatepad/test-index
-    public function getTestIndex()
+    public function getTestIndex(Request $request)
     {
+        $exam_id = $request->get('id');
 
-        $studentId =132;
-        $stationId =25;
-        $roomId = 6;
-        $watch = new WatchReminderRepositories();
-        $watch ->getWatchPublish($studentId,$stationId,$roomId);
+        $ExamModel = new Exam();
+        $result = $ExamModel->emptyData($exam_id);
+        if($result === 11111){
+            return '成功-' . mt_rand(1000,9999);
+        }else{
+
+        return '失败-' . mt_rand(1000,9999).', 错误信息: '.$result;
+    }
+//        $examId =19;
+//        $studentId =438;
+//        $stationId ='';
+//        $roomId = '';
+//        $watch = new WatchReminderRepositories();
+//        $watch ->getWatchPublish($examId,$studentId,$stationId,$roomId);
 
     }
 
@@ -1173,13 +1183,22 @@ class InvigilatePadController extends CommonController
             $watchData = $watchModel->getWatchExamStatus($ncfCode,$examing->id);
 
             if(count($watchData) > 0){
-                if($watchData->status < 2){
+
+                if(in_array(2,$watchData)){
+                    $status = 1;
+                }elseif(count(array_intersect([0,1],$watchData))>0){
+                    $status = 0;
+                }else{
+                    $status = 2;
+                }
+
+                /*if($watchData->status < 2){
                     $status = 0;
                 }elseif($watchData->status == 2){
                     $status = 1;
                 }else{
                     $status = 2;
-                }
+                }*/
                 return response()->json(
                     $this->success_data($status,200,'success')
                 );

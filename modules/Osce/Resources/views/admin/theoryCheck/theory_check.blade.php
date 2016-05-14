@@ -17,7 +17,7 @@
 
         .colockbox{width:250px;height:30px;overflow: hidden; color:#000;}
         .colockbox span{
-            float:left;display:block;
+            float:left;display:inline-block;
             width:30px;height:29px;
             line-height:29px;font-size:20px;
             font-weight:bold;text-align:center;
@@ -57,7 +57,7 @@
             $(".actions").prepend($('.btnBox'));
             $(".check_label").change(function(){
                 var examCategoryFormalId= $(this).parent().attr("examCategoryFormalId");//判断题型
-                var exam_question_id= $(this).parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
+                var exam_question_id= $(this).parent().parent().parent().find(".subjectBox").attr("exam_question_id");//获取题号ID
                 var answer="";//答案
                 if($(this).children(".check_icon").hasClass("check")){
                     $(this).children(".check_icon").removeClass("check");
@@ -203,29 +203,28 @@
                     $("#minute").text(minute<10?"0"+minute:minute);//计算分钟
                     $("#second").text(second<10?"0"+second:second);//计算秒杀
                 } else {
+                    clearInterval(timer);
                     var examPaperFormalId=$('#examPaperFormalId').val();
                     var examQuestionFormalInfo=JSON.parse(localStorage.getItem("Storage_answer"));
                     var stationId = $(".allData").attr("stationId");
                     var userId = $(".allData").attr("userId");
                     var studentId = $(".allData").attr("studentId");
                     var examId = $(".allData").attr("examId");
+                    console.log(examQuestionFormalInfo);
                     $.post("{{route('osce.admin.AnswerController.postSaveAnswer')}}",
                             {examQuestionFormalInfo:examQuestionFormalInfo,examPaperFormalId:examPaperFormalId,studentId:studentId,stationId:stationId,teacherId:userId,examId:examId},function(obj){
                                 if(obj.code==1){
                                     $.post("{{route('osce.admin.AnswerController.postSaveStatus')}}",{examId:examId,studentId:studentId,stationId:stationId},function(res){
                                         if(res.code==1){
-
                                             location.href="{{route("osce.admin.AnswerController.selectGrade")}}?examPaperFormalId="+examPaperFormalId;
                                         }else{
                                             layer.confirm(res.message);
                                         }
                                     })
-
                                 }else{
                                     layer.confirm(obj.message);
                                 }
-
-                    })
+                            });
                 }
             }, 1000);
         }
@@ -344,8 +343,8 @@
                             </div>
                         </div>
 
-                        <div class="btnBox left" style="margin:0 auto; text-align: center; width: 400px;padding-left:400px;">
-                            <span class="marl_10 left" style="height: 29px; line-height: 29px;">剩余时间：</span>
+                        <div class="btnBox left" style="margin:0 auto; text-align: center; width: 800px;padding-left:400px;">
+                            <span class="marl_10 left" style="display:inline-block; height: 29px; width:100px; line-height: 29px;">剩余时间：</span>
                             <div class="colockbox" id="colockbox1">
                                 <span class="hour" id="hour">00</span><span class="left">:</span>
                                 <span class="minute" id="minute">00</span><span class="left">:</span>

@@ -383,11 +383,15 @@ class TestResult extends CommonModel
                         ->first();
             if($examResult)
             {
-                //拿到考试结果id去exam_score中删除数据
-                if(!$examResult->examScore()->delete())
+                if(count($examResult->examScore))
                 {
-                    throw new \Exception('舍弃考试评分详情失败',-1100);
+                    //拿到考试结果id去exam_score中删除数据
+                    if(!$examResult->examScore()->delete())
+                    {
+                        throw new \Exception('舍弃考试评分详情失败',-1100);
+                    }
                 }
+
                 if(!$examResult->delete())
                 {
                     throw new \Exception('舍弃考试成绩失败',-1200);

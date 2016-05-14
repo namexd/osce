@@ -92,6 +92,17 @@
                     </table>
                 </div>
             </div>
+            <br/>
+            <div class="pull-left">
+                共{{$msg->total()}}条
+            </div>
+            <div class="pull-right">
+                <nav>
+                    <ul class="pagination">
+                        {!! $msg->appends($_GET)->render() !!}
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 @stop{{-- 内容主体区域 --}}

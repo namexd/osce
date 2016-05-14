@@ -35,6 +35,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabelType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionType;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel;
+use Modules\Osce\Repositories\Common;
 use Modules\Osce\Repositories\QuestionBankRepositories;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaperFormal;
 use Modules\Osce\Entities\QuestionBankEntities\ExamQuestion;
@@ -479,8 +480,6 @@ class ApiController extends CommonController
                 throw new \Exception('您还没有登录，请先登录', 1000);
             }
             //检验登录的老师是否是监考老师
-
-
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('您不是监考老师', 1001);
             }
@@ -506,15 +505,9 @@ class ApiController extends CommonController
         }
         catch(\Exception $ex)
         {
-           /* if ($ex->getCode() === 1000) {
+            if ($ex->getCode() === 1000) {
                 return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }
-            if($ex->getCode() === 1001 || $ex->getCode() === 1002)
-            {
-                Auth::logout();
-                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }
-            if($ex->getCode() === -100 || $ex->getCode() === -101){
+            }else{
                 $data = array(
                     'status'=>0,
                     'info'=>$ex->getMessage()
@@ -522,14 +515,7 @@ class ApiController extends CommonController
                 return view('osce::admin.theoryCheck.theory_check_volidate', [
                     'data' => $data,
                 ]);
-            }*/
-            $data = array(
-                'status'=>0,
-                'info'=>$ex->getMessage()
-            );
-            return view('osce::admin.theoryCheck.theory_check_volidate', [
-                'data' => $data,
-            ]);
+            }
         }
     }
 
@@ -727,8 +713,9 @@ class ApiController extends CommonController
      * @date 2016-04-06 15:43
      * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
-    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder, DrawlotsRepository $draw) {
-
+    public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder, DrawlotsRepository $draw)
+    {
+        \Log::alert('老师准备传入所有的参数', $request->all());
         $this->validate($request, [
             'exam_id'           => 'required|integer',
             'station_id'        => 'required|integer',
@@ -764,37 +751,39 @@ class ApiController extends CommonController
                 $this->success_data([], -4, '未查询到当前考试信息')
             );
         }
-
+        //获取考试模式（1、考场、2、考站）
         $examSequenceMode = $exam->sequence_mode;
-
         $examQenenModel = new ExamQueue();
         $watchLogModel = new WatchLog();
+
+
         if ($examSequenceMode == 1) {
             // 考场排 多个学生
             $studentIds = $examQenenModel->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreeningId)
                 ->where('room_id', '=', $roomId)
-                ->where('status', '<', 3) // 确保可以多次点击
+                ->where('status', '<', 3)           // 确保可以多次点击（0:绑定腕表,1:抽签,2:正在考试）
                 ->get()
-                ->pluck('student_id')
-                ->toArray();
+                ->pluck('student_id')->toArray();   // 获取学生ID数组
 
-            if (empty($studentIds)) {
+            \Log::alert('老师准备时拿到的学生信息',[$studentIds]);
+            if (empty($studentIds))
+            {
+                \Log::alert('未查到相应考试队列信息',[$studentIds, $request->all(),'screeningId' => Common::getExamScreening($examId)->id]);
+
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')
                 );
             }
 
             $watches = $watchLogModel->leftJoin('watch', function($join){
-                $join->on('watch_log.watch_id', '=', 'watch.id');
-            })->whereIn('watch_log.student_id', $studentIds)
-                ->where('watch.status', '=', 1)
-                ->get();
-
-          //  dd($watches);
+                    $join->on('watch_log.watch_id', '=', 'watch.id');
+                })
+                ->whereIn('watch_log.student_id', $studentIds)
+                ->where('watch.status', '=', 1)->get();
 
             $watchNfcCodes = [];
-            if (!empty($watches)) {
+            if (!$watches->isEmpty()) {
                 foreach ($watches as $item) {
                     $watchNfcCodes[] = $item['code'];
                 }
@@ -805,19 +794,21 @@ class ApiController extends CommonController
                     $this->success_data([], -3, '未查到相应腕表信息')
                 );
             }
-            
 
-
-        } else {
+        } else
+        {
             // 考站排 一个学生
             $examQenens = $examQenenModel->where('exam_id', '=', $examId)
                 ->where('exam_screening_id', '=', $examScreeningId)
                 ->where('station_id', '=', $stationId)
-                ->where('status', '<', 3) // 确保可以多次点击
+                ->where('status', '<', 3)       // 确保可以多次点击
                 ->orderBy('begin_dt', 'asc')
                 ->first();
 
-            if (is_null($examQenens)) {
+            if (is_null($examQenens))
+            {
+                \Log::alert('未查到相应考试队列信息',[$examQenens, $request->all()]);
+
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')
                 );
@@ -857,7 +848,17 @@ class ApiController extends CommonController
         $stationArr = $draw->getStationNum($examId, $roomId, $examScreeningId);
         if(!$stationArr->isEmpty()){
             //查询exam_station_status表（考试-场次-考站状态表）中该考试该考场下status是否全为1，如果是，修改其状态值为2
-            $examStationStatus->status = 1;
+
+            //如果已经有状态为2了，那么就让他为2
+            if ($examStationStatusModel->where('exam_id', $examId)
+            ->where('status', 2)
+            ->whereIn('station_id', $stationArr)
+            ->first()) {
+                $examStationStatus->status = 2;
+            } else {
+                $examStationStatus->status = 1;
+            }
+
             if($examStationStatus->save()){
                 // todo  准备好后调用腕表接口
 
@@ -869,8 +870,12 @@ class ApiController extends CommonController
                         $watchReminder->getWatchPublish($examId,$studentId, $stationId);
                     }
                 } catch (\Exception $ex) {
+
                     \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
                 }
+            } else {
+                //TODO 与安卓商量如果报错，就不刷新页面
+                throw new \Exception('网络故障', -112);
             }
             $examStationStatusData = $examStationStatusModel
                 ->where('exam_id',$examId)
@@ -885,7 +890,6 @@ class ApiController extends CommonController
         $request['teacher_id']=$teacherId;
         $request['exam_id']=$examId;
         $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
-//        $draw = new DrawlotsController($request, \Re);
         $request['id']=$teacherId;
         $draw->getExaminee_arr($request);//当前组推送(可以获得)
         $draw->getNextExaminee_arr($request);
