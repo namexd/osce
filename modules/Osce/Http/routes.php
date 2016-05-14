@@ -571,6 +571,13 @@ Route::post('test/test',function(\Illuminate\Http\Request $request) {
 	$smartArrangeRepository->plan($exam);
 	return view('osce::admin.login');
 });
+
+Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
+	Route::group(['prefix' => 'over-exam', 'namespace' => 'Admin'], function () {
+		Route::get('index', ['uses' => 'OverExamController@index', 'as' => 'osce.over-exam.index']);
+		Route::post('destroy', ['uses' => 'OverExamController@destroy', 'as' => 'osce.over-exam.destroy']);
+	});
+});
 /*
  * 电子门牌
  * */
