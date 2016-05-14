@@ -399,7 +399,7 @@ class TestResult extends CommonModel
                 if(!$examResult->examSpecialScore->isEmpty()){
                     if(!$examResult->examSpecialScore->delete())
                     {
-                        throw new \Exception('舍弃考试评分详情失败',-1100);
+                        throw new \Exception('舍弃考试特殊评分项成绩失败',-11010);
                     }
                 }
 
