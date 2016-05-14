@@ -479,8 +479,6 @@ class ApiController extends CommonController
                 throw new \Exception('您还没有登录，请先登录', 1000);
             }
             //检验登录的老师是否是监考老师
-
-
             if (!$questionBankRepositories->LoginAuth()) {
                 throw new \Exception('您不是监考老师', 1001);
             }
@@ -517,21 +515,6 @@ class ApiController extends CommonController
                     'data' => $data,
                 ]);
             }
-            /*if($ex->getCode() === 1001 || $ex->getCode() === 1002)
-            {
-                Auth::logout();
-                return redirect()->route('osce.admin.ApiController.LoginAuthView')->withErrors($ex->getMessage());
-            }
-            if($ex->getCode() === -100 || $ex->getCode() === -101){
-                $data = array(
-                    'status'=>0,
-                    'info'=>$ex->getMessage()
-                );
-                return view('osce::admin.theoryCheck.theory_check_volidate', [
-                    'data' => $data,
-                ]);
-            }*/
-
         }
     }
 
@@ -744,7 +727,9 @@ class ApiController extends CommonController
         $examScreeningId = $request->input('exam_screening_id');
         $teacherId       = $request->input('teacher_id');
         $roomId          = $request->input('room_id');
-
+        
+        
+        \Log::alert('老师准备传入所有的参数',$request->all());
         // 查询当前老师对应考站准备完成信息
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
@@ -780,7 +765,7 @@ class ApiController extends CommonController
                 ->get()
                 ->pluck('student_id')
                 ->toArray();
-
+            \Log::alert('老师准备时拿到的学生信息',[$studentIds]);
             if (empty($studentIds)) {
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')
@@ -793,7 +778,7 @@ class ApiController extends CommonController
                 ->where('watch.status', '=', 1)
                 ->get();
 
-          //  dd($watches);
+
 
             $watchNfcCodes = [];
             if (!empty($watches)) {
@@ -887,7 +872,6 @@ class ApiController extends CommonController
         $request['teacher_id']=$teacherId;
         $request['exam_id']=$examId;
         $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
-//        $draw = new DrawlotsController($request, \Re);
         $request['id']=$teacherId;
         $draw->getExaminee_arr($request);//当前组推送(可以获得)
         $draw->getNextExaminee_arr($request);
