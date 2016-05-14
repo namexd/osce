@@ -582,32 +582,24 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 /*
  * 电子门牌
  * */
-Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers','middleware' => [],], function()
-{
-	Route::group(['prefix'=>'doorplate','namespace'=>'Doorplate'],function(){
 
-		Route::get('doorplate-start',	['uses'=>'IndexController@doorStart','as'=>'osce.doorplate.doorplatestart']); //启动入口
-		Route::get('today-exam',	['uses'=>'IndexController@getExamMsg','as'=>'osce.doorplate.getdoorplatemsg']);   //信息展示
-		Route::get('current-set',	['uses'=>'IndexController@getExaminee','as'=>'osce.doorplate.getexaminee']);   //当前组
-		Route::get('next-set',	['uses'=>'IndexController@getNextExaminee','as'=>'osce.doorplate.getnextexaminee']);   //下一组
-		Route::get('door-status',	['uses'=>'IndexController@getStatusStatus','as'=>'osce.doorplate.getstatusstatus']);   //状态
-	});
-
+Route::group(['prefix'=>'d','namespace'=>'Modules\Osce\Http\Controllers\Doorplate'],function(){
+	Route::get('doorplate-start',	['uses'=>'IndexController@doorStart','as'=>'osce.doorplate.doorplatestart']); //启动入口
+	Route::get('today-exam',	['uses'=>'IndexController@getExamMsg','as'=>'osce.doorplate.getdoorplatemsg']);   //信息展示
+	Route::get('current-set',	['uses'=>'IndexController@getExaminee','as'=>'osce.doorplate.getexaminee']);   //当前组
+	Route::get('next-set',	['uses'=>'IndexController@getNextExaminee','as'=>'osce.doorplate.getnextexaminee']);   //下一组
+	Route::get('door-status',	['uses'=>'IndexController@getStatusStatus','as'=>'osce.doorplate.getstatusstatus']);   //状态
 });
 
-Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
-		//告示牌登陆
-	Route::group(['prefix' => 'billboard-login', 'namespace' => 'Billboard'], function () {
-		Route::get('index', ['uses' => 'BillboardLoginController@getIndex', 'as' => 'osce.billboard.login.getIndex']);
-		Route::post('index', ['uses' => 'BillboardLoginController@postIndex', 'as' => 'osce.billboard.login.postIndex']);
-	});
-	Route::group(['prefix' => 'billboard', 'namespace' => 'Billboard', 'middleware' => 'billboard'], function () {
-		//告示牌主页
-		Route::get('index', ['uses' => 'BillboardController@getIndex', 'as' => 'osce.billboard.getIndex']);
-		//学生接口
-		Route::get('student', ['uses' => 'BillboardController@getStudent', 'as' => 'osce.billboard.getStudent']);
-	});
-//	Route::group(['prefix' => 'billboard', 'namespace' => 'Billboard'], function () {
-//
-//	});
+//告示牌登陆
+Route::group(['prefix' => 'billboard-login', 'namespace' => 'Modules\Osce\Http\Controllers\Billboard'], function () {
+	Route::get('index', ['uses' => 'BillboardLoginController@getIndex', 'as' => 'osce.billboard.login.getIndex']);
+	Route::post('index', ['uses' => 'BillboardLoginController@postIndex', 'as' => 'osce.billboard.login.postIndex']);
 });
+Route::group(['prefix' => 's', 'namespace' => 'Modules\Osce\Http\Controllers\Billboard', 'middleware' => 'billboard'], function () {
+	//告示牌主页
+	Route::get('index', ['uses' => 'BillboardController@getIndex', 'as' => 'osce.billboard.getIndex']);
+	//学生接口
+	Route::get('student', ['uses' => 'BillboardController@getStudent', 'as' => 'osce.billboard.getStudent']);
+});
+
