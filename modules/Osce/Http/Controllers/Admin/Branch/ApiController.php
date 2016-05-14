@@ -727,7 +727,9 @@ class ApiController extends CommonController
         $examScreeningId = $request->input('exam_screening_id');
         $teacherId       = $request->input('teacher_id');
         $roomId          = $request->input('room_id');
-
+        
+        
+        \Log::alert('老师准备传入所有的参数',$request->all());
         // 查询当前老师对应考站准备完成信息
         $examStationStatusModel = new ExamStationStatus();
         $examStationStatus = $examStationStatusModel->where('exam_id', '=', $examId)
@@ -763,7 +765,7 @@ class ApiController extends CommonController
                 ->get()
                 ->pluck('student_id')
                 ->toArray();
-
+            \Log::alert('老师准备时拿到的学生信息',[$studentIds]);
             if (empty($studentIds)) {
                 return response()->json(
                     $this->success_data([], -2, '未查到相应考试队列信息')
@@ -776,7 +778,7 @@ class ApiController extends CommonController
                 ->where('watch.status', '=', 1)
                 ->get();
 
-          //  dd($watches);
+
 
             $watchNfcCodes = [];
             if (!empty($watches)) {
@@ -842,7 +844,17 @@ class ApiController extends CommonController
         $stationArr = $draw->getStationNum($examId, $roomId, $examScreeningId);
         if(!$stationArr->isEmpty()){
             //查询exam_station_status表（考试-场次-考站状态表）中该考试该考场下status是否全为1，如果是，修改其状态值为2
-            $examStationStatus->status = 1;
+
+            //如果已经有状态为2了，那么就让他为2
+            if ($examStationStatusModel->where('exam_id', $examId)
+            ->where('status', 2)
+            ->whereIn('station_id', $stationArr)
+            ->first()) {
+                $examStationStatus->status = 2;
+            } else {
+                $examStationStatus->status = 1;
+            }
+
             if($examStationStatus->save()){
                 // todo  准备好后调用腕表接口
 
@@ -854,8 +866,12 @@ class ApiController extends CommonController
                         $watchReminder->getWatchPublish($examId,$studentId, $stationId);
                     }
                 } catch (\Exception $ex) {
+
                     \Log::debug('准备考试按钮', [$stationId, $roomId, $ex]);
                 }
+            } else {
+                //TODO 与安卓商量如果报错，就不刷新页面
+                throw new \Exception('网络故障', -112);
             }
             $examStationStatusData = $examStationStatusModel
                 ->where('exam_id',$examId)
@@ -870,7 +886,6 @@ class ApiController extends CommonController
         $request['teacher_id']=$teacherId;
         $request['exam_id']=$examId;
         $draw = \App::make('Modules\Osce\Http\Controllers\Api\Pad\DrawlotsController');
-//        $draw = new DrawlotsController($request, \Re);
         $request['id']=$teacherId;
         $draw->getExaminee_arr($request);//当前组推送(可以获得)
         $draw->getNextExaminee_arr($request);

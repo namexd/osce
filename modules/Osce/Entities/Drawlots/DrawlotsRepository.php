@@ -241,4 +241,37 @@ class DrawlotsRepository extends AbstractDrawlots
             'room_id' => $this->params['room_id']
         ];
     }
+
+    /**
+     * 获取已经抽签的考生
+     * @access public
+     * @param $examId
+     * @param $stationId
+     * @return mixed
+     * @throws \Exception
+     * @version 3.6
+     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @time 2016-05-14
+     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     */
+    public function getDrawlotsQueue($examId, $stationId)
+    {
+        try {
+            //获取队列id
+            $queue = $this->station->getDrawlots($examId, $stationId);
+
+            //通过队列里的学生id，返回值
+            if (!is_null($queue)) {
+                //拼凑参数
+                $params['exam_id'] = $examId;
+                $params['station_id'] = $stationId;
+                $params['student_id'] = $queue->student_id;
+                return $this->draw->pushStudent(new Student(), $params);
+            } else {
+                throw new \Exception('当前考站没有人抽签', -555);
+            }
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
 }
