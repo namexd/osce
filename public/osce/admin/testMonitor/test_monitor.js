@@ -113,6 +113,8 @@ function monitor_test(){
         var $stationId = $(this).parent().attr("stationId");
         var $userId = $(this).parent().attr("userId");
         var $examScreeningStudentId = $(this).parent().attr("examScreeningStudentId");
+
+        console.log($userId);
         layer.confirm("确认当前考生"+$student+"（"+$idCard+"）替考？",function(){
             $.ajax({
                 url:stopUrl,
