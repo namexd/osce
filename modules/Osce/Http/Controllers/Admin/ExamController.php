@@ -195,7 +195,7 @@ class ExamController extends CommonController
             $timeData = $model->handleScreeningTime($examScreeningData, $user);
             $order = $request->input('order', null);
             if (1 == $order) {
-                $sequenceCate = $request->input('sequence_cate', null);
+                $sequenceCate = $request->input('sequence_cate', 3);
             } else {
                 $sequenceCate = $request->input('sequence_cate_1', null);
             }
@@ -209,7 +209,7 @@ class ExamController extends CommonController
                 'status'         => 0,
                 'total'          => 0,
                 'create_user_id' => $user -> id,
-                'sequence_cate'  => is_array($sequenceCate) ? null : $sequenceCate,
+                'sequence_cate'  => is_array($sequenceCate) ? null : (empty($sequenceCate)?3:$sequenceCate),
                 'sequence_mode'  => e($request  ->  get('sequence_mode')),
                 'address'        => e($request  ->  get('address')),
                 'same_time'      => intval($request  ->  get('same_time')),
@@ -322,7 +322,7 @@ class ExamController extends CommonController
         try{
             //处理考试场次时间
             $timeData = $examModel->handleScreeningTime($examScreeningData, $user);
-            $sequenceCate = $request->input('sequence_cate', null);
+            $sequenceCate = $request->input('sequence_cate', 3);
             $gradationOrder = $request->input('gradation_order', null);
             $sc = $request->input('sc', null);
 
@@ -339,7 +339,7 @@ class ExamController extends CommonController
                 'begin_dt'      => $timeData['begin_dt'],
                 'end_dt'        => $timeData['end_dt'],
                 'total'         => count(Student::where('exam_id', $exam_id)->get()),
-                'sequence_cate' => is_array($sequenceCate) ? null : $sequenceCate,
+                'sequence_cate' => is_array($sequenceCate) ? null : (empty($sequenceCate)?3:$sequenceCate),
                 'sequence_mode' => $request  ->  get('sequence_mode'),
                 'address'       => e($request  ->  get('address')),
                 'same_time'     => intval($request  ->  get('same_time')),
