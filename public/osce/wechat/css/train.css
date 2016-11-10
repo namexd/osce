@@ -1,0 +1,24 @@
+.header_a:focus,.header_a:active{color:#fff;}
+#discussion_ul{overflow: hidden;}
+#discussion_ul li{width:100%;margin-bottom:10px;background:#fff;padding:0 15px 0;font-family:"microsoft yahei";}
+#discussion_ul .p_title{padding:10px 0;font-family: "microsoft yahei";overflow:hidden;text-overflow: ellipsis;white-space: nowrap;}
+#discussion_ul li .main_txt{line-height:1.5em;}
+.p_bottom{border-top:1px solid #ccc;line-height:2.5em;margin-top:10px;}
+.student_name{color:#16BEB0;}
+.comment{display:inline-block;color:#999;}
+
+/*列表样式2列表样式1*/
+.add_main .form-group{border-bottom:1px solid #DCE0E4;padding: 5px 0; margin-bottom: 0;}
+.add_main .form-group  label{position:absolute;z-index:10; left:3%;font-size:14px;margin-top:6px;width:82px;
+    padding-left:10px;font-family:"Microsoft YaHei";line-height:24px;font-weight:100;border-right:1px solid #dce0e4;}
+.add_main .form-group input{border:none;border-radius:0;border-width:0 0 1px 0;font-size:14px;padding-left:95px}
+.add_main .form-group .txt{width:100%;min-height:36px;line-height:24px;padding:6px 20px 6px  90px;
+    font-size:14px;word-wrap: break-word;}
+    
+    
+.form-group .txt a{display: inline-block;line-height:1.3em;}
+.more_txt{position:absolute;right:5px; top: 8px;width:18px;height:18px;line-height:18px;text-align: center}
+.add_main{width:100%;background:#fff;padding:0px 3% 0;position:relative;margin-bottom: 10px;border-bottom:1px solid #DCE0E4;}
+.add_main .form-group:last-child{ border-bottom: none;}
+.pull-left,.pull-right{padding:10px;}
+.pagination{margin:0;}

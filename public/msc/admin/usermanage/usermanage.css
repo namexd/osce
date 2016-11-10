@@ -1,0 +1,13 @@
+.nav-tabs a{height:40px;font-size:16px;}
+.user_btn input{margin-left:10px;padding:4px 15px;}
+.user_btn .btn-default{color:#666;}
+.btn-ccc{background: #eee;color: #aaa;font-size:14px;border-radius: 4px;}
+.btn-blue{background: #408AFF;color: #fff;font-size:14px;border-radius: 4px;}
+
+.btn-white,.btn-white:hover,.btn-white:focus{border:none;}
+.open .dropdown-toggle.btn-white {border:none;}
+.btn-white{font-weight:bold;}
+.status1,.status1:hover,.status1:focus{color:#408aff;margin-right:10px;}
+.status2,.status2:hover,.status2:focus{color:#f8ac59;margin-right:10px;}
+.status3,.status3:hover,.status3:focus{color:#ed5565;margin-right:10px;}
+.status4,.status4:hover,.status4:focus{color:#26B79A;margin-right:10px;}

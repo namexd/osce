@@ -1,0 +1,89 @@
+@charset "utf-8";
+/* CSS Document */
+.user_header{width:100%;height:45px;line-height:45px;text-align: center;background:#6595E1;color:#fff; font-size: 16px;}
+.user_header .header_btn{display:inline-block;width:45px;height:45px;text-align: center}
+
+
+/**/
+.container{  width:90%; margin:0 auto;margin-top:5px; margin-bottom: 20px;}
+.form-group{color:#333;overflow:hidden; margin-bottom:10px;
+    position:relative;
+   border-bottom: none;
+    height: inherit;
+    line-height: inherit;
+}
+
+.form-group  label{ position:absolute; z-index:10; left:5px;top:0px;font-family:"微软雅黑";
+    color:#333;line-height: 36px;font-weight: 100;font-size:14px; margin-top: 0;}
+.form-group  label span{ color:#f94040 !important;}
+.btn{background-color:#6595e1; font-size:18px;  width:100%; height:36px;  color:#fff; text-align:center;  border:none;border-radius:3px;  margin-top:15px;opacity:1}
+
+/*input*/
+.s2id_project{box-shadow:none!important;-webkit-box-shadow:none!important;-webkit-appearance: none;}
+.normal_select{width:100%; border:1px solid #ccc; border-radius:4px;text-indent: 80px;}
+.form-control.select2-container{ width:100%;line-height:36px; height:36px;border:1px solid #ccc; }
+.form-group  input{border:1px solid #ccc; border-radius:4px; padding-left:80px; }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+input[type="number"]{-moz-appearance:textfield;}
+/*input-end*/
+
+.select2-container .select2-choice{padding:0 0 0 24%; height:36px;line-height:36px;}
+.select2-container .select2-choice .select2-arrow b { background-position: 0 8px;}
+.form-select{ width:90%; margin:0 auto;  padding:10px 0; overflow:hidden;}
+.form-select div{ width:60px;color: #c9c9c9; padding-top:60px; text-align: center;}
+.form-select .teacher{ background:url(../images/teacher.png) -90px 0; background-repeat:no-repeat;float:left; margin-left:50px; background-size:150px;}
+.form-select .student{ background:url(../images/student.png) -90px 0;background-repeat:no-repeat;float:right;margin-right:50px; background-size: 150px;}
+.form-select .checked { background-position:0 0px; color: #6595e1;}
+
+.center{text-align: center}
+.form-group .ipt_code{float:left;width:100%;padding-left:3%;color : #333;}
+.form-group .ipt_huoqu{float:right;padding:0;text-align:center;width:100%;height:36px;line-height:36px;padding:0;background:#69CCBB;color:#fff; border: none;}
+.form-group .ipt_disabled{background:#C9C9C9;color:white;}
+.form-group .ipt_txt{padding-left:3%;width:100%;box-sizing: border-box}
+.form-group .ipt_zjh{padding-left:37%;width:100%;box-sizing: border-box;}
+.form-group #student_id{ padding-left:30%;width:100%;box-sizing: border-box;}
+
+
+.login_box{width:94%;margin:30px 3%;}
+.login_box .ipt{width:99%;padding-left:0;background:#fff url("../images/icon32.png") no-repeat;background-size:16px;text-indent:32px;}
+.login_box .ipt_id{background-position:8px 8px}
+.login_box .ipt_pwd{background-position:8px -21px}
+.login_box .ipt_phone{background-position:8px -47px}
+
+.login_box .btn{width:47%;height:36px;line-height:36px;padding:0; font-size: 16px;}
+.login_box .btn2{width:100%}
+.login_box .submit_btn{background:#6595E1;}
+.login_box .zhuce_btn{float:right; background:#69CCBB}
+
+.card-list select{ height:36px; border:1px solid #ccc;  line-height:36px; top:7px; padding-right:10px; border-radius: 4px; }
+.card-list  label { left:66px;top:2px}
+
+.select2-container .select2-selection--single{height:36px}
+.select2-container--default .select2-selection--single .select2-selection__rendered {line-height: 34px;padding-left:30%;}
+.select2-container--default .select2-selection--single .select2-selection__arrow b {  margin-top: 3px}
+
+.check_label{position:relative}
+.check_icon{width:16px;height:16px;background:url("../../../wechat/common/img/checkbox.png") no-repeat;background-size:100% auto; background-position:0 -41px}
+.check_label:hover .check_icon,.check_icon.hover{background-position:-16px 0}
+.check_icon.check{background-position:0 -62px}
+.check_label input{position:absolute;left:-2220px;top:0;opacity: 0}
+
+/*表单验证提示部分*/
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 36px;
+    margin-left: 38%;
+}
+/*性别选择*/
+.radio_box{width:100%;height:26px;color:#333}
+.radio_label{position:relative;width:50px; line-height:26px!important;}
+.radio_icon{width:16px;height:16px;margin:5px 5px;background:url("../../../wechat/common/img/checkbox.png") no-repeat;background-size:100% auto; background-position:0 0}
+.radio_icon.check{background-position:0 -21px}
+.radio_label input{position:absolute;left:-999px;top:0;opacity:0}
+.radio_box b{font-size: 14px;}
+/*下拉框去渐变*/
+.normal_select:focus{border-color: #ccc;}

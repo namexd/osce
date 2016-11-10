@@ -1,0 +1,40 @@
+/*信息管理页面css*/
+.container_index a:hover{text-decoration: none;}
+.container_index { padding-bottom:65px; margin-top: 20%;}
+.container_index .row1  span{float: left;line-height: 60px; margin-right:20px; font-size: 16px;}
+.container_index .row1 .normal_background{
+    padding:10px 15px;
+    border:1px solid #dce0e4; border-radius: 4px;
+    background-color: #fff;
+    width: 100%; }
+.container_index .row2 .normal_background{
+    padding:10px 0px;
+    border:1px solid #dce0e4; border-radius: 4px;
+    background-color: #fff;
+    width: 100%; text-align: center;}
+.container_index .row1 .col-sm-6{padding:8px; padding-bottom: 0;}
+.container_index .row2 .col-xs-4{padding:8px;padding-bottom: 0;}
+.container_index  a { display: flex;}
+.container_index  a p{ color:#000;}
+.container_index  a span { color:#000;}
+.manageindex .normal_background{ display: inline-block;}
+.manageindex .manageindex_icon { width:60px; height: 61px; display: inline-block;background:url("../img/icons.png");background-size: cover;}
+
+.manageindex .icon1{ background-position:0 0px;}
+.manageindex .icon2{ background-position:0 -70px;}
+.manageindex .icon3{ background-position:0 -140px;}
+.manageindex .icon4{ background-position:0 -210px;}
+.manageindex .icon5{ background-position:0 -280px;}
+.manageindex .icon6{ background-position:0 -350px;}
+.manageindex .icon7{ background-position:0 -420px;}
+
+
+.error_attention{
+    width: 80%; margin: 0 auto;
+    text-align: center;
+    margin-top:5em;
+}
+.error_attention p{
+  line-height: 1.2em; margin:1em; font-size: 16px;
+}
+.error_attention img{ width:35%;}
