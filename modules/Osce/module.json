@@ -1,0 +1,15 @@
+{
+    "name": "Osce",
+    "alias": "osce",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Osce\\Providers\\OsceServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "start.php"
+    ]
+}
