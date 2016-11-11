@@ -3,7 +3,7 @@ deploy_job:
     script:
     - rm -rf /php_5.6.27-fpm/${CI_BUILD_REF_NAME}
     - git archive --format=tar --prefix=${CI_BUILD_REF_NAME}/ HEAD | (cd /php_5.6.27-fpm/ && tar xf -)
-    - chmod 777 . -R
+    - chmod -R 777 /php_5.6.27-fpm/boostrap/cache /php_5.6.27-fpm/storage
     - rm -rf /php_7.0.12-fpm/${CI_BUILD_REF_NAME}
     - git archive --format=tar --prefix=${CI_BUILD_REF_NAME}/ HEAD | (cd /php_7.0.12-fpm/ && tar xf -)
-    - chmod 777 . -R
+    - chmod -R 777 /php_7.0.12-fpm/boostrap/cache /php_7.0.12-fpm/storage
