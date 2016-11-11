@@ -1,0 +1,4 @@
+deploy_job:
+    stage: deploy
+    script:
+    - echo "deploy"
