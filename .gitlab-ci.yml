@@ -2,3 +2,4 @@ deploy_job:
     stage: deploy
     script:
     - pwd
+    - git archive --format=tar --prefix=v3.4.1/ HEAD | (cd /data/ && tar xf -)
