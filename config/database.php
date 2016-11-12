@@ -66,16 +66,10 @@ return [
         'sys_mis' => [
             'driver'    => 'mysql',
 
-            'host'      => env('DB_HOST_SYS', 'localhost'),
-            'database'  => env('DB_DATABASE_SYS', 'sys_mis'),
-            'username'  => env('DB_USERNAME_MSC', 'root'),
-            'password'  => env('DB_PASSWORD_MSC', ''),
-
-//            'host'      => env('DB_HOST_SYS', '139.196.49.64'),
-//            'database'  => env('DB_DATABASE_SYS', 'wj_dev_sys_mis'),
-//			'username'  => env('DB_USERNAME_SYS', 'myy'),
-//			'password'  => env('DB_PASSWORD_SYS', '123456'),
-
+            'host'      => env('DB_HOST_SYS', 'mysql_5.6.34'),
+            'database'  => env('DB_DATABASE_SYS', 'v3101_dev_sys_mis'),
+            'username'  => env('DB_USERNAME_MSC', 'osce_user'),
+            'password'  => env('DB_PASSWORD_MSC', '0431416db0'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -84,16 +78,10 @@ return [
         'osce_mis' => [
             'driver'    => 'mysql',
 
-            'host'      => env('DB_HOST_OSCE', 'localhost'),
-            'database'  => env('DB_DATABASE_OSCE', 'osce_mis'),
-            'username'  => env('DB_USERNAME_OSCE', 'root'),
-            'password'  => env('DB_PASSWORD_OSCE', ''),
-
-//            'host'      => env('DB_HOST_OSCE', '139.196.49.64'),
-//            'database'  => env('DB_DATABASE_OSCE', 'wj_dev_osce_mis'),
-//            'username'  => env('DB_USERNAME_OSCE', 'myy'),
-//            'password'  => env('DB_PASSWORD_OSCE', '123456'),
-
+            'host'      => env('DB_HOST_OSCE', 'mysql_5.6.34'),
+            'database'  => env('DB_DATABASE_OSCE', 'v3101_dev_osce_mis'),
+            'username'  => env('DB_USERNAME_OSCE', 'osce_user'),
+            'password'  => env('DB_PASSWORD_OSCE', '0431416db0'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
