@@ -1,0 +1,177 @@
+/* CSS Document */
+body,div,img,dl,dt,dt,ul,li,p,h1,input,h1,h2,h3{
+    margin:0; padding:0;
+    font-size:14px; font-family: "Microsoft YaHei";}
+
+body ul li{list-style:none;}
+.clear{ clear:both;}
+a{text-decoration: none;}
+body{ background-color:#eff3f6;}
+
+header{font-size:18px; text-align:center; color:#FFF;line-height:44px;
+    background-color:#6595e1; border-bottom:1px solid #1b7a8b;}
+
+.form-group .form-control{display:inline-block;height:36px;}
+
+/*margin*/
+.mart_10{margin-top:15px;}
+.qn_pa10{ padding:15px;}
+/*input*/
+
+input[type="text"]{box-shadow:none!important;-webkit-box-shadow:none!important;-webkit-appearance: none;}
+input[type="number"]{box-shadow:none!important;-webkit-box-shadow:none!important;-webkit-appearance: none;}
+
+
+/*头部*/
+.user_header{width:100%;height:45px;line-height:45px;text-align: center;background:#6595E1;color:#fff; font-size: 16px;}
+.user_header .header_btn{display:inline-block;width:45px;height:45px;text-align: center}
+
+/*���޸ĵı����ϲ���ʾ������Ϣ*/
+input.ng-dirty.ng-invalid {
+    border: 1px solid red;
+}
+
+input[type="text"],input[type="password"],input[type="button"],input[type="submit"],textarea{box-shadow:none!important;-webkit-box-shadow:none!important;-webkit-appearance: none;}
+select{box-shadow:none!important;-webkit-box-shadow:none!important;}
+li{list-style:none}
+img,input{vertical-align:middle}
+table{border-collapse:collapse;empty-cells:show}
+a:link,a:visited{text-decoration:none;cursor:pointer}
+a:link:hover{text-decoration:underline}
+.lineu{text-decoration:line-through}
+.nou,a.nou,a.nou:hover{text-decoration:none}
+a{-webkit-touch-callout:none;}
+.clo0{color:#000}
+.clo3{color:#333}
+.clo5{color:#555}
+.clo6{color:#666}
+.clo9{color:#999}
+.cloc{color:#ccc}
+.clof{color:#fff}
+.red{color:#e22}
+.font10{font-size:10px}
+.font12{font-size:12px}
+.font13{font-size:13px}
+.font14{font-size:14px}
+.font16{font-size:16px}
+.font18{font-size:18px}
+.font20{font-size:20px}
+.font24{font-size:24px}
+.font26{font-size:26px}
+.fontb{font-weight:bold}
+.left{float:left}
+.right{float:right}
+.center{text-align:center}
+.hide{display:none}
+.ablock{display:block;width:100%;height:100%}
+.weight7{ font-weight: 700;}
+
+/*width*/
+.w_90{width:90%;margin:0 auto; }
+.w_92{width:92%;margin:0 auto; }
+.w_94{width:94%;margin:0 auto; }
+.w_96{width:96%;margin:0 auto; }
+.w_98{width:98%;margin:0 auto; }
+.w_85{width: 85%;}
+.w_70{width: 70%;}
+.w_50{width: 50%;}
+.w_45{width:45%;margin:0 auto; }
+.w_30{width: 30%;}
+.w_15{width: 15%;}
+/*margin*/
+.mart_3{margin-top:0.3em}
+.mart_5{margin-top:0.5em}
+.mart_8{margin-top:0.8em}
+.mart_10{margin-top:1em}
+.mart_12{margin-top:1.2em}
+.mart_15{margin-top:1.5em}
+.mart_20{margin-top:2em}
+.marb_5{margin-bottom:0.5em}
+.marb_8{margin-bottom:0.8em}
+.marb_10{margin-bottom:1em}
+.marb_15{margin-bottom:1.5em}
+.marr_5{margin-right:0.5em}
+
+/*padding*/
+.padt_5{padding-top:0.5em}
+.padt_8{padding-top:0.8em}
+.padt_10{padding-top:1em}
+.padt_20{padding-top:2em}
+.padb_5{padding-bottom:0.5em}
+.padb_8{padding-bottom:0.8em}
+.padb_10{padding-bottom:1em}
+
+/*clear效果*/
+.clearfix{zoom:1}
+.clearfix:after{display:block; content:'.'; clear:both; line-height:0; visibility:hidden}
+.tbl_type{display:table;width:100%}
+.tbl_cell{display:table-cell;position:relative;vertical-align:top}
+.tbl_cell img{vertical-align:middle}
+
+
+/*bootstrop覆盖*/
+.search_button {margin: 10px 0; overflow: hidden;font-size: 14px; line-height: 16px; width: 100%; }
+.search_button input{
+    width: 100%; height: 30px; border-radius: 2px;
+}
+.search_button button{
+    width: 100%; height: 30px; border-radius: 2px; margin-top: 0; text-align: right;
+}
+.search_button .input-group-btn{
+    z-index: 10; position: absolute;right:5px;
+    width: 10%; height: 30px;
+    text-align: center;
+}
+.btn-white2{
+    background-color: transparent;
+    width: 10%; height: 28px;
+    color: #6595e1!important; font-size: 20px; font-weight: 200; line-height: 20px; padding: 0;
+
+}
+.bg_f{
+    background-color: #fff;
+    overflow: hidden;}
+
+
+/*loading加载效果*/
+#layer_loading{position:fixed;top:40%;right:0;
+    width:100%;text-align:center; z-index: 10;}
+#layer_loading .more_show_txt{width:10em;margin:0 auto;padding:1em 0;
+    background-color:#000;color:#fff;
+    opacity:0.7;filter:alpha(opacity=70);
+    background-repeat:no-repeat;background-position:right;}
+#layer_loading p{ text-align: center; line-height:2em;}
+#go_top{
+    padding:2em 0 0.5em;width:4em; text-align:center;
+    font-size:0.8em;color:#5F646E;
+    position:fixed;bottom:1em;right:1em;}
+#go_top img{width: 50px;height: 50px;}
+
+.img_box{overflow:hidden}
+.img_box li{float:left;width:90px;height:90px;position:relative;line-height:85px;margin:10px 0 0 10px;border:1px solid #DCE0E4;overflow:hidden;}
+.add_img{float:left;width:90px;height:90px;margin:10px 0 0 10px;border:1px dashed #DCE0E4;background:url("../../common/img/icon_add.png") no-repeat center;}
+.add_img input{width:100%;height:100%;opacity:0}
+
+.img_box li .del_img{background:rgba(0,0,0,.7);color:#fff;position:absolute;right:2px;top:2px;width:20px;cursor:pointer;height:20px;line-height:18px;text-align:center;border-radius:50%;}
+/*layer-data*/
+.layer-date{max-width: 100%!important; border-radius: 4px;}
+/*表单验证页面效果*/
+.has-error .form-control-feedback{border-color: #ed5565!important;}
+.has-error .form-control{border-color: #ed5565!important;}
+small.help-block{border-color: #ed5565!important;}
+.form-control:focus{border-color: #6595e1}
+.form-control{box-shadow: none!important;}
+.help-block{color: #ed5565!important;}
+.has-error .form-control-feedback{color: #ed5565;}
+
+/*状态标签*/
+.state_btn1{border-radius: 50px 0 0 50px;position: absolute;top: 10px;right: -2px;height: 30px;width: 60px;background-color: #408aff;line-height: 30px;text-align: center;color: #fff;}
+.state_btn2{border-radius: 50px 0 0 50px;position: absolute;top: 10px;right: -2px;height: 30px;width: 60px;background-color: #ed5565;line-height: 30px;text-align: center;color: #fff;}
+.state_btn3{border-radius: 50px 0 0 50px;position: absolute;top: 10px;right: -2px;height: 30px;width: 60px;background-color: #c2c2c2;line-height: 30px;text-align: center;color: #fff;}
+/*展示标题*/
+.form_title{padding: 5px 0 5px 3%; font-weight: 500; font-size: 16px;}
+/*表格标题*/
+.title_number{width: 20%}
+.title_name{width: 40%}
+
+

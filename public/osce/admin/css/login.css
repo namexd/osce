@@ -1,0 +1,23 @@
+body{background:url('../../images/boxed-bg.jpg') repeat;}
+.logo{margin:10px 0 30px;}
+h3{text-align:left}
+h3.hh{margin-bottom:50px;color:#99a3b1}
+h3.tt{color:#999;margin:20px 0 10px;padding-left:2px;font-size:14px}
+.form-control{padding:0 12px;border-radius:3px;}
+.btn{margin-top:20px;font-weight:bold;cursor:pointer;}
+.clearfix:after{visibility:hidden;display:block;font-size: 0;content:" ";clear: both;height:0}
+.clearfix{*zoom:1;}
+.txt{color:#b7bbc2;font-size:12px;font-weight:100;}
+.btn-primary:hover{background:#286090;}
+.form-control:focus{border-color: #408aff!important;}
+.btn-primary{background: #408aff;color: #408aff;color: #fff;}
+.btn-primary:hover{border:1px solid #286090}
+.check_label{position:relative;float:left;}
+.check_icon{width:16px;height:16px;background:url('../../images/green.png') no-repeat;background-size:auto 16px}
+.check_name{position:relative;top:-3px;font-weight:100;cursor: pointer;}
+.check_label:hover .check_icon,.check_icon.hover{background-position:-16px 0}
+.check_icon.check{background-position:-32px 0}
+.check_label:hover .check_icon.check{background-position:-32px 0}
+.check_label input{position:absolute;left:-2220px;top:0;opacity: 0}
+.btn-primary{background:#1dc5a3;border:1px solid #1dc5a3;}
+.btn-primary:hover{background-color:#19AB8E!important;}

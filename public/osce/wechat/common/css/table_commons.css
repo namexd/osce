@@ -1,0 +1,149 @@
+/*table_list*/
+
+.btn1
+{ background-color:#6595e1; font-size:18px;
+    width:100%; height:36px;
+    color:#fff; text-align:center;
+    border:none;border-radius:4px;
+    margin-top:15px;
+}
+.btn2{ background-color:#6595e1; font-size:16px;
+    width:100%; height:36px;
+    color:#fff!important; text-align:center;
+    border:none;border-radius:0.4em;
+    font-weight: 300;
+}
+.btn3
+{ background-color:#6595e1; font-size:16px;
+    width:100%; height:80px;
+    color:#fff; text-align:center;
+    border:none;border-radius:4px;
+    margin-top:10px;
+}
+
+.btn4
+{ background-color:#6595e1; font-size:16px;
+    width:100%; height:34px;
+    color:#fff; text-align:center;
+    border:none;border-radius:4px;
+}
+
+.btn5
+{ background-color:#fff; font-size:16px;
+    width:100%; height:36px;
+    color:#000; text-align:center;
+    border:none;border-radius:0.4em;
+    font-weight: 300;
+}
+.select1{
+    height:36px; width: 100%;font-size:14px;
+    border-radius:0.4em;font-weight: 300;
+    border: 1px solid #dce0e4;
+}
+.select2-container--default .select2-selection--single{ height: 32px!important;
+    border: 1px solid #dce0e4!important;}
+.select2-container--default .select2-selection--single .select2-selection__arrow{top:3px!important;}
+
+
+.add_main .form-group{border-bottom:1px solid #DCE0E4;padding: 5px 0; margin-bottom: 0;}
+.add_main .form-group  label{position:absolute;z-index:10; left:3%;font-size:16px;margin-top:6px;width:82px;
+    padding-left:10px;font-family:"Microsoft YaHei";line-height:24px;font-weight:100;border-right:1px solid #dce0e4;}
+.add_main .form-group input{border:none;border-radius:0;border-width:0 0 1px 0;font-size:16px;padding-left:95px}
+.add_main .form-group .xuan_type{padding-left:95px;text-align:left!important;color:#999}
+.add_main .form-group .set_text{padding-left:105px;text-align:left!important;color:#333;}
+.add_main .form-group .gn_txt{width:100%;min-height:24px;overflow:hidden;height:30px;line-height:24px;margin-bottom:10px;padding:6px 20px 6px  90px;font-size:16px;position:relative}
+.add_main .form-group .txt{width:100%;min-height:36px;line-height:24px;padding:6px 20px 6px  90px;
+    font-size:16px;word-wrap: break-word;}
+.more_txt{position:absolute;right:5px; top: 8px;width:18px;height:18px;line-height:18px;text-align: center}
+.add_main{width:100%;background:#fff;padding:0px 3% 0;position:relative;margin-bottom: 10px;border-bottom:1px solid #DCE0E4;}
+.add_main .form-group:last-child{ border-bottom: none;}
+.submit_box{margin-bottom:20px}
+.add_main .form-group .more{position:absolute;right:6%;top:12px;font-size:26px;color:#999}
+
+
+/*表单验证*/
+.select2-container--default .select2-selection--single{ height: 36px;
+    border: 1px solid #ccc;}
+.select2-container--default .select2-selection--single .select2-selection__arrow{top:3px;}
+.has-feedback label~.form-control-feedback {top: 2px;}
+
+/*列表页面样式2*/
+
+.main_list  a{ color: #676a6c;}
+.main_list {
+    display: inline-block;
+    border:1px solid #dce0e4; /*border-radius: 4px;*/
+    background-color: #fff;
+    width: 100%
+
+}
+.title_nav{
+    overflow: hidden;
+}
+.main_list  .title_nav .title{
+    float:left;
+    color:#a2a2a2; font-size: 14px;
+    text-align: center; height: 30px; line-height: 30px;
+    border-bottom: 1px solid #eff3f6;
+}
+.main_list .title_nav .name{
+    width: 60%;
+}
+
+.main_list .title_nav .number{
+    width: 40%;
+}
+.detail_list{
+    width:100%;
+    display: table;
+    padding:0px 3% 0;
+
+}
+.detail_list ul li{
+    float:left;
+    width: 100%;
+    text-align: center; height: 30px; line-height: 30px;
+    border-bottom: 1px solid #eff3f6;
+    display: table;
+}
+.detail_list ul li:last-child{ border-bottom: none;}
+.detail_list ul li div{ float: left; margin: 10px 0;}
+.detail_list .name{
+    width: 60%; font-size: 16px;
+}
+.detail_list .name img{
+    width:70px;
+}
+.detail_list .number{
+    width: 40%; font-size: 16px; vertical-align: middle; line-height: 46px;
+    border-left: 1px solid #eff3f6;
+}
+
+.main_list .search_none{
+    width:100px;   margin: 0 auto; overflow: hidden; margin-bottom: 20px; margin-top: 20px;
+}
+.main_list .btn_search{
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    padding: 10px 16px;
+    border-radius:50px;
+    font-size: 50px;
+    line-height: 1.33;
+    background-color: #bbcce7;
+    border-color: #bbcce7;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+
+/*显示更多的下拉箭头按钮*/
+#leibie_list{position:fixed;top:0;right:-100%;width:100%;height:100%;z-index:99;background:rgba(0,0,0,.5)}
+.check_tit{line-height:40px;text-align: center}
+.leibie_left{float:left;width:20%;height:100%;}
+.leibie_box{float:right;width:80%;height:100%;background:#fff;}
+.leibie_box li{line-height:40px;text-indent:10px;border-bottom:1px solid #DCE0E4;position:relative}
+.leibie_box .more_li li{background:#F8F8F8;line-height:30px;padding:6px 10px 6px 15px;border:none;position:relative}
+.leibie_box .more_li i{position:absolute;right:10px; top:10px;}
+.icon_return{display:inline-block;width:18px;height:18px;margin-top:10px}
+

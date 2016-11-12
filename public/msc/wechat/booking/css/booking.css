@@ -1,0 +1,26 @@
+/*ԤԼʵ����-ȷ��ʹ�������*/
+#now_borrow .submit_box{
+    width: 20%;
+    max-width:120px;
+    position: absolute;
+    bottom:32px;
+    right: 3%;
+}
+
+/*�ҵ�ԤԼ*/
+#mybooking{
+    background-color: #fff; overflow: hidden;
+    height: 38px; line-height: 36px;
+}
+#mybooking  ul li{ width: 33.33%; float: left; text-align: center; border-bottom:2px solid #DCE0E4; }
+#mybooking  ul .check{border-bottom:2px solid #408aff;}
+#borrow_attention  .submit_box{
+    width: 20%;
+    max-width:120px;
+    position: absolute;
+    bottom:32px;
+    right: 3%;
+}
+
+/*ԤԼʵ���ң�ʱ������*/
+.all_list .w_30{ text-align: center;}
