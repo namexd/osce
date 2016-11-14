@@ -88,7 +88,7 @@ class Standard extends CommonModel
        })-> leftJoin('exam_result', function($join){
            $join -> on('station.id', '=', 'exam_result.station_id');
        });
-       $builder=$builder->where('standard.pid',0)->where('exam_score.subject_id',$subjectId)->where('station.id',$stationId);
+       $builder=$builder->where('standard_item.pid',0)->where('exam_score.subject_id',$subjectId)->where('station.id',$stationId);
 
        $builder=$builder->select([
            'standard.score as score',
@@ -108,7 +108,7 @@ class Standard extends CommonModel
        })-> leftJoin('exam_result', function($join){
            $join -> on('station.id', '=', 'exam_result.station_id');
        });
-       $builder=$builder->where('standard.pid',0)->where('exam_score.subject_id',$subjectId)->where('station.id',$stationId)->where('sort',$sort);
+       $builder=$builder->where('standard_item.pid',0)->where('exam_score.subject_id',$subjectId)->where('station.id',$stationId)->where('sort',$sort);
 
        $builder=$builder->avg('exam_score.score');
 
