@@ -333,7 +333,8 @@ class StationController extends CommonController
                 ->get();     //关联摄像机
         } else {
             //根据station的id找到对应的vcr的id
-            $vcrId = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
+            //$vcrId = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
+            $vcrStation = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first();
 
             /*$vcr  = Vcr::where('used', 0)
                     ->whereNotIn('status',[2,3])
