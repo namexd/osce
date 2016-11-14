@@ -335,13 +335,28 @@ class StationController extends CommonController
             //根据station的id找到对应的vcr的id
             $vcrId = Station::findOrFail($id)->vcrStation()->select('vcr.id as id')->first()->id;
 
-            $vcr  = Vcr::where('used', 0)
+            /*$vcr  = Vcr::where('used', 0)
+                    ->whereNotIn('status',[2,3])
+                    ->orWhere(function($query) use($vcrId){
+                        $query->where('id','=',$vcrId);
+                    })
+                    ->select('id', 'name')
+                    ->get();     //关联摄像机*/
+            if (!is_null($vcrStation)){
+                $vcrId = $vcrStation->id;
+                $vcr  = Vcr::where('used', 0)
                     ->whereNotIn('status',[2,3])
                     ->orWhere(function($query) use($vcrId){
                         $query->where('id','=',$vcrId);
                     })
                     ->select('id', 'name')
                     ->get();     //关联摄像机
+            }else{
+                $vcr = Vcr::where('used', 0)
+                    ->whereNotIn('status',[2,3])
+                    ->select('id', 'name')
+                    ->get();
+            }
         }
         $case   = CaseModel::all(['id', 'name']);
         $room   = Room::all(['id', 'name']);        //房间
