@@ -436,12 +436,12 @@ function setStorage(pageName,setId,setName){
         localStorage.setItem("session2",JSON.stringify(session2));//设置本地存储
     }
     //考核点分析存储
-    if(pageName == "statistics_check"){
+/*    if(pageName == "statistics_check"){
         var session3 = {};
         session3.pageName = pageName;
         session3.examId = setId;
         session3.subjectId = setName;
         localStorage.setItem("session3",JSON.stringify(session3));//设置本地存储
-    }
+    }*/
 }
 
