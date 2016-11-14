@@ -292,14 +292,14 @@ class SubjectStatisticsRepositories  extends BaseRepository
 
         //根据需求 group不同的字段
         if($standardPid){
-            $builder = $builder->where('standard_item.pid','=',$standardPid)
+            $builder = $builder->where('standard.pid','=',$standardPid)
                 ->groupBy($DB->raw('standard.id,exam_result.student_id'));
         }else{
-            $builder = $builder->groupBy($DB->raw('standard_item.pid,exam_result.student_id'));
+            $builder = $builder->groupBy($DB->raw('standard.pid,exam_result.student_id'));
         }
 
         $builder->select(
-                'standard_item.pid as pid',
+                'standard.pid as pid',
                 'standard.id as standard_id',
                 'exam_result.student_id',
                 $DB->raw('SUM(exam_score.score) as score'),//该科目的某一个考核点实际得分
@@ -430,10 +430,10 @@ class SubjectStatisticsRepositories  extends BaseRepository
         $builder = $this->SubjectItemModel->leftJoin('exam_score', function($join){
             $join -> on('exam_score.standard_id', '=','standard.id');
         });
-        $data = $builder->where('standard_item.pid','=',$standardPid)
+        $data = $builder->where('standard.pid','=',$standardPid)
             ->groupBy('standard.id')
             ->select(
-                'standard_item.pid',//评分标准父编号
+                'standard.pid',//评分标准父编号
                 'standard.content',//名称
                 'standard.score', //总分
                 'exam_score.score as grade'//成绩

@@ -130,9 +130,9 @@ class MyRepositories  extends BaseRepository
         }
         $data = $builder->where('subject.id','=',$SubjectId)
             ->where('exam_screening.exam_id','=',$ExamId)
-            ->groupBy($DB->raw('standard_item.pid'))
+            ->groupBy($DB->raw('standard.pid'))
             ->select(
-                'standard_item.pid as pid',
+                'standard.pid as pid',
                 $DB->raw('avg(exam_score.score) as scoreAvg'),
                 $DB->raw('count(exam_result.student_id) as studentQuantity')
             )->get();
@@ -171,10 +171,10 @@ class MyRepositories  extends BaseRepository
         $builder = $this->StandardModel->leftJoin('exam_score', function($join){
             $join -> on('exam_score.standard_id', '=','standard.id');
         });
-        $data = $builder->where('standard_item.pid','=',$standardPid)
+        $data = $builder->where('standard.pid','=',$standardPid)
             ->groupBy('standard.id')
             ->select(
-            'standard_item.pid',//评分标准父编号
+            'standard.pid',//评分标准父编号
             'standard.content',//名称
             'standard.score', //总分
             'exam_score.score as grade'//成绩
