@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="bar_backgroud">#dae4eb</color>
+    <color name="bar_progress">#16beb0</color>
+    <color name="white">#ffffff</color>
+    <color name="bg_lin_95">#000000</color>
+
+    <!-- R:0 G:110 B:191 -->
+    <color name="barprocess_color_orange">#f8ac59</color>
+    <!-- R:0 G:110 B:191 -->
+    <color name="bar_color_init">#dae4e8</color>
+    <!-- R:0 G:110 B:191 -->
+    <color name="barprocess_color_green">#16beb0</color>
+    <!-- R:0 G:110 B:191 -->
+    <!-- grey+second_grey+bule=grey -->
+    <color name="second_grey">#902C14</color>
+    <!-- R:144 G:44 B:20 -->
+    <!-- ActivityTitle Color -->
+    <color name="activity_backgroud">#16beb0</color>
+    <color name="red">#FA5858</color>
+    <color name="green">#74DF00</color>
+    <color name="blue">#58ACFA</color>
+    <color name="yellow">#D7DF01</color>
+    <color name="grey">#6E6E6E</color>
+    <!-- Dialog Color -->
+    <color name="float_transparent">#66000000</color>
+    <color name="sweet_dialog_bg_color">#FFFFFF</color>
+    <color name="button_text_color">#FFFFFF</color>
+    <color name="gray_btn_bg_color">#D0D0D0</color>
+    <color name="gray_btn_bg_pressed_color">#B6B6B6</color>
+    <color name="blue_btn_bg_color">#AEDEF4</color>
+    <color name="blue_btn_bg_pressed_color">#96BFD2</color>
+    <color name="red_btn_bg_color">#DD6B55</color>
+    <color name="red_btn_bg_pressed_color">#CD5B55</color>
+    <color name="error_stroke_color">#F27474</color>
+    <color name="success_stroke_color">#A5DC86</color>
+    <color name="trans_success_stroke_color">#33A5DC86</color>
+    <color name="warning_stroke_color">#F8BB86</color>
+
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/testView_waitDraw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/fragment_draw_textview_wait_backgroud"
+        android:padding="@dimen/y8"
+        android:text="@string/wait_to_draw"
+        android:textColor="#aa3432"
+        android:textSize="@dimen/text_size_18"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/fragment_draw_detail_textview_begin_test"
+        android:padding="10dp"
+        android:text="@string/next"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/text_size_18" />
+
+</RelativeLayout>

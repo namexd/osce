@@ -1,0 +1,32 @@
+<com.mx.osce.custom.SeekBar_Ex xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hint="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:progress="0"
+    android:progressDrawable="@drawable/seekbar_drawable"
+    android:thumb="@drawable/thumb"
+    android:thumbOffset="1dip"
+    hint:popupStyle="follow"
+    hint:progressDrawableHeight="15dp"
+    hint:thumbHeight="17dp" />
+
+<!-- hint:xOffset="100dp" -->
+<!-- hint:popupWidth="100dp" -->
+
+
+<!-- <com.ajit.customseekbar.SeekBar_Ex -->
+<!-- android:id="@+id/seekBar0" -->
+<!-- android:layout_width="match_parent" -->
+<!-- android:layout_height="wrap_content" -->
+<!-- android:progress="0" -->
+<!-- android:progressDrawable="@drawable/seek_img" -->
+<!-- android:thumb="@drawable/seek_thumb_normal" -->
+<!-- android:thumbOffset="0dip" -->
+<!-- hint:popupWidth="100dp" /> -->
+
+
+<!-- hint:popupStyle="fixed" -->
+<!-- hint:popupWidth="100dp" -->
+<!-- hint:yOffset="15dp" -->
+

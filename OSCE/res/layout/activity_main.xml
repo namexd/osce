@@ -1,0 +1,116 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f1f1f1" >
+
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/acticity_title" />
+
+    <LinearLayout
+        android:id="@+id/main_activity_station_LL"
+        style="@style/activity_top_LL_style"
+        android:layout_below="@+id/actionBar" >
+
+        <ImageView
+            style="@style/activity_top_LL_image_style"
+            android:src="@drawable/pad_" />
+
+        <TextView
+            android:id="@+id/textView_testStation"
+            style="@style/activity_top_LL_textView_style"
+            android:layout_marginRight="20dp"
+            android:layout_weight="5"
+            android:text="考站" />
+
+        <ImageView
+            style="@style/activity_top_LL_image_style"
+            android:src="@drawable/pad_time" />
+
+        <TextView
+            android:id="@+id/textView_testTime"
+            style="@style/activity_top_LL_textView_style"
+            android:layout_weight="2"
+            android:text="" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/main_activity_station_LL"
+        android:orientation="vertical" >
+
+        <!-- 考试组 -->
+
+        <LinearLayout
+            android:id="@+id/main_activity_group_LL"
+            style="@style/activity_top_LL_style"
+            android:layout_below="@+id/main_activity_station_LL" >
+
+            <ImageView
+                style="@style/activity_top_LL_image_style"
+                android:src="@drawable/pad_next" />
+
+            <TextView
+                android:id="@+id/texiView_nextGroup"
+                style="@style/activity_top_LL_textView_style"
+                android:layout_weight="5"
+                android:text="下一组考生：没有考生" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/main_activity_group_LL"
+            android:layout_marginBottom="@dimen/y4"
+            android:layout_marginLeft="@dimen/y4"
+            android:layout_marginRight="@dimen/y4"
+            android:layout_marginTop="@dimen/y4"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/y4"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/testView_currentGroup"
+                    style="@style/activity_top_textview_style"
+                    android:text="当前小组:" />
+
+                <GridView
+                    android:id="@+id/gridView_currentGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#ffffff"
+                    android:fastScrollEnabled="true"
+                    android:numColumns="2"
+                    android:scrollingCache="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:background="#ffffff"
+                android:orientation="vertical" >
+
+                <TextView
+                    style="@style/activity_top_textview_style"
+                    android:text="当前考生" />
+
+                <FrameLayout
+                    android:id="@+id/fragment_draw"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" >
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

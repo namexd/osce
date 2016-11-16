@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/image_student_photo"
+        android:layout_width="@dimen/x102"
+        android:layout_height="@dimen/y120"
+        android:layout_above="@+id/linear_operate"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/y8"
+        android:src="@drawable/pad_pic" >
+    </ImageView>
+
+    <TextView
+        android:id="@+id/tv_tip_student_name"
+        style="@style/fragment_grade_textview_style"
+        android:layout_alignTop="@+id/image_student_photo"
+        android:layout_toLeftOf="@+id/tv_studentId"
+        android:text="姓  名:" />
+
+    <TextView
+        android:id="@+id/tv_student_name"
+        style="@style/fragment_grade_textview_style"
+        android:layout_alignBaseline="@+id/tv_tip_student_name"
+        android:layout_toRightOf="@+id/tv_tip_student_name"
+        android:text="测  试"
+        android:textSize="@dimen/text_size_20" />
+
+    <TextView
+        android:id="@+id/tv_tip_studentId"
+        style="@style/fragment_grade_textview_style"
+        android:layout_below="@+id/tv_tip_student_name"
+        android:layout_toRightOf="@+id/image_student_photo"
+        android:text="学  号:" />
+
+    <TextView
+        android:id="@+id/tv_studentId"
+        style="@style/fragment_grade_textview_style"
+        android:layout_alignBaseline="@+id/tv_tip_studentId"
+        android:layout_toRightOf="@+id/tv_tip_studentId"
+        android:text="20161224081454" />
+
+    <TextView
+        android:id="@+id/tv_tip_idCard"
+        style="@style/fragment_grade_textview_style"
+        android:layout_below="@+id/tv_tip_studentId"
+        android:layout_toRightOf="@+id/image_student_photo"
+        android:text="身份证:" />
+
+    <TextView
+        android:id="@+id/tv_idCard"
+        style="@style/fragment_grade_textview_style"
+        android:layout_alignBaseline="@+id/tv_tip_idCard"
+        android:layout_toRightOf="@+id/tv_tip_idCard"
+        android:text="510123199311013658" />
+
+    <TextView
+        android:id="@+id/tv_tip_text_Num"
+        style="@style/fragment_grade_textview_style"
+        android:layout_below="@+id/tv_tip_idCard"
+        android:layout_toRightOf="@+id/image_student_photo"
+        android:text="准考证:" />
+
+    <TextView
+        android:id="@+id/tv_text_Num"
+        style="@style/fragment_grade_textview_style"
+        android:layout_alignBaseline="@+id/tv_tip_text_Num"
+        android:layout_toRightOf="@+id/tv_tip_text_Num"
+        android:text="20160004" />
+
+    <LinearLayout
+        android:id="@+id/linear_operate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/y4"
+        android:layout_marginTop="@dimen/y4"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/text_warn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/y7"
+            android:layout_weight="1"
+            android:background="@drawable/fragment_draw_detail_textview_warn_selector"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/y6"
+            android:text="@string/text_warning_test"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_size_16" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/textview_begin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/y7"
+            android:layout_weight="1"
+            android:background="@drawable/fragment_draw_detail_textview_begin_test"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/y6"
+            android:text="@string/text_begin_test"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_size_16" />
+
+        <TextView
+            android:id="@+id/textView_continue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/y7"
+            android:layout_weight="1"
+            android:background="@drawable/fragment_draw_detail_textview_begin_test"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/y6"
+            android:text="继续抽签"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/text_size_16" />
+    </LinearLayout>
+
+</RelativeLayout>

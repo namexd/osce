@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<<<<<<< remotes/origin/osce_pad.3.3
+    <string name="app_name">3.3.5.9</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <!-- LoginActivity -->
+    <string name="login_activity_title_text_text">OSCE考试智能管理V3.3.5.9</string>
+=======
+<<<<<<< HEAD
+    <string name="app_name">3.2.5.0</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <!-- LoginActivity -->
+    <string name="login_activity_title_text_text">OSCE考试智能管理V3.2.5.0</string>
+=======
+    <string name="app_name">3.3.5.9</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <!-- LoginActivity -->
+    <string name="login_activity_title_text_text">OSCE考试智能管理V3.3.5.9</string>
+>>>>>>> 2ec0224ae8695f41e9d7e211b59762a4529dbdb8
+>>>>>>> local
+    <string name="login_activity_username_edit_hint">账号</string>
+    <string name="login_activity_password_edit_hint">密码</string>
+    <string name="login_activity_login_button">登陆</string>
+    <!-- MainAactivity -->
+    <string name="main_activity_titile_testview_station">考站</string>
+    <string name="main_activity_titile_testview_time">时间</string>
+    <string name="str_recorder_normal">按住   说话</string>
+    <string name="str_recorder_recording">松开   结束</string>
+    <string name="str_recorder_want_cancel">滑动手指，取消录音</string>
+    <!-- GradeActivity -->
+    <string name="upload_score_success">上传成绩成功</string>
+    <string name="upload_score_false">上传成绩失败</string>
+    <!-- Dialog -->
+    <string name="dialog_default_title">这是一个对话框</string>
+    <string name="dialog_ok">确定</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="setting_basic">输入考试的网址</string>
+    <!-- Activity-Title -->
+    <string name="imagBtn_setting">网络地址设置</string>
+    <string name="text_video">实时视频</string>
+    <string name="button_point">打开评分标准</string>
+    <!-- FragmentSuccess -->
+    <string name="text_begin_test">开始考试</string>
+    <string name="text_warning_test">替考警告</string>
+    <string name="close_media">关闭闹钟</string>
+     <string name="start_point">开始评分</string>
+    
+    <!--  -->
+    <string name="next">下一个考生</string>
+    <string name="wait_to_draw">正在等待考生刷取腕表...</string>
+
+</resources>

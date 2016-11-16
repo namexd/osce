@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/timeLayout"
+        android:layout_width="350dip"
+        android:layout_height="250dip"
+        android:background="@drawable/shape_btn"
+        android:padding="20dip">
+        <LinearLayout
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content">
+           
+            <TextView
+           android:id="@+id/textView2"
+           android:layout_width="wrap_content"
+           android:layout_height="fill_parent"
+           android:text="考试名称："
+           android:gravity="center"
+           android:textColor="#000000" />
+       <TextView
+           android:id="@+id/exam_name"
+           android:layout_width="wrap_content"
+           android:layout_height="fill_parent"
+           android:gravity="center"
+           android:layout_marginLeft="20dip"
+           android:textColor="#79D4D7"
+            android:textSize="20sp"
+           android:text="考试名称" />
+        </LinearLayout>
+         <LinearLayout
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:layout_centerInParent="true">
+       <TextView
+           android:id="@+id/textView1"
+           android:layout_width="wrap_content"
+           android:layout_height="fill_parent"  
+           android:gravity="center"
+           android:text="剩余时间："
+           android:textColor="#000000" />
+
+       <TextView
+           android:id="@+id/exam_time"
+           android:layout_width="wrap_content"
+           android:layout_height="fill_parent"
+            android:layout_marginLeft="20dip"
+           android:textSize="30sp"
+           android:text="考试时间"
+           android:textColor="#3F93CF" />
+         
+         </LinearLayout>
+
+       <Button
+           android:id="@+id/confirm_button"
+           style="@style/dialog_blue_button"
+           android:layout_alignParentBottom="true"
+           android:layout_centerHorizontal="true"
+           android:text="@string/start_point" />
+
+     
+
+      
+
+       
+      
+        
+    </RelativeLayout>
+
+

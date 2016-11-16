@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3f3f3"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/y4"
+        android:background="#ffffff"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/kaohepingfeng"
+            style="@style/activity_top_textview_style"
+            android:text="考核评分" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/y4"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <com.mx.osce.custom.SeekView
+                    android:id="@+id/seekBar_tg2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/y4"
+                    android:layout_weight="5" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/y10"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/textView_prePoint"
+                        style="@style/activity_grade_textview_style"
+                        android:text="上一考核点" />
+
+                    <TextView
+                        android:id="@+id/textView_nextPoint"
+                        style="@style/activity_grade_textview_style"
+                        android:text="下一考核点" />
+
+                    <TextView
+                        android:id="@+id/textView_operate"
+                        style="@style/activity_grade_textview_style"
+                        android:text="记录的操作" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/y8"
+            android:layout_marginRight="@dimen/y8"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/image_left"
+                android:layout_width="@dimen/x2"
+                android:layout_height="match_parent"
+                android:background="@drawable/line_orange" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#f3f3f3"
+                android:orientation="vertical"
+                android:padding="@dimen/y2" >
+
+                <TextView
+                    android:id="@+id/textView_testPoint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/image_left"
+                    android:padding="@dimen/y2"
+                    android:text="考核点10："
+                    android:textSize="@dimen/text_size_18" />
+
+                <TextView
+                    android:id="@+id/testView_testPointDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_testPoint"
+                    android:layout_toRightOf="@+id/image_left"
+                    android:padding="@dimen/y2"
+                    android:text="第一：注意动作的力度\n第二：注意动作的精准度"
+                    android:textSize="@dimen/text_size_16" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listView_testStep"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/y7"
+            android:layout_marginRight="@dimen/y7"
+            android:choiceMode="singleChoice"
+            android:divider="#d1d1d1"
+            android:dividerHeight="1px"
+            android:fastScrollEnabled="true"
+            android:scrollingCache="false" >
+        </ListView>
+    </LinearLayout>
+
+</LinearLayout>
