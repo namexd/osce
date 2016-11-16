@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3f3f3"
+    android:orientation="vertical" >
+
+    <!-- 考试组 -->
+    <LinearLayout
+        android:id="@+id/main_activity_group_LL"
+        style="@style/activity_top_LL_style"
+        android:layout_below="@+id/main_activity_station_LL" >
+
+        <ImageView
+            style="@style/activity_top_LL_image_style"
+            android:src="@drawable/pad_next" />
+
+        <TextView
+            android:id="@+id/texiView_nextGroup"
+            style="@style/activity_top_LL_textView_style"
+            android:layout_weight="5"
+            android:text="下一组" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/main_activity_group_LL"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_weight="3"
+            android:background="#ffffff"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/testView_currentGroup"
+                style="@style/activity_top_textview_style"
+                android:text="当前小组" />
+
+            <GridView
+                android:id="@+id/gridView_currentGroup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:numColumns="2" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="#ffffff"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/activity_top_textview_style"
+                android:text="当前考生" />
+
+            <FrameLayout
+                android:id="@+id/fragment_drawSuccess"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" >
+
+                <include layout="@layout/fragment_draw_success" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/fragment_drawWait"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <include layout="@layout/fragment_draw_defeat" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

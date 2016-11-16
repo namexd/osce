@@ -1,0 +1,21 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">8dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
+    <!-- LoginActivity -->
+    <dimen name="login_activity_margin">20dp</dimen>
+    <dimen name="login_activity_text_size">20sp</dimen>
+    <!-- MainActivity -->
+
+    <dimen name="main_activity_title_textview_width">0dp</dimen>
+    <dimen name="main_activity_title_textview">12sp</dimen>
+    <dimen name="main_activity_title_textview_margin">20dp</dimen>
+    <dimen name="text_size_20">16sp</dimen>
+    <dimen name="text_size_18">14sp</dimen>
+    <dimen name="text_size_16">18sp</dimen>
+    <dimen name="text_size_14">10sp</dimen>
+    <dimen name="text_size_12">8sp</dimen>
+    <dimen name="text_size_35">23sp</dimen>
+
+</resources>

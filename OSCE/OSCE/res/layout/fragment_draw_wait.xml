@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    
+       <TextView    
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="老师,您好!"
+        android:layout_centerHorizontal="true"
+        android:textSize="23sp"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/tips"></TextView>
+    
+    <TextView    
+        android:id="@+id/tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="您若准备好,请呼叫下一位考生"
+        android:layout_centerHorizontal="true"
+        android:textSize="23sp"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/testView_readyExam"></TextView>
+
+    <TextView
+        android:id="@+id/testView_readyExam"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/fragment_draw_detail_textview_begin_test"
+        android:padding="20dp"
+        android:text="下一位考生"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:textSize="@dimen/simple_font_size"
+        android:visibility="visible" />
+
+</RelativeLayout>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3f3f3"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/y4"
+        android:background="#ffffff"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/title_bar"
+            style="@style/activity_top_textview_style"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="@dimen/padding_all" >
+
+            <!-- <TextView
+                android:id="@+id/tv_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:text="考核评分:"
+                android:textSize="@dimen/text_size_normal" >
+            </TextView> -->
+
+            <TextView
+                android:id="@+id/tv_student_real_time_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/padding_all"
+                android:gravity="center_vertical"
+                android:text="总成绩:0"
+                android:textColor="@color/menu_seld_color"
+                android:textSize="@dimen/simple_font_size" />
+
+            <Button
+                android:id="@+id/btn_point_complete"
+                style="@style/activity_grade_textview_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/btn_operate"
+                android:gravity="center_vertical"
+                android:text="考生操作完成"
+                android:textSize="@dimen/text_size_normal" />
+
+            <Button
+                android:id="@+id/btn_operate"
+                style="@style/activity_grade_textview_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="标记与点评"
+                android:textSize="@dimen/text_size_normal" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/title_bar"
+            android:orientation="horizontal" >
+
+            <ListView
+                android:id="@+id/menu_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:divider="#00000000"
+                android:dividerHeight="0dip"
+                android:paddingLeft="5dp" >
+            </ListView>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent" />
+
+            <com.hb.views.PinnedSectionListView
+                android:id="@+id/content_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:divider="@null"
+                android:fastScrollEnabled="false"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

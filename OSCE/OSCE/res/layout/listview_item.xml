@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:customseekbar="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tv_fragment_test_detail_point_item_num"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="考核项目XX"
+            android:textSize="@dimen/simple_font_size" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#d1d1d1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tv_fragment_test_detail_point_item_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:text="详细的考点详情"
+                android:textSize="@dimen/simple_font_size" />
+
+            <TextView
+                android:id="@+id/tv_fragment_test_detaile_point_item_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:text="考点的考项内容"
+                android:textColor="#f8ac59"
+                android:textSize="@dimen/simple_font_size"
+                android:visibility="visible" >
+            </TextView>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5px"
+            android:layout_height="match_parent"
+            android:background="#d1d1d1" />
+
+        <com.mx.osce.custom.CustomSeekBar
+            android:id="@+id/seekBar_tg2"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_weight="4"
+            customseekbar:backgroundColor="@color/bar_color_init"
+            customseekbar:markDescArray="0|200|400|600|800|1000"
+            customseekbar:markItemNum="6"
+            customseekbar:markTextColor="@android:color/black"
+            customseekbar:markTextSize="12sp"
+            customseekbar:max="1000"
+            customseekbar:min="0"
+            customseekbar:progressHeight="10dp"
+            customseekbar:selectedColor="@color/barprocess_color_green" />
+    </LinearLayout>
+
+</LinearLayout>

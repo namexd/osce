@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:misrobot="http://schemas.android.com/apk/res/com.mx.osce"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="00:00"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/finsh_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="计时结束" />
+
+</LinearLayout>
