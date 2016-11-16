@@ -1,0 +1,71 @@
+QWidget#BindTip
+{
+	background:rgb(255, 231, 231);
+	border:1px solid rgb(246,205,205);
+	border-radius: 10px;
+}
+
+QWidget#modify
+{
+	background:rgb(255,255,255);
+	border:1px solid rgb(246,205,205);
+	border-radius: 10px;
+}
+
+QComboBox{
+    border:1px solid rgb(229,230,231);
+}
+QComboBox::down-arrow{
+    image:url(:/img/arrowBottom);
+}
+
+QComboBox::down-arrow:on{
+    image:url(:/img/arrowTop);
+}
+
+QComboBox::drop-down{
+    width:30px;
+    border:0px;
+    background:transparent;
+}
+
+QTableView#watchview{
+        border:none;
+        background:white;
+		color:rgb(103,106,108);
+}
+QTableView#watchview::item:selected{
+        background:rgb(69,158,222);
+}
+
+QMenu#switchmenu{
+    padding:0px;
+    background:white;
+    border:1px solid rgb(246,205,205);
+ }
+QMenu#switchmenu::item{
+    padding:0px;
+}
+QMenu#switchmenu::item:selected:enabled{
+    background:lightgray;
+    color:white;
+}
+QMenu#switchmenu::item:selected:!enabled{
+    background:transparent;
+}
+QMenu#switchmenu::separator{
+    height:1px;
+    background:lightgray;
+    margin:5px 0px 5px 0px;
+}
+
+QTableView#groupview{
+        border:none;
+        background:white;
+}
+QTableView#groupview::item:hover{
+        background:rgb(183, 225, 255);
+}
+QTableView#groupview::item:selected{
+        background:rgb(69,158,222);
+}

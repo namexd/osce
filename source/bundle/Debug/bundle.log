@@ -1,0 +1,138 @@
+﻿生成启动时间为 2016/1/20 17:44:07。
+     1>项目“C:\Users\limingyao\Downloads\sourceAndBinTheBundle\source\bundle\bundle.vcxproj”在节点 2 上(Build 个目标)。
+     1>CustomBuild:
+         Rcc'ing bundle.qrc...
+         Moc'ing maincontent.h...
+         Moc'ing mainhead.h...
+         Moc'ing mainwidget.h...
+         Moc'ing activitylabel.h...
+         Moc'ing dropShadow.h...
+         Moc'ing label.h...
+         Moc'ing pushButton.h...
+         Moc'ing bindwidget.h...
+         Moc'ing watchmanager.h...
+         Moc'ing watchview.h...
+         Moc'ing pagingwidget.h...
+         Moc'ing modifywidget.h...
+         Moc'ing calendar.h...
+         Moc'ing readcards.h...
+         Moc'ing httprequest.h...
+         Moc'ing loginwidget.h...
+         Moc'ing selectexamwidget.h...
+         Moc'ing examlist.h...
+         Moc'ing tip.h...
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_activitylabel.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_activitylabel.cpp, GeneratedFiles\Release\moc_activitylabel.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_bindwidget.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_bindwidget.cpp, GeneratedFiles\Release\moc_bindwidget.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_calendar.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_calendar.cpp, GeneratedFiles\Release\moc_calendar.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_dropShadow.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_dropShadow.cpp, GeneratedFiles\Release\moc_dropShadow.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_examlist.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_examlist.cpp, GeneratedFiles\Release\moc_examlist.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_httprequest.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_httprequest.cpp, GeneratedFiles\Release\moc_httprequest.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_label.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_label.cpp, GeneratedFiles\Release\moc_label.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_loginwidget.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_loginwidget.cpp, GeneratedFiles\Release\moc_loginwidget.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_maincontent.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_maincontent.cpp, GeneratedFiles\Release\moc_maincontent.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_mainhead.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_mainhead.cpp, GeneratedFiles\Release\moc_mainhead.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_mainwidget.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_mainwidget.cpp, GeneratedFiles\Release\moc_mainwidget.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_modifywidget.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_modifywidget.cpp, GeneratedFiles\Release\moc_modifywidget.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_pagingwidget.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_pagingwidget.cpp, GeneratedFiles\Release\moc_pagingwidget.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_pushButton.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_pushButton.cpp, GeneratedFiles\Release\moc_pushButton.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_readcards.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_readcards.cpp, GeneratedFiles\Release\moc_readcards.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_selectexamwidget.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_selectexamwidget.cpp, GeneratedFiles\Release\moc_selectexamwidget.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_tip.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_tip.cpp, GeneratedFiles\Release\moc_tip.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_watchmanager.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_watchmanager.cpp, GeneratedFiles\Release\moc_watchmanager.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_watchview.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are GeneratedFiles\Debug\moc_watchview.cpp, GeneratedFiles\Release\moc_watchview.cpp.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\Qt5.5.1\5.5\msvc2013\include /I.\GeneratedFiles\Debug /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtCore /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtGui /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtWidgets /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtNetwork /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_WIDGETS_LIB /D QT_NETWORK_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt GeneratedFiles\Debug\moc_activitylabel.cpp GeneratedFiles\Debug\moc_bindwidget.cpp GeneratedFiles\Debug\moc_calendar.cpp GeneratedFiles\Debug\moc_dropShadow.cpp GeneratedFiles\Debug\moc_examlist.cpp GeneratedFiles\Debug\moc_httprequest.cpp GeneratedFiles\Debug\moc_label.cpp GeneratedFiles\Debug\moc_loginwidget.cpp GeneratedFiles\Debug\moc_maincontent.cpp GeneratedFiles\Debug\moc_mainhead.cpp GeneratedFiles\Debug\moc_mainwidget.cpp GeneratedFiles\Debug\moc_modifywidget.cpp GeneratedFiles\Debug\moc_pagingwidget.cpp GeneratedFiles\Debug\moc_pushButton.cpp GeneratedFiles\Debug\moc_readcards.cpp GeneratedFiles\Debug\moc_selectexamwidget.cpp GeneratedFiles\Debug\moc_tip.cpp GeneratedFiles\Debug\moc_watchmanager.cpp GeneratedFiles\Debug\moc_watchview.cpp main.cpp maininterface\bind\bindwidget.cpp maininterface\bind\readcards.cpp maininterface\httpapi\httprequest.cpp maininterface\login\loginwidget.cpp maininterface\maincontent.cpp maininterface\mainhead.cpp maininterface\mainwidget.cpp maininterface\selectexam\examlist.cpp maininterface\selectexam\selectwidget.cpp maininterface\watchmanager\modifywidget.cpp maininterface\watchmanager\pagingwidget.cpp maininterface\watchmanager\watchmanager.cpp maininterface\watchmanager\watchview.cpp public\activitylabel.cpp public\calendar.cpp public\dropShadow.cpp public\label.cpp public\pushButton.cpp public\tip.cpp public\toolButton.cpp
+         moc_activitylabel.cpp
+         moc_bindwidget.cpp
+         moc_calendar.cpp
+         moc_dropShadow.cpp
+         moc_examlist.cpp
+         moc_httprequest.cpp
+         moc_label.cpp
+         moc_loginwidget.cpp
+         moc_maincontent.cpp
+         moc_mainhead.cpp
+         moc_mainwidget.cpp
+         moc_modifywidget.cpp
+         moc_pagingwidget.cpp
+         moc_pushButton.cpp
+         moc_readcards.cpp
+         moc_selectexamwidget.cpp
+         moc_tip.cpp
+         moc_watchmanager.cpp
+         moc_watchview.cpp
+         main.cpp
+         正在生成代码...
+         正在编译...
+         bindwidget.cpp
+         readcards.cpp
+         httprequest.cpp
+         loginwidget.cpp
+         maincontent.cpp
+         mainhead.cpp
+         mainwidget.cpp
+         examlist.cpp
+         selectwidget.cpp
+         modifywidget.cpp
+         pagingwidget.cpp
+         watchmanager.cpp
+         watchview.cpp
+         activitylabel.cpp
+         calendar.cpp
+         dropShadow.cpp
+     1>public\dropShadow.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+         label.cpp
+         pushButton.cpp
+         tip.cpp
+         toolButton.cpp
+         正在生成代码...
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /IC:\Qt\Qt5.5.1\5.5\msvc2013\include /I.\GeneratedFiles\Debug /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtCore /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtGui /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtWidgets /IC:\Qt\Qt5.5.1\5.5\msvc2013\include\QtNetwork /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_WIDGETS_LIB /D QT_NETWORK_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt GeneratedFiles\qrc_bundle.cpp
+         qrc_bundle.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\limingyao\Downloads\sourceAndBinTheBundle\source\bundle\Win32\Debug\\bundle.exe" /NOLOGO /LIBPATH:C:\Qt\Qt5.5.1\5.5\msvc2013\lib qtmaind.lib Qt5Cored.lib Qt5Guid.lib Qt5Widgetsd.lib Qt5Networkd.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\limingyao\Downloads\sourceAndBinTheBundle\source\bundle\Win32\Debug\bundle.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\limingyao\Downloads\sourceAndBinTheBundle\source\bundle\Win32\Debug\bundle.lib" /MACHINE:X86 /SAFESEH Debug\moc_activitylabel.obj
+         Debug\moc_bindwidget.obj
+         Debug\moc_calendar.obj
+         Debug\moc_dropShadow.obj
+         Debug\moc_examlist.obj
+         Debug\moc_httprequest.obj
+         Debug\moc_label.obj
+         Debug\moc_loginwidget.obj
+         Debug\moc_maincontent.obj
+         Debug\moc_mainhead.obj
+         Debug\moc_mainwidget.obj
+         Debug\moc_modifywidget.obj
+         Debug\moc_pagingwidget.obj
+         Debug\moc_pushButton.obj
+         Debug\moc_readcards.obj
+         Debug\moc_selectexamwidget.obj
+         Debug\moc_tip.obj
+         Debug\moc_watchmanager.obj
+         Debug\moc_watchview.obj
+         Debug\qrc_bundle.obj
+         Debug\main.obj
+         Debug\bindwidget.obj
+         Debug\readcards.obj
+         Debug\httprequest.obj
+         Debug\loginwidget.obj
+         Debug\maincontent.obj
+         Debug\mainhead.obj
+         Debug\mainwidget.obj
+         Debug\examlist.obj
+         Debug\selectwidget.obj
+         Debug\modifywidget.obj
+         Debug\pagingwidget.obj
+         Debug\watchmanager.obj
+         Debug\watchview.obj
+         Debug\activitylabel.obj
+         Debug\calendar.obj
+         Debug\dropShadow.obj
+         Debug\label.obj
+         Debug\pushButton.obj
+         Debug\tip.obj
+         Debug\toolButton.obj
+         bundle.vcxproj -> C:\Users\limingyao\Downloads\sourceAndBinTheBundle\source\bundle\Win32\Debug\bundle.exe
+     1>已完成生成项目“C:\Users\limingyao\Downloads\sourceAndBinTheBundle\source\bundle\bundle.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:50.49
