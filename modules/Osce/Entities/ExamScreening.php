@@ -168,7 +168,8 @@ class ExamScreening extends CommonModel
         }
         else{
             $todayStart = date('Y-m-d 00:00:00');
-            $todayEnd   = date('Y-m-d 23:59:59');
+            //$todayEnd   = date('Y-m-d 23:59:59');
+            $todayEnd = date("Y-m-d",strtotime("+1 day"));
             $exam     = Exam::doingExam($exam_id);
             if(is_null($exam)){
                 throw new \Exception('没有找到对应的考试实例');
@@ -183,7 +184,7 @@ class ExamScreening extends CommonModel
 
             $result = $this->where('exam_id', '=', $exam_id)
                 ->whereRaw("UNIX_TIMESTAMP(begin_dt) >= UNIX_TIMESTAMP('$todayStart')
-                          AND UNIX_TIMESTAMP(end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+                          AND UNIX_TIMESTAMP(end_dt) <= UNIX_TIMESTAMP('$todayEnd')")
                 ->where('status', '=', 0)
                 ->whereIn('id', $screenId)
                 ->OrderBy('begin_dt', 'asc')
@@ -202,11 +203,11 @@ class ExamScreening extends CommonModel
         }
         else{
             $todayStart = date('Y-m-d 00:00:00');
-            $todayEnd   = date('Y-m-d 23:59:59');
-
+            //$todayEnd   = date('Y-m-d 23:59:59');
+            $todayEnd = date("Y-m-d",strtotime("+1 day"));
             $result     = $this->where('exam_id', '=', $exam_id)
                 ->whereRaw("UNIX_TIMESTAMP(begin_dt) >= UNIX_TIMESTAMP('$todayStart')
-                              AND UNIX_TIMESTAMP(end_dt) < UNIX_TIMESTAMP('$todayEnd')")
+                              AND UNIX_TIMESTAMP(end_dt) <= UNIX_TIMESTAMP('$todayEnd')")
                 ->where('status', '=', 1)       //等候考试
                 ->OrderBy('begin_dt', 'asc')
                 ->first();
