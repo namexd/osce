@@ -1,0 +1,1 @@
+php artisan module:seed msc --database=msc_mis

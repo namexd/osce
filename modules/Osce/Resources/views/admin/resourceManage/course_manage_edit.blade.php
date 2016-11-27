@@ -1,0 +1,469 @@
+@extends('osce::admin.layouts.admin_index')
+@section('only_css')
+<link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
+<link href="{{asset('osce/common/select2-4.0.0/css/select2.css')}}" rel="stylesheet"/>
+<style>
+    table tr td .form-group {
+        margin-bottom: 0;
+    }
+    td input{margin: 5px 0;}
+    #file0{
+        height: 34px;
+        width: 70px;
+        opacity: 0;
+        position: relative;
+        top: -20px;
+        left: 0;
+    }
+    .ibox-content{padding-top: 20px;}
+    .btn-outline:hover{color: #fff!important;}
+    .form-group .ibox-title{border-top: 0;}
+    .form-group .ibox-content{
+        border-top: 0;
+        padding-left: 0;
+    }
+    .form-horizontal tbody .control-label {
+        padding-top: 7px;
+        margin-bottom: 0;
+        text-align: center;
+    }
+    .display-none{display: none;}
+    .select2-container--default{width:100% !important;}
+             .select2-container--default .select2-selection--multiple{border:1px solid #e5e6e7;}
+             .select2-container--default.select2-container--focus .select2-selection--multiple {border:1px solid  #1ab394 !important;outline: 0;}
+             .select2-container--default .select2-selection--single {background-color: #fff;border: 1px solid #e5e6e7;border-radius: 1px;}
+                 .select2-container--default  .select2-dropdown {border: 1px solid #e5e6e7;}
+                 .select2-container--default .select2-search--dropdown .select2-search__field {border: 1px solid #e5e6e7;}
+                 .select2-container--open .select2-selection--single {background-color: #fff;border: 1px solid #1ab394 !important;border-radius: 4px;}
+                 .select2-container--open .select2-dropdown {border: 1px solid #1ab394 !important;}
+                 .select2-container--open .select2-search--dropdown .select2-search__field {border: 1px solid #1ab394 !important;}
+                 .select2-container .select2-selection--single { height: 34px;}
+                 .select2-container--default .select2-selection--single .select2-selection__arrow b {margin-left: -4px;margin-top: 1px;}
+</style>
+@stop
+
+@section('only_js')
+<script src="{{asset('osce/admin/resourceManage/resource_manage.js')}}" ></script> 
+<script src="{{asset('osce/wechat/common/js/ajaxupload.js')}}"></script>
+<script src="{{asset('osce/common/select2-4.0.0/js/select2.full.js')}}"></script>
+<script src="{{asset('osce/common/js/bootstrapValidator.js')}}"></script>
+<script> 
+    $(function(){
+        /**
+         * 编辑和新增共用了一段代码，这里必须将验证单独拿出
+         * @author mao
+         * @version 1.0
+         * @date    2016-02-19
+         */
+        $('#sourceForm').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {/*验证*/
+                title: {/*键名username和input name值对应*/
+                    validators: {
+                        threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                        remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                            url: "{{route('osce.admin.topic.postNameUnique')}}",//验证地址
+                            message: '名称已经存在',//提示消息
+                            delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                            type: 'POST',//请求方式
+                            /*自定义提交数据，默认值提交当前input value*/
+                            data: function(validator) {
+                                return {
+                                    id:(location.href).split('=')[1],
+                                    name: $('#title').val()
+                                }
+                            }
+                        },
+                        notEmpty: {/*非空提示*/
+                            message: '名称不能为空'
+                        },
+                        stringLength: {
+                            max:32,
+                            message: '名称字数不超过32个'
+                        }
+                    }
+                },
+                'cases[]':{
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '病例不能为空'
+                        }
+                    }
+                },
+                case_id: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '病例不能为空！'
+                        }
+                    }
+                },
+                time: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '时间间隔不能为空'
+                        },
+                        regexp: {
+                            regexp: /^([0-9]+)$/,
+                            message: '请输入正确的时间间隔'
+                        }
+                    }
+                },
+                total: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '总分不能为空'
+                        },
+                        regexp: {
+                            regexp: /^([0-9]+)$/,
+                            message: '请输入正确的总分'
+                        }
+                    }
+                },
+                rate_choose:{
+                    validators:{
+                        regexp: {
+                            regexp: /^[1-3]$/,
+                            message: '请选择一种折算方案!'
+                        }
+                    }
+                },
+                mins: {
+                    validators: {
+                        notEmpty: {/*非空提示*/
+                            message: '时间不能为空'
+                        },
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '请输入正确的时间'
+                        },
+                        stringLength: {
+                            max:20,
+                            message: '长度不超过20个'
+                        }
+                    }
+                }
+            }
+        });
+        rate();
+    });
+</script> 
+@stop
+
+@section('content')
+    <?php $topticOptionMaxNumer = config('osce.topticOptionMaxNumer'); ?>
+    {{--{{dd($data)}}--}}
+    <input type="hidden" id="parameter" value="{'pagename':'course_module','excel':'{{route('osce.admin.topic.postImportExcel')}}','clinicalList':'{{route('osce.admin.topic.getSubjectCases')}}','goodList':'{{route('osce.admin.topic.getSubjectSupply')}}','clinical_add':'{{route('osce.admin.case.getCreateCase')}}','topticOptionMaxNumer':'{{$topticOptionMaxNumer}}'}" />
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>编辑考试项目</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+
+                <div class="col-md-12 ">
+                    <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.topic.postEditTopic')}}">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                <input type="hidden" class="form-control" id="id" name="id" value="{{$item->id}}">
+                                <input type="text" required class="form-control" id="title" name="title" value="{{$item->title}}" maxlength="32">
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group display-none">
+                            <label class="col-sm-2 control-label">类别</label>
+                            <div class="col-sm-10">
+                                <select id="select_Category" class="form-control" name="category"/>
+                                    <option value="1">问诊</option>
+                                    <option value="2">查询</option>
+                                    <option value="3">操作</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed display-none"></div>
+
+                        <div class="form-group display-none">
+                            <label class="col-sm-2 control-label">操作</label>
+                            <div class="col-sm-5">
+                                <select id="select_Category" class="form-control" name="category"/>
+                                    <option value="1">内科</option>
+                                    <option value="2">外科</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-5">
+                                <select id="select_Category" class="form-control" name="category"/>
+                                    <option value="1">胸穿</option>
+                                    <option value="2">腹穿</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed display-none"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">时间限制(分钟)</label>
+                            <div class="col-sm-10">
+                                <input id="time" class="form-control" name="mins" value="{{$item->mins}}"  placeholder="请输入分钟数" />
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">病例</label>
+                            <div class="col-sm-10">
+                                <select id="select-clinical" class="form-control" name="cases[]" multiple="multiple">
+                                @forelse($item->cases as $subjectCase)
+                                    <option value="{{$subjectCase->id}}" selected="selected">{{$subjectCase->name}}</option>
+                                @empty
+                                @endforelse
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        {{--<div class="form-group">
+                            <label class="col-sm-2 control-label">总分</label>
+                            <div class="col-sm-10">
+                                <input id="total" class="form-control" name="total" value="{{$item->score}}"/>
+                            </div>
+                        </div>--}}
+                        {{--div class="hr-line-dashed"></div>--}}
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">描述</label>
+                            <div class="col-sm-10">
+                                <input id="select_Category" required  class="form-control" name="desc" value="{{$item->description}}"/>
+                            </div>
+                        </div>
+                        {{--<div class="hr-line-dashed"></div>--}}
+
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">物品准备</label>
+                            <div class="col-sm-10">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5></h5>
+                                        <div class="ibox-tools">
+                                            <button type="button" class="btn btn-outline btn-default" id="add-things">新增物品</button>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <table class="table table-bordered" id="things-use">
+                                            <thead>
+                                                <tr>
+                                                    <th width="481">用物</th>
+                                                    <th>数量</th>
+                                                    <th width="160">操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody index="{{count($subjectSupplys)}}">
+                                            @forelse($subjectSupplys as $key => $subjectSupply)
+                                                <tr>
+                                                    <td>
+                                                        <select class="form-control js-example-basic-single" name="goods[{{$key+1}}][name]" style="width: 481px;">
+                                                            <option value="{{$subjectSupply->supply->name}}">{{$subjectSupply->supply->name}}</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" value="{{round($subjectSupply->num)}}" name="goods[{{$key+1}}][number]">
+                                                    </td>
+                                                    <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
+                                                </tr>
+                                            @empty
+                                            @endforelse
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">评分标准</label>
+                            <div class="col-sm-10">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title" style="margin-top: 50px">
+                                        <h5>
+                                            <div id="rate-box" style="width: 100%;height: 100px;">
+                                                <div style="margin-top: 10px">
+                                                    <label>总分：<input type="text" id="total" name="total" value="{{$item->score}}" style="width: 100px;height: 25px;border: 1px solid; margin-left: 3em"/></label>
+                                                    <label style="margin-left:50px;display:{{$item->rate_choose==1?'none':'line-block'}}" id="rate_score_box">折算后总分：<input type="text" id="rate_score" name="rate_score" readonly value="{{round($item->rate_score,2)}}" style="border: none;background-color: #FFF"/></label>
+                                                </div>
+                                                <div style="margin-top: 15px">
+                                                    <label>成绩折算：</label>
+                                                    <select id="rate_choose" name="rate_choose" style="width:100px;height: 25px; margin-left: 10px">
+                                                        <option value="1" {{$item->rate_choose==1?'selected':''}}>不需要折算</option>
+                                                        <option value="2" {{$item->rate_choose==2?'selected':''}}>统一折算率</option>
+                                                        <option value="3" {{$item->rate_choose==3?'selected':''}}>自定义折算</option>
+                                                    </select>
+
+                                                    <label style="margin-left:10%;display: none" id="all_rate_box">折算率：<input type="text" style="width: 117px;height: 25px;border: 1px solid" id="all_rate" value="{{$item->rate_choose==2?(isset($list[0])?round($list[0]->coefficient,2):''):''}}"/></label>
+                                                </div>
+                                            </div>
+                                        </h5>
+                                        <div class="ibox-tools">
+                                            <a  href="{{route('osce.admin.topic.getToppicTpl')}}" class="btn btn-outline btn-default" style="float: right;color:#333;display:none;">下载模板</a>
+                                            <a  href="{{$tempUrl}}" class="btn btn-outline btn-default" style="float: right;color:#333;display:none;">下载模板</a>
+                                            <button type="button" class="btn btn-outline btn-default" id="add-new">新增考核点</button>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <table class="table table-bordered" id="judgement">
+                                            <thead>
+                                                <tr>
+                                                    <th>序号</th>
+                                                    <th>考核内容</th>
+                                                    <th width="120">分数</th>
+                                                    <th width="160">操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody index="{{$prointNum-1}}">
+                                            @forelse($list as $key => $data)
+                                                <tr class="pid-{{$data->pid==0? $data->sort:$data->parent->sort}}"  current="{{$optionNum[$data->id] or 0}}" {{$data->pid==0? 'parent='.$data->sort.'':'child='.$data->sort.''}}>
+                                                    <td>{{$data->pid==0? $data->sort:$data->parent->sort.'-'.$data->sort}}</td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">{{$data->pid==0? '考核点:':'考核项:'}}</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="hidden" class="form-control" name="{{$data->pid==0? 'content['.$data->sort.'][id]':'content['.$data->parent->sort.']['.$data->sort.'][id]'}}" value="{{$data->id}}"/>
+                                                                <input id="select_Category"  class="form-control" name="{{$data->pid==0? 'content['.$data->sort.'][title]':'content['.$data->parent->sort.']['.$data->sort.']['.$data->sort.']'}}" value="{{$data->content}}"/>
+                                                            </div>
+                                                        </div>
+                                                        @if($data->pid!=0)
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">评分标准:</label>
+                                                            <div class="col-sm-10">
+                                                                <input id="select_Category" class="form-control" name="description[{{$data->parent->sort}}][{{$data->sort}}]" value="{{$data->answer}}">
+                                                            </div>
+                                                        </div>
+                                                        @endif
+                                                    </td>
+                                                    <td height="80" width="180">
+                                                        @if($data->pid==0)
+                                                            <label>考核点总分：</label>
+                                                        @endif
+                                                        <select {!! $data->pid==0? 'style="display:none;"':''!!} class="form-control" name="{{$data->pid==0? 'score['.$data->sort.'][total]':'score['.$data->parent->sort.']['.$data->sort.']'}}">
+                                                            @for($i=1; $i<=(($data->score>$topticOptionMaxNumer)?$data->score:$topticOptionMaxNumer); $i++)
+                                                            <option value="{{$i}}" {{$data->score==$i? 'selected="selected"':''}}>{{$i}}</option>
+                                                            @endfor
+                                                        </select>
+
+                                                        <span {!! $data->pid!=0? 'style="display:none;"':'style="line-display:block;"'!!}>{{$data->score}}
+
+                                                        </span>
+                                                        @if($data->pid==0)
+                                                            <label class="rate_box" style="display: {{$item->rate_choose==3?'line-block':'none'}}">
+                                                                折算率：<input type="text" value="{{round($data->coefficient,2)}}" style="width:50px;border:1px solid" class="rate" name="score[{{$data->sort}}][rate]">
+                                                            </label>
+                                                        @endif
+                                                    </td>
+                                                    @if($data->pid==0)
+                                                    <td>
+                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up parent-up fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down parent-down fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read  state1 detail"><i class="fa fa-plus fa-2x"></i></span></a>
+                                                    </td>
+                                                    @else
+                                                    <td>
+                                                        <a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-up child-up fa-2x"></i></span></a>
+                                                        <a href="javascript:void(0)"><span class="read state1 detail"><i class="fa fa-arrow-down child-down fa-2x"></i></span></a>
+                                                    </td>
+                                                    @endif
+                                                </tr>
+                                            @empty
+                                            @endforelse
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-12" id="checkbox_div">
+                                <label class="check_label checkbox_input checkbox_one" style="height: 15px;line-height: 28px;margin-left: 13.7%;">
+                                    <div class="check_icon {{($item->specialScores->isEmpty())?'':'check'}}" style="display: inline-block;margin:5px 0 0 5px;float:left;"></div>
+                                    <input type="hidden" name="special_score_flag" value="{{($item->specialScores->isEmpty())?0:1}}"  checked="checked">
+                                    <span class="check_name" style="display: inline-block;float:left;">特殊评分项</span>
+                                </label>
+                            </div>
+
+                            <div class="col_special"  style="display: {{($item->specialScores->isEmpty())?'none;':'block;'}};">
+                                <label class="col-sm-2 control-label">&nbsp;</label>
+                                <div class="col-sm-10" id="col_special">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-title" style="margin-top: 10px">
+                                            @if(!$item->specialScores->isEmpty())
+                                                <label id="special_rate_box" style="display: {{$item->rate_choose==3?'line-block':'none'}}">折算率：<input id="special_rate" value="{{round($item->specialScores->first()->rate,2)}}" name="special_rate" type="text" style="width: 100px;height: 25px;border: 1px solid;margin-left: 2em"></label>
+                                            @else
+                                                <label id="special_rate_box" style="display: {{$item->rate_choose==3?'line-block':'none'}}">折算率：<input id="special_rate" name="special_rate" type="text" style="width: 100px;height: 25px;border: 1px solid;margin-left: 2em"></label>
+                                            @endif
+                                            <div class="ibox-tools">
+                                                <button type="button" class="btn btn-outline btn-default" id="add-special-score">新增特殊评分项</button>
+                                            </div>
+                                        </div>
+                                        <div class="ibox-content">
+                                            <table class="table table-bordered" id="special-score">
+                                                <thead>
+                                                <tr>
+                                                    <th width="70%">名称</th>
+                                                    <th>分数</th>
+                                                    <th width="10%">操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody index="{{$item->specialScores->count()}}">
+                                                @forelse($item->specialScores as $key => $specialScore)
+                                                    <tr>
+                                                        <td>
+                                                            <input class="form-control" name="special_score[{{$key+1}}][title]" value="{{$specialScore->title}}"  style="width: 100%;" />
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" name="special_score[{{$key+1}}][score]" value="{{$specialScore->score}}" >
+                                                            <input type="hidden" class="special_rate" name="special_score[{{$key+1}}][rate]" value="{{round($specialScore->rate, 2)}}" />
+                                                            <input class="form-control" name="special_score[{{$key+1}}][id]" value="{{$specialScore->id}}" type="hidden">
+                                                        </td>
+                                                        <td><a href="javascript:void(0)"><span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i></span></a></td>
+                                                    </tr>
+                                                @empty
+                                                @endforelse
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-primary" id="submit-btn" type="submit">保存</button>
+                                <a class="btn btn-white" href="{{route("osce.admin.topic.getList")}}">取消</a>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+@stop{{-- 内容主体区域 --}}
