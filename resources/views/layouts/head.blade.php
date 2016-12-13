@@ -1,7 +1,7 @@
 @section('seo')
-	<title>@yield('seo_title','敏行系统,强力驱动')</title>
-	<meta name="description" content="@yield('seo_description','敏行系统,强力驱动')">
-	<meta name="keywords" content="@yield('seo_keywords','敏行系统,强力驱动')">
+	<title>@yield('seo_title','速力达系统,强力驱动')</title>
+	<meta name="description" content="@yield('seo_description','速力达系统,强力驱动')">
+	<meta name="keywords" content="@yield('seo_keywords','速力达系统,强力驱动')">
 @show
 @section('base_css')
 	@include('layouts.base_css')

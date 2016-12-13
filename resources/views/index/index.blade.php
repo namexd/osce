@@ -58,7 +58,7 @@
 
         </div>
 
-        <strong>Copyright &copy; Copyright 2015-2018 <a href=""></a></strong>华西临床技能中心业务管理系统(<code>MscMis</code>)  版本: v1.0
+        <strong>Copyright &copy; Copyright 2015-2018 <a href=""></a></strong>临床技能中心业务管理系统(<code>MscMis</code>)  版本: v1.0
     </footer>
 
 <script type="text/javascript">
