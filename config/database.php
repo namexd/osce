@@ -140,27 +140,30 @@ return [
 
         //队列
         'queue' => [
-			'host'     => env('REDIS_HOST','192.168.0.254'),
-            'port'     => 6379,
+            'host' => 'redis.atapp.com',
+            'port' => 60379,
             'database' => 0,
+            'password' => '4f38ad'
         ],
 
         'cache' => [
-			'host'     => '192.168.0.254',
-            'port'     => 6379,
+            'host' => 'redis.atapp.com',
+            'port' => 60379,
             'database' => 1,
+            'password' => '4f38ad'
         ],
 
         'session' => [
-			'host'     => '192.168.0.254',
-            'port'     => 6379,
+            'host' => 'redis.atapp.com',
+            'port' => 60379,
             'database' => 2,
+            'password' => '4f38ad'
         ],
         'message' => [
-            'host' => 'cloud.misrobot.com',
-            'port' => 6379,
+            'host' => 'redis.atapp.com',
+            'port' => 60379,
             'database' => 3,
-            'password' => 'gogoMisrobot123'
+            'password' => '4f38ad'
         ]
     ],
 
