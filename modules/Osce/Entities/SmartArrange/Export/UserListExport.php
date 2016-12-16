@@ -21,7 +21,7 @@ class UserListExport extends NewExcelFile
      * @version 3.6
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-01
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getFilename()
     {
@@ -37,7 +37,7 @@ class UserListExport extends NewExcelFile
      * @version
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-01
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function objToArray(Collection $collection)
     {

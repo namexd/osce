@@ -23,7 +23,7 @@ trait SmartTraits
      * @version 3.6
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-04
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function judgeTime($studentId, $screen)
     {
@@ -73,7 +73,7 @@ trait SmartTraits
      * @version 3.6
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function writeExamQueue($obj, $stationId, $status = 1)
     {

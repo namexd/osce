@@ -53,7 +53,7 @@ class AutomaticPlanArrangementController extends CommonController
      * @version
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     function getIndex(Request $request)
     {
@@ -91,7 +91,7 @@ class AutomaticPlanArrangementController extends CommonController
      * @version 3.6
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-01
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     function postBegin(SmartArrangeRepository $smartArrangeRepository)
     {
@@ -125,7 +125,7 @@ class AutomaticPlanArrangementController extends CommonController
      * @version 3.6
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-02-23 17:30
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     function postStore(SmartArrangeRepository $smartArrangeRepository)
     {
@@ -161,7 +161,7 @@ class AutomaticPlanArrangementController extends CommonController
      * @version 3.6
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-01 16：48
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getExport(SmartArrangeRepository $smartArrangeRepository, UserListExport $export, StudentArrange $arrange)
     {

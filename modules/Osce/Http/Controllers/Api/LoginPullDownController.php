@@ -38,7 +38,7 @@ class LoginPullDownController extends CommonController
      * @version
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-03
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getExamList(PadLoginRepository $padLogin)
     {
@@ -65,7 +65,7 @@ class LoginPullDownController extends CommonController
      * @version
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getRoomList(Request $request, PadLoginRepository $padLogin)
     {

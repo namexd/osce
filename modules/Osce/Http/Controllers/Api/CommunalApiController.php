@@ -26,7 +26,7 @@ class CommunalApiController extends CommonController
      * @version 1.0
      * @author Luohaihua <Luohaihua@misrobot.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2015 MIS misrobot.com  Inc. All Rights Reserved
      *
      */
     public function postEditorUpload(Request $request){

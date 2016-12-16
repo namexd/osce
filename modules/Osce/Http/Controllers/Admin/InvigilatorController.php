@@ -925,9 +925,7 @@ class InvigilatorController extends CommonController
      * 下载学生导入模板
      * @url GET /osce/admin/invigilator/download-teacher-improt-tpl
      * @access public
-     *
      * @return void
-     *
      * @version 1.0
      * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
      * @date 2015-03-21

@@ -302,7 +302,7 @@ class ExamScreening extends CommonModel
      *
      * @author wt <wangtao@misrobot.com>
      * @date   2016-05-7
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getScreenID($exam_id){
         $screenObject=$this->getExamingScreening($exam_id);

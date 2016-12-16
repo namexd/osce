@@ -16,7 +16,6 @@ use Modules\Msc\Entities\TeacherDept;
 use Modules\Msc\Http\Controllers\MscController;
 use Symfony\Component\HttpFoundation\Response;
 
-
 class UserController extends MscController
 {
     /**

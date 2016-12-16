@@ -21,7 +21,7 @@ class Time implements TimeInterface
      * @version 3.6
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function beginTime()
     {
@@ -37,7 +37,7 @@ class Time implements TimeInterface
      * @version
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function endTime()
     {

@@ -380,7 +380,7 @@ class ExamControl extends Model
      * @version 3.6
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @time 2016-06-04
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function stopExamLate($examId,$studentId, $screen_id,$reason,$replace){
         $DB = DB::connection('osce_mis');
@@ -424,7 +424,7 @@ class ExamControl extends Model
      * @version 3.6
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @time 2016-06-04
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
 
     public function LateStudentAll($examId,$screen_id,$replace ){
@@ -467,7 +467,7 @@ class ExamControl extends Model
      * @version 3.6
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @time 2016-06-04
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
 
     private function ScreeningStudent ($studentId,$screen_id){
@@ -511,7 +511,7 @@ class ExamControl extends Model
      * @version 3.6
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @time 2016-06-04
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     private  function getCreatorResult($examId,$studentId,$screen_id,$studentId,$reason,$replace){
         $emamPlanMsg=ExamPlan::where('exam_id',$examId)->where('exam_screening_id',$screen_id)->where('student_id',$studentId)->get();
@@ -543,7 +543,7 @@ class ExamControl extends Model
      * @version 3.6
      * @author zhouqiang <zhouqiang@misrobot.com>
      * @time 2016-06-04
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
 
 

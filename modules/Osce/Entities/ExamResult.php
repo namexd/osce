@@ -402,7 +402,7 @@ class ExamResult extends CommonModel
      * @version 3.6
      * @author zhouqiang <JiangZhiheng@misrobot.com>
      * @time 2016-05-07
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
 
     public function NextExaminee($examId,$screeningId,$roomId,$teacherId,$stationId,$abnormal = 1){
@@ -512,7 +512,7 @@ class ExamResult extends CommonModel
      * @return mixed
      * @author GaoDapeng <gaodapeng@misrobot.com>
      * @time 2016-06-29
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getInvalidSign($resultId)
     {

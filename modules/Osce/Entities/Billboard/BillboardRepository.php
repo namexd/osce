@@ -30,7 +30,7 @@ class BillboardRepository
      * @version
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-04
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getData($examId)
     {
@@ -53,7 +53,7 @@ class BillboardRepository
      * @version
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-05
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getStudent($examId, $stationId)
     {
@@ -71,7 +71,7 @@ class BillboardRepository
      * @version
      * @author JiangZhiheng <JiangZhiheng@misrobot.com>
      * @time 2016-05-05
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public  function  getRoomData($examId,$studentId,$room_id)
     {

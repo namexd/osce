@@ -299,7 +299,7 @@ class CourseController extends CommonController
      * @param Request $request
      * @return mixed
      * @author GaoDapeng <gaodapeng@misrobot.com>
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
 
     public function invalidScore(Request $request)
