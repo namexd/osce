@@ -420,11 +420,12 @@ class ApiController extends CommonController
         if (\Auth::attempt(['username' => $username, 'password' => $password]))
         {
 
-            
+
             //获取当前登录账户的角色名称
             $user = new User();
             $userInfo = $user->getUserRoleName($username);
 
+            dd($userInfo);
             if($userInfo->name == '监考老师'){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($userInfo->name == '考生'){
