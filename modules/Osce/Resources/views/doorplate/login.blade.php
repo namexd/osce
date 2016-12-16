@@ -90,7 +90,7 @@
 			启　动
 		</button>
 	</form>
-	<p class="bot"><i class="">速力达权所有</i></p>
+	<p class="bot"><i class="">速立达权所有</i></p>
 </div>
 
 <script>
