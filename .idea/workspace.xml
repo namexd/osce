@@ -2,271 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="09f4fc08-8028-4f2a-90a3-23bf47caafbb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/CommonModel.php" afterPath="$PROJECT_DIR$/app/Entities/CommonModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/SysElement.php" afterPath="$PROJECT_DIR$/app/Entities/SysElement.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/SysFunctions.php" afterPath="$PROJECT_DIR$/app/Entities/SysFunctions.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/SysMenus.php" afterPath="$PROJECT_DIR$/app/Entities/SysMenus.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/SysPermissionElement.php" afterPath="$PROJECT_DIR$/app/Entities/SysPermissionElement.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/SysPermissionFunction.php" afterPath="$PROJECT_DIR$/app/Entities/SysPermissionFunction.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/SysPermissionMenu.php" afterPath="$PROJECT_DIR$/app/Entities/SysPermissionMenu.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/SysPermissions.php" afterPath="$PROJECT_DIR$/app/Entities/SysPermissions.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/SysRolePermission.php" afterPath="$PROJECT_DIR$/app/Entities/SysRolePermission.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/SysRoles.php" afterPath="$PROJECT_DIR$/app/Entities/SysRoles.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Entities/SysValidatecode.php" afterPath="$PROJECT_DIR$/app/Entities/SysValidatecode.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/AuthController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/AuthController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/IndexController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/IndexController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/V1/Msc/CommonController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/V1/Msc/CommonController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/V1/Msc/ResourcesManagerController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/V1/Msc/ResourcesManagerController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/V1/Sys/MemberCenterController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/V1/Sys/MemberCenterController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/V1/Sys/UserController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/V1/Sys/UserController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/V1/Sys/UserManagerController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/V1/Sys/UserManagerController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Repositories/BaseRepository.php" afterPath="$PROJECT_DIR$/app/Repositories/BaseRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Repositories/Common.php" afterPath="$PROJECT_DIR$/app/Repositories/Common.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Repositories/ResourcesLocationRepository.php" afterPath="$PROJECT_DIR$/app/Repositories/ResourcesLocationRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Repositories/ResourcesRepository.php" afterPath="$PROJECT_DIR$/app/Repositories/ResourcesRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Repositories/UserRepository.php" afterPath="$PROJECT_DIR$/app/Repositories/UserRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Resources/views/layouts/admin.blade.php" afterPath="$PROJECT_DIR$/app/Resources/views/layouts/admin.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/config.php" afterPath="$PROJECT_DIR$/config/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/CommonModel.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/CommonModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/Floor.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/Floor.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/Grade.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/Grade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/Groups.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/Groups.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/LabApply.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/LabApply.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/LabPlan.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/LabPlan.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/Laboratory.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/Laboratory.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/LadDevice.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/LadDevice.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/MessageModel.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/MessageModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/OpenPlan.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/OpenPlan.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/PlanApply.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/PlanApply.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/PlanRecord.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/PlanRecord.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/School.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/School.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/StdClass.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/StdClass.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/StdProfessional.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/StdProfessional.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/Student.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/Student.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/StudentType.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/StudentType.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/Teacher.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/Teacher.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Entities/TeacherDept.php" afterPath="$PROJECT_DIR$/modules/Msc/Entities/TeacherDept.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/DeptController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/DeptController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/FloorController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/FloorController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/LaboratoryController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/LaboratoryController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/LadMaintainController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/LadMaintainController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/LoginController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/LoginController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/ProfessionController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/ProfessionController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/ProfessionalTitleController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/ProfessionalTitleController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/ResourcesController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/ResourcesController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/TestController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/TestController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/UserController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/UserController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/VerifyController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/Admin/VerifyController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/MscController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/MscController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/WeChat/LaboratoryCotroller.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/WeChat/LaboratoryCotroller.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/WeChat/PersonalCenterController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/WeChat/PersonalCenterController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/WeChat/UserController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/WeChat/UserController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/WeChat/WeChatController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/WeChat/WeChatController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Http/Controllers/WechatController.php" afterPath="$PROJECT_DIR$/modules/Msc/Http/Controllers/WechatController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Repositories/BaseRepository.php" afterPath="$PROJECT_DIR$/modules/Msc/Repositories/BaseRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Repositories/ResourcesLocationRepository.php" afterPath="$PROJECT_DIR$/modules/Msc/Repositories/ResourcesLocationRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Repositories/ResourcesRepository.php" afterPath="$PROJECT_DIR$/modules/Msc/Repositories/ResourcesRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Repositories/ResourcesToolsCateRepository.php" afterPath="$PROJECT_DIR$/modules/Msc/Repositories/ResourcesToolsCateRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Repositories/ResourcesToolsRepository.php" afterPath="$PROJECT_DIR$/modules/Msc/Repositories/ResourcesToolsRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Msc/Resources/views/admin/layouts/base.blade.php" afterPath="$PROJECT_DIR$/modules/Msc/Resources/views/admin/layouts/base.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Commands/DefaultCommand.php" afterPath="$PROJECT_DIR$/modules/Osce/Commands/DefaultCommand.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Config/config.php" afterPath="$PROJECT_DIR$/modules/Osce/Config/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Database/Seeders/AreaSeeder.php" afterPath="$PROJECT_DIR$/modules/Osce/Database/Seeders/AreaSeeder.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/AddAllExaminee/AddAllExaminee.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/AddAllExaminee/AddAllExaminee.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/AddAllExaminee/AddAllExamineeRepository.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/AddAllExaminee/AddAllExamineeRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/AddAllExaminee/Traits/CheckTraits.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/AddAllExaminee/Traits/CheckTraits.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Area.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Area.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/AutomaticPlanArrangement/AutomaticPlanArrangement.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/AutomaticPlanArrangement/AutomaticPlanArrangement.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/AutomaticPlanArrangement/Exam.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/AutomaticPlanArrangement/Exam.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/AutomaticPlanArrangement/Student.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/AutomaticPlanArrangement/Student.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Billboard/Billboard.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Billboard/Billboard.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Billboard/BillboardRepository.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Billboard/BillboardRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/CaseModel.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/CaseModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Config.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ConfigRepository/AbstractConfig.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ConfigRepository/AbstractConfig.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ConfigRepository/SysParam.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ConfigRepository/SysParam.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Discussion.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Discussion.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/DrawlotsRepository.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/DrawlotsRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/HuaxiSmarty.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/HuaxiSmarty.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/Screening.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/Screening.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/Station.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/Station.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/Student.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/Student.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/Traits/SmartTraits.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/Traits/SmartTraits.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/Validator/CheckTraits.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Drawlots/Validator/CheckTraits.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Exam.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Exam.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamAbsent.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamAbsent.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamArrange/ExamArrange.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamArrange/ExamArrange.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamArrange/ExamArrangeRepository.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamArrange/ExamArrangeRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamArrange/Traits/SqlTraits.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamArrange/Traits/SqlTraits.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamArrange/Traits/SundryTraits.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamArrange/Traits/SundryTraits.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamDraft.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamDraft.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamDraftFlow.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamDraftFlow.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamDraftTemp.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamDraftTemp.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamFlow.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamFlow.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamFlowRoom.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamFlowRoom.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamFlowStation.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamFlowStation.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/Drawlots.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/Drawlots.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/ExamMidwayRepository.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/ExamMidwayRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/Examinee.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/Examinee.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/RoomMode.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/RoomMode.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/StationMode.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/StationMode.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamOrder.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamOrder.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamPlan.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamPlan.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamPlanForRoom.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamPlanForRoom.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamPlanRecord.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamPlanRecord.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamQueue.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamQueue.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamResult.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamResult.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamRoom.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamRoom.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamScreening.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamScreening.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamScreeningStudent.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamScreeningStudent.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/ExamStationStatus.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/ExamStationStatus.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Flow.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Flow.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Flows.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Flows.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/InformInfo.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/InformInfo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/InformTrain.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/InformTrain.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Invigilator.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Invigilator.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Machine.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Machine.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/MachineCategory.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/MachineCategory.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/MachineInterface.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/MachineInterface.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Message.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Message.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Notice.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Notice.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/NoticeTo.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/NoticeTo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Pad.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Pad.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/PadLogin/PadLogin.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/PadLogin/PadLogin.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/PadLogin/PadLoginRepository.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/PadLogin/PadLoginRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/PadLogin/Time.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/PadLogin/Time.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/PadLogin/TimeInterface.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/PadLogin/TimeInterface.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/Answer.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/Answer.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamCategoryFormal.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamCategoryFormal.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamControl.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamControl.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamMonitor.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamMonitor.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaper.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaper.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaperExamStation.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaperExamStation.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaperFormal.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaperFormal.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaperStructure.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaperStructure.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaperStructureLabel.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaperStructureLabel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaperStructureQuestion.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamPaperStructureQuestion.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamQuestion.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamQuestion.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamQuestionFormal.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamQuestionFormal.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamQuestionLabelRelation.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamQuestionLabelRelation.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamQuestionLabelType.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamQuestionLabelType.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamQuestionType.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/ExamQuestionType.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/examQuestionLabel.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/examQuestionLabel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Reply.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Reply.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Room.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Room.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/AbstractSmartArrange.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/AbstractSmartArrange.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Cate/AbstractCate.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Cate/AbstractCate.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Cate/Order.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Cate/Order.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Cate/Poll.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Cate/Poll.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Cate/Random.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Cate/Random.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Entity/AbstractEntity.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Entity/AbstractEntity.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Entity/EntityInterface.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Entity/EntityInterface.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Entity/StationMode.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Entity/StationMode.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Export/StudentArrange.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Export/StudentArrange.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Export/UserListExport.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Export/UserListExport.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/SmartArrange.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/SmartArrange.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/SmartArrangeForHuaxiRepository.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/SmartArrangeForHuaxiRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/SmartArrangeRepository.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/SmartArrangeRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Student/StudentInterface.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Student/StudentInterface.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Traits/CheckTraits.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Traits/CheckTraits.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Traits/CheckTraitsForHuaxi.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Traits/CheckTraitsForHuaxi.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Traits/SQLTraits.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Traits/SQLTraits.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Traits/SundryTraits.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SmartArrange/Traits/SundryTraits.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Staff.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Staff.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Standard.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Standard.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/StandardItem.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/StandardItem.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Station.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Station.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/StationTeacher.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/StationTeacher.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/StationVideo.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/StationVideo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Student.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Student.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/StudentScoreExport.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/StudentScoreExport.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Subject.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Subject.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SubjectItem.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SubjectItem.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SubjectSpecialScore.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SubjectSpecialScore.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/SubjectStandard.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/SubjectStandard.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Teacher.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Teacher.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/TeacherSubject.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/TeacherSubject.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/TestResult.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/TestResult.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Vcr.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Vcr.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/Watch.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/Watch.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Entities/WatchLog.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/WatchLog.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/BranchRoutes.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/BranchRoutes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/.AutomaticPlanArrangementController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/.AutomaticPlanArrangementController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/AutomaticPlanArrangementController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/AutomaticPlanArrangementController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/AnswerController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/AnswerController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ApiController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ApiController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamAnswerController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamAnswerController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamControlController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamControlController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamLabelController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamLabelController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamMonitorController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamMonitorController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamPaperController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamPaperController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamQuestionController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/ExamQuestionController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/MyController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/MyController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/SubjectStatisticsController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/SubjectStatisticsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/TestScoresController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/Branch/TestScoresController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/CaseController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/CaseController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ConfigController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ConfigController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/CourseController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/CourseController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ExamArrangeController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ExamArrangeController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ExamController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ExamController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ExamResultController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ExamResultController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/IndexController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/IndexController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/InvigilatorController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/InvigilatorController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/LoginController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/LoginController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/MachineController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/MachineController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/MessageController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/MessageController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/NoticeController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/NoticeController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/OsceTvController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/OsceTvController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/OverExamController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/OverExamController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RolesController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RolesController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RoomCateController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RoomCateController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RoomController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RoomController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/SpteacherController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/SpteacherController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/StationController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/StationController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/StudentController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/StudentController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/SupplyController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/SupplyController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/TopicController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/TopicController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/TrainController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/TrainController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/UserController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/UserController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/CommunalApiController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/CommunalApiController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/IndexController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/IndexController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/InvigilatePadController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/InvigilatePadController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/LoginPullDownController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/LoginPullDownController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/Pad/DrawlotsController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/Pad/DrawlotsController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/Pad/PadController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/Pad/PadController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/StudentWatchController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/StudentWatchController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/WechatController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/WechatController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Billboard/BillboardController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Billboard/BillboardController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Billboard/BillboardLoginController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Billboard/BillboardLoginController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/CommonController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/CommonController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Doorplate/IndexController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Doorplate/IndexController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/OsceController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/OsceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/DiscussionController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/DiscussionController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/ExamTrainController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/ExamTrainController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/IndexController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/IndexController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/InvitationController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/InvitationController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/NoticeController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/NoticeController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/NoticeListController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/NoticeListController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/StudentExamQueryController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/StudentExamQueryController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/TrainController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/TrainController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/UserController.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/Controllers/Wechat/UserController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Http/routes.php" afterPath="$PROJECT_DIR$/modules/Osce/Http/routes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Repositories/Common.php" afterPath="$PROJECT_DIR$/modules/Osce/Repositories/Common.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Repositories/MyRepositories.php" afterPath="$PROJECT_DIR$/modules/Osce/Repositories/MyRepositories.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Repositories/QuestionBankRepositories.php" afterPath="$PROJECT_DIR$/modules/Osce/Repositories/QuestionBankRepositories.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Repositories/SubjectStatisticsRepositories.php" afterPath="$PROJECT_DIR$/modules/Osce/Repositories/SubjectStatisticsRepositories.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Repositories/TestScoreRepositories.php" afterPath="$PROJECT_DIR$/modules/Osce/Repositories/TestScoreRepositories.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Repositories/WatchReminderRepositories.php" afterPath="$PROJECT_DIR$/modules/Osce/Repositories/WatchReminderRepositories.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Resources/views/admin/index/examboard.blade.php" afterPath="$PROJECT_DIR$/modules/Osce/Resources/views/admin/index/examboard.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Resources/views/admin/layouts/base.blade.php" afterPath="$PROJECT_DIR$/modules/Osce/Resources/views/admin/layouts/base.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Tests/ExampleTest.php" afterPath="$PROJECT_DIR$/modules/Osce/Tests/ExampleTest.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Tests/PadTest.php" afterPath="$PROJECT_DIR$/modules/Osce/Tests/PadTest.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/Osce/Tests/VcrTest.php" afterPath="$PROJECT_DIR$/modules/Osce/Tests/VcrTest.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/osce/admin/examManage/exam_manage.js" afterPath="$PROJECT_DIR$/public/osce/admin/examManage/exam_manage.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/osce/admin/resourceManage/resource_manage.js" afterPath="$PROJECT_DIR$/public/osce/admin/resourceManage/resource_manage.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/osce/admin/statisticalAnalysis/statistical_analysis_update.js" afterPath="$PROJECT_DIR$/public/osce/admin/statisticalAnalysis/statistical_analysis_update.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/osce/admin/testMonitor/monitor_test_video.js" afterPath="$PROJECT_DIR$/public/osce/admin/testMonitor/monitor_test_video.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/url.php" afterPath="$PROJECT_DIR$/url.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="D:\wamp\www\osce\modules\Osce\Entities\QuestionBankEntities\ExamQuestionLabel.php" afterPath="$PROJECT_DIR$/modules/Osce/Entities/QuestionBankEntities/examQuestionLabel.php" />
     </list>
     <ignored path="orsc.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -278,6 +15,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
@@ -294,108 +32,7 @@
     <favorites_list name="orsc" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="ShowLogController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ShowLogController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3969">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SpteacherController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/SpteacherController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StudentController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/StudentController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-405">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StationController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/StationController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-8987">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OverExamController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/OverExamController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RolesController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RolesController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RoomCateController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RoomCateController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3335">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AutomaticPlanArrangementController.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/AutomaticPlanArrangementController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="567">
-              <caret line="48" column="13" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TopicController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/TopicController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-81">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UpdateController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/UpdateController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -441,18 +78,24 @@
       </list>
     </option>
   </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolGruntFileManager" detection-done="true" />
   <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
-    <sorting>DEFINITION_ORDER</sorting>
+    <gulpfiles>
+      <GulpfileState>
+        <gulpfile-path>$PROJECT_DIR$/gulpfile.js</gulpfile-path>
+      </GulpfileState>
+    </gulpfiles>
+  </component>
+  <component name="NamedScopeManager">
+    <order />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-9" />
-    <option name="y" value="-9" />
-    <option name="width" value="1932" />
-    <option name="height" value="1048" />
+    <option name="x" value="-8" />
+    <option name="width" value="1378" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -461,8 +104,14 @@
     <OptionsSetting value="true" id="Update" />
     <OptionsSetting value="true" id="Status" />
     <OptionsSetting value="true" id="Edit" />
-    <ConfirmationsSetting value="0" id="Add" />
-    <ConfirmationsSetting value="0" id="Remove" />
+    <OptionsSetting value="true" id="添加" />
+    <OptionsSetting value="true" id="移除" />
+    <OptionsSetting value="true" id="签出" />
+    <OptionsSetting value="true" id="更新" />
+    <OptionsSetting value="true" id="状态" />
+    <OptionsSetting value="true" id="编辑" />
+    <ConfirmationsSetting value="0" id="添加" />
+    <ConfirmationsSetting value="0" id="移除" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -475,268 +124,20 @@
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
-      <manualOrder />
-      <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
+              <option name="myItemId" value="osce" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Osce" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Osce" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Osce" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Controllers" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Osce" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Controllers" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Admin" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Osce" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Config" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Entities" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Console" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="orsc" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Console" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Commands" />
-              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -745,9 +146,6 @@
   </component>
   <component name="RunManager">
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
-      <method />
-    </configuration>
-    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
       <method />
     </configuration>
     <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
@@ -762,44 +160,21 @@
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
-      <node-interpreter>project</node-interpreter>
       <node-options />
       <gulpfile />
       <tasks />
       <arguments />
+      <pass-parent-envs>true</pass-parent-envs>
       <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
-      <command value="run-script" />
-      <scripts />
-      <node-interpreter value="project" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
-      <node-interpreter>project</node-interpreter>
-      <node-options />
-      <working-directory />
-      <pass-parent-env>true</pass-parent-env>
-      <envs />
-      <ui />
-      <extra-mocha-options />
-      <test-kind>DIRECTORY</test-kind>
-      <test-directory />
-      <recursive>false</recursive>
       <method />
     </configuration>
   </component>
-  <component name="ShelveChangesManager" show_recycled="false">
-    <option name="remove_strategy" value="false" />
-  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="09f4fc08-8028-4f2a-90a3-23bf47caafbb" name="Default" comment="" />
       <created>1479434554964</created>
       <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
       <updated>1479434554964</updated>
       <workItem from="1479434556075" duration="79000" />
       <workItem from="1479434663706" duration="12543000" />
@@ -834,26 +209,29 @@
     <option name="totallyTimeSpent" value="306225000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1932" height="1048" extended-state="1" />
-    <editor active="true" />
+    <frame x="-8" y="0" width="1378" height="744" extended-state="0" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28848225" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295583" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299356" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295583" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.292868" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295583" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299356" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295583" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -876,201 +254,175 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/IndexController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/InvigilatePadController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-567">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/WechatController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/MailController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/OsceController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1535">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/routes.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16821">
+        <state vertical-scroll-proportion="0.0">
           <caret line="623" column="55" selection-start-line="623" selection-start-column="46" selection-end-line="623" selection-end-column="55" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Api/LoginPullDownController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
+        <state vertical-scroll-proportion="0.0">
           <caret line="38" column="55" selection-start-line="38" selection-start-column="55" selection-end-line="38" selection-end-column="55" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/.AutomaticPlanArrangementController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-810">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Console/Commands/MigrateMysqlSchemaCommand.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1479434185180" expanded="true" signature="3241:3334" ph="SELECT table... tables" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Console/Kernel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-455">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Entities/SysElement.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Entities/SysMenus.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
+        <state vertical-scroll-proportion="0.0">
           <caret line="42" column="48" selection-start-line="42" selection-start-column="48" selection-end-line="42" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Entities/User.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-81">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Resources/views/admin/layouts/base.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-914">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Resources/views/admin/layouts/master.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Resources/views/admin/forget_pwd.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2903">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Config/config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2241">
+        <state vertical-scroll-proportion="0.0">
           <caret line="13" column="25" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Config/smartarrange.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Config/studentscore.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Config/sysparam.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Kernel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Entities/SysPermissionFunction.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Entities/SysFunctions.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Entities/CommonModel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-486">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Repositories/Common.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
+        <state vertical-scroll-proportion="0.0">
           <caret line="430" column="42" selection-start-line="430" selection-start-column="36" selection-end-line="430" selection-end-column="42" />
           <folding />
         </state>
@@ -1078,15 +430,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Entities/CommonModel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-374">
+        <state vertical-scroll-proportion="0.0">
           <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/ExamMidwayRepository.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-189">
+        <state vertical-scroll-proportion="0.0">
           <caret line="29" column="35" selection-start-line="29" selection-start-column="26" selection-end-line="29" selection-end-column="35" />
           <folding />
         </state>
@@ -1094,143 +445,105 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Entities/ExamMidway/Examinee.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-810">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/CaseController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5063">
+        <state vertical-scroll-proportion="0.0">
           <caret line="31" column="40" selection-start-line="31" selection-start-column="18" selection-end-line="31" selection-end-column="40" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/CourseController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-567">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ExamResultController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="648">
+        <state vertical-scroll-proportion="0.0">
           <caret line="50" column="31" selection-start-line="50" selection-start-column="24" selection-end-line="50" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Msc/Entities/Student.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2859">
+        <state vertical-scroll-proportion="0.0">
           <caret line="158" column="45" selection-start-line="158" selection-start-column="45" selection-end-line="158" selection-end-column="45" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ConfigController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/NoticeController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/MessageController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
+        <state vertical-scroll-proportion="0.0">
           <caret line="23" column="32" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Entities/SysValidatecode.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
+        <state vertical-scroll-proportion="0.0">
           <caret line="90" column="40" selection-start-line="90" selection-start-column="40" selection-end-line="90" selection-end-column="40" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Entities/SysRolePermission.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ExamController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ExamScoreCorrectedController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-648">
+        <state vertical-scroll-proportion="0.0">
           <caret line="92" column="121" selection-start-line="92" selection-start-column="121" selection-end-line="92" selection-end-column="121" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/LoginController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-374">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/InvigilatorController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ShowLogController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3969">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/SpteacherController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/UpdateController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/StudentController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-405">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -1238,39 +551,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/TopicController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-81">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/StationController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-8987">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/OverExamController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RolesController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RoomCateController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3335">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -1278,8 +559,64 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/AutomaticPlanArrangementController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
+        <state vertical-scroll-proportion="-18.62069">
           <caret line="48" column="13" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RoomCateController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/RolesController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/OverExamController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/StationController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/StudentController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/SpteacherController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/Osce/Http/Controllers/Admin/ShowLogController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
