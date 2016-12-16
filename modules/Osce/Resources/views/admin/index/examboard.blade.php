@@ -7,7 +7,7 @@
         font-weight: bolder;
     }
     #start,#end{width: 160px;}
-    /*TODO: Zhoufuxiang，2016-2-26, 只用于本页面*/
+    /*TODO: fandian，2016-2-26, 只用于本页面*/
     .btn.btn-primary{
         padding: 4px 8px; !important;
     }

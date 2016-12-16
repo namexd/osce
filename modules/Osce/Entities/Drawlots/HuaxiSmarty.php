@@ -25,7 +25,7 @@ class HuaxiSmarty
      * @return mixed
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -45,7 +45,7 @@ class HuaxiSmarty
      * @param $name
      * @return string
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -60,7 +60,7 @@ class HuaxiSmarty
      * @param $studentId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -79,7 +79,7 @@ class HuaxiSmarty
      * @param $screenId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -100,7 +100,7 @@ class HuaxiSmarty
      * @return mixed
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-07
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -127,7 +127,7 @@ class HuaxiSmarty
      * @return mixed
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-07
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -148,7 +148,7 @@ class HuaxiSmarty
      * @return object
      * @throws \Exception
      * @version 3.6
-     * @author zhouqiang <JiangZhiheng@misrobot.com>
+     * @author zhouqiang <ZouYuChao@sulida.com>
      * @time 2016-05-07
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -183,7 +183,7 @@ class HuaxiSmarty
      * @return object
      * @throws \Exception
      * @version 3.6
-     * @author zhouqiang <JiangZhiheng@misrobot.com>
+     * @author zhouqiang <ZouYuChao@sulida.com>
      * @time 2016-05-07
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

@@ -98,7 +98,7 @@ class Area extends CommonModel
      * @param $formData
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-17 10：16
      */
     public function editAreaData($id, $vcr_id, $formData)
@@ -169,7 +169,7 @@ class Area extends CommonModel
      * @param $userId
      * @return static
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-17 10:07
      */
     public function createRoom($formData, $vcrId, $userId)
@@ -198,7 +198,7 @@ class Area extends CommonModel
      * @param $userId
      * @param $room
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function vcr($vcrId, $userId, $room)

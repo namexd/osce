@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/12/31
  * Time: 14:59
  */
@@ -38,9 +38,9 @@ class UserController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getStaffList(Request $request, Common $common)
@@ -70,9 +70,9 @@ class UserController extends CommonController
      * @return \Illuminate\View\View
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getAddUser()
@@ -96,9 +96,9 @@ class UserController extends CommonController
      * @return $this|\Illuminate\Http\RedirectResponse
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postAddUser(Request $request, Common $common)
@@ -169,7 +169,7 @@ class UserController extends CommonController
             if ($user->id == $id) {
                 throw new \Exception('此为当前登录人的账号，无法删除自己！');
             }
-            //删除对应的系统管理员角色 TODO: Zhoufuxiang 216-04-13
+            //删除对应的系统管理员角色 TODO: fandian 216-04-13
             \DB::connection('sys_mis')->transaction(function () use ($id, $role_id)
             {
                 //1、
@@ -273,9 +273,9 @@ class UserController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getChangeUsersRole(Request $request)
     {
@@ -339,9 +339,9 @@ class UserController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postEditUserRole(Request $request)
     {
@@ -374,7 +374,7 @@ class UserController extends CommonController
             //处理用户 角色增删，归档问题
             $this->handleUserRoles($user_id, $addRoles, $delRoles, $teacherRoles);
 
-            //TODO: 学生角色归档、还原归档问题   Zhoufuxiang 2016-04-13
+            //TODO: 学生角色归档、还原归档问题   fandian 2016-04-13
 
             $connection->commit();
 
@@ -394,7 +394,7 @@ class UserController extends CommonController
      * @param $delRoles
      * @param $roles
      *
-     * @author Zhoufuxiang 2016-04-13
+     * @author fandian 2016-04-13
      * @return bool
      * @throws \Exception
      */
@@ -446,7 +446,7 @@ class UserController extends CommonController
     /**
      * 异步判断，删除用户对应的角色中是否有老师角色
      * @param Request $request
-     * @author Zhoufuxiang 2016-3-30
+     * @author fandian 2016-3-30
      * @return string
      */
     public function getJudgeUserRole(Request $request){
@@ -493,9 +493,9 @@ class UserController extends CommonController
      * @return view
      *
      * @version 3.4
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-05-04 16:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getForgetPassword(Request $request)
     {
@@ -517,9 +517,9 @@ class UserController extends CommonController
      * @return redirect
      *
      * @version 3.4
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-05-04 17:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postResetPassword(UserRepository $user,Request $request)
     {

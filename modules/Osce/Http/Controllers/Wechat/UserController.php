@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2016/1/9
  * Time: 13:15
  */
@@ -47,9 +47,9 @@ class UserController  extends CommonController
      * @return Redirect；
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postRegister(Request $request)
@@ -166,9 +166,9 @@ class UserController  extends CommonController
      * @return View
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getLogin(){
@@ -213,9 +213,9 @@ class UserController  extends CommonController
      * @return Redirect
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postLogin(Request $request){
@@ -267,13 +267,13 @@ class UserController  extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getForgetPassword(Request $request){
-        //TODO:Zhoufuxiang 2016-3-29
+        //TODO:fandian 2016-3-29
         $succ  = $request->get('succ');
         $reUrl = $request->get('reUrl');
         if($succ == 1){
@@ -299,9 +299,9 @@ class UserController  extends CommonController
      * @return view;
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getResetPassword(){
@@ -326,9 +326,9 @@ class UserController  extends CommonController
      * @return Json
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getResetPasswordVerify(UserRepository $user,Request $request)
@@ -367,9 +367,9 @@ class UserController  extends CommonController
      * @return redirect
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-10 15:41
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postResetPassword(UserRepository $user,Request $request)
@@ -405,7 +405,7 @@ class UserController  extends CommonController
                 $user   -> password = $password;
                 if($user-> save()){
                     $referer    =   session('referer');
-                    //TODO:Zhoufuxiang 2016-3-29
+                    //TODO:fandian 2016-3-29
                     return  redirect()->route('osce.wechat.user.getForgetPassword',['succ'=>1,'reUrl'=>$referer]);
 //                    return  redirect()      ->  intended($referer);
 
@@ -468,9 +468,9 @@ class UserController  extends CommonController
      * * string     mobile    电话号码  (必须的)
      * @return view
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getProofNumber(Request $request){
         $this->validate($request,[

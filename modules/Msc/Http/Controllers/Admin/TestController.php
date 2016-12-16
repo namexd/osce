@@ -12,9 +12,9 @@ class TestController extends Controller {
      *
      * @return json
      *
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date 2015-12-28 15:55
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function Index(){
         return view('msc::admin.labmanage.lab_maintain');

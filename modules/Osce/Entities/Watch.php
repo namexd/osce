@@ -47,9 +47,9 @@ class Watch extends CommonModel implements MachineInterface
      * @return array
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-02 16:33
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getMachineStatuValues()
@@ -70,9 +70,9 @@ class Watch extends CommonModel implements MachineInterface
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-02 16:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function addMachine($data)
@@ -120,9 +120,9 @@ class Watch extends CommonModel implements MachineInterface
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-02 16:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function editMachine($data)
@@ -181,9 +181,9 @@ class Watch extends CommonModel implements MachineInterface
      * @return pagination
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getList($name = '', $status = '', $nfc_code = '')
@@ -226,7 +226,7 @@ class Watch extends CommonModel implements MachineInterface
     //查询使用中的腕表数据
     public function getWatchAboutData($status,$type,$nfc_code,$examId)
     {
-        //获取考试场次ID TODO: Zhoufuxiang 216-05-13
+        //获取考试场次ID TODO: fandian 216-05-13
         $ExamScreening = new ExamScreening();
         $exam_screening_id = Common::getExamScreening($examId)->id;
 

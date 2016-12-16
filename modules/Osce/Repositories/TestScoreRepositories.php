@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-02-23 14:00
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Osce\Repositories;
@@ -32,9 +32,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016年2月26日15:06:29
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTester($ExamId)
     {
@@ -60,9 +60,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016年2月26日15:06:29
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTestSubject($exam_id, $student_id, $subjectId = [], $paperIds = [])
     {
@@ -117,9 +117,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-2-29 09:29:59
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudent(){
         $examResoult = new ExamResult();
@@ -136,9 +136,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-2-29 09:29:59
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentSubject($stuid){
         $builder = new Subject();
@@ -152,9 +152,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-2-29 09:29:59
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentScoreCount($student_id,$subid){
         $DB = \DB::connection('osce_mis');
@@ -200,9 +200,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param string $sign
      * @return ExamResult
      *
-     * @author Zhoufuxiang  <zhoufuxiang@misrobot.com>
+     * @author fandian  <fandian@sulida.com>
      * @date   2016-07-04   17:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentScoreAnalysis($student_id, $subid, $ExamId = 0, $sign = 'subject')
     {
@@ -221,9 +221,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $subid
      * @param $ExamId
      * @return ExamResult
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月3日14:04:11
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentHistoryScoreCount($student_id, $subid, $ExamId = 0)
     {
@@ -270,9 +270,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @return mixed
      *
-     * @author Zhoufuxiang  <zhoufuxiang@misrobot.com>
+     * @author fandian  <fandian@sulida.com>
      * @date   2016-07-04   17:35
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentHistoryScoreOfPaper($student_id, $paperid, $ExamId)
     {
@@ -316,9 +316,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-2-29 09:29:59
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentScoreAvg($student_id,$subid,$ExamId = 0){
         $DB = \DB::connection('osce_mis');
@@ -362,9 +362,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-2-29 09:29:59
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getSubList(){
         $subject = new Subject();
@@ -378,9 +378,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-3-2 16:56:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamList(){
         $exam = new Exam();
@@ -394,9 +394,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-3-2 16:56:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getSubjectlist($examid)
     {
@@ -418,9 +418,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId 考试id
      * @param int $qualified 考试项目id
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-3-2 17:26:32
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherData2($examid, $subjectid, $subject = 'undefined')
     {
@@ -486,9 +486,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param string $subject
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-20 14:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherData($examid, $subjectid, $subject = 'undefined')
     {
@@ -561,9 +561,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-3-2 17:26:32
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getGradeScore($classId,$subid,$examid){
         $DB = \DB::connection('osce_mis');
@@ -624,9 +624,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $exam_id
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-21 14:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getGradeScore2($examId = [], $paper_id, $subject_id, $gradeClass = '')
     {
@@ -711,9 +711,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-3-2 17:26:32
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getGradeDetailList($exam_id, $paperID, $classID, $subject = 'subject')
     {
@@ -761,9 +761,9 @@ class TestScoreRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author weihuiguo <zhoufuixang@misrobot.com>
+     * @author weihuiguo <zhoufuixang@sulida.com>
      * @date    2016-3-2 17:26:32  2016-06-21 11:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamDetails($exam_id, $classID, $paperID, $subject)
     {

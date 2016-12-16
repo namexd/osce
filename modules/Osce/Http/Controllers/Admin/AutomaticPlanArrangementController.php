@@ -54,7 +54,7 @@ class AutomaticPlanArrangementController extends CommonController
      * @return mixed
      *
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -92,7 +92,7 @@ class AutomaticPlanArrangementController extends CommonController
      * @return response
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-01
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -126,7 +126,7 @@ class AutomaticPlanArrangementController extends CommonController
      * @return response
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-02-23 17:30
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -162,7 +162,7 @@ class AutomaticPlanArrangementController extends CommonController
      * @return bool
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-01 16：48
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

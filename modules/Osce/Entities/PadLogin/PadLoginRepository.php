@@ -24,7 +24,7 @@ class PadLoginRepository
      * @param TimeInterface $time
      * @return mixed
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-03
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -54,7 +54,7 @@ class PadLoginRepository
      * @param array $fileds
      * @return mixed
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-03
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -76,7 +76,7 @@ class PadLoginRepository
      * @param array $fields
      * @return array
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -99,7 +99,7 @@ class PadLoginRepository
      * @param bool $status
      * @return mixed
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

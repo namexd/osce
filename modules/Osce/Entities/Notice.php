@@ -2,7 +2,7 @@
 /**
  * 通知模型
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2016/1/6
  * Time: 14:03
  */
@@ -207,9 +207,9 @@ class Notice extends CommonModel
      * @return
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function sendNotice($title,$content,$exam_id,array $groups,$attach){
@@ -254,9 +254,9 @@ class Notice extends CommonModel
      * @return array
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-06 19:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getGroupsOpendIds($groups,$exam_id){
@@ -313,9 +313,9 @@ class Notice extends CommonModel
      * @return array
      * @throws \Exception
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     private function getStudentsOpendIds($exam_id,array $data=[]){
         $list   =   Student::where('exam_id','=',$exam_id)->get();

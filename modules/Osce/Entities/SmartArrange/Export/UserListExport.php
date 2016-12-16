@@ -19,7 +19,7 @@ class UserListExport extends NewExcelFile
      * @access public
      * @return string
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-01
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -35,7 +35,7 @@ class UserListExport extends NewExcelFile
      * @return array
      * @throws \Exception
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-01
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

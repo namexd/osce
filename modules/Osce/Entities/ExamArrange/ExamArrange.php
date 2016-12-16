@@ -74,7 +74,7 @@ class ExamArrange
      * 清除智能排考的数据
      * @param $examId
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-15
      */
     public function resetSmartArrange($examId)

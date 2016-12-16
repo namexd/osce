@@ -17,21 +17,21 @@ use Illuminate\Http\Request;
 class ProfessionController extends MscController
 {
    /**
-    *×¨ÒµÁÐ±í
+    *×¨Òµï¿½Ð±ï¿½
     * @method GET
     * @url /msc/admin/profession/profession-list
     * @access public
     *
-    * @param Request $request getÇëÇó<br><br>
-    * <b>postÇëÇó×Ö¶Î£º</b>
-    * * string        keyword       ×¨ÒµÃû³Æ
-    * * int           status        ×¨Òµ×´Ì¬(1£ºÕý³££¬2£ºÍ£ÓÃ)
+    * @param Request $request getï¿½ï¿½ï¿½ï¿½<br><br>
+    * <b>postï¿½ï¿½ï¿½ï¿½ï¿½Ö¶Î£ï¿½</b>
+    * * string        keyword       ×¨Òµï¿½ï¿½ï¿½ï¿½
+    * * int           status        ×¨Òµ×´Ì¬(1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½Í£ï¿½ï¿½)
     * @return  view
     *
     * @version 1.0
-    * @author zhouqiang <zhouqiang@misrobot.com>
+    * @author zhouqiang <zhouqiang@sulida.com>
     * @date ${DATE} ${TIME}
-    * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+    * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
     */
 
 
@@ -62,23 +62,23 @@ class ProfessionController extends MscController
    }
 
     /**
-     * ÐÂÔö×¨Òµ
+     * ï¿½ï¿½ï¿½ï¿½×¨Òµ
      *
      * @method post
      * @url /msc/admin/profession/profession-add
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string        name       ×¨ÒµÃû×Ö(±ØÐëµÄ)
-     * * int            code       ×¨Òµ´úÂë(±ØÐëµÄ)
-     * * int            status       ×´Ì¬(±ØÐëµÄ)
+     * @param Request $request postï¿½ï¿½ï¿½ï¿½<br><br>
+     * <b>postï¿½ï¿½ï¿½ï¿½ï¿½Ö¶Î£ï¿½</b>
+     * * string        name       ×¨Òµï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½)
+     * * int            code       ×¨Òµï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½)
+     * * int            status       ×´Ì¬(ï¿½ï¿½ï¿½ï¿½ï¿½)
      * @return   json
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postProfessionAdd(Request $request){
 
@@ -92,28 +92,28 @@ class ProfessionController extends MscController
         $profession = new StdProfessional();
         $result =$profession->postAddProfession($data);
         if($result){
-            return redirect()->back()->withInput()->withErrors('ÐÂÔö³É¹¦');
+            return redirect()->back()->withInput()->withErrors('ï¿½ï¿½ï¿½ï¿½ï¿½É¹ï¿½');
         }
 
-            return redirect()->back()->withInput()->withErrors('ÐÂÔöÊ§°Ü');
+            return redirect()->back()->withInput()->withErrors('ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½');
     }
 
 
     /**
-     * ±à¼­»ØÏÔ×¨Òµ
+     * ï¿½à¼­ï¿½ï¿½ï¿½ï¿½×¨Òµ
      * @method GET
      * @url /msc/admin/profession/profession-edit
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * int    id      (±ØÐëµÄ)
+     * @param Request $request getï¿½ï¿½ï¿½ï¿½<br><br>
+     * <b>postï¿½ï¿½ï¿½ï¿½ï¿½Ö¶Î£ï¿½</b>
+     * * int    id      (ï¿½ï¿½ï¿½ï¿½ï¿½)
      * @return json
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
 
@@ -130,24 +130,24 @@ class ProfessionController extends MscController
     }
 
     /**
-     *Ìá½»±à¼­×¨Òµ
+     *ï¿½á½»ï¿½à¼­×¨Òµ
      * @method post
      * @url /msc/admin/profession/profession-save
      * @access public
      *
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * *int   ID    (±ØÐëµÄ)
-     * *string        name       ×¨ÒµÃû×Ö(±ØÐëµÄ)
-     * * int          code       ×¨Òµ´úÂë(±ØÐëµÄ)
-     * * int         status       ×´Ì¬(±ØÐëµÄ)
+     * @param Request $request postï¿½ï¿½ï¿½ï¿½<br><br>
+     * <b>postï¿½ï¿½ï¿½ï¿½ï¿½Ö¶Î£ï¿½</b>
+     * *int   ID    (ï¿½ï¿½ï¿½ï¿½ï¿½)
+     * *string        name       ×¨Òµï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½)
+     * * int          code       ×¨Òµï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½)
+     * * int         status       ×´Ì¬(ï¿½ï¿½ï¿½ï¿½ï¿½)
      *
      * @return json
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public  function postProfessionSave(Request $request){
         $this->validate($request,[
@@ -160,30 +160,30 @@ class ProfessionController extends MscController
         $profession = new StdProfessional();
         $result =$profession->postSaveProfession($data);
         if ($result) {
-            return redirect()->back()->withInput()->withErrors('ÐÞ¸Ä³É¹¦');
+            return redirect()->back()->withInput()->withErrors('ï¿½Þ¸Ä³É¹ï¿½');
 
         }
-        return redirect()->back()->withInput()->withErrors('ÐÞ¸ÄÊ§°Ü');
+        return redirect()->back()->withInput()->withErrors('ï¿½Þ¸ï¿½Ê§ï¿½ï¿½');
     }
 
 
 
     /**
-     *¸Ä±ä×¨ÒµµÄ×´Ì¬
+     *ï¿½Ä±ï¿½×¨Òµï¿½ï¿½×´Ì¬
      * @method get
      * @url /msc/admin/profession/profession-status/{id}
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * *int   ID    (±ØÐëµÄ)
+     * @param Request $request getï¿½ï¿½ï¿½ï¿½<br><br>
+     * <b>postï¿½ï¿½ï¿½ï¿½ï¿½Ö¶Î£ï¿½</b>
+     * *int   ID    (ï¿½ï¿½ï¿½ï¿½ï¿½)
      *
      * @return json
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
 
@@ -207,21 +207,21 @@ class ProfessionController extends MscController
     }
 
     /**
-     *×¨ÒµÉ¾³ý
+     *×¨ÒµÉ¾ï¿½ï¿½
      * @method get
      * @url /msc/admin/profession/profession-deletion/{id}
      * @access public
      *
-     * @param Request $request getÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * *int   ID    (±ØÐëµÄ)
+     * @param Request $request getï¿½ï¿½ï¿½ï¿½<br><br>
+     * <b>postï¿½ï¿½ï¿½ï¿½ï¿½Ö¶Î£ï¿½</b>
+     * *int   ID    (ï¿½ï¿½ï¿½ï¿½ï¿½)
      *
      * @return json
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public  function  getProfessionDeletion($id){
         $id = intval($id);
@@ -241,17 +241,17 @@ class ProfessionController extends MscController
     }
 
     /**
-     * µ¼Èë×¨Òµ±í
+     * ï¿½ï¿½ï¿½ï¿½×¨Òµï¿½ï¿½
      * @api post /msc/admin/profession/profession-import
      * @access public
-     * @param Request $request postÇëÇó<br><br>
-     * <b>postÇëÇó×Ö¶Î£º</b>
-     * * string       training       ¿Î³ÌÎÄ¼þµÄexcl(±ØÐëµÄ)
+     * @param Request $request postï¿½ï¿½ï¿½ï¿½<br><br>
+     * <b>postï¿½ï¿½ï¿½ï¿½ï¿½Ö¶Î£ï¿½</b>
+     * * string       training       ï¿½Î³ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½excl(ï¿½ï¿½ï¿½ï¿½ï¿½)
      * @return object
      * @version 0.8
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2015-11-27 10:24
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
 
@@ -259,20 +259,20 @@ class ProfessionController extends MscController
         try{
             $data = Common::getExclData($request, 'training');
             $professionInfo = array_shift($data);
-            //½«ÖÐÎÄÍ·×ª»»·­Òë³ÉÓ¢ÎÄ
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¢ï¿½ï¿½
             $professionInfo = Common::arrayChTOEn($professionInfo, 'msc.importForCnToEn.profession_group');
-            //ÒÑ¾­´æÔÚµÄÊý¾Ý
+            //ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½
             $dataHaven = [];
-            //Ìí¼ÓÊ§°ÜµÄÊý¾Ý
+            //ï¿½ï¿½ï¿½Ê§ï¿½Üµï¿½ï¿½ï¿½ï¿½ï¿½
             $dataFalse = [];
-            //ÅÐ¶ÏÊÇ·ñ´æÔÚÕâ¸ö×¨Òµ
+            //ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¨Òµ
             foreach ($professionInfo as $professionData) {
-                //´¦Àí×´Ì¬status
+                //ï¿½ï¿½ï¿½ï¿½×´Ì¬status
                 switch ( $professionData['status']){
-                    case "Õý³£":
+                    case "ï¿½ï¿½ï¿½ï¿½":
                         $professionData['status'] = 1;
                         break;
-                    case "Í£ÓÃ":
+                    case "Í£ï¿½ï¿½":
                         $professionData['status'] = 2;
                         break;
                 };

@@ -75,7 +75,7 @@ var videoPlay = (function(mod){
         var szIP = req.ip,//'192.168.1.250',
             szPort = req.ports,//'80',
             szUsername = req.user,//'admin',
-            szPassword = req.passwd;//'misrobot123';
+            szPassword = req.passwd;//'sulida123';
 
         if ("" == szIP || "" == szPort) {
             return;

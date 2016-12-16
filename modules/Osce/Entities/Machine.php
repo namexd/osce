@@ -2,7 +2,7 @@
 /**
  * 监考老师模型
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/12/29
  * Time: 10:46
  */

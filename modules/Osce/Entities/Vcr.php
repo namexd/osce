@@ -2,7 +2,7 @@
 /**
  * 设备摄像机模型
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/12/30
  * Time: 14:11
  */
@@ -40,9 +40,9 @@ class Vcr extends CommonModel implements MachineInterface
      * @return array
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-02 15:38
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getMachineStatuValues()
@@ -68,9 +68,9 @@ class Vcr extends CommonModel implements MachineInterface
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-31 17:38
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function addMachine($data)
@@ -110,9 +110,9 @@ class Vcr extends CommonModel implements MachineInterface
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-02
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function editMachine($data)
@@ -155,9 +155,9 @@ class Vcr extends CommonModel implements MachineInterface
      * @return pagination
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getList($name, $status, $nfc_code = '')
@@ -188,9 +188,9 @@ class Vcr extends CommonModel implements MachineInterface
      * @return object
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function selectVcr($id, $type)
@@ -227,7 +227,7 @@ class Vcr extends CommonModel implements MachineInterface
 
     /**
      * 根据考场获取对应的所有摄像机
-     * TODO:Zhoufuxiang 2016-3-24
+     * TODO:fandian 2016-3-24
      * @return object
      */
     public function getVcrIdsToRoom($room_id){
@@ -253,7 +253,7 @@ class Vcr extends CommonModel implements MachineInterface
 
     /**
      * 根据考试获取对应的所有摄像机
-     * TODO:Zhoufuxiang 2016-3-24
+     * TODO:fandian 2016-3-24
      * @return object
      */
     public function getVcrIdsToExam($exam_id){
@@ -285,7 +285,7 @@ class Vcr extends CommonModel implements MachineInterface
 
     /**
      * 获取所有考试 对应的所有摄像机
-     * TODO:Zhoufuxiang 2016-3-24
+     * TODO:fandian 2016-3-24
      * @return object
      */
     public function getVcrIdsToAllExam(){
@@ -306,7 +306,7 @@ class Vcr extends CommonModel implements MachineInterface
 
     /**
      * 根据考试和考场获取对应的所有摄像机
-     * TODO:Zhoufuxiang 2016-3-24
+     * TODO:fandian 2016-3-24
      * @return object
      */
     public function getVcrIds($room_id, $exam_id)

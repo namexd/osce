@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-01-07 11:44
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Msc\Entities;
@@ -21,9 +21,9 @@ class LabApply  extends Model
     /**
      * @param $where
      * @param $status
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月11日14:03:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetLabApplyData($where,$status){
 
@@ -42,9 +42,9 @@ class LabApply  extends Model
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月18日11:14:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function Laboratory(){
         return  $this->hasOne('Modules\Msc\Entities\Laboratory','id','lab_id');
@@ -170,9 +170,9 @@ class LabApply  extends Model
     /**
      * @param $uid
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date   2016年1月14日17:21:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function MyApplyList($status,$uid,$user_type){
         return  $this->where('status','=',$status)->where('apply_user_id','=',$uid)->where('user_type','=',$user_type)->with(['Laboratory'=>function($Laboratory){
@@ -197,9 +197,9 @@ class LabApply  extends Model
     }
     /**
      * 获取已经完成的历史预约的数据
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月18日11:09:16
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function HistoryLaboratoryApplyList($uid){
         $builder = $this->where('apply_user_id','=',$uid)->whereNotIn('status',[1])->with(['Laboratory'=>function($Laboratory){
@@ -211,9 +211,9 @@ class LabApply  extends Model
     }
  /**
      * @param $apply_id
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月18日12:03:44
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetApplyDetails($apply_id){
         $builder = $this->where('id','=',$apply_id)->with(['Laboratory'=>function($Laboratory){

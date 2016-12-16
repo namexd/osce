@@ -14,7 +14,7 @@ interface StudentInterface
     /**
      * 获取学生的实例
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-07 11:02
      */
     function get($exam);

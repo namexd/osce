@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: tangjun <tangjun@misrobot.com>
+ * User: tangjun <tangjun@sulida.com>
  * Date: 2015年12月15日
  * Time: 11:18:06
  */
@@ -31,9 +31,9 @@ class SysMenus extends Model
      * 添加菜单权限信息
      * @access public
      *
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date 2015年12月17日13:59:39
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function AddMenus($data){

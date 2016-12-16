@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
+ * User: fandian
  * Date: 2016/1/9 0009
  * Time: 15:59
  */
@@ -22,9 +22,9 @@ class Reply extends  CommonModel{
 
     public function getReplyList($id)
     {
-      //Í¨¹ýÎÊÌâ»ñÈ¡»Ø¸´ÄÚÈÝ
+      //Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½
         $list=Reply::where()->select();
-      //·µ»ØÄÚÈÝ²¢·ÖÒ³
+      //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½Ò³
         $replys=[];
         foreach($list as $item){
           $replys[]=[

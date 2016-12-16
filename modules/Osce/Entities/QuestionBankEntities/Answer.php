@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016年3月9日11:02:12
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
@@ -38,9 +38,9 @@ class Answer extends Model
      * @url /osce/
      * @access public
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function examCategoryFormal(){
         return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamCategoryFormal','exam_paper_formal_id','id');
@@ -51,9 +51,9 @@ class Answer extends Model
      * @access public
      * @param $id 正式的试卷表ID
      * @return mixed
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getFormalPaper($id)
     {
@@ -89,9 +89,9 @@ class Answer extends Model
      * @access public
      * @param $data
      * @return bool
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function saveAnswer($data,$resultData)
     {
@@ -201,9 +201,9 @@ class Answer extends Model
      * @param $examId 考试id
      * @param $studentId 学生id
      * @param $stationId 考站id
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function saveStatus($examId,$studentId,$stationId,$teacherId){
         $DB = \DB::connection('osce_mis');
@@ -263,9 +263,9 @@ class Answer extends Model
      * @access public
      * @param $examPaperFormalId 正式的试卷表ID
      * @return array
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function selectGrade($examPaperFormalId)
     {

@@ -21,7 +21,7 @@ trait SmartTraits
      * @return bool
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-04
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -71,7 +71,7 @@ trait SmartTraits
      * @return mixed
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * 年级虚拟模型
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/6
  * Time: 11:07
  */
@@ -20,9 +20,9 @@ class Grade
      * @return object
      *
      * @version 1.0
-     * @author fengyell <Luohaihua@misrobot.com>
+     * @author fengyell <Zouyuchao@sulida.com>
      * @date 2015-11-06 11：13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getGradeList(){

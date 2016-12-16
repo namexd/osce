@@ -48,9 +48,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-1-12 17:36
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getWatchStatus(Request $request){
         $this->validate($request,[
@@ -101,7 +101,7 @@ class IndexController extends CommonController
      * 查询腕表状态
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     * @author Zhoufuxiang  2016-04-27
+     * @author fandian  2016-04-27
      */
     public function getWatchStatus2(Request $request)
     {
@@ -169,9 +169,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getBoundWatch2(Request $request)
     {
@@ -250,7 +250,7 @@ class IndexController extends CommonController
             return \Response::json(array('code'=>5));   //未在考试队列 请等待
         }
 
-        //修改场次状态 TODO: Zhoufuxiang 216-05-11
+        //修改场次状态 TODO: fandian 216-05-11
         $examScreening = ExamScreening::find($exam_screening_id);
         if(!is_null($examScreening))
         {
@@ -354,9 +354,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 3.4
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-16 10:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getBoundWatch(Request $request)
     {
@@ -532,9 +532,9 @@ class IndexController extends CommonController
      * @param string $message
      * @throws \Exception
      *
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-16 14:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     private function judgeNullValue($value, $code = -999, $message = '系统错误'){
         return Common::valueIsNull($value, $code, $message);
@@ -554,9 +554,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-1-12   17:35
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getUnwrapWatch(Request $request)
     {
@@ -603,7 +603,7 @@ class IndexController extends CommonController
             {
                 $examScreening  = $examScreeningModel -> getNearestScreening($exam_id);
             }
-            //不存在考试场次，直接解绑 TODO: Zhoufuxiang 2016-05-25 11:00
+            //不存在考试场次，直接解绑 TODO: fandian 2016-05-25 11:00
             if(is_null($examScreening)){
                 $result = Watch::where('id', '=', $id)->update(['status'=>0]);    //解绑
                 if($result){
@@ -772,9 +772,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-1-12 17:34
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentDetails(Request $request){
         $this->validate($request,[
@@ -829,9 +829,9 @@ class IndexController extends CommonController
      * @return object
      *
      * @version 1.0
-     * @author limingyao <limingyao@misrobot.com>
+     * @author limingyao <limingyao@sulida.com>
      * @date 2016-01-12
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAddWatch(Request $request){
 
@@ -904,9 +904,9 @@ class IndexController extends CommonController
      * @return object
      *
      * @version 1.0
-     * @author limingyao <limingyao@misrobot.com>
+     * @author limingyao <limingyao@sulida.com>
      * @date 2016-01-12
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDeleteWatch(Request $request)
     {
@@ -948,9 +948,9 @@ class IndexController extends CommonController
      * @return object
      *
      * @version 1.0
-     * @author limingyao <limingyao@misrobot.com>
+     * @author limingyao <limingyao@sulida.com>
      * @date 2016-01-12
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getUpdateWatch(Request $request){
 
@@ -1014,9 +1014,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getWatchDetail(Request $request){
         $this->validate($request,[
@@ -1049,9 +1049,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamList()
     {
@@ -1087,9 +1087,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getWatchList(Request $request)
     {
@@ -1196,9 +1196,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com> zhoufuxiang
+     * @author fandian <fandian@sulida.com> fandian
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getStudentList(Request $request)
@@ -1222,7 +1222,7 @@ class IndexController extends CommonController
             $examScreening = Common::getExamScreening($exam_id);
             \Log::info('腕表c程序获取考试ID'.$exam_id.'的考试场次', [$examScreening->toArray()]);
             $screen_id    = $examScreening->id;           //获取场次ID
-            //查找考站 TODO: Zhoufuxiang 2016-05-07
+            //查找考站 TODO: fandian 2016-05-07
             $stations = ExamDraftFlow::leftJoin('exam_draft', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
                                      ->where('exam_draft_flow.exam_id', '=', $exam_id)
                                      ->groupBy('exam_draft.station_id')->select('station_id')->get();
@@ -1283,9 +1283,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAbsentStudent($studentId, $examId, $screen_id)
     {
@@ -1302,7 +1302,7 @@ class IndexController extends CommonController
                     'exam_screening_id' => $screen_id,
                 ]);
                 if($result){
-                    //TODO zhoufuxiang
+                    //TODO fandian
                     //获取该考试最后一位学生（按开始考试时间排序）, 若此学生与当前缺考学生是同一个，则将考试标为已结束
                     $examOrder = ExamOrder::where('exam_id', '=', $examId)->where('exam_screening_id', '=', $screen_id)
                                           ->select(['begin_dt', 'student_id'])->orderBy('begin_dt', 'DESC')->first();
@@ -1333,9 +1333,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getSkipLast(Request $request){
         $this->validate($request,[
@@ -1376,9 +1376,9 @@ class IndexController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function changeSkip($studentId,$exam_id,$screen_id)
     {
@@ -1425,9 +1425,9 @@ class IndexController extends CommonController
      * @param $student_id
      * @return object
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-04-26
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     private function watchUnbundling($id, $student_id)
     {
@@ -1452,7 +1452,7 @@ class IndexController extends CommonController
      * code 1 返回学生考场列表
      *      -122 学生所以考场考完
      *     -1111 捕获异常信息
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date   2016-05-7
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

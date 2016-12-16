@@ -42,7 +42,7 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
      * @param $studentModel
      * @return int
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-06-28 11:17
      */
     public function importStudent($exam, $studentModel)
@@ -111,7 +111,7 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
                     'avatar'        => $studentData['avator'],
                     'email'         => $studentData['email']
                 ];
-                //处理用户数据 TODO：zhoufuxiang 2016-06-03 18:06
+                //处理用户数据 TODO：fandian 2016-06-03 18:06
                 $role_id  = config('osce.studentRoleId');
                 $userData = OsceCommon::handleUser($userData, $role_id);
 
@@ -186,9 +186,9 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
      * @return array
      * @throws \Exception
      *
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-15 14:55
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getParentExamStudent($exam, $user_ids = [])
     {

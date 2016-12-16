@@ -63,7 +63,7 @@ class ExamDraft extends CommonModel
      * @param $value
      * @param $item
      *
-     * @author Zhoufuxiang 2016-04-14
+     * @author fandian 2016-04-14
      * @return object
      */
     private function getNotNullValue($object, $value, $item){
@@ -76,7 +76,7 @@ class ExamDraft extends CommonModel
      * @param $code
      * @param $message
      *
-     * @author Zhoufuxiang 2016-04-14
+     * @author fandian 2016-04-14
      * @return bool
      * @throws \Exception
      */
@@ -348,7 +348,7 @@ class ExamDraft extends CommonModel
      * 理论考站，处理考试、试卷、考站关系
      * @param $item
      *
-     * @author Zhoufuxiang 2016-04-18
+     * @author fandian 2016-04-18
      * @return array|static
      * @throws \Exception
      */
@@ -406,13 +406,13 @@ class ExamDraft extends CommonModel
      * @param examId 考试id
      * @param stationId 考试对应的考站id
      * @param $screenId 考试对应场次id
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-5-3
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamMsg($exam_id, $room_id, $screenId)
     {
-        //对应考试中room_id下所有考站 TODO: Zhoufuxiang 2016-06-12 加入缓存，一天
+        //对应考试中room_id下所有考站 TODO: fandian 2016-06-12 加入缓存，一天
         $key = 'exam_'.$exam_id.'_roomId_'.$room_id.'_screenId_'.$screenId;
 
         \Cache::remember($key, 1440, function () use($exam_id, $room_id, $screenId)
@@ -462,9 +462,9 @@ class ExamDraft extends CommonModel
      * @param string $exam_id
      * @return array
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-04-14 21:12
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamAllStations($exam_id = '')
     {
@@ -495,9 +495,9 @@ class ExamDraft extends CommonModel
      * @return array（$stationId, $roomStations）
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-02 15:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStationAndRoom($user_id, $exam_id, $screening_id)
     {
@@ -526,9 +526,9 @@ class ExamDraft extends CommonModel
      * @param $exam_id
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-13 14:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getRoomByExam($exam_id, $screening_id)
     {
@@ -549,9 +549,9 @@ class ExamDraft extends CommonModel
      * 获取对应考试的 所有科目
      * @param $exam_id
      * @return
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date   2016-06-16
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public  function  getExamSubject($exam_id){
 
@@ -574,9 +574,9 @@ class ExamDraft extends CommonModel
      * @param $elderExam_ids
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-29 14:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStationBySubjectExam($subjectid, $elderExam_ids)
     {

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2015-12-30 11:28
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 namespace Modules\Msc\Entities;
 
@@ -22,9 +22,9 @@ class MessageModel extends  Model
      * @return bool
      * @throws \Exception
      * @throws \Overtrue\Wechat\Exception
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2015年12月30日11:32:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function SendWeChatMsg($msg,$openid){
         $userService = new \Overtrue\Wechat\Staff(config('wechat.app_id'), config('wechat.secret'));
@@ -37,9 +37,9 @@ class MessageModel extends  Model
      * @param $role
      * @param $uid
      * @return array
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2015年12月30日11:43:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function AdjPending($role,$uid){
         $data = [];

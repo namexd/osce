@@ -20,7 +20,7 @@ class OsceController extends Controller {
 //			$connection	=	\DB::connection('sys_mis');
 
 //			$userRoles	=	$connection	->	table('sys_user_role')	->	where('user_id','=',$user->id)->get();
-			//TODO：Zhoufuxiang 2016-04-22
+			//TODO：fandian 2016-04-22
 			$userRoles = SysUserRole::where('user_id','=',$user->id)->orderBy('role_id')->get();
 
 			if($userRoles->isEmpty())

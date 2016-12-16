@@ -21,7 +21,7 @@ class Billboard
      * @param $teacherId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-04
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -64,7 +64,7 @@ class Billboard
      * @param $teacherId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-04
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

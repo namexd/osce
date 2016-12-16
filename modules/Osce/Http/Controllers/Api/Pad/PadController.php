@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
+ * User: fandian
  * Date: 2016/1/13 0013
  * Time: 9:36
  */
@@ -47,9 +47,9 @@ class PadController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
        public function getRoomVcr(Request $request){
             $this->validate($request,[
@@ -84,9 +84,9 @@ class PadController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
        public function getVcr(Request $request){
            $this->validate($request,[
@@ -114,9 +114,9 @@ class PadController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentVcr(Request $request){
         try{
@@ -153,9 +153,9 @@ class PadController extends  CommonController{
      * @return object
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getStationsVcrs(Request $request){
@@ -189,9 +189,9 @@ class PadController extends  CommonController{
      * @return object
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}    2016-3-9
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getTeacherVcr(Request $request)
@@ -230,9 +230,9 @@ class PadController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getTimingList(Request $request){
@@ -280,9 +280,9 @@ class PadController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getWaitStudent(Request $request){
         $this->validate($request,[
@@ -319,9 +319,9 @@ class PadController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamRoom(Request $request){
         $this->validate($request,[
@@ -351,9 +351,9 @@ class PadController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
        public function getWaitRoom(Request $request){
              $this->validate($request,[
@@ -380,7 +380,7 @@ class PadController extends  CommonController{
      * url \osce\pad\change-status
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function getChangeStatus(Request $request,ExamResult $examResult)
     {
@@ -444,9 +444,9 @@ class PadController extends  CommonController{
      * @return object
      *
      * @version 2.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}    2016-3-21
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDoingExams(Request $request)
     {
@@ -467,9 +467,9 @@ class PadController extends  CommonController{
      * @param Request $request
      * @return object
      * @version 2.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}    2016-3-23
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDoneExams(Request $request)
     {
@@ -507,9 +507,9 @@ class PadController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME} 2016-3-25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAllVcrsList(Request $request)
     {
@@ -556,9 +556,9 @@ class PadController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME} 2016-3-25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAllRooms(Request $request){
         $this->validate($request,[
@@ -593,7 +593,7 @@ class PadController extends  CommonController{
     }
     /**
      * 根据考试获取对应的所有考场
-     * TODO:Zhoufuxiang 2016-3-23
+     * TODO:fandian 2016-3-23
      * @return object
      */
     public function getRoomDatas($exam, $status = false){
@@ -636,7 +636,7 @@ class PadController extends  CommonController{
 
     /**
      * 根据考试和考场获取对应的所有摄像机
-     * TODO:Zhoufuxiang 2016-3-24
+     * TODO:fandian 2016-3-24
      * @param $exam_id
      * @param $room_id
      * @return object

@@ -68,7 +68,7 @@ class SmartArrange
     /**
      * 设置考试实例
      * @param $exam
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-28 15:27
      */
     public function setExam($exam)
@@ -79,7 +79,7 @@ class SmartArrange
     /**
      * @param $cate
      * @return $this
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 11:42
      */
     function setCate($cate)
@@ -90,7 +90,7 @@ class SmartArrange
     /**
      * 设置考生
      * @param StudentInterface $student
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 11:10
      */
     public function setStudents()
@@ -104,7 +104,7 @@ class SmartArrange
     /**
      * 打乱学生顺序
      * @param $students
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 16:40
      */
     public function upset($students)
@@ -115,7 +115,7 @@ class SmartArrange
     /**
      * 获得考生
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 11:12
      */
     public function getStudents()
@@ -126,7 +126,7 @@ class SmartArrange
     /**
      * 获取等待区的学生
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 11：15
      */
     public function getWaitStudents()
@@ -137,7 +137,7 @@ class SmartArrange
     /**
      * 获得实体
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 11:13
      */
     public function getEntity()
@@ -149,7 +149,7 @@ class SmartArrange
     /**
      * @param $exam
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     public function setEntity($exam, $screen)

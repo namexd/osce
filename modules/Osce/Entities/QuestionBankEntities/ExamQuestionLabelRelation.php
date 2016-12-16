@@ -35,9 +35,9 @@ class ExamQuestionLabelRelation extends Model
      * @url /osce/
      * @access public
      * @return bool
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function exam_question_label(){
         return $this->hasOne('Modules\Osce\Entities\QuestionBankEntities\examQuestionLabel','id','exam_question_label_id');

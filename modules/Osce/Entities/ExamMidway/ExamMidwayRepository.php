@@ -27,7 +27,7 @@ class ExamMidwayRepository
      * @param $stationId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-13
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -43,7 +43,7 @@ class ExamMidwayRepository
      * @param $examId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-13
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -60,7 +60,7 @@ class ExamMidwayRepository
      * @param array $stationIds
      * @return bool
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-13
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -85,7 +85,7 @@ class ExamMidwayRepository
      * @throws \Exception
      * @throws \Throwable
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-14
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

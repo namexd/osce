@@ -31,7 +31,7 @@ class Exam implements ExamInterface
      * 获取场次列表
      * @param $examId
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-15 15:55:55
      */
     function screenList($examId)
@@ -41,7 +41,7 @@ class Exam implements ExamInterface
 
     /**
      * 获取当前正在进行考试
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-15 15:59:41
      */
     static function getExaming($examId)

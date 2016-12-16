@@ -11,7 +11,7 @@ return [
 	'spRoleId'		=>	4,
 	'examineeRoleId'=>	2,
 	'teacherRoleId'	=>	1,
-	'patrolRoleId'	=>	6,		//巡考老师角色 TODO: Zhoufuxiang  2016-3-23
+	'patrolRoleId'	=>	6,		//巡考老师角色 TODO: fandian  2016-3-23
 	'username'=>[
 		'SP病人',
 		'考生',

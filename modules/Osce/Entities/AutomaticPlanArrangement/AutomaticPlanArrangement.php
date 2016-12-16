@@ -117,7 +117,7 @@ class AutomaticPlanArrangement
 
     /**
      * 智能排考
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @param $examId
      * @return array
      * @throws \Exception
@@ -168,7 +168,7 @@ class AutomaticPlanArrangement
      * @param $examId
      * @param $screen
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function screenPlan($examId, $screen)
@@ -390,7 +390,7 @@ class AutomaticPlanArrangement
     /**
      * 获取流程时间
      * @return int
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-17 10:24
      */
     private function flowTime()
@@ -410,7 +410,7 @@ class AutomaticPlanArrangement
 
     /**
      * 将学生从总清单中放入侯考区
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function waitExamQueue()
@@ -435,7 +435,7 @@ class AutomaticPlanArrangement
      * @param $i
      * @return array
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function dataBuilder($examId, $screen, $student, $station, $i)
@@ -474,7 +474,7 @@ class AutomaticPlanArrangement
      * @param $examId
      * @return array|mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function needStudents($station, $screen, $examId)
@@ -500,7 +500,7 @@ class AutomaticPlanArrangement
      * 获取正在考试的学生，并且把已经考完了的学生写进属性
      * @param $testStudents
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-19 15：36
      */
     private function testingStudents($testStudents)
@@ -551,7 +551,7 @@ class AutomaticPlanArrangement
      * @param $screen 考试场次实例
      * @return array 已经考过了的考生及其考试流程
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function randomTestStudents($station, $screen)
@@ -581,7 +581,7 @@ class AutomaticPlanArrangement
      * @param $screen
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function pollTestStudents($station, $screen)
@@ -629,7 +629,7 @@ class AutomaticPlanArrangement
      * 刚刚进入考试的时候，需要调用此方法返回学生
      * @param $station 考站实例
      * @return array
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-18 17:18
      */
     private function beginStudents($station)
@@ -654,7 +654,7 @@ class AutomaticPlanArrangement
 
     /**
      * 将结果展示在屏幕上
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-22 17：52
      * @param $examId 考试id
      * @return array 拼装完成的数组
@@ -712,7 +712,7 @@ class AutomaticPlanArrangement
      * @param $testStudents
      * @param $result
      * @return array
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function studentNum($station, $testStudents, $result, $examId)
@@ -741,7 +741,7 @@ class AutomaticPlanArrangement
      * @param $station
      * @param $screen
      * @return bool
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function ckeckStatus($station, $screen)
@@ -758,7 +758,7 @@ class AutomaticPlanArrangement
 
     /**
      * @param $screen
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function testingStudentSql($screen)
@@ -775,7 +775,7 @@ class AutomaticPlanArrangement
      * 查询到等待的学生信息
      * @param $screen
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-24 17:35
      */
     private function waitingStudentSql($screen)
@@ -794,7 +794,7 @@ class AutomaticPlanArrangement
      * @param $screen
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function examPlanRecordIsOpenDoor($station, $screen)
@@ -819,7 +819,7 @@ class AutomaticPlanArrangement
      * 获取学生序号
      * @param $testingStudent
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function getStudentSerialnumber($testingStudent)
@@ -833,7 +833,7 @@ class AutomaticPlanArrangement
     /**
      * 重置考站时间
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function resetStationTime()
@@ -849,7 +849,7 @@ class AutomaticPlanArrangement
      * @param $screen
      * @param $examId
      * @return array
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-04 21:20
      */
     private function randomMode($station, $screen, $examId)
@@ -898,7 +898,7 @@ class AutomaticPlanArrangement
      * @param $station
      * @param $screen
      * @return array|\Illuminate\Support\Collection
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-04 21:23
      */
     private function orderMode($station, $screen)
@@ -995,7 +995,7 @@ class AutomaticPlanArrangement
      * @param $screen
      * @param $examId
      * @return array
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-04 20:08
      */
     private function pollMode($station, $screen, $examId)

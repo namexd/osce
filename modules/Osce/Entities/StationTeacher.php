@@ -36,7 +36,7 @@ class StationTeacher extends CommonModel
     }
 
     /**
-     * TODO: Zhoufuxiang 2016-3-9
+     * TODO: fandian 2016-3-9
      * 获取摄像头信息
      */
     public function getVcrInfo($exam_id, $teacher_id, $room_id)
@@ -203,9 +203,9 @@ class StationTeacher extends CommonModel
      * @param $data
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-04-26 16:02
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function singleSaveTeacher($exam_id, $data, $user)
     {
@@ -253,9 +253,9 @@ class StationTeacher extends CommonModel
      * @return null|static
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-04-26 16:02
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function saveStationTeacher($exam_id, $user, $case_id, $data, $teachers)
     {
@@ -318,9 +318,9 @@ class StationTeacher extends CommonModel
      * @return array
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-02 12:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherStation($exam_screening_id, $exam_id, $userId)
     {

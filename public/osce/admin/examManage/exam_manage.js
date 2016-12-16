@@ -1371,7 +1371,7 @@ function exam_assignment_add(){
 
     /**
      * 考试列表(父考试)
-     * @author zhoufuxiang
+     * @author fandian
      * @version 3.10
      * @date    2016-06-14
      */
@@ -1419,7 +1419,7 @@ function exam_basic_info(){
 
     /**
      * 考试列表(父考试)
-     * @author zhoufuxiang
+     * @author fandian
      * @version 3.10
      * @date    2016-06-14
      */
@@ -3506,7 +3506,7 @@ function smart_assignment(){
 
     /**
      * 下载保存表
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * version 3.6
      * @date 2016-05-01
      */

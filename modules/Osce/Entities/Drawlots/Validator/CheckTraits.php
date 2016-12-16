@@ -18,7 +18,7 @@ trait CheckTraits
      * @param int $num
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-03
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

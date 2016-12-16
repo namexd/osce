@@ -120,9 +120,9 @@ class MscController extends Controller {
 	 * 获取当前页面开始的序号
 	 * @access public
 	 * @return int
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date	2016年1月14日16:01:38
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 	public function getNumber(){
 		$number = 0;

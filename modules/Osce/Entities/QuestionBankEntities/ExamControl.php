@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016年3月9日11:02:12
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
@@ -42,9 +42,9 @@ class ExamControl extends Model
      * @method
      * @url /osce/
      * @access public
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDoingExamList(){
         $DB = \DB::connection('osce_mis');
@@ -179,9 +179,9 @@ class ExamControl extends Model
      * @param $examId 考试id
      * @param $studentId 学生id
      * @return int
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamQueueData($examId,$studentId){
         $examQueueModel = new ExamQueue();
@@ -200,9 +200,9 @@ class ExamControl extends Model
      * @url /osce/
      * @access public
      * @param $data
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function stopExam($data){
         $DB = DB::connection('osce_mis');
@@ -378,7 +378,7 @@ class ExamControl extends Model
      * @return bool
      * @throws \Exception
      * @version 3.6
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @time 2016-06-04
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -422,7 +422,7 @@ class ExamControl extends Model
      * @return bool
      * @throws \Exception
      * @version 3.6
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @time 2016-06-04
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -465,7 +465,7 @@ class ExamControl extends Model
      * @return bool
      * @throws \Exception
      * @version 3.6
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @time 2016-06-04
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -509,7 +509,7 @@ class ExamControl extends Model
      * @return bool
      * @throws \Exception
      * @version 3.6
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @time 2016-06-04
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -541,7 +541,7 @@ class ExamControl extends Model
      * @return bool
      * @throws \Exception
      * @version 3.6
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @time 2016-06-04
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -630,9 +630,9 @@ class ExamControl extends Model
      * @param $studentId 学生id
      * @param $examScreeningId 场次id
      * @return array
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getRemainExamQueueData($examId,$studentId,$examScreeningId){
         $examQueueModel = new ExamQueue();
@@ -658,9 +658,9 @@ class ExamControl extends Model
      * @param $examId 考试id
      * @param $stationId 考站id
      * @return mixed
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getVcrInfo($examId, $stationId)
     {

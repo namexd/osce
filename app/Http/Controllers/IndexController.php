@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/19
  * Time: 16:02
  */
@@ -17,11 +17,11 @@ class IndexController extends BaseController
     public function index(){
         $user = Auth::user();
         if(empty($user->id)){
-            //TODO: zhoufuxiang 2016-3-15
+            //TODO: fandian 2016-3-15
             return view('index');
 //            return redirect()->intended('/admin/login');
         }else{
-            //TODO: zhoufuxiang 2016-3-15
+            //TODO: fandian 2016-3-15
             return redirect()->intended('/osce/admin/index');
 //            return view('index');
         }

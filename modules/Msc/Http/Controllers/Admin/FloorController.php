@@ -2,9 +2,9 @@
 /**
  * 楼栋控制器
  *
- * @author weihuiguo <weihuiguo@misrobot.com>
+ * @author weihuiguo <weihuiguo@sulida.com>
  * @date 2015年12月28日17:10:20
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Msc\Http\Controllers\Admin;

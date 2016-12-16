@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * 专业模型
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/6
  * Time: 11:02
  */

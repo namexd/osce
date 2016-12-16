@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
+ * User: fandian
  * Date: 2016/1/28 0028
  * Time: 10:32
  */
@@ -48,9 +48,9 @@ class ExamResultController extends CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function geExamResultList(Request $request)
     {
@@ -100,9 +100,9 @@ class ExamResultController extends CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamResultDetail(Request $request)
     {
@@ -140,7 +140,7 @@ class ExamResultController extends CommonController{
         $ExamSpecialScore = new ExamSpecialScore();
         $specialScore = $ExamSpecialScore->getSpecialScoreBySubject($id, $result['subject_id']);
 
-        //TODO: zhoufuxiang
+        //TODO: fandian
         $scores     = [];   //用于保存返回到页面的成绩
         $itemScore  = [];   //用于保存该考试项目下，每个考核点的总分
         foreach($score as $itm)
@@ -193,9 +193,9 @@ class ExamResultController extends CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDownloadImage(Request $request){
         $this->validate($request,[
@@ -227,7 +227,7 @@ class ExamResultController extends CommonController{
     /**
      * 视频页面的着陆页
      * @param Request $request
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @return \Illuminate\View\View
      */
     public function getResultVideo(Request $request)
@@ -292,9 +292,9 @@ class ExamResultController extends CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamStationList(Request $request){
         $this->validate($request,[
@@ -335,9 +335,9 @@ class ExamResultController extends CommonController{
      * @param StudentScoreExport $export
      * @return mixed
      *
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-25 10:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExportScore(Request $request, StudentScoreExport $export)
     {

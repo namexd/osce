@@ -36,7 +36,7 @@ class LoginPullDownController extends CommonController
      * @param PadLoginRepository $padLogin
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-03
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
@@ -63,7 +63,7 @@ class LoginPullDownController extends CommonController
      * 请求字段：考试id： exam_id
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

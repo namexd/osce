@@ -96,9 +96,9 @@ class Exam extends CommonModel
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function students()
@@ -113,9 +113,9 @@ class Exam extends CommonModel
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function flows()
@@ -130,9 +130,9 @@ class Exam extends CommonModel
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      *
      * @version 3.3
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-04-05 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function gradation()
@@ -344,9 +344,9 @@ class Exam extends CommonModel
      * @return object
      *
      * @version 3.4
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function addExam(array $examData, array $examScreeningData, $gradationMode, $gradation = 1, ExamArrangeRepository $examArrangeRepository)
@@ -394,9 +394,9 @@ class Exam extends CommonModel
      * @return object
      *
      * @version 3.4
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function editExam($exam_id, array $examData, array $examScreeningData, $gradation, $gradationMode, ExamArrangeRepository $examArrangeRepository)
@@ -468,7 +468,7 @@ class Exam extends CommonModel
      * @param $gradation
      * @param $examArrangeRepository
      *
-     * @author Zhoufuxiang 2016-04-18
+     * @author fandian 2016-04-18
      * @throws \Exception
      */
     private function handleGradation($exam_id, $gradation, $gradationMode, ExamArrangeRepository $examArrangeRepository)
@@ -682,7 +682,7 @@ class Exam extends CommonModel
      * @param string $subjectId
      * @param string $sign
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function CourseControllerIndex($screening_ids,$subjectId = "",$sign = "")
     {
@@ -754,7 +754,7 @@ class Exam extends CommonModel
      * @param null $examId
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     static public function doingExam($examId = null)
@@ -791,7 +791,7 @@ class Exam extends CommonModel
      * @param $examId
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     public function beginExam($examId)
@@ -813,7 +813,7 @@ class Exam extends CommonModel
      * @param $examId
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     public function endExam($examId)
@@ -834,7 +834,7 @@ class Exam extends CommonModel
      * 重置考试数据
      * @param   $id         //考试ID
      * @return  bool
-     * @author  Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author  fandian <fandian@sulida.com>
      */
     public function emptyData($id)
     {
@@ -1019,7 +1019,7 @@ class Exam extends CommonModel
      * @param $examScreeningData
      * @param $user
      *
-     * @author Zhoufuxiang 2016-04-18
+     * @author fandian 2016-04-18
      * @return array
      * @throws \Exception
      */
@@ -1069,7 +1069,7 @@ class Exam extends CommonModel
      * @param $examScreeningData
      * @param ExamArrangeRepository $examArrangeRepository
      *
-     * @author Zhoufuxiang 2016-04-18
+     * @author fandian 2016-04-18
      * @return static
      * @throws \Exception
      */

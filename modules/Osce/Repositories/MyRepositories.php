@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-02-23 14:00
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Osce\Repositories;
@@ -54,9 +54,9 @@ class MyRepositories  extends BaseRepository
      * @url /osce/
      * @access public
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年2月26日15:36:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetSubjectList(){
         $subject = new Subject();
@@ -71,9 +71,9 @@ class MyRepositories  extends BaseRepository
      * @param $ExamId
      * @param $SubjectId
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年2月26日15:36:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetSubjectStationStatisticsList($ExamId,$SubjectId){
         $DB = \DB::connection('osce_mis');
@@ -109,9 +109,9 @@ class MyRepositories  extends BaseRepository
      * @param $ExamId
      * @param $SubjectId
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年2月26日15:36:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetSubjectStandardStatisticsList($ExamId,$SubjectId,$qualified=0){
         $DB = \DB::connection('osce_mis');
@@ -163,9 +163,9 @@ class MyRepositories  extends BaseRepository
      * @param $ExamId
      * @param $standardPid 评分标准父编号
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年2月26日15:36:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetStandardDetails($standardPid){
         $DB = \DB::connection('osce_mis');
@@ -202,9 +202,9 @@ class MyRepositories  extends BaseRepository
      * @method
      * @url /osce/
      * @access public
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date 2016年2月26日16:34:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetPidArr($StandardData){
         $PidArr = [];

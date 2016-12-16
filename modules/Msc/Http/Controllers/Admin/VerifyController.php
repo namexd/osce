@@ -114,9 +114,9 @@ class VerifyController extends BaseController {
 	 * @return json
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date ${DATE} ${TIME}
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 /*	public function postChangeUserStatus(Request $request){
@@ -161,9 +161,9 @@ http://www.mis.hx/msc/admin/verify/student*/
 	 *
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-11 18:01
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 	public function postChangeUsersStatus(Request $request){

@@ -1,0 +1,76 @@
+<?php $__env->startSection('meta'); ?>
+<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('head_css'); ?>
+<link href="<?php echo e(asset('msc/admin/plugins/css/bootstrap.min.css?v=3.4.0')); ?>" rel="stylesheet">
+<link href="<?php echo e(asset('msc/admin/plugins/css/font-awesome.min.css?v=4.3.0')); ?>" rel="stylesheet">
+<link href="<?php echo e(asset('msc/admin/plugins/css/animate.min.css')); ?>" rel="stylesheet">
+<link href="<?php echo e(asset('msc/admin/plugins/css/style.min.css?v=3.0.0')); ?>" rel="stylesheet">
+<link href="<?php echo e(asset('msc/wechat/jquery-confirm/jquery-confirm.css')); ?>" rel="stylesheet">
+<link href="<?php echo e(asset('msc/common/css/bootstrapValidator.css')); ?>" rel="stylesheet">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('head_js'); ?>
+<script src="<?php echo e(asset('msc/admin/plugins/js/jquery-2.1.1.min.js')); ?>"></script>
+<script src="<?php echo e(asset('msc/admin/plugins/js/jquery-ui-1.10.4.min.js')); ?>"></script>
+<script src="<?php echo e(asset('msc/admin/plugins/js/bootstrap.min.js?v=3.4.0')); ?>"></script>
+<script src="<?php echo e(asset('msc/common/js/bootstrapValidator.js')); ?>"></script>
+<!-- �Զ���js -->
+<script src="<?php echo e(asset('msc/wechat/jquery-confirm/jquery-confirm.js')); ?>"></script>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('head_style'); ?>
+<style type="text/css">
+
+</style>
+<?php echo $__env->yieldSection(); ?>
+<?php $__env->startSection('body_attr'); ?> class="fixed-sidebar full-height-layout gray-bg"<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('body'); ?>
+
+<?php $__env->startSection('content'); ?>
+<?php echo $__env->yieldSection(); ?><?php /* ������������ */ ?>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <?php $__env->startSection('layer_content'); ?>
+            <?php echo $__env->yieldSection(); ?><?php /* ������������ */ ?>
+        </div>
+    </div>
+</div>
+
+<?php echo $__env->yieldSection(); ?>
+
+<?php $__env->startSection('footer_js'); ?>
+<!--ȫ��Css�Զ��岿��-->
+<link href="<?php echo e(asset('msc/admin/css/common.css')); ?>" rel="stylesheet">
+<!-- ȫ��js -->
+
+<script src="<?php echo e(asset('msc/admin/plugins/js/plugins/metisMenu/jquery.metisMenu.js')); ?>"></script>
+<script src="<?php echo e(asset('msc/admin/plugins/js/plugins/slimscroll/jquery.slimscroll.min.js')); ?>"></script>
+<script src="<?php echo e(asset('msc/admin/plugins/js/plugins/layer/layer.min.js')); ?>"></script>
+
+<!-- �Զ���js -->
+<script src="<?php echo e(asset('msc/admin/plugins/js/hplus.min.js?v=3.0.0')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset('msc/admin/plugins/js/contabs.min.js')); ?>"></script>
+<script src="<?php echo e(asset('msc/admin/plugins/js/content.min.js')); ?>"></script>
+<!-- ������ -->
+<script src="<?php echo e(asset('msc/admin/plugins/js/plugins/pace/pace.min.js')); ?>"></script>
+
+<?php echo $__env->yieldSection(); ?><?php /* footer����javscript�ű� */ ?>
+
+<?php /* �����������JS��� */ ?>
+<script type="text/javascript">
+    $(document).ready(function(){
+        <!--highlight main-sidebar-->
+        <?php $__env->startSection('filledScript'); ?>
+        <?php echo $__env->yieldSection(); ?><?php /* ��document ready �������һЩJS���� */ ?>
+    });
+
+</script>
+<!-- AdminLTE for demo purposes -->
+<script src="<?php echo e(asset('jk/js/jk.js')); ?>" type="text/javascript"></script>
+<?php $__env->startSection('extraSection'); ?>
+<?php echo $__env->yieldSection(); ?><?php /* ��������һЩ��������һ����JS��������HTML */ ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.base', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

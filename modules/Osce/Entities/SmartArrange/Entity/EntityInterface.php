@@ -15,7 +15,7 @@ interface EntityInterface
      * 考试实体，以集合方式返回
      * @param $exam
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-07 11:15
      */
     function entity($exam, $screen);
@@ -28,7 +28,7 @@ interface EntityInterface
      * @param $entity
      * @param $i
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 14:17
      */
     function dataBuilder($exam, $screen, $student, $entity, $i);

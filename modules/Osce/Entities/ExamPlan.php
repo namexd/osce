@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2016/1/11
  * Time: 10:57
  */
@@ -89,9 +89,9 @@ class ExamPlan extends CommonModel
      * @return array
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function IntelligenceEaxmPlan($exam)
@@ -859,9 +859,9 @@ class ExamPlan extends CommonModel
      * @return void
      *
      * @version 0.3
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-29 13:36
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function saveStudentOrder($exam_id)
@@ -909,7 +909,7 @@ class ExamPlan extends CommonModel
      * @param $examId
      * @param $user
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-26
      */
     public function storePlan($examId, $user)
@@ -973,7 +973,7 @@ class ExamPlan extends CommonModel
      * 将examFlows对应的表中对应考试的effected都变成0
      * @param $exam
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-03 15:24
      */
     private function changeSerialnumberToZero($exam)
@@ -1013,7 +1013,7 @@ class ExamPlan extends CommonModel
      * @param $exam
      * @param $result
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-03 15:43
      */
     private function changeSerialnumberToOne($exam, array $result = [])

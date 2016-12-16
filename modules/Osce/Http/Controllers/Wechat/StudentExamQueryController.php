@@ -39,9 +39,9 @@ class StudentExamQueryController extends CommonController
      * <b>get请求字段：</b>
      * @return view
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getResultsQueryIndex(Request $request)
@@ -96,9 +96,9 @@ class StudentExamQueryController extends CommonController
      * <b>get请求字段：</b>
      * @return json
      * @version 0.4
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
 
@@ -152,7 +152,7 @@ class StudentExamQueryController extends CommonController
 //                        throw new \Exception('没有找到' . $stationType->station_name . 'sp老师');
 //                    }
                 }
-                //转换耗时 TODO： zhoufuxiang 2016-3-14
+                //转换耗时 TODO： fandian 2016-3-14
 //                date_default_timezone_set("UTC");
 //                $stationType->time = date('H:i:s', $stationType->time);
 //                date_default_timezone_set("PRC");
@@ -198,9 +198,9 @@ class StudentExamQueryController extends CommonController
      * <b>get请求字段：</b>
      * @return view
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
 
@@ -227,7 +227,7 @@ class StudentExamQueryController extends CommonController
             $examscoreModel = new ExamScore();
             $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
 
-            //TODO: zhoufuxiang
+            //TODO: fandian
             $scores = [];
             $itemScore = [];
             foreach ($examScoreList as $itm) {
@@ -300,9 +300,9 @@ class StudentExamQueryController extends CommonController
      * <b>get请求字段：</b>
      * @return json
      * @version 0.4
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getSubjectList(Request $request)
@@ -344,9 +344,9 @@ class StudentExamQueryController extends CommonController
      * <b>get请求字段：</b>
      * @return  json
      * @version 0.4
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getTeacherCheckScore(Request $request)

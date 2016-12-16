@@ -39,9 +39,9 @@ class Standard extends CommonModel
      * @return static
      *
      * @version 3.4
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-04-12 12:55
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addStandard($standard_name){
         $result = $this->where('title','=',$standard_name)->first();
@@ -59,7 +59,7 @@ class Standard extends CommonModel
      * @return bool
      * @throws \Exception
      *
-     * @author Zhoufuxiang
+     * @author fandian
      * @date   2016-04-13 10:55
      */
     public function delStandard($subject)

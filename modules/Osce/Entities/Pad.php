@@ -47,9 +47,9 @@ class Pad extends CommonModel implements MachineInterface
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-02 16:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function addMachine($data)
@@ -98,9 +98,9 @@ class Pad extends CommonModel implements MachineInterface
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-02 16:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function editMachine($data)
@@ -159,9 +159,9 @@ class Pad extends CommonModel implements MachineInterface
      * @return pagination
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com> Zhoufuxiang 2016-01-13 15:21:48
+     * @author Zouyuchao <Zouyuchao@sulida.com> fandian 2016-01-13 15:21:48
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getList($name, $status, $nfc_code = '')

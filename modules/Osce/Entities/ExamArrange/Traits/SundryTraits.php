@@ -20,7 +20,7 @@ trait SundryTraits
      * @param Collection $data1
      * @param Collection $data2
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-14 18:23
      */
     public function getDiff($data1, $data2)
@@ -37,7 +37,7 @@ trait SundryTraits
      * @param $result
      * @param $field
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-15 10:24
      */
     public function checkSameEntity($result, $field = 'station_id')

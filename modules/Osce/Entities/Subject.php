@@ -2,7 +2,7 @@
 /**
  * 考核项目
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/12/31
  * Time: 15:10
  */
@@ -62,9 +62,9 @@ class Subject extends CommonModel
      * @return pagination
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-02 21:58
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getList($name)
@@ -89,9 +89,9 @@ class Subject extends CommonModel
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-02 22:08
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function addSubject($data, $points, $cases, $speScore, $goods, $user_id)
@@ -103,7 +103,7 @@ class Subject extends CommonModel
             $subject = $this->create($data);          //创建考试项目
             if ($subject)
             {
-                //TODO:Zhoufuxiang 2016-4-12
+                //TODO:fandian 2016-4-12
                 if (!$this->addStandard($subject, $points))
                 {
                     throw new \Exception('保存评分标准失败');
@@ -114,7 +114,7 @@ class Subject extends CommonModel
                     throw new \Exception('创建考试项目——病例关系失败');
                 }
                 $SubjectSpecial = new SubjectSpecialScore();
-                //添加考试项目——特殊评分项关系 Zhoufuxiang 2016-07-01
+                //添加考试项目——特殊评分项关系 fandian 2016-07-01
                 if(!$this->handleSubjectSpecialScore($subject->id, $speScore, $user_id)){
                     throw new \Exception('创建考试项目——特殊评分项关系失败');
                 }
@@ -149,9 +149,9 @@ class Subject extends CommonModel
      * @return object
      * @throws \Exception @version 3.4
      *
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-04-12 18:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addStandard($subject, $points){
 
@@ -171,9 +171,9 @@ class Subject extends CommonModel
      * @param array $points
      * @return object
      * @throws \Exception @version 3.4
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-04-12 19:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editStandard($subject, $points)
     {
@@ -196,9 +196,9 @@ class Subject extends CommonModel
      * * * @param array $points
      * @return object
      * @throws \Exception @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-03 18:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editTopic($id, $data, $points, $cases, $speScore, $goods)
     {
@@ -217,7 +217,7 @@ class Subject extends CommonModel
             }
             if ($subject->save())
             {
-                //修改评分标准     TODO:Zhoufuxiang 2016-4-12
+                //修改评分标准     TODO:fandian 2016-4-12
                 if (!$this->editStandard($subject, $points)){
                     throw new \Exception('保存评分标准失败');
                 }
@@ -227,7 +227,7 @@ class Subject extends CommonModel
                     throw new \Exception('编辑考试项目——病例关系失败');
                 }
                 $SubjectSpecial = new SubjectSpecialScore();
-                //添加考试项目——特殊评分项关系 TODO:Zhoufuxiang 2016-05-07、07-01
+                //添加考试项目——特殊评分项关系 TODO:fandian 2016-05-07、07-01
                 if(!$this->handleSubjectSpecialScore($subject->id, $speScore, $user->id)){
                     throw new \Exception('编辑考试项目——特殊评分项关系失败');
                 }
@@ -266,9 +266,9 @@ class Subject extends CommonModel
      * * string        参数英文名        参数中文名(必须的)
      *
      * @throws \Exception @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-03
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     protected function addPoint($standard, array $points)
     {
@@ -294,9 +294,9 @@ class Subject extends CommonModel
      * @return void
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-03 18:37
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     protected function editPoint($standard, array $points)
@@ -326,7 +326,7 @@ class Subject extends CommonModel
      *
      * @param $subject
      *
-     * @author Zhoufuxiang  2016-04-13 10:55
+     * @author fandian  2016-04-13 10:55
      * @return bool
      * @throws \Exception
      */
@@ -390,7 +390,7 @@ class Subject extends CommonModel
      *
      * @param $subject
      *
-     * @author Zhoufuxiang  2016-04-13 10:55
+     * @author fandian  2016-04-13 10:55
      * @return bool
      * @throws \Exception
      */
@@ -409,7 +409,7 @@ class Subject extends CommonModel
 
     
     /**
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @param $examScreeningId
      * @param $subjectId
      * @param $paperId
@@ -465,7 +465,7 @@ class Subject extends CommonModel
      * @param $subject_id
      * @param $cases
      * @param $user_id
-     * @author Zhoufuxiang 2016-3-31
+     * @author fandian 2016-3-31
      * @return bool
      */
     public function addSubjectCases($subject_id, $cases, $user_id, $id = ''){
@@ -519,9 +519,9 @@ class Subject extends CommonModel
      * @param  $user_id
      * @return bool
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @data   2016-05-7
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addSubjectSpecialScore($subject_id, $speScores, $user_id)
     {
@@ -561,9 +561,9 @@ class Subject extends CommonModel
      * @return bool
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @data   2016-07-01  16:15
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function handleSubjectSpecialScore($subject_id, $speScores, $user_id)
     {
@@ -615,7 +615,7 @@ class Subject extends CommonModel
      * @param $subject_id
      * @param $goods
      * @param $user_id
-     * @author Zhoufuxiang 2016-3-31
+     * @author fandian 2016-3-31
      * @return bool
      */
     public function addSubjectGoods($subject_id, $goods, $user_id){
@@ -658,7 +658,7 @@ class Subject extends CommonModel
      * @param $subject_id
      * @param $goods
      * @param $user_id
-     * @author Zhoufuxiang 2016-3-31
+     * @author fandian 2016-3-31
      * @return bool
      */
     public function editSubjectGoods($subject_id, $goods, $user_id){
@@ -694,9 +694,9 @@ class Subject extends CommonModel
      * @return object
      *
      * @version 3.4
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-04-12 12:55  2016-06-27 18:35
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addItem($standard, array $point, $parent = '')
     {
@@ -761,9 +761,9 @@ class Subject extends CommonModel
      * @param $points
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-27 15:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function handlePoints($standard, $points)
     {
@@ -835,9 +835,9 @@ class Subject extends CommonModel
      * @param $terms
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-27 16:33
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function handleTerm($standard, $standard_item, $terms, $user)
     {

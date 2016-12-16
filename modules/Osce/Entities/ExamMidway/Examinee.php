@@ -47,7 +47,7 @@ class Examinee
     /**
      * 获取到当前组学生
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-22 18:39
      */
     public function examinee()
@@ -76,7 +76,7 @@ class Examinee
      * 获取下一组考生
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-23 10:32
      */
     public function nextExaminee()
@@ -103,7 +103,7 @@ class Examinee
 
     /**
      * 获取当前考试实体的信息
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-23 18:21
      */
     public function getStation()

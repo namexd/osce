@@ -87,7 +87,7 @@ class CaseModel extends CommonModel
      * @param $formData
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function updateCase($id, $formData)
     {

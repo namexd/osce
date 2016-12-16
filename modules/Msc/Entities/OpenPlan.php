@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-01-04 11:42
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Msc\Entities;
@@ -21,9 +21,9 @@ class OpenPlan  extends  Model
     /**
      * @param $DateTime
      * @return array
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月5日10:10:04
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetOpenPlanId($DateTime){
         $y='';$m='';$d='';
@@ -48,9 +48,9 @@ class OpenPlan  extends  Model
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月6日10:14:12
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function OpenLabApply(){
         return  $this->hasMany('Modules\Msc\Entities\OpenLabApply','lab_plan_id','id');
@@ -58,9 +58,9 @@ class OpenPlan  extends  Model
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月6日10:32:55
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function PlanRecord(){
         return  $this->hasMany('Modules\Msc\Entities\PlanRecord','plan_id','id');
@@ -69,9 +69,9 @@ class OpenPlan  extends  Model
     /**
      * @access public
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月12日16:37:15
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function PlanApply(){
         return  $this->hasMany('Modules\Msc\Entities\PlanApply','open_plan_id','id');

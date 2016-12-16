@@ -40,7 +40,7 @@ trait CheckTraits
     /**
      * 验证考生数据的正确性
      * @param array $data
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-21 11：29
      */
     public function checkExaminee($examId, array $data, $user, $studentModel, $key = 0)
@@ -66,9 +66,9 @@ trait CheckTraits
      * @return bool
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-5-09 16:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function checkIdCard($examId, $data, $key)
     {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/10
  * Time: 15:37
  */
@@ -28,9 +28,9 @@ class MemberCenterController extends ApiBaseController
      * @return JSON {'id':用户ID,'username':用户名,'avatar':头像,'nickname':昵称,'mobile':手机号,'gender':性别}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-11
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getUserById(Request $request){
@@ -65,9 +65,9 @@ class MemberCenterController extends ApiBaseController
      * @return json {name：姓名，code：学号，qq：QQ，class：班级，grade：年级，professional：专业，student_type：学生类型} or {code:工号，teacher_dept：科室})}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-11 17:20
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getUserProfile(Request $request){
@@ -98,9 +98,9 @@ class MemberCenterController extends ApiBaseController
      * @return json {'expiretime':过期时间,'mobile':'手机号'}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-11 15:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getMobileVerify(Request $request){
@@ -142,9 +142,9 @@ class MemberCenterController extends ApiBaseController
      * @return json {''result':'验证结果,成功为true','mobile':'当前手机号'}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-11 15：40
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getCheckMobileVerfiy(Request $request){
@@ -207,9 +207,9 @@ class MemberCenterController extends ApiBaseController
      * @return json {"uid":用户ID,"mobile":"当前绑定的手机号"}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-17 11:19
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getMobile(Request $request){
@@ -248,9 +248,9 @@ class MemberCenterController extends ApiBaseController
      * @return json {''result':'验证结果,成功为true','mobile':'当前手机号'}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-17 13:38
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postReletiveMobile(Request $request){

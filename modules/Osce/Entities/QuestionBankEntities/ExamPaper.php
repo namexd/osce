@@ -22,9 +22,9 @@ class ExamPaper extends CommonModel
     /**
      * 与试题构造表的模型关系
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月9日10:38:36
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ExamPaperStructure(){
         return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamPaperStructure','exam_paper_id','id');
@@ -36,8 +36,8 @@ class ExamPaper extends CommonModel
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamPaperlist($keyword){
         $DB = \DB::connection('osce_mis');
@@ -71,8 +71,8 @@ class ExamPaper extends CommonModel
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamDatas($exam_id){
         $builder = $this->where('exam_paper.id','=',$exam_id);
@@ -92,8 +92,8 @@ class ExamPaper extends CommonModel
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getPaperDetails($id){
 //        $builder = $this->where('exam_paper.id','=',$id);

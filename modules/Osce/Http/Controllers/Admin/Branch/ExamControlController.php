@@ -36,9 +36,9 @@ class ExamControlController extends CommonController
      * @access public
      * @param Request $request
      * @return \Illuminate\View\View
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getExamlist()
@@ -59,9 +59,9 @@ class ExamControlController extends CommonController
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postStopExam(Request $request,WatchReminderRepositories $watchReminder,ExamResult $examResult)
     {
@@ -107,25 +107,25 @@ class ExamControlController extends CommonController
             //终止考试的情况下
             if($data['description']==1&&$data['type']=-1) {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 107, '考试终止成功'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 107, '考试终止成功')));
             }elseif($data['description']==2||$data['description']==3||$data['description']==4&&$data['type']=-1){
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 106, '考试终止成功'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 106, '考试终止成功')));
             }elseif($data['description']=-1&& $data['type'] = 1){
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 106, '考试终止成功'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 106, '考试终止成功')));
             }elseif($data['description']=-1&& $data['type'] = 2){
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 107, '考试终止成功'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message', json_encode($this->success_data(['start_time' => $time, 'student_id' => $data['studentId'], 'exam_screening_id' => $data['examScreeningId']], 107, '考试终止成功')));
@@ -162,9 +162,9 @@ class ExamControlController extends CommonController
      * @access public
      * @param Request $request
      * @return \Illuminate\View\View
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getVcrsList(Request $request)
@@ -192,9 +192,9 @@ class ExamControlController extends CommonController
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getTime(Request $request){

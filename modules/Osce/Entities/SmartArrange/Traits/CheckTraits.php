@@ -54,7 +54,7 @@ trait CheckTraits
      * @param $order
      * @throws \Exception
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */

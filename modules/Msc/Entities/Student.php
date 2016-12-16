@@ -150,9 +150,9 @@ class Student extends CommonModel {
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhoucong@misrobot.com>
+     * @author fandian <zhoucong@sulida.com>
      * @date 2015-12-16 14:50
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function saveEditStudent($data){
 
@@ -243,9 +243,9 @@ class Student extends CommonModel {
      * @return blooean
      *
      * @version 1.0
-     * @author zhouchong <zhoucong@misrobot.com>
+     * @author fandian <zhoucong@sulida.com>
      * @date 2015-12-16 14:40
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function postAddStudent($data){
@@ -316,9 +316,9 @@ class Student extends CommonModel {
      * @return blooean
      *
      * @version 1.0
-     * @author zhouchong <zhoucong@misrobot.com>
+     * @author fandian <zhoucong@sulida.com>
      * @date 2015-12-16  14:45
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function SoftTrashed($id){
 
@@ -341,9 +341,9 @@ class Student extends CommonModel {
      * @return blooean
      *
      * @version 1.0
-     * @author zhouchong <zhoucong@misrobot.com>
+     * @author fandian <zhoucong@sulida.com>
      * @date 2015-12-16 14:48
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function changeStatus($id){
 

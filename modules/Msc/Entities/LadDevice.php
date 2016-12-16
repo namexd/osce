@@ -37,9 +37,9 @@ class LadDevice extends Model
     /**
      * @param $lab_id
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月13日18:30:58
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetLadDevice($lab_id){
         return $this->where('lab_id','=',$lab_id)->with(['DeviceInfo'=>function($DeviceInfo){
@@ -50,9 +50,9 @@ class LadDevice extends Model
     /**
      * @param $lab_id
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月13日18:30:58
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetLadDeviceAll($lab_id){
         return $this->where('lab_id','=',$lab_id)->with(['DeviceInfo'=>function($DeviceInfo){
@@ -62,9 +62,9 @@ class LadDevice extends Model
     /**
      * @param $lab_id
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月7日18:14:05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getLadDeviceId($lab_id){
         $IdArr = [];

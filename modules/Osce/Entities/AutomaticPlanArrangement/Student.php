@@ -50,7 +50,7 @@ class Student implements StudentInterface
 
     /**
      * 获取学生状态 此应该需要从数据表中找到当前学生是否正在考试中
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     function getStatus()

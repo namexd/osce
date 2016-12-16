@@ -28,9 +28,9 @@ class ExamQuestionType extends Model
      * @method
      * @url /osce/
      * @access public
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function examQuestionTypeList(){
         $data = $this->select('id','name')->get();

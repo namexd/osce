@@ -33,7 +33,7 @@ abstract class AbstractCate
     /**
      * 设置参数
      * @param $params
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-22 16:55
      */
     function setParams($params)
@@ -120,7 +120,7 @@ abstract class AbstractCate
     /**
      * 返回总的学生集合
      * @return object
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-12 15:15
      */
     public function getTotalStudent()
@@ -131,7 +131,7 @@ abstract class AbstractCate
     /**
      * 返回侯考区的学生集合
      * @return object
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-12 15:15
      */
     public function getWaitStudent()

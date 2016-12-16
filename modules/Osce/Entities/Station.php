@@ -238,7 +238,7 @@ class Station extends CommonModel
      * @param $id
      *
      * @version   3.4
-     * @author Zhoufuxiang 2016-04-14
+     * @author fandian 2016-04-14
      * @return bool| object
      * @throws \Exception
      */
@@ -305,7 +305,7 @@ class Station extends CommonModel
      * @param $id
      *
      * @version   3.4
-     * @author Zhoufuxiang 2016-04-13
+     * @author fandian 2016-04-13
      * @return bool
      * @throws \Exception
      */
@@ -397,7 +397,7 @@ class Station extends CommonModel
     /**
      *
      * @param $examId
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function stationEcho($examId)
     {

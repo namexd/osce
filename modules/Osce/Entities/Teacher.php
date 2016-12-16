@@ -66,7 +66,7 @@ class Teacher extends CommonModel
      * @param $id
      * @param $exam
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-23
      */
     static public function room($id, $exam)
@@ -91,9 +91,9 @@ class Teacher extends CommonModel
      * @return array
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 16:56
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getIsSpValues(){
@@ -224,9 +224,9 @@ class Teacher extends CommonModel
      * @return pagination
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 10:52
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getSpInvigilatorList(){
@@ -261,9 +261,9 @@ class Teacher extends CommonModel
      * @return pagination
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 16:58
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getInvigilatorList($type = 1){
@@ -283,9 +283,9 @@ class Teacher extends CommonModel
      * @return object
      *
      * @version 3.4
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-03-30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addInvigilator($role_id, $userData , $teacherData, $subjects = [])
     {
@@ -323,7 +323,7 @@ class Teacher extends CommonModel
                 }
             }
 
-            //插入老师-考试项目 关系 TODO:Zhoufuxiang 2016-3-30
+            //插入老师-考试项目 关系 TODO:fandian 2016-3-30
             $teacherSubject = $this->handleTeacherSubject($subjects, $user->id, $teacherData['create_user_id']);
 
             $connection->commit();
@@ -339,7 +339,7 @@ class Teacher extends CommonModel
      * 处理用户信息（基本信息、角色分配）
      * @param $userData
      *
-     * @author Zhoufuxiang 2016-04-18
+     * @author fandian 2016-04-18
      * @return static
      * @throws \Exception
      */
@@ -411,7 +411,7 @@ class Teacher extends CommonModel
      * @param $user
      * @param $role_id
      *
-     * @author Zhoufuxiang 2016-04-18
+     * @author fandian 2016-04-18
      * @return object
      */
     private function addUserRoles($user, $role_id)
@@ -444,7 +444,7 @@ class Teacher extends CommonModel
      * @param $teacher_id       //对应老师ID
      * @param $operator         //操作人员
      *
-     * @author Zhoufuxiang 2016-04-18
+     * @author fandian 2016-04-18
      * @throws \Exception
      */
     public function handleTeacherSubject($subjects, $teacher_id, $operator)
@@ -498,9 +498,9 @@ class Teacher extends CommonModel
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function editInvigilator($id, $userData, $teacherData, $subjects)
@@ -542,7 +542,7 @@ class Teacher extends CommonModel
                 throw new   \Exception('教务人员用户信息变更失败');
             }
 
-            //处理 老师、考试项目 关联关系 TODO:Zhoufuxiang 2016-3-30
+            //处理 老师、考试项目 关联关系 TODO:fandian 2016-3-30
             $teacherSubject = $this->handleTeacherSubject($subjects, $id, $user);
 
             $connection->commit();
@@ -701,7 +701,7 @@ class Teacher extends CommonModel
     }
 
     /**
-     * 判断老师模板表头及列数 TODO: zhoufuxiang 2016-03-21
+     * 判断老师模板表头及列数 TODO: fandian 2016-03-21
      */
     public function judgeTemplet($data, $type)
     {
@@ -750,7 +750,7 @@ class Teacher extends CommonModel
      * @param $operator
      * @param $type
      *
-     * @author Zhoufuxiang 2016-03-30
+     * @author fandian 2016-03-30
      * @return int
      * @throws \Exception
      */

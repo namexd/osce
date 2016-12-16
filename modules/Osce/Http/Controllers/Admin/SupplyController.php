@@ -30,9 +30,9 @@ class SupplyController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2016-3-31
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getList(Request $request)
     {
@@ -58,9 +58,9 @@ class SupplyController extends CommonController
      * @return ${response}
      * string        name  用物名
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2016-3-31
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getAddSupply()
@@ -79,9 +79,9 @@ class SupplyController extends CommonController
      * string        name  用物名
      * @return ${response}
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2016-3-31
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function postAddSupply(Request $request)
@@ -113,9 +113,9 @@ class SupplyController extends CommonController
      * int        id  用物编号
      * @return ${response}
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2016-3-31
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getEditSupply(Request $request)
     {
@@ -140,9 +140,9 @@ class SupplyController extends CommonController
      * int        id  用物编号
      * @return ${response}
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2016-3-31
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postEditSupply(Request $request)
     {
@@ -172,9 +172,9 @@ class SupplyController extends CommonController
      * int        id  用物编号
      * @return ${response}
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2016-3-31
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDelSupply(Request $request)
     {

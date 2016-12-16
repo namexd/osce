@@ -84,8 +84,8 @@ class ExamController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamList(Request $request, Exam $exam)
     {
@@ -117,8 +117,8 @@ class ExamController extends CommonController
      * @param Exam $exam
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postDelete(Request $request, Exam $exam)
     {
@@ -145,9 +145,9 @@ class ExamController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-01-02 13:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAddExam(){
         return view('osce::admin.examManage.exam_assignment_add');
@@ -167,9 +167,9 @@ class ExamController extends CommonController
      * @return redirect
      *
      * @version 1.0
-     * @author Zhoufuxing <Zhoufuxing@misrobot.com>
+     * @author Zhoufuxing <Zhoufuxing@sulida.com>
      * @date 2016-01-06 14:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAddExam(Request $request, Exam $model, ExamArrangeRepository $examArrangeRepository)
     {
@@ -246,9 +246,9 @@ class ExamController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getEditExam(Request $request)
@@ -295,9 +295,9 @@ class ExamController extends CommonController
      * @return redirect
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postEditExam(Request $request, Exam $examModel, ExamArrangeRepository $examArrangeRepository)
@@ -384,9 +384,9 @@ class ExamController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamineeManage(Request $request, Student $student)
     {
@@ -426,9 +426,9 @@ class ExamController extends CommonController
      * @return redirect
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postDelStudent(Request $request, Student $student)
     {
@@ -466,9 +466,9 @@ class ExamController extends CommonController
      * @return object
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAddExaminee(Request $request){
         $id = $request->get('id');
@@ -490,9 +490,9 @@ class ExamController extends CommonController
      * @return object
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAddExaminee(Request $request, Student $model)
     {
@@ -634,9 +634,9 @@ class ExamController extends CommonController
      * @return object
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postImportStudent(Request $request, Student $student, $id)
     {
@@ -686,9 +686,9 @@ class ExamController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>  zhouchong <Zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>  fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentQuery(Request $request)
     {
@@ -719,8 +719,8 @@ class ExamController extends CommonController
      *                                      id  考试id
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStationList(Request $request, Exam $exam)
     {
@@ -756,9 +756,9 @@ class ExamController extends CommonController
      * @return json {id:考试ID,name:考试名称}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamListData(Request $request)
     {
@@ -790,9 +790,9 @@ class ExamController extends CommonController
      * id    考试id
      * @return View
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date  2016-01-18
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getChooseExamArrange(Request $request)
@@ -832,9 +832,9 @@ class ExamController extends CommonController
      * @param Request $request
      * @return object
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamroomAssignment(Request $request)
     {
@@ -894,9 +894,9 @@ class ExamController extends CommonController
      * @return redirect
      * @throws \Exception
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postExamroomAssignmen(Request $request)
     {
@@ -940,9 +940,9 @@ class ExamController extends CommonController
      * @return json  {id:考场ID,name:考场名称}
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
 
@@ -969,9 +969,9 @@ class ExamController extends CommonController
      * @return  json  {station_id:考站ID,name:考场名称}
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStationData(Request $request)
     {
@@ -1000,9 +1000,9 @@ class ExamController extends CommonController
      * @return json
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherListData(Request $request)
     {
@@ -1028,9 +1028,9 @@ class ExamController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getWatchStatus(Request $request){
         $this->validate($request,[
@@ -1063,9 +1063,9 @@ class ExamController extends CommonController
 //     * @return ${response}
 //     *
 //     * @version 1.0
-//     * @author zhouchong <zhouchong@misrobot.com>
+//     * @author fandian <fandian@sulida.com>
 //     * @date ${DATE} ${TIME}
-//     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+//     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 //     */
 //    public function getBoundWatch(Request $request){
 //        $this->validate($request,[
@@ -1112,9 +1112,9 @@ class ExamController extends CommonController
 //     * @return ${response}
 //     *
 //     * @version 1.0
-//     * @author zhouchong <zhouchong@misrobot.com>
+//     * @author fandian <fandian@sulida.com>
 //     * @date ${DATE} ${TIME}
-//     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+//     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 //     */
 //    public function getUnwrapWatch(Request $request){
 //        $this->validate($request,[
@@ -1163,9 +1163,9 @@ class ExamController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentDetails(Request $request){
         $this->validate($request,[
@@ -1214,9 +1214,9 @@ class ExamController extends CommonController
      * @return json
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getIntelligenceEaxmPlan(Request $request){
@@ -1284,9 +1284,9 @@ class ExamController extends CommonController
      * @return View {'id':$exam->id}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getIntelligence(Request $request){
@@ -1343,9 +1343,9 @@ class ExamController extends CommonController
      * @return void
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postIntelligence(Request $request){
@@ -1368,9 +1368,9 @@ class ExamController extends CommonController
      * @return json
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getChangeStudent(Request $request){
@@ -1445,9 +1445,9 @@ class ExamController extends CommonController
      * @return \Illuminate\View\View
      * @internal param Teacher $teacher
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-16
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStationAssignment(Request $request)
     {
@@ -1502,9 +1502,9 @@ class ExamController extends CommonController
      *
      * @param ExamFlowStation $examFlowStation
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date  2016-01-16
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function postStationAssignment(Request $request , ExamFlowStation $examFlowStation)
@@ -1551,9 +1551,9 @@ class ExamController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postSaveExamPlan(Request $request){
@@ -1588,9 +1588,9 @@ class ExamController extends CommonController
      * id    考试id
      * @return void
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date  2016-01-18
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getAjaxStation(Request $request)
@@ -1619,9 +1619,9 @@ class ExamController extends CommonController
      * id    考试id
      * @return void
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date  2016-01-18
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getAjaxStationRow(Request $request)
@@ -1646,9 +1646,9 @@ class ExamController extends CommonController
      * @return void
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getdownloadStudentImprotTpl(){
@@ -1749,7 +1749,7 @@ class ExamController extends CommonController
 
     /**
      * 展示考试组成的方法
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @param $examId
      * @return string
      * @throws \Exception
@@ -1816,9 +1816,9 @@ class ExamController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getCheckStudent(Request $request){
         $this   ->  validate($request,[
@@ -1834,7 +1834,7 @@ class ExamController extends CommonController
     /**
      * 判断准考证号是否已经存在
      * @url POST /osce/admin/exam/exam-sequence-unique
-     * @author zhouchong <zhouchong@misrobot.com>     *
+     * @author fandian <fandian@sulida.com>     *
      */
     public function postExamSequenceUnique(Request $request)
     {

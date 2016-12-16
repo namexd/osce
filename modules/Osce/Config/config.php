@@ -11,7 +11,7 @@ return [
 	'begin_dt_buffer' => 10,
 	'batch_num' => 10,
 	'wait_student_num' => 4,
-	'sms_signature' => '【华西临床技能中心】',
+	'sms_signature' => '【临床技能中心】',
 
 	'topticOptionMaxNumer'	=>	50,
 	
@@ -103,7 +103,7 @@ return [
 //	'studentRoleId'		=>	2,
 	'adminRoleId'		=>	3,
 	'superRoleId'		=>	5,
-	'patrolRoleId'		=>	6,		//巡考老师角色 TODO: Zhoufuxiang  2016-3-23
+	'patrolRoleId'		=>	6,		//巡考老师角色 TODO: fandian  2016-3-23
 
 	//场所类型的管理
 	'room_cate' => [
@@ -116,7 +116,7 @@ return [
 
 	'smart_arrange' => include 'smartarrange.php',
 
-	//成绩导出 TODO: Zhoufuxiang 2016-05-25
+	//成绩导出 TODO: fandian 2016-05-25
 	'student_score' => include 'studentscore.php',
 
 	'debug'		=>	env('debug',false),

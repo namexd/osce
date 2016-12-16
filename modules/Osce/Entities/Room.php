@@ -130,7 +130,7 @@ class Room extends CommonModel
 
             $roomStations = RoomStation::where('room_id', '=', $id)->get();
             if (!$roomStations->isEmpty()) {
-                //TODO:zhoufuxiang(修改bug#3599)
+                //TODO:fandian(修改bug#3599)
                 throw new \Exception('该考场下已关联了考站，请先去解除其关联关系。');
 //                if  (!RoomStation::where('room_id',$id)->delete()) {
 //                    throw new \Exception('房间考站关联删除失败');
@@ -173,7 +173,7 @@ class Room extends CommonModel
      * @param $formData
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-17 10：16
      */
     public function editRoomData($id, $vcr_id, $formData)
@@ -248,7 +248,7 @@ class Room extends CommonModel
      * @param $userId
      * @return static
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-17
      */
     public function createRoom($formData, $vcrId, $userId)
@@ -330,7 +330,7 @@ class Room extends CommonModel
      * @param $userId
      * @param $room
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function roomVcr($vcrId, $userId, $room)

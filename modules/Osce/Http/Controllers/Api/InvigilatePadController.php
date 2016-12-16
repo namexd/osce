@@ -198,9 +198,9 @@ class InvigilatePadController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getAuthentication(Request $request)
@@ -225,7 +225,7 @@ class InvigilatePadController extends CommonController
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
                 \Log::alert('推送当前学生',[$studentData['nextTester']]);
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 OsceCommon::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data($studentData['nextTester'], 1, '验证完成'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
@@ -234,7 +234,7 @@ class InvigilatePadController extends CommonController
                 );
             } else {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 OsceCommon::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], -2, '学生信息查询失败'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
@@ -253,9 +253,9 @@ class InvigilatePadController extends CommonController
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAuthenticationtwo(Request $request)
     {
@@ -276,7 +276,7 @@ class InvigilatePadController extends CommonController
                 $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
                 \Log::alert('推送当前学生',[$studentData['nextTester']]);
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 OsceCommon::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data($studentData['nextTester'], 1, '验证完成'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 1, '验证完成')));
@@ -285,7 +285,7 @@ class InvigilatePadController extends CommonController
                 );
             } else {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 OsceCommon::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], -2, '学生信息查询失败'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -2, '学生信息查询失败')));
@@ -313,9 +313,9 @@ class InvigilatePadController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author wangtao <zhouqiang@misrobot.com>
+     * @author wangtao <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getAuthentication_arr($request)
@@ -341,14 +341,14 @@ class InvigilatePadController extends CommonController
         {
             $studentData['nextTester']->avator = asset($studentData['nextTester']->avator);
 
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             OsceCommon::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data($studentData['nextTester'], 102, '验证完成'));
 
 //            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($studentData['nextTester'], 102, '验证完成')));
             return $studentData['nextTester'];
         } else
         {
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             OsceCommon::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], -2, '当前没有学生候考'));
 
 //            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data([], -2, '当前没有学生候考')));
@@ -371,9 +371,9 @@ class InvigilatePadController extends CommonController
      * @return json
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamGrade(Request $request,ConfigRepository $configRepository)
     {
@@ -435,7 +435,7 @@ class InvigilatePadController extends CommonController
                 $SubjectSpecialScore = new SubjectSpecialScore();
                 $specialScoreList  = $SubjectSpecialScore->getSubjectSpecialScore($ExamDraft->subject_id);
 
-                //返回数据组合 TODO: zhoufuxiang
+                //返回数据组合 TODO: fandian
                 $datas = $this->dataCombine($standardItemList, $specialScoreList,$examAllocation);
 
             }else
@@ -462,9 +462,9 @@ class InvigilatePadController extends CommonController
      * * string     station_id    考站id   (必须的)
      * @return view
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      * upload_document_id 音频 图片id集合
      */
     public function postSaveExamResult(Request $request)
@@ -491,7 +491,7 @@ class InvigilatePadController extends CommonController
             }
             $exam_id = $studentInfo->exam_id;
 
-            //重新获取场次ID，TODO: Zhoufuxiang 2016-05-11
+            //重新获取场次ID，TODO: fandian 2016-05-11
             $examScreening = OsceCommon::getExamScreening($exam_id);
             $screening_id  = $examScreening->id;
             \Log::alert('考站：'.$stationId . ';学生：' . $studentId . ';场次：' . $screening_id . '成绩推送313');
@@ -545,7 +545,7 @@ class InvigilatePadController extends CommonController
             //所有考生完成了当前考试
             if ($ExamFinishStatus == $studentExamSum)
             {
-                //todo 调用zhoufuxiang接口......
+                //todo 调用fandian接口......
                 try {
                     $examResultModel = new ExamResult();
                     // 考试成绩实时推送
@@ -583,9 +583,9 @@ class InvigilatePadController extends CommonController
      * @internal param $timeAnchors
      * @internal param array $array
      * @version 1.0
-     * @author jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date   2016-01-16  14:33
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postTestAttachImage(Request $request)
     {
@@ -672,9 +672,9 @@ class InvigilatePadController extends CommonController
      * @internal param $timeAnchors
      * @internal param array $array
      * @version 1.0
-     * @author jiangzhiheng <jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date   2016-01-16  14:33
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postTestAttachRadio(Request $request) {
         try {
@@ -740,7 +740,7 @@ class InvigilatePadController extends CommonController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function postStoreAnchor(Request $request)
     {
@@ -772,7 +772,7 @@ class InvigilatePadController extends CommonController
     }
 
     /**
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @param $stationId 考站id
      * @param $studentId 学生id
      * @param $examId 考试id
@@ -834,9 +834,9 @@ class InvigilatePadController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
 
@@ -880,9 +880,9 @@ class InvigilatePadController extends CommonController
      * @return json
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStartExam(Request $request,WatchReminderRepositories $watchReminder, ExamMidwayRepository $examMidway)
     {
@@ -921,7 +921,7 @@ class InvigilatePadController extends CommonController
 
             if ($AlterResult) {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 OsceCommon::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data(['start_time'=>$date,'student_id'=>$studentId,'exam_screening_id'=>@$examQueue->exam_screening_id], 105, '开始考试成功'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$date,'student_id'=>$studentId,'exam_screening_id'=>@$examQueue->exam_screening_id], 105, '开始考试成功')));
@@ -946,7 +946,7 @@ class InvigilatePadController extends CommonController
                 if($station->type==3) {//理论考试
                     $publishMessage->avator = asset($publishMessage->avator);
 
-                    //推送 TODO: Zhoufuxiang
+                    //推送 TODO: fandian
                     OsceCommon::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data($publishMessage, 102, '学生信息'));
 
 //                    $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data($publishMessage, 102, '学生信息')));
@@ -975,9 +975,9 @@ class InvigilatePadController extends CommonController
      * * string
      * @return json
      * @version
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getBoundWatchMembers(Request $request){
         $WatchLog = new WatchLog();
@@ -1016,9 +1016,9 @@ class InvigilatePadController extends CommonController
      * * string     student_id   exam_id    (必须的)
      * @return json
      * @version
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamineeBoundWatchDetail(Request $request){
         $this->validate($request, [
@@ -1078,9 +1078,9 @@ class InvigilatePadController extends CommonController
      * * string     status   type    (必须的)
      * @return json
      * @version
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getUseingWatchData(Request $request)
     {
@@ -1144,9 +1144,9 @@ class InvigilatePadController extends CommonController
      * * string     status   type    (必须的)
      * @return json
      * @version
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getSingleWatchData(Request $request){
 
@@ -1203,9 +1203,9 @@ class InvigilatePadController extends CommonController
      * * string     status   type    (必须的)
      * @return json
      * @version
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamineeStatus(Request $request){
         try{
@@ -1252,9 +1252,9 @@ class InvigilatePadController extends CommonController
      * * string     status   type    (必须的)
      * @return json
      * @version
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getWatchUnbundling(Request $request)
     {
@@ -1452,9 +1452,9 @@ class InvigilatePadController extends CommonController
      * * string     status   type    (必须的)
      * @return json
      * @version
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getWatchUnbundlingReportLog($station_id,$exam_id,$student_id,$type,$description,$userId,$exam_screening_id){
         $data = array();
@@ -1479,9 +1479,9 @@ class InvigilatePadController extends CommonController
      * * string     status   type    (必须的)
      * @return json
      * @version
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getWatchUnbundlingReport(Request $request){
         $this->validate($request,[
@@ -1652,9 +1652,9 @@ class InvigilatePadController extends CommonController
      * @url api/invigilatepad/live-photo-upload
      * @access public
      * @param Request $request
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postLivePhotoUpload(Request $request){
         $exam_sequence = $request->exam_sequence;//学号
@@ -1717,9 +1717,9 @@ class InvigilatePadController extends CommonController
      * @param $specialScores
      * @return array
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-07 20:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function dataCombine($standardItems, $specialScores,$examAllocation)
     {

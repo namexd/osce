@@ -46,9 +46,9 @@ class ExamQuestion extends Model
      * @param string $formData
      * @return mixed
      * @throws \Exception
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function showExamQuestionList($formData = '')
     {
@@ -92,9 +92,9 @@ class ExamQuestion extends Model
      * @access public
      * @param $id
      * @return bool
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function deleteExamQuestion($id)
     {
@@ -138,9 +138,9 @@ class ExamQuestion extends Model
      * @param $examQuestionItemData 试题子项表数据
      * @param $examQuestionLabelRelationData 试题和标签中间表数据
      * @return bool
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addExamQuestion($examQuestionData, $examQuestionItemData, $examQuestionLabelRelationData)
     {
@@ -211,9 +211,9 @@ class ExamQuestion extends Model
      * @access public
      * @param $id 试题表id
      * @return mixed
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamQuestionById($id)
     {
@@ -240,9 +240,9 @@ class ExamQuestion extends Model
      * @param $examQuestionItemData 试题子项表数据
      * @param $examQuestionLabelRelationData 试题和标签中间表数据
      * @return bool
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editExamQuestion($examQuestionData, $examQuestionItemData, $examQuestionLabelRelationData)
     {
@@ -317,9 +317,9 @@ class ExamQuestion extends Model
      * @url /osce/
      * @access public
      * @return bool
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamQuestion($data,$pageIndex,$question_type){
         $builder = $this->leftjoin('exam_question_type',function($join){
@@ -354,9 +354,9 @@ class ExamQuestion extends Model
      * @param $data
      * @param $questionBankRepositories
      * @return bool|int
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getQuestionsNum($data,$questionBankRepositories){
         $structureArr = [];

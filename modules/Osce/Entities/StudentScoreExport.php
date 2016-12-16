@@ -17,9 +17,9 @@ class StudentScoreExport extends NewExcelFile
      * 返回该文件的文件名
      * @return string
      *
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-25 15:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getFilename()
     {
@@ -32,9 +32,9 @@ class StudentScoreExport extends NewExcelFile
      * @return array
      * @throws \Exception
      *
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-25 15:40
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function objToArray($datas, $exam_id = null)
     {
@@ -108,9 +108,9 @@ class StudentScoreExport extends NewExcelFile
      * @return array
      * @throws \Exception
      *
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-25 17:40
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function objToArray2($datas, $exam_id = null)
     {

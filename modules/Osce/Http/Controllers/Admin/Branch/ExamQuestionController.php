@@ -23,9 +23,9 @@ class ExamQuestionController extends CommonController
      * @access public
      * @param Request $request
      * @return \Illuminate\View\View|string
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function showExamQuestionList(Request $request)
     {
@@ -90,9 +90,9 @@ class ExamQuestionController extends CommonController
      * @method
      * @url  /osce/admin/examQuestion/examQuestion-add
      * @access public
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamQuestionAdd()
     {
@@ -118,9 +118,9 @@ class ExamQuestionController extends CommonController
      * @url /osce/examquestion/examquestion-upload
      * @access public
      * @param Request $request
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postQuestionUpload(Request $request){
         $data   =   [
@@ -160,9 +160,9 @@ class ExamQuestionController extends CommonController
      * @url /osce/admin/examQuestion/examQuestion-add
      * @access public
      * @param Request $request
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postExamQuestionAdd(Request $request)
     {
@@ -223,9 +223,9 @@ class ExamQuestionController extends CommonController
      * @url /osce/
      * @access public
      * @param $id
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamQuestionEdit($id)
     {
@@ -318,9 +318,9 @@ class ExamQuestionController extends CommonController
      * @url /osce/
      * @access public
      * @param Request $request
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postExamQuestionEdit(Request $request)
     {
@@ -383,9 +383,9 @@ class ExamQuestionController extends CommonController
      * @access public
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function examQuestionDelete(Request $request){
