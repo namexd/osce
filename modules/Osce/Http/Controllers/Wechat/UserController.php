@@ -106,14 +106,13 @@ class UserController  extends CommonController
             }
             else
             {
-//                验证 验证码
-				if($code != 'test'){
-					$codeDate = ['mobile'=>$mobile, 'code'=>$code];
-					$userRepository = new UserRepository();
-					if(!empty($userRepository->getRegCheckMobileVerfiy($codeDate))){
-						throw new \Exception('验证码错误');
-					}
+//              验证 验证码
+				$codeDate = ['mobile'=>$mobile, 'code'=>$code];
+				$userRepository = new UserRepository();
+				if(!empty($userRepository->getRegCheckMobileVerfiy($codeDate))){
+					throw new \Exception('验证码错误');
 				}
+				
 
                 $user   =   Common::registerUser(['username'=>$mobile],$password);
                 $user   ->  name        =   $name;
