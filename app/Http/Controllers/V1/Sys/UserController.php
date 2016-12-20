@@ -48,9 +48,9 @@ class UserController extends ApiBaseController {
 	 * @return object
 	 *
 	 * @version 1.0
-	 * @author limingyao <limingyao@misrobot.com>
+	 * @author limingyao <limingyao@sulida.com>
 	 * @date 2015-11-05
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 */
 	public function postRegStudent(Request $request){
 		$this->validate($request, [
@@ -102,9 +102,9 @@ class UserController extends ApiBaseController {
 	 * @return object
 	 *
 	 * @version 1.0
-	 * @author limingyao <limingyao@misrobot.com>
+	 * @author limingyao <limingyao@sulida.com>
 	 * @date 2015-11-05
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 */
 	public function postRegTeacher(Request $request){
 		$this->validate($request, [
@@ -147,9 +147,9 @@ class UserController extends ApiBaseController {
 	 * @return json :['data'=>[{'id':'班级id','code':'班级编号','name':'班级编号'},{……}]]
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-06 11:00
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 	public function getClassList(Request $request){
@@ -173,9 +173,9 @@ class UserController extends ApiBaseController {
 	 * @return json [{id:1,name:本科生},{id:2,name:类别名}]
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-09
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 	public function getStudentTypeList(){
@@ -193,9 +193,9 @@ class UserController extends ApiBaseController {
 	 * @return json :['data'=>[{'id':年份，name:'年级'}，{'id':年份，name:'年级'}，……]}
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-06 11:00
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 	public function getGreadeList(){
@@ -219,9 +219,9 @@ class UserController extends ApiBaseController {
 	 * @return json :['data'=>[{'id':'专业id','code':'专业编号','name':'专业名称'},{……}]]
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-06 12:36
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 	public function getProfessionalList(Request $request){
@@ -251,9 +251,9 @@ class UserController extends ApiBaseController {
 	 * @return json :['data'=>[{'id':'科室id','code':'科室编号','name':'科室名称'},{……}]]
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-06 12:42
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 	public function getTeacherDeptList(Request $request){
@@ -281,9 +281,9 @@ class UserController extends ApiBaseController {
 	 * @return json {id:用户Id,username:用户名，avatar:头像,user_type:用户类型(student or teacher),user_perfile:用户详细信息({name：姓名，code：学号，qq：QQ，class：班级，grade：年级，professional：专业，student_type：学生类型} or {code:工号，teacher_dept：科室})}
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-09
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
     public function getUserProfile(Request $request){
@@ -342,9 +342,9 @@ class UserController extends ApiBaseController {
 	 * @return json {id:用户Id,username:用户名，avatar:头像,user_type:用户类型(student or teacher),user_perfile:用户详细信息({name：姓名，code：学号，qq：QQ，class：班级，grade：年级，professional：专业，student_type：学生类型} or {code:工号，teacher_dept：科室})}
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-06
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 	public function postLoginByOpendid(Request $request){
@@ -401,9 +401,9 @@ class UserController extends ApiBaseController {
 	 * @return booler
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-06
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
     private function postIsTeacher($id){
@@ -432,9 +432,9 @@ class UserController extends ApiBaseController {
 	 * @return blooer
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-06 15:22
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 	private function postIsStudent($id){
@@ -467,9 +467,9 @@ class UserController extends ApiBaseController {
      * @return json ['data'=>{'id':用户id,username:用户名,openid：用户修改后的微信openID}]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06 15:55
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postRelativeOpenidUser(Request $request){
@@ -531,9 +531,9 @@ class UserController extends ApiBaseController {
      * @return json ['data'=>{'id':用户id,username:用户名,mobile：用户修改后的手机号码}]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06 16:41
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postRelativeMobile(Request $request){
@@ -588,9 +588,9 @@ class UserController extends ApiBaseController {
 	 * @return json {'expiretime':过期时间,'mobile':'手机号'}
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-11 16:40
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 	public function getRegMoblieVerify(Request $request){
@@ -629,9 +629,9 @@ class UserController extends ApiBaseController {
 	 * @return json {''result':'验证结果,成功为true','mobile':'当前手机号'}
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-11 16:43
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 	public function getRegCheckMobileVerfiy(Request $request){

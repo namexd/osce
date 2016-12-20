@@ -30,9 +30,9 @@ class ExamTrainController extends CommonController
      * * string        id        教师id(必须的)
      * @return   view
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      * 'name', 'address','begin_dt','end_dt','teacher','content','attachments','status','create_user_id'
      */
@@ -83,9 +83,9 @@ class ExamTrainController extends CommonController
      * * string        id        教师id(必须的)
      * @return   view
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function postAddTraining(Request $request, InformTrain $train)
@@ -133,9 +133,9 @@ class ExamTrainController extends CommonController
      * * string        id        教师id(必须的)
      * @return   view
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
 
@@ -178,9 +178,9 @@ class ExamTrainController extends CommonController
      * * string        id        教师id(必须的)
      * @return   view
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public  function   getSeeTraining(Request $request){
         $id = urlencode(e(Input::get('id')));
@@ -217,9 +217,9 @@ class ExamTrainController extends CommonController
      * * string        id        教师id(必须的)
      * @return   view
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
      public function getEditTraining(Request $request){
          $id = urlencode(e(Input::get('id')));

@@ -25,7 +25,7 @@ class StudentArrange
     /**
      * 获取学生的数据
      * @param $id
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-05-01 10:11
      */
     public function getData($id)

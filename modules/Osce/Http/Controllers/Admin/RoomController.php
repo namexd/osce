@@ -33,8 +33,8 @@ class RoomController extends CommonController
      *                         int           id              房间的id
      * @return view
      * @version   2.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getRoomList(Request $request, Room $room)
     {
@@ -83,8 +83,8 @@ class RoomController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getEditRoom(Request $request, Room $model)
@@ -101,7 +101,7 @@ class RoomController extends CommonController
         $data = $model->showRoomList("", $type, $id);
 
         $cateList   =   Area::groupBy('cate')->select('cate')->get();
-        //TODO:zhoufuxiang，查询没被其他考场关联的摄像机
+        //TODO:fandian，查询没被其他考场关联的摄像机
         $model = new Vcr();
         list($vcr,$modelVcr) = $model->selectVcr($id, $type);
 
@@ -124,8 +124,8 @@ class RoomController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postEditRoom(Request $request, Room $room)
     {
@@ -155,7 +155,7 @@ class RoomController extends CommonController
                 $room = new Room();
                 unset($formData['cate']);
                 $room->editRoomData($id, $vcr_id, $formData);
-            //TODO: Zhoufuxiang 16-3-7
+            //TODO: fandian 16-3-7
             } elseif($type == '考场'){
                 throw new \Exception('不能够修改为考场',-120);
 //                unset($formData['cate']);
@@ -189,8 +189,8 @@ class RoomController extends CommonController
      *                         array           id            主键ID
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAddRoom(Request $request)
     {
@@ -217,8 +217,8 @@ class RoomController extends CommonController
      * @param Room $room
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postCreateRoom(Request $request, Room $room)
     {
@@ -279,8 +279,8 @@ class RoomController extends CommonController
      * @param Room $room
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postDelete(Request $request, Room $room)
     {
@@ -302,7 +302,7 @@ class RoomController extends CommonController
             } else {
                 $area = new Area();
                 $area->deleteArea($id);
-                //查询判断，该场所区域是否还存在 TODO:Zhoufuxiang 2016-3-24
+                //查询判断，该场所区域是否还存在 TODO:fandian 2016-3-24
                 $result = Area::where('cate','=',$type)->first();
                 if(empty($result)){
                     $type = 0;
@@ -319,7 +319,7 @@ class RoomController extends CommonController
     /**
      * 判断名称是否已经存在
      * @url POST /osce/admin/resources-manager/name-unique
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     * @author fandian <fandian@sulida.com>     *
      */
     public function postNameUnique(Request $request)
     {

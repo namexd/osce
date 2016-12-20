@@ -48,7 +48,7 @@
 
             </div>
             <div class="footer">
-                <div class="pull-right">&copy; 2015-2018 <a href="/" target="_blank">misrobot.com</a>
+                <div class="pull-right">&copy; 2015-2018 <a href="/" target="_blank">sulida.com</a>
                 </div>
             </div>
         </div>

@@ -1835,7 +1835,7 @@ function course_module(){
                 '</td>'+
                 '<td>'+
                 '<select class="form-control" name="score['+parent+']['+child+']">';
-                /*TODO: Zhoufuxiang 2016-2-26*/
+                /*TODO: fandian 2016-2-26*/
                 for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                     html += '<option value="'+a+'">'+a+'</option>';
                 }
@@ -2278,12 +2278,12 @@ function course_module(){
                         var res = data.data;
                         //var index = parseInt($('tbody').attr('index'));
 
-                        /*序号置0，内容清空 TODO: Zhoufuxiang 2016-2-26*/
+                        /*序号置0，内容清空 TODO: fandian 2016-2-26*/
                         var index = 0;
                         $('#judgement tbody').html('');
 
                         for(var i in res){
-                            /*TODO: Zhoufuxiang 2016-2-26*/
+                            /*TODO: fandian 2016-2-26*/
 
                            if((res[i].sort).split('-')[1] == undefined){
                                 index++;
@@ -2303,7 +2303,7 @@ function course_module(){
                                        '<td height="80">'+
 									   '<label>考核点总分：</label><select style="display:none;" class="form-control" name="score['+index+'][total]">'+
                                        '<option value="'+res[i].score+'">'+res[i].score+'</option>';
-                                       /*TODO: Zhoufuxiang 2016-2-26*/
+                                       /*TODO: fandian 2016-2-26*/
                                        for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                                            html += '<option value="'+a+'">'+a+'</option>';
                                        }
@@ -2320,7 +2320,7 @@ function course_module(){
                                        '</tr>';
                         
                                for(var j in res){
-                                   /*TODO: Zhoufuxiang 2016-2-26*/
+                                   /*TODO: fandian 2016-2-26*/
                                    if(((res[j].sort).split('-')[1] != undefined) && ((res[j].sort).split('-')[0] == res[i].sort)){
                         
                                        //处理子级dom
@@ -2342,7 +2342,7 @@ function course_module(){
                                                '</td>'+
                                                '<td>'+
                                                '<select class="form-control" name="score['+index+']['+res[j].sort.substr(res[j].sort.indexOf('-')+1, 3)+']">';
-                                                /*TODO: Zhoufuxiang 2016-2-26*/
+                                                /*TODO: fandian 2016-2-26*/
                                                //'<option value="'+res[j].score+'">'+res[j].score+'</option>';
                                                for(var a=1; a<=pars.topticOptionMaxNumer; a++){
                                                    html += '<option value="'+a+'"'+((res[j].score==a)?" selected ":"")+'>'+a+'</option>';
@@ -2588,7 +2588,7 @@ function course_module(){
         });
 
 
-    /**************************************************************zhoufuxiang <zhoufuxiang@misrobot.com> 2016-05-07************************************************************************************/
+    /**************************************************************fandian <fandian@sulida.com> 2016-05-07************************************************************************************/
     /**
      * 特殊评分checkbox
      * @author mao
@@ -2614,7 +2614,7 @@ function course_module(){
 
     /**
      * 新增特殊评分项
-     * @author zhoufuxiang
+     * @author fandian
      * @version 3.4
      * @date    2016-05-07
      */
@@ -2645,7 +2645,7 @@ function course_module(){
 
     /**
      * 删除特殊评分项
-     * @author zhoufuxiang
+     * @author fandian
      * @version 3.4
      * @date    2016-05-07
      */
@@ -2660,7 +2660,7 @@ function course_module(){
         });
     });
 
-    /**************************************************************zhoufuxiang <zhoufuxiang@misrobot.com> 2016-05-07************************************************************************************/
+    /**************************************************************fandian <fandian@sulida.com> 2016-05-07************************************************************************************/
 
 
 }

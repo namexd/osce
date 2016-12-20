@@ -37,9 +37,9 @@ class ExamArrangeRepository extends AbstractExamArrange
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getModel()
     {
@@ -48,7 +48,7 @@ class ExamArrangeRepository extends AbstractExamArrange
 
     /**
      * 检查传入的数据的合理性
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-14 17:27
      */
     function checkData($examId, $field = 'station_id')

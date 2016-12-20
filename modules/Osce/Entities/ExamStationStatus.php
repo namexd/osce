@@ -32,9 +32,9 @@ class ExamStationStatus extends CommonModel
      * ��ȡ��վ״̬
      * @method GET �ӿ�
      * @param $stations �����¿�վ����
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-5-3
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamMsg($exam_id,$exam_screening_id,$stations){
         if(count($stations)){
@@ -107,9 +107,9 @@ class ExamStationStatus extends CommonModel
      * @return mixed
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-14 10:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStationReadyStatus($examId, $examScreeningId, $stationId)
     {
@@ -147,9 +147,9 @@ class ExamStationStatus extends CommonModel
      * @return bool
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-14 15:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function modifyExamStationStatus($examId, $roomId, $examScreeningId, DrawlotsRepository $draw)
     {

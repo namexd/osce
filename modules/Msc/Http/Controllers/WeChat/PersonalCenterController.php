@@ -76,9 +76,9 @@ class PersonalCenterController extends MscWeChatController {
 	 * @method	GET
 	 * @url /msc/wechat/personal-center/my-laboratory-apply
 	 * @access public
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date	2016年1月11日13:58:12
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 	public function MyLaboratoryApply(){
 		$LabApply = new LabApply;
@@ -105,9 +105,9 @@ class PersonalCenterController extends MscWeChatController {
 	 * @method	GET
 	 * @url /msc/wechat/personal-center/history-laboratory-apply-list
 	 * @access public
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date	2016年1月11日13:58:12
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 */
 	public function HistoryLaboratoryApplyList(){
 		$LabApply = new LabApply;
@@ -124,9 +124,9 @@ class PersonalCenterController extends MscWeChatController {
 	 * @method	GET
 	 * @url /msc/wechat/personal-center/get-apply-details
 	 * @access public
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date	2016年1月18日11:41:25
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 	public function GetApplyDetails(){
 		$apply_id = Input::get('apply_id');
@@ -141,9 +141,9 @@ class PersonalCenterController extends MscWeChatController {
 	 * @method	GET
 	 * @url /msc/wechat/personal-center/cancel-apply
 	 * @access public
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date	2016年1月18日16:27:08
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 	public function CancelApply(){
 		$LabApply = new LabApply;

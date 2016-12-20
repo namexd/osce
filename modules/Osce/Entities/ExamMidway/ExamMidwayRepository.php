@@ -27,9 +27,9 @@ class ExamMidwayRepository
      * @param $stationId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-13
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function beginTheoryStatus($examId, $stationId, $status = 3)
     {
@@ -43,9 +43,9 @@ class ExamMidwayRepository
      * @param $examId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-13
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getQueueByStudent($studentId, $examId)
     {
@@ -60,9 +60,9 @@ class ExamMidwayRepository
      * @param array $stationIds
      * @return bool
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-13
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function isChangeToTwo($examId, array $stationIds)
     {
@@ -85,9 +85,9 @@ class ExamMidwayRepository
      * @throws \Exception
      * @throws \Throwable
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-14
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function reset($examId)
     {

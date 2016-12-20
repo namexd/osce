@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2016/1/11
  * Time: 14:30
  */
@@ -29,9 +29,9 @@ class Flows extends CommonModel
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function examFlowRoomRelation(){
@@ -46,7 +46,7 @@ class Flows extends CommonModel
      * @param $stationData
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function saveExamroomAssignmen($exam_id, $roomData, $stationData)
     {
@@ -170,7 +170,7 @@ class Flows extends CommonModel
                         }
                     }
 
-                    //考试-试卷-考站关联  TODO: Zhoufuxiang 2016-3-22
+                    //考试-试卷-考站关联  TODO: fandian 2016-3-22
                     $station = Station::where('id', '=', $station_id)->select(['name', 'type', 'paper_id'])->first();
                     if(!$station){
                         throw new \Exception('未找到对应考站');
@@ -207,7 +207,7 @@ class Flows extends CommonModel
      * @param $stationData
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function editExamroomAssignmen($exam_id, $roomData, $stationData)
     {
@@ -279,7 +279,7 @@ class Flows extends CommonModel
             //删除排考记录表
             ExamPlanRecord::deleteRecord($exam_id);
 
-            //删除考试-试卷-考站关联  TODO: Zhoufuxiang 2016-3-22
+            //删除考试-试卷-考站关联  TODO: fandian 2016-3-22
             if(!ExamPaperStation::where('exam_id', '=', $id)->get()->isEmpty()){
                 if(!ExamPaperStation::where('exam_id', '=', $id)->delete()){
                     throw new \Exception('删除考试-试卷-考站关联失败，请重试！');

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
+ * User: fandian
  * Date: 2016/1/11 0011
  * Time: 15:43
  */
@@ -20,7 +20,7 @@ class WatchLog extends CommonModel{
     /**
      * 腕表和学生的关联关系
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function student()
     {
@@ -172,9 +172,9 @@ class WatchLog extends CommonModel{
      * @return array
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-14 14:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getRoomStudentWatchs($exam_id, $screening_id, $room_id)
     {
@@ -220,9 +220,9 @@ class WatchLog extends CommonModel{
      * @return mixed
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-14 14:24
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStationStudentWatch($examId, $screening_id, $stationId)
     {

@@ -55,7 +55,7 @@ class Order extends AbstractCate implements CateInterface
      * @param $screen
      * @return array
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-11 11:30
      */
     protected function orderTestStudent($entity, $screen)

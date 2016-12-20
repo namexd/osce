@@ -14,7 +14,7 @@ class SysParam implements ConfigInterface
     /**
      * 返回sysParam需要的数据
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-13 18:20
      */
     public function getData()
@@ -27,7 +27,7 @@ class SysParam implements ConfigInterface
      * 重写文件的方法
      * @param array $data
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-13 20:30
      */
     public function setData(array $data)

@@ -125,7 +125,7 @@ class Student extends CommonModel
     }
 
     /**
-     * 判断考生模板表头及列数 TODO: zhoufuxiang 2016-3-4
+     * 判断考生模板表头及列数 TODO: fandian 2016-3-4
      */
     public function judgeTemplet($data)
     {
@@ -354,7 +354,7 @@ class Student extends CommonModel
      * 处理用户信息（基本信息、角色分配）
      * @param $userData
      *
-     * @author Zhoufuxiang 2016-04-18
+     * @author fandian 2016-04-18
      * @return static
      * @throws \Exception
      */
@@ -425,7 +425,7 @@ class Student extends CommonModel
      * @param $user
      * @param $role_id
      *
-     * @author Zhoufuxiang 2016-04-18
+     * @author fandian 2016-04-18
      * @return object
      */
     private function addUserRoles($user, $role_id)
@@ -605,9 +605,9 @@ class Student extends CommonModel
      * @param $exam
      * @return array
      * @throws \Exception
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function studentListtwo($stationId, $exam)
     {
@@ -854,7 +854,7 @@ class Student extends CommonModel
      * 根据考试id和科目id找到对应的考生以及考生的成绩信息
      * @param $exam_id
      * @param $subjectId
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     static public function getStudentByExamAndSubject($exam_id, $subjectId)
     {
@@ -927,7 +927,7 @@ class Student extends CommonModel
      * 学生成绩统计的着陆页
      * @param $screening_ids
      * @param $message
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     static public function getStudentScoreList($screening_ids, $message)
     {
@@ -991,7 +991,7 @@ class Student extends CommonModel
      * @param $student_id
      * @param $exam_id
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-04 21:06
      */
     private function checkDelete($student_id, $exam_id)
@@ -1050,9 +1050,9 @@ class Student extends CommonModel
      * @param $exam_id 考试Id
      * @param $exam_screening_id 当前场次Id
      * @return mixed
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExameeStatus($studentId,$exam_id,$exam_screening_id)
     {
@@ -1254,9 +1254,9 @@ class Student extends CommonModel
      * @return array
      *
      * @version 3.6
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     private function getEmsConfig(){

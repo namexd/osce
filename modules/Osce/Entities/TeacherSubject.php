@@ -56,7 +56,7 @@ class TeacherSubject extends CommonModel
      *
      * @param $subject
      *
-     * @author Zhoufuxiang  2016-04-13 10:55
+     * @author fandian  2016-04-13 10:55
      * @return mixed
      * @throws \Exception
      */
@@ -83,7 +83,7 @@ class TeacherSubject extends CommonModel
      *
      * @param $subject
      *
-     * @author Zhoufuxiang  2016-04-13 10:55
+     * @author fandian  2016-04-13 10:55
      * @return mixed
      * @throws \Exception
      */

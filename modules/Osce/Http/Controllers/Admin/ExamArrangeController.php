@@ -592,7 +592,7 @@ class ExamArrangeController extends CommonController
      * 获取考试所有的阶段（异步接口）
      * @url GET /osce/admin/exam-arrange/all-gradations
      * @param Request $request
-     * @author Zhoufuxiang 2016-04-06
+     * @author fandian 2016-04-06
      * @return string
      */
     public function getAllGradations(Request $request)
@@ -626,7 +626,7 @@ class ExamArrangeController extends CommonController
      * 获取考试项目（异步接口）
      * @url GET /osce/admin/exam-arrange/all-subjects
      * @param Request $request
-     * @author Zhoufuxiang 2016-04-06
+     * @author fandian 2016-04-06
      * @return string
      */
     public function getAllSubjects(Request $request)
@@ -664,9 +664,9 @@ class ExamArrangeController extends CommonController
      * @return view
      *
      * @version 3.4
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getInvigilateArrangeIndex(Request $request)
     {
@@ -692,9 +692,9 @@ class ExamArrangeController extends CommonController
      * 回显数据ajax请求
      * @url GET /osce/admin/exam-arrange/exam-teacher-arrange
      * @param  exam_id
-     * @author Zhoufuxiang 2016-04-06
+     * @author fandian 2016-04-06
      * @return string
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
      public function getExamTeacherArrange(Request $request)
      {
@@ -789,9 +789,9 @@ class ExamArrangeController extends CommonController
      * @param Request $request
      * @return json
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-04-06 16:02
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postInvigilateArrange(Request $request)
     {
@@ -853,7 +853,7 @@ class ExamArrangeController extends CommonController
      * 根据考试项目 获取对应下的考官、SP（接口）
      * @url GET /osce/admin/exam-arrange/invigilates-by-subject
      * @param Request $request
-     * @author Zhoufuxiang 2016-04-06
+     * @author fandian 2016-04-06
      * @return json
      */
     public function getInvigilatesBySubject(Request $request)
@@ -916,7 +916,7 @@ class ExamArrangeController extends CommonController
     /**
      * 考场安排，提交保存
      * @param Request $request
-     * @author Zhoufuxiang 2016-4-7
+     * @author fandian 2016-4-7
      * @return mixed
      * @throws \Exception
      */

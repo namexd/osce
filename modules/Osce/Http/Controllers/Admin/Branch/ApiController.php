@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-03-10 14:11
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
@@ -59,9 +59,9 @@ class ApiController extends CommonController
      * @url /osce/
      * @access public
      * @return \Illuminate\View\View
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月10日14:19:34
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetEditorExamPaperItem(QuestionBankRepositories $questionBankRepositories){
         $question_detail = \Input::get('question_detail','');
@@ -107,9 +107,9 @@ class ApiController extends CommonController
      * @url /osce/
      * @access public
      * @param Request $request
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月11日11:20:48
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function PostEditorExamPaperItem(Request $request){
         $ExamQuestionLabel = new ExamQuestionLabel;
@@ -161,9 +161,9 @@ class ApiController extends CommonController
      * @url /osce/admin/api/exam-paper-preview
      * @access public
      * @param $data
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月11日11:21:47
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ExamPaperPreview(Request $request,QuestionBankRepositories $questionBankRepositories){
         /*
@@ -353,9 +353,9 @@ class ApiController extends CommonController
      * @url /osce/
      * @access public
      * @param QuestionBankRepositories $questionBankRepositories
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月15日09:22:47
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GenerateExamPaper(QuestionBankRepositories $questionBankRepositories){
         //\DB::connection('osce_mis')->enableQueryLog();
@@ -375,9 +375,9 @@ class ApiController extends CommonController
      * @url /osce/
      * @access public
      * @return \Illuminate\View\View
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月14日15:40:51
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ExamineeInfo(QuestionBankRepositories $questionBankRepositories){
         $this->name = \Route::currentRouteAction();
@@ -391,9 +391,9 @@ class ApiController extends CommonController
      * @url /osce/
      * @access public
      * @return \Illuminate\View\View
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function LoginAuthView(){
         return  view('osce::admin.theoryTest.theory_login');
@@ -405,9 +405,9 @@ class ApiController extends CommonController
      * @access public
      * @param Request $request
      * @return $this|\Illuminate\Http\RedirectResponse
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月16日09:49:31
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function LoginAuth(Request $request, ExamMidwayRepository $examMidway){
         $this->validate($request,[
@@ -420,24 +420,24 @@ class ApiController extends CommonController
         if (\Auth::attempt(['username' => $username, 'password' => $password]))
         {
 
-            /*
+
             //获取当前登录账户的角色名称
             $user = new User();
             $userInfo = $user->getUserRoleName($username);
 
-            if($userInfo->name == '监考老师'){
-                return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
-            }else if($userInfo->name == '考生'){
-                return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
-            }else{
-                return redirect()->back()->withErrors('你没有权限！');
-            }
-            */
-            \Log::debug('获考试信息',[]);
+//            if($userInfo->name == '监考老师'){
+//                return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
+//            }else if($userInfo->name == '考生'){
+//                return redirect()->route('osce.admin.ApiController.getStudentExamIndex'); //必须是redirect
+//            }else{
+//                return redirect()->back()->withErrors('你没有权限！');
+//            }
+
+          //  \Log::debug('获考试信息',[]);获考试信息
             //获取当前登录账户的角色名称
             $questionBankRepositories = new QuestionBankRepositories();
             $roleType = $questionBankRepositories->getExamLoginUserRoleType();
-            //dd($roleType);
+//            dd($roleType);
             if($roleType == 1){
                 return redirect()->route('osce.admin.ApiController.LoginAuthWait'); //必须是redirect
             }else if($roleType == 2){
@@ -467,9 +467,9 @@ class ApiController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wangjiang <wangjiang@sulida.com>
      * @date 2016-03-29 11:05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function LoginAuthWait(QuestionBankRepositories $questionBankRepositories, ExamMidwayRepository $examMidway, DrawlotsRepository $drawlots)
     {
@@ -554,9 +554,9 @@ class ApiController extends CommonController
      * @param DrawlotsRepository $drawlots
      * @return $this|\Illuminate\View\View
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-08 14:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function LoginAuthWait2(QuestionBankRepositories $questionBankRepositories, ExamMidwayRepository $examMidway, DrawlotsRepository $drawlots)
     {
@@ -634,9 +634,9 @@ class ApiController extends CommonController
      * @url /osce/
      * @access public
      * @return \Illuminate\Http\RedirectResponse
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function logout(){
         Auth::logout();
@@ -648,9 +648,9 @@ class ApiController extends CommonController
      * @url /osce/
      * @access public
      * @param Request $request
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamPaperId(Request $request)
     {
@@ -671,9 +671,9 @@ class ApiController extends CommonController
      * @url api/student-exam-index
      * @access public
      * @param Request $request
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentExamIndex(ExamMidwayRepository $examMidway, DrawlotsRepository $drawlots)
     {
@@ -813,9 +813,9 @@ class ApiController extends CommonController
      * @return JSON
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamPaperStatus(Request $request,DrawlotsRepository $draw)
     {
@@ -899,9 +899,9 @@ class ApiController extends CommonController
      * @return json
      *
      * @version 3.4a
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wangjiang <wangjiang@sulida.com>
      * @date 2016-04-06 15:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getReadyExam (Request $request, WatchReminderRepositories $watchReminder, DrawlotsRepository $draw)
     {
@@ -935,7 +935,7 @@ class ApiController extends CommonController
                     }
                 }
 
-                //重新获取当前进行的场次 (传过来的场次ID，并不是当前正在进行的考试场次) TODO: Zhoufuxiang216-05-14
+                //重新获取当前进行的场次 (传过来的场次ID，并不是当前正在进行的考试场次) TODO: fandian216-05-14
                 $examScreening   = Common::getExamScreening($examId);
                 $examScreeningId = $examScreening->id;
 
@@ -1006,7 +1006,7 @@ class ApiController extends CommonController
             //1、考试信息校验
             $exam = Common::examCheck($examId);
 
-            //2、重新获取当前进行的场次 (传过来的场次ID，并不是当前正在进行的考试场次) TODO: Zhoufuxiang2016-05-14
+            //2、重新获取当前进行的场次 (传过来的场次ID，并不是当前正在进行的考试场次) TODO: fandian2016-05-14
             $examScreening   = Common::getExamScreening($examId);
             $examScreeningId = $examScreening->id;
 
@@ -1078,9 +1078,9 @@ class ApiController extends CommonController
      * @return json
      *
      * @version 3.4a
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date 2016-04-05 17:54
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAlertExamReplace (Request $request,WatchReminderRepositories $watchReminder) {
         $this->validate($request, [

@@ -44,9 +44,9 @@ class StandardItem extends CommonModel
      * @return object
      *
      * @version 3.4
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-04-12 12:55
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addItem($standard, array $point, $parent = '')
     {
@@ -106,7 +106,7 @@ class StandardItem extends CommonModel
 
     /**
      * 查询考核点的平均分
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      */
     public function getCheckPointAvg($pid, $subjectId)
     {
@@ -141,9 +141,9 @@ class StandardItem extends CommonModel
      * @return mixed
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-04-13 14:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getSubjectStandards($subject_id)
     {
@@ -170,7 +170,7 @@ class StandardItem extends CommonModel
     /**
      * @param $standard_id
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>  Zhoufuxiang
+     * @author zhouqiang <zhouqiang@sulida.com>  fandian
      * @return array
      */
 
@@ -230,7 +230,7 @@ class StandardItem extends CommonModel
      *
      * @param Collection $itemCollect
      *
-     * @author Zhoufuxiang  2016-04-13 14:13
+     * @author fandian  2016-04-13 14:13
      * @return bool
      * @throws \Exception
      */
@@ -317,9 +317,9 @@ class StandardItem extends CommonModel
      * @return mixed
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getSubjectUsedInfoByExamScore($used){
@@ -346,9 +346,9 @@ class StandardItem extends CommonModel
      * @param $points
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-27 15:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function handlePoints($standard, $points)
     {
@@ -382,9 +382,9 @@ class StandardItem extends CommonModel
      * @param $terms
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-27 16:33
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function handleTerm($standard, $standard_item, $terms)
     {

@@ -17,9 +17,9 @@ class OverExamController extends CommonController
      * @请求字段：
      * @return \Illuminate\View\View
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-14
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function index()
     {
@@ -96,9 +96,9 @@ class OverExamController extends CommonController
      * 考试id exam_id
      * @return string
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-14
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function destroy(Request $request, ExamMidwayRepository $examMidway)
     {

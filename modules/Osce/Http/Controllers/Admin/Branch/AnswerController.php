@@ -32,9 +32,9 @@ class AnswerController extends CommonController
      * @method
      * @url /osce/
      * @access public
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function formalPaperList(Request $request,QuestionBankRepositories $questionBankRepositories)
     {
@@ -137,9 +137,9 @@ class AnswerController extends CommonController
      * @url /osce/
      * @access public
      * @param Request $request
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postSaveAnswer(Request $request)
     {
@@ -274,9 +274,9 @@ class AnswerController extends CommonController
      * @access public
      * @param $examPaperFormalId
      * @return \Illuminate\View\View
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function selectGrade(Request $request)
     {
@@ -307,9 +307,9 @@ class AnswerController extends CommonController
      * @url /osce/
      * @access public
      * @param Request $request
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getControlMark(Request $request)
     {
@@ -342,9 +342,9 @@ class AnswerController extends CommonController
      * @access public
      * @param Request $request
      * @throws \Exception
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postSaveStatus(Request $request,WatchReminderRepositories $watchReminder){
 
@@ -376,7 +376,7 @@ class AnswerController extends CommonController
             $redis = Redis::connection('message');
             $time = date('Y-m-d H:i:s', time());
 
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data(['start_time'=>$time,'student_id'=>$studentId,'exam_screening_id'=>$exam_screening_id->exam_screening_id],108,'理论考试结束'));
 
 //            $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode($this->success_data(['start_time'=>$time,'student_id'=>$studentId,'exam_screening_id'=>$exam_screening_id->exam_screening_id],108,'理论考试结束')));

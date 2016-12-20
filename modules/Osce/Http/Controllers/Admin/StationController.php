@@ -48,8 +48,8 @@ class StationController extends CommonController
      * @param Station $model
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStationList(Request $request, Station $model)
     {
@@ -81,8 +81,8 @@ class StationController extends CommonController
      * @param Request $request get请求<br><br>
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAddStation(Request $request)
     {
@@ -107,8 +107,8 @@ class StationController extends CommonController
      * @return view
      * @throws \Exceptio
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAddStation(Request $request, Station $model)
     {
@@ -134,7 +134,7 @@ class StationController extends CommonController
             $vcrId  = $request->input('vcr_id', null);
             $roomId = $request->input('room_id');
 
-            //TODO:考卷 Zhoufuxiang，2016-3-22
+            //TODO:考卷 fandian，2016-3-22
             $paperId= $request->input('paper_id');
             if($stationData['type'] == 3){
                 $stationData['subject_id'] = null;
@@ -182,8 +182,8 @@ class StationController extends CommonController
      * @param Station $model
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getEditStation(Request $request, Station $model)
     {
@@ -217,8 +217,8 @@ class StationController extends CommonController
      * @param Station $model Station
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postEditStation(Request $request, Station $model)
     {
@@ -246,7 +246,7 @@ class StationController extends CommonController
             $roomId    = $request->input('room_id');
             $id        = $request->input('id');
 
-            //TODO:考卷 Zhoufuxiang，2016-3-22
+            //TODO:考卷 fandian，2016-3-22
             $paperId   = $request->input('paper_id');
             if($placeData['type'] == 3){
                 $placeData['subject_id'] = null;
@@ -279,8 +279,8 @@ class StationController extends CommonController
      * @return view
      * @internal param Station $model Station
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postDelete(Request $request, Station $station)
     {
@@ -341,7 +341,7 @@ class StationController extends CommonController
         $case   = CaseModel::all(['id', 'name']);
         $room   = Room::all(['id', 'name']);        //房间
         $subject= Subject::all(['id', 'title']);
-        $papers = ExamPaper::where('status', '=', 1)->select(['id', 'name'])->get();   //考卷 Zhoufuxiang 2016-3-22
+        $papers = ExamPaper::where('status', '=', 1)->select(['id', 'name'])->get();   //考卷 fandian 2016-3-22
 
         return array($placeCate, $vcr, $case, $room, $subject, $papers);  //评分标准
     }
@@ -349,7 +349,7 @@ class StationController extends CommonController
     /**
      * 判断名称是否已经存在
      * @url POST /osce/admin/resources-manager/postNameUnique
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     * @author fandian <fandian@sulida.com>     *
      * @param Request $request
      * @return string
      */

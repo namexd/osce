@@ -41,9 +41,9 @@ class StudentWatchController extends CommonController
      * @return json
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentExamReminder(Request $request, $stationId = null)
     {
@@ -67,7 +67,7 @@ class StudentWatchController extends CommonController
                     'data'      => $data,
                     'message'   => 'success'
                 ];
-                //推送 TODO: Zhoufuxiang 2016-05-17
+                //推送 TODO: fandian 2016-05-17
                 Common::watchPublish(md5($_SERVER['HTTP_HOST']) . 'watch_message', $json);
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'watch_message', json_encode([
@@ -203,7 +203,7 @@ class StudentWatchController extends CommonController
         $surplus = strtotime($item->end_dt) - time();
 
         if ($surplus <= 0) {
-            //todo 调用jiangzhiheng接口
+            //todo 调用ZouYuChao接口
             //$endStudentExam = ExamQueue::endStudentQueueExam($item->student_id);
         };
         $data = [
@@ -369,9 +369,9 @@ class StudentWatchController extends CommonController
      * @return json
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getWatchNfc(Request $request)

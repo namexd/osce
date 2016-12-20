@@ -54,9 +54,9 @@ class AutomaticPlanArrangementController extends CommonController
      * @return mixed
      *
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     function getIndex(Request $request)
     {
@@ -92,9 +92,9 @@ class AutomaticPlanArrangementController extends CommonController
      * @return response
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-01
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     function postBegin(SmartArrangeForHuaxiRepository $smartArrangeRepository)
     {
@@ -126,9 +126,9 @@ class AutomaticPlanArrangementController extends CommonController
      * @return response
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-02-23 17:30
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     function postStore(SmartArrangeRepository $smartArrangeRepository)
     {
@@ -162,9 +162,9 @@ class AutomaticPlanArrangementController extends CommonController
      * @return bool
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-01 16：48
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getExport(
         SmartArrangeRepository $smartArrangeRepository,

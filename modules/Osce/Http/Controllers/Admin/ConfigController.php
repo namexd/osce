@@ -36,9 +36,9 @@ class ConfigController extends CommonController
      *
      * @internal param Teacher $teacher
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-11 11：48
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getIndex(Request $request)
     {
@@ -60,7 +60,7 @@ class ConfigController extends CommonController
      * 读出文件的配置
      * @param ConfigRepository $configRepository
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-13 18:29
      */
     public function getSysparam(ConfigRepository $configRepository)
@@ -71,7 +71,7 @@ class ConfigController extends CommonController
     /**
      * 改写文件的方法
      * @param ConfigRepository $configRepository
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-13 20:12
      */
     public function postSysparam(ConfigRepository $configRepository)
@@ -98,9 +98,9 @@ class ConfigController extends CommonController
      * @throws \Exception
      * @internal param Teacher $teacher
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-09 16：48
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postStore(Request $request, Config $config)
     {
@@ -173,9 +173,9 @@ class ConfigController extends CommonController
      *
      * @internal param Teacher $teacher
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-11 11：48
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getArea()
     {
@@ -196,9 +196,9 @@ class ConfigController extends CommonController
      *
      * @internal param Teacher $teacher
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-11 11：48
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAreaStore()
     {
@@ -216,9 +216,9 @@ class ConfigController extends CommonController
      *
      * @internal param Teacher $teacher
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-11 11：48
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAreaStore(Request $request)
     {
@@ -262,9 +262,9 @@ class ConfigController extends CommonController
      * @return object
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postDelArea(Request $request, Area $area){
         //验证
@@ -286,7 +286,7 @@ class ConfigController extends CommonController
     /**
      * 判断名称是否已经存在
      * @url POST /osce/admin/resources-manager/postNameUnique
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     * @author fandian <fandian@sulida.com>     *
      */
     public function postNameUnique(Request $request)
     {
@@ -381,9 +381,9 @@ class ConfigController extends CommonController
      * <b>get请求字段：</b>
      * @return view
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getWeChatHelp(){
         $current_url    =   $_SERVER['HTTP_HOST'];

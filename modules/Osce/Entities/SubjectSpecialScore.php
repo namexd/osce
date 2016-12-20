@@ -39,9 +39,9 @@ class SubjectSpecialScore extends CommonModel
      * @return bool
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @data   2016-07-01  16:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addSubjectSpecialScore($subject_id, $speScores, $user_id)
     {

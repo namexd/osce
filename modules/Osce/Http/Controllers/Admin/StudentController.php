@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Zhoufuxiang
+ * User: fandian
  * Date: 2016/3/9 0009
  * Time: 16:37
  */
@@ -31,9 +31,9 @@ class StudentController extends CommonController
      * @return object
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME} 201-3-9
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postJudgeStudent(Request $request)
@@ -75,9 +75,9 @@ class StudentController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
 

@@ -19,7 +19,7 @@ class StationMode extends AbstractEntity implements EntityInterface
      * 返回该场次所对应的实体
      * @param $screen
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 17：40
      */
     function entity($exam, $screen)

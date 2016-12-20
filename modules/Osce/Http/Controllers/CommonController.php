@@ -1,7 +1,7 @@
 <?php
 /**
  * osce 公共控制器
- * author   Luohaihua<luohaihua@misrobot.com>
+ * author   Zouyuchao<Zouyuchao@sulida.com>
  * date 2015-12-28  15:51
  */
 namespace Modules\Osce\Http\Controllers;
@@ -105,7 +105,7 @@ abstract class CommonController extends Controller
     /**
      * 将错误代码和错误信息写进日志
      * @param $ex
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     protected function errorLog(\Exception $ex)
@@ -121,7 +121,7 @@ abstract class CommonController extends Controller
      * @param $value
      * @param $rule
      * @return bool
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-07 09:41
      */
     public static function regex_vali($value, $rule)
@@ -159,7 +159,7 @@ abstract class CommonController extends Controller
      * @param array $timeAnchors 锚点数据
      * @return array
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-14 10:50
      */
     static public function storeAnchor($stationId, $studentId, $examId, $teacherId, array $timeAnchors)
@@ -206,9 +206,9 @@ abstract class CommonController extends Controller
      * * string
      * @return json
      * @version
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function checkType($status){
         if(!is_null($status)){

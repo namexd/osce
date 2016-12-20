@@ -73,9 +73,9 @@ class DrawlotsController extends CommonController
      * <b>post请求字段：</b>
      *
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-20 12:01
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     private function getRoomId($teacher_id, $examId)
     {
@@ -107,9 +107,9 @@ class DrawlotsController extends CommonController
      * <b>post请求字段：</b>
      *
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-20 12:01
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExaminee2(Request $request)
     {
@@ -183,9 +183,9 @@ class DrawlotsController extends CommonController
      * <b>post请求字段：</b>
      *
      * @version 1.0
-     * @author wt <Jiangzhiheng@misrobot.com>
+     * @author wt <ZouYuChao@sulida.com>
      * @date 2016-01-20 12:01
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExaminee_arr2(Request $request)
     {
@@ -202,7 +202,7 @@ class DrawlotsController extends CommonController
             //获取正在考试中的考试
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], -50, '今天没有正在进行的考试'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -210,7 +210,7 @@ class DrawlotsController extends CommonController
                 throw new \Exception('今天没有正在进行的考试', -50);
             } elseif ($exam->status != 1) {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], -777, '当前考试没有进行'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -232,7 +232,7 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id, $exam_screening_id);
             } else {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], -703, '考试模式不存在'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -243,7 +243,7 @@ class DrawlotsController extends CommonController
                 $examQueue[$key]->student_avator = asset($examQueue[$key]->student_avator);
             }
 
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data($examQueue, 103, '获取成功'));
 
 //            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -267,9 +267,9 @@ class DrawlotsController extends CommonController
      * <b>post请求字段：</b>
      *
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-23 12:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getNextExaminee2(Request $request)
     {
@@ -331,9 +331,9 @@ class DrawlotsController extends CommonController
      * @param Request $request
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-02 10:10
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExaminee(Request $request)
     {
@@ -376,9 +376,9 @@ class DrawlotsController extends CommonController
      * @param Request $request
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-02 11:10
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExaminee_arr(Request $request)
     {
@@ -408,7 +408,7 @@ class DrawlotsController extends CommonController
 
             //推送当前组 考生队列
             if (!empty($examQueue)&& count($examQueue)>0) {
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish($pad_message, $this->success_data($examQueue, 103, '获取成功'));
             }
 
@@ -419,7 +419,7 @@ class DrawlotsController extends CommonController
                 'message'   => $ex->getMessage(),
                 'data'      => []
             ];
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             Common::padPublish($pad_message, $data);
         }
     }
@@ -429,9 +429,9 @@ class DrawlotsController extends CommonController
      * @param Request $request
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-02 20:10
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getNextExaminee(Request $request)
     {
@@ -470,9 +470,9 @@ class DrawlotsController extends CommonController
      * @param Request $request
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-02 20:10
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getNextExaminee_arr(Request $request)
     {
@@ -499,7 +499,7 @@ class DrawlotsController extends CommonController
 //            $ExamQueue = new ExamQueue();
 //            $examQueue = $ExamQueue->getNextGroupStudent($user_id, $exam->id);
 
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             Common::padPublish($pad_message, $this->success_data($examQueue, 104, '获取成功'));
             return true;
 
@@ -510,7 +510,7 @@ class DrawlotsController extends CommonController
                 'message'   => $ex->getMessage(),
                 'data'      => []
             ];
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             Common::padPublish($pad_message, $data);
         }
     }
@@ -521,9 +521,9 @@ class DrawlotsController extends CommonController
      * @return mixed
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-03 10:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     private function examCheck($exam_id){
         $exam = Exam::doingExam($exam_id);
@@ -549,9 +549,9 @@ class DrawlotsController extends CommonController
      * <b>post请求字段：</b>
      *
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-23 12:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getNextExaminee_arr2(Request $request)
     {
@@ -568,7 +568,7 @@ class DrawlotsController extends CommonController
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3000, '当前没有正在进行的考试'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -591,7 +591,7 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::nextExamineeByStationId($stationId, $exam->id, $exam_screening_id);
             } else {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], -703, '考试模式不存在'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -602,7 +602,7 @@ class DrawlotsController extends CommonController
             //从集合中移除blocking
 //            $students->forget('blocking');
 
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data($examQueue, 104, '获取成功'));
 
 //            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -627,9 +627,9 @@ class DrawlotsController extends CommonController
      * <b>post请求字段：</b>
      *
      * @version 1.0
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-04-12 12:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function nextStudent(Request $request)
     {
@@ -711,9 +711,9 @@ class DrawlotsController extends CommonController
      *                     uid   腕表编号
      *                     room_id  考场id
      * @version 1.0
-     * @author Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @date 2016-01-20 15:10
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStation(Request $request)
     {
@@ -740,7 +740,7 @@ class DrawlotsController extends CommonController
             \Log::alert('抽签拿到的腕表id',[$watch->id]);
             if (is_null($watch)) {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3100, '没有找到对应的腕表信息'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -757,7 +757,7 @@ class DrawlotsController extends CommonController
                 'desc')->first();
             if (!$watchLog) {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3200, '没有找到学生对应的腕表信息'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -768,7 +768,7 @@ class DrawlotsController extends CommonController
             //获取腕表对应的学生实例
             if (!$student = $watchLog->student) {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3300, '没有找到对应的学生信息'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -780,7 +780,7 @@ class DrawlotsController extends CommonController
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3000, '当前没有正在进行的考试'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -802,7 +802,7 @@ class DrawlotsController extends CommonController
                 
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
 
-                    //推送 TODO: Zhoufuxiang
+                    //推送 TODO: fandian
                     Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 7200, '该考生不在当前考生小组中'));
 
 //                    $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -813,7 +813,7 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByStationId($stationId, $examId, $exam_screening_id);
                 if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
 
-                    //推送 TODO: Zhoufuxiang
+                    //推送 TODO: fandian
                     Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 7201, '该考生不在当前考生小组中'));
 
 //                    $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -822,7 +822,7 @@ class DrawlotsController extends CommonController
                 }
             } else {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], -705, '没有这种考试模式'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -838,7 +838,7 @@ class DrawlotsController extends CommonController
                 ->isEmpty()
             ) {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3400, '当前考生走错了考场'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -868,7 +868,7 @@ class DrawlotsController extends CommonController
 
             $connection->commit();
 
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data($result, 1, '抽签成功'));
 
 //            $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -896,7 +896,7 @@ class DrawlotsController extends CommonController
             
             if ($studentMsg) {
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data($studentMsg, 102, '验证完成'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
@@ -919,9 +919,9 @@ class DrawlotsController extends CommonController
      * @access public
      * @param DrawlotsRepository $huaxiDrawlots
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function postDrawlots(DrawlotsRepository $huaxiDrawlots, WatchReminderRepositories $watchReminder)
     {
@@ -954,7 +954,7 @@ class DrawlotsController extends CommonController
             $student = $huaxiDrawlots->pushStudent();
             //将数据推送给pad端
             \Log::info('推送给pad的数据', [$student, 'channel' => md5($_SERVER['HTTP_HOST']) . 'pad_message']);
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data($student, 102, '抽签成功'));
             
             return response()->json($this->success_data($data));
@@ -974,9 +974,9 @@ class DrawlotsController extends CommonController
      * 考试id exam_id
      * @return mixed
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-14
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function postPushStudent(DrawlotsRepository $drawlotsRepository)
     {
@@ -1007,7 +1007,7 @@ class DrawlotsController extends CommonController
      * 登陆之后根据老师id返回考站信息
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function getStationList(Request $request)
     {
@@ -1138,7 +1138,7 @@ class DrawlotsController extends CommonController
      * @param $exam 考试实例
      * @return array 返回参数为一个数组
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     private function drawlots($student, $roomId, $teacherId, $exam)
     {
@@ -1243,7 +1243,7 @@ class DrawlotsController extends CommonController
      * @param $exam
      * @return array
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     private function getRoomIdAndStation($id, $exam)
     {
@@ -1276,7 +1276,7 @@ class DrawlotsController extends CommonController
      * 判断时间
      * @param $uid
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     private function judgeTime($studentId, $screenId)
     {
@@ -1316,7 +1316,7 @@ class DrawlotsController extends CommonController
      * @param $roomId
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-01
      */
     private function whetherInthisEntity($student, $examId, $roomId)
@@ -1364,7 +1364,7 @@ class DrawlotsController extends CommonController
      * @param $examId
      * @param $studentids
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-01
      */
     private function ranStationSelect($roomId, $examId, $examScreeingId)
@@ -1437,7 +1437,7 @@ class DrawlotsController extends CommonController
      * @param $room
      * @param $station
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-04 16:42
      */
     private function checkEffected($exam, $room, $station)
@@ -1454,7 +1454,7 @@ class DrawlotsController extends CommonController
      * @param $teacher_id
      * @param $examId
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function getStationAndRoom($teacher_id, $examId)
@@ -1519,9 +1519,9 @@ class DrawlotsController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     private function getexamScreeing($exam)
     {
@@ -1574,7 +1574,7 @@ class DrawlotsController extends CommonController
         if (is_null($stationId)) {
             if($type) {//默认不推
 
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 4000, '当前老师没有考试'));
 
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',

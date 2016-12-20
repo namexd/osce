@@ -38,7 +38,7 @@ trait SqlTraits
      * @param $examId
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-15 11:14
      */
     public function emptyingPlan($examId)
@@ -57,7 +57,7 @@ trait SqlTraits
      * @param $examId
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-15 11:17
      */
     public function emptyingPlanRecord($examId)
@@ -77,7 +77,7 @@ trait SqlTraits
      * @param $examId
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-15 11:20
      */
     public function emptyingOrder($examId)

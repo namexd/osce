@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
+ * User: fandian
  * Date: 2016/1/14 0014
  * Time: 14:49
  */
@@ -31,9 +31,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTrainList(){
       $user=Auth::user();
@@ -69,9 +69,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAddTrain(Request $request){
         $this->validate($request,[
@@ -129,9 +129,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getEditTrain(Request $request){
         $this->validate($request,[
@@ -194,9 +194,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postEditTrain(Request $request){
         $this->validate($request,[
@@ -209,7 +209,7 @@ class TrainController extends  CommonController{
             'content'                 =>'required',
         ]);
         $data = $request->only(['id','name','address','begin_dt','end_dt','teacher','content']);
-        //限制内容长度（1W） TODO: Zhoufuxiang
+        //限制内容长度（1W） TODO: fandian
         $contentLen = mb_strlen(strip_tags($data['content']));
         
         if($contentLen > 10000){
@@ -246,9 +246,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDelTrain(Request $request)
     {
@@ -309,9 +309,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTrainDetail(Request $request){
         $id=$request->get('id');
@@ -358,9 +358,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postUploadFile(Request $request){
        try {
@@ -437,9 +437,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAddTrain(){
     	return view('osce::admin.examManage.train_add');
@@ -459,9 +459,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDownloadDocument(Request $request){
         $this->validate($request,[

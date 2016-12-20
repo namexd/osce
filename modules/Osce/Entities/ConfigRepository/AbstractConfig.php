@@ -25,7 +25,7 @@ abstract class AbstractConfig
     /**
      * 返回对象实例
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-13 20:25
      */
     public function makeModel()
@@ -39,7 +39,7 @@ abstract class AbstractConfig
 
     /**
      * 获取模型中的数据
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-14 11:00
      */
     public function getData()
@@ -50,7 +50,7 @@ abstract class AbstractConfig
     /**
      * 将数据写入模型
      * @param array $data
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-14 11:01
      */
     public function setData(array $data)

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/11
  * Time: 20:20
  */
@@ -37,9 +37,9 @@ class ResourcesToolsCateRepository extends BaseRepository
      * @return array
      *
      * @version 0.2
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wangjiang <wangjiang@sulida.com>
      * @date 2015-11-26 9:48
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getCateTree ($pid=0)
     {

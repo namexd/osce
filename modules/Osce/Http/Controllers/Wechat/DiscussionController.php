@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
+ * User: fandian
  * Date: 2016/1/9 0009
  * Time: 15:13
  */
@@ -29,9 +29,9 @@ class DiscussionController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getQuestionList(Request $request)
     {
@@ -111,9 +111,9 @@ class DiscussionController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDiscussionLists()
     {
@@ -133,9 +133,9 @@ class DiscussionController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getCheckQuestion(Request $request)
     {
@@ -255,9 +255,9 @@ class DiscussionController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAddQuestion(Request $request)
     {
@@ -297,9 +297,9 @@ class DiscussionController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAddReply(Request $request)
     {
@@ -326,9 +326,9 @@ class DiscussionController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAddReply(Request $request)
     {
@@ -372,9 +372,9 @@ class DiscussionController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDelQuestion(Request $request)
     {
@@ -442,9 +442,9 @@ class DiscussionController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getEditQuestion(Request $request)
     {
@@ -471,9 +471,9 @@ class DiscussionController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postEditQuestion(Request $request)
     {
@@ -510,9 +510,9 @@ class DiscussionController extends CommonController
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getCheckQuestions(Request $request)
     {

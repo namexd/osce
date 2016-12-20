@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-01-20 10:52
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 namespace Modules\Msc\Http\Controllers;
 

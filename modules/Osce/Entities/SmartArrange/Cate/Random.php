@@ -24,7 +24,7 @@ class Random extends AbstractCate implements CateInterface
      * @param $exam
      * @param $params
      * @return array
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-11 10:18
      */
     function needStudents($entity, $screen, $exam)
@@ -66,7 +66,7 @@ class Random extends AbstractCate implements CateInterface
      * @param $screen
      * @return array 已经考过了的考生及其考试流程
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-12 15:26
      */
     protected function randomTestStudent($entity, $screen)

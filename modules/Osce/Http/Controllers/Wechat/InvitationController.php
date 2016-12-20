@@ -38,9 +38,9 @@ class InvitationController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * @return view
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getInvitationList(Request $request)
@@ -127,9 +127,9 @@ class InvitationController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * @return view
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date  2016-4-13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
 
@@ -223,9 +223,9 @@ class InvitationController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * @return view
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date  2016-4-13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getInviteAllTeacher(Request $request, Invite $invite)
@@ -323,9 +323,9 @@ class InvitationController extends CommonController
      * * string        参数英文名        参数中文名(必须的)
      * @return view
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getList()
@@ -354,9 +354,9 @@ class InvitationController extends CommonController
      * * string        id        教师id(必须的)
      * @return   ruset
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
 
@@ -393,9 +393,9 @@ class InvitationController extends CommonController
      * * string        id        教师id(必须的)
      * @return   view
      ** @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getMsg()
     {

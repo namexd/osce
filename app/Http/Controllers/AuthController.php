@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/19
  * Time: 16:02
  */
@@ -35,9 +35,9 @@ class AuthController extends BaseController
      * @return view
      *
      * @version 0.8
-     * @author whg <whg@misrobot.com>
+     * @author whg <whg@sulida.com>
      * @date 2015年12月15日17:39:08
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function AuthManage(Request $request){
         $succ = $request->input('succ');
@@ -55,9 +55,9 @@ class AuthController extends BaseController
      * @return view
      *
      * @version 0.8
-     * @author whg <weihuiguo@misrobot.com>
+     * @author whg <weihuiguo@sulida.com>
      * @date 2015年12月15日11:36:27
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function newRolePage(){
         return view('role.role');
@@ -73,9 +73,9 @@ class AuthController extends BaseController
      * @return view
      *
      * @version 0.8
-     * @author whg <weihuiguo@misrobot.com>
+     * @author whg <weihuiguo@sulida.com>
      * @date 2015年12月15日11:39:12
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAddNewRole(Request $Request,SysRoles $SysRoles){
         $this->validate($Request,[
@@ -119,9 +119,9 @@ class AuthController extends BaseController
      * @return view
      *
      * @version 0.8
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date 2015年12月15日13:59:39
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function SetPermissions($id,SysRolePermission $SysRolePermission,SysMenus $SysMenus,SysFunctions $SysFunctions){
@@ -171,9 +171,9 @@ class AuthController extends BaseController
      * @return view
      *
      * @version 0.8
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date 2015年12月15日13:59:39
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function SavePermissions(Request $Request,SysRolePermission $SysRolePermission){
@@ -214,9 +214,9 @@ class AuthController extends BaseController
     /**
      * 删除角色
      * @method GET /auth/role-manage
-     * @author whg <weihuiguo@misrobot.com>
+     * @author whg <weihuiguo@sulida.com>
      * @date 2015-12-15 14:20
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function deleteRole(){
@@ -254,9 +254,9 @@ class AuthController extends BaseController
     /**
      * 编辑角色
      * @method GET /auth/role-manage
-     * @author whg <weihuiguo@misrobot.com>
+     * @author whg <weihuiguo@sulida.com>
      * @date 2015-12-15 14:20
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editRole(Request $Request){
 //        dd(Input::get());
@@ -278,7 +278,7 @@ class AuthController extends BaseController
 //        }else{
 //            return  redirect()->back()->withErrors(['修改失败']);
 //        }
-        //TODO: zhoufuxiang 2016-2-23
+        //TODO: fandian 2016-2-23
         $name =  trim(Input::get('name'));
         $id   =  Input::get('id');
         $des  =  Input::get('description');
@@ -332,9 +332,9 @@ class AuthController extends BaseController
      * <b>get请求字段：</b>
      * @return view
      *
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date 2015年12月17日13:59:39
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function AddAuth(SysPermissions $SysPermissions,SysMenus $SysMenus){
         $data = [];

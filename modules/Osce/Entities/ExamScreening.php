@@ -52,7 +52,7 @@ class ExamScreening extends CommonModel
      * @param $examId
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-16 15:30:11
      */
     public function beginScreen($examId)
@@ -74,7 +74,7 @@ class ExamScreening extends CommonModel
      * @param $examId
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-16 15:30:54
      */
     public function endScreen($examId)
@@ -149,7 +149,7 @@ class ExamScreening extends CommonModel
      * 获取考试对应的场次列表 TODO 不一定会使用
      * @param $examId
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     public function screeningList($examId)
@@ -227,9 +227,9 @@ class ExamScreening extends CommonModel
      * <b>get请求字段：</b>
      * @return json
      * @version 1.0
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getExamCheck()
@@ -300,9 +300,9 @@ class ExamScreening extends CommonModel
      * @param $exam_id
      * @return object
      *
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date   2016-05-7
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getScreenID($exam_id){
         $screenObject=$this->getExamingScreening($exam_id);
@@ -323,9 +323,9 @@ class ExamScreening extends CommonModel
      * @param $exam_id
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-16 17:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public static function getAllScreeningByExam($exam_id, array $sonExam_id = [])
     {

@@ -49,9 +49,9 @@ class ExamScreeningStudent extends CommonModel
      * * int        exam_screening_id        考场id(必须的)
      *
      * @version 1.0
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function selectExamScreeningStudent($exam_screening_id)
     {
@@ -100,9 +100,9 @@ class ExamScreeningStudent extends CommonModel
      * @param $screenId 场次id
      * @return object
      *
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date   2016-05-7
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getStudentByWatchCode($code,$screenId){
       return  $this->leftJoin('watch', function ($join) {

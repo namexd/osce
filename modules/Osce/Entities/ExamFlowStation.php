@@ -202,7 +202,7 @@ class ExamFlowStation extends CommonModel
                 throw new Exception('考试流程考站关联添加失败');
             }
 
-            //考试-试卷-考站关联  TODO: Zhoufuxiang 2016-3-22
+            //考试-试卷-考站关联  TODO: fandian 2016-3-22
             $station = Station::where('id','=',$value)->select(['name', 'type', 'paper_id'])->first();
             if($station->type == 3){
                 if(!isset($station->paper_id) || empty($station->paper_id)){
@@ -313,7 +313,7 @@ class ExamFlowStation extends CommonModel
                 }
             }
 
-            //删除考试-试卷-考站关联  TODO: Zhoufuxiang 2016-3-22
+            //删除考试-试卷-考站关联  TODO: fandian 2016-3-22
             if(!ExamPaperStation::where('exam_id', '=', $id)->get()->isEmpty()){
                 if(!ExamPaperStation::where('exam_id', '=', $id)->delete()){
                     throw new \Exception('删除考试-试卷-考站关联失败，请重试！');

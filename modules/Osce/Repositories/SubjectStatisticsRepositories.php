@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-02-23 14:00
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Osce\Repositories;
@@ -63,14 +63,14 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @param $ExamId
      * @param int $qualified
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年2月26日09:31:50
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetSubjectStatisticsList2($ExamId,$qualified = 0)
     {
         $DB = \DB::connection('osce_mis');
-        //获取所有场次ID（包括子考试的场次ID）TODO:zhoufuxiang 2016-06-22
+        //获取所有场次ID（包括子考试的场次ID）TODO:fandian 2016-06-22
         list($screening_ids, $elderExam_ids) = ExamScreening::getAllScreeningByExam($ExamId);
         $builder = $this->ExamResultModel
             ->leftJoin('station', 'station.id', '=', 'exam_result.station_id')
@@ -80,7 +80,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
             ->whereIn('exam_result.exam_screening_id', $screening_ids)
             ->where('exam_result.flag', '=', 0);                    //只取有效成绩（0:使用；1:作废；2:弃考；3:作弊；4:替考）
 
-        //TODO:zhoufuxiang 2016-06-01 加上该条件为统计合格人数
+        //TODO:fandian 2016-06-01 加上该条件为统计合格人数
         if($qualified){
             $builder->whereNotNull('subject.id')
                     ->where($DB->raw('exam_result.score/subject.rate_score'), '>=', '0.6')
@@ -122,9 +122,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @param $elderExam_ids
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-07-05 10:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getSubjectStatisticsList($screening_ids, $elderExam_ids)
     {
@@ -168,9 +168,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @param $SubjectId
      * @param int $qualified
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年2月26日15:21:01
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetSubjectDifficultyStatisticsList($examId =[],$SubjectId, $sign = 'subject', $qualified=0)
     {
@@ -196,7 +196,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
         }
         $SubjectDiff =[];
         foreach ($examId as $item){
-            //获取所有场次ID（包括子考试的场次ID）TODO:zhoufuxiang 2016-06-22
+            //获取所有场次ID（包括子考试的场次ID）TODO:fandian 2016-06-22
             list($screening_ids, $elderExam_ids) = ExamScreening::getAllScreeningByExam($item);
             $builder = $this->ExamResultModel
                 ->leftJoin('station', 'station.id', '=', 'exam_result.station_id')
@@ -279,9 +279,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @param $ExamId
      * @param $SubjectId
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>   <zhoufuxiang@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>   <fandian@sulida.com>
      * @date    2016年2月26日15:36:25            2016-07-06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetSubjectStationStatisticsList($ExamId, $SubjectId, $sign = 'subject')
     {
@@ -339,14 +339,14 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @access public
      * @param $stationId 考站id
      * @return mixed
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetStationDetails($examId, $subjectId, $stationId, $sign = 'subject')
     {
         $DB = \DB::connection('osce_mis');
-        //获取所有场次ID（包括子考试的场次ID）  TODO:zhoufuxiang 2016-06-23
+        //获取所有场次ID（包括子考试的场次ID）  TODO:fandian 2016-06-23
         list($screening_ids, $elderExam_ids) = ExamScreening::getAllScreeningByExam($examId);
         //获取主考试信息、及整个考试时间
         $examInfo = Exam::whereIn('id', $elderExam_ids)
@@ -415,14 +415,14 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @param $SubjectId
      * @param $standardPid; 默认为 0 统计考核项父节点，  统计对应父考核点的考核子项
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com> <zhoufuxiang@misrobot.com>
+     * @author tangjun <tangjun@sulida.com> <fandian@sulida.com>
      * @date    2016年2月26日15:36:25          2016-06-23 9:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetSubjectStandardStatisticsList($ExamId, $SubjectId, $standardPid=0, $pid=0)
     {
         $DB = \DB::connection('osce_mis');
-        //获取所有场次ID（包括子考试的场次ID）  TODO:zhoufuxiang 2016-06-23
+        //获取所有场次ID（包括子考试的场次ID）  TODO:fandian 2016-06-23
         list($screening_ids, $elderExam_ids) = ExamScreening::getAllScreeningByExam($ExamId);
 
         $builder = $this->ExamResultModel
@@ -462,9 +462,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @method
      * @url /osce/
      * @access public
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date 2016年2月26日16:34:06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetPidArr($StandardData){
         $PidArr = [];
@@ -482,9 +482,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @access public
      * @param $id
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月2日12:56:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetContent($id){
         $data = $this->StandardItemModel
@@ -505,9 +505,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @param array $status
      * @return mixed
      *
-     * @author tangjun <tangjun@misrobot.com>   <zhoufuxiang@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>   <fandian@sulida.com>
      * @date    2016年3月1日11:47:49             2016-07-01 10:20
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetExamList($pid = null, $status = [1,2])
     {
@@ -532,9 +532,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @access public
      * @param int $status
      * @return mixed
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date    2016年3月31日
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetExamListNoStandardGrade($pid = 0, $status = [1,2]){
         return $this->ExamModel
@@ -555,7 +555,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * 出科目的下拉菜单
      * @param $examId
      * @return array|\Illuminate\Support\Collection
-     * @author Jiangzhiheng     <zhoufuxiang@misrobot.com> 2016-06-29
+     * @author ZouYuChao     <fandian@sulida.com> 2016-06-29
      */
     public function subjectDownlist($examId, $paper = true, $sign = false)
     {
@@ -567,7 +567,7 @@ class SubjectStatisticsRepositories  extends BaseRepository
         }
         $stationIdList = $StationTeacherBuilder->groupBy('station_id')->get()->pluck('station_id')->toArray();
 
-        //TODO：zhoufuxiang  2016-06-29 从考场安排中获取对应的考试项目
+        //TODO：fandian  2016-06-29 从考场安排中获取对应的考试项目
 
         $subjectIdList = ExamDraft::leftJoin('exam_draft_flow', 'exam_draft_flow.id', '=', 'exam_draft.exam_draft_flow_id')
                         ->whereIn('exam_draft.station_id', $stationIdList)
@@ -610,9 +610,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @url /osce/
      * @access public
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年2月26日15:36:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetSubjectList(){
         $subject = new Subject();
@@ -627,9 +627,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @param $ExamId
      * @param $standardPid 评分标准父编号
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年2月26日15:36:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetStandardDetails($standardPid){
         $DB = \DB::connection('osce_mis');
@@ -656,9 +656,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @access public
      * @param $seconds, 秒戳
      * @return mixed
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月4日09:41:31
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function timeTransformation($seconds){
         $time = 0;
@@ -675,9 +675,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @param string $sign
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-23 15:45
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentByExamAndSubject($examId, $subjectId, $sign = 'subject')
     {
@@ -750,9 +750,9 @@ class SubjectStatisticsRepositories  extends BaseRepository
      * @param $paper_total
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-07-05 16:45
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getViaStudentNum($screening_ids, $station_id, $rate_score, $paper_id)
     {

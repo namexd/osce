@@ -23,7 +23,7 @@ abstract class AbstractEntity
      * @param $sameTime
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-29 14:56
      */
     function entityMinsFuture($entities, $sameTime)
@@ -58,7 +58,7 @@ abstract class AbstractEntity
      * @param $sameTime
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-29 14：57
      */
     function entityMins($entities, $sameTime)
@@ -85,7 +85,7 @@ abstract class AbstractEntity
      * 将考站对应的时间写进考站
      * @param $entities
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-18 18:21
      */
     function entityTime($entities)
@@ -104,7 +104,7 @@ abstract class AbstractEntity
      * @param string $sortBy
      * @param bool $desc
      * @return object
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-13 16:20
      */
     function setSerialnumber(Collection $collection, $groupBy = 'order', $sortBy = 'order', $desc = false)
@@ -154,7 +154,7 @@ abstract class AbstractEntity
 
     /**
      * 将每个大站的第一个序号写进每个实体
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-26 19:23
      */
     protected function setMinSerialnumber($entities)

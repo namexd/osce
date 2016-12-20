@@ -42,7 +42,7 @@ class ExamDraftTemp extends CommonModel{
     /**
      * 处理 待删除 数据
      * @param $exam_id
-     * @author Zhoufuxiang 2016-4-11
+     * @author fandian 2016-4-11
      * @throws \Exception
      */
     public function handleDelDatas($exam_id){

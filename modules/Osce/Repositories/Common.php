@@ -204,7 +204,7 @@ class Common
      * @param int $code
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-10 15:01
      */
     static public function objIsEmpty($obj, $code = -999, $message = '系统错误')
@@ -228,7 +228,7 @@ class Common
      * @param int $code
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-10 15:19
      */
     static public function valueIsNull($value, $code = -999, $message = '系统错误')
@@ -246,7 +246,7 @@ class Common
      * @param $value
      * @param $item
      *
-     * @author Zhoufuxiang 2016-04-14
+     * @author fandian 2016-04-14
      * @return object
      */
     public static function getNotNullValue($object, $value, $item){
@@ -262,7 +262,7 @@ class Common
      * @param null $temp
      * @return mixed|null
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-21 17:52
      */
     static public function mixCommonDivisor(array $arrays, $temp = null)
@@ -304,7 +304,7 @@ class Common
     /**
      * 通过角色ID，获取对应的老师的类型
      * @param $role_id
-     * @author Zhoufuxiang 2016-3-30
+     * @author fandian 2016-3-30
      * @return int
      */
     static public function getTeacherTypeByRoleId($role_id)
@@ -381,7 +381,7 @@ class Common
          * @param int $code
          * @return bool
          * @throws \Exception
-         * @author Zhoufuxiang
+         * @author fandian
          * @time 2016-04-13 09:55
          */
         static public function delRelation($subject, $values, $message = '系统错误', $code = -999)
@@ -407,7 +407,7 @@ class Common
      * @param string $message
      * @param array $params
      *
-     * @author Zhoufuxiang 2016-04-13
+     * @author fandian 2016-04-13
      * @return bool
      * @throws \Exception
      */
@@ -437,7 +437,7 @@ class Common
      * @param string $message
      * @param array $params
      *
-     * @author Zhoufuxiang 2016-04-13
+     * @author fandian 2016-04-13
      * @return bool
      * @throws \Exception
      */
@@ -467,9 +467,9 @@ class Common
      * @param $time
      * @return string
      *
-     * @author Zhoufuxiang
+     * @author fandian
      * @date   2016-03-22 11:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public static function handleTime($time)
     {
@@ -495,9 +495,9 @@ class Common
      * @return static
      * @throws \Exception
      *
-     * @author Zhoufuxiang
+     * @author fandian
      * @date   2016-04-22 11:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public static function handleUser($userData, $role_id)
     {
@@ -555,9 +555,9 @@ class Common
      * @return mixed
      * @throws \Exception
      *
-     * @author Zhoufuxiang
+     * @author fandian
      * @date   2016-04-22 11:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public static function addUserRoles($user, $role_id)
     {
@@ -590,9 +590,9 @@ class Common
      * @return bool
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-5-11 10:10
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public static function checkIdCard($examId, $data)
     {
@@ -636,9 +636,9 @@ class Common
      * @param $exam_id
      * @return $screening_id
      *
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-13
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public static function getExamScreening($exam_id)
     {
@@ -663,9 +663,9 @@ class Common
      * @param $id
      * @return int|string
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-04-14 15:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public static function emptyExamData($id)
     {
@@ -904,9 +904,9 @@ class Common
      * @param string $name
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-02 15:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public static function updateCache($user_id, $exam_id)
     {
@@ -931,9 +931,9 @@ class Common
      * @return mixed
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-03 10:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public static function examCheck($exam_id)
     {
@@ -954,9 +954,9 @@ class Common
      * @param $exam_id
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-13 10:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public static function updateRoomCache($exam_id, $room_id)
     {
@@ -985,9 +985,9 @@ class Common
      * @param $screen_id
      * @return bool
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-28 17:55
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public static  function updateAllCache($exam_id,$screen_id ,$push = false)
     {
@@ -1067,14 +1067,14 @@ class Common
                 $data['code']= 103;
                 $data['message']= '获取成功';
                 $data['data']= $examQueue;
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish($pad_message, $data);
             }
             if(!empty($NextExamQueue)&& count($NextExamQueue)>0){
                 $data['code']= 104;
                 $data['message']= '获取成功';
                 $data['data']= $NextExamQueue;
-                //推送 TODO: Zhoufuxiang
+                //推送 TODO: fandian
                 Common::padPublish($pad_message,$data);
             }
         } catch (\Exception $ex)
@@ -1084,7 +1084,7 @@ class Common
             $data['message']= $ex->getMessage();
             $data['data']= [];
             \Log::info('推送给老师报错',[$data]);
-            //推送 TODO: Zhoufuxiang
+            //推送 TODO: fandian
             Common::padPublish($pad_message, $data);
         }
 

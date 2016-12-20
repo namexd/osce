@@ -40,7 +40,7 @@ class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
      * @param $exam
      * @param $this ->smartArrange
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-11 16:17
      */
     function plan($exam)
@@ -108,7 +108,7 @@ class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
      * 将数据输出
      * @param $exam
      * @return array
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-11 16:10
      */
     function output($exam)
@@ -159,7 +159,7 @@ class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
      * 将数据保存
      * @param $exam
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-11 17:20
      */
     function store($exam)
@@ -218,7 +218,7 @@ class SmartArrangeForHuaxiRepository extends AbstractSmartArrange
      * 将学生的排考情况导出
      * @param $export
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-05-01 09:45
      */
     public function export($id, $export, $arrange)

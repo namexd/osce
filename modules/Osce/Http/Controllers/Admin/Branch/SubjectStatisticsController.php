@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-02-23 14:28
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
@@ -33,15 +33,15 @@ class SubjectStatisticsController  extends CommonController
      * @url /osce/admin/subject-statistics/subject-grade-list
      * @access public
      * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
-     * @author yangshaolin <yangshaolin@misrobot.com>   <zhoufuxiang@misrobot.com>
+     * @author yangshaolin <yangshaolin@sulida.com>   <fandian@sulida.com>
      * @date    2016年2月23日15:43:34                    2016-07-06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function SubjectGradeList(Request $request, SubjectStatisticsRepositories $subjectStatisticsR)
     {
          $examid=\Input::get('id');
         //\DB::connection('osce_mis')->enableQueryLog();
-        //获取所有场次ID（包括子考试的场次ID）TODO:zhoufuxiang 2016-06-22
+        //获取所有场次ID（包括子考试的场次ID）TODO:fandian 2016-06-22
         list($screening_ids, $elderExam_ids) = ExamScreening::getAllScreeningByExam($examid);
         //查询统计所需数据
         $rew = $subjectStatisticsR->getSubjectStatisticsList($screening_ids, $elderExam_ids);
@@ -79,9 +79,9 @@ class SubjectStatisticsController  extends CommonController
      * @url /osce/admin/subject-statistics/subject-analyze
      * @access public
      * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
-     * @author yangshaolin <yangshaoliin@misrobot.com>
+     * @author yangshaolin <yangshaoliin@sulida.com>
      * @date    2016年3月4日10:08:52
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function  SubjectGradeAnalyze(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories)
     {
@@ -140,9 +140,9 @@ class SubjectStatisticsController  extends CommonController
      * @param SubjectStatisticsController $subjectStatisticsRepositories
      * @param SubjectStatisticsRepositories $subject
      * @return \Illuminate\View\View|string
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date 2016年3月4日10:08:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function stationGradeList(Request $request,SubjectStatisticsRepositories $subjectStatisticsR)
     {
@@ -193,9 +193,9 @@ class SubjectStatisticsController  extends CommonController
      * @param Request $request
      * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
      * @return \Illuminate\View\View
-     * @author xumin <xumin@misrobot.com>   <zhoufuxiang@misrobot.com>
+     * @author xumin <xumin@sulida.com>   <fandian@sulida.com>
      * @date                                2016-06-23 14:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function stationDetails(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories)
     {
@@ -245,9 +245,9 @@ class SubjectStatisticsController  extends CommonController
      * @param SubjectStatisticsController $subjectStatisticsRepositories
      * @param SubjectStatisticsRepositories $subject
      * @return \Illuminate\View\View|string
-     * @author xumin <xumin@misrobot.com> <zhoufuxiang@misrobot.com>重构
+     * @author xumin <xumin@sulida.com> <fandian@sulida.com>重构
      * @date    2016年3月2日18:21:59       2016-06-23 9:10
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function standardGradeList(Request $request,SubjectStatisticsRepositories $subjectStatisticsR)
     {
@@ -269,7 +269,7 @@ class SubjectStatisticsController  extends CommonController
         //统计相关数据方便  下一步运算
         $rew = $subjectStatisticsR->GetSubjectStandardStatisticsList($examId, $subjectId);
 
-//        //zhoufuxiang
+//        //fandian
 //        $pidArr = array_unique($rew->pluck('pid')->toArray());      //取出pid，转为数组，去重
 //        sort($pidArr);      //重新排序
 //        $sonRew = [];
@@ -379,9 +379,9 @@ class SubjectStatisticsController  extends CommonController
      * @param Request $request
      * @param SubjectStatisticsController $subjectStatisticsRepositories
      * @return string
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date    2016年3月2日18:21:51
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function standardDetails(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories)
     {
@@ -466,9 +466,9 @@ class SubjectStatisticsController  extends CommonController
      * @param Request $request
      * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
      * @return \Illuminate\Http\JsonResponse
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date    2016年3月2日14:09:32
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getSubject(Request $request,TestScoreRepositories $TestScoreR)
     {

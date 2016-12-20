@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016年3月9日11:02:12
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
@@ -24,9 +24,9 @@ class ExamPaperFormal extends CommonModel
     /**
      * 与正式试题分类表的关系
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月9日10:38:36
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ExamCategoryFormal(){
         return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamCategoryFormal','exam_paper_formal_id','id');
@@ -38,9 +38,9 @@ class ExamPaperFormal extends CommonModel
      * @url /osce/
      * @access public
      * @param $ExamPaperInfo
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月15日09:28:01
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function CreateExamPaper($ExamPaperInfo,$studentId){
         //throw new \Exception(' 插入试题和标签中间表失败！')

@@ -25,9 +25,9 @@ class TestScoresController  extends CommonController
      * @url /osce/admin/testscores/test-score-list
      * @access public
      * @param Request $request
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016年2月26日14:56:58
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function TestScoreList(Request $request, SubjectStatisticsRepositories $SubjectStatisticsR){
         //查找所有考试信息
@@ -42,9 +42,9 @@ class TestScoresController  extends CommonController
      * @url /osce/admin/testscores/ajax-get-tester
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016年2月26日14:56:58
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAjaxGetTester(Request $request,TestScoreRepositories $TestScoreRepositories){
         //根据页面get过来的考试ID查找当前考试下的所有考生
@@ -66,9 +66,9 @@ class TestScoresController  extends CommonController
      * @url /osce/admin/testscores/ajax-get-subject
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016年2月26日14:56:58
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAjaxGetSubject(Request $request,TestScoreRepositories $TestScoreR, SubjectStatisticsRepositories $subjectStatisticsR)
     {
@@ -133,9 +133,9 @@ class TestScoresController  extends CommonController
      * @url /osce/admin/testscores/student-subject-list
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
-     * @author weihuiguo <weihuiguo@misrobot.com>   <zhoufuxiang@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>   <fandian@sulida.com>
      * @date    2016年2月26日14:56:58                2016-07-04
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function studentSubjectList(Request $request,TestScoreRepositories $TestScoreR,SubjectStatisticsRepositories $subjectStatisticsR)
     {
@@ -197,9 +197,9 @@ class TestScoresController  extends CommonController
      * @url /osce/admin/testscores/ajax-get-subjectlist
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-2-29 09:45:15
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ajaxGetSubjectlist(Request $request,TestScoreRepositories $TestScoreRepositories){
         $studentSublist = $TestScoreRepositories->getStudentSubject();
@@ -212,9 +212,9 @@ class TestScoresController  extends CommonController
      * @url ajax-get-student-test-count
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-2-29 09:45:15
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ajaxGetStudentTestCount(Request $request,TestScoreRepositories $TestScoreRepositories,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $student_id = $request->student_id;
@@ -246,7 +246,7 @@ class TestScoresController  extends CommonController
      * @url     /osce/admin/testscores/test-scores-count
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
-     * @author weihuiguo <weihuiguo@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>
      * @date    2016-3-2 16:51:27 .com Inc. All Rights Reserved
      */
     public function testScoresCount(Request $request,SubjectStatisticsRepositories $SubjectStatisticsRepositories){
@@ -263,7 +263,7 @@ class TestScoresController  extends CommonController
      * @url testscores/subject-lists
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
-     * @author weihuiguo <weihuiguo@misrobot.com>   <zhoufuxiang@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>   <fandian@sulida.com>
      * @date    2016-3-2 17:00:10                   2016-06-29 10:00
      * .com Inc. All Rights Reserved
      */
@@ -285,9 +285,9 @@ class TestScoresController  extends CommonController
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
      *
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-20 10:22:53
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherDataList(Request $request,TestScoreRepositories $TestScoreRepositories)
     {
@@ -326,9 +326,9 @@ class TestScoresController  extends CommonController
      * @url testscores/grade-score-list
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
-     * @author weihuiguo <weihuiguo@misrobot.com>   <zhoufuxiang@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>   <fandian@sulida.com>
      * @date   2016-3-2 17:50:30                    2016-06-29
-     * misrobot.com Inc. All Rights Reserved
+     * sulida.com Inc. All Rights Reserved
      */
     public function getGradeScoreList(Request $request,TestScoreRepositories $TestScoreRepositories)
     {
@@ -368,7 +368,7 @@ class TestScoresController  extends CommonController
      * @url testscores/grade-detail
      * @access public
      * @param Request $request,TestScoreRepositories $TestScoreRepositories
-     * @author weihuiguo <weihuiguo@misrobot.com>   <zhoufuxiang@misrobot.com>
+     * @author weihuiguo <weihuiguo@sulida.com>   <fandian@sulida.com>
      * @date   2016-3-3 10:17:25                    2016-06-29
      * .com Inc. All Rights Reserved
      */
@@ -399,9 +399,9 @@ class TestScoresController  extends CommonController
      * @param $arr
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-07-07 09:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function nullFullZero($arr)
     {

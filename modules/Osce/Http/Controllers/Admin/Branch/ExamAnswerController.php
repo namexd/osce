@@ -35,9 +35,9 @@ class ExamAnswerController extends CommonController
      * @url   /osce/admin/answer/student-answer
      * @access public
      * @param
-     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @author yangshaolin <yangshaolin@sulida.com>
      * @date    2016年3月29日15:09:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function  getStudentAnswer(Request $request)
     {
@@ -160,9 +160,9 @@ class ExamAnswerController extends CommonController
      * @url   /osce/admin/answer/student-answer
      * @access public
      * @param
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date    2016年4月5日15:09:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     protected function numToWord($num)
     {

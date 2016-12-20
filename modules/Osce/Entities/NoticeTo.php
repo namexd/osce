@@ -2,7 +2,7 @@
 /**
  * 通知收件人关联模型
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2016/1/6
  * Time: 14:17
  */

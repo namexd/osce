@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016年3月9日11:02:12
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 namespace Modules\Osce\Entities\QuestionBankEntities;
 use Illuminate\Database\Eloquent\Model;
@@ -22,9 +22,9 @@ class ExamCategoryFormal extends CommonModel
     /**
      * 与正式的试题表的关系
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月9日10:38:36
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ExamQuestionFormal(){
         return $this->hasMany('Modules\Osce\Entities\QuestionBankEntities\ExamQuestionFormal','exam_category_formal_id','id');

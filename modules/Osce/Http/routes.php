@@ -246,8 +246,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/exam-result-list',['uses'=>'ExamResultController@geExamResultList','as'=>'osce.admin.geExamResultList']);
 		Route::get('exam/download-image',['uses'=>'ExamResultController@getDownloadImage','as'=>'osce.admin.getDownloadImage']);
 		Route::get('exam/exam-station-list',['uses'=>'ExamResultController@getExamStationList','as'=>'osce.admin.getExamStationList']);
-		Route::get('exam/export-score',	['uses'=>'ExamResultController@getExportScore','as'=>'osce.admin.getExportScore']);			//成绩导出 TODO: Zhoufuxiang 216-05-25
-		Route::get('exam/subject-score',	['uses'=>'ExamResultController@getSubjectScore','as'=>'osce.admin.getSubjectScore']);			//成绩导出 TODO: Zhoufuxiang 216-05-25
+		Route::get('exam/export-score',	['uses'=>'ExamResultController@getExportScore','as'=>'osce.admin.getExportScore']);			//成绩导出 TODO: fandian 216-05-25
+		Route::get('exam/subject-score',	['uses'=>'ExamResultController@getSubjectScore','as'=>'osce.admin.getSubjectScore']);			//成绩导出 TODO: fandian 216-05-25
 
 		//sp
 		Route::get('/spteacher/show', ['uses'=>'SpteacherController@getShow','as'=>'osce.admin.spteacher.getShow']);
@@ -330,13 +330,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('vcr',['uses'=>'PadController@getVcr']);
 
 		Route::get('student-vcr',['uses'=>'PadController@getStudentVcr']);
-		Route::get('teacher-vcr',['uses'=>'PadController@getTeacherVcr']);		//根据考场ID、考试ID和teacher_id获取考站的摄像头信息(接口) zhoufuxiang 2016-3-9
+		Route::get('teacher-vcr',['uses'=>'PadController@getTeacherVcr']);		//根据考场ID、考试ID和teacher_id获取考站的摄像头信息(接口) fandian 2016-3-9
 		Route::get('timing-vcr', ['uses'=>'PadController@getTimingList']);
-		Route::get('doing-exams',['uses'=>'PadController@getDoingExams']);		//获取当前正在进行的所有考试 	 (接口) zhoufuxiang 2016-3-21
-		Route::get('done-exams', ['uses'=>'PadController@getDoneExams']);		//获取所有的 历史考试(已经考完) (接口) zhoufuxiang 2016-3-23
-		Route::get('all-rooms',  ['uses'=>'PadController@getAllRooms']);		//获取所有的 历史考试的考场列表 (接口) zhoufuxiang 2016-3-25
-		Route::get('all-vcrs-list', ['uses'=>'PadController@getAllVcrsList']);	//历史回放，获取所有已经考完的考试对应的摄像头列表(接口) zhoufuxiang 2016-3-25
-		Route::get('stations-vcrs', ['uses'=>'PadController@getStationsVcrs']);	//根据考场ID和考试ID获取 考站列表、考站对应的摄像机信息 (接口) zhoufuxiang 2016-3-28
+		Route::get('doing-exams',['uses'=>'PadController@getDoingExams']);		//获取当前正在进行的所有考试 	 (接口) fandian 2016-3-21
+		Route::get('done-exams', ['uses'=>'PadController@getDoneExams']);		//获取所有的 历史考试(已经考完) (接口) fandian 2016-3-23
+		Route::get('all-rooms',  ['uses'=>'PadController@getAllRooms']);		//获取所有的 历史考试的考场列表 (接口) fandian 2016-3-25
+		Route::get('all-vcrs-list', ['uses'=>'PadController@getAllVcrsList']);	//历史回放，获取所有已经考完的考试对应的摄像头列表(接口) fandian 2016-3-25
+		Route::get('stations-vcrs', ['uses'=>'PadController@getStationsVcrs']);	//根据考场ID和考试ID获取 考站列表、考站对应的摄像机信息 (接口) fandian 2016-3-28
 
 		Route::get('wait-student',['uses'=>'PadController@getWaitStudent']);
 		Route::get('dispose-aberrant-exam',['uses'=>'PadController@getDisposeAberrantExam']);//异常考生结束考试处理
@@ -543,7 +543,7 @@ Route::group(['prefix' => "api/1.0/public/osce", 'namespace' => 'Modules\Osce\Ht
 
 Route::get('test/test', function(Redis $redis) {
 
-//	//验证腕表是否唯一  TODO: zhoufuxiang
+//	//验证腕表是否唯一  TODO: fandian
 //	$wath = \Modules\Osce\Entities\Watch::where('id', '>', 0)->groupBy('nfc_code')->selectRaw('COUNT(nfc_code) as num')->get();
 //	$watch= [];
 //	foreach ($wath as $item) {
@@ -551,7 +551,7 @@ Route::get('test/test', function(Redis $redis) {
 //	}
 //	dd($watch);
 
-	//验证密码是否为（123456）TODO: zhoufuxiang
+	//验证密码是否为（123456）TODO: fandian
 //	$teachers = \Modules\Osce\Entities\Teacher::where('id','>',0)->get();
 //	$arr = [];
 //	foreach ($teachers as $index => $teacher) {
@@ -579,7 +579,7 @@ Route::get('redis', function(){
 
 });
 
-//TODO:清空考试数据使用 	Zhoufuxiang
+//TODO:清空考试数据使用 	fandian
 Route::get('test/empty', function(\Illuminate\Http\Request $request) {
 	if($request->get('ini')){
 		phpinfo();

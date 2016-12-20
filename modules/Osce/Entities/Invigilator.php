@@ -2,7 +2,7 @@
 /**
  * 监考老师模型
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/12/29
  * Time: 10:46
  */
@@ -35,9 +35,9 @@ class Invigilator extends CommonModel
      * @return array
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 16:56
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getIsSpValues(){
@@ -57,9 +57,9 @@ class Invigilator extends CommonModel
      * @return pagination
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 10:52
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getSpInvigilatorList(){
@@ -80,9 +80,9 @@ class Invigilator extends CommonModel
      * @return pagination
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 16:58
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getInvigilatorList(){

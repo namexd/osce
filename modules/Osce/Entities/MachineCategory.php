@@ -2,7 +2,7 @@
 /**
  * 设备类别模型
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/12/30
  * Time: 11:25
  */

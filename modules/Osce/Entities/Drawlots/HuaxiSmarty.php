@@ -25,9 +25,9 @@ class HuaxiSmarty
      * @return mixed
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function ramdonId($stations)
     {
@@ -45,9 +45,9 @@ class HuaxiSmarty
      * @param $name
      * @return string
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function assembly($name)
     {
@@ -60,9 +60,9 @@ class HuaxiSmarty
      * @param $studentId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function isDraw($studentId)
     {
@@ -79,9 +79,9 @@ class HuaxiSmarty
      * @param $screenId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getObj($studentId, $screenId, $roomId)
     {
@@ -100,9 +100,9 @@ class HuaxiSmarty
      * @return mixed
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-07
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function pushStudent($student, array $params)
     {
@@ -127,9 +127,9 @@ class HuaxiSmarty
      * @return mixed
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-07
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function  AbnormalStudent ($student, array $params){
         
@@ -148,9 +148,9 @@ class HuaxiSmarty
      * @return object
      * @throws \Exception
      * @version 3.6
-     * @author zhouqiang <JiangZhiheng@misrobot.com>
+     * @author zhouqiang <ZouYuChao@sulida.com>
      * @time 2016-05-07
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public  function Examinee($examId,$roomId){
         //从缓存中 获取当前组考生队列
@@ -183,9 +183,9 @@ class HuaxiSmarty
      * @return object
      * @throws \Exception
      * @version 3.6
-     * @author zhouqiang <JiangZhiheng@misrobot.com>
+     * @author zhouqiang <ZouYuChao@sulida.com>
      * @time 2016-05-07
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
 
     public function NextExaminee($examId ,$roomId){

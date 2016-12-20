@@ -28,8 +28,8 @@ class RoomCateController extends CommonController
      *                         string        order_by        排序方式 枚举 e.g:desc,asc
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postCreateRoomCate(Request $request)
     {
@@ -72,8 +72,8 @@ class RoomCateController extends CommonController
      *                         string        order_by        排序方式 枚举 e.g:desc,asc
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getEditRoomCate(Request $request)
     {
@@ -96,8 +96,8 @@ class RoomCateController extends CommonController
      *                         <b>get请求字段：</b>
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postEditRoomCate(Request $request, RoomCate $RoomCate)
     {
@@ -132,8 +132,8 @@ class RoomCateController extends CommonController
      * @param Area|RoomCate $model
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postDelete(Request $request, Area $model)
     {

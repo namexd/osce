@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-01-04 11:19
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Msc\Http\Controllers\WeChat;
@@ -26,9 +26,9 @@ class LaboratoryCotroller extends MscWeChatController
     /**
      * @param Student $student
      * @param Teacher $teacher
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月4日12:05:39
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function  __construct(Student $student, Teacher $teacher)
     {
@@ -44,9 +44,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @access public
      * @param Request $Request
      * @return \Illuminate\View\View
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月4日12:05:39
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function LaboratoryList(Request $Request){
         $Floor = new Floor;
@@ -66,9 +66,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @url /msc/wechat/laboratory/laboratory-teacher-list
      * @access public
      * @return \Illuminate\View\View
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月15日10:29:38
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function LaboratoryTeacherList(){
         $Floor = new Floor;
@@ -87,9 +87,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @floor_id 地址id
      * @floor_num 几楼
      * @return \Illuminate\Http\JsonResponse
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月4日15:46:29
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function LaboratoryListData(){
         $DateTime = Input::get('DateTime');
@@ -120,9 +120,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @floor_id 地址id
      * @floor_num 几楼
      * @return \Illuminate\Http\JsonResponse
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月4日15:46:29
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function OpenLaboratoryListData(){
         $DateTime = Input::get('DateTime');
@@ -153,9 +153,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @access public
      * @DateTime 时间（筛选预约的时间）
      * @id 实验室id
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月5日11:07:56
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ApplyLaboratory(){
         $DateTime = Input::get('DateTime');
@@ -186,9 +186,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @url /msc/wechat/laboratory/apply-laboratory-op
      * @access public
      * @param Request $Request
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月15日16:45:56
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ApplyLaboratoryOp(Request $Request){
         $this->validate($Request,[
@@ -266,9 +266,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @access public
      * @DateTime 时间（筛选预约的时间）
      * @id 实验室id
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月6日09:48:41
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ApplyOpenLaboratory(){
         $user = Auth::user();
@@ -320,9 +320,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @access public
      * @param Request $Request
      * @return \Illuminate\View\View
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月6日11:06:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function OpenLaboratoryForm(Request $Request){
 
@@ -363,9 +363,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @url /msc/wechat/laboratory/open-laboratory-form-teacher-op
      * @access public
      * @param Request $Request
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月7日10:31:29
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function OpenLaboratoryFormTeacherOp(Request $Request){
         $this->validate($Request,[
@@ -474,9 +474,9 @@ class LaboratoryCotroller extends MscWeChatController
      * @url /msc/wechat/laboratory/open-laboratory-form-op
      * @access public
      * @param Request $Request
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月7日10:31:29
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function OpenLaboratoryFormOp(Request $Request){
         $this->validate($Request,[

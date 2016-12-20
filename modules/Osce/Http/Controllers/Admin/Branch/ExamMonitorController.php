@@ -45,9 +45,9 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-04-01 11:38
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamMonitorLateList () {
 
@@ -80,9 +80,9 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-04-11 11:39
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postStopExam(Request $request,WatchReminderRepositories $watchReminder)
     {
@@ -144,9 +144,9 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-04-01 11:39
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamMonitorReplaceList () {
         $examControlModel = new ExamControl();
@@ -171,9 +171,9 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-04-01 11:40
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamMonitorQuitList () {
         $data=$this->getExamMonitorListByStatus(3);
@@ -197,9 +197,9 @@ class ExamMonitorController  extends CommonController
      * @return view
      *
      * @version 3.3a
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-04-01 11:40
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamMonitorFinishList () {
         $data=$this->getExamMonitorListByStatus(4);
@@ -232,9 +232,9 @@ class ExamMonitorController  extends CommonController
      * @return array
      *
      * @version 3.3a
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-04-01 11:41
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     protected function getExamMonitorHeadInfo (Request $request) {
          try {
@@ -296,9 +296,9 @@ class ExamMonitorController  extends CommonController
      * @return array
      *
      * @version 3.3a
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-04-05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     protected function getExamMonitorListByStatus($status){
 

@@ -27,9 +27,9 @@ class ExamQuestionLabelType extends  Model
      * @url /osce/
      * @access public
      * @return mixed
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function examQuestionLabelTypeList(){
         $data = $this->select('id','name')->orderBy('created_at','desc')->get();
@@ -48,9 +48,9 @@ class ExamQuestionLabelType extends  Model
      * @method
      * @url /osce/
      * @access public
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getLabAndType(){
         $builder = $this->with(['LabelTypeAndLabel'=>function($label){

@@ -123,7 +123,7 @@ class ExampleTest extends TestCase
         $studentModel = new Student();
         try {
             $mode=Exam::where('id',$exam_id)->select('sequence_mode')->first()->sequence_mode;
-            //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO zhoufuxiang
+            //$mode 为1 ，表示以考场分组， 为2，表示以考站分组 //TODO fandian
             if($mode==1){
                 $rooms=ExamFlowRoom::where('exam_id',$exam_id)->select('room_id')->get();
                 $stations=RoomStation::whereIn('room_id',$rooms)->select('station_id')->get();

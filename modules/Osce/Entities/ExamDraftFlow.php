@@ -37,7 +37,7 @@ class ExamDraftFlow extends CommonModel
      * @param $value
      * @param $item
      *
-     * @author Zhoufuxiang 2016-04-14
+     * @author fandian 2016-04-14
      * @return object
      */
     private function getNotNullValue($object, $value, $item)
@@ -51,7 +51,7 @@ class ExamDraftFlow extends CommonModel
      * @param $code
      * @param $message
      *
-     * @author Zhoufuxiang 2016-04-14
+     * @author fandian 2016-04-14
      * @return bool
      * @throws \Exception
      */
@@ -71,7 +71,7 @@ class ExamDraftFlow extends CommonModel
      * 保存考场安排所有数据
      * @param $exam_id
      *
-     * @author Zhoufuxiang 2016-04-14
+     * @author fandian 2016-04-14
      * @return array
      */
     public function saveArrangeDatas($exam_id, $condition = [], ExamArrangeRepository $examArrangeRepository, $FrontArrangeData, $status)
@@ -170,7 +170,7 @@ class ExamDraftFlow extends CommonModel
      * 获取所有临时数据
      * @param $exam_id
      *
-     * @author Zhoufuxiang 2016-04-07
+     * @author fandian 2016-04-07
      * @return array
      */
     private function getAllTempDatas($exam_id)
@@ -221,7 +221,7 @@ class ExamDraftFlow extends CommonModel
      * 处理大表（站）数据
      * @param $data
      *
-     * @author Zhoufuxiang 2016-4-11
+     * @author fandian 2016-4-11
      * @return bool
      * @throws \Exception
      */
@@ -257,7 +257,7 @@ class ExamDraftFlow extends CommonModel
      * 简单新增
      * @param $data
      *
-     * @author Zhoufuxiang 2016-4-11
+     * @author fandian 2016-4-11
      * @return \Exception|object
      */
     public function bigOne($data)
@@ -290,7 +290,7 @@ class ExamDraftFlow extends CommonModel
     /**
      * 简单更新
      * @param $data
-     * @author Zhoufuxiang 2016-4-11
+     * @author fandian 2016-4-11
      * @return \Exception|int
      */
     public function bigTwo($data)
@@ -323,7 +323,7 @@ class ExamDraftFlow extends CommonModel
     /**
      * 新增后更新(已经保存过后了的)
      * @param $data
-     * @author Zhoufuxiang 2016-4-11
+     * @author fandian 2016-4-11
      * @return \Exception|int
      */
     public function bigThree($data)
@@ -362,7 +362,7 @@ class ExamDraftFlow extends CommonModel
     /**
      * 删除
      * @param $data
-     * @author Zhoufuxiang 2016-4-11
+     * @author fandian 2016-4-11
      * @return \Exception|int
      */
     public function bigFive($data)
@@ -408,13 +408,13 @@ class ExamDraftFlow extends CommonModel
      * @param null $room
      * @param null $station
      *
-     * @author Zhoufuxiang 2016-4-15
+     * @author fandian 2016-4-15
      * @return array
      */
     public function getTempDatas($exam_id, $condition)
     {
         $examInfo = Exam::where('id', '=', $exam_id)->first();
-        //考站分组模式，考场无限制 2016-04-18 Zhoufuxiang
+        //考站分组模式，考场无限制 2016-04-18 fandian
         if ($examInfo->sequence_mode == 2 && $condition['room'] === 1) {
             return [];
         }
@@ -457,7 +457,7 @@ class ExamDraftFlow extends CommonModel
      * 清空考场安排数据
      * @param $exam_id
      *
-     * @author Zhoufuxiang 2016-4-16
+     * @author fandian 2016-4-16
      * @throws \Exception
      */
     public function delDraftDatas($exam_id)
@@ -494,7 +494,7 @@ class ExamDraftFlow extends CommonModel
      * 修改站名称、序号
      * @param $exam_id
      *
-     * @author Zhoufuxiang 2016-4-16
+     * @author fandian 2016-4-16
      * @return object
      * @throws \Exception
      */

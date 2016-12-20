@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
+ * User: fandian
  * Date: 2016/1/11 0011
  * Time: 10:01
  */
@@ -33,9 +33,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTrainList(Request $request){
         $this->validate($request,[
@@ -120,9 +120,9 @@ class TrainController extends  CommonController{
      * @return ${response}
      *
      * @version 1.0
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTrainDetail(Request $request){
 

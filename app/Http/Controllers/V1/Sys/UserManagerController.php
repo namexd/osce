@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/10
  * Time: 13:52
  */
@@ -32,9 +32,9 @@ class UserManagerController extends ApiBaseController
      * @return json {'validated':验证状态，box：所属科室/班级，id:用户Id,username:用户名，avatar:头像}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-10 15:46
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getUserList(){
@@ -90,9 +90,9 @@ class UserManagerController extends ApiBaseController
      * @return json
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getChangeUserStatus(Request $request){
@@ -141,9 +141,9 @@ class UserManagerController extends ApiBaseController
      *
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-11 18:01
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getChangeUsersStatus(Request $request){
@@ -184,9 +184,9 @@ class UserManagerController extends ApiBaseController
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-19
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postDelMany(Request $request){

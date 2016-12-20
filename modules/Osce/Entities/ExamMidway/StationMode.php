@@ -46,7 +46,7 @@ class StationMode implements ModeInterface
     }
 
     /**
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-22 16:58
      * @throws \Exception
      */
@@ -66,7 +66,7 @@ class StationMode implements ModeInterface
      * 获取当前组考生的实例
      * @param array $serialnumber
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-23 10:12
      */
     function getExaminee(array $serialnumber)
@@ -219,7 +219,7 @@ class StationMode implements ModeInterface
      * 获取下一组考生的实例
      * @param array $serialnumber
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-23 10:34
      */
     function getNextExaminee(array $serialnumber)

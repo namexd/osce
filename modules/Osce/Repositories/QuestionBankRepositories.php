@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-03-08 11:43
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Osce\Repositories;
@@ -30,9 +30,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @access public
      * @param ExamPaper $ExamPaper
      * @return array
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月9日12:11:59
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ExamPaperPreview($data){
         $ExamQuestion  = new ExamQuestion;
@@ -72,9 +72,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @access public
      * @param $str
      * @return array|bool
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月11日11:05:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function StrToArr($str){
         $NewArr = [];
@@ -122,9 +122,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @access public
      * @param $str
      * @return array|bool
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月11日11:05:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ArrToStr($data){
         $ExamQuestionLabel = new ExamQuestionLabel;
@@ -175,9 +175,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @url /osce/
      * @access public
      * @param $structureArr
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月11日18:33:54
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function StructureExamQuestionArr($structureArr)
     {
@@ -329,9 +329,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @access public
      * @param $PaperPreviewArrItem
      * @return array
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月11日18:32:08
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function HandlePaperPreviewArr($PaperPreviewArrItem){
         $data = [];
@@ -360,9 +360,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @param $questionList
      * @param $questionNum
      * @return array
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date   2016年3月11日18:29:14
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function RandQuestionId($questionList,$questionNum){
         $length = count($questionList);
@@ -394,9 +394,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @access public
      * @param $ExamPaperId
      * @return array
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date   2016年3月14日14:27:03
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GenerateExamPaper($ExamPaperId,$Mark=0){
         $ExamPaper = new ExamPaper;
@@ -459,9 +459,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @url /osce/
      * @access public
      * @return bool
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月16日10:03:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function LoginAuth(){
         $user = Auth::user();
@@ -495,9 +495,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @return mixed
      *
      * @version 3.3a
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wangjiang <wangjiang@sulida.com>
      * @date 2016-03-31
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamLoginUserRoleType () {
         $roleIds = Auth::user()->roles->pluck('id')->toArray();
@@ -524,9 +524,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @url /osce/
      * @access public
      * @return $this
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月17日10:05:55
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetExamInfo($userId){
         try{
@@ -539,7 +539,7 @@ class QuestionBankRepositories  extends BaseRepository
             $exam_id = $ExamInfo->id;
 
             //获取当前正在考试的场次
-            $examScreening = Common::getExamScreening($exam_id);    //TODO: Zhoufuxiang,
+            $examScreening = Common::getExamScreening($exam_id);    //TODO: fandian,
 
             //根据监考老师的id和考试id，获取对应的考站id
             $builder = $Exam->leftJoin('station_teacher', function($join){
@@ -551,7 +551,7 @@ class QuestionBankRepositories  extends BaseRepository
                 ->where('exam_gradation.exam_id',$ExamInfo->id)
                 ->where('exam_gradation.order',$examScreening->gradation_order)
                 ->where('station_teacher.user_id',$userId->id)
-//                ->where('station_teacher.exam_screening_id',$exam_screen_id)   //TODO: Zhoufuxiang,不能用场次ID做条件查询
+//                ->where('station_teacher.exam_screening_id',$exam_screen_id)   //TODO: fandian,不能用场次ID做条件查询
                 ->select('station_teacher.station_id');
             $station_id = $builder->get()->pluck('station_id')->toArray();
             \Log::debug('根据监考老师id获取相关信息', [$userId, $examScreening, $station_id]);
@@ -568,9 +568,9 @@ class QuestionBankRepositories  extends BaseRepository
     /**
      * @param $userId
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-08 10:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherStation($user_id, $exam_id, $examScreening)
     {
@@ -617,9 +617,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @param $arr
      * @param $array
      * @return bool
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月23日10:23:04
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function IsContain($arr,$array){
         foreach($arr as $v){
@@ -638,9 +638,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @param $arr
      * @param $array
      * @return bool
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年3月23日10:23:04
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function IsContainTwo($arr,$array){
         foreach($arr as $v){
@@ -660,8 +660,8 @@ class QuestionBankRepositories  extends BaseRepository
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetExamQuestionLabelId($obj){
         $IdArr = [];
@@ -729,9 +729,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @url /osce/
      * @access public
      * @param $ExamInfo
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamData($ExamInfo){
         $stationTeacher = new StationTeacher();
@@ -755,9 +755,9 @@ class QuestionBankRepositories  extends BaseRepository
      * @param $examPapersInfo
      * @param $casheList
      * @return $data
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date  2016年3月28日 18:19:24
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function CheckIdentical($examPapersInfo,$casheList){
 

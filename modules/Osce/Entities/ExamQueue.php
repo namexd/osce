@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
+ * User: fandian
  * Date: 2016/1/14 0014
  * Time: 15:19
  */
@@ -234,7 +234,7 @@ class ExamQueue extends CommonModel
      * @param $stationNum
      * @return
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     static public function examineeByRoomId($room_id, $examId, $stations, $exam_screening_id)
     {
@@ -417,7 +417,7 @@ class ExamQueue extends CommonModel
      * @param $station
      * @return
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     static public function nextExamineeByRoomId($room_id, $examId, $station, $exam_screening_id)
     {
@@ -676,9 +676,9 @@ class ExamQueue extends CommonModel
      * @access public
      * @param $station_id 考站id
      * @param $exam_id 考试id
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function stationTime($station_id, $exam_id)
     {
@@ -752,7 +752,7 @@ class ExamQueue extends CommonModel
      * @param $time  当前时间戳
      * @param $examScreeningId
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function createExamQueue($examId, $studentId, $time, $examScreeningId ,$controlMark =-1)
     {
@@ -847,7 +847,7 @@ class ExamQueue extends CommonModel
      * @param $stationId
      * @return
      * @throws \Exception
-     * @author Jiangzhiheng  zhoufuxiang<zhoufuxiang@misrobot.com>
+     * @author ZouYuChao  fandian<fandian@sulida.com>
      */
     static public function findQueueIdByStudentId($studentId, $stationId)
     {
@@ -888,7 +888,7 @@ class ExamQueue extends CommonModel
      * @param $station_id $exam_id
      * @return
      * @throws \Exception
-     * @author zhouchong
+     * @author fandian
      *
      *
      *
@@ -948,7 +948,7 @@ class ExamQueue extends CommonModel
      * @param $room_id $exam_id
      * @return
      * @throws \Exception
-     * @author zhouchong
+     * @author fandian
      */
     public function getWaitStudentRoom($room_id = '', $exam_id = '', $screeningId)
     {
@@ -999,7 +999,7 @@ class ExamQueue extends CommonModel
      * @param null $teacherId 教师id
      * @return Object 返回队列表对应的对象
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
 
     static public function endStudentQueueExam($studentId, $stationId = null, $teacherId = null)
@@ -1045,9 +1045,9 @@ class ExamQueue extends CommonModel
      * @param int $pageSize
      * @param string $mode
      * @return mixed
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getPageSize($exam_id, $screeningId, $pageSize = 4, $mode = 'station_id')
     {
@@ -1063,9 +1063,9 @@ class ExamQueue extends CommonModel
      * @param $screeningId
      * @param int $pageSize
      * @return array
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getWaitStationStudents($exam_id, $screeningId, $pageSize = 4)
     {
@@ -1217,9 +1217,9 @@ class ExamQueue extends CommonModel
      * @param $code
      * @return object
      *
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date   2016-05-7
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
 
     public function getStudentScreenRoomResultList($code){
@@ -1321,9 +1321,9 @@ class ExamQueue extends CommonModel
      * @return \Illuminate\Support\Collection
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-02 11:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getCurrentGroupStudent($user_id, $exam_id)
     {
@@ -1384,9 +1384,9 @@ class ExamQueue extends CommonModel
      * @return \Illuminate\Support\Collection
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-02 20:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getNextGroupStudent($user_id, $exam_id)
     {
@@ -1444,9 +1444,9 @@ class ExamQueue extends CommonModel
      * @return \Illuminate\Support\Collection
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-12 20:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamineeByRoom($exam_id, $room_id, $stations = null)
     {
@@ -1487,9 +1487,9 @@ class ExamQueue extends CommonModel
      * @return \Illuminate\Support\Collection
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-12 20:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAllQueueByStation($stations, $exam_id, $screening_id, $param = 'current')
     {
@@ -1516,9 +1516,9 @@ class ExamQueue extends CommonModel
      * @return \Illuminate\Support\Collection
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-12 21:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getNextExamineeByRoom($exam_id, $room_id, $stations = null)
     {

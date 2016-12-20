@@ -52,7 +52,7 @@ class ExamPlanRecord extends CommonModel
      * 随机模式下的看是否有人考试
      * @param $screen 当前流程实例
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-24 17:51
      */
     static public function randomBeginStudent($screen)
@@ -70,7 +70,7 @@ class ExamPlanRecord extends CommonModel
      * @param $sequenceMode
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-24 17:53
      */
     static public function pollBeginStudent($entity, $screen, $sequenceMode)
@@ -100,7 +100,7 @@ class ExamPlanRecord extends CommonModel
 
     /**
      * 顺序模式下是否有符合要求的学生
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-02-25 16:33
      */
     static public function orderBeginStudent($screen,$serialnumber,$sequenceMode)
@@ -134,7 +134,7 @@ class ExamPlanRecord extends CommonModel
      * @param $examId
      * @return bool
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-09 16:11
      */
     static public function deleteRecord($examId)

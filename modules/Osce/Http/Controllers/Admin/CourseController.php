@@ -31,7 +31,7 @@ class CourseController extends CommonController
     /**
      * 科目统计的主页,此控制器暂时只支持一次一个考试
      * @param Request $request
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @return \Illuminate\View\View
      */
     public function getIndex(Request $request, SubjectStatisticsRepositories $subjectStatisticsR,TestScoreRepositories $testScoreR)
@@ -118,9 +118,9 @@ class CourseController extends CommonController
      * @param SubjectStatisticsRepositories $subjectStatisticsRepositories
      * @return \Illuminate\View\View
      *
-     * @author Jiangzhiheng     Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author ZouYuChao     fandian <fandian@sulida.com>
      * @date                    2016-06-23 15:45
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudent(Request $request, SubjectStatisticsRepositories $subjectStatisticsRepositories)
     {
@@ -157,7 +157,7 @@ class CourseController extends CommonController
      * 考生统计
      * @param Request $request
      * @return \Illuminate\View\View
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     public function getStudentScore(Request $request)
     {
@@ -233,7 +233,7 @@ class CourseController extends CommonController
 
     /**
      * 动态获取ajax列表
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -262,7 +262,7 @@ class CourseController extends CommonController
      * 出科目的下拉菜单
      * @param $examId
      * @return array|\Illuminate\Support\Collection
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     private function subjectDownlist($examId)
     {
@@ -272,7 +272,7 @@ class CourseController extends CommonController
         $station_ids = StationTeacher::where('exam_id', $examId)
                         ->groupBy('station_id')->get()->pluck('station_id');
 
-        //TODO：zhoufuxiang 2016-06-01 （添加条件：->whereNotNull('subject_id')）
+        //TODO：fandian 2016-06-01 （添加条件：->whereNotNull('subject_id')）
         $stationList = Station::whereIn('id', $station_ids)->whereNotNull('subject_id')->groupBy('subject_id')->get();
         $subjectList = [];
         foreach ($stationList as $value) {
@@ -298,8 +298,8 @@ class CourseController extends CommonController
      * @access public
      * @param Request $request
      * @return mixed
-     * @author GaoDapeng <gaodapeng@misrobot.com>
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @author GaoDapeng <gaodapeng@sulida.com>
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
 
     public function invalidScore(Request $request)

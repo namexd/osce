@@ -105,9 +105,9 @@ class DrawlotsRepository extends AbstractDrawlots
      * 将学生进行分配
      * @access public
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function distribute()
     {
@@ -149,9 +149,9 @@ class DrawlotsRepository extends AbstractDrawlots
      * @param $screenId
      * @param $studentId
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     
    public  function drawlots($studentId,$screenId){
@@ -187,9 +187,9 @@ class DrawlotsRepository extends AbstractDrawlots
      * 异常考生抽签
      * @access public
      * @version 3.6
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @time 2016-06-16
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function UnusualStudentDraw(){
         //检查当前组异常考试学生附带抽签
@@ -213,9 +213,9 @@ class DrawlotsRepository extends AbstractDrawlots
      * @access public
      * @return mixed
      * @version 3.6
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @time 2016-06-16
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function  AbnormalStudent(){
         $screen = $this->screen->screening($this->params['exam_id']);
@@ -233,9 +233,9 @@ class DrawlotsRepository extends AbstractDrawlots
      * @param $roomId
      * @return bool
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-02
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function process($studentId, $examId, $screenId, $roomId)
     {
@@ -254,9 +254,9 @@ class DrawlotsRepository extends AbstractDrawlots
      * @param $screenId
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-07
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getStationNum($examId, $roomId, $screenId)
     {
@@ -270,9 +270,9 @@ class DrawlotsRepository extends AbstractDrawlots
      * @请求字段：
      * @return mixed
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-13
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getScreening($examId)
     {
@@ -284,9 +284,9 @@ class DrawlotsRepository extends AbstractDrawlots
      * @access public
      * @return mixed
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-07
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function  pushStudent()
     {
@@ -318,9 +318,9 @@ class DrawlotsRepository extends AbstractDrawlots
      * @return mixed
      * @throws \Exception
      * @version 3.6
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-14
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getDrawlotsQueue($examId, $stationId)
     {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
+ * User: fandian
  * Date: 2016/1/27 0027
  * Time: 14:18
  */
@@ -51,7 +51,7 @@ class StationVideo extends CommonModel
      * @param $examId
      * @param $studentId
      * @param $stationId
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     static public function label($examId, $studentId, $stationId, $examScreeningId)
     {
@@ -115,7 +115,7 @@ class StationVideo extends CommonModel
 
     /**
      * 获取考试、摄像机对应的所有标记点（锚点）
-     * TODO:Zhoufuxiang 2016-3-25
+     * TODO:fandian 2016-3-25
      * @return object
      */
     public function  getVideoLabels($examId, $vcrId, $beginDt, $endDt)

@@ -40,7 +40,7 @@ abstract class AbstractSmartArrange implements SmartArrangeInterface
      * 更改effect
      * @param $exam
      * @param array $attributes
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-14 15:06
      */
     public function changeEffect($exam, array $attributes = [])
@@ -99,7 +99,7 @@ abstract class AbstractSmartArrange implements SmartArrangeInterface
      * @param $exam
      * @param array $attributes
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-14 15：35
      */
     public function stationStatus($exam)
@@ -125,7 +125,7 @@ abstract class AbstractSmartArrange implements SmartArrangeInterface
      * 将数据保存在order表中
      * @param $exam
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-14 16:10
      */
     public function saveStudentOrder($exam)
@@ -173,9 +173,9 @@ abstract class AbstractSmartArrange implements SmartArrangeInterface
      * @return mixed
      * @throws \Exception
      * @version
-     * @author JiangZhiheng <JiangZhiheng@misrobot.com>
+     * @author ZouYuChao <ZouYuChao@sulida.com>
      * @time 2016-05-10
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function newSaveStudentOrder($exam)
     {

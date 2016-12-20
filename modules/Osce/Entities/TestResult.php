@@ -108,7 +108,7 @@ class TestResult extends CommonModel
             //获取考试成绩特殊评分项扣分详情（解析json为数组）
             $specialScoreData = $this->getSpecialScore($specialScore);
 
-            //todo:增加提交数据校验  20160512 01:02 luohaihua
+            //todo:增加提交数据校验  20160512 01:02 Zouyuchao
             //获取当前考试当前场次当前考站下的考试项目
             $subject = $this->getSuject($examScreening->exam_id, $examScreening->id, $data['station_id']);
 
@@ -135,7 +135,7 @@ class TestResult extends CommonModel
                 //保存考试，考核点分数详情
                 $this->getSaveExamEvaluate($scoreData, $ExamResultId);
 
-                //保存考试，特殊评分项 实际扣分详情 TODO: Zhoufuxiang
+                //保存考试，特殊评分项 实际扣分详情 TODO: fandian
                 \Log::info('特殊评分项保存前记录', [$specialScoreData, $ExamResultId]);
                 $this->getSaveSpecialScore($specialScoreData, $ExamResultId,$data['station_id']);
                 \Log::debug('特殊评分项', [$specialScoreData]);
@@ -146,7 +146,7 @@ class TestResult extends CommonModel
                 throw new \Exception('成绩提交失败', -1000);
             }
 
-            //标记父考试成绩 TODO：zhoufuxiang 2016-06-17
+            //标记父考试成绩 TODO：fandian 2016-06-17
             $result = $this->flagOldExamResult($exam_id, $data['student_id']);
 
             $connection->commit();
@@ -345,9 +345,9 @@ class TestResult extends CommonModel
      * @param $ExamResultId
      * @throws \Exception
      *
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date   2016-06-15 16:44
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     
@@ -396,9 +396,9 @@ class TestResult extends CommonModel
      * @param $ExamResultId
      * @throws \Exception
      *
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date   2016-06-15 16:44
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
 
@@ -439,9 +439,9 @@ class TestResult extends CommonModel
      * @param $ExamResultId
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-07 16:44
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     private function getSaveSpecialScore($specialScoreDatas, $ExamResultId,$stationId)
     {
@@ -546,9 +546,9 @@ class TestResult extends CommonModel
      * @param $specialScores
      * @return array
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-07 16:44
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     private function getSpecialScore($specialScores)
     {
@@ -578,9 +578,9 @@ class TestResult extends CommonModel
      * @return bool
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-17 13:44
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function flagOldExamResult($exam_id, $student_id, $flag = 1)
     {

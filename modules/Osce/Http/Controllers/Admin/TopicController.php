@@ -41,9 +41,9 @@ class TopicController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getList(Request $request)
@@ -72,9 +72,9 @@ class TopicController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getAddTopic()
@@ -101,9 +101,9 @@ class TopicController extends CommonController
      * @return redirect
      *
      * @version 3.4
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2016-03-30 21:35
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postAddTopic(Request $request)
@@ -224,9 +224,9 @@ class TopicController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postEditTopic(Request $request)
@@ -322,9 +322,9 @@ class TopicController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getEditTopic(Request $request)
@@ -385,9 +385,9 @@ class TopicController extends CommonController
      * @return
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getDelTopic(Request $request)
@@ -421,8 +421,8 @@ class TopicController extends CommonController
      *
      * @param Request $request
      * @version 1.0
-     * @author jiangzhiheng <Jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postImportExcel(Request $request)
     {
@@ -441,7 +441,7 @@ class TopicController extends CommonController
                     $item = e($item);
                 }
 
-                /*判断分数 TODO: Zhoufuxiang 2016-2-26*/
+                /*判断分数 TODO: fandian 2016-2-26*/
                 if (!strpos($items['sort'], '-')) {
                     if ($key != 0 && $totalScore != 0) {
                         throw new \Exception('分数有误，请修改后重试');
@@ -470,7 +470,7 @@ class TopicController extends CommonController
     }
 
     /**
-     * 判断科目模板表头及列数 TODO: zhoufuxiang 2016-2-27
+     * 判断科目模板表头及列数 TODO: fandian 2016-2-27
      */
     public function judgeTemplet($topicList)
     {
@@ -502,9 +502,9 @@ class TopicController extends CommonController
      * @return void
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getToppicTpl()
@@ -529,7 +529,7 @@ class TopicController extends CommonController
     /**
      * 判断名称是否已经存在
      * @url POST /osce/admin/resources-manager/postNameUnique
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     * @author fandian <fandian@sulida.com>     *
      */
     public function postNameUnique(Request $request)
     {

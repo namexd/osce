@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2016/1/9
  * Time: 11:06
  */
@@ -33,15 +33,15 @@ class NoticeController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getSystemList(Request $request)
     {
 
-        //查询当前操作人是学生、老师、sp老师 TODO zhoufuxiang 16-1-22
+        //查询当前操作人是学生、老师、sp老师 TODO fandian 16-1-22
         $user = \Auth::user();
         if (!$user) {
             throw new \Exception('没有找到当前操作人的信息！');
@@ -55,7 +55,7 @@ class NoticeController extends CommonController
         } else {
             $accept = 2;
         }
-        // TODO zhoufuxiang 16-1-25
+        // TODO fandian 16-1-25
         $config = Config::where('name', '=', 'type')->first();
 //        if(!empty($way) && !empty($config)){
 //            //查看 系统设置中，是否有此 通知方式
@@ -87,7 +87,7 @@ class NoticeController extends CommonController
   //osce/wechat/notice/system-view
     public function  getSystemView(Request $request)
     {
-        //查询当前操作人是学生、老师、sp老师 TODO zhoufuxiang 16-1-22
+        //查询当前操作人是学生、老师、sp老师 TODO fandian 16-1-22
         $user = \Auth::user();
         if (!$user) {
             throw new \Exception('没有找到当前操作人的信息！');
@@ -136,9 +136,9 @@ class NoticeController extends CommonController
      * @return view
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE}${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getView(Request $request)
@@ -201,7 +201,7 @@ class NoticeController extends CommonController
         $file   = explode('.',$filename);
         $tFile  = array_pop($file);
         $filename = md5($filename).'.'.$tFile;
-        //TODO:Zhoufuxiang 2016-3-14
+        //TODO:fandian 2016-3-14
 //        $encode = mb_detect_encoding($filepath, array("ASCII","GB2312","GBK","UTF-8",'BIG5'));
 //        if($encode == 'UTF-8'){
 //            $filepath = iconv('utf-8', 'gbk', $filepath);

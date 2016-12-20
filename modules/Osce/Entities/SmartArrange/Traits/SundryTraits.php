@@ -14,7 +14,7 @@ trait SundryTraits
     /**
      * 重置考站时间
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-07 19:30
      */
     public function resetStationTime()
@@ -27,7 +27,7 @@ trait SundryTraits
     /**
      * 获取流程时间
      * @return int
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 10:24
      */
     public function flowTime()
@@ -49,7 +49,7 @@ trait SundryTraits
 
     /**
      * 将学生从总清单中放入侯考区
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 10:53
      */
     public function waitExamQueue()
@@ -81,7 +81,7 @@ trait SundryTraits
      * 为数组的最大值求取最大值
      * @param array $mins
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 18:08
      */
     function mins(array $mins)
@@ -94,7 +94,7 @@ trait SundryTraits
      * 顺序模式下是否有符合要求的学生
      * @param $screen
      * @param $serialnumber
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-11 11:05
      */
     function orderBeginStudent($screen, $entity)
@@ -117,7 +117,7 @@ trait SundryTraits
      * @param $entity
      * @param $last
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-26 20:24
      */
     function pollStudents($screen, $entity, $last)
@@ -140,7 +140,7 @@ trait SundryTraits
      * 获取当前场次下的流程个数
      * @param $entities
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 14:40
      */
     function flowNum($entities)
@@ -152,7 +152,7 @@ trait SundryTraits
      * 返回考场对应的考站的考试时间数组
      * @param $roomStation
      * @return array
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 18:01
      */
     function stationMins($roomStation)

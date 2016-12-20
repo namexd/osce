@@ -24,7 +24,7 @@ class AddAllExaminee
      * @param $fileName
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-20 18:10
      */
     public function setData(array $data)
@@ -35,7 +35,7 @@ class AddAllExaminee
     /**
      * 获取data数据
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-21 14:29
      */
     public function getData()
@@ -50,7 +50,7 @@ class AddAllExaminee
      * 去掉sheet
      * @param array $data
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-20 18：11
      */
     public function wipeOffSheet(array $data)
@@ -61,7 +61,7 @@ class AddAllExaminee
     /**
      * 判断模板数据
      * @param array $data
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-20 18：13
      */
     public function judgeTemplate(array $data)
@@ -91,7 +91,7 @@ class AddAllExaminee
      * @param string $nameToEn
      * @return array
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-20 18:32
      */
     public function fieldsChTOEn(array $data, $nameToEn = 'osce.importForCnToEn.student')
@@ -103,7 +103,7 @@ class AddAllExaminee
      * 处理用户的性别
      * @param $sex
      * @return int
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-21 10:30
      */
     public function handleSex($sex)
@@ -127,9 +127,9 @@ class AddAllExaminee
      * @return mixed
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-06 10:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function handleIdcardType($idcard_type, $key)
     {

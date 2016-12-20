@@ -24,9 +24,9 @@ class Message extends CommonModel
     /**
      * 发送未发送的信息（短信、邮件）
      * @return bool
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date    2016-04-27
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function sendMessage()
     {
@@ -74,9 +74,9 @@ class Message extends CommonModel
      * 发送短信
      * @param $mobile
      * @param $message
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date    2016-04-27
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function sendShortMsg($mobile, $message)
     {
@@ -88,9 +88,9 @@ class Message extends CommonModel
      * @param $to
      * @param $content
      * @param $access
-     * @author  Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author  fandian <fandian@sulida.com>
      * @date    2016-04-27
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function sendEmail($to, $content, $access)
     {
@@ -101,9 +101,9 @@ class Message extends CommonModel
      * @param   $to
      * @param   $content
      * @param   $access
-     * @author  Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author  fandian <fandian@sulida.com>
      * @date    2016-04-27
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function sendWechat($to, $content, $access)
     {

@@ -16,7 +16,6 @@ use Modules\Msc\Entities\TeacherDept;
 use Modules\Msc\Http\Controllers\MscController;
 use Symfony\Component\HttpFoundation\Response;
 
-
 class UserController extends MscController
 {
     /**
@@ -36,9 +35,9 @@ class UserController extends MscController
      * @return view
      *
      * @version 0.8
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wangjiang <wangjiang@sulida.com>
      * @date 2015-12-14 18:29
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentList(Request $request)
     {
@@ -111,9 +110,9 @@ class UserController extends MscController
      * @return json
      *
      * @version 0.8
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wangjiang <wangjiang@sulida.com>
      * @date 2015-12-15 10:58
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentItem($id)
     {
@@ -148,9 +147,9 @@ class UserController extends MscController
      * @return view
      *
      * @version 0.8
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wangjiang <wangjiang@sulida.com>
      * @date 2015-12-15 11:32
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherList(Request $request)
     {
@@ -208,9 +207,9 @@ class UserController extends MscController
      * @return json
      *
      * @version 0.8
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wangjiang <wangjiang@sulida.com>
      * @date 2015-12-15 17:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherItem($id)
     {
@@ -246,9 +245,9 @@ class UserController extends MscController
      * @return bloo
      *
      * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-12-15 14:50
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentEdit($id)
     {
@@ -273,9 +272,9 @@ class UserController extends MscController
      * @return json
      *
      * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-12-15 15:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postStudentSave(Request $request)
     {
@@ -322,9 +321,9 @@ class UserController extends MscController
      * @return json
      *
      * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-12-15 16:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postStudentAdd(Request $request,$status=1)
     {
@@ -368,9 +367,9 @@ class UserController extends MscController
      * @return json
      *
      * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-12-15 16:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentTrashed($id)
     {
@@ -403,9 +402,9 @@ class UserController extends MscController
      * @return blooean
      *
      * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-12-15 17:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStudentStatus($id)
     {
@@ -439,9 +438,9 @@ class UserController extends MscController
      * @return blooean
      *
      * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-12-15 14:50
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherEdit($id)
     {
@@ -466,9 +465,9 @@ class UserController extends MscController
      * @return json
      *
      * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-12-15 15:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postTeacherSave(Request $request)
     {
@@ -508,9 +507,9 @@ class UserController extends MscController
      * @return json
      *
      * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-12-15 16:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postTeacherAdd(Request $request,$status=1)
     {
@@ -549,9 +548,9 @@ class UserController extends MscController
      * @return json
      *
      * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-12-15 16:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherTrashed($id)
     {
@@ -584,9 +583,9 @@ class UserController extends MscController
      * @return josn
      *
      * @version 0.8
-     * @author zhouchong <zhouchong@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date 2015-12-15 17:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getTeacherStatus($id)
     {
@@ -616,9 +615,9 @@ class UserController extends MscController
      * * string       training       课程文件的excl(必须的)
      * @return object
      * @version 0.8
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2015-11-27 10:24
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function  postImportTeacherUser(Request $request)
@@ -699,9 +698,9 @@ class UserController extends MscController
      * @return object
      *
      * @version 0.8
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2015-11-27 10:24
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function  postImportStudentUser(Request $request)
@@ -805,9 +804,9 @@ class UserController extends MscController
      * @return json
      *
      * @version 0.8
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2015-11-27 10:24
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
 
@@ -871,9 +870,9 @@ class UserController extends MscController
      * @return json
      *
      * @version 0.8
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2015-11-27 10:24
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getExportTeacherUser(Request $request)

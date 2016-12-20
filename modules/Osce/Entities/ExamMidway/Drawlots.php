@@ -107,7 +107,7 @@ class Drawlots
      * @param $studentId
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-25 10:15
      */
     public function judgeTime($studentId)
@@ -146,7 +146,7 @@ class DrawStationMode implements DrawModeInterface
      * @param $exam
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-23 14:38
      */
     public function station($student, $exam)
@@ -237,7 +237,7 @@ class DrawRoomMode implements DrawModeInterface
      * @param $exam
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-23 15:06
      */
     public function station($student, $exam)
@@ -291,7 +291,7 @@ class DrawRoomMode implements DrawModeInterface
      * @param $exam
      * @param $object
      * @param $stationIds
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      * @return \Illuminate\Support\Collection
      */
@@ -316,7 +316,7 @@ class DrawRoomMode implements DrawModeInterface
      * @return array
      * @return array
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     private function drawlot($student, $exam, $diff, $object)

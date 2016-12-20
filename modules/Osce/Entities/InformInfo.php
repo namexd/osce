@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zhouchong
+ * User: fandian
  * Date: 2016/1/12 0012
  * Time: 19:33
  */
@@ -125,9 +125,9 @@ class InformInfo extends CommonModel{
      * @return
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function sendNotice($title,$content,$exam_id,array $groups){
@@ -151,7 +151,7 @@ class InformInfo extends CommonModel{
 
     /**
      *  获取资讯列表
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      */
     public function getList($accept, $exam_ids){
         switch($accept){
@@ -177,9 +177,9 @@ class InformInfo extends CommonModel{
      * @return array
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-06 19:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getGroupsOpendIds($groups,$exam_id){
@@ -229,9 +229,9 @@ class InformInfo extends CommonModel{
      * @return array
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-12-29 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     private function getStudentsOpendIds($exam_id,array $data=[]){

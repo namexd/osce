@@ -24,9 +24,9 @@ class UserController extends MscController {
 	 * @return view
 	 *
 	 * @version 0.1
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date 2015-12-8 16:20
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 */
 	public function getUserLogin()
 	{
@@ -56,9 +56,9 @@ class UserController extends MscController {
 	 * @return view
 	 *
 	 * @version 0.1
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date 2015-12-8 16:20
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 */
 	public function postUserLoginOp(Request $request,PasswordGrantVerifier $passwordGrantVerifier)
 	{
@@ -106,9 +106,9 @@ class UserController extends MscController {
 	 * @return view
 	 *
 	 * @version 0.1
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date 2015-12-8 16:20
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 */
 	public function getUserRegister(UserRepository $userRepository)
 	{
@@ -149,9 +149,9 @@ class UserController extends MscController {
 	 * @return 用户ID
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-19 17:32
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 */
 	//处理学生注册
 	public function postRegStudentOp(Request $request,UserRepository $userRepository)
@@ -213,9 +213,9 @@ class UserController extends MscController {
 	 * @return 用户ID
 	 *
 	 * @version 1.0
-	 * @author Luohaihua <Luohaihua@misrobot.com>
+	 * @author Zouyuchao <Zouyuchao@sulida.com>
 	 * @date 2015-11-19 17:37
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 */
 
 	//处理老师注册
@@ -260,9 +260,9 @@ class UserController extends MscController {
 	 * @return view
 	 *
 	 * @version 0.1
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date 2015-12-8 16:20
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 */
 	public function getUserBinding()
 	{
@@ -285,9 +285,9 @@ class UserController extends MscController {
 	 * @return json ['data'=>{'id':用户id,username:用户名,mobile：用户修改后的手机号码}]
 	 *
 	 * @version 1.0
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date 2015-11-06 16:41
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 *
 	 */
 
@@ -325,9 +325,9 @@ class UserController extends MscController {
 	 * @return
 	 *
 	 * @version 1.0
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date 2015-12-21 10:21
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 * use Modules\Msc\Entities\Student;
 	   use Modules\Msc\Entities\Teacher;
 	 */
@@ -355,9 +355,9 @@ class UserController extends MscController {
 	 * @return
 	 *
 	 * @version 1.0
-	 * @author tangjun <tangjun@misrobot.com>
+	 * @author tangjun <tangjun@sulida.com>
 	 * @date 2015-12-21 10:21
-	 * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+	 * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 	 */
 	private function CheckPhoneRegister($mobile)
 	{

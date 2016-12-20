@@ -35,8 +35,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamList(Request $request)
     {
@@ -59,8 +59,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getQuestionRound(Request $request)
     {
@@ -78,8 +78,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDeleteExam(Request $request)
     {
@@ -183,8 +183,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAddExamPage(Request $request,QuestionBankRepositories $QuestionBankRepositories)
     {
@@ -300,8 +300,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
 
 
      */
@@ -323,8 +323,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamQuestions(Request $request)
     {
@@ -416,8 +416,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAddExams(Request $request,QuestionBankRepositories $QuestionBankRepositories){
        //dd($request->all());
@@ -510,8 +510,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addAutoRandomExam($request,$QuestionBankRepositories,$examPapers,$examPaperID,$DB){
         //新增试卷-试卷构造表和标签类型关联数据添加
@@ -560,8 +560,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addAutoUniteExam($request,$QuestionBankRepositories,$examPapers,$examPaperID,$DB){
         //新增试卷-试卷构造表和标签类型关联数据添加
@@ -651,8 +651,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function addManualUniteExam($questions,$examPaperID,$DB,$user){
         foreach($questions as $k=>$v){
@@ -700,8 +700,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getEditExamPaper(Request $request,QuestionBankRepositories $QuestionBankRepositories){
         //dd($request->all());
@@ -789,8 +789,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editAutoRandomExam($request,$QuestionBankRepositories,$examPapers,$examPaperID,$DB){
         //新增试卷-试卷构造表和标签类型关联数据添加
@@ -910,8 +910,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editAutoUniteExam($request,$DB,$QuestionBankRepositories,$examPapers,$examPaperID,$user){
         //新增试卷-试卷构造表和标签类型关联数据添加
@@ -1009,8 +1009,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editManualUniteExam($request,$questions,$examPaperID,$DB,$user){
         $idArrays = [];
@@ -1130,8 +1130,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editManualUniteExamNotExist($request,$examPapers,$examPaperID,$DB,$user,$QuestionBankRepositories,$exam,$examQuestion){
         //新增试卷-试卷构造表和标签类型关联数据添加
@@ -1210,8 +1210,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editManualUniteExamExist($examPapers,$examPaperID,$DB,$QuestionBankRepositories,$exam,$examQuestion)
     {
@@ -1321,8 +1321,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editData($examPapers,$examPaperID,$QuestionBankRepositories){
         $user = Auth::user();
@@ -1410,8 +1410,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExampQuestions(Request $request){
         if($request->question_detail){
@@ -1443,8 +1443,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function GetExamQuestionLabelId($obj){
         $IdArr = [];
@@ -1470,8 +1470,8 @@ class ExamPaperController extends CommonController
      * @return view
      * @throws \Exception
      * @version   1.0
-     * @author    weihuiguo <weihuiguo@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    weihuiguo <weihuiguo@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postCheckNameOnly(Request $request){
         //dd('验证');
@@ -1501,9 +1501,9 @@ class ExamPaperController extends CommonController
      * @param Request $request
      * @param QuestionBankRepositories $questionBankRepositories
      * @return \Illuminate\Http\JsonResponse
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postCheckQuestionsNum(Request $request,QuestionBankRepositories $questionBankRepositories){
 

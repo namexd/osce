@@ -44,7 +44,7 @@ class RoomMode implements ModeInterface
 
     /**
      * 获取flow
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-22 16:58
      */
     function getFlow()

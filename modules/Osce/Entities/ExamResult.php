@@ -114,9 +114,9 @@ class ExamResult extends CommonModel
     /**
      * @return array
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-16 14:12
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getSonExamResult($exam_ids, $user_id)
     {
@@ -137,9 +137,9 @@ class ExamResult extends CommonModel
      * @param $studentExamScreeningIdArr
      * @throws \Exception
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-03-14 21:12
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function examResultPush($student_id, $screening_id, $stationId,$studentExamScreeningIdArr)
     {
@@ -194,9 +194,9 @@ class ExamResult extends CommonModel
      * @param $result_id
      * @return mixed
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-07-08 14:30     TODO:整理
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getResultDetail($result_id)
     {
@@ -308,9 +308,9 @@ class ExamResult extends CommonModel
      * @param null $exam_id
      * @return mixed
      *
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-25 14:30
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getAllResult($exam_id = null)
     {
@@ -347,9 +347,9 @@ class ExamResult extends CommonModel
      * @param null $exam_id
      * @return mixed
      *
-     * @author zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-05-25 17:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getScoreHeader($exam_id = null)
     {
@@ -400,9 +400,9 @@ class ExamResult extends CommonModel
      * @return object
      * @throws \Exception
      * @version 3.6
-     * @author zhouqiang <JiangZhiheng@misrobot.com>
+     * @author zhouqiang <ZouYuChao@sulida.com>
      * @time 2016-05-07
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
 
     public function NextExaminee($examId,$screeningId,$roomId,$teacherId,$stationId,$abnormal = 1){
@@ -510,9 +510,9 @@ class ExamResult extends CommonModel
      * @access public
      * @param $resultId
      * @return mixed
-     * @author GaoDapeng <gaodapeng@misrobot.com>
+     * @author GaoDapeng <gaodapeng@sulida.com>
      * @time 2016-06-29
-     * @copyright 2013-2016 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
     public function getInvalidSign($resultId)
     {

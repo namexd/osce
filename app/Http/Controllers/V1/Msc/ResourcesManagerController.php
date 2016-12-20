@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/11
  * Time: 18:33
  */
@@ -39,9 +39,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json [{"id":ID,"code":"设备编号","cateid":"类别ID","category":'类别名',"manager_name":"设备负责人","manager_mobile":"设备负责人联系方式","location":"设备地址","name":"设备名称",'detail':‘设备描述’,"is_rejected":是否报废,"reject_detail":"报废说明","reject_date":报废日期,"is_appointment":‘是否接受预约’},…]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-11 21:15
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getResourcesList(Request $request)
@@ -120,9 +120,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json [{"id":ID,"code":"设备编号","cateid":"类别ID","category":'类别名',"manager_name":"设备负责人","manager_mobile":"设备负责人联系方式","location":"设备地址","name":"设备名称",'detail':‘设备描述’,"is_rejected":是否报废,"reject_detail":"报废说明","reject_date":报废日期,"is_appointment":‘是否接受预约’},…]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date  2015-11-11 21:10
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getResourcesListByKeyword(Request $request){
@@ -180,9 +180,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json  "data":{"id":ID,"code":"设备编号","cateid":"类别ID","category":'类别名',"images":[{"id":1,"Resources_id":1,"url":"\/www.baidu.com.jpg","order":图片排序,"descrption":"图片秒速"},……],"manager_name":"设备负责人","manager_mobile":"设备负责人联系方式","location":"设备地址","name":"设备名称",'detail':‘设备描述’,"is_rejected":是否报废,"reject_detail":"报废说明","reject_date":报废日期,"is_appointment":‘是否接受预约’}}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-12 15：23
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getResources(Request $request){
@@ -255,9 +255,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json {name:设备名称,cate_id:类别ID,code:设备编号,manager_name:管理员姓名,manager_mobile:管理员电话,location_id:地址ID,detail:设备说明,images:[{'id':设备图片ID,url:'图片访问路径'}]}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postEditResources(Request $request){
@@ -370,9 +370,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json {"id":ID,"code":"设备编号","cate_id":"类别ID","images":['路径1','路径二'，……],"manager_name":"设备负责人","manager_mobile":"设备负责人联系方式","location_id":"设备地址ID","name":"设备名称",'detail':‘设备描述’,"is_rejected":是否报废,"reject_detail":"报废说明","reject_date":报废日期,"is_appointment":‘是否接受预约’}}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-12 18:34
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postAddResources(Request $request){
@@ -450,9 +450,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json {'id'：设备ID,'name':设备名称,code:设备编码,is_rejected:是否报废,reject_detail:报废说明,reject_date:报废日期}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-13 16:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postRejectedResources(Request $request){
@@ -503,9 +503,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json  ['result:true']
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getResourcesDel(Request $request){
@@ -560,9 +560,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json {'id':地址ID,'code':地址编码,'name':地址,'pid':上级地址ID,'level':地址层级,'description':地址描述,}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postAddAddress(Request $request){
@@ -618,9 +618,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json {'id':地址ID,'code':地址编码,'name':地址,'pid':上级地址ID,'level':地址层级,'description':地址描述,}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-13 17:29
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getResourcesLocationList(Request $request){
@@ -648,9 +648,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json {name:'名称',pid:'父id',level:'层级',description:'备注',}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-16
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getCategroyList(Request $request){
@@ -685,9 +685,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-18
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getBorrowList(Request $request){
@@ -774,9 +774,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return object
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-18
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postAddBorrowApply(Request $request){
@@ -833,9 +833,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json {'id':预约ID,'validated':变更后的结果}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-18 17:32
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postExamineBorrowApply(Request $request){
@@ -911,9 +911,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return json [{"id":ID,"code":"设备编号","cateid":"类别ID","category":'类别名',"manager_name":"设备负责人","manager_mobile":"设备负责人联系方式","location":"设备地址","name":"设备名称",'detail':‘设备描述’,"is_rejected":是否报废,"reject_detail":"报废说明","reject_date":报废日期,"is_appointment":‘是否接受预约’},…]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-18
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getResourcesNameList(Request $request){
@@ -972,9 +972,9 @@ class ResourcesManagerController extends ApiBaseController
      * @return JSON {'name'：设备名称,'code':设备编码,'start':借出时间开始,'end'：借出时间结束}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-19 15:27
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function postFindResource(Request $request){

@@ -22,9 +22,9 @@ class ExamLabelController extends CommonController
      * @url /osce/admin/exam/exam-verify
      * @access public
      * @param
-     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @author yangshaolin <yangshaolin@sulida.com>
      * @date    2016年3月7日17:38:23
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function postCheckNameOnly(Request $request){
@@ -55,9 +55,9 @@ class ExamLabelController extends CommonController
      * @url /osce/admin/exam/exam-label
      * @access public
      * @param
-     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @author yangshaolin <yangshaolin@sulida.com>
      * @date    2016年3月7日17:38:23
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function getExamLabel(Request $Request, ExamQuestionLabel $examQuestionLabel)
@@ -95,9 +95,9 @@ class ExamLabelController extends CommonController
      * @url   /osce/admin/exam/exam-addLabel
      * @access public
      * @param
-     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @author yangshaolin <yangshaolin@sulida.com>
      * @date    2016年3月7日17:38:23
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
     public function addExamQuestionLabel(Request $Request){
@@ -116,9 +116,9 @@ class ExamLabelController extends CommonController
      * @url /osce/admin/exam/exam-addLabel
      * @access public
      * @return $this
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date 2016年3月8日14:26:08
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postAddExamQuestionLabel(Request $Request)
     {
@@ -147,9 +147,9 @@ class ExamLabelController extends CommonController
      * @url   /osce/admin/exam/exam-getLabel
      * @access public
      * @param
-     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @author yangshaolin <yangshaolin@sulida.com>
      * @date    2016年3月7日17:39:14
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getEditExamQuestionLabel(){
         //dd('获取编辑试卷标签内容');
@@ -172,9 +172,9 @@ class ExamLabelController extends CommonController
      * @url  /osce/admin/exam/exam-editLabel
      * @access public
      * @param
-     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @author yangshaolin <yangshaolin@sulida.com>
      * @date    2016年3月7日17:49:25
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function editExamQuestionLabelInsert(Request $Request){
 
@@ -209,9 +209,9 @@ class ExamLabelController extends CommonController
      * @url   /osce/admin/exam/exam-deleteLabel
      * @access public
      * @param
-     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @author yangshaolin <yangshaolin@sulida.com>
      * @date    2016年3月7日17:39:14
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getDeleteExamQuestionLabel(){
         // dd('删除试卷标签');

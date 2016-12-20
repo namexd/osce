@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/11
  * Time: 20:20
  */
@@ -40,9 +40,9 @@ class ResourcesToolsRepository extends BaseRepository
      * @return pagination
      *
      * @version 0.2
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wangjiang <wangjiang@sulida.com>
      * @date 2015-11-24 16:07
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getResourcesByParams ($where, $pagesize=10, $order=['id','desc'])
     {
@@ -67,9 +67,9 @@ class ResourcesToolsRepository extends BaseRepository
      * @return Model Builder
      *
      * @version 0.2
-     * @author wangjiang <wangjiang@misrobot.com>
+     * @author wangjiang <wangjiang@sulida.com>
      * @date 2015-11-24 19:39
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getResourcesListByKeyword($keyword,$feild=''){
         return $this->model->searchByKeyword($keyword,$feild);

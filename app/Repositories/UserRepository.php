@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/19
  * Time: 17:23
  */
@@ -45,9 +45,9 @@ class UserRepository extends BaseRepository
      * @return 用户ID
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-19 17:32
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function regStudent($data){
         try{
@@ -91,9 +91,9 @@ class UserRepository extends BaseRepository
      * @return 用户ID
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-19 17:37
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function regTeacher($data){
         try{
@@ -137,9 +137,9 @@ class UserRepository extends BaseRepository
      * @return pagination对象 :['data'=>[{'id':'班级id','code':'班级编号','name':'班级编号'},{……}]]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06 11:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getClassList($keyword=''){
@@ -157,9 +157,9 @@ class UserRepository extends BaseRepository
      * @return Array [{id:1,name:本科生},{id:2,name:类别名}]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-19 17:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getStudentTypeList(){
@@ -174,9 +174,9 @@ class UserRepository extends BaseRepository
      * @return json :['data'=>[{'id':年份，name:'年级'}，{'id':年份，name:'年级'}，……]}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06 11:00
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getGreadeList(){
@@ -194,9 +194,9 @@ class UserRepository extends BaseRepository
      * @return pagination 对象 :['data'=>[{'id':'专业id','code':'专业编号','name':'专业名称'},{……}]]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06 12:36
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getProfessionalList($keyword){
@@ -216,9 +216,9 @@ class UserRepository extends BaseRepository
      * @return pagination 对象 :['data'=>[{'id':'科室id','code':'科室编号','name':'科室名称'},{……}]]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06 12:42
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getTeacherDeptList($keyword){
@@ -238,9 +238,9 @@ class UserRepository extends BaseRepository
      * @return Array {id:用户Id,username:用户名，avatar:头像,user_type:用户类型(student or teacher),user_perfile:用户详细信息({name：姓名，code：学号，qq：QQ，class：班级，grade：年级，professional：专业，student_type：学生类型} or {code:工号，teacher_dept：科室})}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getUserProfile($uid){
@@ -291,9 +291,9 @@ class UserRepository extends BaseRepository
      * @return json {id:用户Id,username:用户名，avatar:头像,user_type:用户类型(student or teacher),user_perfile:用户详细信息({name：姓名，code：学号，qq：QQ，class：班级，grade：年级，professional：专业，student_type：学生类型} or {code:工号，teacher_dept：科室})}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function checkOpendid($uid){
@@ -340,9 +340,9 @@ class UserRepository extends BaseRepository
      * @return json ['data'=>{'id':用户id,username:用户名,openid：用户修改后的微信openID}]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06 15:55
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function relativeOpenidUser($data){
@@ -390,9 +390,9 @@ class UserRepository extends BaseRepository
      * @return json ['data'=>{'id':用户id,username:用户名,mobile：用户修改后的手机号码}]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06 16:41
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
 
@@ -436,9 +436,9 @@ class UserRepository extends BaseRepository
      * @return Array {'expiretime':过期时间,'mobile':'手机号'}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-11 16:40
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getRegMoblieVerify($mobile){
@@ -469,9 +469,9 @@ class UserRepository extends BaseRepository
      * @return Array {'expiretime':过期时间,'mobile':'手机号'}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-11 16:40
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getResetPasswordVerify($mobile){
@@ -502,9 +502,9 @@ class UserRepository extends BaseRepository
      * @return json {''result':'验证结果,成功为true','mobile':'当前手机号'}
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-11 16:43
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public function getRegCheckMobileVerfiy($formData){
@@ -553,9 +553,9 @@ class UserRepository extends BaseRepository
      * @return booler
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     private function postIsTeacher($id){
@@ -584,9 +584,9 @@ class UserRepository extends BaseRepository
      * @return blooer
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-06 15:22
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     private function postIsStudent($id){

@@ -41,9 +41,8 @@ class ExamQuestionLabel extends  Model
      * @url
      * @access public
      * @param
-     * @author yangshaolin <yangshaolin@misrobot.com>
+     * @author yangshaolin
      * @date    2016年3月7日18:11:01
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
      */
     public function getFilteredPaginateList ($where)
     {

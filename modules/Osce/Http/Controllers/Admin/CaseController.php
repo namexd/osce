@@ -28,8 +28,8 @@ class CaseController extends CommonController
      *                         string        order_by        排序方式 枚举 e.g:desc,asc
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getCaseList(Request $request)
     {
@@ -54,8 +54,8 @@ class CaseController extends CommonController
      * @param CaseModel $caseModel
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getCreateCase()
     {
@@ -72,8 +72,8 @@ class CaseController extends CommonController
      * @param CaseModel $caseModel
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postCreateCase(Request $request, CaseModel $caseModel)
     {
@@ -126,8 +126,8 @@ class CaseController extends CommonController
      *                         id           主键
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getEditCase(Request $request)
     {
@@ -157,8 +157,8 @@ class CaseController extends CommonController
      * @param CaseModel $caseModel
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postEditCase(Request $request, CaseModel $caseModel)
     {
@@ -193,8 +193,8 @@ class CaseController extends CommonController
      * @param CaseModel $caseModel
      * @return view
      * @version   1.0
-     * @author    jiangzhiheng <jiangzhiheng@misrobot.com>
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @author    ZouYuChao <ZouYuChao@sulida.com>
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function postDelete(Request $request, CaseModel $caseModel)
     {
@@ -214,7 +214,7 @@ class CaseController extends CommonController
     /**
      * 判断名称是否已经存在
      * @url POST /osce/admin/resources-manager/postNameUnique
-     * @author Zhoufuxiang <Zhoufuxiang@misrobot.com>     *
+     * @author fandian <fandian@sulida.com>     *
      */
     public function postNameUnique(Request $request)
     {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: fengyell <Luohaihua@misrobot.com>
+ * User: fengyell <Zouyuchao@sulida.com>
  * Date: 2015/11/11
  * Time: 14:47
  */
@@ -88,7 +88,7 @@ class SysValidatecode extends Model
 
     public function getMobileResetPasswordVerify($mobile){
         try{
-            //查询 当前手机号 是否有 有效的验证码 TODO: Zhoufuxiang 2016-3-9
+            //查询 当前手机号 是否有 有效的验证码 TODO: fandian 2016-3-9
             $result = $this->judgeCode($mobile, 2);
             if(is_null($result)){
                 $data=[
@@ -119,7 +119,7 @@ class SysValidatecode extends Model
         }
     }
 
-    /* TODO: Zhoufuxiang 2016-3-9
+    /* TODO: fandian 2016-3-9
      * 查询 手机号 是否有 有效的验证码
      */
     public function judgeCode($mobile, $type){

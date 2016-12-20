@@ -26,9 +26,9 @@ class Common{
      * @return void
      *
      * @version 1.0
-     * @author limingyao <limingyao@misrobot.com>
+     * @author limingyao <limingyao@sulida.com>
      * @date ${DATE} ${TIME}
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public static function sendSms($mobile,$message,$access = '',$type = 'msg')
@@ -37,7 +37,7 @@ class Common{
 //        $sender=\App::make('messages.sms');
 //        $sender->send($mobile,$message);
 
-        //将要发送的信息，写入数据库中 TODO：zhoufuxiang 2016-04-27
+        //将要发送的信息，写入数据库中 TODO：fandian 2016-04-27
         $mobile  = json_encode($mobile);
         $message = json_encode($message);
         $access  = json_encode($access);        //保存域名之类（第三方发送认证参数）
@@ -80,9 +80,9 @@ class Common{
      * @return ['路径1'，'路径2'，'路径3'，…………]
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-15 17:51
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public static function saveImags(Request $request,$name){
@@ -120,9 +120,9 @@ class Common{
      * @return string  路径
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2015-11-15 17:51
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     public static function saveImage(Request $request,$name){
@@ -404,9 +404,9 @@ class Common{
      *  Common::sendWeixinToMany($Message,['oI7UquKmahFwGV0l2nyu_f51nDJ4','oI7UquPKycumti7NU4HQYjVnRjPo']);//群发
      * </pre>
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-01-07 21:04
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     static public function sendWeixinToMany(BaseMessage $message,array $OpendIdArray){
@@ -428,9 +428,9 @@ class Common{
      * @return bool|int
      *
      * @version 1.0
-     * @author Luohaihua <Luohaihua@misrobot.com>
+     * @author Zouyuchao <Zouyuchao@sulida.com>
      * @date 2016-03-02 17:09
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
     static public function receiveStreamFile($path,callable $encrypt=null){
@@ -458,7 +458,7 @@ class Common{
      * 判断图片文件的MIME类型
      * @param $image
      * @return bool
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-03-02 10:09
      */
     static public function imageMimeCheck($image) {

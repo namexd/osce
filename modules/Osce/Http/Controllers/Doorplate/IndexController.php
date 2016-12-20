@@ -36,9 +36,9 @@ class IndexController extends CommonController
      * @url /osce/doorplate/doorplate-start
      * @access public
      *
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-5-3
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function doorStart()
     {
@@ -63,9 +63,9 @@ class IndexController extends CommonController
      * @access public
      * @param examId 考试id
      * @param roomId 考试对应的考站id
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-5-3
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExamMsg(Request $request ,BillboardRepository $billboardRepository)
     {
@@ -97,7 +97,7 @@ class IndexController extends CommonController
                 throw new \Exception('本场次该房间下暂时没有考试信息');
             };
 
-            // 获取到当前组 TODO: Zhoufuxiang 2016-06-12
+            // 获取到当前组 TODO: fandian 2016-06-12
             $current   = $this->getExaminee($request);
             // 获取到下一组
             $nextGroup = $this->getNextExaminee($request);
@@ -135,9 +135,9 @@ class IndexController extends CommonController
     /**
      * 前端数据整合
      * @method GET
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-5-3
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     protected function combinData(&$data, &$cont)
     {
@@ -168,9 +168,9 @@ class IndexController extends CommonController
      * 当前组满足华西
      * @method GET
      * @url /osce/doorplate/current-set
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-5-3
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExaminee2(Request $request)
     {
@@ -213,9 +213,9 @@ class IndexController extends CommonController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Support\Collection
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-12 14:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getExaminee(Request $request)
     {
@@ -253,9 +253,9 @@ class IndexController extends CommonController
 
     /**
      * /检查缓存是否为空
-     * @author zhouqiang <zhouqiang@misrobot.com>
+     * @author zhouqiang <zhouqiang@sulida.com>
      * @date 2016-6-23
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     private  function ExamineRoomCache($examId,$roomId)
     {
@@ -294,9 +294,9 @@ class IndexController extends CommonController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Support\Collection
      *
-     * @author Zhoufuxiang <zhoufuxiang@misrobot.com>
+     * @author fandian <fandian@sulida.com>
      * @date   2016-06-13 14:13
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getNextExaminee(Request $request)
     {
@@ -334,9 +334,9 @@ class IndexController extends CommonController
      * 下一组满足华西
      * @method GET
      * @url /osce/doorplate/next-set
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-5-3
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getNextExaminee2(Request $request){
         $this->validate($request,[
@@ -375,9 +375,9 @@ class IndexController extends CommonController
      * 获取房间状态
      * @method GET
      * @url /osce/doorplate/door-status
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-5-3
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function getStatusStatus(Request $request)
     {
@@ -422,9 +422,9 @@ class IndexController extends CommonController
     /**
      * 随机数组
      * @method GET
-     * @author wt <wangtao@misrobot.com>
+     * @author wt <wangtao@sulida.com>
      * @date 2016-5-3
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     protected function takeArr($num){
         $arr=[];

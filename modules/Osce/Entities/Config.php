@@ -73,7 +73,7 @@ class Config extends CommonModel
      * @return bool
      * @return bool
      * @throws \Exception
-     * @auther Jiangzhiheng <Jiangzhiheng@misrobot.com>
+     * @auther ZouYuChao <ZouYuChao@sulida.com>
      */
     private function saveDBConfig($data)
     {

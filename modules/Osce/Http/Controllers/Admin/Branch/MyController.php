@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * @author tangjun <tangjun@misrobot.com>
+ * @author tangjun <tangjun@sulida.com>
  * @date 2016-02-23 14:28
- * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+ * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
  */
 
 namespace Modules\Osce\Http\Controllers\Admin\Branch;
@@ -31,9 +31,9 @@ class MyController  extends CommonController
      * @param MyRepositories $subjectStatisticsRepositories
      * @param SubjectStatisticsRepositories $subject
      * @return \Illuminate\View\View|string
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function stationGradeList(Request $request,MyRepositories $subjectStatisticsRepositories,SubjectStatisticsRepositories $subject){
         //获取考试列表信息
@@ -117,9 +117,9 @@ class MyController  extends CommonController
      * @param MyRepositories $subjectStatisticsRepositories
      * @param SubjectStatisticsRepositories $subject
      * @return \Illuminate\View\View|string
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function standardGradeList(Request $request,MyRepositories $subjectStatisticsRepositories,SubjectStatisticsRepositories $subject)
     {
@@ -241,9 +241,9 @@ class MyController  extends CommonController
      * @param Request $request
      * @param MyRepositories $subjectStatisticsRepositories
      * @return string
-     * @author xumin <xumin@misrobot.com>
+     * @author xumin <xumin@sulida.com>
      * @date
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function standardDetails(Request $request,SubjectStatisticsRepositories $subjectStatisticsRepositories){
         $standardPid = $request->input('standardPid',0);
@@ -305,7 +305,7 @@ class MyController  extends CommonController
      * 出科目的下拉菜单
      * @param $examId
      * @return array|\Illuminate\Support\Collection
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      */
     private function subjectDownlist($examId)
     {

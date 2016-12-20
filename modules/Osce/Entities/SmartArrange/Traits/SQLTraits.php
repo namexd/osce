@@ -25,7 +25,7 @@ trait SQLTraits
      * 根据考试id找到对应的阶段
      * @param $exam
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time
      */
     function getGradations($exam)
@@ -46,7 +46,7 @@ trait SQLTraits
      * @param $key
      * @param $exam
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-07 16:36
      */
     function getScreenByOrder($key, $exam)
@@ -60,7 +60,7 @@ trait SQLTraits
      * 获取随机状态下该考站需要的考生
      * @param $entity
      * @param $students
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-28 16：48
      */
     function randomNeedStudent($entity, $students)
@@ -80,7 +80,7 @@ trait SQLTraits
      * 获取目前正在考试的学生
      * @param $screen
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-28 19:48
      */
     function randomBeginStudent($screen, $serialnumber)
@@ -127,7 +127,7 @@ trait SQLTraits
      * 将流程写进screen
      * @param $screen
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-07 17:30
      */
     function setFlowsnumToScreen($exam, $screen)
@@ -148,7 +148,7 @@ trait SQLTraits
      * @param $screen
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 11:30
      */
     function examPlanRecordIsOpenDoor($entity, $screen)
@@ -175,7 +175,7 @@ trait SQLTraits
      * @param $exam
      * @param $flowsNum
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 14:49
      */
     function testingStudentList($exam, $screen, $flowsNum)
@@ -217,7 +217,7 @@ trait SQLTraits
      * 获取当前场次排考已经写完的条数
      * @param $screenId
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-15 15:44
      */
     public function overStudentCount($screenId)
@@ -232,7 +232,7 @@ trait SQLTraits
      * 返回考站实体
      * @param $screen
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 17:07
      */
     function getStationFuture($screen)
@@ -264,7 +264,7 @@ trait SQLTraits
      * @param $exam
      * @param $screen
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-12 14：37
      */
     function getStation($exam, $screen)
@@ -303,7 +303,7 @@ trait SQLTraits
      * 返回考场实体,新的方法，现在不改
      * @param $screen
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 17:07
      */
     function getRoomFuture($exam, $screen)
@@ -351,7 +351,7 @@ trait SQLTraits
      * @param $exam
      * @param $screen
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-12 14:36
      */
     function getRoom($exam, $screen)
@@ -399,7 +399,7 @@ trait SQLTraits
      * @param $screen
      * @param $roomId
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 17:53
      */
     function roomStation($exam, $screen, $roomId)
@@ -423,7 +423,7 @@ trait SQLTraits
      * 获取学生考过的序号
      * @param $testingStudent
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-08 18:55
      */
     function getStudentSerialnumber($exam, $screen, $testingStudent)
@@ -439,7 +439,7 @@ trait SQLTraits
      * @param $screen
      * @param $serialnumber
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-11 11:26
      */
     function prevSerial($screen, $serialnumber)
@@ -456,7 +456,7 @@ trait SQLTraits
      * @param $screen
      * @param $serialnumber
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-11 11:27
      */
     function thisSerial($screen, $serialnumber)
@@ -484,7 +484,7 @@ trait SQLTraits
      * @param $sequenceMode
      * @return mixed
      * @throws \Exception
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-12 18:08
      */
     function pollBeginStudent($entity, $screen)
@@ -515,7 +515,7 @@ trait SQLTraits
      * 获取理论考试的考试时间
      * @param $entity
      * @return mixed
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-18 18:15
      */
     function getTheoryMins($entity)
@@ -528,7 +528,7 @@ trait SQLTraits
 
     /**
      * 返回当场考试的考站及screen
-     * @author Jiangzhiheng
+     * @author ZouYuChao
      * @time 2016-04-19 10:52
      */
     function getDraft($exam)

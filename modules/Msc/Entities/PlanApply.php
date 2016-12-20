@@ -35,9 +35,9 @@ class PlanApply extends Model
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月13日11:29:19
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function LabApply(){
         return  $this->hasOne('Modules\Msc\Entities\LabApply','id','apply_id');
@@ -46,9 +46,9 @@ class PlanApply extends Model
     /**
      * @param $apply_id
      * @return array
-     * @author tangjun <tangjun@misrobot.com>
+     * @author tangjun <tangjun@sulida.com>
      * @date    2016年1月18日15:22:33
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
+     * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
     public function ApplyIdGetOpenPlanIdArr($apply_id){
         $PlanApplyInfo = $this->where('apply_id','=',$apply_id)->get();
