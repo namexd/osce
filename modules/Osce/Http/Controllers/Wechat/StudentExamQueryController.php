@@ -227,7 +227,7 @@ class StudentExamQueryController extends CommonController
             //查询出详情列表
             $examscoreModel = new ExamScore();
             $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
-            var_dump($examScoreList);
+            //var_dump($examScoreList);
             //TODO: fandian
             $scores = [];
             $itemScore = [];
@@ -248,7 +248,7 @@ class StudentExamQueryController extends CommonController
                 $scores[$index]['tScore'] = $standardM->score;
                 $scores[$index]['score'] = $itemScore[$index]['totalScore'];
             }
-
+            dd($scores);
             echo '5';
 //        $groupData = [];
 //        foreach ($examScoreList as $examScore) {
