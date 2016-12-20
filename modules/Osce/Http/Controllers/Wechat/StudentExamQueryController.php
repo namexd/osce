@@ -206,12 +206,13 @@ class StudentExamQueryController extends CommonController
 
     public function  getExamDetails(Request $request)
     {
+        echo '1';
         try{
             $this->validate($request, [
                 'exam_screening_id' => 'required|integer',
 //            'station_id'    => 'required|integer'
             ]);
-
+            echo '2';
             $examScreeningId = intval(Input::get('exam_screening_id'));
             $station_id = intval(Input::get('station_id'));
             //根据考试场次id查询出该结果详情
@@ -222,7 +223,7 @@ class StudentExamQueryController extends CommonController
             }
             //得到考试名字
             $examName = ExamScreening::where('id', $examScreeningId)->select('exam_id')->first()->ExamInfo;
-
+            echo '3';
             //查询出详情列表
             $examscoreModel = new ExamScore();
             $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
@@ -238,7 +239,7 @@ class StudentExamQueryController extends CommonController
                 ];
                 $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
             }
-
+            echo '4';
             foreach ($scores as $index => $item) {
                 //获取考核点信息
                 $standardM = Standard::where('id', $index)->first();
@@ -248,7 +249,7 @@ class StudentExamQueryController extends CommonController
                 $scores[$index]['score'] = $itemScore[$index]['totalScore'];
             }
 
-
+            echo '5';
 //        $groupData = [];
 //        foreach ($examScoreList as $examScore) {
 //            $groupData[$examScore->standard->pid][] = $examScore;
@@ -285,7 +286,8 @@ class StudentExamQueryController extends CommonController
                 ]);
 
         }catch (\Exception $ex){
-            return  redirect()->back()->withErrors($ex->getMessage());
+            dd(6);
+            //return  redirect()->back()->withErrors($ex->getMessage());
         }
 
     }
