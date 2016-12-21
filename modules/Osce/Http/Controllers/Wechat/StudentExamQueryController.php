@@ -16,6 +16,7 @@ use Modules\Osce\Entities\ExamScore;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStation;
 use Modules\Osce\Entities\Standard;
+use Modules\Osce\Entities\StandardItem;
 use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
@@ -236,21 +237,44 @@ class StudentExamQueryController extends CommonController
             $scores = [];
             $itemScore = [];
             foreach ($examScoreList as $itm) {
-                $pid = $itm->standard->pid;
+                /*$pid = $itm->standard->pid;
                 $scores[$pid]['items'][] = [
                     'standard' => $itm->standard,
+                    'score' => $itm->score,
+                ];*/
+                $pid=$itm->standardItem->pid;
+                $scores[$pid]['items'][] = [
+                    'standard' =>$itm->standard_item_id,
                     'score' => $itm->score,
                 ];
                 $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
             }
             //dd($scores);
-            foreach ($scores as $index => $item) {
+            /*foreach ($scores as $index => $item) {
                 //获取考核点信息
                 $standardM = Standard::where('id', $index)->first();
                 $scores[$index]['sort'] = $standardM->sort;
                 $scores[$index]['content'] = $standardM->content;
                 $scores[$index]['tScore'] = $standardM->score;
                 $scores[$index]['score'] = $itemScore[$index]['totalScore'];
+            }*/
+            foreach ($scores as $index => $item) {
+                //获取考核点信息
+                //$standardM = Standard::where('id', $index)->first();
+                $standardM = StandardItem::where('id', $index)->first();
+               // dd($standardM);
+                $scores[$index]['sort'] = $standardM->sort;
+                $scores[$index]['content'] = $standardM->content;
+                $scores[$index]['tScore'] = $standardM->score;
+                $scores[$index]['score'] = $itemScore[$index]['totalScore'];
+                foreach ($item['items'] as $k=> $v){
+                    $standardMC = StandardItem::where('id', $v['standard'])->first();
+                    //dd($standardM);
+                    $scores[$index]['items'][$k]['sort'] = $standardMC->sort;
+                    $scores[$index]['items'][$k]['content'] = $standardMC->content;
+                    $scores[$index]['items'][$k]['tScore'] = $standardMC->score;
+                    $scores[$index]['items'][$k]['score'] = ( $itemScore[$index]['totalScore']/$standardM->score)*$standardMC->score;
+                }
             }
 //        $groupData = [];
 //        foreach ($examScoreList as $examScore) {
@@ -288,7 +312,7 @@ class StudentExamQueryController extends CommonController
                 ]);
 
         }catch (\Exception $ex){
-            return  redirect()->back()->withErrors($ex->getMessage());
+            //return  redirect()->back()->withErrors($ex->getMessage());
         }
 
     }
