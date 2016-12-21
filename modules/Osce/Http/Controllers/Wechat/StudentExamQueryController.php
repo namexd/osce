@@ -231,7 +231,7 @@ class StudentExamQueryController extends CommonController
             $examscoreModel = new ExamScore();
             $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
             //var_dump($examScoreList);
-            dd($examScoreList);
+            //dd($examScoreList);
             //TODO: fandian
             $scores = [];
             $itemScore = [];
@@ -243,7 +243,7 @@ class StudentExamQueryController extends CommonController
                 ];
                 $itemScore[$pid]['totalScore'] = (isset($itemScore[$pid]['totalScore']) ? $itemScore[$pid]['totalScore'] : 0) + $itm->score;
             }
-            dd($scores);
+            //dd($scores);
             foreach ($scores as $index => $item) {
                 //获取考核点信息
                 $standardM = Standard::where('id', $index)->first();
