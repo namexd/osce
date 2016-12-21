@@ -41,7 +41,7 @@ class Common{
         $mobile  = json_encode($mobile);
         $message = json_encode($message);
         $access  = json_encode($access);        //保存域名之类（第三方发送认证参数）
-        $template = json_endcode($template);
+        $template = json_encode($template);
 
         $datas = [
             'to'            => $mobile,
