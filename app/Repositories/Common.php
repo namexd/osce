@@ -37,7 +37,7 @@ class Common{
 //        $sender=\App::make('messages.sms');
 //        $sender->send($mobile,$message);
 
-        //将要发送的信息，写入数据库中 TODO：fandian 2016-04-27
+        //将要发送的信息，写入数据库中
         $mobile  = json_encode($mobile);
         $message = json_encode($message);
         $access  = json_encode($access);        //保存域名之类（第三方发送认证参数）

@@ -110,10 +110,9 @@ class ConfigController extends CommonController
             //验证
             $this->validate($request, [
                 'message_type' => 'array',
-                'sms_cnname' => 'required',
-                'sms_url' => 'required|url',
-                'sms_username' => 'required',
-                'sms_password' => 'required',
+                'sms_request_host' => 'required|url',
+                'sms_app_key' => 'required',
+                'sms_app_secret' => 'required',
                 'wechat_use_alias' => 'required',
                 'wechat_app_id' => 'required',
                 'wechat_secret' => 'required',
@@ -130,7 +129,7 @@ class ConfigController extends CommonController
 
             //获取输入值
             $formData = $request->only('message_type');
-            $file = $request->only('sms_cnname', 'sms_url', 'sms_username', 'sms_password', 'wechat_use_alias',
+            $file = $request->only('sms_request_host', 'sms_app_key', 'sms_app_secret', 'sms_password', 'wechat_use_alias',
                 'wechat_app_id'
                 , 'wechat_secret', 'wechat_token', 'wechat_encoding_key', 'email_server', 'email_port', 'email_protocol', 'email_ssl',
                 'email_username', 'email_password');

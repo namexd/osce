@@ -5,11 +5,12 @@ return array (
   array (
     'sms' => 
     array (
-      'driver' => 'sms',
-      'cnname' => '1',
-      'url' => 'http://atapp.com/message?',
-      'username' => 'whatisyourname',
-      'password' => 'nopass',
+      'app_key' => '23576437',
+      'app_secret' => 'f9fec0c87812bd9e5301ac49ea9bd6db',
+      'SingName' => '智慧医教',
+      'TemplateCode' => 'SMS_34875276',
+      'request_host' => 'http://sms.market.alicloudapi.com',
+      'request_uri' => '/singleSendSms',
     ),
     'wechat' => 
     array (
