@@ -231,11 +231,13 @@ class StudentExamQueryController extends CommonController
             //查询出详情列表
             $examscoreModel = new ExamScore();
             $examScoreList = $examscoreModel->getExamScoreList($examresultList->id);
+            //dd($examScoreList);
             //var_dump($examScoreList);
             //dd($examScoreList);
             //TODO: fandian
             $scores = [];
             $itemScore = [];
+            //dd($examScoreList);
             foreach ($examScoreList as $itm) {
                 /*$pid = $itm->standard->pid;
                 $scores[$pid]['items'][] = [
@@ -258,22 +260,22 @@ class StudentExamQueryController extends CommonController
                 $scores[$index]['tScore'] = $standardM->score;
                 $scores[$index]['score'] = $itemScore[$index]['totalScore'];
             }*/
+           // dd($scores);
             foreach ($scores as $index => $item) {
                 //获取考核点信息
                 //$standardM = Standard::where('id', $index)->first();
                 $standardM = StandardItem::where('id', $index)->first();
-               // dd($standardM);
+                //dd($standardM);
                 $scores[$index]['sort'] = $standardM->sort;
                 $scores[$index]['content'] = $standardM->content;
-                $scores[$index]['tScore'] = $standardM->score;
+                $scores[$index]['tScore'] = round($standardM->score*$standardM->coefficient);
                 $scores[$index]['score'] = $itemScore[$index]['totalScore'];
                 foreach ($item['items'] as $k=> $v){
                     $standardMC = StandardItem::where('id', $v['standard'])->first();
-                    //dd($standardM);
                     $scores[$index]['items'][$k]['sort'] = $standardMC->sort;
                     $scores[$index]['items'][$k]['content'] = $standardMC->content;
-                    $scores[$index]['items'][$k]['tScore'] = $standardMC->score;
-                    $scores[$index]['items'][$k]['score'] = ( $itemScore[$index]['totalScore']/$standardM->score)*$standardMC->score;
+                    $scores[$index]['items'][$k]['tScore'] = round($standardMC->score*$standardM->coefficient);
+                    $scores[$index]['items'][$k]['score'] = $v['score'];
                 }
             }
 //        $groupData = [];
