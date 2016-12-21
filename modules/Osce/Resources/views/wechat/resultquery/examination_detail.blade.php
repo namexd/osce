@@ -47,7 +47,7 @@
 	  			<th width="15%">序号</th>
 	  			<th width="55%">考核内容</th>
 	  			<th width="15%" style="text-align: center">满分</th>
-	  			<th width="15%" style="text-align: center">折合得分</th>
+	  			<th width="15%" style="text-align: center">得分</th>
 	  		</tr>
 
             @forelse($examScoreList as $key => $value)
