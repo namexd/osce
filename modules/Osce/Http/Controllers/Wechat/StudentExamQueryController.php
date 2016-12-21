@@ -212,11 +212,11 @@ class StudentExamQueryController extends CommonController
                 'exam_screening_id' => 'required|integer',
 //            'station_id'    => 'required|integer'
             ]);
-            $user = Auth::user();
-            if (empty($user)) {
-                throw new \Exception('当前用户未登陆');
-            }
-            dd($user);
+//            $user = Auth::user();
+//            if (empty($user)) {
+//                throw new \Exception('当前用户未登陆');
+//            }
+//            dd($user);
             $examScreeningId = intval(Input::get('exam_screening_id'));
             $station_id = intval(Input::get('station_id'));
             //根据考试场次id查询出该结果详情
