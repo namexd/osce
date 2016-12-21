@@ -47,7 +47,7 @@
 	  			<th width="15%">序号</th>
 	  			<th width="55%">考核内容</th>
 	  			<th width="15%" style="text-align: center">满分</th>
-	  			<th width="15%" style="text-align: center">得分</th>
+	  			<th width="15%" style="text-align: center">折合分</th>
 	  		</tr>
 
             @forelse($examScoreList as $key => $value)
@@ -59,10 +59,14 @@
                 </tr>
                 @forelse($value['items'] as $k => $item)
                     <tr>
-                        <td>{{$item['standard']->parent->sort.'-'.$item['standard']->sort}}</td>
+                        <td>{{$value['sort'].'-'.$item['sort']}}</td>
+                        <td>{{$item['content']}}</td>
+                        <td style="text-align: center">{{$item['tScore']}}</td>
+                        <td style="text-align: center">{{$item['score']}}</td>
+                        <!--td>{{--$item['standard']->parent->sort.'-'.$item['standard']->sort}}</td>
                         <td>{{$item['standard']->content}}</td>
                         <td style="text-align: center">{{$item['standard']->score}}</td>
-                        <td style="text-align: center">{{$item['score']}}</td>
+                        <td style="text-align: center">{{$item['score']--}}</td-->
                     </tr>
                 @empty
                 @endforelse

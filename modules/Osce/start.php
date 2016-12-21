@@ -13,5 +13,5 @@
 */
 
 require __DIR__ . '/Http/routes.php';
-//ÌÆ¿¡×é ĞÂÔöÂ·ÓÉÎÄ¼ş
+//å”ä¿Šç»„ æ–°å¢è·¯ç”±æ–‡ä»¶
 require __DIR__ . '/Http/BranchRoutes.php';

@@ -104,8 +104,11 @@ if(!empty($errorsInfo)){
                 @endif
                 <dd class="">{{$room_name}}</dd>
             </dl>
-            <p>
+            <!--p>
                 考试时间：<span class="f_red">{{$msg['mins']}}分钟</span>，时间到请停止考试，根据腕表提示完成考试
+            </p-->
+            <p>
+                考试时间：<span class="f_red">{{$msg['mins']}}分钟</span>，时间到请停止考试，根据提示完成考试
             </p>
             <p>
                 <span>当前考生：</span>
