@@ -31,7 +31,7 @@ class Common{
      * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
-    public static function sendSms($mobile,$message,$access = '',$type = 'msg')
+    public static function sendSms($mobile,$message,$template,$access = '',$type = 'msg')
     {
 
 //        $sender=\App::make('messages.sms');
@@ -41,6 +41,7 @@ class Common{
         $mobile  = json_encode($mobile);
         $message = json_encode($message);
         $access  = json_encode($access);        //保存域名之类（第三方发送认证参数）
+        $template = json_endcode($template);
 
         $datas = [
             'to'            => $mobile,

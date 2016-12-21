@@ -449,7 +449,9 @@ class UserRepository extends BaseRepository
                 'expiretime'=>$verify->expiretime,
                 'mobile'=>$verify->mobile
             ];
-            Common::sendSms($verify->mobile,'注册验证码：'.$verify->code.' 【敏行医学】');
+            //模板1类型 mb1 模板2类型 mb2 依此类推 变量name1 name2 以此类推
+            $template = array("mb"=>"mb1","name1"=>$verify->code);
+            Common::sendSms($verify->mobile,'注册验证码：'.$verify->code,$template);
 
             return $dataReturn;
         }
@@ -482,7 +484,9 @@ class UserRepository extends BaseRepository
                 'expiretime'=>$verify->expiretime,
                 'mobile'=>$verify->mobile
             ];
-            Common::sendSms($verify->mobile,'你正在重置密码，验证码为：'.$verify->code.' 【敏行医学】');
+            //模板1类型 mb1 模板2类型 mb2 依此类推 变量name1 name2 以此类推
+            $template = array("mb"=>"mb1","name1"=>$verify->code);
+            Common::sendSms($verify->mobile,'你正在重置密码，验证码为：'.$verify->code,$template);
             return $dataReturn;
         }
         catch(\Exception $ex)

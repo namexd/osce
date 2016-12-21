@@ -605,7 +605,10 @@ class UserController extends ApiBaseController {
 					'expiretime'=>$verify->expiretime,
 					'mobile'=>$verify->mobile
 			];
-			//Common::sendSms($verify->mobile,'注册验证码：'.$verify->code);
+			//模板1类型 mb1 模板2类型 mb2 依此类推 变量name1 name2 以此类推
+			$template = array("mb"=>"mb1","name1"=>$verify->code);
+
+			Common::sendSms($verify->mobile,'注册验证码：'.$verify->code,$template);
 			return response()->json(
 					$this->success_data($dataReturn,1,'短信已发送')
 			);

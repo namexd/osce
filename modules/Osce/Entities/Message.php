@@ -42,6 +42,7 @@ class Message extends CommonModel
                 $to      = json_decode($message->to);
                 $content = json_decode($message->content);
                 $access  = json_decode($message->access);
+                $template = json_decode($message->template);
 
                 //根据解码方式 处理信息('msg', 'email', 'wechat')
                 switch($message->decode_type)
@@ -63,10 +64,29 @@ class Message extends CommonModel
                                     //签名名称
                                     $SignName = config('message.messages.sms.SignName');
                                     //模板CODE
-                                    $TemplateCode = config('message.messages.sms.TemplateCode');
+                                    $TemplateCode1 = config('message.messages.sms.TemplateCode1');
+                                    $TemplateCode2 = config('message.messages.sms.TemplateCode2');
+                                    $TemplateCode3 = config('message.messages.sms.TemplateCode3');
+
+                                    if($template["mb"]=="mb1"){
+                                        $TemplateCode = $TemplateCode1;
+                                        $name1 = $template["name1"];
+                                        $content = '{"name":"name1"}';
+                                    }
+                                    if($template["mb"]=="mb2"){
+                                        $TemplateCode = $TemplateCode2;
+                                        $name1 = $template["name1"];
+                                        $content = '{"name":"name1"}';
+                                    }
+                                    if($template["mb"]=="mb3"){
+                                        $TemplateCode = $TemplateCode3;
+                                        $name1 = $template["name1"];
+                                        $name2 = $template["name2"];
+                                        $content = '{"name":"name1","val":"name2"}';
+                                    }
 
                                     $request_paras = $request_paras = array(
-                                        'ParamString' => '{"name":"$content"}',
+                                        'ParamString' => $content,
                                         'RecNum' => $to,
                                         'SignName' =>$SignName,
                                         'TemplateCode' =>$TemplateCode
