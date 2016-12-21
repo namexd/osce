@@ -95,31 +95,23 @@
 			        <div class="ibox-content">
 			            <div class="row">
 			                <div class="col-md-12 ">
-			                	<div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">方式选择：</label>
-		                            <div class="col-sm-4">
-		                            	
-		                            	<select class="form-control" name="sms_cnname">
-		                            		<option value="1">{{$tempConfig['messages']['sms']['cnname']}}</option>
-	                            		</select>
-		                            </div>
-		                        </div>
+
 		                        <div class="clearfix form-group">
 		                            <label class="col-sm-2 control-label">地址：</label>
 		                            <div class="col-sm-9">
-		                                <input type="text" class="form-control" id="" name="sms_url" value="{{$tempConfig['messages']['sms']['url']}}">
+		                                <input type="text" class="form-control" id="" name="sms_request_host" value="{{$tempConfig['messages']['sms']['request_host']}}">
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">用户名：</label>
+		                            <label class="col-sm-2 control-label">app_key：</label>
 		                            <div class="col-sm-9">
-		                                <input type="text" class="form-control" id="" name="sms_username" value="{{$tempConfig['messages']['sms']['username']}}">
+		                                <input type="text" class="form-control" id="" name="sms_app_key" value="{{$tempConfig['messages']['sms']['app_key']}}">
 		                            </div>
 		                        </div>
 		                        <div class="clearfix form-group">
-		                            <label class="col-sm-2 control-label">密码：</label>
+		                            <label class="col-sm-2 control-label">app_secret：</label>
 		                            <div class="col-sm-9">
-		                                <input type="text" class="form-control" id="" name="sms_password" value="{{$tempConfig['messages']['sms']['password']}}">
+		                                <input type="text" class="form-control" id="" name="sms_app_secret" value="{{$tempConfig['messages']['sms']['app_secret']}}">
 		                            </div>
 		                        </div>
 			                </div>

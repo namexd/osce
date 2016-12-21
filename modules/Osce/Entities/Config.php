@@ -103,10 +103,9 @@ class Config extends CommonModel
 
             //将每一项改写读取到的数组
 //          $config['default'] = 'env(\'MESSAGE_DRIVER\'， \'' . $formData['default'] . '\'' . "),\n";
-            $config['messages']['sms']['cnname'] = $formData['sms_cnname'];
-            $config['messages']['sms']['url'] = $formData['sms_url'];
-            $config['messages']['sms']['username'] = $formData['sms_username'];
-            $config['messages']['sms']['password'] = $formData['sms_password'];
+            $config['messages']['sms']['request_host'] = $formData['sms_request_host'];
+            $config['messages']['sms']['app_key'] = $formData['sms_app_key'];
+            $config['messages']['sms']['app_secret'] = $formData['sms_app_secret'];
 
             $config['messages']['wechat']['use_alias'] =
                 <<<EOT
