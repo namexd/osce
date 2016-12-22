@@ -50,7 +50,8 @@ class StudentExamQueryController extends CommonController
         try {
             $user = Auth::user();
             if (empty($user)) {
-                throw new \Exception('当前用户未登陆');
+                return  redirect()   ->route('osce.wechat.user.getLogin');
+                //throw new \Exception('当前用户未登陆');
             }
             //检查用户是学生还是监考老师
             $invigilateTeacher = Teacher::find($user->id);
