@@ -48,6 +48,7 @@ class Common{
             'content'       => $message,
             'decode_type'   => $type,               //默认为短信（短信：msg，邮件：email, 微信：wechat）
             'access'        => $access,
+            'template'      =>$template,
             'status'        => 0,
         ];
         $messageModel = new \Modules\Osce\Entities\Message();
