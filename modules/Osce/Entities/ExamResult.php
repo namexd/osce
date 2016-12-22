@@ -170,7 +170,7 @@ class ExamResult extends CommonModel
                     $msgData = [
                         [
                             'title' => '考试成绩查看',
-                            'desc'  => $userInfo->name.'同学的 '.$exam->name.' 考试的总成绩为：'.$examResult.'分',
+                            'desc'  => $userInfo->name.'同学的 '.$exam->name.' 考试的总成绩为：'.$examResult.'分'.'多场考试至（首页-成绩查询-选择考场）详细查看！',
                             'url'   => $url,
                         ],
                     ];
