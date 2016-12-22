@@ -56,6 +56,9 @@ class Common{
         if (!$result){
             throw new \Exception('信息写入失败！');
         }
+        //$hello = $messageModel->sendMessage();
+        //print_r($hello);
+        //exit;
     }
 
     /**

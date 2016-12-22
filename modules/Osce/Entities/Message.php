@@ -8,7 +8,6 @@
 
 namespace Modules\Osce\Entities;
 
-
 class Message extends CommonModel
 {
     protected $connection   = 'osce_mis';
@@ -44,6 +43,7 @@ class Message extends CommonModel
                 $access  = json_decode($message->access);
                 $template = json_decode($message->template);
 
+
                 //根据解码方式 处理信息('msg', 'email', 'wechat')
                 switch($message->decode_type)
                 {
@@ -53,47 +53,51 @@ class Message extends CommonModel
                     case 'wechat' : $this->sendWechat($to, $content, $access);  //3、发送微信
                                     $wechatNum++;
                                     break;
-                    case 'msg'    :                                             //1、发送短信（调用发送短信方法）
+                    //case 'msg'    :                                             //1、发送短信（调用发送短信方法）
                     default       :
                                     //$content    .=  config('osce.sms_signature','【华西临床技能中心】');
                                     $app_key = config('message.messages.sms.app_key');
                                     $app_secret = config('message.messages.sms.app_secret');
                                     $request_uri = config('message.messages.sms.request_uri');
                                     $request_host = config('message.messages.sms.request_host');
-                                    $request_method = 'get';
+                                    $request_method = 'GET';
                                     //签名名称
-                                    $SignName = config('message.messages.sms.SignName');
+                                     $SingName = config('message.messages.sms.SingName');
                                     //模板CODE
                                     $TemplateCode1 = config('message.messages.sms.TemplateCode1');
                                     $TemplateCode2 = config('message.messages.sms.TemplateCode2');
                                     $TemplateCode3 = config('message.messages.sms.TemplateCode3');
 
-                                    if($template["mb"]=="mb1"){
+                                    if($template->mb =="mb1"){
                                         $TemplateCode = $TemplateCode1;
-                                        $name1 = $template["name1"];
-                                        $content = '{"name":"name1"}';
+                                        $name1 = $template->name1;
+                                        $content = "{\"name\":\"$name1\"}";
                                     }
-                                    if($template["mb"]=="mb2"){
+                                    if($template->mb =="mb2"){
                                         $TemplateCode = $TemplateCode2;
-                                        $name1 = $template["name1"];
-                                        $content = '{"name":"name1"}';
+                                        $name1 = $template->name1;
+                                        $content = "{\"name\":\"$name1\"}";
                                     }
-                                    if($template["mb"]=="mb3"){
+                                    if($template->mb =="mb3"){
                                         $TemplateCode = $TemplateCode3;
-                                        $name1 = $template["name1"];
-                                        $name2 = $template["name2"];
-                                        $content = '{"name":"name1","val":"name2"}';
+                                        $name1 = $template->name1;
+                                        $name2 = $template->name2;
+                                        $content = "{\"name\":\"$name1\",\"val\":\"$name2\"}";
                                     }
 
-                                    $request_paras = $request_paras = array(
+                                   $request_paras = array(
                                         'ParamString' => $content,
                                         'RecNum' => $to,
-                                        'SignName' =>$SignName,
+                                        'SignName' =>$SingName,
                                         'TemplateCode' =>$TemplateCode
                                     );
+                                    $info = "";
 
                                     //$this->sendShortMsg($to, $content);         //默认发送短信
-                    do_get($app_key, $app_secret, $request_host, $request_uri, $request_method, $request_paras, '');
+                                    //$hello = array("app_key"=>$app_key,"app_secret"=>$app_secret,"request_paras"=>$request_paras);
+                                    //return $hello;
+
+                           $hello = $this->do_get($app_key, $app_secret, $request_host, $request_uri, $request_method, $request_paras, $info);
                                     $msgNum++;
                 }
 
@@ -134,19 +138,19 @@ class Message extends CommonModel
         $request_header_accept = "application/json;charset=utf-8";
         $content_type = "";
         $headers = array(
-            'X-Ca-Key' => $app_key,
-            'Accept' => $request_header_accept
+        'X-Ca-Key' => $app_key,
+        'Accept' => $request_header_accept
         );
         ksort($headers);
         $header_str = "";
         $header_ignore_list = array('X-CA-SIGNATURE', 'X-CA-SIGNATURE-HEADERS', 'ACCEPT', 'CONTENT-MD5', 'CONTENT-TYPE', 'DATE');
         $sig_header = array();
         foreach($headers as $k => $v) {
-            if(in_array(strtoupper($k), $header_ignore_list)) {
-                continue;
-            }
-            $header_str .= $k . ':' . $v . "\n";
-            array_push($sig_header, $k);
+        if(in_array(strtoupper($k), $header_ignore_list)) {
+        continue;
+        }
+        $header_str .= $k . ':' . $v . "\n";
+        array_push($sig_header, $k);
         }
         $url_str = $request_uri;
         $para_array = array();
@@ -189,7 +193,7 @@ class Message extends CommonModel
         $info = curl_getinfo($ch);
         curl_close($ch);
         return $ret;
-    }
+}
     /**
      * 发送邮件
      * @param $to
