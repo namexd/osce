@@ -105,7 +105,7 @@ class Message extends CommonModel
                                     //$hello = array("app_key"=>$app_key,"app_secret"=>$app_secret,"request_paras"=>$request_paras);
                                     //return $hello;
 
-                           $hello = $this->do_get($app_key, $app_secret, $request_host, $request_uri, $request_method, $request_paras, $info);
+                                    $this->do_get($app_key, $app_secret, $request_host, $request_uri, $request_method, $request_paras, $info);
                                     $msgNum++;
                 }
 
