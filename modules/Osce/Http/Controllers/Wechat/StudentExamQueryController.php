@@ -51,7 +51,7 @@ class StudentExamQueryController extends CommonController
             $user = Auth::user();
             if (empty($user)) {
                 //return  redirect()   ->route('osce.wechat.user.getLogin');
-                return  redirect('http:/'.config('wechat.redirect_url').'/osce/wechat/user/login') ;//由于微信授权回调网站不是主网址
+                return  redirect('http://'.config('wechat.redirect_url').'/osce/wechat/user/login') ;//由于微信授权回调网站不是主网址
                 //throw new \Exception('当前用户未登陆');
             }
             //检查用户是学生还是监考老师
