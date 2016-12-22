@@ -1391,7 +1391,7 @@ class Student extends CommonModel
             if (empty($sendType['student'])) {
                 throw new \Exception('请到系统设置中设置发送消息的方式');
             }
-            
+
             try {
                 $list   =   ExamOrder::where('exam_id','=',$examId)->with('student')->with('exam')->get();
 
