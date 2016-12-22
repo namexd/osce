@@ -18,7 +18,7 @@ class Message extends CommonModel
     public    $incrementing = true;
     protected $guarded      = [];
     protected $hidden       = [];
-    protected $fillable     = ['to', 'content', 'decode_type', 'access', 'status'];
+    protected $fillable     = ['to', 'content', 'decode_type', 'access','template' ,'status'];
 
 
     /**
