@@ -58,7 +58,7 @@
                     <td>{{$item->mobile}}</td>
                     <td>{{$item->original_score_total}}</td>
                     <td>{{round($item->score_total, 2)}}</td>
-                    <td>{{$item->name}} 同学，2016年临床医学专业临床技能多站考试你的成绩为 {{round($item->score_total, 2)}} 分（总分200分）。如需查看成绩反馈，请于6月13~24日10点~17点到临床教学楼临床技能中心4039办公室查询{{config('osce.sms_signature','【华西临床技能中心】')}}</td>
+                    <td>{{$item->name}} 同学，临床医学专业临床技能多站考试你的成绩为 {{round($item->score_total, 2)}} 分。</td>
                 </tr>
                 @empty
                 @endforelse
