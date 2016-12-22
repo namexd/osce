@@ -1230,10 +1230,18 @@ class Student extends CommonModel
         $smsContent = view('osce::admin.systemManage.student_inform',['notice'=>$notice->first(),'timeData'=>$timeData])->render();
 
         $smsContent =   $this->linshi($smsContent);
+        $notice = $notice->first();
+        //模板1类型 mb1 模板2类型 mb2 依此类推 变量name1 name2 以此类推
+        $name1 = $notice->student->name;
+        $name2 = implode('、',$timeData);
+        $name3 = $notice->exam->address;
+        $name4 = $notice->exam->name;
+        $template = array("mb"=>"mb4","name1"=>$name1,"name2"=>$name2,"name3"=>$name3,"name4"=>$name4);
+        //print_r($template);
         try
         {
 
-            AppCommon::sendSms($to,$smsContent,$this   ->  getEmsConfig(),$type);
+            AppCommon::sendSms($to,$smsContent,$template,$this   ->  getEmsConfig(),$type);
 //            $path   =   public_path('osce').'/sms.txt';
 //            $f     =   fopen($path,'a');
 //            fwrite($f,$smsContent);

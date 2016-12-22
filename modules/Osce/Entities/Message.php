@@ -67,7 +67,7 @@ class Message extends CommonModel
                                     $TemplateCode1 = config('message.messages.sms.TemplateCode1');
                                     $TemplateCode2 = config('message.messages.sms.TemplateCode2');
                                     $TemplateCode3 = config('message.messages.sms.TemplateCode3');
-
+                                    $TemplateCode4 = config('message.messages.sms.TemplateCode4');
                                     if($template->mb =="mb1"){
                                         $TemplateCode = $TemplateCode1;
                                         $name1 = $template->name1;
@@ -83,6 +83,14 @@ class Message extends CommonModel
                                         $name1 = $template->name1;
                                         $name2 = $template->name2;
                                         $content = "{\"name\":\"$name1\",\"val\":\"$name2\"}";
+                                    }
+                                    if($template->mb =="mb4"){
+                                        $TemplateCode = $TemplateCode4;
+                                        $name1 = $template->name1;
+                                        $name2 = $template->name2;
+                                        $name3 = $template->name3;
+                                        $name4 = $template->name4;
+                                        $content = "{\"name\":\"$name1\",\"val\":\"$name2\",\"val1\":\"$name3\",\"val2\":\"$name4\"}";
                                     }
 
                                    $request_paras = array(
