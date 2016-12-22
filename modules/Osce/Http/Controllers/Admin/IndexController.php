@@ -135,8 +135,10 @@ class IndexController extends CommonController
                 {
                     foreach ($data as $item)
                     {
-                        $content = $item->name." 同学，2016年临床医学专业临床技能多站考试你的成绩为 ".round($item->score_total, 2)." 分（总分200分）。如需查看成绩反馈，请于6月13~24日10点~17点到临床教学楼临床技能中心4039办公室查询";
-                        AppCommon::sendSms($item->mobile, $content);
+                        $content = $item->name." 同学，临床医学专业临床技能多站考试你的成绩为 ".round($item->score_total, 2)." 分。";
+                        //模板1类型 mb1 模板2类型 mb2 依此类推 变量name1 name2 以此类推
+                        $template = array("mb"=>"mb3","name1"=>round($item->score_total, 2));
+                        AppCommon::sendSms($item->mobile, $content,$template);
                     }
                     return $this->success_data([], 1, '发送成功！');
                 }

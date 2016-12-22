@@ -31,7 +31,7 @@ class Common{
      * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      *
      */
-    public static function sendSms($mobile,$message,$access = '',$type = 'msg')
+    public static function sendSms($mobile,$message,$template,$access = '',$type = 'msg')
     {
 
 //        $sender=\App::make('messages.sms');
@@ -41,12 +41,14 @@ class Common{
         $mobile  = json_encode($mobile);
         $message = json_encode($message);
         $access  = json_encode($access);        //保存域名之类（第三方发送认证参数）
+        $template = json_encode($template);
 
         $datas = [
             'to'            => $mobile,
             'content'       => $message,
             'decode_type'   => $type,               //默认为短信（短信：msg，邮件：email, 微信：wechat）
             'access'        => $access,
+            'template'      =>$template,
             'status'        => 0,
         ];
         $messageModel = new \Modules\Osce\Entities\Message();
@@ -54,6 +56,9 @@ class Common{
         if (!$result){
             throw new \Exception('信息写入失败！');
         }
+        //$hello = $messageModel->sendMessage();
+        //print_r($hello);
+        //exit;
     }
 
     /**
