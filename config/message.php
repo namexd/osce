@@ -12,7 +12,7 @@ return array (
       'TemplateCode2' => 'SMS_35005390',
       'TemplateCode3' => 'SMS_34860490',
       'TemplateCode4' => 'SMS_35070529',
-      'TemplateCode5' => 'SMS_35305052',
+      'TemplateCode5' => 'SMS_35100044',
        'TemplateCode6' => 'SMS_35100040',
 
 
