@@ -333,7 +333,8 @@ class InvitationController extends CommonController
 
         $user = Auth::user();
         if (empty($user)) {
-            throw new \Exception('未找到当前操作人信息');
+            return  redirect()   ->route('osce.wechat.user.getLogin');
+            //throw new \Exception('未找到当前操作人信息');
         }
         $userId = $user->id;
 
