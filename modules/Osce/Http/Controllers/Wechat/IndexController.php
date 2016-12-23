@@ -14,6 +14,11 @@ class IndexController extends CommonController
 {
 
     public function getIndex(){
+        $user = Auth::user();
+        if (empty($user)) {
+            return  redirect()   ->route('osce.wechat.user.getLogin');
+            //throw new \Exception('未找到当前操作人信息');
+        }
         return view('osce::wechat.index.index');
     }
 }
