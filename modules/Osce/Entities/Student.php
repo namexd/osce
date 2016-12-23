@@ -1225,7 +1225,7 @@ class Student extends CommonModel
         $timeData   =   [];
         foreach($timeArray as $time)
         {
-            $timeData[] =   date('Y年m月d日H时i分',strtotime($time));
+            $timeData[] =   date('d年m月d日H时i分',strtotime($time));
         }
         $smsContent = view('osce::admin.systemManage.student_inform',['notice'=>$notice->first(),'timeData'=>$timeData])->render();
 

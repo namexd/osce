@@ -97,6 +97,8 @@ class StudentController extends CommonController
 //            if(empty($studentOpenid)){
 //                throw new \Exception('没有学生信息');
 //            }
+
+
             if(!$student->sendMsg($examId)){
                 throw new \Exception('发送通知失败');
             }

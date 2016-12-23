@@ -93,6 +93,7 @@ class Message extends CommonModel
                                         $content = "{\"name\":\"$name1\",\"val\":\"$name2\",\"val1\":\"$name3\",\"val2\":\"$name4\"}";
                                     }
 
+
                                    $request_paras = array(
                                         'ParamString' => $content,
                                         'RecNum' => $to,
@@ -105,7 +106,8 @@ class Message extends CommonModel
                                     //$hello = array("app_key"=>$app_key,"app_secret"=>$app_secret,"request_paras"=>$request_paras);
                                     //return $hello;
 
-                                    $this->do_get($app_key, $app_secret, $request_host, $request_uri, $request_method, $request_paras, $info);
+                                    $hello = $this->do_get($app_key, $app_secret, $request_host, $request_uri, $request_method, $request_paras, $info);
+
                                     $msgNum++;
                 }
 
