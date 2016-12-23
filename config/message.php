@@ -12,6 +12,8 @@ return array (
       'TemplateCode2' => 'SMS_35005390',
       'TemplateCode3' => 'SMS_34860490',
       'TemplateCode4' => 'SMS_35070529',
+       'TemplateCode5' => 'SMS_35085054',
+
       'request_host' => 'http://sms.market.alicloudapi.com',
       'request_uri' => '/singleSendSms',
     ),
