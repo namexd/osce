@@ -165,12 +165,13 @@ class ExamResult extends CommonModel
                     $examResult = $testResult->AcquireExam($student_id,$studentExamScreeningIdArr);
 
                     //成绩详情url地址
-                    $url = route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$screening_id,'station_id'=>$stationId]);
+                    //$url = route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$screening_id,'station_id'=>$stationId]);
+                    $url = 'http://'.config('wechat.redirect_url').'/osce/wechat/student-exam-query/exam-details?exam_screening_id='.$screening_id.'&station_id='.$stationId ;//由于微信授权回调网站不是主网址
 
                     $msgData = [
                         [
                             'title' => '考试成绩查看',
-                            'desc'  => $userInfo->name.'同学的 '.$exam->name.' 考试的总成绩为：'.$examResult.'分',
+                            'desc'  => $userInfo->name.'同学的 '.$exam->name.' 考试的总成绩为：'.$examResult.'分'.'多场考试至（首页-成绩查询-选择考场）详细查看！',
                             'url'   => $url,
                         ],
                     ];
