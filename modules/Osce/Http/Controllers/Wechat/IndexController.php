@@ -9,6 +9,7 @@
 namespace Modules\Osce\Http\Controllers\Wechat;
 
 use Modules\Osce\Http\Controllers\CommonController;
+use Illuminate\Support\Facades\Auth;
 
 class IndexController extends CommonController
 {
