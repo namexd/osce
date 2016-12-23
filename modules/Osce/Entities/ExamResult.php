@@ -165,8 +165,8 @@ class ExamResult extends CommonModel
                     $examResult = $testResult->AcquireExam($student_id,$studentExamScreeningIdArr);
 
                     //成绩详情url地址
-                    //$url = route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$screening_id,'station_id'=>$stationId]);
-                    $url = 'http://'.config('wechat.redirect_url').'/osce/wechat/student-exam-query/exam-details?exam_screening_id='.$screening_id.'&station_id='.$stationId ;//由于微信授权回调网站不是主网址
+                    $url = route('osce.wechat.student-exam-query.getExamDetails',['exam_screening_id'=>$screening_id,'station_id'=>$stationId]);
+                    //$url = 'http://'.config('wechat.redirect_url').'/osce/wechat/student-exam-query/exam-details?exam_screening_id='.$screening_id.'&station_id='.$stationId ;//由于微信授权回调网站不是主网址
 
                     $msgData = [
                         [
