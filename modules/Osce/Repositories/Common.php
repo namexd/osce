@@ -191,7 +191,7 @@ class Common
     {
         $message = '恭喜你已经成功注册OSCE考试系统，请使用手机号进行登录，登录密码:' . $password . ',请不要轻易将密码告诉他人';
         //模板1类型 mb1 模板2类型 mb2 依此类推 变量name1 name2 以此类推
-        $template = array("mb"=>"mb2","name1"=>$password);
+        $template = array("mb"=>"mb6","name1"=>$password);
         \App\Repositories\Common::sendSms($mobile, $message,$template);
 
 //        $sender = \App::make('messages.sms');
