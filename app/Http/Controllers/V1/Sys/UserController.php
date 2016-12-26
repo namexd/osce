@@ -609,6 +609,8 @@ class UserController extends ApiBaseController {
 			$template = array("mb"=>"mb1","name1"=>$verify->code);
 
 			Common::sendSms($verify->mobile,'注册验证码：'.$verify->code,$template);
+			$messageContro = \App::make('Modules\Osce\Http\Controllers\Admin\MessageController');
+			$messageContro ->getSendMessage();
 			return response()->json(
 					$this->success_data($dataReturn,1,'短信已发送')
 			);
