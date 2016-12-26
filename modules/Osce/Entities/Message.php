@@ -55,6 +55,10 @@ class Message extends CommonModel
                                     break;
                     //case 'msg'    :                                             //1、发送短信（调用发送短信方法）
                     default       :
+                                    if(empty($template)){
+                                        \Log::alert('template数据没有写入');
+                                        break;
+                                    }
                                     //$content    .=  config('osce.sms_signature','【华西临床技能中心】');
                                     $app_key = config('message.messages.sms.app_key');
                                     $app_secret = config('message.messages.sms.app_secret');
