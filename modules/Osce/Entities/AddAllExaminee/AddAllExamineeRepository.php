@@ -55,7 +55,6 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
         $examId = $exam->id;    //获取考试ID
 //        $connection = \DB::connection('osce_mis');
 //        $connection->beginTransaction();
-
         try {
             $data = $this->model->getData();
             //查询是否有父考试，并获取父考试中所有的学生用户ID
@@ -142,7 +141,9 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
 
             //更新考试的人数
             $exam = Exam::doingExam($examId);
-            $exam->total = $sucNum + $exam->total;
+            $total = Student::where('exam_id',$examId)->count();
+            //$exam->total = $sucNum + $exam->total;
+            $exam->total = $sucNum + $total;
             if (!$exam->save()) {
                 throw new \Exception('保存考试人数失败！');
             }
@@ -168,7 +169,6 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
             unset($userData);
 //            $connection->commit();
             return $sucNum;     //返回导入成功的个数
-
         } catch (\Exception $ex)
         {
             if ($ex->getCode() == 23000) {
