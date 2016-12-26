@@ -107,7 +107,7 @@ class Message extends CommonModel
                                     //$hello = array("app_key"=>$app_key,"app_secret"=>$app_secret,"request_paras"=>$request_paras);
                                     //return $hello;
 
-                                    $hello = $this->do_get($app_key, $app_secret, $request_host, $request_uri, $request_method, $request_paras, $info);
+                                    $this->do_get($app_key, $app_secret, $request_host, $request_uri, $request_method, $request_paras, $info);
 
                                     $msgNum++;
                 }
@@ -119,8 +119,10 @@ class Message extends CommonModel
                 }
             }
         }
+
         $backMsg = ($msgNum?'短信：'.$msgNum.'条；':'').($emailNum?'邮件：'.$emailNum.'条；':'').($wechatNum?'微信：'.$wechatNum.'条；':'');
-        return ($backMsg == '')? '没有发送信息！' : '成功发送：'.$backMsg;
+        //return ($backMsg == '')? '没有发送信息！' : '成功发送：'.$backMsg;
+        ($backMsg == '')? \Log::alert('没有发送信息！'):  \Log::alert('成功发送：'.$backMsg);
     }
 
     /**
@@ -203,7 +205,7 @@ class Message extends CommonModel
         $ret = curl_exec($ch);
         $info = curl_getinfo($ch);
         curl_close($ch);
-        return $ret;
+        //return $ret;
 }
     /**
      * 发送邮件
