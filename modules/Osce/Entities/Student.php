@@ -1242,6 +1242,8 @@ class Student extends CommonModel
         {
 
             AppCommon::sendSms($to,$smsContent,$template,$this   ->  getEmsConfig(),$type);
+            $messageContro = \App::make('Modules\Osce\Http\Controllers\Admin\MessageController');
+            $messageContro ->getSendMessage();
 //            $path   =   public_path('osce').'/sms.txt';
 //            $f     =   fopen($path,'a');
 //            fwrite($f,$smsContent);

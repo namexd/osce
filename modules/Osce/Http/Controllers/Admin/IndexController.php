@@ -140,6 +140,8 @@ class IndexController extends CommonController
                         $template = array("mb"=>"mb3","name1"=>round($item->score_total, 2));
                         AppCommon::sendSms($item->mobile, $content,$template);
                     }
+                    $messageContro = \App::make('Modules\Osce\Http\Controllers\Admin\MessageController');
+                    $messageContro ->getSendMessage();
                     return $this->success_data([], 1, '发送成功！');
                 }
             }
