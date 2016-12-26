@@ -386,7 +386,7 @@ class Notice extends CommonModel
         //签名名称
         $SingName = config('message.messages.sms.SingName');
         $url = preg_match('/id.(\d*)/',$url,$a)?$a[1]:0;
-        $content = "{\"name\":\"$notice->exam->name\",\"val\":\"$url\"}";
+        $content = "{\"name\":\"$notice->name\",\"val\":\"$url\"}";
 
         $info = "";
 
