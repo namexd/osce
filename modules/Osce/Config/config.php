@@ -86,7 +86,7 @@ return [
 		],
 		3 =>[
 			'id'=>3,
-			'name'=>'腕表',
+			'name'=>'NFC',
 		]
 	],
 	'manager'=>[
