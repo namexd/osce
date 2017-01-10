@@ -59,7 +59,7 @@ class Message extends CommonModel
                                         \Log::alert('template数据没有写入');
                                         break;
                                     }
-                                    //$content    .=  config('osce.sms_signature','【华西临床技能中心】');
+                                    //$content    .=  config('osce.sms_signature','【<!--速立达-->临床技能中心】');
                                     $app_key = config('message.messages.sms.app_key');
                                     $app_secret = config('message.messages.sms.app_secret');
                                     $request_uri = config('message.messages.sms.request_uri');

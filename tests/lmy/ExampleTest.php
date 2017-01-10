@@ -401,7 +401,7 @@ class ExampleTest extends TestCase
     /*   public function testSendSms(){
            //mobi
           $sender=App::make('messages.sms');
-           dd($sender->send('13980757127','验证码：'.time().'【敏行医学】'));
+           dd($sender->send('13980757127','验证码：'.time().'【<!--速立达-->医学】'));
 
            //userid
            //$sender=App::make('messages.pm');
@@ -423,16 +423,16 @@ class ExampleTest extends TestCase
             *
           dd($sender->messages(1));
 
-           dd($sender->send(1,'验证码：'.time().'【敏行医学】'));
+           dd($sender->send(1,'验证码：'.time().'【<!--速立达-->医学】'));
 
            //email
            $sender=App::make('messages.email');
            dd($sender->messages(1));
-           dd($sender->send('111@13.com','验证码：'.time().'【敏行医学】'),'注册信息');
+           dd($sender->send('111@13.com','验证码：'.time().'【<!--速立达-->医学】'),'注册信息');
 
            //openid
            $sender=App::make('messages.wechat');
-           dd($sender->send('fewq3ffw','验证码：'.time().'【敏行医学】'));
+           dd($sender->send('fewq3ffw','验证码：'.time().'【<!--速立达-->医学】'));
 
 
     }*/

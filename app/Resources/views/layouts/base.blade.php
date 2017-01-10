@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>@section('title') 敏行综合管理系统 @show{{-- 页面标题 --}}</title>
+    <title>@section('title') <!--速立达-->综合管理系统 @show{{-- 页面标题 --}}</title>
     <meta name="description" content="JkBoss" />
     <meta name="keywords" content="JkBoss" />
-    <meta name="author" content="敏行综合管理系统" />
+    <meta name="author" content="<!--速立达-->综合管理系统" />
     <meta name="renderer" content="webkit">{{-- 360浏览器使用webkit内核渲染页面 --}}
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />{{-- IE(内核)浏览器优先使用高版本内核 --}}
 
