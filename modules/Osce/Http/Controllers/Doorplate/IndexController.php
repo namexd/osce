@@ -165,7 +165,7 @@ class IndexController extends CommonController
     }
 
     /**
-     * 当前组满足华西
+     * 当前组满足<!--速立达-->
      * @method GET
      * @url /osce/doorplate/current-set
      * @author wt <wangtao@sulida.com>
@@ -209,7 +209,7 @@ class IndexController extends CommonController
     }
 
     /**
-     * 获取当前组考生队列（满足华西）
+     * 获取当前组考生队列（满足<!--速立达-->）
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Support\Collection
      *
@@ -290,7 +290,7 @@ class IndexController extends CommonController
     }
 
     /**
-     * 获取下一组考生队列（满足华西）
+     * 获取下一组考生队列（满足<!--速立达-->）
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Support\Collection
      *
@@ -331,7 +331,7 @@ class IndexController extends CommonController
     }
 
     /**
-     * 下一组满足华西
+     * 下一组满足<!--速立达-->
      * @method GET
      * @url /osce/doorplate/next-set
      * @author wt <wangtao@sulida.com>

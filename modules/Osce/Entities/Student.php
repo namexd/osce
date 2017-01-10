@@ -1405,7 +1405,7 @@ class Student extends CommonModel
 //                        $this->sendWechat($value, $studentOrder->student->mobile, $url);
 //                    }
 
-//                    $str    =   '今天上午不慎将系统调试过程的短信发送给大家，造成误解，请大家谅解，正式的考试时间通知将在稍后发出。【敏行医学】';
+//                    $str    =   '今天上午不慎将系统调试过程的短信发送给大家，造成误解，请大家谅解，正式的考试时间通知将在稍后发出。【<!--速立达-->医学】';
 //                    $sender=\App::make('messages.sms');
 //                    $sender->send($value->student->mobile,$str);
 

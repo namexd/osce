@@ -392,7 +392,7 @@ class Notice extends CommonModel
 
         foreach($to as $mobile)
         {
-            //$sender ->  send($mobile,implode('',$content).' 【敏行医学】');
+            //$sender ->  send($mobile,implode('',$content).' 【<!--速立达-->医学】');
 
             $request_paras = array(
                 'ParamString' => $content,
