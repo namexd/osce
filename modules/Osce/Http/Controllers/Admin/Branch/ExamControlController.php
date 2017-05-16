@@ -206,7 +206,8 @@ class ExamControlController extends CommonController
                 'student_id'    => 'required|integer'   //学生id
             ]);
 
-            $exam_id    = $request->input('exam_id');
+            //$exam_id    = $request->input('exam_id');
+            $exam_id    =81;
             $student_id = $request->input('student_id');
 
             $examQueue = ExamQueue::where('exam_id',$exam_id)->where('student_id',$student_id)->where('status',2)->first();
