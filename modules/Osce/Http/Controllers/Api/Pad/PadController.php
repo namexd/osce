@@ -392,7 +392,7 @@ class PadController extends  CommonController{
         ]);
 
         try {
-            $exam = Exam::doingExam(81);
+            $exam = Exam::doingExam();
             //获取当前的服务器时间
             $date = date('Y-m-d H:i:s');
             //通过考生的腕表id来找到对应的队列id
