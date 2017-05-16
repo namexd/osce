@@ -392,6 +392,10 @@ class PadController extends  CommonController{
         ]);
 
         try {
+            return response()->json(
+                $this->success_data([
+                ], 1, '结束考试成功')
+            );
             $exam = Exam::doingExam();
             //获取当前的服务器时间
             $date = date('Y-m-d H:i:s');
