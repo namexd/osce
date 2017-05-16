@@ -394,6 +394,9 @@ class PadController extends  CommonController{
         try {
             return response()->json(
                 $this->success_data([
+                    'end_time'          => '2017-05-16 15:51:00',
+                    'exam_screening_id' => 90,
+                    'student_id'        => 649
                 ], 1, '结束考试成功')
             );
             $exam = Exam::doingExam();
