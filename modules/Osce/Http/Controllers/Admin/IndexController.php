@@ -137,7 +137,7 @@ class IndexController extends CommonController
                     {
                         $content = $item->name." 同学，临床医学专业临床技能多站考试你的成绩为 ".round($item->score_total, 2)." 分。";
                         //模板1类型 mb1 模板2类型 mb2 依此类推 变量name1 name2 以此类推
-                        $template = array("mb"=>"mb3","name1"=>round($item->score_total, 2));
+                        $template = array("mb"=>"mb3",'name1'=> $item->name,"name2"=>round($item->score_total, 2));
                         AppCommon::sendSms($item->mobile, $content,$template);
                     }
                     $messageContro = \App::make('Modules\Osce\Http\Controllers\Admin\MessageController');
