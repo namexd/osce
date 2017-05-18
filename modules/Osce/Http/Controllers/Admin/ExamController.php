@@ -137,6 +137,23 @@ class ExamController extends CommonController
             return $this->fail($ex);
         }
     }
+    //强制结束考试
+    public function stopexam(Request $request, Exam $exam){
+        //验证
+        $this->validate($request, [
+            'id' => 'required|integer'
+        ]);
+
+        try {
+            //获取id
+            $id = $request->input('id');  //id为考试id
+
+            $exam->stopData($id);
+            return redirect('osce/admin/exam/exam-list');
+        } catch (\Exception $ex) {
+            return $this->fail($ex);
+        }
+    }
 
     /**
      * 新增考试表单页面

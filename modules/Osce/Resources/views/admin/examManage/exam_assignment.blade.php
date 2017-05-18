@@ -79,18 +79,24 @@
                                 <button class="btn btn-primary" {{($item->status==2 && $item->real_push==0)?'':'disabled'}} type="button">发布成绩</button>
                             </a>
                         @endif
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
 
-        <div class="pull-left">
-            共{{$data->total()}}条
-        </div>
-        <div class="btn-group pull-right">
-           {!! $data->appends($_GET)->render() !!}
-        </div>
-    </form>
+                        @if($item->status==2)
+                            考试已结束
+                        @else
+                            <a href="javascript:if(confirm('确实要结束考试吗?'))location='{{route('osce.admin.exam.stopexam',['id'=>$item->id])}}'"><span class="read  state1 detail">结束考试</span></a>
+                        @endif
+</td>
+</tr>
+@endforeach
+</tbody>
+</table>
+
+<div class="pull-left">
+共{{$data->total()}}条
+</div>
+<div class="btn-group pull-right">
+{!! $data->appends($_GET)->render() !!}
+</div>
+</form>
 </div>
 @stop{{-- 内容主体区域 --}}

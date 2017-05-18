@@ -331,6 +331,25 @@ class Exam extends CommonModel
         }
     }
 
+    public function stopData($id){
+        try {
+            //获得当前exam的实例
+/*            $examObj = $this->findOrFail($id);
+            $enddt = $examObj->end_dt;
+            $enddt = strtotime($enddt);
+            $nowtime = time();
+            if($nowtime>$enddt){
+                throw new \Exception('该考试还没有到结束时间！');
+            }*/
+            $this->where('id', $id)
+                ->update(['status' => 2]);
+
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+     }
+
+
     /**
      * 添加考试
      * @access public

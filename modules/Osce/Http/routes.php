@@ -1,4 +1,7 @@
 <?php
+Route::get('/mi', function () {
+	return bcrypt('123456');
+});
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 		Route::get('login/index', ['uses' => 'LoginController@getIndex', 'as' => 'osce.admin.getIndex']);
@@ -181,6 +184,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('user/judge-user-role',['uses'=>'UserController@getJudgeUserRole','as'=>'osce.admin.user.getJudgeUserRole']);
 
 		//考试
+		Route::get('exam/stopexam', 	['uses'=>'ExamController@stopexam','as'=>'osce.admin.exam.stopexam']);
 		Route::get('exam/exam-list', 	['uses'=>'ExamController@getExamList','as'=>'osce.admin.exam.getExamList']);
 		Route::get('exam/delete', 	['uses'=>'ExamController@postDelete','as'=>'osce.admin.exam.postDelete']);
 		Route::get('exam/choose-exam-arrange', 	['uses'=>'ExamController@getChooseExamArrange','as'=>'osce.admin.exam.getChooseExamArrange']);  //判定应该载入哪个安排页面
