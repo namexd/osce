@@ -1,6 +1,6 @@
 <?php
-Route::get('/mi', function () {
-	return bcrypt('123456');
+Route::get('/test/mi', function () {
+	return bcrypt(request()->get('value')?:123456);
 });
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
