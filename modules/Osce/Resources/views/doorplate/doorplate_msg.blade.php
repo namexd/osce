@@ -162,12 +162,12 @@ if(!empty($errorsInfo)){
 
     <script src="{{asset('osce/admin/plugins/js/plugins/layer/layer.min.js')}}"></script>
     <script>
-        setInterval(function(){
+        /*setInterval(function(){
         $(function () {
             show();
         })
 		},3
-		);
+		);*/
 
             function show() {
 
