@@ -392,13 +392,13 @@ class PadController extends  CommonController{
         ]);
 
         try {
-            /*return response()->json(
+            return response()->json(
                 $this->success_data([
-                    'end_time'          => '2017-05-16 15:51:00',
-                    'exam_screening_id' => 90,
-                    'student_id'        => 649
+                    'end_time'          => '2017-05-24 15:51:00',
+                    'exam_screening_id' => 96,
+                    'student_id'        => 880
                 ], 1, '结束考试成功')
-            );*/
+            );
             $exam = Exam::doingExam();
             //获取当前的服务器时间
             $date = date('Y-m-d H:i:s');
