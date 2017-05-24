@@ -18,12 +18,29 @@
     }
     .btn.btn-primary{
         padding: 4px 9px; !important;
+		margin:0;
     }
+	table tbody tr td:last-child{white-space: nowrap;}
+	table tbody tr td:last-child a:link:hover{text-decoration: none;}
     </style>
 @stop
 
 @section('only_js')
    <script src="{{asset('osce/admin/examManage/exam_manage.js')}}" ></script> 
+   <script>
+		function stop_exam(id) {
+            //删除用户
+            var thisElement=$(this);
+            var _layer;
+            _layer = layer.confirm('是否确认结束考试？', {
+                title:"结束考试",
+                btn: ['确定','取消'] //按钮
+            }, function(){
+				window.location.href = "{{route('osce.admin.exam.stopexam')}}?id="+id;
+                
+            });
+        }
+   </script>
 @stop
 
 
@@ -79,11 +96,14 @@
                                 <button class="btn btn-primary" {{($item->status==2 && $item->real_push==0)?'':'disabled'}} type="button">发布成绩</button>
                             </a>
                         @endif
-
-                        @if($item->status==2)
-                            考试已结束
+							
+							
+                        @if($item->status==0 || $item->status==2)
+							<a href="javascript:void (0);">
+                                <button class="btn btn-primary" disabled type="button">结束考试</button>
+                            </a>
                         @else
-                            <a href="javascript:if(confirm('确实要结束考试吗?'))location='{{route('osce.admin.exam.stopexam',['id'=>$item->id])}}'"><span class="read  state1 detail">结束考试</span></a>
+                            <a href="javascript:stop_exam('{{$item->id}}');"><button class="btn btn-primary" type="button">结束考试</button></a>
                         @endif
 </td>
 </tr>

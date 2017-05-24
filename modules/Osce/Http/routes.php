@@ -2,6 +2,9 @@
 Route::get('/mi', function () {
 	return bcrypt('123456');
 });
+Route::group(['namespace'=>'Modules\Osce\Http\Controllers\Doorplate'],function(){
+	Route::get('/3',	['uses'=>'IndexController@doorStart','as'=>'osce.doorplate.doorplatestart']); //启动入口
+});
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 		Route::get('login/index', ['uses' => 'LoginController@getIndex', 'as' => 'osce.admin.getIndex']);
