@@ -75,7 +75,7 @@ class Billboard
         $currentRoom = ExamQueue::where('exam_queue.student_id', '=', $studentId)
             ->where('exam_queue.exam_id', '=', $examId)
             ->where('exam_queue.room_id', $room_id)
-            ->where('exam_queue.status', '=', 0)
+            ->where('exam_queue.status', '=', 2)
             ->first();
         if(is_null($currentRoom)){
             throw new \Exception('获取当前考场信息失败',-1001);
