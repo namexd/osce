@@ -1,6 +1,6 @@
 <?php
-Route::get('/mi', function () {
-	return bcrypt('123456');
+Route::get('/test/mi', function () {
+	return bcrypt(request()->get('value')?:123456);
 });
 Route::group(['namespace'=>'Modules\Osce\Http\Controllers\Doorplate'],function(){
 	Route::get('/3',	['uses'=>'IndexController@doorStart','as'=>'osce.doorplate.doorplatestart']); //启动入口

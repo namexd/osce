@@ -114,7 +114,7 @@
     <span id="roomName">完成此项考试后请交还考试卡结束考试</span>
   </div>
   <div id="pic">
-    <img src="{{asset('osce/images/u4.png')}}" width="100%" height="100%" align="right">
+    <!--img src="{{--asset('osce/images/u4.png')--}}" width="100%" height="100%" align="right"-->
   </div>
   <div id="background">
     <img src="{{asset('osce/images/bg_02.png')}}" align="bottom">
