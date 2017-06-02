@@ -74,8 +74,8 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
                 $studentData['gender'] = $this->model->handleSex($studentData['gender']);
                 //证件类型处理（将中文转换为对应的数字）
                 $studentData['idcard_type'] = $this->model->handleIdcardType($studentData['idcard_type'], $key+2);
-                //去掉证件号码中的空格
-                $studentData['idcard'] = str_replace(' ', '', $studentData['idcard']);
+                //去掉证件号码中的空格 //小x强转大X
+                $studentData['idcard'] = strtoupper(str_replace(' ', '', $studentData['idcard']));
 
                 //查询用户是否已经参加考试
                 $user = User::where('username', $studentData['mobile'])->select('id')->first();
