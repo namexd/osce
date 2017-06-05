@@ -2,6 +2,10 @@
 Route::get('/test/mi', function () {
 	return bcrypt(request()->get('value')?:123456);
 });
+Route::get('/c',function(){
+	$c = \Cache::flush();
+	dd($c);
+});
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 		Route::get('login/index', ['uses' => 'LoginController@getIndex', 'as' => 'osce.admin.getIndex']);
