@@ -6,16 +6,16 @@
         html, body, div, span, iframe, h1, h3, h4, h5, h6, p, blockquote, pre, a, address,
         big, cite, code, del, em, font, img, ins, small, strong, var, b, u, center, dl,
         dt, dd, ol, ul, li, fieldset, form, label, legend{margin: 0px;padding: 0px}
-        body{width:100%;height:100%;background:#E1E1E8;font-size:16px;line-height:1em;font-family: "微软雅黑";position:relative}
+        body{width:100%;height:100%;background:#E1E1E8;font-size:16px;line-height:1em;font-family: "微软雅黑";position:relative; overflow: hidden}
         ul li{ list-style:none}
-        .pin_box{width:100%;height:auto;margin:50px auto 0;padding: 20px 20px 0 20px;font-size: 44px;}
+        .pin_box{width:100%;height:auto;margin:50px auto 0;padding: 20px 20px 0 20px;font-size: 36px;}
         .pin_box .red{float:right;color:#ED5565;}
         .clearfix:after{content:""; display:table;  clear:both; }
         .clearfix{*zoom:1}
         .pin_title{height:80px;line-height:80px;color:#000;font-weight:bold;text-align: center;}
         #marquee{margin-top:20px}
         #marquee p{margin:0;line-height:2em;}
-        #name_list{width:100%;height:auto;min-height:420px;background:#fff}
+        #name_list{width:100%;height:auto;min-height:250px;max-height:450px;background:#fff; overflow: hidden}
         #name_list dl{float:left}
         #name_list dl dt{height:80px;line-height:80px;background:#2B3A40;color:#fff;text-align:center}
         #name_list dl dd{text-align: center;line-height:1.5em;padding:10px;color:#333;}

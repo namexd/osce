@@ -229,9 +229,23 @@ class IndexController extends CommonController
         try{
 //            $ExamQueue = new ExamQueue();
 //            $examQueue = $ExamQueue->getExamineeByRoom($exam_id, $room_id, $stations);
-
+             //$this->ExamineRoomCache($exam_id,$room_id);
             //获取当前组 缓存key
             $currKey   = 'current_room_id' . $room_id .'_exam_id'.$exam_id;
+/*            for($i=1;$i<12;$i++){
+                for($j=$i+1;$j<12;$j++){
+                    $r1 = 'current_room_id' . $i .'_exam_id'.$exam_id;
+                    $r2 = 'current_room_id' . $j .'_exam_id'.$exam_id;
+                    $cr1 = \Cache::get($r1);
+                    $cr2 = \Cache::get($r2);
+                    if($cr1==$cr2){
+                        $this->ExamineRoomCache($exam_id,$room_id);
+                        break 2;
+                    }
+                }
+            }*/
+            //$c = \Cache::pull($currKey);
+            //dd($c);\Cache::flush();
             //从缓存中取出 当前组考生队列
             $examQueue = \Cache::get($currKey);
             if(count($examQueue) == 0){

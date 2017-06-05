@@ -261,6 +261,7 @@ class ExamQueue extends CommonModel
                     'exam_queue.exam_screening_id as exam_screening_id',
                     'exam_queue.controlMark as controlMark'
                 )
+                //->orderBy('exam_queue.serialnumber','asc')
                 ->orderBy('exam_queue.next_num', 'asc')
                 ->orderBy('exam_queue.begin_dt', 'asc')
                 ->orderBy('exam_queue.id', 'asc')
@@ -320,6 +321,7 @@ class ExamQueue extends CommonModel
                         'exam_queue.exam_screening_id as exam_screening_id',
                         'exam_queue.controlMark as controlMark'
                     )
+                    //->orderBy('exam_queue.serialnumber','asc')
                     ->orderBy('exam_queue.next_num', 'asc')
                     ->orderBy('exam_queue.begin_dt', 'asc')
                     ->orderBy('exam_queue.id', 'asc')
@@ -335,7 +337,7 @@ class ExamQueue extends CommonModel
                 {
                     $data[]=    $item;
                 }
-                
+
                 return collect($data);//$queueing->merge($temp);
             } else {
                 \Log::error('needNumTooBig', [$queueing->count()]);

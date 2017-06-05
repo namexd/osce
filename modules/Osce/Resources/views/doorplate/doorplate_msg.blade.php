@@ -12,7 +12,7 @@
 
     .top{
         background:#364150;
-        height: 40px;
+        height: 60px;
         line-height: 60px;
         font-size: 20px;
         width: 100%;
@@ -32,7 +32,7 @@
     .exam_msg{
         width: 90%;
         margin: auto;
-        font-size: 60px;
+        font-size: 48px;
         margin-top: 50px;
     }
     .green{

@@ -359,7 +359,8 @@ class Teacher extends CommonModel
                 if(config('debug')==true){
                     $password   =   123456;
                 }else{
-                    $password   =   Common::getRandStr(6);
+                    //$password   =   Common::getRandStr(6);
+                    $password = 123456;
                 }
 
                 $user = $this -> registerUser($userData, $password);

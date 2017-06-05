@@ -523,13 +523,14 @@ class Common
 
             if(is_null($user)){
                 //设置密码
-                $password = (config('osce.debug') == true)? '123456': Common::getRandStr(6);
+                //$password = (config('osce.debug') == true)? '123456': Common::getRandStr(6);
+                $password = (config('osce.debug') == true)? '123456': '123456';
                 //注册用户
                 $userData['username'] = $mobile;
                 unset($userData['mobile']);
                 $user = Common::registerUser($userData, $password);
                 //给用户发送短信
-                Common::sendRegisterEms($mobile, $password);
+                //Common::sendRegisterEms($mobile, $password);
                 //给用户分配角色
                 Common::addUserRoles($user, $role_id);
 
