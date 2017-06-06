@@ -11,11 +11,7 @@
      }
 
     .top{
-<<<<<<< HEAD
-        background:#364150;
-=======
         background:#16beb0;
->>>>>>> c545459994ed4c087db65c7703337725c2c8887b
         height: 60px;
         line-height: 60px;
         font-size: 20px;
