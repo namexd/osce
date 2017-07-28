@@ -46,7 +46,6 @@
                shadeClose: true,
                shade: 0.8,
                area: ['90%', '90%'],
-
                content: 'stopexam?id='+id,
            });
        }
@@ -109,7 +108,7 @@
 							
 							
                         @if($item->status==0 || $item->status==2)
-							<a href="javascript:stop_exam('{{$item->id}}');">
+                            <a href="javascript:void (0);">
                                 <button class="btn btn-primary" disabled type="button">结束考试</button>
                             </a>
                         @else
