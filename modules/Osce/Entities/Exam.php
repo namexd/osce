@@ -345,7 +345,7 @@ class Exam extends CommonModel
             ->update(['status' => 2]);
     }
     public function doStopZexam($id){
-        ExamScreening::where('exam_id', $id)
+        ExamScreening::where('id', $id)
             ->update(['status' => 2]);
         $this::where('id', $id)
             ->update(['status' => 2]);
