@@ -157,10 +157,12 @@ class ExamController extends CommonController
     public function stopfexam(Request $request, Exam $exam){
         //验证
         $this->validate($request, [
-            'id' => 'required|integer'
+            'id' => 'required|integer',
+            'sid' => 'required|integer'
         ]);
         //获取id
-        $id = $request->input('id');  //id为考试id
+        $id = $request->input('id');  //id为分阶段考试id
+        $sid = $request->input('sid');  //id为总考试id
         $exam->doStopFexam($id);
         return redirect("osce/admin/exam/stopexam?id=$id");
 
