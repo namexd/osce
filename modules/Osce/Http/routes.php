@@ -189,6 +189,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//考试
 		Route::get('exam/stopexam', 	['uses'=>'ExamController@stopexam','as'=>'osce.admin.exam.stopexam']);
+		Route::get('exam/stopfexam', 	['uses'=>'ExamController@stopfexam','as'=>'osce.admin.exam.stopfexam']);
+		Route::get('exam/stopzexam', 	['uses'=>'ExamController@stopzexam','as'=>'osce.admin.exam.stopzexam']);
 		Route::get('exam/exam-list', 	['uses'=>'ExamController@getExamList','as'=>'osce.admin.exam.getExamList']);
 		Route::get('exam/delete', 	['uses'=>'ExamController@postDelete','as'=>'osce.admin.exam.postDelete']);
 		Route::get('exam/choose-exam-arrange', 	['uses'=>'ExamController@getChooseExamArrange','as'=>'osce.admin.exam.getChooseExamArrange']);  //判定应该载入哪个安排页面

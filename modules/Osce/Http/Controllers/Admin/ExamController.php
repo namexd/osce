@@ -137,22 +137,45 @@ class ExamController extends CommonController
             return $this->fail($ex);
         }
     }
-    //强制结束考试
+    //强制结束考试(分段)数据展示
     public function stopexam(Request $request, Exam $exam){
         //验证
         $this->validate($request, [
             'id' => 'required|integer'
         ]);
+        //获取id
+        $id = $request->input('id');  //id为考试id
+        $arr = $exam->getStopData($id);
+        $arr1 = $exam->getMainStopStatus($id);
+        $status = $arr1->status;
+        $begin_dt = $arr1->begin_dt;
+        $end_dt = $arr1->end_dt;
+        $data = compact('arr','status','begin_dt','end_dt','id');
+        return view('osce::admin.examManage.exam_stop', ['data' => $data]);
+    }
+    //强制结束考试(分段)执行
+    public function stopfexam(Request $request, Exam $exam){
+        //验证
+        $this->validate($request, [
+            'id' => 'required|integer'
+        ]);
+        //获取id
+        $id = $request->input('id');  //id为考试id
+        $exam->doStopFexam($id);
+        return redirect("osce/admin/exam/stopexam?id=$id");
 
-        try {
-            //获取id
-            $id = $request->input('id');  //id为考试id
+    }
+    //强制结束考试(总)执行
+    public function stopzexam(Request $request, Exam $exam){
+        //验证
+        $this->validate($request, [
+            'id' => 'required|integer'
+        ]);
+        //获取id
+        $id = $request->input('id');  //id为考试id
+        $exam->doStopZexam($id);
+        return redirect("osce/admin/exam/stopexam?id=$id");
 
-            $exam->stopData($id);
-            return redirect('osce/admin/exam/exam-list');
-        } catch (\Exception $ex) {
-            return $this->fail($ex);
-        }
     }
 
     /**

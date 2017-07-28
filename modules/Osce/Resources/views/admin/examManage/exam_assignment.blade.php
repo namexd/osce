@@ -28,7 +28,7 @@
 @section('only_js')
    <script src="{{asset('osce/admin/examManage/exam_manage.js')}}" ></script> 
    <script>
-		function stop_exam(id) {
+		/*function stop_exam(id) {
             //删除用户
             var thisElement=$(this);
             var _layer;
@@ -38,8 +38,18 @@
             }, function(){
 				window.location.href = "{{route('osce.admin.exam.stopexam')}}?id="+id;
                 
-            });
-        }
+            });*/
+       function stop_exam(id){
+           layer.open({
+               type: 2,
+               title: '结束考试',
+               shadeClose: true,
+               shade: 0.8,
+               area: ['90%', '90%'],
+
+               content: 'stopexam?id='+id,
+           });
+       }
    </script>
 @stop
 
@@ -99,7 +109,7 @@
 							
 							
                         @if($item->status==0 || $item->status==2)
-							<a href="javascript:void (0);">
+							<a href="javascript:stop_exam('{{$item->id}}');">
                                 <button class="btn btn-primary" disabled type="button">结束考试</button>
                             </a>
                         @else

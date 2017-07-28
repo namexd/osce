@@ -331,23 +331,25 @@ class Exam extends CommonModel
         }
     }
 
-    public function stopData($id){
-        try {
-            //获得当前exam的实例
-/*            $examObj = $this->findOrFail($id);
-            $enddt = $examObj->end_dt;
-            $enddt = strtotime($enddt);
-            $nowtime = time();
-            if($nowtime>$enddt){
-                throw new \Exception('该考试还没有到结束时间！');
-            }*/
-            $this->where('id', $id)
-                ->update(['status' => 2]);
-
-        } catch (\Exception $ex) {
-            throw $ex;
-        }
+    public function getStopData($id){
+        $data = ExamScreening::where('exam_id', $id)->get();
+        return $data;
      }
+
+    public function getMainStopStatus($id){
+        $arr = $this::where('id', $id)->first();
+        return $arr;
+    }
+    public function doStopFexam($id){
+        return ExamScreening::where('id', $id)
+            ->update(['status' => 2]);
+    }
+    public function doStopZexam($id){
+        ExamScreening::where('exam_id', $id)
+            ->update(['status' => 2]);
+        $this::where('id', $id)
+            ->update(['status' => 2]);
+    }
 
 
     /**
