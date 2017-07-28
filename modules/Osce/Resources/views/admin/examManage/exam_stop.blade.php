@@ -60,7 +60,7 @@
                                     <button class="btn btn-primary" disabled type="button">结束考试</button>
                                 </a>
                             @else
-                                <a href="{{route('osce.admin.exam.stopfexam')}}?id={{$item->id}}"><button class="btn btn-primary" type="button">结束考试</button></a>
+                                <a href="{{route('osce.admin.exam.stopfexam')}}?id={{$item->id}}&sid={{$item->exam_id}}"><button class="btn btn-primary" type="button">结束考试</button></a>
                             @endif
 
                         </td>
