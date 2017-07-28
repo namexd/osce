@@ -164,7 +164,7 @@ class ExamController extends CommonController
         $id = $request->input('id');  //id为分阶段考试id
         $sid = $request->input('sid');  //id为总考试id
         $exam->doStopFexam($id);
-        return redirect("osce/admin/exam/stopexam?id=$id");
+        return redirect("osce/admin/exam/stopexam?id=$sid");
 
     }
     //强制结束考试(总)执行
