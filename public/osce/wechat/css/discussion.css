@@ -5,10 +5,10 @@
 #discussion_ul .p_title{padding:10px 0;font-family: "microsoft yahei";overflow:hidden;text-overflow: ellipsis;white-space: nowrap;}
 #discussion_ul li .main_txt{line-height:1.5em;}
 .p_bottom{border-top:1px solid #ccc;line-height:2.5em;margin-top:10px;}
-.student_name{color:#16BEB0;}
+.student_name{color:#408aff;}
 .comment{display:inline-block;color:#999;}
 
 /*提问与编辑*/
 .quiz_form{padding:15px;}
 #context{height:120px;resize:none;}
-.btn2{background:#1ab394;}
+.btn2{background:#408aff;}

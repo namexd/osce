@@ -3,7 +3,7 @@
     <link href="{{asset('msc/wechat/user/css/commons.css')}}"  rel="stylesheet"/>
     <link rel="stylesheet" href="{{asset('osce/common/css/bootstrapValidator.css')}}">
     <style>
-		    .user_header{width:100%;height:45px;line-height:45px;text-align: center;background:#1ab394;color:#fff; font-size: 16px;}
+		    .user_header{width:100%;height:45px;line-height:45px;text-align: center;background:#408aff;color:#fff; font-size: 16px;}
 		.user_header .header_btn{display:inline-block;width:45px;height:45px;text-align: center}
 
         .btn{
@@ -14,7 +14,7 @@
             margin-top: 10px;
         }
         .text-box{width:94%;margin:0 3%;}
-        .jconfirm.white .jconfirm-box .buttons button.btn-default {background: #1ab394;}
+        .jconfirm.white .jconfirm-box .buttons button.btn-default {background: #408aff;}
         input[type=text],input[type=password]{padding-left: 10px!important;}
     </style>
 @stop
@@ -33,7 +33,7 @@
 	        </div>
 	        <div  class="form-group">
 	        	<input style="float:left;width:60%;" type="text" name="verify" class="form-control ipt_txt" placeholder="请输入验证码"/>
-                <input type="button"class="right btn btn-default" style="width:38%;font-size:14px;padding:0;text-align:center;background:#1ab394;" id="btn" value="发送手机验证码" />
+                <input type="button"class="right btn btn-default" style="width:38%;font-size:14px;padding:0;text-align:center;background:#408aff;" id="btn" value="发送手机验证码" />
 	        </div>
 	        <div class="form-group">
 	            <input type="password" name="password" class="form-control ipt_txt" placeholder="请输入新密码"/>
@@ -41,7 +41,7 @@
 	        <div class="form-group">
 	            <input type="password" name="password_confirmation" class="form-control ipt_txt" placeholder="请重复新密码"/>
 	        </div>
-            <input class="btn" type="submit" style="background:#1ab394;" value="提交审核" />
+            <input class="btn" type="submit" style="background:#408aff;" value="提交审核" />
         </form>
     </div>
     <span id="url" style="display: none;">{{(isset($_GET['reUrl'])?$_GET['reUrl']:'')}}</span>
@@ -86,7 +86,7 @@
                $('#btn').css('background','#ddd'); 
                if(tim == 0){
                     $('#btn').val('发送手机验证码');
-                    $('#btn').css('background','#1ab394');
+                    $('#btn').css('background','#408aff');
                     clearInterval(self);
                 }
             },1000); 

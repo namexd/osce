@@ -216,9 +216,9 @@ function score_query_detail() {
                     symbolSize:4,
                     itemStyle: {
                         normal: {
-                            color:'#1ab394',
+                            color:'#408aff',
                             lineStyle:{
-                                color:'#1ab394'
+                                color:'#408aff'
                             },
                             areaStyle: {
                                 color:'rgba(26,179,148,.3)',

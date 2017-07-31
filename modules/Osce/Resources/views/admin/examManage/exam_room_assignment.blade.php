@@ -29,7 +29,7 @@
         border-radius: 0;
     }
     .select2-container--default .select2-selection--multiple:focus{
-        border-color: #1ab394!important;
+        border-color: #408aff!important;
         width: 100%;
     }
     .control-label{text-align: right;}
@@ -73,7 +73,7 @@
         padding: 0;
         margin: 0;
     }
-    #exam-place tbody tr td:last-child>a{color: #1ab394;}
+    #exam-place tbody tr td:last-child>a{color: #408aff;}
     .panel-options .nav.nav-tabs{
         margin-left: 20px!important;
     }

@@ -88,7 +88,7 @@
 </head>
 <body>
 		<div class="middle-box loginscreen animated fadeInDown">
-			<div style="background:#fff;margin-top:60px;padding:20px;border-top:3px solid #1dc5a3;">
+			<div style="background:#fff;margin-top:60px;padding:20px;border-top:3px solid #408aff;">
 				<div class="logo">
 					<img src="{{asset('osce/images/logo.png')}}" width="100%"/>
 				</div>

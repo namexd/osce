@@ -26,7 +26,7 @@
     /*图片上传*/
     #file {position: relative;overflow: hidden;}
     #file input{position: absolute;right: 0;top: 0;font-size: 100px;}
-    .file-msg{color: #42b2b1;}
+    .file-msg{color: #286090;}
     .upload_list{padding-top:10px;line-height:1em;color:#4f9fcf;}
     .fa-remove:hover{cursor: pointer;}
 </style>

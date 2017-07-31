@@ -23,7 +23,7 @@
 			position: relative;
 			top: -26px;
 			left: 109px;
-			color: #42b2b1;
+			color: #286090;
 		}
     </style>
 @stop

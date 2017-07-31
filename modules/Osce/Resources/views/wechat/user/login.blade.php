@@ -6,7 +6,7 @@
             margin-top: 20px;
 
         }
-        .user_header,.submit_btn,.register{background: #1ab394!important;}
+        .user_header,.submit_btn,.register{background: #408aff!important;}
     </style>
 @stop
 

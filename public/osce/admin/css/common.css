@@ -119,12 +119,12 @@ a{-webkit-touch-callout:none;}
    margin-right: 10px;
 }
 .btn-primary{
-    background-color: #16beb0;
-    border-color: #16beb0;
+    background-color: #408aff;
+    border-color: #408aff;
 }
-.btn-primary:focus{background-color:#1ab394;border-color:#1ab394;}
-.btn-primary:hover{background-color: #42b2b1;border-color: #42b2b1}
-.btn-primary.active,.btn-primary:active,.btn-primary:hover,.open .dropdown-toggle.btn-primary{background-color:#42b2b1;border-color:#42b2b1;color:#FFF}
+.btn-primary:focus{background-color:#408aff;border-color:#408aff;}
+.btn-primary:hover{background-color: #286090;border-color: #286090}
+.btn-primary.active,.btn-primary:active,.btn-primary:hover,.open .dropdown-toggle.btn-primary{background-color:#286090;border-color:#286090;color:#FFF}
 
 .btn-default{background-color: #fff;border-color: #ccc;color: #333;}
 .btn-default2{background-color: #fff;border-color: #ccc;color: #9c9c9c;}
@@ -160,11 +160,11 @@ a.btn:hover {text-decoration: none;}
 /**
  * 表格状态
  */
-.table a .state1{ color:#1ab394;}
+.table a .state1{ color:#408aff;}
 .table a .state2{ color:#ed5565;}
 .table a .state3{ color:#21b9bb;}
 .table a .state4{ color:#c2c2c2;}
-.table .state1{ color:#1ab394;}
+.table .state1{ color:#408aff;}
 .table .state2{ color:#ed5565;}
 .table .state3{ color:#21b9bb;}
 .table .state4{ color:#c2c2c2;}
@@ -250,7 +250,7 @@ body .layer-ext-moon .layui-layer-btn .layui-layer-btn0 {
     background: #ed5565!important;
     border: 1px solid #ed5565!important;
 }
-body .layer-ext-moon .layui-layer-btn a {border: 1px solid #1ab394;}
+body .layer-ext-moon .layui-layer-btn a {border: 1px solid #408aff;}
 .fa-2x{font-size: 16px;}
 
 /*描述超出显示省略号*/
@@ -316,7 +316,7 @@ table tbody tr td:last-child{width: 120px;}
 }
 /*成功导入*/
 .msg-success{
-    color: #3c763d;
+    color: #408aff;
     background-color: #dff0d8!important;
     border-color: #d6e9c6!important;
 }

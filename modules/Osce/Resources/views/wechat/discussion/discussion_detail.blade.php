@@ -29,7 +29,7 @@
             border-bottom: 1px solid #eee;
             font-size: 12px;
         }
-        .item-l{width: 50%;color:#42b2b1;}
+        .item-l{width: 50%;color:#286090;}
         .item-c{width: 45%}
         .item-r{width: 5%}
         .title-con{padding-top: 10px;}
@@ -43,7 +43,7 @@
         }
         .content-l span{margin: 0 3px;}
         .content-l span:first-child{margin-left: 0;}
-        .content-l .student{color: #42b2b1;}
+        .content-l .student{color: #286090;}
         .content-l .time{color: #cccccc;}
         .content-r{
             width: 40%;
@@ -71,7 +71,7 @@
             color: #333!important;
         }
         .btn.btn-default:first-child{
-            background: #1ab394;
+            background: #408aff;
             color: #fff!important;
         }
     </style>

@@ -32,7 +32,7 @@
             border-bottom: 1px solid #eee;
             font-size: 12px;
         }
-        .item-l{width: 50%;color:#42b2b1;}
+        .item-l{width: 50%;color:#286090;}
         .item-c{width: 45%}
         .item-r{width: 5%}
         .title-con{padding-top: 10px;}
@@ -46,7 +46,7 @@
         }
         .content-l span{margin: 0 3px;}
         .content-l span:first-child{margin-left: 0;}
-        .content-l .student{color: #42b2b1;}
+        .content-l .student{color: #286090;}
         .content-l .time{color: #cccccc;}
         .content-r{
             width: 40%;
@@ -67,11 +67,11 @@
             line-height: 30px;
             text-align: center;
         }
-        .btn2{background: #1ab394}
+        .btn2{background: #408aff}
         .has-feedback label~.form-control-feedback {top: 26px;}
         .layui-layer-title{
             background: #fff!important;
-            color: #1ab394!important;
+            color: #408aff!important;
             font-size: 16px!important;
         }
         .layui-layer-btn {
@@ -79,8 +79,8 @@
             border-top: 1px #fff solid !important;
         }
         .layui-layer-btn0{
-            border:1px solid #1ab394!important;
-            background: #1ab394 !important;
+            border:1px solid #408aff!important;
+            background: #408aff !important;
         }
     </style>
 @stop

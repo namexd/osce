@@ -5,11 +5,11 @@
     <link href="{{asset('osce/admin/css/common.css')}}" rel="stylesheet">
     <style>
     .btn-success{
-        background-color: #16beb0!important;
-        border-color: #16beb0!important;
+        background-color: #408aff!important;
+        border-color: #408aff!important;
     }
     .modal-title{color: #676a6c!important;}
-    tbody td .state1{color: #1ab394!important;}
+    tbody td .state1{color: #408aff!important;}
     body {
         font-family: 微软雅黑;
         font-size: 14px;
@@ -157,7 +157,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>角色权限管理</h5>
-                <button type="button" class="btn btn-primary" id="add_role" style="background:#16BEB0;border:1px solid #16BEB0;margin:0;float:right;margin-top:-10px;" data-toggle="modal" data-target="#myModal">新增角色</button>
+                <button type="button" class="btn btn-primary" id="add_role" style="background:#408aff;border:1px solid #408aff;margin:0;float:right;margin-top:-10px;" data-toggle="modal" data-target="#myModal">新增角色</button>
             </div>
             <div class="container-fluid ibox-content">
                 <table class="table table-striped" id="table-striped">

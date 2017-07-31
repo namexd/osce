@@ -28,7 +28,7 @@
 		select{border-radius: 5px;width: 450px;padding: 10px;font-size: 20px;font-family: 黑体;margin: 10px 0}
 		.hide{display: none}
 		.sub{
-			border-radius: 5px;width: 450px;height: 50px;margin-top: 20px;background: #16BEB0;border: none;
+			border-radius: 5px;width: 450px;height: 50px;margin-top: 20px;background: #408aff;border: none;
 			color: #fff;font-family: 黑体;
 			font-size: 20px;
 

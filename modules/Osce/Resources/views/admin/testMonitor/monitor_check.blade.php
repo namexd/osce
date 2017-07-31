@@ -2,7 +2,7 @@
 
 @section('only_css')
     <style>
-        #myModalLabel{color: #16BEB0;}
+        #myModalLabel{color: #408aff;}
         /*强调颜色*/
         .state{color: #ed5565;}
         /*标题展示区域*/
@@ -12,7 +12,7 @@
         .list_box{width:25%;height:150px;padding:15px;float:left}
         .list_box a{color:#666;}
         .list_box a:link:hover {text-decoration: none;}
-        .list_con{height:100%;border-radius: 5px;background-color: #16beb0;position: relative;}
+        .list_con{height:100%;border-radius: 5px;background-color: #408aff;position: relative;}
         .list_con_info{padding-top:12%;margin-left:auto;margin-right:auto;font-weight:bold;color:#fff;font-size: 1.5rem}
         .list_timers{padding-top:.5em;text-align: center;}
     </style>

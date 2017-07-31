@@ -23,7 +23,7 @@
     box-shadow: none;
 }
 .fc-calendar .fc-row > div.fc-today > span.fc-date{color: #686a6e;}
-.fc-content{background-color: #1ab394!important;}
+.fc-content{background-color: #408aff!important;}
 .fc-content>span {
     color: #fff!important;
     box-shadow: none!important;

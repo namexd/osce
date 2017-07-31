@@ -24,7 +24,7 @@
            font-weight: inherit!important;
         }
         .agree{
-            background-color: #16beb0;
+            background-color: #408aff;
         }
     </style>
 

@@ -31,7 +31,7 @@
             </div>
             <div class="sidebar-collapse">
                 <ul class="nav" id="side-menu">
-                    <li class="nav-header" style="background:#16beb0;">
+                    <li class="nav-header" style="background:#408aff;">
                         <div class="profile-element">
                            <span>OSCE管理系统</span>
 

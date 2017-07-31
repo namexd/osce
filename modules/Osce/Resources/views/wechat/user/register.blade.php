@@ -12,13 +12,13 @@
         .form-control{
             color: #333!important;
         }
-        .user_header,.btn{background: #1ab394;}
+        .user_header,.btn{background: #408aff;}
         .must{
             color: #ff0000;
         }
         .layui-layer-title{
             background: #fff!important;
-            color: #1ab394!important;
+            color: #408aff!important;
             font-size: 16px!important;
         }
         .layui-layer-btn {
@@ -26,8 +26,8 @@
             border-top: 1px #fff solid !important;
         }
         .layui-layer-btn0{
-            border:1px solid #1ab394!important;
-            background: #1ab394 !important;
+            border:1px solid #408aff!important;
+            background: #408aff !important;
         }
         i.form-control-feedback.glyphicon.glyphicon-ok, i.form-control-feedback.glyphicon.glyphicon-remove{display: none!important;}
     </style>

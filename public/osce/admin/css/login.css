@@ -1,5 +1,6 @@
 body{background:url('../../images/boxed-bg.jpg') repeat;}
-.logo{margin:10px 0 30px;}
+.logo{margin:10px 0 30px;font-family: "microsoft yahei"; font-size: 24px;color: #408aff;text-align: center; font-weight: bold;  }
+
 h3{text-align:left}
 h3.hh{margin-bottom:50px;color:#99a3b1}
 h3.tt{color:#999;margin:20px 0 10px;padding-left:2px;font-size:14px}
@@ -19,5 +20,5 @@ h3.tt{color:#999;margin:20px 0 10px;padding-left:2px;font-size:14px}
 .check_icon.check{background-position:-32px 0}
 .check_label:hover .check_icon.check{background-position:-32px 0}
 .check_label input{position:absolute;left:-2220px;top:0;opacity: 0}
-.btn-primary{background:#1dc5a3;border:1px solid #1dc5a3;}
-.btn-primary:hover{background-color:#19AB8E!important;}
+.btn-primary{background:#408aff;border:1px solid #408aff;}
+.btn-primary:hover{background-color:#286090!important;}

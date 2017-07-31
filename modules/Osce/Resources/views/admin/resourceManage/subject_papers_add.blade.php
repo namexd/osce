@@ -2,7 +2,7 @@
 
 @section('only_css')
     <style>
-        .modal-title{color: #16beb0!important;}
+        .modal-title{color: #408aff!important;}
     </style>
 @stop
 

@@ -1,14 +1,14 @@
 #examination{width:94%;margin:10px 3% 0;}
 .examination_time{width:100%;height:36px;line-height:36px;background:#fff;}
-.examination_time .tit{display:inline-block;height:36px;color:#1ab394;border-left:2px solid #1ab394;}
+.examination_time .tit{display:inline-block;height:36px;color:#408aff;border-left:2px solid #408aff;}
 #exmination_ul{overflow: hidden;}
 #exmination_ul li{border-top:1px solid #eff3f6;}
 #exmination_ul dl{overflow:hidden;background:#fff;padding:10px 10px 5px;}
 #exmination_ul dd{float:left;width:50%;line-height:1.7em;text-align:left;color:#333;}
 .see_msg{background:#fff;padding-bottom:10px;}
-.see_msg a{color:#1ab394;}
+.see_msg a{color:#408aff;}
 
-/*详情border-left:2px solid #1ab394;*/
+/*详情border-left:2px solid #408aff;*/
 .examination_msg{width:100%;box-sizing: border-box;padding:10px;background:#fff;}
 /*列表样式2列表样式1*/
 .examination_msg .form-group{padding:0; margin-bottom: 0;}

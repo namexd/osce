@@ -8,7 +8,7 @@
 	.cj_tab tr{border-bottom:1px solid #e7eaec;}
 	.cj_tab tr.even{background:#F9F9F9;}
 	.cj_tab th,.cj_tab td{border:none!important;}
-	.cj_tab .see{color:#1ab394;}
+	.cj_tab .see{color:#408aff;}
 	.form-group label{z-index:0!important;}
 	.invigilation{
 		margin:10px 3% 0;

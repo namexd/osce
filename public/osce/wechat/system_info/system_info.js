@@ -60,7 +60,7 @@ function exam_notice() {
                     html +='<li>'+
                                 '<p class="title">'+data[i].name+'</p>'+
                                 '<p class="time"><span class="year">'+data[i].created_at+'</span>'+
-                                    '<a style="color:#1ab394;" class="right" href="'+pars.href+'?id='+data[i].id+'">查看详情&nbsp;&gt;</a>'+
+                                    '<a style="color:#408aff;" class="right" href="'+pars.href+'?id='+data[i].id+'">查看详情&nbsp;&gt;</a>'+
                                 '</p>'+
                             '</li>';
                 }
@@ -116,7 +116,7 @@ function system_notice() {
                             html +='<li>'+
                                         '<p class="title">'+data[i].name+'</p>'+
                                         '<p class="time"><span class="year">'+data[i].created_at+'</span>'+
-                                            '<a style="color:#1ab394;" class="right" href="'+data[i].content+'">查看详情&nbsp;&gt;</a>'+
+                                            '<a style="color:#408aff;" class="right" href="'+data[i].content+'">查看详情&nbsp;&gt;</a>'+
                                         '</p>'+
                                     '</li>';
                         }

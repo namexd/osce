@@ -32,8 +32,8 @@
             color: #9c9c9c;
         }
         .btn.btn-primary.marl_10{
-            background-color: #1ab394;
-            border-color: #1ab394;
+            background-color: #408aff;
+            border-color: #408aff;
         }
         body {
             font-family: 微软雅黑;

@@ -3,7 +3,7 @@
 @section('only_head_css')
 <link href="{{asset('osce/common/css/bootstrapValidator.css')}}" rel="stylesheet">
 <style>
-.btn2{background: #1ab394;width: 96%;}
+.btn2{background: #408aff;width: 96%;}
 .has-feedback label~.form-control-feedback {top: 26px;}
 .tijiao{
         text-align: center;

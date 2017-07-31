@@ -98,7 +98,7 @@
                             <td>{{$item->code}}</td>
                             <td>{{$item->nfc_code}}</td>
                             <td>{{$item->name}}</td>
-                            <td style="color: @if($item->status==1)#16beb0
+                            <td style="color: @if($item->status==1)#408aff
                                               @elseif($item->status==2)#ed5565
                                               @elseif($item->status==3)#f8ac59
                                               @endif

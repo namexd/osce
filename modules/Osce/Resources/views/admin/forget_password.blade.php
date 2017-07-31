@@ -163,10 +163,10 @@
 			margin-top: 10px;
 			font-weight: 600;
 		}
-		.btn:active{background-color: #1dc5a3!important;}
-		.btn:visited{background-color: #1dc5a3!important;}
-		.btn:hover{background-color: #1dc5a3!important;}
-		.btn:focus{background-color: #1dc5a3!important;}
+		.btn:active{background-color: #286090!important;}
+		.btn:visited{background-color: #286090!important;}
+		.btn:hover{background-color: #286090!important;}
+		.btn:focus{background-color: #286090!important;}
 		
 		/*layer alert*/
 		.layui-layer-title{
@@ -186,7 +186,7 @@
 </head>
 <body>
 		<div class="middle-box loginscreen animated fadeInDown">
-			<div style="background:#fff;margin-top:60px;padding:20px;border-top:3px solid #1dc5a3;">
+			<div style="background:#fff;margin-top:60px;padding:20px;border-top:3px solid #408aff;">
 				<div class="logo">
 					<strong>忘记密码</strong>
 					<a href="{{route('osce.admin.getIndex')}}">返回></a>

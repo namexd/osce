@@ -37,7 +37,7 @@
 	padding: 5px 10px 10px 20px;
 	height: 50px;
 	position: relative;
-	border-top: 5px solid #1ab394;
+	border-top: 5px solid #408aff;
 	border-bottom: 1px solid #ddd;
 }
 
@@ -89,7 +89,7 @@
 
 .custom-header nav span:before {
 	font-family: 'fontawesome-selected';
-	color: #1ab394;
+	color: #408aff;
 	position: absolute;
 	text-align: center;
 	width: 100%;
@@ -189,7 +189,7 @@
 
 .fc-calendar .fc-head {
 	background: transparent;
-	color: #1ab394;
+	color: #408aff;
 	font-weight: bold;
 	text-transform: uppercase;
 	font-size: 12px;

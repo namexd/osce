@@ -34,7 +34,7 @@
             width: 53.6px;
         }
         .roll-nav.roll-right.J_tabExit{line-height: 50px;}
-        .nav > li.active {border-left: 4px solid #16beb0!important;}
+        .nav > li.active {border-left: 4px solid #408aff!important;}
         .content-tabs .roll-nav:hover, .page-tabs a:hover {
             color: #999;
             background: #fff;

@@ -16,7 +16,7 @@
             line-height: 10px;
             margin-left: 10px;
             font-size: 16px;
-            color: #16beb0;
+            color: #408aff;
         }
     </style>
 @stop

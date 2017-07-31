@@ -2,7 +2,7 @@
 
 @section('only_css')
     <style>
-        #myModalLabel{color: #16BEB0;}
+        #myModalLabel{color: #408aff;}
         .description-this {
             display: inline-block;
             width: 350px;

@@ -2,7 +2,7 @@
 
 @section('only_css')
     <style>
-        #myModalLabel{color: #16BEB0;}
+        #myModalLabel{color: #408aff;}
         /*强调颜色*/
         .state{color: #ed5565;}
         /*标题展示区域*/
