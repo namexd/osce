@@ -259,4 +259,15 @@ abstract class CommonController extends Controller
     {
         return $this->getCurrentAction()['method'];
     }
+
+    /*返回信息接口*/
+    public function rmsg($code=1, $msg=''){
+        $data = [
+            'status' => $code,
+            'msg' => $msg,
+        ];
+        $data = json_encode($data, JSON_UNESCAPED_UNICODE);
+
+        return $data;
+    }
 }

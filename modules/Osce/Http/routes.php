@@ -17,7 +17,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('export', ['uses'=>'TestController@export']);
 
 		Route::get('choose', ['uses'=>'TestController@choose']);
-		Route::get('classroom', ['uses'=>'TestController@classroom']);
+		Route::get('chooseexam', ['uses'=>'TestController@chooseexam']);
 
 		Route::get('del', ['uses'=>'TestController@del']);
 
@@ -25,22 +25,22 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 
 //考试管理
-	Route::group(['prefix' => "exam", 'namespace' => 'Admin'], function()
+	Route::group(['prefix' => "cexam", 'namespace' => 'Admin'], function()
 	{
-		Route::post('addexam', ['uses'=>'ExamController@addaExame']);
-		Route::get('examlist', ['uses'=>'ExamController@searchExameList']);
-		Route::get('dptexamlist', ['uses'=>'ExamController@searchDepartexamList']);
-		Route::get('examinfo', ['uses'=>'ExamController@searchExameInfo']);
-		Route::get('surestudent', ['uses'=>'ExamController@sureuserExame']);
-		Route::get('startexam', ['uses'=>'ExamController@startExame']);
-		Route::get('search-answerlist', ['uses'=>'ExamController@searchUserREesult']);
-		Route::get('search-examdetail', ['uses'=>'ExamController@searchExamREesult']);
-		Route::get('studentlist', ['uses'=>'ExamController@searchDepartStudents']);
-		Route::post('addstudentresult', ['uses'=>'ExamController@addExameResult']);
-		Route::post('modifyresult', ['uses'=>'ExamController@modifyExamREesult']);
-		Route::get('surecanshow', ['uses'=>'ExamController@sureScoreShow']);
-		Route::get('scorelist', ['uses'=>'ExamController@searchResultList']);
-		Route::get('modelexamnews', ['uses'=>'ExamController@searchModelExam']);
+		Route::post('addexam', ['uses'=>'CexamController@addaExame']);
+		Route::get('examlist', ['uses'=>'CexamController@searchExameList']);
+		Route::get('dptexamlist', ['uses'=>'CexamController@searchDepartexamList']);
+		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo']);
+		Route::get('surestudent', ['uses'=>'CexamController@sureuserExame']);
+		Route::get('startexam', ['uses'=>'CexamController@startExame']);
+		Route::get('search-answerlist', ['uses'=>'CexamController@searchUserREesult']);
+		Route::get('search-examdetail', ['uses'=>'CexamController@searchExamREesult']);
+		Route::get('studentlist', ['uses'=>'CexamController@searchDepartStudents']);
+		Route::post('addstudentresult', ['uses'=>'CexamController@addExameResult']);
+		Route::post('modifyresult', ['uses'=>'CexamController@modifyExamREesult']);
+		Route::get('surecanshow', ['uses'=>'CexamController@sureScoreShow']);
+		Route::get('scorelist', ['uses'=>'CexamController@searchResultList']);
+		Route::get('modelexamnews', ['uses'=>'CexamController@searchModelExam']);
 
 	});
 	//---新加理论考试系统end
