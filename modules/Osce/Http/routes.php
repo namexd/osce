@@ -6,7 +6,44 @@ Route::get('/c',function(){
 	$c = \Cache::flush();
 	dd($c);
 });
+
+
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
+	//---新加理论考试系统start
+	//考试管理
+	Route::group(['prefix' => "test",'namespace' => 'Admin'], function()
+	{
+		Route::post('import', ['uses'=>'TestController@import']);
+		Route::post('export', ['uses'=>'TestController@export']);
+
+		Route::get('choose', ['uses'=>'TestController@choose']);
+		Route::get('classroom', ['uses'=>'TestController@classroom']);
+
+		Route::get('del', ['uses'=>'TestController@del']);
+
+	});
+
+
+//考试管理
+	Route::group(['prefix' => "exam", 'namespace' => 'Admin'], function()
+	{
+		Route::post('addexam', ['uses'=>'ExamController@addaExame']);
+		Route::get('examlist', ['uses'=>'ExamController@searchExameList']);
+		Route::get('dptexamlist', ['uses'=>'ExamController@searchDepartexamList']);
+		Route::get('examinfo', ['uses'=>'ExamController@searchExameInfo']);
+		Route::get('surestudent', ['uses'=>'ExamController@sureuserExame']);
+		Route::get('startexam', ['uses'=>'ExamController@startExame']);
+		Route::get('search-answerlist', ['uses'=>'ExamController@searchUserREesult']);
+		Route::get('search-examdetail', ['uses'=>'ExamController@searchExamREesult']);
+		Route::get('studentlist', ['uses'=>'ExamController@searchDepartStudents']);
+		Route::post('addstudentresult', ['uses'=>'ExamController@addExameResult']);
+		Route::post('modifyresult', ['uses'=>'ExamController@modifyExamREesult']);
+		Route::get('surecanshow', ['uses'=>'ExamController@sureScoreShow']);
+		Route::get('scorelist', ['uses'=>'ExamController@searchResultList']);
+		Route::get('modelexamnews', ['uses'=>'ExamController@searchModelExam']);
+
+	});
+	//---新加理论考试系统end
 	Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 		Route::get('login/index', ['uses' => 'LoginController@getIndex', 'as' => 'osce.admin.getIndex']);
 		Route::post('login/index', ['uses' => 'LoginController@postIndex', 'as' => 'osce.admin.postIndex']);
