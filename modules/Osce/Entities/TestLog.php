@@ -23,5 +23,11 @@ class TestLog extends Model
     public function exam(){
         return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
     }
+    public function test(){
+        return $this->hasOne('\Modules\Osce\Entities\Test','id','tid');
+    }
+    public function teacher(){
+        return $this->hasOne('\Modules\Osce\Entities\Teacher','id','teacher');
+    }
 
 }
