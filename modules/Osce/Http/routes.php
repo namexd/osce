@@ -15,10 +15,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	{
 		Route::post('import', ['uses'=>'TestController@import']);
 		Route::post('export', ['uses'=>'TestController@export']);
-
 		Route::get('choose', ['uses'=>'TestController@choose']);
 		Route::get('chooseexam', ['uses'=>'TestController@chooseexam']);
-
+		Route::get('chooseteacher', ['uses'=>'TestController@chooseteacher']);
 		Route::get('del', ['uses'=>'TestController@del']);
 
 	});

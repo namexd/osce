@@ -14,14 +14,17 @@ use Auth;
 
 class Test extends CommonModel
 {
+    protected $connection = 'osce_mis';
     protected $table='g_test';
     protected $primaryKey='id';
     public $timestamps=false;
 
+
     //新增答卷
     public function addTest($data)
     {
-        $id = DB::table('g_test')->insertGetId([
+        $connection = DB::connection($this->connection);
+        $id = $connection->table('g_test')->insertGetId([
             'name'           =>  $data['name'],
             'ctime'           =>  time()
         ]);
@@ -32,8 +35,8 @@ class Test extends CommonModel
     //新增题目
     public function addContent($data)
     {
-
-        $id = DB::table('g_test_content')->insertGetId([
+        $connection = DB::connection($this->connection);
+        $id = $connection->table('g_test_content')->insertGetId([
             'type'           =>  $data['type'],
             'answer'          =>   $data['answer'],
             'poins'           =>  $data['poins'],
@@ -61,8 +64,8 @@ class Test extends CommonModel
     //选择试题
     public function getChoose($data)
     {
-
-        $info = DB::table('g_test')
+        $connection = DB::connection($this->connection);
+        $info = $connection->table('g_test')
             ->select('id','name')
             ->get();
 
@@ -73,9 +76,18 @@ class Test extends CommonModel
     //选择考试
     public function getChooseExam()
     {
+        $connection = DB::connection($this->connection);
+        $info = $connection->table('exam')->where('status',0)->get();
 
-        $info = DB::table('exam')->where('status',0)->get();
+        return $info;
 
+    }
+
+    //选择老师
+    public function getChooseTeacher()
+    {
+        $connection = DB::connection($this->connection);
+        $info = $connection->table('teacher')->get();
         return $info;
 
     }
@@ -84,8 +96,8 @@ class Test extends CommonModel
     //选择教室
     public function del($data)
     {
-
-        $base = DB::table('g_test_log')
+        $connection = DB::connection($this->connection);
+        $base = $connection->table('g_test_log')
             ->where('g_test_log.tid',$data['id'])
             ->get();
 
@@ -94,19 +106,19 @@ class Test extends CommonModel
             $arr['log'] = 1;
             return $arr;
         }
-        DB::table('g_test')
+        $connection->table('g_test')
             ->where('g_test.id',$data['id'])
             ->delete();
 
-        $info = DB::table('test_content')
+        $info = $connection->table('test_content')
             ->where('test_content.tid',$data['id'])
             ->get();
 
-        DB::table('test_content')
+        $connection->table('test_content')
             ->where('test_content.tid',$data['id'])
             ->delete();
         foreach($info as $item){
-            $count =  DB::table('g_test_content')
+            $count =  $connection->table('g_test_content')
                 ->where('g_test_content.id',$item->cid)
                 ->delete();
         }

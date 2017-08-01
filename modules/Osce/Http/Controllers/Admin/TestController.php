@@ -235,6 +235,7 @@ class TestController extends CommonController
     //选择试题
     public function choose(Request $request){
 
+
         $data = $request->all();
 
         $test = new Test();
@@ -295,6 +296,12 @@ class TestController extends CommonController
         }
 
 
+    }
+
+    public function chooseteacher(){
+        $test = new Test();
+        $result = $test->getChooseTeacher();
+        return $result;
     }
 
 
