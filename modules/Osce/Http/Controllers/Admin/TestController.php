@@ -233,18 +233,20 @@ class TestController extends CommonController
     //删除试题
     public function del(Request $request){
 
-        $data = $request->all();
-
-        $test = new Test();
-
-        $result = $test->del($data);
-        if(isset($result['log'])){
-            $back = $this->rmsg(2,'试题已使用，无法删除');
-        }else{
-            $back = $this->rmsg(1,'删除成功');
+        $this->validate($request, [
+            'id'    => 'required|integer',
+        ],[
+            'id.required'   => 'ID必传',
+        ]);
+        try{
+            $id = $request->get('id');
+            TestLog::find($id)->delete();
+            return redirect()->route('osce.theory.index');
+        }
+        catch (\Exception $ex){
+            return response()->json($this->fail($ex));
         }
 
-        return $back;
     }
 
 
