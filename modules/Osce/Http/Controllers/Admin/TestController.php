@@ -23,7 +23,6 @@ class TestController extends CommonController
         $choose = $this->choose();
         $chooseexam = $this->chooseexam();
         $chooseteacher = $this->chooseteacher();
-
         return view('osce::theory.exam_manage')->with('data',['choose'=>$choose,'chooseexam'=>$chooseexam,'chooseteacher'=>$chooseteacher]);
     }
 
@@ -242,69 +241,19 @@ class TestController extends CommonController
 
 
     //选择试题
-    public function choose(Request $request){
-
-
-        $data = $request->all();
-
+    public function choose(){
         $test = new Test();
-
-        $result = $test->getChoose($data);
-
-        if(isset($data['page'])){
-            $count = $data['pagecount'];
-            $page  = $data['page'];
-
-            $arr = [];
-            for($i=0;$i<count($result);$i++){
-                if($i>=($page-1)*$count&&$i<=$page*$count){
-                    $arr[] = $result[$i];
-                }
-            }
-
-            $back = array(
-                'allcount' => count($result),
-                'data'     => $arr
-            );
-            return $back;
-        }else{
-            return $result;
-        }
-
+        $result = $test->getChoose();
+        return $result;
 
     }
 
     //选择考试
-
-    public function chooseexam(Request $request){
-
-        $data = $request->all();
-
+    //public function chooseexam(Request $request){
+    public function chooseexam(){
         $test = new Test();
-
-        $result = $test->getChooseExam($data);
-
-        if(isset($data['page'])){
-            $count = $data['pagecount'];
-            $page  = $data['page'];
-
-            $arr = [];
-            for($i=0;$i<count($result);$i++){
-                if($i>=($page-1)*$count&&$i<=$page*$count){
-                    $arr[] = $result[$i];
-                }
-            }
-
-            $back = array(
-                'allcount' => count($result),
-                'data'     => $arr
-            );
-            return $back;
-        }else{
-            return $result;
-        }
-
-
+        $result = $test->getChooseExam();
+        return $result;
     }
 
     public function chooseteacher(){
@@ -312,8 +261,5 @@ class TestController extends CommonController
         $result = $test->getChooseTeacher();
         return $result;
     }
-
-
-
 
 }
