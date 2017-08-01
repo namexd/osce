@@ -16,7 +16,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('add', ['uses'=>'TestController@add', 'as' => 'osce.theory.add']);//考试管理
 		Route::get('index', ['uses'=>'TestController@index', 'as' => 'osce.theory.index']);//考试管理
 		Route::post('import', ['uses'=>'TestController@import']);
-		Route::post('export', ['uses'=>'TestController@export']);
+		Route::get('export', ['uses'=>'TestController@export']);
 		Route::get('choose', ['uses'=>'TestController@choose','as' => 'osce.theory.choose']);
 		Route::get('chooseexam', ['uses'=>'TestController@chooseexam']);
 		Route::get('chooseteacher', ['uses'=>'TestController@chooseteacher']);
