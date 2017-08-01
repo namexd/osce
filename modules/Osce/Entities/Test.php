@@ -62,7 +62,7 @@ class Test extends CommonModel
     }
 
     //选择试题
-    public function getChoose($data)
+    public function getChoose()
     {
         $connection = DB::connection($this->connection);
         $info = $connection->table('g_test')
