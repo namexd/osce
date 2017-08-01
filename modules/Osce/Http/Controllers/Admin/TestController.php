@@ -20,7 +20,11 @@ class TestController extends CommonController
     public $result;
 
     public function index(){
-        return view('osce::theory.exam_manage');
+        $choose = $this->choose();
+        $chooseexam = $this->chooseexam();
+        $chooseteacher = $this->chooseteacher();
+
+        return view('osce::theory.exam_manage')->with('data',['choose'=>$choose,'chooseexam'=>$chooseexam,'chooseteacher'=>$chooseteacher]);
     }
 
     //get  文件导入
