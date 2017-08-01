@@ -16,7 +16,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('index', ['uses'=>'TestController@index', 'as' => 'osce.theory.index']);//考试管理
 		Route::post('import', ['uses'=>'TestController@import']);
 		Route::post('export', ['uses'=>'TestController@export']);
-		Route::get('choose', ['uses'=>'TestController@choose']);
+		Route::get('choose', ['uses'=>'TestController@choose','as' => 'osce.theory.choose']);
 		Route::get('chooseexam', ['uses'=>'TestController@chooseexam']);
 		Route::get('chooseteacher', ['uses'=>'TestController@chooseteacher']);
 		Route::get('del', ['uses'=>'TestController@del']);
@@ -27,7 +27,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 //考试管理
 	Route::group(['prefix' => "cexam", 'namespace' => 'Admin'], function()
 	{
-		Route::post('addexam', ['uses'=>'CexamController@addaExame']);
+		Route::post('addexam', ['uses'=>'CexamController@addaExame','as'=>'osce.cexam.postAddExam'] );
 		Route::get('examlist', ['uses'=>'CexamController@searchExameList']);
 		Route::get('dptexamlist', ['uses'=>'CexamController@searchDepartexamList']);
 		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo']);
