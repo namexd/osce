@@ -11,7 +11,7 @@ Route::get('/c',function(){
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	//---新加理论考试系统start
 	//考试管理
-	Route::group(['prefix' => "test",'namespace' => 'Admin'], function()
+	Route::group(['prefix' => "theory",'namespace' => 'Admin'], function()
 	{
 		Route::get('index', ['uses'=>'TestController@index']);//考试管理
 		Route::post('import', ['uses'=>'TestController@import']);
