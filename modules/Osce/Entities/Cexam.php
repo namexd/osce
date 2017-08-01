@@ -14,6 +14,7 @@ use Auth;
 
 class Cexam extends CommonModel
 {
+    protected $connection = 'osce_mis';
     public $timestamps=false;
     public $logdata;
 
@@ -34,7 +35,8 @@ class Cexam extends CommonModel
     //新增考试
     public function addscore($data)
     {
-        $builder = DB::table('g_test_log')
+        $connection = DB::connection($this->connection);
+        $builder = $connection->table('g_test_log')
             ->insertGetId([
                 'exam_id'=>$data['exam_id'],
                 'tid' =>  $data['tid'],
