@@ -24,21 +24,7 @@ class CexamController extends CommonController
     {
         $dataArray=$request->only('exam_id','tid','start','end','teacher');
 
-
         $exam = new Cexam();
-
-        $result= array();
-
-/*        $zz= $exam-> iftimeyiyang($dataArray);
-
-
-        if($zz['code']!=1){
-
-            $info = $this->rmsg($zz['code'],$zz['msg']);
-
-            return $info;
-        }*/
-
 
             $addArray = [
                 'exam_id'=>$dataArray['exam_id'],
@@ -48,13 +34,11 @@ class CexamController extends CommonController
                 'teacher' =>$dataArray['teacher']
             ];
 
-            $result = $exam->ifcanaddscore($addArray);
+          if($exam->addscore($addArray)){
+              return redirect()->route('osce.theory.index');
+          }
 
 
-
-        $info = $this->rmsg($result['code'],$result['msg']);
-
-        return $info;
     }
 
 

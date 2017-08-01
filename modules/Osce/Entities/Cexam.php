@@ -18,17 +18,6 @@ class Cexam extends CommonModel
     public $timestamps=false;
     public $logdata;
 
-    //查询科室有没有新增过考试
-    public function ifcanaddscore($data)
-    {
-
-        $result=$this->addscore($data);
-
-        return $result;
-
-
-    }
-
 
 
 
@@ -45,16 +34,8 @@ class Cexam extends CommonModel
                 'end' =>   $data['end'],
                 'status' => 0
             ]);
+        return $builder;
 
-        if($builder){
-            $result['code']=1;
-            $result['msg']='新增成功';
-            return $result;
-
-        }
-        $result['code']=0;
-        $result['msg']='新增失败';
-        return $result;
 
     }
     //查询科室考试的列表

@@ -13,6 +13,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	//考试管理
 	Route::group(['prefix' => "theory",'namespace' => 'Admin'], function()
 	{
+		Route::get('add', ['uses'=>'TestController@add', 'as' => 'osce.theory.add']);//考试管理
 		Route::get('index', ['uses'=>'TestController@index', 'as' => 'osce.theory.index']);//考试管理
 		Route::post('import', ['uses'=>'TestController@import']);
 		Route::post('export', ['uses'=>'TestController@export']);

@@ -14,16 +14,24 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use Excel;
 use Modules\Osce\Entities\Test;
+use Modules\Osce\Entities\TestLog;
 class TestController extends CommonController
 {
 
     public $result;
 
-    public function index(){
+    public function add(){
         $choose = $this->choose();
         $chooseexam = $this->chooseexam();
         $chooseteacher = $this->chooseteacher();
         return view('osce::theory.exam_manage')->with('data',['choose'=>$choose,'chooseexam'=>$chooseexam,'chooseteacher'=>$chooseteacher]);
+    }
+
+    public function index(){
+        $data = TestLog::paginate(10);
+        return view('osce::theory.exam_list')->with('data',$data);
+        //$data[0]->exam;
+        //dd($data);
     }
 
     //get  文件导入

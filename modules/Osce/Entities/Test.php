@@ -18,7 +18,11 @@ class Test extends CommonModel
     protected $table='g_test';
     protected $primaryKey='id';
     public $timestamps=false;
-
+    protected $guarded      = [];
+    protected $hidden       = [];
+    protected $fillable     = [
+     'id','name','ctime'
+    ];
 
     //新增答卷
     public function addTest($data)
@@ -31,6 +35,7 @@ class Test extends CommonModel
 
         return $id;
     }
+
 
     //新增题目
     public function addContent($data)
