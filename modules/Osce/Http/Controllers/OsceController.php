@@ -30,7 +30,7 @@ class OsceController extends Controller {
 			$superRole = config('osce.superRoleId');		//获取超级管理员角色值
 			$adminRole = config('osce.adminRoleId');		//获取系统管理员角色值
 			//获取用户最高权限角色
-			$role_id   = $userRoles->first();				//默认取第一个
+			$role_id   = $userRoles->first()->role_id;				//默认取第一个
 			foreach ($userRoles as $userRole)
 			{
 				if ($userRole->role_id == $superRole){
