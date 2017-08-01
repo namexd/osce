@@ -26,7 +26,7 @@ class TestLog extends Model
     public function test(){
         return $this->hasOne('\Modules\Osce\Entities\Test','id','tid');
     }
-    public function teacher(){
+    public function teacherdata(){
         return $this->hasOne('\Modules\Osce\Entities\Teacher','id','teacher');
     }
 
