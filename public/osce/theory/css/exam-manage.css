@@ -1,0 +1,31 @@
+
+.exam { width: 800px; margin: 0 auto; padding-bottom: 50px;}
+
+.exam-left { float: left; width: 180px; padding-right:20px ; text-align: right;}
+.exam-right { float: left; width: 600px;}
+
+.choose-type label { margin-right: 20px;}
+.exam-column { margin-top: 20px;}
+.choose-depart .exam-right { padding-top: 20px; min-height: 200px;}
+.choose-depart .exam-right div { padding: 10px 0; border-bottom: 1px solid #ccc;}
+.choose-depart ul { padding: 0 20px; padding-top:10px ;}
+.choose-depart ul li { float: left; padding: 5px 20px 5px 0;}
+.set-exam .exam-left { line-height: 34px;}
+.choose-question .exam-left strong { color: red;}
+.choose-question .exam-right div { float: left; width: 400px; margin-right: 20px; }
+.choose-question .exam-right a { float: left; width: 100px; height: 34px; text-align: center; line-height: 34px;
+	 background: #DC5C59; color: #fff; text-decoration: none; border-radius: 4px; }
+.choose-time .exam-right div { float: left; width: 173px; }
+.choose-time .exam-right span { float: left; line-height: 34px; padding: 0 20px;}
+.choose-set i { float: left; margin: 80px 20px; font-style: normal; }
+.choose-set ul { float: left; overflow: auto; width: 200px; height: 200px; border: 1px solid #ccc; }
+.choose-set ul li { text-indent: 1em; height: 32px; line-height: 32px; cursor: pointer;}
+.choose-set ul li:hover { background: #ccc;}
+
+
+
+.exam-addbtn { display: block; width: 200px; height: 34px; color: #fff; border-radius: 4px; margin: 50px auto 0;}
+
+
+
+
