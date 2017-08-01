@@ -1,5 +1,27 @@
 'use strict';
 
+window.noempty = function (obj) {
+
+	var empty = false;
+	
+	$(obj).find('label i').each(function () {
+		var _p = $(this).parent().parent()
+		var _obj = $(_p).find('.form-control');
+		if ($.trim($(_obj).val())=='') {
+			empty = true;
+			uselayer(3,($(_obj).attr('emptymsg')?$(_obj).attr('emptymsg'):$(_obj).attr('placeholder')));
+			$(_obj).focus();
+			return false;
+		}
+	});
+	if (empty) {
+		return true;
+	}
+	return false;
+};
+
+
+
 /**
  * 公用ajax方法
  * 调用方法
