@@ -18,6 +18,11 @@ class TestController extends CommonController
 {
 
     public $result;
+
+    public function index(){
+        return view('osce::theory.exam_manage');
+    }
+
     //get  文件导入
     public function import(Request $request)
     {
