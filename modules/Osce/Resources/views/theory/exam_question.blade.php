@@ -66,9 +66,6 @@
             		
                 </tbody>
             </table>
-            <form method="get" class="form-horizontal" action="{{route('osce.theory.del')}}">
-            	<input type="hidden" name="id" value="" />
-            </form>
 		</div>
 		<div class="pull-left">
 			共{{$data->total()}}条
