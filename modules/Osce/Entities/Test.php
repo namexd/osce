@@ -30,7 +30,7 @@ class Test extends CommonModel
         $connection = DB::connection($this->connection);
         $id = $connection->table('g_test')->insertGetId([
             'name'           =>  $data['name'],
-            'ctime'           =>  time()
+            'ctime'           =>  date('Y-m-d H:i:s')
         ]);
 
         return $id;
