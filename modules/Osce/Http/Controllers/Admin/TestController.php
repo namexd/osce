@@ -195,19 +195,17 @@ class TestController extends CommonController
                     'separate'   =>  $result[12],
                     'poins'      =>  $result[13]
                 );
-
                 $id = $test->addContent($contents);
                 $return[] = $id;
-
             }
 
         });
-
         if($this->result==1){
-            return back()->withErrors('导入失败,请填写试卷名称');
+            return redirect()->route('osce.theory.examquestion')->withErrors('导入失败,请填写试卷名称');
         }
         unlink($filePath);
-        return redirect()->route('osce.theory.examquestion')->withErrors(0,'导入成功');
+        return redirect()->route('osce.theory.examquestion')->withErrors('1导入成功');
+
 
     }
 

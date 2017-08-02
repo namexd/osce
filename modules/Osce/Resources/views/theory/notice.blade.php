@@ -1,13 +1,14 @@
 <script>
    	$(function () {
-   		var msg = {!! json_encode($errors) !!};
+   		var msg = {!! json_encode($errors->all()) !!};
+		console.log(msg);
    		if (msg) {
    			for (var name in msg) {
-   				if (name==0||name=='error') {
-   					uselayer(3,msg[name][0]);
-   				} else if (name==1||name=='success') {
-   					uselayer(31,msg[name][0]);
-   				}
+				if (msg[name][0]==1) {
+					uselayer(31,msg[name].substring(1,msg[name].length));
+				} else {
+					uselayer(3,msg[name]);
+				}
    			}	   				
    		}   			
 	});
