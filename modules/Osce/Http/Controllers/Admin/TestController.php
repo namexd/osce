@@ -33,6 +33,16 @@ class TestController extends CommonController
         //$data[0]->exam;
         //dd($data);
     }
+    public function examquestion(){
+        $data = Test::paginate(10);
+        return view('osce::theory.exam_question')->with('data',$data);
+    }
+    public function examscore(){
+        return view('osce::theory.exam_score');
+    }
+    public function examcheck(){
+        return view('osce::theory.exam_check');
+    }
 
     //get  文件导入
     public function import(Request $request)

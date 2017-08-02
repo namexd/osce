@@ -13,14 +13,17 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	//考试管理
 	Route::group(['prefix' => "theory",'namespace' => 'Admin'], function()
 	{
-		Route::get('add', ['uses'=>'TestController@add', 'as' => 'osce.theory.add']);//考试管理
-		Route::get('index', ['uses'=>'TestController@index', 'as' => 'osce.theory.index']);//考试管理
-		Route::post('import', ['uses'=>'TestController@import']);
-		Route::get('export', ['uses'=>'TestController@export']);
+		Route::get('add', ['uses'=>'TestController@add', 'as' => 'osce.theory.add']);//添加考试
+		Route::get('index', ['uses'=>'TestController@index','as'=>'osce.theory.index']);//考试管理
+		Route::get('examquestion', ['uses'=>'TestController@examquestion', 'as' => 'osce.theory.examquestion']);//题库管理
+		Route::get('examscore', ['uses'=>'TestController@examscore', 'as' => 'osce.theory.examscore']);//成绩管理
+		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//在线批卷
+		Route::post('import', ['uses'=>'TestController@import', 'as' => 'osce.theory.import']);
+		Route::get('export', ['uses'=>'TestController@export', 'as' => 'osce.theory.export']);
 		Route::get('choose', ['uses'=>'TestController@choose','as' => 'osce.theory.choose']);
-		Route::get('chooseexam', ['uses'=>'TestController@chooseexam']);
-		Route::get('chooseteacher', ['uses'=>'TestController@chooseteacher']);
-		Route::get('del', ['uses'=>'TestController@del', 'as' => 'osce.theory.del']);
+		Route::get('chooseexam', ['uses'=>'TestController@chooseexam', 'as' => 'osce.theory.chooseexam']);
+		Route::get('chooseteacher', ['uses'=>'TestController@chooseteacher', 'as' => 'osce.theory.choosteacher']);
+		Route::get('del', ['uses'=>'TestController@del',  'as' => 'osce.theory.del']);
 
 	});
 
