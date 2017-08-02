@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use DB;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\TestContent;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use Excel;
@@ -35,8 +36,19 @@ class TestController extends CommonController
         //dd($data);
     }
     public function examquestion(){
-        $data = Test::paginate(10);
+        $data = Test::orderBy('id','desc')->paginate(10);
         return view('osce::theory.exam_question')->with('data',$data);
+    }
+    public function delquestion(Request $request){
+        $this->validate($request, [
+            'id'    => 'required|integer',
+        ],[
+            'id.required'   => 'ID必传',
+        ]);
+        $id = $request->get('id');
+        Test::find($id)->delete();
+        TestContent::where('test_id',$id)->deleted();
+        return view('osce::theory.exam_question')->withErrors('1删除成功！');
     }
     public function examscore(){
         return view('osce::theory.exam_score');
@@ -179,7 +191,7 @@ class TestController extends CommonController
                 }
 
                 $contents = array(
-                    'tid'         =>  $tid,
+                    'test_id'         =>  $tid,
                     'type'        =>  $type,
                     'question'   =>  $result[1],
                     'content'   =>  $result[2],
@@ -195,8 +207,7 @@ class TestController extends CommonController
                     'separate'   =>  $result[12],
                     'poins'      =>  $result[13]
                 );
-                $id = $test->addContent($contents);
-                $return[] = $id;
+                $return[] = TestContent::insertGetId($contents);
             }
 
         });

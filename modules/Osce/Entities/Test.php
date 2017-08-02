@@ -36,36 +36,6 @@ class Test extends CommonModel
         return $id;
     }
 
-
-    //新增题目
-    public function addContent($data)
-    {
-        $connection = DB::connection($this->connection);
-        $id = $connection->table('g_test_content')->insertGetId([
-            'type'           =>  $data['type'],
-            'answer'          =>   $data['answer'],
-            'poins'           =>  $data['poins'],
-            'question'          =>   $data['question'],
-            'content'          =>   $data['content'],
-            'pbase'           =>  $data['pbase'],
-            'base'          =>   $data['base'],
-            'cognition'           =>  $data['cognition'],
-            'source'          =>   $data['source'],
-            'lv'          =>   $data['lv'],
-            'require'           =>  $data['require'],
-            'times'          =>   $data['times'],
-            'degree'           =>  $data['degree'],
-            'separate'          =>   $data['separate']
-        ]);
-
-/*        DB::table('test_content')->insertGetId([
-            'tid'            =>  $data['tid'],
-            'cid'            =>  $id
-        ]);*/
-
-        return $id;
-    }
-
     //选择试题
     public function getChoose()
     {
