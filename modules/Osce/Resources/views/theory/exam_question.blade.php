@@ -6,7 +6,7 @@
 @section('head_css')
 	<style>
 		.mar0 { margin: 0;}
-		.form-horizontal {float: right; position: relative; margin-right: 10px; overflow: hidden; }
+		.form-horizontal {float: right; position: relative; margin-right: 20px; overflow: hidden; }
 		.import { opacity: 0; filter: alpha(opacity=0); position: absolute; left: -100%; top: 0; width: 200%; height: 100%; outline: none; cursor: pointer; }
 		
 	</style>
@@ -41,10 +41,10 @@
 	        <div class="col-xs-6 col-md-2">
 	            <h5 class="title-label">题库管理</h5>
 	        </div>
-	        <div class="col-xs-6 col-md-2" style="float: right;">
+	        <div class="col-xs-6" style="float: right;">
 	            <a  href="{{route('osce.theory.export')}}" class="btn btn-primary" style="float: right;">&nbsp;模版下载&nbsp;</a>
 	        	<form method="post" enctype="multipart/form-data" class="form-horizontal" action="{{route('osce.theory.import')}}" >
-	        		<input type="file" onchange="upload()" class="import" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+	        		<input type="file" name="file" onchange="upload()" class="import" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
 	        		<a  href="javascript:;" class="btn btn-primary mar0">&nbsp;导入试题&nbsp;</a>
 	        	</form>
 	        </div>
