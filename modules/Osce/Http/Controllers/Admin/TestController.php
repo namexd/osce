@@ -47,8 +47,8 @@ class TestController extends CommonController
         ]);
         $id = $request->get('id');
         Test::find($id)->delete();
-        TestContent::where('test_id',$id)->deleted();
-        return view('osce::theory.exam_question')->withErrors('1删除成功！');
+        TestContent::where('test_id',$id)->delete();
+        return redirect()->route('osce.theory.examquestion')->withErrors('1删除成功！');
     }
     public function examscore(){
         return view('osce::theory.exam_score');
