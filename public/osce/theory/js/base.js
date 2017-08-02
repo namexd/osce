@@ -363,128 +363,6 @@ var ng = {
 	
 	},
 	
-	initedit:function ($scope,$http,$cookies) {
-		
-		
-		
-		
-		
-		window.UEDITOR_HOME_URL = Api.url+Api.upload;
-		
-		$scope.fourm = UE.getEditor('editor', {
-			toolbars: [
-				[
-					"undo","|",
-					"redo","|",
-					"link","|",
-					"unlink","|",
-					"bold","|",
-					"italic","|",
-					"underline","|",
-					"forecolor","|",
-					"fontfamily","|",
-					"fontsize","|",
-					"emotion","|",
-					"simpleupload"				
-				]
-			],
-			enableContextMenu:false,//右键菜单
-			autoHeightEnabled: false,//是否自动长高,默认true
-			wordCount: true, //开启字数统计 
-			elementPathEnabled : false,//是否启用元素路径，默认是显示
-			maximumWords: 10000, //允许的最大字符数 
-			//pasteplain: true, //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴 
-			enableAutoSave: false, //自动保存
-			emotionLocalization:false,//是否开启表情本地化
-			zIndex : 1
-			//initialContent:'欢迎使用ueditor!',初始化编辑器的内容
-			//focus:false, //初始化时，是否让编辑器获得焦点true或false
-		});			
-		
-		
-		$scope.fourm.onfocus = function () {
-			setTimeout(function () {
-				$('.edui-box.edui-button:last .edui-state-disabled')[0].className = 'dui-default';
-//				document.getElementById('edui56_state').className = 'dui-default';
-				return false;
-			},500);
-		}
-		
-		//获取所有主题
-		ng.fourm.getType($http,$cookies,{
-			fn:function (res) {
-				$scope.fourmItems = res.data;
-				if (res.data.length!=0) {
-					$scope.fourmTypeId=$scope.fourmItems[0].id;
-				}
-				
-			}
-		});			
-		
-		
-		$scope.addfourm = function ($event) {
-			if (!$scope.fourmTypeId) {
-				uselayer(1,'你还没有选择主题');
-				return false;				
-			}
-			if (!$scope.fourmTitle||$scope.fourmTitle=='') {
-				uselayer(3,'标题不能为空');
-				$event.target.parentElement.children[1].children[1].focus();
-				return false;
-			}
-			if (!$scope.fourm.hasContents()) {
-				uselayer(3,'内容不能为空');
-				$scope.fourm.focus()//聚焦
-				return false;
-			}
-			ng.fourm.editFourm($http,$cookies,{
-				json:{
-					id:$scope.fourmId,
-					title:$scope.fourmTitle,
-					typeid:$scope.fourmTypeId,
-					content:$scope.fourm.getContent(),
-					desc:$scope.fourm.getContentTxt()									
-				},
-				fn:function (res) {
-					uselayer(1,res.message,function () {
-						window.location.reload();			
-					});
-
-				}
-				
-			});				
-		};		
-		$scope.toaddfourm = function (isre) {
-			if (!isre) {
-				$scope.fourmId=undefined;
-				$scope.fourmTitle ='';
-			}
-			$scope.showedit = layer.open({
-				zIndex:1,
-				type: 1,
-				title: false,
-				closeBtn: 0,
-				area: '700px',
-				skin: 'layui-layer-nobg', //没有背景色
-				shadeClose: true,
-				content: $('#my-edit')
-			});		
-			$('.edui-box.edui-button:last .edui-button-body')[0].innerHTML+='<input type="file" class="edit-upload" accept="image/png,image/jpg,image/jpeg,image/gif" />';
-		
-			toupload($('.edit-upload')[0],Api.upload,{file:'Filedata'},function (res) {
-				console.log(res);
-				if (res.code==1) {
-					$scope.fourm.setContent('<img src="'+Api.url+'/'+res.imageurl+'" /> &nbsp;',true);
-				} else {
-					uselayer(3,res.msg);
-				}
-			});			
-		};
-		$scope.tocancelfourm = function () {
-			layer.close($scope.showedit);
-		};
-	},
-	
 	
 	
 	notoken:function () {
@@ -551,45 +429,43 @@ function codetostr(str) {
 	return _str;
 };
 
-function uselayer(type,str,fn,fn2) {
+//layer弹出层	
+function uselayer (type,str,fn,title,obj) {
+	var data = {title:[(title?title:'信息'),'background-color:#16abff;color:#fff']};
 	if (type=='1') {
-		var ilayer = layer.alert(
-			str, 
-			{btn:['确定']},
-			function () {
+		var ilayer = layer.alert(str,data,function () {
 				layer.close(ilayer);
 				fn&&fn();							
-			});		
+		});		
 	} else if (type=='2') {
-		var ilayer = layer.confirm(
-			str,
-			{btn:['确定','取消']},
-			function () {
+		var ilayer = layer.confirm(str,data,function () {
 				layer.close(ilayer);
 				fn&&fn();
-			},
-			function () {
-				layer.close(ilayer);
-				fn2&&fn2();
 			}
 		);
 	} else if (type=='3') {
-		var ilayer = layer.msg(str,{
-		  time: 1000 //1秒关闭（如果不配置，默认是3秒）
-		}, function(){
-		  fn&&fn();
-		});  		
 		
+		var ilayer = layer.msg(str,{skin:'msg-error center',icon:1,time:1500},function(){
+		  		fn&&fn();
+		});  		
+	} else if (type=='31') {
+		
+		var ilayer = layer.msg(str,{skin:'msg-success center',icon:1,time:1500},function(){
+		  		fn&&fn();
+		});  		
 	} else if (type=='4') {
-		var ilayer = layer.alert(
-			str,
-			{btn:['确定']},
-			function () {
-				//layer.close(ilayer);
-				fn&&fn();
-			});
+		data = {
+			type: 1,
+			title: data.title,
+			area: $(obj).width(),
+			content: $(obj)
+		};
+		var ilayer = layer.open(data);	
 	}
+	return ilayer;
 };
+
+
 
 
 //获取url参数
@@ -666,23 +542,7 @@ function addzero(n) {
 };
 
 
-function getstrongid(id) {
-	var oDiv = id;
-	if (typeof id == "string") {
-		oDiv = document.getElementById(id);
-	}	
-	var oStrong = oDiv.getElementsByTagName("strong")[0];
-	return oStrong.indexid;
-};
 
-function getstronghtml(id) {
-	var oDiv = id;
-	if (typeof id == "string") {
-		oDiv = document.getElementById(id);
-	}	
-	var oStrong = oDiv.getElementsByTagName("strong")[0];
-	return oStrong.innerHTML;
-};
 
 //时间戳转时间格式2016-05-01 12:01:12
 function timetodate(num,n) {
@@ -706,195 +566,7 @@ function datetotime(dateStr){
 };
 
 
-/**
- * 公用分页方法
- * 调用方法
- * flipover(
- * 		total,        总共多少条数据
- * 		prepage,      每页多少条数据
- * 		fn,     	     回调函数， 重新取数据      
- * 		obj		   	     挂载一些参数，obj可以是容器，调用前需要初始化
-*						 obj.page:请求第几页数据，
-* 						 obj.showpage:false 是否显示分页
- * );
- **/
-function flipover(total,prepage,fn,obj) {
-	changeurltype('page',obj.page);
-	if (obj.page==1) {
-		obj.showpage=false;
-	}
-	var oPage = document.getElementById("page");
-	if (total==0) {
-		obj.innerHTML = '<p class="no-data">该条件下暂无数据<p>';
-		oPage.style.display = "none";
-		return false;
-	} else {
-		obj.innerHTML = '';
-	}	
-	if (obj.showpage) {
-		return false;
-	}
-	if (total<=prepage) {
-		oPage.style.display = "none";
-		return false;
-	}	
-	
-	obj.showpage = true;
 
-	if (oPage.innerHTML=='') {
-		oPage.innerHTML = 
-			'<input type="button" value="首页" class="page_first" />'
-			+'<input type="button" value="上一页" class="page_prev" />'
-			+'<input type="button" value="..." class="page_jump_prev" />'
-			+'<div><ul class="clearfix page_list"></ul></div>'
-			+'<input type="button" value="..." class="page_jump_next" />'
-			+'<input type="button" value="下一页" class="page_next" />'
-			+'<input type="button" value="末页" class="page_last" />';		
-		oPage.className = 'clearfix page';
-	}
-	var oUl = oPage.getElementsByTagName("ul")[0];
-	var oFirst = $(oPage).find('.page_first')[0];
-	var oLast = $(oPage).find('.page_last')[0];
-	var oPrev = $(oPage).find('.page_prev')[0];
-	var oNext = $(oPage).find('.page_next')[0];
-	var oJumpPrev = $(oPage).find('.page_jump_prev')[0];
-	var oJumpNext = $(oPage).find('.page_jump_next')[0];
-	
-	var iW = 42;
-	
-	var iLeft = 0;
-	
-	oUl.innerHTML = '';
-	oUl.style.left = 0;	
-//	oJumpPrev.style.visibility = "hidden";
-//	oJumpNext.style.visibility = "hidden";
-	oUl.style.width = total*iW+"px";	
-	var nPage = Math.ceil(total/prepage);
-	for (var i = 0 ; i < nPage; i++) {
-		var oLi = document.createElement("li");
-		oLi.innerHTML = i+1;
-		oUl.appendChild(oLi);
-	}
-	if (obj.page>nPage) {
-		obj.page = nPage;
-		obj.showpage = false;
-		fn&&fn();
-		return false;
-	}
-	oUl.children[obj.page-1].className = "active";
-	var iNow = obj.page-1;
-	var aLi = oUl.getElementsByTagName("li");
-	aLi[aLi.length-1].style.borderRight = '1px solid #ddd';
-	if (nPage>5) {
-		oFirst.style.visibility = "visible";
-		oLast.style.visibility = "visible";
-		oPrev.style.visibility = "visible";
-		oNext.style.visibility = "visible";
-		oJumpPrev.style.visibility = "visible";
-		oJumpNext.style.visibility = "visible";
-		
-		
-		oJumpNext.onclick = function () {
-			iNow+=5;
-			if (iNow > aLi.length-1) {
-				iNow = aLi.length-1;
-			}
-			tab();
-		};
-	} else {
-		oFirst.style.visibility = "hidden";
-		oLast.style.visibility = "hidden";
-		oPrev.style.visibility = "hidden";
-		oNext.style.visibility = "hidden";
-		oJumpPrev.style.visibility = "hidden";
-		oJumpNext.style.visibility = "hidden";		
-	}
-	oJumpPrev.onclick = function () {
-		iNow-=5;
-		if (iNow <0) {
-			iNow = 0;
-		}
-		tab();
-	};	
-	oFirst.onclick = function () {
-		iNow = 0;
-		tab();
-	};
-	oLast.onclick = function () {
-		iNow = aLi.length-1;
-		tab();
-	};
-	for (var i = 0 ; i < aLi.length; i++) {
-		aLi[i].index = i;
-		aLi[i].onclick = function () {
-			iNow = this.index;
-			tab();
-		}
-	}
-	oNext.onclick = function () {
-		iNow++;
-		if(iNow == aLi.length) {
-			iNow = aLi.length-1;						
-		}											
-		tab();
-	};
-	oPrev.onclick = function () {
-		iNow--;
-		if(iNow <0) {
-			iNow=0;
-		}
-		tab();
-	};
-	function tab(first) {
-		if (iNow<3) {
-			oJumpPrev.disabled="disabled";
-		} else {
-			if (nPage>5) {
-				oJumpPrev.removeAttribute('disabled');
-			}			
-		}
-		if (iNow>aLi.length-4) {
-			oJumpNext.disabled="disabled";
-		} else {
-			if (nPage>5) {
-				oJumpNext.removeAttribute('disabled');
-			}
-		}
-		if(iNow == 0) {
-			oPrev.disabled="disabled";	
-			oFirst.disabled="disabled";					
-		} else {
-			oPrev.removeAttribute('disabled');
-			oFirst.removeAttribute('disabled');	
-		}
-		if(iNow == aLi.length-1) {
-			oNext.disabled="disabled";	
-			oLast.disabled="disabled";					
-		} else {
-			oNext.removeAttribute('disabled');
-			oLast.removeAttribute('disabled');	
-		}
-		iLeft = (-iNow+2)*iW;
-		if (iLeft<-(aLi.length-5)*iW) {
-			iLeft=-(aLi.length-5)*iW;
-		}
-		if (iLeft>0) {
-			iLeft=0;
-		}
-		for ( var i=0;i<aLi.length;i++) { 
-			aLi[i].className = '';			
-		}
-		obj.page = aLi[iNow].innerHTML;
-		changeurltype('page',obj.page);
-		!first&&fn&&fn();
-		aLi[iNow].className = 'active';
-		$(oUl).stop().animate({"left":iLeft},{duration: 200});	
-		return true;
-	};
-	tab(true);
-	oPage.style.display = 'block';
-	return true;
-};
 
 //html5 文件上传
 function uploadFile(options) {
@@ -973,208 +645,10 @@ function toupload(obj,url,json,fn) {
 	};					
 };
 
-function togetteacher(id,did,fn) {
-	Api.searchteacher({
-		json:{
-			id:id,
-			department_id:did
-		},
-		fn:function (arr) {
-			fn&fn(arr);
-		}
-		
-	});
-};
-
-function togetfatherdepart(fn) {
-	Api.fatherdepart({
-		json:{},
-		fn:function (arr) {
-			fn&fn(arr);
-		}
-	});
-};
-function togetchilddepart(id,fn) {						
-	Api.childdepart({
-		json:{
-			pid:id
-		},
-		fn:function (arr) {
-			fn&fn(arr);
-		}
-	});					
-};
-
-function writesel(all,oDiv,arr,change,fn,name) {
-	if (all!='') {
-		$(oDiv).html('<option value="0">'+all+'</option>');
-	} else {
-		$(oDiv).html('');
-	}
-	for (var i = 0 ; i < arr.length; i++) {
-		if (name) {
-			$(oDiv).append('<option value="'+arr[i].name+'">'+arr[i].name+'</option>');
-		} else {
-			$(oDiv).append('<option value="'+arr[i].id+'">'+arr[i].name+'</option>');
-		}					
-	}
-	$(oDiv).val($(oDiv).find('option').first().val());
-	$(oDiv).off('change');
-	if (change=="1") {
-		$(oDiv).on('change',function () {
-			fn($(oDiv).val());
-		});
-	}
-	fn&&fn($(oDiv).val());
-};	
 
 
 
-function uselayer(type,str,fn,fn2) {
-	if (type=='1') {
-		var ilayer = layer.alert(
-			str, 
-			{btn:['确定']},
-			function () {
-				layer.close(ilayer);
-				fn&&fn();							
-			});		
-	} else if (type=='2') {
-		var ilayer = layer.confirm(
-			str,
-			{btn:['确定','取消']},
-			function () {
-				layer.close(ilayer);
-				fn&&fn();
-			},
-			function () {
-				layer.close(ilayer);
-				fn2&&fn2();
-			}
-		);
-	} else if (type=='3') {
-		var ilayer = layer.msg(str,{
-		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
-		}, function(){
-		  fn&&fn();
-		});  		
-		
-	}
-};
 
-/**
- * 柱状图
- * @author sunjie
- * @date    2016-06-15
- * @version [1.0]
- * @param   {string}   title 图表标题
- * @param   {string}   yname y轴标题
- * @param   {string}   xname x轴标题
- * @param   {string}   hovername 鼠标悬浮标题
- * @param   {array}   arr1  x轴数据
- * @param   {array}   arr2  y轴数据
- */
-function writediagram(title,yname,xname,hovername,arr1,arr2) {
-    $('.statistics').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-        	style:{
-        		color:'#000'
-        	},
-            text: title
-        },
-        subtitle: {
-        	useHTML:true,
-            text: '&nbsp;'
-        }, 		
-        series: [{
-            name: hovername,
-            data: arr2,
-            color:'#4f81bd',
-            dataLabels: {
-                enabled: false,
-                rotation: 0,
-                color: '#FFFFFF',
-                align: 'center',
-                x: 0,
-                y: 0
-            }            
-        }],
-        xAxis: {
-            title: {
-                text: xname,
-	            style: {
-	                color: '#999',
-	                fontSize:'16px'
-	            }                  
-            },        	
-            categories:arr1,
-            labels:{
-            	align:'center',
- 	            style: {
-	                color: '#999',
-	                fontSize:'16'
-	            }             	
-            }            
-        },
-        yAxis: {
-            title: {
-                text: yname,
-	            style: {
-	                color: '#999',
-	                fontSize:'16px'
-	            }                  
-            },
-            allowDecimals:false,  //取整
-            gridLineColor:'#c0c0c0',
-            lineColor:'red',
-            min:0,
-            labels:{
- 	            style: {
-	                color: '#999',
-	                fontSize:'20'
-	            }             	
-            }
-        },
-        legend: {
-        	enabled:false	//图例
-        },
-		credits: {
-			enabled: false  //右下角不显示LOGO 
-		},
-        exporting: { 
-            enabled: false  //设置导出按钮不可用 
-        }
-    });
-};
-
-//公用方法
-function common() {
-	if (isIELower()) {
-		alert('您的浏览器版本过低，请升级浏览器');
-	}
-	
-	if (!getCookie("token")) {
-//		window.location.href = "login.html";
-	}
-	if ($('.childTitle').hasClass('hascancle')) {
-		$('.childTitle').append('<div class="childTitle-right cancle"><span class="glyphicon glyphicon-share-alt"></span></div>');
-	}
-
-	
-	
-	$('.cancle').click(function () {
-		if (findurltype('page')==1) {
-			history.go(-2);
-		} else {
-			history.go(-1);
-		}
-			
-	});	
-	
-};
 
 
 

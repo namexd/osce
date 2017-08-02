@@ -43,7 +43,8 @@
 	
 	    @section('head_js')
 	    @show{{-- head区域javscript脚本 --}}
-	
+		
+		@include('osce::theory.notice')
 	   
 	</head>
 	<body @section('body_attr')class=""@show{{-- 追加类属性 --}}>
