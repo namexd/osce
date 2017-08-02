@@ -5,11 +5,12 @@
 @stop
 @section('head_css')
 
-		<script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
+		
 		
 
 @stop	
 @section('head_js')
+	<script src="{{asset('osce/admin/plugins/js/plugins/layer/laydate/laydate.js')}}"></script>
 	<script>
 		$(function () {
 			var start = {
