@@ -16,6 +16,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('add', ['uses'=>'TestController@add', 'as' => 'osce.theory.add']);//添加考试
 		Route::get('index', ['uses'=>'TestController@index','as'=>'osce.theory.index']);//考试管理
 		Route::get('examquestion', ['uses'=>'TestController@examquestion', 'as' => 'osce.theory.examquestion']);//题库管理
+		Route::get('delquestion', ['uses'=>'TestController@delquestion', 'as' => 'osce.theory.delquestion']);//题库管理
 		Route::get('examscore', ['uses'=>'TestController@examscore', 'as' => 'osce.theory.examscore']);//成绩管理
 		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//在线批卷
 		Route::post('import', ['uses'=>'TestController@import', 'as' => 'osce.theory.import']);
@@ -27,8 +28,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 	});
 
-
-//考试管理
+	//考试管理
 	Route::group(['prefix' => "cexam", 'namespace' => 'Admin'], function()
 	{
 		Route::post('addexam', ['uses'=>'CexamController@addaExame','as'=>'osce.cexam.postAddExam'] );
@@ -48,6 +48,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 	});
 	//---新加理论考试系统end
+
+
 	Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 		Route::get('login/index', ['uses' => 'LoginController@getIndex', 'as' => 'osce.admin.getIndex']);
 		Route::post('login/index', ['uses' => 'LoginController@postIndex', 'as' => 'osce.admin.postIndex']);
