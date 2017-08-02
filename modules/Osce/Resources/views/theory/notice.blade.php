@@ -1,7 +1,6 @@
 <script>
    	$(function () {
    		var msg = {!! json_encode($errors->all()) !!};
-		console.log(msg);
    		if (msg) {
    			for (var name in msg) {
 				if (msg[name][0]==1) {
