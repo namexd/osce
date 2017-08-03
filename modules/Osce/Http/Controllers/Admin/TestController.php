@@ -112,9 +112,8 @@ class TestController extends CommonController
                 'name'    => $name[1]
             );
             $tid = $test->addTest($tdata);
-
             $return = [];
-
+            $sumScore=0;
             foreach($arr as $result){
                 //题目类型
                 if($result[0]=='单选题'){
@@ -214,8 +213,10 @@ class TestController extends CommonController
                     'separate'   =>  $result[12],
                     'poins'      =>  $result[13]
                 );
+                $sumScore+=$result[13];
                 $return[] = TestContent::insertGetId($contents);
             }
+            Test::find($tid)->update(['score'=>$sumScore]);
 
         });
         if($this->result==1){

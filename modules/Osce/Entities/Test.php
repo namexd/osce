@@ -21,7 +21,7 @@ class Test extends CommonModel
     protected $guarded      = [];
     protected $hidden       = [];
     protected $fillable     = [
-     'id','name','ctime'
+     'id','name','ctime','score'
     ];
 
     //新增答卷
