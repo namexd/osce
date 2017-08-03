@@ -49,7 +49,7 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach($data['data'] as $key => $item)
+            @foreach($data as $key => $item)
                 <tr>
                     <td><span class="description" title="{{$item->name}}">{{$item->name}}</span></td>
                     <td><span class="description-this" title="{{$item->description}}">{{$item->description}}</span></td>
