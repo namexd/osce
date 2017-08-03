@@ -56,7 +56,9 @@ class TestController extends CommonController
         }
     }
     public function examscore(){
-        return view('osce::theory.exam_score');
+        $data = TestLog::where('end','<',date('Y-m-d H:i:s'))->paginate(10);
+        //dd($data);
+        return view('osce::theory.exam_score',['data'=>$data]);
     }
     public function examcheck(){
         return view('osce::theory.exam_check');
