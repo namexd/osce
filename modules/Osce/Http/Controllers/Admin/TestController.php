@@ -46,9 +46,14 @@ class TestController extends CommonController
             'id.required'   => 'ID必传',
         ]);
         $id = $request->get('id');
-        Test::find($id)->delete();
-        TestContent::where('test_id',$id)->delete();
-        return redirect()->route('osce.theory.examquestion')->withErrors('1删除成功！');
+        $isUser = TestLog::where('tid',$id)->first();
+        if(empty($isUser)){
+            Test::find($id)->delete();
+            TestContent::where('test_id',$id)->delete();
+            return redirect()->route('osce.theory.examquestion')->withErrors('1删除成功！');
+        }else{
+            return redirect()->back()->withErrors('删除失败，已存在考试引入此试题！');
+        }
     }
     public function examscore(){
         return view('osce::theory.exam_score');
