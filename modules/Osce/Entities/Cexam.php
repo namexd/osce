@@ -18,26 +18,6 @@ class Cexam extends CommonModel
     public $timestamps=false;
     public $logdata;
 
-
-
-
-    //新增考试
-    public function addscore($data)
-    {
-        $connection = DB::connection($this->connection);
-        $builder = $connection->table('g_test_log')
-            ->insertGetId([
-                'exam_id'=>$data['exam_id'],
-                'tid' =>  $data['tid'],
-                'teacher' =>  $data['teacher'],
-                'start' =>   $data['start'],
-                'end' =>   $data['end'],
-                'status' => 0
-            ]);
-        return $builder;
-
-
-    }
     //查询科室考试的列表
     public function searchscorelist($data)
     {
@@ -188,14 +168,14 @@ class Cexam extends CommonModel
     }
 
     //查询科室考试的内容
-    public function searchscoreinfos($data)
+    public function searchscoreinfos($test_id)
     {
 
-        $builder = DB::table('test_content')
+        $builder = DB::table('g_test_content')
             ->join('g_test','g_test.id','=','test_content.tid')
             ->join('g_test_log','g_test_log.tid','=','g_test.id')
-            ->join('g_test_content','g_test_content.id','=','test_content.cid')
-            ->where('g_test_log.id',$data['id'])
+            ->join('g_test_content','g_test_content.id','=','g_test_content.cid')
+            ->where('g_test_log.id',$test_id)
             ->select('g_test_content.*','g_test_log.id as logid')
             ->orderBy('g_test_content.type')
             ->get();

@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use DB;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\TestLog;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use Modules\Osce\Entities\Cexam;
@@ -24,23 +25,32 @@ class CexamController extends CommonController
     {
         $dataArray=$request->only('exam_id','tid','start','end','teacher');
 
-        $exam = new Cexam();
-
+        $isHas = TestLog::where('start','<',$dataArray['start'])->where('end','>',$dataArray['start'])->orWhere(function ($query)use ( $dataArray )  {
+            $query->where('start', '<', $dataArray['end'])
+                ->where('end', '>', $dataArray['end']);
+        })->first();
+        if(empty($isHas)){
             $addArray = [
                 'exam_id'=>$dataArray['exam_id'],
                 'tid' =>$dataArray['tid'],
                 'start' =>$dataArray['start'],
                 'end' =>$dataArray['end'],
-                'teacher' =>$dataArray['teacher']
+                'teacher' =>$dataArray['teacher'],
+                'status' =>0
             ];
-
-          if($exam->addscore($addArray)){
-              return redirect()->route('osce.theory.index');
-          }
-
+            TestLog::create($addArray);
+            return redirect()->route('osce.theory.index')->withErrors('1新增成功');
+        }else{
+            return redirect()->route('osce.theory.index')->withErrors('新增失败，当前考试时间与其他考试时间冲突');
+        }
+    }
+    /** 登入考试
+     * @method GET
+     */
+    public function cexamQuestion(Request $request)
+    {
 
     }
-
 
     /** 查询负责考试的考试信息列表
      * @method GET
@@ -174,19 +184,13 @@ class CexamController extends CommonController
 
     public function searchExameInfo(Request $request)
     {
-        $dataArray=$request->only('id');
-
-        $exam = new Cexam();
-
-        $result = $exam->searchscoreinfos($dataArray);
-
-        if(count($result)==0){
-            $info = $this->rmsg(1,'考试内容为空');
-
-            return $info;
+        $log_id=$request->get('testlog_id');
+        $result = TestLog::find($log_id);
+        if($result){
+            return view('osce.theory.exam_online', ['data' =>$result]);
+        }else{
+            return redirect()->back()->withErrors('参数有误！');
         }
-
-        return $result;
     }
 
 

@@ -34,7 +34,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('addexam', ['uses'=>'CexamController@addaExame','as'=>'osce.cexam.postAddExam'] );
 		Route::get('examlist', ['uses'=>'CexamController@searchExameList']);
 		Route::get('dptexamlist', ['uses'=>'CexamController@searchDepartexamList']);
-		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo']);
+		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo','as'=>'osce.cexam.examinfo'])->middleware('auth');
 		Route::get('surestudent', ['uses'=>'CexamController@sureuserExame']);
 		Route::get('startexam', ['uses'=>'CexamController@startExame']);
 		Route::get('search-answerlist', ['uses'=>'CexamController@searchUserREesult']);
@@ -685,6 +685,20 @@ Route::group(['prefix'=>'d','namespace'=>'Modules\Osce\Http\Controllers\Doorplat
 Route::group(['prefix' => 'billboard-login', 'namespace' => 'Modules\Osce\Http\Controllers\Billboard'], function () {
 	Route::get('index', ['uses' => 'BillboardLoginController@getIndex', 'as' => 'osce.billboard.login.getIndex']);
 	Route::post('index', ['uses' => 'BillboardLoginController@postIndex', 'as' => 'osce.billboard.login.postIndex']);
+});
+Route::group(['prefix' => 's', 'namespace' => 'Modules\Osce\Http\Controllers\Billboard', 'middleware' => 'billboard'], function () {
+
+	//告示牌主页
+	Route::get('i', ['uses' => 'BillboardController@getIndex', 'as' => 'osce.billboard.getIndex']);
+	//学生接口
+	Route::get('student', ['uses' => 'BillboardController@getStudent', 'as' => 'osce.billboard.getStudent']);
+});
+
+
+//告示牌登陆
+Route::group(['prefix' => 'theory-login', 'namespace' => 'Modules\Osce\Http\Controllers\Theory'], function () {
+	Route::get('index', ['uses' => 'TheoryLoginController@getIndex', 'as' => 'osce.theory.login.getIndex']);
+	Route::post('index', ['uses' => 'TheoryLoginController@postIndex', 'as' => 'osce.theory.login.postIndex']);
 });
 Route::group(['prefix' => 's', 'namespace' => 'Modules\Osce\Http\Controllers\Billboard', 'middleware' => 'billboard'], function () {
 

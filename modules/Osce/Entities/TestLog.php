@@ -17,11 +17,14 @@ class TestLog extends Model
     protected $table 		= 	'g_test_log';
     public $incrementing	=	true;
     public $timestamps	    =	false;
-    protected $fillable 	=   ['exam_id','tid','teacher','start','end','status','ifshow'];
+    protected $fillable 	=   ['id','exam_id','tid','teacher','start','end','status','ifshow'];
 
 
     public function exam(){
         return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
+    }
+    public function question(){
+        return $this->hasOne('\Modules\Osce\Entities\TestContent','test_id','tid');
     }
     public function test(){
         return $this->hasOne('\Modules\Osce\Entities\Test','id','tid');
