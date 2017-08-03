@@ -24,7 +24,7 @@ class TestLog extends Model
         return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
     }
     public function question(){
-        return $this->hasOne('\Modules\Osce\Entities\TestContent','test_id','tid');
+        return $this->hasMany('\Modules\Osce\Entities\TestContent','test_id','tid');
     }
     public function test(){
         return $this->hasOne('\Modules\Osce\Entities\Test','id','tid');
