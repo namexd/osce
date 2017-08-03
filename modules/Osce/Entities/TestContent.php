@@ -24,7 +24,7 @@ class TestContent extends CommonModel
     protected $guarded      = [];
     protected $hidden       = [];
     protected $fillable     = [
-        'id', 'test_id', 'type', 'answer', 'poins', 'question',
+        'id', 'test_id', 'type', 'images', 'answer', 'poins', 'question',
         'pbase', 'base', 'cognition', 'source', 'lv', 'require','times',
         'degree', 'separate', 'content'
     ];
