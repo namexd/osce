@@ -37,6 +37,8 @@
 	            background-color: #f3f7f8;
 	        }
 	        .nav-tabs>li.active>a{border-bottom: 1px solid #fff!important}
+	        .table tbody td a:hover { text-decoration: none;}
+	        
 	    </style>		
 	    @section('head_css')
 	    @show{{-- head区域css样式表 --}}
