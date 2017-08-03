@@ -238,7 +238,7 @@ class TestController extends CommonController
             ['判断题','宫颈活组织检查目的是为了诊断子宫内膜癌。','','错误','诊断基础','检查方法','解释','自编','本科生','熟悉','2','中等','0.00','1'],
             ['判断题','宫颈刮片报告为巴氏Ⅰ级，提示正常，未见癌细胞。','','正确','诊断基础','检查方法','解释','自编','本科生','熟悉','2','简单','0.00','1']
         ];
-        Excel::create('shijuan',function($excel) use ($cellData){
+        Excel::create(iconv('UTF-8', 'GBK//ignore', '考题模板'),function($excel) use ($cellData){
             $excel->sheet('score', function($sheet) use ($cellData){
                 $sheet->rows($cellData);
             });
