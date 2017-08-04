@@ -10,9 +10,10 @@ namespace Modules\Osce\Entities;
 
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 use Auth;
 
-class Test extends CommonModel
+class Test extends Model
 {
     protected $connection = 'osce_mis';
     protected $table='g_test';

@@ -9,12 +9,9 @@
 
 namespace Modules\Osce\Entities;
 
-use DB;
-use Auth;
-use Modules\Osce\Repositories\Common;
-use Modules\Osce\Entities\StandardItem as SItem;
+use Illuminate\Database\Eloquent\Model;
 
-class TestContent extends CommonModel
+class TestContent extends Model
 {
     protected $connection   = 'osce_mis';
     protected $table        = 'g_test_content';

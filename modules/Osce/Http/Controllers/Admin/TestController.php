@@ -12,6 +12,7 @@ use DB;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
 use Modules\Osce\Entities\TestContent;
+use Modules\Osce\Entities\TestStatistics;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use Excel;
@@ -61,6 +62,17 @@ class TestController extends CommonController
         //dd($data);
         return view('osce::theory.exam_score',['data'=>$data]);
     }
+    public function studentscore(Request $request){
+        $this->validate($request, [
+            'id'    => 'required|integer',
+        ], [
+            'id.required' => 'ID必传'
+        ]);
+        $id = $request->get('id');
+        $data = TestStatistics::where('logid',$id)->paginate(10);
+        return view('osce::theory.student_score',['data'=>$data]);
+    }
+
     public function examcheck(){
         return view('osce::theory.exam_check');
     }

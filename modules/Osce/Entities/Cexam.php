@@ -443,7 +443,8 @@ class Cexam extends CommonModel
     //新增统计
     public function addstatics($data)
     {
-        $builder = DB::table('g_test_statistics')
+        $connection = DB::connection($this->connection);
+        $builder = $connection->table('g_test_statistics')
             ->where('g_test_statistics.logid',$data['logid'])
             ->where('g_test_statistics.stuid',$data['stuid'])
             ->update([

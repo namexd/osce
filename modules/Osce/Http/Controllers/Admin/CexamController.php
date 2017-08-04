@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use DB;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\TestLog;
+use Modules\Osce\Entities\TestStatistics;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use Modules\Osce\Entities\Cexam;
@@ -343,9 +344,10 @@ class CexamController extends CommonController
         $exam->addstatics($dataArray);
 
 
-        $info = $this->rmsg($result['code'],$result['msg']);
+        //$info = $this->rmsg($result['code'],$result['msg']);
 
-        return $info;
+        \Auth::logout();
+        return view('osce::theory.theory_login')->withErrors('1答卷成功');
 
     }
 
@@ -569,6 +571,7 @@ class CexamController extends CommonController
     }
 
 
+// 成绩列表
 
 
 
