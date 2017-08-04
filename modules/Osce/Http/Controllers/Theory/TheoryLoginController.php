@@ -12,6 +12,7 @@ namespace Modules\Osce\Http\Controllers\Theory;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestLog;
+use Modules\Osce\Entities\TestRecord;
 use Pingpong\Modules\Routing\Controller;
 
 class TheoryLoginController extends Controller
@@ -59,6 +60,7 @@ class TheoryLoginController extends Controller
             $test = TestLog::where('start','<',date('Y-m-d H:i:s'))->where('end','>',date('Y-m-d H:i:s'))->first();
             if(!empty($test)){
                 $user = \Auth::attempt(['username' => $username, 'password' => $password]);
+                //dd($user);
                 if ($user) {
                     $userid = \Auth::user()->id;
                     $isExist = Student::where('exam_id',$test->exam_id)->where('user_id',$userid)->first();
@@ -66,6 +68,12 @@ class TheoryLoginController extends Controller
                         \Auth::logout();
                         return redirect()->back()->withErrors('你不属于当前考试');
                     }
+                    $isAnswer =  TestRecord::where(['logid'=>$test->id,'stuid'=>$userid])->first();
+                    if(!empty($isAnswer)){
+                        \Auth::logout();
+                        return redirect()->back()->withErrors('你已经参加过当前考试');
+                    }
+                    session(['enterTime' => date('Y-m-d H:i:s')]);
                     return redirect()->route('osce.cexam.examinfo', ['testlog_id' => $test->id]);
                 } else {
                     throw new \Exception('账号密码错误');
