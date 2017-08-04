@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use DB;
 use Illuminate\Http\Request;
+use Modules\Msc\Entities\Student;
 use Modules\Osce\Entities\TestContent;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
@@ -62,6 +63,21 @@ class TestController extends CommonController
     }
     public function examcheck(){
         return view('osce::theory.exam_check');
+    }
+    public function rankStudent(Request $request){
+        $this->validate($request, [
+            'log_id'    => 'required|integer',
+        ],[
+            'log_id.required'   => 'ID必传',
+        ]);
+        $id = $request->get('log_id');
+        $logData =TestLog::find($id);
+        if($logData){
+           $list =  Student::where('exam_id',$logData->exam_id)->orderBy('id','asc')->get()->chunk(20);
+            return view('osce::theory.exam_student_list',['data'=>['test'=>$logData,'student'=>$list]]);
+        }else{
+            return redirect()->back()->withErrors('参数错误！');
+        }
     }
 
     //get  文件导入
