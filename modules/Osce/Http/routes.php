@@ -40,7 +40,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('search-answerlist', ['uses'=>'CexamController@searchUserREesult']);
 		Route::get('search-examdetail', ['uses'=>'CexamController@searchExamREesult']);
 		Route::get('studentlist', ['uses'=>'CexamController@searchDepartStudents']);
-		Route::post('addstudentresult', ['uses'=>'CexamController@addExameResult','as'=>'osce.cexam.addstudentresult']);
+		Route::post('addstudentresult', ['uses'=>'CexamController@addExameResult','as'=>'osce.cexam.addstudentresult'])->middleware('auth');
 		Route::post('modifyresult', ['uses'=>'CexamController@modifyExamREesult']);
 		Route::get('surecanshow', ['uses'=>'CexamController@sureScoreShow']);
 		Route::get('scorelist', ['uses'=>'CexamController@searchResultList']);

@@ -286,8 +286,8 @@ class CexamController extends CommonController
 
     public function addExameResult(Request $request)
     {
-        $dataArray=$request->only('logid','stuid','cid','answer','time','type');
-
+        $dataArray=$request->only('logid','cid','answer','time','type');
+        $dataArray['stuid'] =  $userid = \Auth::user()->id;
 
         $exam = new Cexam();
 
