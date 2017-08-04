@@ -190,6 +190,10 @@ class CexamController extends CommonController
         if($result){
             //dd($result->times*60);
             $endTime =strtotime(session('enterTime'))+($result->times*60)-time();
+            if($endTime<0){
+                \Auth::logout();
+                return redirect()->back()->withErrors('考试时间已经结束！');
+            }
             return view('osce::theory.exam_online', ['data' =>$result,'endtime'=>$endTime]);
         }else{
             return redirect()->back()->withErrors('参数有误！');
