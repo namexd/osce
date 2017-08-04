@@ -187,6 +187,7 @@ class CexamController extends CommonController
     {
         $log_id=$request->get('testlog_id');
         $result = TestLog::find($log_id);
+        session(['enterTime' => date('Y-m-d H:i:s')]);
         if($result){
             return view('osce.theory.exam_online', ['data' =>$result]);
         }else{
