@@ -25,6 +25,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('chooseexam', ['uses'=>'TestController@chooseexam', 'as' => 'osce.theory.chooseexam']);
 		Route::get('chooseteacher', ['uses'=>'TestController@chooseteacher', 'as' => 'osce.theory.choosteacher']);
 		Route::get('del', ['uses'=>'TestController@del',  'as' => 'osce.theory.del']);
+		Route::get('rankStudent', ['uses'=>'TestController@rankStudent',  'as' => 'osce.theory.rankStudent']);//排考查看
 
 	});
 
