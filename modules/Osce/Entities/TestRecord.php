@@ -10,10 +10,10 @@ namespace Modules\Osce\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TestReocrd extends Model
+class TestRecord extends Model
 {
     protected $connection = 'osce_mis';
-    protected $table = 't_test_record';
+    protected $table = 'g_test_record';
     public $timestamps = false;
     protected $primaryKey = 'id';
     public $incrementing = true;
