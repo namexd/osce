@@ -272,7 +272,6 @@ class Cexam extends CommonModel
         $result = $connection->table('g_test_statistics')
             ->where('g_test_statistics.logid',$dataArray['logid'])
             ->where('g_test_statistics.stuid',$dataArray['stuid'])
-            ->where('g_test_statistics.ifexam',3)
             ->first();
         return $result;
     }

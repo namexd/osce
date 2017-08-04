@@ -296,7 +296,6 @@ class CexamController extends CommonController
         $dataArray['time'] = time();
         $exam = new Cexam();
 
-        $result ='';
 
         $score = 0;
 
@@ -307,10 +306,7 @@ class CexamController extends CommonController
         $ifadd = $exam->ifadd($dataArray);
 
         if($ifadd){
-
-            $info = $this->rmsg(0,'您已提交过了 请勿重复提交');
-
-            return $info;
+            return view('osce::theory.theory_login')->withErrors('您已提交过了 请勿重复提交');
         }
 
         //增加到表g_test_statistics
