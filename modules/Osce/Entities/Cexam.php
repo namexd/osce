@@ -222,6 +222,7 @@ class Cexam extends CommonModel
         $connection->table('g_test_statistics')->insert([
         'logid' => $data['id'],
         'stuid' => $data['userid'],
+         'time' => $data['time']
     ]);
     }
 
@@ -510,7 +511,8 @@ class Cexam extends CommonModel
     //更新统计
     public function updatestatics($data)
     {
-        $builder = DB::table('g_test_statistics')
+        $connection = DB::connection($this->connection);
+        $builder = $connection->table('g_test_statistics')
             ->where('g_test_statistics.logid',$data['logid'])
             ->where('g_test_statistics.stuid',$data['stuid'])
             ->update([
