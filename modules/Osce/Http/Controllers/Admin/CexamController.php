@@ -280,24 +280,12 @@ class CexamController extends CommonController
 
     /** 提交答案
      * @method GET
-     * @url   fatherdepart
-     * @access public
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * @return view
-     *
-     * @version 1.0
-     * @author zhochong <zouyuchao@misrobot.com>
-     * @date 2016-5-12 14:05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * @
      */
 
     public function addExameResult(Request $request)
     {
         $dataArray=$request->only('logid','stuid','cid','answer','time','type');
 
-        $this->gyinput($dataArray);
 
         $exam = new Cexam();
 
@@ -309,11 +297,7 @@ class CexamController extends CommonController
         $answers = $dataArray['answer'];
 
 
-        $ifadd = DB::table('g_test_statistics')
-            ->where('g_test_statistics.logid',$dataArray['logid'])
-            ->where('g_test_statistics.stuid',$dataArray['stuid'])
-            ->where('g_test_statistics.ifexam',3)
-            ->first();
+        $ifadd = $exam->ifadd($dataArray);
 
         if($ifadd){
 
@@ -322,8 +306,7 @@ class CexamController extends CommonController
             return $info;
         }
 
-        //更新学生的答题状态
-        $dataArray['status'] =3;
+        //增加到表g_test_statistics
         $dataArray['userid'] =$dataArray['stuid'];
         $dataArray['id'] =$dataArray['logid'];
         $exam-> stunowexam($dataArray);
@@ -443,7 +426,6 @@ class CexamController extends CommonController
     {
         $dataArray=$request->only('id','isright','poins','logid','stuid');
 
-        $this->gyinput($dataArray);
 
         $exam = new Cexam();
 

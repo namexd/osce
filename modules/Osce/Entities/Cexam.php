@@ -215,24 +215,21 @@ class Cexam extends CommonModel
     }
 
 
-    //查询学生的考试状态
+    //更新学生的答题状态
     public function stunowexam($data)
     {
-
-        DB::table('g_test_statistics')
-            ->where('g_test_statistics.logid',$data['id'])
-            ->where('g_test_statistics.stuid',$data['userid'])
-            ->where('g_test_statistics.ifexam','>',0)
-            ->update([
-                'g_test_statistics.ifexam'=>$data['status']
-            ]);
+        $connection = DB::connection($this->connection);
+        $connection->table('g_test_statistics')->insert([
+        'logid' => $data['id'],
+        'stuid' => $data['userid'],
+    ]);
     }
 
     //查询学生的考试状态
     public function searchuserexamstatus($data)
     {
-
-        $builder=  DB::table('g_test_statistics')
+        $connection = DB::connection($this->connection);
+        $builder = $connection->table('g_test_statistics')
             ->where('g_test_statistics.logid',$data['id'])
             ->where('g_test_statistics.stuid',$data['userid'])
             ->where('g_test_statistics.ifexam','>',0)
@@ -245,7 +242,8 @@ class Cexam extends CommonModel
     //更新学生的考试状态
     public function addexamresult($data)
     {
-        $id=  DB::table('g_test_record')
+        $connection = DB::connection($this->connection);
+        $id=  $connection->table('g_test_record')
             ->insertGetId([
                 'logid' =>  $data['logid'],
                 'stuid' =>  $data['stuid'],
@@ -265,6 +263,17 @@ class Cexam extends CommonModel
 
         return $result;
 
+    }
+
+    //判断学生是否已提交试卷
+    public function ifadd($dataArray){
+        $connection = DB::connection($this->connection);
+        $result = $connection->table('g_test_statistics')
+            ->where('g_test_statistics.logid',$dataArray['logid'])
+            ->where('g_test_statistics.stuid',$dataArray['stuid'])
+            ->where('g_test_statistics.ifexam',3)
+            ->first();
+        return $result;
     }
 
 
@@ -325,8 +334,8 @@ class Cexam extends CommonModel
     //修改试卷的信息
     public function updateExamDetail($data)
     {
-
-        $sbuder = DB::table('g_test_record')
+        $connection = DB::connection($this->connection);
+        $sbuder = $connection->table('g_test_record')
             ->where('g_test_record.logid',$data['logid'])
             ->where('g_test_record.cid',$data['id'])
             ->get();
@@ -373,8 +382,9 @@ class Cexam extends CommonModel
     //自动判断客观题成绩
     public function objectResult($data)
     {
+        $connection = DB::connection($this->connection);
 
-        $record = DB::table('g_test_record')
+        $record = $connection->table('g_test_record')
             ->join('g_test_content','g_test_content.id','=','g_test_record.cid')
             ->where('g_test_record.type','<',4)
             ->where('g_test_record.id',$data['id'])
@@ -384,7 +394,7 @@ class Cexam extends CommonModel
         $score=0;
         if($record){
             if($record[0]->answer==$record[0]->rightresult){
-                DB::table('g_test_record')
+                $connection->table('g_test_record')
                     ->where('g_test_record.id',$data['id'])
                     ->update([
                         'isright' => 1,
@@ -393,7 +403,7 @@ class Cexam extends CommonModel
 
                 $score+=$record[0]->poins;
             }else{
-                DB::table('g_test_record')
+                $connection->table('g_test_record')
                     ->where('g_test_record.id',$data['id'])
                     ->update([
                         'isright' => 2,
