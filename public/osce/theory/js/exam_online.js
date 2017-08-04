@@ -30,7 +30,7 @@ function setdanxuanstr(arr,str) {
 			_str2+=
 					'<li class="">'
 						+'<div class="radio_icon left"></div>'
-						+'<span class="marl_10"><span>'+aZimu[j]+'</span>.'+_arr[j]+'</span>' 
+						+'<label class="marl_10"><span>'+aZimu[j]+'</span>.'+_arr[j]+'</label>' 
 					+'</li>'
 		}
 		str+=
@@ -106,12 +106,12 @@ function setwendastr(arr,str) {
 
 function tojiaojuan() {
 	$('.type_1 .allSubject,.type_3 .allSubject').each(function () {
-		$(this).find('.answer').val($(this).find('ul li.check span').html());
+		$(this).find('.answer').val($(this).find('.radio_icon.check').parent().find('span').html());
 	});
 	$('.type_2 .allSubject').each(function () {
 		var _arr = [];
-		$(this).find('ul li.check span').each(function () {
-			_arr.push($(this).html());
+		$(this).find('.radio_icon.check').each(function () {
+			_arr.push($(this).parent().find('span').html());
 		});
 		$(this).find('.answer').val(_arr.join(' '));
 	});
@@ -121,6 +121,6 @@ function tojiaojuan() {
 			_arr.push($.trim($(this).val()));
 		});	
 		$(this).find('.answer').val(_arr.join(' '));
-	});							
+	});		
 	$('.form-shijuan').submit();
 };
