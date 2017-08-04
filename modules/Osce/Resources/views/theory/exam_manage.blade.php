@@ -4,7 +4,12 @@
 	新增考试
 @stop
 @section('head_css')
-
+	<style>
+		.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+		    background-color: #fff;
+		}		
+		
+	</style>
 		
 		
 
@@ -93,16 +98,23 @@
 	                </div>
 	                <div class="hr-line-dashed"></div>	
 	                <div class="form-group">
+	                    <label for="end" class="col-sm-2 control-label">考试时长：<i></i></label>
+	                    <div class="col-sm-5">
+							<input type="text" placeholder="请填写考试时长(分钟)" class="form-control" name="times" />
+	                    </div>
+	                </div>
+	                <div class="hr-line-dashed"></div>	
+	                <div class="form-group">
 	                    <label for="start" class="col-sm-2 control-label">开始时间：<i></i></label>
 	                    <div class="col-sm-5">
-							<input type="text" placeholder="请选择开始时间" class="form-control sel-time" id="start" name="start" />
+							<input type="text" readonly="readonly" placeholder="请选择开始时间" class="form-control sel-time" id="start" name="start" />
 	                    </div>
 	                </div>
 	                <div class="hr-line-dashed"></div>	
 	                <div class="form-group">
 	                    <label for="end" class="col-sm-2 control-label">结束时间：<i></i></label>
 	                    <div class="col-sm-5">
-							<input type="text" placeholder="请选择结束时间" class="form-control sel-time" id="end" name="end" />
+							<input type="text" readonly="readonly" placeholder="请选择结束时间" class="form-control sel-time" id="end" name="end" />
 	                    </div>
 	                </div>
 	                <div class="hr-line-dashed"></div>	
