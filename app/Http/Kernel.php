@@ -29,6 +29,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'csrf' => \App\Http\Middleware\VerifyCsrfToken::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
+        'theoryauth' => \App\Http\Middleware\TheoryAuthenticate::class,
         'wechatauth' => \App\Http\Middleware\WeChatAuthenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,

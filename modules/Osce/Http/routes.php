@@ -34,13 +34,13 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('addexam', ['uses'=>'CexamController@addaExame','as'=>'osce.cexam.postAddExam'] );
 		Route::get('examlist', ['uses'=>'CexamController@searchExameList']);
 		Route::get('dptexamlist', ['uses'=>'CexamController@searchDepartexamList']);
-		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo','as'=>'osce.cexam.examinfo'])->middleware('auth');
+		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo','as'=>'osce.cexam.examinfo'])->middleware('theoryauth');
 		Route::get('surestudent', ['uses'=>'CexamController@sureuserExame']);
 		Route::get('startexam', ['uses'=>'CexamController@startExame']);
 		Route::get('search-answerlist', ['uses'=>'CexamController@searchUserREesult']);
 		Route::get('search-examdetail', ['uses'=>'CexamController@searchExamREesult']);
 		Route::get('studentlist', ['uses'=>'CexamController@searchDepartStudents']);
-		Route::post('addstudentresult', ['uses'=>'CexamController@addExameResult','as'=>'osce.cexam.addstudentresult'])->middleware('auth');
+		Route::post('addstudentresult', ['uses'=>'CexamController@addExameResult','as'=>'osce.cexam.addstudentresult'])->middleware('theoryauth');
 		Route::post('modifyresult', ['uses'=>'CexamController@modifyExamREesult']);
 		Route::get('surecanshow', ['uses'=>'CexamController@sureScoreShow']);
 		Route::get('scorelist', ['uses'=>'CexamController@searchResultList']);
