@@ -18,6 +18,7 @@ class TestLog extends Model
     public $incrementing	=	true;
     public $timestamps	    =	false;
     protected $fillable 	=   ['id','exam_id','tid','teacher','times','start','end','status','ifshow'];
+    protected $hidden = [];
 
 
     public function exam(){

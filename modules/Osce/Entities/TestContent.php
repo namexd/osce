@@ -19,7 +19,7 @@ class TestContent extends Model
     protected $primaryKey   = 'id';
     public    $incrementing = true;
     protected $guarded      = [];
-    protected $hidden       = [];
+    protected $hidden = ['answer'];
     protected $fillable     = [
         'id', 'test_id', 'type', 'images', 'answer', 'poins', 'question',
         'pbase', 'base', 'cognition', 'source', 'lv', 'require','times',
