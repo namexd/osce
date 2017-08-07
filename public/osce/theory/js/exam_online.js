@@ -34,7 +34,7 @@ function setdanxuanstr(arr,str) {
 					+'</li>'
 		}
 		str+=
-			'<div class="allSubject">'
+			'<div class="allSubject" _a="'+arr[i].answer+'" _ra="'+arr[i].rightanswer+'">'
 				+setnamestr(arr[i],i)
 				+'<ul>'
 					+_str2
@@ -49,7 +49,7 @@ function setdanxuanstr(arr,str) {
 function setpanduanstr(arr,str) {
 	for (var i = 0 ; i < arr.length; i++) {
 		str+=
-			'<div class="allSubject">'
+			'<div class="allSubject" _a="'+arr[i].answer+'" _ra="'+arr[i].rightanswer+'">'
 				+setnamestr(arr[i],i)
 				+'<ul>'
 					+'<li class="">'
@@ -76,7 +76,7 @@ function settiankongstr(arr,str) {
 			_str2+='<li class=""><input type="text" class="form-control" /></li>';
 		}
 		str+=
-			'<div class="allSubject">'
+			'<div class="allSubject" _a="'+arr[i].answer+'" _ra="'+arr[i].rightanswer+'">'
 				+setnamestr(arr[i],i)
 				+'<ul>'
 					+_str2
@@ -91,7 +91,7 @@ function settiankongstr(arr,str) {
 function setwendastr(arr,str) {
 	for (var i = 0 ; i < arr.length; i++) {
 		str+=
-			'<div class="allSubject">'
+			'<div class="allSubject" _a="'+arr[i].answer+'" _ra="'+arr[i].rightanswer+'">'
 				+setnamestr(arr[i],i)
 				+'<ul>'
 					+'<li class=""><textarea class="form-control"></textarea></li>'

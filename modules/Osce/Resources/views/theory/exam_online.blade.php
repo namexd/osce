@@ -28,7 +28,7 @@
 .question_type li { padding: 5px 0;}
 .allSubject div { padding: 10px 0 5px;}
 #jiaojuan {}
-
+.allSubject label { font-weight: normal;}
         .colockbox{width:250px;height:30px;overflow: hidden; color:#000;}
         .colockbox span{
             float:left;display:inline-block;

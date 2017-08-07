@@ -1,7 +1,7 @@
 @extends('osce::theory.base')
 
 @section('title')
-	成绩管理
+	成绩查询
 @stop
 
 
@@ -16,7 +16,7 @@
 	<div class="wrapper wrapper-content animated fadeInRight">
 	    <div class="row table-head-style1 ">
 	        <div class="col-xs-6 col-md-2">
-	            <h5 class="title-label">考试列表</h5>
+	            <h5 class="title-label">{{$data[0]->logdata->exam->name or ''}} 的理论考试</h5>
 	        </div>
 	    </div>
    		<div class="container-fluid ibox-content" id="list_form">
@@ -24,11 +24,11 @@
                 <thead>
                     <tr>
                         <th>序号</th>
-                        <th>考试名称</th>
-                        <th>试卷</th>
-                        <th>监考老师</th>
-                        <th>开始时间</th>
-                        <th>结束时间</th>
+                        <th>学生姓名</th>
+                        <th>考试时长</th>
+                        <th>试卷总分</th>
+                        <th>客观题得分</th>
+                        <th>主观题得分</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -36,15 +36,15 @@
             		@foreach($data->items() as $k=>$val)
                     <tr>
                         <td >{{$k+1}}</td>
-                        <td >{{$val->exam->name}}的理论考试</td>
-                        <td >{{$val->test->name}}</td>
-                        <td >{{$val->teacherdata->name}}</td>
-                        <td >{{$val->start}}</td>  
-                        <td >{{$val->end}}</td>                  
+                        <td >{{$val->student->name}}</td>
+                        <td >{{$val->logdata->times}}</td>
+                        <td >{{$val->logdata->test->score}}</td>  
+                        <td >{{$val->objective}}</td>
+                        <td >{{$val->subjective}}</td> 
                         
                         <td>
-                            <a class="state1 modal-control" href="{{route('osce.theory.studentscore',['id'=>$val->id])}}" onclick="deletelist({{$val->id}})">
-                                <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i>查看成绩</span>
+                            <a class="state1 modal-control" href="{{route('osce.cexam.searchexamdetail',['logid'=>$val->logid,'userid'=>$val->stuid,'exam'=>$val->logdata->exam->name])}}" onclick="deletelist({{$val->id}})">
+                                <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i>查看详细</span>
                             </a>
 	                    </td>
                     </tr>
