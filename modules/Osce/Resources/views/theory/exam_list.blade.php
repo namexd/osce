@@ -20,10 +20,10 @@
 @section('body')
 	<div class="wrapper wrapper-content animated fadeInRight">
 	    <div class="row table-head-style1 ">
-	        <div class="col-xs-6 col-md-2">
+	        <div class="col-xs-6">
 	            <h5 class="title-label">考试列表</h5>
 	        </div>
-	        <div class="col-xs-6 col-md-2" style="float: right;">
+	        <div class="col-xs-6" style="float: right;">
 	            <a  href="{{route('osce.theory.add')}}" class="btn btn-primary" style="float: right;">&nbsp;新增&nbsp;</a>
 	        </div>
 	    </div>
