@@ -37,10 +37,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('examlist', ['uses'=>'CexamController@searchExameList']);
 		Route::get('dptexamlist', ['uses'=>'CexamController@searchDepartexamList']);
 		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo','as'=>'osce.cexam.examinfo'])->middleware('theoryauth');
-		Route::get('surestudent', ['uses'=>'CexamController@sureuserExame']);
-		Route::get('startexam', ['uses'=>'CexamController@startExame']);
-		Route::get('search-answerlist', ['uses'=>'CexamController@searchUserREesult']);
-		Route::get('search-examdetail', ['uses'=>'CexamController@searchExamREesult']);
+
+		Route::get('searchexamdetail', ['uses'=>'CexamController@searchExamREesult','as'=>'osce.cexam.searchexamdetail']);//查学学生成绩详细信息
 		Route::get('studentlist', ['uses'=>'CexamController@searchDepartStudents']);
 		Route::post('addstudentresult', ['uses'=>'CexamController@addExameResult','as'=>'osce.cexam.addstudentresult'])->middleware('theoryauth');
 		Route::post('modifyresult', ['uses'=>'CexamController@modifyExamREesult']);

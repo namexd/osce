@@ -406,7 +406,9 @@ class CexamController extends CommonController
 
         $result= $exam->searchExamDetail($dataArray['logid'],$dataArray['userid']);
 
-        return $result;
+
+        return view('osce::theory.searchexamdetail',['data'=>$result]);
+
 
     }
 
