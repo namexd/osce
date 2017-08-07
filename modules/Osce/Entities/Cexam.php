@@ -287,12 +287,20 @@ class Cexam extends CommonModel
     public function updatestatics($data)
     {
         $connection = DB::connection($this->connection);
+        $arrobj = $connection->table('g_test_log')->where('id',$data['logid'])->first();
+        $tid = $arrobj->tid;
+        $arrobj1 = $connection->table('g_test_content')->where('test_id',$tid)->where('type','>',3)->first();
+        if($arrobj1){
+            $status = 2;
+        }else{
+            $status = 1;
+        }
         $builder = $connection->table('g_test_statistics')
             ->where('g_test_statistics.logid',$data['logid'])
             ->where('g_test_statistics.stuid',$data['stuid'])
             ->update([
                 'subjective' =>   $data['subjective'],
-                'status' => 1
+                'status' => $status
             ]);
 
         if($builder){
