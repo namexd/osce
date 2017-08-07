@@ -175,7 +175,7 @@
 @section('body')
 	<div class="wrapper wrapper-content animated fadeInRight">
 	    <div class="row table-head-style1 ">
-	        <div class="col-xs-6 col-md-2">
+	        <div class="col-xs-6">
 	            <h5 class="title-label">{{request()->get('exam')}} 的理论考试</h5>
 	        </div>
 	    </div>
@@ -186,10 +186,10 @@
                         <h2>{{$data[0]->examname}}</h2>
                         <span>考生姓名：</span>
                         <span class="checkTime">{{$data[0]->stuname}}</span>
-                        <span style="margin-left: 1em;">考试时间：</span>
-                        <span class="score">{{$data[0]->alltime}}分钟</span>
-                        <span style="margin-left: 1em;">总分：</span>
-                        <span class="score">{{$data[0]->score}}分</span>
+                        <span style="margin-left: 1em;">考试时长：</span>
+                        <span class="score">{{$data[0]->times}}分钟</span>
+                        <span style="margin-left: 1em;">试卷总分：</span>
+                        <span class="score">{{$data[0]->examscore}}分</span>
                     </div>
                 </div>
             </div>

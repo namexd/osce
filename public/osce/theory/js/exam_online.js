@@ -11,7 +11,8 @@ var aZimu = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N'];
 function setnamestr(question,i) {
 	var _name = 
 		'<div class="">'
-			+'<span class="font16">'+(i+1)+'、'+question.question+'（'+question.poins+'分）</span>'
+			+'<span class="font16">'+(i+1)+'、'+question.question+'（'+question.poins+'分）'
+			+(question.score||question.score==0?'（得分：'+question.score+'分）':'')+'</span>'
 			+(question.images?'<img src="question.images" />':'')
 		+'</div>'				
 	return	_name		
