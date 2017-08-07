@@ -211,7 +211,7 @@ class Cexam extends CommonModel
         $connection = DB::connection($this->connection);
         $arrobj = $connection->table('g_test_log')->where('id',$data['logid'])->first();
         $tid = $arrobj->tid;
-        $arrobj1 = $connection->table('g_test_content')->where('id',$tid)->where('type','>',3)->first();
+        $arrobj1 = $connection->table('g_test_content')->where('test_id',$tid)->where('type','>',3)->first();
         if($arrobj1){
             $status = 2;
         }else{
