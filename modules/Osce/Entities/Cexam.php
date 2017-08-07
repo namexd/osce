@@ -149,7 +149,7 @@ class Cexam extends CommonModel
 
         if($sbuder){
 
-            $search = DB::table('g_test_record')
+            $search = $connection->table('g_test_record')
                 ->where('g_test_record.logid',$data['logid'])
                 ->where('g_test_record.cid',$data['id'])
                 ->update([
