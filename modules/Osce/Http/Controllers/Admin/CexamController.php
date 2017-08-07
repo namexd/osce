@@ -54,120 +54,9 @@ class CexamController extends CommonController
 
     }
 
-    /** 查询负责考试的考试信息列表
-     * @method GET
-     */
-
-    public function searchExameList(Request $request)
-    {
-
-        $exam = new Cexam();
-
-        $dataArray=$request->only('id','type','usertype','department_id','page','pagecount');
-
-
-        $page = $dataArray['page'];
-
-        $pagecount = $dataArray['pagecount'];
-
-        $result = $exam->searchscorelist($dataArray);
-
-        $info = $this->paginationWay($result,$page,$pagecount);
-
-        return $info;
-    }
-
-
-    /** 查询负责考试的考试信息列表
-     * @method GET
-     * @url   fatherdepart
-     * @access public
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * @return view
-     *
-     * @version 1.0
-     * @author zhochong <zouyuchao@misrobot.com>
-     * @date 2016-5-12 14:05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * @
-     */
-
-    public function searchDepartexamList(Request $request)
-    {
-
-        $exam = new Cexam();
-
-        $dataArray=$request->only('id','page','pagecount');
-
-        $page = $dataArray['page'];
-
-        $pagecount = $dataArray['pagecount'];
-
-        $result = $exam->searchdepartexamlist($dataArray);
-
-        $info = $this->paginationWay($result,$page,$pagecount);
-
-        $info['nowtime']=time();
-
-        return $info;
-    }
-
-    /** 查询负责考试的考试信息列表
-     * @method GET
-     * @url   fatherdepart
-     * @access public
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * @return view
-     *
-     * @version 1.0
-     * @author zhochong <zouyuchao@misrobot.com>
-     * @date 2016-5-12 14:05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * @
-     */
-
-    public function searchModelExam(Request $request)
-    {
-
-        $exam = new Cexam();
-
-        $dataArray=$request->only('userid');
-
-        $result = $exam->searchModelExamNews($dataArray);
-
-        return $result;
-    }
 
 
 
-    /** 查询当前轮转科室里的学生信息
-     * @method GET
-     * @url   fatherdepart
-     * @access public
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * @return view
-     *
-     * @version 1.0
-     * @author zhochong <zouyuchao@misrobot.com>
-     * @date 2016-5-12 14:05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * @
-     */
-
-    public function searchDepartStudents(Request $request)
-    {
-        $dataArray=$request->only('department_id','logid');
-
-        $exam = new Cexam();
-
-        $result = $exam->searchDepartStudents($dataArray);
-
-
-        return $result;
-    }
 
     /** 查询考试
      * @method GET
@@ -202,88 +91,6 @@ class CexamController extends CommonController
     }
 
 
-    /** 确认学生能参加考试
-     * @method GET
-     * @url   fatherdepart
-     * @access public
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * @return view
-     *
-     * @version 1.0
-     * @author zhochong <zouyuchao@misrobot.com>
-     * @date 2016-5-12 14:05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * @
-     */
-
-    public function sureuserExame(Request $request)
-    {
-        $dataArray=$request->only('id','logid');
-
-        $exam = new Cexam();
-
-        $result = $exam->modifyuserexamstatus($dataArray);
-
-        $info = $this->rmsg($result['code'],$result['msg']);
-
-        return $info;
-    }
-    /** 开始考试
-     * @method GET
-     * @url   fatherdepart
-     * @access public
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * @return view
-     *
-     * @version 1.0
-     * @author zhochong <zouyuchao@misrobot.com>
-     * @date 2016-5-12 14:05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * @
-     */
-
-    public function startExame(Request $request)
-    {
-        $dataArray=$request->only('id','userid');
-
-        $exam = new Cexam();
-
-        $ifexam= $exam->searchuserexamstatus($dataArray);
-
-
-        if(count($ifexam)==0) {
-            $info['status']= 3;
-            $info['msg']= '此学生不能参加考试,请等待老师确认';
-            $info['data']=[];
-            return $info;
-        }else{
-
-            $result = $exam->searchscorequestion($dataArray);
-
-            if(count($result)==0) {
-                $info['status']= 2;
-                $info['msg']= '考试内容为空';
-                $info['data']=[];
-
-                return $info;
-            }
-
-
-            $info['status']= 1;
-            $info['msg']= '可以考试';
-            $info['datas']=$result;
-            $info['nowtime']=time();
-
-
-            $dataArray['status'] = 2;
-            $exam-> stunowexam($dataArray);
-
-            return $info;
-        }
-
-    }
 
     /** 提交答案
      * @method GET
@@ -347,40 +154,7 @@ class CexamController extends CommonController
 
     }
 
-    /** 查询试卷答题人的列表
-     * @method GET
-     * @url   fatherdepart
-     * @access public
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * @return view
-     *
-     * @version 1.0
-     * @author zhochong <zouyuchao@misrobot.com>
-     * @date 2016-5-12 14:05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * @
-     */
 
-    public function searchUserREesult(Request $request)
-    {
-
-        //status、subjective、objective
-        $dataArray=$request->only('logid','page','pagecount');
-
-        $page = $dataArray['page'];
-
-        $pagecount = $dataArray['pagecount'];
-
-        $exam = new Cexam();
-
-        $result= $exam->searchResultlist($dataArray['logid']);
-
-        $info = $this->paginationWay($result,$page,$pagecount);
-
-        return $info;
-
-    }
 
 
     /** 查询某个学生试卷的具体信息
@@ -460,37 +234,7 @@ class CexamController extends CommonController
     }
 
 
-    /**确认某次考试能看了
-     * @method GET
-     * @url   fatherdepart
-     * @access public
-     * @param Request $request post请求<br><br>
-     * <b>post请求字段：</b>
-     * @return view
-     *
-     * @version 1.0
-     * @author zhochong <zouyuchao@misrobot.com>
-     * @date 2016-5-12 14:05
-     * @copyright 2013-2015 MIS misrobot.com Inc. All Rights Reserved
-     * @
-     */
 
-    public function sureScoreShow(Request $request)
-    {
-        $dataArray=$request->only('id');
-
-        $exam = new Cexam();
-
-        $result=$exam->updateExamCanShow($dataArray);
-
-        if($result){
-            $exam->addaveragescore($dataArray);
-        }
-
-        $info = $this->rmsg($result['code'],$result['msg']);
-
-        return $info;
-    }
 
 
 

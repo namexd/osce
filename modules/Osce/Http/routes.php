@@ -34,17 +34,14 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	Route::group(['prefix' => "cexam", 'namespace' => 'Admin'], function()
 	{
 		Route::post('addexam', ['uses'=>'CexamController@addaExame','as'=>'osce.cexam.postAddExam'] );
-		Route::get('examlist', ['uses'=>'CexamController@searchExameList']);
-		Route::get('dptexamlist', ['uses'=>'CexamController@searchDepartexamList']);
+
 		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo','as'=>'osce.cexam.examinfo'])->middleware('theoryauth');
 
 		Route::get('searchexamdetail', ['uses'=>'CexamController@searchExamREesult','as'=>'osce.cexam.searchexamdetail']);//查学学生成绩详细信息
-		Route::get('studentlist', ['uses'=>'CexamController@searchDepartStudents']);
+
 		Route::post('addstudentresult', ['uses'=>'CexamController@addExameResult','as'=>'osce.cexam.addstudentresult'])->middleware('theoryauth');
-		Route::post('modifyresult', ['uses'=>'CexamController@modifyExamREesult']);
-		Route::get('surecanshow', ['uses'=>'CexamController@sureScoreShow']);
-		Route::get('scorelist', ['uses'=>'CexamController@searchResultList']);
-		Route::get('modelexamnews', ['uses'=>'CexamController@searchModelExam']);
+		Route::post('modifyresult', ['uses'=>'CexamController@modifyExamREesult','as'=>'osce.cexam.modifyresult']);//老师批卷
+
 
 	});
 	//---新加理论考试系统end
