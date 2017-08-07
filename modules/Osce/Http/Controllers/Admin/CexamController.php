@@ -111,8 +111,8 @@ class CexamController extends CommonController
 
 
         $ifadd = $exam->ifadd($dataArray);
-
         if($ifadd){
+            \Auth::logout();
             return view('osce::theory.theory_login')->withErrors('您已提交过了 请勿重复提交');
         }
 
