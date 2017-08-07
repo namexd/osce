@@ -38,9 +38,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo','as'=>'osce.cexam.examinfo'])->middleware('theoryauth');
 
 		Route::get('searchexamdetail', ['uses'=>'CexamController@searchExamREesult','as'=>'osce.cexam.searchexamdetail']);//查学学生成绩详细信息
+		Route::get('modifystudentexam', ['uses'=>'CexamController@searchExamREesult','as'=>'osce.cexam.modifystudentexam']);//老师批卷
 
 		Route::post('addstudentresult', ['uses'=>'CexamController@addExameResult','as'=>'osce.cexam.addstudentresult'])->middleware('theoryauth');
-		Route::post('modifyresult', ['uses'=>'CexamController@modifyExamREesult','as'=>'osce.cexam.modifyresult']);//老师批卷
+		Route::post('modifyresult', ['uses'=>'CexamController@modifyExamREesult','as'=>'osce.cexam.modifyresult']);//老师批卷提交
 
 
 	});
