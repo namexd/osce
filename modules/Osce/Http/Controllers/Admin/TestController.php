@@ -73,6 +73,17 @@ class TestController extends CommonController
         return view('osce::theory.student_score',['data'=>$data]);
     }
 
+    public function studentmarking(Request $request){
+        $this->validate($request, [
+            'id'    => 'required|integer',
+        ], [
+            'id.required' => 'ID必传'
+        ]);
+        $id = $request->get('id');
+        $data = TestStatistics::where('logid',$id)->paginate(10);
+        return view('osce::theory.student_marking',['data'=>$data]);
+    }
+
     public function examcheck(){
         return view('osce::theory.exam_check');
     }

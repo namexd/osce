@@ -242,9 +242,8 @@ class CexamController extends CommonController
         $sysarray['stuid']=$dataArray['stuid'];
         //更新统计表里的分数
         $exam ->updatestatics($sysarray);
-        $info = $this->rmsg(1,'成功');
+        return view('osce::theory.theory_login')->withErrors('1批巻成功');
 
-        return $info;
     }
 
 
