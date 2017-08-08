@@ -242,7 +242,7 @@ class CexamController extends CommonController
         $sysarray['stuid']=$dataArray['stuid'];
         //更新统计表里的分数
         $exam ->updatestatics($sysarray);
-        return view('osce::theory.student_marking')->withErrors('1批巻成功');
+        return redirect()->route('osce.cexam.modifystudentexam',array('logid'=>$dataArray['logid'],'userid'=>$dataArray['stuid']))->withErrors('1批巻成功');
 
     }
 
