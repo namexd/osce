@@ -62,6 +62,14 @@ class TestController extends CommonController
         //dd($data);
         return view('osce::theory.exam_score',['data'=>$data]);
     }
+
+    public function examcheck(){
+        $data = TestLog::where('end','<',date('Y-m-d H:i:s'))->paginate(10);
+        //dd($data);
+        return view('osce::theory.exam_check',['data'=>$data]);
+    }
+
+
     public function studentscore(Request $request){
         $this->validate($request, [
             'id'    => 'required|integer',

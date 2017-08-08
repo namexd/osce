@@ -18,6 +18,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('examquestion', ['uses'=>'TestController@examquestion', 'as' => 'osce.theory.examquestion']);//题库管理
 		Route::get('delquestion', ['uses'=>'TestController@delquestion', 'as' => 'osce.theory.delquestion']);//题库管理
 		Route::get('examscore', ['uses'=>'TestController@examscore', 'as' => 'osce.theory.examscore']);//成绩管理
+		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//批巻管理
 		Route::get('studentscore', ['uses'=>'TestController@studentscore', 'as' => 'osce.theory.studentscore']);//学生成绩列表
 		Route::get('studentmarking', ['uses'=>'TestController@studentmarking', 'as' => 'osce.theory.studentmarking']);//学生打分列表
 		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//在线批卷
