@@ -92,9 +92,7 @@ class TestController extends CommonController
         return view('osce::theory.student_marking',['data'=>$data]);
     }
 
-    public function examcheck(){
-        return view('osce::theory.exam_check');
-    }
+
     public function rankStudent(Request $request){
         $this->validate($request, [
             'log_id'    => 'required|integer',
