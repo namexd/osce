@@ -10,10 +10,11 @@ var title={
 var aZimu = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N'];
 function setnamestr(question,i) {
 	var _name = 
-		'<div class="">'
+		'<div class="clearfix">'
 			+'<span class="font16">'+(i+1)+'、'+question.question+'（'+question.poins+'分）'
-			+(question.score||question.score==0?'（得分：'+question.score+'分）':'')+'</span>'
+			+(question.score||question.score==0?'<i class="defen">（得分：'+question.score+'分）</i>':'')+'</span>'
 			+(question.images?'<img src="question.images" />':'')
+			+'<div class="dafen"><strong>得分：</strong><input type="text" name="poins[]" class="form-control" /></div>'
 		+'</div>'				
 	return	_name		
 };
@@ -124,4 +125,20 @@ function tojiaojuan() {
 		$(this).find('.answer').val(_arr.join(' '));
 	});		
 	$('.form-shijuan').submit();
+};
+
+function setzhuguan(arr,str) {
+	for (var i = 0 ; i < arr.length; i++) {
+		str+=
+			'<div class="allSubject" _a="'+arr[i].answer+'" _ra="'+arr[i].rightanswer+'">'
+				+setnamestr(arr[i],i)
+				+'<ul>'
+					+'<li class=""><span class="form-control">参考答案：'+arr[i].rightanswer+'</span></li>'
+					+'<li class=""><span class="form-control">学生答案：'+arr[i].answer+'</span></li>'
+				+'</ul>'
+				+'<input type="hidden" name="id[]" value="'+arr[i].cid+'" />'
+				+'<input type="hidden" name="isright[]" value="3" />'
+			+'</div>';								
+	}	
+	return str;
 };
