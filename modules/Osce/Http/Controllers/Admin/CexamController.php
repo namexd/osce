@@ -172,7 +172,7 @@ class CexamController extends CommonController
      * @
      */
 
-    public function searchExamREesult(Request $request)
+    public function searchExamResult(Request $request)
     {
         $dataArray=$request->only('logid','userid');
 
@@ -186,7 +186,7 @@ class CexamController extends CommonController
 
     }
 
-    public function MarkingExamREesult(Request $request)
+    public function MarkingExamResult(Request $request)
     {
         $dataArray=$request->only('logid','userid');
 
@@ -216,7 +216,7 @@ class CexamController extends CommonController
      * @
      */
 
-    public function modifyExamREesult(Request $request)
+    public function modifyExamResult(Request $request)
     {
         $dataArray=$request->only('id','isright','poins','logid','stuid');
 
