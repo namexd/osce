@@ -21,7 +21,7 @@ class TestStatistics extends Model
     protected $guarded      = [];
     protected $hidden       = [];
     protected $fillable     = [
-        'id','logid','stuid','objective','subjective','time','ifexam'
+        'id','logid','stuid','objective','subjective','time','ifexam','status'
     ];
 
 
