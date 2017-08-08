@@ -186,6 +186,20 @@ class CexamController extends CommonController
 
     }
 
+    public function MarkingExamREesult(Request $request)
+    {
+        $dataArray=$request->only('logid','userid');
+
+        $exam = new Cexam();
+
+        $result= $exam->searchExamDetail($dataArray['logid'],$dataArray['userid']);
+
+
+        return view('osce::theory.modifystudentexam',['data'=>$result]);
+
+
+    }
+
 
     /** 批改试卷提交
      * @method GET
