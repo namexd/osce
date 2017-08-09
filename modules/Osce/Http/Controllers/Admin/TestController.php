@@ -12,6 +12,7 @@ use DB;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
 use Modules\Osce\Entities\TestContent;
+use Modules\Osce\Entities\TestContentModule;
 use Modules\Osce\Entities\TestStatistics;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
@@ -40,6 +41,11 @@ class TestController extends CommonController
     public function examquestion(){
         $data = Test::orderBy('id','desc')->paginate(10);
         return view('osce::theory.exam_question')->with('data',$data);
+    }
+    public function autoquestion(){
+        $data = TestContentModule::select('type', DB::raw('count(id) as sum_count'))
+            -> groupBy('type')->get();
+        return view('osce::theory.exam_authquestion')->with('data',$data);
     }
     public function delquestion(Request $request){
         $this->validate($request, [
