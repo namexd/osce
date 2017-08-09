@@ -1,7 +1,7 @@
 @extends('osce::theory.base')
 
 @section('title')
-	学生成绩查询
+	在线批卷
 @stop
 @section('head_css')
 	<style>
@@ -42,7 +42,12 @@
 	.stu_ra label,.stu_ra span {color: #2d8f7b; font-weight: bolder;}
 	.stu_cuo { border: 1px solid #e86f64;}
 	.form-control { height: auto;}
-	.dafen { display: none;}
+	.defen { display: none;}
+	.dafen { float: right; width: 200px; padding: 0!important;}
+	.dafen strong { float: left; width: 50px; line-height: 34px;}
+	.dafen input { width: 150px;}
+	.font16 { line-height: 34px;}
+	.type_1 .dafen,.type_2 .dafen,.type_3 .dafen { display: none;}
 	
 	</style>
 @stop
@@ -79,6 +84,8 @@
 					if (name=='5'||name=='6'||name=='7') {
 						str = setzhuguan(arr,str);	
 					}				
+					$('#logid').val(arr[0].logid);
+					$('#stuid').val(arr[0].stuid);
 					
 					$('.step-content').append('<div class="question_type type_'+name+'">'+str+'</div>');	
 				}			
@@ -142,8 +149,29 @@
 				});	
 				
 				
+				$('.type_1 input,.type_2 input,.type_3 input').remove();				
+			    $("input.form-control").keyup(function () {
+			        this.value = this.value.replace(/[^\d]/g, '');
+			    });					
 				
-								
+				$('#pijuan').click(function () {
+					var bOk = true;
+					$('input.form-control').each(function () {
+						if ($.trim($(this).val())=='') {
+							uselayer(3,'还有尚未评分的题目！！');
+							$(this).focus();
+							bOk = false;
+							return false;
+						}
+						
+					});
+					if (bOk) {
+						uselayer(2,'确定要提交批卷吗？',function () {
+							$('.form-shijuan').submit();
+						});
+					}
+					return false;
+				});	
 				
 				
 				
@@ -180,13 +208,16 @@
 			<div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content text-center p-md">
-                    	<div class="p-md cBorder mart_10 clearfix">
+                    	<form method="post" class="form-horizontal form-shijuan p-md cBorder mart_10 clearfix" action="{{route('osce.cexam.modifyresult')}}">
 							<div class="step-content body current">
 				
 								
 							</div>
-							<button class="btn btn-primary" onclick="javascript:history.go(-1);">返回</button>
-						</div>
+							<input type="hidden" name="logid" id="logid" value="" />
+							<input type="hidden" name="stuid" id="stuid" value="" />
+							<button class="btn btn-primary" id="pijuan" type="submit">提交批卷</button>
+							<button class="btn btn-default" onclick="javascript:history.go(-1);">返回</button>
+						</form>
 					</div>
 
                            

@@ -126,7 +126,7 @@ class Cexam extends CommonModel
             ->join('g_test_content','g_test_content.id','=','g_test_record.cid')
             ->join('g_test_statistics','g_test_statistics.logid','=','g_test_log.id')
             ->join('g_test','g_test.id','=','g_test_log.tid')
-            ->select('g_test_record.*','g_test_record.poins as score','student.name as stuname','g_test_content.question','g_test_content.answer as rightanswer','g_test_statistics.time as alltime','g_test_statistics.objective','g_test_content.content','g_test_content.poins','g_test.name as examname','g_test.score as examscore','g_test_log.times')
+            ->select('g_test_record.*','g_test_record.poins as score','student.name as stuname','g_test_content.question','g_test_content.answer as rightanswer','g_test_statistics.time as alltime','g_test_statistics.status as zt','g_test_statistics.objective','g_test_content.content','g_test_content.poins','g_test.name as examname','g_test.score as examscore','g_test_log.times')
             ->where('g_test_log.id',$logid)
             ->where('g_test_record.stuid',$stuid)
             ->orderBy('g_test_log.id')
@@ -209,14 +209,14 @@ class Cexam extends CommonModel
     public function addstatics($data)
     {
         $connection = DB::connection($this->connection);
-        $arrobj = $connection->table('g_test_log')->where('id',$data['logid'])->first();
+ /*       $arrobj = $connection->table('g_test_log')->where('id',$data['logid'])->first();
         $tid = $arrobj->tid;
         $arrobj1 = $connection->table('g_test_content')->where('test_id',$tid)->where('type','>',3)->first();
         if($arrobj1){
             $status = 2;
         }else{
             $status = 0;
-        }
+        }*/
         $builder = $connection->table('g_test_statistics')
             ->where('g_test_statistics.logid',$data['logid'])
             ->where('g_test_statistics.stuid',$data['stuid'])
@@ -224,7 +224,7 @@ class Cexam extends CommonModel
                 'logid' =>  $data['logid'],
                 'stuid' =>  $data['stuid'],
                 'time' =>  $data['time'],
-                'status'=> $status,
+                //'status'=> $status,
                 'objective' =>   $data['objective']
 
             ]);
@@ -287,14 +287,16 @@ class Cexam extends CommonModel
     public function updatestatics($data)
     {
         $connection = DB::connection($this->connection);
-        $arrobj = $connection->table('g_test_log')->where('id',$data['logid'])->first();
+/*        $arrobj = $connection->table('g_test_log')->where('id',$data['logid'])->first();
         $tid = $arrobj->tid;
         $arrobj1 = $connection->table('g_test_content')->where('test_id',$tid)->where('type','>',3)->first();
         if($arrobj1){
             $status = 2;
         }else{
             $status = 1;
-        }
+        }*/
+
+        $status = 1;
         $builder = $connection->table('g_test_statistics')
             ->where('g_test_statistics.logid',$data['logid'])
             ->where('g_test_statistics.stuid',$data['stuid'])

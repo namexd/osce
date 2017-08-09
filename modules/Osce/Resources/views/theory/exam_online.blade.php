@@ -37,6 +37,7 @@
             font-weight:bold;text-align:center;
             color:#ff0101; margin-right:5px;}
 	
+	.dafen,.defen { display: none;}
 	</style>
 @stop
 
