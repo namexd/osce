@@ -25,7 +25,8 @@ class TestContentModule extends Model
         'pbase', 'base', 'cognition', 'source', 'lv', 'require','times',
         'degree', 'separate', 'content'
     ];
-    protected $typeValues  = [
+    protected $visible = ['typeValues'];
+    public $typeValues  = [
         1 => '单选题',
         2 => '多选题',
         3 => '判断题',
