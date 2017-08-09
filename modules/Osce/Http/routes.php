@@ -7,6 +7,7 @@ Route::get('/c',function(){
 	dd($c);
 });
 
+Route::get('/A',['uses'=>'Modules\Osce\Http\Controllers\Admin\AddModuleController@index']);
 
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	//---新加理论考试系统start
@@ -16,6 +17,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('add', ['uses'=>'TestController@add', 'as' => 'osce.theory.add']);//添加考试
 		Route::get('index', ['uses'=>'TestController@index','as'=>'osce.theory.index']);//考试管理
 		Route::get('examquestion', ['uses'=>'TestController@examquestion', 'as' => 'osce.theory.examquestion']);//题库管理
+		Route::get('autoquestion', ['uses'=>'TestController@autoquestion', 'as' => 'osce.theory.autoquestion']);//自动组卷
 		Route::get('delquestion', ['uses'=>'TestController@delquestion', 'as' => 'osce.theory.delquestion']);//题库管理
 		Route::get('examscore', ['uses'=>'TestController@examscore', 'as' => 'osce.theory.examscore']);//成绩管理
 		Route::get('studentscore', ['uses'=>'TestController@studentscore', 'as' => 'osce.theory.studentscore']);//学生成绩列表
