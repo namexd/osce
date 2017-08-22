@@ -18,8 +18,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('index', ['uses'=>'TestController@index','as'=>'osce.theory.index']);//考试管理
 		Route::get('examquestion', ['uses'=>'TestController@examquestion', 'as' => 'osce.theory.examquestion']);//题库管理
 		Route::get('autoquestion', ['uses'=>'TestController@autoquestion', 'as' => 'osce.theory.autoquestion']);//自动组卷
-		Route::get('autoexam', ['uses'=>'TestController@autoexam', 'as' => 'osce.theory.autoexam']);//自动组卷提交
-		Route::get('onceautoexam', ['uses'=>'TestController@onceautoexam', 'as' => 'osce.theory.onceautoexam']);//重新组卷提交
+		Route::post('autoexam', ['uses'=>'TestController@autoexam', 'as' => 'osce.theory.autoexam']);//自动组卷提交
+		Route::post('onceautoexam', ['uses'=>'TestController@onceautoexam', 'as' => 'osce.theory.onceautoexam']);//重新组卷提交
 		Route::get('delquestion', ['uses'=>'TestController@delquestion', 'as' => 'osce.theory.delquestion']);//题库管理
 		Route::get('examscore', ['uses'=>'TestController@examscore', 'as' => 'osce.theory.examscore']);//成绩管理
 		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//批巻管理

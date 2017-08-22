@@ -47,6 +47,16 @@ class TestController extends CommonController
             -> groupBy('type')->get();
         return view('osce::theory.exam_autoquestion')->with('data',$data);
     }
+    public function autoexampreview(Request $request){
+        $this->validate($request, [
+            'id'    => 'required'
+        ],[
+            'id.required'   => '试卷ID必传'
+        ]);
+        $id =$request->get('id');
+        $data =Test::find($id);
+        return view('osce::theory.exam_preview')->with('data',$data);
+    }
     public function autoexam(Request $request){
         $this->validate($request, [
             'name'    => 'required',
@@ -71,7 +81,7 @@ class TestController extends CommonController
         $sum = $this->creatautoexam($test_id,$typeArr,$numberArr,$scoreArr);
         $data =Test::find($test_id);
         $data->update(['score'=>$sum]);
-        return view('osce::theory.exam_preview')->with('data',$data);
+        return $this->success_data(['test_id'=>$test_id]);
     }
     public function onceautoexam(Request $request){
         $this->validate($request, [
