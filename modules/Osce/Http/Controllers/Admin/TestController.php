@@ -96,29 +96,31 @@ class TestController extends CommonController
     protected function creatautoexam($test_id,$typeArr,$numberArr,$scoreArr){
         $sum =0 ;
         foreach($typeArr as $key =>$val){
-            $sum=$sum + $numberArr[$key]*$scoreArr[$key];
-            $data = TestContentModule::where('type',$val)->get()->shuffle()->take($numberArr[$key]);
-            foreach($data as $k=>$value ){
-                $insert = [
-                    'test_id'=>$test_id,
-                    'type'=>$value->type,
-                    'images'=>$value->images,
-                    'answer'=>$value->answer,
-                    'poins'=>$scoreArr[$key],
-                    'question'=>$value->question,
-                    'pbase'=>$value->pbase,
-                    'base'=>$value->base,
-                    'cognition'=>$value->cognition,
-                    'source'=>$value->source,
-                    'lv'=>$value->lv,
-                    'require'=>$value->require,
-                    'times'=>$value->times,
-                    'degree'=>$value->degree,
-                    'separate'=>$value->separate,
-                    'content'=>$value->content
-                ];
-                //dd($data,$insert);
-                TestContent::create($insert);
+            if($typeArr[$key] && $numberArr[$key] && $scoreArr[$key]){
+                $sum=$sum + $numberArr[$key]*$scoreArr[$key];
+                $data = TestContentModule::where('type',$val)->get()->shuffle()->take($numberArr[$key]);
+                foreach($data as $k=>$value ){
+                    $insert = [
+                        'test_id'=>$test_id,
+                        'type'=>$value->type,
+                        'images'=>$value->images,
+                        'answer'=>$value->answer,
+                        'poins'=>$scoreArr[$key],
+                        'question'=>$value->question,
+                        'pbase'=>$value->pbase,
+                        'base'=>$value->base,
+                        'cognition'=>$value->cognition,
+                        'source'=>$value->source,
+                        'lv'=>$value->lv,
+                        'require'=>$value->require,
+                        'times'=>$value->times,
+                        'degree'=>$value->degree,
+                        'separate'=>$value->separate,
+                        'content'=>$value->content
+                    ];
+                    //dd($data,$insert);
+                    TestContent::create($insert);
+                }
             }
         }
         return $sum;
