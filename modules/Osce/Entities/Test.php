@@ -32,6 +32,13 @@ class Test extends Model
     {
         return $this->hasMany('Modules\Osce\Entities\TestContent','test_id','id');
     }
+    /**
+     * 获取考试的试卷不带密码
+     */
+    public function questionHas()
+    {
+        return $this->hasMany('Modules\Osce\Entities\TestContentHas','test_id','id');
+    }
 
     //新增答卷
     public function addTest($data)
