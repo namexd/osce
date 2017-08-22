@@ -25,7 +25,7 @@ class TestContent extends Model
         'pbase', 'base', 'cognition', 'source', 'lv', 'require','times',
         'degree', 'separate', 'content'
     ];
-    protected $visible = ['answer'];
+    protected $visible = [ ];
 
 
 

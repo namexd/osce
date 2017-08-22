@@ -43,7 +43,7 @@
                         <td >{{$val->end}}</td>                  
                         
                         <td>
-                            <a class="state1 modal-control" href="{{route('osce.theory.studentmarking',['id'=>$val->id])}}" onclick="deletelist({{$val->id}})">
+                            <a class="state1 modal-control" href="{{route('osce.theory.studentmarking',['id'=>$val->id])}}">
                                 <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i>学生列表</span>
                             </a>
 	                    </td>

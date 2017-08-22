@@ -43,9 +43,17 @@
                         <td >{{$val->subjective}}</td> 
                         
                         <td>
-                            <a class="state1 modal-control" href="{{route('osce.cexam.modifystudentexam',['logid'=>$val->logid,'userid'=>$val->stuid,'exam'=>$val->logdata->exam->name])}}">
-                                <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i>打分</span>
-                            </a>
+                        	@if($val->status==0)
+	                            <a class="state1 modal-control" href="{{route('osce.cexam.modifystudentexam',['logid'=>$val->logid,'userid'=>$val->stuid,'exam'=>$val->logdata->exam->name])}}">
+	                                <span class="read  state2 detail"><i class="fa fa-pencil-square-o fa-2x"></i>打分</span>
+	                            </a>
+                        	
+                        	@else
+	                            <a class="state1 modal-control" href="{{route('osce.cexam.searchexamdetail',['logid'=>$val->logid,'userid'=>$val->stuid,'exam'=>$val->logdata->exam->name])}}">
+	                                <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i>查看详细</span>
+	                            </a>
+                        	
+                        	@endif
 	                    </td>
                     </tr>
                		@endforeach

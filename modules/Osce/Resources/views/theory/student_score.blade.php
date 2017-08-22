@@ -43,7 +43,7 @@
                         <td >{{$val->subjective}}</td> 
                         
                         <td>
-                            <a class="state1 modal-control" href="{{route('osce.cexam.searchexamdetail',['logid'=>$val->logid,'userid'=>$val->stuid,'exam'=>$val->logdata->exam->name])}}" onclick="deletelist({{$val->id}})">
+                            <a class="state1 modal-control" href="{{route('osce.cexam.searchexamdetail',['logid'=>$val->logid,'userid'=>$val->stuid,'exam'=>$val->logdata->exam->name])}}">
                                 <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i>查看详细</span>
                             </a>
 	                    </td>

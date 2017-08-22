@@ -73,7 +73,7 @@ function setpanduanstr(arr,str) {
 function settiankongstr(arr,str) {
 	for (var i = 0 ; i < arr.length; i++) {
 		var _str2 = '';
-		var _arr = arr[i].question.replace(/\s/g,"").match(/__/g);							
+		var _arr = arr[i].question.replace(/\s/g,"").replace(/_+/g,'__').match(/__/g);							
 		for (var j = 0 ; j< _arr.length; j++) {
 			_str2+='<li class=""><input type="text" class="form-control" /></li>';
 		}

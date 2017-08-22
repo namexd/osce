@@ -8,7 +8,7 @@
 		.mar0 { margin: 0;}
 		.form-horizontal {float: right; position: relative; margin-right: 20px; overflow: hidden; }
 		.import { opacity: 0; filter: alpha(opacity=0); position: absolute; left: -100%; top: 0; width: 200%; height: 100%; outline: none; cursor: pointer; }
-		
+		table tbody tr td:last-child { width: 200px;}
 	</style>
 	
 		
@@ -51,6 +51,7 @@
 	        		<input type="file" name="file" onchange="upload()" class="import" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
 	        		<a  href="javascript:;" class="btn btn-primary mar0">&nbsp;导入试题&nbsp;</a>
 	        	</form>
+	        	<a  href="{{route('osce.theory.autoquestion')}}" class="btn btn-primary" style=" margin-right: 20px; float: right;">&nbsp;新增试卷&nbsp;</a>
 	        </div>
 	    </div>
    		<div class="container-fluid ibox-content" id="list_form">
@@ -71,6 +72,9 @@
                         <td >{{$val->ctime}}</td>  
                         
                         <td>
+                            <a class="state1 modal-control" href="{{route('osce.theory.autoexampreview',['id'=>$val->id])}}">
+                                <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i> 预览</span>
+                            </a>
                             <a class="state1 modal-control" href="javascript:;" onclick="deletelist({{$val->id}})">
                                 <span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i> 删除</span>
                             </a>
