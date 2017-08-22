@@ -84,6 +84,7 @@ class TestController extends CommonController
             $scoreArr[$key]=$val->poins;
         }
         //dd($typeArr,$numberArr,$scoreArr);
+        TestContent::where('test_id',$id)->delete();
         $this->creatautoexam($id,$typeArr,$numberArr,$scoreArr);
         $data= Test::find($id);
         return view('osce::theory.exam_preview')->with('data',$data);
